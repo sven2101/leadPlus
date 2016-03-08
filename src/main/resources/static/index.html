@@ -1,40 +1,66 @@
-
-
 <html>
 <head>
-    <title>Angular 2 QuickStart</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="styles.css">
+    <title>Containerbasis</title>
 
-    <!-- 1. Load libraries -->
-    <!-- IE required polyfills, in this exact order -->
-    <script src="node_modules/es6-shim/es6-shim.min.js"></script>
-    <script src="node_modules/systemjs/dist/system-polyfills.js"></script>
-    <script src="node_modules/angular2/es6/dev/src/testing/shims_for_IE.js"></script>
+    <link rel="stylesheet" href="node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 
-    <script src="node_modules/angular2/bundles/angular2-polyfills.js"></script>
-    <script src="node_modules/systemjs/dist/system.src.js"></script>
-    <script src="node_modules/rxjs/bundles/Rx.js"></script>
-    <script src="node_modules/angular2/bundles/angular2.dev.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 
-    <!-- 2. Configure SystemJS -->
-    <script>
-        System.config({
-            packages: {
-                app: {
-                    format: 'register',
-                    defaultExtension: 'js'
-                }
-            }
-        });
-        System.import('app/main')
-                .then(null, console.error.bind(console));
-    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="css/timeline.css">
+    <link rel="stylesheet" href="css/sb-admin-2.css">
+
+    <link rel="stylesheet" href="node_modules/ng-table/dist/ng-table.css" />
+
+    <link rel="stylesheet" href="node_modules/ng-dialog/css/ngDialog.css"/>
+
+    <link rel="stylesheet" href="node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" />
+    <link rel="stylesheet" href="node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
 </head>
-
-<!-- 3. Display the application -->
 <body>
-<my-app>Loading...</my-app>
-faskldfjaslkdfjasldfhasjkldf
+
+<body class="container" ng-app="app" ng-strict-di ng-controller="AppController">
+
+<div ng-viewport>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script src="node_modules/angular/angular.js"></script>
+<script src="node_modules/angular-bootstrap/ui-bootstrap.js"></script>
+<script src="node_modules/angular-new-router/dist/router.es5.min.js"></script>
+<script src="node_modules/angular-resource/angular-resource.js"></script>
+
+<script src="node_modules/ng-table/dist/ng-table.js"></script>
+
+<script src="node_modules/ng-dialog/js/ngDialog.js"></script>
+
+<script src="https://cdnjs.com/libraries/chart.js"></script>
+
+<script src="node_modules/moment/min/moment.min.js"></script>
+
+<script src="node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+
+
+<!-- Includes -->
+
+<script src="js/app.js"></script>
+<script src="js/services.js"></script>
+
+<script src="components/dashboard/dashboard.js"></script>
+<script src="components/data/data.js"></script>
+<script src="components/login/login.js"></script>
+<script src="components/logout/logout.js"></script>
+<script src="components/sales/sales.js"></script>
+<script src="components/settings/settings.js"></script>
+<script src="components/statistiken/statistiken.js"></script>
+<!-- Includes -->
+
 </body>
 </html>
