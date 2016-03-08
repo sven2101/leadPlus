@@ -14,14 +14,14 @@ angular.module('app', [
     'app.settings',
     'app.statistiken',
     'app.signup',
-    'ngNewRouter',
+    'ngRoute',
     'ngResource'
 ])
-    .controller('AppController', ['$router', AppController]);
+    .controller('AppController', ['$routeProvider', AppController]);
 
-function AppController($router) {
+function AppController($routeProvider) {
 
-    $router.config([
+    $routeProvider.config([
         { path: "/dashboard",               component: "dashboard"      },
         { path: "/data",                    component: "data"           },
         { path: "/login",                   component: "login"          },
