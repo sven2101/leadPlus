@@ -55,14 +55,11 @@ public class UserResource {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> add(@RequestBody User userDto) {
 
-        List<Role> roles = new ArrayList<Role>();
-        roles.add(Role.ADMIN);
-
         User user = new User();
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setRoles(roles);
+        user.setRole(Role.ADMIN);
 
         if(userRepository.findByUsername(user.getUsername()) == null && userRepository.findByEmail(user.getEmail())  == null)
             userRepository.save(user);

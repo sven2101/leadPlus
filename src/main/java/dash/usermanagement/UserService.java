@@ -20,7 +20,6 @@ import java.util.*;
 /**
  * Created by Andreas on 28.11.2015.
  */
-@Component
 @Service
 @Transactional
 public class UserService implements UserDetailsService {

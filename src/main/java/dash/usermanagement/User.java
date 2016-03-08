@@ -24,16 +24,13 @@ public class User implements UserDetails{
     @Column(unique = true, length = 16, nullable = false)
     private String username;
 
-    @Column(length = 16, nullable = false)
+    @Column(length = 50, nullable = false)
     private String email;
 
     @Column(length = 80, nullable = false)
     private String password;
 
-    @ManyToMany
-    @JoinTable(name = "users_roles",
-                joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id") ,
-                inverseJoinColumns = @JoinColumn(name = "role_id" + "", referencedColumnName = "id") )
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     public User(){}

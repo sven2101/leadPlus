@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
@@ -133,7 +134,7 @@ public class Application {
 
         @Autowired
         public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-            auth.userDetailsService(customUserDetailsService);
+            auth.userDetailsService(userDetailsService);
         }
 
         @Override
@@ -151,6 +152,5 @@ public class Application {
                 .csrf().disable();
         }
     }
-
 
 }

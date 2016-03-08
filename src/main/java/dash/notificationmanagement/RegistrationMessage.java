@@ -14,6 +14,9 @@ public class RegistrationMessage implements IMessage {
     private String content;
     private String message;
 
+    public RegistrationMessage(){
+    }
+
     public RegistrationMessage(User recipient){
         this.recipient = recipient;
     }
