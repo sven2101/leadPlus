@@ -1,0 +1,497 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" ng-link="dashboard()"><img src="img/Containerbasis.png" width="100px"/></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a ng-link="dashboard()">Anfragen Dashboard<span class="sr-only">(current)</span></a></li>
+                <li><a ng-link="statistiken()">Statistiken</a></li>
+                <li><a ng-link="data()">Datensätze</a></li>
+                <li><a ng-link="sales()">Sales</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Sales Check" ng-model="search">
+                </div>
+                <button type="submit" class="btn btn-default" data-toggle="modal" data-target="#salesCheck" ng-click="check()">Check</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li >
+                    <a data-toggle="modal" data-target="#callsCheck">
+                        <i class="fa fa-phone"></i>&nbsp;&nbsp;&nbsp;<span class="badge">{{ callAmount }}</span>
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a ng-link="settings()">Settings</a></li>
+                        <li class="divider"></li>
+                        <li><a ng-link="logout()">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Quick Overview - row - START -->
+<br/>
+<div ng-controller="DashboardCtrl as dashboard">
+    <div class="row">
+        <div class="col-lg-2 col-md-6">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <i class="fa fa-calendar-o fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="content"> &nbsp; {{ dashboard.space }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                     <select ng-init="dashboard.space = 'heute'" ng-options="zeiten for zeiten in ['heute', '7 T', '30 T', 'alle']" class="form-control selectpicker" ng-change="dashboard.changeSpace(dashboard.space)" ng-model="dashboard.space">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-comments fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{dashboard.application_amount}}</div>
+                            <div>Anfragen</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <span class="pull-left">
+                        <label class="control-label">bearbeitet </label> <span class="badge">{{dashboard.application_amount_follow}}</span>
+                    </span>
+                    <span class="pull-right">
+                        <label class="control-label">unbearbeitet </label> <span class="badge">{{dashboard.application_amount_open}}</span>
+                    </span>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-usd fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ dashboard.profit }}</div>
+                            <div>Gewinn</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer panel-green">
+                    <span class="pull-left">
+                        <label class="control-label">Umsatz </label> <span class="badge">{{ dashboard.revenue }} € </span>
+                    </span>
+                    <span class="pull-right">
+                        <label class="control-label">Gewinn </label> <span class="badge">{{ dashboard.profit  }} € </span>
+                    </span>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-area-chart fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ dashboard.convertionrate}}%</div>
+                            <div>Conversion Rate &nbsp;&nbsp;</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <span class="pull-left">
+                        <label class="control-label">Conversion Rate &nbsp;&nbsp; </label> <span class="badge">{{ dashboard.convertionrate }} %</span>
+                    </span>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Quick Overview - row - END -->
+
+<br/>
+<br/>
+<br/>
+
+    <script type="text/javascript">
+        $('#myTab a').click(function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+        })
+    </script>
+
+<!-- Applications -->
+    <div role="tabpanel">
+
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a data-target="#open" aria-controls="open" role="tab" data-toggle="tab">
+                    Offene Anfragen
+                    <span class="badge">{{ dashboard.application_amount_open }}</span>
+                </a>
+            </li>
+            <li role="presentation">
+                <a data-target="#follow" aria-controls="follow" role="tab" data-toggle="tab">
+                    Follow up
+                    <span class="badge">{{ dashboard.application_amount_follow }}</span>
+                </a>
+            </li>
+        </ul>
+
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="open">
+
+            <!-- Application state OPEN -->
+
+                <br/>
+                <br/>
+
+                <table class="table" ng-table="tableParams">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Nachricht</th>
+                        <th>Eingang</th>
+                        <th>Bearbeiter</th>
+                        <th style="width:120px;">Aktion</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="application in dashboard.applicationsStateOPEN">
+                        <td  data-title="'Name'" sortable="'username'">{{ application.inquirer.firstname }} {{ application.inquirer.lastname }}</td>
+                        <td  data-title="'Email'" sortable="'email'">{{ application.inquirer.email }}</td>
+                        <td  data-title="'Bedarf'" sortable="'bedarf'">{{ application.message }}</td>
+                        <td  data-title="'Eingangsdatum'" sortable="'eingangsdatum'">{{ application.eingangsdatum }}</td>
+                        <td  data-title="'Bearbeiter'" sortable="'bearbeiter'">{{ application.bearbeiter }}</td>
+                        <td style="width:150px;">
+                            <div class="row">
+                                <button class="btn btn-warning" ng-click="dashboard.edit(application._id)" data-toggle="modal" data-target="#editApplication">
+                                    <i class="fa fa-pencil-square-o"></i>
+                                </button>
+
+                                <button class="btn btn-success" type="button" title="Angebot gesendet" ng-click="dashboard.situation(application._id, 'angebot_gesendet')">
+                                    <i class="fa fa-paper-plane-o"></i>
+                                </button>
+
+                                <button class="btn btn-info" type="button" title="In Kontakt" ng-click="dashboard.situation(application._id, 'in_kontakt')">
+                                    <i class="fa fa-check"></i>
+                                </button>
+
+                                <button class="btn btn-danger" type="button" title="Trash" ng-click="dashboard.remove(application._id)">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <!-- Application state OPEN -->
+
+            </div>
+            <div role="tabpanel" class="tab-pane" id="follow">
+
+                <!-- Application state FOLLOW -->
+
+                <br/>
+                <br/>
+                <table class="table" ng-table="tableParamsAPP">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Nachricht</th>
+                        <th>Eingang</th>
+                        <th>Bearbeiter</th>
+                        <th>Situation</th>
+                        <th style="width:90px;">Aktion</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="application in $applicationStateFOLLOW">
+                        <td data-title="'Name'" sortable="'username'">{{ application.username }}</td>
+                        <td data-title="'Email'" sortable="'email'">{{ application.email }}</td>
+                        <td data-title="'Bedarf'" sortable="'bedarf'">{{ application.bedarf }}</td>
+                        <td data-title="'Eingangsdatum'" sortable="'eingangsdatum'">{{ application.eingangsdatum }}</td>
+                        <td data-title="'Bearbeiter'" sortable="'bearbeiter'">{{ application.bearbeiter }}</td>
+                        <td data-title="'Situation'" sortable="'situation'">{{ application.situation }}</td>
+                        <td style="width:120px;">
+                            <div class="row">
+                                <button class="btn btn-warning" ng-click="edit(application._id)" data-toggle="modal" data-target="#editApplication">
+                                    <i class="fa fa-pencil-square-o"></i>
+                                </button>
+
+                                <button class="btn btn-success" type="button" title="follow up gesendet" ng-click="situation_fol(application._id, 'follow')">
+                                    <i class="fa fa-share"></i>
+                                </button>
+                                <button class="btn btn-info" type="button" title="erledigt" ng-click="status(application._id, 'done')">
+                                    <i class="fa fa-check"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <!-- Application state FOLLOW -->
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+<!-- Modal -->
+
+    <script type="text/css">
+        body .modal {
+            /* new custom width */
+            width: 1500px;
+            /* must be half of the width, minus scrollbar on the left (30px) */
+            margin-left: -750px;
+        }
+    </script>
+
+    <!-- Salescheck -->
+        <div class="modal" id="salesCheck" tabindex="-1" role="dialog" aria-labelledby="setReminderLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="setReminderLabel">Sales Check</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Telefon</th>
+                                    <th style="width:90px;">Aktion</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="contact in searchResult">
+                                    <td>{{ contact.username }}</td>
+                                    <td>{{ contact.email }}</td>
+                                    <td>{{ contact.telefon }}</td>
+                                    <td style="width:90px;">
+                                        <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="addSale(contact._id)"><i class="fa fa-plus-circle"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th>Typ Container</th>
+                                                <th>Anzahl Container</th>
+                                                <th>Transport</th>
+                                                <th>Umsatz €</th>
+                                                <th>Gewinn CB €</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td><input class="form-control" ng-model="sale.containerTyp" placeholder="Typ Container"></td>
+                                                <td><input class="form-control" ng-model="sale.containerAmount" placeholder="Anzahl Container"></td>
+                                                <td><input class="form-control" ng-model="sale.containerTransport" placeholder="Transport"></td>
+                                                <td><input class="form-control" ng-model="sale.return" placeholder="Umsatz"></td>
+                                                <td><input class="form-control" ng-model="sale.profitCB" placeholder="Gewinn CB"></td>
+                                            </tr>
+                                            <tr>
+                                                <td><input class="form-control" placeholder="z.B. Frachtcontainer" readonly></td>
+                                                <td><input class="form-control" placeholder="30" readonly></td>
+                                                <td><input class="form-control" placeholder="Stuttgart" readonly></td>
+                                                <td><input class="form-control" placeholder="30000.50" readonly></td>
+                                                <td><input class="form-control" placeholder="3000.50" readonly></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- Salescheck -->
+
+    <!-- Calls -->
+        <div class="modal" id="callsCheck" tabindex="-1" role="dialog" aria-labelledby="setCallLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="setCallLabel">Calls</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Telefonnummer</th>
+                                    <th>Eingang</th>
+                                    <th style="width:90px;">Aktion</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="call in calls">
+                                    <td>{{ call.telefonnummer }}</td>
+                                    <td>{{ call.eingangsdatum }}</td>
+                                    <td style="width:90px;">
+                                        <div class="row">
+                                            <button class="btn btn-success" type="button" title="Angebot gesendet" ng-click="situation(call._id, 'angebot_gesendet')">
+                                                <i class="fa fa-paper-plane-o"></i>
+                                                <!--Angebot-->
+                                            </button>
+                                            <button class="btn btn-danger" type="button" title="Trash" ng-click="remove(call._id)">
+                                                <i class="fa fa-trash"></i>
+                                                <!--Trash-->
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- Calls -->
+
+    <!-- Calls Angebot -->
+        <div class="modal" id="enterAngebot" tabindex="-1" role="dialog" aria-labelledby="setAngebotLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="setAngebotLabel">Calls</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="Name-text" class="control-label">Name:</label>
+                                <input type="text" class="form-control" id="Name-text"/>
+
+                                <label for="Email-text" class="control-label">Email:</label>
+                                <input type="text" class="form-control" id="Email-text"/>
+
+                                <label for="Bedarf-text" class="control-label">Bedarf:</label>
+                                <input type="text" class="form-control" id="Bedarf-text"/>
+
+                                <label for="Transport" class="control-label">Transport:</label>
+                                <input type="text" class="form-control" id="Transport"/>
+
+                                <label for="Datum-text" class="control-label">Datum CB:</label>
+                                <input type="text" class="form-control" id="Datum-text"/>
+
+                                <label for="Bearbeiter-text" class="control-label">Bearbeiter:</label>
+                                <input type="text" class="form-control" id="Bearbeiter-text"/>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                        <button type="button" class="btn btn-primary">Änderung speichern</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- Calls Angebot -->
+
+    <!-- Edit -->
+    <div class="modal" id="editApplication" tabindex="-1" role="dialog" aria-labelledby="setReminderLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="setAnfrageLabel">Anfrage bearbeiten</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="kind-text" class="control-label">Art:</label>
+                            <select id="kind-text" class="form-control selectpicker" ng-model="application.kind" >
+                                <option value="mail">mail</option>
+                                <option value="call">call</option>
+                            </select>
+
+                            <label for="Name-text" class="control-label">Name:</label>
+                            <input type="text" class="form-control" id="Name-text" ng-model="application.username" />
+
+                            <label for="telefonnummer-text" class="control-label">Telefonnummer:</label>
+                            <input type="text" class="form-control" id="telefonnummer-text" ng-model="application.telefonnummer" />
+
+                            <label for="Email-text" class="control-label">Email:</label>
+                            <input type="text" class="form-control" id="Email-text" ng-model="application.email" />
+
+                            <label for="Bedarf-text" class="control-label">Bedarf:</label>
+                            <input type="text" class="form-control" id="Bedarf-text" ng-model="application.bedarf" />
+
+                            <label for="Transport-txt" class="control-label">Transport:</label>
+                            <input type="text" class="form-control" id="Transport-txt" ng-model="application.transport" />
+
+                            <label for="Eingangsdatum-text" class="control-label">Eingangsdatum:</label>
+
+                            <div class="input-group date" id="editDateEingang">
+                                <input class="form-control" type="text" class="form-control" id="Eingangsdatum-text"  ng-model="application.eingangsdatum" placeholder="Eingangsdatum"/>
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                            </div>
+                            <script type="text/javascript">
+
+                                $('#editDateEingang')
+                                        .datepicker({ });
+                            </script>
+
+                            <label for="Bearbeiter-text" class="control-label">Bearbeiter:</label>
+                            <input type="text" class="form-control" id="Bearbeiter-text" ng-model="application.bearbeiter" />
+
+                            <label for="Status-text" class="control-label">Status:</label>
+                            <input type="text" class="form-control" id="Status-text" ng-model="application.status" readonly/>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="update()">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit -->

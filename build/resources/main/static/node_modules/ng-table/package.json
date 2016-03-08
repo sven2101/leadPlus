@@ -1,0 +1,71 @@
+{
+  "name": "ng-table",
+  "version": "0.5.4",
+  "author": {
+    "name": "Vitalii Savchuk",
+    "email": "esvit666@gmail.com"
+  },
+  "license": "BSD",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/esvit/ng-table.git"
+  },
+  "devDependencies": {
+    "coveralls": "~2.11.0",
+    "grunt": "~0.4.2",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-connect": "~0.5.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-cssmin": "~0.6.1",
+    "grunt-contrib-jade": "~0.5.0",
+    "grunt-contrib-less": "~0.5.2",
+    "grunt-contrib-requirejs": "~0.4.0",
+    "grunt-contrib-uglify": "0.8.x",
+    "grunt-contrib-watch": "~0.6.x",
+    "grunt-hustler": "0.11.2",
+    "karma": "~0.12.0",
+    "karma-chrome-launcher": "~0.1.0",
+    "karma-coverage": "~0.2.0",
+    "karma-firefox-launcher": "~0.1.0",
+    "karma-jasmine": "~0.1.0",
+    "karma-ng-html2js-preprocessor": "~0.1.0",
+    "load-grunt-tasks": "~0.2.0",
+    "qq": "^0.3.5"
+  },
+  "scripts": {
+    "test": "karma start --single-run --no-auto-watch"
+  },
+  "gitHead": "a4a522125c699f490cc7f3e2c3abe7c9737259eb",
+  "description": "Table + AngularJS ================= [![Build Status](https://travis-ci.org/esvit/ng-table.png)](https://travis-ci.org/esvit/ng-table) [![Coverage Status](https://coveralls.io/repos/esvit/ng-table/badge.png)](https://coveralls.io/r/esvit/ng-table)",
+  "bugs": {
+    "url": "https://github.com/esvit/ng-table/issues"
+  },
+  "homepage": "https://github.com/esvit/ng-table",
+  "_id": "ng-table@0.5.4",
+  "_shasum": "03f461cfea5b384d8c8977351850147804287a2c",
+  "_from": "ng-table@*",
+  "_npmVersion": "2.7.5",
+  "_nodeVersion": "0.10.26",
+  "_npmUser": {
+    "name": "demands",
+    "email": "npm@maxedmands.com"
+  },
+  "maintainers": [
+    {
+      "name": "demands",
+      "email": "me@maxedmands.com"
+    },
+    {
+      "name": "goodeggs",
+      "email": "open-source@goodeggs.com"
+    }
+  ],
+  "dist": {
+    "shasum": "03f461cfea5b384d8c8977351850147804287a2c",
+    "tarball": "http://registry.npmjs.org/ng-table/-/ng-table-0.5.4.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/ng-table/-/ng-table-0.5.4.tgz"
+}
