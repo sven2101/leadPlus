@@ -4,27 +4,26 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.io.Serializable;
 
 /**
  * Created by Andreas on 10.10.2015.
  */
 @Entity
-public class Container implements Serializable {
+public class Container {
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String description;
-    private double price;
+    private double priceNetto;
 
-    protected Container(){}
+    public Container(){}
 
-    public Container(String name, String description, double price){
+    public Container(String name, String description, double priceNetto){
         this.name = name;
         this.description = description;
-        this.price = price;
+        this.priceNetto = priceNetto;
     }
 
     public Long getId () {return id; }
@@ -45,11 +44,11 @@ public class Container implements Serializable {
         this.description = description;
     }
 
-    public double getPrice() {
-        return price;
+    public double getPriceNetto() {
+        return priceNetto;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setPriceNetto(double priceNetto) {
+        this.priceNetto = priceNetto;
     }
 }

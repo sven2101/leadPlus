@@ -1,14 +1,13 @@
 package dash.usermanagement;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import dash.commentmanagement.Comment;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by Andreas on 09.10.2015.
@@ -16,7 +15,9 @@ import java.util.Set;
 @Entity
 public class User implements UserDetails{
 
-    @Id
+	private static final long serialVersionUID = 3125258392087209376L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
@@ -32,6 +33,10 @@ public class User implements UserDetails{
 
     @Enumerated(EnumType.STRING)
     private Role role;
+    
+    @OneToMany
+    @JoinColumn(name = "user_fk", nullable = false)
+	private List<Comment> comment;
 
     public User(){}
 

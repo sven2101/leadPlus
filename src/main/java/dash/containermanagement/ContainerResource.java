@@ -2,19 +2,13 @@ package dash.containermanagement;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import dash.vendormanagement.Vendor;
-import dash.vendormanagement.VendorRepository;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 /**
  * Created by Andreas on 12.10.2015.
@@ -63,7 +57,7 @@ public class ContainerResource {
                 Container container = containerRepository.findOne(id);
                 container.setName(updateContainer.getName());
                 container.setDescription(updateContainer.getDescription());
-                container.setPrice(updateContainer.getPrice());
+                container.setPriceNetto(updateContainer.getPriceNetto());
                 return container;
         }
 

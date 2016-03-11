@@ -1,19 +1,12 @@
 package dash.notificationmanagement;
 
 import com.sun.mail.smtp.SMTPMessage;
-import dash.usermanagement.User;
-import dash.usermanagement.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.mail.PasswordAuthentication;
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -21,12 +14,6 @@ import java.util.Properties;
  */
 @Service
 public class EmailNotificationService implements INotificationService {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private JavaMailSender javaMailSender;
 
     @Value("${mail.from}")
     private String mailFrom;

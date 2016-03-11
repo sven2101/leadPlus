@@ -1,45 +1,46 @@
 package dash.inquirermanagement;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.hateoas.ResourceSupport;
-import org.springframework.stereotype.Component;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
 
 /**
  * Created by Andreas on 10.10.2015.
  */
 @Entity
-public class Inquirer implements Serializable {
+public class Inquirer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private String title;
     private String firstname;
     private String lastname;
     private String company;
     private String email;
+    private String phone;
 
     public Inquirer(){}
 
-    public Inquirer(String firstname, String lastname, String company, String email){
-        this.firstname = firstname;
+    public Inquirer(String title, String firstname, String lastname, String company, String email, String phone){
+        this.title = title;
+    	this.firstname = firstname;
         this.lastname = lastname;
         this.company = company;
         this.email = email;
+        this.phone = phone;
     }
 
     public Long getId() { return id; }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) { this.title = title; }
+    
     public String getFirstname() {
         return firstname;
     }
@@ -68,5 +69,13 @@ public class Inquirer implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

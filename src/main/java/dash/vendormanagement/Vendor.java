@@ -1,19 +1,16 @@
 package dash.vendormanagement;
 
-import org.springframework.hateoas.ResourceSupport;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.io.Serializable;
 
 /**
  * Created by Andreas on 10.10.2015.
  */
 
 @Entity
-public class Vendor implements Serializable {
+public class Vendor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

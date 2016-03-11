@@ -1,19 +1,23 @@
-package dash.applicationmanagement;
+package dash.leadmanagement;
 
 import com.fasterxml.jackson.annotation.*;
 import dash.Status;
+import dash.commentmanagement.Comment;
+import dash.containermanagement.Container;
 import dash.inquirermanagement.Inquirer;
+import dash.salemanagement.Sale;
 import dash.vendormanagement.Vendor;
 
-import javax.persistence.*;
+import java.util.List;
 
-import java.io.Serializable;
+import javax.persistence.*;
 
 /**
  * Created by Andreas on 09.10.2015.
  */
 @Entity
-public class Application implements Serializable {
+@Table(indexes = { @Index(columnList = "container_fk")})
+public class Lead {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,32 +25,44 @@ public class Application implements Serializable {
 
     @JsonProperty(value = "inquirer")
     @JsonView
-    @OneToOne(cascade = CascadeType.ALL)
-   // @JoinColumn(name = "inquirer")
+    @OneToOne
+    @JoinColumn(name = "inquirer_fk")
     public Inquirer inquirer;
 
     @JsonProperty(value = "vendor")
     @JsonView
-    @OneToOne(cascade = CascadeType.ALL)
-   // @JoinColumn(name = "vendor")
+    @OneToOne
+    @JoinColumn(name = "vendor_fk")
     public Vendor vendor;
 
+    @JsonProperty(value = "container")
+    @JsonView
+    @OneToOne
+    @JoinColumn(name = "container_fk")
+    public Container container;
+    
+    @OneToOne
+    @JoinColumn(name = "sale_fk")
+    private Sale sale;
+    
     public int containerAmount;
-    public boolean transport;
     public String destination;
-    public String compareableProposal;
     public String message;
+    
+    @Enumerated(EnumType.STRING)
     public Status status;
+    
+    @OneToMany
+    @JoinColumn(name = "lead_fk", nullable = false)
+    public List<Comment> comment;
 
-    protected Application(){}
+    public Lead(){}
 
-    public Application(Inquirer inquirer, Vendor vendor, int containerAmount, boolean transport, String destination, String compareableProposal, String message, Status status){
+    public Lead(Inquirer inquirer, Vendor vendor, int containerAmount, String destination, String message, Status status){
         this.inquirer = inquirer;
         this.vendor = vendor;
         this.containerAmount = containerAmount;
-        this.transport = transport;
         this.destination = destination;
-        this.compareableProposal = compareableProposal;
         this.message = message;
         this.status = status;
     }
@@ -77,28 +93,12 @@ public class Application implements Serializable {
         this.containerAmount = containerAmount;
     }
 
-    public boolean isTransport() {
-        return transport;
-    }
-
-    public void setTransport(boolean transport) {
-        this.transport = transport;
-    }
-
     public String getDestination() {
         return destination;
     }
 
     public void setDestination(String destination) {
         this.destination = destination;
-    }
-
-    public String getCompareableProposal() {
-        return compareableProposal;
-    }
-
-    public void setCompareableProposal(String compareableProposal) {
-        this.compareableProposal = compareableProposal;
     }
 
     public String getMessage() {
@@ -117,4 +117,11 @@ public class Application implements Serializable {
         this.status = status;
     }
 
+    public Container getContainer(){
+    	return this.container;
+    }
+    
+    public void setContainer(Container container){
+    	this.container = container;
+    }
 }

@@ -1,5 +1,6 @@
-package dash.notificationmanagement;
+package dash.notificationmanagement.message;
 
+import dash.notificationmanagement.IMessage;
 import dash.usermanagement.User;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,16 +20,21 @@ public class RegistrationMessage implements IMessage {
 
     public RegistrationMessage(User recipient){
         this.recipient = recipient;
+        this.subject = "Registration";
+        this.content = "Test";
+        this.message = "You registered successfully";
     }
 
-    public String getSubject(){ return "Registration"; }
+    public String getSubject(){ 
+    	return this.subject; 
+    }
 
     public String getContent(){
-        return "Test";
+        return this.content;
     }
 
     public String getMessage(){
-        return "Registration";
+        return this.message;
     }
 
     public User getRecipient(){

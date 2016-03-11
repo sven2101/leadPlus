@@ -1,59 +1,33 @@
 package dash;
 
-
-import dash.security.CsrfHeaderFilter;
 import dash.usermanagement.Role;
 import dash.usermanagement.User;
 import dash.usermanagement.UserRepository;
-import dash.usermanagement.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
-import org.springframework.hateoas.config.EnableHypermediaSupport;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.WebUtils;
+
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-
 import com.google.common.base.Predicate;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.security.KeyPair;
 
 import static com.google.common.base.Predicates.*;
 import static springfox.documentation.builders.PathSelectors.*;
@@ -114,14 +88,23 @@ public class Application {
     public void createAdminIfNotExists() throws Exception {
         if (userRepository.findByUsername("admin") == null){
 
-            User user = new User();
+            User user1 = new User();
 
-            user.setUsername("admin".toLowerCase());
-            user.setPassword( passwordEncoder().encode("admin"));
-            user.setEmail("andreas.foitzik@live.com");
-            user.setRole(Role.ADMIN);
+            user1.setUsername("andreas".toLowerCase());
+            user1.setPassword( passwordEncoder().encode("admin"));
+            user1.setEmail("andreas.foitzik@live.com");
+            user1.setRole(Role.ADMIN);
 
-            userRepository.save(user);
+            userRepository.save(user1);
+            
+            User user2 = new User();
+
+            user2.setUsername("sven".toLowerCase());
+            user2.setPassword( passwordEncoder().encode("admin"));
+            user2.setEmail("sven-jaschkewitz@web.de");
+            user2.setRole(Role.ADMIN);
+
+            userRepository.save(user2);
         }
     }
 

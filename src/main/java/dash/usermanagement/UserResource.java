@@ -1,8 +1,5 @@
 package dash.usermanagement;
 
-import dash.notificationmanagement.IMessage;
-import dash.notificationmanagement.RegistrationMessage;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,10 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import dash.notificationmanagement.INotificationService;
+import dash.notificationmanagement.message.RegistrationMessage;
 
 /**
  * Created by Andreas on 09.10.2015.
@@ -26,9 +23,6 @@ public class UserResource {
 
     @Autowired
     private INotificationService notificationService;
-
-    @Autowired
-    private IMessage message;
 
     @Autowired
     private UserRepository userRepository;

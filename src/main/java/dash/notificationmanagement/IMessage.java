@@ -7,8 +7,9 @@ import dash.usermanagement.User;
  */
 public interface IMessage {
 
+    User getRecipient();
+	
     String getSubject();
     String getMessage();
     String getContent();
-    User getRecipient();
 }
