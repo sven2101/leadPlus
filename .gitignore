@@ -1,4 +1,8 @@
 .gradle/*
 .idea/*
+.settings/
+.classpath
+.project
 cbd.iml
 build/
+/bin/
