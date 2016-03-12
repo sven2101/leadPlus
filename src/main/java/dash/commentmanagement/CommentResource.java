@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiParam;
  */
 
 @RestController
-@RequestMapping("/api/rest/containers")
+@RequestMapping("/api/rest/comment")
 @Api(value = "containers", description = "Container API")
 public class CommentResource {
 	
