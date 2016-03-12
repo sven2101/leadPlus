@@ -4,16 +4,16 @@
 'use strict';
 
 angular.module('app.services', ['ngResource'])
-    .service('login', ['$resource', function($resource){
+    .service('login', ['$resource', function ($resource) {
         return $resource('/login', {});
     }])
-    .service('Users', ['$resource', function($resource){
+    .service('Users', ['$resource', function ($resource) {
         return $resource('api/rest/users', {});
     }])
-    .service('logout', ['$resource', function($resource){
+    .service('logout', ['$resource', function ($resource) {
         return $resource('/logout', {});
     }])
-    .service('Applications', ['$resource', function($resource){
+    .service('Applications', ['$resource', function ($resource) {
         return $resource('/applica/api/rest/applications/:id', {id: '@id'}, {
             'stateOPEN': {
                 method: 'GET',
@@ -37,15 +37,15 @@ angular.module('app.services', ['ngResource'])
             }
         });
     }])
-    .service('Inquirers', ['$resource', function($resource){
+    .service('Inquirers', ['$resource', function ($resource) {
         return $resource('api/rest/inquirers/:id', {id: '@id'});
     }])
-    .service('Vendors', ['$resource', function($resource){
+    .service('Vendors', ['$resource', function ($resource) {
         return $resource('api/rest/vendors/:id', {id: '@id'});
     }])
-    .service('Containers', ['$resource', function($resource){
+    .service('Containers', ['$resource', function ($resource) {
         return $resource('api/rest/containers/:id', {id: '@id'});
     }])
-    .service('Users', ['$resource', function($resource){
+    .service('Users', ['$resource', function ($resource) {
         return $resource('api/rest/users/:id', {id: '@id'});
     }]);

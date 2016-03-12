@@ -16,390 +16,145 @@
         </div>
     </div>
 </div>
-
-
-<!-- Plan example for container -->
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Anfrage Board</h5>
+                </div>
                 <div class="ibox-content">
-                    Example
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal START -->
-<div class="modal" id="export" tabindex="-1" role="dialog" aria-labelledby="setReminderLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="exportLabel">Datensätze exportieren</h4>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                <button type="button" class="btn btn-success" ng-click="export()"><i class="fa fa-table"></i>  Alle Anfragen als CSV exportieren</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal END -->
-
-<!-- Controller DataCtrl START -->
-<div>
-
-    <!-- Overview - row - START -->    
-    <!-- Search Panel START -->
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h3 class="panel-title">Search Panel</h3>
-        </div>
-        <div class="panel-body">
-            <div class="col-sm-3 ">
-                <div class="imaginary_container">
-                    <div class="input-group stylish-input-group">
-                        <input ng-model="searchText.username" type="text" class="form-control"  placeholder="Search for Name ... " >
-                            <span class="input-group-addon">
-                                <button type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover dataTables-example table-condensed">
+                            <thead>
+                            <tr>
+                                <th class="text-center curs">Anrede</th>
+                                <th class="text-center curs">Name</th>
+                                <th class="text-center curs">Firma</th>
+                                <th class="text-center curs">E-Mail</th>
+                                <th class="text-center curs">Telefon</th>
+                                <th class="text-center curs">Status</th>
+                                <th class="text-center curs">Anfrage Datum</th>
+                                <th class="text-center curs">Container</th>
+                                <th class="text-center curs">Menge</th>
+                                <th class="text-center curs">Preis</th>
+                                <th class="text-center curs">Anlieferort</th>
+                                <th class="text-center curs"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="curs" tablerowtoggle>
+                                <td class="text-center">Herr</td>
+                                <td class="text-center">Sven Jaschkewitz</td>
+                                <td class="text-center">Get-Net</td>
+                                <td class="text-center">sven.jaschkewitz@get-net.eu</td>
+                                <td class="text-center">01744855077</td>
+                                <td class="text-center" style="color:green">Offen</td>
+                                <td class="text-center">21.01.1992</td>
+                                <td class="text-center">Typ abc</td>
+                                <td class="text-center">5</td>
+                                <td class="text-center">150€</td>
+                                <td class="text-center">Karlsruhe</td>
+                                <td class="text-center">
+                                    <button class="btn btn-primary btn-circle" type="button" title="Zu Angebote hinzufügen"><i
+                                            class="fa fa-check"></i></button>&nbsp;&nbsp;
+                                    <button class="btn btn-danger btn-circle" type="button" data-toggle="modal" data-target="#myModal4" title="Anfrage schließen"><i
+                                            class="fa fa-ban"></i></button>&nbsp;&nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">Herr</td>
+                                <td class="text-center">Andreas Foitzik</td>
+                                <td class="text-center">Get-Net</td>
+                                <td class="text-center">Andreas.Foitzik@get-net.eu</td>
+                                <td class="text-center">01744855077</td>
+                                <td class="text-center" style="color:red">Geschlossen</td>
+                                <td class="text-center">04.12.1991</td>
+                                <td class="text-center">Typ zyx</td>
+                                <td class="text-center">3</td>
+                                <td class="text-center">850€</td>
+                                <td class="text-center">Berlin</td>
+                                <td class="text-center">
+                                    <button class="btn btn-primary btn-circle" type="button"><i
+                                            class="fa fa-check"></i></button>&nbsp;&nbsp;
+                                    <button class="btn btn-danger btn-circle" type="button" data-toggle="modal" data-target="#myModal4"><i
+                                            class="fa fa-ban"></i></button>&nbsp;&nbsp;
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th class="text-center">Anrede</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">Firma</th>
+                                <th class="text-center">E-Mail</th>
+                                <th class="text-center">Telefon</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Anfrage Datum</th>
+                                <th class="text-center">Container</th>
+                                <th class="text-center">Menge</th>
+                                <th class="text-center">Preis</th>
+                                <th class="text-center">Anlieferort</th>
+                                <th class="text-center"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></th>
+                            </tr>
+                            </tfoot>
+                        </table>
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-3 ">
-                <div class="imaginary_container">
-                    <div class="input-group stylish-input-group">
-                        <input ng-model="searchText.email" type="text" class="form-control"  placeholder="Search for Email ... " >
-                            <span class="input-group-addon">
-                                <button type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3 ">
-                <div class="imaginary_container">
-                    <div class="input-group stylish-input-group">
-                        <input ng-model="searchText.bedarf" type="text" class="form-control"  placeholder="Search for Bedarf ... " >
-                            <span class="input-group-addon">
-                                <button type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Search Panel END -->
 
-    <br/>
-    <br/>
-    
-    <!-- Applications START -->
-    <!-- Add dash.Application START -->
-    <table class="table">
-        <tbody>
-        <tr>
-            <td>
-                <div class="radio">
-                    <input type="radio" username="applicationType" value="mail" ng-model="application.type" checked>Mail<br/>
-                    <input type="radio" username="applicationType" value="call" ng-model="application.type">Call
                 </div>
-            </td>
-            <td><input class="form-control" ng-model="lead.application.username"         placeholder="Name"></td>
-            <td><input class="form-control" ng-model="lead.application.phone"        placeholder="Telefonnr"></td>
-            <td><input class="form-control" ng-model="lead.application.email"        placeholder="Email"></td>
-            <td><input class="form-control" ng-model="lead.application.need"         placeholder="Bedarf"></td>
-            <td><input class="form-control" ng-model="lead.application.transport"    placeholder="Transport"></td>
-            
-            <td width="150px;">
-                <div class="input-group date" id="dateEingang">
-                    <input type="text" class="form-control" ng-model="application.dateofreceipt" placeholder="Eingangsdatum"/>
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                </div>
-                <script type="text/javascript">
-    
-                        $('#dateEingang')
-                            .datepicker({ format: 'mm/dd/yyyy' });
-    
-                </script>
-            </td>
-            <td><input  class="form-control"    ng-model="lead.application.processor" placeholder="Bearbeiter"></td>
-            <td><button class="btn btn-primary" ng-click="lead.add(lead.application)">Add</button></td>
-            <td><button class="btn btn-info"    ng-click="lead.clear()">Clear</button></td>
-        </tr>
-        </tbody>
-    </table>
-    <!-- Add dash.Application END -->
-      
-    <table class="table" ng-table="tableParams">
-        <thead>
-        <tr>
-            <th>Art</th>
-            <th>Name</th>
-            <th>Telefonnummer</th>
-            <th>Email</th>
-            <th>Bedarf</th>
-            <th>Transport</th>
-            <th>Eingangsdatum</th>
-            <th>Bearbeiter</th>
-            <th>&nbsp;</th>
-            <th>&nbsp;</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="application in lead.applications | filter:searchText">
-            <td>
-                <!-- <i class="{{ anfrageTyp }}}" data-toggle="modal" data-target="#setReminder"></i> -->
-                {{ application.type }}
-                <!-- Modal -->
-                <div class="modal" id="setReminder" tabindex="-1" role="dialog" aria-labelledby="setReminderLabel" aria-hidden="true">
+                <div class="modal inmodal" id="myModal4" tabindex="-1" role="dialog"  aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content animated fadeIn">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="setReminderLabel">Erinnerung setzten</h4>
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title">Anfrage bearbeiten</h4>
+                                <h2>Container xy</h2>
                             </div>
                             <div class="modal-body">
-                                <form>
-                                    <div class="form-group">
-                                        <label for="notiz-text" class="control-label">Notiz:</label>
-                                        <textarea class="form-control" id="notiz-text"></textarea>
-                                    </div>
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class='col-sm-6'>
-                                                <div class="form-group">
-                                                    <div class='input-group date' id='datetimepicker1'>
-                                                        <input type='text' class="form-control" />
-                                                                <span class="input-group-addon">
-                                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                                </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <script type="text/javascript">
-    
-                                                $('#datetimepicker1')
-                                                        .datepicker({ });
-                                            </script>
-                                        </div>
-                                    </div>
+                                <form role="form" id="form">
+                                    <div class="form-group"><label>Email</label> <input type="email" placeholder="Enter email" class="form-control" required></div>
+                                    <div class="form-group"><label>Password</label> <input type="password" placeholder="Password" class="form-control" name="password"></div>
+                                    <div class="form-group"><label>Url</label> <input type="text" placeholder="Enter email" class="form-control" name="url"></div>
+                                    <div class="form-group"><label>Number</label> <input type="text" placeholder="Enter email" class="form-control" name="number"></div>
+                                    <div class="form-group"><label>MinLength</label> <input type="text" placeholder="Enter email" class="form-control" name="min"></div>
+                                    <div class="form-group"><label>MaxLength</label> <input type="text" placeholder="Enter email" class="form-control" name="max"></div>
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                                <button type="button" class="btn btn-primary">Erinnerung speichern</button>
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Abbrechen</button>
+                                <button type="button" class="btn btn-success">Speichern</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </td>
-            <td data-title="'Name'"             sortable="'username'">{{ application.username }}</td>
-            <td data-title="'Telefonnummer'"    sortable="'email'">{{ application.phone }}</td>
-            <td data-title="'Email'"            sortable="'email'">{{ application.email }}</td>
-            <td data-title="'Bedarf'"           sortable="'bedarf'">{{ application.need }}</td>
-            <td data-title="'Transport'"        sortable="'transport'">{{ application.transport }}</td>
-            <td data-title="'Eingangsdatum'"    sortable="'eingangsdatum'">{{ application.dateofreceipt }}</td>
-            <td data-title="'Bearbeiter'"       sortable="'bearbeiter'">{{ application.processor }}</td>
-            <td><button class="btn btn-danger"  ng-click="lead.remove(application.id)">Remove</button></td>
-            <td><button class="btn btn-warning" ng-click="lead.edit(application.id)" data-toggle="modal" data-target="#editApplication">Edit</button></td>
-        </tr>
-    
-        </tbody>
-    </table>
-    <!-- Applications END -->
-
-
-
-<!-- Modal -->
-
-
-    <!-- Edit -->
-    <div class="modal" id="editApplication" tabindex="-1" role="dialog" aria-labelledby="setReminderLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="setAnfrageLabel">Anfrage bearbeiten</h4>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="kind-text" class="control-label">Art:</label>
-                            
-                            <select id="kind-text" class="form-control selectpicker" ng-model="lead.application.type" >
-                                <option value="mail">mail</option>
-                                <option value="call">call</option>
-                            </select>
-
-                            <label for="Name-text" class="control-label">Name:</label>
-                            <input type="text" class="form-control" id="Name-text" ng-model="lead.username"/>
-
-                            <label for="telefonnummer-text" class="control-label">Telefonnummer:</label>
-                            <input type="text" class="form-control" id="telefonnummer-text" ng-model="lead.application.phone" />
-
-                            <label for="Email-text" class="control-label">Email:</label>
-                            <input type="text" class="form-control" id="Email-text" ng-model="lead.application.email" />
-
-                            <label for="Bedarf-text" class="control-label">Bedarf:</label>
-                            <input type="text" class="form-control" id="Bedarf-text" ng-model="lead.application.need" />
-
-                            <label for="Transport-txt" class="control-label">Transport:</label>
-                            <input type="text" class="form-control" id="Transport-txt" ng-model="lead.application.transport" />
-
-                            <label for="Eingangsdatum-text" class="control-label">Eingangsdatum:</label>
-
-                            <div class="input-group date" id="lead.application.dateofreceipt">
-                                <input class="form-control" type="text" class="form-control" id="Eingangsdatum-text"  ng-model="application.eingangsdatum" placeholder="Eingangsdatum"/>
-                                    <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                            </div>
-                            <script type="text/javascript">
-
-                                $('#editDateEingang')
-                                        .datepicker({ });
-                            </script>
-
-                            <label for="Bearbeiter-text" class="control-label">Bearbeiter:</label>
-                            <input type="text" class="form-control" id="Bearbeiter-text" ng-model="lead.application.processor" />
-
-                            <label for="Status-text" class="control-label">Status:</label>
-                            <input type="text" class="form-control" id="Status-text" ng-model="lead.application.status" readonly/>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="lead.update()">Update</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Edit -->
-</div>
-<!-- DataCtrl END -->
-
-<!-- Salescheck -->
-<div class="modal" id="salesCheck" tabindex="-1" role="dialog" aria-labelledby="setReminderLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="setReminderLabel">Sales Check</h4>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Telefon</th>
-                            <th style="width:90px;">Aktion</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="contact in searchResult">
-                            <td>{{ contact.username }}</td>
-                            <td>{{ contact.email }}</td>
-                            <td>{{ contact.telefon }}</td>
-                            <td style="width:90px;">
-                                <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="addSale(contact._id)"><i class="fa fa-plus-circle"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th>Typ Container</th>
-                                        <th>Anzahl Container</th>
-                                        <th>Transport</th>
-                                        <th>Umsatz €</th>
-                                        <th>Gewinn CB €</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td><input class="form-control" ng-model="sale.containerTyp" placeholder="Typ Container"></td>
-                                        <td><input class="form-control" ng-model="sale.containerAmount" placeholder="Anzahl Container"></td>
-                                        <td><input class="form-control" ng-model="sale.containerTransport" placeholder="Transport"></td>
-                                        <td><input class="form-control" ng-model="sale.return" placeholder="Umsatz"></td>
-                                        <td><input class="form-control" ng-model="sale.profitCB" placeholder="Gewinn CB"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><input class="form-control" placeholder="z.B. Frachtcontainer" readonly></td>
-                                        <td><input class="form-control" placeholder="30" readonly></td>
-                                        <td><input class="form-control" placeholder="Stuttgart" readonly></td>
-                                        <td><input class="form-control" placeholder="30000.50" readonly></td>
-                                        <td><input class="form-control" placeholder="3000.50" readonly></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-
-
-
-                </form>
             </div>
         </div>
     </div>
 </div>
-<!-- Salescheck -->
+<!-- Page-Level Scripts -->
+<script>
+    $(document).ready(function () {
+        $('.dataTables-example').DataTable({
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                {extend: 'copy'},
+                {extend: 'csv'},
+                {extend: 'excel', title: 'Leads'},
+                {extend: 'pdf', title: 'Leads'},
 
-    <!-- Calls -->
-        <div class="modal" id="callsCheck" tabindex="-1" role="dialog" aria-labelledby="setCallLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="setCallLabel">Calls</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th>Telefonnummer</th>
-                                    <th>Eingang</th>
-                                    <th style="width:90px;">Aktion</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="call in calls">
-                                    <td>{{ call.telefonnummer }}</td>
-                                    <td>{{ call.eingangsdatum }}</td>
-                                    <td style="width:90px;">
-                                        <div class="row">
-                                            <button class="btn btn-success" type="button" title="Angebot gesendet" ng-click="situation(call._id, 'angebot_gesendet')">
-                                                <i class="fa fa-paper-plane-o"></i>
-                                                <!--Angebot-->
-                                            </button>
-                                            <button class="btn btn-danger" type="button" title="Trash" ng-click="remove(call._id)">
-                                                <i class="fa fa-trash"></i>
-                                                <!--Trash-->
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <!-- Calls -->
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
 
-<!-- Modal -->
+                        $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                    }
+                }
+            ],
+            "order": [[ 6, "asc" ]]
+        });
+    });
+</script>

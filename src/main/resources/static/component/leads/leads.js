@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('app.lead', ['ngResource']).controller('LeadCtrl', LeadCtrl);
+angular.module('app.leads', ['ngResource']).controller('LeadsCtrl', LeadsCtrl);
 
-LeadCtrl.$inject = ["Applications"];
+LeadsCtrl.$inject = ["Applications"];
 
-function LeadCtrl(Applications) {
+function LeadsCtrl(Applications) {
 
   var applications = Applications.all();
   console.log(applications);
@@ -17,7 +17,7 @@ function LeadCtrl(Applications) {
   this.application    =    [{'id': '1', 'type': 'mail', 'name': 'Andreas', 'phone': '408 555 1212', 'email': 'andreas.foitzik@live.com', 'need': '2 Container', 'transport': 'yes', 'dateofreceipt': 'today', 'processor':'Samuel Ilg'}];
 }
 
-LeadCtrl.prototype.add = function(application) {
+LeadsCtrl.prototype.add = function(application) {
   this.type           = application.type;
   this.name           = application.name;
   this.phone          = application.phone;
@@ -28,7 +28,7 @@ LeadCtrl.prototype.add = function(application) {
   this.processor      = application.processor;
 };
 
-LeadCtrl.prototype.clear = function() {
+LeadsCtrl.prototype.clear = function() {
   this.application.name           = "";
   this.application.phone          = "";
   this.application.email          = "";
@@ -38,7 +38,7 @@ LeadCtrl.prototype.clear = function() {
   this.application.processor      = "";
 };
 
-LeadCtrl.prototype.edit = function(applicationId) {
+LeadsCtrl.prototype.edit = function(applicationId) {
   
   // get data via applicationId
   this.application.name           = "name";
@@ -51,7 +51,7 @@ LeadCtrl.prototype.edit = function(applicationId) {
 
 };
 
-LeadCtrl.prototype.remove = function(applicationId) {
+LeadsCtrl.prototype.remove = function(applicationId) {
 
   // send delete request an REST-API
 };
