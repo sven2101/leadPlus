@@ -8,6 +8,7 @@ import dash.inquirermanagement.Inquirer;
 import dash.salemanagement.Sale;
 import dash.vendormanagement.Vendor;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.*;
@@ -21,50 +22,54 @@ public class Lead {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long id;
+    private long id;
 
     @JsonProperty(value = "inquirer")
     @JsonView
     @OneToOne
     @JoinColumn(name = "inquirer_fk")
-    public Inquirer inquirer;
+    private Inquirer inquirer;
 
     @JsonProperty(value = "vendor")
     @JsonView
     @OneToOne
     @JoinColumn(name = "vendor_fk")
-    public Vendor vendor;
+    private Vendor vendor;
 
     @JsonProperty(value = "container")
     @JsonView
     @OneToOne
     @JoinColumn(name = "container_fk")
-    public Container container;
+    private Container container;
     
     @OneToOne
     @JoinColumn(name = "sale_fk")
     private Sale sale;
     
     public int containerAmount;
-    public String destination;
-    public String message;
+    private String destination;
+    private String message;
     
     @Enumerated(EnumType.STRING)
-    public Status status;
+    private Status status;
     
     @OneToMany
     @JoinColumn(name = "lead_fk", nullable = false)
-    public List<Comment> comment;
+    private List<Comment> comment;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
+    
     public Lead(){}
 
-    public Lead(Inquirer inquirer, Vendor vendor, int containerAmount, String destination, String message, Status status){
+    public Lead(Inquirer inquirer, Vendor vendor, int containerAmount, String destination, String message, Status status, Date date){
         this.inquirer = inquirer;
         this.vendor = vendor;
         this.containerAmount = containerAmount;
         this.destination = destination;
         this.message = message;
         this.status = status;
+        this.date = date;
     }
 
     public Long getId() { return id; }
@@ -123,5 +128,13 @@ public class Lead {
     
     public void setContainer(Container container){
     	this.container = container;
+    }
+    
+    public Date getDate(){
+    	return this.date;
+    }
+    
+    public void setDate(Date date){
+    	this.date = date;
     }
 }

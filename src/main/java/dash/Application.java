@@ -1,5 +1,7 @@
 package dash;
 
+import dash.security.AngularCsrfHeaderFilter;
+import dash.security.listener.RESTAuthenticationEntryPoint;
 import dash.usermanagement.Role;
 import dash.usermanagement.User;
 import dash.usermanagement.UserRepository;
@@ -11,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +21,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
@@ -116,24 +122,55 @@ public class Application {
         private UserDetailsService userDetailsService;
 
         @Autowired
-        public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-            auth.userDetailsService(userDetailsService);
-        }
+	private RESTAuthenticationEntryPoint authenticationEntryPoint;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                .httpBasic()
-                .and()
-                .authorizeRequests()
-                .antMatchers("/**",
-                        "/application/api/rest/applications**",
-                        "/application/api/rest/containers**",
-                        "/application/api/rest/inquirers**",
-                        "/application/api/rest/vendors**").permitAll()
-                .and()
-                .csrf().disable();
-        }
+		http.httpBasic().and()
+				.authorizeRequests()
+				.antMatchers("/**",			                    
+			                    "/application/api/rest/comments**",
+			                    "/application/api/rest/containers**",
+			                    "/application/api/rest/inquirers**",
+			                    "/application/api/rest/leads**",
+			                    "/application/api/rest/sales**",
+			                    "/application/api/rest/vendors**")
+				.permitAll()
+				.antMatchers(HttpMethod.DELETE, "/rest/**")
+				.authenticated()
+				.and()
+				.addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class).csrf()
+				.csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout().logoutUrl("/logout")
+				.logoutSuccessUrl("/")
+				.and()
+				.headers()
+				.frameOptions().sameOrigin()
+				.httpStrictTransportSecurity().disable();
+		
+		http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
+
+	}
+
+	private CsrfTokenRepository csrfTokenRepository() {
+		HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+		repository.setHeaderName("X-XSRF-TOKEN");
+		return repository;
+	}
+	
+	@Autowired
+	public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
+	       	auth.userDetailsService(userDetailsService);
+	}
+
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+	}
+
     }
 
 }

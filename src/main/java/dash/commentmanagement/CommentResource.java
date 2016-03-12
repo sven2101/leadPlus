@@ -48,22 +48,18 @@ public class CommentResource {
     }
     
     @RequestMapping(value="/comments/lead/{id}",
-            		method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "lead id", notes = "You have to provide a valid lead ID.")
-	public List<Comment> findByLead(@ApiParam(required=true) @PathVariable Long leadId) {
-	    return commentRepository.findByLead(leadId);
-	}
+            	method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "lead id", notes = "You have to provide a valid lead ID.")
+    public List<Comment> findByLead(@ApiParam(required=true) @PathVariable Long leadId) {
+	return commentRepository.findByLead(leadId);
+    }
     
-    @RequestMapping(value="/comments/lead/{id}",
-    				method = RequestMethod.POST,
-    				consumes = {MediaType.APPLICATION_JSON_VALUE},
-					produces = {MediaType.APPLICATION_JSON_VALUE})
-	@ResponseStatus(HttpStatus.CREATED)
-	@ApiOperation(value = "Create a Comment Entity.", notes = "Returns the URL of the new resource in the Location header.")
-	public ResponseEntity<Void> add( @RequestBody Comment comment) {
-    	commentRepository.save(comment);
-    	return new ResponseEntity<Void>(HttpStatus.OK);
-	}
+    @ApiOperation(value = "Delete a single comment.", notes = "")
+    @RequestMapping(method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@ApiParam(required=true) @PathVariable Long id) {
+	commentRepository.delete(id);
+    }
 
 }

@@ -44,7 +44,7 @@ public class UserResource {
     }
 
     @RequestMapping(method = RequestMethod.POST,
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
+	    consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> add(@RequestBody User userDto) {
@@ -53,7 +53,7 @@ public class UserResource {
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setRole(Role.ADMIN);
+        user.setRole(Role.USER);
 
         if(userRepository.findByUsername(user.getUsername()) == null && userRepository.findByEmail(user.getEmail())  == null)
             userRepository.save(user);
@@ -73,8 +73,11 @@ public class UserResource {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public User update(@PathVariable Long id, @RequestBody User updateUser) {
         User user = userRepository.findOne(id);
+        
         user.setUsername(updateUser.getUsername());
         user.setEmail(updateUser.getEmail());
+        user.setEmail(passwordEncoder.encode(updateUser.getPassword()));
+        
         return user;
     }
 
