@@ -1,53 +1,35 @@
-
-<link rel="stylesheet" href="lead.css">
-
-<!-- Menü -->
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" ng-link="dashboard()"><img src="img/Containerbasis.png" width="100px"/></a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li><a ng-link="dashboard()">Anfragen Dashboard</a></li>
-                <li><a ng-link="statistiken()">Statistiken</a></li>
-                <li class="active"><a ng-link="data()">Datensätze<span class="sr-only">(current)</span></a></li>
-                <li><a ng-link="sales()">Sales</a></li>
-            </ul>
-            <form class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Sales Check" ng-model="search">
-                </div>
-                <button type="submit" class="btn btn-default" data-toggle="modal" data-target="#salesCheck" ng-click="check()">Check</button>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li >
-                    <a data-toggle="modal" data-target="#callsCheck">
-                        <i class="fa fa-phone"></i>&nbsp;&nbsp;&nbsp;<span class="badge">{{ callAmount }}</span>
-                    </a>
-                </li>
-                <li class="dropdown">
-                    <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="" data-toggle="modal" data-target="#export">Export</a></li>
-                        <li><a ng-link="settings()">Settings</a></li>
-                        <li class="divider"></li>
-                        <li><a ng-link="logout()" ng-click="logout()">Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
+<meta charset="utf-8">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-10">
+                <h2>Anfragen</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#/dashboard">Home</a>
+                    </li>
+                    <li class="active">
+                        <strong>Anfragen</strong>
+                    </li>
+                </ol>
+            </div>
         </div>
     </div>
-</nav>
-<!-- Menü -->
+</div>
+
+
+<!-- Plan example for container -->
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    Example
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal START -->
 <div class="modal" id="export" tabindex="-1" role="dialog" aria-labelledby="setReminderLabel" aria-hidden="true">
@@ -67,7 +49,7 @@
 <!-- Modal END -->
 
 <!-- Controller DataCtrl START -->
-<div ng-controller="DataCtrl as data">
+<div>
 
     <!-- Overview - row - START -->    
     <!-- Search Panel START -->
@@ -130,11 +112,11 @@
                     <input type="radio" username="applicationType" value="call" ng-model="application.type">Call
                 </div>
             </td>
-            <td><input class="form-control" ng-model="data.application.username"         placeholder="Name"></td>
-            <td><input class="form-control" ng-model="data.application.phone"        placeholder="Telefonnr"></td>
-            <td><input class="form-control" ng-model="data.application.email"        placeholder="Email"></td>
-            <td><input class="form-control" ng-model="data.application.need"         placeholder="Bedarf"></td>
-            <td><input class="form-control" ng-model="data.application.transport"    placeholder="Transport"></td>
+            <td><input class="form-control" ng-model="lead.application.username"         placeholder="Name"></td>
+            <td><input class="form-control" ng-model="lead.application.phone"        placeholder="Telefonnr"></td>
+            <td><input class="form-control" ng-model="lead.application.email"        placeholder="Email"></td>
+            <td><input class="form-control" ng-model="lead.application.need"         placeholder="Bedarf"></td>
+            <td><input class="form-control" ng-model="lead.application.transport"    placeholder="Transport"></td>
             
             <td width="150px;">
                 <div class="input-group date" id="dateEingang">
@@ -150,9 +132,9 @@
     
                 </script>
             </td>
-            <td><input  class="form-control"    ng-model="data.application.processor" placeholder="Bearbeiter"></td>
-            <td><button class="btn btn-primary" ng-click="data.add(data.application)">Add</button></td>
-            <td><button class="btn btn-info"    ng-click="data.clear()">Clear</button></td>
+            <td><input  class="form-control"    ng-model="lead.application.processor" placeholder="Bearbeiter"></td>
+            <td><button class="btn btn-primary" ng-click="lead.add(lead.application)">Add</button></td>
+            <td><button class="btn btn-info"    ng-click="lead.clear()">Clear</button></td>
         </tr>
         </tbody>
     </table>
@@ -174,7 +156,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="application in data.applications | filter:searchText">
+        <tr ng-repeat="application in lead.applications | filter:searchText">
             <td>
                 <!-- <i class="{{ anfrageTyp }}}" data-toggle="modal" data-target="#setReminder"></i> -->
                 {{ application.type }}
@@ -228,8 +210,8 @@
             <td data-title="'Transport'"        sortable="'transport'">{{ application.transport }}</td>
             <td data-title="'Eingangsdatum'"    sortable="'eingangsdatum'">{{ application.dateofreceipt }}</td>
             <td data-title="'Bearbeiter'"       sortable="'bearbeiter'">{{ application.processor }}</td>
-            <td><button class="btn btn-danger"  ng-click="data.remove(application.id)">Remove</button></td>
-            <td><button class="btn btn-warning" ng-click="data.edit(application.id)" data-toggle="modal" data-target="#editApplication">Edit</button></td>
+            <td><button class="btn btn-danger"  ng-click="lead.remove(application.id)">Remove</button></td>
+            <td><button class="btn btn-warning" ng-click="lead.edit(application.id)" data-toggle="modal" data-target="#editApplication">Edit</button></td>
         </tr>
     
         </tbody>
@@ -254,29 +236,29 @@
                         <div class="form-group">
                             <label for="kind-text" class="control-label">Art:</label>
                             
-                            <select id="kind-text" class="form-control selectpicker" ng-model="data.application.type" >
+                            <select id="kind-text" class="form-control selectpicker" ng-model="lead.application.type" >
                                 <option value="mail">mail</option>
                                 <option value="call">call</option>
                             </select>
 
                             <label for="Name-text" class="control-label">Name:</label>
-                            <input type="text" class="form-control" id="Name-text" ng-model="data.username"></input>
+                            <input type="text" class="form-control" id="Name-text" ng-model="lead.username"/>
 
                             <label for="telefonnummer-text" class="control-label">Telefonnummer:</label>
-                            <input type="text" class="form-control" id="telefonnummer-text" ng-model="data.application.phone" />
+                            <input type="text" class="form-control" id="telefonnummer-text" ng-model="lead.application.phone" />
 
                             <label for="Email-text" class="control-label">Email:</label>
-                            <input type="text" class="form-control" id="Email-text" ng-model="data.application.email" />
+                            <input type="text" class="form-control" id="Email-text" ng-model="lead.application.email" />
 
                             <label for="Bedarf-text" class="control-label">Bedarf:</label>
-                            <input type="text" class="form-control" id="Bedarf-text" ng-model="data.application.need" />
+                            <input type="text" class="form-control" id="Bedarf-text" ng-model="lead.application.need" />
 
                             <label for="Transport-txt" class="control-label">Transport:</label>
-                            <input type="text" class="form-control" id="Transport-txt" ng-model="data.application.transport" />
+                            <input type="text" class="form-control" id="Transport-txt" ng-model="lead.application.transport" />
 
                             <label for="Eingangsdatum-text" class="control-label">Eingangsdatum:</label>
 
-                            <div class="input-group date" id="data.application.dateofreceipt">
+                            <div class="input-group date" id="lead.application.dateofreceipt">
                                 <input class="form-control" type="text" class="form-control" id="Eingangsdatum-text"  ng-model="application.eingangsdatum" placeholder="Eingangsdatum"/>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
@@ -289,16 +271,16 @@
                             </script>
 
                             <label for="Bearbeiter-text" class="control-label">Bearbeiter:</label>
-                            <input type="text" class="form-control" id="Bearbeiter-text" ng-model="data.application.processor" />
+                            <input type="text" class="form-control" id="Bearbeiter-text" ng-model="lead.application.processor" />
 
                             <label for="Status-text" class="control-label">Status:</label>
-                            <input type="text" class="form-control" id="Status-text" ng-model="data.application.status" readonly/>
+                            <input type="text" class="form-control" id="Status-text" ng-model="lead.application.status" readonly/>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="data.update()">Update</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="lead.update()">Update</button>
                 </div>
             </div>
         </div>

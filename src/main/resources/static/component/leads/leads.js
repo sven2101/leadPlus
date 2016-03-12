@@ -2,7 +2,7 @@
 
 angular.module('app.lead', ['ngResource']).controller('LeadCtrl', LeadCtrl);
 
-DataCtrl.$inject = ["Applications"];
+LeadCtrl.$inject = ["Applications"];
 
 function LeadCtrl(Applications) {
 
