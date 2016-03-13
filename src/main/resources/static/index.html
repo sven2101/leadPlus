@@ -20,7 +20,10 @@
 </head>
 <body>
 
-<div id="wrapper">
+<div ng-show="!authenticated" class="md-skin gray-bg dashbard-1" ng-view></div>
+<!-- <div ng-show="!authenticated" class="md-skin" ng-view></div> -->
+
+<div ng-show="authenticated" id="wrapper">
 	<nav class="navbar-default navbar-static-side" role="navigation" style="position: fixed; height: 100%;">
 		<div class="sidebar-collapse">
 			<ul class="nav metismenu" id="side-menu">
@@ -224,7 +227,6 @@
 <script src="component/sales/sales.js"></script>
 <script src="component/settings/settings.js"></script>
 <script src="component/statistics/statistics.js"></script>
-<script src="component/signup/signup.js"></script>
 <!-- Local Inclusions -->
 
 </body>

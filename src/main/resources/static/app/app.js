@@ -13,7 +13,6 @@ angular.module('app', [
     'app.sales',
     'app.settings',
     'app.statistics',
-    'app.signup',
 	'pascalprecht.translate',
 	'ngResource',
     'ngRoute',
@@ -53,10 +52,10 @@ angular.module('app')
 		  controller: 'SettingsCtrl',
 		  controllerAs: 'settings'
 	  })
-	  .when('/signup', {
-		  templateUrl: 'component/signup/signup.html',
-		  controller: 'SignUpCtrl',
-		  controllerAs: "signup"
+	  .when('/registration', {
+		  templateUrl: 'component/registration/registration.html',
+		  controller: 'RegistrationCtrl',
+		  controllerAs: "registration"
 	  })
 		.when('/login', {
 			templateUrl: 'component/login/login.html',
@@ -71,7 +70,52 @@ angular.module('app')
 	 .otherwise({
 	    redirectTo: '/'
 	  })
-	}]);
+	  
+	  // $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+
+	}])
+	.run(function($location, $http, $rootScope) {
+		
+		// register listener to watch route changes
+	 	/*
+		$rootScope.$on("$locationChangeStart", function(event, next, current) {
+
+	 		if($location.path() === "/upload" && $rootScope.authenticated === false) {	
+	 			$location.path('/login');	
+	 		}
+	 		
+	 		if($location.path() === "/settings" && $rootScope.authenticated === false) {	
+	 			$location.path('/login');
+	 		}
+	    });
+	 	 */
+		
+		$rootScope.user = [];
+		$rootScope.getUser = function() {
+			$http.get('./user').success(
+	      		function(data, status, headers, config) {
+	      			if (data.name !== null) {
+                    	$rootScope.user = data.name;
+                    	$rootScope.authenticated = true;
+                    	$rootScope.authority = data.role;
+                    }
+	      		}).error(function(data, status, headers, config) {
+					$rootScope.authenticated = false;
+	    		}); 	
+		};
+			
+		$rootScope.getUser();
+			
+		$rootScope.logout = function() {
+			$http.post('logout', {}).success(function() {
+				$rootScope.authenticated = false;
+				$location.path("/login");
+			}).error(function(data) {
+				$location.path("/login");
+				$rootScope.authenticated = false;
+			});
+		};
+});;
 
 angular.module('app').controller('appCtrl', function($translate,$scope) {
 	$scope.changeLanguage = function (langKey) {
