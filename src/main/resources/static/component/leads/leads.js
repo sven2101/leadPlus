@@ -3,55 +3,30 @@
 angular.module('app.leads', ['ngResource']).controller('LeadsCtrl', LeadsCtrl);
 
 LeadsCtrl.$inject = ["Applications"];
-
-function LeadsCtrl(Applications) {
-
-  var applications = Applications.all();
-  console.log(applications);
-  this.applications = [
-    {'id': '1', 'type': 'mail', 'name': 'Andreas', 'phone': '408 555 1212', 'email': 'andreas.foitzik@live.com', 'need': '2 Container', 'transport': 'yes', 'dateofreceipt': 'today', 'processor':'Samuel Ilg'},
-    {'id': '2', 'type': 'mail', 'name': 'Andreas', 'phone': '408 555 1212', 'email': 'andreas.foitzik@live.com', 'need': '2 Container', 'transport': 'yes', 'dateofreceipt': 'today', 'processor':'Samuel Ilg'},
-    {'id': '3', 'type': 'mail', 'name': 'Andreas', 'phone': '408 555 1212', 'email': 'andreas.foitzik@live.com', 'need': '2 Container', 'transport': 'yes', 'dateofreceipt': 'today', 'processor':'Samuel Ilg'},
-    {'id': '4', 'type': 'mail', 'name': 'Andreas', 'phone': '408 555 1212', 'email': 'andreas.foitzik@live.com', 'need': '2 Container', 'transport': 'yes', 'dateofreceipt': 'today', 'processor':'Samuel Ilg'}
-  ];
-  this.application    =    [{'id': '1', 'type': 'mail', 'name': 'Andreas', 'phone': '408 555 1212', 'email': 'andreas.foitzik@live.com', 'need': '2 Container', 'transport': 'yes', 'dateofreceipt': 'today', 'processor':'Samuel Ilg'}];
+function LeadsCtrl(Applications,$scope) {
+    //var applications = Applications.all();
 }
 
-LeadsCtrl.prototype.add = function(application) {
-  this.type           = application.type;
-  this.name           = application.name;
-  this.phone          = application.phone;
-  this.email          = application.email;
-  this.need           = application.need;
-  this.transport      = application.transport;
-  this.dateofreceipt  = application.dateofreceipt;
-  this.processor      = application.processor;
-};
+LeadsCtrl.addLeadToOffer = function (data,table,tableRowElement) {
+    data.status = "Follow up";
+    table.row(tableRowElement).data(data).draw();
+    //window.alert("Anfrage von " + data.name + " mit der ID:" + data.id + " zu angebot hinzufügen!");
+}
 
-LeadsCtrl.prototype.clear = function() {
-  this.application.name           = "";
-  this.application.phone          = "";
-  this.application.email          = "";
-  this.application.need           = "";
-  this.application.transport      = "";
-  this.application.dateofreceipt  = "";
-  this.application.processor      = "";
-};
+LeadsCtrl.closeLead = function (data,table,tableRowElement,cell) {
+    data.status = "Geschlossen";
+    cell.css('color', 'red');
+    table.row(tableRowElement).data(data).draw();
+    //window.alert("Anfrage von " + data.name + " mit der ID:" + data.id + " schließen!");
+}
 
-LeadsCtrl.prototype.edit = function(applicationId) {
-  
-  // get data via applicationId
-  this.application.name           = "name";
-  this.application.phone          = "phone";
-  this.application.email          = "email";
-  this.application.need           = "need";
-  this.application.transport      = "transport";
-  this.application.dateofreceipt  = "dateofreceipt";
-  this.application.processor      = "processor";
+LeadsCtrl.editLead = function (data,table,tableRowElement) {
+    data.name="new Name";
+    table.row(tableRowElement).data(data).draw();
+   //window.alert("Anfrage von " + data.name + " mit der ID:" + data.id + " editieren!");
+}
 
-};
-
-LeadsCtrl.prototype.remove = function(applicationId) {
-
-  // send delete request an REST-API
-};
+LeadsCtrl.removeLead = function (data,tableRowElement) {
+    //window.alert("Anfrage von " + data.name + " mit der ID:" + data.id + " löschen!");
+    tableRowElement.remove();
+}
