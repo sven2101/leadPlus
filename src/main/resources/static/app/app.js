@@ -18,7 +18,10 @@ angular.module('app', [
     'pascalprecht.translate',
     'ngResource',
     'ngRoute',
-    'ngAnimate'
+    'ngAnimate',
+    'datatables',
+    'datatables.bootstrap',
+    'datatables.buttons'
 ]);
 
 angular.module('app')
@@ -85,3 +88,4 @@ angular.module('app').controller('appCtrl', function ($translate, $scope) {
         $scope.language = langKey;
     };
 });
+

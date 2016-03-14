@@ -42,38 +42,19 @@
                     <h5>Anfrage Board</h5>
                 </div>
                 <div class="ibox-content">
-                    <div class="table-responsive">
-                        <table id="example"
-                               class="table table-striped table-bordered table-hover table-condensed text-center">
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th class="text-center">Name</th>
-                                <th class="text-center">Firma</th>
-                                <th class="text-center">E-Mail</th>
-                                <th class="text-center">Telefon</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Datum</th>
-                                <th class="text-center curs"><span class="glyphicon glyphicon-cog"
-                                                                   aria-hidden="true"></span></th>
-                            </tr>
-                            </thead>
-                            <tfoot>
-                            <tr>
-                                <th></th>
-                                <th class="text-center">Name</th>
-                                <th class="text-center">Firma</th>
-                                <th class="text-center">E-Mail</th>
-                                <th class="text-center">Telefon</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Datum</th>
-                                <th class="text-center curs"><span class="glyphicon glyphicon-cog"
-                                                                   aria-hidden="true"></span></th>
-                            </tr>
-                            </tfoot>
-                        </table>
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#newLeadModal">
+                        <i class="fa fa-plus"></i>&nbsp;Add Lead
+                    </button>
+                    <button ng-click="lead.refreshData()" type="button" class="btn btn-success">
+                        <i class="fa fa-refresh"></i>&nbsp;Reload data
+                    </button>
+                    <p class="text-danger"><strong>{{ lead.message }}</strong></p>
+                    <div style="overflow:auto;">
+                        <table datatable="" dt-options="lead.dtOptions" dt-columns="lead.dtColumns"
+                               dt-instance="lead.dtInstance"
+                               class="table table-striped table-bordered table-hover table-condensed text-center"
+                               style="width:100%;"></table>
                     </div>
-
                 </div>
                 <div class="modal inmodal" id="editModal" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog">
@@ -86,45 +67,133 @@
                             </div>
                             <div class="modal-body">
                                 <form role="form" id="form">
-                                    <div class="form-group"><label>{{ lead.editName }}</label> <input type="text"
+                                    <div class="form-group"><label>Name</label> <input type="text"
                                                                                        placeholder="Enter Name"
-                                                                                       class="form-control" id="name" ng-model="lead.editName">
+                                                                                       class="form-control"
+                                                                                       id="name"
+                                                                                       ng-model="lead.editLead.firstName">
                                     </div>
                                     <div class="form-group"><label>Firma</label> <input type="text"
                                                                                         placeholder="Enter Firma"
-                                                                                        class="form-control"></div>
+                                                                                        class="form-control"
+                                                                                        ng-model="lead.editLead.lastName">
+                                    </div>
                                     <div class="form-group"><label>E-Mail</label> <input type="email"
                                                                                          placeholder="Enter Email"
-                                                                                         class="form-control">
+                                                                                         class="form-control"
+                                                                                         ng-model="lead.editLead.email">
                                     </div>
                                     <div class="form-group"><label>Telefon</label> <input type="text"
                                                                                           placeholder="Enter Telefon"
-                                                                                          class="form-control"></div>
+                                                                                          class="form-control"
+                                                                                          ng-model="lead.editLead.name">
+                                    </div>
                                     <div class="form-group"><label>Datum</label> <input type="text"
                                                                                         placeholder="Enter Datum"
                                                                                         class="form-control"
-                                    ></div>
+                                                                                        ng-model="lead.editLead.name">
+                                    </div>
                                     <div class="form-group"><label>Container</label> <input type="text"
                                                                                             placeholder="Enter Container"
                                                                                             class="form-control"
-                                    ></div>
+                                                                                            ng-model="lead.editLead.name">
+                                    </div>
                                     <div class="form-group"><label>Menge</label> <input type="number"
                                                                                         placeholder="Enter Menge"
                                                                                         class="form-control"
-                                    ></div>
+                                                                                        ng-model="lead.editLead.name">
+                                    </div>
                                     <div class="form-group"><label>Preis</label> <input type="number"
                                                                                         placeholder="Enter Preis"
                                                                                         class="form-control"
-                                    ></div>
+                                                                                        ng-model="lead.editLead.name">
+                                    </div>
                                     <div class="form-group"><label>Lieferort</label> <input type="text"
                                                                                             placeholder="Enter Lieferort"
                                                                                             class="form-control"
-                                    ></div>
+                                                                                            ng-model="lead.editLead.name">
+                                    </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-white" data-dismiss="modal">Abbrechen</button>
-                                <button type="button" class="btn btn-success">Speichern</button>
+                                <button type="button" class="btn btn-success" ng-click="lead.saveEditedRow()"
+                                        data-dismiss="modal">Speichern
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal inmodal" id="newLeadModal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content animated fadeIn">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span
+                                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title">Anfrage erstellen</h4>
+                                <h2>Container xy</h2>
+                            </div>
+                            <div class="modal-body">
+                                <form role="form" id="newLeadForm">
+                                    <div class="form-group"><label>Name</label> <input type="text"
+                                                                                       placeholder="Enter Name"
+                                                                                       class="form-control required"
+                                                                                       id="newLeadName"
+                                                                                       ng-model="lead.newLead.firstName"
+
+                                    >
+                                    </div>
+                                    <div class="form-group"><label>Firma</label> <input type="text"
+                                                                                        placeholder="Enter Firma"
+                                                                                        class="form-control required"
+                                                                                        ng-model="lead.newLead.lastName"
+                                    >
+                                    </div>
+                                    <div class="form-group"><label>E-Mail</label> <input type="email"
+                                                                                         placeholder="Enter Email"
+                                                                                         class="form-control"
+                                                                                         ng-model="lead.newLead.email"
+                                    >
+                                    </div>
+                                    <div class="form-group"><label>Telefon</label> <input type="text"
+                                                                                          placeholder="Enter Telefon"
+                                                                                          class="form-control"
+                                                                                          ng-model="lead.newLead.name">
+                                    </div>
+                                    <div class="form-group"><label>Datum</label> <input type="text"
+                                                                                        placeholder="Enter Datum"
+                                                                                        class="form-control"
+                                                                                        ng-model="lead.newLead.name"
+                                                                                        required>
+                                    </div>
+                                    <div class="form-group"><label>Container</label> <input type="text"
+                                                                                            placeholder="Enter Container"
+                                                                                            class="form-control"
+                                                                                            ng-model="lead.newLead.name"
+                                                                                            required>
+                                    </div>
+                                    <div class="form-group"><label>Menge</label> <input type="number"
+                                                                                        placeholder="Enter Menge"
+                                                                                        class="form-control"
+                                                                                        ng-model="lead.newLead.name"
+                                                                                        required>
+                                    </div>
+                                    <div class="form-group"><label>Preis</label> <input type="number"
+                                                                                        placeholder="Enter Preis"
+                                                                                        class="form-control"
+                                                                                        ng-model="lead.newLead.name">
+                                    </div>
+                                    <div class="form-group"><label>Lieferort</label> <input type="text"
+                                                                                            placeholder="Enter Lieferort"
+                                                                                            class="form-control"
+                                                                                            ng-model="lead.newLead.name">
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Abbrechen</button>
+                                <button type="submit" class="btn btn-success" ng-click="lead.saveLead()">Speichern
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -133,146 +202,3 @@
         </div>
     </div>
 </div>
-<!-- Page-Level Scripts -->
-<script>
-    /* Formatting function for row details - modify as you need */
-    function format(d) {
-        // `d` is the original data object for the row
-        return ' <div class="row">' +
-                '<div class="col-lg-6">' +
-                '<div class="ibox">' +
-                '<div class="ibox-title">' +
-                ' <h3>Container Information</h3>' +
-                '  </div>' +
-                ' <div class="ibox-content">' +
-                '<table class="table table-bordered text-left">' +
-                '<tr>' +
-                '<td>Name</td>' +
-                '<td>' + d.anrede + ' ' + d.name + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td>Container</td>' +
-                '<td>' + d.containerTyp + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td>Menge</td>' +
-                '<td>' + d.amount + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td>Preis</td>' +
-                '<td>' + d.price + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td>Lieferort</td>' +
-                '<td>' + d.delivery + '</td>' +
-                '</tr>' +
-                '</table></div></div> </div>' +
-                '<div class="col-lg-6">' +
-                '<div class="ibox">' +
-                '<div class="ibox-title">' +
-                ' <h3>Notiz</h3>' +
-                '</div>' +
-                ' <div class="ibox-content text-left">' + d.notiz + '</div>' +
-                '</div> </div> </div>';
-    }
-
-    $(document).ready(function () {
-        var table = $('#example').DataTable({
-            "ajax": "http://demo8978930.mockable.io/test",
-            "columns": [
-                {
-                    "className": 'details-control',
-                    "orderable": false,
-                    "data": null,
-                    "defaultContent": ''
-                },
-                {"data": "name"},
-                {"data": "firma"},
-                {"data": "mail"},
-                {"data": "telefon"},
-                {"data": "status"},
-                {"data": "datum"},
-                {
-                    "className": 'td-settings',
-                    "orderable": false,
-                    "data": null,
-                    "defaultContent": '<button id="addToOffer" class="btn btn-primary btn-circle" title="Angebot erstellen">' +
-                    '<i class="fa fa-check"></i></button> &nbsp;&nbsp; <button id="closeInquiry" class="btn btn-warning btn-circle" type="button" title="Anfrage schließen">' +
-                    '<i class="fa fa-ban"></i></button> &nbsp;&nbsp; <button  id="editInquiry" class="btn btn-success btn-circle" type="button" data-toggle="modal"' +
-                    'data-target="#editModal"title="Anfrage bearbeiten">' +
-                    '<i class="fa fa-pencil-square-o"></i></button> &nbsp;&nbsp; <button id="deleteInquiry" class="btn btn-danger btn-circle" type="button" title="Anfrage löschen">' +
-                    '<i class="fa fa-times"></i></button>'
-                }
-            ],
-            "aoColumnDefs": [{
-                "aTargets": [5],
-                "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
-                    if (oData.status == "Offen") {
-                        $(nTd).css('color', 'green')
-                    } else if (oData.status == "Geschlossen") {
-                        $(nTd).css('color', 'red')
-                    }
-                }
-            }],
-
-
-            buttons: [
-                {extend: 'copy'},
-                {extend: 'csv'},
-                {extend: 'excel', title: 'Leads'},
-                {extend: 'pdf', title: 'Leads'},
-
-                {
-                    extend: 'print',
-                    customize: function (win) {
-                        $(win.document.body).addClass('white-bg');
-                        $(win.document.body).css('font-size', '10px');
-
-                        $(win.document.body).find('table')
-                                .addClass('compact')
-                                .css('font-size', 'inherit');
-                    }
-                }
-            ],
-            "order": [[6, 'desc']]
-        });
-
-        // Add event listener for opening and closing details
-        $('#example tbody').on('click', 'td.details-control', function () {
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
-
-            if (row.child.isShown()) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            }
-            else {
-                // Open this row
-                row.child(format(row.data())).show();
-                tr.addClass('shown');
-            }
-        });
-        $('#example tbody').on('click', '#addToOffer', function () {
-            var tableRowElement = $(this).parents('tr');
-            var data = table.row(tableRowElement).data();
-            LeadsCtrl.addLeadToOffer(data, table, tableRowElement);
-        });
-        $('#example tbody').on('click', '#closeInquiry', function () {
-            var tableRowElement = $(this).parents('tr');
-            var cell = $(table.cell({row: table.row(tableRowElement).index(), column: 5}).node());
-            var data = table.row(tableRowElement).data();
-            LeadsCtrl.closeLead(data, table, tableRowElement, cell);
-        });
-        $('#example tbody').on('click', '#editInquiry', function () {
-            var tableRowElement = $(this).parents('tr');
-            var data = table.row(tableRowElement).data();
-            LeadsCtrl.editLead(data, table, tableRowElement);
-        });
-        $('#example tbody').on('click', '#deleteInquiry', function () {
-            var tableRowElement = $(this).parents('tr');
-            var data = table.row(tableRowElement).data();
-            LeadsCtrl.removeLead(data, tableRowElement);
-        });
-    });
-</script>
