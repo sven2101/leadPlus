@@ -3,7 +3,7 @@ package dash.usermanagement;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import dash.commentmanagement.Comment;
+import dash.processmanagement.commentmanagement.Comment;
 
 import javax.persistence.*;
 import java.util.Collection;

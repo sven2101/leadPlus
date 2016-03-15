@@ -19,7 +19,7 @@ public class PrincipleResource {
     	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<Map<String, String>> getUser(Principal user) {
 		
-		Map<String, String> map = new LinkedHashMap();
+		Map<String, String> map = new LinkedHashMap<String, String>();
 		
 		if(user == null)
 			return new ResponseEntity<Map<String, String>>(map, HttpStatus.UNAUTHORIZED);

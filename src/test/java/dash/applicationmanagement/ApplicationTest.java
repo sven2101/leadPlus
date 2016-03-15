@@ -1,7 +1,9 @@
 package dash.applicationmanagement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dash.inquirermanagement.Inquirer;
+
+import dash.processmanagement.leadmanagement.inquirermanagement.Inquirer;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
