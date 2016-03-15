@@ -2,7 +2,7 @@ package dash.applicationmanagement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dash.processmanagement.leadmanagement.inquirermanagement.Inquirer;
+import dash.processmanagement.lead.inquirer.Inquirer;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

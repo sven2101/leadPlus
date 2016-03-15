@@ -12,13 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonView;
-
-import dash.processmanagement.commentmanagement.Comment;
-import dash.processmanagement.leadmanagement.Lead;
-import dash.processmanagement.offermanagement.Offer;
-import dash.processmanagement.salemanagement.Sale;
+import dash.processmanagement.comment.Comment;
+import dash.processmanagement.lead.Lead;
+import dash.processmanagement.offer.Offer;
+import dash.processmanagement.sale.Sale;
 import dash.processmanagement.status.Status;
 import dash.usermanagement.User;
 
