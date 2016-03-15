@@ -23,8 +23,18 @@ function LeadsCtrl(Applications, DTOptionsBuilder, DTColumnBuilder, $compile, $s
         .withButtons([
             'copyHtml5',
             'print',
-            'csvHtml5',
-            'excelHtml5',
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [1, 2, 3]
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [1, 2, 3]
+                }
+            },
             'pdfHtml5'
         ])
         .withBootstrap()
@@ -34,7 +44,8 @@ function LeadsCtrl(Applications, DTOptionsBuilder, DTColumnBuilder, $compile, $s
         DTColumnBuilder.newColumn(null).withTitle('').notSortable()
             .renderWith(addDetailButton),
         DTColumnBuilder.newColumn('id').withTitle('ID'),
-        DTColumnBuilder.newColumn('firstName').withTitle('First name'),
+        DTColumnBuilder.newColumn(null).withTitle('First name')
+            .renderWith(addStatusStyle),
         DTColumnBuilder.newColumn('lastName').withTitle('Last name'),
         DTColumnBuilder.newColumn(null).withTitle('').notSortable()
             .renderWith(addActionsButtons)
@@ -47,11 +58,21 @@ function LeadsCtrl(Applications, DTOptionsBuilder, DTColumnBuilder, $compile, $s
 
     function addActionsButtons(data, type, full, meta) {
         vm.leads[data.id] = data;
-        return '<button class="btn btn-primary" ng-click="lead.followUp(lead.leads[' + data.id + '])" title="Angebot erstellen'+data.id+'">' +
+        var disabled = '';
+        var openOrLock = 'Anfrage schließen';
+        var faOpenOrLOck = 'fa fa-lock';
+        if (data.id % 2 == 0) {
+            disabled = 'disabled';
+            openOrLock = 'Anfrage Öffnen';
+            faOpenOrLOck = 'fa fa-unlock';
+        }
+
+
+        return '<button class="btn btn-primary" ' + disabled + ' ng-click="lead.followUp(lead.leads[' + data.id + '])" title="Angebot erstellen' + data.id + '">' +
             '   <i class="fa fa-check"></i>' +
             '</button>&nbsp;' +
-            '<button class="btn btn-warning" ng-click="lead.closeInquiry(lead.leads[' + data.id + '])" title="Anfrage Schließen">' +
-            '   <i class="fa fa-ban"></i>' +
+            '<button class="btn btn-warning" ng-click="lead.closeInquiry(lead.leads[' + data.id + '])" title="' + openOrLock + '">' +
+            '   <i class="' + faOpenOrLOck + '"></i>' +
             '</button>&nbsp;' +
             '<button class="btn btn-success" ng-click="lead.loadDataToModal(lead.leads[' + data.id + '])" data-toggle="modal"' +
             'data-target="#editModal" title="Anfrage bearbeiten">' +
@@ -62,6 +83,17 @@ function LeadsCtrl(Applications, DTOptionsBuilder, DTColumnBuilder, $compile, $s
             '</button>';
     }
 
+    function addStatusStyle(data, type, full, meta) {
+        vm.leads[data.id] = data;
+        if (data.id % 2 == 0) {
+            return '<div style="color: red;">' + data.firstName + '</div>'
+        }
+        else {
+            return '<div style="color: green;">' + data.firstName + '</div>'
+        }
+    }
+
+
     function addDetailButton(data, type, full, meta) {
         vm.leads[data.id] = data;
         return '<a class="green shortinfo" href="javascript:;"' +
@@ -70,10 +102,18 @@ function LeadsCtrl(Applications, DTOptionsBuilder, DTColumnBuilder, $compile, $s
     }
 }
 
+LeadsCtrl.prototype.submitForm = function() {
+    // check to make sure the form is completely valid
+    if(this.scope.editForm.$valid) {
+        alert('our form is amazing');
+    }
+}
+
 LeadsCtrl.prototype.saveLead = function () {
     this.message = 'Save new lead:' + this.newLead.firstName;
-    this.newLead.firstName="";
+    this.newLead.firstName = "";
 }
+
 
 LeadsCtrl.prototype.refreshData = function () {
     var resetPaging = false;
@@ -81,11 +121,12 @@ LeadsCtrl.prototype.refreshData = function () {
     this.message = 'refresh table';
 }
 
+
 LeadsCtrl.prototype.followUp = function (lead) {
     this.message = 'You are trying to generate an offer of the row: ' + JSON.stringify(lead);
     // Delete some data and call server to make changes...
     // Then reload the data so that DT is refreshed
-    this.dtInstance.reloadData();
+    //this.dtInstance.reloadData();
 }
 
 LeadsCtrl.prototype.closeInquiry = function (lead) {
