@@ -1,0 +1,89 @@
+
+<div class="middle-box text-center loginscreen animated fadeInDown">
+    <div>
+        <div>
+
+            <h1 class="logo-name">CB+</h1>
+
+        </div>
+        <h3>Register to CB+</h3>
+        <p>Create an account to see it in action.</p>
+        <form name="registration" class="m-t" role="form">
+            <div class="form-group" ng-class="{  'has-success': 	!registration.username.$error.required &&
+            														!registration.username.$error.username &&
+																	!registration.username.$error.usernameExists &&
+																	!usernameExists	,
+												 'has-error': 		registration.username.$error.required ||
+												 					registration.username.$error.minlength ||
+				        											registration.username.$error.maxlength ||
+				        											registration.username.$error.usernameExists ||
+				        											usernameExists 	}">
+				        									
+                <input 	type="text" 
+            			id="username"
+            			name="username"
+            			class="form-control"
+            			placeholder="Username"
+            			required
+            			ng-model="user.username"
+         		    	ng-minlength="2" 
+       					ng-maxlength="20" 
+       					ng-blur="signup.uniqueUsername(user.username)">
+       			
+       			<span ng-show="usernameExists" class="help-block">Username is already in use.</span>		
+       			<span ng-show="registration.username.$error.minlength" class="help-block">Username is too short min. 2 chars</span>
+            	<span ng-show="registration.username.$error.maxlength" class="help-block">Username is too long max. 20 chars</span>
+         	</div>
+         	
+            <div class="form-group" ng-class="{ 'has-success': 	!registration.email.$error.required &&
+																!registration.email.$error.email && 
+																!registration.email.$error.emailExists &&
+																!emailExists ,
+												'has-error': 	registration.email.$error.email ||
+																registration.email.$error.emailExists ||
+																emailExists	 }">
+                <input  type="email" 
+            			id="email"
+            			name="email"
+            			class="form-control" 
+            			placeholder="Email"
+            			required
+            			ng-model="user.email"
+            			ng-blur="signup.uniqueEmail(user.email)">
+            			
+            	<span ng-show="emailExists" class="help-block">Email Address is already in use.</span>
+            	<span ng-show="registration.email.$error.email" class="help-block">Enter a valid email!</span>
+            	<span ng-show="registration.email.$error.emailExists" class="help-block">Email already exists!</span>
+            </div>
+            <div class="form-group" ng-class="{ 'has-success has-feedback': 	!registration.password.$error.required &&
+																				!registration.password.$error.minlength &&
+																				!registration.password.$error.maxlength  ,
+												'has-error has-feedback': 		registration.password.$error.minlength ||
+																				registration.password.$error.maxlength	 }">
+                <input  type="password" 
+            			id="password"
+            			name="password"
+            			class="form-control"
+            			placeholder="Password"
+            			required
+            			ng-model="user.password" 
+	    		        ng-minlength="6" 
+	       				ng-maxlength="20">
+	       				
+	       		<span ng-show="registration.password.$dirty && registration.password.$error.required" class="help-block">Password is required</span>
+            	<span ng-show="registration.password.$error.minlength" class="help-block">Password is too short min. 6 chars</span>
+            	<span ng-show="registration.password.$error.maxlength" class="help-block">Password is too long max. 20 chars</span>
+            </div>
+            
+            <button type="button"
+            		id="registration"
+            		ng-disabled="registration.$invalid || vm.dataLoading || emailExists || usernameExists" 
+            		ng-click="signup.signup(user);"
+            		class="btn btn-success block full-width m-b">Register</button>
+            
+            <p class="text-muted text-center"><small>Login after your Signed Up.</small></p>		
+            <a class="btn btn-sm btn-white btn-block" href="#/login">Login</a>
+            
+        </form>
+    </div>
+</div>

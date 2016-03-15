@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -75,7 +77,7 @@ public class Application {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Applica")
-                .description("Applica is meant to manage your appliaction")
+                .description("Applica is meant to manage your leadss")
                 .license("")
                 .licenseUrl("")
                 .version("1.0")
@@ -92,30 +94,29 @@ public class Application {
 
     @PostConstruct
     public void createAdminIfNotExists() throws Exception {
-        if (userRepository.findByUsername("admin") == null){
 
-            User user1 = new User();
+        User user1 = new User();
 
-            user1.setUsername("andreas".toLowerCase());
-            user1.setPassword( passwordEncoder().encode("admin"));
-            user1.setEmail("andreas.foitzik@live.com");
-            user1.setRole(Role.ADMIN);
+        user1.setUsername("andreas".toLowerCase());
+        user1.setPassword( passwordEncoder().encode("admin"));
+        user1.setEmail("andreas.foitzik@live.com");
+        user1.setRole(Role.ADMIN);
 
-            userRepository.save(user1);
-            
-            User user2 = new User();
+        userRepository.save(user1);
+        
+        User user2 = new User();
 
-            user2.setUsername("sven".toLowerCase());
-            user2.setPassword( passwordEncoder().encode("admin"));
-            user2.setEmail("sven-jaschkewitz@web.de");
-            user2.setRole(Role.ADMIN);
+        user2.setUsername("sven".toLowerCase());
+        user2.setPassword( passwordEncoder().encode("admin"));
+        user2.setEmail("sven-jaschkewitz@web.de");
+        user2.setRole(Role.ADMIN);
 
-            userRepository.save(user2);
-        }
+        userRepository.save(user2);
     }
 
     @EnableWebSecurity
     @Configuration
+    @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
     public static class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Autowired
@@ -132,19 +133,28 @@ public class Application {
 
 		http.httpBasic().and()
 				.authorizeRequests()
-				.antMatchers("/**",			                    
+				.antMatchers(HttpMethod.GET, "/application/**").permitAll()
+				.antMatchers("application/user/**").permitAll()
+				.antMatchers("application/**",
+					    "/user",
+					    "/application/user",
 			                    "/application/api/rest/comments**",
 			                    "/application/api/rest/containers**",
 			                    "/application/api/rest/inquirers**",
 			                    "/application/api/rest/leads**",
 			                    "/application/api/rest/sales**",
-			                    "/application/api/rest/vendors**")
+			                    "/application/api/rest/vendors**",
+			                    "/application/api/rest/registrations**")
 				.permitAll()
-				.antMatchers(HttpMethod.DELETE, "/rest/**")
-				.authenticated()
 				.and()
-				.addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class).csrf()
-				.csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout().logoutUrl("/logout")
+				.addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
+				.csrf()
+				.csrfTokenRepository(csrfTokenRepository())
+				.and()
+				.csrf()
+				.disable()
+				.logout()
+				.logoutUrl("/logout")
 				.logoutSuccessUrl("/")
 				.and()
 				.headers()
@@ -152,18 +162,12 @@ public class Application {
 				.httpStrictTransportSecurity().disable();
 		
 		http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
-
 	}
 
 	private CsrfTokenRepository csrfTokenRepository() {
 		HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
 		repository.setHeaderName("X-XSRF-TOKEN");
 		return repository;
-	}
-	
-	@Autowired
-	public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
-	       	auth.userDetailsService(userDetailsService);
 	}
 
 	@Autowired

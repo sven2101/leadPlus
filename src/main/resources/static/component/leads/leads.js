@@ -2,11 +2,8 @@
 
 angular.module('app.lead', ['ngResource']).controller('LeadCtrl', LeadCtrl);
 
-LeadCtrl.$inject = ["Applications"];
+function LeadCtrl() {
 
-function LeadCtrl(Applications) {
-
-  var applications = Applications.all();
   console.log(applications);
   this.applications = [
     {'id': '1', 'type': 'mail', 'name': 'Andreas', 'phone': '408 555 1212', 'email': 'andreas.foitzik@live.com', 'need': '2 Container', 'transport': 'yes', 'dateofreceipt': 'today', 'processor':'Samuel Ilg'},

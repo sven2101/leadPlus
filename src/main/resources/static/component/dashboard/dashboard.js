@@ -4,9 +4,9 @@ angular.module('app.dashboard', ['ngResource']);
 
 angular.module('app.dashboard').controller('DashboardCtrl', DashboardCtrl);
 
-DashboardCtrl.$inject = ["Applications"];
+DashboardCtrl.$inject = [];
 
-function DashboardCtrl(Applications) {
+function DashboardCtrl() {
 
     var anfrage = {
         "inquirer":{
@@ -22,7 +22,7 @@ function DashboardCtrl(Applications) {
         "container":[
             {
                 "name": "Seecontainer",
-                "description": "Für hohe See geeignet",
+                "description": "Fï¿½r hohe See geeignet",
                 "price": 30.00
             }
         ],
@@ -33,7 +33,7 @@ function DashboardCtrl(Applications) {
         "message": "Hallo Herr Ilg",
         "status": "OPEN"
     };
-
+/*
     Applications.save(anfrage, function (){
         console.log("save succesfull");
     });
@@ -44,8 +44,8 @@ function DashboardCtrl(Applications) {
 
     this.applicationsStateOPEN      = Applications.stateOPEN();
     this.applicationStateOPENAmount = this.applicationsStateOPEN.length;
-    console.log("Länge: ", this.applicationsStateOPEN);
-    console.log("Länge: ", this.applicationsStateOPEN.length);
+    console.log("Lï¿½nge: ", this.applicationsStateOPEN);
+    console.log("Lï¿½nge: ", this.applicationsStateOPEN.length);
 
     this.applicationsStateFOLLOW    = Applications.stateFOLLOW();
     this.applicationStateFOLLOWAmount = this.applicationsStateFOLLOW.length;
@@ -68,6 +68,8 @@ function DashboardCtrl(Applications) {
             console.log(test);
         });
     };
+    
+    */
 }
 
 

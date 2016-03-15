@@ -9,113 +9,103 @@ angular.module('app', [
     'app.dashboard',
     'app.lead',
     'app.login',
-    'app.logout',
+    'app.signup',
     'app.sales',
     'app.settings',
     'app.statistics',
 	'pascalprecht.translate',
 	'ngResource',
     'ngRoute',
-	'ngAnimate'
+	'ngAnimate',
+	'ngCookies'
 ]);
 
 angular.module('app')
-    .config(['$routeProvider', function($routeProvider) {
+    .config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
     $routeProvider
 		.when('/', {
 			templateUrl: 'component/dashboard/dashboard.html',
 			controller: 'DashboardCtrl',
-			controllerAs: 'dashboard'
+			controllerAs: 'dashboard',
+			authenticated: true
 		})
-	  .when('/dashboard', {
-		  templateUrl: 'component/dashboard/dashboard.html',
-		  controller: 'DashboardCtrl',
-		  controllerAs: 'dashboard'
-	  })
-	  .when('/lead', {
-		  templateUrl: 'component/leads/leads.html',
-		  controller: 'LeadCtrl',
-		  controllerAs: 'lead'
-	  })
-	  .when('/sales', {
-		  templateUrl: 'component/sales/sales.html',
-		  controller: 'SalesCtrl',
-		  controllerAs: 'sales'
-	  })
-		.when('/statistic', {
+		.when('/dashboard', {
+			templateUrl: 'component/dashboard/dashboard.html',
+			controller: 'DashboardCtrl',
+			controllerAs: 'dashboard',
+			authenticated: true
+		})
+		.when('/leads', {
+			templateUrl: 'component/leads/leads.html',
+		  	controller: 'LeadCtrl',
+		  	controllerAs: 'lead',
+			authenticated: true
+		})
+		.when('/sales', {
+			templateUrl: 'component/sales/sales.html',
+			controller: 'SalesCtrl',
+			controllerAs: 'sales',
+			authenticated: true
+		})
+		.when('/statistics', {
 			templateUrl:'component/statistics/statistics.html',
 			controller: 'StatisticsCtrl',
-			controllerAs: 'statistics'
+			controllerAs: 'statistics',
+			authenticated: true
 		})
-	  .when('/settings', {
-		  templateUrl: 'component/settings/settings.html',
-		  controller: 'SettingsCtrl',
-		  controllerAs: 'settings'
-	  })
-	  .when('/registration', {
-		  templateUrl: 'component/registration/registration.html',
-		  controller: 'RegistrationCtrl',
-		  controllerAs: "registration"
-	  })
+		.when('/settings', {
+			templateUrl: 'component/settings/settings.html',
+			controller: 'SettingsCtrl',
+			controllerAs: 'settings',
+			authenticated: true
+		})
+		.when('/registration', {
+			templateUrl: 'component/registration/registration.html',
+			controller: 'RegistrationCtrl',
+			controllerAs: "registration"
+		})
 		.when('/login', {
 			templateUrl: 'component/login/login.html',
 			controller: 'LoginCtrl',
 			controllerAs: 'login'
 		})
-		.when('/logout', {
-			templateUrl: 'component/logout/logout.html',
-			controller: 'LogoutCtrl',
-			controllerAs: 'logout'
+		.when('/signup', {
+			templateUrl: 'component/signup/signup.html',
+			controller: 'SignUpCtrl',
+			controllerAs: 'signup'
 		})
-	 .otherwise({
-	    redirectTo: '/'
-	  })
+		.otherwise({
+			redirectTo: '/'
+		})
 	  
-	  // $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+	   $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
 	}])
-	.run(function($location, $http, $rootScope) {
+	.run([ '$location', '$http', '$rootScope', 'Auth', '$cookieStore', function($location, $http, $rootScope, Auth, $cookieStore) {
 		
-		// register listener to watch route changes
-	 	/*
-		$rootScope.$on("$locationChangeStart", function(event, next, current) {
-
-	 		if($location.path() === "/upload" && $rootScope.authenticated === false) {	
-	 			$location.path('/login');	
-	 		}
-	 		
-	 		if($location.path() === "/settings" && $rootScope.authenticated === false) {	
-	 			$location.path('/login');
-	 		}
+        $rootScope.globals = $cookieStore.get('globals') || {};
+        if ($rootScope.globals.currentUser) {
+            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authorization;
+            console.log("authorization: ", $rootScope.globals.currentUser.authorization);
+        } 
+		
+ 		$rootScope.$on('$routeChangeStart', function(event, next, current) {
+		
+	 		if(next.authenticated === true) {
+	 			if(!$rootScope.globals.currentUser) {
+	 				$location.path('/login');	
+	 			}
+	 		}	
 	    });
-	 	 */
 		
-		$rootScope.user = [];
-		$rootScope.getUser = function() {
-			$http.get('./user').success(
-	      		function(data, status, headers, config) {
-	      			if (data.name !== null) {
-                    	$rootScope.user = data.name;
-                    	$rootScope.authenticated = true;
-                    	$rootScope.authority = data.role;
-                    }
-	      		}).error(function(data, status, headers, config) {
-					$rootScope.authenticated = false;
-	    		}); 	
-		};
-			
-		$rootScope.getUser();
-			
 		$rootScope.logout = function() {
-			$http.post('logout', {}).success(function() {
-				$rootScope.authenticated = false;
-				$location.path("/login");
-			}).error(function(data) {
-				$location.path("/login");
-				$rootScope.authenticated = false;
-			});
+			Auth.logout();
+			console.log("Successful logout.");
 		};
-});;
+	    
+	 }]);
+
+
 
 angular.module('app').controller('appCtrl', function($translate,$scope) {
 	$scope.changeLanguage = function (langKey) {

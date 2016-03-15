@@ -2,44 +2,38 @@
 
 angular.module('app.login', ['ngResource']).controller('LoginCtrl', LoginCtrl);
 
-LoginCtrl.$inject = ['$scope', '$rootScope', '$location', '$http'];
+LoginCtrl.$inject = ['$rootScope', '$location', 'Auth', '$scope'];
 
-function LoginCtrl() {
-		  
-}
+function LoginCtrl($rootScope, $location, Auth, $scope) {
 
-LoginCtrl.login = function(credentials) {
-
-	console.log("Credentials: ", credentials);
+	this.login = function(credentials) {
+		Auth.login( credentials,
+			        function(res) {
+			            $location.path('/dashoard');
+			        },
+			        function(err) {
+			        	$scope.credentials.password = "";
+			        	toastr.options = {
+			        			  "closeButton": true,
+			        			  "debug": false,
+			        			  "newestOnTop": false,
+			        			  "progressBar": false,
+			        			  "positionClass": "toast-top-right",
+			        			  "preventDuplicates": false,
+			        			  "onclick": null,
+			        			  "showDuration": "300",
+			        			  "hideDuration": "1000",
+			        			  "timeOut": "5000",
+			        			  "extendedTimeOut": "1000",
+			        			  "showEasing": "swing",
+			        			  "hideEasing": "linear",
+			        			  "showMethod": "fadeIn",
+			        			  "hideMethod": "fadeOut"
+			        			}
+			        	
+			        	toastr.error('Login faild, please try again.');        	
+			        }
+		        );
+	};
 	
-    var headers = credentials ? {authorization : "Basic " + btoa(credentials.username + ":" + credentials.password) } : {};
-
-    $http.get('user', {headers : headers}).success(function(data) {
-      if (data.name) {
-        $rootScope.authenticated = true;
-      } else {
-        $rootScope.authenticated = false;
-      }
-      
-      if ($rootScope.authenticated) {
-          $location.path("/");
-          $scope.error = false;
-      } else {
-          $location.path("/login");
-          $scope.error = true;
-      }
-      
-    }).error(function() {
-      $rootScope.authenticated = false;
-      
-      if ($rootScope.authenticated) {
-          $location.path("/");
-          $scope.error = false;
-      } else {
-          $location.path("/login");
-          $scope.error = true;
-      }
-      
-    });
-};
-
+}

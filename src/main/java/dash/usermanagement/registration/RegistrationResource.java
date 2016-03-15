@@ -1,8 +1,5 @@
 package dash.usermanagement.registration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +20,7 @@ import dash.usermanagement.User;
 import dash.usermanagement.UserRepository;
 
 @RestController
-@RequestMapping("/registrations")
+@RequestMapping("/api/rest/registrations")
 public class RegistrationResource {
 
     @Autowired
@@ -57,28 +54,26 @@ public class RegistrationResource {
     }
     
     @RequestMapping( 	value="/unique/email",
-    	    		method = RequestMethod.GET,
-    	    		consumes = {MediaType.APPLICATION_JSON_VALUE},
-    	    		produces = {MediaType.APPLICATION_JSON_VALUE})
+    	    		method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Boolean> uniqueEmail(@RequestBody String email) {
 
 	boolean found = false;
-	if (userRepository.findByEmail(email) != null)
+	User user = userRepository.findByEmail(email);
+	if (user != null)
 	    found = true;
 	    
         return new ResponseEntity<Boolean>(found, HttpStatus.OK);
     }
     
     @RequestMapping(	value="/unique/username",
-	    		method = RequestMethod.GET,
-	    		consumes = {MediaType.APPLICATION_JSON_VALUE},
-	    		produces = {MediaType.APPLICATION_JSON_VALUE})
+	    		method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Boolean> uniqueUsername(@RequestBody String username) {
 
 	boolean found = false;
-	if (userRepository.findByUsername(username) != null)
+	User user = userRepository.findByUsername(username);
+	if (user != null)
 	    found = true;
 	    
         return new ResponseEntity<Boolean>(found, HttpStatus.OK);

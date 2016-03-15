@@ -1,9 +1,20 @@
 package dash.usermanagement.registration;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class Registration {
 
+    @NotNull
+    @Size(min=2, max=30)
     private String username;
+    
+    @NotNull
+    @Size(min=2, max=30)
     private String password;
+    
+    @NotNull
+    @Size(min=2, max=50)
     private String email;
     
     public Registration(){

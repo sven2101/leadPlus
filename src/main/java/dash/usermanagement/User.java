@@ -22,13 +22,13 @@ public class User implements UserDetails{
     @Column(name = "id")
     private Long id;
 
-    @Column(unique = true, length = 16, nullable = false)
+    @Column(unique = true, length = 30, nullable = false)
     private String username;
 
     @Column(length = 50, nullable = false)
     private String email;
 
-    @Column(length = 80, nullable = false)
+    @Column(length = 60, nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
