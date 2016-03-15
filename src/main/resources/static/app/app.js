@@ -14,7 +14,6 @@ angular.module('app', [
     'app.settings',
     'app.login',
     'app.logout',
-    'app.directives',
     'pascalprecht.translate',
     'ngResource',
     'ngRoute',
