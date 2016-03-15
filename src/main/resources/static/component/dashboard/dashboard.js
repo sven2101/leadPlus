@@ -1,94 +1,87 @@
 'use strict';
 
-angular.module('app.dashboard', ['ngResource']);
+angular.module('app.dashboard', ['ngResource']).controller('DashboardCtrl', DashboardCtrl);
 
-angular.module('app.dashboard').controller('DashboardCtrl', DashboardCtrl);
 
 DashboardCtrl.$inject = [];
 function DashboardCtrl() {
-    var tmpList = [];
 
-    this.rawScreens = [
-        [{
-            icon: './img/icons/facebook.jpg',
-            title: 'Facebook (a)',
-            link: 'http://www.facebook.com'
-        }, {
-            icon: './img/icons/youtube.jpg',
-            title: 'Youtube (a)',
-            link: 'http://www.youtube.com'
-        }, {
-            icon: './img/icons/gmail.jpg',
-            title: 'Gmail (a)',
-            link: 'http://www.gmail.com'
-        }, {
-            icon: './img/icons/google+.jpg',
-            title: 'Google+ (a)',
-            link: 'http://plus.google.com'
-        }, {
-            icon: './img/icons/twitter.jpg',
-            title: 'Twitter (a)',
-            link: 'http://www.twitter.com'
-        }, {
-            icon: './img/icons/yahoomail.jpg',
-            title: 'Yahoo Mail (a)',
-            link: 'http://mail.yahoo.com'
-        }, {
-            icon: './img/icons/pinterest.jpg',
-            title: 'Pinterest (a)',
-            link: 'http://www.pinterest.com'
-        }],
-        [{
-            icon: './img/icons/facebook.jpg',
-            title: 'Facebook (b)',
-            link: 'http://www.facebook.com'
-        }, {
-            icon: './img/icons/youtube.jpg',
-            title: 'Youtube (b)',
-            link: 'http://www.youtube.com'
-        }, {
-            icon: './img/icons/gmail.jpg',
-            title: 'Gmail (b)',
-            link: 'http://www.gmail.com'
-        }, {
-            icon: './img/icons/google+.jpg',
-            title: 'Google+ (b)',
-            link: 'http://plus.google.com'
-        }, {
-            icon: './img/icons/twitter.jpg',
-            title: 'Twitter (b)',
-            link: 'http://www.twitter.com'
-        }, {
-            icon: './img/icons/yahoomail.jpg',
-            title: 'Yahoo Mail (b)',
-            link: 'http://mail.yahoo.com'
-        }, {
-            icon: './img/icons/pinterest.jpg',
-            title: 'Pinterest (b)',
-            link: 'http://www.pinterest.com'
-        }]
-    ];
-
-    this.list1 = this.rawScreens[0];
-    this.list2 = this.rawScreens[1];
-
-
-    this.sortingLog = [];
+    var vm = this;
+    this.infoData = {};
+    this.openLead = [{
+        name: 'lead1',
+        locked: false
+    },
+        {
+            name: 'lead2',
+            locked: false
+        }];
+    this.openOffer = [{
+        name: 'offer1',
+        locked: false
+    },
+        {
+            name: 'offer2',
+            locked: false
+        }];
+    this.sales = [{
+        name: 'sale1',
+        locked: true
+    },
+        {
+            name: 'sale2',
+            locked: true
+        }];
 
     this.sortableOptions = {
-        placeholder: "app",
-        connectWith: ".apps-container"
+        update: function (e, ui) {
+            var target = ui.item.sortable.droptargetModel;
+            var source = ui.item.sortable.sourceModel;
+            if ((vm.openLead == target && vm.openOffer == source) || target == source) {
+                ui.item.sortable.cancel();
+            }
+        },
+        stop: function (e, ui) {
+            var target = ui.item.sortable.droptargetModel;
+            var item = ui.item.sortable.model;
+            if (vm.sales == target) {
+                vm.sales.sort(vm.SortByName)
+                item.locked = true;
+            }
+            var fromIndex = ui.item.sortable.index;
+            var toIndex = ui.item.sortable.dropindex;
+        },
+        connectWith: ".connectList",
+        items: "li:not(.not-sortable)"
     };
-    var vm = this;
-    this.logModels = function () {
-        vm.sortingLog = [];
-        for (var i = 0; i < vm.rawScreens.length; i++) {
-            var logEntry = vm.rawScreens[i].map(function (x) {
-                return x.title;
-            }).join(', ');
-            logEntry = 'container ' + (i + 1) + ': ' + logEntry;
-            vm.sortingLog.push(logEntry);
-        }
-    }
 }
 
+DashboardCtrl.prototype.saveDataToModal = function (data) {
+    this.infoData = data;
+}
+DashboardCtrl.prototype.refreshData = function () {
+    this.openLead = [{
+        name: 'lead3',
+        locked: false
+    },
+        {
+            name: 'lead4',
+            locked: false
+        }];
+    this.openOffer = [{
+        name: 'offer5',
+        locked: false
+    },
+        {
+            name: 'offer6',
+            locked: false
+        }];
+    this.sales = [{
+        name: 'sale7',
+        locked: true
+    },
+        {
+            name: 'sale8',
+            locked: true
+        }];
+}
