@@ -1,0 +1,42 @@
+<div class="modal inmodal" id="editModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Anfrage bearbeiten</h4>
+                <h2>Container xy</h2>
+            </div>
+            <div class="modal-body">
+                <form name="editForm" ng-submit="lead.submitForm()" novalidate>
+
+                    <!-- NAME -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : editForm.name.$invalid && !editForm.name.$pristine }">
+                        <label>Name</label>
+                        <input type="text" name="name" class="form-control"
+                               ng-model="lead.editLead.firstName" required>
+                        <p ng-show="editForm.name.$invalid && !editForm.name.$pristine"
+                           class="help-block">You name is required.</p>
+                    </div>
+
+                    <!-- EMAIL -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : editForm.email.$invalid && !editForm.email.$pristine }">
+                        <label>Email</label>
+                        <input type="email" name="email" class="form-control"
+                               ng-model="lead.editLead.lastName">
+                        <p ng-show="editForm.email.$invalid && !editForm.email.$pristine"
+                           class="help-block">Enter a valid email.</p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Abbrechen</button>
+                <button type="submit" class="btn btn-success" ng-disabled="editForm.$invalid"
+                        data-dismiss="modal">Speichern
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
