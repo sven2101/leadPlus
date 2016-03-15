@@ -20,7 +20,8 @@ angular.module('app', [
 	'ngCookies',
     'datatables',
     'datatables.bootstrap',
-    'datatables.buttons'
+    'datatables.buttons',
+    'ui.sortable'
 ]);
 
 angular.module('app')
