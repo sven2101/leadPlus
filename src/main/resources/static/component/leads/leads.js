@@ -3,8 +3,8 @@
 angular.module('app.leads', ['ngResource']).controller('LeadsCtrl', LeadsCtrl);
 
 
-LeadsCtrl.$inject = ["Applications", 'DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope'];
-function LeadsCtrl(Applications, DTOptionsBuilder, DTColumnBuilder, $compile, $scope) {
+LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope'];
+function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope) {
 
     var vm = this;
     this.scope = $scope;

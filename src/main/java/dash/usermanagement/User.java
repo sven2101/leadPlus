@@ -15,20 +15,20 @@ import java.util.List;
 @Entity
 public class User implements UserDetails{
 
-	private static final long serialVersionUID = 3125258392087209376L;
+    private static final long serialVersionUID = 3125258392087209376L;
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(unique = true, length = 16, nullable = false)
+    @Column(unique = true, length = 30, nullable = false)
     private String username;
 
     @Column(length = 50, nullable = false)
     private String email;
 
-    @Column(length = 80, nullable = false)
+    @Column(length = 60, nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -36,14 +36,19 @@ public class User implements UserDetails{
     
     @OneToMany
     @JoinColumn(name = "user_fk", nullable = false)
-	private List<Comment> comment;
+    private List<Comment> comment;
 
+    private String profilPictureURL;
+    private String defaultLanguage;
+    
     public User(){}
 
-    public User(String firstName, String lastName, String email, String username, String passwordHash){
-        this.email = email;
+    public User(String username, String firstName, String lastName, String email, String passwordHash, String profilPictureURL, String defaultLanguage){
         this.username = username;
+	this.email = email;
         this.password = passwordHash;
+        this.profilPictureURL = profilPictureURL;
+        this.defaultLanguage = defaultLanguage;
     }
 
     public Long getId()
@@ -92,6 +97,22 @@ public class User implements UserDetails{
     public String getPassword()
     {
         return password;
+    }
+
+    public String getProfilPictureURL() {
+        return profilPictureURL;
+    }
+
+    public void setProfilPictureURL(String profilPictureURL) {
+        this.profilPictureURL = profilPictureURL;
+    }
+
+    public String getDefaultLanguage() {
+        return defaultLanguage;
+    }
+
+    public void setDefaultLanguage(String defaultLanguage) {
+        this.defaultLanguage = defaultLanguage;
     }
 
     @Override

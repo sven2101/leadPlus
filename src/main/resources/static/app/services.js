@@ -4,48 +4,62 @@
 'use strict';
 
 angular.module('app.services', ['ngResource'])
-    .service('login', ['$resource', function ($resource) {
-        return $resource('/login', {});
-    }])
-    .service('Users', ['$resource', function ($resource) {
-        return $resource('api/rest/users', {});
-    }])
-    .service('logout', ['$resource', function ($resource) {
-        return $resource('/logout', {});
-    }])
-    .service('Applications', ['$resource', function ($resource) {
-        return $resource('/applica/api/rest/applications/:id', {id: '@id'}, {
-            'stateOPEN': {
-                method: 'GET',
-                url: '/applica/api/rest/applications/state/OPEN',
-                isArray: true
-            },
-            'stateFOLLOW': {
-                method: 'GET',
-                url: '/applica/api/rest/applications/state/FOLLOW',
-                isArray: true
-            },
-            'stateCLOSED': {
-                method: 'GET',
-                url: '/applica/api/rest/applications/state/CLOSED',
-                isArray: true
-            },
-            'all': {
-                method: 'GET',
-                url: '/applica/api/rest/applications/',
-                isArray: true
-            }
-        });
-    }])
-    .service('Inquirers', ['$resource', function ($resource) {
-        return $resource('api/rest/inquirers/:id', {id: '@id'});
-    }])
-    .service('Vendors', ['$resource', function ($resource) {
-        return $resource('api/rest/vendors/:id', {id: '@id'});
-    }])
-    .service('Containers', ['$resource', function ($resource) {
-        return $resource('api/rest/containers/:id', {id: '@id'});
-    }])
-    .service('Users', ['$resource', function ($resource) {
-        return $resource('api/rest/users/:id', {id: '@id'});
-    }]);
+    .service('Auth', function($http, $rootScope, $cookieStore, $location, $window){
+	
+	    return {
+		        	
+	        signup: function(user, success, error) {
+	            
+	            $http.post('./api/rest/registrations', user, {
+	    	        headers: {'Content-Type': "application/json"}
+	    	    })
+	    	    .success(success)
+	    	    .error(error);
+	        },
+	
+	        login: function(credentials, success, error) {
+	            
+		        if(credentials) {
+		        	
+	    	    	var authorization = btoa(credentials.username + ":" + credentials.password);
+		        	var headers = credentials ? {authorization : "Basic " + authorization} : {};
+	
+		    	    $http.get('user', {headers : headers}).success(function(data) {
+		    	    		    	    	
+			    	    if (data.username) {
+			    	    			    	    	
+			    	    	$rootScope.globals = {
+			    	                currentUser: {
+			    	                    username: data.username,
+			    	                    authorization: authorization
+			    	                }
+			    	            };
+			    	    	
+			    	    	$http.defaults.headers.common['Authorization'] = 'Basic ' + authorization;
+			                $cookieStore.put('globals', $rootScope.globals);
+			                
+			    	    	success(data);
+			    	    } else {
+			    	    }	    	      
+		    	    }).error(error);
+		        	
+		        }
+	        },
+	
+	        logout: function() {
+	           		
+	        	$rootScope.globals = {};
+	        	console.log("Globals: ", $rootScope.globals)
+	            $cookieStore.remove('globals');
+	            $http.defaults.headers.common.Authorization = 'Basic';
+	        	
+				$http.post('logout', {})
+					.success(function() {					    
+						$location.path("#/login");
+					  })
+					 .error(function(data) {					    
+						$location.path("#/login");
+					  });
+	       }
+	    };
+	});

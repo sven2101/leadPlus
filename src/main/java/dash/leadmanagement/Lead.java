@@ -6,6 +6,7 @@ import dash.commentmanagement.Comment;
 import dash.containermanagement.Container;
 import dash.inquirermanagement.Inquirer;
 import dash.salemanagement.Sale;
+import dash.usermanagement.User;
 import dash.vendormanagement.Vendor;
 
 import java.util.Date;
@@ -45,20 +46,26 @@ public class Lead {
     @OneToOne
     @JoinColumn(name = "sale_fk")
     private Sale sale;
-    
-    public int containerAmount;
-    private String destination;
-    private String message;
-    
-    @Enumerated(EnumType.STRING)
-    private Status status;
-    
+      
     @OneToMany
     @JoinColumn(name = "lead_fk", nullable = false)
     private List<Comment> comment;
 
+    @JsonProperty(value = "processor")
+    @JsonView
+    @OneToOne
+    @JoinColumn(name = "processor_fk")
+    private User processor;
+    
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+        
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    
+    private int containerAmount;
+    private String destination;
+    private String message;
     
     public Lead(){}
 
@@ -136,5 +143,13 @@ public class Lead {
     
     public void setDate(Date date){
     	this.date = date;
+    }
+    
+    public User getProcessor(){
+    	return this.processor;
+    }
+    
+    public void setProcessor(User processor){
+    	this.processor = processor;
     }
 }

@@ -1,108 +1,89 @@
-<link rel="stylesheet" href="css/signup.css">
 
-<script>
-    $(document).ready(function() {
-        $('#registrationForm').formValidation({
-            framework: 'bootstrap',
-            icon: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
-            },
-            fields: {
-                username: {
-                    validators: {
-                        notEmpty: {
-                            message: 'The username is required'
-                        },
-                        stringLength: {
-                            min: 6,
-                            max: 30,
-                            message: 'The username must be more than 6 and less than 30 characters long'
-                        },
-                        regexp: {
-                            regexp: /^[a-zA-Z0-9_]+$/,
-                            message: 'The username can only consist of alphabetical, number and underscore'
-                        }
-                    }
-                },
-                password: {
-                    validators: {
-                        notEmpty: {
-                            message: 'The password is required'
-                        }
-                    }
-                }
-            }
-        });
-    });
-</script>
+<div class="middle-box text-center loginscreen animated fadeInDown">
+    <div>
+        <div>
 
-<div class="centered-logo">
-    <img src="img/Containerbasis.png" width="100%" />
-</div>
+            <h1 class="logo-name">CB+</h1>
 
-<br/>
-<br/>
-
-<div class="container">
-    <h1 class="well">Registration</h1>
-    <div class="col-lg-12 well" ng-controller="SignUpCtrl as signup">
-        <div class="row">
-            <form name="registrationForm">
-                <div class="col-sm-12">
-                    <div class="form-group" ng-class=" {'has-success has-feedback' :    !registrationForm.firstname.$error.required &&
-                                                                                        !registrationForm.firstname.$error.minlength &&
-                                                                                        !registrationForm.firstname.$error.maxlength }">
-                        <label>Firstname</label>
-                        <input type="text"
-                               id="firstname"
-                               name="firstname"
-                               placeholder="Firstname"
-                               class="form-control"
-                               ng-model="user.firstname"
-                               ng-minlength="3"
-                               ng-maxlength="20"
-                               required />
-                        <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
-
-                        <span ng-show="registrationForm.firstname.$invalid" class="help-block" >Enter your Firstname</span>
-                        <span ng-show="registrationForm.firstname.$error.required" class="help-block" >Enter your Firstname</span>
-                        <span ng-show="registrationForm.firstname.$error.minlength" class="help-block" >Your Firstname is too short, min. 3 chars</span>
-                        <span ng-show="registrationForm.firstname.$error.maxlength" class="help-block" >Your Lastname is too short, min. 3 chars</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Lastname</label>
-                        <input type="text" placeholder="Lastname" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" placeholder="Username" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" placeholder="Email" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label>Email Confirmation</label>
-                        <input type="email" placeholder="Enter Email Address Here.." class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" placeholder="Email" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label>Password Confirmation</label>
-                        <input type="password" placeholder="Enter Email Address Here.." class="form-control">
-                    </div>
-
-                    <br/>
-                    <br/>
-
-                    <button type="button" class="btn btn-lg btn-info">Submit</button>
-                </div>
-            </form>
         </div>
+        <h3>Register to CB+</h3>
+        <p>Create an account to see it in action.</p>
+        <form name="registration" class="m-t" role="form">
+            <div class="form-group" ng-class="{  'has-success': 	!registration.username.$error.required &&
+            														!registration.username.$error.username &&
+																	!registration.username.$error.usernameExists &&
+																	!usernameExists	,
+												 'has-error': 		registration.username.$error.required ||
+												 					registration.username.$error.minlength ||
+				        											registration.username.$error.maxlength ||
+				        											registration.username.$error.usernameExists ||
+				        											usernameExists 	}">
+				        									
+                <input 	type="text" 
+            			id="username"
+            			name="username"
+            			class="form-control"
+            			placeholder="Username"
+            			required
+            			ng-model="user.username"
+         		    	ng-minlength="2" 
+       					ng-maxlength="20" 
+       					ng-blur="signup.uniqueUsername(user.username)">
+       			
+       			<span ng-show="usernameExists" class="help-block">Username is already in use.</span>		
+       			<span ng-show="registration.username.$error.minlength" class="help-block">Username is too short min. 2 chars</span>
+            	<span ng-show="registration.username.$error.maxlength" class="help-block">Username is too long max. 20 chars</span>
+         	</div>
+         	
+            <div class="form-group" ng-class="{ 'has-success': 	!registration.email.$error.required &&
+																!registration.email.$error.email && 
+																!registration.email.$error.emailExists &&
+																!emailExists ,
+												'has-error': 	registration.email.$error.email ||
+																registration.email.$error.emailExists ||
+																emailExists	 }">
+                <input  type="email" 
+            			id="email"
+            			name="email"
+            			class="form-control" 
+            			placeholder="Email"
+            			required
+            			ng-model="user.email"
+            			ng-blur="signup.uniqueEmail(user.email)">
+            			
+            	<span ng-show="emailExists" class="help-block">Email Address is already in use.</span>
+            	<span ng-show="registration.email.$error.email" class="help-block">Enter a valid email!</span>
+            	<span ng-show="registration.email.$error.emailExists" class="help-block">Email already exists!</span>
+            </div>
+            <div class="form-group" ng-class="{ 'has-success has-feedback': 	!registration.password.$error.required &&
+																				!registration.password.$error.minlength &&
+																				!registration.password.$error.maxlength  ,
+												'has-error has-feedback': 		registration.password.$error.minlength ||
+																				registration.password.$error.maxlength	 }">
+                <input  type="password" 
+            			id="password"
+            			name="password"
+            			class="form-control"
+            			placeholder="Password"
+            			required
+            			ng-model="user.password" 
+	    		        ng-minlength="6" 
+	       				ng-maxlength="20">
+	       				
+	       		<span ng-show="registration.password.$dirty && registration.password.$error.required" class="help-block">Password is required</span>
+            	<span ng-show="registration.password.$error.minlength" class="help-block">Password is too short min. 6 chars</span>
+            	<span ng-show="registration.password.$error.maxlength" class="help-block">Password is too long max. 20 chars</span>
+            </div>
+            
+            <button type="button"
+            		id="registration"
+            		ng-disabled="registration.$invalid || vm.dataLoading || emailExists || usernameExists" 
+            		ng-click="signup.signup(user);"
+            		class="btn btn-success block full-width m-b">Register</button>
+            
+            <p class="text-muted text-center"><small>Login after your Signed Up.</small></p>		
+            <a class="btn btn-sm btn-white btn-block" href="#/login">Login</a>
+            
+        </form>
     </div>
 </div>

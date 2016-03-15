@@ -4,15 +4,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import dash.notificationmanagement.INotificationService;
-import dash.notificationmanagement.message.RegistrationMessage;
 
 /**
  * Created by Andreas on 09.10.2015.
@@ -20,9 +13,6 @@ import dash.notificationmanagement.message.RegistrationMessage;
 @RestController
 @RequestMapping("/users")
 public class UserResource {
-
-    @Autowired
-    private INotificationService notificationService;
 
     @Autowired
     private UserRepository userRepository;
@@ -41,29 +31,6 @@ public class UserResource {
     @ResponseStatus(HttpStatus.OK)
     public User findById(@PathVariable Long id) {
         return userRepository.findOne(id);
-    }
-
-    @RequestMapping(method = RequestMethod.POST,
-	    consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Void> add(@RequestBody User userDto) {
-
-        User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setRole(Role.USER);
-
-        if(userRepository.findByUsername(user.getUsername()) == null && userRepository.findByEmail(user.getEmail())  == null)
-            userRepository.save(user);
-
-        List<User> users = new ArrayList<User>();
-        users.add(user);
-
-        notificationService.sendNotification(new RegistrationMessage(user));
-
-        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     @RequestMapping(method=RequestMethod.PUT,
