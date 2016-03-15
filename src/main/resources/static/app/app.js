@@ -7,81 +7,85 @@
 angular.module('app', [
     'app.services',
     'app.dashboard',
-    'app.lead',
     'app.login',
     'app.signup',
+    'app.leads',
+    'app.orders',
     'app.sales',
-    'app.settings',
     'app.statistics',
 	'pascalprecht.translate',
 	'ngResource',
     'ngRoute',
 	'ngAnimate',
-	'ngCookies'
+	'ngCookies',
+    'datatables',
+    'datatables.bootstrap',
+    'datatables.buttons'
 ]);
 
 angular.module('app')
     .config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
-    $routeProvider
-		.when('/', {
-			templateUrl: 'component/dashboard/dashboard.html',
-			controller: 'DashboardCtrl',
-			controllerAs: 'dashboard',
-			authenticated: true
-		})
-		.when('/dashboard', {
-			templateUrl: 'component/dashboard/dashboard.html',
-			controller: 'DashboardCtrl',
-			controllerAs: 'dashboard',
-			authenticated: true
-		})
-		.when('/leads', {
-			templateUrl: 'component/leads/leads.html',
-		  	controller: 'LeadCtrl',
-		  	controllerAs: 'lead',
-			authenticated: true
-		})
-		.when('/sales', {
-			templateUrl: 'component/sales/sales.html',
-			controller: 'SalesCtrl',
-			controllerAs: 'sales',
-			authenticated: true
-		})
-		.when('/statistics', {
-			templateUrl:'component/statistics/statistics.html',
-			controller: 'StatisticsCtrl',
-			controllerAs: 'statistics',
-			authenticated: true
-		})
-		.when('/settings', {
-			templateUrl: 'component/settings/settings.html',
-			controller: 'SettingsCtrl',
-			controllerAs: 'settings',
-			authenticated: true
-		})
-		.when('/registration', {
-			templateUrl: 'component/registration/registration.html',
-			controller: 'RegistrationCtrl',
-			controllerAs: "registration"
-		})
-		.when('/login', {
-			templateUrl: 'component/login/login.html',
-			controller: 'LoginCtrl',
-			controllerAs: 'login'
-		})
-		.when('/signup', {
-			templateUrl: 'component/signup/signup.html',
-			controller: 'SignUpCtrl',
-			controllerAs: 'signup'
-		})
-		.otherwise({
-			redirectTo: '/'
-		})
-	  
-	   $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+        $routeProvider
+            .when('/', {
+                templateUrl: 'component/dashboard/dashboard.html',
+                controller: 'DashboardCtrl',
+                controllerAs: 'dashboard',
+        		authenticated: true
+            })
+            .when('/dashboard', {
+                templateUrl: 'component/dashboard/dashboard.html',
+                controller: 'DashboardCtrl',
+                controllerAs: 'dashboard',
+        		authenticated: true
+            })
+            .when('/leads', {
+                templateUrl: 'component/leads/leads.html',
+                controller: 'LeadsCtrl',
+                controllerAs: 'lead',
+        		authenticated: true
+            })
+            .when('/orders', {
+                templateUrl: 'component/orders/orders.html',
+                controller: 'OrdersCtrl',
+                controllerAs: 'order',
+        		authenticated: true
+            })
+            .when('/sales', {
+                templateUrl: 'component/sales/sales.html',
+                controller: 'SalesCtrl',
+                controllerAs: 'sales',
+        		authenticated: true
+            })
+            .when('/statistic', {
+                templateUrl: 'component/statistics/statistics.html',
+                controller: 'StatisticsCtrl',
+                controllerAs: 'statistics',
+        		authenticated: true
+            })
+            .when('/settings', {
+                templateUrl: 'component/settings/settings.html',
+                controller: 'SettingsCtrl',
+                controllerAs: 'settings',
+        		authenticated: true
+            })
+            .when('/signup', {
+                templateUrl: 'component/signup/signup.html',
+                controller: 'SignUpCtrl',
+                controllerAs: "signup"
+            })
+            .when('/login', {
+                templateUrl: 'component/login/login.html',
+                controller: 'LoginCtrl',
+                controllerAs: 'login'
+            })
+            .otherwise({
+                redirectTo: '/'
+            })
+            
+     	   $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
-	}])
-	.run([ '$location', '$http', '$rootScope', 'Auth', '$cookieStore', function($location, $http, $rootScope, Auth, $cookieStore) {
+    }])
+    .run([ '$location', '$http', '$rootScope', 'Auth', '$cookieStore', function($location, $http, $rootScope, Auth, $cookieStore) {
 		
         $rootScope.globals = $cookieStore.get('globals') || {};
         if ($rootScope.globals.currentUser) {
@@ -100,16 +104,13 @@ angular.module('app')
 		
 		$rootScope.logout = function() {
 			Auth.logout();
-			console.log("Successful logout.");
 		};
 	    
 	 }]);
 
-
-
-angular.module('app').controller('appCtrl', function($translate,$scope) {
-	$scope.changeLanguage = function (langKey) {
-		$translate.use(langKey);
-		$scope.language = langKey;
-	};
+angular.module('app').controller('appCtrl', function ($translate, $scope) {
+    $scope.changeLanguage = function (langKey) {
+        $translate.use(langKey);
+        $scope.language = langKey;
+    };
 });

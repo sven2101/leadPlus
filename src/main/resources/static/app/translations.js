@@ -5,6 +5,7 @@ function config($translateProvider) {
             // Define all menu elements
             DASHBOARD_MENU: 'Dashboard',
             LEADS_MENU: 'Anfragen',
+            ORDERS_MENU: 'Angebote',
             SALES_MENU: 'Verkäufe',
             STATISTIC_MENU: 'Statistiken',
             SETTINGS_MENU: 'Einstellungen'
@@ -14,6 +15,7 @@ function config($translateProvider) {
             // Define all menu elements
             DASHBOARD_MENU: 'Dashboard',
             LEADS_MENU: 'Leads',
+            ORDERS_MENU: 'Orders',
             SALES_MENU: 'Sales',
             STATISTIC_MENU: 'Statistics',
             SETTINGS_MENU: 'Settings'

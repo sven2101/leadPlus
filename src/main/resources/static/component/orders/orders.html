@@ -1,0 +1,336 @@
+<meta charset="utf-8">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-10">
+                <h2>Sales</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#/dashboard">Home</a>
+                    </li>
+                    <li class="active">
+                        <strong>Sales</strong>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Plan example for container -->
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    Example
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="export" tabindex="-1" role="dialog" aria-labelledby="setReminderLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exportLabel">Datensätze exportieren</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-success" ng-click="export()"><i class="fa fa-table"></i> Alle
+                    Verkäufe als CSV exportieren
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Overview - row - -->
+
+<style type="text/css">
+    .imaginary_container {
+        /*  margin-top:20%;  Don't copy this */
+    }
+
+    .stylish-input-group .input-group-addon {
+        background: white !important;
+    }
+
+    .stylish-input-group .form-control {
+        border-right: 0;
+        box-shadow: 0 0 0;
+        border-color: #ccc;
+    }
+
+    .stylish-input-group button {
+        border: 0;
+        background: transparent;
+    }
+</style>
+
+<!-- Search Panel -->
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Search Panel</h3>
+    </div>
+    <div class="panel-body">
+        <div class="col-sm-3 ">
+            <div class="imaginary_container">
+                <div class="input-group stylish-input-group">
+                    <input ng-model="searchText.kaeufer" type="text" class="form-control"
+                           placeholder="Search for Käufer ... ">
+                        <span class="input-group-addon">
+                            <button type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 ">
+            <div class="imaginary_container">
+                <div class="input-group stylish-input-group">
+                    <input ng-model="searchText.containerTyp" type="text" class="form-control"
+                           placeholder="Search for Container Typ ... ">
+                        <span class="input-group-addon">
+                            <button type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Search Panel -->
+
+<br/>
+<br/>
+
+<!-- Applications -->
+
+<table class="table" ng-table="tableParams">
+    <thead>
+    <tr>
+        <th>Kunde</th>
+        <th>Container Typ</th>
+        <th>Container Anzahl</th>
+        <th>Transport</th>
+        <th>Umsatz</th>
+        <th>Gewinn CB</th>
+        <th>Datum</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="sale in $data | filter:searchText">
+        <!-- <tr ng-repeat="application in applicationlist"> -->
+        <td data-title="'kaeufer'" sortable="'kaeufer'">{{ sale.kaeufer }}</td>
+        <td data-title="'Typ'" sortable="'containerTyp'">{{ sale.containerTyp }}</td>
+        <td data-title="'Anzahl'" sortable="'containerAnzahl'">{{ sale.containerAmount }}</td>
+        <td data-title="'Transport'" sortable="'containerTransport'">{{ sale.containerTransport }}</td>
+        <td data-title="'Umsatz'" sortable="'umsatz'">{{ sale.saleReturn }} €</td>
+        <td data-title="'Gewinn'" sortable="'gewinn'">{{ sale.saleProfitCB }} €</td>
+        <td data-title="'Datum'" sortable="'datum'">{{ sale.saleDate }}</td>
+        <td>
+            <button class="btn btn-danger" ng-click="remove(sale._id)">Remove</button>
+        </td>
+        <td>
+            <button class="btn btn-warning" ng-click="edit(sale._id)" data-toggle="modal"
+                    data-target="#editApplication">Edit
+            </button>
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+<!-- Applications -->
+
+<!-- Modal -->
+
+
+<!-- Edit -->
+<div class="modal" id="editApplication" tabindex="-1" role="dialog" aria-labelledby="setReminderLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="setAnfrageLabel">Verkauf bearbeiten</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="typ-text" class="control-label">Container Typ:</label>
+                        <input type="text" class="form-control" id="typ-text" ng-model="sale.containerTyp"/>
+
+                        <label for="amount-text" class="control-label">Container Anzahl:</label>
+                        <input type="text" class="form-control" id="amount-text" ng-model="sale.containerAmount"/>
+
+                        <label for="ctransport-text" class="control-label">Transport:</label>
+                        <input type="text" class="form-control" id="ctransport-text"
+                               ng-model="sale.containerTransport"/>
+
+                        <label for="return-text" class="control-label">Umsatz:</label>
+                        <input type="text" class="form-control" id="return-text" ng-model="sale.saleReturn"/>
+
+                        <label for="gewinn-text" class="control-label">Gewinn CB:</label>
+                        <input type="text" class="form-control" id="gewinn-text" ng-model="sale.saleProfitCB"/>
+
+                        <label for="verkaufsdatum-text" class="control-label">Verkaufsdatum:</label>
+
+                        <div class="input-group date" id="editDateEingang">
+                            <input class="form-control" type="text" class="form-control" id="verkaufsdatum-text"
+                                   ng-model="sale.saleDate" placeholder="Verkaufsdatum"/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                        </div>
+                        <script type="text/javascript">
+
+                            $('#editDateEingang')
+                                    .datepicker({});
+                        </script>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="update()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit -->
+
+
+<!-- Salescheck -->
+<div class="modal" id="salesCheck" tabindex="-1" role="dialog" aria-labelledby="setReminderLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="setReminderLabel">Sales Check</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Telefon</th>
+                            <th style="width:90px;">Aktion</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="contact in searchResult">
+                            <td>{{ contact.username }}</td>
+                            <td>{{ contact.email }}</td>
+                            <td>{{ contact.telefon }}</td>
+                            <td style="width:90px;">
+                                <button type="button" class="btn btn-success" data-dismiss="modal"
+                                        ng-click="addSale(contact._id)"><i class="fa fa-plus-circle"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Typ Container</th>
+                                        <th>Anzahl Container</th>
+                                        <th>Transport</th>
+                                        <th>Umsatz €</th>
+                                        <th>Gewinn CB €</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td><input class="form-control" ng-model="sale.containerTyp"
+                                                   placeholder="Typ Container"></td>
+                                        <td><input class="form-control" ng-model="sale.containerAmount"
+                                                   placeholder="Anzahl Container"></td>
+                                        <td><input class="form-control" ng-model="sale.containerTransport"
+                                                   placeholder="Transport"></td>
+                                        <td><input class="form-control" ng-model="sale.return" placeholder="Umsatz">
+                                        </td>
+                                        <td><input class="form-control" ng-model="sale.profitCB"
+                                                   placeholder="Gewinn CB"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input class="form-control" placeholder="z.B. Frachtcontainer" readonly>
+                                        </td>
+                                        <td><input class="form-control" placeholder="30" readonly></td>
+                                        <td><input class="form-control" placeholder="Stuttgart" readonly></td>
+                                        <td><input class="form-control" placeholder="30000.50" readonly></td>
+                                        <td><input class="form-control" placeholder="3000.50" readonly></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Salescheck -->
+
+<!-- Calls -->
+<div class="modal" id="callsCheck" tabindex="-1" role="dialog" aria-labelledby="setCallLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="setCallLabel">Calls</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Telefonnummer</th>
+                            <th>Eingang</th>
+                            <th style="width:90px;">Aktion</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="call in calls">
+                            <td>{{ call.telefonnummer }}</td>
+                            <td>{{ call.eingangsdatum }}</td>
+                            <td style="width:90px;">
+                                <div class="row">
+                                    <button class="btn btn-success" type="button" title="Angebot gesendet"
+                                            ng-click="situation(call._id, 'angebot_gesendet')">
+                                        <i class="fa fa-paper-plane-o"></i>
+                                        <!--Angebot-->
+                                    </button>
+                                    <button class="btn btn-danger" type="button" title="Trash"
+                                            ng-click="removeCall(call._id)">
+                                        <i class="fa fa-trash"></i>
+                                        <!--Trash-->
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Calls -->
+
+<!-- Modal -->
