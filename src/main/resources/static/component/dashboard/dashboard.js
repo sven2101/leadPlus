@@ -1,93 +1,118 @@
 'use strict';
 
-angular.module('app.dashboard', ['ngResource']);
+angular.module('app.dashboard', ['ngResource']).controller('DashboardCtrl', DashboardCtrl);
 
-angular.module('app.dashboard').controller('DashboardCtrl', DashboardCtrl);
 
-DashboardCtrl.$inject = [];
+DashboardCtrl.$inject = ['toaster'];
+function DashboardCtrl(toaster) {
 
-function DashboardCtrl() {
+    var vm = this;
+    this.toaster =  toaster;
+    this.selectedPeriod = 'Heute';
+    this.leadsAmount = 100;
+    this.offersAmount = 50;
+    this.salesAmount = 20;
+    this.profit = 320000;
+    this.conversion = 6340000;
+    this.conversionRate = 12;
+    this.infoData = {};
+    this.openLead = [{
+        name: 'lead1',
+        locked: false
+    },
+        {
+            name: 'lead2',
+            locked: false
+        }];
+    this.openOffer = [{
+        name: 'offer1',
+        locked: false
+    },
+        {
+            name: 'offer2',
+            locked: false
+        }];
+    this.sales = [{
+        name: 'sale1',
+        locked: true
+    },
+        {
+            name: 'sale2',
+            locked: true
+        }];
 
-    var anfrage = {
-        "inquirer":{
-            "firstname": "Andreas",
-            "lastname": "Foitzik",
-            "company": "getnet",
-            "email": "andreas.foitzik@get-net.eu"
-        },
-        "vendor":{
-            "name": "Breuniger",
-            "phone": "08239"
-        },
-        "container":[
-            {
-                "name": "Seecontainer",
-                "description": "F�r hohe See geeignet",
-                "price": 30.00
+    this.sortableOptions = {
+        update: function (e, ui) {
+            var target = ui.item.sortable.droptargetModel;
+            var source = ui.item.sortable.sourceModel;
+            if ((vm.openLead == target && vm.openOffer == source) || target == source) {
+                ui.item.sortable.cancel();
             }
-        ],
-        "containerAmount": 30,
-        "transport": true,
-        "destination": "Berlin",
-        "compareableProposal": "yes",
-        "message": "Hallo Herr Ilg",
-        "status": "OPEN"
+        },
+        stop: function (e, ui) {
+            var target = ui.item.sortable.droptargetModel;
+            var source = ui.item.sortable.sourceModel;
+            var item = ui.item.sortable.model;
+            if (vm.sales == target && vm.openLead == source) {
+                item.locked = true;
+                vm.addLeadToSale(item);
+            } else if (vm.sales == target && vm.openOffer == source) {
+                item.locked = true;
+                vm.addOfferToSale(item);
+            }
+            else if (vm.openOffer == target && vm.openLead == source) {
+                vm.addLeadToOffer(item);
+            }
+            else {
+                vm.toaster.pop('error', item.name, "Invalid action. Don't move inside or back!");
+            }
+
+        },
+        connectWith: ".connectList",
+        items: "li:not(.not-sortable)"
     };
-/*
-    Applications.save(anfrage, function (){
-        console.log("save succesfull");
-    });
-
-    var test = Applications.get({id: 1}, function(){
-        console.log(test);
-    });
-
-    this.applicationsStateOPEN      = Applications.stateOPEN();
-    this.applicationStateOPENAmount = this.applicationsStateOPEN.length;
-    console.log("L�nge: ", this.applicationsStateOPEN);
-    console.log("L�nge: ", this.applicationsStateOPEN.length);
-
-    this.applicationsStateFOLLOW    = Applications.stateFOLLOW();
-    this.applicationStateFOLLOWAmount = this.applicationsStateFOLLOW.length;
-
-    this.applicationsStateCLOSED    = Applications.stateCLOSED();
-    this.applicationStateCLOSEDAmount = this.applicationsStateCLOSED.length;
-
-    this.space                      = "7";
-    this.application_amount         = "50";
-    this.application_amount_follow  = "20";
-    this.application_amount_open    = "30";
-    this.profit                     = "10.000";
-    this.revenue                    = "100.000";
-    this.convertionrate             = "10";
-
-    this.edit = function(applicationId) {
-        console.log("Application ID: ", applicationId);
-
-        var application = Applications.get({id: applicationId}, function(){
-            console.log(test);
-        });
-    };
-    
-    */
 }
 
+DashboardCtrl.prototype.addLeadToSale = function (item) {
+    this.toaster.pop('success', item.name, "Congratulation for your Sale!");
+}
+DashboardCtrl.prototype.addOfferToSale = function (item) {
+    this.toaster.pop('success', item.name, "Congratulation for your Sale!");
+}
+DashboardCtrl.prototype.addLeadToOffer = function (item) {
+    this.toaster.pop('success', item.name, "You have a new Offer!");
+}
 
+DashboardCtrl.prototype.saveDataToModal = function (data) {
+    this.infoData = data;
+}
+DashboardCtrl.prototype.refreshData = function () {
+    this.openLead = [{
+        name: 'lead3',
+        locked: false
+    },
+        {
+            name: 'lead4',
+            locked: false
+        }];
+    this.openOffer = [{
+        name: 'offer5',
+        locked: false
+    },
+        {
+            name: 'offer6',
+            locked: false
+        }];
+    this.sales = [{
+        name: 'sale7',
+        locked: true
+    },
+        {
+            name: 'sale8',
+            locked: true
+        }];
+}
 
-DashboardCtrl.prototype.changeSpace = function(space) {
-  alert(space);
-};
-
-DashboardCtrl.prototype.addContact = function() {
-  this.contacts.push({type: 'email', value: 'yourname@example.org'});
-};
-
-DashboardCtrl.prototype.removeContact = function(contactToRemove) {
- var index = this.contacts.indexOf(contactToRemove);
-  this.contacts.splice(index, 1);
-};
-
-DashboardCtrl.prototype.clearContact = function(contact) {
-  contact.type = 'phone';
-  contact.value = '';
-};
+DashboardCtrl.prototype.onPeriodChange = function (selectedPeriod) {
+    this.selectedPeriod = selectedPeriod;
+}

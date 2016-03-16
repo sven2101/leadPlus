@@ -2,9 +2,9 @@
 
 angular.module('app.login', ['ngResource']).controller('LoginCtrl', LoginCtrl);
 
-LoginCtrl.$inject = ['$rootScope', '$location', 'Auth', '$scope'];
+LoginCtrl.$inject = ['$location', 'Auth', '$scope','toaster'];
 
-function LoginCtrl($rootScope, $location, Auth, $scope) {
+function LoginCtrl($location, Auth, $scope,toaster) {
 
 	this.login = function(credentials) {
 		Auth.login( credentials,
@@ -13,25 +13,7 @@ function LoginCtrl($rootScope, $location, Auth, $scope) {
 			        },
 			        function(err) {
 			        	$scope.credentials.password = "";
-			        	toastr.options = {
-			        			  "closeButton": true,
-			        			  "debug": false,
-			        			  "newestOnTop": false,
-			        			  "progressBar": false,
-			        			  "positionClass": "toast-top-right",
-			        			  "preventDuplicates": false,
-			        			  "onclick": null,
-			        			  "showDuration": "300",
-			        			  "hideDuration": "1000",
-			        			  "timeOut": "5000",
-			        			  "extendedTimeOut": "1000",
-			        			  "showEasing": "swing",
-			        			  "hideEasing": "linear",
-			        			  "showMethod": "fadeIn",
-			        			  "hideMethod": "fadeOut"
-			        			}
-			        	
-			        	toastr.error('Login faild, please try again.');        	
+						toaster.pop('error','Error', "Pleas try again!");
 			        }
 		        );
 	};

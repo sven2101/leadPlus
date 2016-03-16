@@ -10,11 +10,13 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope) {
     this.scope = $scope;
     this.compile = $compile;
     this.message = '';
+    this.comment = '';
+    this.loadAllData = false;
     this.dtInstance = {};
     this.leads = {};
     this.editLead = {};
     this.newLead = {};
-    this.dtOptions = DTOptionsBuilder.fromSource('https://demo1774041.mockable.io/getData')
+    this.dtOptions = DTOptionsBuilder.fromSource('http://demo1774041.mockable.io/test2')
         .withDOM('<"row"<"col-sm-12"l>>' +
             '<"row"<"col-sm-6"B><"col-sm-6"f>>' +
             '<"row"<"col-sm-12"tr>>' +
@@ -68,17 +70,17 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope) {
         }
 
 
-        return '<button class="btn btn-primary" ' + disabled + ' ng-click="lead.followUp(lead.leads[' + data.id + '])" title="Angebot erstellen' + data.id + '">' +
+        return '<button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.leads[' + data.id + '])" title="Angebot erstellen' + data.id + '">' +
             '   <i class="fa fa-check"></i>' +
             '</button>&nbsp;' +
-            '<button class="btn btn-warning" ng-click="lead.closeInquiry(lead.leads[' + data.id + '])" title="' + openOrLock + '">' +
+            '<button class="btn btn-white" ng-click="lead.closeInquiry(lead.leads[' + data.id + '])" title="' + openOrLock + '">' +
             '   <i class="' + faOpenOrLOck + '"></i>' +
             '</button>&nbsp;' +
-            '<button class="btn btn-success" ng-click="lead.loadDataToModal(lead.leads[' + data.id + '])" data-toggle="modal"' +
+            '<button class="btn btn-white" ng-click="lead.loadDataToModal(lead.leads[' + data.id + '])" data-toggle="modal"' +
             'data-target="#editModal" title="Anfrage bearbeiten">' +
             '<i class="fa fa-edit"></i>' +
             '</button>&nbsp;' +
-            '<button class="btn btn-danger" ng-click="lead.deleteRow(lead.leads[' + data.id + '])" title="Anfrage Löschen">' +
+            '<button class="btn btn-white" ng-click="lead.deleteRow(lead.leads[' + data.id + '])" title="Anfrage Löschen">' +
             '   <i class="fa fa-trash-o"></i>' +
             '</button>';
     }
@@ -102,9 +104,22 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope) {
     }
 }
 
-LeadsCtrl.prototype.submitForm = function() {
+LeadsCtrl.prototype.changeDataInput = function () {
+    if (this.loadAllData == true) {
+        this.dtInstance.changeData('http://demo1774041.mockable.io/getData');
+    }
+    else {
+        this.dtInstance.changeData('https://demo1774041.mockable.io/test2');
+    }
+}
+
+LeadsCtrl.prototype.addComment = function () {
+    alert("send comment");
+}
+
+LeadsCtrl.prototype.submitForm = function () {
     // check to make sure the form is completely valid
-    if(this.scope.editForm.$valid) {
+    if (this.scope.editForm.$valid) {
         alert('our form is amazing');
     }
 }

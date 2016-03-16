@@ -10,7 +10,7 @@ angular.module('app', [
     'app.login',
     'app.signup',
     'app.leads',
-    'app.orders',
+    'app.offers',
     'app.sales',
     'app.statistics',
 	'pascalprecht.translate',
@@ -20,7 +20,10 @@ angular.module('app', [
 	'ngCookies',
     'datatables',
     'datatables.bootstrap',
-    'datatables.buttons'
+    'datatables.buttons',
+    'ui.sortable',
+    'NgSwitchery',
+    'toaster'
 ]);
 
 angular.module('app')
@@ -44,10 +47,10 @@ angular.module('app')
                 controllerAs: 'lead',
         		authenticated: true
             })
-            .when('/orders', {
-                templateUrl: 'component/orders/orders.html',
-                controller: 'OrdersCtrl',
-                controllerAs: 'order',
+            .when('/offers', {
+                templateUrl: 'component/offers/offers.html',
+                controller: 'OfferCtrl',
+                controllerAs: 'offer',
         		authenticated: true
             })
             .when('/sales', {
