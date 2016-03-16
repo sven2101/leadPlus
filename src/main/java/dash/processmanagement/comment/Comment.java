@@ -9,7 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import dash.processmanagement.lead.Lead;
+import dash.processmanagement.Process;
+
 import dash.usermanagement.User;
 
 @Entity
@@ -17,26 +18,28 @@ public class Comment {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
+	private Long 	id;
 	
 	@ManyToOne
-	@JoinColumn(name = "lead_fk", nullable = false, insertable = false, updatable = false)
-	private Lead lead;
+	@JoinColumn(name = "process_fk", nullable = false, insertable = false, updatable = false)
+	private Process process;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_fk", nullable = false, insertable = false, updatable = false)
-	private User user;
+	private User 	user;
 	
-	private String commentText;
-	private Date date;
+	private String 	commentText;
+	private Date 	timestamp;
 	
 	public Comment(){
 		
 	}
 	
-	public Comment(String commentText, Date date){
-		this.commentText = commentText;
-		this.date = date;
+	public Comment(Process process, User user, String commentText, Date timestamp){
+	    	this.process 		= process;
+	    	this.user 		= user;
+		this.commentText 	= commentText;
+		this.timestamp 		= timestamp;
 	}
 	
 	public Long getId() {
@@ -45,11 +48,11 @@ public class Comment {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Lead getLead() {
-		return lead;
+	public Process getProcess() {
+		return process;
 	}
-	public void setLead(Lead lead) {
-		this.lead = lead;
+	public void setProcess(Process process) {
+		this.process = process;
 	}
 	public User getUser() {
 		return user;
@@ -64,9 +67,9 @@ public class Comment {
 		this.commentText = commentText;
 	}
 	public Date getDate() {
-		return date;
+		return timestamp;
 	}
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDate(Date timestamp) {
+		this.timestamp = timestamp;
 	}
 }

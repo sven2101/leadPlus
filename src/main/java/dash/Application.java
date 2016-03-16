@@ -91,7 +91,8 @@ public class Application {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
+    
+    /*
     @PostConstruct
     public void createAdminIfNotExists() throws Exception {
 
@@ -113,7 +114,7 @@ public class Application {
 
         userRepository.save(user2);
     }
-
+    */
     @EnableWebSecurity
     @Configuration
     @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)

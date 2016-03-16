@@ -9,46 +9,44 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import dash.processmanagement.offer.service.IOfferService;
 
 /**
  * Created by Andreas on 12.10.2015.
  */
 @RestController
-@RequestMapping("/api/rest/processes/offers")
+@RequestMapping("/api/rest/processes")
 @Api(value = "Offers API")
 public class OfferResource {
 
     @Autowired
     private OfferRepository offerRepository;
+    
+    @Autowired
+    private IOfferService offerService;
 
-    @ApiOperation(value = "Returns all offers.", notes = "")
-    @RequestMapping(method = RequestMethod.GET)
+    @ApiOperation(value = "Return a single offer.", notes = "")
+    @RequestMapping(method = RequestMethod.GET, value="/offers/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Offer> get() { return offerRepository.findAll(); }
-
-    @ApiOperation(value = "Returns a single offer.", notes = "")
-    @RequestMapping(method = RequestMethod.GET,
-                    value="{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Offer findById(@ApiParam(required=true) @PathVariable Long id) {
+    public Offer getOfferById(@PathVariable Long id) {
         return offerRepository.findOne(id);
     }
 
     @ApiOperation(value = "Add a single offer.", notes = "")
-    @RequestMapping(method = RequestMethod.POST,
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value="/{processId}/offers",
+	    		method = RequestMethod.POST,
+	    		consumes = {MediaType.APPLICATION_JSON_VALUE},
+	    		produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Void> add(@ApiParam(required=true) @RequestBody Offer lead) {
-	offerRepository.save(lead);
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+    public void addOfferByProcessId(@PathVariable Long processId, @ApiParam(required=true) @RequestBody @Valid Offer offer) {
+	offerService.createOffer(processId, offer);
     }
     
-    @ApiOperation(value = "Update a single lead.", notes = "")
+    @ApiOperation(value = "Update a single offer.", notes = "")
     @RequestMapping(method=RequestMethod.PUT,
-                    value="{id}",
+                    value="/offers/{id}",
                     consumes = {MediaType.APPLICATION_JSON_VALUE},
                     produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -66,7 +64,7 @@ public class OfferResource {
     }
 
     @ApiOperation(value = "Delete a single offer.", notes = "")
-    @RequestMapping(method = RequestMethod.DELETE)
+    @RequestMapping(value = "/offers/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void delete(@ApiParam(required=true) @PathVariable Long id) {
         offerRepository.delete(id);

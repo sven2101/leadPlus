@@ -1,4 +1,4 @@
-package dash.processmanagement.vendor;
+package dash.processmanagement.lead.vendor;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class VendorResource {
 
         @ApiOperation(value = "Returns by VendorId specified vendor")
         @RequestMapping(method = RequestMethod.GET,
-                value="{id}")
+                value="/{id}")
         public Vendor findById(@ApiParam(required = true) @PathVariable Long id) {
                 return vendorRepository.findOne(id);
         }
@@ -44,7 +44,7 @@ public class VendorResource {
 
         @ApiOperation(value = "Update Vendor")
         @RequestMapping(method=RequestMethod.PUT,
-                value="{id}",
+                value="/{id}",
                 consumes = {MediaType.APPLICATION_JSON_VALUE},
                 produces = {MediaType.APPLICATION_JSON_VALUE})
         public Vendor update(@ApiParam(required = true) @PathVariable Long id,

@@ -1,4 +1,4 @@
-package dash.processmanagement.vendor;
+package dash.processmanagement.lead.vendor;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface VendorRepository extends JpaRepository<Vendor, Long> {
-
+    public Vendor findByName(String name);
 }

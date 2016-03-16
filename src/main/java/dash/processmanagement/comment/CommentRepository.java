@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface CommentRepository extends CrudRepository<Comment, Long>{
 
-	public List<Comment>findByLead(Long leadId);
+	public List<Comment> findCommentsByProcess(Long process);
 }

@@ -53,6 +53,15 @@ public class Process {
 	
     }
     
+    public Process(Lead lead){
+	this.lead 	= lead;
+	this.offer 	= null;
+	this.sale 	= null;
+	this.comments 	= null;
+	this.status 	= Status.OPEN;
+	this.processor 	= null;
+    }
+    
     public Process(Lead lead, Offer offer, Sale sale, List<Comment> comments, Status status, User processor){
 	this.lead 	= lead;
 	this.offer 	= offer;

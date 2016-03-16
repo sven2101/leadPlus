@@ -2,10 +2,10 @@ package dash.processmanagement.lead;
 
 import com.fasterxml.jackson.annotation.*;
 
-import dash.processmanagement.container.Container;
+import dash.processmanagement.lead.container.Container;
 import dash.processmanagement.lead.inquirer.Inquirer;
+import dash.processmanagement.lead.vendor.Vendor;
 import dash.processmanagement.status.Status;
-import dash.processmanagement.vendor.Vendor;
 
 import java.util.Date;
 
@@ -15,43 +15,43 @@ import javax.persistence.*;
  * Created by Andreas on 09.10.2015.
  */
 @Entity
-@Table(indexes = { @Index(columnList = "container_fk")})
 public class Lead {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long 	id;
     
     @JsonProperty(value = "inquirer")
     @JsonView
     @OneToOne
     @JoinColumn(name = "inquirer_fk")
-    private Inquirer inquirer;
+    private Inquirer 	inquirer;
     
     @JsonProperty(value = "vendor")
     @JsonView
     @OneToOne
     @JoinColumn(name = "vendor_fk")
-    private Vendor vendor;
+    private Vendor 	vendor;
 
     @JsonProperty(value = "container")
     @JsonView
     @OneToOne
     @JoinColumn(name = "container_fk")
-    private Container container;
+    private Container 	container;
     
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private Date 	date;
            
-    private int containerAmount;
-    private String destination;
-    private String message;
+    private int 	containerAmount;
+    private String 	destination;
+    private String 	message;
     
     public Lead(){}
 
-    public Lead(Inquirer inquirer, Vendor vendor, int containerAmount, String destination, String message, Status status, Date date){
+    public Lead(Inquirer inquirer, Vendor vendor, Container container, int containerAmount, String destination, String message, Status status, Date date){
         this.inquirer 		= inquirer;
         this.vendor 		= vendor;
+        this.container		= container;
         this.containerAmount 	= containerAmount;
         this.destination 	= destination;
         this.message 		= message;

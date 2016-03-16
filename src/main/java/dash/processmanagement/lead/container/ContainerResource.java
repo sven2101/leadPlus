@@ -1,4 +1,4 @@
-package dash.processmanagement.container;
+package dash.processmanagement.lead.container;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,8 +30,7 @@ public class ContainerResource {
         }
 
         @ApiOperation(value = "Get a single container.", notes = "You have to provide a valid container ID.")
-        @RequestMapping(method = RequestMethod.GET,
-                value="{id}")
+        @RequestMapping(value="/{id}", method = RequestMethod.GET)
         @ResponseStatus(HttpStatus.OK)
         public Container findById(@ApiParam(required=true) @PathVariable Long id) {
                 return containerRepository.findOne(id);
@@ -39,8 +38,8 @@ public class ContainerResource {
 
         @ApiOperation(value = "Add a single container.", notes = "You have to provide a valid Container Object")
         @RequestMapping(method = RequestMethod.POST,
-                consumes = {MediaType.APPLICATION_JSON_VALUE},
-                produces = {MediaType.APPLICATION_JSON_VALUE})
+                        consumes = {MediaType.APPLICATION_JSON_VALUE},
+                        produces = {MediaType.APPLICATION_JSON_VALUE})
         @ResponseStatus(HttpStatus.CREATED)
         public ResponseEntity<Void> add(@ApiParam(required=true) final @RequestBody Container container) {
                 containerRepository.save(container);
@@ -49,9 +48,9 @@ public class ContainerResource {
 
         @ApiOperation(value = "Update a single container.", notes = "")
         @RequestMapping(method=RequestMethod.PUT,
-                value="{id}",
-                consumes = {MediaType.APPLICATION_JSON_VALUE},
-                produces = {MediaType.APPLICATION_JSON_VALUE})
+                        value="/{id}",
+                        consumes = {MediaType.APPLICATION_JSON_VALUE},
+                        produces = {MediaType.APPLICATION_JSON_VALUE})
         @ResponseStatus(HttpStatus.NO_CONTENT)
         public Container update(@ApiParam(required=true) @PathVariable Long id, @ApiParam(required=true) final @RequestBody Container updateContainer) {
                 Container container = containerRepository.findOne(id);

@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @RestController(value = "InquirerResource")
 @Api(value = "inquirers", description = "Inquirer API")
-@RequestMapping(value="/api/rest")
+@RequestMapping(value="/api/rest/inquirers")
 public class InquirerResource {
 
         @Autowired
         private InquirerRepository inquirerRepository;
 
-        @RequestMapping(value="/inquirers",
+        @RequestMapping(value="",
                         method = RequestMethod.GET,
                         produces = {MediaType.APPLICATION_JSON_VALUE})
         @ResponseStatus(HttpStatus.OK)
@@ -31,7 +31,7 @@ public class InquirerResource {
                 return inquirerRepository.findAll();
         }
 
-        @RequestMapping(value="/inquirers/{id}",
+        @RequestMapping(value="/{id}",
                         method = RequestMethod.GET)
         @ResponseStatus(HttpStatus.OK)
         @ApiOperation(value = "Get a single inquirer.", notes = "You have to provide a valid inquirer ID.")
@@ -39,7 +39,7 @@ public class InquirerResource {
                 return inquirerRepository.findOne(id);
         }
 
-        @RequestMapping(value="/inquirers",
+        @RequestMapping(value="",
                         method = RequestMethod.POST,
                         consumes = {MediaType.APPLICATION_JSON_VALUE},
                         produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -51,7 +51,7 @@ public class InquirerResource {
         }
 
         @RequestMapping(method=RequestMethod.PUT,
-                        value="/inquirers/{id}",
+                        value="/{id}",
                         consumes = {MediaType.APPLICATION_JSON_VALUE},
                         produces = {MediaType.APPLICATION_JSON_VALUE})
         @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -65,7 +65,7 @@ public class InquirerResource {
                 return inquirer;
         }
 
-        @RequestMapping(value="/inquirers/{id}",
+        @RequestMapping(value="/{id}",
                         method = RequestMethod.DELETE)
         @ResponseStatus(HttpStatus.NO_CONTENT)
         @ApiOperation(value = "Delete a single inquirer.", notes = "You have to provide a valid inquirer ID.")

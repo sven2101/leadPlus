@@ -1,24 +1,22 @@
 package dash.processmanagement.lead;
 
-
-import dash.processmanagement.container.ContainerRepository;
-import dash.processmanagement.lead.inquirer.InquirerRepository;
-import dash.processmanagement.status.Status;
-import dash.processmanagement.vendor.VendorRepository;
+import dash.processmanagement.lead.service.ILeadService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Andreas on 12.10.2015.
  */
 @RestController
-@RequestMapping("/api/rest/processes/leads")
+@RequestMapping("/api/rest/processes")
 @Api(value = "leads", description = "Lead API")
 public class LeadResource {
 
@@ -26,63 +24,55 @@ public class LeadResource {
     private LeadRepository leadRepository;
 
     @Autowired
-    private ContainerRepository containerRepository;
-
-    @Autowired
-    private InquirerRepository inquirerRepository;
-
-    @Autowired
-    private VendorRepository vendorRepository;
-
-    @ApiOperation(value = "Returns all leads.", notes = "")
-    @RequestMapping(method = RequestMethod.GET)
+    private ILeadService leadService;
+    
+    @ApiOperation(value = "Return all leads.", notes = "")
+    @RequestMapping(value = "/leads", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public Iterable<Lead> get() { return leadRepository.findAll(); }
-
-    @ApiOperation(value = "Returns leads with a certain state", notes = "")
-    @RequestMapping(method = RequestMethod.GET,
-                    value= "state/{status}")
-    @ResponseStatus(HttpStatus.OK)
-    public Iterable<Lead> get(@ApiParam(required=true) @PathVariable Status status) {
-        return leadRepository.findApplicationsByStatus(status);
+    public Iterable<Lead> getAllLeads() { 
+	return leadRepository.findAll(); 
     }
 
-    @ApiOperation(value = "Returns a single lead.", notes = "")
-    @RequestMapping(method = RequestMethod.GET,
-                    value="{id}")
+    @ApiOperation(value = "Return a single lead.", notes = "")
+    @RequestMapping(value="/leads/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public Lead findById(@ApiParam(required=true) @PathVariable Long id) {
+    public Lead getLeadById(@ApiParam(required=true) @PathVariable Long id) {
         return leadRepository.findOne(id);
     }
 
     @ApiOperation(value = "Add a single lead.", notes = "")
-    @RequestMapping(method = RequestMethod.POST,
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/leads",
+	    	method = RequestMethod.POST,
+	    	consumes = {MediaType.APPLICATION_JSON_VALUE},
+	    	produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Void> add(@ApiParam(required=true) @RequestBody Lead lead) {
-        inquirerRepository.save(lead.getInquirer());
-        vendorRepository.save(lead.getVendor());
-        containerRepository.save(lead.getContainer());
-
-        leadRepository.save(lead);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+    public void add(@ApiParam(required=true) @RequestBody @Valid Lead lead) {
+        leadService.createLead(lead);
     }
+    
     @ApiOperation(value = "Update a single lead.", notes = "")
     @RequestMapping(method=RequestMethod.PUT,
-            value="{id}",
+            value="/leads/{id}",
             consumes = {MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Lead update(@ApiParam(required=true) @PathVariable Long id, @ApiParam(required=true) @RequestBody Lead updateContainer) {
-        Lead application = leadRepository.findOne(id);
+    @ResponseStatus(HttpStatus.OK)
+    public Lead update(@ApiParam(required=true) @PathVariable Long id, @ApiParam(required=true) @RequestBody Lead updateLead) {
+        Lead lead = leadRepository.findOne(id);
 
-        return application;
+        lead.setInquirer(updateLead.getInquirer());
+        lead.setVendor(updateLead.getVendor());
+        lead.setContainer(updateLead.getContainer());
+        lead.setDate(updateLead.getDate());
+        lead.setContainerAmount(updateLead.getContainerAmount());
+        lead.setDestination(updateLead.getDestination());
+        lead.setMessage(updateLead.getMessage());
+        
+        return lead;
     }
 
     @ApiOperation(value = "Delete a single Lead.", notes = "")
-    @RequestMapping(method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @RequestMapping(value="/leads/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
     public void delete(@ApiParam(required=true) @PathVariable Long id) {
         leadRepository.delete(id);
     }

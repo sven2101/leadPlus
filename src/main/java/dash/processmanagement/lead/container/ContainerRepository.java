@@ -1,4 +1,4 @@
-package dash.processmanagement.container;
+package dash.processmanagement.lead.container;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ContainerRepository extends CrudRepository<Container, Long> {
-
+    public Container findByName(String name);
 }

@@ -1,4 +1,4 @@
-package dash.processmanagement.container;
+package dash.processmanagement.lead.container;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,9 +11,10 @@ import javax.persistence.Id;
 @Entity
 public class Container {
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    
     private String name;
     private String description;
     private double priceNetto;
