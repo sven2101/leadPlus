@@ -12,7 +12,10 @@
     <link href="assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- Toastr style -->
-    <link href="assets/css/toastr.min.css" rel="stylesheet">
+    <link href="assets/css/ng-toaster.min.css" rel="stylesheet">
+
+    <!-- switch for checkbox-->
+    <link href="assets/css/switchery.min.css" rel="stylesheet">
 
     <link href="assets/css/animate.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
@@ -26,6 +29,7 @@
 <body>
 
 <div id="wrapper">
+    <toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
     <div ng-if="!globals.currentUser" ng-view></div>
     <div ng-if="globals.currentUser">
         <div ng-include="'main.html'"></div>
@@ -49,9 +53,6 @@
 <!-- Custom and plugin javascript -->
 <script src="assets/js/inspinia.js"></script>
 
-<!-- Toastr javascript -->
-<script src="assets/js/toastr.min.js"></script>
-
 <!-- Data table javascript -->
 <script src="assets/js/datatables/datatables.min.js"></script>
 
@@ -64,6 +65,7 @@
 <script src="assets/js/angular/angular-translate.min.js"></script>
 <script src="assets/js/angular/angular-cookies.min.js"></script>
 <script src="assets/js/angular/angular-sortable-ui.js"></script>
+<script src="assets/js/angular/ng-toaster.js"></script>
 
 <!-- Angular-Datatable-->
 <script src="assets/js/datatables/angular-datatables.min.js"></script>
@@ -76,6 +78,10 @@
 <script src="assets/js/datatables/jszip.min.js"></script>
 <script src="assets/js/datatables/buttons.html5.min.js"></script>
 <script src="assets/js/datatables/buttons.print.min.js"></script>
+
+<!--Switch for checkbox-->
+<script src="assets/js/switchery.min.js"></script>
+<script src="assets/js/angular/ng-switchery.js"></script>
 
 <!-- Local Inclusions -->
 <script src="app/app.js"></script>

@@ -22,6 +22,7 @@ function config($translateProvider) {
         });
 
     $translateProvider.preferredLanguage('de');
+    $translateProvider.fallbackLanguage('en');
 }
 'use strict';
 angular

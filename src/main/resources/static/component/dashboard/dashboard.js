@@ -3,10 +3,18 @@
 angular.module('app.dashboard', ['ngResource']).controller('DashboardCtrl', DashboardCtrl);
 
 
-DashboardCtrl.$inject = [];
-function DashboardCtrl() {
+DashboardCtrl.$inject = ['toaster'];
+function DashboardCtrl(toaster) {
 
     var vm = this;
+    this.toaster =  toaster;
+    this.selectedPeriod = 'Heute';
+    this.leadsAmount = 100;
+    this.offersAmount = 50;
+    this.salesAmount = 20;
+    this.profit = 320000;
+    this.conversion = 6340000;
+    this.conversionRate = 12;
     this.infoData = {};
     this.openLead = [{
         name: 'lead1',
@@ -43,17 +51,36 @@ function DashboardCtrl() {
         },
         stop: function (e, ui) {
             var target = ui.item.sortable.droptargetModel;
+            var source = ui.item.sortable.sourceModel;
             var item = ui.item.sortable.model;
-            if (vm.sales == target) {
-                vm.sales.sort(vm.SortByName)
+            if (vm.sales == target && vm.openLead == source) {
                 item.locked = true;
+                vm.addLeadToSale(item);
+            } else if (vm.sales == target && vm.openOffer == source) {
+                item.locked = true;
+                vm.addOfferToSale(item);
             }
-            var fromIndex = ui.item.sortable.index;
-            var toIndex = ui.item.sortable.dropindex;
+            else if (vm.openOffer == target && vm.openLead == source) {
+                vm.addLeadToOffer(item);
+            }
+            else {
+                vm.toaster.pop('error', item.name, "Invalid action. Don't move inside or back!");
+            }
+
         },
         connectWith: ".connectList",
         items: "li:not(.not-sortable)"
     };
+}
+
+DashboardCtrl.prototype.addLeadToSale = function (item) {
+    this.toaster.pop('success', item.name, "Congratulation for your Sale!");
+}
+DashboardCtrl.prototype.addOfferToSale = function (item) {
+    this.toaster.pop('success', item.name, "Congratulation for your Sale!");
+}
+DashboardCtrl.prototype.addLeadToOffer = function (item) {
+    this.toaster.pop('success', item.name, "You have a new Offer!");
 }
 
 DashboardCtrl.prototype.saveDataToModal = function (data) {
@@ -84,4 +111,8 @@ DashboardCtrl.prototype.refreshData = function () {
             name: 'sale8',
             locked: true
         }];
+}
+
+DashboardCtrl.prototype.onPeriodChange = function (selectedPeriod) {
+    this.selectedPeriod = selectedPeriod;
 }

@@ -2,9 +2,9 @@
 
 angular.module('app.signup', ['ngResource']).controller('SignUpCtrl', SignUpCtrl);
 
-SignUpCtrl.$inject = ['$rootScope', '$location', '$http', '$scope', 'Auth' ];
+SignUpCtrl.$inject = ['$location', '$http', '$scope', 'Auth' ,'toaster'];
 
-function SignUpCtrl($rootScope, $location, $http, $scope, Auth) {
+function SignUpCtrl($location, $http, $scope, Auth,toaster) {
 	var self 			= this;
 	this.emailExists 	= false;
 	this.usernameExists = false;
@@ -38,33 +38,15 @@ function SignUpCtrl($rootScope, $location, $http, $scope, Auth) {
 	}
 	
 	this.signup = function(user){
-
-		toastr.options = {
-		  "closeButton": true,
-		  "debug": false,
-		  "newestOnTop": false,
-		  "progressBar": false,
-		  "positionClass": "toast-top-right",
-		  "preventDuplicates": false,
-		  "onclick": null,
-		  "showDuration": "300",
-		  "hideDuration": "1000",
-		  "timeOut": "5000",
-		  "extendedTimeOut": "1000",
-		  "showEasing": "swing",
-		  "hideEasing": "linear",
-		  "showMethod": "fadeIn",
-		  "hideMethod": "fadeOut"
-  		}
-		
 		Auth.signup(user,
 			        function() {
-						$scope.user = "";			
-				    	toastr.success('Successful Sign Up. Login now.');
+						$scope.user = "";
+						toaster.pop('success', 'Congratulation', "Successful Sign Up. Login now.");
+						$location.path('/login');
 			        },
 			        function(err) {
-			        	$scope.user = "";	    	
-						toastr.error('Unsuccessful Sign Up. Try again.');        	
+			        	$scope.user = "";
+						toaster.pop('error', 'Error', "Unsuccessful Sign Up. Try again.");
 			        }
 	        	   );
 	}

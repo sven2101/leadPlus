@@ -30,6 +30,8 @@
                     <button ng-click="lead.refreshData()" type="button" class="btn btn-success">
                         <i class="fa fa-refresh"></i>&nbsp;Reload data
                     </button>
+                    <span class="pull-right" style=" font-size: 1.5em;">All leads &nbsp;<input type="checkbox" ng-model="lead.loadAllData" ng-change="lead.changeDataInput()" class="js-switch"
+                                                    ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
                     <p class="text-danger"><strong>{{ lead.message }}</strong></p>
                     <div class="table-responsive">
                         <table datatable="" dt-options="lead.dtOptions" dt-columns="lead.dtColumns"

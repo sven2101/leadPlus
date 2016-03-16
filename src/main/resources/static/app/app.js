@@ -21,7 +21,9 @@ angular.module('app', [
     'datatables',
     'datatables.bootstrap',
     'datatables.buttons',
-    'ui.sortable'
+    'ui.sortable',
+    'NgSwitchery',
+    'toaster'
 ]);
 
 angular.module('app')
