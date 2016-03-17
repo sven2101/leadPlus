@@ -1,7 +1,5 @@
 package dash.processmanagement.offer;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,8 +23,8 @@ public class Offer {
     @JoinColumn(name = "prospect_fk")
     private Prospect 	prospect;
     
-    private Date	timestamp;
-    private Date 	deliveryDate;
+    private String	timestamp;
+    private String 	deliveryDate;
     private double 	price;
     private String 	deliveryAddress;
     
@@ -34,7 +32,7 @@ public class Offer {
 	
     }
     
-    public Offer(Prospect prospect, Date timestamp, double price, Date deliveryDate, String deliveryAddress){
+    public Offer(Prospect prospect, String timestamp, double price, String deliveryDate, String deliveryAddress){
 	this.prospect 		= prospect;
 	this.timestamp 		= timestamp;
 	this.price 		= price;
@@ -58,11 +56,11 @@ public class Offer {
         this.prospect = prospect;
     }
 
-    public Date getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
     
@@ -74,11 +72,11 @@ public class Offer {
         this.price = price;
     }
 
-    public Date getDeliveryDate() {
+    public String getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(String deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 

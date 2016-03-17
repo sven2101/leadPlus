@@ -1,7 +1,5 @@
 package dash.processmanagement.sale;
 
-import java.util.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,13 +19,13 @@ public class Sale {
     private boolean 	transport;
     private double 	saleReturn;
     private double 	saleProfit;
-    private Date	timestamp;
+    private String 	timestamp;
     
     public Sale (){
     	
     }
     
-    public Sale (int containerAmount, boolean transport, double saleReturn, double saleProfit, Date timestamp){
+    public Sale (int containerAmount, boolean transport, double saleReturn, double saleProfit, String timestamp){
     	this.containerAmount 	= containerAmount;
     	this.transport		= transport;
     	this.saleReturn		= saleReturn;
@@ -67,11 +65,11 @@ public class Sale {
 	this.saleProfit = saleProfit;
     }
 
-    public Date getTimestamp() {
+    public String getTimestamp() {
 	return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(String timestamp) {
 	this.timestamp = timestamp;
     }
 }

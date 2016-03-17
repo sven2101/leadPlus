@@ -40,6 +40,8 @@ import javax.annotation.PostConstruct;
 import static com.google.common.base.Predicates.*;
 import static springfox.documentation.builders.PathSelectors.*;
 
+import java.io.FileReader;
+
 /**
  * Created by Andreas on 09.10.2015.
  */
@@ -91,11 +93,10 @@ public class Application {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-    
-    /*
+        
     @PostConstruct
     public void createAdminIfNotExists() throws Exception {
-
+	/*
         User user1 = new User();
 
         user1.setUsername("andreas".toLowerCase());
@@ -113,8 +114,10 @@ public class Application {
         user2.setRole(Role.ADMIN);
 
         userRepository.save(user2);
+        
+       */
     }
-    */
+    
     @EnableWebSecurity
     @Configuration
     @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)

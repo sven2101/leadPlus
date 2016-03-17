@@ -5,6 +5,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,19 @@ public class LeadResource {
     @ResponseStatus(HttpStatus.CREATED)
     public void add(@ApiParam(required=true) @RequestBody @Valid Lead lead) {
         leadService.createLead(lead);
+    }
+    
+    /*
+     * This API is only used to integrate data.
+     */
+    @ApiOperation(value = "Add a single lead.", notes = "")
+    @RequestMapping(value = "/leads/array",
+	    	method = RequestMethod.POST,
+	    	consumes = {MediaType.APPLICATION_JSON_VALUE},
+	    	produces = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseStatus(HttpStatus.CREATED)
+    public void add(@ApiParam(required=true) @RequestBody @Valid List<Lead> lead) {
+        leadService.createLeads(lead);
     }
     
     @ApiOperation(value = "Update a single lead.", notes = "")

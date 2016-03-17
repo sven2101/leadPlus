@@ -7,8 +7,6 @@ import dash.processmanagement.lead.inquirer.Inquirer;
 import dash.processmanagement.lead.vendor.Vendor;
 import dash.processmanagement.status.Status;
 
-import java.util.Date;
-
 import javax.persistence.*;
 
 /**
@@ -38,24 +36,25 @@ public class Lead {
     @OneToOne
     @JoinColumn(name = "container_fk")
     private Container 	container;
+
+    private String 	date;
     
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date 	date;
-           
     private int 	containerAmount;
     private String 	destination;
+    
+    @Column(length=2048)
     private String 	message;
     
     public Lead(){}
 
-    public Lead(Inquirer inquirer, Vendor vendor, Container container, int containerAmount, String destination, String message, Status status, Date date){
+    public Lead(Inquirer inquirer, Vendor vendor, Container container, int containerAmount, String destination, String message, Status status, String date){
         this.inquirer 		= inquirer;
         this.vendor 		= vendor;
         this.container		= container;
         this.containerAmount 	= containerAmount;
         this.destination 	= destination;
         this.message 		= message;
-        this.date		= date;
+	this.date 		= date;
     }
 
     public Long getId() { return id; }
@@ -107,12 +106,12 @@ public class Lead {
     public void setContainer(Container container){
     	this.container = container;
     }
-    
-    public Date getDate(){
+   
+    public String getDate(){
     	return this.date;
     }
     
-    public void setDate(Date date){
+    public void setDate(String date){
     	this.date = date;
     }
 }
