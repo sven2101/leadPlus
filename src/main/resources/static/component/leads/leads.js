@@ -11,13 +11,9 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope) {
     this.compile = $compile;
     this.message = '';
     this.commentInput = {};
-    /*this.comments = [
-        {from: "Sven", comment: "hallo du", date: "21.01.1993 12:45:10"}, {
-            from: "Andreas",
-            comment: "hey du pisser",
-            date: "21.01.1991 11:45:12"
-        }, {from: "Sven", comment: "Aufs maul?", date: "21.01.1991 18:00:25"}];*/
-    this.comments=[];
+    this.commentModalInput = {};
+    this.comments = {};
+    this.currentCommentModalId = '';
     this.loadAllData = false;
     this.dtInstance = {};
     this.leads = {};
@@ -120,13 +116,24 @@ LeadsCtrl.prototype.changeDataInput = function () {
     }
 }
 
-LeadsCtrl.prototype.addComment = function (id) {
-    var input = this.commentInput[id];
-    var currentDate = new Date();
-    var comment = {from: "Sven", comment: input, date: currentDate};
-    this.comments.push(comment);
-    this.commentInput[id] = '';
+LeadsCtrl.prototype.loadCurrentIdToModal = function (id) {
+    this.currentCommentModalId = id;
 }
+
+LeadsCtrl.prototype.addComment = function (id, source) {
+    if (angular.isUndefined(this.comments[id])) {
+        this.comments[id] = [];
+    }
+    if (source == 'table' && this.commentInput[id] != '' && !angular.isUndefined(this.commentInput[id])) {
+        this.comments[id].push({from: "Sven", comment: this.commentInput[id], date: new Date()});
+        this.commentInput[id] = '';
+    }
+    else if (source == 'modal' && this.commentModalInput[id] != '' && !angular.isUndefined(this.commentModalInput[id])) {
+        this.comments[id].push({from: "Sven", comment: this.commentModalInput[id], date: new Date()});
+        this.commentModalInput[id] = '';
+    }
+}
+
 
 LeadsCtrl.prototype.submitForm = function () {
     // check to make sure the form is completely valid
@@ -183,8 +190,7 @@ LeadsCtrl.prototype.deleteRow = function (lead) {
 
 LeadsCtrl.prototype.appendChildRow = function (lead, event) {
     var childScope = this.scope.$new(true);
-    childScope.lead = lead;
-    childScope.comments = this.comments;
+    childScope.leadChildData = lead;
     childScope.parent = this;
 
     var link = angular.element(event.currentTarget),

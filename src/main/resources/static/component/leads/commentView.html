@@ -2,19 +2,20 @@
     <div class="ibox chat-view">
         <div class="ibox-title text-left">
             Comments
-            <small ng-if="comments.length>0" class="pull-right text-muted">Last Comment:
-                {{comments[comments.length-1].date| date:'dd-MM-yyyy HH:mm:ss'}}
+            <small ng-if="parent.comments[leadChildData.id].length>0" class="pull-right text-muted">Last Comment:
+                {{(parent.comments[leadChildData.id])[(parent.comments[leadChildData.id]).length-1].date|
+                date:'dd-MM-yyyy HH:mm:ss'}}
             </small>
         </div>
         <div class="ibox-content text-left">
-            <div class="row">
+            <div class="row" ng-if="parent.comments[leadChildData.id].length>0">
                 <div class="col-md-12">
-                    <div class="chat-discussion" ng-model="comments">
-                        <div ng-repeat="comment in comments | orderBy: '-date' | limitTo: 3">
+                    <div class="chat-discussion" ng-model="parent.comments[leadChildData.id]">
+                        <div ng-repeat="comment in parent.comments[leadChildData.id] | orderBy: '-date' | limitTo: 3">
                             <div ng-if="$index%2==0" class="chat-message left">
                                 <img class="message-avatar" src="assets/img/guest.png" alt="">
                                 <div class="message">
-                                    <a class="message-author" href="#"> {{comment.from}} </a>
+                                    <a class="message-author"> {{comment.from}} </a>
                                     <span class="message-date"> {{comment.date|  date:'dd-MM-yyyy HH:mm:ss'}} </span>
                                             <span class="message-content">
                                                 {{comment.comment}}
@@ -33,8 +34,9 @@
                             </div>
                         </div>
                         </br>
-                        <div ng-if="comments.length>3"
-                             class="text-center"><a ng-click="" data-toggle="modal" data-target="#commentModal">More
+                        <div ng-if="parent.comments[leadChildData.id].length>3"
+                             class="text-center"><a ng-click="parent.loadCurrentIdToModal(leadChildData.id)"
+                                                    data-toggle="modal" data-target="#commentModal">More
                             Comments...</a>
                         </div>
                     </div>
@@ -45,14 +47,15 @@
                     <div class="chat-message-form" style="width:100%">
 
                         <div class="form-group" style="width:100%">
-                                <textarea class="form-control message-input" ng-model="parent.commentInput[lead.id]"
+                                <textarea class="form-control message-input"
+                                          ng-model="parent.commentInput[leadChildData.id]"
                                           style="resize: none; width:100%;box-sizing: border-box;"
                                           name="message"
                                           placeholder="Enter Comment"/>
                         </div>
                         <button style="width:20%; margin-top: 10px;"
-                                class="btn btn-success" ng-click="parent.addComment(lead.id)">
-                            <i class="fa fa-plus"></i>&nbsp;Add Comment
+                                class="btn btn-success" ng-click="parent.addComment(leadChildData.id,'table')">
+                            <i class="fa fa-comment-o"></i>&nbsp;Add Comment
                         </button>
                     </div>
                 </div>
