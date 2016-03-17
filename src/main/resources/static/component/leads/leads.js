@@ -10,7 +10,14 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope) {
     this.scope = $scope;
     this.compile = $compile;
     this.message = '';
-    this.comment = '';
+    this.commentInput = {};
+    /*this.comments = [
+        {from: "Sven", comment: "hallo du", date: "21.01.1993 12:45:10"}, {
+            from: "Andreas",
+            comment: "hey du pisser",
+            date: "21.01.1991 11:45:12"
+        }, {from: "Sven", comment: "Aufs maul?", date: "21.01.1991 18:00:25"}];*/
+    this.comments=[];
     this.loadAllData = false;
     this.dtInstance = {};
     this.leads = {};
@@ -113,8 +120,12 @@ LeadsCtrl.prototype.changeDataInput = function () {
     }
 }
 
-LeadsCtrl.prototype.addComment = function () {
-    alert("send comment");
+LeadsCtrl.prototype.addComment = function (id) {
+    var input = this.commentInput[id];
+    var currentDate = new Date();
+    var comment = {from: "Sven", comment: input, date: currentDate};
+    this.comments.push(comment);
+    this.commentInput[id] = '';
 }
 
 LeadsCtrl.prototype.submitForm = function () {
@@ -173,13 +184,15 @@ LeadsCtrl.prototype.deleteRow = function (lead) {
 LeadsCtrl.prototype.appendChildRow = function (lead, event) {
     var childScope = this.scope.$new(true);
     childScope.lead = lead;
+    childScope.comments = this.comments;
+    childScope.parent = this;
 
     var link = angular.element(event.currentTarget),
         icon = link.find('.glyphicon'),
         tr = link.parent().parent(),
         table = this.dtInstance.DataTable,
         row = table.row(tr);
-    //
+
     if (row.child.isShown()) {
         icon.removeClass('glyphicon-minus-sign').addClass('glyphicon-plus-sign');
         row.child.hide();
