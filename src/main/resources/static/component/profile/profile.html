@@ -37,11 +37,10 @@
                         <!-- default language -->
                         <div class="form-group">
                             <label>Standard Sprache</label>
-                            <select style="width:140px;"
-                                    ng-options="languages for languages in ['de', 'en']"
-                                    ng-change="profile.onDefaultLanguageChange(profile.selectedLanguage)"
-                                    ng-model="profile.defaultLanguage"
-                                    class="form-control"/>
+                            <select class="form-control" ng-model="profile.defaultLanguage">
+                                <option value="de">Deutsch(de)</option>
+                                <option value="en">English(en)</option>
+                            </select>
                         </div>
                         <button class="btn btn-success" type="submit" ng-disabled="profilInfoForm.$invalid">
                             <i class="fa fa-save"></i>&nbsp;Speichern
@@ -58,33 +57,35 @@
                     <h5>Passwort ändern</h5>
                 </div>
                 <div class="ibox-content">
-                    <form name="passwordForm" ng-submit="profile.submitPasswordForm()" novalidate>
+                    <form name="profile.passwordForm" ng-submit="profile.submitPasswordForm()" novalidate>
                         <!-- password -->
                         <div class="form-group"
-                             ng-class="{ 'has-error' : passwordForm.oldPassword.$invalid && !passwordForm.oldPassword.$pristine }">
+                             ng-class="{ 'has-error' : profile.passwordForm.oldPassword.$invalid && !profile.passwordForm.oldPassword.$pristine }">
                             <label>Altes Passwort</label>
                             <input type="password" name="oldPassword" class="form-control"
                                    ng-model="profile.oldPassword" required>
-                            <p ng-show="passwordForm.oldPassword.$invalid && !passwordForm.oldPassword.$pristine"
+                            <p ng-show="profile.passwordForm.oldPassword.$invalid && !profile.passwordForm.oldPassword.$pristine"
+                               class="help-block">set old pw to change pw</p>
+                        </div>
+                        <div class="form-group"
+                             ng-class="{ 'has-error' : profile.passwordForm.newPassword1.$invalid && !profile.passwordForm.newPassword1.$pristine }">
+                            <label>Neues Passwort</label>
+                            <input type="password" name="newPassword1" id="newPassword1" class="form-control"
+                                   ng-model="profile.newPassword1" required ng-minlength="6"/>
+                            <p ng-show="profile.passwordForm.newPassword1.$invalid && !profile.passwordForm.newPassword1.$pristine"
                                class="help-block">Password invalid</p>
                         </div>
                         <div class="form-group"
-                             ng-class="{ 'has-error' : passwordForm.newPassword.$invalid && !passwordForm.newPassword.$pristine }">
+                             ng-class="{ 'has-error' : profile.passwordForm.newPassword2.$invalid && !profile.passwordForm.newPassword2.$pristine }">
                             <label>Neues Passwort</label>
-                            <input type="password" name="newPassword" class="form-control"
-                                   ng-model="profile.newPassword1" required ng-minlength="6">
-                            <p ng-show="passwordForm.newPassword.$invalid && !passwordForm.newPassword.$pristine"
+                            <input type="password" name="newPassword2" id="newPassword2" class="form-control"
+                                   ng-model="profile.newPassword2" required ng-minlength="6" pw-check="newPassword1"/>
+                            <p ng-show="profile.passwordForm.newPassword2.$invalid && !profile.passwordForm.newPassword2.$pristine"
                                class="help-block">Password invalid</p>
+                            <p ng-show="profile.passwordForm.newPassword2.$error.pwmatch"
+                               class="help-block">Passwords don't match</p>
                         </div>
-                        <div class="form-group"
-                             ng-class="{ 'has-error' : passwordForm.newPassword2.$invalid && !passwordForm.newPassword2.$pristine }">
-                            <label>Neues Passwort</label>
-                            <input type="password" name="newPassword2" class="form-control"
-                                   ng-model="profile.newPassword2" required ng-minlength="6">
-                            <p ng-show="passwordForm.newPassword2.$invalid && !passwordForm.newPassword2.$pristine"
-                               class="help-block">Password invalid</p>
-                        </div>
-                        <button class="btn btn-success" type="submit" ng-disabled="passwordForm.$invalid">
+                        <button class="btn btn-success" type="submit" ng-disabled="profile.passwordForm.$invalid">
                             <i class="fa fa-save"></i>&nbsp;Speichern
                         </button>
                     </form>

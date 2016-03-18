@@ -3,12 +3,13 @@
 angular.module('app.leads', ['ngResource']).controller('LeadsCtrl', LeadsCtrl);
 
 
-LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope'];
-function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope) {
+LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster'];
+function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster) {
 
     var vm = this;
     this.scope = $scope;
     this.compile = $compile;
+    this.toaster = toaster;
     this.message = '';
     this.commentInput = {};
     this.commentModalInput = {};
@@ -152,6 +153,7 @@ LeadsCtrl.prototype.addComment = function (id, source) {
 }
 
 LeadsCtrl.prototype.saveLead = function () {
+    this.toaster.pop('success', 'Success', "New Lead Saved");
     this.message = 'Save new lead:' + this.newLead.firstName;
 }
 
@@ -188,11 +190,13 @@ LeadsCtrl.prototype.loadDataToModal = function (lead) {
 LeadsCtrl.prototype.saveEditedRow = function () {
     // Edit some data and call server to make changes...
     // Then reload the data so that DT is refreshed
+    this.toaster.pop('success', 'Success', "Lead edited");
     this.message = 'You are trying to edit the row: ' + JSON.stringify(this.editLead);
     this.dtInstance.reloadData();
 }
 
 LeadsCtrl.prototype.deleteRow = function (lead) {
+    this.toaster.pop('success', 'Success', "Lead removed");
     this.message = 'You are trying to remove the row: ' + JSON.stringify(lead);
     // Delete some data and call server to make changes...
     // Then reload the data so that DT is refreshed
