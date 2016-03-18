@@ -43,16 +43,33 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope) {
             'pdfHtml5'
         ])
         .withBootstrap()
+        .withLanguage({
+            "sEmptyTable": "Keine Daten verfügbar",
+            "sInfo": "Zeige _START_ bis _END_ von _TOTAL_ Einträgen",
+            "sInfoEmpty": "Zeige 0 bis 0 von 0 Einträgen",
+            "sInfoFiltered": "(filtered from _MAX_ total entries)",
+            "sInfoPostFix": "",
+            "sInfoThousands": ",",
+            "sLengthMenu": "Zeige _MENU_ Einträge",
+            "sLoadingRecords": "Loading...",
+            "sProcessing": "Processing...",
+            "sSearch": "Suche:",
+            "sZeroRecords": "Keine Einträge gefunden"
+        })
         .withOption('createdRow', createdRow)
         .withOption('order', [1, 'asc']);
     this.dtColumns = [
         DTColumnBuilder.newColumn(null).withTitle('').notSortable()
             .renderWith(addDetailButton),
-        DTColumnBuilder.newColumn('id').withTitle('ID'),
+        DTColumnBuilder.newColumn('id').withTitle('ID')
+            .withClass('text-center'),
         DTColumnBuilder.newColumn(null).withTitle('First name')
+            .withClass('text-center')
             .renderWith(addStatusStyle),
-        DTColumnBuilder.newColumn('lastName').withTitle('Last name'),
-        DTColumnBuilder.newColumn(null).withTitle('').notSortable()
+        DTColumnBuilder.newColumn('lastName').withTitle('Last name')
+            .withClass('text-center'),
+        DTColumnBuilder.newColumn(null).withTitle('<span class="glyphicon glyphicon-cog"></span>').withClass('text-center')
+            .notSortable()
             .renderWith(addActionsButtons)
     ];
 
@@ -134,19 +151,13 @@ LeadsCtrl.prototype.addComment = function (id, source) {
     }
 }
 
-
-LeadsCtrl.prototype.submitForm = function () {
-    // check to make sure the form is completely valid
-    if (this.scope.editForm.$valid) {
-        alert('our form is amazing');
-    }
-}
-
 LeadsCtrl.prototype.saveLead = function () {
     this.message = 'Save new lead:' + this.newLead.firstName;
-    this.newLead.firstName = "";
 }
 
+LeadsCtrl.prototype.clearNewLead = function () {
+    this.newLead = {};
+}
 
 LeadsCtrl.prototype.refreshData = function () {
     var resetPaging = false;
@@ -170,14 +181,14 @@ LeadsCtrl.prototype.closeInquiry = function (lead) {
 }
 
 LeadsCtrl.prototype.loadDataToModal = function (lead) {
-    this.message = 'You are trying to edit the row: ' + JSON.stringify(lead);
+    this.message = 'You are loading datas to edit: ' + JSON.stringify(lead);
     this.editLead = lead;
 }
 
 LeadsCtrl.prototype.saveEditedRow = function () {
     // Edit some data and call server to make changes...
     // Then reload the data so that DT is refreshed
-    this.editLead.firstName = "test";
+    this.message = 'You are trying to edit the row: ' + JSON.stringify(this.editLead);
     this.dtInstance.reloadData();
 }
 

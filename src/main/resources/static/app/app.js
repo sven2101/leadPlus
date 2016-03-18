@@ -13,6 +13,7 @@ angular.module('app', [
     'app.offers',
     'app.sales',
     'app.statistics',
+    'app.profile',
 	'pascalprecht.translate',
 	'ngResource',
     'ngRoute',
@@ -70,6 +71,12 @@ angular.module('app')
                 controller: 'SettingsCtrl',
                 controllerAs: 'settings',
         		authenticated: true
+            })
+            .when('/profile', {
+                templateUrl: 'component/profile/profile.html',
+                controller: 'ProfileCtrl',
+                controllerAs: 'profile',
+                authenticated: true
             })
             .when('/signup', {
                 templateUrl: 'component/signup/signup.html',
