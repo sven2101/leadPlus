@@ -3,14 +3,18 @@
 angular.module('app.leads', ['ngResource']).controller('LeadsCtrl', LeadsCtrl);
 
 
-LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope'];
-function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope) {
+LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster'];
+function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster) {
 
     var vm = this;
     this.scope = $scope;
     this.compile = $compile;
+    this.toaster = toaster;
     this.message = '';
-    this.comment = '';
+    this.commentInput = {};
+    this.commentModalInput = {};
+    this.comments = {};
+    this.currentCommentModalId = '';
     this.loadAllData = false;
     this.dtInstance = {};
     this.leads = {};
@@ -40,16 +44,33 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope) {
             'pdfHtml5'
         ])
         .withBootstrap()
+        .withLanguage({
+            "sEmptyTable": "Keine Daten verfügbar",
+            "sInfo": "Zeige _START_ bis _END_ von _TOTAL_ Einträgen",
+            "sInfoEmpty": "Zeige 0 bis 0 von 0 Einträgen",
+            "sInfoFiltered": "(filtered from _MAX_ total entries)",
+            "sInfoPostFix": "",
+            "sInfoThousands": ",",
+            "sLengthMenu": "Zeige _MENU_ Einträge",
+            "sLoadingRecords": "Loading...",
+            "sProcessing": "Processing...",
+            "sSearch": "Suche:",
+            "sZeroRecords": "Keine Einträge gefunden"
+        })
         .withOption('createdRow', createdRow)
         .withOption('order', [1, 'asc']);
     this.dtColumns = [
         DTColumnBuilder.newColumn(null).withTitle('').notSortable()
             .renderWith(addDetailButton),
-        DTColumnBuilder.newColumn('id').withTitle('ID'),
+        DTColumnBuilder.newColumn('id').withTitle('ID')
+            .withClass('text-center'),
         DTColumnBuilder.newColumn(null).withTitle('First name')
+            .withClass('text-center')
             .renderWith(addStatusStyle),
-        DTColumnBuilder.newColumn('lastName').withTitle('Last name'),
-        DTColumnBuilder.newColumn(null).withTitle('').notSortable()
+        DTColumnBuilder.newColumn('lastName').withTitle('Last name')
+            .withClass('text-center'),
+        DTColumnBuilder.newColumn(null).withTitle('<span class="glyphicon glyphicon-cog"></span>').withClass('text-center')
+            .notSortable()
             .renderWith(addActionsButtons)
     ];
 
@@ -113,22 +134,32 @@ LeadsCtrl.prototype.changeDataInput = function () {
     }
 }
 
-LeadsCtrl.prototype.addComment = function () {
-    alert("send comment");
+LeadsCtrl.prototype.loadCurrentIdToModal = function (id) {
+    this.currentCommentModalId = id;
 }
 
-LeadsCtrl.prototype.submitForm = function () {
-    // check to make sure the form is completely valid
-    if (this.scope.editForm.$valid) {
-        alert('our form is amazing');
+LeadsCtrl.prototype.addComment = function (id, source) {
+    if (angular.isUndefined(this.comments[id])) {
+        this.comments[id] = [];
+    }
+    if (source == 'table' && this.commentInput[id] != '' && !angular.isUndefined(this.commentInput[id])) {
+        this.comments[id].push({from: "Sven", comment: this.commentInput[id], date: new Date()});
+        this.commentInput[id] = '';
+    }
+    else if (source == 'modal' && this.commentModalInput[id] != '' && !angular.isUndefined(this.commentModalInput[id])) {
+        this.comments[id].push({from: "Sven", comment: this.commentModalInput[id], date: new Date()});
+        this.commentModalInput[id] = '';
     }
 }
 
 LeadsCtrl.prototype.saveLead = function () {
+    this.toaster.pop('success', 'Success', "New Lead Saved");
     this.message = 'Save new lead:' + this.newLead.firstName;
-    this.newLead.firstName = "";
 }
 
+LeadsCtrl.prototype.clearNewLead = function () {
+    this.newLead = {};
+}
 
 LeadsCtrl.prototype.refreshData = function () {
     var resetPaging = false;
@@ -152,18 +183,20 @@ LeadsCtrl.prototype.closeInquiry = function (lead) {
 }
 
 LeadsCtrl.prototype.loadDataToModal = function (lead) {
-    this.message = 'You are trying to edit the row: ' + JSON.stringify(lead);
+    this.message = 'You are loading datas to edit: ' + JSON.stringify(lead);
     this.editLead = lead;
 }
 
 LeadsCtrl.prototype.saveEditedRow = function () {
     // Edit some data and call server to make changes...
     // Then reload the data so that DT is refreshed
-    this.editLead.firstName = "test";
+    this.toaster.pop('success', 'Success', "Lead edited");
+    this.message = 'You are trying to edit the row: ' + JSON.stringify(this.editLead);
     this.dtInstance.reloadData();
 }
 
 LeadsCtrl.prototype.deleteRow = function (lead) {
+    this.toaster.pop('success', 'Success', "Lead removed");
     this.message = 'You are trying to remove the row: ' + JSON.stringify(lead);
     // Delete some data and call server to make changes...
     // Then reload the data so that DT is refreshed
@@ -172,14 +205,15 @@ LeadsCtrl.prototype.deleteRow = function (lead) {
 
 LeadsCtrl.prototype.appendChildRow = function (lead, event) {
     var childScope = this.scope.$new(true);
-    childScope.lead = lead;
+    childScope.leadChildData = lead;
+    childScope.parent = this;
 
     var link = angular.element(event.currentTarget),
         icon = link.find('.glyphicon'),
         tr = link.parent().parent(),
         table = this.dtInstance.DataTable,
         row = table.row(tr);
-    //
+
     if (row.child.isShown()) {
         icon.removeClass('glyphicon-minus-sign').addClass('glyphicon-plus-sign');
         row.child.hide();

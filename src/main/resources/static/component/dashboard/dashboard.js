@@ -7,7 +7,9 @@ DashboardCtrl.$inject = ['toaster'];
 function DashboardCtrl(toaster) {
 
     var vm = this;
-    this.toaster =  toaster;
+    this.toaster = toaster;
+    this.commentModalInput = '';
+    this.comments = {};
     this.selectedPeriod = 'Heute';
     this.leadsAmount = 100;
     this.offersAmount = 50;
@@ -17,26 +19,33 @@ function DashboardCtrl(toaster) {
     this.conversionRate = 12;
     this.infoData = {};
     this.openLead = [{
+        id:'7',
         name: 'lead1',
         locked: false
     },
         {
+            id:'8',
             name: 'lead2',
             locked: false
         }];
     this.openOffer = [{
+        id:'' +
+        '9',
         name: 'offer1',
         locked: false
     },
         {
+            id:'10',
             name: 'offer2',
             locked: false
         }];
     this.sales = [{
+        id:'11',
         name: 'sale1',
         locked: true
     },
         {
+            id:'12',
             name: 'sale2',
             locked: true
         }];
@@ -88,26 +97,32 @@ DashboardCtrl.prototype.saveDataToModal = function (data) {
 }
 DashboardCtrl.prototype.refreshData = function () {
     this.openLead = [{
+        id:'1',
         name: 'lead3',
         locked: false
     },
         {
+            id:'2',
             name: 'lead4',
             locked: false
         }];
     this.openOffer = [{
+        id:'3',
         name: 'offer5',
         locked: false
     },
         {
+            id:'4',
             name: 'offer6',
             locked: false
         }];
     this.sales = [{
+        id:'5',
         name: 'sale7',
         locked: true
     },
         {
+            id:'5',
             name: 'sale8',
             locked: true
         }];
@@ -116,3 +131,15 @@ DashboardCtrl.prototype.refreshData = function () {
 DashboardCtrl.prototype.onPeriodChange = function (selectedPeriod) {
     this.selectedPeriod = selectedPeriod;
 }
+
+
+DashboardCtrl.prototype.addComment = function (id) {
+    if (this.commentModalInput != '' && !angular.isUndefined(this.commentModalInput)) {
+        if(angular.isUndefined(this.comments[id])){
+            this.comments[id] = [];
+        }
+        this.comments[id].push({from: "Sven", comment: this.commentModalInput, date: new Date()});
+        this.commentModalInput = '';
+    }
+}
+

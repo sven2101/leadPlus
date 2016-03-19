@@ -1,3 +1,8 @@
+<style>
+    .chat-view {
+        word-break: break-all;
+    }
+</style>
 <div class="row">
     <div class="col-lg-6">
         <div class="ibox">
@@ -8,22 +13,22 @@
                 <table class="table table-bordered text-left">
                     <tr>
                         <td>Name</td>
-                        <td>{{lead.firstName}}</td>
+                        <td>{{leadChildData.firstName}}</td>
                     </tr>
                     <tr>
                         <td>Container</td>
-                        <td>{{lead.firstName}}</td>
+                        <td>{{leadChildData.firstName}}</td>
                     </tr>
                     <tr>
                         <td>Menge</td>
-                        <td>{{lead.lastName}}</td>
+                        <td>{{leadChildData.lastName}}</td>
                     </tr>
                     <tr>
                         <td>Preis</td>
-                        <td>{{lead.lastName}}</td>
+                        <td>{{leadChildData.lastName}}</td>
                     </tr>
                     <tr>
-                        <td>Lieferort</td>
+                        <td>leadChildData</td>
                         <td>{{lead.lastName}}</td>
                     </tr>
                 </table>
@@ -35,8 +40,9 @@
             <div class="ibox-title">
                 <h3>Notiz</h3>
             </div>
-            <div class="ibox-content text-left">{{lead.lastName}}</div>
+            <div class="ibox-content text-left">{{leadChildData.lastName}}</div>
         </div>
     </div>
 </div>
 <div class="row" ng-include="'component/leads/commentView.html'"></div>
+<div class="row" ng-include="'component/leads/allCommentsModal.html'"></div>

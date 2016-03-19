@@ -8,25 +8,32 @@
                 <h2>Container xy</h2>
             </div>
             <div class="modal-body">
-                <form name="addForm" ng-submit="lead.submitForm()" novalidate>
+                <form name="addForm" novalidate>
                     <!-- NAME -->
-                    <div class="form-group" ng-class="{ 'has-error' : addForm.name.$invalid && !addForm.name.$pristine }">
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : addForm.name.$invalid && !addForm.name.$pristine }">
                         <label>Name</label>
                         <input type="text" name="name" class="form-control" ng-model="lead.newLead.firstName" required>
-                        <p ng-show="addForm.name.$invalid && !addForm.name.$pristine" class="help-block">You name is required.</p>
+                        <p ng-show="addForm.name.$invalid && !addForm.name.$pristine" class="help-block">You name is
+                            required.</p>
                     </div>
 
                     <!-- EMAIL -->
-                    <div class="form-group" ng-class="{ 'has-error' : addForm.email.$invalid && !addForm.email.$pristine }">
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : addForm.email.$invalid && !addForm.email.$pristine }">
                         <label>Email</label>
                         <input type="email" name="email" class="form-control" ng-model="lead.newLead.lastName">
-                        <p ng-show="addForm.email.$invalid && !addForm.email.$pristine" class="help-block">Enter a valid email.</p>
+                        <p ng-show="addForm.email.$invalid && !addForm.email.$pristine" class="help-block">Enter a valid
+                            email.</p>
                     </div>
                 </form>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">Abbrechen</button>
-                <button type="submit" class="btn btn-success" ng-disabled="addForm.$invalid" data-dismiss="modal">Speichern</button>
+                <button type="button" class="btn btn-success" ng-disabled="addForm.$invalid"
+                        ng-click="lead.saveLead()" data-dismiss="modal">Speichern
+                </button>
             </div>
         </div>
     </div>

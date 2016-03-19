@@ -1,0 +1,97 @@
+<meta charset="utf-8">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-10">
+                <h2>Profil</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#/dashboard">Home</a>
+                    </li>
+                    <li class="active">
+                        <strong>Profil</strong>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Profilinformationen</h5>
+                </div>
+                <div class="ibox-content">
+                    <form name="profilInfoForm" ng-submit="profile.submitProfilInfoForm()" novalidate>
+                        <!-- EMAIL -->
+                        <div class="form-group"
+                             ng-class="{ 'has-error' : profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine }">
+                            <label>Email</label>
+                            <input type="email" name="email" class="form-control"
+                                   ng-model="profile.email">
+                            <p ng-show="profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine"
+                               class="help-block">Enter a valid email.</p>
+                        </div>
+                        <!-- default language -->
+                        <div class="form-group">
+                            <label>Standard Sprache</label>
+                            <select class="form-control" ng-model="profile.defaultLanguage">
+                                <option value="de">Deutsch(de)</option>
+                                <option value="en">English(en)</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-success" type="submit" ng-disabled="profilInfoForm.$invalid">
+                            <i class="fa fa-save"></i>&nbsp;Speichern
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Passwort ändern</h5>
+                </div>
+                <div class="ibox-content">
+                    <form name="profile.passwordForm" ng-submit="profile.submitPasswordForm()" novalidate>
+                        <!-- password -->
+                        <div class="form-group"
+                             ng-class="{ 'has-error' : profile.passwordForm.oldPassword.$invalid && !profile.passwordForm.oldPassword.$pristine }">
+                            <label>Altes Passwort</label>
+                            <input type="password" name="oldPassword" class="form-control"
+                                   ng-model="profile.oldPassword" required>
+                            <p ng-show="profile.passwordForm.oldPassword.$invalid && !profile.passwordForm.oldPassword.$pristine"
+                               class="help-block">set old pw to change pw</p>
+                        </div>
+                        <div class="form-group"
+                             ng-class="{ 'has-error' : profile.passwordForm.newPassword1.$invalid && !profile.passwordForm.newPassword1.$pristine }">
+                            <label>Neues Passwort</label>
+                            <input type="password" name="newPassword1" id="newPassword1" class="form-control"
+                                   ng-model="profile.newPassword1" required ng-minlength="6"/>
+                            <p ng-show="profile.passwordForm.newPassword1.$invalid && !profile.passwordForm.newPassword1.$pristine"
+                               class="help-block">Password invalid</p>
+                        </div>
+                        <div class="form-group"
+                             ng-class="{ 'has-error' : profile.passwordForm.newPassword2.$invalid && !profile.passwordForm.newPassword2.$pristine }">
+                            <label>Neues Passwort</label>
+                            <input type="password" name="newPassword2" id="newPassword2" class="form-control"
+                                   ng-model="profile.newPassword2" required ng-minlength="6" pw-check="newPassword1"/>
+                            <p ng-show="profile.passwordForm.newPassword2.$invalid && !profile.passwordForm.newPassword2.$pristine"
+                               class="help-block">Password invalid</p>
+                            <p ng-show="profile.passwordForm.newPassword2.$error.pwmatch"
+                               class="help-block">Passwords don't match</p>
+                        </div>
+                        <button class="btn btn-success" type="submit" ng-disabled="profile.passwordForm.$invalid">
+                            <i class="fa fa-save"></i>&nbsp;Speichern
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
