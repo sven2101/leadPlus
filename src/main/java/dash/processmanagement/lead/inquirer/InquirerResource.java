@@ -72,6 +72,5 @@ public class InquirerResource {
         public void delete( @ApiParam(required=true) @PathVariable Long id) {
                 inquirerRepository.delete(id);
         }
-
 }
 

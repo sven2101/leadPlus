@@ -26,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.util.StopWatch;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
@@ -39,8 +40,6 @@ import javax.annotation.PostConstruct;
 
 import static com.google.common.base.Predicates.*;
 import static springfox.documentation.builders.PathSelectors.*;
-
-import java.io.FileReader;
 
 /**
  * Created by Andreas on 09.10.2015.
@@ -59,27 +58,43 @@ public class Application {
     @ConditionalOnMissingBean
     public Docket multipartApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("cbd-api")
+                .groupName("Lead-Management-REST-API")
                 .apiInfo(apiInfo())
                 .select()
-                //.paths(cbdPaths())
+                .paths(paths())
                 .build();
     }
+    
+    @Bean
+    public Docket vortoApi() {
+	StopWatch watch = new StopWatch();
+	watch.start();
+	Docket docket = new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).useDefaultResponseMessages(false)
+			.select().paths(paths()).build();
+	watch.stop();
+	return docket;
+    }
 
-    private Predicate<String> cbdPaths() {
+
+    @SuppressWarnings("unchecked")
+    private Predicate<String> paths() {
         return or(
-                regex("/applica/api/rest/applications.*"),
-                regex("/applica/api/rest/containers.*"),
-                regex("/applica/api/rest/inquirers.*"),
-                regex("/applica/api/rest/users.*"),
-                regex("/applica/api/rest/vendors.*")
+                regex("/api/rest/processes.*"),
+                regex("/api/rest/processes/leads.*"),
+                regex("/api/rest/processes/leads/containers.*"),
+                regex("/api/rest/processes/leads/inquirers.*"),
+                regex("/api/rest/processes/leads/vendors.*"),
+                regex("/api/rest/processes/offers.*"),
+                regex("/api/rest/processes/offers/prospects.*"),
+                regex("/api/rest/processes/sales.*"),
+                regex("/api/rest/processes/sales/customers.*")               
         );
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Applica")
-                .description("Applica is meant to manage your leadss")
+                .description("Applica - Lead Management Tool")
                 .license("")
                 .licenseUrl("")
                 .version("1.0")

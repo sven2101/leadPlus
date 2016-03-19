@@ -1,28 +1,28 @@
 package dash.processmanagement.offer.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dash.processmanagement.Process;
-import dash.processmanagement.ProcessRepository;
 import dash.processmanagement.offer.Offer;
 import dash.processmanagement.offer.OfferRepository;
+import dash.processmanagement.offer.prospect.ProspectRepository;
 
 @Service
 public class OfferService implements IOfferService{
-
-    @Autowired
-    private OfferRepository offerRepository;
     
     @Autowired
-    private ProcessRepository processRepository;
+    private OfferRepository 	offerRepository;
     
-    public void createOffer(Long processId, Offer offer){
-	Process process = processRepository.findOne(processId);
-	if (process != null){
-	    offerRepository.save(offer);
-	    process.setOffer(offer);
-	    processRepository.save(process);
-	}
+    @Autowired
+    private ProspectRepository 	prospectRepository;
+    
+    public void createOffer(Offer offer){
+	if(Optional.ofNullable(offer.getProspect()).isPresent())	   
+	    prospectRepository.save(offer.getProspect());
+	
+	if(Optional.ofNullable(offer).isPresent())
+	    offerRepository.save(offer);	
     }    
 }

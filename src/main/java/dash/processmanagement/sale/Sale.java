@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import dash.processmanagement.sale.customer.Customer;
 
@@ -27,10 +29,11 @@ public class Sale {
     private Customer	customer;
     
     private int 	containerAmount;
-    private boolean 	transport;
+    private String 	transport;
     private double 	saleReturn;
     private double 	saleProfit;
     
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable=true)
     private Date 	timestamp;
     
@@ -38,7 +41,7 @@ public class Sale {
     	
     }
     
-    public Sale (int containerAmount, boolean transport, double saleReturn, double saleProfit, Date timestamp){
+    public Sale (int containerAmount, String transport, double saleReturn, double saleProfit, Date timestamp){
     	this.containerAmount 	= containerAmount;
     	this.transport		= transport;
     	this.saleReturn		= saleReturn;
@@ -54,12 +57,12 @@ public class Sale {
 	this.containerAmount = containerAmount;
     }
 
-    public Boolean getContainerTransport() {
+    public String getTransport() {
 	return transport;
     }
 
-    public void setContainerTransport(Boolean containerTransport) {
-	this.transport = containerTransport;
+    public void setTransport(String transport) {
+	this.transport = transport;
     }
 
     public double getSaleReturn() {

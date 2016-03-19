@@ -39,6 +39,7 @@ dependencies {
     compile("org.springframework.security:spring-security-jwt:1.0.3.RELEASE")
 
     compile("postgresql:postgresql:9.0-801.jdbc4")
+	compile('joda-time:joda-time:2.9.2')
 		
     compile("com.fasterxml.jackson.core:jackson-databind")
     compile("org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE")

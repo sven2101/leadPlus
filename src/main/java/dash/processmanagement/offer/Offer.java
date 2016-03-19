@@ -2,12 +2,15 @@ package dash.processmanagement.offer;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import dash.processmanagement.offer.prospect.Prospect;
 
@@ -22,11 +25,17 @@ public class Offer {
     private long id;
     
     @OneToOne
-    @JoinColumn(name = "prospect_fk")
+    @JoinColumn(name = "prospect_fk", nullable=true)
     private Prospect 	prospect;
     
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable=true)
     private Date	timestamp;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable=true)
     private Date 	deliveryDate;
+    
     private double 	price;
     private String 	deliveryAddress;
     
