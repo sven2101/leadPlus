@@ -9,5 +9,5 @@ import dash.processmanagement.offer.Offer;
 @Service
 public interface IOfferService {
 
-    public void createOffer(Long processId, Offer offer);
+    void createOffer(Long processId, Offer offer);
 }

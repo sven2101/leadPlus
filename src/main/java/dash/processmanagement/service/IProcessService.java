@@ -10,6 +10,6 @@ import dash.processmanagement.Process;
 @Service
 public interface IProcessService {
 
-    public List<?> getElementsByStatus(Status status, String kind);
-    public void createProcesses(List<Process>processes);
+    List<?> getElementsByStatus(Status status, String kind);
+    void createProcesses(List<Process> processes);
 }

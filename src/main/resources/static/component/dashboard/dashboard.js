@@ -10,12 +10,11 @@ function DashboardCtrl(toaster) {
     this.toaster = toaster;
     this.commentModalInput = '';
     this.comments = {};
-    this.selectedPeriod = 'Heute';
     this.leadsAmount = 100;
     this.offersAmount = 50;
     this.salesAmount = 20;
     this.profit = 320000;
-    this.conversion = 6340000;
+    this.turnover = 6340000;
     this.conversionRate = 12;
     this.infoData = {};
     this.openLead = [{
@@ -84,17 +83,17 @@ function DashboardCtrl(toaster) {
 
 DashboardCtrl.prototype.addLeadToSale = function (item) {
     this.toaster.pop('success', item.name, "Congratulation for your Sale!");
-}
+};
 DashboardCtrl.prototype.addOfferToSale = function (item) {
     this.toaster.pop('success', item.name, "Congratulation for your Sale!");
-}
+};
 DashboardCtrl.prototype.addLeadToOffer = function (item) {
     this.toaster.pop('success', item.name, "You have a new Offer!");
-}
+};
 
 DashboardCtrl.prototype.saveDataToModal = function (data) {
     this.infoData = data;
-}
+};
 DashboardCtrl.prototype.refreshData = function () {
     this.openLead = [{
         id:'1',
@@ -126,12 +125,7 @@ DashboardCtrl.prototype.refreshData = function () {
             name: 'sale8',
             locked: true
         }];
-}
-
-DashboardCtrl.prototype.onPeriodChange = function (selectedPeriod) {
-    this.selectedPeriod = selectedPeriod;
-}
-
+};
 
 DashboardCtrl.prototype.addComment = function (id) {
     if (this.commentModalInput != '' && !angular.isUndefined(this.commentModalInput)) {
@@ -141,5 +135,5 @@ DashboardCtrl.prototype.addComment = function (id) {
         this.comments[id].push({from: "Sven", comment: this.commentModalInput, date: new Date()});
         this.commentModalInput = '';
     }
-}
+};
 

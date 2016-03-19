@@ -13,6 +13,7 @@ angular.module('app', [
     'app.offers',
     'app.sales',
     'app.statistics',
+    'app.settings',
     'app.profile',
     'pascalprecht.translate',
     'ngResource',
@@ -24,7 +25,8 @@ angular.module('app', [
     'datatables.buttons',
     'ui.sortable',
     'NgSwitchery',
-    'toaster'
+    'toaster',
+    'highcharts-ng'
 ]);
 
 angular.module('app')
@@ -50,7 +52,7 @@ angular.module('app')
             })
             .when('/offers', {
                 templateUrl: 'component/offers/offers.html',
-                controller: 'OfferCtrl',
+                controller: 'OffersCtrl',
                 controllerAs: 'offer',
                 authenticated: true
             })
@@ -63,13 +65,13 @@ angular.module('app')
             .when('/statistic', {
                 templateUrl: 'component/statistics/statistics.html',
                 controller: 'StatisticsCtrl',
-                controllerAs: 'statistics',
+                controllerAs: 'statistic',
                 authenticated: true
             })
             .when('/settings', {
                 templateUrl: 'component/settings/settings.html',
                 controller: 'SettingsCtrl',
-                controllerAs: 'settings',
+                controllerAs: 'setting',
                 authenticated: true
             })
             .when('/profile', {
@@ -90,7 +92,7 @@ angular.module('app')
             })
             .otherwise({
                 redirectTo: '/'
-            })
+            });
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 

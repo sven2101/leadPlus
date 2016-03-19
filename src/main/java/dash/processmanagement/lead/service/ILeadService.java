@@ -9,7 +9,7 @@ import dash.processmanagement.lead.Lead;
 @Service
 public interface ILeadService {
 
-    public void createLead(Lead lead);
-    public void createLeads(List<Lead> leads);
+    void createLead(Lead lead);
+    void createLeads(List<Lead> leads);
 
 }

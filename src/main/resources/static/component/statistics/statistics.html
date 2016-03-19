@@ -13,6 +13,20 @@
                     </li>
                 </ol>
             </div>
+            <div class="col-lg-2">
+                <div class="row">
+                    </br>
+                    <h3>Zeitraum</h3>
+                </div>
+                <div class="row">
+                    <select style="width:140px;"
+                            ng-options="times for times in ['Heute', 'Woche', 'Monat', 'Jahr','Alle']"
+                            ng-change="statistic.onPeriodChange(statistic.selectedPeriod)"
+                            ng-model="statistic.selectedPeriod"
+                            class="form-control">
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -20,186 +34,19 @@
 
 <!-- Plan example for container -->
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-content">
-                    Example
-                </div>
-            </div>
-        </div>
-    </div>
+    <ul class="nav nav-tabs">
+        <li class="active" ng-click="statistic.tabOnClick(1)">
+            <a data-toggle="tab" aria-expanded="true">Einzelstatistiken</a>
+        </li>
+        <li ng-click="statistic.tabOnClick(2)">
+            <a data-toggle="tab" aria-expanded="true">Gesamtstatistiken</a>
+        </li>
+        <li ng-click="statistic.tabOnClick(3)">
+            <a data-toggle="tab" aria-expanded="true">Benutzer Statistik</a>
+        </li>
+    </ul>
+    </br>
+    <div ng-include="'component/statistics/singleStatistics.html'"></div>
+    <div ng-include="'component/statistics/entireStatistics.html'"></div>
+    <div ng-include="'component/statistics/userStatistics.html'"></div>
 </div>
-
-<!-- Umsatz Liniendiagramm -->
-<div class="row">
-    <div class="col-lg-12">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h3 class="panel-title">Umsatz</h3>
-            </div>
-            <div class="panel-body">
-               <canvas width="1000" height="350" tc-chartjs-line chart-options="options" chart-data="linedataReturn" auto-legend></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Umsatz Liniendiagramm -->
-
-<!-- Gewinn Liniendiagramm -->
-<div class="row">
-    <div class="col-lg-12">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h3 class="panel-title">Gewinn</h3>
-            </div>
-            <div class="panel-body">
-                <canvas width="1000" height="350" tc-chartjs-line chart-options="options" chart-data="linedataProfit" auto-legend></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Gewinn Liniendiagramm -->
-
-<!-- Anzahl Anfragen Liniendiagramm -->
-<div class="row">
-    <div class="col-lg-12">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h3 class="panel-title">Anzahl Anfragen</h3>
-            </div>
-            <div class="panel-body">
-                <canvas width="1000" height="350" tc-chartjs-line chart-options="options" chart-data="linedataAmountApplication" auto-legend></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Anzahl Anfragen Liniendiagramm -->
-
-<!-- Conversion Rate Liniendiagramm -->
-<div class="row">
-    <div class="col-lg-12">
-        <div class="panel panel-info">
-            <div class="panel-heading">
-                <h3 class="panel-title">Conversion Rate in %</h3>
-            </div>
-            <div class="panel-body">
-                <canvas width="1000" height="350" tc-chartjs-line chart-options="options" chart-data="linedataConversionRate" auto-legend></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Conversion Rate Liniendiagramm -->
-
-<!-- Salescheck -->
-<div class="modal" id="salesCheck" tabindex="-1" role="dialog" aria-labelledby="setReminderLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="setReminderLabel">Sales Check</h4>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Telefon</th>
-                            <th style="width:90px;">Aktion</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="contact in searchResult">
-                            <td>{{ contact.username }}</td>
-                            <td>{{ contact.email }}</td>
-                            <td>{{ contact.telefon }}</td>
-                            <td style="width:90px;">
-                                <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="addSale(contact._id)"><i class="fa fa-plus-circle"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th>Typ Container</th>
-                                        <th>Anzahl Container</th>
-                                        <th>Transport</th>
-                                        <th>Umsatz €</th>
-                                        <th>Gewinn CB €</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td><input class="form-control" ng-model="sale.containerTyp" placeholder="Typ Container"></td>
-                                        <td><input class="form-control" ng-model="sale.containerAmount" placeholder="Anzahl Container"></td>
-                                        <td><input class="form-control" ng-model="sale.containerTransport" placeholder="Transport"></td>
-                                        <td><input class="form-control" ng-model="sale.return" placeholder="Umsatz"></td>
-                                        <td><input class="form-control" ng-model="sale.profitCB" placeholder="Gewinn CB"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><input class="form-control" placeholder="z.B. Frachtcontainer" readonly></td>
-                                        <td><input class="form-control" placeholder="30" readonly></td>
-                                        <td><input class="form-control" placeholder="Stuttgart" readonly></td>
-                                        <td><input class="form-control" placeholder="30000.50" readonly></td>
-                                        <td><input class="form-control" placeholder="3000.50" readonly></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-
-
-
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Salescheck -->
-
-    <!-- Calls -->
-    <div class="modal" id="callsCheck" tabindex="-1" role="dialog" aria-labelledby="setCallLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="setCallLabel">Calls</h4>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>Telefonnummer</th>
-                                <th>Eingang</th>
-                                <th style="width:90px;">Aktion</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="call in calls">
-                                <td>{{ call.telefonnummer }}</td>
-                                <td>{{ call.eingangsdatum }}</td>
-                                <td style="width:90px;">
-                                    <div class="row">
-                                        <button class="btn btn-success" type="button" title="Angebot gesendet" ng-click="situation(call._id, 'angebot_gesendet')">
-                                            <i class="fa fa-paper-plane-o"></i>
-                                            <!--Angebot-->
-                                        </button>
-                                        <button class="btn btn-danger" type="button" title="Trash" ng-click="remove(call._id)">
-                                            <i class="fa fa-trash"></i>
-                                            <!--Trash-->
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Calls -->

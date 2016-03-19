@@ -8,6 +8,6 @@ app.directive("childrow", function () {
     directive.templateUrl = 'component/leads/leadChildRow.html';
     directive.transclude = true;
     directive.link = function (scope, element, attrs) {
-    }
+    };
     return directive;
 });
