@@ -1,9 +1,16 @@
 package dash.processmanagement.sale;
 
+import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import dash.processmanagement.sale.customer.Customer;
 
 /**
  * Created by Andreas on 08.03.2016.
@@ -13,19 +20,25 @@ public class Sale {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long 	id;
+    
+    @OneToOne
+    @JoinColumn(name = "customer_fk", nullable=true)
+    private Customer	customer;
     
     private int 	containerAmount;
     private boolean 	transport;
     private double 	saleReturn;
     private double 	saleProfit;
-    private String 	timestamp;
+    
+    @Column(nullable=true)
+    private Date 	timestamp;
     
     public Sale (){
     	
     }
     
-    public Sale (int containerAmount, boolean transport, double saleReturn, double saleProfit, String timestamp){
+    public Sale (int containerAmount, boolean transport, double saleReturn, double saleProfit, Date timestamp){
     	this.containerAmount 	= containerAmount;
     	this.transport		= transport;
     	this.saleReturn		= saleReturn;
@@ -65,11 +78,19 @@ public class Sale {
 	this.saleProfit = saleProfit;
     }
 
-    public String getTimestamp() {
+    public Date getTimestamp() {
 	return timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(Date timestamp) {
 	this.timestamp = timestamp;
+    }
+    
+    public Customer getCustomer() {
+   	return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+   	this.customer = customer;
     }
 }

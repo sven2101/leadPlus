@@ -27,26 +27,26 @@ public class Process {
     private Long id;
     
     @OneToOne
-    @JoinColumn(name = "lead_fk")
+    @JoinColumn(name = "lead_fk", nullable = true)
     private Lead lead;
     
     @OneToOne
-    @JoinColumn(name = "offer_fk")
+    @JoinColumn(name = "offer_fk", nullable = true)
     private Offer offer;
     
     @OneToOne
-    @JoinColumn(name = "sale_fk")
+    @JoinColumn(name = "sale_fk", nullable = true)
     private Sale sale;
     
     @OneToMany
-    @JoinColumn(name = "comment_fk", nullable = false)
+    @JoinColumn(name = "comment_fk", nullable = true)
     private List<Comment> comments;
     
     @Enumerated(EnumType.STRING)
     private Status status;
     
     @OneToOne
-    @JoinColumn(name = "processor_fk")
+    @JoinColumn(name = "processor_fk", nullable = true)
     private User processor;
     
     public Process(){

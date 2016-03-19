@@ -71,6 +71,13 @@ public class ProcessResource {
         
         return process;
     }
+    
+    @ApiOperation(value = "Creates processes base on a List of Processes.", notes = "")
+    @RequestMapping(value="", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public void getSaleByProcess(@RequestBody List<Process> processes) { 
+	processService.createProcesses(processes); 
+    }
 
     @ApiOperation(value = "Delete a single process.", notes = "")
     @RequestMapping(method = RequestMethod.DELETE)
@@ -79,7 +86,7 @@ public class ProcessResource {
         processRepository.delete(id);
     }
     
-    @ApiOperation(value = "Returns a .", notes = "")
+    @ApiOperation(value = "Returns a List of a specified kind with a specific status.", notes = "")
     @RequestMapping(value="/status/{status}/{kind}/", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<?> getElementsByStatus(@ApiParam(required=true) @PathVariable Status status, String kind) {    
