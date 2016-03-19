@@ -21,7 +21,7 @@ function SignUpCtrl($location, $http, $scope, Auth,toaster) {
 	    }).error(function(data, status, headers, config) {
 	    	console.log("Email: ", data);
 	    });
-	}
+	};
 		
 	this.uniqueUsername = function(username){
 		
@@ -35,7 +35,7 @@ function SignUpCtrl($location, $http, $scope, Auth,toaster) {
 	    }).error(function(data, status, headers, config) {
 	    	console.log("User: ", data);
 	    });
-	}
+	};
 	
 	this.signup = function(user){
 		Auth.signup(user,

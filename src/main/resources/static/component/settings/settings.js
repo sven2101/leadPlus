@@ -1,28 +1,38 @@
 'use strict';
 
 angular.module('app.settings', ['ngResource']).controller('SettingsCtrl', SettingsCtrl);
-
-function SettingsCtrl() {
-  this.name = "John Smith";
-  this.contacts = [
-    {type: 'phone', value: '408 555 1212'},
-    {type: 'email', value: 'john.smith@example.org'} ];
+SettingsCtrl.$inject = ['$filter'];
+function SettingsCtrl($filter) {
+    this.filter = $filter;
+    this.users = [{
+        id: '1',
+        surname: 'Sven',
+        lastname: 'Jaschkewitz',
+        username: 'sven2101',
+        email: 'sven-jaschkewitz@get-net.eu',
+        role: 'admin',
+        access: true
+    },
+        {
+            id: '2',
+            surname: 'Andreas',
+            lastname: 'Foitzik',
+            username: 'foan1013',
+            email: 'andreas-foitzik@get-net.eu',
+            role: 'superadmin',
+            access: false
+        }];
 }
 
-SettingsCtrl.prototype.greet = function() {
-  alert(this.name);
-};
+SettingsCtrl.prototype.activateUser = function (id) {
+    this.filter('filter')(this.users, {id: id})[0].access = true;
+}
 
-SettingsCtrl.prototype.addContact = function() {
-  this.contacts.push({type: 'email', value: 'yourname@example.org'});
-};
+SettingsCtrl.prototype.deactivateUser = function (id) {
+    this.filter('filter')(this.users, {id: id})[0].access = false;
+}
 
-SettingsCtrl.prototype.removeContact = function(contactToRemove) {
- var index = this.contacts.indexOf(contactToRemove);
-  this.contacts.splice(index, 1);
-};
-
-SettingsCtrl.prototype.clearContact = function(contact) {
-  contact.type = 'phone';
-  contact.value = '';
-};
+SettingsCtrl.prototype.saveRole = function (id, role) {
+    alert('set ' + role + " for " + id)
+    this.filter('filter')(this.users, {id: id})[0].role = role;
+}

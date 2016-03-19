@@ -13,7 +13,8 @@ import java.util.List;
  * Created by Andreas on 09.10.2015.
  */
 @Entity
-public class User implements UserDetails{
+@Table(name="\"User\"")
+public class User implements UserDetails {
 
     private static final long serialVersionUID = 3125258392087209376L;
 
@@ -33,51 +34,46 @@ public class User implements UserDetails{
 
     @Enumerated(EnumType.STRING)
     private Role role;
-    
+
     @OneToMany
     @JoinColumn(name = "user_fk", nullable = false)
     private List<Comment> comment;
 
     private String profilPictureURL;
     private String defaultLanguage;
-    
-    public User(){}
 
-    public User(String username, String firstName, String lastName, String email, String passwordHash, String profilPictureURL, String defaultLanguage){
+    public User() {
+    }
+
+    public User(String username, String firstName, String lastName, String email, String passwordHash, String profilPictureURL, String defaultLanguage) {
         this.username = username;
-	this.email = email;
+        this.email = email;
         this.password = passwordHash;
         this.profilPictureURL = profilPictureURL;
         this.defaultLanguage = defaultLanguage;
     }
 
-    public Long getId()
-    {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(Long id)
-    {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getUsername()
-    {
+    public String getUsername() {
         return this.username;
     }
 
-    public void setUsername(String username)
-    {
+    public void setUsername(String username) {
         this.username = username;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return this.email;
     }
 
-    public void setEmail(String email)
-    {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -89,13 +85,11 @@ public class User implements UserDetails{
         this.role = role;
     }
 
-    public void setPassword(String password)
-    {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getPassword()
-    {
+    public String getPassword() {
         return password;
     }
 

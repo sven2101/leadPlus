@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ContainerRepository extends CrudRepository<Container, Long> {
-    public Container findByName(String name);
+    Container findByName(String name);
 }

@@ -8,7 +8,7 @@ function ProfileCtrl($rootScope, toaster) {
     this.email = $rootScope.globals.currentUser.username;
     this.rootScope = $rootScope;
     this.oldPassword = '';
-    this.newPassword1 = ''
+    this.newPassword1 = '';
     this.newPassword2 = '';
     this.defaultLanguage = $rootScope.language;
 }

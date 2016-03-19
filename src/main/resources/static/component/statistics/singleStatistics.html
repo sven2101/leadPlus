@@ -1,0 +1,24 @@
+<div class="row" ng-if="statistic.currentTab==1">
+    <div class="col-lg-6">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right">Heute</span>
+                <h5>Gewinn</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">{{statistic.profit| currency:'\u20AC'}}</h1>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right">Heute</span>
+                <h5>Umsatz</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">{{statistic.turnover | currency:'\u20AC'}}</h1>
+            </div>
+        </div>
+    </div>
+</div>

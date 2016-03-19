@@ -14,5 +14,5 @@ import dash.processmanagement.status.Status;
 @Repository
 public interface ProcessRepository extends JpaRepository<Process, Long> {
 
-    public List<Process> findProcessesByStatus(Status status);
+    List<Process> findProcessesByStatus(Status status);
 }

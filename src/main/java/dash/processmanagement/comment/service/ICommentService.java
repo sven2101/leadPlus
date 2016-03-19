@@ -7,5 +7,5 @@ import dash.processmanagement.comment.Comment;
 @Service
 public interface ICommentService {
     
-    public void createComment(Long processId, Comment comment) throws Exception;
+    void createComment(Long processId, Comment comment) throws Exception;
 }

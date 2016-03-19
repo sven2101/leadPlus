@@ -23,244 +23,82 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Benutzer freischalten</h5>
+                </div>
                 <div class="ibox-content">
-                    Example
+                    <table class="table text-center">
+                        <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Username</th>
+                            <th class="text-center">First name</th>
+                            <th class="text-center">Last name</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center"><i class="fa fa-cog"></i></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-model="setting.user" ng-repeat="user in setting.users | orderBy:'username'">
+                            <td>{{$index+1}}</td>
+                            <td>{{user.username}}</td>
+                            <td>{{user.surname}}</td>
+                            <td>{{user.lastname}}</td>
+                            <td>{{user.email}}</td>
+                            <td ng-if="user.access==false">
+                                <button ng-click="setting.activateUser(user.id)" type="button" class="btn btn-success">
+                                    <i class="fa fa-check"></i>&nbsp;Freischalten
+                                </button>
+                            </td>
+                            <td ng-if="user.access==true">
+                                <button ng-click="setting.deactivateUser(user.id)" type="button"
+                                        class="btn btn-success">
+                                    <i class="fa fa-ban"></i>&nbsp;Deaktivieren
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Benutzer Role verwalten</h5>
+                </div>
+                <div class="ibox-content">
+                    <table class="table text-center">
+                        <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Username</th>
+                            <th class="text-center">Rolle</th>
+                            <th class="text-center"><i class="fa fa-cog"></i></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-model="setting.user" ng-repeat="user in setting.users | orderBy:'username'">
+                            <td>{{$index+1}}</td>
+                            <td>{{user.email}}</td>
+                            <td><select ng-model="user.role">
+                                <option value="bearbeiter">Bearbeiter</option>
+                                <option value="admin">Admin</option>
+                                <option value="superadmin">Super-Admin</option>
+                            </select></td>
+                            <td>
+                                <button ng-click="setting.saveRole(user.id,user.role)" type="button"
+                                        class="btn btn-success">
+                                    <i class="fa fa-save"></i>&nbsp;Save
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script type="text/ng-template" id="wrongUser">
-
-    <div class="bs-example" style="width:350px; margin:auto; align:center;">
-        <div class="alert alert-warning">
-            <a href="" class="close" data-dismiss="alert">&times;</a>
-            <strong>Warning!</strong>
-            <br/>
-            Bitte Benutzername und Passwort eintragen!
-        </div>
-    </div>
-
-</script>
-
-<script type="text/ng-template" id="mistakeUser">
-
-    <div class="bs-example" style="width:350px; margin:auto; align:center;">
-        <div class="alert alert-warning">
-            <a href="" class="close" data-dismiss="alert">&times;</a>
-            <strong>Warning!</strong>
-            <br/>
-            Benutzer konnte nicht angelegt werden!
-        </div>
-    </div>
-
-</script>
-
-<script type="text/ng-template" id="noPassword">
-
-    <div class="bs-example" style="width:350px; margin:auto; align:center;">
-        <div class="alert alert-warning">
-            <a href="" class="close" data-dismiss="alert">&times;</a>
-            <strong>Warning!</strong>
-            <br/>
-            Sie haben kein neues Passwort eingetragen!
-        </div>
-    </div>
-
-</script>
-
-<script type="text/ng-template" id="successUser">
-
-    <div class="bs-example" style="width:350px; margin:auto; align:center;">
-        <div class="alert alert-success">
-            <a href="" class="close" data-dismiss="alert">&times;</a>
-            <strong>Success</strong>
-            <br/>
-            Benutzer wurde erfolgreich hinzugefügt!
-        </div>
-    </div>
-
-</script>
-<!-- Settings - -->
-
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h3 class="panel-title">dash.usermanagement.Account Settings</h3>
-    </div>
-    <div class="panel-body">
-
-        <br/>
-        <div class="row">
-            <div class="col-lg-3">
-                <label for="benutzername-txt" class="control-label">Benutzername:</label>
-                <input type="text" class="form-control" id="benutzername-txt" ng-model="user.username" readonly />
-            </div>
-        </div>
-
-        <br/>
-        <div class="row">
-            <div class="col-lg-3">
-                <label for="passwort-txt" class="control-label">Passwort:</label>
-                <input type="text" class="form-control" id="passwort-txt" ng-model="user.password" readonly />
-            </div>
-        </div>
-
-        <br/>
-        <div class="row">
-            <div class="col-lg-3">
-                <label for="newpasswort-txt" class="control-label">Neues Passwort:</label>
-                <input type="text" class="form-control" id="newpasswort-txt" ng-model="user.newpassword" />
-            </div>
-        </div>
-
-        <br/>
-        <div class="row">
-            <div class="col-lg-3">
-                <button class="btn btn-info" ng-click="changePassword()">Passwort ändern</button>
-            </div>
-            <div class="col-lg-3">
-                <button class="btn btn-success" data-toggle="modal" data-target="#addUser" >Neuen Benutzer anlegen</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-
-<!-- Salescheck -->
-<div class="modal" id="salesCheck" tabindex="-1" role="dialog" aria-labelledby="setReminderLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="setReminderLabel">Sales Check</h4>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Telefon</th>
-                            <th style="width:90px;">Aktion</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="contact in searchResult">
-                            <td>{{ contact.username }}</td>
-                            <td>{{ contact.email }}</td>
-                            <td>{{ contact.telefon }}</td>
-                            <td style="width:90px;">
-                                <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="addSale(contact._id)"><i class="fa fa-plus-circle"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">
-                                <table class="table">
-                                    <thead>
-                                    <tr>
-                                        <th>Typ Container</th>
-                                        <th>Anzahl Container</th>
-                                        <th>Transport</th>
-                                        <th>Umsatz €</th>
-                                        <th>Gewinn CB €</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td><input class="form-control" ng-model="sale.containerTyp" placeholder="Typ Container"></td>
-                                        <td><input class="form-control" ng-model="sale.containerAmount" placeholder="Anzahl Container"></td>
-                                        <td><input class="form-control" ng-model="sale.containerTransport" placeholder="Transport"></td>
-                                        <td><input class="form-control" ng-model="sale.return" placeholder="Umsatz"></td>
-                                        <td><input class="form-control" ng-model="sale.profitCB" placeholder="Gewinn CB"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><input class="form-control" placeholder="z.B. Frachtcontainer" readonly></td>
-                                        <td><input class="form-control" placeholder="30" readonly></td>
-                                        <td><input class="form-control" placeholder="Stuttgart" readonly></td>
-                                        <td><input class="form-control" placeholder="30000.50" readonly></td>
-                                        <td><input class="form-control" placeholder="3000.50" readonly></td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Salescheck -->
-
-<!-- Calls -->
-<div class="modal" id="callsCheck" tabindex="-1" role="dialog" aria-labelledby="setCallLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="setCallLabel">Calls</h4>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Telefonnummer</th>
-                            <th>Eingang</th>
-                            <th style="width:90px;">Aktion</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="call in calls">
-                            <td>{{ call.telefonnummer }}</td>
-                            <td>{{ call.eingangsdatum }}</td>
-                            <td style="width:90px;">
-                                <div class="row">
-                                    <button class="btn btn-success" type="button" title="Angebot gesendet" ng-click="situation(call._id, 'angebot_gesendet')">
-                                        <i class="fa fa-paper-plane-o"></i>
-                                        <!--Angebot-->
-                                    </button>
-                                    <button class="btn btn-danger" type="button" title="Trash" ng-click="remove(call._id)">
-                                        <i class="fa fa-trash"></i>
-                                        <!--Trash-->
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Calls -->
-
-
-<!-- add dash.usermanagement.Accountunt -->
-<div class="modal" id="addUser" tabindex="-1" role="dialog" aria-labelledby="addUserLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="addUserLabel">Neuen Benutzer anlegen</h4>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <label for="Neuer-Benutzername-text" class="control-label">Benutzername:</label>
-                    <input type="text" class="form-control" id="Neuer-Benutzername-text" ng-model="newuser.username" />
-
-                    <label for="Neuer-Benutzer-Passwort-text" class="control-label">Passwort:</label>
-                    <input type="text" class="form-control" id="Neuer-Benutzer-Passwort-text" ng-model="newuser.password" />
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="addUser()">Benutzer hinzufügen</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- add dash.usermanagement.Accountunt -->

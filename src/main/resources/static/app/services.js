@@ -49,7 +49,7 @@ angular.module('app.services', ['ngResource'])
 	        logout: function() {
 	           		
 	        	$rootScope.globals = {};
-	        	console.log("Globals: ", $rootScope.globals)
+	        	console.log("Globals: ", $rootScope.globals);
 	            $cookieStore.remove('globals');
 	            $http.defaults.headers.common.Authorization = 'Basic';
 	        	
