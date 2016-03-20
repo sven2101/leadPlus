@@ -102,7 +102,6 @@ angular.module('app')
         $rootScope.globals = $cookieStore.get('globals') || {};
         if ($rootScope.globals.currentUser) {
             $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authorization;
-            console.log("authorization: ", $rootScope.globals.currentUser.authorization);
         }
 
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
