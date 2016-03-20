@@ -1,8 +1,18 @@
 'use strict';
 angular.module('app.leads', ['ngResource']).controller('LeadsCtrl', LeadsCtrl);
-LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster'];
-function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster) {
-    var vm = this;
+LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', 'Leads'];
+function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, Leads) {
+    
+	var lead = Processes.getLead({id:2});
+    console.log("Lead : ", lead);
+    
+    var offer = Processes.getOffer({id:2});
+    console.log("offer : ", offer);
+    
+    var sale = Processes.getSale({id:2});
+    console.log("sale : ", sale);
+    
+	var vm = this;
     this.scope = $scope;
     this.compile = $compile;
     this.toaster = toaster;

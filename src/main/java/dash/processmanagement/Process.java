@@ -38,8 +38,7 @@ public class Process {
     @JoinColumn(name = "sale_fk", nullable = true)
     private Sale sale;
     
-    @OneToMany
-    @JoinColumn(name = "comment_fk", nullable = true)
+    @OneToMany(mappedBy="process")
     private List<Comment> comments;
     
     @Enumerated(EnumType.STRING)
@@ -107,7 +106,7 @@ public class Process {
         return comments;
     } 
 
-    public void setComment(Comment comment) {
+    public void addComment(Comment comment) {
    	this.comments.add(comment);
     }
     
