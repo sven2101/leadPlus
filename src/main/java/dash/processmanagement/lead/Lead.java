@@ -3,9 +3,10 @@ package dash.processmanagement.lead;
 import dash.processmanagement.lead.container.Container;
 import dash.processmanagement.lead.inquirer.Inquirer;
 import dash.processmanagement.lead.vendor.Vendor;
+import dash.processmanagement.request.Request;
 import dash.processmanagement.status.Status;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import javax.persistence.*;
 
@@ -13,7 +14,7 @@ import javax.persistence.*;
  * Created by Andreas on 09.10.2015.
  */
 @Entity
-public class Lead {
+public class Lead implements Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,30 +31,30 @@ public class Lead {
     @OneToOne
     @JoinColumn(name = "container_fk")
     private Container 	container;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable=true)
-    private Date 	timestamp;
     
     private int 	containerAmount;
     private String 	destination;
+    
+    
+    @Column(nullable=true)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar  	timestamp;
     
     @Column(length=2048)
     private String 	message;
     
     public Lead(){}
 
-    public Lead(Inquirer inquirer, Vendor vendor, Container container, int containerAmount, String destination, String message, Status status, Date timestamp){
-        this.inquirer 		= inquirer;
+    public Lead(Inquirer inquirer, Vendor vendor, Container container, int containerAmount, String destination, String message, Status status, Calendar timestamp){
+        super();
+	this.inquirer 		= inquirer;
         this.vendor 		= vendor;
         this.container		= container;
         this.containerAmount 	= containerAmount;
         this.destination 	= destination;
+        this.timestamp		= timestamp;
         this.message 		= message;
-	this.timestamp 		= timestamp;
     }
-
-    public Long getId() { return id; }
 
     public Inquirer getInquirer() {
         return inquirer;
@@ -95,19 +96,19 @@ public class Lead {
         this.message = message;
     }
 
+    public void setTimestamp(Calendar timestamp){
+   	this.timestamp = timestamp;
+    }
+       
+    public Calendar getTimestamp(){
+   	return timestamp;
+    }
+    
     public Container getContainer(){
     	return this.container;
     }
     
     public void setContainer(Container container){
     	this.container = container;
-    }
-   
-    public Date getTimestamp(){
-    	return this.timestamp;
-    }
-    
-    public void setTimestamp(Date timestamp){
-    	this.timestamp = timestamp;
     }
 }

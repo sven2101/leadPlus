@@ -111,7 +111,7 @@ public class Application {
         
     @PostConstruct
     public void createAdminIfNotExists() throws Exception {
-	/*
+/*
         User user1 = new User();
 
         user1.setUsername("andreas".toLowerCase());
@@ -129,8 +129,7 @@ public class Application {
         user2.setRole(Role.ADMIN);
 
         userRepository.save(user2);
-        
-       */
+*/
     }
     
     @EnableWebSecurity

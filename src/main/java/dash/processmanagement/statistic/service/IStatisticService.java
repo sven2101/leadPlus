@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import dash.processmanagement.request.RequestRepository;
 import dash.processmanagement.statistic.Statistic;
 
 /**
@@ -12,11 +13,6 @@ import dash.processmanagement.statistic.Statistic;
 @Service
 public interface IStatisticService {
 
-    public List<Integer> getLeadStatistic(Statistic statistic); 
-    public List<Integer> getOfferStatistic(Statistic statistic); 
-    public List<Integer> getSaleStatistic(Statistic statistic); 
+    public <T> List<Integer> getStatistic(Statistic statistic, RequestRepository<T, Long> leadRepository); 
 
-    public List<Double>  getConversionStatistic(Statistic statistic); 
-    public List<Double>  getProfitStatistic(Statistic statistic); 
-    public List<Double>  getTurnoverStatistic(Statistic statistic); 
 }

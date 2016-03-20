@@ -1,6 +1,6 @@
 package dash.processmanagement.offer;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,12 +13,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import dash.processmanagement.offer.prospect.Prospect;
+import dash.processmanagement.request.Request;
 
 /**
  * Created by Andreas on 09.10.2015.
  */
 @Entity
-public class Offer {
+public class Offer implements Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +31,11 @@ public class Offer {
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable=true)
-    private Date	timestamp;
+    private Calendar	timestamp;
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable=true)
-    private Date 	deliveryDate;
+    private Calendar 	deliveryDate;
     
     private double 	price;
     private String 	deliveryAddress;
@@ -43,7 +44,7 @@ public class Offer {
 	
     }
     
-    public Offer(Prospect prospect, Date timestamp, double price, Date deliveryDate, String deliveryAddress){
+    public Offer(Prospect prospect, Calendar timestamp, double price, Calendar deliveryDate, String deliveryAddress){
 	this.prospect 		= prospect;
 	this.timestamp 		= timestamp;
 	this.price 		= price;
@@ -67,11 +68,11 @@ public class Offer {
         this.prospect = prospect;
     }
 
-    public Date getTimestamp() {
+    public Calendar getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Calendar timestamp) {
         this.timestamp = timestamp;
     }
     
@@ -83,11 +84,11 @@ public class Offer {
         this.price = price;
     }
 
-    public Date getDeliveryDate() {
+    public Calendar getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(Calendar deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 

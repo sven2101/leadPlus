@@ -1,15 +1,17 @@
 package dash.processmanagement.statistic.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dash.processmanagement.lead.Lead;
-import dash.processmanagement.lead.LeadRepository;
+import dash.processmanagement.request.Request;
+import dash.processmanagement.request.RequestRepository;
 import dash.processmanagement.statistic.Statistic;
+import dash.utils.TimeIgnoringComparator;
 
 /**
  * Created by Andreas on 08.03.2016.
@@ -17,50 +19,35 @@ import dash.processmanagement.statistic.Statistic;
 @Service
 public class StatisticService implements IStatisticService {
 
-    @Autowired
-    private LeadRepository leadRepository;
-        
-    public List<Integer> getLeadStatistic(Statistic statistic){
-	final List<Lead> leads 		= leadRepository.findByTimestampBetween(statistic.getFrom(), statistic.getUntil());
-	final List<Integer> values 	= new ArrayList<Integer>();
+    public <T> List<Integer> getStatistic(Statistic statistic, RequestRepository<T, Long> repository){
 	
-	final DateTime dtUntil 		= new DateTime(statistic.getUntil());
-
-	DateTime dtFrom 		= new DateTime(statistic.getFrom());
-
-	while (!dtFrom.isEqual(dtUntil)){
-	    int value = 0; 
-	    for(Lead lead: leads){
-		final DateTime dtCurrent = new DateTime(lead.getTimestamp());
-		if (dtFrom.isEqual(dtCurrent)){
-		    value ++;
-		}
+	Calendar from 	= statistic.getFrom();
+	Calendar until = statistic.getUntil();
+	
+	Calendar tmp = Calendar.getInstance();
+	tmp.setTime(from.getTime());
+	tmp.add(Calendar.DAY_OF_MONTH, -1);
+	
+	final List<Request> leads 	= repository.findByTimestampBetween(tmp, until);
+	final TimeIgnoringComparator c 	= new TimeIgnoringComparator();
+	
+        Map<String, Integer> countOfProcessInDate = new LinkedHashMap<>();
+    
+	while(c.compare(from, until) <= 0){
+	    countOfProcessInDate.put(from.get(Calendar.YEAR)+""+from.get(Calendar.MONTH)+""+from.get(Calendar.DAY_OF_MONTH), 0);
+	    from.add(Calendar.DAY_OF_MONTH, 1);
+	}
+	for(Request lead: leads){
+	    Calendar timeStamp = lead.getTimestamp();
+	    String key = timeStamp.get(Calendar.YEAR)+""+timeStamp.get(Calendar.MONTH)+""+timeStamp.get(Calendar.DAY_OF_MONTH);
+	    if(countOfProcessInDate.containsKey(key)){
+		int value = countOfProcessInDate.get(key)+1;
+		countOfProcessInDate.put(key, value);
 	    }
-	    
-	    values.add(value);
-	    dtFrom = dtFrom.plusDays(1);
-	}	
-	
-	return values;
-    }
-    
-    public List<Integer> getOfferStatistic(Statistic statistic){
-	return null;
-    }
-    
-    public List<Integer> getSaleStatistic(Statistic statistic){
-	return null;
-    }
-    
-    public List<Double> getConversionStatistic(Statistic statistic){
-	return null;
-    } 
-    
-    public List<Double> getProfitStatistic(Statistic statistic){
-	return null;
-    }
-    
-    public List<Double> getTurnoverStatistic(Statistic statistic){
-	return null;
-    }
+	}
+	   
+
+    return new ArrayList<Integer>(countOfProcessInDate.values());
+}
+
 }

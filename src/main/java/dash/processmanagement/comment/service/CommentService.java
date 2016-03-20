@@ -5,12 +5,12 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dash.processmanagement.Process;
+import dash.processmanagement.ProcessRepository;
 import dash.processmanagement.comment.Comment;
 import dash.processmanagement.comment.CommentRepository;
 import dash.usermanagement.User;
 import dash.usermanagement.UserRepository;
-import dash.processmanagement.Process;
-import dash.processmanagement.ProcessRepository;
 
 @Service
 public class CommentService implements ICommentService {

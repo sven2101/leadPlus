@@ -1,6 +1,6 @@
 package dash.processmanagement.sale;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,13 +12,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import dash.processmanagement.request.Request;
 import dash.processmanagement.sale.customer.Customer;
 
 /**
  * Created by Andreas on 08.03.2016.
  */
 @Entity
-public class Sale {
+public class Sale implements Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,13 +36,13 @@ public class Sale {
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable=true)
-    private Date 	timestamp;
+    private Calendar 	timestamp;
     
     public Sale (){
     	
     }
     
-    public Sale (int containerAmount, String transport, double saleReturn, double saleProfit, Date timestamp){
+    public Sale (int containerAmount, String transport, double saleReturn, double saleProfit, Calendar timestamp){
     	this.containerAmount 	= containerAmount;
     	this.transport		= transport;
     	this.saleReturn		= saleReturn;
@@ -81,11 +82,11 @@ public class Sale {
 	this.saleProfit = saleProfit;
     }
 
-    public Date getTimestamp() {
+    public Calendar getTimestamp() {
 	return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Calendar timestamp) {
 	this.timestamp = timestamp;
     }
     
