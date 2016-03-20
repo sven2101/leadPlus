@@ -1,35 +1,41 @@
 package dash.processmanagement.statistic;
 
-import java.util.Date;
+import java.util.Calendar;
+
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * Created by Andreas on 08.03.2016.
  */
 public class Statistic {
 
-    private Date from;
-    private Date until;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar from;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    private Calendar until;
 
     public Statistic (){}
     
-    public Statistic (Date from, Date until){
+    public Statistic (Calendar from, Calendar until){
 	this.from = from;
 	this.until = until;
     }
 
-    public Date getFrom() {
+    public Calendar getFrom() {
 	return from;
     }
 
-    public void setFrom(Date from) {
+    public void setFrom(Calendar from) {
 	this.from = from;
     } 
     
-    public Date getUntil() {
+    public Calendar getUntil() {
 	return until;
     }
 
-    public void setUntil(Date until) {
+    public void setUntil(Calendar until) {
 	this.until = until;
     }    
 }

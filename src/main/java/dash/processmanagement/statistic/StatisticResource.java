@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.processmanagement.statistic.Statistic;
+import dash.processmanagement.lead.Lead;
+import dash.processmanagement.offer.Offer;
+import dash.processmanagement.request.RequestRepository;
+import dash.processmanagement.sale.Sale;
 import dash.processmanagement.statistic.service.IStatisticService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,8 +28,17 @@ import io.swagger.annotations.ApiParam;
 public class StatisticResource {
 	
     @Autowired
-    private IStatisticService statisticsService;
+    private IStatisticService 			statisticsService;
     
+    @Autowired
+    private RequestRepository<Lead, Long> 	leadRepository;
+    
+    @Autowired
+    private RequestRepository<Offer, Long> 	offerRepository;
+    
+    @Autowired
+    private RequestRepository<Sale, Long> 	saleRepository;
+       
     @RequestMapping(value="/leads",
 	    	    method = RequestMethod.POST,
 	            produces = {MediaType.APPLICATION_JSON_VALUE},
@@ -34,7 +46,7 @@ public class StatisticResource {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get Lead Statistic", notes = "")
     public List<Integer> getLeadStatistic(@ApiParam(required=true) @RequestBody @Valid Statistic statistic) {
-	return statisticsService.getLeadStatistic(statistic);
+	return statisticsService.getStatistic(statistic, leadRepository);
     }
     
     @RequestMapping(value="/offers",
@@ -44,7 +56,7 @@ public class StatisticResource {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get Offer Statistic", notes = "")
     public List<Integer> getOfferStatistic(@ApiParam(required=true) @RequestBody @Valid Statistic statistic) {
-	return statisticsService.getOfferStatistic(statistic);
+	return statisticsService.getStatistic(statistic, offerRepository);
     }
     
     @RequestMapping(value="/sales",
@@ -54,7 +66,7 @@ public class StatisticResource {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get Sale Statistic", notes = "")
     public List<Integer> getSaleStatistic(@ApiParam(required=true) @RequestBody @Valid Statistic statistic) {
-	return statisticsService.getOfferStatistic(statistic);
+	return statisticsService.getStatistic(statistic, saleRepository);
     }
 	
 }

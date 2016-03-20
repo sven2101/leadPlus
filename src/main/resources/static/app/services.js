@@ -62,4 +62,9 @@ angular.module('app.services', ['ngResource'])
 					  });
 	       }
 	    };
-	});
+	})
+	.service('Processes', ['$resource', function($resource) {
+		return $resource('/application/api/rest/processes', null, {
+				'query': { method:'GET' }
+			});
+	}]);
