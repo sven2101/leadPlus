@@ -1,5 +1,6 @@
 package dash.processmanagement.lead;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import dash.processmanagement.lead.container.Container;
 import dash.processmanagement.lead.inquirer.Inquirer;
 import dash.processmanagement.lead.vendor.Vendor;
@@ -38,6 +39,7 @@ public class Lead implements Request {
     
     @Column(nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy/MM/dd")
     private Calendar  	timestamp;
     
     @Column(length=2048)

@@ -1,7 +1,7 @@
 'use strict';
 angular.module('app.leads', ['ngResource']).controller('LeadsCtrl', LeadsCtrl);
-LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster'];
-function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster) {
+LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', '$filter'];
+function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, $filter) {
     var vm = this;
     this.scope = $scope;
     this.compile = $compile;
@@ -16,7 +16,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster)
     this.leads = {};
     this.editLead = {};
     this.newLead = {};
-    this.dtOptions = DTOptionsBuilder.fromSource('http://demo1774041.mockable.io/test2')
+    this.dtOptions = DTOptionsBuilder.fromSource('http://localhost:8080/application/api/rest/processes/leads')
         .withDOM('<"row"<"col-sm-12"l>>' +
             '<"row"<"col-sm-6"B><"col-sm-6"f>>' +
             '<"row"<"col-sm-12"tr>>' +
@@ -28,13 +28,13 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster)
             {
                 extend: 'csvHtml5',
                 exportOptions: {
-                    columns: [1, 2, 3]
+                    columns: [1, 2, 3, 4]
                 }
             },
             {
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: [1, 2, 3]
+                    columns: [1, 2, 3, 4]
                 }
             },
             'pdfHtml5'
@@ -54,17 +54,24 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster)
             "sZeroRecords": "Keine Einträge gefunden"
         })
         .withOption('createdRow', createdRow)
-        .withOption('order', [1, 'asc']);
+        .withOption('order', [5, 'desc']);
     this.dtColumns = [
         DTColumnBuilder.newColumn(null).withTitle('').notSortable()
             .renderWith(addDetailButton),
-        DTColumnBuilder.newColumn('id').withTitle('ID')
+        DTColumnBuilder.newColumn('inquirer.id').withTitle('ID')
             .withClass('text-center'),
-        DTColumnBuilder.newColumn(null).withTitle('First name')
+        DTColumnBuilder.newColumn('inquirer.lastname').withTitle('Name')
+            .withClass('text-center'),
+        DTColumnBuilder.newColumn('inquirer.company').withTitle('Firma')
+            .withClass('text-center'),
+        DTColumnBuilder.newColumn('inquirer.email').withTitle('Email')
+            .withClass('text-center'),
+        DTColumnBuilder.newColumn('timestamp').withTitle('Datum')
+            .withOption('type', 'date')
+            .withClass('text-center'),
+        DTColumnBuilder.newColumn(null).withTitle('Status')
             .withClass('text-center')
             .renderWith(addStatusStyle),
-        DTColumnBuilder.newColumn('lastName').withTitle('Last name')
-            .withClass('text-center'),
         DTColumnBuilder.newColumn(null).withTitle('<span class="glyphicon glyphicon-cog"></span>').withClass('text-center')
             .notSortable()
             .renderWith(addActionsButtons)
@@ -103,19 +110,19 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster)
     }
 
     function addStatusStyle(data, type, full, meta) {
-        vm.leads[data.id] = data;
-        if (data.id % 2 == 0) {
-            return '<div style="color: red;">' + data.firstName + '</div>'
+        vm.leads[data.inquirer.id] = data;
+        if (data.inquirer.id % 2 == 0) {
+            return '<div style="color: red;">' + data.timestamp + '</div>'
         }
         else {
-            return '<div style="color: green;">' + data.firstName + '</div>'
+            return '<div style="color: green;">' + data.timestamp + '</div>'
         }
     }
 
     function addDetailButton(data, type, full, meta) {
-        vm.leads[data.id] = data;
+        vm.leads[data.inquirer.id] = data;
         return '<a class="green shortinfo" href="javascript:;"' +
-            'ng-click="lead.appendChildRow(lead.leads[' + data.id + '], $event)" title="Click to view more">' +
+            'ng-click="lead.appendChildRow(lead.leads[' + data.inquirer.id + '], $event)" title="Click to view more">' +
             '<i class="glyphicon glyphicon-plus-sign"/></a>';
     }
 }
