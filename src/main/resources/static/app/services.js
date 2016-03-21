@@ -80,7 +80,14 @@ angular.module('app.services', ['ngResource'])
 			addComment: 	{ url: '/application/api/rest/processes/:id/comments',	 method: 'POST'},
 			getStatus: 		{ url: '/application/api/rest/processes/:id/:status', 	 method: 'GET' },
 			setStatus: 		{ url: '/application/api/rest/processes/:id/status',	 method: 'PUT' },
-			getByStatus: 	{ url: '/application/api/rest/processes/status/:status', method: 'GET', isArray:true }
+			getByStatus: 	{ url: '/application/api/rest/processes/status/:status', method: 'GET', isArray:true },
+			getProcessByLead: 	{ url: '/application/api/rest/processes/leads', 	method: 'GET', isArray:true },
+			getProcessByOffer: 	{ url: '/application/api/rest/processes/offers', 	method: 'GET', isArray:true },
+			getProcessBySale: 	{ url: '/application/api/rest/processes/sales', 	method: 'GET', isArray:true },
+			getProcessByLeadAndStatus: 		{ url: '/application/api/rest/processes/state/:status/leads', 	method: 'GET', isArray:true },
+			getProcessByOfferAndStatus: 	{ url: '/application/api/rest/processes/state/:status/offers', 	method: 'GET', isArray:true },
+			getProcessBySaleAndStatus: 		{ url: '/application/api/rest/processes/state/:status/sales', 	method: 'GET', isArray:true },
+
 		});
 	}])
 	.service('Leads', ['$resource', function($resource) {

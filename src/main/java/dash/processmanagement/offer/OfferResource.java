@@ -29,13 +29,6 @@ public class OfferResource {
     public Offer getOfferById(@PathVariable Long id) {
         return offerRepository.findOne(id);
     }
-    
-    @ApiOperation(value = "Return all offers.", notes = "")
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public Iterable<Offer> getOffers() {
-        return offerRepository.findAll();
-    }
    
     @ApiOperation(value = "Update a single offer.", notes = "")
     @RequestMapping(method=RequestMethod.PUT,

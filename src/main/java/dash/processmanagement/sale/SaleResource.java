@@ -33,14 +33,7 @@ public class SaleResource {
     public Sale getSaleById(@PathVariable Long id) {
         return saleRepository.findOne(id);
     }
-    
-    @ApiOperation(value = "Return all sales.", notes = "")
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public Iterable<Sale> getSales() {
-        return saleRepository.findAll();
-    }
-   
+
     @ApiOperation(value = "Update a single sale.", notes = "")
     @RequestMapping(method=RequestMethod.PUT,
                     value="/{id}",

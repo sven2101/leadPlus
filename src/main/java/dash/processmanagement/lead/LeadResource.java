@@ -25,13 +25,6 @@ public class LeadResource {
 
     @Autowired
     private ILeadService leadService;
-    
-    @ApiOperation(value = "Return all leads.", notes = "")
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public Iterable<Lead> getAllLeads() { 
-	return leadRepository.findAll(); 
-    }
 
     @ApiOperation(value = "Return a single lead.", notes = "")
     @RequestMapping(value="/{id}", method = RequestMethod.GET)

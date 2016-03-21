@@ -1,6 +1,6 @@
 package dash.exceptions;
 
-public class ProcessNotFoundException extends RuntimeException {
+public class ProcessNotFoundException extends Exception {
 
     /**
      * 

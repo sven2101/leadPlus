@@ -1,6 +1,6 @@
 package dash.exceptions;
 
-public class StatusNotFoundException extends RuntimeException {
+public class StatusNotFoundException extends Exception {
 
     /**
      * 

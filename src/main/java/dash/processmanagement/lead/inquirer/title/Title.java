@@ -6,6 +6,7 @@ import dash.exceptions.TitleNotFoundException;
 
 public enum Title {
 
+    UNKOWN(""),
     MR("Herr"),
     MS("Frau");
     
@@ -23,7 +24,9 @@ public enum Title {
     public static Title getTitle(String value) throws TitleNotFoundException {
 	
 	 switch(value){ 
-	        case "Herr":
+	 	case "":
+	            return Title.UNKOWN;      
+	 	case "Herr":
 	            return Title.MR;
 	        case "Frau": 
 	            return Title.MS;

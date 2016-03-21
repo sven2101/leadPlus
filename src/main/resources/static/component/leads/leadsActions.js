@@ -3,10 +3,10 @@
  */
 LeadsCtrl.prototype.changeDataInput = function () {
     if (this.loadAllData == true) {
-        this.dtInstance.changeData('http://demo1774041.mockable.io/getData');
+        this.dtInstance.changeData(this.processes.getProcessByLead());
     }
     else {
-        this.dtInstance.changeData('https://demo1774041.mockable.io/test2');
+        this.dtInstance.changeData(this.processes.getProcessByLeadAndStatus({status:"open"}));
     }
 };
 

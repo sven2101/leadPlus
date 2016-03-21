@@ -12,6 +12,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import dash.processmanagement.offer.prospect.Prospect;
 import dash.processmanagement.request.Request;
 
@@ -31,10 +33,12 @@ public class Offer implements Request {
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable=true)
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy")
     private Calendar	timestamp;
     
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable=true)
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy")
     private Calendar 	deliveryDate;
     
     private double 	price;

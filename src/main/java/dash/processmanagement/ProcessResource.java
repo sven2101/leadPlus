@@ -159,7 +159,14 @@ public class ProcessResource {
     public void updateStatusByProcessId(@PathVariable Long processId, Status status) throws ProcessNotFoundException { 
 	processService.updateStatus(processId, status);
     }
-        
+      
+    @ApiOperation(value = "Returns a list of leads.", notes = "")
+    @RequestMapping(value="/leads", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public List<Lead> getProcessWithLeads() {
+        return processRepository.findByLeadIsNotNull();
+    }
+    
     @ApiOperation(value = "Return a single lead.", notes = "")
     @RequestMapping(value = "/{processId}/leads", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -174,6 +181,13 @@ public class ProcessResource {
 	processService.createLead(processId, lead);
     }
     
+    @ApiOperation(value = "Returns a list of offers.", notes = "")
+    @RequestMapping(value="/offers", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public List<Offer> getProcessWithOffers() {
+        return processRepository.findByOfferIsNotNull();
+    }
+    
     @ApiOperation(value = "Returns single offer.", notes = "")
     @RequestMapping(value="{processId}/offers", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -186,6 +200,13 @@ public class ProcessResource {
     @ResponseStatus(HttpStatus.CREATED)
     public void createOfferByProcess(@PathVariable Long processId, @RequestBody @Valid Offer offer) throws ProcessNotFoundException { 
 	processService.createOffer(processId, offer);
+    }
+    
+    @ApiOperation(value = "Returns a list of sales.", notes = "")
+    @RequestMapping(value="/sales", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public List<Sale> getProcessWithSales() {
+        return processRepository.findBySaleIsNotNull();
     }
     
     @ApiOperation(value = "Returns a single sale.", notes = "")

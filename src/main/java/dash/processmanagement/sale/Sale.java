@@ -12,6 +12,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import dash.processmanagement.request.Request;
 import dash.processmanagement.sale.customer.Customer;
 
@@ -34,8 +36,9 @@ public class Sale implements Request {
     private double 	saleReturn;
     private double 	saleProfit;
     
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable=true)
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy")
     private Calendar 	timestamp;
     
     public Sale (){
@@ -49,7 +52,11 @@ public class Sale implements Request {
     	this.saleProfit		= saleProfit;
     	this.timestamp		= timestamp;
     }
-
+    
+    public long getId(){
+	return this.id;
+    }
+    
     public int getContainerAmount() {
 	return containerAmount;
     }

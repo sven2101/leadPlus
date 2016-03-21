@@ -1,6 +1,6 @@
 package dash.exceptions;
 
-public class TitleNotFoundException extends RuntimeException {
+public class TitleNotFoundException extends Exception {
 
     /**
      * 
