@@ -3,6 +3,7 @@ package dash.usermanagement.principle;
 import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class PrincipleResource {
 		
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		
-		if(user == null)
+		if(!Optional.ofNullable(user).isPresent())
 			return new ResponseEntity<Map<String, String>>(map, HttpStatus.UNAUTHORIZED);
 		
 		for (GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities()){

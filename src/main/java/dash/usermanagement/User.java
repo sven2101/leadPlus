@@ -26,7 +26,7 @@ public class User implements UserDetails {
     @Column(unique = true, length = 30, nullable = false)
     private String username;
 
-    @Column(length = 50, nullable = false)
+    @Column(unique = true, length = 50, nullable = false)
     private String email;
 
     @Column(length = 60, nullable = false)
@@ -41,16 +41,19 @@ public class User implements UserDetails {
 
     private String profilPictureURL;
     private String defaultLanguage;
+    
+    private boolean enabled;
 
     public User() {
     }
 
     public User(String username, String firstName, String lastName, String email, String passwordHash, String profilPictureURL, String defaultLanguage) {
-        this.username = username;
-        this.email = email;
-        this.password = passwordHash;
-        this.profilPictureURL = profilPictureURL;
-        this.defaultLanguage = defaultLanguage;
+        this.username 		= username;
+        this.email 		= email;
+        this.password 		= passwordHash;
+        this.profilPictureURL 	= profilPictureURL;
+        this.defaultLanguage 	= defaultLanguage;
+        this.enabled 		= false;
     }
 
     public Long getId() {
@@ -107,6 +110,14 @@ public class User implements UserDetails {
 
     public void setDefaultLanguage(String defaultLanguage) {
         this.defaultLanguage = defaultLanguage;
+    }
+    
+    public boolean getEnabled() {
+	return this.enabled;
+    }
+    
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override

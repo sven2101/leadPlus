@@ -2,18 +2,17 @@ package dash.processmanagement.statistic;
 
 import java.util.Calendar;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * Created by Andreas on 08.03.2016.
  */
 public class Statistic {
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy")
     private Calendar from;
     
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy")
     private Calendar until;
 
     public Statistic (){}

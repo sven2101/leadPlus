@@ -13,6 +13,7 @@ import dash.processmanagement.statistic.Statistic;
 @Service
 public interface IStatisticService {
 
-    public <T> List<Integer> getStatistic(Statistic statistic, RequestRepository<T, Long> leadRepository); 
-
+    public <T> List<Integer> 	getStatistic(Statistic statistic, RequestRepository<T, Long> leadRepository); 
+    public <T> List<Double> 	getProfitStatistic(Statistic statistic, RequestRepository<T, Long> leadRepository); 
+    public <T> List<Double> 	getReturnStatistic(Statistic statistic, RequestRepository<T, Long> leadRepository); 
 }

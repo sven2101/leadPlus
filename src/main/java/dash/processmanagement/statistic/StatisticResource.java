@@ -60,13 +60,33 @@ public class StatisticResource {
     }
     
     @RequestMapping(value="/sales",
-    	    method = RequestMethod.POST,
-            produces = {MediaType.APPLICATION_JSON_VALUE},
-	    consumes = {MediaType.APPLICATION_JSON_VALUE})
+    	    	    method = RequestMethod.POST,
+    	    	    produces = {MediaType.APPLICATION_JSON_VALUE},
+    	    	    consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get Sale Statistic", notes = "")
     public List<Integer> getSaleStatistic(@ApiParam(required=true) @RequestBody @Valid Statistic statistic) {
 	return statisticsService.getStatistic(statistic, saleRepository);
+    }
+    
+    @RequestMapping(value="/profits",
+        	    method = RequestMethod.POST,
+        	    produces = {MediaType.APPLICATION_JSON_VALUE},
+        	    consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Get Sale Statistic", notes = "")
+    public List<Double> getProfitStatistic(@ApiParam(required=true) @RequestBody @Valid Statistic statistic) {
+	return statisticsService.getProfitStatistic(statistic, saleRepository);
+    }
+    
+    @RequestMapping(value="/returns",
+	    method = RequestMethod.POST,
+	    produces = {MediaType.APPLICATION_JSON_VALUE},
+	    consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Get Sale Statistic", notes = "")
+    public List<Double> getReturnStatistic(@ApiParam(required=true) @RequestBody @Valid Statistic statistic) {
+    return statisticsService.getReturnStatistic(statistic, saleRepository);
     }
 	
 }

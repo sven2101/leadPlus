@@ -41,6 +41,8 @@ import javax.annotation.PostConstruct;
 import static com.google.common.base.Predicates.*;
 import static springfox.documentation.builders.PathSelectors.*;
 
+import java.util.Optional;
+
 /**
  * Created by Andreas on 09.10.2015.
  */
@@ -111,25 +113,32 @@ public class Application {
         
     @PostConstruct
     public void createAdminIfNotExists() throws Exception {
-/*
-        User user1 = new User();
-
-        user1.setUsername("andreas".toLowerCase());
-        user1.setPassword( passwordEncoder().encode("admin"));
-        user1.setEmail("andreas.foitzik@live.com");
-        user1.setRole(Role.ADMIN);
-
-        userRepository.save(user1);
         
-        User user2 = new User();
-
-        user2.setUsername("sven".toLowerCase());
-        user2.setPassword( passwordEncoder().encode("admin"));
-        user2.setEmail("sven-jaschkewitz@web.de");
-        user2.setRole(Role.ADMIN);
-
-        userRepository.save(user2);
-*/
+	if(!Optional.ofNullable(userRepository.findByUsername("andreas")).isPresent()){
+    	
+	    User user1 = new User();
+    
+            user1.setUsername("andreas".toLowerCase());
+            user1.setPassword( passwordEncoder().encode("admin"));
+            user1.setEmail("andreas.foitzik@live.com");
+            user1.setRole(Role.ADMIN);
+            user1.setEnabled(true);
+    
+            userRepository.save(user1);
+	}
+	
+	if(!Optional.ofNullable(userRepository.findByUsername("sven")).isPresent()){
+            
+	    User user2 = new User();
+    
+            user2.setUsername("sven".toLowerCase());
+            user2.setPassword( passwordEncoder().encode("admin"));
+            user2.setEmail("sven-jaschkewitz@web.de");
+            user2.setRole(Role.ADMIN);
+            user2.setEnabled(true);
+    
+            userRepository.save(user2);
+	}
     }
     
     @EnableWebSecurity
