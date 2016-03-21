@@ -9,24 +9,94 @@
             </div>
             <div class="modal-body">
                 <form name="editForm" novalidate>
-                    <!-- NAME -->
-                    <div class="form-group"
-                         ng-class="{ 'has-error' : editForm.name.$invalid && !editForm.name.$pristine }">
-                        <label>Name</label>
-                        <input type="text" name="name" class="form-control"
-                               ng-model="lead.editLead.firstName" required>
-                        <p ng-show="editForm.name.$invalid && !editForm.name.$pristine"
-                           class="help-block">You name is required.</p>
+                    <!-- TITLE -->
+                    <div class="form-group">
+                        <label>Title</label>
+                        <select name="title"  ng-model="lead.editLead.inquirer.title">
+                            <option value="m">Herr</option>
+                            <option value="w">Frau</option>
+                        </select>
                     </div>
-
+                    <!-- FIRSTNAME -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : editForm.firstname.$invalid && !editForm.firstname.$pristine }">
+                        <label>Vorname</label>
+                        <input type="text" name="firstname" class="form-control"
+                               ng-model="lead.editLead.inquirer.firstname" ng-maxlength="30">
+                        <p ng-show="editForm.firstname.$invalid && !editForm.firstname.$pristine"
+                           class="help-block">Firstname is too long</p>
+                    </div>
+                    <!-- FIRSTNAME -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : editForm.lastname.$invalid && !editForm.lastname.$pristine }">
+                        <label>Vorname</label>
+                        <input type="text" name="lastname" class="form-control"
+                               ng-model="lead.editLead.inquirer.lastname" ng-maxlength="30">
+                        <p ng-show="editForm.lastname.$invalid && !editForm.lastname.$pristine"
+                           class="help-block">Lastname is too long</p>
+                    </div>
+                    <!-- COMPANY -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : editForm.company.$invalid && !editForm.company.$pristine }">
+                        <label>Firma</label>
+                        <input type="text" name="company" class="form-control"
+                               ng-model="lead.editLead.inquirer.company" ng-maxlength="50">
+                        <p ng-show="editForm.company.$invalid && !editForm.company.$pristine"
+                           class="help-block">Company is too long</p>
+                    </div>
                     <!-- EMAIL -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : editForm.email.$invalid && !editForm.email.$pristine }">
                         <label>Email</label>
                         <input type="email" name="email" class="form-control"
-                               ng-model="lead.editLead.lastName">
+                               ng-model="lead.editLead.inquirer.email">
                         <p ng-show="editForm.email.$invalid && !editForm.email.$pristine"
                            class="help-block">Enter a valid email.</p>
+                    </div>
+                    <!-- PHONE -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : editForm.phone.$invalid && !editForm.phone.$pristine }">
+                        <label>Telefon</label>
+                        <input type="text" name="phone" class="form-control"
+                               ng-model="lead.editLead.inquirer.phone" ng-maxlength="50">
+                        <p ng-show="editForm.phone.$invalid && !editForm.phone.$pristine"
+                           class="help-block">Phonenumber is too long</p>
+                    </div>
+                    <!-- CONTAINER NAME -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : editForm.containerName.$invalid && !editForm.containerName.$pristine }">
+                        <label>Container Name</label>
+                        <input type="text" name="containerName" class="form-control"
+                               ng-model="lead.editLead.container.name" ng-maxlength="50">
+                        <p ng-show="editForm.containerName.$invalid && !editForm.containerName.$pristine"
+                           class="help-block">Containername is too long</p>
+                    </div>
+                    <!-- CONTAINER AMOUNT -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : editForm.containerAmount.$invalid && !editForm.containerAmount.$pristine }">
+                        <label>Container Menge</label>
+                        <input type="number" name="containerAmount" class="form-control"
+                               ng-model="lead.editLead.containerAmount">
+                        <p ng-show="editForm.containerAmount.$invalid && !editForm.containerAmount.$pristine"
+                           class="help-block">Containername is too long</p>
+                    </div>
+                    <!-- PRICE -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : editForm.nettoPrice.$invalid && !editForm.nettoPrice.$pristine }">
+                        <label>Preis</label>
+                        <input type="number" name="nettoPrice" class="form-control"
+                               ng-model="lead.editLead.nettoPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01">
+                        <p ng-show="editForm.nettoPrice.$invalid && !editForm.nettoPrice.$pristine"
+                           class="help-block">Containername is too long</p>
+                    </div>
+                    <!-- CONTAINER NAME -->
+                    <div class="form-group"
+                         ng-class="{ 'has-error' : editForm.destination.$invalid && !editForm.destination.$pristine }">
+                        <label>Lieferort</label>
+                        <input type="text" name="containerName" class="form-control"
+                               ng-model="lead.editLead.destination" ng-maxlength="50">
+                        <p ng-show="editForm.destination.$invalid && !editForm.destination.$pristine"
+                           class="help-block">Destination is too long</p>
                     </div>
                 </form>
             </div>

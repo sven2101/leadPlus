@@ -1,7 +1,7 @@
 'use strict';
 angular.module('app.leads', ['ngResource']).controller('LeadsCtrl', LeadsCtrl);
-LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', '$filter'];
-function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, $filter) {
+LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster'];
+function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster) {
     var vm = this;
     this.scope = $scope;
     this.compile = $compile;
@@ -28,13 +28,13 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             {
                 extend: 'csvHtml5',
                 exportOptions: {
-                    columns: [1, 2, 3, 4]
+                    columns: [2, 3, 4, 5, 6]
                 }
             },
             {
                 extend: 'excelHtml5',
                 exportOptions: {
-                    columns: [1, 2, 3, 4]
+                    columns: [2, 3, 4, 5, 6]
                 }
             },
             'pdfHtml5'
@@ -67,8 +67,10 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
         DTColumnBuilder.newColumn('inquirer.email').withTitle('Email')
             .withClass('text-center'),
         DTColumnBuilder.newColumn('timestamp').withTitle('Datum')
-            .withOption('type', 'date')
+            .withOption('type', 'date-euro')
             .withClass('text-center'),
+        DTColumnBuilder.newColumn('inquirer.phone').withTitle('Phone')
+            .notVisible(),
         DTColumnBuilder.newColumn(null).withTitle('Status')
             .withClass('text-center')
             .renderWith(addStatusStyle),
@@ -110,8 +112,8 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     }
 
     function addStatusStyle(data, type, full, meta) {
-        vm.leads[data.inquirer.id] = data;
-        if (data.inquirer.id % 2 == 0) {
+        vm.leads[data.id] = data;
+        if (data.id % 2 == 0) {
             return '<div style="color: red;">' + data.timestamp + '</div>'
         }
         else {
@@ -120,9 +122,9 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     }
 
     function addDetailButton(data, type, full, meta) {
-        vm.leads[data.inquirer.id] = data;
+        vm.leads[data.id] = data;
         return '<a class="green shortinfo" href="javascript:;"' +
-            'ng-click="lead.appendChildRow(lead.leads[' + data.inquirer.id + '], $event)" title="Click to view more">' +
+            'ng-click="lead.appendChildRow(lead.leads[' + data.id + '], $event)" title="Click to view more">' +
             '<i class="glyphicon glyphicon-plus-sign"/></a>';
     }
 }

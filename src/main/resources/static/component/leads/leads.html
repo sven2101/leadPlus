@@ -24,14 +24,18 @@
                     <h5>Anfragen verwalten</h5>
                 </div>
                 <div class="ibox-content">
-                    <button type="button" class="btn btn-success" ng-click="lead.clearNewLead()" data-toggle="modal" data-target="#newLeadModal">
+                    <button type="button" class="btn btn-success" ng-click="lead.clearNewLead()" data-toggle="modal"
+                            data-target="#newLeadModal">
                         <i class="fa fa-plus"></i>&nbsp;Add Lead
                     </button>
                     <button ng-click="lead.refreshData()" type="button" class="btn btn-success">
                         <i class="fa fa-refresh"></i>&nbsp;Reload data
                     </button>
-                    <span class="pull-right" style=" font-size: 1.5em;">All leads &nbsp;<input type="checkbox" ng-model="lead.loadAllData" ng-change="lead.changeDataInput()" class="js-switch"
-                                                    ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
+                    <span class="pull-right" style=" font-size: 1.5em;">All leads &nbsp;<input type="checkbox"
+                                                                                               ng-model="lead.loadAllData"
+                                                                                               ng-change="lead.changeDataInput()"
+                                                                                               class="js-switch"
+                                                                                               ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
                     <p class="text-danger"><strong>{{ lead.message }}</strong></p>
                     </br></br>
                     <div class="table-responsive text-center">
@@ -47,3 +51,19 @@
         </div>
     </div>
 </div>
+<!--Page level script-->
+<script>
+    jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+        "date-euro-pre": function (date) {
+            return moment(date, 'DD.MM.YYYY');
+        },
+
+        "date-euro-asc": function (a, b) {
+            return (a.isBefore(b) ? -1 : (a.isAfter(b) ? 1 : 0));
+        },
+
+        "date-euro-desc": function (a, b) {
+            return (a.isBefore(b) ? 1 : (a.isAfter(b) ? -1 : 0));
+        }
+    });
+</script>

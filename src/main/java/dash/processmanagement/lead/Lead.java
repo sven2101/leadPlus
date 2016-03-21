@@ -39,7 +39,7 @@ public class Lead implements Request {
     
     @Column(nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy/MM/dd")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy")
     private Calendar  	timestamp;
     
     @Column(length=2048)
@@ -56,6 +56,10 @@ public class Lead implements Request {
         this.destination 	= destination;
         this.timestamp		= timestamp;
         this.message 		= message;
+    }
+
+    public Long getId(){
+        return this.id;
     }
 
     public Inquirer getInquirer() {
@@ -80,6 +84,10 @@ public class Lead implements Request {
 
     public void setContainerAmount(int containerAmount) {
         this.containerAmount = containerAmount;
+    }
+
+    public double getNettoPrice(){
+        return this.containerAmount*this.container.getPriceNetto();
     }
 
     public String getDestination() {
