@@ -1,9 +1,13 @@
 package dash.processmanagement.lead.inquirer;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import dash.processmanagement.lead.inquirer.title.Title;
 
 /**
  * Created by Andreas on 10.10.2015.
@@ -15,7 +19,9 @@ public class Inquirer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String title;
+    @Enumerated(EnumType.STRING)
+    private Title  title;
+    
     private String firstname;
     private String lastname;
     private String company;
@@ -24,7 +30,7 @@ public class Inquirer {
 
     public Inquirer(){}
 
-    public Inquirer(String title, String firstname, String lastname, String company, String email, String phone){
+    public Inquirer(Title title, String firstname, String lastname, String company, String email, String phone){
         this.title = title;
     	this.firstname = firstname;
         this.lastname = lastname;
@@ -35,11 +41,11 @@ public class Inquirer {
 
     public Long getId() { return id; }
 
-    public String getTitle() {
+    public Title getTitle() {
         return title;
     }
 
-    public void setTitle(String title) { this.title = title; }
+    public void setTitle(Title title) { this.title = title; }
     
     public String getFirstname() {
         return firstname;

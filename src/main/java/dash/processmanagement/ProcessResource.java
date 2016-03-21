@@ -1,6 +1,7 @@
 package dash.processmanagement;
 
 import dash.exceptions.ProcessNotFoundException;
+import dash.exceptions.StatusNotFoundException;
 import dash.processmanagement.comment.Comment;
 import dash.processmanagement.lead.Lead;
 import dash.processmanagement.offer.Offer;
@@ -54,6 +55,27 @@ public class ProcessResource {
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Process> get(@ApiParam(required=true) @PathVariable Status status) {
 	return processRepository.findProcessesByStatus(Status.valueOf("status"));
+    }
+    
+    @ApiOperation(value = "Returns list of leads, which are related to a process status.", notes = "")
+    @RequestMapping(value= "/state/{status}/leads", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public List<Lead> getLeadsByProcessStatus(@ApiParam(required=true) @PathVariable String status) throws StatusNotFoundException {	
+	return processRepository.findByStatusAndLeadIsNotNull(Status.getStatus(status));
+    }
+    
+    @ApiOperation(value = "Returns list of offers, which are related to a process status.", notes = "")
+    @RequestMapping(value= "/state/{status}/offers", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public List<Offer> getOffersByProcessStatus(@ApiParam(required=true) @PathVariable String status) throws StatusNotFoundException {	
+	return processRepository.findByStatusAndOfferIsNotNull(Status.getStatus(status));
+    }
+    
+    @ApiOperation(value = "Returns list of sales, which are related to a process status.", notes = "")
+    @RequestMapping(value= "/state/{status}/sales", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public List<Sale> getSalesByProcessStatus(@ApiParam(required=true) @PathVariable String status) throws StatusNotFoundException {	
+	return processRepository.findByStatusAndSaleIsNotNull(Status.getStatus(status));
     }
     
     @ApiOperation(value = "Returns status", notes = "")

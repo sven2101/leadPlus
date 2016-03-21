@@ -1,13 +1,13 @@
 package dash.exceptions;
 
-public class ProcessNotFoundException extends RuntimeException {
+public class TitleNotFoundException extends RuntimeException {
 
     /**
      * 
      */
     private static final long serialVersionUID = 5520905786207281118L;
 
-    public ProcessNotFoundException(String message){
+    public TitleNotFoundException(String message){
 	super(message);
     }
 }

@@ -1,6 +1,8 @@
 package dash.processmanagement.status;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import dash.exceptions.StatusNotFoundException;
 
 /**
  * Created by Andreas on 16.11.2015.
@@ -22,22 +24,23 @@ public enum Status {
         return status;
     }
     
-    @JsonCreator
-    public static Status create (String value) {
-
-        return OPEN;/*
-        if(value == null) {
-            throw new IllegalArgumentException();
-        }
-        for(Status v : values()) {
-            if(value.equals(v.getStatus())) {
-                return v;
-            }
-        }
-        throw new IllegalArgumentException();
-        */
+    public static Status getStatus(String value) throws StatusNotFoundException {
+	
+	 switch(value){ 
+	        case "open":
+	            return Status.OPEN;
+	        case "offer": 
+	            return Status.OFFER;
+	        case "sale":
+	            return Status.SALE;
+	        case "closed":
+	            return Status.CLOSED;
+	        default:
+	            throw new StatusNotFoundException("No Status found.");
+	 }
     }
-    
+	 
+    @JsonValue
     public String getStatus() {
         return status;
     }
