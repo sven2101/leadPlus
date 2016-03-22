@@ -54,7 +54,6 @@ LeadsCtrl.prototype.followUp = function (lead) {
 
 LeadsCtrl.prototype.closeOrOpenInquiry = function (lead) {
     var vm = this;
-    alert(lead.status);
     if (lead.status == "open") {
         this.processes.setStatus({id: lead.id}, 'closed').$promise.then(function () {
             vm.toaster.pop('success', 'Success', "You have closed your lead");

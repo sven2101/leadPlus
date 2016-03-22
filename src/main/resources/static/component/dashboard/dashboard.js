@@ -2,42 +2,11 @@
 
 angular.module('app.dashboard', ['ngResource']).controller('DashboardCtrl', DashboardCtrl);
 
-DashboardCtrl.$inject = ['toaster', 'Statistics'];
+DashboardCtrl.$inject = ['toaster'];
 
-function DashboardCtrl(toaster, Statistics) {
-    var vm = this;
-	
-	this.service = Statistics;
-	vm = this;
-	
-	var leadStatistic = [];
-	var offerStatistic = [];
-	var saleStatistic = [];
-	var profitStatistic = [];
-	var returnStatistic = [];
-	
-	this.service.getLeadStatistics({"from":"01.01.2015", "until":"31.12.2015"}).$promise.then(function (result) {
-		vm.leadStatistic = result;
-		console.log("Lead: ", result);
-	});
-	this.service.getOffersStatistics({"from":"01.01.2015", "until":"31.12.2015"}).$promise.then(function (result) {
-		vm.offerStatistic = result;
-		console.log("Offer: ", result);
-	});
-	this.service.getSalesStatistics({"from":"01.01.2015", "until":"31.12.2015"}).$promise.then(function (result) {
-		vm.saleStatistic = result;
-		console.log("Sale: ", result);
-	});
-	
-	this.service.getProfitStatistics({"from":"01.01.2015", "until":"31.12.2015"}).$promise.then(function (result) {
-		vm.profitStatistic = result;
-		console.log("Profit: ", result);
-	});
-	this.service.getReturnStatistics({"from":"01.01.2015", "until":"31.12.2015"}).$promise.then(function (result) {
-		vm.returnStatistic = result;
-		console.log("Return: ", result);
-	});
-	
+function DashboardCtrl(toaster) {
+
+	var vm = this;
     this.toaster = toaster;
     this.commentModalInput = '';
     this.comments = {};
