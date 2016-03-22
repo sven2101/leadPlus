@@ -20,6 +20,7 @@ import dash.notificationmanagement.message.RegistrationMessage;
 import dash.usermanagement.Role;
 import dash.usermanagement.User;
 import dash.usermanagement.UserRepository;
+import dash.usermanagement.settings.language.Language;
 
 @RestController
 @RequestMapping("/api/rest/registrations")
@@ -47,6 +48,7 @@ public class RegistrationResource {
         user.setPassword(passwordEncoder.encode(registration.getPassword()));
         user.setRole(Role.USER);
         user.setEnabled(false);
+        user.setLanguage(Language.DE);
         
         if(!Optional.ofNullable(userRepository.findByUsername(user.getUsername())).isPresent() && 
            !Optional.ofNullable(userRepository.findByEmail(user.getEmail())).isPresent()) {

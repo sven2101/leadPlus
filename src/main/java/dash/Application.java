@@ -5,6 +5,7 @@ import dash.security.listener.RESTAuthenticationEntryPoint;
 import dash.usermanagement.Role;
 import dash.usermanagement.User;
 import dash.usermanagement.UserRepository;
+import dash.usermanagement.settings.language.Language;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -123,6 +124,7 @@ public class Application {
             user1.setEmail("andreas.foitzik@live.com");
             user1.setRole(Role.ADMIN);
             user1.setEnabled(true);
+            user1.setLanguage(Language.DE);
     
             userRepository.save(user1);
 	}
@@ -136,6 +138,7 @@ public class Application {
             user2.setEmail("sven-jaschkewitz@web.de");
             user2.setRole(Role.ADMIN);
             user2.setEnabled(true);
+            user2.setLanguage(Language.DE);
     
             userRepository.save(user2);
 	}

@@ -25,7 +25,7 @@ public class UserService implements UserDetailsService {
         
 	User user = userRepository.findByUsername(username);
 
-        if (!Optional.ofNullable(user).isPresent()) {
+        if (!Optional.ofNullable(user).isPresent() || !user.getEnabled()) {
             throw new UsernameNotFoundException("User details not found with this username: " + username);
         }
         
