@@ -1,11 +1,6 @@
 package dash.processmanagement.lead.inquirer;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import dash.processmanagement.lead.inquirer.title.Title;
 
@@ -19,39 +14,47 @@ public class Inquirer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    private Title  title;
-    
+    private Title title;
+
     private String firstname;
     private String lastname;
     private String company;
     private String email;
     private String phone;
 
-    public Inquirer(){}
+    public Inquirer() {
+    }
 
-    public Inquirer(Title title, String firstname, String lastname, String company, String email, String phone){
+    public Inquirer(Title title, String firstname, String lastname, String company, String email, String phone) {
         this.title = title;
-    	this.firstname = firstname;
+        this.firstname = firstname;
         this.lastname = lastname;
         this.company = company;
         this.email = email;
         this.phone = phone;
     }
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
     public Title getTitle() {
         return title;
     }
 
-    public void setTitle(Title title) { this.title = title; }
-    
+    public void setTitle(Title title) {
+        this.title = title;
+    }
+
     public String getFirstname() {
         return firstname;
     }
 
-    public void setFirstname(String firstname) { this.firstname = firstname; }
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
 
     public String getCompany() {
         return company;
@@ -76,7 +79,7 @@ public class Inquirer {
     public void setEmail(String email) {
         this.email = email;
     }
-    
+
     public String getPhone() {
         return phone;
     }

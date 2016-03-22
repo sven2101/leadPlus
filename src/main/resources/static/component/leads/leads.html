@@ -33,7 +33,7 @@
                     </button>
                     <span class="pull-right" style=" font-size: 1.5em;">All leads &nbsp;<input type="checkbox"
                                                                                                ng-model="lead.loadAllData"
-                                                                                               ng-change="lead.changeDataInput()"
+                                                                                               ng-change="lead.dtInstance.changeData(lead.changeDataInput)"
                                                                                                class="js-switch"
                                                                                                ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
                     <p class="text-danger"><strong>{{ lead.message }}</strong></p>
@@ -55,7 +55,7 @@
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {
         "date-euro-pre": function (date) {
-            return moment(date, 'DD.MM.YYYY');
+            return moment(date, 'DD.MM.YYYY HH:mm');
         },
 
         "date-euro-asc": function (a, b) {

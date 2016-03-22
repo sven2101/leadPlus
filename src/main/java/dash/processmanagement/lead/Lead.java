@@ -38,7 +38,7 @@ public class Lead implements Request {
     
     @Column(nullable=true)
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy HH:mm")
     private Calendar  	timestamp;
     
     @Column(length=2048)

@@ -27,45 +27,59 @@ public class LeadResource {
     private ILeadService leadService;
 
     @ApiOperation(value = "Return a single lead.", notes = "")
-    @RequestMapping(value="/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public Lead getLeadById(@ApiParam(required=true) @PathVariable Long id) {
+    public Lead getLeadById(@ApiParam(required = true) @PathVariable Long id) {
         return leadRepository.findOne(id);
     }
 
     @ApiOperation(value = "Add a single lead.", notes = "")
     @RequestMapping(method = RequestMethod.POST,
-	    	    consumes = {MediaType.APPLICATION_JSON_VALUE},
-	    	    produces = {MediaType.APPLICATION_JSON_VALUE})
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
-    public void add(@ApiParam(required=true) @RequestBody @Valid Lead lead) {
+    public void add(@ApiParam(required = true) @RequestBody @Valid Lead lead) {
         leadService.createLead(lead);
     }
-    
+
     @ApiOperation(value = "Update a single lead.", notes = "")
-    @RequestMapping(value="/{id}",
-    		    method=RequestMethod.PUT,
-    		    consumes = {MediaType.APPLICATION_JSON_VALUE},
-    		    produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/{id}",
+            method = RequestMethod.PUT,
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.OK)
-    public Lead update(@ApiParam(required=true) @PathVariable Long id, @ApiParam(required=true) @RequestBody @Valid Lead updateLead) {
+    public Lead update(@ApiParam(required = true) @PathVariable Long id, @ApiParam(required = true) @RequestBody @Valid Lead updateLead) {
         Lead lead = leadRepository.findOne(id);
 
-        lead.setInquirer(updateLead.getInquirer());
-        lead.setVendor(updateLead.getVendor());
-        lead.setContainer(updateLead.getContainer());
+        //set inquirer datas
+        lead.getInquirer().setFirstname(updateLead.getInquirer().getFirstname());
+        lead.getInquirer().setLastname(updateLead.getInquirer().getLastname());
+        lead.getInquirer().setCompany(updateLead.getInquirer().getCompany());
+        lead.getInquirer().setEmail(updateLead.getInquirer().getEmail());
+        lead.getInquirer().setPhone(updateLead.getInquirer().getPhone());
+        lead.getInquirer().setTitle(updateLead.getInquirer().getTitle());
+
+        //set vendor datas
+        lead.getVendor().setName(updateLead.getVendor().getName());
+        lead.getVendor().setPhone(updateLead.getVendor().getPhone());
+
+        //set container datas
+        lead.getContainer().setName(updateLead.getContainer().getName());
+        lead.getContainer().setDescription(updateLead.getContainer().getDescription());
+        lead.getContainer().setPriceNetto(updateLead.getContainer().getPriceNetto());
+
+        //set main data
         lead.setTimestamp(updateLead.getTimestamp());
         lead.setContainerAmount(updateLead.getContainerAmount());
         lead.setDestination(updateLead.getDestination());
         lead.setMessage(updateLead.getMessage());
-        
-        return lead;
+        return leadRepository.save(lead);
     }
 
     @ApiOperation(value = "Delete a single Lead.", notes = "")
-    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@ApiParam(required=true) @PathVariable Long id) {
+    public void delete(@ApiParam(required = true) @PathVariable Long id) {
         leadRepository.delete(id);
     }
 }

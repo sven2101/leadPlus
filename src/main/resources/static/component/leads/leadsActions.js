@@ -1,18 +1,10 @@
 /**
  * Created by Sven on 20.03.2016.
  */
-LeadsCtrl.prototype.changeDataInput = function () {
-    if (this.loadAllData == true) {
-        this.dtInstance.changeData(this.processes.getProcessByLead());
-    }
-    else {
-        this.dtInstance.changeData(this.processes.getProcessByLeadAndStatus({status:"open"}));
-    }
-};
 
 LeadsCtrl.prototype.loadCurrentIdToModal = function (id) {
     this.currentCommentModalId = id;
-};
+}
 
 LeadsCtrl.prototype.addComment = function (id, source) {
     if (angular.isUndefined(this.comments[id])) {
@@ -29,46 +21,64 @@ LeadsCtrl.prototype.addComment = function (id, source) {
 };
 
 LeadsCtrl.prototype.saveLead = function () {
-    this.toaster.pop('success', 'Success', "New Lead Saved");
-    this.message = 'Save new lead:' + this.newLead.firstName;
-};
+    var vm = this;
+    this.newLead.timestamp = this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm');
+    this.newLead.vendor = {
+        name: "***REMOVED***"
+    };
+    var process = {
+        lead: this.newLead,
+        status: 'open'
+    }
+    this.processes.addProcess(process).$promise.then(function () {
+        vm.toaster.pop('success', 'Success', "New Lead Saved");
+        vm.refreshData();
+    });
+}
 
 LeadsCtrl.prototype.clearNewLead = function () {
     this.newLead = {};
-};
-
-LeadsCtrl.prototype.refreshData = function () {
-    var resetPaging = false;
-    this.dtInstance.reloadData(resetPaging);
-    this.message = 'refresh table';
-};
+    this.newLead.containerAmount = 1;
+    this.newLead.container = {
+        priceNetto: 0
+    }
+}
 
 LeadsCtrl.prototype.followUp = function (lead) {
-    this.message = 'You are trying to generate an offer of the row: ' + JSON.stringify(lead);
-    // Delete some data and call server to make changes...
-    // Then reload the data so that DT is refreshed
-    //this.dtInstance.reloadData();
-};
+    var vm = this;
+    this.processes.setStatus({id: lead.id}, 'offer').$promise.then(function () {
+        vm.toaster.pop('success', 'Success', "You have a new offer");
+        vm.refreshData();
+    });
+}
 
-LeadsCtrl.prototype.closeInquiry = function (lead) {
-    this.message = 'You are trying to close an offer of the row: ' + JSON.stringify(lead);
-    // Delete some data and call server to make changes...
-    // Then reload the data so that DT is refreshed
-    this.dtInstance.reloadData();
-};
+LeadsCtrl.prototype.closeOrOpenInquiry = function (lead) {
+    var vm = this;
+    alert(lead.status);
+    if (lead.status == "open") {
+        this.processes.setStatus({id: lead.id}, 'closed').$promise.then(function () {
+            vm.toaster.pop('success', 'Success', "You have closed your lead");
+            vm.refreshData();
+        });
+    } else if (lead.status == "closed") {
+        this.processes.setStatus({id: lead.id}, 'open').$promise.then(function () {
+            vm.toaster.pop('success', 'Success', "You have opened your lead");
+            vm.refreshData();
+        });
+    }
+}
 
 LeadsCtrl.prototype.loadDataToModal = function (lead) {
-    this.message = 'You are loading datas to edit: ' + JSON.stringify(lead);
     this.editLead = lead;
-};
+}
 
 LeadsCtrl.prototype.saveEditedRow = function () {
-    // Edit some data and call server to make changes...
-    // Then reload the data so that DT is refreshed
-    this.toaster.pop('success', 'Success', "Lead edited");
-    this.message = 'You are trying to edit the row: ' + JSON.stringify(this.editLead);
-    this.dtInstance.reloadData();
-};
+    var vm = this;
+    this.processes.putLead({id: this.editLead.lead.id}, this.editLead.lead).$promise.then(function () {
+        vm.toaster.pop('success', 'Success', "You have updated your lead");
+        vm.refreshData();
+    });
+}
 
 LeadsCtrl.prototype.deleteRow = function (lead) {
     this.toaster.pop('success', 'Success', "Lead removed");
@@ -76,4 +86,4 @@ LeadsCtrl.prototype.deleteRow = function (lead) {
     // Delete some data and call server to make changes...
     // Then reload the data so that DT is refreshed
     this.dtInstance.reloadData();
-};
+}

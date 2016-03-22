@@ -1,10 +1,11 @@
 'use strict';
 angular.module('app.leads', ['ngResource']).controller('LeadsCtrl', LeadsCtrl);
-LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes'];
-function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes) {
-    
-	var vm = this;
-	this.processes = Processes;
+LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', '$filter'];
+function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, $filter) {
+
+    var vm = this;
+    this.filter = $filter;
+    this.processes = Processes;
     this.scope = $scope;
     this.compile = $compile;
     this.toaster = toaster;
@@ -18,7 +19,9 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     this.leads = {};
     this.editLead = {};
     this.newLead = {};
-    this.dtOptions = DTOptionsBuilder.fromSource('http://localhost:8080/application/api/rest/processes/leads')
+    this.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
+            return vm.processes.getProcessByLeadAndStatus({status: 'open'}).$promise;
+        })
         .withDOM('<"row"<"col-sm-12"l>>' +
             '<"row"<"col-sm-6"B><"col-sm-6"f>>' +
             '<"row"<"col-sm-12"tr>>' +
@@ -60,18 +63,22 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     this.dtColumns = [
         DTColumnBuilder.newColumn(null).withTitle('').notSortable()
             .renderWith(addDetailButton),
-        DTColumnBuilder.newColumn('inquirer.id').withTitle('ID')
+        DTColumnBuilder.newColumn('lead.inquirer.lastname').withTitle('Name')
             .withClass('text-center'),
-        DTColumnBuilder.newColumn('inquirer.lastname').withTitle('Name')
+        DTColumnBuilder.newColumn('lead.inquirer.company').withTitle('Firma')
             .withClass('text-center'),
-        DTColumnBuilder.newColumn('inquirer.company').withTitle('Firma')
+        DTColumnBuilder.newColumn('lead.inquirer.email').withTitle('Email')
             .withClass('text-center'),
-        DTColumnBuilder.newColumn('inquirer.email').withTitle('Email')
-            .withClass('text-center'),
-        DTColumnBuilder.newColumn('timestamp').withTitle('Datum')
+        DTColumnBuilder.newColumn('lead.timestamp').withTitle('Datum')
             .withOption('type', 'date-euro')
             .withClass('text-center'),
-        DTColumnBuilder.newColumn('inquirer.phone').withTitle('Phone')
+        DTColumnBuilder.newColumn('lead.inquirer.phone').withTitle('Phone')
+            .notVisible(),
+        DTColumnBuilder.newColumn('lead.inquirer.firstname').withTitle('firstname')
+            .notVisible(),
+        DTColumnBuilder.newColumn('lead.container.name').withTitle('containername')
+            .notVisible(),
+        DTColumnBuilder.newColumn('lead.destination').withTitle('destination')
             .notVisible(),
         DTColumnBuilder.newColumn(null).withTitle('Status')
             .withClass('text-center')
@@ -81,6 +88,23 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             .renderWith(addActionsButtons)
     ];
 
+    vm.refreshData = refreshData;
+    function refreshData() {
+        var resetPaging = true;
+        this.dtInstance.reloadData(resetPaging);
+    }
+
+    vm.changeDataInput = changeDataInput;
+    function changeDataInput() {
+
+        if (vm.loadAllData == true) {
+            return vm.processes.getProcessByLead().$promise;
+        }
+        else {
+            return vm.processes.getProcessByLeadAndStatus({status: 'open'}).$promise;
+        }
+    }
+
     function createdRow(row, data, dataIndex) {
         // Recompiling so we can bind Angular directive to the DT
         vm.compile(angular.element(row).contents())(vm.scope);
@@ -89,22 +113,26 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     function addActionsButtons(data, type, full, meta) {
         vm.leads[data.id] = data;
         var disabled = '';
+        var closeOrOpenInquiryDisable = '';
         var openOrLock = 'Anfrage schließen';
         var faOpenOrLOck = 'fa fa-lock';
-        if (data.id % 2 == 0) {
+        if (data.status != 'open') {
             disabled = 'disabled';
             openOrLock = 'Anfrage Öffnen';
             faOpenOrLOck = 'fa fa-unlock';
         }
+        if (data.offer != null || data.sale != null) {
+            closeOrOpenInquiryDisable = 'disabled';
+        }
 
 
-        return '<button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.leads[' + data.id + '])" title="Angebot erstellen' + data.id + '">' +
+        return '<button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.leads[' + data.id + '])" title="Angebot erstellen">' +
             '   <i class="fa fa-check"></i>' +
             '</button>&nbsp;' +
-            '<button class="btn btn-white" ng-click="lead.closeInquiry(lead.leads[' + data.id + '])" title="' + openOrLock + '">' +
+            '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.closeOrOpenInquiry(lead.leads[' + data.id + '])" title="' + openOrLock + '">' +
             '   <i class="' + faOpenOrLOck + '"></i>' +
             '</button>&nbsp;' +
-            '<button class="btn btn-white" ng-click="lead.loadDataToModal(lead.leads[' + data.id + '])" data-toggle="modal"' +
+            '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.loadDataToModal(lead.leads[' + data.id + '])" data-toggle="modal"' +
             'data-target="#editModal" title="Anfrage bearbeiten">' +
             '<i class="fa fa-edit"></i>' +
             '</button>&nbsp;' +
@@ -115,11 +143,17 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
 
     function addStatusStyle(data, type, full, meta) {
         vm.leads[data.id] = data;
-        if (data.id % 2 == 0) {
-            return '<div style="color: red;">' + data.timestamp + '</div>'
+        if (data.status == 'open') {
+            return '<div style="color: green;">' + data.status + '</div>'
         }
-        else {
-            return '<div style="color: green;">' + data.timestamp + '</div>'
+        else if (data.status == 'offer') {
+            return '<div style="color: #f79d3c;">' + data.status + '</div>'
+        }
+        else if (data.status == 'sale') {
+            return '<div style="color: #1872ab;">' + data.status + '</div>'
+        }
+        else if (data.status == 'closed') {
+            return '<div style="color: #ea394c;">' + data.status + '</div>'
         }
     }
 

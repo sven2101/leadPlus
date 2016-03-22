@@ -141,7 +141,7 @@ public class ProcessResource {
     
     @ApiOperation(value = "Creates a process.", notes = "")
     @RequestMapping(method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void createProcess(@RequestBody @Valid Process process) { 
 	processService.createProcess(process); 
     }
@@ -153,11 +153,11 @@ public class ProcessResource {
 	processService.createProcesses(processes); 
     }
     
-    @ApiOperation(value = "Get  status.", notes = "")
+    @ApiOperation(value = "Modifie status.", notes = "")
     @RequestMapping(value = "/{processId}/status", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void updateStatusByProcessId(@PathVariable Long processId, Status status) throws ProcessNotFoundException { 
-	processService.updateStatus(processId, status);
+    public void updateStatusByProcessId(@PathVariable Long processId, @RequestBody String status) throws ProcessNotFoundException,StatusNotFoundException {
+	processService.updateStatus(processId, Status.getStatus(status));
     }
       
     @ApiOperation(value = "Returns a list of leads.", notes = "")

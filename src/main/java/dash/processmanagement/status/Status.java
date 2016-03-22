@@ -12,10 +12,10 @@ public enum Status {
     OFFER("offer"),
     SALE("sale"),
     CLOSED("closed");
-    
+
     private String status;
 
-    Status (String status) {
+    Status(String status) {
         this.status = status;
     }
 
@@ -23,23 +23,24 @@ public enum Status {
     public String toString() {
         return status;
     }
-    
+
     public static Status getStatus(String value) throws StatusNotFoundException {
-	
-	 switch(value){ 
-	        case "open":
-	            return Status.OPEN;
-	        case "offer": 
-	            return Status.OFFER;
-	        case "sale":
-	            return Status.SALE;
-	        case "closed":
-	            return Status.CLOSED;
-	        default:
-	            throw new StatusNotFoundException("No Status found.");
-	 }
+        if (null == value)
+            throw new StatusNotFoundException("No Status found.");
+        switch (value) {
+            case "open":
+                return Status.OPEN;
+            case "offer":
+                return Status.OFFER;
+            case "sale":
+                return Status.SALE;
+            case "closed":
+                return Status.CLOSED;
+            default:
+                throw new StatusNotFoundException("No Status found.");
+        }
     }
-	 
+
     @JsonValue
     public String getStatus() {
         return status;
