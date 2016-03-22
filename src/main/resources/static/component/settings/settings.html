@@ -45,8 +45,8 @@
                             <td>{{user.surname}}</td>
                             <td>{{user.lastname}}</td>
                             <td>{{user.email}}</td>
-                            <td ng-if="user.access==false">
-                                <button ng-click="setting.activateUser(user.id)" type="button" class="btn btn-success">
+                            <td ng-if="user.enabled==false">
+                                <button ng-click="setting.activateUser(user)" type="button" class="btn btn-success">
                                     <i class="fa fa-check"></i>&nbsp;Freischalten
                                 </button>
                             </td>
@@ -84,12 +84,12 @@
                             <td>{{$index+1}}</td>
                             <td>{{user.email}}</td>
                             <td><select ng-model="user.role">
-                                <option value="bearbeiter">Bearbeiter</option>
+                                <option value="user">User</option>
                                 <option value="admin">Admin</option>
-                                <option value="superadmin">Super-Admin</option>
+                                <option value="superadmin">Superadmin</option>
                             </select></td>
                             <td>
-                                <button ng-click="setting.saveRole(user.id,user.role)" type="button"
+                                <button ng-click="setting.saveRole(user)" type="button"
                                         class="btn btn-success">
                                     <i class="fa fa-save"></i>&nbsp;Save
                                 </button>

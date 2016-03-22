@@ -19,11 +19,12 @@
                     <h3>Zeitraum</h3>
                 </div>
                 <div class="row">
-                    <select style="width:140px;"
-                            ng-options="times for times in ['Heute', 'Woche', 'Monat', 'Jahr','Alle']"
-                            ng-change="statistic.onPeriodChange(statistic.selectedPeriod)"
-                            ng-model="statistic.selectedPeriod"
-                            class="form-control">
+                    <select class="form-control" style="width:140px;" ng-model="statistic.selectedPeriod" ng-change="statistic.onPeriodChange(statistic.selectedPeriod)">
+                    	<option value="day">Heute</option>
+                       	<option value="week">Woche</option>
+                       	<option value="month">Monat</option>
+                       	<option value="year">Jahr</option>
+                       	<option value="all">Alle</option>
                     </select>
                 </div>
             </div>

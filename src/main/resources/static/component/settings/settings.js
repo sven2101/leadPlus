@@ -1,38 +1,44 @@
 'use strict';
 
 angular.module('app.settings', ['ngResource']).controller('SettingsCtrl', SettingsCtrl);
-SettingsCtrl.$inject = ['$filter'];
-function SettingsCtrl($filter) {
-    this.filter = $filter;
-    this.users = [{
-        id: '1',
-        surname: 'Sven',
-        lastname: 'Jaschkewitz',
-        username: 'sven2101',
-        email: 'sven-jaschkewitz@get-net.eu',
-        role: 'admin',
-        access: true
-    },
-        {
-            id: '2',
-            surname: 'Andreas',
-            lastname: 'Foitzik',
-            username: 'foan1013',
-            email: 'andreas-foitzik@get-net.eu',
-            role: 'superadmin',
-            access: false
-        }];
+
+SettingsCtrl.$inject = ['$filter', 'toaster', 'Settings'];
+
+function SettingsCtrl($filter, toaster, Settings) {
+	this.service = Settings;
+	
+	var vm = this;
+	this.users = [];
+	this.service.query().$promise.then(function (result) {
+		vm.users = result;
+	});
+	
+	this.filter = $filter;
+	this.toaster = toaster;
 }
 
-SettingsCtrl.prototype.activateUser = function (id) {
-    this.filter('filter')(this.users, {id: id})[0].access = true;
+SettingsCtrl.prototype.activateUser = function (user) {
+    var vm = this;
+	this.service.activate({username: user.username}, {}).$promise.then(function () {
+		vm.filter('filter')(vm.users, {id: user.id})[0].enabled = true;
+		vm.toaster.pop('success', 'Success', "User freigeschalten.");
+	}, function () {		
+		vm.toaster.pop('error', 'Error', "User nicht freigeschalten.");
+	}); 
 }
 
 SettingsCtrl.prototype.deactivateUser = function (id) {
     this.filter('filter')(this.users, {id: id})[0].access = false;
 }
 
-SettingsCtrl.prototype.saveRole = function (id, role) {
-    alert('set ' + role + " for " + id)
-    this.filter('filter')(this.users, {id: id})[0].role = role;
+SettingsCtrl.prototype.saveRole = function (user) {
+    
+    var vm = this;
+	this.service.setRole({username: user.username}, user.role).$promise.then(function () {
+		//set rootScope role
+	    vm.filter('filter')(vm.users, {id: user.id})[0].role = user.role;
+		vm.toaster.pop('success', 'Success', "Set User Role Successful.");
+	}, function () {		
+		vm.toaster.pop('error', 'Error', "Set User Role Unsuccessful.");
+	});
 }

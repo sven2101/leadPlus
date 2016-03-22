@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import dash.processmanagement.comment.Comment;
+import dash.usermanagement.settings.language.Language;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -26,7 +27,7 @@ public class User implements UserDetails {
     @Column(unique = true, length = 30, nullable = false)
     private String username;
 
-    @Column(length = 50, nullable = false)
+    @Column(unique = true, length = 50, nullable = false)
     private String email;
 
     @Column(length = 60, nullable = false)
@@ -40,17 +41,22 @@ public class User implements UserDetails {
     private List<Comment> comment;
 
     private String profilPictureURL;
-    private String defaultLanguage;
+    
+    @Enumerated(EnumType.STRING)
+    private Language language;
+    
+    private boolean enabled;
 
     public User() {
     }
 
-    public User(String username, String firstName, String lastName, String email, String passwordHash, String profilPictureURL, String defaultLanguage) {
-        this.username = username;
-        this.email = email;
-        this.password = passwordHash;
-        this.profilPictureURL = profilPictureURL;
-        this.defaultLanguage = defaultLanguage;
+    public User(String username, String firstName, String lastName, String email, String passwordHash, String profilPictureURL, Language language) {
+        this.username 		= username;
+        this.email 		= email;
+        this.password 		= passwordHash;
+        this.profilPictureURL 	= profilPictureURL;
+        this.language 		= language;
+        this.enabled 		= false;
     }
 
     public Long getId() {
@@ -81,7 +87,7 @@ public class User implements UserDetails {
         return role;
     }
 
-    public void setRole(final Role role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -101,12 +107,20 @@ public class User implements UserDetails {
         this.profilPictureURL = profilPictureURL;
     }
 
-    public String getDefaultLanguage() {
-        return defaultLanguage;
+    public Language getLanguage() {
+        return language;
     }
 
-    public void setDefaultLanguage(String defaultLanguage) {
-        this.defaultLanguage = defaultLanguage;
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+    
+    public boolean getEnabled() {
+	return this.enabled;
+    }
+    
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override
@@ -131,7 +145,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 
 }

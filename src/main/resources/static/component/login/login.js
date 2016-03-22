@@ -13,7 +13,7 @@ function LoginCtrl($location, Auth, $scope,toaster) {
 			        },
 			        function(err) {
 			        	$scope.credentials.password = "";
-						toaster.pop('error','Error', "Pleas try again!");
+						toaster.pop('error','Error', "Please try again!");
 			        }
 		        );
 	};

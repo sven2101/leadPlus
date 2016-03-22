@@ -24,20 +24,18 @@
                     <h5>Profilinformationen</h5>
                 </div>
                 <div class="ibox-content">
-                    <form name="profilInfoForm" ng-submit="profile.submitProfilInfoForm()" novalidate>
+                    <form name="profilInfoForm" ng-submit="profile.submitProfilInfoForm(profile.user)" novalidate>
                         <!-- EMAIL -->
                         <div class="form-group"
                              ng-class="{ 'has-error' : profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine }">
                             <label>Email</label>
-                            <input type="email" name="email" class="form-control"
-                                   ng-model="profile.email">
-                            <p ng-show="profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine"
-                               class="help-block">Enter a valid email.</p>
+                            <input type="email" name="email" class="form-control" ng-model="profile.user.email">
+                            <p ng-show="profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine" class="help-block">Enter a valid email.</p>
                         </div>
                         <!-- default language -->
                         <div class="form-group">
                             <label>Standard Sprache</label>
-                            <select class="form-control" ng-model="profile.defaultLanguage">
+                            <select class="form-control" ng-model="profile.user.language">
                                 <option value="de">Deutsch(de)</option>
                                 <option value="en">English(en)</option>
                             </select>
@@ -57,7 +55,7 @@
                     <h5>Passwort ändern</h5>
                 </div>
                 <div class="ibox-content">
-                    <form name="profile.passwordForm" ng-submit="profile.submitPasswordForm()" novalidate>
+                    <form name="profile.passwordForm" ng-submit="profile.submitPasswordForm(profile.user)" novalidate>
                         <!-- password -->
                         <div class="form-group"
                              ng-class="{ 'has-error' : profile.passwordForm.oldPassword.$invalid && !profile.passwordForm.oldPassword.$pristine }">

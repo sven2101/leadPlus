@@ -1,11 +1,23 @@
 package dash.usermanagement;
 
-import io.swagger.annotations.ApiOperation;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.google.common.base.Optional;
+
+import dash.usermanagement.settings.password.PasswordChange;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * Created by Andreas on 09.10.2015.
@@ -25,27 +37,72 @@ public class UserResource {
     public Iterable<User> get() {
         return userRepository.findAll();
     }
-
-    @RequestMapping(method = RequestMethod.GET,
-                    value="{id}")
+    
+    @RequestMapping(value="/{username}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public User findById(@PathVariable Long id) {
-        return userRepository.findOne(id);
+    public User findById(@PathVariable String username) {
+        return userRepository.findByUsername(username);
     }
 
-    @RequestMapping(method=RequestMethod.PUT,
-            value="{id}",
-            consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value="/{username}/update", method=RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public User update(@PathVariable Long id, @RequestBody User updateUser) {
-        User user = userRepository.findOne(id);
+    public User updateUser(@PathVariable String username, @RequestBody @Valid User updateUser) {
+        User user = userRepository.findByUsername(username);
         
-        user.setUsername(updateUser.getUsername());
-        user.setEmail(updateUser.getEmail());
-        user.setEmail(passwordEncoder.encode(updateUser.getPassword()));
+        if(Optional.fromNullable(user).isPresent()){
+            
+            user.setEmail(updateUser.getEmail());
+            user.setLanguage(updateUser.getLanguage());
+            
+            userRepository.save(user);
+            
+            return user;
+        } else {
+            throw new UsernameNotFoundException("No User found.");
+        }
+    }
+    
+    @RequestMapping(value="/{username}/pw", method=RequestMethod.PUT )
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePassword(@PathVariable String username, @RequestBody PasswordChange passwordChange) throws Exception {
+        final User user = userRepository.findByUsername(username);
         
-        return user;
+        if(Optional.fromNullable(user).isPresent()){
+            if(passwordEncoder.encode(passwordChange.getOldPassword()) == user.getPassword()){
+                user.setPassword(passwordEncoder.encode(passwordChange.getOldPassword()));            
+                userRepository.save(user);
+            } else {
+                throw new Exception("Password does not match.");
+            }
+        } else {
+            throw new UsernameNotFoundException("No User found.");
+        }
+    }
+    
+    @RequestMapping(value="/{username}/activate", method=RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.OK)
+    public void activeUser(@PathVariable String username) throws UsernameNotFoundException {
+        final User user = userRepository.findByUsername(username);
+        if(Optional.fromNullable(user).isPresent()){
+            user.setEnabled(true);
+            userRepository.save(user);
+        } else {
+            throw new UsernameNotFoundException("User not found.");
+        }        
+    }
+    
+    @RequestMapping(value="/{username}/role", 
+	    	    method=RequestMethod.POST,
+	    	    consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @ResponseStatus(HttpStatus.OK)
+    public void setRoleForUser(@PathVariable String username, @RequestBody String role) throws Exception {
+        final User user = userRepository.findByUsername(username);
+        if(Optional.fromNullable(user).isPresent()){ 
+            user.setRole(Role.getRole(role));
+            userRepository.save(user);
+        } else {
+            throw new UsernameNotFoundException("User not found.");
+        }        
     }
 
     @RequestMapping(method = RequestMethod.DELETE)

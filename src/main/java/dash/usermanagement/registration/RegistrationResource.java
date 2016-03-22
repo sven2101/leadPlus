@@ -1,5 +1,7 @@
 package dash.usermanagement.registration;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import dash.notificationmanagement.message.RegistrationMessage;
 import dash.usermanagement.Role;
 import dash.usermanagement.User;
 import dash.usermanagement.UserRepository;
+import dash.usermanagement.settings.language.Language;
 
 @RestController
 @RequestMapping("/api/rest/registrations")
@@ -33,18 +36,22 @@ public class RegistrationResource {
     private PasswordEncoder passwordEncoder;
     
     @RequestMapping(method = RequestMethod.POST,
-	    consumes = {MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+	    	    consumes = {MediaType.APPLICATION_JSON_VALUE},
+	    	    produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> add(@RequestBody @Valid Registration registration) {
 
-        User user = new User();
+        final User user = new User();
+        
         user.setUsername(registration.getUsername());
         user.setEmail(registration.getEmail());
         user.setPassword(passwordEncoder.encode(registration.getPassword()));
         user.setRole(Role.USER);
-
-        if(userRepository.findByUsername(user.getUsername()) == null && userRepository.findByEmail(user.getEmail()) == null ){
+        user.setEnabled(false);
+        user.setLanguage(Language.DE);
+        
+        if(!Optional.ofNullable(userRepository.findByUsername(user.getUsername())).isPresent() && 
+           !Optional.ofNullable(userRepository.findByEmail(user.getEmail())).isPresent()) {
             userRepository.save(user);
             notificationService.sendNotification(new RegistrationMessage(user));
             return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -53,27 +60,23 @@ public class RegistrationResource {
         return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
-    @RequestMapping( 	value="/unique/email",
-    	    		method = RequestMethod.POST)
+    @RequestMapping(value="/unique/email", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Boolean> uniqueEmail(@RequestBody String email) {
 
 	boolean found = false;
-	User user = userRepository.findByEmail(email);
-	if (user != null)
+	if (Optional.ofNullable(userRepository.findByEmail(email)).isPresent())
 	    found = true;
 	    
         return new ResponseEntity<Boolean>(found, HttpStatus.OK);
     }
     
-    @RequestMapping(	value="/unique/username",
-	    		method = RequestMethod.POST)
+    @RequestMapping(value="/unique/username", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Boolean> uniqueUsername(@RequestBody String username) {
 
 	boolean found = false;
-	User user = userRepository.findByUsername(username);
-	if (user != null)
+	if (Optional.ofNullable(userRepository.findByUsername(username)).isPresent())
 	    found = true;
 	    
         return new ResponseEntity<Boolean>(found, HttpStatus.OK);

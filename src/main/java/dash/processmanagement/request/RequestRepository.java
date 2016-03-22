@@ -10,5 +10,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface RequestRepository <T, ID extends Serializable> extends CrudRepository<T, ID> {
     
-    List<Request> findByTimestampBetween(Calendar from, Calendar until);
+    List<T> findByTimestampBetween(Calendar from, Calendar until);
+    List<T> findByTimestamp(Calendar until);
 }
