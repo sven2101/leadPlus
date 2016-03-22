@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.base.Optional;
 
-import dash.exceptions.RoleNotFoundException;
+import dash.usermanagement.settings.password.PasswordChange;
 import io.swagger.annotations.ApiOperation;
 
 /**
@@ -44,10 +44,7 @@ public class UserResource {
         return userRepository.findByUsername(username);
     }
 
-    @RequestMapping(value="/{username}", 
-	    	    method=RequestMethod.POST,
-                    consumes = {MediaType.APPLICATION_JSON_VALUE},
-                    produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value="/{username}/update", method=RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public User updateUser(@PathVariable String username, @RequestBody @Valid User updateUser) {
         User user = userRepository.findByUsername(username);
@@ -66,18 +63,17 @@ public class UserResource {
     }
     
     @RequestMapping(value="/{username}/pw", method=RequestMethod.PUT )
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public User updatePw(@PathVariable String username, @RequestBody @Valid User updateUser) {
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePassword(@PathVariable String username, @RequestBody PasswordChange passwordChange) throws Exception {
         final User user = userRepository.findByUsername(username);
         
         if(Optional.fromNullable(user).isPresent()){
-            
-            user.setEmail(updateUser.getEmail());
-            user.setLanguage(updateUser.getLanguage());
-            
-            userRepository.save(user);
-            
-            return user;
+            if(passwordEncoder.encode(passwordChange.getOldPassword()) == user.getPassword()){
+                user.setPassword(passwordEncoder.encode(passwordChange.getOldPassword()));            
+                userRepository.save(user);
+            } else {
+                throw new Exception("Password does not match.");
+            }
         } else {
             throw new UsernameNotFoundException("No User found.");
         }

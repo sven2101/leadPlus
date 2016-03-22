@@ -164,6 +164,7 @@ public class Application {
 		http.httpBasic().and()
 				.authorizeRequests()
 				.antMatchers(HttpMethod.GET, "/application/**").permitAll()
+				.antMatchers(HttpMethod.PUT, "/application/**").permitAll()
 				.antMatchers("application/user/**").permitAll()
 				.antMatchers("application/**",
 					    "/user",

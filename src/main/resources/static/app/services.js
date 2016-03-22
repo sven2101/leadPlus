@@ -105,17 +105,11 @@ angular.module('app.services', ['ngResource'])
 
 		});
 	}])
-	.service('Statistics', ['$resource', function($resource) {
-		return $resource('/application/api/rest/processes/statistics',{}, {
-			getLeadStatistics: 		{ url: '/application/api/rest/processes/statistics/leads',  	method: 'POST', isArray:true },
-			getOffersStatistics: 	{ url: '/application/api/rest/processes/statistics/offers', 	method: 'POST', isArray:true },
-			getSalesStatistics: 	{ url: '/application/api/rest/processes/statistics/sales',  	method: 'POST', isArray:true }, 
-			getProfitStatistics: 	{ url: '/application/api/rest/processes/statistics/profits',  	method: 'POST', isArray:true }, 
-			getReturnStatistics: 	{ url: '/application/api/rest/processes/statistics/returns',  	method: 'POST', isArray:true }			
-		});
-	}])
 	.service('Profile', ['$resource', function($resource) {
-		return $resource('/application/users/:username', {});
+		return $resource('/application/users/:username', {}, {
+			update: 	{ url: '/application/users/:username/update',  	method: 'PUT' },
+			pw: 		{ url: '/application/users/:username/pw',  		method: 'PUT' }
+		});
 	}])
 	.service('Settings', ['$resource', function($resource) {
 		return $resource('/application/users/:username', {username:'@Username'}, {
@@ -124,5 +118,50 @@ angular.module('app.services', ['ngResource'])
 			getSalesStatistics: 	{ url: '/application/api/rest/processes/statitstics/sales',  	method: 'POST' }, 
 			getProfitStatistics: 	{ url: '/application/api/rest/processes/statitstics/profits',  	method: 'POST' }, 
 			getReturnStatistics: 	{ url: '/application/api/rest/processes/statitstics/returns',  	method: 'POST' }			
+		});
+	}])
+	.service('Turnover', ['$resource', function($resource) {
+		return $resource('/application/api/rest/processes/statistics/turnover', {}, {
+			day: 	{ url: '/application/api/rest/processes/statistics/turnover/day',  	method: 'GET'},
+			week: 	{ url: '/application/api/rest/processes/statistics/turnover/week', 	method: 'GET'},
+			month: 	{ url: '/application/api/rest/processes/statistics/turnover/month', method: 'GET'}, 
+			year: 	{ url: '/application/api/rest/processes/statistics/turnover/year',  method: 'GET'}, 
+			all: 	{ url: '/application/api/rest/processes/statistics/turnover/all',  	method: 'GET'}			
+		});
+	}])
+	.service('Profit', ['$resource', function($resource) {
+		return $resource('/application/api/rest/processes/statistics/profit', {}, {
+			day: 	{ url: '/application/api/rest/processes/statistics/profit/day',   method: 'GET'},
+			week: 	{ url: '/application/api/rest/processes/statistics/profit/week',  method: 'GET'},
+			month: 	{ url: '/application/api/rest/processes/statistics/profit/month', method: 'GET'}, 
+			year: 	{ url: '/application/api/rest/processes/statistics/profit/year',  method: 'GET'}, 
+			all: 	{ url: '/application/api/rest/processes/statistics/profit/all',   method: 'GET'}			
+		});
+	}])
+	.service('Leads', ['$resource', function($resource) {
+		return $resource('/api/rest/processes/statistics/leads', {}, {
+			day: 	{ url: '/application/api/rest/processes/statistics/leads/day',   method: 'GET'},
+			week: 	{ url: '/application/api/rest/processes/statistics/leads/week',  method: 'GET'},
+			month: 	{ url: '/application/api/rest/processes/statistics/leads/month', method: 'GET'}, 
+			year: 	{ url: '/application/api/rest/processes/statistics/leads/year',  method: 'GET'}, 
+			all: 	{ url: '/application/api/rest/processes/statistics/leads/all',   method: 'GET'}			
+		});
+	}])
+	.service('Offers', ['$resource', function($resource) {
+		return $resource('/application/api/rest/processes/statistics/offers', {}, {
+			day: 	{ url: '/application/api/rest/processes/statistics/offers/day',   method: 'GET'},
+			week: 	{ url: '/application/api/rest/processes/statistics/offers/week',  method: 'GET'},
+			month: 	{ url: '/application/api/rest/processes/statistics/offers/month', method: 'GET'}, 
+			year: 	{ url: '/application/api/rest/processes/statistics/offers/year',  method: 'GET'}, 
+			all: 	{ url: '/application/api/rest/processes/statistics/offers/all',   method: 'GET'}			
+		});
+	}])
+	.service('Sales', ['$resource', function($resource) {
+		return $resource('/application/api/rest/processes/statistics/sales', {}, {
+			day: 	{ url: '/application/api/rest/processes/statistics/sales/day',   method: 'GET'},
+			week: 	{ url: '/application/api/rest/processes/statistics/sales/week',  method: 'GET'},
+			month: 	{ url: '/application/api/rest/processes/statistics/sales/month', method: 'GET'}, 
+			year: 	{ url: '/application/api/rest/processes/statistics/sales/year',  method: 'GET'}, 
+			all: 	{ url: '/application/api/rest/processes/statistics/sales/all',   method: 'GET'}			
 		});
 	}]);

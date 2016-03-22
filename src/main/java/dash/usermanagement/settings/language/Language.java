@@ -7,7 +7,7 @@ import dash.exceptions.LanguageNotFoundException;
 public enum Language {
 
     DE("de"),
-    EN("offer");
+    EN("en");
 	    
     private String language;
 

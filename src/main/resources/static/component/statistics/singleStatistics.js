@@ -1,6 +1,64 @@
 /**
  * Created by Sven on 20.03.2016.
  */
+
+
+StatisticsCtrl.prototype.getProfit = function (profits) {
+	var summe = 0;
+	for (var profit in profits.result) {
+		summe = summe + profits.result[profit];
+	}
+	this.profit = summe;
+	return summe;
+}
+
+StatisticsCtrl.prototype.getTurnover = function (turnovers) {
+	var summe = 0;
+	for (var turnover in turnovers.result) {
+		summe = summe + turnovers.result[turnover];
+	}
+	this.turnover 					= summe;
+	this.efficiency 				= this.getEfficiency();
+    this.chartEntireStatisticArea 	= this.entireStatisticArea();
+	return summe;
+}
+
+StatisticsCtrl.prototype.getLeads = function (leads) {
+	var summe = 0;
+	for (var lead in leads.result) {
+		 summe += leads.result[lead];
+	}	
+	this.leads = summe;
+	console.log("leads: ", this.leads);
+	return summe;
+}
+
+StatisticsCtrl.prototype.getOffers = function (offers) {
+	var summe = 0;
+	for (var offer in offers.result) {
+		 summe += offers.result[offer];
+	}
+	this.offers = summe;
+	console.log("offers: ", this.offers);
+	return summe;
+}
+
+StatisticsCtrl.prototype.getSales = function (sales) {
+	var summe = 0;
+	for (var sale in sales.result) {
+		 summe += sales.result[sale];
+	}
+	this.sales 								= summe;
+	this.getSalesLeadsRatePercentage();
+	this.getSalesOffersRatePercentage();
+	this.profitPerSale 						= this.getProfitPerSale();
+	this.chartSingleStatisticPie			= this.getSharedItemsPieChart();
+	    
+    this.chartEntireStatisticSpline 		= this.entireStatisticSpline();
+    console.log("sales: ", this.sales);
+	return summe;
+}
+
 StatisticsCtrl.prototype.getSalesLeadsRatePercentage = function () {
     if (this.leads != 0) {
         return (this.sales / this.leads) * 100;
@@ -41,7 +99,7 @@ StatisticsCtrl.prototype.getProfitPerSale = function () {
         return 0;
 }
 
-StatisticsCtrl.prototype.getSharedItemsPieChart = function () {
+StatisticsCtrl.prototype.getSharedItemsPieChart = function (leads) {
     var chartConfig = {
         options: {
             chart: {
@@ -75,15 +133,15 @@ StatisticsCtrl.prototype.getSharedItemsPieChart = function () {
             colorByPoint: true,
             data: [{
                 name: 'Anfragen',
-                y: 20,
+                y: leads,
                 color: '#ed5565'
             }, {
                 name: 'Angebote',
-                y: 12,
+                y: this.offers,
                 color: '#f8ac59'
             }, {
                 name: 'Verkäufe',
-                y: 6,
+                y: this.sales,
                 color: '#1a7bb9'
             }]
         }]

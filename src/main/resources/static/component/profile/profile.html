@@ -24,7 +24,7 @@
                     <h5>Profilinformationen</h5>
                 </div>
                 <div class="ibox-content">
-                    <form name="profilInfoForm" ng-submit="profile.submitProfilInfoForm(profile)" novalidate>
+                    <form name="profilInfoForm" ng-submit="profile.submitProfilInfoForm(profile.user)" novalidate>
                         <!-- EMAIL -->
                         <div class="form-group"
                              ng-class="{ 'has-error' : profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine }">
@@ -55,7 +55,7 @@
                     <h5>Passwort ändern</h5>
                 </div>
                 <div class="ibox-content">
-                    <form name="profile.passwordForm" ng-submit="profile.submitPasswordForm()" novalidate>
+                    <form name="profile.passwordForm" ng-submit="profile.submitPasswordForm(profile.user)" novalidate>
                         <!-- password -->
                         <div class="form-group"
                              ng-class="{ 'has-error' : profile.passwordForm.oldPassword.$invalid && !profile.passwordForm.oldPassword.$pristine }">

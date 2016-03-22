@@ -1,4 +1,4 @@
-package dash.processmanagement.statistic.profit.service;
+package dash.processmanagement.statistic.conversion.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import dash.processmanagement.request.RequestRepository;
 import dash.processmanagement.sale.Sale;
-import dash.processmanagement.statistic.result.Result;
 import dash.utils.YearComparator;
 import dash.utils.YearMonthComparator;
 import dash.utils.YearMonthDayComparator;
@@ -20,7 +19,7 @@ import dash.utils.YearMonthDayComparator;
  * Created by Andreas on 08.03.2016.
  */
 @Service
-public class ProfitStatisticService implements IProfitStatisticService {
+public class ConversionStatisticService implements IConversionStatisticService {
 
     @Autowired
     private YearComparator 				yC;
@@ -35,111 +34,84 @@ public class ProfitStatisticService implements IProfitStatisticService {
     private RequestRepository<Sale, Long> 		repository;
     
     private Calendar until 				= Calendar.getInstance();
+    private Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
 
-    public <T> Result getDailyProfitStatistic(){
-	
-	final List<Sale> sales = (List<Sale>) repository.findByTimestamp(until);
-	
-	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
-
-	countOfSaleInDate.put(until.get(Calendar.DAY_OF_MONTH)+"", 0.00);
-
-	for(Sale sale: sales){
-	    Calendar timeStamp = sale.getTimestamp();
-	    String key = timeStamp.get(Calendar.DAY_OF_MONTH)+"";
-	    if(countOfSaleInDate.containsKey(key)){
-		double value = countOfSaleInDate.get(key) + sale.getSaleProfit();
-		countOfSaleInDate.put(key, value);
-	    }
-	}	   
-
-	return new Result(new ArrayList<Double>(countOfSaleInDate.values()));
-    }
-        
-    public <T> Result getWeeklyProfitStatistic(){
+    public <T> List<Double> getDailyConversionStatistic(){
 	
 	Calendar tmp = Calendar.getInstance();
-	tmp.add(Calendar.DAY_OF_YEAR, -7);
-
-	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
+	tmp.add(Calendar.DAY_OF_MONTH, -1);
 	
-	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
-   
+	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
+	    
 	while(ymdC.compare(tmp, until) <= 0){
-	    countOfSaleInDate.put(tmp.get(Calendar.DAY_OF_YEAR)+"", 0.00);
-	    tmp.add(Calendar.DAY_OF_YEAR, 1);
+	    countOfSaleInDate.put(tmp.get(Calendar.YEAR)+""+tmp.get(Calendar.MONTH)+""+tmp.get(Calendar.DAY_OF_MONTH), 0.00);
+	    tmp.add(Calendar.DAY_OF_MONTH, 1);
 	}
 	for(Sale sale: sales){
 	    Calendar timeStamp = sale.getTimestamp();
-	    String key = timeStamp.get(Calendar.DAY_OF_YEAR)+"";
+	    String key = timeStamp.get(Calendar.YEAR)+""+timeStamp.get(Calendar.MONTH)+""+timeStamp.get(Calendar.DAY_OF_MONTH);
 	    if(countOfSaleInDate.containsKey(key)){
 		double value = countOfSaleInDate.get(key) + sale.getSaleProfit();
 		countOfSaleInDate.put(key, value);
 	    }
 	}	   
 
-	return new Result(new ArrayList<Double>(countOfSaleInDate.values()));
+	return new ArrayList<Double>(countOfSaleInDate.values());
+    }
+        
+    public <T> List<Double> getWeeklyConversionStatistic(){
+	
+	Calendar tmp = Calendar.getInstance();
+	tmp.add(Calendar.DAY_OF_MONTH, -8);
+
+	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
+	    
+	while(ymdC.compare(tmp, until) <= 0){
+	    countOfSaleInDate.put(tmp.get(Calendar.YEAR)+""+tmp.get(Calendar.MONTH)+""+tmp.get(Calendar.DAY_OF_MONTH), 0.00);
+	    tmp.add(Calendar.DAY_OF_MONTH, 1);
+	}
+	for(Sale sale: sales){
+	    Calendar timeStamp = sale.getTimestamp();
+	    String key = timeStamp.get(Calendar.YEAR)+""+timeStamp.get(Calendar.MONTH)+""+timeStamp.get(Calendar.DAY_OF_MONTH);
+	    if(countOfSaleInDate.containsKey(key)){
+		double value = countOfSaleInDate.get(key) + sale.getSaleProfit();
+		countOfSaleInDate.put(key, value);
+	    }
+	}	   
+
+	return new ArrayList<Double>(countOfSaleInDate.values());
     }
     
-    public <T> Result getMonthlyProfitStatistic(){
+    public <T> List<Double> getMonthlyConversionStatistic(){
 	
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.MONTH, -1);
 	
 	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
-	
-	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
-	
-	while(ymdC.compare(tmp, until) <= 0){
-	    countOfSaleInDate.put(Calendar.DAY_OF_MONTH+"", 0.00);
-	    tmp.add(Calendar.DAY_OF_MONTH, 1);
+	    
+	while(ymC.compare(tmp, until) <= 0){
+	    countOfSaleInDate.put(tmp.get(Calendar.YEAR)+""+tmp.get(Calendar.MONTH), 0.00);
+	    tmp.add(Calendar.MONTH, 1);
 	}
 	for(Sale sale: sales){
 	    Calendar timeStamp = sale.getTimestamp();
-	    String key = timeStamp.get(Calendar.DAY_OF_MONTH)+"";
+	    String key = timeStamp.get(Calendar.YEAR)+""+timeStamp.get(Calendar.MONTH);
 	    if(countOfSaleInDate.containsKey(key)){
 		double value = countOfSaleInDate.get(key) + sale.getSaleProfit();
 		countOfSaleInDate.put(key, value);
 	    }
 	}	   
 
-	return new Result(new ArrayList<Double>(countOfSaleInDate.values()));
+	return new ArrayList<Double>(countOfSaleInDate.values());
     }
     
-    public <T> Result getYearlyProfitStatistic(){
+    public <T> List<Double> getYearlyConversionStatistic(){
 
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.YEAR, -1);
 	
 	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
-	
-	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
-	
-	while(ymC.compare(tmp, until) <= 0){
-	    countOfSaleInDate.put(tmp.get(Calendar.MONTH)+"", 0.00);
-	    tmp.add(Calendar.MONTH, 1);
-	}
-	for(Sale sale: sales){
-	    Calendar timeStamp = sale.getTimestamp();
-	    String key = timeStamp.get(Calendar.MONTH)+"";
-	    if(countOfSaleInDate.containsKey(key)){
-		double value = countOfSaleInDate.get(key) + sale.getSaleProfit();
-		countOfSaleInDate.put(key, value);
-	    }
-	}	   
-
-	return new Result(new ArrayList<Double>(countOfSaleInDate.values()));
-    }
-    
-    public <T> Result getAllProfitStatistic(){
-
-	Calendar tmp = Calendar.getInstance();
-	tmp.set(2014, 1, 1);
-	
-	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
-	
-	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
-   
+	    
 	while(yC.compare(tmp, until) <= 0){
 	    countOfSaleInDate.put(tmp.get(Calendar.YEAR)+"", 0.00);
 	    tmp.add(Calendar.YEAR, 1);
@@ -153,6 +125,29 @@ public class ProfitStatisticService implements IProfitStatisticService {
 	    }
 	}	   
 
-	return new Result(new ArrayList<Double>(countOfSaleInDate.values()));
+	return new ArrayList<Double>(countOfSaleInDate.values());
+    }
+    
+    public <T> List<Double> getAllConversionStatistic(){
+
+	Calendar tmp = Calendar.getInstance();
+	tmp.add(Calendar.YEAR, -1);
+
+	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
+	    
+	while(yC.compare(tmp, until) <= 0){
+	    countOfSaleInDate.put(tmp.get(Calendar.YEAR)+""+tmp.get(Calendar.MONTH)+""+tmp.get(Calendar.DAY_OF_MONTH), 0.00);
+	    tmp.add(Calendar.DAY_OF_MONTH, 1);
+	}
+	for(Sale sale: sales){
+	    Calendar timeStamp = sale.getTimestamp();
+	    String key = timeStamp.get(Calendar.YEAR)+""+timeStamp.get(Calendar.MONTH)+""+timeStamp.get(Calendar.DAY_OF_MONTH);
+	    if(countOfSaleInDate.containsKey(key)){
+		double value = countOfSaleInDate.get(key) + sale.getSaleProfit();
+		countOfSaleInDate.put(key, value);
+	    }
+	}	   
+
+	return new ArrayList<Double>(countOfSaleInDate.values());
     }
 }

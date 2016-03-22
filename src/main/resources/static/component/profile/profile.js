@@ -22,23 +22,11 @@ function ProfileCtrl($rootScope, toaster, Profile) {
     this.newPassword2 = '';
 }
 
-ProfileCtrl.prototype.submitProfilInfoForm = function (update) {
+ProfileCtrl.prototype.submitProfilInfoForm = function (user) {
 	vm = this;
-	console.log(updateUser);
-	var updateUser = {"id":4,
-			"username":"christian",
-			"email":"christian@gmx.net",
-			"password":"$2a$10$g8uLIG9qoYOsLnH9h0xltOtY3BXQtrTj6ijELxpeE4udAvOhfWlW6",
-			"role":"admin",
-			"profilPictureURL":null,
-			"language":"en",
-			"enabled":true,
-			"accountNonLocked":true,
-			"credentialsNonExpired":true,
-			"accountNonExpired":true,
-			"authorities":null
-	};
-	this.service.save({username: update.username}, {updateUser: updateUser}).$promise.then(function () {
+	console.log(user);
+
+	this.service.update({username: user.username}, user).$promise.then(function () {
 		vm.rootScope.changeLanguage(user.language);
 		vm.toaster.pop('success', 'Success', "profil information saved");
 	}, function () {		
@@ -47,19 +35,13 @@ ProfileCtrl.prototype.submitProfilInfoForm = function (update) {
 	});
 };
 
-ProfileCtrl.prototype.submitPasswordForm = function () {
-    this.oldPassword = '';
-    this.newPassword1 = '';
-    this.newPassword2 = '';
+ProfileCtrl.prototype.submitPasswordForm = function (user) {
 
-    this.service.update({username: user.username}, {user: user}).$promise.then(function () {
-		vm.rootScope.changeLanguage(user.language);
-		vm.toaster.pop('success', 'Success', "profil information saved");
+    this.service.pw({username: user.username}, {newPassword: user.oldPassword, oldPassword: user.newPassword1}).$promise.then(function () {
+		vm.toaster.pop('success', 'Success', "Password change successful.");
 	}, function () {		
-		vm.user.language = vm.user.language;
-		vm.toaster.pop('error', 'Error', "profil information not saved");
+		vm.toaster.pop('error', 'Error', "Password change unsuccessful.");
 	});
     
     this.passwordForm.$setPristine();
-    this.toaster.pop('success', 'Success', "New Password saved");
 };

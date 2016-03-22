@@ -11,7 +11,6 @@ function SettingsCtrl($filter, toaster, Settings) {
 	this.users = [];
 	this.service.query().$promise.then(function (result) {
 		vm.users = result;
-		console.log("R: ",  result)
 	});
 	
 	this.filter = $filter;

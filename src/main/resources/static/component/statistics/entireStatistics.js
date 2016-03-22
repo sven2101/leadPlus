@@ -11,8 +11,7 @@ StatisticsCtrl.prototype.entireStatisticSpline = function () {
             },
             loading: false,
             xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
             },
             yAxis: {
                 title: {
@@ -33,15 +32,15 @@ StatisticsCtrl.prototype.entireStatisticSpline = function () {
         },
         series: [{
             name: 'Anfragen',
-            data: [10, 20, 15, 12, 30, 40, 20, 12, 12, 12, 12, 20],
+            data: this.leads,
             color: '#ed5565'
         }, {
             name: 'Angebote',
-            data: [0, 5, 8, 12, 10, 20, 15, 10, 8, 8, 8, 8],
+            data: this.offers,
             color: '#f8ac59'
         }, {
             name: 'Verkäufe',
-            data: [0, 3, 5, 5, 8, 17, 12, 8, 5, 5, 5, 5],
+            data: this.sales,
             color: '#1a7bb9'
         }],
         //function (optional)
@@ -62,8 +61,7 @@ StatisticsCtrl.prototype.entireStatisticArea = function () {
                 text: ''
             },
             xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 
                 title: {
                     enabled: false
@@ -87,11 +85,11 @@ StatisticsCtrl.prototype.entireStatisticArea = function () {
         },
         series: [{
             name: 'Umsatz',
-            data: [30000, 27000, 35000, 37000, 40000, 38000, 40000],
+            data: this.turnover,
             color: '#000000'
         }, {
             name: 'Gewinn',
-            data: [12000, 11000, 14000, 15000, 17000, 18000, 17000],
+            data: this.profit,
             color: '#1a7bb9'
         }]
     };

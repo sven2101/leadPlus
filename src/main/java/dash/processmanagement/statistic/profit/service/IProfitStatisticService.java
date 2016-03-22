@@ -1,15 +1,15 @@
 package dash.processmanagement.statistic.profit.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
+
+import dash.processmanagement.statistic.result.Result;
 
 @Service
 public interface IProfitStatisticService {
     
-    public <T> List<Double> 	getDailyProfitStatistic(); 
-    public <T> List<Double> 	getWeeklyProfitStatistic();
-    public <T> List<Double> 	getMonthlyProfitStatistic();
-    public <T> List<Double> 	getYearlyProfitStatistic();
-    public <T> List<Double> 	getAllProfitStatistic();
+    public <T> Result 	getDailyProfitStatistic(); 
+    public <T> Result 	getWeeklyProfitStatistic();
+    public <T> Result 	getMonthlyProfitStatistic();
+    public <T> Result 	getYearlyProfitStatistic();
+    public <T> Result 	getAllProfitStatistic();
 }
