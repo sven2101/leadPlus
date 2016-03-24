@@ -12,7 +12,7 @@
                 <div class="text-left">
                     Comments
                     <small class="pull-right text-muted">Last Comment:{{parent.currentCommentModalId}}
-                        {{(parent.comments[parent.currentCommentModalId])[(parent.comments[parent.currentCommentModalId]).length-1].date| date:'dd-MM-yyyy HH:mm:ss'}}
+                        {{(parent.comments[parent.currentCommentModalId])[(parent.comments[parent.currentCommentModalId]).length-1].date| date:'dd.MM.yyyy HH:mm:ss'}}
                     </small>
                 </div>
                 <div class=" text-left">
@@ -23,20 +23,20 @@
                                     <div ng-if="$index%2==0" class="chat-message left">
                                         <img class="message-avatar" src="assets/img/guest.png" alt="">
                                         <div class="message">
-                                            <a class="message-author" href="#"> {{comment.from}} </a>
-                                            <span class="message-date"> {{comment.date|  date:'dd-MM-yyyy HH:mm:ss'}} </span>
+                                            <a class="message-author" href="#"> {{comment.creator.username}} </a>
+                                            <span class="message-date"> {{comment.date|  date:'dd.MM.yyyy HH:mm:ss'}} </span>
                                             <span class="message-content">
-                                                {{comment.comment}}
+                                                {{comment.commentText}}
                                             </span>
                                         </div>
                                     </div>
                                     <div ng-if="$index%2!=0" class="chat-message right">
                                         <img class="message-avatar" src="assets/img/guest.png" alt="">
                                         <div class="message">
-                                            <a class="message-author"> {{comment.from}} </a>
-                                            <span class="message-date"> {{comment.date |  date:'dd-MM-yyyy HH:mm:ss'}} </span>
+                                            <a class="message-author"> {{comment.creator.username}} </a>
+                                            <span class="message-date"> {{comment.date |  date:'dd.MM.yyyy HH:mm:ss'}} </span>
                                             <span class="message-content">
-                                                {{comment.comment}}
+                                                {{comment.commentText}}
                                             </span>
                                         </div>
                                     </div>

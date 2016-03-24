@@ -1,5 +1,6 @@
 package dash.usermanagement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -7,6 +8,7 @@ import dash.processmanagement.comment.Comment;
 import dash.usermanagement.settings.language.Language;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,7 +16,7 @@ import java.util.List;
  * Created by Andreas on 09.10.2015.
  */
 @Entity
-@Table(name="\"User\"")
+@Table(name = "\"User\"")
 public class User implements UserDetails {
 
     private static final long serialVersionUID = 3125258392087209376L;
@@ -37,26 +39,26 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToMany
-    @JoinColumn(name = "user_fk", nullable = false)
-    private List<Comment> comment;
+    @JsonIgnore
+    private List<Comment> comments;
 
     private String profilPictureURL;
-    
+
     @Enumerated(EnumType.STRING)
     private Language language;
-    
+
     private boolean enabled;
 
     public User() {
     }
 
     public User(String username, String firstName, String lastName, String email, String passwordHash, String profilPictureURL, Language language) {
-        this.username 		= username;
-        this.email 		= email;
-        this.password 		= passwordHash;
-        this.profilPictureURL 	= profilPictureURL;
-        this.language 		= language;
-        this.enabled 		= false;
+        this.username = username;
+        this.email = email;
+        this.password = passwordHash;
+        this.profilPictureURL = profilPictureURL;
+        this.language = language;
+        this.enabled = false;
     }
 
     public Long getId() {
@@ -114,14 +116,23 @@ public class User implements UserDetails {
     public void setLanguage(Language language) {
         this.language = language;
     }
-    
+
     public boolean getEnabled() {
-	return this.enabled;
+        return this.enabled;
     }
-    
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
+    public List<Comment> getComments() {
+        return this.comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

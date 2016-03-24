@@ -27,152 +27,152 @@ import dash.usermanagement.UserRepository;
 public class ProcessService implements IProcessService {
 
     @Autowired
-    private ProcessRepository 	processRepository;
-    
-    @Autowired
-    private UserRepository 	userRepository;
-    
-    @Autowired
-    private ILeadService 	leadService;
-    
-    @Autowired
-    private IOfferService 	offerService;
-    
-    @Autowired
-    private ISaleService 	saleService;
-    
-    @Autowired
-    private ICommentService 	commentService;
-    
-    public List<?> getElementsByStatus(Status status, String kind){
-	
-	List<Process> processes = processRepository.findProcessesByStatus(status);
-	List<Object> elements = new ArrayList<>();
+    private ProcessRepository processRepository;
 
-	if(kind == "lead"){
-	    for(Process process : processes){
-		elements.add(process.getLead());
-	    }
-	} else if (kind == "offer") {
-	    for(Process process : processes){
-		elements.add(process.getOffer());
-	    }
-	} else if (kind == "sale") {
-	    for(Process process : processes){
-		elements.add(process.getSale());
-	    }
-	}
-	
-	return elements;	
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ILeadService leadService;
+
+    @Autowired
+    private IOfferService offerService;
+
+    @Autowired
+    private ISaleService saleService;
+
+    @Autowired
+    private ICommentService commentService;
+
+    public List<?> getElementsByStatus(Status status, String kind) {
+
+        List<Process> processes = processRepository.findProcessesByStatus(status);
+        List<Object> elements = new ArrayList<>();
+
+        if (kind == "lead") {
+            for (Process process : processes) {
+                elements.add(process.getLead());
+            }
+        } else if (kind == "offer") {
+            for (Process process : processes) {
+                elements.add(process.getOffer());
+            }
+        } else if (kind == "sale") {
+            for (Process process : processes) {
+                elements.add(process.getSale());
+            }
+        }
+
+        return elements;
     }
-    
-    public void createProcesses(List<Process>processes){
-	for (Process process : processes){
-	    process.setProcessor(null);
-	    
-	    if(Optional.ofNullable(process.getLead()).isPresent())
-		leadService.createLead(process.getLead());
-	    if(Optional.ofNullable(process.getOffer()).isPresent())
-		offerService.createOffer(process.getOffer());
-	    if(Optional.ofNullable(process.getSale()).isPresent())
-		saleService.createSale(process.getSale());
-	    
-	    processRepository.save(process);
-	}
+
+    public void createProcesses(List<Process> processes) {
+        for (Process process : processes) {
+            process.setProcessor(null);
+
+            if (Optional.ofNullable(process.getLead()).isPresent())
+                leadService.createLead(process.getLead());
+            if (Optional.ofNullable(process.getOffer()).isPresent())
+                offerService.createOffer(process.getOffer());
+            if (Optional.ofNullable(process.getSale()).isPresent())
+                saleService.createSale(process.getSale());
+
+            processRepository.save(process);
+        }
     }
-    
-    public void createProcess(Process process){
-	if(Optional.ofNullable(process).isPresent()){
-	    if(Optional.ofNullable(process.getProcessor()).isPresent()){
-		    if(!Optional.ofNullable(userRepository.findByUsername(process.getProcessor().getUsername())).isPresent()){
-			userRepository.save(process.getProcessor());
-		    }
-	    }	    
-	    
-	    if(Optional.ofNullable(process.getLead()).isPresent())
-		leadService.createLead(process.getLead());
-		
-	    if(Optional.ofNullable(process.getOffer()).isPresent())
-		offerService.createOffer(process.getOffer());
-	
-	    if(Optional.ofNullable(process.getSale()).isPresent())
-		saleService.createSale(process.getSale());
-	    
-	    processRepository.save(process);
-	}
-    }    
-    
-    public void createLead(Long processId, Lead lead) throws ProcessNotFoundException{
-	Process process = processRepository.findOne(processId);
-	if(Optional.ofNullable(process).isPresent()){	   
-	    leadService.createLead(lead);
-	    process.setLead(lead);
-	    processRepository.save(process);
-	} else {
-   	    throw new ProcessNotFoundException("Process not found");
-   	}
+
+    public void createProcess(Process process) {
+        if (Optional.ofNullable(process).isPresent()) {
+            if (Optional.ofNullable(process.getProcessor()).isPresent()) {
+                if (!Optional.ofNullable(userRepository.findByUsername(process.getProcessor().getUsername())).isPresent()) {
+                    userRepository.save(process.getProcessor());
+                }
+            }
+
+            if (Optional.ofNullable(process.getLead()).isPresent())
+                leadService.createLead(process.getLead());
+
+            if (Optional.ofNullable(process.getOffer()).isPresent())
+                offerService.createOffer(process.getOffer());
+
+            if (Optional.ofNullable(process.getSale()).isPresent())
+                saleService.createSale(process.getSale());
+
+            processRepository.save(process);
+        }
     }
-    
-    public void createOffer(Long processId, Offer offer) throws ProcessNotFoundException{
-	Process process = processRepository.findOne(processId);
-	if(Optional.ofNullable(process).isPresent()){	   
-	    offerService.createOffer(offer);
-	    process.setOffer(offer);
-	    processRepository.save(process);
-	} else {
-   	    throw new ProcessNotFoundException("Process not found");
-   	}
+
+    public void createLead(Long processId, Lead lead) throws ProcessNotFoundException {
+        Process process = processRepository.findOne(processId);
+        if (Optional.ofNullable(process).isPresent()) {
+            leadService.createLead(lead);
+            process.setLead(lead);
+            processRepository.save(process);
+        } else {
+            throw new ProcessNotFoundException("Process not found");
+        }
     }
-    
-    public void createSale(Long processId, Sale sale) throws ProcessNotFoundException{
-	Process process = processRepository.findOne(processId);
-	if(Optional.ofNullable(process).isPresent()){	   
-	    saleService.createSale(sale);
-	    process.setSale(sale);
-	    processRepository.save(process);
-	} else {
-   	    throw new ProcessNotFoundException("Process not found");
-   	}
+
+    public void createOffer(Long processId, Offer offer) throws ProcessNotFoundException {
+        Process process = processRepository.findOne(processId);
+        if (Optional.ofNullable(process).isPresent()) {
+            offerService.createOffer(offer);
+            process.setOffer(offer);
+            processRepository.save(process);
+        } else {
+            throw new ProcessNotFoundException("Process not found");
+        }
     }
-    
+
+    public void createSale(Long processId, Sale sale) throws ProcessNotFoundException {
+        Process process = processRepository.findOne(processId);
+        if (Optional.ofNullable(process).isPresent()) {
+            saleService.createSale(sale);
+            process.setSale(sale);
+            processRepository.save(process);
+        } else {
+            throw new ProcessNotFoundException("Process not found");
+        }
+    }
+
     public void createComment(Long processId, Comment comment) throws Exception {
-   	Process process = processRepository.findOne(processId);
-   	if(Optional.ofNullable(process).isPresent()){	   
-   	    commentService.createComment(process, comment);
-   	    process.addComment(comment);
-   	    processRepository.save(process);
-   	} else {
-   	    throw new ProcessNotFoundException("Process not found");
-   	}
+        Process process = processRepository.findOne(processId);
+        if (Optional.ofNullable(process).isPresent()) {
+            commentService.createComment(process, comment);
+            process.addComment(comment);
+            processRepository.save(process);
+        } else {
+            throw new ProcessNotFoundException("Process not found");
+        }
     }
-    
-    public void createProcessor(Long processId, String username) throws Exception {
-   	final User processor 	= userRepository.findByUsername(username);
-   	Process process 	= processRepository.findOne(processId);
 
-   	if(Optional.ofNullable(processor).isPresent()){
-   	    if(Optional.ofNullable(process).isPresent()){	 
-   		process.setProcessor(processor);
-   		processRepository.save(process);
-   	    } else {
-   		throw new ProcessNotFoundException("Process not found");
-   	    }
-   	} else {
-   	    throw new UsernameNotFoundException("User not found");
-   	}
-   	
+    public void createProcessor(Long processId, String username) throws Exception {
+        final User processor = userRepository.findByUsername(username);
+        Process process = processRepository.findOne(processId);
+
+        if (Optional.ofNullable(processor).isPresent()) {
+            if (Optional.ofNullable(process).isPresent()) {
+                process.setProcessor(processor);
+                processRepository.save(process);
+            } else {
+                throw new ProcessNotFoundException("Process not found");
+            }
+        } else {
+            throw new UsernameNotFoundException("User not found");
+        }
+
     }
-    
-    public void updateStatus (Long processId, Status status) throws ProcessNotFoundException {
-   	Process process 	= processRepository.findOne(processId);
-   	
-   	if(Optional.ofNullable(process).isPresent()){
-   	    process.setStatus(status);
-   	    processRepository.save(process);
-   	    
-   	} else {
-   	    throw new ProcessNotFoundException("Process not found");
-   	}
+
+    public void updateStatus(Long processId, Status status) throws ProcessNotFoundException {
+        Process process = processRepository.findOne(processId);
+
+        if (Optional.ofNullable(process).isPresent()) {
+            process.setStatus(status);
+            processRepository.save(process);
+
+        } else {
+            throw new ProcessNotFoundException("Process not found");
+        }
     }
 
 }

@@ -2,18 +2,12 @@ package dash.processmanagement.offer;
 
 import java.util.Calendar;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import dash.processmanagement.lead.container.Container;
+import dash.processmanagement.lead.vendor.Vendor;
 import dash.processmanagement.offer.prospect.Prospect;
 import dash.processmanagement.request.Request;
 
@@ -26,42 +20,51 @@ public class Offer implements Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "prospect_fk", nullable = true)
+    private Prospect prospect;
+
     @OneToOne
-    @JoinColumn(name = "prospect_fk", nullable=true)
-    private Prospect 	prospect;
-    
+    @JoinColumn(name = "vendor_fk")
+    private Vendor vendor;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "container_fk")
+    private Container container;
+
+    private int containerAmount;
+
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable=true)
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy")
-    private Calendar	timestamp;
-    
+    @Column(nullable = true)
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy HH:mm")
+    private Calendar timestamp;
+
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable=true)
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy")
-    private Calendar 	deliveryDate;
-    
-    private double 	price;
-    private String 	deliveryAddress;
-    
-    public Offer(){
-	
+    @Column(nullable = true)
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy HH:mm")
+    private Calendar deliveryDate;
+
+    private double price;
+    private String deliveryAddress;
+
+    public Offer() {
+
     }
-    
-    public Offer(Prospect prospect, Calendar timestamp, double price, Calendar deliveryDate, String deliveryAddress){
-	this.prospect 		= prospect;
-	this.timestamp 		= timestamp;
-	this.price 		= price;
-	this.deliveryDate 	= deliveryDate;
-	this.deliveryAddress 	= deliveryAddress;
+
+    public Offer(Prospect prospect, Vendor vendor, Container container, int containerAmount, Calendar timestamp, double price, Calendar deliveryDate, String deliveryAddress) {
+        this.prospect = prospect;
+        this.vendor = vendor;
+        this.container = container;
+        this.containerAmount = containerAmount;
+        this.timestamp = timestamp;
+        this.price = price;
+        this.deliveryDate = deliveryDate;
+        this.deliveryAddress = deliveryAddress;
     }
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public Prospect getProspect() {
@@ -79,7 +82,7 @@ public class Offer implements Request {
     public void setTimestamp(Calendar timestamp) {
         this.timestamp = timestamp;
     }
-    
+
     public double getPrice() {
         return price;
     }
@@ -103,6 +106,30 @@ public class Offer implements Request {
     public void setDeliveryAddress(String deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
     }
-    
-    
+
+    public Container getContainer() {
+        return this.container;
+    }
+
+    public void setContainer(Container container) {
+        this.container = container;
+    }
+
+    public Vendor getVendor() {
+        return vendor;
+    }
+
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
+    }
+
+    public int getContainerAmount() {
+        return this.containerAmount;
+    }
+
+    public void setContainerAmount(int containerAmount) {
+        this.containerAmount = containerAmount;
+    }
+
+
 }

@@ -64,11 +64,11 @@
                     <!-- CONTAINER NAME -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : addForm.containerName.$invalid && !addForm.containerName.$pristine }">
-                        <label>Container Name</label>
+                        <label>Container Name *</label>
                         <input type="text" name="containerName" class="form-control"
-                               ng-model="lead.newLead.container.name" ng-maxlength="50">
+                               ng-model="lead.newLead.container.name" ng-maxlength="50" required>
                         <p ng-show="addForm.containerName.$invalid && !addForm.containerName.$pristine"
-                           class="help-block">Max 50 letters</p>
+                           class="help-block">Container required(Max 50 letters)</p>
                     </div>
                     <!-- CONTAINER DESCRIPTION -->
                     <div class="form-group"
@@ -82,21 +82,21 @@
                     <!-- CONTAINER AMOUNT -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : addForm.containerAmount.$invalid && !addForm.containerAmount.$pristine }">
-                        <label>Anzahl container</label>
+                        <label>Anzahl container *</label>
                         <input type="number" name="containerAmount" class="form-control"
-                               ng-model="lead.newLead.containerAmount" required>
+                               ng-model="lead.newLead.containerAmount" required min="1" ng-pattern="/^[1-9]+[0-9]*$/">
                         <p ng-show="addForm.containerAmount.$invalid && !addForm.containerAmount.$pristine"
                            class="help-block">Container amount required</p>
                     </div>
                     <!-- PRICE -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : addForm.nettoPrice.$invalid && !addForm.nettoPrice.$pristine }">
-                        <label>Preis pro Container(Netto)</label>
+                        <label>Preis pro Container(Netto) *</label>
                         <input type="number" name="nettoPrice" class="form-control"
                                ng-model="lead.newLead.container.priceNetto" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
                                step="0.01" required>
                         <p ng-show="addForm.nettoPrice.$invalid && !addForm.nettoPrice.$pristine"
-                           class="help-block">Container price is required/p>
+                           class="help-block">Container price is required</p>
                     </div>
                     <!-- CONTAINER DESTINATION -->
                     <div class="form-group"
@@ -109,7 +109,7 @@
                     </div>
                     <!-- ENTIRE PRICE -->
                     <div class="form-group">
-                        <h2>Gesamtpreis(Netto):  {{lead.newLead.containerAmount * lead.newLead.container.priceNetto}}</h2>
+                        <h2>Gesamtpreis(Netto):  {{lead.newLead.containerAmount * lead.newLead.container.priceNetto | currency:'\u20AC'}}</h2>
                     </div>
                 </form>
             </div>

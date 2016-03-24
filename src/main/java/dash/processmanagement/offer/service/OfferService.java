@@ -19,9 +19,6 @@ public class OfferService implements IOfferService{
     private ProspectRepository 	prospectRepository;
     
     public void createOffer(Offer offer){
-	if(Optional.ofNullable(offer.getProspect()).isPresent())	   
-	    prospectRepository.save(offer.getProspect());
-	
 	if(Optional.ofNullable(offer).isPresent())
 	    offerRepository.save(offer);	
     }    

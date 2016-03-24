@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dash.processmanagement.comment.Comment;
 import dash.processmanagement.lead.Lead;
 import dash.processmanagement.offer.Offer;
@@ -39,6 +40,7 @@ public class Process {
     private Sale sale;
     
     @OneToMany(mappedBy="process")
+    @JsonIgnore
     private List<Comment> comments;
     
     @Enumerated(EnumType.STRING)

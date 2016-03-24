@@ -5,14 +5,13 @@
                 <button type="button" class="close" data-dismiss="modal"><span
                         aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">Anfrage bearbeiten</h4>
-                <h2>Container xy</h2>
             </div>
             <div class="modal-body">
                 <form name="editForm" novalidate>
                     <!-- TITLE -->
                     <div class="form-group">
                         <label>Title</label>
-                        <select name="title"  ng-model="lead.editLead.lead.inquirer.title">
+                        <select name="title" ng-model="lead.editProcess.lead.inquirer.title">
                             <option value="Herr">Herr</option>
                             <option value="Frau">Frau</option>
                         </select>
@@ -22,7 +21,7 @@
                          ng-class="{ 'has-error' : editForm.firstname.$invalid && !editForm.firstname.$pristine }">
                         <label>Vorname</label>
                         <input type="text" name="firstname" class="form-control"
-                               ng-model="lead.editLead.lead.inquirer.firstname" ng-maxlength="30">
+                               ng-model="lead.editProcess.lead.inquirer.firstname" ng-maxlength="30">
                         <p ng-show="editForm.firstname.$invalid && !editForm.firstname.$pristine"
                            class="help-block">Max 30 letters</p>
                     </div>
@@ -31,7 +30,7 @@
                          ng-class="{ 'has-error' : editForm.lastname.$invalid && !editForm.lastname.$pristine }">
                         <label>Nachname</label>
                         <input type="text" name="lastname" class="form-control"
-                               ng-model="lead.editLead.lead.inquirer.lastname" ng-maxlength="30">
+                               ng-model="lead.editProcess.lead.inquirer.lastname" ng-maxlength="30">
                         <p ng-show="editForm.lastname.$invalid && !editForm.lastname.$pristine"
                            class="help-block">Max 30 letters</p>
                     </div>
@@ -40,7 +39,7 @@
                          ng-class="{ 'has-error' : editForm.company.$invalid && !editForm.company.$pristine }">
                         <label>Firma</label>
                         <input type="text" name="company" class="form-control"
-                               ng-model="lead.editLead.lead.inquirer.company" ng-maxlength="50">
+                               ng-model="lead.editProcess.lead.inquirer.company" ng-maxlength="50">
                         <p ng-show="editForm.company.$invalid && !editForm.company.$pristine"
                            class="help-block">Max 50 letters</p>
                     </div>
@@ -49,7 +48,7 @@
                          ng-class="{ 'has-error' : editForm.email.$invalid && !editForm.email.$pristine }">
                         <label>Email</label>
                         <input type="email" name="email" class="form-control"
-                               ng-model="lead.editLead.lead.inquirer.email">
+                               ng-model="lead.editProcess.lead.inquirer.email">
                         <p ng-show="editForm.email.$invalid && !editForm.email.$pristine"
                            class="help-block">Enter a valid email</p>
                     </div>
@@ -58,43 +57,44 @@
                          ng-class="{ 'has-error' : editForm.phone.$invalid && !editForm.phone.$pristine }">
                         <label>Telefon</label>
                         <input type="text" name="phone" class="form-control"
-                               ng-model="lead.editLead.lead.inquirer.phone" ng-maxlength="50">
+                               ng-model="lead.editProcess.lead.inquirer.phone" ng-maxlength="50">
                         <p ng-show="editForm.phone.$invalid && !editForm.phone.$pristine"
                            class="help-block">Max 50 letters</p>
                     </div>
                     <!-- CONTAINER NAME -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : editForm.containerName.$invalid && !editForm.containerName.$pristine }">
-                        <label>Container Name</label>
+                        <label>Container Name *</label>
                         <input type="text" name="containerName" class="form-control"
-                               ng-model="lead.editLead.lead.container.name" ng-maxlength="50">
+                               ng-model="lead.editProcess.lead.container.name" ng-maxlength="50" required>
                         <p ng-show="editForm.containerName.$invalid && !editForm.containerName.$pristine"
-                           class="help-block">Max 50 letters</p>
+                           class="help-block">Container required(Max 50 letters)</p>
                     </div>
                     <!-- CONTAINER DESCRIPTION -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : editForm.containerDescription.$invalid && !editForm.containerDescription.$pristine }">
                         <label>Container Beschreibung</label>
                         <input type="text" name="containerName" class="form-control"
-                               ng-model="lead.editLead.lead.container.description" ng-maxlength="50">
+                               ng-model="lead.editProcess.lead.container.description" ng-maxlength="50">
                         <p ng-show="editForm.containerDescription.$invalid && !editForm.containerDescription.$pristine"
                            class="help-block">Max 50 letters</p>
                     </div>
                     <!-- CONTAINER AMOUNT -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : editForm.containerAmount.$invalid && !editForm.containerAmount.$pristine }">
-                        <label>Container Menge</label>
+                        <label>Container Menge *</label>
                         <input type="number" name="containerAmount" class="form-control"
-                               ng-model="lead.editLead.lead.containerAmount" required>
+                               ng-model="lead.editProcess.lead.containerAmount" required min="1" ng-pattern="/^[1-9]+[0-9]*$/">
                         <p ng-show="editForm.containerAmount.$invalid && !editForm.containerAmount.$pristine"
                            class="help-block">Container amount required</p>
                     </div>
                     <!-- PRICE -->
                     <div class="form-group"
                          ng-class="{ 'has-error' : editForm.containerPrice.$invalid && !editForm.containerPrice.$pristine }">
-                        <label>Container Preis(netto)</label>
+                        <label>Container Preis(netto) *</label>
                         <input type="number" name="nettoPrice" class="form-control"
-                               ng-model="lead.editLead.lead.container.priceNetto" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" required>
+                               ng-model="lead.editProcess.lead.container.priceNetto"
+                               ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" required>
                         <p ng-show="editForm.containerPrice.$invalid && !editForm.containerPrice.$pristine"
                            class="help-block">Container price required</p>
                     </div>
@@ -103,12 +103,13 @@
                          ng-class="{ 'has-error' : editForm.destination.$invalid && !editForm.destination.$pristine }">
                         <label>Lieferort</label>
                         <input type="text" name="containerName" class="form-control"
-                               ng-model="lead.editLead.lead.destination" ng-maxlength="50">
+                               ng-model="lead.editProcess.lead.destination" ng-maxlength="50">
                         <p ng-show="editForm.destination.$invalid && !editForm.destination.$pristine"
                            class="help-block">Max 50 letters</p>
                     </div>
                     <div class="form-group">
-                        <h2>Gesamtpreis(Netto):  {{lead.editLead.lead.containerAmount * lead.editLead.lead.container.priceNetto}}</h2>
+                        <h2>Gesamtpreis(Netto): {{lead.editProcess.lead.containerAmount *
+                            lead.editProcess.lead.container.priceNetto | currency:'\u20AC'}}</h2>
                     </div>
                 </form>
             </div>

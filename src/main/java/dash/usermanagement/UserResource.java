@@ -47,16 +47,16 @@ public class UserResource {
     @RequestMapping(value="/{username}/update", method=RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public User updateUser(@PathVariable String username, @RequestBody @Valid User updateUser) {
-        User user = userRepository.findByUsername(username);
+        User User = userRepository.findByUsername(username);
         
-        if(Optional.fromNullable(user).isPresent()){
+        if(Optional.fromNullable(User).isPresent()){
             
-            user.setEmail(updateUser.getEmail());
-            user.setLanguage(updateUser.getLanguage());
+            User.setEmail(updateUser.getEmail());
+            User.setLanguage(updateUser.getLanguage());
             
-            userRepository.save(user);
+            userRepository.save(User);
             
-            return user;
+            return User;
         } else {
             throw new UsernameNotFoundException("No User found.");
         }
@@ -65,12 +65,12 @@ public class UserResource {
     @RequestMapping(value="/{username}/pw", method=RequestMethod.PUT )
     @ResponseStatus(HttpStatus.OK)
     public void updatePassword(@PathVariable String username, @RequestBody PasswordChange passwordChange) throws Exception {
-        final User user = userRepository.findByUsername(username);
+        final User User = userRepository.findByUsername(username);
         
-        if(Optional.fromNullable(user).isPresent()){
-            if(passwordEncoder.encode(passwordChange.getOldPassword()) == user.getPassword()){
-                user.setPassword(passwordEncoder.encode(passwordChange.getOldPassword()));            
-                userRepository.save(user);
+        if(Optional.fromNullable(User).isPresent()){
+            if(passwordEncoder.encode(passwordChange.getOldPassword()) == User.getPassword()){
+                User.setPassword(passwordEncoder.encode(passwordChange.getOldPassword()));
+                userRepository.save(User);
             } else {
                 throw new Exception("Password does not match.");
             }
@@ -82,10 +82,10 @@ public class UserResource {
     @RequestMapping(value="/{username}/activate", method=RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public void activeUser(@PathVariable String username) throws UsernameNotFoundException {
-        final User user = userRepository.findByUsername(username);
-        if(Optional.fromNullable(user).isPresent()){
-            user.setEnabled(true);
-            userRepository.save(user);
+        final User User = userRepository.findByUsername(username);
+        if(Optional.fromNullable(User).isPresent()){
+            User.setEnabled(true);
+            userRepository.save(User);
         } else {
             throw new UsernameNotFoundException("User not found.");
         }        
@@ -96,10 +96,10 @@ public class UserResource {
 	    	    consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.OK)
     public void setRoleForUser(@PathVariable String username, @RequestBody String role) throws Exception {
-        final User user = userRepository.findByUsername(username);
-        if(Optional.fromNullable(user).isPresent()){ 
-            user.setRole(Role.getRole(role));
-            userRepository.save(user);
+        final User User = userRepository.findByUsername(username);
+        if(Optional.fromNullable(User).isPresent()){
+            User.setRole(Role.getRole(role));
+            userRepository.save(User);
         } else {
             throw new UsernameNotFoundException("User not found.");
         }        

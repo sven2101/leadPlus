@@ -51,7 +51,6 @@ public class ProspectResource {
     public Prospect update(@ApiParam(required=true) @PathVariable Long id, @ApiParam(required=true) @RequestBody @Valid Prospect updateProspect) {
         Prospect prospect = prospectRepository.findOne(id);
             if(Optional.fromNullable(prospect).isPresent()) {
-            	prospect.setName(updateProspect.getName());
             	prospect.setPhone(updateProspect.getPhone());
             	prospect.setAddress(updateProspect.getAddress());
             }  

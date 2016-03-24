@@ -1,11 +1,16 @@
 'use strict';
 angular.module('app.leads', ['ngResource']).controller('LeadsCtrl', LeadsCtrl);
-LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', '$filter'];
-function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, $filter) {
+LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', '$filter', 'Profile', '$rootScope'];
+function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, $filter, Profile, $rootScope) {
 
     var vm = this;
     this.filter = $filter;
-    this.processes = Processes;
+    this.processesService = Processes;
+    this.userService = Profile;
+    this.user = {};
+    this.userService.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
+        vm.user = result;
+    });
     this.scope = $scope;
     this.compile = $compile;
     this.toaster = toaster;
@@ -16,11 +21,11 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     this.currentCommentModalId = '';
     this.loadAllData = false;
     this.dtInstance = {};
-    this.leads = {};
-    this.editLead = {};
+    this.processes = {};
+    this.editProcess = {};
     this.newLead = {};
     this.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
-            return vm.processes.getProcessByLeadAndStatus({status: 'open'}).$promise;
+            return vm.processesService.getProcessByLeadAndStatus({status: 'open'}).$promise;
         })
         .withDOM('<"row"<"col-sm-12"l>>' +
             '<"row"<"col-sm-6"B><"col-sm-6"f>>' +
@@ -59,7 +64,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             "sZeroRecords": "Keine Einträge gefunden"
         })
         .withOption('createdRow', createdRow)
-        .withOption('order', [5, 'desc']);
+        .withOption('order', [4, 'desc']);
     this.dtColumns = [
         DTColumnBuilder.newColumn(null).withTitle('').notSortable()
             .renderWith(addDetailButton),
@@ -98,10 +103,10 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     function changeDataInput() {
 
         if (vm.loadAllData == true) {
-            return vm.processes.getProcessByLead().$promise;
+            return vm.processesService.getProcessByLead().$promise;
         }
         else {
-            return vm.processes.getProcessByLeadAndStatus({status: 'open'}).$promise;
+            return vm.processesService.getProcessByLeadAndStatus({status: 'open'}).$promise;
         }
     }
 
@@ -111,7 +116,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     }
 
     function addActionsButtons(data, type, full, meta) {
-        vm.leads[data.id] = data;
+        vm.processes[data.id] = data;
         var disabled = '';
         var closeOrOpenInquiryDisable = '';
         var openOrLock = 'Anfrage schließen';
@@ -126,23 +131,23 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
         }
 
 
-        return '<button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.leads[' + data.id + '])" title="Angebot erstellen">' +
+        return '<button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])" title="Angebot erstellen">' +
             '   <i class="fa fa-check"></i>' +
             '</button>&nbsp;' +
-            '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.closeOrOpenInquiry(lead.leads[' + data.id + '])" title="' + openOrLock + '">' +
+            '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.closeOrOpenInquiry(lead.processes[' + data.id + '])" title="' + openOrLock + '">' +
             '   <i class="' + faOpenOrLOck + '"></i>' +
             '</button>&nbsp;' +
-            '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.loadDataToModal(lead.leads[' + data.id + '])" data-toggle="modal"' +
+            '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.loadDataToModal(lead.processes[' + data.id + '])" data-toggle="modal"' +
             'data-target="#editModal" title="Anfrage bearbeiten">' +
             '<i class="fa fa-edit"></i>' +
             '</button>&nbsp;' +
-            '<button class="btn btn-white" ng-click="lead.deleteRow(lead.leads[' + data.id + '])" title="Anfrage Löschen">' +
+            '<button class="btn btn-white" ng-click="lead.deleteRow(lead.processes[' + data.id + '])" title="Anfrage Löschen">' +
             '   <i class="fa fa-trash-o"></i>' +
             '</button>';
     }
 
     function addStatusStyle(data, type, full, meta) {
-        vm.leads[data.id] = data;
+        vm.processes[data.id] = data;
         if (data.status == 'open') {
             return '<div style="color: green;">' + data.status + '</div>'
         }
@@ -158,16 +163,29 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     }
 
     function addDetailButton(data, type, full, meta) {
-        vm.leads[data.id] = data;
+        vm.processes[data.id] = data;
         return '<a class="green shortinfo" href="javascript:;"' +
-            'ng-click="lead.appendChildRow(lead.leads[' + data.id + '], $event)" title="Click to view more">' +
+            'ng-click="lead.appendChildRow(lead.processes[' + data.id + '], $event)" title="Click to view more">' +
             '<i class="glyphicon glyphicon-plus-sign"/></a>';
     }
 }
 
-LeadsCtrl.prototype.appendChildRow = function (lead, event) {
+LeadsCtrl.prototype.appendChildRow = function (process, event) {
     var childScope = this.scope.$new(true);
-    childScope.leadChildData = lead;
+    childScope.leadChildData = process;
+    var vm = this;
+    this.processesService.getComments({id: process.id}).$promise.then(function (result) {
+        vm.comments[process.id] = [];
+        for (var comment in result) {
+            if (comment == '$promise')
+                break;
+            vm.comments[process.id].push({
+                commentText: result[comment].commentText,
+                date: result[comment].date,
+                creator: result[comment].creator
+            });
+        }
+    });
     childScope.parent = this;
 
     var link = angular.element(event.currentTarget),

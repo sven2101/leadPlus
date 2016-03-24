@@ -27,23 +27,13 @@ public class LeadService implements ILeadService {
     private ContainerRepository containerRepository;
     
     public void createLead(Lead lead){
-	
-	inquirerRepository.save(lead.getInquirer());
-        
+
 	Vendor vendor = vendorRepository.findByName(lead.getVendor().getName());
 	if(vendor == null){
             vendorRepository.save(lead.getVendor());
 	} else {
 	    lead.setVendor(vendor);
 	}
-	
-	Container container = containerRepository.findByName(lead.getContainer().getName());
-        if(container == null){
-            containerRepository.save(lead.getContainer());
-        } else {
-            lead.setContainer(container);
-        }
-
         leadRepository.save(lead);
     }
 }

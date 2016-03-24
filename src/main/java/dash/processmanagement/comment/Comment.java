@@ -1,21 +1,11 @@
 package dash.processmanagement.comment;
 
-import java.util.Calendar;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import dash.processmanagement.Process;
 import dash.usermanagement.User;
 
-import dash.processmanagement.Process;
+import javax.persistence.*;
+import java.util.Calendar;
 
 @Entity
 public class Comment {
@@ -23,13 +13,13 @@ public class Comment {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long 		id;
-		
+
 	@ManyToOne
-	@JoinColumn(name = "user_fk", nullable = false, insertable = false, updatable = false)
-	private User 		user;
+	@JoinColumn(name = "creator_fk", nullable = false)
+	private User creator;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="process_fk")
+	@JoinColumn(name="process_fk", nullable = false)
 	private Process 	process;
 	
 	private String 		commentText;
@@ -42,9 +32,9 @@ public class Comment {
 		
 	}
 	
-	public Comment(Process process, User user, String commentText, Calendar timestamp){
+	public Comment(Process process, User creator, String commentText, Calendar timestamp){
 	    this.process	= process;
-	    this.user 		= user;
+	    this.creator = creator;
 	    this.commentText 	= commentText;
 	    this.timestamp 	= timestamp;
 	}
@@ -63,22 +53,22 @@ public class Comment {
 		this.process = process;
 	}
 	
-	public User getUser() {
-		return user;
+	public User getCreator() {
+		return this.creator;
 	}
-	public void setUser(User user) {
-		this.user = user;
+	public void setCreator(User creator) {
+		this.creator = creator;
 	}
 	
 	public String getCommentText() {
-		return commentText;
+		return this.commentText;
 	}
 	public void setCommentText(String commentText) {
 		this.commentText = commentText;
 	}
 	
 	public Calendar getDate() {
-		return timestamp;
+		return this.timestamp;
 	}
 	public void setDate(Calendar timestamp) {
 		this.timestamp = timestamp;
