@@ -75,6 +75,7 @@ public class TurnoverStatisticService implements ITurnoverStatisticService {
 	    if(countOfSaleInDate.containsKey(key)){
 		double value = countOfSaleInDate.get(key) + sale.getSaleReturn();
 		countOfSaleInDate.put(key, value);
+		
 	    }
 	}	   
 

@@ -7,7 +7,16 @@ StatisticsCtrl.$inject = ['Leads', 'Offers', 'Sales', 'Profit', 'Turnover'];
 function StatisticsCtrl(Leads, Offers, Sales, Profit, Turnover) {
     
 	var vm = this;
-    
+	this.timeframe 		= [];
+	
+    this.chartSingleStatisticPie 	= this.getSharedItemsPieChart();
+    this.chartEntireStatisticSpline = this.entireStatisticSpline();
+    this.chartEntireStatisticArea   = this.entireStatisticArea();
+    this.chartEntireStatisticArea.options.xAxis.categories 		= [];
+
+    this.chartLeadsConversionRate   = this.getLeadsConversionRate();
+    this.chartOffersConversionRate  = this.getOffersConversionRate();
+   
 	this.profit 		= {}
     this.turnover 		= {};
     this.leads 			= {};
@@ -42,20 +51,15 @@ function StatisticsCtrl(Leads, Offers, Sales, Profit, Turnover) {
 	
 	this.currentTab 				= 1;
     this.selectedPeriod 			= 'day';
-    this.chartEntireStatisticSpline = {};
-    this.chartEntireStatisticArea 	= {};
-    var chartSingleStatisticPie = chartSingleStatisticPie;
-    function chartSingleStatisticPie(){
-    	return this.getSharedItemsPieChart(vm.leads);
-    }
-    //this.chartSingleStatisticPie 	= {};
-
+    
+      
+    //this.chartLeadsConversionRate 	= this.getSharedItemsPieChart();
     //this.chartLeadsConversionRate 	= this.getLeadsConversionRate();
     //this.chartOffersConversionRate 	= this.getOffersConversionRate();
  
     this.efficiency 				= {};
     this.conversionrate 			= {};
-    this.profitPerSale 				= {};
+    this.profitPerSale 				= {};   
 }
 
 StatisticsCtrl.prototype.tabOnClick = function (tab) {
@@ -63,9 +67,65 @@ StatisticsCtrl.prototype.tabOnClick = function (tab) {
 }
 
 StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
-    this.selectedPeriod = selectedPeriod;
+    var vm 											= this;
+	
+	this.selectedPeriod 							= selectedPeriod;
     
-    var vm = this;
+    this.chartSingleStatisticPie.series[0].data  	= [];
+    this.chartEntireStatisticSpline.series			= [];
+    this.chartEntireStatisticArea.series   			= [];
+    this.chartLeadsConversionRate.series[0].data   	= [];
+    this.chartOffersConversionRate.series[0].data  	= [];
+    
+    this.timeframe = [];
+    
+    var date 		= Date.now();
+	var currentDate = new Date();
+	
+    switch(this.selectedPeriod) {
+    	case 'day':    		
+    		
+    		break;
+    	case 'week':
+    		var oneWeekAgo = new Date();
+    		oneWeekAgo.setDate(oneWeekAgo.getDate() - 6)
+    		while (oneWeekAgo <= currentDate){
+    			this.timeframe.push(oneWeekAgo.getDate());
+    			oneWeekAgo.setDate(oneWeekAgo.getDate() + 1);    			
+    		}
+
+    		break;
+    	case 'month':
+    		var oneMonthAgo = new Date();
+    		oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
+
+    		while (oneMonthAgo <= currentDate){
+    			this.timeframe.push(oneMonthAgo.getDate());
+    			oneMonthAgo.setDate(oneMonthAgo.getDate() + 1)
+    		}    	
+    		break;
+    	case 'year':
+    		var oneYearAgo = new Date();
+    		oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
+
+    		while (oneYearAgo <= currentDate){
+    			this.timeframe.push(oneYearAgo.toUTCString().split(' ')[2]);
+    			oneYearAgo.setMonth(oneYearAgo.getMonth() + 1)
+    		} 
+    		break;
+    	case 'all':
+    		var oneYearAgo = new Date(2014, 1, 1);
+
+    		while (oneYearAgo <= currentDate){
+    			this.timeframe.push(oneYearAgo.getDate());
+        		oneYearAgo.setFullYear(oneYearAgo.getFullYear() + 1);    			
+    		} 
+    		break;
+    	default:
+    		console.log("Timeframe not found");
+    }
+        
+    this.chartEntireStatisticArea.options.xAxis.categories 		= this.timeframe;
     
     switch(selectedPeriod) {
 	    case 'day':

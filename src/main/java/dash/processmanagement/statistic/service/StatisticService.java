@@ -50,7 +50,6 @@ public class StatisticService implements IStatisticService {
 		countOfProcessInDate.put(key, value);
 	    }
 	}	   
-
 	return new Result(new ArrayList<Double>(countOfProcessInDate.values()));
     }
         
@@ -75,8 +74,7 @@ public class StatisticService implements IStatisticService {
 		double value = countOfProcessInDate.get(key)+1.00;
 		countOfProcessInDate.put(key, value);
 	    }
-	}	   
-
+	}
 	return new Result(new ArrayList<Double>(countOfProcessInDate.values()));
     }
     
@@ -102,7 +100,6 @@ public class StatisticService implements IStatisticService {
 		countOfProcessInDate.put(key, value);
 	    }
 	}	   
-
 	return new Result(new ArrayList<Double>(countOfProcessInDate.values()));
     }
     
@@ -127,7 +124,7 @@ public class StatisticService implements IStatisticService {
 		double value = countOfProcessInDate.get(key)+1.00;
 		countOfProcessInDate.put(key, value);
 	    }
-	}	   
+	}   
 
 	return new Result(new ArrayList<Double>(countOfProcessInDate.values()));
     }
@@ -154,8 +151,7 @@ public class StatisticService implements IStatisticService {
 		double value = countOfProcessInDate.get(key)+1.00;
 		countOfProcessInDate.put(key, value);
 	    }
-	}	   
-
+	}
 	return new Result(new ArrayList<Double>(countOfProcessInDate.values()));
     }
 }
