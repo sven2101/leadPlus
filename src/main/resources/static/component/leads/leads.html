@@ -3,13 +3,13 @@
     <div class="col-lg-12">
         <div class="row">
             <div class="col-lg-10">
-                <h2>Anfragen</h2>
+                <h2>{{ 'LEAD_LEADS' | translate }}</h2>
                 <ol class="breadcrumb">
                     <li>
                         <a href="#/dashboard">Home</a>
                     </li>
                     <li class="active">
-                        <strong>Anfragen</strong>
+                        <strong>{{ 'LEAD_LEADS' | translate }}</strong>
                     </li>
                 </ol>
             </div>
@@ -21,22 +21,21 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Anfragen verwalten</h5>
+                    <h5>{{ 'LEAD_MANAGE_LEADS' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
                     <button type="button" class="btn btn-success" ng-click="lead.clearNewLead()" data-toggle="modal"
                             data-target="#newLeadModal">
-                        <i class="fa fa-plus"></i>&nbsp;Add Lead
+                        <i class="fa fa-plus"></i>&nbsp;{{ 'LEAD_ADD_LEAD' | translate }}
                     </button>
                     <button ng-click="lead.refreshData()" type="button" class="btn btn-success">
-                        <i class="fa fa-refresh"></i>&nbsp;Reload data
+                        <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
                     </button>
-                    <span class="pull-right" style=" font-size: 1.5em;">All leads &nbsp;<input type="checkbox"
+                    <span class="pull-right" style=" font-size: 1.5em;">{{ 'LEAD_SHOW_ALL_LEADS' | translate }} &nbsp;<input type="checkbox"
                                                                                                ng-model="lead.loadAllData"
                                                                                                ng-change="lead.dtInstance.changeData(lead.changeDataInput)"
                                                                                                class="js-switch"
                                                                                                ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
-                    <p class="text-danger"><strong>{{ lead.message }}</strong></p>
                     </br></br>
                     <div class="table-responsive text-center">
                         <table datatable="" dt-options="lead.dtOptions" dt-columns="lead.dtColumns"

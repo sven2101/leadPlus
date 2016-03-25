@@ -4,120 +4,133 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span
                         aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Anfrage bearbeiten</h4>
+                <h4 class="modal-title">{{ 'LEAD_EDIT_LEAD_MODAL' | translate }}</h4>
             </div>
             <div class="modal-body">
-                <form name="editForm" novalidate>
+                <form name="lead.editForm" novalidate>
                     <!-- TITLE -->
                     <div class="form-group">
-                        <label>Title</label>
+                        <label>{{ 'COMMON_TITLE' | translate }}</label>
                         <select name="title" ng-model="lead.editProcess.lead.inquirer.title">
-                            <option value="Herr">Herr</option>
-                            <option value="Frau">Frau</option>
+                            <option value="Herr">{{ 'COMMON_TITLE_MR' | translate }}</option>
+                            <option value="Frau">{{ 'COMMON_TITLE_MS' | translate }}</option>
                         </select>
                     </div>
+
                     <!-- FIRSTNAME -->
                     <div class="form-group"
-                         ng-class="{ 'has-error' : editForm.firstname.$invalid && !editForm.firstname.$pristine }">
-                        <label>Vorname</label>
+                         ng-class="{ 'has-error' : lead.editForm.firstname.$invalid && !lead.editForm.firstname.$pristine }">
+                        <label>{{ 'COMMON_FIRSTNAME' | translate }}</label>
                         <input type="text" name="firstname" class="form-control"
                                ng-model="lead.editProcess.lead.inquirer.firstname" ng-maxlength="30">
-                        <p ng-show="editForm.firstname.$invalid && !editForm.firstname.$pristine"
-                           class="help-block">Max 30 letters</p>
+                        <p ng-show="lead.editForm.firstname.$invalid && !lead.editForm.firstname.$pristine"
+                           class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' |
+                            translate }}</p>
                     </div>
                     <!-- LASTNAME -->
                     <div class="form-group"
-                         ng-class="{ 'has-error' : editForm.lastname.$invalid && !editForm.lastname.$pristine }">
-                        <label>Nachname</label>
+                         ng-class="{ 'has-error' : lead.editForm.lastname.$invalid && !lead.editForm.lastname.$pristine }">
+                        <label>{{ 'COMMON_LASTNAME' | translate }}</label>
                         <input type="text" name="lastname" class="form-control"
                                ng-model="lead.editProcess.lead.inquirer.lastname" ng-maxlength="30">
-                        <p ng-show="editForm.lastname.$invalid && !editForm.lastname.$pristine"
-                           class="help-block">Max 30 letters</p>
+                        <p ng-show="lead.editForm.lastname.$invalid && !lead.editForm.lastname.$pristine"
+                           class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' |
+                            translate }}</p>
                     </div>
                     <!-- COMPANY -->
                     <div class="form-group"
-                         ng-class="{ 'has-error' : editForm.company.$invalid && !editForm.company.$pristine }">
-                        <label>Firma</label>
+                         ng-class="{ 'has-error' : lead.editForm.company.$invalid && !lead.editForm.company.$pristine }">
+                        <label>{{ 'COMMON_COMPANY' | translate }}</label>
                         <input type="text" name="company" class="form-control"
                                ng-model="lead.editProcess.lead.inquirer.company" ng-maxlength="50">
-                        <p ng-show="editForm.company.$invalid && !editForm.company.$pristine"
-                           class="help-block">Max 50 letters</p>
+                        <p ng-show="lead.editForm.company.$invalid && !lead.editForm.company.$pristine"
+                           class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' |
+                            translate }}</p>
                     </div>
                     <!-- EMAIL -->
                     <div class="form-group"
-                         ng-class="{ 'has-error' : editForm.email.$invalid && !editForm.email.$pristine }">
-                        <label>Email</label>
+                         ng-class="{ 'has-error' : lead.editForm.email.$invalid && !lead.editForm.email.$pristine }">
+                        <label>{{ 'COMMON_EMAIL' | translate }}</label>
                         <input type="email" name="email" class="form-control"
                                ng-model="lead.editProcess.lead.inquirer.email">
-                        <p ng-show="editForm.email.$invalid && !editForm.email.$pristine"
-                           class="help-block">Enter a valid email</p>
+                        <p ng-show="lead.editForm.email.$invalid && !lead.editForm.email.$pristine"
+                           class="help-block">{{ 'COMMON_VALIDATE_EMAIL'| translate }}</p>
                     </div>
                     <!-- PHONE -->
                     <div class="form-group"
-                         ng-class="{ 'has-error' : editForm.phone.$invalid && !editForm.phone.$pristine }">
-                        <label>Telefon</label>
+                         ng-class="{ 'has-error' : lead.editForm.phone.$invalid && !lead.editForm.phone.$pristine }">
+                        <label>{{ 'COMMON_PHONE' | translate }}</label>
                         <input type="text" name="phone" class="form-control"
                                ng-model="lead.editProcess.lead.inquirer.phone" ng-maxlength="50">
-                        <p ng-show="editForm.phone.$invalid && !editForm.phone.$pristine"
-                           class="help-block">Max 50 letters</p>
+                        <p ng-show="lead.editForm.phone.$invalid && !lead.editForm.phone.$pristine"
+                           class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' |
+                            translate }}</p>
                     </div>
                     <!-- CONTAINER NAME -->
                     <div class="form-group"
-                         ng-class="{ 'has-error' : editForm.containerName.$invalid && !editForm.containerName.$pristine }">
-                        <label>Container Name *</label>
+                         ng-class="{ 'has-error' : lead.editForm.containerName.$invalid && !lead.editForm.containerName.$pristine }">
+                        <label>{{ 'COMMON_CONTAINER' | translate }} *</label>
                         <input type="text" name="containerName" class="form-control"
                                ng-model="lead.editProcess.lead.container.name" ng-maxlength="50" required>
-                        <p ng-show="editForm.containerName.$invalid && !editForm.containerName.$pristine"
-                           class="help-block">Container required(Max 50 letters)</p>
+                        <p ng-show="lead.editForm.containerName.$invalid && !lead.editForm.containerName.$pristine"
+                           class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_MAX' |
+                            translate
+                            }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }})</p>
                     </div>
                     <!-- CONTAINER DESCRIPTION -->
                     <div class="form-group"
-                         ng-class="{ 'has-error' : editForm.containerDescription.$invalid && !editForm.containerDescription.$pristine }">
-                        <label>Container Beschreibung</label>
-                        <input type="text" name="containerName" class="form-control"
-                               ng-model="lead.editProcess.lead.container.description" ng-maxlength="50">
-                        <p ng-show="editForm.containerDescription.$invalid && !editForm.containerDescription.$pristine"
-                           class="help-block">Max 50 letters</p>
+                         ng-class="{ 'has-error' : lead.editForm.containerDescription.$invalid && !lead.editForm.containerDescription.$pristine }">
+                        <label>{{ 'COMMON_CONTAINER_DESC' | translate }}</label>
+                        <input type="text" name="containerDescription" class="form-control"
+                               ng-model="lead.editProcess.lead.container.description" ng-maxlength="100">
+                        <p ng-show="lead.editForm.containerDescription.$invalid && !lead.editForm.containerDescription.$pristine"
+                           class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}100{{ 'COMMON_VALIDATE_MAX_END' |
+                            translate }}</p>
                     </div>
                     <!-- CONTAINER AMOUNT -->
                     <div class="form-group"
-                         ng-class="{ 'has-error' : editForm.containerAmount.$invalid && !editForm.containerAmount.$pristine }">
-                        <label>Container Menge *</label>
+                         ng-class="{ 'has-error' : lead.editForm.containerAmount.$invalid && !lead.editForm.containerAmount.$pristine }">
+                        <label>{{ 'COMMON_CONTAINER_AMOUNT' | translate }} *</label>
                         <input type="number" name="containerAmount" class="form-control"
-                               ng-model="lead.editProcess.lead.containerAmount" required min="1" ng-pattern="/^[1-9]+[0-9]*$/">
-                        <p ng-show="editForm.containerAmount.$invalid && !editForm.containerAmount.$pristine"
-                           class="help-block">Container amount required</p>
+                               ng-model="lead.editProcess.lead.containerAmount" required min="1"
+                               ng-pattern="/^[1-9]+[0-9]*$/">
+                        <p ng-show="lead.editForm.containerAmount.$invalid && !lead.editForm.containerAmount.$pristine"
+                           class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'|
+                            translate }})</p>
                     </div>
                     <!-- PRICE -->
                     <div class="form-group"
-                         ng-class="{ 'has-error' : editForm.containerPrice.$invalid && !editForm.containerPrice.$pristine }">
-                        <label>Container Preis(netto) *</label>
-                        <input type="number" name="nettoPrice" class="form-control"
+                         ng-class="{ 'has-error' : lead.editForm.containerPrice.$invalid && !lead.editForm.containerPrice.$pristine }">
+                        <label>{{ 'COMMON_CONTAINER_SINGLE_PRICE'| translate }} *</label>
+                        <input type="number" name="containerPrice" class="form-control"
                                ng-model="lead.editProcess.lead.container.priceNetto"
                                ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" required>
-                        <p ng-show="editForm.containerPrice.$invalid && !editForm.containerPrice.$pristine"
-                           class="help-block">Container price required</p>
+                        <p ng-show="lead.editForm.containerPrice.$invalid && !lead.editForm.containerPrice.$pristine"
+                           class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'|
+                            translate }})</p>
                     </div>
                     <!-- CONTAINER DESTINATION -->
                     <div class="form-group"
-                         ng-class="{ 'has-error' : editForm.destination.$invalid && !editForm.destination.$pristine }">
-                        <label>Lieferort</label>
-                        <input type="text" name="containerName" class="form-control"
+                         ng-class="{ 'has-error' : lead.editForm.destination.$invalid && !lead.editForm.destination.$pristine }">
+                        <label>{{ 'COMMON_CONTAINER_DESTINATION'| translate }}</label>
+                        <input type="text" name="destination" class="form-control"
                                ng-model="lead.editProcess.lead.destination" ng-maxlength="50">
-                        <p ng-show="editForm.destination.$invalid && !editForm.destination.$pristine"
-                           class="help-block">Max 50 letters</p>
+                        <p ng-show="lead.editForm.destination.$invalid && !lead.editForm.destination.$pristine"
+                           class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' |
+                            translate }}</p>
                     </div>
                     <div class="form-group">
-                        <h2>Gesamtpreis(Netto): {{lead.editProcess.lead.containerAmount *
+                        <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{lead.editProcess.lead.containerAmount *
                             lead.editProcess.lead.container.priceNetto | currency:'\u20AC'}}</h2>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-white" data-dismiss="modal">Abbrechen</button>
-                <button type="submit" class="btn btn-success" ng-disabled="editForm.$invalid"
+                <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL'| translate }}
+                </button>
+                <button type="submit" class="btn btn-success" ng-disabled="lead.editForm.$invalid"
                         ng-click="lead.saveEditedRow()"
-                        data-dismiss="modal">Speichern
+                        data-dismiss="modal">{{ 'COMMON_SAVE'| translate }}
                 </button>
             </div>
         </div>

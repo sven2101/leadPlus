@@ -119,11 +119,40 @@ angular.module('app')
 
     }]);
 
-angular.module('app').controller('appCtrl', function ($translate, $scope, $rootScope) {
-    $translate.use('en');
-    $rootScope.language = 'en';
-    $rootScope.changeLanguage = function (langKey) {
-        $translate.use(langKey);
-        $rootScope.language = langKey;
-    };
-});
+angular.module('app').controller('appCtrl', function ($translate, $scope, $rootScope, $interval, Processes, Profile) {
+        $rootScope.leadsCount = 0;
+        $rootScope.offersCount = 0;
+
+        if (!angular.isUndefined($rootScope.globals.currentUser)) {
+            Profile.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
+                $rootScope.changeLanguage(result.language);
+            });
+        }
+        Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
+            $rootScope.leadsCount = result.length;
+        });
+        Processes.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
+            $rootScope.offersCount = result.length;
+        });
+        $rootScope.changeLanguage = function (langKey) {
+            $translate.use(langKey);
+            $rootScope.language = langKey;
+        };
+
+        var stop;
+        $rootScope.$on('$destroy', function () {
+            if (angular.isDefined(stop)) {
+                $interval.cancel(stop);
+                stop = undefined;
+            }
+        });
+        stop = $interval(function () {
+            Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
+                $rootScope.leadsCount = result.length;
+            });
+            Processes.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
+                $rootScope.offersCount = result.length;
+            });
+        }.bind(this), 300000);
+    }
+);

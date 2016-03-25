@@ -21,7 +21,6 @@ LeadsCtrl.prototype.addComment = function (id, source) {
         this.processesService.addComment({id: id}, comment).$promise.then(function () {
             vm.comments[id].push(comment);
             vm.commentInput[id] = '';
-            vm.toaster.pop('success', 'Success', "Added new Comment!");
         });
     }
     else if (source == 'modal' && this.commentModalInput[id] != '' && !angular.isUndefined(this.commentModalInput[id])) {
@@ -34,7 +33,6 @@ LeadsCtrl.prototype.addComment = function (id, source) {
         this.processesService.addComment({id: id}, comment).$promise.then(function () {
             vm.comments[id].push(comment);
             vm.commentModalInput[id] = '';
-            vm.toaster.pop('success', 'Success', "Added new Comment!");
         });
     }
 };
@@ -55,7 +53,9 @@ LeadsCtrl.prototype.saveLead = function () {
         status: 'open'
     }
     this.processesService.addProcess(process).$promise.then(function () {
-        vm.toaster.pop('success', 'Success', "New Lead Saved");
+        vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_ADD_LEAD'));
+        vm.rootScope.leadsCount += 1;
+        vm.addForm.$setPristine();
         vm.refreshData();
     });
 }
@@ -92,7 +92,8 @@ LeadsCtrl.prototype.followUp = function (process) {
     }
     this.processesService.addOffer({id: process.id}, offer).$promise.then(function () {
         vm.processesService.setStatus({id: process.id}, 'offer').$promise.then(function () {
-            vm.toaster.pop('success', 'Success', "You have a new offer");
+            vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_NEW_OFFER'));
+            vm.rootScope.leadsCount -= 1;
             vm.refreshData();
         });
     });
@@ -102,12 +103,14 @@ LeadsCtrl.prototype.closeOrOpenInquiry = function (process) {
     var vm = this;
     if (process.status == "open") {
         this.processesService.setStatus({id: process.id}, 'closed').$promise.then(function () {
-            vm.toaster.pop('success', 'Success', "You have closed your lead");
+            vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_CLOSE_LEAD'));
+            vm.rootScope.leadsCount -= 1;
             vm.refreshData();
         });
     } else if (process.status == "closed") {
         this.processesService.setStatus({id: process.id}, 'open').$promise.then(function () {
-            vm.toaster.pop('success', 'Success', "You have opened your lead");
+            vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_OPEN_LEAD'));
+            vm.rootScope.leadsCount += 1;
             vm.refreshData();
         });
     }
@@ -120,7 +123,8 @@ LeadsCtrl.prototype.loadDataToModal = function (lead) {
 LeadsCtrl.prototype.saveEditedRow = function () {
     var vm = this;
     this.processesService.putLead({id: this.editProcess.lead.id}, this.editProcess.lead).$promise.then(function () {
-        vm.toaster.pop('success', 'Success', "You have updated your lead");
+        vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_UPDATE_LEAD'));
+        vm.editForm.$setPristine();
         vm.refreshData();
     });
 }
@@ -128,8 +132,14 @@ LeadsCtrl.prototype.saveEditedRow = function () {
 LeadsCtrl.prototype.deleteRow = function (process) {
     var vm = this;
     this.processesService.putProcess({id: process.id}, {lead: null}).$promise.then(function () {
+        if (process.offer == null && process.sale == null) {
+            vm.processesService.deleteProcess({id: process.id});
+        }
         vm.processesService.deleteLead({id: process.lead.id}).$promise.then(function () {
-            vm.toaster.pop('success', 'Success', "You have deleted your lead");
+            vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_DELETE_LEAD'));
+            if (process.status = 'open') {
+                vm.rootScope.leadsCount -= 1;
+            }
             vm.refreshData();
         });
     });

@@ -1,7 +1,7 @@
 'use strict';
 angular.module('app.leads', ['ngResource']).controller('LeadsCtrl', LeadsCtrl);
-LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', '$filter', 'Profile', '$rootScope'];
-function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, $filter, Profile, $rootScope) {
+LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', '$filter', 'Profile', '$rootScope', '$interval', '$translate'];
+function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, $filter, Profile, $rootScope, $interval, $translate) {
 
     var vm = this;
     this.filter = $filter;
@@ -12,9 +12,10 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
         vm.user = result;
     });
     this.scope = $scope;
+    this.rootScope = $rootScope;
+    this.translate = $translate;
     this.compile = $compile;
     this.toaster = toaster;
-    this.message = '';
     this.commentInput = {};
     this.commentModalInput = {};
     this.comments = {};
@@ -37,55 +38,54 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             'print',
             {
                 extend: 'csvHtml5',
+                title: $translate('LEAD_LEADS'),
                 exportOptions: {
-                    columns: [2, 3, 4, 5, 6]
+                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9]
                 }
             },
             {
                 extend: 'excelHtml5',
+                title: $translate.instant('LEAD_LEADS'),
                 exportOptions: {
-                    columns: [2, 3, 4, 5, 6]
+                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9]
                 }
             },
-            'pdfHtml5'
+            {
+                extend: 'pdfHtml5',
+                title: $translate('LEAD_LEADS'),
+                orientation: 'landscape',
+                exportOptions: {
+                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    modifier: {
+                        page: 'current'
+                    }
+                }
+            }
         ])
         .withBootstrap()
-        .withLanguage({
-            "sEmptyTable": "Keine Daten verfügbar",
-            "sInfo": "Zeige _START_ bis _END_ von _TOTAL_ Einträgen",
-            "sInfoEmpty": "Zeige 0 bis 0 von 0 Einträgen",
-            "sInfoFiltered": "(filtered from _MAX_ total entries)",
-            "sInfoPostFix": "",
-            "sInfoThousands": ",",
-            "sLengthMenu": "Zeige _MENU_ Einträge",
-            "sLoadingRecords": "Loading...",
-            "sProcessing": "Processing...",
-            "sSearch": "Suche:",
-            "sZeroRecords": "Keine Einträge gefunden"
-        })
         .withOption('createdRow', createdRow)
         .withOption('order', [4, 'desc']);
     this.dtColumns = [
         DTColumnBuilder.newColumn(null).withTitle('').notSortable()
             .renderWith(addDetailButton),
-        DTColumnBuilder.newColumn('lead.inquirer.lastname').withTitle('Name')
+        DTColumnBuilder.newColumn('lead.inquirer.lastname').withTitle($translate('COMMON_NAME'))
             .withClass('text-center'),
-        DTColumnBuilder.newColumn('lead.inquirer.company').withTitle('Firma')
+        DTColumnBuilder.newColumn('lead.inquirer.company').withTitle($translate('COMMON_COMPANY'))
             .withClass('text-center'),
-        DTColumnBuilder.newColumn('lead.inquirer.email').withTitle('Email')
+        DTColumnBuilder.newColumn('lead.inquirer.email').withTitle($translate('COMMON_EMAIL'))
             .withClass('text-center'),
-        DTColumnBuilder.newColumn('lead.timestamp').withTitle('Datum')
+        DTColumnBuilder.newColumn('lead.timestamp').withTitle($translate('COMMON_DATE'))
             .withOption('type', 'date-euro')
             .withClass('text-center'),
-        DTColumnBuilder.newColumn('lead.inquirer.phone').withTitle('Phone')
+        DTColumnBuilder.newColumn('lead.inquirer.phone').withTitle($translate('COMMON_PHONE'))
             .notVisible(),
-        DTColumnBuilder.newColumn('lead.inquirer.firstname').withTitle('firstname')
+        DTColumnBuilder.newColumn('lead.inquirer.firstname').withTitle($translate('COMMON_FIRSTNAME'))
             .notVisible(),
-        DTColumnBuilder.newColumn('lead.container.name').withTitle('containername')
+        DTColumnBuilder.newColumn('lead.container.name').withTitle($translate('COMMON_CONTAINER'))
             .notVisible(),
-        DTColumnBuilder.newColumn('lead.destination').withTitle('destination')
+        DTColumnBuilder.newColumn('lead.destination').withTitle($translate('COMMON_CONTAINER_DESTINATION'))
             .notVisible(),
-        DTColumnBuilder.newColumn(null).withTitle('Status')
+        DTColumnBuilder.newColumn(null).withTitle($translate('COMMON_STATUS'))
             .withClass('text-center')
             .renderWith(addStatusStyle),
         DTColumnBuilder.newColumn(null).withTitle('<span class="glyphicon glyphicon-cog"></span>').withClass('text-center')
@@ -93,11 +93,30 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             .renderWith(addActionsButtons)
     ];
 
+    if($rootScope.language == 'de'){
+        vm.dtOptions.withLanguageSource('/application/app/datatablesTranslationFiles/German.json');
+    }else {
+        vm.dtOptions.withLanguageSource('/application/app/datatablesTranslationFiles/English.json');
+    }
+
     vm.refreshData = refreshData;
     function refreshData() {
         var resetPaging = true;
         this.dtInstance.reloadData(resetPaging);
     }
+
+    var stop;
+    $scope.$on('$destroy', function () {
+        if (angular.isDefined(stop)) {
+            $interval.cancel(stop);
+            stop = undefined;
+        }
+    });
+    stop = $interval(function () {
+        if (vm.loadAllData == false) {
+            vm.dtInstance.reloadData(true);
+        }
+    }.bind(this), 100000);
 
     vm.changeDataInput = changeDataInput;
     function changeDataInput() {
@@ -119,11 +138,11 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
         vm.processes[data.id] = data;
         var disabled = '';
         var closeOrOpenInquiryDisable = '';
-        var openOrLock = 'Anfrage schließen';
+        var openOrLock = "{{ 'LEAD_CLOSE_LEAD' | translate }}";
         var faOpenOrLOck = 'fa fa-lock';
         if (data.status != 'open') {
             disabled = 'disabled';
-            openOrLock = 'Anfrage Öffnen';
+            openOrLock = "{{ 'LEAD_OPEN_LEAD' | translate }}";
             faOpenOrLOck = 'fa fa-unlock';
         }
         if (data.offer != null || data.sale != null) {
@@ -131,17 +150,17 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
         }
 
 
-        return '<button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])" title="Angebot erstellen">' +
+        return '<button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])" title="{{ \'LEAD_FOLLOW_UP\' | translate }}">' +
             '   <i class="fa fa-check"></i>' +
             '</button>&nbsp;' +
             '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.closeOrOpenInquiry(lead.processes[' + data.id + '])" title="' + openOrLock + '">' +
             '   <i class="' + faOpenOrLOck + '"></i>' +
             '</button>&nbsp;' +
             '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.loadDataToModal(lead.processes[' + data.id + '])" data-toggle="modal"' +
-            'data-target="#editModal" title="Anfrage bearbeiten">' +
+            'data-target="#editModal" title="{{ \'LEAD_EDIT_LEAD\' | translate }}">' +
             '<i class="fa fa-edit"></i>' +
             '</button>&nbsp;' +
-            '<button class="btn btn-white" ng-click="lead.deleteRow(lead.processes[' + data.id + '])" title="Anfrage Löschen">' +
+            '<button class="btn btn-white" ng-click="lead.deleteRow(lead.processes[' + data.id + '])" title="{{ \'LEAD_DELETE_LEAD\' | translate }}">' +
             '   <i class="fa fa-trash-o"></i>' +
             '</button>';
     }
@@ -165,7 +184,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     function addDetailButton(data, type, full, meta) {
         vm.processes[data.id] = data;
         return '<a class="green shortinfo" href="javascript:;"' +
-            'ng-click="lead.appendChildRow(lead.processes[' + data.id + '], $event)" title="Click to view more">' +
+            'ng-click="lead.appendChildRow(lead.processes[' + data.id + '], $event)" title="Details">' +
             '<i class="glyphicon glyphicon-plus-sign"/></a>';
     }
 }

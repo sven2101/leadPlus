@@ -7,38 +7,42 @@
     <div class="col-lg-6">
         <div class="ibox">
             <div class="ibox-title">
-                <h3>Additonal Information</h3>
+                <h3>{{ 'COMMON_CHILDROW_ADDITONAL_TITLE' | translate }}</h3>
             </div>
             <div class="ibox-content">
                 <table class="table table-bordered text-left">
                     <tr>
-                        <td>Name</td>
+                        <td>{{ 'COMMON_NAME' | translate }}</td>
                         <td>{{leadChildData.lead.inquirer.title}} {{leadChildData.lead.inquirer.firstname}}
                             {{leadChildData.lead.inquirer.lastname}}
                         </td>
                     </tr>
                     <tr>
-                        <td>Telefon</td>
+                        <td>{{ 'COMMON_PHONE' | translate }}</td>
                         <td>{{leadChildData.lead.inquirer.phone}}</td>
                     </tr>
                     <tr>
-                        <td>Container</td>
+                        <td>{{ 'COMMON_CONTAINER' | translate }}</td>
                         <td>{{leadChildData.lead.container.name}}</td>
                     </tr>
                     <tr>
-                        <td>Container beschreibung</td>
+                        <td>{{ 'COMMON_CONTAINER_DESC' | translate }}</td>
                         <td>{{leadChildData.lead.container.description}}</td>
                     </tr>
                     <tr>
-                        <td>Menge</td>
+                        <td>{{ 'COMMON_CONTAINER_AMOUNT' | translate }}</td>
                         <td>{{leadChildData.lead.containerAmount}}</td>
                     </tr>
                     <tr>
-                        <td>Preis</td>
-                        <td>{{leadChildData.lead.container.priceNetto}}</td>
+                        <td>{{ 'COMMON_CONTAINER_SINGLE_PRICE' | translate }}</td>
+                        <td>{{leadChildData.lead.container.priceNetto | currency:'\u20AC'}}</td>
                     </tr>
                     <tr>
-                        <td>Lieferort</td>
+                        <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
+                        <td>{{leadChildData.lead.nettoPrice | currency:'\u20AC'}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</td>
                         <td>{{leadChildData.lead.destination}}</td>
                     </tr>
                 </table>
@@ -48,7 +52,7 @@
     <div class="col-lg-6">
         <div class="ibox">
             <div class="ibox-title">
-                <h3>Notiz</h3>
+                <h3>{{ 'COMMON_NOTE' | translate }}</h3>
             </div>
             <div class="ibox-content text-left">{{leadChildData.lead.message}}</div>
         </div>

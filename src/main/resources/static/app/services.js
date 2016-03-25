@@ -84,6 +84,7 @@ angular.module('app.services', ['ngResource'])
             getByStatus: {url: '/application/api/rest/processes/status/:status', method: 'GET', isArray: true},
             addProcess: {url: '/application/api/rest/processes', method: 'POST'},
             putProcess: {url: '/application/api/rest/processes/:id', method: 'PUT'},
+            deleteProcess: {url: '/application/api/rest/processes/:id', method: 'DELETE'},
             getProcessByLead: {url: '/application/api/rest/processes/leads', method: 'GET', isArray: true},
             getProcessByOffer: {url: '/application/api/rest/processes/offers', method: 'GET', isArray: true},
             getProcessBySale: {url: '/application/api/rest/processes/sales', method: 'GET', isArray: true},
