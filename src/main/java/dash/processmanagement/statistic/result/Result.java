@@ -1,6 +1,5 @@
 package dash.processmanagement.statistic.result;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Result {
@@ -9,15 +8,15 @@ public class Result {
     
     public Result (){}
     
-    public Result(ArrayList<Double> result){
+    public Result(List <Double> result){
 	this.result = result;
     }
 
-    public List<Double> getResult() {
+    public List <Double> getResult() {
         return result;
     }
 
-    public void setResult(List<Double> result) {
+    public void setResult(List <Double> result) {
         this.result = result;
     }
     

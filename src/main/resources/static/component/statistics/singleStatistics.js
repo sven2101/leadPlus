@@ -9,6 +9,21 @@ StatisticsCtrl.prototype.getProfit = function (profits) {
 		summe = summe + profits.result[profit];
 	}
 	this.profit = summe;
+
+	console.log(this.timeframe);
+
+    this.chartEntireStatisticArea.series.push({
+        name: 'Gewinn',
+        data: this.profit,
+        color: '#000000'
+    });
+	
+	/*
+	this.chartEntireStatisticArea.series[0].data.push({     	
+        data: this.profit,
+        color: '#1a7bb9'
+	});
+	*/
 	return summe;
 }
 
@@ -19,8 +34,18 @@ StatisticsCtrl.prototype.getTurnover = function (turnovers) {
 	}
 	this.turnover 					= summe;
 	this.efficiency 				= this.getEfficiency();
-    this.chartEntireStatisticArea 	= this.entireStatisticArea();
-	return summe;
+	
+    this.chartEntireStatisticArea.series.push({
+        name: 'Umsatz',
+        data: this.turnover,
+        color: '#1a7bb9'
+    });
+	
+	/*
+	this.chartEntireStatisticArea.series[0].data.push({     	
+       data: this.turnover,
+       color: '#000000'
+	});*/
 }
 
 StatisticsCtrl.prototype.getLeads = function (leads) {
@@ -28,9 +53,20 @@ StatisticsCtrl.prototype.getLeads = function (leads) {
 	for (var lead in leads.result) {
 		 summe += leads.result[lead];
 	}	
+	
 	this.leads = summe;
-	console.log("leads: ", this.leads);
-	return summe;
+	this.getSalesLeadsRatePercentage();
+	/*
+	this.chartSingleStatisticPie.series[0].data.push({     	
+         name: 'Anfragen',
+         y: this.leads,
+         color: '#ed5565'
+    });
+	this.chartEntireStatisticSpline.series[0].data.push({     	
+        name: 'Anfragen',
+        y: this.leads,
+        color: '#ed5565'
+	});*/
 }
 
 StatisticsCtrl.prototype.getOffers = function (offers) {
@@ -39,8 +75,17 @@ StatisticsCtrl.prototype.getOffers = function (offers) {
 		 summe += offers.result[offer];
 	}
 	this.offers = summe;
-	console.log("offers: ", this.offers);
-	return summe;
+	/*
+	this.chartSingleStatisticPie.series[0].data.push({     	
+        name: 'Angebote',
+        y: this.offers,
+        color: '#f8ac59'
+	});
+	this.chartEntireStatisticSpline.series[0].data.push({     	
+        name: 'Angebote',
+        y: this.offers,
+        color: '#f8ac59'
+	});*/
 }
 
 StatisticsCtrl.prototype.getSales = function (sales) {
@@ -49,14 +94,22 @@ StatisticsCtrl.prototype.getSales = function (sales) {
 		 summe += sales.result[sale];
 	}
 	this.sales 								= summe;
-	this.getSalesLeadsRatePercentage();
+	
 	this.getSalesOffersRatePercentage();
+	
 	this.profitPerSale 						= this.getProfitPerSale();
-	this.chartSingleStatisticPie			= this.getSharedItemsPieChart();
-	    
-    this.chartEntireStatisticSpline 		= this.entireStatisticSpline();
-    console.log("sales: ", this.sales);
-	return summe;
+	/*
+	this.chartSingleStatisticPie.series[0].data.push({     	
+        name: 'Verkäufe',
+        y: this.sales,
+        color: '#1a7bb9'
+	});
+	this.chartEntireStatisticSpline.series[0].data.push({     	
+        name: 'Verkäufe',
+        y: this.sales,
+        color: '#1a7bb9'
+	});
+	*/
 }
 
 StatisticsCtrl.prototype.getSalesLeadsRatePercentage = function () {
@@ -99,7 +152,7 @@ StatisticsCtrl.prototype.getProfitPerSale = function () {
         return 0;
 }
 
-StatisticsCtrl.prototype.getSharedItemsPieChart = function (leads) {
+StatisticsCtrl.prototype.getSharedItemsPieChart = function () {
     var chartConfig = {
         options: {
             chart: {
@@ -129,22 +182,11 @@ StatisticsCtrl.prototype.getSharedItemsPieChart = function (leads) {
             }
         },
         series: [{
-            name: 'Anteil',
-            colorByPoint: true,
-            data: [{
-                name: 'Anfragen',
-                y: leads,
-                color: '#ed5565'
-            }, {
-                name: 'Angebote',
-                y: this.offers,
-                color: '#f8ac59'
-            }, {
-                name: 'Verkäufe',
-                y: this.sales,
-                color: '#1a7bb9'
-            }]
-        }]
+                 name: 'Anteil',
+	             colorByPoint: true,
+	             data: []
+        }],
+        loading: false
     };
 
     return chartConfig;

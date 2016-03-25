@@ -9,7 +9,6 @@ StatisticsCtrl.prototype.entireStatisticSpline = function () {
                 shared: true,
                 valueSuffix: ''
             },
-            loading: false,
             xAxis: {
                 categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
             },
@@ -32,15 +31,15 @@ StatisticsCtrl.prototype.entireStatisticSpline = function () {
         },
         series: [{
             name: 'Anfragen',
-            data: this.leads,
+            data: [5, 7, 3, 8, 4, 7, 5,8,5,9,3,5],
             color: '#ed5565'
         }, {
             name: 'Angebote',
-            data: this.offers,
+            data: [5, 7, 3, 8, 4, 7, 5,8,5,9,3,5],
             color: '#f8ac59'
         }, {
             name: 'Verkäufe',
-            data: this.sales,
+            data: [5, 7, 3, 8, 4, 7, 5,8,5,9,3,5],
             color: '#1a7bb9'
         }],
         //function (optional)
@@ -61,12 +60,13 @@ StatisticsCtrl.prototype.entireStatisticArea = function () {
                 text: ''
             },
             xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                categories: [],
 
                 title: {
                     enabled: false
                 }
             },
+            loading: false,
             yAxis: {
                 title: {
                     text: 'Gewinn/Umsatz in €'
@@ -83,15 +83,7 @@ StatisticsCtrl.prototype.entireStatisticArea = function () {
             }
 
         },
-        series: [{
-            name: 'Umsatz',
-            data: this.turnover,
-            color: '#000000'
-        }, {
-            name: 'Gewinn',
-            data: this.profit,
-            color: '#1a7bb9'
-        }]
+        series: []
     };
     return chartConfig;
 }
