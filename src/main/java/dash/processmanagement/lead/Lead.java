@@ -21,15 +21,15 @@ public class Lead implements Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long 	id;
     
-    @OneToOne
-    @JoinColumn(name = "inquirer_fk")
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "inquirer_fk", nullable = true)
     private Inquirer 	inquirer;
-    
+
     @OneToOne
     @JoinColumn(name = "vendor_fk")
     private Vendor 	vendor;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "container_fk")
     private Container 	container;
     

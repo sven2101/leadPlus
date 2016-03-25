@@ -7,21 +7,45 @@ LeadsCtrl.prototype.loadCurrentIdToModal = function (id) {
 }
 
 LeadsCtrl.prototype.addComment = function (id, source) {
+    var vm = this;
     if (angular.isUndefined(this.comments[id])) {
         this.comments[id] = [];
     }
     if (source == 'table' && this.commentInput[id] != '' && !angular.isUndefined(this.commentInput[id])) {
-        this.comments[id].push({from: "Sven", comment: this.commentInput[id], date: new Date()});
-        this.commentInput[id] = '';
+        var comment = {
+            commentText: this.commentInput[id],
+            date: new Date(),
+            process: this.processes[id],
+            creator: this.user
+        };
+        this.processesService.addComment({id: id}, comment).$promise.then(function () {
+            vm.comments[id].push(comment);
+            vm.commentInput[id] = '';
+            vm.toaster.pop('success', 'Success', "Added new Comment!");
+        });
     }
     else if (source == 'modal' && this.commentModalInput[id] != '' && !angular.isUndefined(this.commentModalInput[id])) {
-        this.comments[id].push({from: "Sven", comment: this.commentModalInput[id], date: new Date()});
-        this.commentModalInput[id] = '';
+        var comment = {
+            commentText: this.commentModalInput[id],
+            date: new Date(),
+            process: this.processes[id],
+            creator: this.user
+        };
+        this.processesService.addComment({id: id}, comment).$promise.then(function () {
+            vm.comments[id].push(comment);
+            vm.commentModalInput[id] = '';
+            vm.toaster.pop('success', 'Success', "Added new Comment!");
+        });
     }
 };
 
 LeadsCtrl.prototype.saveLead = function () {
     var vm = this;
+    if (angular.isUndefined(this.newLead.inquirer)) {
+        this.newLead.inquirer = {
+            title: ''
+        }
+    }
     this.newLead.timestamp = this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm');
     this.newLead.vendor = {
         name: "***REMOVED***"
@@ -30,7 +54,7 @@ LeadsCtrl.prototype.saveLead = function () {
         lead: this.newLead,
         status: 'open'
     }
-    this.processes.addProcess(process).$promise.then(function () {
+    this.processesService.addProcess(process).$promise.then(function () {
         vm.toaster.pop('success', 'Success', "New Lead Saved");
         vm.refreshData();
     });
@@ -44,23 +68,45 @@ LeadsCtrl.prototype.clearNewLead = function () {
     }
 }
 
-LeadsCtrl.prototype.followUp = function (lead) {
+LeadsCtrl.prototype.followUp = function (process) {
     var vm = this;
-    this.processes.setStatus({id: lead.id}, 'offer').$promise.then(function () {
-        vm.toaster.pop('success', 'Success', "You have a new offer");
-        vm.refreshData();
+    var offer = {
+        container: {
+            name: process.lead.container.name,
+            description: process.lead.container.description,
+            priceNetto: process.lead.container.priceNetto
+        },
+        containerAmount: process.lead.containerAmount,
+        deliveryAddress: process.lead.destination,
+        price: (process.lead.containerAmount * process.lead.container.priceNetto),
+        prospect: {
+            company: process.lead.inquirer.company,
+            email: process.lead.inquirer.email,
+            firstname: process.lead.inquirer.firstname,
+            lastname: process.lead.inquirer.lastname,
+            phone: process.lead.inquirer.phone,
+            title: process.lead.inquirer.title
+        },
+        timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm'),
+        vendor: process.lead.vendor
+    }
+    this.processesService.addOffer({id: process.id}, offer).$promise.then(function () {
+        vm.processesService.setStatus({id: process.id}, 'offer').$promise.then(function () {
+            vm.toaster.pop('success', 'Success', "You have a new offer");
+            vm.refreshData();
+        });
     });
 }
 
-LeadsCtrl.prototype.closeOrOpenInquiry = function (lead) {
+LeadsCtrl.prototype.closeOrOpenInquiry = function (process) {
     var vm = this;
-    if (lead.status == "open") {
-        this.processes.setStatus({id: lead.id}, 'closed').$promise.then(function () {
+    if (process.status == "open") {
+        this.processesService.setStatus({id: process.id}, 'closed').$promise.then(function () {
             vm.toaster.pop('success', 'Success', "You have closed your lead");
             vm.refreshData();
         });
-    } else if (lead.status == "closed") {
-        this.processes.setStatus({id: lead.id}, 'open').$promise.then(function () {
+    } else if (process.status == "closed") {
+        this.processesService.setStatus({id: process.id}, 'open').$promise.then(function () {
             vm.toaster.pop('success', 'Success', "You have opened your lead");
             vm.refreshData();
         });
@@ -68,21 +114,23 @@ LeadsCtrl.prototype.closeOrOpenInquiry = function (lead) {
 }
 
 LeadsCtrl.prototype.loadDataToModal = function (lead) {
-    this.editLead = lead;
+    this.editProcess = lead;
 }
 
 LeadsCtrl.prototype.saveEditedRow = function () {
     var vm = this;
-    this.processes.putLead({id: this.editLead.lead.id}, this.editLead.lead).$promise.then(function () {
+    this.processesService.putLead({id: this.editProcess.lead.id}, this.editProcess.lead).$promise.then(function () {
         vm.toaster.pop('success', 'Success', "You have updated your lead");
         vm.refreshData();
     });
 }
 
-LeadsCtrl.prototype.deleteRow = function (lead) {
-    this.toaster.pop('success', 'Success', "Lead removed");
-    this.message = 'You are trying to remove the row: ' + JSON.stringify(lead);
-    // Delete some data and call server to make changes...
-    // Then reload the data so that DT is refreshed
-    this.dtInstance.reloadData();
+LeadsCtrl.prototype.deleteRow = function (process) {
+    var vm = this;
+    this.processesService.putProcess({id: process.id}, {lead: null}).$promise.then(function () {
+        vm.processesService.deleteLead({id: process.lead.id}).$promise.then(function () {
+            vm.toaster.pop('success', 'Success', "You have deleted your lead");
+            vm.refreshData();
+        });
+    });
 }
