@@ -17,7 +17,7 @@ function StatisticsCtrl(Leads, Offers, Sales, Profit, Turnover) {
     this.chartLeadsConversionRate   = this.getLeadsConversionRate();
     this.chartOffersConversionRate  = this.getOffersConversionRate();
    
-	this.profit 		= {}
+	this.profit 		= {};
     this.turnover 		= {};
     this.leads 			= {};
     this.offers 		= {};
@@ -64,7 +64,7 @@ function StatisticsCtrl(Leads, Offers, Sales, Profit, Turnover) {
 
 StatisticsCtrl.prototype.tabOnClick = function (tab) {
     this.currentTab = tab;
-}
+};
 
 StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
     var vm 											= this;
@@ -88,7 +88,7 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
     		break;
     	case 'week':
     		var oneWeekAgo = new Date();
-    		oneWeekAgo.setDate(oneWeekAgo.getDate() - 6)
+    		oneWeekAgo.setDate(oneWeekAgo.getDate() - 6);
     		while (oneWeekAgo <= currentDate){
     			this.timeframe.push(oneWeekAgo.getDate());
     			oneWeekAgo.setDate(oneWeekAgo.getDate() + 1);    			
@@ -97,7 +97,7 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
     		break;
     	case 'month':
     		var oneMonthAgo = new Date();
-    		oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
+    		oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
     		while (oneMonthAgo <= currentDate){
     			this.timeframe.push(oneMonthAgo.getDate());
@@ -106,7 +106,7 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
     		break;
     	case 'year':
     		var oneYearAgo = new Date();
-    		oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
+    		oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
 
     		while (oneYearAgo <= currentDate){
     			this.timeframe.push(oneYearAgo.toUTCString().split(' ')[2]);
@@ -236,5 +236,5 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
 	    default:
 	        console.log("Time Frame not found.");
     }	
-}
+};
 

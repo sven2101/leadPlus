@@ -11,9 +11,9 @@ import dash.processmanagement.statistic.result.Result;
 @Service
 public interface IStatisticService {
 
-    public <T> Result 	getDailyStatistic(RequestRepository<T, Long> leadRepository); 
-    public <T> Result 	getWeeklyStatistic(RequestRepository<T, Long> leadRepository);
-    public <T> Result 	getMonthlyStatistic(RequestRepository<T, Long> leadRepository);
-    public <T> Result 	getYearlyStatistic(RequestRepository<T, Long> leadRepository);
-    public <T> Result 	getAllStatistic(RequestRepository<T, Long> leadRepository); 
+    <T> Result 	getDailyStatistic(RequestRepository<T, Long> leadRepository);
+    <T> Result 	getWeeklyStatistic(RequestRepository<T, Long> leadRepository);
+    <T> Result 	getMonthlyStatistic(RequestRepository<T, Long> leadRepository);
+    <T> Result 	getYearlyStatistic(RequestRepository<T, Long> leadRepository);
+    <T> Result 	getAllStatistic(RequestRepository<T, Long> leadRepository);
 }

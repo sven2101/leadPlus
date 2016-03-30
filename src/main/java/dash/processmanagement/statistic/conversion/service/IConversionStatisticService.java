@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 @Service
 public interface IConversionStatisticService {
     
-    public <T> List<Double> 	getDailyConversionStatistic(); 
-    public <T> List<Double> 	getWeeklyConversionStatistic();
-    public <T> List<Double> 	getMonthlyConversionStatistic();
-    public <T> List<Double> 	getYearlyConversionStatistic();
-    public <T> List<Double> 	getAllConversionStatistic();
+    <T> List<Double> 	getDailyConversionStatistic();
+    <T> List<Double> 	getWeeklyConversionStatistic();
+    <T> List<Double> 	getMonthlyConversionStatistic();
+    <T> List<Double> 	getYearlyConversionStatistic();
+    <T> List<Double> 	getAllConversionStatistic();
 }

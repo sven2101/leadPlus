@@ -7,9 +7,9 @@ import dash.processmanagement.statistic.result.Result;
 @Service
 public interface IProfitStatisticService {
     
-    public <T> Result 	getDailyProfitStatistic(); 
-    public <T> Result 	getWeeklyProfitStatistic();
-    public <T> Result 	getMonthlyProfitStatistic();
-    public <T> Result 	getYearlyProfitStatistic();
-    public <T> Result 	getAllProfitStatistic();
+    <T> Result 	getDailyProfitStatistic();
+    <T> Result 	getWeeklyProfitStatistic();
+    <T> Result 	getMonthlyProfitStatistic();
+    <T> Result 	getYearlyProfitStatistic();
+    <T> Result 	getAllProfitStatistic();
 }

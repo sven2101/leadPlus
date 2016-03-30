@@ -38,7 +38,7 @@ public class TurnoverStatisticService implements ITurnoverStatisticService {
     
     public <T> Result getDailyTurnoverStatistic(){
 
-	final List<Sale> sales = (List<Sale>) repository.findByTimestamp(until);
+	final List<Sale> sales = repository.findByTimestamp(until);
 	
 	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
 
@@ -61,7 +61,7 @@ public class TurnoverStatisticService implements ITurnoverStatisticService {
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.DAY_OF_YEAR, -7);
 
-	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
+	final List<Sale> sales 		= repository.findByTimestampBetween(tmp, until);
 	
 	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
    
@@ -87,7 +87,7 @@ public class TurnoverStatisticService implements ITurnoverStatisticService {
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.MONTH, -1);
 	
-	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
+	final List<Sale> sales 		= repository.findByTimestampBetween(tmp, until);
 	
 	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
 	
@@ -112,7 +112,7 @@ public class TurnoverStatisticService implements ITurnoverStatisticService {
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.YEAR, -1);
 	
-	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
+	final List<Sale> sales 		= repository.findByTimestampBetween(tmp, until);
 	
 	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
 	
@@ -137,7 +137,7 @@ public class TurnoverStatisticService implements ITurnoverStatisticService {
 	Calendar tmp = Calendar.getInstance();
 	tmp.set(2014, 1, 1);
 	
-	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
+	final List<Sale> sales 		= repository.findByTimestampBetween(tmp, until);
 	
 	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
    

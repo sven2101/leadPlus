@@ -12,4 +12,5 @@ public interface RequestRepository <T, ID extends Serializable> extends CrudRepo
     
     List<T> findByTimestampBetween(Calendar from, Calendar until);
     List<T> findByTimestamp(Calendar until);
+    List<T> findTop10ByOrderByTimestampDesc();
 }

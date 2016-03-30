@@ -1,0 +1,106 @@
+<style>
+    .huge {
+        font-size: 2em;
+    }
+
+    .span-left-margin {
+        margin-left: 5%;
+    }
+
+    .span-right-margin {
+        margin-right: 5%;
+    }
+
+    .statisticDiv {
+        height: 80px;
+    }
+</style>
+<div class="row">
+    <div class="col-lg-4 col-md-6">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-comments fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{dashboard.salesAmount}}/{{dashboard.leadsAmount}}</div>
+                        <div>Ausbeute</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer statisticDiv">
+                <div class="row">
+                        <span class="pull-left span-left-margin">
+                             <label class="control-label">Anfragen </label>
+                        </span>
+                    <span class="pull-right badge span-right-margin">{{dashboard.leadsAmount}} </span>
+                </div>
+                <div class="row">
+                        <span class="pull-left span-left-margin">
+                             <label class="control-label">Angebote </label>
+                        </span>
+                    <span class="pull-right badge span-right-margin">{{dashboard.offersAmount}} </span>
+                </div>
+                <div class="row">
+                        <span class="pull-left span-left-margin">
+                             <label class="control-label">Sales </label>
+                        </span>
+                    <span class="pull-right badge span-right-margin">{{dashboard.salesAmount}} </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-usd fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{dashboard.profit | currency:'\u20AC'}}</div>
+                        <div>Gewinn</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer statisticDiv">
+                <div class="row">
+                        <span class="pull-left span-left-margin">
+                             <label class="control-label">Umsatz </label>
+                        </span>
+                    <span class="pull-right badge span-right-margin">{{dashboard.turnover | currency:'\u20AC'}} </span>
+                </div>
+                <div class="row">
+                        <span class="pull-left span-left-margin">
+                             <label class="control-label">Gewinn </label>
+                        </span>
+                    <span class="pull-right badge span-right-margin">{{dashboard.profit | currency:'\u20AC'}} </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-area-chart fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{dashboard.conversionRate}}%</div>
+                        <div>Conversionrate &nbsp;&nbsp;</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer statisticDiv">
+                <div class="row">
+                        <span class="pull-left span-left-margin">
+                             <label class="control-label">Conversionrate </label>
+                        </span>
+                    <span class="pull-right badge span-right-margin">{{dashboard.conversionRate}}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

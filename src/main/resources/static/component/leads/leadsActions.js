@@ -4,7 +4,7 @@
 
 LeadsCtrl.prototype.loadCurrentIdToModal = function (id) {
     this.currentCommentModalId = id;
-}
+};
 
 LeadsCtrl.prototype.addComment = function (id, source) {
     var vm = this;
@@ -44,21 +44,21 @@ LeadsCtrl.prototype.saveLead = function () {
             title: ''
         }
     }
-    this.newLead.timestamp = this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm');
+    this.newLead.timestamp = this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm.SSSZ');
     this.newLead.vendor = {
         name: "***REMOVED***"
     };
     var process = {
         lead: this.newLead,
         status: 'open'
-    }
+    };
     this.processesService.addProcess(process).$promise.then(function () {
         vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_ADD_LEAD'));
         vm.rootScope.leadsCount += 1;
         vm.addForm.$setPristine();
         vm.refreshData();
     });
-}
+};
 
 LeadsCtrl.prototype.clearNewLead = function () {
     this.newLead = {};
@@ -66,7 +66,7 @@ LeadsCtrl.prototype.clearNewLead = function () {
     this.newLead.container = {
         priceNetto: 0
     }
-}
+};
 
 LeadsCtrl.prototype.followUp = function (process) {
     var vm = this;
@@ -87,17 +87,18 @@ LeadsCtrl.prototype.followUp = function (process) {
             phone: process.lead.inquirer.phone,
             title: process.lead.inquirer.title
         },
-        timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm'),
+        timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm.SSSZ'),
         vendor: process.lead.vendor
-    }
+    };
     this.processesService.addOffer({id: process.id}, offer).$promise.then(function () {
         vm.processesService.setStatus({id: process.id}, 'offer').$promise.then(function () {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_NEW_OFFER'));
             vm.rootScope.leadsCount -= 1;
+            vm.rootScope.offersCount += 1;
             vm.refreshData();
         });
     });
-}
+};
 
 LeadsCtrl.prototype.closeOrOpenInquiry = function (process) {
     var vm = this;
@@ -114,11 +115,11 @@ LeadsCtrl.prototype.closeOrOpenInquiry = function (process) {
             vm.refreshData();
         });
     }
-}
+};
 
 LeadsCtrl.prototype.loadDataToModal = function (lead) {
     this.editProcess = lead;
-}
+};
 
 LeadsCtrl.prototype.saveEditedRow = function () {
     var vm = this;
@@ -127,7 +128,7 @@ LeadsCtrl.prototype.saveEditedRow = function () {
         vm.editForm.$setPristine();
         vm.refreshData();
     });
-}
+};
 
 LeadsCtrl.prototype.deleteRow = function (process) {
     var vm = this;
@@ -143,4 +144,4 @@ LeadsCtrl.prototype.deleteRow = function (process) {
             vm.refreshData();
         });
     });
-}
+};

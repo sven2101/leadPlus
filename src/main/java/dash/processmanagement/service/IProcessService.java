@@ -15,13 +15,13 @@ import dash.processmanagement.status.Status;
 @Service
 public interface IProcessService {
 
-    public List<?> getElementsByStatus(Status status, String kind);
-    public void createProcesses(List<Process>processes);
-    public void createProcess(Process process);
-    public void createLead(Long processId, Lead lead) throws ProcessNotFoundException;
-    public void createOffer(Long processId, Offer offer) throws ProcessNotFoundException;
-    public void createSale(Long processId, Sale sale) throws ProcessNotFoundException;
-    public void createComment(Long processId, Comment comment) throws Exception;
-    public void createProcessor(Long processId, String username) throws Exception;
-    public void updateStatus(Long processId, Status status) throws ProcessNotFoundException;
+    List<?> getElementsByStatus(Status status, String kind);
+    void createProcesses(List<Process> processes);
+    void createProcess(Process process);
+    void createLead(Long processId, Lead lead) throws ProcessNotFoundException;
+    void createOffer(Long processId, Offer offer) throws ProcessNotFoundException;
+    void createSale(Long processId, Sale sale) throws ProcessNotFoundException;
+    void createComment(Long processId, Comment comment) throws Exception;
+    void createProcessor(Long processId, String username) throws Exception;
+    void updateStatus(Long processId, Status status) throws ProcessNotFoundException;
 }

@@ -16,6 +16,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.util.List;
+
 /**
  * Created by Andreas on 08.03.2016.
  */
@@ -32,6 +34,13 @@ public class SaleResource {
     @ResponseStatus(HttpStatus.OK)
     public Sale getSaleById(@PathVariable Long id) {
         return saleRepository.findOne(id);
+    }
+
+    @ApiOperation(value = "Return a list of sales.", notes = "")
+    @RequestMapping(value ="/latestSales" ,method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public List<Sale> getLatestTenSales() {
+        return saleRepository.findTop10ByOrderByTimestampDesc();
     }
 
     @ApiOperation(value = "Update a single sale.", notes = "")

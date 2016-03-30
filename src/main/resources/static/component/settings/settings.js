@@ -25,11 +25,11 @@ SettingsCtrl.prototype.activateUser = function (user) {
 	}, function () {		
 		vm.toaster.pop('error', 'Error', "User nicht freigeschalten.");
 	}); 
-}
+};
 
 SettingsCtrl.prototype.deactivateUser = function (id) {
     this.filter('filter')(this.users, {id: id})[0].access = false;
-}
+};
 
 SettingsCtrl.prototype.saveRole = function (user) {
     
@@ -41,4 +41,4 @@ SettingsCtrl.prototype.saveRole = function (user) {
 	}, function () {		
 		vm.toaster.pop('error', 'Error', "Set User Role Unsuccessful.");
 	});
-}
+};

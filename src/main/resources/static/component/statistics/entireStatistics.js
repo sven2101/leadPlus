@@ -48,7 +48,7 @@ StatisticsCtrl.prototype.entireStatisticSpline = function () {
         }
     };
     return chartConfig;
-}
+};
 
 StatisticsCtrl.prototype.entireStatisticArea = function () {
     var chartConfig = {
@@ -86,7 +86,7 @@ StatisticsCtrl.prototype.entireStatisticArea = function () {
         series: []
     };
     return chartConfig;
-}
+};
 
 StatisticsCtrl.prototype.getLeadsConversionRate = function () {
     var chartConfig = {
@@ -136,7 +136,7 @@ StatisticsCtrl.prototype.getLeadsConversionRate = function () {
     };
 
     return chartConfig;
-}
+};
 
 
 StatisticsCtrl.prototype.getOffersConversionRate = function () {
@@ -187,4 +187,4 @@ StatisticsCtrl.prototype.getOffersConversionRate = function () {
     };
 
     return chartConfig;
-}
+};

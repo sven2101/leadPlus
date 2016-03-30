@@ -99,7 +99,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                     if (original) {
                         return original.apply(this, args);
                     } else {
-                        return;
+                        
                     }
 
                 };

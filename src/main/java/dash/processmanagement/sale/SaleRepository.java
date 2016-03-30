@@ -11,5 +11,4 @@ import javax.transaction.Transactional;
 @Repository
 @Transactional
 public interface SaleRepository extends RequestRepository <Sale, Long>{
-
 }

@@ -7,5 +7,5 @@ import dash.processmanagement.sale.Sale;
 @Service
 public interface ISaleService {
     
-    public void createSale(Sale sale);
+    void createSale(Sale sale);
 }

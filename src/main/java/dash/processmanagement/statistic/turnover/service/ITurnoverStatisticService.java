@@ -7,9 +7,9 @@ import dash.processmanagement.statistic.result.Result;
 @Service
 public interface ITurnoverStatisticService {
     
-    public <T> Result 	getDailyTurnoverStatistic(); 
-    public <T> Result 	getWeeklyTurnoverStatistic();
-    public <T> Result 	getMonthlyTurnoverStatistic();
-    public <T> Result 	getYearlyTurnoverStatistic();
-    public <T> Result 	getAllTurnoverStatistic();
+    <T> Result 	getDailyTurnoverStatistic();
+    <T> Result 	getWeeklyTurnoverStatistic();
+    <T> Result 	getMonthlyTurnoverStatistic();
+    <T> Result 	getYearlyTurnoverStatistic();
+    <T> Result 	getAllTurnoverStatistic();
 }

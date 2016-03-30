@@ -1,0 +1,93 @@
+<style>
+    .not-sortable {
+        opacity: 0.75;
+        cursor: default !important;
+    }
+</style>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Manage Leads</h5>
+            </div>
+            <div class="ibox-content">
+                <div class="row" style="margin: 0px; margin-bottom: 10px;">
+                    <span class="pull-left small"><i class="fa fa-hand-o-up"></i> Drag task between list</span>
+                    <span class="pull-right">  <button ng-click="dashboard.refreshData()" type="button"
+                                                       class="btn btn-success">
+                        <i class="fa fa-refresh"></i>&nbsp;Reload data
+                    </button></span>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <h3>Open leads</h3>
+                                <ul ui-sortable="dashboard.sortableOptions"
+                                    class="sortable-list connectList agile-list" id="lead"
+                                    ng-model="dashboard.openLead">
+                                    <li class="danger-element"
+                                        ng-repeat="process in dashboard.openLead | orderBy:'process.lead.timestamp'">
+                                        {{process.lead.containerAmount}}x {{process.lead.container.name}}
+                                        <div class="agile-detail">
+                                            <a ng-click="dashboard.saveDataToModal(process)"
+                                               class="pull-right btn btn-xs btn-white"
+                                               data-toggle="modal" data-target="#infoModal">Info</a>
+                                            <a href="#/leads" class="pull-right btn btn-xs btn-white">Go To</a>
+                                            <i class="fa fa-clock-o"></i>{{process.lead.timestamp}}
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <h3>Open Offers</h3>
+                                <ul ui-sortable="dashboard.sortableOptions"
+                                    class="sortable-list connectList agile-list" id="offer"
+                                    ng-model="dashboard.openOffer">
+                                    <li class="warning-element"
+                                        ng-repeat="process in dashboard.openOffer | orderBy:'process.offer.timestamp'">
+                                        {{process.offer.containerAmount}}x {{process.offer.container.name}}
+                                        <div class="agile-detail">
+                                            <a ng-click="dashboard.saveDataToModal(offer)"
+                                               class="pull-right btn btn-xs btn-white"
+                                               data-toggle="modal" data-target="#infoModal">Info</a>
+                                            <a href="#/offers" class="pull-right btn btn-xs btn-white">Go To</a>
+                                            <i class="fa fa-clock-o"></i> {{process.offer.timestamp}}
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="ibox">
+                            <div class="ibox-content">
+                                <h3>Latest sales</h3>
+                                <ul ui-sortable="dashboard.sortableOptions"
+                                    class="sortable-list connectList agile-list" id="sale"
+                                    ng-model="dashboard.sales">
+                                    <li class="info-element not-sortable"
+                                        ng-repeat="process in dashboard.sales | orderBy:'process.sale.timestamp'">
+                                        {{process.sale.containerAmount}}x {{process.sale.container.name}}
+                                        <div class="agile-detail">
+                                            <a ng-click="dashboard.saveDataToModal(sale)"
+                                               class="pull-right btn btn-xs btn-white"
+                                               data-toggle="modal" data-target="#infoModal">Info</a>
+                                            <a href="#/sales" class="pull-right btn btn-xs btn-white">Go To</a>
+                                            <i class="fa fa-clock-o"></i> {{process.sale.timestamp}}
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-include="'component/dashboard/infoModal.html'"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

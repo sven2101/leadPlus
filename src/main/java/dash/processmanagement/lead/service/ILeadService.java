@@ -7,5 +7,5 @@ import dash.processmanagement.lead.Lead;
 @Service
 public interface ILeadService {
 
-    public void createLead(Lead lead);
+    void createLead(Lead lead);
 }

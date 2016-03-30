@@ -21,7 +21,7 @@ public class PasswordChange {
 
     public void setOldPassword(String oldPassword) {
         this.oldPassword = oldPassword;
-    };
-    
-    
+    }
+
+
 }

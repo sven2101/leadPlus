@@ -25,7 +25,7 @@ StatisticsCtrl.prototype.getProfit = function (profits) {
 	});
 	*/
 	return summe;
-}
+};
 
 StatisticsCtrl.prototype.getTurnover = function (turnovers) {
 	var summe = 0;
@@ -46,7 +46,7 @@ StatisticsCtrl.prototype.getTurnover = function (turnovers) {
        data: this.turnover,
        color: '#000000'
 	});*/
-}
+};
 
 StatisticsCtrl.prototype.getLeads = function (leads) {
 	var summe = 0;
@@ -67,7 +67,7 @@ StatisticsCtrl.prototype.getLeads = function (leads) {
         y: this.leads,
         color: '#ed5565'
 	});*/
-}
+};
 
 StatisticsCtrl.prototype.getOffers = function (offers) {
 	var summe = 0;
@@ -86,7 +86,7 @@ StatisticsCtrl.prototype.getOffers = function (offers) {
         y: this.offers,
         color: '#f8ac59'
 	});*/
-}
+};
 
 StatisticsCtrl.prototype.getSales = function (sales) {
 	var summe = 0;
@@ -110,7 +110,7 @@ StatisticsCtrl.prototype.getSales = function (sales) {
         color: '#1a7bb9'
 	});
 	*/
-}
+};
 
 StatisticsCtrl.prototype.getSalesLeadsRatePercentage = function () {
     if (this.leads != 0) {
@@ -118,7 +118,7 @@ StatisticsCtrl.prototype.getSalesLeadsRatePercentage = function () {
     }
     else
         return 0;
-}
+};
 
 StatisticsCtrl.prototype.getSalesOffersRatePercentage = function () {
     if (this.offers != 0) {
@@ -126,7 +126,7 @@ StatisticsCtrl.prototype.getSalesOffersRatePercentage = function () {
     }
     else
         return 0;
-}
+};
 
 StatisticsCtrl.prototype.getEfficiency = function () {
     if (this.turnover != 0) {
@@ -134,7 +134,7 @@ StatisticsCtrl.prototype.getEfficiency = function () {
     }
     else
         return 0;
-}
+};
 
 StatisticsCtrl.prototype.getConversionrate = function () {
     if (this.leads != 0) {
@@ -142,7 +142,7 @@ StatisticsCtrl.prototype.getConversionrate = function () {
     }
     else
         return 0;
-}
+};
 
 StatisticsCtrl.prototype.getProfitPerSale = function () {
     if (this.sales != 0) {
@@ -150,7 +150,7 @@ StatisticsCtrl.prototype.getProfitPerSale = function () {
     }
     else
         return 0;
-}
+};
 
 StatisticsCtrl.prototype.getSharedItemsPieChart = function () {
     var chartConfig = {
@@ -190,4 +190,4 @@ StatisticsCtrl.prototype.getSharedItemsPieChart = function () {
     };
 
     return chartConfig;
-}
+};

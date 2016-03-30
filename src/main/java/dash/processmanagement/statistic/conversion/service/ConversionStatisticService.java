@@ -41,7 +41,7 @@ public class ConversionStatisticService implements IConversionStatisticService {
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.DAY_OF_MONTH, -1);
 	
-	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
+	final List<Sale> sales 		= repository.findByTimestampBetween(tmp, until);
 	    
 	while(ymdC.compare(tmp, until) <= 0){
 	    countOfSaleInDate.put(tmp.get(Calendar.YEAR)+""+tmp.get(Calendar.MONTH)+""+tmp.get(Calendar.DAY_OF_MONTH), 0.00);
@@ -64,7 +64,7 @@ public class ConversionStatisticService implements IConversionStatisticService {
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.DAY_OF_MONTH, -8);
 
-	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
+	final List<Sale> sales 		= repository.findByTimestampBetween(tmp, until);
 	    
 	while(ymdC.compare(tmp, until) <= 0){
 	    countOfSaleInDate.put(tmp.get(Calendar.YEAR)+""+tmp.get(Calendar.MONTH)+""+tmp.get(Calendar.DAY_OF_MONTH), 0.00);
@@ -87,7 +87,7 @@ public class ConversionStatisticService implements IConversionStatisticService {
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.MONTH, -1);
 	
-	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
+	final List<Sale> sales 		= repository.findByTimestampBetween(tmp, until);
 	    
 	while(ymC.compare(tmp, until) <= 0){
 	    countOfSaleInDate.put(tmp.get(Calendar.YEAR)+""+tmp.get(Calendar.MONTH), 0.00);
@@ -110,7 +110,7 @@ public class ConversionStatisticService implements IConversionStatisticService {
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.YEAR, -1);
 	
-	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
+	final List<Sale> sales 		= repository.findByTimestampBetween(tmp, until);
 	    
 	while(yC.compare(tmp, until) <= 0){
 	    countOfSaleInDate.put(tmp.get(Calendar.YEAR)+"", 0.00);
@@ -133,7 +133,7 @@ public class ConversionStatisticService implements IConversionStatisticService {
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.YEAR, -1);
 
-	final List<Sale> sales 		= (List<Sale>) repository.findByTimestampBetween(tmp, until);
+	final List<Sale> sales 		= repository.findByTimestampBetween(tmp, until);
 	    
 	while(yC.compare(tmp, until) <= 0){
 	    countOfSaleInDate.put(tmp.get(Calendar.YEAR)+""+tmp.get(Calendar.MONTH)+""+tmp.get(Calendar.DAY_OF_MONTH), 0.00);

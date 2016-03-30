@@ -2,11 +2,11 @@
 
 angular.module('app.dashboard', ['ngResource']).controller('DashboardCtrl', DashboardCtrl);
 
-DashboardCtrl.$inject = ['toaster'];
+DashboardCtrl.$inject = ['toaster', 'Processes'];
 
-function DashboardCtrl(toaster) {
+function DashboardCtrl(toaster, Processes) {
 
-	var vm = this;
+    var vm = this;
     this.toaster = toaster;
     this.commentModalInput = '';
     this.comments = {};
@@ -17,38 +17,15 @@ function DashboardCtrl(toaster) {
     this.turnover = 6340000;
     this.conversionRate = 12;
     this.infoData = {};
-    this.openLead = [{
-        id:'7',
-        name: 'lead1',
-        locked: false
-    },
-        {
-            id:'8',
-            name: 'lead2',
-            locked: false
-        }];
-    this.openOffer = [{
-        id:'' +
-        '9',
-        name: 'offer1',
-        locked: false
-    },
-        {
-            id:'10',
-            name: 'offer2',
-            locked: false
-        }];
-    this.sales = [{
-        id:'11',
-        name: 'sale1',
-        locked: true
-    },
-        {
-            id:'12',
-            name: 'sale2',
-            locked: true
-        }];
-
+    Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
+        vm.openLead = result;
+    });
+    Processes.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
+        vm.openOffer = result;
+    });
+    Processes.getProcessBySaleAndStatus({status: 'sale'}).$promise.then(function (result) {
+        vm.sales = result;
+    });
     this.sortableOptions = {
         update: function (e, ui) {
             var target = ui.item.sortable.droptargetModel;
@@ -61,20 +38,12 @@ function DashboardCtrl(toaster) {
             var target = ui.item.sortable.droptargetModel;
             var source = ui.item.sortable.sourceModel;
             var item = ui.item.sortable.model;
-            if (vm.sales == target && vm.openLead == source) {
-                item.locked = true;
-                vm.addLeadToSale(item);
-            } else if (vm.sales == target && vm.openOffer == source) {
-                item.locked = true;
+            if (vm.sales == target && vm.openOffer == source) {
                 vm.addOfferToSale(item);
             }
             else if (vm.openOffer == target && vm.openLead == source) {
                 vm.addLeadToOffer(item);
             }
-            else {
-                vm.toaster.pop('error', item.name, "Invalid action. Don't move inside or back!");
-            }
-
         },
         connectWith: ".connectList",
         items: "li:not(.not-sortable)"
@@ -96,32 +65,32 @@ DashboardCtrl.prototype.saveDataToModal = function (data) {
 };
 DashboardCtrl.prototype.refreshData = function () {
     this.openLead = [{
-        id:'1',
+        id: '1',
         name: 'lead3',
         locked: false
     },
         {
-            id:'2',
+            id: '2',
             name: 'lead4',
             locked: false
         }];
     this.openOffer = [{
-        id:'3',
+        id: '3',
         name: 'offer5',
         locked: false
     },
         {
-            id:'4',
+            id: '4',
             name: 'offer6',
             locked: false
         }];
     this.sales = [{
-        id:'5',
+        id: '5',
         name: 'sale7',
         locked: true
     },
         {
-            id:'5',
+            id: '5',
             name: 'sale8',
             locked: true
         }];
@@ -129,7 +98,7 @@ DashboardCtrl.prototype.refreshData = function () {
 
 DashboardCtrl.prototype.addComment = function (id) {
     if (this.commentModalInput != '' && !angular.isUndefined(this.commentModalInput)) {
-        if(angular.isUndefined(this.comments[id])){
+        if (angular.isUndefined(this.comments[id])) {
             this.comments[id] = [];
         }
         this.comments[id].push({from: "Sven", comment: this.commentModalInput, date: new Date()});
