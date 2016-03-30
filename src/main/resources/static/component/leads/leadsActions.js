@@ -44,7 +44,7 @@ LeadsCtrl.prototype.saveLead = function () {
             title: ''
         }
     }
-    this.newLead.timestamp = this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm.SSSZ');
+    this.newLead.timestamp = this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm');
     this.newLead.vendor = {
         name: "***REMOVED***"
     };
@@ -87,7 +87,7 @@ LeadsCtrl.prototype.followUp = function (process) {
             phone: process.lead.inquirer.phone,
             title: process.lead.inquirer.title
         },
-        timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm.SSSZ'),
+        timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm'),
         vendor: process.lead.vendor
     };
     this.processesService.addOffer({id: process.id}, offer).$promise.then(function () {

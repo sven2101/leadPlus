@@ -2,18 +2,11 @@ package dash.processmanagement.sale;
 
 import java.util.Calendar;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import dash.processmanagement.lead.container.Container;
 import dash.processmanagement.request.Request;
 import dash.processmanagement.sale.customer.Customer;
 
@@ -25,83 +18,96 @@ public class Sale implements Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long 	id;
-    
+    private long id;
+
     @OneToOne
-    @JoinColumn(name = "customer_fk", nullable=true)
-    private Customer	customer;
-    
-    private int 	containerAmount;
-    private String 	transport;
-    private double 	saleReturn;
-    private double 	saleProfit;
-    
-    @Column(nullable=true)
+    @JoinColumn(name = "customer_fk", nullable = true)
+    private Customer customer;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "container_fk")
+    private Container container;
+
+    private int containerAmount;
+    private String transport;
+    private double saleReturn;
+    private double saleProfit;
+
+    @Column(nullable=true,columnDefinition = "timestamptz")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy")
-    private Calendar 	timestamp;
-    
-    public Sale (){
-    	
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
+    private Calendar timestamp;
+
+    public Sale() {
+
     }
-    
-    public Sale (int containerAmount, String transport, double saleReturn, double saleProfit, Calendar timestamp){
-    	this.containerAmount 	= containerAmount;
-    	this.transport		= transport;
-    	this.saleReturn		= saleReturn;
-    	this.saleProfit		= saleProfit;
-    	this.timestamp		= timestamp;
+
+    public Sale(int containerAmount, String transport, Container container, double saleReturn, double saleProfit, Calendar timestamp) {
+        this.containerAmount = containerAmount;
+        this.transport = transport;
+        this.container = container;
+        this.saleReturn = saleReturn;
+        this.saleProfit = saleProfit;
+        this.timestamp = timestamp;
     }
-    
-    public long getId(){
-	return this.id;
+
+    public long getId() {
+        return this.id;
     }
-    
+
     public int getContainerAmount() {
-	return containerAmount;
+        return containerAmount;
     }
 
     public void setContainerAmount(int containerAmount) {
-	this.containerAmount = containerAmount;
+        this.containerAmount = containerAmount;
     }
 
     public String getTransport() {
-	return transport;
+        return transport;
     }
 
     public void setTransport(String transport) {
-	this.transport = transport;
+        this.transport = transport;
     }
 
     public double getSaleReturn() {
-	return saleReturn;
+        return saleReturn;
     }
 
     public void setSaleReturn(double saleReturn) {
-	this.saleReturn = saleReturn;
+        this.saleReturn = saleReturn;
     }
 
     public double getSaleProfit() {
-	return saleProfit;
+        return saleProfit;
     }
 
     public void setSaleProfit(double saleProfit) {
-	this.saleProfit = saleProfit;
+        this.saleProfit = saleProfit;
     }
 
     public Calendar getTimestamp() {
-	return timestamp;
+        return timestamp;
     }
 
     public void setTimestamp(Calendar timestamp) {
-	this.timestamp = timestamp;
+        this.timestamp = timestamp;
     }
-    
+
     public Customer getCustomer() {
-   	return customer;
+        return customer;
     }
 
     public void setCustomer(Customer customer) {
-   	this.customer = customer;
+        this.customer = customer;
+    }
+
+    public Container getContainer() {
+        return this.container;
+    }
+
+    public void setContainer(Container container) {
+        this.container = container;
     }
 }

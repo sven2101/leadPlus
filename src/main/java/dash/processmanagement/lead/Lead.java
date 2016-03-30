@@ -36,7 +36,7 @@ public class Lead implements Request {
     private int 	containerAmount;
     private String 	destination;
     
-    @Column(nullable=true)
+    @Column(nullable=true,columnDefinition = "timestamptz")
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy HH:mm")
     private Calendar  	timestamp;

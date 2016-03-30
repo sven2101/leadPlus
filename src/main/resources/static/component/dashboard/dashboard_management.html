@@ -27,7 +27,7 @@
                                     class="sortable-list connectList agile-list" id="lead"
                                     ng-model="dashboard.openLead">
                                     <li class="danger-element"
-                                        ng-repeat="process in dashboard.openLead | orderBy:'process.lead.timestamp'">
+                                        ng-repeat="process in dashboard.openLead">
                                         {{process.lead.containerAmount}}x {{process.lead.container.name}}
                                         <div class="agile-detail">
                                             <a ng-click="dashboard.saveDataToModal(process)"
@@ -49,10 +49,10 @@
                                     class="sortable-list connectList agile-list" id="offer"
                                     ng-model="dashboard.openOffer">
                                     <li class="warning-element"
-                                        ng-repeat="process in dashboard.openOffer | orderBy:'process.offer.timestamp'">
+                                        ng-repeat="process in dashboard.openOffer">
                                         {{process.offer.containerAmount}}x {{process.offer.container.name}}
                                         <div class="agile-detail">
-                                            <a ng-click="dashboard.saveDataToModal(offer)"
+                                            <a ng-click="dashboard.saveDataToModal(process)"
                                                class="pull-right btn btn-xs btn-white"
                                                data-toggle="modal" data-target="#infoModal">Info</a>
                                             <a href="#/offers" class="pull-right btn btn-xs btn-white">Go To</a>
@@ -71,10 +71,10 @@
                                     class="sortable-list connectList agile-list" id="sale"
                                     ng-model="dashboard.sales">
                                     <li class="info-element not-sortable"
-                                        ng-repeat="process in dashboard.sales | orderBy:'process.sale.timestamp'">
+                                        ng-repeat="process in dashboard.sales">
                                         {{process.sale.containerAmount}}x {{process.sale.container.name}}
                                         <div class="agile-detail">
-                                            <a ng-click="dashboard.saveDataToModal(sale)"
+                                            <a ng-click="dashboard.saveDataToModal(process)"
                                                class="pull-right btn btn-xs btn-white"
                                                data-toggle="modal" data-target="#infoModal">Info</a>
                                             <a href="#/sales" class="pull-right btn btn-xs btn-white">Go To</a>

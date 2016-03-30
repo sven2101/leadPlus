@@ -23,8 +23,8 @@ public class Comment {
 	private Process 	process;
 	
 	private String 		commentText;
-	
-	@Column(nullable=false)
+
+	@Column(nullable=false,columnDefinition = "timestamptz")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar 	timestamp;
 	

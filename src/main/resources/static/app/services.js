@@ -106,15 +106,6 @@ angular.module('app.services', ['ngResource'])
 
         });
     }])
-    .service('Leads', ['$resource', function ($resource) {
-        return $resource('/application/api/rest/processes/leads/:id', {}, {});
-    }])
-    .service('Offers', ['$resource', function ($resource) {
-        return $resource('/application/api/rest/processes/offers/:id', null, {});
-    }])
-    .service('Sales', ['$resource', function ($resource) {
-        return $resource('/application/api/rest/processes/sales/:id', null, {});
-    }])
     .service('Profile', ['$resource', function ($resource) {
         return $resource('/application/users/:username', {}, {
             update: {url: '/application/users/:username/update', method: 'PUT'},
@@ -172,6 +163,9 @@ angular.module('app.services', ['ngResource'])
             week: {url: '/application/api/rest/processes/statistics/sales/week', method: 'GET'},
             month: {url: '/application/api/rest/processes/statistics/sales/month', method: 'GET'},
             year: {url: '/application/api/rest/processes/statistics/sales/year', method: 'GET'},
-            all: {url: '/application/api/rest/processes/statistics/sales/all', method: 'GET'}
+            all: {url: '/application/api/rest/processes/statistics/sales/all', method: 'GET'},
+            getLatestSales: {
+                url: '/application/api/rest/processes/sales/latestSales', method: 'GET', isArray: true
+            }
         });
     }]);
