@@ -123,6 +123,7 @@ angular.module('app').controller('appCtrl', function ($translate, $scope, $rootS
         $rootScope.leadsCount = 0;
         $rootScope.offersCount = 0;
 
+
         if (!angular.isUndefined($rootScope.globals.currentUser)) {
             Profile.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
                 $rootScope.changeLanguage(result.language);

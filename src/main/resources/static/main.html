@@ -40,7 +40,7 @@
             <li>
                 <a href="#/statistic"><i class="fa fa-line-chart"></i> <span class="nav-label">{{ 'STATISTIC_MENU' | translate }}</span></a>
             </li>
-            <li>
+            <li ng-if="globals.currentUser.role == 'admin'">
                 <a href="#/settings"><i class="fa fa-cogs"></i> <span class="nav-label">{{ 'SETTINGS_MENU' | translate }}</span></a>
             </li>
         </ul>

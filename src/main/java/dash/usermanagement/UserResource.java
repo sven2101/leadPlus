@@ -81,10 +81,10 @@ public class UserResource {
     
     @RequestMapping(value="/{username}/activate", method=RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public void activeUser(@PathVariable String username) throws UsernameNotFoundException {
+    public void activeUser(@PathVariable String username,@RequestBody Boolean activate) throws UsernameNotFoundException {
         final User User = userRepository.findByUsername(username);
         if(Optional.fromNullable(User).isPresent()){
-            User.setEnabled(true);
+            User.setEnabled(activate);
             userRepository.save(User);
         } else {
             throw new UsernameNotFoundException("User not found.");

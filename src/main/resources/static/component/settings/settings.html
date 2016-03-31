@@ -51,8 +51,8 @@
                                 </button>
                             </td>
                             <td ng-if="user.enabled==true">
-                                <button ng-click="setting.deactivateUser(user.id)" type="button"
-                                        class="btn btn-success">
+                                <button ng-click="setting.deactivateUser(user)" type="button"
+                                        class="btn btn-success" ng-disabled="setting.hasRight(user)">
                                     <i class="fa fa-ban"></i>&nbsp;Deaktivieren
                                 </button>
                             </td>
@@ -83,14 +83,14 @@
                         <tr ng-model="setting.user" ng-repeat="user in setting.users | orderBy:'username'">
                             <td>{{$index+1}}</td>
                             <td>{{user.email}}</td>
-                            <td><select ng-model="user.role">
-                                <option value="user">User</option>
-                                <option value="admin">Admin</option>
-                                <option value="superadmin">Superadmin</option>
+                            <td><select ng-model="setting.roleSelection[user.id]">
+                                <option ng-if="globals.currentUser.role == 'admin'" value="user">User</option>
+                                <option ng-if="globals.currentUser.role == 'admin'" value="admin">Admin</option>
+                                <option ng-if="globals.currentUser.role == 'superadmin'" value="superadmin">Superadmin</option>
                             </select></td>
                             <td>
                                 <button ng-click="setting.saveRole(user)" type="button"
-                                        class="btn btn-success">
+                                        class="btn btn-success" ng-disabled="setting.hasRight(user)">
                                     <i class="fa fa-save"></i>&nbsp;Save
                                 </button>
                             </td>
