@@ -2,9 +2,9 @@
 
 angular.module('app.dashboard', ['ngResource']).controller('DashboardCtrl', DashboardCtrl);
 
-DashboardCtrl.$inject = ['toaster', 'Processes', 'Sales', '$filter', '$translate', '$rootScope', '$scope', 'orderByFilter'];
+DashboardCtrl.$inject = ['toaster', 'Processes', '$filter', '$translate', '$rootScope', 'orderByFilter', '$scope', '$interval', 'Profile'];
 
-function DashboardCtrl(toaster, Processes, Sales, $filter, $translate, $rootScope, $scope, orderByFilter) {
+function DashboardCtrl(toaster, Processes, $filter, $translate, $rootScope, orderByFilter, $scope, $interval, Profile) {
 
     var vm = this;
     this.toaster = toaster;
@@ -22,14 +22,22 @@ function DashboardCtrl(toaster, Processes, Sales, $filter, $translate, $rootScop
     this.turnover = 6340000;
     this.conversionRate = 12;
     this.infoData = {};
+    this.infoType = '';
+    this.infoProcess = {};
+    this.infoComments = [];
     Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
         vm.openLead = orderByFilter(result, ['-lead.timestamp']);
     });
     Processes.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
         vm.openOffer = orderByFilter(result, ['-offer.timestamp']);
     });
-    Sales.getLatestSales().$promise.then(function (result) {
+    Processes.getLatestSales().$promise.then(function (result) {
         vm.sales = result;
+    });
+
+    this.user = {};
+    Profile.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
+        vm.user = result;
     });
 
     this.sortableOptions = {
@@ -56,6 +64,17 @@ function DashboardCtrl(toaster, Processes, Sales, $filter, $translate, $rootScop
         connectWith: ".connectList",
         items: "li:not(.not-sortable)"
     };
+
+    var stop;
+    $scope.$on('$destroy', function () {
+        if (angular.isDefined(stop)) {
+            $interval.cancel(stop);
+            stop = undefined;
+        }
+    });
+    stop = $interval(function () {
+        vm.refreshData();
+    }.bind(this), 200000);
 }
 
 DashboardCtrl.prototype.addLeadToOffer = function (process) {
@@ -68,7 +87,7 @@ DashboardCtrl.prototype.addLeadToOffer = function (process) {
         },
         containerAmount: process.lead.containerAmount,
         deliveryAddress: process.lead.destination,
-        price: (process.lead.containerAmount * process.lead.container.priceNetto),
+        offerPrice: (process.lead.containerAmount * process.lead.container.priceNetto),
         prospect: {
             company: process.lead.inquirer.company,
             email: process.lead.inquirer.email,
@@ -90,53 +109,86 @@ DashboardCtrl.prototype.addLeadToOffer = function (process) {
         });
     });
 };
-DashboardCtrl.prototype.addOfferToSale = function (item) {
-    this.toaster.pop('success', item.name, "You have a new Offer!");
+DashboardCtrl.prototype.addOfferToSale = function (process) {
+    var vm = this;
+    var sale = {
+        container: {
+            name: process.offer.container.name,
+            description: process.offer.container.description,
+            priceNetto: process.offer.container.priceNetto
+        },
+        containerAmount: process.offer.containerAmount,
+        transport: process.offer.deliveryAddress,
+        customer: {
+            company: process.offer.prospect.company,
+            email: process.offer.prospect.email,
+            firstname: process.offer.prospect.firstname,
+            lastname: process.offer.prospect.lastname,
+            phone: process.offer.prospect.phone,
+            title: process.offer.prospect.title
+        },
+        saleProfit: 0,
+        saleReturn: process.offer.offerPrice,
+        timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm'),
+        vendor: process.offer.vendor
+    };
+    this.processesService.addSale({id: process.id}, sale).$promise.then(function () {
+        vm.processesService.setStatus({id: process.id}, 'sale').$promise.then(function () {
+            vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_NEW_SALE'));
+            vm.rootScope.offersCount -= 1;
+            process.sale = sale;
+            vm.sales = vm.orderByFilter(vm.sales, ['-sale.timestamp']);
+        });
+    });
 };
 
-DashboardCtrl.prototype.saveDataToModal = function (data) {
-    this.infoData = data;
+DashboardCtrl.prototype.saveDataToModal = function (info, type, process) {
+    this.infoData = info;
+    this.infoType = type;
+    this.infoProcess = process;
+    var vm = this;
+    this.processesService.getComments({id: process.id}).$promise.then(function (result) {
+        vm.infoComments = [];
+        for (var comment in result) {
+            if (comment == '$promise')
+                break;
+            vm.infoComments.push({
+                commentText: result[comment].commentText,
+                date: result[comment].date,
+                creator: result[comment].creator
+            });
+        }
+    });
 };
 DashboardCtrl.prototype.refreshData = function () {
-    this.openLead = [{
-        id: '1',
-        name: 'lead3',
-        locked: false
-    },
-        {
-            id: '2',
-            name: 'lead4',
-            locked: false
-        }];
-    this.openOffer = [{
-        id: '3',
-        name: 'offer5',
-        locked: false
-    },
-        {
-            id: '4',
-            name: 'offer6',
-            locked: false
-        }];
-    this.sales = [{
-        id: '5',
-        name: 'sale7',
-        locked: true
-    },
-        {
-            id: '5',
-            name: 'sale8',
-            locked: true
-        }];
+    var vm = this;
+    this.processesService.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
+        vm.openLead = vm.orderByFilter(result, ['-lead.timestamp']);
+    });
+    this.processesService.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
+        vm.openOffer = vm.orderByFilter(result, ['-offer.timestamp']);
+    });
+    this.processesService.getLatestSales().$promise.then(function (result) {
+        vm.sales = result;
+    });
 };
 
-DashboardCtrl.prototype.addComment = function (id) {
+DashboardCtrl.prototype.addComment = function (process) {
+    var vm = this;
+    if (angular.isUndefined(this.infoComments)) {
+        this.infoComments = [];
+    }
     if (this.commentModalInput != '' && !angular.isUndefined(this.commentModalInput)) {
-        if (angular.isUndefined(this.comments[id])) {
-            this.comments[id] = [];
-        }
-        this.comments[id].push({from: "Sven", comment: this.commentModalInput, date: new Date()});
-        this.commentModalInput = '';
+        var comment = {
+            commentText: this.commentModalInput,
+            date: new Date(),
+            process: process,
+            creator: this.user
+        };
+        this.processesService.addComment({id: process.id}, comment).$promise.then(function () {
+            vm.infoComments.push(comment);
+            vm.commentModalInput = '';
+        });
     }
 };
 

@@ -22,16 +22,16 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/api/rest/comments/")
 @Api(value = "Comment API")
 public class CommentResource {
-	
+
     @Autowired
-    private CommentRepository 	commentRepository;
-        
+    private CommentRepository commentRepository;
+
     @RequestMapping(value = "/{processId}/comments/",
-	    	    method = RequestMethod.GET,
-                    produces = {MediaType.APPLICATION_JSON_VALUE})
+            method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get all Comments", notes = ".")
-    public List<Comment> get(@PathVariable Long processId) {	
-	return commentRepository.findCommentsByProcess(processId);
+    public List<Comment> get(@PathVariable Long processId) {
+        return commentRepository.findCommentsByProcess(processId);
     }
 }

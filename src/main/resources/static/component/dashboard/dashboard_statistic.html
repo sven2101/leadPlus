@@ -25,26 +25,26 @@
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">{{dashboard.salesAmount}}/{{dashboard.leadsAmount}}</div>
-                        <div>Ausbeute</div>
+                        <div>{{ 'DASHBOARD_COMPLETION' | translate }}</div>
                     </div>
                 </div>
             </div>
             <div class="panel-footer statisticDiv">
                 <div class="row">
                         <span class="pull-left span-left-margin">
-                             <label class="control-label">Anfragen </label>
+                             <label class="control-label">{{ 'LEADS_MENU' | translate }}</label>
                         </span>
                     <span class="pull-right badge span-right-margin">{{dashboard.leadsAmount}} </span>
                 </div>
                 <div class="row">
                         <span class="pull-left span-left-margin">
-                             <label class="control-label">Angebote </label>
+                             <label class="control-label">{{ 'OFFERS_MENU' | translate }} </label>
                         </span>
                     <span class="pull-right badge span-right-margin">{{dashboard.offersAmount}} </span>
                 </div>
                 <div class="row">
                         <span class="pull-left span-left-margin">
-                             <label class="control-label">Sales </label>
+                             <label class="control-label">{{ 'SALES_MENU' | translate }} </label>
                         </span>
                     <span class="pull-right badge span-right-margin">{{dashboard.salesAmount}} </span>
                 </div>
@@ -60,20 +60,20 @@
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">{{dashboard.profit | currency:'\u20AC'}}</div>
-                        <div>Gewinn</div>
+                        <div>{{ 'COMMON_SALE_PROFIT' | translate }}</div>
                     </div>
                 </div>
             </div>
             <div class="panel-footer statisticDiv">
                 <div class="row">
                         <span class="pull-left span-left-margin">
-                             <label class="control-label">Umsatz </label>
+                             <label class="control-label">{{ 'COMMON_SALE_RETURN' | translate }} </label>
                         </span>
                     <span class="pull-right badge span-right-margin">{{dashboard.turnover | currency:'\u20AC'}} </span>
                 </div>
                 <div class="row">
                         <span class="pull-left span-left-margin">
-                             <label class="control-label">Gewinn </label>
+                             <label class="control-label">{{ 'COMMON_SALE_PROFIT' | translate }} </label>
                         </span>
                     <span class="pull-right badge span-right-margin">{{dashboard.profit | currency:'\u20AC'}} </span>
                 </div>
@@ -89,14 +89,14 @@
                     </div>
                     <div class="col-xs-9 text-right">
                         <div class="huge">{{dashboard.conversionRate}}%</div>
-                        <div>Conversionrate &nbsp;&nbsp;</div>
+                        <div>{{ 'COMMON_CONVERSIONRATE' | translate }} &nbsp;&nbsp;</div>
                     </div>
                 </div>
             </div>
             <div class="panel-footer statisticDiv">
                 <div class="row">
                         <span class="pull-left span-left-margin">
-                             <label class="control-label">Conversionrate </label>
+                             <label class="control-label">{{ 'COMMON_CONVERSIONRATE' | translate }} </label>
                         </span>
                     <span class="pull-right badge span-right-margin">{{dashboard.conversionRate}}%</span>
                 </div>

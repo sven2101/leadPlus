@@ -36,29 +36,29 @@ public class Offer implements Request {
     private int containerAmount;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable=true,columnDefinition = "timestamptz")
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy HH:mm")
+    @Column(nullable = true, columnDefinition = "timestamptz")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
     private Calendar timestamp;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = true)
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy HH:mm")
+    @Column(nullable = true, columnDefinition = "timestamptz")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
     private Calendar deliveryDate;
 
-    private double price;
+    private double offerPrice;
     private String deliveryAddress;
 
     public Offer() {
 
     }
 
-    public Offer(Prospect prospect, Vendor vendor, Container container, int containerAmount, Calendar timestamp, double price, Calendar deliveryDate, String deliveryAddress) {
+    public Offer(Prospect prospect, Vendor vendor, Container container, int containerAmount, Calendar timestamp, double offerPrice, Calendar deliveryDate, String deliveryAddress) {
         this.prospect = prospect;
         this.vendor = vendor;
         this.container = container;
         this.containerAmount = containerAmount;
         this.timestamp = timestamp;
-        this.price = price;
+        this.offerPrice = offerPrice;
         this.deliveryDate = deliveryDate;
         this.deliveryAddress = deliveryAddress;
     }
@@ -83,12 +83,12 @@ public class Offer implements Request {
         this.timestamp = timestamp;
     }
 
-    public double getPrice() {
-        return price;
+    public double getOfferPrice() {
+        return offerPrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setOfferPrice(double price) {
+        this.offerPrice = price;
     }
 
     public Calendar getDeliveryDate() {

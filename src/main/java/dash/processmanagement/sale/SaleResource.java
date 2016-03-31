@@ -25,49 +25,59 @@ import java.util.List;
 @RequestMapping("/api/rest/processes/sales")
 @Api(value = "Sale API")
 public class SaleResource {
-    
+
     @Autowired
     private SaleRepository saleRepository;
 
     @ApiOperation(value = "Return a single sale.", notes = "")
-    @RequestMapping(value="/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Sale getSaleById(@PathVariable Long id) {
         return saleRepository.findOne(id);
     }
 
-    @ApiOperation(value = "Return a list of sales.", notes = "")
-    @RequestMapping(value ="/latestSales" ,method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public List<Sale> getLatestTenSales() {
-        return saleRepository.findTop10ByOrderByTimestampDesc();
-    }
-
     @ApiOperation(value = "Update a single sale.", notes = "")
-    @RequestMapping(method=RequestMethod.PUT,
-                    value="/{id}",
-                    consumes = {MediaType.APPLICATION_JSON_VALUE},
-                    produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(method = RequestMethod.PUT,
+            value = "/{id}",
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Sale update(@ApiParam(required=true) @PathVariable Long id, @ApiParam(required=true) @RequestBody @Valid Sale updateSale) {
+    public Sale update(@ApiParam(required = true) @PathVariable Long id, @ApiParam(required = true) @RequestBody @Valid Sale updateSale) {
         Sale sale = saleRepository.findOne(id);
-               
-        sale.setCustomer(updateSale.getCustomer());
+
+        //set prospect datas
+        sale.getCustomer().setFirstname(updateSale.getCustomer().getFirstname());
+        sale.getCustomer().setLastname(updateSale.getCustomer().getLastname());
+        sale.getCustomer().setCompany(updateSale.getCustomer().getCompany());
+        sale.getCustomer().setEmail(updateSale.getCustomer().getEmail());
+        sale.getCustomer().setPhone(updateSale.getCustomer().getPhone());
+        sale.getCustomer().setTitle(updateSale.getCustomer().getTitle());
+
+        //set vendor datas
+        sale.getVendor().setName(updateSale.getVendor().getName());
+        sale.getVendor().setPhone(updateSale.getVendor().getPhone());
+
+        //set container datas
+        sale.getContainer().setName(updateSale.getContainer().getName());
+        sale.getContainer().setDescription(updateSale.getContainer().getDescription());
+        sale.getContainer().setPriceNetto(updateSale.getContainer().getPriceNetto());
+
+        //set main data
+        sale.setTimestamp(updateSale.getTimestamp());
         sale.setContainerAmount(updateSale.getContainerAmount());
         sale.setTransport(updateSale.getTransport());
         sale.setSaleReturn(updateSale.getSaleReturn());
         sale.setSaleProfit(updateSale.getSaleProfit());
-        sale.setTimestamp(updateSale.getTimestamp());
-        
+
         saleRepository.save(sale);
-        
+
         return sale;
     }
 
     @ApiOperation(value = "Delete a single sale.", notes = "")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@ApiParam(required=true) @PathVariable Long id) {
+    public void delete(@ApiParam(required = true) @PathVariable Long id) {
         saleRepository.delete(id);
     }
 

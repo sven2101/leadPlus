@@ -1,9 +1,8 @@
 package dash.processmanagement.sale.customer;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import dash.processmanagement.lead.inquirer.title.Title;
+
+import javax.persistence.*;
 
 @Entity
 public class Customer {
@@ -11,35 +10,74 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
-    private String name;
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private Title title;
+
+    private String firstname;
+    private String lastname;
+    private String company;
+    private String email;
     private String phone;
     private String address;
-    
-    public Customer(){
-	
+
+    public Customer() {
+
     }
-    
-    public Customer(String name, String phone, String address){
-	this.name = name;
-	this.phone = phone;
-	this.address = address;
+
+    public Customer(Title title, String firstname, String lastname, String company, String email, String phone, String address) {
+        this.title = title;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.company = company;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
     }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public Title getTitle() {
+        return title;
     }
 
-    public String getName() {
-        return name;
+    public void setTitle(Title title) {
+        this.title = title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPhone() {

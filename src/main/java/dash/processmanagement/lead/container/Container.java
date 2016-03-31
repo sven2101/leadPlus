@@ -14,20 +14,23 @@ public class Container {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
+
     private String name;
     private String description;
     private double priceNetto;
 
-    public Container(){}
+    public Container() {
+    }
 
-    public Container(String name, String description, double priceNetto){
+    public Container(String name, String description, double priceNetto) {
         this.name = name;
         this.description = description;
         this.priceNetto = priceNetto;
     }
 
-    public Long getId () {return id; }
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;

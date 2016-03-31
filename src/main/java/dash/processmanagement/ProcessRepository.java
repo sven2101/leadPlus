@@ -20,11 +20,19 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProcessRepository extends JpaRepository<Process, Long> {
 
-    List<Process> 	findProcessesByStatus(Status status);
-    List<Lead> 		findByStatusAndLeadIsNotNull(Status status);
-    List<Lead>		findByLeadIsNotNull();
-    List<Offer> 	findByStatusAndOfferIsNotNull(Status status);
-    List<Offer>		findByOfferIsNotNull();
-    List<Sale>		findByStatusAndSaleIsNotNull(Status status);
-    List<Sale>		findBySaleIsNotNull();
+    List<Process> findProcessesByStatus(Status status);
+
+    List<Lead> findByStatusAndLeadIsNotNull(Status status);
+
+    List<Lead> findByLeadIsNotNull();
+
+    List<Offer> findByStatusAndOfferIsNotNull(Status status);
+
+    List<Offer> findByOfferIsNotNull();
+
+    List<Sale> findByStatusAndSaleIsNotNull(Status status);
+
+    List<Sale> findBySaleIsNotNull();
+
+    List<Sale> findTop10BySaleIsNotNullOrderBySaleTimestampDesc();
 }

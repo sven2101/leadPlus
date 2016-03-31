@@ -27,43 +27,46 @@ public class CustomerResource {
     private CustomerRepository customerRepository;
 
     @RequestMapping(method = RequestMethod.GET,
-                    produces = {MediaType.APPLICATION_JSON_VALUE})
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get all Customers", notes = "")
     public Iterable<Customer> get() {
-            return customerRepository.findAll();
+        return customerRepository.findAll();
     }
 
-    @RequestMapping(value="/{id}",
-                    method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}",
+            method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get a single customer.", notes = "You have to provide a valid customer ID.")
-    public Customer findById(@ApiParam(required=true) @PathVariable Long id) {
-            return customerRepository.findOne(id);
+    public Customer findById(@ApiParam(required = true) @PathVariable Long id) {
+        return customerRepository.findOne(id);
     }
 
-    @RequestMapping(value="/{id}",
-	    	    method=RequestMethod.PUT,                    
-                    consumes = {MediaType.APPLICATION_JSON_VALUE},
-                    produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/{id}",
+            method = RequestMethod.PUT,
+            consumes = {MediaType.APPLICATION_JSON_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Update a single customer.", notes = "You have to provide a valid customer ID.")
-    public Customer update(@ApiParam(required=true) @PathVariable Long id, @ApiParam(required=true) @RequestBody @Valid Customer updateCustomer) {
+    public Customer update(@ApiParam(required = true) @PathVariable Long id, @ApiParam(required = true) @RequestBody @Valid Customer updateCustomer) {
         Customer customer = customerRepository.findOne(id);
-            if(Optional.fromNullable(customer).isPresent()) {
-        	customer.setName(updateCustomer.getName());
-        	customer.setPhone(updateCustomer.getPhone());
-        	customer.setAddress(updateCustomer.getAddress());
-            }  
+        if (Optional.fromNullable(customer).isPresent()) {
+            customer.setFirstname(updateCustomer.getFirstname());
+            customer.setLastname(updateCustomer.getLastname());
+            customer.setCompany(updateCustomer.getCompany());
+            customer.setEmail(updateCustomer.getEmail());
+            customer.setPhone(updateCustomer.getPhone());
+            customer.setTitle(updateCustomer.getTitle());
+        }
         return customer;
     }
 
-    @RequestMapping(value="/{id}",
-                    method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}",
+            method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a single customer.", notes = "You have to provide a valid customer ID.")
-    public void delete( @ApiParam(required=true) @PathVariable Long id) {
-	customerRepository.delete(id);
+    public void delete(@ApiParam(required = true) @PathVariable Long id) {
+        customerRepository.delete(id);
     }
-    
+
 }

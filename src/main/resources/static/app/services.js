@@ -103,7 +103,9 @@ angular.module('app.services', ['ngResource'])
                 method: 'GET',
                 isArray: true
             },
-
+            getLatestSales: {
+                url: '/application/api/rest/processes/latestSales', method: 'GET', isArray: true
+            }
         });
     }])
     .service('Profile', ['$resource', function ($resource) {
@@ -163,9 +165,6 @@ angular.module('app.services', ['ngResource'])
             week: {url: '/application/api/rest/processes/statistics/sales/week', method: 'GET'},
             month: {url: '/application/api/rest/processes/statistics/sales/month', method: 'GET'},
             year: {url: '/application/api/rest/processes/statistics/sales/year', method: 'GET'},
-            all: {url: '/application/api/rest/processes/statistics/sales/all', method: 'GET'},
-            getLatestSales: {
-                url: '/application/api/rest/processes/sales/latestSales', method: 'GET', isArray: true
-            }
+            all: {url: '/application/api/rest/processes/statistics/sales/all', method: 'GET'}
         });
     }]);

@@ -7,6 +7,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.processmanagement.lead.container.Container;
+import dash.processmanagement.lead.vendor.Vendor;
 import dash.processmanagement.request.Request;
 import dash.processmanagement.sale.customer.Customer;
 
@@ -28,22 +29,27 @@ public class Sale implements Request {
     @JoinColumn(name = "container_fk")
     private Container container;
 
+    @OneToOne
+    @JoinColumn(name = "vendor_fk")
+    private Vendor vendor;
+
     private int containerAmount;
     private String transport;
     private double saleReturn;
     private double saleProfit;
 
-    @Column(nullable=true,columnDefinition = "timestamptz")
+    @Column(nullable = true, columnDefinition = "timestamptz")
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
     private Calendar timestamp;
 
     public Sale() {
 
     }
 
-    public Sale(int containerAmount, String transport, Container container, double saleReturn, double saleProfit, Calendar timestamp) {
+    public Sale(int containerAmount, Vendor vendor, String transport, Container container, double saleReturn, double saleProfit, Calendar timestamp) {
         this.containerAmount = containerAmount;
+        this.vendor = vendor;
         this.transport = transport;
         this.container = container;
         this.saleReturn = saleReturn;
@@ -53,6 +59,14 @@ public class Sale implements Request {
 
     public long getId() {
         return this.id;
+    }
+
+    public Vendor getVendor() {
+        return vendor;
+    }
+
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
     }
 
     public int getContainerAmount() {

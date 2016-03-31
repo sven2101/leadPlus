@@ -78,7 +78,7 @@ LeadsCtrl.prototype.followUp = function (process) {
         },
         containerAmount: process.lead.containerAmount,
         deliveryAddress: process.lead.destination,
-        price: (process.lead.containerAmount * process.lead.container.priceNetto),
+        offerPrice: (process.lead.containerAmount * process.lead.container.priceNetto),
         prospect: {
             company: process.lead.inquirer.company,
             email: process.lead.inquirer.email,
@@ -138,8 +138,11 @@ LeadsCtrl.prototype.deleteRow = function (process) {
         }
         vm.processesService.deleteLead({id: process.lead.id}).$promise.then(function () {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_DELETE_LEAD'));
-            if (process.status = 'open') {
+            if (process.status == 'open') {
                 vm.rootScope.leadsCount -= 1;
+            }
+            else if (process.status == 'offer') {
+                vm.rootScope.offersCount -= 1;
             }
             vm.refreshData();
         });

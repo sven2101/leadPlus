@@ -8,7 +8,7 @@ import java.util.List;
 
 @Transactional
 @Repository
-public interface CommentRepository extends CrudRepository<Comment, Long>{
+public interface CommentRepository extends CrudRepository<Comment, Long> {
 
-	List<Comment> findCommentsByProcess(Long process);
+    List<Comment> findCommentsByProcess(Long process);
 }

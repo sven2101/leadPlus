@@ -9,64 +9,122 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span
                         aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Details</h4>
-                <h2>{{dashboard.infoData.name}}</h2>
+                <h4 class="modal-title">{{ 'COMMON_DETAILS' | translate }}</h4>
+                <h2>{{dashboard.infoData.container.name}}</h2>
             </div>
             <div class="modal-body">
-                <table class="table table-striped table-bordered table-hover table-condensed text-left">
+                <table class="table table-bordered text-left">
                     <tr>
-                        <td>Name</td>
-                        <td>{{dashboard.infoData.id}}</td>
+                        <td>{{ 'COMMON_NAME' | translate }}</td>
+                        <td ng-if="dashboard.infoType == 'lead'">{{dashboard.infoData.inquirer.title}}
+                            {{dashboard.infoData.inquirer.firstname}}
+                            {{dashboard.infoData.inquirer.lastname}}
+                        </td>
+                        <td ng-if="dashboard.infoType == 'offer'">{{dashboard.infoData.prospect.title}}
+                            {{dashboard.infoData.prospect.firstname}}
+                            {{dashboard.infoData.prospect.lastname}}
+                        </td>
+                        <td ng-if="dashboard.infoType == 'sale'">{{dashboard.infoData.customer.title}}
+                            {{dashboard.infoData.customer.firstname}}
+                            {{dashboard.infoData.customer.lastname}}
+                        </td>
                     </tr>
                     <tr>
-                        <td>Container</td>
-                        <td>{{dashboard.infoData.name}}</td>
+                        <td>{{ 'COMMON_PHONE' | translate }}</td>
+                        <td ng-if="dashboard.infoType == 'lead'">{{dashboard.infoData.inquirer.phone}}</td>
+                        <td ng-if="dashboard.infoType == 'offer'">{{dashboard.infoData.prospect.phone}}</td>
+                        <td ng-if="dashboard.infoType == 'sale'">{{dashboard.infoData.customer.phone}}</td>
                     </tr>
                     <tr>
-                        <td>Menge</td>
-                        <td>{{dashboard.infoData.name}}</td>
+                        <td>{{ 'COMMON_CONTAINER' | translate }}</td>
+                        <td>{{dashboard.infoData.container.name}}</td>
                     </tr>
                     <tr>
-                        <td>Preis</td>
-                        <td>{{dashboard.infoData.name}}</td>
+                        <td>{{ 'COMMON_CONTAINER_DESC' | translate }}</td>
+                        <td>{{dashboard.infoData.container.description}}</td>
                     </tr>
                     <tr>
-                        <td>Lieferort</td>
-                        <td>{{dashboard.infoData.name}}</td>
+                        <td>{{ 'COMMON_CONTAINER_AMOUNT' | translate }}</td>
+                        <td>{{dashboard.infoData.containerAmount}}</td>
                     </tr>
+                    <tr>
+                        <td>{{ 'COMMON_CONTAINER_SINGLE_PRICE' | translate }}</td>
+                        <td>{{dashboard.infoData.container.priceNetto | currency:'\u20AC'}}</td>
+                    </tr>
+                    <tr ng-if="dashboard.infoType == 'lead'">
+                        <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
+                        <td>{{dashboard.infoData.leadPrice | currency:'\u20AC'}}</td>
+                    </tr>
+                    <tr ng-if="dashboard.infoType == 'offer'">
+                        <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
+                        <td>{{dashboard.infoData.containerAmount*dashboard.infoData.container.priceNetto |
+                            currency:'\u20AC'}}
+                        </td>
+                    </tr>
+                    <tr ng-if="dashboard.infoType == 'offer'">
+                        <td>{{ 'COMMON_CONTAINER_OFFER_PRICE' | translate }}</td>
+                        <td>{{dashboard.infoData.offerPrice |
+                            currency:'\u20AC'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</td>
+                        <td ng-if="dashboard.infoType == 'lead'">{{dashboard.infoData.destination}}</td>
+                        <td ng-if="dashboard.infoType == 'offer'">{{dashboard.infoData.deliveryAddress}}</td>
+                        <td ng-if="dashboard.infoType == 'sale'">{{dashboard.infoData.transport}}</td>
+                    </tr>
+                    <tr ng-if="dashboard.infoType == 'offer'">
+                        <td>{{ 'COMMON_DELIVERY_TIME' | translate }}</td>
+                        <td>{{dashboard.infoData.deliveryDate |
+                            date:'dd-MM-yyyy'}}
+                        </td>
+                    </tr>
+                    <tr ng-if="dashboard.infoType == 'sale'">
+                        <td>{{ 'COMMON_SALE_RETURN' | translate }}</td>
+                        <td>{{dashboard.infoData.saleReturn|
+                            currency:'\u20AC'}}
+                        </td>
+                    </tr>
+                    <tr ng-if="dashboard.infoType == 'sale'">
+                        <td>{{ 'COMMON_SALE_PROFIT' | translate }}</td>
+                        <td>{{dashboard.infoData.saleProfit|
+                            currency:'\u20AC'}}
+                        </td>
+                    </tr>
+
                 </table>
                 <div class="chat-view">
 
                     <div class="text-left">
-                        <span class="pull-left" style="font-size: 1.5em;">Comments</span>
-                        <small ng-if="dashboard.comments[dashboard.infoData.id].length>0" class="pull-right text-muted">
-                            Last Comment:
-                            {{(dashboard.comments[dashboard.infoData.id])[(dashboard.comments[dashboard.infoData.id]).length-1].date|
-                            date:'dd-MM-yyyy HH:mm:ss'}}
+                        <span class="pull-left" style="font-size: 1.5em;">{{ 'COMMON_COMMENTS' | translate }}</span>
+                        <small ng-if="dashboard.infoComments.length>0" class="pull-right text-muted">
+                            {{ 'COMMON_COMMENTS_LAST' | translate }}:
+                            {{dashboard.infoComments[dashboard.infoComments.length-1].date|
+                            date:'dd.MM.yyyy HH:mm:ss'}}
                         </small>
                     </div>
                     <div class=" text-left">
-                        <div ng-if="dashboard.comments[dashboard.infoData.id].length>0" class="row">
+                        <div ng-if="dashboard.infoComments.length>0" class="row">
                             <div class="col-md-12 ">
-                                <div class="chat-discussion" ng-model="dashboard.comments[dashboard.infoData.id]">
-                                    <div ng-repeat="comment in dashboard.comments[dashboard.infoData.id] | orderBy: '-date'">
+                                <div class="chat-discussion" ng-model="dashboard.infoComments">
+                                    <div ng-repeat="comment in dashboard.infoComments | orderBy: '-date'">
                                         <div ng-if="$index%2==0" class="chat-message left">
                                             <img class="message-avatar" src="assets/img/guest.png" alt="">
                                             <div class="message">
-                                                <a class="message-author" href="#"> {{comment.from}} </a>
-                                                <span class="message-date"> {{comment.date|  date:'dd-MM-yyyy HH:mm:ss'}} </span>
+                                                <a class="message-author" href="#"> {{comment.creator.username}} </a>
+                                                <span class="message-date"> {{comment.date|  date:'dd.MM.yyyy HH:mm:ss'}} </span>
                                             <span class="message-content">
-                                                {{comment.comment}}
+                                                {{comment.commentText}}
                                             </span>
                                             </div>
                                         </div>
                                         <div ng-if="$index%2!=0" class="chat-message right">
                                             <img class="message-avatar" src="assets/img/guest.png" alt="">
                                             <div class="message">
-                                                <a class="message-author"> {{comment.from}} </a>
-                                                <span class="message-date"> {{comment.date |  date:'dd-MM-yyyy HH:mm:ss'}} </span>
+                                                <a class="message-author"> {{comment.creator.username}} </a>
+                                                <span class="message-date"> {{comment.date |  date:'dd.MM.yyyy HH:mm:ss'}} </span>
                                             <span class="message-content">
-                                                {{comment.comment}}
+                                                {{comment.commentText}}
                                             </span>
                                             </div>
                                         </div>
@@ -83,12 +141,12 @@
                                           ng-model="dashboard.commentModalInput"
                                           style="resize: none; width:100%;box-sizing: border-box;"
                                           name="message"
-                                          placeholder="Enter Comment"/>
+                                          placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}"/>
                                     </div>
-                                    <button style="width:30%; margin-top: 10px;"
+                                    <button style="width:35%; margin-top: 10px;"
                                             class="btn btn-success"
-                                            ng-click="dashboard.addComment(dashboard.infoData.id)">
-                                        <i class="fa fa-comment-o"></i>&nbsp;Add Comment
+                                            ng-click="dashboard.addComment(dashboard.infoProcess)">
+                                        <i class="fa fa-comment-o"></i>&nbsp;{{ 'COMMON_COMMENTS_ADD' | translate }}
                                     </button>
                                 </div>
                             </div>
@@ -97,7 +155,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-white" data-dismiss="modal">Abbrechen</button>
+                <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}</button>
             </div>
         </div>
     </div>

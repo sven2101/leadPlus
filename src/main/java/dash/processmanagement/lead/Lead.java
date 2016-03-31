@@ -19,45 +19,46 @@ public class Lead implements Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long 	id;
-    
+    private long id;
+
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "inquirer_fk", nullable = true)
-    private Inquirer 	inquirer;
+    private Inquirer inquirer;
 
     @OneToOne
     @JoinColumn(name = "vendor_fk")
-    private Vendor 	vendor;
+    private Vendor vendor;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "container_fk")
-    private Container 	container;
-    
-    private int 	containerAmount;
-    private String 	destination;
-    
-    @Column(nullable=true,columnDefinition = "timestamptz")
-    @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="dd.MM.yyyy HH:mm")
-    private Calendar  	timestamp;
-    
-    @Column(length=2048)
-    private String 	message;
-    
-    public Lead(){}
+    private Container container;
 
-    public Lead(Inquirer inquirer, Vendor vendor, Container container, int containerAmount, String destination, String message, Status status, Calendar timestamp){
-        super();
-	this.inquirer 		= inquirer;
-        this.vendor 		= vendor;
-        this.container		= container;
-        this.containerAmount 	= containerAmount;
-        this.destination 	= destination;
-        this.timestamp		= timestamp;
-        this.message 		= message;
+    private int containerAmount;
+    private String destination;
+
+    @Column(nullable = true, columnDefinition = "timestamptz")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
+    private Calendar timestamp;
+
+    @Column(length = 2048)
+    private String message;
+
+    public Lead() {
     }
 
-    public Long getId(){
+    public Lead(Inquirer inquirer, Vendor vendor, Container container, int containerAmount, String destination, String message, Status status, Calendar timestamp) {
+        super();
+        this.inquirer = inquirer;
+        this.vendor = vendor;
+        this.container = container;
+        this.containerAmount = containerAmount;
+        this.destination = destination;
+        this.timestamp = timestamp;
+        this.message = message;
+    }
+
+    public Long getId() {
         return this.id;
     }
 
@@ -85,8 +86,8 @@ public class Lead implements Request {
         this.containerAmount = containerAmount;
     }
 
-    public double getNettoPrice(){
-        return this.containerAmount*this.container.getPriceNetto();
+    public double getLeadPrice() {
+        return this.containerAmount * this.container.getPriceNetto();
     }
 
     public String getDestination() {
@@ -105,19 +106,19 @@ public class Lead implements Request {
         this.message = message;
     }
 
-    public void setTimestamp(Calendar timestamp){
-   	this.timestamp = timestamp;
+    public void setTimestamp(Calendar timestamp) {
+        this.timestamp = timestamp;
     }
-       
-    public Calendar getTimestamp(){
-   	return timestamp;
+
+    public Calendar getTimestamp() {
+        return timestamp;
     }
-    
-    public Container getContainer(){
-    	return this.container;
+
+    public Container getContainer() {
+        return this.container;
     }
-    
-    public void setContainer(Container container){
-    	this.container = container;
+
+    public void setContainer(Container container) {
+        this.container = container;
     }
 }
