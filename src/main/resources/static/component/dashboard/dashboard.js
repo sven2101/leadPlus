@@ -104,6 +104,9 @@ DashboardCtrl.prototype.addLeadToOffer = function (process) {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_NEW_OFFER'));
             vm.rootScope.leadsCount -= 1;
             vm.rootScope.offersCount += 1;
+            vm.processesService.setProcessor({id: process.id}, vm.user.username).$promise.then(function () {
+                process.processor = vm.user;
+            });
             process.offer = offer;
             vm.openOffer = vm.orderByFilter(vm.openOffer, ['-offer.timestamp']);
         });

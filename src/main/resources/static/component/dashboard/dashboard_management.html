@@ -29,11 +29,14 @@
                                     <li class="danger-element"
                                         ng-repeat="process in dashboard.openLead">
                                         {{process.lead.containerAmount}}x {{process.lead.container.name}}
+                                        <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
                                         <div class="agile-detail">
                                             <a ng-click="dashboard.saveDataToModal(process.lead,'lead',process)"
                                                class="pull-right btn btn-xs btn-white"
-                                               data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' | translate }}</a>
-                                            <a href="#/leads" class="pull-right btn btn-xs btn-white">{{ 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
+                                               data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |
+                                                translate }}</a>
+                                            <a href="#/leads" class="pull-right btn btn-xs btn-white">{{
+                                                'DASHBOARD_GOTO_BUTTON' | translate }}</a>
                                             <i class="fa fa-clock-o"></i> {{process.lead.timestamp}}
                                         </div>
                                     </li>
@@ -51,11 +54,14 @@
                                     <li class="warning-element"
                                         ng-repeat="process in dashboard.openOffer">
                                         {{process.offer.containerAmount}}x {{process.offer.container.name}}
+                                        <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
                                         <div class="agile-detail">
                                             <a ng-click="dashboard.saveDataToModal(process.offer,'offer',process)"
                                                class="pull-right btn btn-xs btn-white"
-                                               data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' | translate }}</a>
-                                            <a href="#/offers" class="pull-right btn btn-xs btn-white">{{ 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
+                                               data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |
+                                                translate }}</a>
+                                            <a href="#/offers" class="pull-right btn btn-xs btn-white">{{
+                                                'DASHBOARD_GOTO_BUTTON' | translate }}</a>
                                             <i class="fa fa-clock-o"></i> {{process.offer.timestamp}}
                                         </div>
                                     </li>
@@ -73,11 +79,14 @@
                                     <li class="info-element not-sortable"
                                         ng-repeat="process in dashboard.sales">
                                         {{process.sale.containerAmount}}x {{process.sale.container.name}}
+                                        <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
                                         <div class="agile-detail">
                                             <a ng-click="dashboard.saveDataToModal(process.sale,'sale',process)"
                                                class="pull-right btn btn-xs btn-white"
-                                               data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' | translate }}</a>
-                                            <a href="#/sales" class="pull-right btn btn-xs btn-white">{{ 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
+                                               data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |
+                                                translate }}</a>
+                                            <a href="#/sales" class="pull-right btn btn-xs btn-white">{{
+                                                'DASHBOARD_GOTO_BUTTON' | translate }}</a>
                                             <i class="fa fa-clock-o"></i> {{process.sale.timestamp}}
                                         </div>
                                     </li>

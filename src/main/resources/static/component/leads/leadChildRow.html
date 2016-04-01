@@ -10,6 +10,7 @@
                 <h3>{{ 'COMMON_CHILDROW_ADDITONAL_TITLE' | translate }}</h3>
             </div>
             <div class="ibox-content">
+                <p ng-if="leadChildData.processor != null">{{ 'COMMON_PROCESSOR' | translate }}: {{leadChildData.processor.username}}</p>
                 <table class="table table-bordered text-left">
                     <tr>
                         <td>{{ 'COMMON_NAME' | translate }}</td>

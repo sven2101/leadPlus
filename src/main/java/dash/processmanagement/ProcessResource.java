@@ -98,6 +98,7 @@ public class ProcessResource {
         process.setOffer(updateProcess.getOffer());
         process.setSale(updateProcess.getSale());
         process.setStatus(updateProcess.getStatus());
+        process.setProcessor(updateProcess.getProcessor());
 
         processRepository.save(process);
 
@@ -111,10 +112,10 @@ public class ProcessResource {
         return processRepository.findOne(processId).getProcessor();
     }
 
-    @ApiOperation(value = "Creates a single processor.", notes = "")
+    @ApiOperation(value = "Puts processor to process", notes = "")
     @RequestMapping(value = "/{processId}/processors", method = RequestMethod.PUT)
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createProcessorByProcessId(@PathVariable Long processId, String username) throws Exception {
+    @ResponseStatus(HttpStatus.OK)
+    public void createProcessorByProcessId(@PathVariable Long processId, @RequestBody String username) throws Exception {
         processService.createProcessor(processId, username);
     }
 

@@ -34,20 +34,43 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             '<"row"<"col-sm-5"i><"col-sm-7"p>>')
         .withPaginationType('full_numbers')
         .withButtons([
-            'copyHtml5',
-            'print',
+            {
+                extend: 'copyHtml5',
+                exportOptions: {
+                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    modifier: {
+                        page: 'current'
+                    }
+                }
+            },
+            {
+                extend: 'print',
+                exportOptions: {
+                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    modifier: {
+                        page: 'current'
+                    }
+                }
+            },
             {
                 extend: 'csvHtml5',
                 title: $translate('LEAD_LEADS'),
                 exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9]
+                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    modifier: {
+                        page: 'current'
+                    }
+
                 }
             },
             {
                 extend: 'excelHtml5',
                 title: $translate.instant('LEAD_LEADS'),
                 exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9]
+                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    modifier: {
+                        page: 'current'
+                    }
                 }
             },
             {
@@ -93,9 +116,9 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             .renderWith(addActionsButtons)
     ];
 
-    if($rootScope.language == 'de'){
+    if ($rootScope.language == 'de') {
         vm.dtOptions.withLanguageSource('/application/app/datatablesTranslationFiles/German.json');
-    }else {
+    } else {
         vm.dtOptions.withLanguageSource('/application/app/datatablesTranslationFiles/English.json');
     }
 
@@ -104,19 +127,6 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
         var resetPaging = true;
         this.dtInstance.reloadData(resetPaging);
     }
-
-    var stop;
-    $scope.$on('$destroy', function () {
-        if (angular.isDefined(stop)) {
-            $interval.cancel(stop);
-            stop = undefined;
-        }
-    });
-    stop = $interval(function () {
-        if (vm.loadAllData == false) {
-            vm.dtInstance.reloadData(true);
-        }
-    }.bind(this), 100000);
 
     vm.changeDataInput = changeDataInput;
     function changeDataInput() {
@@ -168,16 +178,16 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     function addStatusStyle(data, type, full, meta) {
         vm.processes[data.id] = data;
         if (data.status == 'open') {
-            return '<div style="color: green;">' + data.status + '</div>'
+            return '<div style="color: green;">' + $translate.instant('COMMON_STATUS_OPEN') + '</div>'
         }
         else if (data.status == 'offer') {
-            return '<div style="color: #f79d3c;">' + data.status + '</div>'
+            return '<div style="color: #f79d3c;">' + $translate.instant('COMMON_STATUS_OFFER') + '</div>'
         }
         else if (data.status == 'sale') {
-            return '<div style="color: #1872ab;">' + data.status + '</div>'
+            return '<div style="color: #1872ab;">' + $translate.instant('COMMON_STATUS_SALE') + '</div>'
         }
         else if (data.status == 'closed') {
-            return '<div style="color: #ea394c;">' + data.status + '</div>'
+            return '<div style="color: #ea394c;">' + $translate.instant('COMMON_STATUS_CLOSED') + '</div>'
         }
     }
 
@@ -220,7 +230,7 @@ LeadsCtrl.prototype.appendChildRow = function (process, event) {
     }
     else {
         icon.removeClass('glyphicon-plus-sign').addClass('glyphicon-minus-sign');
-        row.child(this.compile('<div childrow class="clearfix"></div>')(childScope)).show();
+        row.child(this.compile('<div childrow type="lead" class="clearfix"></div>')(childScope)).show();
         tr.addClass('shown');
     }
 };

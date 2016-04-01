@@ -9,18 +9,10 @@ function config($translateProvider) {
             SALES_MENU: 'Verkäufe',
             STATISTIC_MENU: 'Statistiken',
             SETTINGS_MENU: 'Einstellungen',
+            PROFILE_MENU: 'Profil',
+            LOGIN: 'Anmelden',
+            LOGOUT: 'Abmelden',
 
-            //Define dashboard elements
-            DASHBOARD_MANAGE_LEADS:'Anfragen verwalten',
-            DASHBOARD_DRAG_INFO:'Ziehen Sie die Elemente per Drag\'n\'Drop',
-            DASHBOARD_REFRESH:'Aktualisieren',
-            DASHBOARD_OPEN_LEADS:'Offene Anfragen',
-            DASHBOARD_OPEN_OFFERS:'Ausstehende Angebote',
-            DASHBOARD_LATEST_SALES:'Letzte Verkäufe',
-            DASHBOARD_INFO_BUTTON:'Info',
-            DASHBOARD_GOTO_BUTTON:'Go to',
-            DASHBOARD_COMPLETION:'Abschlüsse',
-            
             //Define common elements
             COMMON_DETAILS: 'Details',
             COMMON_TITLE: 'Anrede',
@@ -28,6 +20,9 @@ function config($translateProvider) {
             COMMON_TITLE_MS: 'Frau',
             COMMON_FIRSTNAME: 'Vorname',
             COMMON_LASTNAME: 'Nachname',
+            COMMON_USERNAME: 'Benutzername',
+            COMMON_USER: 'Benutzer',
+            COMMON_ROLE: 'Rolle',
             COMMON_NAME: 'Name',
             COMMON_DATE: 'Datum',
             COMMON_STATUS: 'Status',
@@ -37,6 +32,7 @@ function config($translateProvider) {
             COMMON_CANCEL: 'Abbrechen',
             COMMON_SAVE: 'Speichern',
             COMMON_REFRESH: 'Aktualisieren',
+            COMMON_PROCESSOR: 'Bearbeiter',
             COMMON_CHILDROW_ADDITONAL_TITLE: 'Zusätzliche Informationen',
             COMMON_CONTAINER: 'Container',
             COMMON_CONTAINER_DESC: 'Container Beschreibung',
@@ -61,6 +57,9 @@ function config($translateProvider) {
             COMMON_VALIDATE_REQ: 'Feld benötigt ',
             COMMON_VALIDATE_REQ_NUMBER: 'Eingabe darf nicht negativ sein oder ungültige Zeichen enthalten',
             COMMON_VALIDATE_EMAIL: 'E-Mail ungültig!',
+            COMMON_NEW_PASSWORD:'Neues Passwort',
+            COMMON_VALIDATE_PASSWORD:'Passwort muss mindestens 6 Zeichen lang sein',
+            COMMON_VALIDATE_PASSWORD_NOT_MATCH:'Passwörter stimmen nicht überein',
             COMMON_TOAST_SUCCESS_ADD_LEAD: 'Eine neue Anfrage wurde angelegt',
             COMMON_TOAST_SUCCESS_NEW_OFFER:'Ein neues Angebot wurde erstellt',
             COMMON_TOAST_SUCCESS_NEW_SALE:'Glückwunsch zum Verkauf!',
@@ -68,6 +67,37 @@ function config($translateProvider) {
             COMMON_TOAST_SUCCESS_OPEN_LEAD:'Die Anfrage wurde geöffnet',
             COMMON_TOAST_SUCCESS_UPDATE_LEAD:'Die Anfrage wurde bearbeitet',
             COMMON_TOAST_SUCCESS_DELETE_LEAD:'Die Anfrage wurde gelöscht',
+            COMMON_TOAST_SUCCESS_ADD_OFFER: 'Ein neues Angebot wurde angelegt',
+            COMMON_TOAST_SUCCESS_CLOSE_OFFER:'Das Angebot wurde geschlossen',
+            COMMON_TOAST_SUCCESS_OPEN_OFFER:'Das Angebot wurde geöffnet',
+            COMMON_TOAST_SUCCESS_UPDATE_OFFER:'Das Angebot wurde bearbeitet',
+            COMMON_TOAST_SUCCESS_DELETE_OFFER:'Das Angebot wurde gelöscht',
+            COMMON_STATUS_OPEN: 'Offen',
+            COMMON_STATUS_OFFER: 'Angebot',
+            COMMON_STATUS_SALE: 'Verkauf',
+            COMMON_STATUS_CLOSED: 'Geschlossen',
+
+            //Define dashboard elements
+            DASHBOARD_MANAGE_LEADS:'Anfragen verwalten',
+            DASHBOARD_DRAG_INFO:'Ziehen Sie die Elemente per Drag\'n\'Drop',
+            DASHBOARD_REFRESH:'Aktualisieren',
+            DASHBOARD_OPEN_LEADS:'Offene Anfragen',
+            DASHBOARD_OPEN_OFFERS:'Ausstehende Angebote',
+            DASHBOARD_LATEST_SALES:'Letzte Verkäufe',
+            DASHBOARD_INFO_BUTTON:'Info',
+            DASHBOARD_GOTO_BUTTON:'Go to',
+            DASHBOARD_COMPLETION:'Abschlüsse',
+
+            //Define profile elements
+            PROFILE_PROFILE_INFORMATION:'Profilinformationen',
+            PROFILE_DEFAULT_LANGUAGE:'Standard Sprache',
+            PROFILE_PASSWORD_MANAGEMENT:'Passwortverwaltung',
+            PROFILE_OLD_PASSWORD:'Altes Passwort',
+            PROFILE_VALIDATE_OLD_PASSWORD:'Altes Passwort wird benötigt',
+            PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS:'Profilinformationen wurden aktualisiert',
+            PROFILE_TOAST_PROFILE_INFORMATION_ERROR:'Profilinformationen konnten nicht aktualisiert werden',
+            PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS:'Passwort wurde geändert',
+            PROFILE_TOAST_PASSWORD_CHANGE_ERROR:'Passwort konnte nicht geändert werden',
 
             // Define all lead elements
             LEAD_LEADS: 'Anfragen',
@@ -80,7 +110,33 @@ function config($translateProvider) {
             LEAD_OPEN_LEAD: 'Anfrage öffnen',
             LEAD_CLOSE_LEAD: 'Anfrage schließen',
             LEAD_EDIT_LEAD: 'Anfrage bearbeiten',
-            LEAD_DELETE_LEAD: 'Anfrage löschen'
+            LEAD_DELETE_LEAD: 'Anfrage löschen',
+
+            // Define all offer elements
+            OFFER_OFFERS: 'Angebote',
+            OFFER_MANAGE_OFFERS: 'Angebote verwalten',
+            OFFER_ADD_OFFER: 'Neues Angebot',
+            OFFER_ADD_OFFER_MODAL: 'Angebot erstellen',
+            OFFER_EDIT_OFFER_MODAL: 'Angebot bearbeiten',
+            OFFER_SHOW_ALL_OFFERS: 'Alle Angebote',
+            OFFER_FOLLOW_UP: 'Verkauf abschließen',
+            OFFER_OPEN_OFFER: 'Angebot öffnen',
+            OFFER_CLOSE_OFFER: 'Angebot schließen',
+            OFFER_EDIT_OFFER: 'Angebot bearbeiten',
+            OFFER_DELETE_OFFER: 'Angebot löschen',
+
+            //Define setting elements
+            SETTING_ACCESS_MANAGEMENT:'Benutzer freischalten',
+            SETTING_ACTIVATE_USER:'Freischalten',
+            SETTING_DEACTIVATE_USER:'Deaktivieren',
+            SETTING_ROLE_MANAGEMENT:'Benutzerrollen verwalten',
+            SETTING_TOAST_ACCESS_GRANTED:'Der Benutzer wurde freigeschalten',
+            SETTING_TOAST_ACCESS_GRANTED_ERROR:'Der Benutzer konnte nicht freigeschaltet werden',
+            SETTING_TOAST_ACCESS_REVOKED:'Der Benutzer wurde deaktiviert',
+            SETTING_TOAST_ACCESS_REVOKED_ERROR:'Der Benutzer konnte nicht deaktiviert werden',
+            SETTING_TOAST_SET_ROLE:'Die Rolle wurde geändert',
+            SETTING_TOAST_SET_ROLE_ERROR:'Die Rolle konnte nicht geändert werden',
+
         })
         .translations('en', {
             // Define all menu elements
@@ -90,18 +146,10 @@ function config($translateProvider) {
             SALES_MENU: 'Sales',
             STATISTIC_MENU: 'Statistics',
             SETTINGS_MENU: 'Settings',
+            PROFILE_MENU: 'Profile',
+            LOGIN: 'Login',
+            LOGOUT: 'Logout',
 
-            //Define dashboard elements
-            DASHBOARD_MANAGE_LEADS:'Manage leads',
-            DASHBOARD_DRAG_INFO:'Drag elements between list',
-            DASHBOARD_REFRESH:'Refresh',
-            DASHBOARD_OPEN_LEADS:'Open leads',
-            DASHBOARD_OPEN_OFFERS:'Open offers',
-            DASHBOARD_LATEST_SALES:'Latest sales',
-            DASHBOARD_INFO_BUTTON:'Info',
-            DASHBOARD_GOTO_BUTTON:'Go to',
-            DASHBOARD_COMPLETION:'Sales statements',
-            
             //Define common elements
             COMMON_DETAILS: 'Details',
             COMMON_TITLE: 'Title',
@@ -109,6 +157,9 @@ function config($translateProvider) {
             COMMON_TITLE_MS: 'Ms',
             COMMON_FIRSTNAME: 'Firstname',
             COMMON_LASTNAME: 'Lastname',
+            COMMON_USERNAME: 'Username',
+            COMMON_USER: 'User',
+            COMMON_ROLE: 'Role',
             COMMON_NAME: 'Name',
             COMMON_DATE: 'Date',
             COMMON_STATUS: 'Status',
@@ -118,6 +169,7 @@ function config($translateProvider) {
             COMMON_CANCEL: 'Cancel',
             COMMON_SAVE: 'Save',
             COMMON_REFRESH: 'Refresh',
+            COMMON_PROCESSOR: 'Processor',
             COMMON_CHILDROW_ADDITONAL_TITLE: 'Additional informationen',
             COMMON_CONTAINER: 'Container',
             COMMON_CONTAINER_DESC: 'Container description',
@@ -142,6 +194,9 @@ function config($translateProvider) {
             COMMON_VALIDATE_REQ: 'Field required ',
             COMMON_VALIDATE_REQ_NUMBER: 'Negative numbers and invalid characters are restricted',
             COMMON_VALIDATE_EMAIL: 'Enter a valid email',
+            COMMON_VALIDATE_NEW_PASSWORD:'New password',
+            COMMON_VALIDATE_PASSWORD:'Password have to be 6 characters long',
+            COMMON_VALIDATE_PASSWORD_NOT_MATCH:'Password doesn\'t match',
             COMMON_TOAST_SUCCESS_ADD_LEAD: 'A new lead was generated',
             COMMON_TOAST_SUCCESS_NEW_OFFER:'A new offer was generated',
             COMMON_TOAST_SUCCESS_NEW_SALE:'Congratulation for your sale!',
@@ -149,7 +204,37 @@ function config($translateProvider) {
             COMMON_TOAST_SUCCESS_OPEN_LEAD:'The lead was unlocked',
             COMMON_TOAST_SUCCESS_UPDATE_LEAD:'The lead was edited',
             COMMON_TOAST_SUCCESS_DELETE_LEAD:'The lead was deleted',
+            COMMON_TOAST_SUCCESS_ADD_OFFER: 'A new offer was generated',
+            COMMON_TOAST_SUCCESS_CLOSE_OFFER:'The offer was locked',
+            COMMON_TOAST_SUCCESS_OPEN_OFFER:'The offer was unlocked',
+            COMMON_TOAST_SUCCESS_UPDATE_OFFER:'The offer was edited',
+            COMMON_TOAST_SUCCESS_DELETE_OFFER:'THe offer was deleted',
+            COMMON_STATUS_OPEN: 'Open',
+            COMMON_STATUS_OFFER: 'Offer',
+            COMMON_STATUS_SALE: 'Sale',
+            COMMON_STATUS_CLOSED: 'Closed',
 
+            //Define dashboard elements
+            DASHBOARD_MANAGE_LEADS:'Manage leads',
+            DASHBOARD_DRAG_INFO:'Drag elements between list',
+            DASHBOARD_REFRESH:'Refresh',
+            DASHBOARD_OPEN_LEADS:'Open leads',
+            DASHBOARD_OPEN_OFFERS:'Open offers',
+            DASHBOARD_LATEST_SALES:'Latest sales',
+            DASHBOARD_INFO_BUTTON:'Info',
+            DASHBOARD_GOTO_BUTTON:'Go to',
+            DASHBOARD_COMPLETION:'Sales statements',
+
+            //Define profile elements
+            PROFILE_PROFILE_INFORMATION:'Profile information',
+            PROFILE_DEFAULT_LANGUAGE:'Default language',
+            PROFILE_PASSWORD_MANAGEMENT:'Password management',
+            PROFILE_OLD_PASSWORD:'Old password',
+            PROFILE_VALIDATE_OLD_PASSWORD:'Old password is required',
+            PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS:'Profil changed',
+            PROFILE_TOAST_PROFILE_INFORMATION_ERROR:'Profil cannot be saved',
+            PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS:'Password changed',
+            PROFILE_TOAST_PASSWORD_CHANGE_ERROR:'Password cannot be saved',
 
             // Define all lead elements
             LEAD_LEADS: 'Leads',
@@ -162,7 +247,32 @@ function config($translateProvider) {
             LEAD_OPEN_LEAD: 'Unlock lead',
             LEAD_CLOSE_LEAD: 'Lock lead',
             LEAD_EDIT_LEAD: 'Edit lead',
-            LEAD_DELETE_LEAD: 'Delete lead'
+            LEAD_DELETE_LEAD: 'Delete lead',
+
+            // Define all offer elements
+            OFFER_OFFERS: 'Offers',
+            OFFER_MANAGE_OFFERS: 'Manage offers',
+            OFFER_ADD_OFFER: 'New offer',
+            OFFER_ADD_OFFER_MODAL: 'Create offer',
+            OFFER_EDIT_OFFER_MODAL: 'Edit offer',
+            OFFER_SHOW_ALL_OFFERS: 'Total offers',
+            OFFER_FOLLOW_UP: 'Make sale',
+            OFFER_OPEN_OFFER: 'Unlock offer',
+            OFFER_CLOSE_OFFER: 'Lock offer',
+            OFFER_EDIT_OFFER: 'Edit offer',
+            OFFER_DELETE_OFFER: 'Delete offer',
+
+            //Define setting elements
+            SETTING_ACCESS_MANAGEMENT:'Activate user',
+            SETTING_ACTIVATE_USER:'Activate',
+            SETTING_DEACTIVATE_USER:'Deactivate',
+            SETTING_ROLE_MANAGEMENT:'Manage user roles',
+            SETTING_TOAST_ACCESS_GRANTED:'User is activated',
+            SETTING_TOAST_ACCESS_GRANTED_ERROR:'User cannot be activated',
+            SETTING_TOAST_ACCESS_REVOKED:'User is deactivated',
+            SETTING_TOAST_ACCESS_REVOKED_ERROR:'User cannot be deactivated',
+            SETTING_TOAST_SET_ROLE:'Role has changed',
+            SETTING_TOAST_SET_ROLE_ERROR:'Role cannot be cahgend'
 
         });
 

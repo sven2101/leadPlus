@@ -50,8 +50,8 @@ public class RegistrationResource {
         user.setEnabled(false);
         user.setLanguage(Language.DE);
         
-        if(!Optional.ofNullable(userRepository.findByUsername(user.getUsername())).isPresent() && 
-           !Optional.ofNullable(userRepository.findByEmail(user.getEmail())).isPresent()) {
+        if(!Optional.ofNullable(userRepository.findByUsernameIgnoreCase(user.getUsername())).isPresent() &&
+           !Optional.ofNullable(userRepository.findByEmailIgnoreCase(user.getEmail())).isPresent()) {
             userRepository.save(user);
             notificationService.sendNotification(new RegistrationMessage(user));
             return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -65,7 +65,7 @@ public class RegistrationResource {
     public ResponseEntity<Boolean> uniqueEmail(@RequestBody String email) {
 
 	boolean found = false;
-	if (Optional.ofNullable(userRepository.findByEmail(email)).isPresent())
+	if (Optional.ofNullable(userRepository.findByEmailIgnoreCase(email)).isPresent())
 	    found = true;
 	    
         return new ResponseEntity<Boolean>(found, HttpStatus.OK);
@@ -76,7 +76,7 @@ public class RegistrationResource {
     public ResponseEntity<Boolean> uniqueUsername(@RequestBody String username) {
 
 	boolean found = false;
-	if (Optional.ofNullable(userRepository.findByUsername(username)).isPresent())
+	if (Optional.ofNullable(userRepository.findByUsernameIgnoreCase(username)).isPresent())
 	    found = true;
 	    
         return new ResponseEntity<Boolean>(found, HttpStatus.OK);

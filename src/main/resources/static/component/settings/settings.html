@@ -3,13 +3,13 @@
     <div class="col-lg-12">
         <div class="row">
             <div class="col-lg-10">
-                <h2>Settings</h2>
+                <h2>{{ 'SETTINGS_MENU' | translate }}</h2>
                 <ol class="breadcrumb">
                     <li>
                         <a href="#/dashboard">Home</a>
                     </li>
                     <li class="active">
-                        <strong>Settings</strong>
+                        <strong>{{ 'SETTINGS_MENU' | translate }}</strong>
                     </li>
                 </ol>
             </div>
@@ -17,24 +17,20 @@
     </div>
 </div>
 
-
-<!-- Plan example for container -->
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Benutzer freischalten</h5>
+                    <h5>{{ 'SETTING_ACCESS_MANAGEMENT' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
                     <table class="table text-center">
                         <thead>
                         <tr>
                             <th class="text-center">#</th>
-                            <th class="text-center">Username</th>
-                            <th class="text-center">First name</th>
-                            <th class="text-center">Last name</th>
-                            <th class="text-center">Email</th>
+                            <th class="text-center">{{ 'COMMON_USERNAME' | translate }}</th>
+                            <th class="text-center">{{ 'COMMON_EMAIL' | translate }}</th>
                             <th class="text-center"><i class="fa fa-cog"></i></th>
                         </tr>
                         </thead>
@@ -42,18 +38,16 @@
                         <tr ng-model="setting.user" ng-repeat="user in setting.users | orderBy:'username'">
                             <td>{{$index+1}}</td>
                             <td>{{user.username}}</td>
-                            <td>{{user.surname}}</td>
-                            <td>{{user.lastname}}</td>
                             <td>{{user.email}}</td>
                             <td ng-if="user.enabled==false">
                                 <button ng-click="setting.activateUser(user)" type="button" class="btn btn-success">
-                                    <i class="fa fa-check"></i>&nbsp;Freischalten
+                                    <i class="fa fa-check"></i>&nbsp;{{ 'SETTING_ACTIVATE_USER' | translate }}
                                 </button>
                             </td>
                             <td ng-if="user.enabled==true">
                                 <button ng-click="setting.deactivateUser(user)" type="button"
                                         class="btn btn-success" ng-disabled="setting.hasRight(user)">
-                                    <i class="fa fa-ban"></i>&nbsp;Deaktivieren
+                                    <i class="fa fa-ban"></i>&nbsp;{{ 'SETTING_DEACTIVATE_USER' | translate }}
                                 </button>
                             </td>
                         </tr>
@@ -67,31 +61,31 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>Benutzer Role verwalten</h5>
+                    <h5>{{ 'SETTING_ROLE_MANAGEMENT' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
                     <table class="table text-center">
                         <thead>
                         <tr>
                             <th class="text-center">#</th>
-                            <th class="text-center">Username</th>
-                            <th class="text-center">Rolle</th>
+                            <th class="text-center">{{ 'COMMON_USERNAME' | translate }}</th>
+                            <th class="text-center">{{ 'COMMON_ROLE' | translate }}</th>
                             <th class="text-center"><i class="fa fa-cog"></i></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-model="setting.user" ng-repeat="user in setting.users | orderBy:'username'">
                             <td>{{$index+1}}</td>
-                            <td>{{user.email}}</td>
+                            <td>{{user.username}}</td>
                             <td><select ng-model="setting.roleSelection[user.id]">
-                                <option ng-if="globals.currentUser.role == 'admin'" value="user">User</option>
+                                <option ng-if="globals.currentUser.role == 'admin'" value="user">{{ 'COMMON_USER' | translate }}</option>
                                 <option ng-if="globals.currentUser.role == 'admin'" value="admin">Admin</option>
                                 <option ng-if="globals.currentUser.role == 'superadmin'" value="superadmin">Superadmin</option>
                             </select></td>
                             <td>
                                 <button ng-click="setting.saveRole(user)" type="button"
                                         class="btn btn-success" ng-disabled="setting.hasRight(user)">
-                                    <i class="fa fa-save"></i>&nbsp;Save
+                                    <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
                                 </button>
                             </td>
                         </tr>

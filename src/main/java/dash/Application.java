@@ -67,15 +67,15 @@ public class Application {
                 .paths(paths())
                 .build();
     }
-    
+
     @Bean
     public Docket vortoApi() {
-	StopWatch watch = new StopWatch();
-	watch.start();
-	Docket docket = new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).useDefaultResponseMessages(false)
-			.select().paths(paths()).build();
-	watch.stop();
-	return docket;
+        StopWatch watch = new StopWatch();
+        watch.start();
+        Docket docket = new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).useDefaultResponseMessages(false)
+                .select().paths(paths()).build();
+        watch.stop();
+        return docket;
     }
 
 
@@ -90,7 +90,7 @@ public class Application {
                 regex("/api/rest/processes/offers.*"),
                 regex("/api/rest/processes/offers/prospects.*"),
                 regex("/api/rest/processes/sales.*"),
-                regex("/api/rest/processes/sales/customers.*")               
+                regex("/api/rest/processes/sales/customers.*")
         );
     }
 
@@ -108,42 +108,42 @@ public class Application {
     private UserRepository userRepository;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-        
+
     @PostConstruct
     public void createAdminIfNotExists() throws Exception {
-        
-	if(!Optional.ofNullable(userRepository.findByUsername("andreas")).isPresent()){
-    	
-	    User user1 = new User();
-    
+
+        if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("andreas")).isPresent()) {
+
+            User user1 = new User();
+
             user1.setUsername("andreas".toLowerCase());
-            user1.setPassword( passwordEncoder().encode("admin"));
+            user1.setPassword(passwordEncoder().encode("admin"));
             user1.setEmail("andreas.foitzik@live.com");
             user1.setRole(Role.ADMIN);
             user1.setEnabled(true);
             user1.setLanguage(Language.DE);
-    
+
             userRepository.save(user1);
-	}
-	
-	if(!Optional.ofNullable(userRepository.findByUsername("sven")).isPresent()){
-            
-	    User user2 = new User();
-    
+        }
+
+        if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("sven")).isPresent()) {
+
+            User user2 = new User();
+
             user2.setUsername("sven".toLowerCase());
-            user2.setPassword( passwordEncoder().encode("admin"));
+            user2.setPassword(passwordEncoder().encode("admin"));
             user2.setEmail("sven-jaschkewitz@web.de");
             user2.setRole(Role.ADMIN);
             user2.setEnabled(true);
             user2.setLanguage(Language.DE);
-    
+
             userRepository.save(user2);
-	}
+        }
     }
-    
+
     @EnableWebSecurity
     @Configuration
     @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
@@ -153,58 +153,59 @@ public class Application {
         private UserDetailsService userDetailsService;
 
         @Autowired
-	private RESTAuthenticationEntryPoint authenticationEntryPoint;
-	
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+        private RESTAuthenticationEntryPoint authenticationEntryPoint;
 
-		http.httpBasic().and()
-				.authorizeRequests()
-				.antMatchers(HttpMethod.GET, "/application/**").permitAll()
-				.antMatchers(HttpMethod.PUT, "/application/**").permitAll()
-				.antMatchers("application/user/**").permitAll()
-				.antMatchers("application/**",
-					    "/user",
-					    "/application/user",
-			                    "/application/api/rest/comments**",
-			                    "/application/api/rest/containers**",
-			                    "/application/api/rest/inquirers**",
-			                    "/application/api/rest/leads**",
-			                    "/application/api/rest/sales**",
-			                    "/application/api/rest/vendors**",
-			                    "/application/api/rest/registrations**")
-				.permitAll()
-				.and()
-				.addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
-				.csrf()
-				.csrfTokenRepository(csrfTokenRepository())
-				.and()
-				.csrf()
-				.disable()
-				.logout()
-				.logoutUrl("/logout")
-				.logoutSuccessUrl("/")
-				.and()
-				.headers()
-				.frameOptions().sameOrigin()
-				.httpStrictTransportSecurity().disable();
-		
-		http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
-	}
+        @Autowired
+        private PasswordEncoder passwordEncoder;
 
-	private CsrfTokenRepository csrfTokenRepository() {
-		HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-		repository.setHeaderName("X-XSRF-TOKEN");
-		return repository;
-	}
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-	}
+            http.httpBasic().and()
+                    .authorizeRequests()
+                    .antMatchers(HttpMethod.GET, "/application/**").permitAll()
+                    .antMatchers(HttpMethod.PUT, "/application/**").permitAll()
+                    .antMatchers("application/user/**").permitAll()
+                    .antMatchers("application/**",
+                            "/user",
+                            "/application/user",
+                            "/application/api/rest/processes**",
+                            "/application/api/rest/comments**",
+                            "/application/api/rest/containers**",
+                            "/application/api/rest/inquirers**",
+                            "/application/api/rest/leads**",
+                            "/application/api/rest/sales**",
+                            "/application/api/rest/vendors**",
+                            "/application/api/rest/registrations**")
+                    .permitAll()
+                    .and()
+                    .addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
+                    .csrf()
+                    .csrfTokenRepository(csrfTokenRepository())
+                    .and()
+                    .csrf()
+                    .disable()
+                    .logout()
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/")
+                    .and()
+                    .headers()
+                    .frameOptions().sameOrigin()
+                    .httpStrictTransportSecurity().disable();
+
+            http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
+        }
+
+        private CsrfTokenRepository csrfTokenRepository() {
+            HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+            repository.setHeaderName("X-XSRF-TOKEN");
+            return repository;
+        }
+
+        @Autowired
+        public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+            auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+        }
 
     }
 
