@@ -33,30 +33,34 @@ public class TurnoverStatisticService implements ITurnoverStatisticService {
         
     @Autowired
     private RequestRepository<Sale, Long> 		repository;
-    
-    private Calendar until 				= Calendar.getInstance();
-    
+        
     public <T> Result getDailyTurnoverStatistic(){
 
-	final List<Sale> sales = repository.findByTimestamp(until);
+	Calendar until = Calendar.getInstance();
+	until.add(Calendar.DAY_OF_MONTH, 1);
+	
+	Calendar tmp = Calendar.getInstance();
+	tmp.add(Calendar.DAY_OF_MONTH, -1);
+	
+	final List<Sale> sales = repository.findByTimestampBetween(tmp, until);
 	
 	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
 
 	countOfSaleInDate.put(until.get(Calendar.DAY_OF_MONTH)+"", 0.00);
 	
+	double value = 0.0;
 	for(Sale sale: sales){
-	    final Calendar timeStamp = sale.getTimestamp();
-	    String key = timeStamp.get(Calendar.DAY_OF_MONTH)+"";
-	    if(countOfSaleInDate.containsKey(key)){
-		double value = countOfSaleInDate.get(key) + sale.getSaleReturn();
-		countOfSaleInDate.put(key, value);
-	    }
+	    value += sale.getSaleReturn();
 	}	   
 
+	countOfSaleInDate.put(until.get(Calendar.DAY_OF_MONTH)+"", value);
+	
 	return new Result(new ArrayList<Double>(countOfSaleInDate.values()));
     }
         
     public <T> Result getWeeklyTurnoverStatistic(){
+	
+	Calendar until = Calendar.getInstance();
 	
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.DAY_OF_YEAR, -7);
@@ -69,13 +73,13 @@ public class TurnoverStatisticService implements ITurnoverStatisticService {
 	    countOfSaleInDate.put(tmp.get(Calendar.DAY_OF_YEAR)+"", 0.00);
 	    tmp.add(Calendar.DAY_OF_YEAR, 1);
 	}
+	
 	for(Sale sale: sales){
 	    Calendar timeStamp = sale.getTimestamp();
 	    String key = timeStamp.get(Calendar.DAY_OF_YEAR)+"";
 	    if(countOfSaleInDate.containsKey(key)){
 		double value = countOfSaleInDate.get(key) + sale.getSaleReturn();
-		countOfSaleInDate.put(key, value);
-		
+		countOfSaleInDate.put(key, value);	
 	    }
 	}	   
 
@@ -84,15 +88,17 @@ public class TurnoverStatisticService implements ITurnoverStatisticService {
     
     public <T> Result getMonthlyTurnoverStatistic(){
 	
+	Calendar until = Calendar.getInstance();
+	
 	Calendar tmp = Calendar.getInstance();
-	tmp.add(Calendar.MONTH, -1);
+	tmp.add(Calendar.DAY_OF_MONTH, -30);
 	
 	final List<Sale> sales 		= repository.findByTimestampBetween(tmp, until);
 	
 	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
 	
 	while(ymdC.compare(tmp, until) <= 0){
-	    countOfSaleInDate.put(Calendar.DAY_OF_MONTH+"", 0.00);
+	    countOfSaleInDate.put(tmp.get(Calendar.DAY_OF_MONTH)+"", 0.00);
 	    tmp.add(Calendar.DAY_OF_MONTH, 1);
 	}
 	for(Sale sale: sales){
@@ -108,6 +114,8 @@ public class TurnoverStatisticService implements ITurnoverStatisticService {
     }
     
     public <T> Result getYearlyTurnoverStatistic(){
+	
+	Calendar until = Calendar.getInstance();
 	
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.YEAR, -1);
@@ -133,6 +141,8 @@ public class TurnoverStatisticService implements ITurnoverStatisticService {
     }
     
     public <T> Result getAllTurnoverStatistic(){
+	
+	Calendar until = Calendar.getInstance();
 	
 	Calendar tmp = Calendar.getInstance();
 	tmp.set(2014, 1, 1);
