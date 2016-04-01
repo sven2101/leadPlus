@@ -1,54 +1,3 @@
-StatisticsCtrl.prototype.entireStatisticSpline = function () {
-    var chartConfig = {
-        options: {
-            chart: {
-                type: 'spline'
-            },
-            title: '',
-            tooltip: {
-                shared: true,
-                valueSuffix: ''
-            },
-            xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-            },
-            yAxis: {
-                title: {
-                    text: 'Anzahl'
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle',
-                borderWidth: 0
-            }
-        },
-        series: [{
-            name: 'Anfragen',
-            data: [5, 7, 3, 8, 4, 7, 5,8,5,9,3,5],
-            color: '#ed5565'
-        }, {
-            name: 'Angebote',
-            data: [5, 7, 3, 8, 4, 7, 5,8,5,9,3,5],
-            color: '#f8ac59'
-        }, {
-            name: 'Verkäufe',
-            data: [5, 7, 3, 8, 4, 7, 5,8,5,9,3,5],
-            color: '#1a7bb9'
-        }],
-        //function (optional)
-        func: function (chart) {
-            //setup some logic for the chart
-        }
-    };
-    return chartConfig;
-};
 
 StatisticsCtrl.prototype.entireStatisticArea = function () {
     var chartConfig = {
@@ -88,6 +37,46 @@ StatisticsCtrl.prototype.entireStatisticArea = function () {
     return chartConfig;
 };
 
+StatisticsCtrl.prototype.entireStatisticSpline = function () {
+    var chartConfig = {
+        options: {
+            chart: {
+                type: 'spline'
+            },
+            title: '',
+            tooltip: {
+                shared: true,
+                valueSuffix: ''
+            },
+            xAxis: {
+                categories: []
+            },
+            yAxis: {
+                title: {
+                    text: 'Anzahl'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            }
+        },
+        series: [],
+        //function (optional)
+        func: function (chart) {
+            //setup some logic for the chart
+        }
+    };
+    return chartConfig;
+};
+
 StatisticsCtrl.prototype.getLeadsConversionRate = function () {
     var chartConfig = {
         options: {
@@ -98,8 +87,7 @@ StatisticsCtrl.prototype.getLeadsConversionRate = function () {
                 text: ''
             },
             xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                categories: [],
             },
             yAxis: {
                 title: {
@@ -127,12 +115,7 @@ StatisticsCtrl.prototype.getLeadsConversionRate = function () {
                 }
             },
         },
-        series: [{
-            name: 'Abschlüsse aus Anfragen',
-            data: [5, 7, 3, 8, 4, 7, 5,8,5,9,3,5],
-            color: '#ed5565'
-
-        }]
+        series: []
     };
 
     return chartConfig;
@@ -149,8 +132,7 @@ StatisticsCtrl.prototype.getOffersConversionRate = function () {
                 text: ''
             },
             xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                categories: [],
             },
             yAxis: {
                 title: {
@@ -178,12 +160,7 @@ StatisticsCtrl.prototype.getOffersConversionRate = function () {
                 }
             },
         },
-        series: [{
-            name: 'Abschlüsse aus Angeboten',
-            data: [20, 30, 40, 30, 25, 35, 40,30,40,34,50,60],
-            color: '#f8ac59'
-
-        }]
+        series: []
     };
 
     return chartConfig;
