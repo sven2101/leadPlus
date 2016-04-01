@@ -11,6 +11,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
     this.userService.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
         vm.user = result;
     });
+    this.test = 'de';
     this.scope = $scope;
     this.rootScope = $rootScope;
     this.translate = $translate;
@@ -37,7 +38,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
             {
                 extend: 'copyHtml5',
                 exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    columns: [6, 1, 2, 3, 5, 7, 10, 11, 12, 8, 9, 13, 14, 15],
                     modifier: {
                         page: 'current'
                     }
@@ -46,7 +47,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
             {
                 extend: 'print',
                 exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    columns: [6, 1, 2, 3, 5, 7, 10, 11, 12, 8, 9, 13, 14, 15],
                     modifier: {
                         page: 'current'
                     }
@@ -56,7 +57,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
                 extend: 'csvHtml5',
                 title: $translate('OFFER_OFFERS'),
                 exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    columns: [6, 1, 2, 3, 5, 7, 10, 11, 12, 8, 9, 13, 14, 15],
                     modifier: {
                         page: 'current'
                     }
@@ -67,7 +68,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
                 extend: 'excelHtml5',
                 title: $translate.instant('OFFER_OFFERS'),
                 exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    columns: [6, 1, 2, 3, 5, 7, 10, 11, 12, 8, 9, 13, 14, 15],
                     modifier: {
                         page: 'current'
                     }
@@ -78,7 +79,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
                 title: $translate('OFFER_OFFERS'),
                 orientation: 'landscape',
                 exportOptions: {
-                    columns: [1, 2, 7, 8, 9, 10],
+                    columns: [6, 1, 2, 7, 10, 11, 12, 8, 9, 13, 14],
                     modifier: {
                         page: 'current'
                     }
@@ -110,7 +111,24 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
             .notVisible(),
         DTColumnBuilder.newColumn('offer.deliveryDate').withTitle($translate('COMMON_DELIVERY_TIME'))
             .notVisible(),
-        DTColumnBuilder.newColumn('offer.offerPrice').withTitle($translate('COMMON_CONTAINER_OFFER_PRICE'))
+        DTColumnBuilder.newColumn('offer.containerAmount').withTitle($translate('COMMON_CONTAINER_AMOUNT'))
+            .notVisible(),
+        DTColumnBuilder.newColumn(null).withTitle($translate('COMMON_CONTAINER_SINGLE_PRICE'))
+            .renderWith(function (data, type, full) {
+                return $filter('currency')(data.offer.container.priceNetto, '€', 2);
+            })
+            .notVisible(),
+        DTColumnBuilder.newColumn(null).withTitle($translate('COMMON_CONTAINER_ENTIRE_PRICE'))
+            .renderWith(function (data, type, full) {
+                return $filter('currency')(data.offer.container.priceNetto * data.offer.containerAmount, '€', 2);
+            })
+            .notVisible(),
+        DTColumnBuilder.newColumn(null).withTitle($translate('COMMON_CONTAINER_OFFER_PRICE'))
+            .renderWith(function (data, type, full) {
+                return $filter('currency')(data.offer.offerPrice, '€', 2);
+            })
+            .notVisible(),
+        DTColumnBuilder.newColumn('processor.username').withTitle($translate('COMMON_PROCESSOR'))
             .notVisible(),
         DTColumnBuilder.newColumn(null).withTitle($translate('COMMON_STATUS'))
             .withClass('text-center')

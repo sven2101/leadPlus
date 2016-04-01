@@ -120,14 +120,20 @@
                             translate }}</p>
                     </div>
                     <!-- DELIVERY DATE -->
-                    <div class="form-group"
-                         ng-class="{ 'has-error' : offer.editForm.deliveryDate.$invalid && !offer.editForm.deliveryDate.$pristine }">
-                        <label>{{ 'COMMON_DELIVERY_TIME'| translate }}</label>
-                        <input type="text" name="deliveryDate" class="form-control"
-                               ng-model="offer.editProcess.offer.deliveryDate" ng-maxlength="50">
-                        <p ng-show="offer.editForm.deliveryDate.$invalid && !offer.editForm.deliveryDate.$pristine"
-                           class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' |
-                            translate }}</p>
+                    <div class="form-group" id="editOfferDatepicker">
+                        <label>{{ 'COMMON_DELIVERY_TIME' | translate }}</label>
+                        <div ng-show="$root.language == 'de'" class="input-group date" data-date-language="de"
+                             data-date-format="dd.mm.yyyy">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" class="form-control" name="deliveryDate"
+                                   ng-model="offer.editProcess.offer.deliveryDate">
+                        </div>
+                        <div ng-show="$root.language == 'en'" class="input-group date" data-date-language="en"
+                             data-date-format="dd.mm.yyyy">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                            <input type="text" class="form-control" name="deliveryDate"
+                                   ng-model="offer.editProcess.offer.deliveryDate">
+                        </div>
                     </div>
                     <div class="form-group">
                         <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{offer.editProcess.offer.containerAmount
@@ -158,3 +164,14 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $('#editOfferDatepicker .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true
+        });
+    });
+</script>
