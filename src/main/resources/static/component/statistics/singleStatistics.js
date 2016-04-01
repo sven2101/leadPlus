@@ -50,8 +50,6 @@ StatisticsCtrl.prototype.getLeads = function (leads) {
         data: leads.result,
         color: '#ed5565'
     });
-	
-	this.leadsConversionRate();
 };
 
 StatisticsCtrl.prototype.getOffers = function (offers) {
@@ -89,8 +87,10 @@ StatisticsCtrl.prototype.getSales = function (sales) {
         y: this.sales,
         color: '#1a7bb9'
     });
-	this.getConversionrate();
 	
+    this.getConversionrate();
+	this.leadsConversionRate();
+
     this.chartEntireStatisticSpline.series.push({
         name: 'Verkäufe',
         data: sales.result,
@@ -140,21 +140,14 @@ StatisticsCtrl.prototype.getProfitPerSale = function () {
 
 StatisticsCtrl.prototype.leadsConversionRate = function () {
 	var salesToLeadsConversion = new Array();
-	console.log(this.saleResult);
+
 	for (var counter in this.leadResult) {		
-		if (this.leadResult[counter] != 0 && this.saleResult[counter] != 0){
-			console.log(this.leadResult[counter]);
-			console.log(this.saleResult[counter]);
-			
+		if (this.leadResult[counter] !== 0 && this.saleResult[counter] !== 0)
 			salesToLeadsConversion.push(this.leadResult[counter] / this.saleResult[counter]);
-		}
-		else {
+		else 
 			salesToLeadsConversion.push(0);
-		}
 	}
-	
-	console.log("leadsConversionRate", salesToLeadsConversion);
-	
+		
     this.chartLeadsConversionRate.series.push({
         name: 'Abschlüsse aus Anfragen',
         data: salesToLeadsConversion,
