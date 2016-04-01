@@ -55,15 +55,9 @@
                         <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
                         <td>{{dashboard.infoData.leadPrice | currency:'\u20AC'}}</td>
                     </tr>
-                    <tr ng-if="dashboard.infoType == 'offer'">
+                    <tr ng-if="dashboard.infoType == 'offer' || dashboard.infoType == 'sale' ">
                         <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
                         <td>{{dashboard.infoData.containerAmount*dashboard.infoData.container.priceNetto |
-                            currency:'\u20AC'}}
-                        </td>
-                    </tr>
-                    <tr ng-if="dashboard.infoType == 'offer'">
-                        <td>{{ 'COMMON_CONTAINER_OFFER_PRICE' | translate }}</td>
-                        <td>{{dashboard.infoData.offerPrice |
                             currency:'\u20AC'}}
                         </td>
                     </tr>
@@ -77,6 +71,12 @@
                         <td>{{ 'COMMON_DELIVERY_TIME' | translate }}</td>
                         <td>{{dashboard.infoData.deliveryDate |
                             date:'dd-MM-yyyy'}}
+                        </td>
+                    </tr>
+                    <tr ng-if="dashboard.infoType == 'offer'">
+                        <td>{{ 'COMMON_CONTAINER_OFFER_PRICE' | translate }}</td>
+                        <td>{{dashboard.infoData.offerPrice |
+                            currency:'\u20AC'}}
                         </td>
                     </tr>
                     <tr ng-if="dashboard.infoType == 'sale'">
@@ -155,7 +155,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}</button>
+                <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}
+                </button>
             </div>
         </div>
     </div>

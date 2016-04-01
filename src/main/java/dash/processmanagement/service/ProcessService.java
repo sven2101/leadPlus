@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import dash.exceptions.HasAlreadyProcessorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -84,7 +85,7 @@ public class ProcessService implements IProcessService {
     public void createProcess(Process process) {
         if (Optional.ofNullable(process).isPresent()) {
             if (Optional.ofNullable(process.getProcessor()).isPresent()) {
-                if (!Optional.ofNullable(userRepository.findByUsername(process.getProcessor().getUsername())).isPresent()) {
+                if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase(process.getProcessor().getUsername())).isPresent()) {
                     userRepository.save(process.getProcessor());
                 }
             }
@@ -147,18 +148,15 @@ public class ProcessService implements IProcessService {
     }
 
     public void createProcessor(Long processId, String username) throws Exception {
-        final User processor = userRepository.findByUsername(username);
+        final User processor = userRepository.findByUsernameIgnoreCase(username);
         Process process = processRepository.findOne(processId);
-
-        if (Optional.ofNullable(processor).isPresent()) {
-            if (Optional.ofNullable(process).isPresent()) {
-                process.setProcessor(processor);
-                processRepository.save(process);
-            } else {
-                throw new ProcessNotFoundException("Process not found");
-            }
-        } else {
+        if (!Optional.ofNullable(process).isPresent())
+            throw new ProcessNotFoundException("Process not found");
+        if (!Optional.ofNullable(processor).isPresent())
             throw new UsernameNotFoundException("User not found");
+        if (!Optional.ofNullable(process.getProcessor()).isPresent()) {
+            process.setProcessor(processor);
+            processRepository.save(process);
         }
 
     }

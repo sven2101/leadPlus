@@ -58,6 +58,7 @@ public class OfferResource {
 
         //set main data
         offer.setTimestamp(updateOffer.getTimestamp());
+        offer.setOfferPrice(updateOffer.getOfferPrice());
         offer.setContainerAmount(updateOffer.getContainerAmount());
         offer.setDeliveryDate(updateOffer.getDeliveryDate());
         offer.setDeliveryAddress(updateOffer.getDeliveryAddress());

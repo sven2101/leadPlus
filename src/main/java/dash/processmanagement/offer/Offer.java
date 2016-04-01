@@ -42,7 +42,7 @@ public class Offer implements Request {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = true, columnDefinition = "timestamptz")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private Calendar deliveryDate;
 
     private double offerPrice;

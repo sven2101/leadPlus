@@ -95,7 +95,9 @@ LeadsCtrl.prototype.followUp = function (process) {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_NEW_OFFER'));
             vm.rootScope.leadsCount -= 1;
             vm.rootScope.offersCount += 1;
-            vm.refreshData();
+            vm.processesService.setProcessor({id: process.id}, vm.user.username).$promise.then(function () {
+                vm.refreshData();
+            });
         });
     });
 };
@@ -132,17 +134,16 @@ LeadsCtrl.prototype.saveEditedRow = function () {
 
 LeadsCtrl.prototype.deleteRow = function (process) {
     var vm = this;
-    this.processesService.putProcess({id: process.id}, {lead: null}).$promise.then(function () {
+    var leadId = process.lead.id;
+    process.lead = null;
+    this.processesService.putProcess({id: process.id}, process).$promise.then(function () {
         if (process.offer == null && process.sale == null) {
             vm.processesService.deleteProcess({id: process.id});
         }
-        vm.processesService.deleteLead({id: process.lead.id}).$promise.then(function () {
+        vm.processesService.deleteLead({id: leadId}).$promise.then(function () {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_DELETE_LEAD'));
             if (process.status == 'open') {
                 vm.rootScope.leadsCount -= 1;
-            }
-            else if (process.status == 'offer') {
-                vm.rootScope.offersCount -= 1;
             }
             vm.refreshData();
         });

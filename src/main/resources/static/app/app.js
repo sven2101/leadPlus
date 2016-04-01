@@ -123,12 +123,6 @@ angular.module('app').controller('appCtrl', function ($translate, $scope, $rootS
         $rootScope.leadsCount = 0;
         $rootScope.offersCount = 0;
 
-
-        if (!angular.isUndefined($rootScope.globals.currentUser)) {
-            Profile.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
-                $rootScope.changeLanguage(result.language);
-            });
-        }
         Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
             $rootScope.leadsCount = result.length;
         });
@@ -139,6 +133,16 @@ angular.module('app').controller('appCtrl', function ($translate, $scope, $rootS
             $translate.use(langKey);
             $rootScope.language = langKey;
         };
+
+        $rootScope.setUserDefaultLanguage = function () {
+            if (!angular.isUndefined($rootScope.globals.currentUser)) {
+                Profile.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
+                    $rootScope.changeLanguage(result.language);
+                });
+            }
+        }
+
+        $rootScope.setUserDefaultLanguage();
 
         var stop;
         $rootScope.$on('$destroy', function () {
@@ -155,5 +159,7 @@ angular.module('app').controller('appCtrl', function ($translate, $scope, $rootS
                 $rootScope.offersCount = result.length;
             });
         }.bind(this), 300000);
+
+
     }
 );

@@ -11,6 +11,8 @@ import dash.processmanagement.lead.inquirer.InquirerRepository;
 import dash.processmanagement.lead.vendor.Vendor;
 import dash.processmanagement.lead.vendor.VendorRepository;
 
+import java.util.Optional;
+
 @Service
 public class LeadService implements ILeadService {
 
@@ -26,14 +28,15 @@ public class LeadService implements ILeadService {
     @Autowired
     private ContainerRepository containerRepository;
     
-    public void createLead(Lead lead){
-
-	Vendor vendor = vendorRepository.findByName(lead.getVendor().getName());
-	if(vendor == null){
-            vendorRepository.save(lead.getVendor());
-	} else {
-	    lead.setVendor(vendor);
-	}
-        leadRepository.save(lead);
+    public void createLead(Lead lead) {
+        if (Optional.ofNullable(lead).isPresent()) {
+            Vendor vendor = vendorRepository.findByName(lead.getVendor().getName());
+            if (vendor == null) {
+                vendorRepository.save(lead.getVendor());
+            } else {
+                lead.setVendor(vendor);
+            }
+            leadRepository.save(lead);
+        }
     }
 }
