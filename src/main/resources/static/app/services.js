@@ -79,6 +79,7 @@ angular.module('app.services', ['ngResource'])
             deleteSale: {url: '/application/api/rest/processes/sales/:id', method: 'DELETE'},
             getProcessor: {url: '/application/api/rest/processes/:id/processors', method: 'GET'},
             setProcessor: {url: '/application/api/rest/processes/:id/processors', method: 'PUT'},
+            removeProcessor: {url: '/application/api/rest/processes/:id/processors/remove', method: 'DELETE'},
             getComments: {url: '/application/api/rest/processes/:id/comments', method: 'GET', isArray: true},
             addComment: {url: '/application/api/rest/processes/:id/comments', method: 'POST'},
             getStatus: {url: '/application/api/rest/processes/:id/:status', method: 'GET'},
@@ -107,6 +108,9 @@ angular.module('app.services', ['ngResource'])
             },
             getLatestSales: {
                 url: '/application/api/rest/processes/latestSales', method: 'GET', isArray: true
+            },
+            getLatest100Sales: {
+                url: '/application/api/rest/processes/latest100Sales', method: 'GET', isArray: true
             }
         });
     }])

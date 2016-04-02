@@ -10,11 +10,11 @@
                 <h3>{{ 'COMMON_CHILDROW_ADDITONAL_TITLE' | translate }}</h3>
             </div>
             <div class="ibox-content">
-                <p ng-if="leadChildData.processor != null">{{ 'COMMON_PROCESSOR' | translate }}: {{leadChildData.processor.username}}</p>
                 <table class="table table-bordered text-left">
                     <tr>
                         <td>{{ 'COMMON_NAME' | translate }}</td>
-                        <td>{{leadChildData.lead.inquirer.title}} {{leadChildData.lead.inquirer.firstname}}
+                        <td>{{ leadChildData.lead.inquirer.title | translate }}
+                            {{leadChildData.lead.inquirer.firstname}}
                             {{leadChildData.lead.inquirer.lastname}}
                         </td>
                     </tr>
@@ -47,6 +47,13 @@
                         <td>{{leadChildData.lead.destination}}</td>
                     </tr>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6" ng-if="leadChildData.processor != null">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h3>{{ 'COMMON_PROCESSOR' | translate }}: {{leadChildData.processor.username}}</h3>
             </div>
         </div>
     </div>

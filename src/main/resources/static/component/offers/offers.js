@@ -1,7 +1,7 @@
 'use strict';
 angular.module('app.offers', ['ngResource']).controller('OffersCtrl', OffersCtrl);
-OffersCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', '$filter', 'Profile', '$rootScope', '$interval', '$translate'];
-function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, $filter, Profile, $rootScope, $interval, $translate) {
+OffersCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', '$filter', 'Profile', '$rootScope', '$translate'];
+function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, $filter, Profile, $rootScope, $translate) {
 
     var vm = this;
     this.filter = $filter;
@@ -11,7 +11,6 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
     this.userService.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
         vm.user = result;
     });
-    this.test = 'de';
     this.scope = $scope;
     this.rootScope = $rootScope;
     this.translate = $translate;
@@ -169,6 +168,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
     function addActionsButtons(data, type, full, meta) {
         vm.processes[data.id] = data;
         var disabled = '';
+        var hasRightToDelete = '';
         var closeOrOpenOfferDisable = '';
         var openOrLock = "{{ 'OFFER_CLOSE_OFFER' | translate }}";
         var faOpenOrLOck = 'fa fa-lock';
@@ -180,7 +180,9 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
         if (data.sale != null) {
             closeOrOpenOfferDisable = 'disabled';
         }
-
+        if ($rootScope.globals.currentUser.role == 'user') {
+            hasRightToDelete = 'disabled';
+        }
 
         return '<button class="btn btn-white" ' + disabled + ' ng-click="offer.followUp(offer.processes[' + data.id + '])" title="{{ \'OFFER_FOLLOW_UP\' | translate }}">' +
             '   <i class="fa fa-check"></i>' +
@@ -192,7 +194,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
             'data-target="#editModal" title="{{ \'OFFER_EDIT_OFFER\' | translate }}">' +
             '<i class="fa fa-edit"></i>' +
             '</button>&nbsp;' +
-            '<button class="btn btn-white" ng-click="offer.deleteRow(offer.processes[' + data.id + '])" title="{{ \'OFFER_DELETE_OFFER\' | translate }}">' +
+            '<button class="btn btn-white"' + hasRightToDelete + ' ng-click="offer.deleteRow(offer.processes[' + data.id + '])" title="{{ \'OFFER_DELETE_OFFER\' | translate }}">' +
             '   <i class="fa fa-trash-o"></i>' +
             '</button>';
     }

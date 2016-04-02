@@ -59,7 +59,7 @@ angular.module('app')
             .when('/sales', {
                 templateUrl: 'component/sales/sales.html',
                 controller: 'SalesCtrl',
-                controllerAs: 'sales',
+                controllerAs: 'sale',
                 authenticated: true
             })
             .when('/statistic', {

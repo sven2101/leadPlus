@@ -35,4 +35,6 @@ public interface ProcessRepository extends JpaRepository<Process, Long> {
     List<Sale> findBySaleIsNotNull();
 
     List<Sale> findTop10BySaleIsNotNullOrderBySaleTimestampDesc();
+
+    List<Sale> findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
 }

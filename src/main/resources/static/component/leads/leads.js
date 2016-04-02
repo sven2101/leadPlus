@@ -1,7 +1,7 @@
 'use strict';
 angular.module('app.leads', ['ngResource']).controller('LeadsCtrl', LeadsCtrl);
-LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', '$filter', 'Profile', '$rootScope', '$interval', '$translate'];
-function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, $filter, Profile, $rootScope, $interval, $translate) {
+LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', '$filter', 'Profile', '$rootScope', '$translate'];
+function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, $filter, Profile, $rootScope, $translate) {
 
     var vm = this;
     this.filter = $filter;
@@ -37,7 +37,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             {
                 extend: 'copyHtml5',
                 exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    columns: [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12],
                     modifier: {
                         page: 'current'
                     }
@@ -46,7 +46,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             {
                 extend: 'print',
                 exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    columns: [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12],
                     modifier: {
                         page: 'current'
                     }
@@ -56,7 +56,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
                 extend: 'csvHtml5',
                 title: $translate('LEAD_LEADS'),
                 exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    columns: [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12],
                     modifier: {
                         page: 'current'
                     }
@@ -67,7 +67,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
                 extend: 'excelHtml5',
                 title: $translate.instant('LEAD_LEADS'),
                 exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    columns: [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12],
                     modifier: {
                         page: 'current'
                     }
@@ -78,7 +78,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
                 title: $translate('LEAD_LEADS'),
                 orientation: 'landscape',
                 exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 4, 7, 8, 9],
+                    columns: [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12],
                     modifier: {
                         page: 'current'
                     }
@@ -107,6 +107,18 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
         DTColumnBuilder.newColumn('lead.container.name').withTitle($translate('COMMON_CONTAINER'))
             .notVisible(),
         DTColumnBuilder.newColumn('lead.destination').withTitle($translate('COMMON_CONTAINER_DESTINATION'))
+            .notVisible(),
+        DTColumnBuilder.newColumn('lead.containerAmount').withTitle($translate('COMMON_CONTAINER_AMOUNT'))
+            .notVisible(),
+        DTColumnBuilder.newColumn(null).withTitle($translate('COMMON_CONTAINER_SINGLE_PRICE'))
+            .renderWith(function (data, type, full) {
+                return $filter('currency')(data.lead.container.priceNetto, '€', 2);
+            })
+            .notVisible(),
+        DTColumnBuilder.newColumn(null).withTitle($translate('COMMON_CONTAINER_ENTIRE_PRICE'))
+            .renderWith(function (data, type, full) {
+                return $filter('currency')(data.lead.leadPrice, '€', 2);
+            })
             .notVisible(),
         DTColumnBuilder.newColumn(null).withTitle($translate('COMMON_STATUS'))
             .withClass('text-center')
@@ -147,21 +159,33 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     function addActionsButtons(data, type, full, meta) {
         vm.processes[data.id] = data;
         var disabled = '';
+        var disablePin = '';
+        var hasRightToDelete = '';
         var closeOrOpenInquiryDisable = '';
         var openOrLock = "{{ 'LEAD_CLOSE_LEAD' | translate }}";
         var faOpenOrLOck = 'fa fa-lock';
         if (data.status != 'open') {
             disabled = 'disabled';
+            disablePin = 'disabled';
             openOrLock = "{{ 'LEAD_OPEN_LEAD' | translate }}";
             faOpenOrLOck = 'fa fa-unlock';
         }
         if (data.offer != null || data.sale != null) {
             closeOrOpenInquiryDisable = 'disabled';
         }
+        if ($rootScope.globals.currentUser.role == 'user') {
+            hasRightToDelete = 'disabled';
+        }
+        if (data.processor != null && $rootScope.globals.currentUser.username != data.processor.username) {
+            disablePin = 'disabled';
+        }
 
 
         return '<button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])" title="{{ \'LEAD_FOLLOW_UP\' | translate }}">' +
             '   <i class="fa fa-check"></i>' +
+            '</button>&nbsp;' +
+            '<button class="btn btn-white" ' + disablePin + ' ng-click="lead.pin(lead.processes[' + data.id + '])" title="{{ \'LEAD_PIN\' | translate }}">' +
+            '   <i class="fa fa-thumb-tack"></i>' +
             '</button>&nbsp;' +
             '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.closeOrOpenInquiry(lead.processes[' + data.id + '])" title="' + openOrLock + '">' +
             '   <i class="' + faOpenOrLOck + '"></i>' +
@@ -170,24 +194,27 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             'data-target="#editModal" title="{{ \'LEAD_EDIT_LEAD\' | translate }}">' +
             '<i class="fa fa-edit"></i>' +
             '</button>&nbsp;' +
-            '<button class="btn btn-white" ng-click="lead.deleteRow(lead.processes[' + data.id + '])" title="{{ \'LEAD_DELETE_LEAD\' | translate }}">' +
+            '<button class="btn btn-white" ' + hasRightToDelete + ' ng-click="lead.deleteRow(lead.processes[' + data.id + '])" title="{{ \'LEAD_DELETE_LEAD\' | translate }}">' +
             '   <i class="fa fa-trash-o"></i>' +
             '</button>';
     }
 
     function addStatusStyle(data, type, full, meta) {
         vm.processes[data.id] = data;
+        var hasProcessor = '';
+        if (data.processor != null)
+            hasProcessor = '&nbsp;<span style="color: #ea394c;"><i class="fa fa-thumb-tack"></i></span>';
         if (data.status == 'open') {
-            return '<div style="color: green;">' + $translate.instant('COMMON_STATUS_OPEN') + '</div>'
+            return '<span style="color: green;">' + $translate.instant('COMMON_STATUS_OPEN') + '</span>' + hasProcessor;
         }
         else if (data.status == 'offer') {
-            return '<div style="color: #f79d3c;">' + $translate.instant('COMMON_STATUS_OFFER') + '</div>'
+            return '<span style="color: #f79d3c;">' + $translate.instant('COMMON_STATUS_OFFER') + '</span>'
         }
         else if (data.status == 'sale') {
-            return '<div style="color: #1872ab;">' + $translate.instant('COMMON_STATUS_SALE') + '</div>'
+            return '<span style="color: #1872ab;">' + $translate.instant('COMMON_STATUS_SALE') + '</span>'
         }
         else if (data.status == 'closed') {
-            return '<div style="color: #ea394c;">' + $translate.instant('COMMON_STATUS_CLOSED') + '</div>'
+            return '<span style="color: #ea394c;">' + $translate.instant('COMMON_STATUS_CLOSED') + '</span>'
         }
     }
 

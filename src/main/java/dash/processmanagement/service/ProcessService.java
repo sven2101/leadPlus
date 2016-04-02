@@ -89,7 +89,6 @@ public class ProcessService implements IProcessService {
                     userRepository.save(process.getProcessor());
                 }
             }
-
             if (Optional.ofNullable(process.getLead()).isPresent())
                 leadService.createLead(process.getLead());
 
@@ -148,8 +147,8 @@ public class ProcessService implements IProcessService {
     }
 
     public void createProcessor(Long processId, String username) throws Exception {
-        final User processor = userRepository.findByUsernameIgnoreCase(username);
         Process process = processRepository.findOne(processId);
+        final User processor = userRepository.findByUsernameIgnoreCase(username);
         if (!Optional.ofNullable(process).isPresent())
             throw new ProcessNotFoundException("Process not found");
         if (!Optional.ofNullable(processor).isPresent())

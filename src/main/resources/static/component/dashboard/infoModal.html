@@ -16,15 +16,15 @@
                 <table class="table table-bordered text-left">
                     <tr>
                         <td>{{ 'COMMON_NAME' | translate }}</td>
-                        <td ng-if="dashboard.infoType == 'lead'">{{dashboard.infoData.inquirer.title}}
+                        <td ng-if="dashboard.infoType == 'lead'">{{ dashboard.infoData.inquirer.title | translate }}
                             {{dashboard.infoData.inquirer.firstname}}
                             {{dashboard.infoData.inquirer.lastname}}
                         </td>
-                        <td ng-if="dashboard.infoType == 'offer'">{{dashboard.infoData.prospect.title}}
+                        <td ng-if="dashboard.infoType == 'offer'">{{ dashboard.infoData.prospect.title | translate }}
                             {{dashboard.infoData.prospect.firstname}}
                             {{dashboard.infoData.prospect.lastname}}
                         </td>
-                        <td ng-if="dashboard.infoType == 'sale'">{{dashboard.infoData.customer.title}}
+                        <td ng-if="dashboard.infoType == 'sale'">{{ dashboard.infoData.customer.title | translate }}
                             {{dashboard.infoData.customer.firstname}}
                             {{dashboard.infoData.customer.lastname}}
                         </td>

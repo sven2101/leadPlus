@@ -119,6 +119,15 @@ public class ProcessResource {
         processService.createProcessor(processId, username);
     }
 
+    @ApiOperation(value = "Remove processor from process", notes = "")
+    @RequestMapping(value = "/{processId}/processors/remove", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public void removeProcessorByProcessId(@PathVariable Long processId) throws Exception {
+        Process process = processRepository.findOne(processId);
+        process.setProcessor(null);
+        processRepository.save(process);
+    }
+
     @ApiOperation(value = "Returns comments of a certain process.", notes = "")
     @RequestMapping(value = "/{processId}/comments", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
@@ -215,6 +224,14 @@ public class ProcessResource {
     @ResponseStatus(HttpStatus.OK)
     public List<Sale> getProcessWithLatestSales() {
         return processRepository.findTop10BySaleIsNotNullOrderBySaleTimestampDesc();
+
+    }
+
+    @ApiOperation(value = "Returns a list of latest 100 sales.", notes = "")
+    @RequestMapping(value = "/latest100Sales", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public List<Sale> getProcessWithLatest100Sales() {
+        return processRepository.findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
 
     }
 

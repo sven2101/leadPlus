@@ -1,30 +1,34 @@
-<div class="modal inmodal" id="newOfferModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal inmodal" id="newSaleModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content animated fadeIn">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span
                         aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">{{ 'OFFER_ADD_OFFER_MODAL' | translate }}</h4>
+                <h4 class="modal-title">{{ 'SALE_ADD_SALE_MODAL' | translate }}</h4>
             </div>
             <div class="modal-body">
-                <form name="offer.addForm" novalidate>
+                <form name="sale.addForm" novalidate>
                     <div class="row">
-                        <div class="col-sm-6 b-r">
+                        <div class="col-sm-6">
                             <!-- TITLE -->
                             <div class="form-group">
                                 <label>{{ 'COMMON_TITLE' | translate }}</label>
-                                <select name="title" class="form-control" ng-model="offer.newOffer.prospect.title">
+                                <select name="title" class="form-control" ng-model="sale.newSale.customer.title">
                                     <option value="Herr">{{ 'COMMON_TITLE_MR' | translate }}</option>
                                     <option value="Frau">{{ 'COMMON_TITLE_MS' | translate }}</option>
                                 </select>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 b-r">
                             <!-- FIRSTNAME -->
                             <div class="form-group"
-                                 ng-class="{ 'has-error' : offer.addForm.firstname.$invalid && !offer.addForm.firstname.$pristine }">
+                                 ng-class="{ 'has-error' : sale.addForm.firstname.$invalid && !sale.addForm.firstname.$pristine }">
                                 <label>{{ 'COMMON_FIRSTNAME' | translate }}</label>
                                 <input type="text" name="firstname" class="form-control"
-                                       ng-model="offer.newOffer.prospect.firstname" ng-maxlength="30">
-                                <p ng-show="offer.addForm.firstname.$invalid && !offer.addForm.firstname.$pristine"
+                                       ng-model="sale.newSale.customer.firstname" ng-maxlength="30">
+                                <p ng-show="sale.addForm.firstname.$invalid && !sale.addForm.firstname.$pristine"
                                    class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{
                                     'COMMON_VALIDATE_MAX_END'
                                     |
@@ -32,11 +36,11 @@
                             </div>
                             <!-- LASTNAME -->
                             <div class="form-group"
-                                 ng-class="{ 'has-error' : offer.addForm.lastname.$invalid && !offer.addForm.lastname.$pristine }">
+                                 ng-class="{ 'has-error' : sale.addForm.lastname.$invalid && !sale.addForm.lastname.$pristine }">
                                 <label>{{ 'COMMON_LASTNAME' | translate }}</label>
                                 <input type="text" name="lastname" class="form-control"
-                                       ng-model="offer.newOffer.prospect.lastname" ng-maxlength="30">
-                                <p ng-show="offer.addForm.lastname.$invalid && !offer.addForm.lastname.$pristine"
+                                       ng-model="sale.newSale.customer.lastname" ng-maxlength="30">
+                                <p ng-show="sale.addForm.lastname.$invalid && !sale.addForm.lastname.$pristine"
                                    class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{
                                     'COMMON_VALIDATE_MAX_END'
                                     |
@@ -44,11 +48,11 @@
                             </div>
                             <!-- COMPANY -->
                             <div class="form-group"
-                                 ng-class="{ 'has-error' : offer.addForm.company.$invalid && !offer.addForm.company.$pristine }">
+                                 ng-class="{ 'has-error' : sale.addForm.company.$invalid && !sale.addForm.company.$pristine }">
                                 <label>{{ 'COMMON_COMPANY' | translate }}</label>
                                 <input type="text" name="company" class="form-control"
-                                       ng-model="offer.newOffer.prospect.company" ng-maxlength="50">
-                                <p ng-show="offer.addForm.company.$invalid && !offer.addForm.company.$pristine"
+                                       ng-model="sale.newSale.customer.company" ng-maxlength="50">
+                                <p ng-show="sale.addForm.company.$invalid && !sale.addForm.company.$pristine"
                                    class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{
                                     'COMMON_VALIDATE_MAX_END'
                                     |
@@ -56,20 +60,20 @@
                             </div>
                             <!-- EMAIL -->
                             <div class="form-group"
-                                 ng-class="{ 'has-error' : offer.addForm.email.$invalid && !offer.addForm.email.$pristine }">
+                                 ng-class="{ 'has-error' : sale.addForm.email.$invalid && !sale.addForm.email.$pristine }">
                                 <label>{{ 'COMMON_EMAIL' | translate }}</label>
                                 <input type="email" name="email" class="form-control"
-                                       ng-model="offer.newOffer.prospect.email">
-                                <p ng-show="offer.addForm.email.$invalid && !offer.addForm.email.$pristine"
+                                       ng-model="sale.newSale.customer.email">
+                                <p ng-show="sale.addForm.email.$invalid && !sale.addForm.email.$pristine"
                                    class="help-block">{{ 'COMMON_VALIDATE_EMAIL'| translate }}</p>
                             </div>
                             <!-- PHONE -->
                             <div class="form-group"
-                                 ng-class="{ 'has-error' : offer.addForm.phone.$invalid && !offer.addForm.phone.$pristine }">
+                                 ng-class="{ 'has-error' : sale.addForm.phone.$invalid && !sale.addForm.phone.$pristine }">
                                 <label>{{ 'COMMON_PHONE' | translate }}</label>
                                 <input type="text" name="phone" class="form-control"
-                                       ng-model="offer.newOffer.prospect.phone" ng-maxlength="50">
-                                <p ng-show="offer.addForm.phone.$invalid && !offer.addForm.phone.$pristine"
+                                       ng-model="sale.newSale.customer.phone" ng-maxlength="50">
+                                <p ng-show="sale.addForm.phone.$invalid && !sale.addForm.phone.$pristine"
                                    class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{
                                     'COMMON_VALIDATE_MAX_END'
                                     |
@@ -79,22 +83,22 @@
                         <div class="col-sm-6">
                             <!-- CONTAINER NAME -->
                             <div class="form-group"
-                                 ng-class="{ 'has-error' : offer.addForm.containerName.$invalid && !offer.addForm.containerName.$pristine }">
+                                 ng-class="{ 'has-error' : sale.addForm.containerName.$invalid && !sale.addForm.containerName.$pristine }">
                                 <label>{{ 'COMMON_CONTAINER' | translate }} *</label>
                                 <input type="text" name="containerName" class="form-control"
-                                       ng-model="offer.newOffer.container.name" ng-maxlength="50" required>
-                                <p ng-show="offer.addForm.containerName.$invalid && !offer.addForm.containerName.$pristine"
+                                       ng-model="sale.newSale.container.name" ng-maxlength="50" required>
+                                <p ng-show="sale.addForm.containerName.$invalid && !sale.addForm.containerName.$pristine"
                                    class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_MAX' |
                                     translate
                                     }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }})</p>
                             </div>
                             <!-- CONTAINER DESCRIPTION -->
                             <div class="form-group"
-                                 ng-class="{ 'has-error' : offer.addForm.containerDescription.$invalid && !offer.addForm.containerDescription.$pristine }">
+                                 ng-class="{ 'has-error' : sale.addForm.containerDescription.$invalid && !sale.addForm.containerDescription.$pristine }">
                                 <label>{{ 'COMMON_CONTAINER_DESC' | translate }}</label>
                                 <input type="text" name="containerDescription" class="form-control"
-                                       ng-model="offer.newOffer.container.description" ng-maxlength="100">
-                                <p ng-show="offer.addForm.containerDescription.$invalid && !offer.addForm.containerDescription.$pristine"
+                                       ng-model="sale.newSale.container.description" ng-maxlength="100">
+                                <p ng-show="sale.addForm.containerDescription.$invalid && !sale.addForm.containerDescription.$pristine"
                                    class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}100{{
                                     'COMMON_VALIDATE_MAX_END'
                                     |
@@ -102,56 +106,40 @@
                             </div>
                             <!-- CONTAINER AMOUNT -->
                             <div class="form-group"
-                                 ng-class="{ 'has-error' : offer.addForm.containerAmount.$invalid && !offer.addForm.containerAmount.$pristine }">
+                                 ng-class="{ 'has-error' : sale.addForm.containerAmount.$invalid && !sale.addForm.containerAmount.$pristine }">
                                 <label>{{ 'COMMON_CONTAINER_AMOUNT' | translate }} *</label>
                                 <input type="number" name="containerAmount" class="form-control"
-                                       ng-model="offer.newOffer.containerAmount" required min="1"
+                                       ng-model="sale.newSale.containerAmount" required min="1"
                                        ng-pattern="/^[1-9]+[0-9]*$/">
-                                <p ng-show="offer.addForm.containerAmount.$invalid && !offer.addForm.containerAmount.$pristine"
+                                <p ng-show="sale.addForm.containerAmount.$invalid && !sale.addForm.containerAmount.$pristine"
                                    class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{
                                     'COMMON_VALIDATE_REQ_NUMBER'|
                                     translate }})</p>
                             </div>
                             <!-- PRICE -->
                             <div class="form-group"
-                                 ng-class="{ 'has-error' : offer.addForm.nettoPrice.$invalid && !offer.addForm.nettoPrice.$pristine }">
+                                 ng-class="{ 'has-error' : sale.addForm.nettoPrice.$invalid && !sale.addForm.nettoPrice.$pristine }">
                                 <label>{{ 'COMMON_CONTAINER_SINGLE_PRICE' | translate }} *</label>
                                 <input type="number" name="nettoPrice" class="form-control"
-                                       ng-model="offer.newOffer.container.priceNetto"
+                                       ng-model="sale.newSale.container.priceNetto"
                                        ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
                                        step="0.01" required>
-                                <p ng-show="offer.addForm.nettoPrice.$invalid && !offer.addForm.nettoPrice.$pristine"
+                                <p ng-show="sale.addForm.nettoPrice.$invalid && !sale.addForm.nettoPrice.$pristine"
                                    class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{
                                     'COMMON_VALIDATE_REQ_NUMBER'|
                                     translate }})</p>
                             </div>
                             <!-- CONTAINER DESTINATION -->
                             <div class="form-group"
-                                 ng-class="{ 'has-error' : offer.addForm.containerDestination.$invalid && !offer.addForm.containerDestination.$pristine }">
+                                 ng-class="{ 'has-error' : sale.addForm.containerDestination.$invalid && !sale.addForm.containerDestination.$pristine }">
                                 <label>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</label>
                                 <input type="text" name="containerDestination" class="form-control"
-                                       ng-model="offer.newOffer.deliveryAddress" ng-maxlength="50">
-                                <p ng-show="offer.addForm.containerDestination.$invalid && !offer.addForm.containerDestination.$pristine"
+                                       ng-model="sale.newSale.transport" ng-maxlength="50">
+                                <p ng-show="sale.addForm.containerDestination.$invalid && !sale.addForm.containerDestination.$pristine"
                                    class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{
                                     'COMMON_VALIDATE_MAX_END'
                                     |
                                     translate }}</p>
-                            </div>
-                            <!-- DELIVERY DATE -->
-                            <div class="form-group" id="newOfferDatepicker">
-                                <label>{{ 'COMMON_DELIVERY_TIME' | translate }}</label>
-                                <div ng-show="$root.language == 'de'" class="input-group date" data-date-language="de"
-                                     data-date-format="dd.mm.yyyy">
-                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" name="deliveryDate"
-                                           ng-model="offer.newOffer.deliveryDate">
-                                </div>
-                                <div ng-show="$root.language == 'en'" class="input-group date" data-date-language="en"
-                                     data-date-format="dd.mm.yyyy">
-                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" name="deliveryDate"
-                                           ng-model="offer.newOffer.deliveryDate">
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -159,22 +147,36 @@
                         <div class="col-sm-12">
                             <!-- ENTIRE PRICE -->
                             <div class="form-group">
-                                <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{offer.newOffer.containerAmount
+                                <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{sale.newSale.containerAmount
                                     *
-                                    offer.newOffer.container.priceNetto | currency:'\u20AC'}}</h2>
+                                    sale.newSale.container.priceNetto | currency:'\u20AC'}}</h2>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-6">
-                            <!-- OFFER PRICE -->
+                        <div class="col-sm-6 b-r">
+                            <!-- SALE TURNOVE -->
                             <div class="form-group"
-                                 ng-class="{ 'has-error' : offer.addForm.offerPrice.$invalid && !offer.addForm.offerPrice.$pristine }">
-                                <label>{{ 'COMMON_CONTAINER_OFFER_PRICE' | translate }} *</label>
-                                <input type="number" name="offerPrice" class="form-control"
-                                       ng-model="offer.newOffer.offerPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+                                 ng-class="{ 'has-error' : sale.addForm.saleTurnover.$invalid && !sale.addForm.saleTurnover.$pristine }">
+                                <label>{{ 'COMMON_CONTAINER_SALE_TURNOVER' | translate }} *</label>
+                                <input type="number" name="saleTurnover" class="form-control"
+                                       ng-model="sale.newSale.saleReturn" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
                                        step="0.01" required>
-                                <p ng-show="offer.addForm.offerPrice.$invalid && !offer.addForm.offerPrice.$pristine"
+                                <p ng-show="sale.addForm.saleTurnover.$invalid && !sale.addForm.saleTurnover.$pristine"
+                                   class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{
+                                    'COMMON_VALIDATE_REQ_NUMBER'|
+                                    translate }})</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <!-- SALE TURNOVE -->
+                            <div class="form-group"
+                                 ng-class="{ 'has-error' : sale.addForm.saleProfit.$invalid && !sale.addForm.saleProfit.$pristine }">
+                                <label>{{ 'COMMON_CONTAINER_SALE_PROFIT' | translate }} *</label>
+                                <input type="number" name="saleProfit" class="form-control"
+                                       ng-model="sale.newSale.saleProfit" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+                                       step="0.01" required>
+                                <p ng-show="sale.addForm.saleProfit.$invalid && !sale.addForm.saleProfit.$pristine"
                                    class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{
                                     'COMMON_VALIDATE_REQ_NUMBER'|
                                     translate }})</p>
@@ -186,21 +188,10 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}
                 </button>
-                <button type="button" class="btn btn-success" ng-disabled="offer.addForm.$invalid"
-                        ng-click="offer.saveOffer()" data-dismiss="modal">{{ 'COMMON_SAVE' | translate }}
+                <button type="button" class="btn btn-success" ng-disabled="sale.addForm.$invalid"
+                        ng-click="sale.saveSale()" data-dismiss="modal">{{ 'COMMON_SAVE' | translate }}
                 </button>
             </div>
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $('#newOfferDatepicker .input-group.date').datepicker({
-            todayBtn: "linked",
-            keyboardNavigation: false,
-            forceParse: false,
-            calendarWeeks: true,
-            autoclose: true
-        });
-    });
-</script>

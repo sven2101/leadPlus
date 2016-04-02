@@ -95,12 +95,28 @@ LeadsCtrl.prototype.followUp = function (process) {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_NEW_OFFER'));
             vm.rootScope.leadsCount -= 1;
             vm.rootScope.offersCount += 1;
-            vm.processesService.setProcessor({id: process.id}, vm.user.username).$promise.then(function () {
-                vm.refreshData();
-            });
+            if (process.processor != null) {
+                vm.processesService.setProcessor({id: process.id}, vm.user.username).$promise.then(function () {
+                    vm.refreshData();
+                });
+            }
         });
     });
 };
+
+LeadsCtrl.prototype.pin = function (process) {
+    var vm = this;
+    if (process.processor == null) {
+        this.processesService.setProcessor({id: process.id}, vm.user.username).$promise.then(function () {
+            vm.refreshData();
+        });
+    }
+    else {
+        this.processesService.removeProcessor({id: process.id}).$promise.then(function () {
+            vm.refreshData();
+        });
+    }
+}
 
 LeadsCtrl.prototype.closeOrOpenInquiry = function (process) {
     var vm = this;

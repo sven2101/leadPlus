@@ -21,7 +21,7 @@ public class Sale implements Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "customer_fk", nullable = true)
     private Customer customer;
 
