@@ -18,7 +18,7 @@ StatisticsCtrl.prototype.entireStatisticArea = function () {
             loading: false,
             yAxis: {
                 title: {
-                    text: 'Gewinn/Umsatz in €'
+                    text: this.translate.instant('STATISTIC_PROFIT_AND_RETURN_Y_AXIS'),
                 },
                 labels: {
                     formatter: function () {
@@ -48,12 +48,13 @@ StatisticsCtrl.prototype.entireStatisticSpline = function () {
                 shared: true,
                 valueSuffix: ''
             },
+            loading: false,
             xAxis: {
                 categories: []
             },
             yAxis: {
                 title: {
-                    text: 'Anzahl'
+                    text: this.translate.instant('STATISTIC_LEADS_OFFERS_SALES_Y_AXIS')
                 },
                 plotLines: [{
                     value: 0,
@@ -86,12 +87,13 @@ StatisticsCtrl.prototype.getLeadsConversionRate = function () {
             title: {
                 text: ''
             },
+            loading: false,
             xAxis: {
                 categories: [],
             },
             yAxis: {
                 title: {
-                    text: 'Abschlüsse in %'
+                    text: this.translate.instant('STATISTIC_SALES_OF_LEADS_Y_AXIS')
                 },
                 minorGridLineWidth: 1,
                 gridLineWidth: 1,
@@ -131,12 +133,13 @@ StatisticsCtrl.prototype.getOffersConversionRate = function () {
             title: {
                 text: ''
             },
+            loading: false,
             xAxis: {
                 categories: [],
             },
             yAxis: {
                 title: {
-                    text: 'Abschlüsse in %'
+                    text: this.translate.instant('STATISTIC_SALES_OF_OFFERS_Y_AXIS')
                 },
                 minorGridLineWidth: 1,
                 gridLineWidth: 1,

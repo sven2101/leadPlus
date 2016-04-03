@@ -3,7 +3,7 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
-                <h5>Gewinn</h5>
+                <h5>{{ 'STATISTIC_PROFIT' | translate }}</h5>
             </div>
             <div class="ibox-content">
                 <h1 class="no-margins">{{statistic.profit| currency:'\u20AC'}}</h1>
@@ -14,7 +14,7 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
-                <h5>Umsatz</h5>
+                <h5>{{ 'STATISTIC_TURNOVER' | translate }}</h5>
             </div>
             <div class="ibox-content">
                 <h1 class="no-margins">{{statistic.turnover | currency:'\u20AC'}}</h1>
@@ -25,13 +25,13 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
-                <h5>Abschlüsse</h5>
+                <h5>{{ 'STATISTIC_SALES' | translate }}</h5>
             </div>
             <div class="ibox-content">
                 <ul class="stat-list m-t-lg">
                     <li>
                         <h2 class="no-margins">{{statistic.sales}}/{{statistic.leads}}</h2>
-                        <small>Verkäufe aus Anfragen</small>
+                        <small>{{ 'STATISTIC_SALES_OF_LEADS' | translate }}</small>
                         <div class="progress progress-mini">
                             <div ng-style="{'width':statistic.getSalesLeadsRatePercentage()+'%'}"
                                  class="progress-bar progress-bar-danger"></div>
@@ -39,7 +39,7 @@
                     </li>
                     <li>
                         <h2 class="no-margins">{{statistic.sales}}/{{statistic.offers}}</h2>
-                        <small>Verkäufe aus Angeboten</small>
+                        <small>{{ 'STATISTIC_SALES_OF_OFFERS' | translate }}</small>
                         <div class="progress progress-mini">
                             <div ng-style="{'width':statistic.getSalesOffersRatePercentage()+'%'}"
                                  class="progress-bar progress-bar-warning"></div>
@@ -53,7 +53,7 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
-                <h5>Umsatzrentabilität</h5>
+                <h5>{{ 'STATISTIC_PROFIT_ON_SALES' | translate }}</h5>
             </div>
             <div class="ibox-content">
                 <h1 class="no-margins">{{statistic.efficiency | number:2}}%</h1>
@@ -64,7 +64,7 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
-                <h5>Gewinn pro Verkauf</h5>
+                <h5>{{ 'STATISTIC_PROFIT_PER_SALE' | translate }}</h5>
             </div>
             <div class="ibox-content">
                 <h1 class="no-margins">{{statistic.profitPerSale | currency:'\u20AC'}}</h1>
@@ -75,7 +75,7 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
-                <h5>Conversionrate</h5>
+                <h5>{{ 'STATISTIC_CONVERSIONRATE' | translate }}</h5>
             </div>
             <div class="ibox-content">
                 <h1 class="no-margins">{{statistic.conversionrate | number:2}}%</h1>
@@ -86,7 +86,7 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
-                <h5>Anteile</h5>
+                <h5>{{ 'STATISTIC_PARTS' | translate }}</h5>
             </div>
             <div class="ibox-content">
                 <highchart id="chartSingleStatisticPie" config="statistic.chartSingleStatisticPie"></highchart>

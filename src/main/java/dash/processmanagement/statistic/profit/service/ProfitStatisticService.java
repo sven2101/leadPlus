@@ -124,12 +124,12 @@ public class ProfitStatisticService implements IProfitStatisticService {
 	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
 	
 	while(ymC.compare(tmp, until) <= 0){
-	    countOfSaleInDate.put(tmp.get(Calendar.MONTH)+"", 0.00);
+	    countOfSaleInDate.put(tmp.get(Calendar.YEAR)+""+tmp.get(Calendar.MONTH), 0.00);
 	    tmp.add(Calendar.MONTH, 1);
 	}
 	for(Sale sale: sales){
 	    Calendar timeStamp = sale.getTimestamp();
-	    String key = timeStamp.get(Calendar.MONTH)+"";
+	    String key = timeStamp.get(Calendar.YEAR)+""+timeStamp.get(Calendar.MONTH);
 	    if(countOfSaleInDate.containsKey(key)){
 		double value = countOfSaleInDate.get(key) + sale.getSaleProfit();
 		countOfSaleInDate.put(key, value);

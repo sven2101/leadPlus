@@ -12,7 +12,8 @@ function config($translateProvider) {
             PROFILE_MENU: 'Profil',
             LOGIN: 'Anmelden',
             LOGOUT: 'Abmelden',
-
+            LANGUAGE: 'Sprache',
+            
             //Define login elements
             LOGIN_WELCOME: 'Willkommen bei CB+',
             LOGIN_WELCOME_DESCRIPTION: 'Containerbasis Lead Management System',
@@ -176,7 +177,32 @@ function config($translateProvider) {
             SETTING_TOAST_ACCESS_REVOKED_ERROR: 'Der Benutzer konnte nicht deaktiviert werden',
             SETTING_TOAST_SET_ROLE: 'Die Rolle wurde geändert',
             SETTING_TOAST_SET_ROLE_ERROR: 'Die Rolle konnte nicht geändert werden',
-
+          
+            //Define statistic elements
+            STATISTIC_PERIOD: 'Zeitraum',
+            STATISTIC_PERIOD_TODAY: 'Heute',
+            STATISTIC_PERIOD_WEEK: 'Woche',
+            STATISTIC_PERIOD_MONTH: 'Monat',
+            STATISTIC_PERIOD_YEAR: 'Jahr',
+            STATISTIC_PERIOD_ALL: 'Alle',
+            STATISTIC_SINGLE_STATISTIC: 'Einzelstatistik',
+            STATISTIC_GENERAL_STATISTIC: 'Gesamtstatistik',
+            STATISTIC_USER_STATISTIC: 'Benutzer Statistik',
+            STATISTIC_PROFIT: 'Gewinn',
+            STATISTIC_TURNOVER: 'Umsatz',
+            STATISTIC_SALES: 'Abschlüsse',
+            STATISTIC_SALES_OF_LEADS: 'Verkäufe aus Anfragen',
+            STATISTIC_SALES_OF_LEADS_Y_AXIS: 'Abschlüsse in %',
+            STATISTIC_SALES_OF_OFFERS: 'Verkäufe aus Angeboten',
+            STATISTIC_SALES_OF_OFFERS_Y_AXIS: 'Abschlüsse in %',
+            STATISTIC_PROFIT_ON_SALES: 'Umsatzrentabilität',
+            STATISTIC_PROFIT_PER_SALE: 'Gewinn pro Verkauf',
+            STATISTIC_CONVERSIONRATE: 'Conversionrate',
+            STATISTIC_PARTS: 'Anteile',
+            STATISTIC_PROFIT_AND_RETURN: 'Gewinn und Umsatz',
+            STATISTIC_PROFIT_AND_RETURN_Y_AXIS:	'Gewinn/Umsatz in €',
+            STATISTIC_LEADS_OFFERS_SALES: 'Anfragen/Angebote/Verkäufe', 
+            STATISTIC_LEADS_OFFERS_SALES_Y_AXIS: 'Anzahl'            
         })
         .translations('en', {
             // Define all menu elements
@@ -189,6 +215,7 @@ function config($translateProvider) {
             PROFILE_MENU: 'Profile',
             LOGIN: 'Login',
             LOGOUT: 'Logout',
+            LANGUAGE: 'Language',
 
             //Define login elements
             LOGIN_WELCOME: 'Welcome to CB+',
@@ -351,8 +378,33 @@ function config($translateProvider) {
             SETTING_TOAST_ACCESS_REVOKED: 'User is deactivated',
             SETTING_TOAST_ACCESS_REVOKED_ERROR: 'User cannot be deactivated',
             SETTING_TOAST_SET_ROLE: 'Role has changed',
-            SETTING_TOAST_SET_ROLE_ERROR: 'Role cannot be cahgend'
-
+            SETTING_TOAST_SET_ROLE_ERROR: 'Role cannot be cahgend',
+            
+            //Define statistic elements
+            STATISTIC_PERIOD: 'PERIOD',
+            STATISTIC_PERIOD_TODAY: 'Today',
+            STATISTIC_PERIOD_WEEK: 'Week',
+            STATISTIC_PERIOD_MONTH: 'Month',
+            STATISTIC_PERIOD_YEAR: 'Year',
+            STATISTIC_PERIOD_ALL: 'All',
+            STATISTIC_SINGLE_STATISTIC: 'Single Statistic',
+            STATISTIC_GENERAL_STATISTIC: 'General Statistic',
+            STATISTIC_USER_STATISTIC: 'User Statistic',
+            STATISTIC_PROFIT: 'Profit',
+            STATISTIC_TURNOVER: 'Turnover',
+            STATISTIC_SALES: 'Sales',
+            STATISTIC_SALES_OF_LEADS: 'Sales of Leads',
+            STATISTIC_SALES_OF_LEADS_Y_AXIS: 'Sales in %',
+            STATISTIC_SALES_OF_OFFERS: 'Sales of Offers',
+            STATISTIC_SALES_OF_OFFERS_Y_AXIS: 'Sales in %',
+            STATISTIC_PROFIT_ON_SALES: 'Profit on Sales',
+            STATISTIC_PROFIT_PER_SALE: 'Profit per Sale',
+            STATISTIC_CONVERSIONRATE: 'Conversionrate',
+            STATISTIC_PARTS: 'Parts',     
+            STATISTIC_PROFIT_AND_RETURN: 'Profit and Return',
+            STATISTIC_PROFIT_AND_RETURN_Y_AXIS:	'Profit/Return in €',
+            STATISTIC_LEADS_OFFERS_SALES: 'Leads/Offers/Sales',
+            STATISTIC_LEADS_OFFERS_SALES_Y_AXIS: 'Amount' 
         });
 
     $translateProvider.preferredLanguage('de');

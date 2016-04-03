@@ -63,7 +63,7 @@ public class TurnoverStatisticService implements ITurnoverStatisticService {
 	Calendar until = Calendar.getInstance();
 	
 	Calendar tmp = Calendar.getInstance();
-	tmp.add(Calendar.DAY_OF_YEAR, -7);
+	tmp.add(Calendar.DAY_OF_YEAR, -6);
 
 	final List<Sale> sales 		= repository.findByTimestampBetween(tmp, until);
 	
@@ -125,12 +125,12 @@ public class TurnoverStatisticService implements ITurnoverStatisticService {
 	Map<String, Double> countOfSaleInDate 	= new LinkedHashMap<>();
 	
 	while(ymC.compare(tmp, until) <= 0){
-	    countOfSaleInDate.put(tmp.get(Calendar.MONTH)+"", 0.00);
+	    countOfSaleInDate.put(tmp.get(Calendar.YEAR)+""+tmp.get(Calendar.MONTH), 0.00);
 	    tmp.add(Calendar.MONTH, 1);
 	}
 	for(Sale sale: sales){
 	    Calendar timeStamp = sale.getTimestamp();
-	    String key = timeStamp.get(Calendar.MONTH)+"";
+	    String key = timeStamp.get(Calendar.YEAR)+""+timeStamp.get(Calendar.MONTH);
 	    if(countOfSaleInDate.containsKey(key)){
 		double value = countOfSaleInDate.get(key) + sale.getSaleReturn();
 		countOfSaleInDate.put(key, value);

@@ -121,12 +121,12 @@ public class StatisticService implements IStatisticService {
 	Map<String, Double> countOfProcessInDate= new LinkedHashMap<>();
 	
 	while(ymC.compare(tmp, until) <= 0){
-	    countOfProcessInDate.put(tmp.get(Calendar.MONTH)+"", 0.00);
+	    countOfProcessInDate.put(tmp.get(Calendar.YEAR)+""+tmp.get(Calendar.MONTH), 0.00);
 	    tmp.add(Calendar.MONTH, 1);
 	}
 	for(Request request: requests){
 	    Calendar timeStamp = request.getTimestamp();
-	    String key = timeStamp.get(Calendar.YEAR)+"";
+	    String key = timeStamp.get(Calendar.YEAR)+""+timeStamp.get(Calendar.MONTH);
 	    if(countOfProcessInDate.containsKey(key)){
 		double value = countOfProcessInDate.get(key)+1.00;
 		countOfProcessInDate.put(key, value);

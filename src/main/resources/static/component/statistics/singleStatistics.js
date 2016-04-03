@@ -9,7 +9,7 @@ StatisticsCtrl.prototype.getProfit = function (profits) {
 	}
 	this.profit = summe;
     this.chartEntireStatisticArea.series.push({
-        name: 'Gewinn',
+        name: this.translate.instant('STATISTIC_PROFIT'),
         data: profits.result,
         color: '#1a7bb9'
     });
@@ -24,7 +24,7 @@ StatisticsCtrl.prototype.getTurnover = function (turnovers) {
     this.getEfficiency();
     this.getProfitPerSale();
 	this.chartEntireStatisticArea.series.push({
-        name: 'Umsatz',
+        name: this.translate.instant('STATISTIC_TURNOVER'),
         data: turnovers.result,
         color: '#000000'
     }); 
@@ -39,14 +39,14 @@ StatisticsCtrl.prototype.getLeads = function (leads) {
 	this.leads = summe;
 	
 	this.chartSingleStatisticPie.series[0].data.push({
-        name: 'Anfragen',
+        name: this.translate.instant('LEADS_MENU'),
         y: this.leads,
         color: '#ed5565'
     });
 	this.getConversionrate();
 	
 	this.chartEntireStatisticSpline.series.push({
-        name: 'Anfragen',
+        name: this.translate.instant('LEADS_MENU'),
         data: leads.result,
         color: '#ed5565'
     });
@@ -61,17 +61,16 @@ StatisticsCtrl.prototype.getOffers = function (offers) {
 	this.offers = summe;
 	
     this.chartSingleStatisticPie.series[0].data.push({
-        name: 'Angebote',
+        name: this.translate.instant('OFFERS_MENU'),
         y: this.offers,
         color: '#f8ac59'
     });
     this.chartEntireStatisticSpline.series.push({
-        name: 'Angebote',
+        name: this.translate.instant('OFFERS_MENU'),
         data: offers.result,
         color: '#f8ac59'
-    }); 
+    });
     
-    this.offersConversionRate();
 };
 
 StatisticsCtrl.prototype.getSales = function (sales) {
@@ -83,16 +82,17 @@ StatisticsCtrl.prototype.getSales = function (sales) {
 	this.sales 								= summe;
 	
     this.chartSingleStatisticPie.series[0].data.push({
-        name: 'Verkäufe',
+        name: this.translate.instant('SALES_MENU'),
         y: this.sales,
         color: '#1a7bb9'
     });
 	
     this.getConversionrate();
 	this.leadsConversionRate();
+    this.offersConversionRate();
 
     this.chartEntireStatisticSpline.series.push({
-        name: 'Verkäufe',
+        name: this.translate.instant('SALES_MENU'),
         data: sales.result,
         color: '#1a7bb9'
     });
@@ -149,7 +149,7 @@ StatisticsCtrl.prototype.leadsConversionRate = function () {
 	}
 		
     this.chartLeadsConversionRate.series.push({
-        name: 'Abschlüsse aus Anfragen',
+        name: this.translate.instant('STATISTIC_SALES_OF_LEADS'),
         data: salesToLeadsConversion,
         color: '#ed5565'
     });
@@ -158,14 +158,14 @@ StatisticsCtrl.prototype.leadsConversionRate = function () {
 StatisticsCtrl.prototype.offersConversionRate = function () {
 	var salesToOffersConversion = new Array(); 
 	for (var counter in this.offerResult) {		
-		if (this.offerResult[counter] != 0 && this.saleResult[counter] != 0)
+		if (this.offerResult[counter] !== 0 && this.saleResult[counter] !== 0)
 			salesToOffersConversion.push(this.offerResult[counter] / this.saleResult[counter]);
 		else 
 			salesToOffersConversion.push(0);
 	}
 	
     this.chartOffersConversionRate.series.push({
-        name: 'Abschlüsse aus Angeboten',
+    	name: this.translate.instant('STATISTIC_SALES_OF_OFFERS'),
         data: salesToOffersConversion,
         color: '#f8ac59'
     });
@@ -201,7 +201,7 @@ StatisticsCtrl.prototype.getSharedItemsPieChart = function () {
             }
         },
         series: [{
-                 name: 'Anteil',
+                 name: this.translate.instant('STATISTIC_PARTS'),
 	             colorByPoint: true,
                  data: []
         }],

@@ -2,10 +2,12 @@
 
 angular.module('app.statistics', ['ngResource']).controller('StatisticsCtrl', StatisticsCtrl);
 
-StatisticsCtrl.$inject = ['Leads', 'Offers', 'Sales', 'Profit', 'Turnover'];
+StatisticsCtrl.$inject = ['Leads', 'Offers', 'Sales', 'Profit', 'Turnover', '$translate'];
 
-function StatisticsCtrl(Leads, Offers, Sales, Profit, Turnover) {
+function StatisticsCtrl(Leads, Offers, Sales, Profit, Turnover, $translate) {
     
+    this.translate = $translate;
+	
 	var vm 														= this;
 	this.timeframe 												= [];
 	
@@ -35,24 +37,20 @@ function StatisticsCtrl(Leads, Offers, Sales, Profit, Turnover) {
 	this.profitService  	= Profit;
 	this.turnoverService  	= Turnover;
 
-	this.leadsService.day().$promise.then(function (result) {
-	    vm.getLeads(result);
-	});
-	
 	this.offersService.day().$promise.then(function (result) {
 	    vm.getOffers(result);
 	});
-	
+	this.leadsService.day().$promise.then(function (result) {
+	    vm.getLeads(result);
+	});	
 	this.salesService.day().$promise.then(function (result) {
 	    vm.getSales(result);
 	});
-	
-	this.profitService.day().$promise.then(function (result) {
-	   vm.getProfit(result);
-	});
-	
 	this.turnoverService.day().$promise.then(function (result) {
 	    vm.getTurnover(result);
+	});
+	this.profitService.day().$promise.then(function (result) {
+	   vm.getProfit(result);
 	});
 	
 	this.currentTab 				= 1;
@@ -121,13 +119,12 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
     			this.timeframe.push(oneYearAgo.toUTCString().split(' ')[2]);
     			oneYearAgo.setMonth(oneYearAgo.getMonth() + 1)
     		} 
-    		
+    		this.timeframe.push(oneYearAgo.toUTCString().split(' ')[2]);
     		break;
     	case 'all':
     		var oneYearAgo = new Date(2014, 1, 1);
 
     		while (oneYearAgo <= currentDate){
-    			console.log(oneYearAgo);
     			this.timeframe.push(oneYearAgo.getFullYear());
         		oneYearAgo.setFullYear(oneYearAgo.getFullYear() + 1); 
     		}
@@ -141,112 +138,96 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
 	    case 'day':
 	    	this.leadsService.day().$promise.then(function (result) {
 	    	    vm.getLeads(result);
-	    	});
-	    	
+	    	});	    	
 	    	this.offersService.day().$promise.then(function (result) {
 	    		vm.getOffers(result);
-	    	});
-	    	
+	    	});	    	
 	    	this.salesService.day().$promise.then(function (result) {
 	    		vm.getSales(result);
 	    	});
-	    	
-	    	this.profitService.day().$promise.then(function (result) {
-	    		vm.getProfit(result);
-	    	});
-	    	
 	    	this.turnoverService.day().$promise.then(function (result) {
 	    		vm.getTurnover(result);
 	    	});
+	    	this.profitService.day().$promise.then(function (result) {
+	    		vm.getProfit(result);
+	    	});	    	
+	    	
 	        break;
 	    case 'week':
 	    	this.leadsService.week().$promise.then(function (result) {
 	    	    vm.getLeads(result);
-	    	});
-	    	
+	    	});	    		    	
 	    	this.offersService.week().$promise.then(function (result) {
 	    		vm.getOffers(result);
-	    	});
-	    	
+	    	});	    	
 	    	this.salesService.week().$promise.then(function (result) {
 	    		vm.getSales(result);
 	    	});
-	    	
-	    	this.profitService.week().$promise.then(function (result) {
-	    		vm.getProfit(result);
-	    	});
-	    	
 	    	this.turnoverService.week().$promise.then(function (result) {
 	    		vm.getTurnover(result);
-	    	});
+	    	});	    	
+	    	this.profitService.week().$promise.then(function (result) {
+	    		vm.getProfit(result);
+	    	});	    	
+
 	        break;
 	    case 'month':
 	    	this.leadsService.month().$promise.then(function (result) {
 	    	    vm.getLeads(result);
-	    	});
-	    	
+	    	});	    	
 	    	this.offersService.month().$promise.then(function (result) {
 	    		vm.getOffers(result);
-	    	});
-	    	
+	    	});	    	
 	    	this.salesService.month().$promise.then(function (result) {
 	    		vm.getSales(result);
 	    	});
-	    	
-	    	this.profitService.month().$promise.then(function (result) {
-	    		vm.getProfit(result);
-	    	});
-	    	
 	    	this.turnoverService.month().$promise.then(function (result) {
 	    		vm.getTurnover(result);
 	    	});
+	    	this.profitService.month().$promise.then(function (result) {
+	    		vm.getProfit(result);
+	    	});	    	
+	    	
 	        break;
 	    case 'year':
 	    	this.leadsService.year().$promise.then(function (result) {
 	    	    vm.getLeads(result);
-	    	});
-	    	
+	    	});	    	
 	    	this.offersService.year().$promise.then(function (result) {
 	    		vm.getOffers(result);
-	    	});
-	    	
+	    	});	    	
 	    	this.salesService.year().$promise.then(function (result) {
 	    		vm.getSales(result);
-	    	});
-	    	
-	    	this.profitService.year().$promise.then(function (result) {
-	    		vm.getProfit(result);
-	    	});
-	    	
+	    	});	
 	    	this.turnoverService.year().$promise.then(function (result) {
 	    		vm.getTurnover(result);
 	    	});
+	    	this.profitService.year().$promise.then(function (result) {
+	    		vm.getProfit(result);
+	    	});	    	
+	    	
 	        break;
 	    case 'all':
 	    	this.leadsService.all().$promise.then(function (result) {
 	    	    vm.getLeads(result);
-	    	});
-	    	
+	    	});	    	
 	    	this.offersService.all().$promise.then(function (result) {
 	    		vm.getOffers(result);
-	    	});
-	    	
+	    	});	    	
 	    	this.salesService.all().$promise.then(function (result) {
 	    		vm.getSales(result);
 	    	});
-	    	
-	    	this.profitService.all().$promise.then(function (result) {
-	    		vm.getProfit(result);
-	    	});
-	    	
 	    	this.turnoverService.all().$promise.then(function (result) {
 	    		vm.getTurnover(result);
 	    	});
+	    	this.profitService.all().$promise.then(function (result) {
+	    		vm.getProfit(result);
+	    	});	    	
+	    	
 	        break;
 	    default:
 	        console.log("Time Frame not found.");
     }
-    
     this.chartEntireStatisticArea.options.xAxis.categories 		= this.timeframe;
     this.chartEntireStatisticSpline.options.xAxis.categories 	= this.timeframe;    
     this.chartLeadsConversionRate.options.xAxis.categories		= this.timeframe;  
