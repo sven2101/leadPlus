@@ -2,9 +2,9 @@
 
 angular.module('app.dashboard', ['ngResource']).controller('DashboardCtrl', DashboardCtrl);
 
-DashboardCtrl.$inject = ['toaster', 'Processes', '$filter', '$translate', '$rootScope', 'orderByFilter', '$scope', '$interval', 'Profile'];
+DashboardCtrl.$inject = ['toaster', 'Processes', '$filter', '$translate', '$rootScope', 'orderByFilter', '$scope', '$interval', 'Profile', 'Leads', 'Offers', 'Sales', 'Profit', 'Turnover'];
 
-function DashboardCtrl(toaster, Processes, $filter, $translate, $rootScope, orderByFilter, $scope, $interval, Profile) {
+function DashboardCtrl(toaster, Processes, $filter, $translate, $rootScope, orderByFilter, $scope, $interval, Profile, Leads, Offers, Sales, Profit, Turnover) {
 
     var vm = this;
     this.toaster = toaster;
@@ -15,16 +15,18 @@ function DashboardCtrl(toaster, Processes, $filter, $translate, $rootScope, orde
     this.orderByFilter = orderByFilter;
     this.commentModalInput = '';
     this.comments = {};
-    this.leadsAmount = 100;
-    this.offersAmount = 50;
-    this.salesAmount = 20;
-    this.profit = 320000;
-    this.turnover = 6340000;
-    this.conversionRate = 12;
     this.infoData = {};
     this.infoType = '';
     this.infoProcess = {};
     this.infoComments = [];
+
+    this.leadsAmount = {};
+    this.offersAmount = {};
+    this.salesAmount = {};
+    this.profit = {};
+    this.turnover = {};
+    this.conversionRate = {};
+
     Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
         vm.openLead = orderByFilter(result, ['-lead.timestamp']);
     });
@@ -75,6 +77,28 @@ function DashboardCtrl(toaster, Processes, $filter, $translate, $rootScope, orde
     stop = $interval(function () {
         vm.refreshData();
     }.bind(this), 200000);
+
+    this.leadsService = Leads;
+    this.offersService = Offers;
+    this.salesService = Sales;
+    this.profitService = Profit;
+    this.turnoverService = Turnover;
+
+    this.leadsService.week().$promise.then(function (result) {
+        vm.getLeads(result);
+        vm.offersService.week().$promise.then(function (result) {
+            vm.getOffers(result);
+            vm.salesService.week().$promise.then(function (result) {
+                vm.getSales(result);
+                vm.profitService.week().$promise.then(function (result) {
+                    vm.getProfit(result);
+                    vm.turnoverService.week().$promise.then(function (result) {
+                        vm.getTurnover(result);
+                    });
+                });
+            });
+        });
+    });
 }
 
 DashboardCtrl.prototype.addLeadToOffer = function (process) {
@@ -195,3 +219,51 @@ DashboardCtrl.prototype.addComment = function (process) {
     }
 };
 
+DashboardCtrl.prototype.getProfit = function (profits) {
+    var summe = 0;
+    for (var profit in profits.result) {
+        summe = summe + profits.result[profit];
+    }
+    this.profit = summe;
+};
+
+DashboardCtrl.prototype.getTurnover = function (turnovers) {
+    var summe = 0;
+    for (var turnover in turnovers.result) {
+        summe = summe + turnovers.result[turnover];
+    }
+    this.turnover = summe;
+};
+
+DashboardCtrl.prototype.getLeads = function (leads) {
+    var summe = 0;
+    for (var lead in leads.result) {
+        summe += leads.result[lead];
+    }
+    this.leadsAmount = summe;
+};
+
+DashboardCtrl.prototype.getOffers = function (offers) {
+    var summe = 0;
+    for (var offer in offers.result) {
+        summe += offers.result[offer];
+    }
+    this.offersAmount = summe;
+};
+
+DashboardCtrl.prototype.getSales = function (sales) {
+    var summe = 0;
+    for (var sale in sales.result) {
+        summe += sales.result[sale];
+    }
+    this.salesAmount = summe;
+    this.getConversionrate();
+};
+
+DashboardCtrl.prototype.getConversionrate = function () {
+    if (this.leadsAmount != 0) {
+        this.conversionRate = (this.salesAmount / this.leadsAmount) * 100;
+    }
+    else
+        this.conversionRate = 0;
+};

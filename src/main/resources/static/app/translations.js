@@ -13,7 +13,7 @@ function config($translateProvider) {
             LOGIN: 'Anmelden',
             LOGOUT: 'Abmelden',
             LANGUAGE: 'Sprache',
-            
+
             //Define login elements
             LOGIN_WELCOME: 'Willkommen bei CB+',
             LOGIN_WELCOME_DESCRIPTION: 'Containerbasis Lead Management System',
@@ -38,6 +38,11 @@ function config($translateProvider) {
             //Define common elements
             Herr: 'Herr',
             Frau: 'Frau',
+            day:'Heute',
+            week:'Woche',
+            month:'Monat',
+            year:'Jahr',
+            all:'Alle',
             COMMON_DETAILS: 'Details',
             COMMON_TITLE: 'Anrede',
             COMMON_TITLE_MR: 'Herr',
@@ -66,12 +71,12 @@ function config($translateProvider) {
             COMMON_CONTAINER_ENTIRE_PRICE: 'Gesamtpreis',
             COMMON_CONTAINER_OFFER_PRICE: 'Angebotspreis',
             COMMON_CONTAINER_DESTINATION: 'Lieferort',
-            COMMON_CONTAINER_SALE_TURNOVER:'Umsatz',
-            COMMON_CONTAINER_SALE_PROFIT:'Gewinn',
+            COMMON_CONTAINER_SALE_TURNOVER: 'Umsatz',
+            COMMON_CONTAINER_SALE_PROFIT: 'Gewinn',
             COMMON_DELIVERY_TIME: 'Lieferdatum',
             COMMON_SALE_RETURN: 'Umsatz',
             COMMON_SALE_PROFIT: 'Gewinn',
-            COMMON_CONVERSIONRATE: 'Conversionsrate',
+            COMMON_CONVERSIONRATE: 'Conversionrate',
             COMMON_NOTE: 'Notiz',
             COMMON_COMMENTS: 'Kommentare',
             COMMON_COMMENTS_LAST: 'Letzter Kommentar',
@@ -177,7 +182,7 @@ function config($translateProvider) {
             SETTING_TOAST_ACCESS_REVOKED_ERROR: 'Der Benutzer konnte nicht deaktiviert werden',
             SETTING_TOAST_SET_ROLE: 'Die Rolle wurde geändert',
             SETTING_TOAST_SET_ROLE_ERROR: 'Die Rolle konnte nicht geändert werden',
-          
+
             //Define statistic elements
             STATISTIC_PERIOD: 'Zeitraum',
             STATISTIC_PERIOD_TODAY: 'Heute',
@@ -200,9 +205,34 @@ function config($translateProvider) {
             STATISTIC_CONVERSIONRATE: 'Conversionrate',
             STATISTIC_PARTS: 'Anteile',
             STATISTIC_PROFIT_AND_RETURN: 'Gewinn und Umsatz',
-            STATISTIC_PROFIT_AND_RETURN_Y_AXIS:	'Gewinn/Umsatz in €',
-            STATISTIC_LEADS_OFFERS_SALES: 'Anfragen/Angebote/Verkäufe', 
-            STATISTIC_LEADS_OFFERS_SALES_Y_AXIS: 'Anzahl'            
+            STATISTIC_PROFIT_AND_RETURN_Y_AXIS: 'Gewinn/Umsatz in €',
+            STATISTIC_LEADS_OFFERS_SALES: 'Anfragen/Angebote/Verkäufe',
+            STATISTIC_LEADS_OFFERS_SALES_Y_AXIS: 'Anzahl',
+            STATISTIC_ENTIRE_STATISTICS_NOT_AVAILABLE: 'Nicht verfügbar',
+            STATISTIC_ENTIRE_STATISTICS_NOT_AVAILABLE_MESSAGE: 'Die Gesamtstatistiken sind nur für Woche, Monat, Jahr und Alle verfügbar',
+
+            //Define all week and month names
+            SUNDAY:'Sonntag',
+            MONDAY:'Montag',
+            TUESDAY:'Dienstag',
+            WEDNESDAY:'Mittwoch',
+            THURSDAY:'Donnerstag',
+            FRIDAY:'Freitag',
+            SATURDAY:'Samstag',
+
+            JANUARY:'Januar',
+            FEBRUARY:'Februar',
+            MARCH:'März',
+            APRIL:'April',
+            MAY:'Mai',
+            JUNE:'Juni',
+            JULY:'Juli',
+            AUGUST:'August',
+            SEPTEMBER:'September',
+            OCTOBER:'Oktober',
+            NOVEMBER:'November',
+            DECEMBER:'Dezember'
+
         })
         .translations('en', {
             // Define all menu elements
@@ -240,6 +270,11 @@ function config($translateProvider) {
             //Define common elements
             Herr: 'Mr.',
             Frau: 'Ms.',
+            day:'Today',
+            week:'Week',
+            month:'Month',
+            year:'Year',
+            all:'All',
             COMMON_DETAILS: 'Details',
             COMMON_TITLE: 'Title',
             COMMON_TITLE_MR: 'Mr',
@@ -268,8 +303,8 @@ function config($translateProvider) {
             COMMON_CONTAINER_ENTIRE_PRICE: 'Entire price',
             COMMON_CONTAINER_OFFER_PRICE: 'Offer price',
             COMMON_CONTAINER_DESTINATION: 'Place of delivery',
-            COMMON_CONTAINER_SALE_TURNOVER:'Turnover',
-            COMMON_CONTAINER_SALE_PROFIT:'Profit',
+            COMMON_CONTAINER_SALE_TURNOVER: 'Turnover',
+            COMMON_CONTAINER_SALE_PROFIT: 'Profit',
             COMMON_DELIVERY_TIME: 'Delivery date',
             COMMON_SALE_RETURN: 'Turnover',
             COMMON_SALE_PROFIT: 'Profit',
@@ -379,9 +414,9 @@ function config($translateProvider) {
             SETTING_TOAST_ACCESS_REVOKED_ERROR: 'User cannot be deactivated',
             SETTING_TOAST_SET_ROLE: 'Role has changed',
             SETTING_TOAST_SET_ROLE_ERROR: 'Role cannot be cahgend',
-            
+
             //Define statistic elements
-            STATISTIC_PERIOD: 'PERIOD',
+            STATISTIC_PERIOD: 'Period',
             STATISTIC_PERIOD_TODAY: 'Today',
             STATISTIC_PERIOD_WEEK: 'Week',
             STATISTIC_PERIOD_MONTH: 'Month',
@@ -400,11 +435,36 @@ function config($translateProvider) {
             STATISTIC_PROFIT_ON_SALES: 'Profit on Sales',
             STATISTIC_PROFIT_PER_SALE: 'Profit per Sale',
             STATISTIC_CONVERSIONRATE: 'Conversionrate',
-            STATISTIC_PARTS: 'Parts',     
+            STATISTIC_PARTS: 'Parts',
             STATISTIC_PROFIT_AND_RETURN: 'Profit and Return',
-            STATISTIC_PROFIT_AND_RETURN_Y_AXIS:	'Profit/Return in €',
+            STATISTIC_PROFIT_AND_RETURN_Y_AXIS: 'Profit/Return in €',
             STATISTIC_LEADS_OFFERS_SALES: 'Leads/Offers/Sales',
-            STATISTIC_LEADS_OFFERS_SALES_Y_AXIS: 'Amount' 
+            STATISTIC_LEADS_OFFERS_SALES_Y_AXIS: 'Amount',
+            STATISTIC_ENTIRE_STATISTICS_NOT_AVAILABLE: 'Not available',
+            STATISTIC_ENTIRE_STATISTICS_NOT_AVAILABLE_MESSAGE: 'The entire statistics only available for week, month, year and all',
+
+            //Define all week and month names
+            SUNDAY:'Sunday',
+            MONDAY:'Monday',
+            TUESDAY:'Tuesday',
+            WEDNESDAY:'Wednesday',
+            THURSDAY:'Thursday',
+            FRIDAY:'Friday',
+            SATURDAY:'Saturday',
+
+            JANUARY:'January',
+            FEBRUARY:'February',
+            MARCH:'March',
+            APRIL:'April',
+            MAY:'May',
+            JUNE:'June',
+            JULY:'July',
+            AUGUST:'August',
+            SEPTEMBER:'September',
+            OCTOBER:'October',
+            NOVEMBER:'November',
+            DECEMBER:'December'
+
         });
 
     $translateProvider.preferredLanguage('de');

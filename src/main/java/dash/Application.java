@@ -144,8 +144,8 @@ public class Application {
         }
     }
 
-    @EnableWebSecurity
     @Configuration
+    @EnableWebSecurity
     @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
     public static class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -163,21 +163,9 @@ public class Application {
 
             http.httpBasic().and()
                     .authorizeRequests()
-                    .antMatchers(HttpMethod.GET, "/application/**").permitAll()
-                    .antMatchers(HttpMethod.PUT, "/application/**").permitAll()
-                    .antMatchers("application/user/**").permitAll()
-                    .antMatchers("application/**",
-                            "/user",
-                            "/application/user",
-                            "/application/api/rest/processes**",
-                            "/application/api/rest/comments**",
-                            "/application/api/rest/containers**",
-                            "/application/api/rest/inquirers**",
-                            "/application/api/rest/leads**",
-                            "/application/api/rest/sales**",
-                            "/application/api/rest/vendors**",
-                            "/application/api/rest/registrations**")
-                    .permitAll()
+                    .antMatchers("/", "/assets/**", "/app/**", "/component/**", "/api/rest/registrations/**").permitAll()
+                    .anyRequest()
+                    .authenticated()
                     .and()
                     .addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
                     .csrf()

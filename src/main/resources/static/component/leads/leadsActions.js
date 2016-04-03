@@ -95,7 +95,7 @@ LeadsCtrl.prototype.followUp = function (process) {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_NEW_OFFER'));
             vm.rootScope.leadsCount -= 1;
             vm.rootScope.offersCount += 1;
-            if (process.processor != null) {
+            if (process.processor == null) {
                 vm.processesService.setProcessor({id: process.id}, vm.user.username).$promise.then(function () {
                     vm.refreshData();
                 });

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value ={ "/user", "/me" })
 public class PrincipleResource {
 
-    	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<Map<String, String>> getUser(Principal user) {
 		
 		Map<String, String> map = new LinkedHashMap<String, String>();

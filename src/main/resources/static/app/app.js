@@ -114,6 +114,7 @@ angular.module('app')
         });
 
         $rootScope.logout = function () {
+            $location.path('/login');
             Auth.logout();
         };
 
@@ -122,13 +123,14 @@ angular.module('app')
 angular.module('app').controller('appCtrl', function ($translate, $scope, $rootScope, $interval, Processes, Profile) {
         $rootScope.leadsCount = 0;
         $rootScope.offersCount = 0;
-
-        Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
-            $rootScope.leadsCount = result.length;
-        });
-        Processes.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
-            $rootScope.offersCount = result.length;
-        });
+        if (!angular.isUndefined($rootScope.globals.currentUser)) {
+            Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
+                $rootScope.leadsCount = result.length;
+            });
+            Processes.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
+                $rootScope.offersCount = result.length;
+            });
+        }
         $rootScope.changeLanguage = function (langKey) {
             $translate.use(langKey);
             $rootScope.language = langKey;
@@ -152,12 +154,14 @@ angular.module('app').controller('appCtrl', function ($translate, $scope, $rootS
             }
         });
         stop = $interval(function () {
-            Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
-                $rootScope.leadsCount = result.length;
-            });
-            Processes.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
-                $rootScope.offersCount = result.length;
-            });
+            if (!angular.isUndefined($rootScope.globals.currentUser)) {
+                Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
+                    $rootScope.leadsCount = result.length;
+                });
+                Processes.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
+                    $rootScope.offersCount = result.length;
+                });
+            }
         }.bind(this), 300000);
 
 

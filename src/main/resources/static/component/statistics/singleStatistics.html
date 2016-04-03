@@ -2,7 +2,7 @@
     <div class="col-lg-6">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
+                <span class="label label-success pull-right">{{ statistic.selectedPeriod | translate }}</span>
                 <h5>{{ 'STATISTIC_PROFIT' | translate }}</h5>
             </div>
             <div class="ibox-content">
@@ -13,7 +13,7 @@
     <div class="col-lg-6">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
+                <span class="label label-success pull-right">{{ statistic.selectedPeriod | translate }}</span>
                 <h5>{{ 'STATISTIC_TURNOVER' | translate }}</h5>
             </div>
             <div class="ibox-content">
@@ -24,7 +24,7 @@
     <div class="col-lg-6">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
+                <span class="label label-success pull-right">{{ statistic.selectedPeriod | translate }}</span>
                 <h5>{{ 'STATISTIC_SALES' | translate }}</h5>
             </div>
             <div class="ibox-content">
@@ -52,7 +52,7 @@
     <div class="col-lg-6">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
+                <span class="label label-success pull-right">{{ statistic.selectedPeriod | translate }}</span>
                 <h5>{{ 'STATISTIC_PROFIT_ON_SALES' | translate }}</h5>
             </div>
             <div class="ibox-content">
@@ -63,7 +63,7 @@
     <div class="col-lg-6">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
+                <span class="label label-success pull-right">{{ statistic.selectedPeriod | translate }}</span>
                 <h5>{{ 'STATISTIC_PROFIT_PER_SALE' | translate }}</h5>
             </div>
             <div class="ibox-content">
@@ -71,10 +71,12 @@
             </div>
         </div>
     </div>
+</div>
+<div class="row" ng-if="statistic.currentTab==1">
     <div class="col-lg-6">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
+                <span class="label label-success pull-right">{{ statistic.selectedPeriod | translate }}</span>
                 <h5>{{ 'STATISTIC_CONVERSIONRATE' | translate }}</h5>
             </div>
             <div class="ibox-content">
@@ -85,7 +87,7 @@
     <div class="col-lg-6">
         <div class="ibox float-e-margins">
             <div class="ibox-title">
-                <span class="label label-success pull-right">{{statistic.selectedPeriod}}</span>
+                <span class="label label-success pull-right">{{ statistic.selectedPeriod | translate }}</span>
                 <h5>{{ 'STATISTIC_PARTS' | translate }}</h5>
             </div>
             <div class="ibox-content">

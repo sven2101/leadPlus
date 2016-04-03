@@ -1,4 +1,3 @@
-
 StatisticsCtrl.prototype.entireStatisticArea = function () {
     var chartConfig = {
         options: {
@@ -101,7 +100,7 @@ StatisticsCtrl.prototype.getLeadsConversionRate = function () {
 
             },
             tooltip: {
-                valueSuffix: ' %'
+                pointFormat: "{point.y:.2f} %"
             },
             plotOptions: {
                 spline: {
@@ -147,7 +146,7 @@ StatisticsCtrl.prototype.getOffersConversionRate = function () {
 
             },
             tooltip: {
-                valueSuffix: ' %'
+                pointFormat: "{point.y:.2f} %"
             },
             plotOptions: {
                 spline: {
