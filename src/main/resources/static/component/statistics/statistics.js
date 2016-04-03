@@ -20,6 +20,8 @@ function StatisticsCtrl(Leads, Offers, Sales, Profit, Turnover, $translate) {
     this.leadResult = {};
     this.offerResult = {};
     this.saleResult = {};
+    this.profitsResult = {};
+    this.turnoverResult = {};
 
     this.profit = {};
     this.turnover = {};
@@ -67,12 +69,12 @@ function StatisticsCtrl(Leads, Offers, Sales, Profit, Turnover, $translate) {
             vm.getOffers(result);
             vm.salesService.day().$promise.then(function (result) {
                 vm.getSales(result);
-                vm.leadsConversionRate();
-                vm.offersConversionRate();
                 vm.profitService.day().$promise.then(function (result) {
                     vm.getProfit(result);
                     vm.turnoverService.day().$promise.then(function (result) {
                         vm.getTurnover(result);
+                        vm.leadsConversionRate();
+                        vm.offersConversionRate();
                     });
                 });
             });
@@ -116,7 +118,7 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
             break;
         case 'week':
             var oneWeekAgo = new Date();
-            oneWeekAgo.setDate(oneWeekAgo.getDate() - 6);
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
             while (oneWeekAgo <= currentDate) {
                 this.timeframe.push(vm.weekday[oneWeekAgo.getDay()]);
                 oneWeekAgo.setDate(oneWeekAgo.getDate() + 1);
@@ -164,12 +166,14 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
                     vm.getOffers(result);
                     vm.salesService.day().$promise.then(function (result) {
                         vm.getSales(result);
-                        vm.leadsConversionRate();
-                        vm.offersConversionRate();
                         vm.profitService.day().$promise.then(function (result) {
                             vm.getProfit(result);
                             vm.turnoverService.day().$promise.then(function (result) {
                                 vm.getTurnover(result);
+                                vm.pushLeadsOffersSales();
+                                vm.leadsConversionRate();
+                                vm.offersConversionRate();
+                                vm.pushProfitAndTurnover();
                             });
                         });
                     });
@@ -184,12 +188,14 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
                     vm.getOffers(result);
                     vm.salesService.week().$promise.then(function (result) {
                         vm.getSales(result);
-                        vm.leadsConversionRate();
-                        vm.offersConversionRate();
                         vm.profitService.week().$promise.then(function (result) {
                             vm.getProfit(result);
                             vm.turnoverService.week().$promise.then(function (result) {
                                 vm.getTurnover(result);
+                                vm.pushLeadsOffersSales();
+                                vm.leadsConversionRate();
+                                vm.offersConversionRate();
+                                vm.pushProfitAndTurnover();
                             });
                         });
                     });
@@ -203,12 +209,14 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
                     vm.getOffers(result);
                     vm.salesService.month().$promise.then(function (result) {
                         vm.getSales(result);
-                        vm.leadsConversionRate();
-                        vm.offersConversionRate();
                         vm.profitService.month().$promise.then(function (result) {
                             vm.getProfit(result);
                             vm.turnoverService.month().$promise.then(function (result) {
                                 vm.getTurnover(result);
+                                vm.pushLeadsOffersSales();
+                                vm.leadsConversionRate();
+                                vm.offersConversionRate();
+                                vm.pushProfitAndTurnover();
                             });
                         });
                     });
@@ -224,12 +232,14 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
                     vm.getOffers(result);
                     vm.salesService.year().$promise.then(function (result) {
                         vm.getSales(result);
-                        vm.leadsConversionRate();
-                        vm.offersConversionRate();
                         vm.profitService.year().$promise.then(function (result) {
                             vm.getProfit(result);
                             vm.turnoverService.year().$promise.then(function (result) {
                                 vm.getTurnover(result);
+                                vm.pushLeadsOffersSales();
+                                vm.leadsConversionRate();
+                                vm.offersConversionRate();
+                                vm.pushProfitAndTurnover();
                             });
                         });
                     });
@@ -243,12 +253,14 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
                     vm.getOffers(result);
                     vm.salesService.all().$promise.then(function (result) {
                         vm.getSales(result);
-                        vm.leadsConversionRate();
-                        vm.offersConversionRate();
                         vm.profitService.all().$promise.then(function (result) {
                             vm.getProfit(result);
                             vm.turnoverService.all().$promise.then(function (result) {
                                 vm.getTurnover(result);
+                                vm.pushLeadsOffersSales();
+                                vm.leadsConversionRate();
+                                vm.offersConversionRate();
+                                vm.pushProfitAndTurnover();
                             });
                         });
                     });
