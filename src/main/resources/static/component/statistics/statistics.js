@@ -2,11 +2,13 @@
 
 angular.module('app.statistics', ['ngResource']).controller('StatisticsCtrl', StatisticsCtrl);
 
-StatisticsCtrl.$inject = ['Leads', 'Offers', 'Sales', 'Profit', 'Turnover', '$translate'];
+StatisticsCtrl.$inject = ['Leads', 'Offers', 'Sales', 'Profit', 'Turnover', '$translate', '$interval', '$scope'];
 
-function StatisticsCtrl(Leads, Offers, Sales, Profit, Turnover, $translate) {
+function StatisticsCtrl(Leads, Offers, Sales, Profit, Turnover, $translate, $interval, $scope) {
 
     this.translate = $translate;
+    this.scope = $scope;
+    this.interval = $interval;
     var vm = this;
     this.currentTab = 1;
     this.selectedPeriod = 'day';
@@ -63,31 +65,74 @@ function StatisticsCtrl(Leads, Offers, Sales, Profit, Turnover, $translate) {
     this.month[10] = $translate.instant('NOVEMBER');
     this.month[11] = $translate.instant('DECEMBER');
 
+    this.isLeadPromise = false;
+    this.isOfferPromise = false;
+    this.isSalePromise = false;
+    this.isProfitPromise = false;
+    this.isTurnoverPromise = false;
     this.leadsService.day().$promise.then(function (result) {
         vm.getLeads(result);
-        vm.offersService.day().$promise.then(function (result) {
-            vm.getOffers(result);
-            vm.salesService.day().$promise.then(function (result) {
-                vm.getSales(result);
-                vm.profitService.day().$promise.then(function (result) {
-                    vm.getProfit(result);
-                    vm.turnoverService.day().$promise.then(function (result) {
-                        vm.getTurnover(result);
-                        vm.leadsConversionRate();
-                        vm.offersConversionRate();
-                    });
-                });
-            });
-        });
+        vm.isLeadPromise = true;
     });
-}
+    this.offersService.day().$promise.then(function (result) {
+        vm.getOffers(result);
+        vm.isOfferPromise = true;
+    });
+    this.salesService.day().$promise.then(function (result) {
+        vm.getSales(result);
+        vm.isSalePromise = true;
+    });
+    this.profitService.day().$promise.then(function (result) {
+        vm.getProfit(result);
+        vm.isProfitPromise = true;
+    });
+    this.turnoverService.day().$promise.then(function (result) {
+        vm.getTurnover(result);
+        vm.isTurnoverPromise = true;
+    });
 
+    this.checkPromises();
+
+}
+StatisticsCtrl.prototype.checkPromises = function () {
+    var vm = this;
+    var stop;
+    this.scope.$on('$destroy', function () {
+        if (angular.isDefined(stop)) {
+            vm.interval.cancel(stop);
+            stop = undefined;
+        }
+    });
+    stop = this.interval(function () {
+        if (vm.isLeadPromise == true && vm.isOfferPromise == true &&
+            vm.isSalePromise == true && vm.isProfitPromise == true &&
+            vm.isTurnoverPromise == true) {
+            vm.getEfficiency();
+            vm.getProfitPerSale();
+            vm.pushProfitAndTurnover();
+            vm.getConversionrate();
+            vm.pushToPieChart();
+            vm.pushLeadsOffersSales();
+            vm.leadsConversionRate();
+            vm.offersConversionRate();
+            vm.interval.cancel(stop);
+        }
+    }.bind(this), 1000);
+
+
+}
 StatisticsCtrl.prototype.tabOnClick = function (tab) {
     this.currentTab = tab;
 };
 
 StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
     var vm = this;
+
+    this.isLeadPromise = false;
+    this.isOfferPromise = false;
+    this.isSalePromise = false;
+    this.isProfitPromise = false;
+    this.isTurnoverPromise = false;
 
     this.selectedPeriod = selectedPeriod;
 
@@ -162,117 +207,128 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
         case 'day':
             this.leadsService.day().$promise.then(function (result) {
                 vm.getLeads(result);
-                vm.offersService.day().$promise.then(function (result) {
-                    vm.getOffers(result);
-                    vm.salesService.day().$promise.then(function (result) {
-                        vm.getSales(result);
-                        vm.profitService.day().$promise.then(function (result) {
-                            vm.getProfit(result);
-                            vm.turnoverService.day().$promise.then(function (result) {
-                                vm.getTurnover(result);
-                                vm.pushLeadsOffersSales();
-                                vm.leadsConversionRate();
-                                vm.offersConversionRate();
-                                vm.pushProfitAndTurnover();
-                            });
-                        });
-                    });
-                });
+                vm.isLeadPromise = true;
             });
+            vm.offersService.day().$promise.then(function (result) {
+                vm.getOffers(result);
+                vm.isOfferPromise = true;
+            });
+            vm.salesService.day().$promise.then(function (result) {
+                vm.getSales(result);
+                vm.isSalePromise = true;
+            });
+            vm.profitService.day().$promise.then(function (result) {
+                vm.getProfit(result);
+                vm.isProfitPromise = true;
+            });
+            vm.turnoverService.day().$promise.then(function (result) {
+                vm.getTurnover(result);
+                vm.isTurnoverPromise = true;
+            });
+
 
             break;
         case 'week':
             this.leadsService.week().$promise.then(function (result) {
                 vm.getLeads(result);
-                vm.offersService.week().$promise.then(function (result) {
-                    vm.getOffers(result);
-                    vm.salesService.week().$promise.then(function (result) {
-                        vm.getSales(result);
-                        vm.profitService.week().$promise.then(function (result) {
-                            vm.getProfit(result);
-                            vm.turnoverService.week().$promise.then(function (result) {
-                                vm.getTurnover(result);
-                                vm.pushLeadsOffersSales();
-                                vm.leadsConversionRate();
-                                vm.offersConversionRate();
-                                vm.pushProfitAndTurnover();
-                            });
-                        });
-                    });
-                });
+                vm.isLeadPromise = true;
             });
+            vm.offersService.week().$promise.then(function (result) {
+                vm.getOffers(result);
+                vm.isOfferPromise = true;
+            });
+            vm.salesService.week().$promise.then(function (result) {
+                vm.getSales(result);
+                vm.isSalePromise = true;
+            });
+            vm.profitService.week().$promise.then(function (result) {
+                vm.getProfit(result);
+                vm.isProfitPromise = true;
+            });
+            vm.turnoverService.week().$promise.then(function (result) {
+                vm.getTurnover(result);
+                vm.isTurnoverPromise = true;
+            });
+
             break;
         case 'month':
             this.leadsService.month().$promise.then(function (result) {
                 vm.getLeads(result);
-                vm.offersService.month().$promise.then(function (result) {
-                    vm.getOffers(result);
-                    vm.salesService.month().$promise.then(function (result) {
-                        vm.getSales(result);
-                        vm.profitService.month().$promise.then(function (result) {
-                            vm.getProfit(result);
-                            vm.turnoverService.month().$promise.then(function (result) {
-                                vm.getTurnover(result);
-                                vm.pushLeadsOffersSales();
-                                vm.leadsConversionRate();
-                                vm.offersConversionRate();
-                                vm.pushProfitAndTurnover();
-                            });
-                        });
-                    });
-                });
+                vm.isLeadPromise = true;
             });
-
+            vm.offersService.month().$promise.then(function (result) {
+                vm.getOffers(result);
+                vm.isOfferPromise = true;
+            });
+            vm.salesService.month().$promise.then(function (result) {
+                vm.getSales(result);
+                vm.isSalePromise = true;
+            });
+            vm.profitService.month().$promise.then(function (result) {
+                vm.getProfit(result);
+                vm.isProfitPromise = true;
+            });
+            vm.turnoverService.month().$promise.then(function (result) {
+                vm.getTurnover(result);
+                vm.isTurnoverPromise = true;
+            });
 
             break;
         case 'year':
             this.leadsService.year().$promise.then(function (result) {
                 vm.getLeads(result);
-                vm.offersService.year().$promise.then(function (result) {
-                    vm.getOffers(result);
-                    vm.salesService.year().$promise.then(function (result) {
-                        vm.getSales(result);
-                        vm.profitService.year().$promise.then(function (result) {
-                            vm.getProfit(result);
-                            vm.turnoverService.year().$promise.then(function (result) {
-                                vm.getTurnover(result);
-                                vm.pushLeadsOffersSales();
-                                vm.leadsConversionRate();
-                                vm.offersConversionRate();
-                                vm.pushProfitAndTurnover();
-                            });
-                        });
-                    });
-                });
+                vm.isLeadPromise = true;
             });
+            vm.offersService.year().$promise.then(function (result) {
+                vm.getOffers(result);
+                vm.isOfferPromise = true;
+            });
+            vm.salesService.year().$promise.then(function (result) {
+                vm.getSales(result);
+                vm.isSalePromise = true;
+            });
+            vm.profitService.year().$promise.then(function (result) {
+                vm.getProfit(result);
+                vm.isProfitPromise = true;
+            });
+            vm.turnoverService.year().$promise.then(function (result) {
+                vm.getTurnover(result);
+                vm.isTurnoverPromise = true;
+            });
+
             break;
         case 'all':
             this.leadsService.all().$promise.then(function (result) {
                 vm.getLeads(result);
-                vm.offersService.all().$promise.then(function (result) {
-                    vm.getOffers(result);
-                    vm.salesService.all().$promise.then(function (result) {
-                        vm.getSales(result);
-                        vm.profitService.all().$promise.then(function (result) {
-                            vm.getProfit(result);
-                            vm.turnoverService.all().$promise.then(function (result) {
-                                vm.getTurnover(result);
-                                vm.pushLeadsOffersSales();
-                                vm.leadsConversionRate();
-                                vm.offersConversionRate();
-                                vm.pushProfitAndTurnover();
-                            });
-                        });
-                    });
-                });
+                vm.isLeadPromise = true;
             });
+            vm.offersService.all().$promise.then(function (result) {
+                vm.getOffers(result);
+                vm.isOfferPromise = true;
+            });
+            vm.salesService.all().$promise.then(function (result) {
+                vm.getSales(result);
+                vm.isSalePromise = true;
+            });
+            vm.profitService.all().$promise.then(function (result) {
+                vm.getProfit(result);
+                vm.isProfitPromise = true;
+            });
+            vm.turnoverService.all().$promise.then(function (result) {
+                vm.getTurnover(result);
+                vm.isTurnoverPromise = true;
+            });
+
             break;
         default:
             console.log("Time Frame not found.");
+            break;
     }
     this.chartEntireStatisticArea.options.xAxis.categories = this.timeframe;
     this.chartEntireStatisticSpline.options.xAxis.categories = this.timeframe;
     this.chartLeadsConversionRate.options.xAxis.categories = this.timeframe;
     this.chartOffersConversionRate.options.xAxis.categories = this.timeframe;
+
+    this.checkPromises();
 };
 

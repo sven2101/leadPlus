@@ -53,7 +53,6 @@ SalesCtrl.prototype.saveSale = function () {
         status: 'sale',
         processor: vm.user
     };
-    alert(JSON.stringify(this.newSale.customer));
     this.processesService.addProcess(process).$promise.then(function () {
         vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_ADD_SALE'));
         vm.addForm.$setPristine();

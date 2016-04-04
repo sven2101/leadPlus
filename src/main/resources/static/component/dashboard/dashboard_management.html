@@ -26,7 +26,7 @@
                                 <ul ui-sortable="dashboard.sortableOptions"
                                     class="sortable-list connectList agile-list" id="lead"
                                     ng-model="dashboard.openLead">
-                                    <li class="danger-element"
+                                    <li class="danger-element draggable"
                                         ng-repeat="process in dashboard.openLead">
                                         {{process.lead.containerAmount}}x {{process.lead.container.name}}
                                         <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
@@ -51,7 +51,7 @@
                                 <ul ui-sortable="dashboard.sortableOptions"
                                     class="sortable-list connectList agile-list" id="offer"
                                     ng-model="dashboard.openOffer">
-                                    <li class="warning-element"
+                                    <li class="warning-element draggable"
                                         ng-repeat="process in dashboard.openOffer">
                                         {{process.offer.containerAmount}}x {{process.offer.container.name}}
                                         <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
@@ -76,7 +76,7 @@
                                 <ul ui-sortable="dashboard.sortableOptions"
                                     class="sortable-list connectList agile-list" id="sale"
                                     ng-model="dashboard.sales">
-                                    <li class="info-element not-sortable"
+                                    <li class="info-element not-sortable draggable"
                                         ng-repeat="process in dashboard.sales">
                                         {{process.sale.containerAmount}}x {{process.sale.container.name}}
                                         <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
@@ -94,9 +94,14 @@
                             </div>
                         </div>
                     </div>
-                    <div ng-include="'component/dashboard/infoModal.html'"></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!--Page level script-->
+<script>
+    $(function () {
+        $(".draggable").draggable();
+    });
+</script>

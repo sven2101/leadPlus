@@ -86,19 +86,21 @@ function DashboardCtrl(toaster, Processes, $filter, $translate, $rootScope, orde
 
     this.leadsService.week().$promise.then(function (result) {
         vm.getLeads(result);
-        vm.offersService.week().$promise.then(function (result) {
-            vm.getOffers(result);
-            vm.salesService.week().$promise.then(function (result) {
-                vm.getSales(result);
-                vm.profitService.week().$promise.then(function (result) {
-                    vm.getProfit(result);
-                    vm.turnoverService.week().$promise.then(function (result) {
-                        vm.getTurnover(result);
-                    });
-                });
-            });
+        vm.salesService.week().$promise.then(function (result) {
+            vm.getSales(result);
         });
     });
+    vm.offersService.week().$promise.then(function (result) {
+        vm.getOffers(result);
+    });
+    vm.profitService.week().$promise.then(function (result) {
+        vm.getProfit(result);
+    });
+    vm.turnoverService.week().$promise.then(function (result) {
+        vm.getTurnover(result);
+    });
+
+
 }
 
 DashboardCtrl.prototype.addLeadToOffer = function (process) {

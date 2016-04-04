@@ -18,9 +18,6 @@ StatisticsCtrl.prototype.getTurnover = function (turnovers) {
         summe = summe + turnovers.result[turnover];
     }
     this.turnover = summe;
-    this.getEfficiency();
-    this.getProfitPerSale();
- 
 };
 
 StatisticsCtrl.prototype.getLeads = function (leads) {
@@ -30,12 +27,6 @@ StatisticsCtrl.prototype.getLeads = function (leads) {
         summe += leads.result[lead];
     }
     this.leads = summe;
-
-    this.chartSingleStatisticPie.series[0].data.push({
-        name: this.translate.instant('LEADS_MENU'),
-        y: this.leads,
-        color: '#ed5565'
-    });
 };
 
 StatisticsCtrl.prototype.getOffers = function (offers) {
@@ -45,12 +36,6 @@ StatisticsCtrl.prototype.getOffers = function (offers) {
         summe += offers.result[offer];
     }
     this.offers = summe;
-
-    this.chartSingleStatisticPie.series[0].data.push({
-        name: this.translate.instant('OFFERS_MENU'),
-        y: this.offers,
-        color: '#f8ac59'
-    });
 };
 
 StatisticsCtrl.prototype.getSales = function (sales) {
@@ -60,13 +45,6 @@ StatisticsCtrl.prototype.getSales = function (sales) {
         summe += sales.result[sale];
     }
     this.sales = summe;
-    this.getConversionrate();
-
-    this.chartSingleStatisticPie.series[0].data.push({
-        name: this.translate.instant('SALES_MENU'),
-        y: this.sales,
-        color: '#1a7bb9'
-    });
 };
 
 StatisticsCtrl.prototype.getSalesLeadsRatePercentage = function () {
@@ -185,3 +163,23 @@ StatisticsCtrl.prototype.getSharedItemsPieChart = function () {
 
     return chartConfig;
 };
+
+StatisticsCtrl.prototype.pushToPieChart = function () {
+    this.chartSingleStatisticPie.series[0].data.push({
+        name: this.translate.instant('LEADS_MENU'),
+        y: this.leads,
+        color: '#ed5565'
+    });
+
+    this.chartSingleStatisticPie.series[0].data.push({
+        name: this.translate.instant('OFFERS_MENU'),
+        y: this.offers,
+        color: '#f8ac59'
+    });
+
+    this.chartSingleStatisticPie.series[0].data.push({
+        name: this.translate.instant('SALES_MENU'),
+        y: this.sales,
+        color: '#1a7bb9'
+    });
+}

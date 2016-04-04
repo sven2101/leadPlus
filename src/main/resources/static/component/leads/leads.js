@@ -8,6 +8,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     this.processesService = Processes;
     this.userService = Profile;
     this.user = {};
+    this.windowWidth = $(window).width();
     this.userService.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
         vm.user = result;
     });
@@ -180,23 +181,36 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             disablePin = 'disabled';
         }
 
-
-        return '<button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])" title="{{ \'LEAD_FOLLOW_UP\' | translate }}">' +
-            '   <i class="fa fa-check"></i>' +
-            '</button>&nbsp;' +
-            '<button class="btn btn-white" ' + disablePin + ' ng-click="lead.pin(lead.processes[' + data.id + '])" title="{{ \'LEAD_PIN\' | translate }}">' +
-            '   <i class="fa fa-thumb-tack"></i>' +
-            '</button>&nbsp;' +
-            '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.closeOrOpenInquiry(lead.processes[' + data.id + '])" title="' + openOrLock + '">' +
-            '   <i class="' + faOpenOrLOck + '"></i>' +
-            '</button>&nbsp;' +
-            '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.loadDataToModal(lead.processes[' + data.id + '])" data-toggle="modal"' +
-            'data-target="#editModal" title="{{ \'LEAD_EDIT_LEAD\' | translate }}">' +
-            '<i class="fa fa-edit"></i>' +
-            '</button>&nbsp;' +
-            '<button class="btn btn-white" ' + hasRightToDelete + ' ng-click="lead.deleteRow(lead.processes[' + data.id + '])" title="{{ \'LEAD_DELETE_LEAD\' | translate }}">' +
-            '   <i class="fa fa-trash-o"></i>' +
-            '</button>';
+        if (vm.windowWidth > 1200) {
+            return '<button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])" title="{{ \'LEAD_FOLLOW_UP\' | translate }}">' +
+                '   <i class="fa fa-check"></i>' +
+                '</button>&nbsp;' +
+                '<button class="btn btn-white" ' + disablePin + ' ng-click="lead.pin(lead.processes[' + data.id + '])" title="{{ \'LEAD_PIN\' | translate }}">' +
+                '   <i class="fa fa-thumb-tack"></i>' +
+                '</button>&nbsp;' +
+                '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.closeOrOpenInquiry(lead.processes[' + data.id + '])" title="' + openOrLock + '">' +
+                '   <i class="' + faOpenOrLOck + '"></i>' +
+                '</button>' +
+                '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.loadDataToModal(lead.processes[' + data.id + '])" data-toggle="modal"' +
+                'data-target="#editModal" title="{{ \'LEAD_EDIT_LEAD\' | translate }}">' +
+                '<i class="fa fa-edit"></i>' +
+                '</button>&nbsp;' +
+                '<button class="btn btn-white" ' + hasRightToDelete + ' ng-click="lead.deleteRow(lead.processes[' + data.id + '])" title="{{ \'LEAD_DELETE_LEAD\' | translate }}">' +
+                '   <i class="fa fa-trash-o"></i>' +
+                '</button>';
+        } else {
+            return '<div class="dropdown">' +
+                '<button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">' +
+                '<i class="fa fa-wrench"></i></button>' +
+                '<ul class="dropdown-menu pull-right">' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])"><i class="fa fa-check">&nbsp;</i>{{\'LEAD_FOLLOW_UP\' | translate }}</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disablePin + ' ng-click="lead.pin(lead.processes[' + data.id + '])"><i class="fa fa-thumb-tack">&nbsp;</i>{{\'LEAD_PIN\' | translate }}</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.closeOrOpenInquiry(lead.processes[' + data.id + '])"><i class="' + faOpenOrLOck + '">&nbsp;</i>' + openOrLock + '</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.loadDataToModal(lead.processes[' + data.id + '])"><i class="fa fa-edit"">&nbsp;</i>{{\'LEAD_EDIT_LEAD\' | translate }}</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + hasRightToDelete + ' ng-click="lead.deleteRow(lead.processes[' + data.id + '])"><i class="fa fa-trash-o">&nbsp;</i>{{\'LEAD_DELETE_LEAD\' | translate }}</button></li>' +
+                '</ul>' +
+                '</div>'
+        }
     }
 
     function addStatusStyle(data, type, full, meta) {

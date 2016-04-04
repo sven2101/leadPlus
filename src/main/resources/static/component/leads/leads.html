@@ -31,11 +31,13 @@
                     <button ng-click="lead.refreshData()" type="button" class="btn btn-success">
                         <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
                     </button>
-                    <span class="pull-right" style=" font-size: 1.5em;">{{ 'LEAD_SHOW_ALL_LEADS' | translate }} &nbsp;<input type="checkbox"
-                                                                                               ng-model="lead.loadAllData"
-                                                                                               ng-change="lead.dtInstance.changeData(lead.changeDataInput)"
-                                                                                               class="js-switch"
-                                                                                               ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
+                    <span class="pull-right"
+                          style=" font-size: 1.5em;">{{ 'LEAD_SHOW_ALL_LEADS' | translate }} &nbsp;<input
+                            type="checkbox"
+                            ng-model="lead.loadAllData"
+                            ng-change="lead.dtInstance.changeData(lead.changeDataInput)"
+                            class="js-switch"
+                            ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
                     </br></br>
                     <div class="table-responsive text-center">
                         <table datatable="" dt-options="lead.dtOptions" dt-columns="lead.dtColumns"
@@ -44,12 +46,12 @@
                                style="width:100%;"></table>
                     </div>
                 </div>
-                <div ng-include="'component/leads/editLeadModal.html'"></div>
-                <div ng-include="'component/leads/addLeadModal.html'"></div>
             </div>
         </div>
     </div>
 </div>
+<div ng-include="'component/leads/editLeadModal.html'"></div>
+<div ng-include="'component/leads/addLeadModal.html'"></div>
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {

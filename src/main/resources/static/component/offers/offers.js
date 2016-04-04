@@ -8,6 +8,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
     this.processesService = Processes;
     this.userService = Profile;
     this.user = {};
+    this.windowWidth = $(window).width();
     this.userService.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
         vm.user = result;
     });
@@ -183,20 +184,33 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
         if ($rootScope.globals.currentUser.role == 'user') {
             hasRightToDelete = 'disabled';
         }
-
-        return '<button class="btn btn-white" ' + disabled + ' ng-click="offer.followUp(offer.processes[' + data.id + '])" title="{{ \'OFFER_FOLLOW_UP\' | translate }}">' +
-            '   <i class="fa fa-check"></i>' +
-            '</button>&nbsp;' +
-            '<button class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.closeOrOpenOffer(offer.processes[' + data.id + '])" title="' + openOrLock + '">' +
-            '   <i class="' + faOpenOrLOck + '"></i>' +
-            '</button>&nbsp;' +
-            '<button class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.loadDataToModal(offer.processes[' + data.id + '])" data-toggle="modal"' +
-            'data-target="#editModal" title="{{ \'OFFER_EDIT_OFFER\' | translate }}">' +
-            '<i class="fa fa-edit"></i>' +
-            '</button>&nbsp;' +
-            '<button class="btn btn-white"' + hasRightToDelete + ' ng-click="offer.deleteRow(offer.processes[' + data.id + '])" title="{{ \'OFFER_DELETE_OFFER\' | translate }}">' +
-            '   <i class="fa fa-trash-o"></i>' +
-            '</button>';
+        if (vm.windowWidth > 1200) {
+            return '<button class="btn btn-white" ' + disabled + ' ng-click="offer.followUp(offer.processes[' + data.id + '])" title="{{ \'OFFER_FOLLOW_UP\' | translate }}">' +
+                '   <i class="fa fa-check"></i>' +
+                '</button>&nbsp;' +
+                '<button class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.closeOrOpenOffer(offer.processes[' + data.id + '])" title="' + openOrLock + '">' +
+                '   <i class="' + faOpenOrLOck + '"></i>' +
+                '</button>&nbsp;' +
+                '<button class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.loadDataToModal(offer.processes[' + data.id + '])" data-toggle="modal"' +
+                'data-target="#editModal" title="{{ \'OFFER_EDIT_OFFER\' | translate }}">' +
+                '<i class="fa fa-edit"></i>' +
+                '</button>&nbsp;' +
+                '<button class="btn btn-white"' + hasRightToDelete + ' ng-click="offer.deleteRow(offer.processes[' + data.id + '])" title="{{ \'OFFER_DELETE_OFFER\' | translate }}">' +
+                '   <i class="fa fa-trash-o"></i>' +
+                '</button>';
+        }
+        else {
+            return '<div class="dropdown">' +
+                '<button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">' +
+                '<i class="fa fa-wrench"></i></button>' +
+                '<ul class="dropdown-menu pull-right">' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disabled + ' ng-click="offer.followUp(offer.processes[' + data.id + '])"><i class="fa fa-check">&nbsp;</i>{{\'OFFER_FOLLOW_UP\' | translate }}</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.closeOrOpenOffer(offer.processes[' + data.id + '])"><i class="' + faOpenOrLOck + '">&nbsp;</i>' + openOrLock + '</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.loadDataToModal(offer.processes[' + data.id + '])"><i class="fa fa-edit"">&nbsp;</i>{{\'OFFER_EDIT_OFFER\' | translate }}</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + hasRightToDelete + ' ng-click="offer.deleteRow(offer.processes[' + data.id + '])"><i class="fa fa-trash-o">&nbsp;</i>{{\'OFFER_DELETE_OFFER\' | translate }}</button></li>' +
+                '</ul>' +
+                '</div>'
+        }
     }
 
     function addStatusStyle(data, type, full, meta) {
