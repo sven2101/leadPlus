@@ -167,3 +167,36 @@ StatisticsCtrl.prototype.getOffersConversionRate = function () {
 
     return chartConfig;
 };
+
+StatisticsCtrl.prototype.pushLeadsOffersSales = function () {
+    this.chartEntireStatisticSpline.series.push({
+        name: this.translate.instant('LEADS_MENU'),
+        data: this.leadResult,
+        color: '#ed5565'
+    });
+    this.chartEntireStatisticSpline.series.push({
+        name: this.translate.instant('OFFERS_MENU'),
+        data: this.offerResult,
+        color: '#f8ac59'
+    });
+    this.chartEntireStatisticSpline.series.push({
+        name: this.translate.instant('SALES_MENU'),
+        data: this.saleResult,
+        color: '#1a7bb9'
+    });
+
+}
+
+StatisticsCtrl.prototype.pushProfitAndTurnover = function () {
+    this.chartEntireStatisticArea.series.push({
+        name: this.translate.instant('STATISTIC_TURNOVER'),
+        data: this.turnoverResult,
+        color: '#000000'
+    });
+
+    this.chartEntireStatisticArea.series.push({
+        name: this.translate.instant('STATISTIC_PROFIT'),
+        data: this.profitsResult,
+        color: '#1a7bb9'
+    });
+}

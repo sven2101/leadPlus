@@ -3,19 +3,16 @@
  */
 
 StatisticsCtrl.prototype.getProfit = function (profits) {
+    this.profitsResult = profits.result;
     var summe = 0;
     for (var profit in profits.result) {
         summe = summe + profits.result[profit];
     }
     this.profit = summe;
-    this.chartEntireStatisticArea.series.push({
-        name: this.translate.instant('STATISTIC_PROFIT'),
-        data: profits.result,
-        color: '#1a7bb9'
-    });
 };
 
 StatisticsCtrl.prototype.getTurnover = function (turnovers) {
+    this.turnoverResult = turnovers.result;
     var summe = 0;
     for (var turnover in turnovers.result) {
         summe = summe + turnovers.result[turnover];
@@ -23,11 +20,7 @@ StatisticsCtrl.prototype.getTurnover = function (turnovers) {
     this.turnover = summe;
     this.getEfficiency();
     this.getProfitPerSale();
-    this.chartEntireStatisticArea.series.push({
-        name: this.translate.instant('STATISTIC_TURNOVER'),
-        data: turnovers.result,
-        color: '#000000'
-    });
+ 
 };
 
 StatisticsCtrl.prototype.getLeads = function (leads) {
@@ -41,12 +34,6 @@ StatisticsCtrl.prototype.getLeads = function (leads) {
     this.chartSingleStatisticPie.series[0].data.push({
         name: this.translate.instant('LEADS_MENU'),
         y: this.leads,
-        color: '#ed5565'
-    });
-
-    this.chartEntireStatisticSpline.series.push({
-        name: this.translate.instant('LEADS_MENU'),
-        data: leads.result,
         color: '#ed5565'
     });
 };
@@ -64,12 +51,6 @@ StatisticsCtrl.prototype.getOffers = function (offers) {
         y: this.offers,
         color: '#f8ac59'
     });
-
-    this.chartEntireStatisticSpline.series.push({
-        name: this.translate.instant('OFFERS_MENU'),
-        data: offers.result,
-        color: '#f8ac59'
-    });
 };
 
 StatisticsCtrl.prototype.getSales = function (sales) {
@@ -84,12 +65,6 @@ StatisticsCtrl.prototype.getSales = function (sales) {
     this.chartSingleStatisticPie.series[0].data.push({
         name: this.translate.instant('SALES_MENU'),
         y: this.sales,
-        color: '#1a7bb9'
-    });
-
-    this.chartEntireStatisticSpline.series.push({
-        name: this.translate.instant('SALES_MENU'),
-        data: sales.result,
         color: '#1a7bb9'
     });
 };
