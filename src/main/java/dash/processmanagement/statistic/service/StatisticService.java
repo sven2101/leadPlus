@@ -53,6 +53,7 @@ public class StatisticService implements IStatisticService {
     public <T> Result getWeeklyStatistic(RequestRepository<T, Long> repository) {
 
         Calendar until = Calendar.getInstance();
+        until.add(Calendar.DAY_OF_MONTH, 1);
 
         Calendar tmp = Calendar.getInstance();
         tmp.add(Calendar.DAY_OF_YEAR, -6);
@@ -81,6 +82,7 @@ public class StatisticService implements IStatisticService {
     public <T> Result getMonthlyStatistic(RequestRepository<T, Long> repository) {
 
         Calendar until = Calendar.getInstance();
+        until.add(Calendar.DAY_OF_MONTH, 1);
 
         Calendar tmp = Calendar.getInstance();
         tmp.add(Calendar.DAY_OF_MONTH, -30);
@@ -110,6 +112,7 @@ public class StatisticService implements IStatisticService {
     public <T> Result getYearlyStatistic(RequestRepository<T, Long> repository) {
 
         Calendar until = Calendar.getInstance();
+        until.add(Calendar.DAY_OF_MONTH, 1);
 
         Calendar tmp = Calendar.getInstance();
         tmp.add(Calendar.YEAR, -1);
@@ -138,6 +141,7 @@ public class StatisticService implements IStatisticService {
     public <T> Result getAllStatistic(RequestRepository<T, Long> repository) {
 
         Calendar until = Calendar.getInstance();
+        until.add(Calendar.DAY_OF_MONTH, 1);
 
         Calendar tmp = Calendar.getInstance();
         tmp.set(2014, 1, 1);

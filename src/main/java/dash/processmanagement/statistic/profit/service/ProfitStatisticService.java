@@ -61,6 +61,7 @@ public class ProfitStatisticService implements IProfitStatisticService {
     public <T> Result getWeeklyProfitStatistic(){
 	
 	Calendar until = Calendar.getInstance();
+	until.add(Calendar.DAY_OF_MONTH, 1);
 
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.DAY_OF_YEAR, -6);
@@ -88,6 +89,7 @@ public class ProfitStatisticService implements IProfitStatisticService {
     public <T> Result getMonthlyProfitStatistic(){
 	
 	Calendar until = Calendar.getInstance();
+	until.add(Calendar.DAY_OF_MONTH, 1);
 
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.DAY_OF_MONTH, -30);
@@ -115,6 +117,7 @@ public class ProfitStatisticService implements IProfitStatisticService {
     public <T> Result getYearlyProfitStatistic(){
 
 	Calendar until = Calendar.getInstance();
+	until.add(Calendar.DAY_OF_MONTH, 1);
 
 	Calendar tmp = Calendar.getInstance();
 	tmp.add(Calendar.YEAR, -1);
@@ -142,6 +145,7 @@ public class ProfitStatisticService implements IProfitStatisticService {
     public <T> Result getAllProfitStatistic(){
 
 	Calendar until = Calendar.getInstance();
+	until.add(Calendar.DAY_OF_MONTH, 1);
 
 	Calendar tmp = Calendar.getInstance();
 	tmp.set(2014, 1, 1);
