@@ -139,9 +139,9 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
     ];
 
     if ($rootScope.language == 'de') {
-        vm.dtOptions.withLanguageSource('/application/app/datatablesTranslationFiles/German.json');
+        vm.dtOptions.withLanguageSource('/app/datatablesTranslationFiles/German.json');
     } else {
-        vm.dtOptions.withLanguageSource('/application/app/datatablesTranslationFiles/English.json');
+        vm.dtOptions.withLanguageSource('/app/datatablesTranslationFiles/English.json');
     }
 
     vm.refreshData = refreshData;
@@ -184,8 +184,8 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
         if ($rootScope.globals.currentUser.role == 'user') {
             hasRightToDelete = 'disabled';
         }
-        if (vm.windowWidth > 1200) {
-            return '<button class="btn btn-white" ' + disabled + ' ng-click="offer.followUp(offer.processes[' + data.id + '])" title="{{ \'OFFER_FOLLOW_UP\' | translate }}">' +
+        if (vm.windowWidth > 1300) {
+            return '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disabled + ' ng-click="offer.followUp(offer.processes[' + data.id + '])" title="{{ \'OFFER_FOLLOW_UP\' | translate }}">' +
                 '   <i class="fa fa-check"></i>' +
                 '</button>&nbsp;' +
                 '<button class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.closeOrOpenOffer(offer.processes[' + data.id + '])" title="' + openOrLock + '">' +
@@ -197,7 +197,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
                 '</button>&nbsp;' +
                 '<button class="btn btn-white"' + hasRightToDelete + ' ng-click="offer.deleteRow(offer.processes[' + data.id + '])" title="{{ \'OFFER_DELETE_OFFER\' | translate }}">' +
                 '   <i class="fa fa-trash-o"></i>' +
-                '</button>';
+                '</button></div>';
         }
         else {
             return '<div class="dropdown">' +

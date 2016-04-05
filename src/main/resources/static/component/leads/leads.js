@@ -130,9 +130,9 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     ];
 
     if ($rootScope.language == 'de') {
-        vm.dtOptions.withLanguageSource('/application/app/datatablesTranslationFiles/German.json');
+        vm.dtOptions.withLanguageSource('/app/datatablesTranslationFiles/German.json');
     } else {
-        vm.dtOptions.withLanguageSource('/application/app/datatablesTranslationFiles/English.json');
+        vm.dtOptions.withLanguageSource('/app/datatablesTranslationFiles/English.json');
     }
 
     vm.refreshData = refreshData;
@@ -181,8 +181,8 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             disablePin = 'disabled';
         }
 
-        if (vm.windowWidth > 1200) {
-            return '<button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])" title="{{ \'LEAD_FOLLOW_UP\' | translate }}">' +
+        if (vm.windowWidth > 1300) {
+            return '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])" title="{{ \'LEAD_FOLLOW_UP\' | translate }}">' +
                 '   <i class="fa fa-check"></i>' +
                 '</button>&nbsp;' +
                 '<button class="btn btn-white" ' + disablePin + ' ng-click="lead.pin(lead.processes[' + data.id + '])" title="{{ \'LEAD_PIN\' | translate }}">' +
@@ -197,7 +197,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
                 '</button>&nbsp;' +
                 '<button class="btn btn-white" ' + hasRightToDelete + ' ng-click="lead.deleteRow(lead.processes[' + data.id + '])" title="{{ \'LEAD_DELETE_LEAD\' | translate }}">' +
                 '   <i class="fa fa-trash-o"></i>' +
-                '</button>';
+                '</button></div>';
         } else {
             return '<div class="dropdown">' +
                 '<button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">' +

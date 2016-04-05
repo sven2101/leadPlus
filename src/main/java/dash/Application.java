@@ -115,32 +115,18 @@ public class Application {
     @PostConstruct
     public void createAdminIfNotExists() throws Exception {
 
-        if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("andreas")).isPresent()) {
+        if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("admin")).isPresent()) {
 
             User user1 = new User();
 
-            user1.setUsername("andreas".toLowerCase());
-            user1.setPassword(passwordEncoder().encode("admin"));
-            user1.setEmail("andreas.foitzik@live.com");
-            user1.setRole(Role.ADMIN);
+            user1.setUsername("admin".toLowerCase());
+            user1.setPassword(passwordEncoder().encode("6HzRSZjmj89sQaN5!"));
+            user1.setEmail("admin@***REMOVED***.com");
+            user1.setRole(Role.SUPERADMIN);
             user1.setEnabled(true);
             user1.setLanguage(Language.DE);
 
             userRepository.save(user1);
-        }
-
-        if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("sven")).isPresent()) {
-
-            User user2 = new User();
-
-            user2.setUsername("sven".toLowerCase());
-            user2.setPassword(passwordEncoder().encode("admin"));
-            user2.setEmail("sven-jaschkewitz@web.de");
-            user2.setRole(Role.ADMIN);
-            user2.setEnabled(true);
-            user2.setLanguage(Language.DE);
-
-            userRepository.save(user2);
         }
     }
 

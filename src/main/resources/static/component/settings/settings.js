@@ -21,8 +21,11 @@ function SettingsCtrl($filter, toaster, Settings, $rootScope, $translate) {
     });
     this.filter = $filter;
     this.toaster = toaster;
+    this.counter = 1;
 }
-
+SettingsCtrl.prototype.incrementCounter = function () {
+    this.counter++;
+}
 SettingsCtrl.prototype.activateUser = function (user) {
     var vm = this;
     this.service.activate({username: user.username}, true).$promise.then(function () {
@@ -45,7 +48,8 @@ SettingsCtrl.prototype.deactivateUser = function (user) {
 SettingsCtrl.prototype.hasRight = function (user) {
     if (user.username == this.rootScope.globals.currentUser.username
         || (user.role == this.rootScope.globals.currentUser.role)
-        || this.rootScope.globals.currentUser.role == 'user') {
+        || this.rootScope.globals.currentUser.role == 'user'
+        || user.role == 'superadmin') {
         return true;
     } else {
         return false;

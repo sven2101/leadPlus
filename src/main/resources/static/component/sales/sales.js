@@ -141,9 +141,9 @@ function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     ];
 
     if ($rootScope.language == 'de') {
-        vm.dtOptions.withLanguageSource('/application/app/datatablesTranslationFiles/German.json');
+        vm.dtOptions.withLanguageSource('/app/datatablesTranslationFiles/German.json');
     } else {
-        vm.dtOptions.withLanguageSource('/application/app/datatablesTranslationFiles/English.json');
+        vm.dtOptions.withLanguageSource('/app/datatablesTranslationFiles/English.json');
     }
 
     vm.refreshData = refreshData;
