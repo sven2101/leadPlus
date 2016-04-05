@@ -24,9 +24,9 @@ public class SaleService implements ISaleService {
     private CustomerRepository customerRepository;
 
     public void createSale(Sale sale) {
-        if (Optional.ofNullable(sale).isPresent()) {
+        if (Optional.ofNullable(sale.getVendor()).isPresent()) {
             Vendor vendor = vendorRepository.findByName(sale.getVendor().getName());
-            if (vendor == null) {
+            if (Optional.ofNullable(vendor).isPresent()) {
                 vendorRepository.save(sale.getVendor());
             } else {
                 sale.setVendor(vendor);
