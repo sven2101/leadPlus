@@ -69,14 +69,15 @@ public class ProcessService implements IProcessService {
 
     public void createProcesses(List<Process> processes) {
         for (Process process : processes) {
-            process.setProcessor(null);
 
             if (Optional.ofNullable(process.getLead()).isPresent())
                 leadService.createLead(process.getLead());
             if (Optional.ofNullable(process.getOffer()).isPresent())
                 offerService.createOffer(process.getOffer());
-            if (Optional.ofNullable(process.getSale()).isPresent())
+            if (Optional.ofNullable(process.getSale()).isPresent()) {
+                process.setProcessor(userRepository.findByUsernameIgnoreCase("admin"));
                 saleService.createSale(process.getSale());
+            }
 
             processRepository.save(process);
         }

@@ -29,7 +29,7 @@ public class Sale implements Request {
     @JoinColumn(name = "container_fk")
     private Container container;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "vendor_fk")
     private Vendor vendor;
 

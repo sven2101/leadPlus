@@ -119,7 +119,7 @@ public class Application {
 
             User user1 = new User();
 
-            user1.setUsername("andreas".toLowerCase());
+            user1.setUsername("admin".toLowerCase());
             user1.setPassword(passwordEncoder().encode("admin"));
             user1.setEmail("andreas.foitzik@live.com");
             user1.setRole(Role.ADMIN);
