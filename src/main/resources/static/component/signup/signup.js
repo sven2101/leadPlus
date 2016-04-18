@@ -17,9 +17,7 @@ function SignUpCtrl($location, $http, $scope, Auth, toaster, $translate) {
             headers: {'Content-Type': "text/plain"}
         }).success(function (data, status, headers, config) {
             $scope.emailExists = data;
-            console.log("Email: ", $scope.emailExists);
         }).error(function (data, status, headers, config) {
-            console.log("Email: ", data);
         });
     };
 

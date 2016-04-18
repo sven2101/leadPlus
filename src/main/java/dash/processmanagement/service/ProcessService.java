@@ -83,7 +83,8 @@ public class ProcessService implements IProcessService {
         }
     }
 
-    public void createProcess(Process process) {
+    public Process createProcess(Process process) {
+        Process createdProcess = null;
         if (Optional.ofNullable(process).isPresent()) {
             if (Optional.ofNullable(process.getProcessor()).isPresent()) {
                 if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase(process.getProcessor().getUsername())).isPresent()) {
@@ -99,8 +100,9 @@ public class ProcessService implements IProcessService {
             if (Optional.ofNullable(process.getSale()).isPresent())
                 saleService.createSale(process.getSale());
 
-            processRepository.save(process);
+            createdProcess = processRepository.save(process);
         }
+        return createdProcess;
     }
 
     public void createLead(Long processId, Lead lead) throws ProcessNotFoundException {

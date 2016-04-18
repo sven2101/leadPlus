@@ -9,9 +9,10 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     this.userService = Profile;
     this.user = {};
     this.windowWidth = $(window).width();
-    this.userService.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
-        vm.user = result;
-    });
+    if (!angular.isUndefined($rootScope.globals.currentUser))
+        this.userService.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
+            vm.user = result;
+        });
     this.scope = $scope;
     this.rootScope = $rootScope;
     this.translate = $translate;
@@ -24,6 +25,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     this.loadAllData = false;
     this.dtInstance = {};
     this.processes = {};
+    this.rows = {};
     this.editProcess = {};
     this.newLead = {};
     this.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
@@ -154,6 +156,11 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
 
     function createdRow(row, data, dataIndex) {
         // Recompiling so we can bind Angular directive to the DT
+        vm.rows[data.id] = row;
+        var currentDate = moment();
+        var leadDate = moment(data.lead.timestamp, "DD.MM.YYYY");
+        if (currentDate.diff(leadDate, 'days') >= 3 && data.status == 'open')
+            $(row).addClass('important');
         vm.compile(angular.element(row).contents())(vm.scope);
     }
 
@@ -180,7 +187,6 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
         if (data.processor != null && $rootScope.globals.currentUser.username != data.processor.username) {
             disablePin = 'disabled';
         }
-
         if (vm.windowWidth > 1300) {
             return '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])" title="{{ \'LEAD_FOLLOW_UP\' | translate }}">' +
                 '   <i class="fa fa-check"></i>' +
@@ -206,7 +212,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
                 '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])"><i class="fa fa-check">&nbsp;</i>{{\'LEAD_FOLLOW_UP\' | translate }}</button></li>' +
                 '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disablePin + ' ng-click="lead.pin(lead.processes[' + data.id + '])"><i class="fa fa-thumb-tack">&nbsp;</i>{{\'LEAD_PIN\' | translate }}</button></li>' +
                 '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.closeOrOpenInquiry(lead.processes[' + data.id + '])"><i class="' + faOpenOrLOck + '">&nbsp;</i>' + openOrLock + '</button></li>' +
-                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.loadDataToModal(lead.processes[' + data.id + '])"><i class="fa fa-edit"">&nbsp;</i>{{\'LEAD_EDIT_LEAD\' | translate }}</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenInquiryDisable + ' data-toggle="modal" data-target="#editModal" ng-click="lead.loadDataToModal(lead.processes[' + data.id + '])"><i class="fa fa-edit"">&nbsp;</i>{{\'LEAD_EDIT_LEAD\' | translate }}</button></li>' +
                 '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + hasRightToDelete + ' ng-click="lead.deleteRow(lead.processes[' + data.id + '])"><i class="fa fa-trash-o">&nbsp;</i>{{\'LEAD_DELETE_LEAD\' | translate }}</button></li>' +
                 '</ul>' +
                 '</div>'
@@ -223,6 +229,9 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
         }
         else if (data.status == 'offer') {
             return '<span style="color: #f79d3c;">' + $translate.instant('COMMON_STATUS_OFFER') + '</span>'
+        }
+        else if (data.status == 'followup') {
+            return '<span style="color: #f79d3c;">' + $translate.instant('COMMON_STATUS_FOLLOW_UP') + '</span>'
         }
         else if (data.status == 'sale') {
             return '<span style="color: #1872ab;">' + $translate.instant('COMMON_STATUS_SALE') + '</span>'

@@ -24,10 +24,12 @@
                     <h5>{{ 'SALE_MANAGE_SALES' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
+                    <!--
                     <button type="button" class="btn btn-success" ng-click="sale.clearNewSale()" data-toggle="modal"
                             data-target="#newSaleModal">
                         <i class="fa fa-plus"></i>&nbsp;{{ 'SALE_ADD_SALE' | translate }}
                     </button>
+                    -->
                     <button ng-click="sale.refreshData()" type="button" class="btn btn-success">
                         <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
                     </button>
@@ -51,7 +53,7 @@
     </div>
 </div>
 <div ng-include="'component/sales/editSaleModal.html'"></div>
-<div ng-include="'component/sales/addSaleModal.html'"></div>
+<!--<div ng-include="'component/sales/addSaleModal.html'"></div>-->
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {

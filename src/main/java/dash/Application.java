@@ -116,17 +116,28 @@ public class Application {
     public void createAdminIfNotExists() throws Exception {
 
         if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("admin")).isPresent()) {
+            User admin = new User();
 
-            User user1 = new User();
+            admin.setUsername("admin".toLowerCase());
+            admin.setPassword(passwordEncoder().encode("6HzRSZjmj89sQaN5!"));
+            admin.setEmail("admin@***REMOVED***.com");
+            admin.setRole(Role.SUPERADMIN);
+            admin.setEnabled(true);
+            admin.setLanguage(Language.DE);
 
-            user1.setUsername("admin".toLowerCase());
-            user1.setPassword(passwordEncoder().encode("6HzRSZjmj89sQaN5!"));
-            user1.setEmail("admin@***REMOVED***.com");
-            user1.setRole(Role.SUPERADMIN);
-            user1.setEnabled(true);
-            user1.setLanguage(Language.DE);
+            userRepository.save(admin);
+        }
+        if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("api")).isPresent()) {
+            User apiuser = new User();
 
-            userRepository.save(user1);
+            apiuser.setUsername("api".toLowerCase());
+            apiuser.setPassword(passwordEncoder().encode("!APQYtDwgBtNqNY5L"));
+            apiuser.setEmail("api@***REMOVED***.com");
+            apiuser.setRole(Role.USER);
+            apiuser.setEnabled(true);
+            apiuser.setLanguage(Language.DE);
+
+            userRepository.save(apiuser);
         }
     }
 

@@ -8,9 +8,10 @@ function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     this.processesService = Processes;
     this.userService = Profile;
     this.user = {};
-    this.userService.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
-        vm.user = result;
-    });
+    if (!angular.isUndefined($rootScope.globals.currentUser))
+        this.userService.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
+            vm.user = result;
+        });
     this.scope = $scope;
     this.rootScope = $rootScope;
     this.translate = $translate;
@@ -23,6 +24,7 @@ function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     this.loadAllData = false;
     this.dtInstance = {};
     this.processes = {};
+    this.rows = {};
     this.editProcess = {};
     this.newSale = {};
     this.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
@@ -165,6 +167,7 @@ function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
 
     function createdRow(row, data, dataIndex) {
         // Recompiling so we can bind Angular directive to the DT
+        vm.rows[data.id] = row;
         vm.compile(angular.element(row).contents())(vm.scope);
     }
 

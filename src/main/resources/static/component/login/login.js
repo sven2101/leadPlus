@@ -6,16 +6,23 @@ LoginCtrl.$inject = ['$location', 'Auth', '$scope', 'toaster', '$rootScope', '$t
 
 function LoginCtrl($location, Auth, $scope, toaster, $rootScope, $translate) {
     this.login = function (credentials) {
-        Auth.login(credentials,
-            function (res) {
-                $location.path('/dashoard');
-                $rootScope.setUserDefaultLanguage();
-            },
-            function (err) {
-                $scope.credentials.password = "";
-                toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
-            }
-        );
+        if (credentials.username == 'apiuser') {
+            $scope.credentials.password = "";
+            toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
+        }
+        else {
+            Auth.login(credentials,
+                function (res) {
+                    $location.path('/dashoard');
+                    $rootScope.setUserDefaultLanguage();
+                    $rootScope.loadLabels();
+                },
+                function (err) {
+                    $scope.credentials.password = "";
+                    toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
+                }
+            );
+        }
     };
 
 }

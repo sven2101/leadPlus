@@ -33,6 +33,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(length = 60, nullable = false)
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)

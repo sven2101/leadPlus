@@ -19,15 +19,15 @@ public class Process {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "lead_fk", nullable = true)
     private Lead lead;
     
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "offer_fk", nullable = true)
     private Offer offer;
     
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "sale_fk", nullable = true)
     private Sale sale;
     

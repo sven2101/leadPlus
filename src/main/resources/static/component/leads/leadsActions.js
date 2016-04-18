@@ -52,11 +52,11 @@ LeadsCtrl.prototype.saveLead = function () {
         lead: this.newLead,
         status: 'open'
     };
-    this.processesService.addProcess(process).$promise.then(function () {
+    this.processesService.addProcess(process).$promise.then(function (result) {
         vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_ADD_LEAD'));
         vm.rootScope.leadsCount += 1;
         vm.addForm.$setPristine();
-        vm.refreshData();
+        vm.dtInstance.DataTable.row.add(result).draw();
     });
 };
 
@@ -97,7 +97,10 @@ LeadsCtrl.prototype.followUp = function (process) {
             vm.rootScope.offersCount += 1;
             if (process.processor == null) {
                 vm.processesService.setProcessor({id: process.id}, vm.user.username).$promise.then(function () {
-                    vm.refreshData();
+                    process.processor = vm.user;
+                    process.offer = offer;
+                    process.status = 'offer';
+                    vm.updateRow(process);
                 });
             }
         });
@@ -108,12 +111,14 @@ LeadsCtrl.prototype.pin = function (process) {
     var vm = this;
     if (process.processor == null) {
         this.processesService.setProcessor({id: process.id}, vm.user.username).$promise.then(function () {
-            vm.refreshData();
+            process.processor = vm.user;
+            vm.updateRow(process);
         });
     }
     else {
         this.processesService.removeProcessor({id: process.id}).$promise.then(function () {
-            vm.refreshData();
+            process.processor = null;
+            vm.updateRow(process);
         });
     }
 }
@@ -124,19 +129,21 @@ LeadsCtrl.prototype.closeOrOpenInquiry = function (process) {
         this.processesService.setStatus({id: process.id}, 'closed').$promise.then(function () {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_CLOSE_LEAD'));
             vm.rootScope.leadsCount -= 1;
-            vm.refreshData();
+            process.status = 'closed';
+            vm.updateRow(process);
         });
     } else if (process.status == "closed") {
         this.processesService.setStatus({id: process.id}, 'open').$promise.then(function () {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_OPEN_LEAD'));
             vm.rootScope.leadsCount += 1;
-            vm.refreshData();
+            process.status = 'open';
+            vm.updateRow(process);
         });
     }
 };
 
-LeadsCtrl.prototype.loadDataToModal = function (lead) {
-    this.editProcess = lead;
+LeadsCtrl.prototype.loadDataToModal = function (process) {
+    this.editProcess = process;
 };
 
 LeadsCtrl.prototype.saveEditedRow = function () {
@@ -144,7 +151,8 @@ LeadsCtrl.prototype.saveEditedRow = function () {
     this.processesService.putLead({id: this.editProcess.lead.id}, this.editProcess.lead).$promise.then(function () {
         vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_UPDATE_LEAD'));
         vm.editForm.$setPristine();
-        vm.refreshData();
+        vm.editProcess.lead.leadPrice = vm.editProcess.lead.containerAmount * vm.editProcess.lead.container.priceNetto;
+        vm.updateRow(vm.editProcess);
     });
 };
 
@@ -161,7 +169,12 @@ LeadsCtrl.prototype.deleteRow = function (process) {
             if (process.status == 'open') {
                 vm.rootScope.leadsCount -= 1;
             }
-            vm.refreshData();
+            vm.dtInstance.DataTable.row(vm.rows[process.id]).remove().draw();
         });
     });
+};
+
+LeadsCtrl.prototype.updateRow = function (process) {
+    this.dtInstance.DataTable.row(this.rows[process.id]).data(process).draw();
+    this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
 };

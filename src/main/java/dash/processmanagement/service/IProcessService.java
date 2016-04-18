@@ -17,7 +17,7 @@ public interface IProcessService {
 
     List<?> getElementsByStatus(Status status, String kind);
     void createProcesses(List<Process> processes);
-    void createProcess(Process process);
+    Process createProcess(Process process);
     void createLead(Long processId, Lead lead) throws ProcessNotFoundException;
     void createOffer(Long processId, Offer offer) throws ProcessNotFoundException;
     void createSale(Long processId, Sale sale) throws ProcessNotFoundException;

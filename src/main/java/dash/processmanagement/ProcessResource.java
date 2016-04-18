@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -64,11 +65,16 @@ public class ProcessResource {
         return processRepository.findByStatusAndLeadIsNotNull(Status.getStatus(status));
     }
 
+    // TODO workaround for follow ups
+    // rebuild with a new api
     @ApiOperation(value = "Returns list of offers, which are related to a process status.", notes = "")
     @RequestMapping(value = "/state/{status}/offers", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<Offer> getOffersByProcessStatus(@ApiParam(required = true) @PathVariable String status) throws StatusNotFoundException {
-        return processRepository.findByStatusAndOfferIsNotNull(Status.getStatus(status));
+        List<Offer> returnedOffers = processRepository.findByStatusAndOfferIsNotNull(Status.getStatus(status));
+        if (Status.getStatus(status).equals(Status.OFFER))
+            returnedOffers.addAll(processRepository.findByStatusAndOfferIsNotNull(Status.FOLLOWUP));
+        return returnedOffers;
     }
 
     @ApiOperation(value = "Returns list of sales, which are related to a process status.", notes = "")
@@ -152,8 +158,8 @@ public class ProcessResource {
     @ApiOperation(value = "Creates a process.", notes = "")
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProcess(@RequestBody @Valid Process process) {
-        processService.createProcess(process);
+    public Process createProcess(@RequestBody @Valid Process process) {
+        return processService.createProcess(process);
     }
 
     @ApiOperation(value = "Creates processes based on a List of Processes.", notes = "")

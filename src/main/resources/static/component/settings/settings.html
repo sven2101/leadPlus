@@ -36,7 +36,7 @@
                         </thead>
                         <tbody>
                         <tr ng-model="setting.user" ng-repeat="user in setting.users | orderBy:'username'"
-                            ng-if="user.username != globals.currentUser.username">
+                            ng-if="user.username != globals.currentUser.username && user.username != 'api'">
                             <td>{{user.id}}</td>
                             <td>{{user.username}}</td>
                             <td>{{user.email}}</td>
@@ -76,7 +76,7 @@
                         </thead>
                         <tbody>
                         <tr ng-model="setting.user" ng-repeat="user in setting.users | orderBy:'username'"
-                            ng-if="user.role !='superadmin' && user.username != globals.currentUser.username">
+                            ng-if="user.role !='superadmin' && user.username != globals.currentUser.username  && user.username != 'api'">
                             <td>{{user.id}}</td>
                             <td>{{user.username}}</td>
                             <td><select ng-model="setting.roleSelection[user.id]">

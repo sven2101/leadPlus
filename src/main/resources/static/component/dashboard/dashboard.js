@@ -2,17 +2,17 @@
 
 angular.module('app.dashboard', ['ngResource']).controller('DashboardCtrl', DashboardCtrl);
 
-DashboardCtrl.$inject = ['toaster', 'Processes', '$filter', '$translate', '$rootScope', 'orderByFilter', '$scope', '$interval', 'Profile', 'Leads', 'Offers', 'Sales', 'Profit', 'Turnover'];
+DashboardCtrl.$inject = ['toaster', 'Processes', '$filter', '$translate', '$rootScope', '$scope', '$interval', 'Profile', 'Leads', 'Offers', 'Sales', 'Profit', 'Turnover'];
 
-function DashboardCtrl(toaster, Processes, $filter, $translate, $rootScope, orderByFilter, $scope, $interval, Profile, Leads, Offers, Sales, Profit, Turnover) {
+function DashboardCtrl(toaster, Processes, $filter, $translate, $rootScope, $scope, $interval, Profile, Leads, Offers, Sales, Profit, Turnover) {
 
     var vm = this;
     this.toaster = toaster;
     this.filter = $filter;
+    this.orderBy = $filter('orderBy');
     this.translate = $translate;
     this.rootScope = $rootScope;
     this.processesService = Processes;
-    this.orderByFilter = orderByFilter;
     this.commentModalInput = '';
     this.comments = {};
     this.infoData = {};
@@ -28,19 +28,20 @@ function DashboardCtrl(toaster, Processes, $filter, $translate, $rootScope, orde
     this.conversionRate = {};
 
     Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
-        vm.openLead = orderByFilter(result, ['-lead.timestamp']);
+        vm.openLead = vm.orderBy(result, 'lead.timestamp', false);
     });
     Processes.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
-        vm.openOffer = orderByFilter(result, ['-offer.timestamp']);
+        vm.openOffer = vm.orderBy(result, 'offer.timestamp', false);
     });
     Processes.getLatestSales().$promise.then(function (result) {
         vm.sales = result;
     });
 
     this.user = {};
-    Profile.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
-        vm.user = result;
-    });
+    if (!angular.isUndefined($rootScope.globals.currentUser))
+        Profile.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
+            vm.user = result;
+        });
 
     this.sortableOptions = {
         update: function (e, ui) {
@@ -134,7 +135,7 @@ DashboardCtrl.prototype.addLeadToOffer = function (process) {
                 process.processor = vm.user;
             });
             process.offer = offer;
-            vm.openOffer = vm.orderByFilter(vm.openOffer, ['-offer.timestamp']);
+            vm.openOffer = vm.orderBy(vm.openOffer, 'offer.timestamp', false);
         });
     });
 };
@@ -166,7 +167,7 @@ DashboardCtrl.prototype.addOfferToSale = function (process) {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_NEW_SALE'));
             vm.rootScope.offersCount -= 1;
             process.sale = sale;
-            vm.sales = vm.orderByFilter(vm.sales, ['-sale.timestamp']);
+            vm.sales = vm.orderBy(vm.sales, 'sale.timestamp', true);
         });
     });
 };
@@ -192,10 +193,10 @@ DashboardCtrl.prototype.saveDataToModal = function (info, type, process) {
 DashboardCtrl.prototype.refreshData = function () {
     var vm = this;
     this.processesService.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
-        vm.openLead = vm.orderByFilter(result, ['-lead.timestamp']);
+        vm.openLead = vm.orderBy(result, 'lead.timestamp', false);
     });
     this.processesService.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
-        vm.openOffer = vm.orderByFilter(result, ['-offer.timestamp']);
+        vm.openOffer = vm.orderBy(result, 'offer.timestamp', false);
     });
     this.processesService.getLatestSales().$promise.then(function (result) {
         vm.sales = result;

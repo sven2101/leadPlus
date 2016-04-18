@@ -27,7 +27,7 @@
                                     class="sortable-list connectList agile-list" id="lead"
                                     ng-model="dashboard.openLead">
                                     <li class="danger-element draggable"
-                                        ng-repeat="process in dashboard.openLead">
+                                        ng-repeat="process in dashboard.openLead | limitTo:10">
                                         {{process.lead.containerAmount}}x {{process.lead.container.name}}
                                         <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
                                         <div class="agile-detail">
@@ -52,7 +52,7 @@
                                     class="sortable-list connectList agile-list" id="offer"
                                     ng-model="dashboard.openOffer">
                                     <li class="warning-element draggable"
-                                        ng-repeat="process in dashboard.openOffer">
+                                        ng-repeat="process in dashboard.openOffer | limitTo:10">
                                         {{process.offer.containerAmount}}x {{process.offer.container.name}}
                                         <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
                                         <div class="agile-detail">

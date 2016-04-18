@@ -10,6 +10,7 @@ import dash.exceptions.StatusNotFoundException;
 public enum Status {
     OPEN("open"),
     OFFER("offer"),
+    FOLLOWUP("followup"),
     SALE("sale"),
     CLOSED("closed");
 
@@ -32,6 +33,8 @@ public enum Status {
                 return Status.OPEN;
             case "offer":
                 return Status.OFFER;
+            case "followup":
+                return Status.FOLLOWUP;
             case "sale":
                 return Status.SALE;
             case "closed":

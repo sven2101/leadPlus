@@ -9,9 +9,10 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
     this.userService = Profile;
     this.user = {};
     this.windowWidth = $(window).width();
-    this.userService.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
-        vm.user = result;
-    });
+    if (!angular.isUndefined($rootScope.globals.currentUser))
+        this.userService.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
+            vm.user = result;
+        });
     this.scope = $scope;
     this.rootScope = $rootScope;
     this.translate = $translate;
@@ -24,6 +25,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
     this.loadAllData = false;
     this.dtInstance = {};
     this.processes = {};
+    this.rows = {};
     this.editProcess = {};
     this.newOffer = {};
     this.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
@@ -163,6 +165,11 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
 
     function createdRow(row, data, dataIndex) {
         // Recompiling so we can bind Angular directive to the DT
+        vm.rows[data.id] = row;
+        var currentDate = moment();
+        var offerDate = moment(data.offer.timestamp, "DD.MM.YYYY");
+        if (currentDate.diff(offerDate, 'days') >= 3 && (data.status == 'offer' || data.status == 'followup'))
+            $(row).addClass('important');
         vm.compile(angular.element(row).contents())(vm.scope);
     }
 
@@ -171,12 +178,17 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
         var disabled = '';
         var hasRightToDelete = '';
         var closeOrOpenOfferDisable = '';
+        var disableFollowUp = '';
         var openOrLock = "{{ 'OFFER_CLOSE_OFFER' | translate }}";
         var faOpenOrLOck = 'fa fa-lock';
-        if (data.status != 'offer') {
+        if (data.status != 'offer' && data.status != 'followup') {
+            disableFollowUp = 'disabled';
             disabled = 'disabled';
             openOrLock = "{{ 'OFFER_OPEN_OFFER' | translate }}";
             faOpenOrLOck = 'fa fa-unlock';
+        }
+        if (data.status == 'followup') {
+            disableFollowUp = 'disabled';
         }
         if (data.sale != null) {
             closeOrOpenOfferDisable = 'disabled';
@@ -185,8 +197,10 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
             hasRightToDelete = 'disabled';
         }
         if (vm.windowWidth > 1300) {
-            return '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disabled + ' ng-click="offer.followUp(offer.processes[' + data.id + '])" title="{{ \'OFFER_FOLLOW_UP\' | translate }}">' +
+            return '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disabled + ' ng-click="offer.createSale(offer.processes[' + data.id + '])" title="{{ \'OFFER_CREATE_SALE\' | translate }}">' +
                 '   <i class="fa fa-check"></i>' +
+                '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disableFollowUp + ' ng-click="offer.followUp(offer.processes[' + data.id + '])" title="{{ \'OFFER_FOLLOW_UP\' | translate }}">' +
+                '<i class="fa fa-eye"></i>' +
                 '</button>&nbsp;' +
                 '<button class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.closeOrOpenOffer(offer.processes[' + data.id + '])" title="' + openOrLock + '">' +
                 '   <i class="' + faOpenOrLOck + '"></i>' +
@@ -204,9 +218,10 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
                 '<button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">' +
                 '<i class="fa fa-wrench"></i></button>' +
                 '<ul class="dropdown-menu pull-right">' +
-                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disabled + ' ng-click="offer.followUp(offer.processes[' + data.id + '])"><i class="fa fa-check">&nbsp;</i>{{\'OFFER_FOLLOW_UP\' | translate }}</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disabled + ' ng-click="offer.createSale(offer.processes[' + data.id + '])"><i class="fa fa-check">&nbsp;</i>{{\'OFFER_CREATE_SALE\' | translate }}</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disableFollowUp + ' ng-click="offer.followUp(offer.processes[' + data.id + '])"><i class="fa fa-eye">&nbsp;</i>{{\'OFFER_FOLLOW_UP\' | translate }}</button></li>' +
                 '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.closeOrOpenOffer(offer.processes[' + data.id + '])"><i class="' + faOpenOrLOck + '">&nbsp;</i>' + openOrLock + '</button></li>' +
-                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.loadDataToModal(offer.processes[' + data.id + '])"><i class="fa fa-edit"">&nbsp;</i>{{\'OFFER_EDIT_OFFER\' | translate }}</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenOfferDisable + ' data-toggle="modal" data-target="#editModal" ng-click="offer.loadDataToModal(offer.processes[' + data.id + '])"><i class="fa fa-edit"">&nbsp;</i>{{\'OFFER_EDIT_OFFER\' | translate }}</button></li>' +
                 '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + hasRightToDelete + ' ng-click="offer.deleteRow(offer.processes[' + data.id + '])"><i class="fa fa-trash-o">&nbsp;</i>{{\'OFFER_DELETE_OFFER\' | translate }}</button></li>' +
                 '</ul>' +
                 '</div>'
@@ -215,11 +230,11 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
 
     function addStatusStyle(data, type, full, meta) {
         vm.processes[data.id] = data;
-        if (data.status == 'open') {
+        if (data.status == 'offer' || data.status == 'open') {
             return '<div style="color: green;">' + $translate.instant('COMMON_STATUS_OPEN') + '</div>'
         }
-        else if (data.status == 'offer') {
-            return '<div style="color: green;">' + $translate.instant('COMMON_STATUS_OPEN') + '</div>'
+        else if (data.status == 'followup') {
+            return '<div style="color: #f79d3c;">' + $translate.instant('COMMON_STATUS_FOLLOW_UP') + '</div>'
         }
         else if (data.status == 'sale') {
             return '<div style="color: #1872ab;">' + $translate.instant('COMMON_STATUS_SALE') + '</div>'

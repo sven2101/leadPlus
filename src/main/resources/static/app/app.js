@@ -123,14 +123,18 @@ angular.module('app')
 angular.module('app').controller('appCtrl', function ($translate, $scope, $rootScope, $interval, Processes, Profile) {
         $rootScope.leadsCount = 0;
         $rootScope.offersCount = 0;
-        if (!angular.isUndefined($rootScope.globals.currentUser)) {
-            Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
-                $rootScope.leadsCount = result.length;
-            });
-            Processes.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
-                $rootScope.offersCount = result.length;
-            });
+        $rootScope.loadLabels = function () {
+            if (!angular.isUndefined($rootScope.globals.currentUser)) {
+                Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
+                    $rootScope.leadsCount = result.length;
+                });
+                Processes.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
+                    $rootScope.offersCount = result.length;
+                });
+            }
         }
+        $rootScope.loadLabels();
+
         $rootScope.changeLanguage = function (langKey) {
             $translate.use(langKey);
             $rootScope.language = langKey;

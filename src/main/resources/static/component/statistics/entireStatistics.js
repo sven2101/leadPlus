@@ -7,12 +7,13 @@ StatisticsCtrl.prototype.entireStatisticArea = function () {
             title: {
                 text: ''
             },
+            tooltip: {
+                shared: true,
+                valueSuffix: ' €',
+                valueDecimals: 2
+            },
             xAxis: {
                 categories: [],
-
-                title: {
-                    enabled: false
-                }
             },
             loading: false,
             yAxis: {
@@ -24,12 +25,7 @@ StatisticsCtrl.prototype.entireStatisticArea = function () {
                         return this.value;
                     }
                 }
-            },
-            tooltip: {
-                shared: true,
-                valueSuffix: ' €'
             }
-
         },
         series: []
     };
@@ -100,7 +96,8 @@ StatisticsCtrl.prototype.getLeadsConversionRate = function () {
 
             },
             tooltip: {
-                pointFormat: "{point.y:.2f} %"
+                valueSuffix: ' %',
+                valueDecimals: 2
             },
             plotOptions: {
                 spline: {
@@ -146,7 +143,8 @@ StatisticsCtrl.prototype.getOffersConversionRate = function () {
 
             },
             tooltip: {
-                pointFormat: "{point.y:.2f} %"
+                valueSuffix: ' %',
+                valueDecimals: 2
             },
             plotOptions: {
                 spline: {

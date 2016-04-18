@@ -36,7 +36,8 @@ OffersCtrl.prototype.addComment = function (id, source) {
         });
     }
 };
-
+/*
+Not in Use.
 OffersCtrl.prototype.saveOffer = function () {
     var vm = this;
     if (angular.isUndefined(this.newOffer.prospect)) {
@@ -53,13 +54,14 @@ OffersCtrl.prototype.saveOffer = function () {
         status: 'offer',
         processor: vm.user
     };
-    this.processesService.addProcess(process).$promise.then(function () {
+    this.processesService.addProcess(process).$promise.then(function (result) {
         vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_ADD_OFFER'));
         vm.rootScope.offersCount += 1;
         vm.addForm.$setPristine();
-        vm.refreshData();
+        vm.dtInstance.DataTable.row.add(result).draw();
     });
 };
+*/
 
 OffersCtrl.prototype.clearNewOffer = function () {
     this.newOffer = {};
@@ -69,7 +71,7 @@ OffersCtrl.prototype.clearNewOffer = function () {
     }
 };
 
-OffersCtrl.prototype.followUp = function (process) {
+OffersCtrl.prototype.createSale = function (process) {
     var vm = this;
     var sale = {
         container: {
@@ -97,25 +99,39 @@ OffersCtrl.prototype.followUp = function (process) {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_NEW_SALE'));
             vm.rootScope.offersCount -= 1;
             vm.processesService.setProcessor({id: process.id}, vm.user.username).$promise.then(function () {
-                vm.refreshData();
+                process.processor = vm.user;
+                process.sale = sale;
+                process.status = 'sale';
+                vm.updateRow(process);
             });
         });
     });
 };
 
+OffersCtrl.prototype.followUp = function (process) {
+    var vm = this;
+    this.processesService.setStatus({id: process.id}, 'followup').$promise.then(function () {
+        vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_FOLLOW_UP'));
+        process.status = 'followup';
+        vm.updateRow(process);
+    });
+};
+
 OffersCtrl.prototype.closeOrOpenOffer = function (process) {
     var vm = this;
-    if (process.status == "offer") {
+    if (process.status == "offer" || process.status == "followup") {
         this.processesService.setStatus({id: process.id}, 'closed').$promise.then(function () {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_CLOSE_OFFER'));
             vm.rootScope.offersCount -= 1;
-            vm.refreshData();
+            process.status = 'closed';
+            vm.updateRow(process);
         });
     } else if (process.status == "closed") {
         this.processesService.setStatus({id: process.id}, 'offer').$promise.then(function () {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_OPEN_OFFER'));
             vm.rootScope.offersCount += 1;
-            vm.refreshData();
+            process.status = 'offer';
+            vm.updateRow(process);
         });
     }
 };
@@ -129,7 +145,7 @@ OffersCtrl.prototype.saveEditedRow = function () {
     this.processesService.putOffer({id: this.editProcess.offer.id}, this.editProcess.offer).$promise.then(function () {
         vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_UPDATE_OFFER'));
         vm.editForm.$setPristine();
-        vm.refreshData();
+        vm.updateRow(vm.editProcess);
     });
 };
 
@@ -148,7 +164,12 @@ OffersCtrl.prototype.deleteRow = function (process) {
             if (process.status == 'offer') {
                 vm.rootScope.offersCount -= 1;
             }
-            vm.refreshData();
+            vm.dtInstance.DataTable.row(vm.rows[process.id]).remove().draw();
         });
     });
 };
+
+OffersCtrl.prototype.updateRow = function (process) {
+    this.dtInstance.DataTable.row(this.rows[process.id]).data(process).draw();
+    this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
+}

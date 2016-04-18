@@ -36,7 +36,8 @@ SalesCtrl.prototype.addComment = function (id, source) {
         });
     }
 };
-
+/*
+Not in use
 SalesCtrl.prototype.saveSale = function () {
     var vm = this;
     if (angular.isUndefined(this.newSale.customer)) {
@@ -56,9 +57,10 @@ SalesCtrl.prototype.saveSale = function () {
     this.processesService.addProcess(process).$promise.then(function () {
         vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_ADD_SALE'));
         vm.addForm.$setPristine();
-        vm.refreshData();
+        vm.updateRow(process);
     });
 };
+*/
 
 SalesCtrl.prototype.clearNewSale = function () {
     this.newSale = {};
@@ -77,7 +79,7 @@ SalesCtrl.prototype.saveEditedRow = function () {
     this.processesService.putSale({id: this.editProcess.sale.id}, this.editProcess.sale).$promise.then(function () {
         vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_UPDATE_SALE'));
         vm.editForm.$setPristine();
-        vm.refreshData();
+        vm.updateRow(vm.editProcess);
     });
 };
 
@@ -93,7 +95,12 @@ SalesCtrl.prototype.deleteRow = function (process) {
         }
         vm.processesService.deleteSale({id: saleId}).$promise.then(function () {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_DELETE_SALE'));
-            vm.refreshData();
+            vm.dtInstance.DataTable.row(vm.rows[process.id]).remove().draw();
         });
     });
+};
+
+SalesCtrl.prototype.updateRow = function (process) {
+    this.dtInstance.DataTable.row(this.rows[process.id]).data(process).draw();
+    this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
 };

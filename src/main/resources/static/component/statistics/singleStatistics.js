@@ -92,8 +92,8 @@ StatisticsCtrl.prototype.leadsConversionRate = function () {
     for (var counter in this.saleResult) {
         var lead = parseInt(this.leadResult[counter], 10);
         var sale = parseInt(this.saleResult[counter], 10);
-        if (angular.isNumber(lead) && angular.isNumber(sale) && sale != 0) {
-            salesToLeadsConversion.push(lead / sale);
+        if (angular.isNumber(lead) && angular.isNumber(sale) && lead != 0) {
+            salesToLeadsConversion.push((sale / lead) * 100);
         } else {
             salesToLeadsConversion.push(0);
         }
@@ -111,8 +111,8 @@ StatisticsCtrl.prototype.offersConversionRate = function () {
     for (var counter in this.saleResult) {
         var offer = parseInt(this.offerResult[counter], 10);
         var sale = parseInt(this.saleResult[counter], 10);
-        if (angular.isNumber(offer) && angular.isNumber(sale) && sale != 0) {
-            salesToOffersConversion.push(offer / sale);
+        if (angular.isNumber(offer) && angular.isNumber(sale) && offer != 0) {
+            salesToOffersConversion.push((sale / offer) * 100);
         } else {
             salesToOffersConversion.push(0);
         }
@@ -137,9 +137,7 @@ StatisticsCtrl.prototype.getSharedItemsPieChart = function () {
             title: {
                 text: ''
             },
-            tooltip: {
-                pointFormat: '{series.name}: <b>{point.y}</b>'
-            },
+            tooltip: {},
             plotOptions: {
                 pie: {
                     allowPointSelect: false,
