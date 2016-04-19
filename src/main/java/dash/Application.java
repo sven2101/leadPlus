@@ -1,22 +1,23 @@
 package dash;
 
-import dash.security.AngularCsrfHeaderFilter;
-import dash.security.listener.RESTAuthenticationEntryPoint;
-import dash.usermanagement.Role;
-import dash.usermanagement.User;
-import dash.usermanagement.UserRepository;
-import dash.usermanagement.settings.language.Language;
+import static com.google.common.base.Predicates.or;
+import static springfox.documentation.builders.PathSelectors.regex;
+
+import java.util.Optional;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.cloud.aws.context.config.annotation.EnableContextRegion;
+import org.springframework.cloud.aws.jdbc.config.annotation.EnableRdsInstance;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,20 +30,19 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.util.StopWatch;
 
+import com.google.common.base.Predicate;
+
+import dash.security.AngularCsrfHeaderFilter;
+import dash.security.listener.RESTAuthenticationEntryPoint;
+import dash.usermanagement.Role;
+import dash.usermanagement.User;
+import dash.usermanagement.UserRepository;
+import dash.usermanagement.settings.language.Language;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import com.google.common.base.Predicate;
-
-import javax.annotation.PostConstruct;
-
-import static com.google.common.base.Predicates.*;
-import static springfox.documentation.builders.PathSelectors.*;
-
-import java.util.Optional;
 
 /**
  * Created by Andreas on 09.10.2015.
@@ -51,6 +51,9 @@ import java.util.Optional;
 @SpringBootApplication
 @EnableSwagger2
 @EnableJpaRepositories
+@EnableRdsInstance(databaseName="***REMOVED***", dbInstanceIdentifier = "ett", username = "***REMOVED***", password = "***REMOVED***")
+//@EnableContextCredentials(accessKey = "AKIAJPRTCXLYNGWFPDIQ", secretKey="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")
+@EnableContextRegion(region = "eu-central-1")
 public class Application {
 
     public static void main(String[] args) {
