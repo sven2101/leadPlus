@@ -28,14 +28,13 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
     this.rows = {};
     this.editProcess = {};
     this.newOffer = {};
-    this.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
-            return vm.processesService.getProcessByOfferAndStatus({status: 'offer'}).$promise;
-        })
+    this.dtOptions = DTOptionsBuilder.fromSource('/api/rest/processes/state/offer/offers')
         .withDOM('<"row"<"col-sm-12"l>>' +
             '<"row"<"col-sm-6"B><"col-sm-6"f>>' +
             '<"row"<"col-sm-12"tr>>' +
             '<"row"<"col-sm-5"i><"col-sm-7"p>>')
         .withPaginationType('full_numbers')
+        .withOption('stateSave', true)
         .withButtons([
             {
                 extend: 'copyHtml5',
@@ -154,12 +153,11 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
 
     vm.changeDataInput = changeDataInput;
     function changeDataInput() {
-
         if (vm.loadAllData == true) {
-            return vm.processesService.getProcessByOffer().$promise;
+            vm.dtInstance.changeData('/api/rest/processes/offers');
         }
         else {
-            return vm.processesService.getProcessByOfferAndStatus({status: 'offer'}).$promise;
+            vm.dtInstance.changeData('/api/rest/processes/state/offer/offers');
         }
     }
 
@@ -179,12 +177,12 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
         var hasRightToDelete = '';
         var closeOrOpenOfferDisable = '';
         var disableFollowUp = '';
-        var openOrLock = "{{ 'OFFER_CLOSE_OFFER' | translate }}";
+        var openOrLock = $translate.instant('OFFER_CLOSE_OFFER');
         var faOpenOrLOck = 'fa fa-lock';
         if (data.status != 'offer' && data.status != 'followup') {
             disableFollowUp = 'disabled';
             disabled = 'disabled';
-            openOrLock = "{{ 'OFFER_OPEN_OFFER' | translate }}";
+            openOrLock = $translate.instant('OFFER_OPEN_OFFER');
             faOpenOrLOck = 'fa fa-unlock';
         }
         if (data.status == 'followup') {
@@ -197,19 +195,19 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
             hasRightToDelete = 'disabled';
         }
         if (vm.windowWidth > 1300) {
-            return '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disabled + ' ng-click="offer.createSale(offer.processes[' + data.id + '])" title="{{ \'OFFER_CREATE_SALE\' | translate }}">' +
+            return '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disabled + ' ng-click="offer.createSale(offer.processes[' + data.id + '])" title="' + $translate.instant('OFFER_CREATE_SALE') + '">' +
                 '   <i class="fa fa-check"></i>' +
-                '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disableFollowUp + ' ng-click="offer.followUp(offer.processes[' + data.id + '])" title="{{ \'OFFER_FOLLOW_UP\' | translate }}">' +
+                '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disableFollowUp + ' ng-click="offer.followUp(offer.processes[' + data.id + '])" title="' + $translate.instant('OFFER_FOLLOW_UP') + '">' +
                 '<i class="fa fa-eye"></i>' +
                 '</button>&nbsp;' +
                 '<button class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.closeOrOpenOffer(offer.processes[' + data.id + '])" title="' + openOrLock + '">' +
                 '   <i class="' + faOpenOrLOck + '"></i>' +
                 '</button>&nbsp;' +
                 '<button class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.loadDataToModal(offer.processes[' + data.id + '])" data-toggle="modal"' +
-                'data-target="#editModal" title="{{ \'OFFER_EDIT_OFFER\' | translate }}">' +
+                'data-target="#editModal" title="' + $translate.instant('OFFER_EDIT_OFFER') + '">' +
                 '<i class="fa fa-edit"></i>' +
                 '</button>&nbsp;' +
-                '<button class="btn btn-white"' + hasRightToDelete + ' ng-click="offer.deleteRow(offer.processes[' + data.id + '])" title="{{ \'OFFER_DELETE_OFFER\' | translate }}">' +
+                '<button class="btn btn-white"' + hasRightToDelete + ' ng-click="offer.deleteRow(offer.processes[' + data.id + '])" title="' + $translate.instant('OFFER_DELETE_OFFER') + '">' +
                 '   <i class="fa fa-trash-o"></i>' +
                 '</button></div>';
         }
@@ -218,11 +216,11 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
                 '<button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">' +
                 '<i class="fa fa-wrench"></i></button>' +
                 '<ul class="dropdown-menu pull-right">' +
-                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disabled + ' ng-click="offer.createSale(offer.processes[' + data.id + '])"><i class="fa fa-check">&nbsp;</i>{{\'OFFER_CREATE_SALE\' | translate }}</button></li>' +
-                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disableFollowUp + ' ng-click="offer.followUp(offer.processes[' + data.id + '])"><i class="fa fa-eye">&nbsp;</i>{{\'OFFER_FOLLOW_UP\' | translate }}</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disabled + ' ng-click="offer.createSale(offer.processes[' + data.id + '])"><i class="fa fa-check">&nbsp;</i>' + $translate.instant('OFFER_CREATE_SALE') + '</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disableFollowUp + ' ng-click="offer.followUp(offer.processes[' + data.id + '])"><i class="fa fa-eye">&nbsp;</i>' + $translate.instant('OFFER_FOLLOW_UP') + '</button></li>' +
                 '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.closeOrOpenOffer(offer.processes[' + data.id + '])"><i class="' + faOpenOrLOck + '">&nbsp;</i>' + openOrLock + '</button></li>' +
-                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenOfferDisable + ' data-toggle="modal" data-target="#editModal" ng-click="offer.loadDataToModal(offer.processes[' + data.id + '])"><i class="fa fa-edit"">&nbsp;</i>{{\'OFFER_EDIT_OFFER\' | translate }}</button></li>' +
-                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + hasRightToDelete + ' ng-click="offer.deleteRow(offer.processes[' + data.id + '])"><i class="fa fa-trash-o">&nbsp;</i>{{\'OFFER_DELETE_OFFER\' | translate }}</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenOfferDisable + ' data-toggle="modal" data-target="#editModal" ng-click="offer.loadDataToModal(offer.processes[' + data.id + '])"><i class="fa fa-edit"">&nbsp;</i>' + $translate.instant('OFFER_EDIT_OFFER') + '</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + hasRightToDelete + ' ng-click="offer.deleteRow(offer.processes[' + data.id + '])"><i class="fa fa-trash-o">&nbsp;</i>' + $translate.instant('OFFER_DELETE_OFFER') + '</button></li>' +
                 '</ul>' +
                 '</div>'
         }

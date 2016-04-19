@@ -27,14 +27,13 @@ function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     this.rows = {};
     this.editProcess = {};
     this.newSale = {};
-    this.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
-            return vm.processesService.getLatest100Sales().$promise;
-        })
+    this.dtOptions = DTOptionsBuilder.fromSource('/api/rest/processes/latest100Sales')
         .withDOM('<"row"<"col-sm-12"l>>' +
             '<"row"<"col-sm-6"B><"col-sm-6"f>>' +
             '<"row"<"col-sm-12"tr>>' +
             '<"row"<"col-sm-5"i><"col-sm-7"p>>')
         .withPaginationType('full_numbers')
+        .withOption('stateSave', true)
         .withButtons([
             {
                 extend: 'copyHtml5',
@@ -156,12 +155,11 @@ function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
 
     vm.changeDataInput = changeDataInput;
     function changeDataInput() {
-
         if (vm.loadAllData == true) {
-            return vm.processesService.getProcessBySale().$promise;
+            vm.dtInstance.changeData('/api/rest/processes/sales');
         }
         else {
-            return vm.processesService.getLatest100Sales().$promise;
+            vm.dtInstance.changeData('/api/rest/processes/latest100Sales');
         }
     }
 
@@ -178,10 +176,10 @@ function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             hasRightToDelete = 'disabled';
         }
         return '<button class="btn btn-white" ng-click="sale.loadDataToModal(sale.processes[' + data.id + '])" data-toggle="modal"' +
-            'data-target="#editModal" title="{{ \'SALE_EDIT_SALE\' | translate }}">' +
+            'data-target="#editModal" title="' + $translate.instant('SALE_EDIT_SALE') + '">' +
             '<i class="fa fa-edit"></i>' +
             '</button>&nbsp;' +
-            '<button class="btn btn-white"' + hasRightToDelete + ' ng-click="sale.deleteRow(sale.processes[' + data.id + '])" title="{{ \'SALE_DELETE_SALE\' | translate }}">' +
+            '<button class="btn btn-white"' + hasRightToDelete + ' ng-click="sale.deleteRow(sale.processes[' + data.id + '])" title="' + $translate.instant('SALE_DELETE_SALE') + '">' +
             '   <i class="fa fa-trash-o"></i>' +
             '</button>';
     }

@@ -28,9 +28,8 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     this.rows = {};
     this.editProcess = {};
     this.newLead = {};
-    this.dtOptions = DTOptionsBuilder.fromFnPromise(function () {
-            return vm.processesService.getProcessByLeadAndStatus({status: 'open'}).$promise;
-        })
+    this.dtOptions = DTOptionsBuilder.fromSource('/api/rest/processes/state/open/leads')
+        .withOption('stateSave', true)
         .withDOM('<"row"<"col-sm-12"l>>' +
             '<"row"<"col-sm-6"B><"col-sm-6"f>>' +
             '<"row"<"col-sm-12"tr>>' +
@@ -139,18 +138,17 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
 
     vm.refreshData = refreshData;
     function refreshData() {
-        var resetPaging = true;
+        var resetPaging = false;
         this.dtInstance.reloadData(resetPaging);
     }
 
     vm.changeDataInput = changeDataInput;
     function changeDataInput() {
-
         if (vm.loadAllData == true) {
-            return vm.processesService.getProcessByLead().$promise;
+            vm.dtInstance.changeData('/api/rest/processes/leads');
         }
         else {
-            return vm.processesService.getProcessByLeadAndStatus({status: 'open'}).$promise;
+            vm.dtInstance.changeData('/api/rest/processes/state/open/leads');
         }
     }
 
@@ -170,12 +168,12 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
         var disablePin = '';
         var hasRightToDelete = '';
         var closeOrOpenInquiryDisable = '';
-        var openOrLock = "{{ 'LEAD_CLOSE_LEAD' | translate }}";
+        var openOrLock = $translate.instant('LEAD_CLOSE_LEAD');
         var faOpenOrLOck = 'fa fa-lock';
         if (data.status != 'open') {
             disabled = 'disabled';
             disablePin = 'disabled';
-            openOrLock = "{{ 'LEAD_OPEN_LEAD' | translate }}";
+            openOrLock = $translate.instant('LEAD_OPEN_LEAD');
             faOpenOrLOck = 'fa fa-unlock';
         }
         if (data.offer != null || data.sale != null) {
@@ -188,20 +186,20 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
             disablePin = 'disabled';
         }
         if (vm.windowWidth > 1300) {
-            return '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])" title="{{ \'LEAD_FOLLOW_UP\' | translate }}">' +
+            return '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])" title="' + $translate.instant('LEAD_FOLLOW_UP') + '">' +
                 '   <i class="fa fa-check"></i>' +
                 '</button>&nbsp;' +
-                '<button class="btn btn-white" ' + disablePin + ' ng-click="lead.pin(lead.processes[' + data.id + '])" title="{{ \'LEAD_PIN\' | translate }}">' +
+                '<button class="btn btn-white" ' + disablePin + ' ng-click="lead.pin(lead.processes[' + data.id + '])" title="' + $translate.instant('LEAD_PIN') + '">' +
                 '   <i class="fa fa-thumb-tack"></i>' +
                 '</button>&nbsp;' +
                 '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.closeOrOpenInquiry(lead.processes[' + data.id + '])" title="' + openOrLock + '">' +
                 '   <i class="' + faOpenOrLOck + '"></i>' +
                 '</button>' +
                 '<button class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.loadDataToModal(lead.processes[' + data.id + '])" data-toggle="modal"' +
-                'data-target="#editModal" title="{{ \'LEAD_EDIT_LEAD\' | translate }}">' +
+                'data-target="#editModal" title="' + $translate.instant('LEAD_EDIT_LEAD') + '">' +
                 '<i class="fa fa-edit"></i>' +
                 '</button>&nbsp;' +
-                '<button class="btn btn-white" ' + hasRightToDelete + ' ng-click="lead.deleteRow(lead.processes[' + data.id + '])" title="{{ \'LEAD_DELETE_LEAD\' | translate }}">' +
+                '<button class="btn btn-white" ' + hasRightToDelete + ' ng-click="lead.deleteRow(lead.processes[' + data.id + '])" title="' + $translate.instant('LEAD_DELETE_LEAD') + '">' +
                 '   <i class="fa fa-trash-o"></i>' +
                 '</button></div>';
         } else {
@@ -209,11 +207,11 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
                 '<button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">' +
                 '<i class="fa fa-wrench"></i></button>' +
                 '<ul class="dropdown-menu pull-right">' +
-                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])"><i class="fa fa-check">&nbsp;</i>{{\'LEAD_FOLLOW_UP\' | translate }}</button></li>' +
-                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disablePin + ' ng-click="lead.pin(lead.processes[' + data.id + '])"><i class="fa fa-thumb-tack">&nbsp;</i>{{\'LEAD_PIN\' | translate }}</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disabled + ' ng-click="lead.followUp(lead.processes[' + data.id + '])"><i class="fa fa-check">&nbsp;</i>' + $translate.instant('LEAD_FOLLOW_UP') + '</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + disablePin + ' ng-click="lead.pin(lead.processes[' + data.id + '])"><i class="fa fa-thumb-tack">&nbsp;</i>' + $translate.instant('LEAD_PIN') + '</button></li>' +
                 '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenInquiryDisable + ' ng-click="lead.closeOrOpenInquiry(lead.processes[' + data.id + '])"><i class="' + faOpenOrLOck + '">&nbsp;</i>' + openOrLock + '</button></li>' +
-                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenInquiryDisable + ' data-toggle="modal" data-target="#editModal" ng-click="lead.loadDataToModal(lead.processes[' + data.id + '])"><i class="fa fa-edit"">&nbsp;</i>{{\'LEAD_EDIT_LEAD\' | translate }}</button></li>' +
-                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + hasRightToDelete + ' ng-click="lead.deleteRow(lead.processes[' + data.id + '])"><i class="fa fa-trash-o">&nbsp;</i>{{\'LEAD_DELETE_LEAD\' | translate }}</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + closeOrOpenInquiryDisable + ' data-toggle="modal" data-target="#editModal" ng-click="lead.loadDataToModal(lead.processes[' + data.id + '])"><i class="fa fa-edit"">&nbsp;</i>' + $translate.instant('LEAD_EDIT_LEAD') + '</button></li>' +
+                '<li><button style="width: 100%; text-align: left;" class="btn btn-white" ' + hasRightToDelete + ' ng-click="lead.deleteRow(lead.processes[' + data.id + '])"><i class="fa fa-trash-o">&nbsp;</i>' + $translate.instant('LEAD_DELETE_LEAD') + '</button></li>' +
                 '</ul>' +
                 '</div>'
         }

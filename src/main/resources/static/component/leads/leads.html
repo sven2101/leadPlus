@@ -40,7 +40,7 @@
                           style=" font-size: 1.5em;">{{ 'LEAD_SHOW_ALL_LEADS' | translate }} &nbsp;<input
                             type="checkbox"
                             ng-model="lead.loadAllData"
-                            ng-change="lead.dtInstance.changeData(lead.changeDataInput)"
+                            ng-change="lead.changeDataInput()"
                             class="js-switch"
                             ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
                     </br></br>
