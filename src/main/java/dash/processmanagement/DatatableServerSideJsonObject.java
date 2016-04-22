@@ -1,7 +1,5 @@
 package dash.processmanagement;
 
-import dash.processmanagement.lead.Lead;
-
 import java.util.List;
 
 /**

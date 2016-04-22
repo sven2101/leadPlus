@@ -52,7 +52,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @EnableJpaRepositories
 @EnableRdsInstance(databaseName="***REMOVED***", dbInstanceIdentifier = "ett", username = "***REMOVED***", password = "***REMOVED***")
-//@EnableContextCredentials(accessKey = "AKIAJPRTCXLYNGWFPDIQ", secretKey="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")
 @EnableContextRegion(region = "eu-central-1")
 public class Application {
 
