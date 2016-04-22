@@ -27,7 +27,14 @@ function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     this.rows = {};
     this.editProcess = {};
     this.newSale = {};
-    this.dtOptions = DTOptionsBuilder.fromSource('/api/rest/processes/latest100Sales')
+    this.dtOptions = DTOptionsBuilder.newOptions()
+        .withOption('ajax', {
+            url: '/api/rest/processes/latest100Sales',
+            error: function (xhr, error, thrown) {
+                console.log(xhr);
+            },
+            type: 'GET'
+        })
         .withDOM('<"row"<"col-sm-12"l>>' +
             '<"row"<"col-sm-6"B><"col-sm-6"f>>' +
             '<"row"<"col-sm-12"tr>>' +
@@ -156,10 +163,28 @@ function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     vm.changeDataInput = changeDataInput;
     function changeDataInput() {
         if (vm.loadAllData == true) {
-            vm.dtInstance.changeData('/api/rest/processes/sales');
+            vm.dtOptions.withOption('serverSide', true)
+                .withOption('ajax', {
+                    url: '/api/rest/processes/sales',
+                    type: 'GET',
+                    pages: 5,
+                    dataSrc: 'data',
+                    error: function (xhr, error, thrown) {
+                        console.log(xhr);
+                    }
+                })
+                .withOption('searchDelay', 500);
         }
         else {
-            vm.dtInstance.changeData('/api/rest/processes/latest100Sales');
+            vm.dtOptions.withOption('serverSide', false)
+                .withOption('ajax', {
+                    url: '/api/rest/processes/latest100Sales',
+                    error: function (xhr, error, thrown) {
+                        console.log(xhr);
+                    },
+                    type: 'GET'
+                })
+                .withOption('searchDelay', 0);
         }
     }
 

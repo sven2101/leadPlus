@@ -28,7 +28,14 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
     this.rows = {};
     this.editProcess = {};
     this.newOffer = {};
-    this.dtOptions = DTOptionsBuilder.fromSource('/api/rest/processes/state/offer/offers')
+    this.dtOptions = DTOptionsBuilder.newOptions()
+        .withOption('ajax', {
+            url: '/api/rest/processes/state/offer/offers',
+            error: function (xhr, error, thrown) {
+                console.log(xhr);
+            },
+            type: 'GET'
+        })
         .withDOM('<"row"<"col-sm-12"l>>' +
             '<"row"<"col-sm-6"B><"col-sm-6"f>>' +
             '<"row"<"col-sm-12"tr>>' +
@@ -154,10 +161,28 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
     vm.changeDataInput = changeDataInput;
     function changeDataInput() {
         if (vm.loadAllData == true) {
-            vm.dtInstance.changeData('/api/rest/processes/offers');
+            vm.dtOptions.withOption('serverSide', true)
+                .withOption('ajax', {
+                    url: '/api/rest/processes/offers',
+                    type: 'GET',
+                    pages: 5,
+                    dataSrc: 'data',
+                    error: function (xhr, error, thrown) {
+                        console.log(xhr);
+                    }
+                })
+                .withOption('searchDelay', 500);
         }
         else {
-            vm.dtInstance.changeData('/api/rest/processes/state/offer/offers');
+            vm.dtOptions.withOption('serverSide', false)
+                .withOption('ajax', {
+                    url: '/api/rest/processes/state/offer/offers',
+                    error: function (xhr, error, thrown) {
+                        console.log(xhr);
+                    },
+                    type: 'GET'
+                })
+                .withOption('searchDelay', 0);
         }
     }
 
@@ -166,7 +191,8 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
         vm.rows[data.id] = row;
         var currentDate = moment();
         var offerDate = moment(data.offer.timestamp, "DD.MM.YYYY");
-        if (currentDate.diff(offerDate, 'days') >= 3 && (data.status == 'offer' || data.status == 'followup'))
+        if ((currentDate.diff(offerDate, 'days') >= 3 && data.status == 'offer')
+            || (currentDate.diff(offerDate, 'days') >= 5 && data.status == 'followup'))
             $(row).addClass('important');
         vm.compile(angular.element(row).contents())(vm.scope);
     }

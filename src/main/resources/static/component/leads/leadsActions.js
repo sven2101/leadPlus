@@ -175,6 +175,6 @@ LeadsCtrl.prototype.deleteRow = function (process) {
 };
 
 LeadsCtrl.prototype.updateRow = function (process) {
-    this.dtInstance.DataTable.row(this.rows[process.id]).data(process).draw();
+    this.dtInstance.DataTable.row(this.rows[process.id]).data(process).draw(false);
     this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
 };

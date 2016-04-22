@@ -22,6 +22,7 @@ public class Comment {
     @JoinColumn(name = "process_fk", nullable = false)
     private Process process;
 
+    @Column(length = 5000)
     private String commentText;
 
     @Column(nullable = false, columnDefinition = "timestamptz")

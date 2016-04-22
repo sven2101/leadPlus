@@ -117,7 +117,7 @@ StatisticsCtrl.prototype.checkPromises = function () {
             vm.offersConversionRate();
             vm.interval.cancel(stop);
         }
-    }.bind(this), 1000);
+    }.bind(this), 500);
 
 
 }

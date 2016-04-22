@@ -41,7 +41,7 @@ public class Lead implements Request {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
     private Calendar timestamp;
 
-    @Column(length = 2048)
+    @Column(length = 4096)
     private String message;
 
     public Lead() {

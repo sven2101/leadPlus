@@ -45,7 +45,7 @@ public class Process {
     public Process(){
 	
     }
-    
+
     public Process(Lead lead){
 	this.lead 	= lead;
 	this.offer 	= null;

@@ -28,7 +28,14 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     this.rows = {};
     this.editProcess = {};
     this.newLead = {};
-    this.dtOptions = DTOptionsBuilder.fromSource('/api/rest/processes/state/open/leads')
+    this.dtOptions = DTOptionsBuilder.newOptions()
+        .withOption('ajax', {
+            url: '/api/rest/processes/state/open/leads',
+            error: function (xhr, error, thrown) {
+                console.log(xhr);
+            },
+            type: 'GET'
+        })
         .withOption('stateSave', true)
         .withDOM('<"row"<"col-sm-12"l>>' +
             '<"row"<"col-sm-6"B><"col-sm-6"f>>' +
@@ -145,10 +152,28 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     vm.changeDataInput = changeDataInput;
     function changeDataInput() {
         if (vm.loadAllData == true) {
-            vm.dtInstance.changeData('/api/rest/processes/leads');
+            vm.dtOptions.withOption('serverSide', true)
+                .withOption('ajax', {
+                    url: '/api/rest/processes/leads',
+                    type: 'GET',
+                    pages: 5,
+                    dataSrc: 'data',
+                    error: function (xhr, error, thrown) {
+                        console.log(xhr);
+                    }
+                })
+                .withOption('searchDelay', 500);
         }
         else {
-            vm.dtInstance.changeData('/api/rest/processes/state/open/leads');
+            vm.dtOptions.withOption('serverSide', false)
+                .withOption('ajax', {
+                    url: '/api/rest/processes/state/open/leads',
+                    error: function (xhr, error, thrown) {
+                        console.log(xhr);
+                    },
+                    type: 'GET'
+                })
+                .withOption('searchDelay', 0);
         }
     }
 
