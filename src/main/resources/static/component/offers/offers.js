@@ -189,10 +189,10 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
     function createdRow(row, data, dataIndex) {
         // Recompiling so we can bind Angular directive to the DT
         vm.rows[data.id] = row;
-        var currentDate = moment();
+        var currentDate = moment(moment(),"DD.MM.YYYY");
         var offerDate = moment(data.offer.timestamp, "DD.MM.YYYY");
-        if ((currentDate.diff(offerDate, 'days') >= 3 && data.status == 'offer')
-            || (currentDate.diff(offerDate, 'days') >= 5 && data.status == 'followup'))
+        if ((currentDate.businessDiff(offerDate, 'days') > 3 && data.status == 'offer')
+            || (currentDate.businessDiff(offerDate, 'days') > 5 && data.status == 'followup'))
             $(row).addClass('important');
         vm.compile(angular.element(row).contents())(vm.scope);
     }

@@ -30,6 +30,12 @@
                         </td>
                     </tr>
                     <tr>
+                        <td>{{ 'COMMON_EMAIL' | translate }}</td>
+                        <td ng-if="dashboard.infoType == 'lead'">{{dashboard.infoData.inquirer.email}}</td>
+                        <td ng-if="dashboard.infoType == 'offer'">{{dashboard.infoData.prospect.email}}</td>
+                        <td ng-if="dashboard.infoType == 'sale'">{{dashboard.infoData.customer.email}}</td>
+                    </tr>
+                    <tr>
                         <td>{{ 'COMMON_PHONE' | translate }}</td>
                         <td ng-if="dashboard.infoType == 'lead'">{{dashboard.infoData.inquirer.phone}}</td>
                         <td ng-if="dashboard.infoType == 'offer'">{{dashboard.infoData.prospect.phone}}</td>

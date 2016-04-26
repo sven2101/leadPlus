@@ -142,11 +142,19 @@
                                     translate }}</p>
                             </div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-6 b-r">
                             <div class="form-group">
                                 <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}:
                                     {{lead.editProcess.lead.containerAmount *
                                     lead.editProcess.lead.container.priceNetto | currency:'\u20AC'}}</h2>
+                            </div>
+                        </div>
+                        <!-- MESSAGE -->
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>{{ 'COMMON_NOTE' | translate }}</label>
+                                <textarea class="form-control" rows="5" name="message" style="resize:vertical;"
+                                          ng-model="lead.editProcess.lead.message"></textarea>
                             </div>
                         </div>
                     </div>
