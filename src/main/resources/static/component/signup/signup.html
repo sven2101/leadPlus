@@ -2,7 +2,7 @@
     <div>
         <div>
 
-            <h1 class="logo-name">CB+</h1>
+            <h1 class="logo-name">{{ 'LOGO' | translate }}</h1>
 
         </div>
         <h3>{{ 'SIGNUP_REGISTER_WELCOME' | translate }}</h3>
@@ -25,6 +25,7 @@
                        class="form-control"
                        placeholder="{{ 'COMMON_USERNAME' | translate }}"
                        required
+                       ng-pattern="/^[a-zA-Z0-9]*$/"
                        ng-model="user.username"
                        ng-minlength="2"
                        ng-maxlength="20"

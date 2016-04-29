@@ -13,7 +13,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.cloud.aws.context.config.annotation.EnableContextRegion;
-import org.springframework.cloud.aws.jdbc.config.annotation.EnableRdsInstance;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -51,7 +50,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 @EnableJpaRepositories
-@EnableRdsInstance(databaseName="***REMOVED***", dbInstanceIdentifier = "ett", username = "***REMOVED***", password = "***REMOVED***")
 @EnableContextRegion(region = "eu-central-1")
 public class Application {
 

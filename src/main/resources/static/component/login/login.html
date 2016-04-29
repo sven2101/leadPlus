@@ -1,7 +1,7 @@
 <div class="middle-box text-center loginscreen animated fadeInDown">
     <div>
         <div>
-            <h1 class="logo-name">CB+</h1>
+            <h1 class="logo-name">{{ 'LOGO' | translate }}</h1>
         </div>
 
         <h3>{{ 'LOGIN_WELCOME' | translate }}</h3>
@@ -18,8 +18,7 @@
                        ng-model="credentials.password">
             </div>
             <button type="submit" class="btn btn-success block full-width m-b" ng-click="login.login(credentials)"
-                    OnClick="document.loginform.loginPassword.focus();">{{
-                'LOGIN' | translate }}
+                    OnClick="document.loginform.loginPassword.focus();">{{ 'LOGIN' | translate }}
             </button>
         </form>
         <p class="text-muted text-center">

@@ -1,8 +1,15 @@
 function config($translateProvider) {
 
+	var pageTitle = 'test';
+	var pageLogo  =  pageTitle+'+';
+	
     $translateProvider
         .translations('de', {
-            // Define all menu elements
+            //GENERAL
+        	TITLE:pageTitle,
+        	LOGO: pageLogo,
+        	
+        	// Define all menu elements
             DASHBOARD_MENU: 'Dashboard',
             LEADS_MENU: 'Anfragen',
             OFFERS_MENU: 'Angebote',
@@ -15,18 +22,18 @@ function config($translateProvider) {
             LANGUAGE: 'Sprache',
 
             //Define login elements
-            LOGIN_WELCOME: 'Willkommen bei CB+',
-            LOGIN_WELCOME_DESCRIPTION: 'Containerbasis Lead Management System',
+            LOGIN_WELCOME: 'Willkommen bei '+pageTitle,
+            LOGIN_WELCOME_DESCRIPTION: pageTitle+' Lead Management System',
             LOGIN_NO_ACCOUNT: 'Noch keinen Account?',
             LOGIN_CREATE_ACCOUNT: 'Registrieren',
             LOGIN_ERROR: 'Anmeldung fehlgeschlagen',
 
             //Define signup elements
-            SIGNUP_REGISTER_WELCOME: 'Registrieren Sie sich bei CB+',
+            SIGNUP_REGISTER_WELCOME: 'Registrieren Sie sich bei '+pageLogo,
             SIGNUP_CREATE_ACCOUNT: 'Erstellen Sie sich ein Account',
             SIGNUP_LOGIN_AFTER: 'Melden Sie sich nach der Registrierung an',
             SIGNUP_TO_LOGIN: 'Zur Anmeldung',
-            SIGNUP_SUCCESS: 'Willkommen bei CB+',
+            SIGNUP_SUCCESS: 'Willkommen bei '+pageLogo,
             SIGNUP_ERROR: 'Registrierung fehlgeschlagen',
             SIGNUP_VALIDATE_USER_IN_USE: 'Benutzername schon vergeben',
             SIGNUP_VALIDATE_USER_TO_SHORT: 'Benutzername muss mindestens 2 Zeichen enthalten',
@@ -238,7 +245,11 @@ function config($translateProvider) {
 
         })
         .translations('en', {
-            // Define all menu elements
+            //GENERAL
+        	TITLE: pageTitle,
+        	LOGO: pageLogo,
+        	
+        	// Define all menu elements
             DASHBOARD_MENU: 'Dashboard',
             LEADS_MENU: 'Leads',
             OFFERS_MENU: 'Offers',
@@ -251,18 +262,18 @@ function config($translateProvider) {
             LANGUAGE: 'Language',
 
             //Define login elements
-            LOGIN_WELCOME: 'Welcome to CB+',
-            LOGIN_WELCOME_DESCRIPTION: 'Containerbasis Lead Management System',
+            LOGIN_WELCOME: 'Welcome to '+pageLogo,
+            LOGIN_WELCOME_DESCRIPTION: pageTitle+' Lead Management System',
             LOGIN_NO_ACCOUNT: 'Do not have an account?',
             LOGIN_CREATE_ACCOUNT: 'Register',
             LOGIN_ERROR: 'Login failed',
 
             //Define signup elements
-            SIGNUP_REGISTER_WELCOME: 'Register to CB+',
+            SIGNUP_REGISTER_WELCOME: 'Register to '+pageLogo,
             SIGNUP_CREATE_ACCOUNT: 'Create an account',
             SIGNUP_LOGIN_AFTER: 'Login after your Signed Up',
             SIGNUP_TO_LOGIN: 'Go to login',
-            SIGNUP_SUCCESS: 'Welcome to CB+',
+            SIGNUP_SUCCESS: 'Welcome to '+pageLogo,
             SIGNUP_ERROR: 'Registration failed',
             SIGNUP_VALIDATE_USER_IN_USE: 'Username already in use',
             SIGNUP_VALIDATE_USER_TO_SHORT: 'Username have to contain 6 or more characters',
@@ -475,6 +486,7 @@ function config($translateProvider) {
 
     $translateProvider.preferredLanguage('de');
     $translateProvider.fallbackLanguage('en');
+    
 }
 'use strict';
 angular
