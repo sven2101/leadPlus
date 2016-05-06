@@ -86,8 +86,7 @@ SalesCtrl.prototype.saveEditedRow = function () {
 SalesCtrl.prototype.deleteRow = function (process) {
     var vm = this;
     var saleId = process.sale.id;
-    if (process.status != 'sale')
-        process.status = 'closed';
+    process.status = 'closed';
     process.sale = null;
     this.processesService.putProcess({id: process.id}, process).$promise.then(function () {
         if (process.lead == null && process.sale == null) {

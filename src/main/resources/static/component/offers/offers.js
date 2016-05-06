@@ -222,8 +222,9 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
         }
         if (vm.windowWidth > 1300) {
             return '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disabled + ' ng-click="offer.createSale(offer.processes[' + data.id + '])" title="' + $translate.instant('OFFER_CREATE_SALE') + '">' +
-                '   <i class="fa fa-check"></i>' +
-                '<div style="white-space: nowrap;"><button class="btn btn-white" ' + disableFollowUp + ' ng-click="offer.followUp(offer.processes[' + data.id + '])" title="' + $translate.instant('OFFER_FOLLOW_UP') + '">' +
+                ' <i class="fa fa-check"></i>' +
+                '</button>&nbsp;' +
+                '<button class="btn btn-white" ' + disableFollowUp + ' ng-click="offer.followUp(offer.processes[' + data.id + '])" title="' + $translate.instant('OFFER_FOLLOW_UP') + '">' +
                 '<i class="fa fa-eye"></i>' +
                 '</button>&nbsp;' +
                 '<button class="btn btn-white" ' + closeOrOpenOfferDisable + ' ng-click="offer.closeOrOpenOffer(offer.processes[' + data.id + '])" title="' + openOrLock + '">' +

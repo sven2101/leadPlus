@@ -159,6 +159,10 @@ LeadsCtrl.prototype.saveEditedRow = function () {
 LeadsCtrl.prototype.deleteRow = function (process) {
     var vm = this;
     var leadId = process.lead.id;
+    if (process.sale != null || process.offer != null) {
+        vm.toaster.pop('error', '', vm.translate.instant('COMMON_TOAST_FAILURE_DELETE_LEAD'));
+        return;
+    }
     process.lead = null;
     this.processesService.putProcess({id: process.id}, process).$promise.then(function () {
         if (process.offer == null && process.sale == null) {
@@ -166,9 +170,7 @@ LeadsCtrl.prototype.deleteRow = function (process) {
         }
         vm.processesService.deleteLead({id: leadId}).$promise.then(function () {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_DELETE_LEAD'));
-            if (process.status == 'open') {
-                vm.rootScope.leadsCount -= 1;
-            }
+            vm.rootScope.leadsCount -= 1;
             vm.dtInstance.DataTable.row(vm.rows[process.id]).remove().draw();
         });
     });

@@ -152,8 +152,11 @@ OffersCtrl.prototype.saveEditedRow = function () {
 OffersCtrl.prototype.deleteRow = function (process) {
     var vm = this;
     var offerId = process.offer.id;
-    if (process.status != 'sale')
-        process.status = 'closed';
+    if (process.sale != null) {
+        vm.toaster.pop('error', '', vm.translate.instant('COMMON_TOAST_FAILURE_DELETE_OFFER'));
+        return;
+    }
+    process.status = 'closed';
     process.offer = null;
     this.processesService.putProcess({id: process.id}, process).$promise.then(function () {
         if (process.lead == null && process.sale == null) {
@@ -161,9 +164,7 @@ OffersCtrl.prototype.deleteRow = function (process) {
         }
         vm.processesService.deleteOffer({id: offerId}).$promise.then(function () {
             vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_DELETE_OFFER'));
-            if (process.status == 'offer') {
-                vm.rootScope.offersCount -= 1;
-            }
+            vm.rootScope.offersCount -= 1;
             vm.dtInstance.DataTable.row(vm.rows[process.id]).remove().draw();
         });
     });
