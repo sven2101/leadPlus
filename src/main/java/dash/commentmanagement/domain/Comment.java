@@ -50,6 +50,9 @@ public class Comment implements Request {
 	@Column(length = 5000)
 	private String commentText;
 
+	/*
+	 * TODO - time is two hours earlier in case of 20:00 it saves 22:00 
+	 */
 	@Column(nullable = true, columnDefinition = "timestamptz")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
