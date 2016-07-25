@@ -1,6 +1,6 @@
 package dash.notificationmanagement;
 
-import dash.usermanagement.User;
+import dash.usermanagement.domain.User;
 
 /**
  * Created by Andreas on 17.01.2016.

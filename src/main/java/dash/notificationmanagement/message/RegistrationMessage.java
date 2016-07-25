@@ -1,7 +1,8 @@
 package dash.notificationmanagement.message;
 
 import dash.notificationmanagement.IMessage;
-import dash.usermanagement.User;
+import dash.usermanagement.domain.User;
+
 import org.springframework.context.annotation.Configuration;
 
 /**

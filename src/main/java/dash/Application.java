@@ -33,9 +33,9 @@ import com.google.common.base.Predicate;
 
 import dash.security.AngularCsrfHeaderFilter;
 import dash.security.listener.RESTAuthenticationEntryPoint;
-import dash.usermanagement.Role;
-import dash.usermanagement.User;
-import dash.usermanagement.UserRepository;
+import dash.usermanagement.business.UserRepository;
+import dash.usermanagement.domain.Role;
+import dash.usermanagement.domain.User;
 import dash.usermanagement.settings.language.Language;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
@@ -53,145 +53,109 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableContextRegion(region = "eu-central-1")
 public class Application {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
 
-    @Bean
-    @ConditionalOnMissingBean
-    public Docket multipartApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("Lead-Management-REST-API")
-                .apiInfo(apiInfo())
-                .select()
-                .paths(paths())
-                .build();
-    }
+	@Bean
+	@ConditionalOnMissingBean
+	public Docket multipartApi() {
+		return new Docket(DocumentationType.SWAGGER_2).groupName("Lead-Management-REST-API").apiInfo(apiInfo()).select().paths(paths()).build();
+	}
 
-    @Bean
-    public Docket vortoApi() {
-        StopWatch watch = new StopWatch();
-        watch.start();
-        Docket docket = new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).useDefaultResponseMessages(false)
-                .select().paths(paths()).build();
-        watch.stop();
-        return docket;
-    }
+	@Bean
+	public Docket vortoApi() {
+		StopWatch watch = new StopWatch();
+		watch.start();
+		Docket docket = new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).useDefaultResponseMessages(false).select().paths(paths()).build();
+		watch.stop();
+		return docket;
+	}
 
+	@SuppressWarnings("unchecked")
+	private Predicate<String> paths() {
+		return or(regex("/api/rest/processes.*"), regex("/api/rest/processes/leads.*"), regex("/api/rest/processes/leads/containers.*"),
+				regex("/api/rest/processes/leads/inquirers.*"), regex("/api/rest/processes/leads/vendors.*"), regex("/api/rest/processes/offers.*"),
+				regex("/api/rest/processes/offers/prospects.*"), regex("/api/rest/processes/sales.*"), regex("/api/rest/processes/sales/customers.*"));
+	}
 
-    @SuppressWarnings("unchecked")
-    private Predicate<String> paths() {
-        return or(
-                regex("/api/rest/processes.*"),
-                regex("/api/rest/processes/leads.*"),
-                regex("/api/rest/processes/leads/containers.*"),
-                regex("/api/rest/processes/leads/inquirers.*"),
-                regex("/api/rest/processes/leads/vendors.*"),
-                regex("/api/rest/processes/offers.*"),
-                regex("/api/rest/processes/offers/prospects.*"),
-                regex("/api/rest/processes/sales.*"),
-                regex("/api/rest/processes/sales/customers.*")
-        );
-    }
+	private ApiInfo apiInfo() {
+		return new ApiInfoBuilder().title("Applica").description("Applica - Lead Management Tool").license("").licenseUrl("").version("1.0").build();
+	}
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("Applica")
-                .description("Applica - Lead Management Tool")
-                .license("")
-                .licenseUrl("")
-                .version("1.0")
-                .build();
-    }
+	@Autowired
+	private UserRepository userRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@PostConstruct
+	public void createAdminIfNotExists() throws Exception {
 
-    @PostConstruct
-    public void createAdminIfNotExists() throws Exception {
+		if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("admin")).isPresent()) {
+			User admin = new User();
 
-        if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("admin")).isPresent()) {
-            User admin = new User();
+			admin.setUsername("admin".toLowerCase());
+			admin.setPassword(passwordEncoder().encode("6HzRSZjmj89sQaN5!"));
+			admin.setEmail("admin@***REMOVED***.com");
+			admin.setRole(Role.SUPERADMIN);
+			admin.setEnabled(true);
+			admin.setLanguage(Language.DE);
 
-            admin.setUsername("admin".toLowerCase());
-            admin.setPassword(passwordEncoder().encode("6HzRSZjmj89sQaN5!"));
-            admin.setEmail("admin@***REMOVED***.com");
-            admin.setRole(Role.SUPERADMIN);
-            admin.setEnabled(true);
-            admin.setLanguage(Language.DE);
+			userRepository.save(admin);
+		}
+		if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("api")).isPresent()) {
+			User apiuser = new User();
 
-            userRepository.save(admin);
-        }
-        if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("api")).isPresent()) {
-            User apiuser = new User();
+			apiuser.setUsername("api".toLowerCase());
+			apiuser.setPassword(passwordEncoder().encode("!APQYtDwgBtNqNY5L"));
+			apiuser.setEmail("api@***REMOVED***.com");
+			apiuser.setRole(Role.USER);
+			apiuser.setEnabled(true);
+			apiuser.setLanguage(Language.DE);
 
-            apiuser.setUsername("api".toLowerCase());
-            apiuser.setPassword(passwordEncoder().encode("!APQYtDwgBtNqNY5L"));
-            apiuser.setEmail("api@***REMOVED***.com");
-            apiuser.setRole(Role.USER);
-            apiuser.setEnabled(true);
-            apiuser.setLanguage(Language.DE);
+			userRepository.save(apiuser);
+		}
+	}
 
-            userRepository.save(apiuser);
-        }
-    }
+	@Configuration
+	@EnableWebSecurity
+	@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
+	public static class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Configuration
-    @EnableWebSecurity
-    @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-    public static class SecurityConfig extends WebSecurityConfigurerAdapter {
+		@Autowired
+		private UserDetailsService userDetailsService;
 
-        @Autowired
-        private UserDetailsService userDetailsService;
+		@Autowired
+		private RESTAuthenticationEntryPoint authenticationEntryPoint;
 
-        @Autowired
-        private RESTAuthenticationEntryPoint authenticationEntryPoint;
+		@Autowired
+		private PasswordEncoder passwordEncoder;
 
-        @Autowired
-        private PasswordEncoder passwordEncoder;
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
 
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
+			http.httpBasic().and().authorizeRequests().antMatchers("/", "/assets/**", "/app/**", "/component/**", "/api/rest/registrations/**").permitAll()
+					.anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class).csrf()
+					.csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout().logoutUrl("/logout").logoutSuccessUrl("/").and().headers()
+					.frameOptions().sameOrigin().httpStrictTransportSecurity().disable();
 
-            http.httpBasic().and()
-                    .authorizeRequests()
-                    .antMatchers("/", "/assets/**", "/app/**", "/component/**", "/api/rest/registrations/**").permitAll()
-                    .anyRequest()
-                    .authenticated()
-                    .and()
-                    .addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
-                    .csrf()
-                    .csrfTokenRepository(csrfTokenRepository())
-                    .and()
-                    .csrf()
-                    .disable()
-                    .logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/")
-                    .and()
-                    .headers()
-                    .frameOptions().sameOrigin()
-                    .httpStrictTransportSecurity().disable();
+			http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
+		}
 
-            http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
-        }
+		private CsrfTokenRepository csrfTokenRepository() {
+			HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
+			repository.setHeaderName("X-XSRF-TOKEN");
+			return repository;
+		}
 
-        private CsrfTokenRepository csrfTokenRepository() {
-            HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-            repository.setHeaderName("X-XSRF-TOKEN");
-            return repository;
-        }
+		@Autowired
+		public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+			auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+		}
 
-        @Autowired
-        public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-            auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-        }
-
-    }
+	}
 
 }
