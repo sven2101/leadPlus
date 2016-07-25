@@ -18,6 +18,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import dash.exceptions.StatusNotFoundException;
 
+/*
+ * TODO - replace enum.valueOf()
+ */
+
 public enum Status {
 	OPEN("open"), OFFER("offer"), FOLLOWUP("followup"), SALE("sale"), CLOSED("closed");
 

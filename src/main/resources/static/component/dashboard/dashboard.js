@@ -138,7 +138,7 @@ DashboardCtrl.prototype.addLeadToOffer = function (process) {
             phone: process.lead.inquirer.phone,
             title: process.lead.inquirer.title
         },
-        timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm'),
+        timestamp: this.filter('date')(new Date(), "dd.MM.yyyy HH:mm"),
         vendor: process.lead.vendor
     };
     this.processesService.addOffer({id: process.id}, offer).$promise.then(function () {
@@ -228,7 +228,7 @@ DashboardCtrl.prototype.addComment = function (process) {
         	process: process,
         	creator: this.user,
         	commentText: this.commentModalInput,
-        	timestamp: (new Date(), 'dd.MM.yyyy HH:mm')
+        	timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm')
         };
         this.commentsService.addComment(comment).$promise.then(function () {
             vm.infoComments.push(comment);

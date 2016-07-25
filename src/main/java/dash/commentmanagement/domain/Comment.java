@@ -29,10 +29,11 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.processmanagement.domain.Process;
+import dash.processmanagement.request.Request;
 import dash.usermanagement.domain.User;
 
 @Entity
-public class Comment {
+public class Comment implements Request {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -97,11 +98,12 @@ public class Comment {
 		this.commentText = commentText;
 	}
 
-	public Calendar getDate() {
+	@Override
+	public Calendar getTimestamp() {
 		return this.timestamp;
 	}
 
-	public void setDate(Calendar timestamp) {
+	public void setTimestamp(Calendar timestamp) {
 		this.timestamp = timestamp;
 	}
 }
