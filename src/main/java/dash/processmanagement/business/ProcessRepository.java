@@ -9,11 +9,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import dash.leadmanagement.domain.Lead;
+import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.lead.domain.Lead;
-import dash.processmanagement.offer.domain.Offer;
-import dash.processmanagement.sale.domain.Sale;
-import dash.processmanagement.status.Status;
+import dash.processmanagement.domain.Status;
+import dash.salemanagement.domain.Sale;
 
 /**
  * Created by Andreas on 12.10.2015.

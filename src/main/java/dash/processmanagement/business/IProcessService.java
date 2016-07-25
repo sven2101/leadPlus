@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.ProcessNotFoundException;
+import dash.leadmanagement.domain.Lead;
+import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.lead.domain.Lead;
-import dash.processmanagement.offer.domain.Offer;
-import dash.processmanagement.sale.domain.Sale;
-import dash.processmanagement.status.Status;
+import dash.processmanagement.domain.Status;
+import dash.salemanagement.domain.Sale;
 
 @Service
 public interface IProcessService {

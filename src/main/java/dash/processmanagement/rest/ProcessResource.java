@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.ProcessNotFoundException;
 import dash.exceptions.StatusNotFoundException;
+import dash.leadmanagement.domain.Lead;
+import dash.offermanagement.domain.Offer;
 import dash.processmanagement.business.IProcessService;
 import dash.processmanagement.business.ProcessRepository;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.lead.domain.Lead;
-import dash.processmanagement.offer.domain.Offer;
-import dash.processmanagement.sale.domain.Sale;
-import dash.processmanagement.status.Status;
+import dash.processmanagement.domain.Status;
+import dash.salemanagement.domain.Sale;
 import dash.usermanagement.domain.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

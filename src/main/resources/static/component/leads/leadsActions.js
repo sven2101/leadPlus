@@ -13,22 +13,22 @@ LeadsCtrl.prototype.addComment = function (id, source) {
     }
     if (source == 'table' && this.commentInput[id] != '' && !angular.isUndefined(this.commentInput[id])) {
         var comment = {
-            commentText: this.commentInput[id],
-            date: new Date(),
-            process: this.processes[id],
-            creator: this.user
+        	process: this.processes[id],
+        	creator: this.user,
+        	commentText: this.commentInput[id],
+        	timestamp: (new Date(), 'dd.MM.yyyy HH:mm')            
         };
-        this.processesService.addComment({id: id}, comment).$promise.then(function () {
+        this.commentsService.addComment(comment).$promise.then(function () {
             vm.comments[id].push(comment);
             vm.commentInput[id] = '';
         });
     }
     else if (source == 'modal' && this.commentModalInput[id] != '' && !angular.isUndefined(this.commentModalInput[id])) {
         var comment = {
-            commentText: this.commentModalInput[id],
-            date: new Date(),
-            process: this.processes[id],
-            creator: this.user
+    		process: this.processes[id],
+    		creator: this.user,
+    		commentText: this.commentModalInput[id],
+    		timestamp: (new Date(), 'dd.MM.yyyy HH:mm')           
         };
         this.processesService.addComment({id: id}, comment).$promise.then(function () {
             vm.comments[id].push(comment);

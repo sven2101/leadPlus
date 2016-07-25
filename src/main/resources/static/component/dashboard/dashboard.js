@@ -2,9 +2,9 @@
 
 angular.module('app.dashboard', ['ngResource']).controller('DashboardCtrl', DashboardCtrl);
 
-DashboardCtrl.$inject = ['toaster', 'Processes', '$filter', '$translate', '$rootScope', '$scope', '$interval', 'Profile', 'Leads', 'Offers', 'Sales', 'Profit', 'Turnover'];
+DashboardCtrl.$inject = ['toaster', 'Processes', 'Comments', '$filter', '$translate', '$rootScope', '$scope', '$interval', 'Profile', 'Leads', 'Offers', 'Sales', 'Profit', 'Turnover'];
 
-function DashboardCtrl(toaster, Processes, $filter, $translate, $rootScope, $scope, $interval, Profile, Leads, Offers, Sales, Profit, Turnover) {
+function DashboardCtrl(toaster, Processes, Comments, $filter, $translate, $rootScope, $scope, $interval, Profile, Leads, Offers, Sales, Profit, Turnover) {
 
     var vm = this;
     this.toaster = toaster;
@@ -13,6 +13,7 @@ function DashboardCtrl(toaster, Processes, $filter, $translate, $rootScope, $sco
     this.translate = $translate;
     this.rootScope = $rootScope;
     this.processesService = Processes;
+    this.commentsService = Comments;
     this.commentModalInput = '';
     this.comments = {};
     this.infoData = {};
@@ -177,7 +178,7 @@ DashboardCtrl.prototype.saveDataToModal = function (info, type, process) {
     this.infoType = type;
     this.infoProcess = process;
     var vm = this;
-    this.processesService.getComments({id: process.id}).$promise.then(function (result) {
+    this.commentsService.getComments({id: process.id}).$promise.then(function (result) {
         vm.infoComments = [];
         for (var comment in result) {
             if (comment == '$promise')
@@ -210,12 +211,12 @@ DashboardCtrl.prototype.addComment = function (process) {
     }
     if (this.commentModalInput != '' && !angular.isUndefined(this.commentModalInput)) {
         var comment = {
-            commentText: this.commentModalInput,
-            date: new Date(),
-            process: process,
-            creator: this.user
+        	process: process,
+        	creator: this.user,
+        	commentText: this.commentModalInput,
+        	timestamp: (new Date(), 'dd.MM.yyyy HH:mm')
         };
-        this.processesService.addComment({id: process.id}, comment).$promise.then(function () {
+        this.commentsService.addComment(comment).$promise.then(function () {
             vm.infoComments.push(comment);
             vm.commentModalInput = '';
         });

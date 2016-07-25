@@ -9,14 +9,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.ProcessNotFoundException;
+import dash.leadmanagement.business.ILeadService;
+import dash.leadmanagement.domain.Lead;
+import dash.offermanagement.business.IOfferService;
+import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.lead.business.ILeadService;
-import dash.processmanagement.lead.domain.Lead;
-import dash.processmanagement.offer.business.IOfferService;
-import dash.processmanagement.offer.domain.Offer;
-import dash.processmanagement.sale.business.ISaleService;
-import dash.processmanagement.sale.domain.Sale;
-import dash.processmanagement.status.Status;
+import dash.processmanagement.domain.Status;
+import dash.salemanagement.business.ISaleService;
+import dash.salemanagement.domain.Sale;
 import dash.usermanagement.business.UserRepository;
 import dash.usermanagement.domain.User;
 

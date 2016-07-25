@@ -1,11 +1,12 @@
 'use strict';
 angular.module('app.leads', ['ngResource']).controller('LeadsCtrl', LeadsCtrl);
-LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', '$filter', 'Profile', '$rootScope', '$translate'];
-function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, $filter, Profile, $rootScope, $translate) {
+LeadsCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', 'Comments', '$filter', 'Profile', '$rootScope', '$translate'];
+function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, Comments, $filter, Profile, $rootScope, $translate) {
 
     var vm = this;
     this.filter = $filter;
     this.processesService = Processes;
+    this.commentsService = Comments;
     this.userService = Profile;
     this.user = {};
     this.windowWidth = $(window).width();
@@ -276,14 +277,14 @@ LeadsCtrl.prototype.appendChildRow = function (process, event) {
     var childScope = this.scope.$new(true);
     childScope.leadChildData = process;
     var vm = this;
-    this.processesService.getComments({id: process.id}).$promise.then(function (result) {
+    this.commentsService.getComments({id: process.id}).$promise.then(function (result) {
         vm.comments[process.id] = [];
         for (var comment in result) {
             if (comment == '$promise')
                 break;
             vm.comments[process.id].push({
                 commentText: result[comment].commentText,
-                date: result[comment].date,
+                date: result[comment].timestamp,
                 creator: result[comment].creator
             });
         }

@@ -10,10 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import dash.processmanagement.lead.domain.Lead;
-import dash.processmanagement.offer.domain.Offer;
-import dash.processmanagement.sale.domain.Sale;
-import dash.processmanagement.status.Status;
+import dash.leadmanagement.domain.Lead;
+import dash.offermanagement.domain.Offer;
+import dash.salemanagement.domain.Sale;
 import dash.usermanagement.domain.User;
 
 @Entity

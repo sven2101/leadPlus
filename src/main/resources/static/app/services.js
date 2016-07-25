@@ -80,8 +80,6 @@ angular.module('app.services', ['ngResource'])
             getProcessor: {url: '/api/rest/processes/:id/processors', method: 'GET'},
             setProcessor: {url: '/api/rest/processes/:id/processors', method: 'PUT'},
             removeProcessor: {url: '/api/rest/processes/:id/processors/remove', method: 'DELETE'},
-            getComments: {url: '/api/rest/processes/:id/comments', method: 'GET', isArray: true},
-            addComment: {url: '/api/rest/processes/:id/comments', method: 'POST'},
             getStatus: {url: '/api/rest/processes/:id/:status', method: 'GET'},
             setStatus: {url: '/api/rest/processes/:id/status', method: 'PUT'},
             getByStatus: {url: '/api/rest/processes/status/:status', method: 'GET', isArray: true},
@@ -112,6 +110,12 @@ angular.module('app.services', ['ngResource'])
             getLatest100Sales: {
                 url: '/api/rest/processes/latest100Sales', method: 'GET', isArray: true
             }
+        });
+    }])
+     .service('Comments', ['$resource', function ($resource) {
+        return $resource('/api/rest/comments/', {}, {
+            getComments: {url: '/api/rest/comments/processes/:id', method: 'GET', isArray: true},
+            addComment: {url: '/api/rest/comments/processes', method: 'POST'},
         });
     }])
     .service('Profile', ['$resource', function ($resource) {
