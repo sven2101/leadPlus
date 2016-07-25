@@ -1,3 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
 package dash.usermanagement.principle;
 
 import java.security.Principal;
@@ -14,24 +28,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value ={ "/user", "/me" })
+@RequestMapping(value = { "/user", "/me" })
 public class PrincipleResource {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<Map<String, String>> getUser(Principal user) {
-		
+
 		Map<String, String> map = new LinkedHashMap<String, String>();
-		
-		if(!Optional.ofNullable(user).isPresent())
+
+		if (!Optional.ofNullable(user).isPresent())
 			return new ResponseEntity<Map<String, String>>(map, HttpStatus.UNAUTHORIZED);
-		
-		for (GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities()){
+
+		for (GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
 			map.put("role", authority.getAuthority());
 		}
-		
+
 		map.put("username", user.getName());
-		
+
 		return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
-	}		
-	
+	}
+
 }

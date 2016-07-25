@@ -1,3 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
 package dash.statisticmanagement.lead.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,45 +32,45 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/api/rest/processes/statistics/leads")
 @Api(value = "Statistic Conversion API")
 public class StatisticLeadResource {
-	
-    @Autowired
-    private IStatisticService 			statisticsService;
-    
-    @Autowired
-    private RequestRepository<Lead, Long> 	leadRepository;
-    
-    @RequestMapping(value="/day", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get daily Lead Statistic", notes = "")
-    public Result getDailyLeadStatistic() {
-	return statisticsService.getDailyStatistic(leadRepository);
-    }
-    
-    @RequestMapping(value="/week", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get weekly Lead Statistic", notes = "")
-    public Result getWeeklyLeadStatistic() {
-	return statisticsService.getWeeklyStatistic(leadRepository);
-    }
-    
-    @RequestMapping(value="/month", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get monthly Lead Statistic", notes = "")
-    public Result getMonthlyLeadStatistic() {
-	return statisticsService.getMonthlyStatistic(leadRepository);
-    }
-    
-    @RequestMapping(value="/year", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get yearly Lead Statistic", notes = "")
-    public Result getYearlyLeadStatistic() {
-	return statisticsService.getYearlyStatistic(leadRepository);
-    }
-    
-    @RequestMapping(value="/all", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get all Lead Statistic", notes = "")
-    public Result getAllLeadStatistic() {
-	return statisticsService.getAllStatistic(leadRepository);
-    }	
+
+	@Autowired
+	private IStatisticService statisticsService;
+
+	@Autowired
+	private RequestRepository<Lead, Long> leadRepository;
+
+	@RequestMapping(value = "/day", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get daily Lead Statistic", notes = "")
+	public Result getDailyLeadStatistic() {
+		return statisticsService.getDailyStatistic(leadRepository);
+	}
+
+	@RequestMapping(value = "/week", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get weekly Lead Statistic", notes = "")
+	public Result getWeeklyLeadStatistic() {
+		return statisticsService.getWeeklyStatistic(leadRepository);
+	}
+
+	@RequestMapping(value = "/month", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get monthly Lead Statistic", notes = "")
+	public Result getMonthlyLeadStatistic() {
+		return statisticsService.getMonthlyStatistic(leadRepository);
+	}
+
+	@RequestMapping(value = "/year", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get yearly Lead Statistic", notes = "")
+	public Result getYearlyLeadStatistic() {
+		return statisticsService.getYearlyStatistic(leadRepository);
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get all Lead Statistic", notes = "")
+	public Result getAllLeadStatistic() {
+		return statisticsService.getAllStatistic(leadRepository);
+	}
 }

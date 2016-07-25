@@ -1,25 +1,38 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
 package dash.statisticmanagement.result.domain;
 
 import java.util.List;
 
 public class Result {
 
-    private List<Double> result; 
-    
-    public Result (){}
-    
-    public Result(List <Double> result){
-	this.result = result;
-    }
+	private List<Double> result;
 
-    public List <Double> getResult() {
-        return result;
-    }
+	public Result() {
+	}
 
-    public void setResult(List <Double> result) {
-        this.result = result;
-    }
-    
-    
+	public Result(List<Double> result) {
+		this.result = result;
+	}
+
+	public List<Double> getResult() {
+		return result;
+	}
+
+	public void setResult(List<Double> result) {
+		this.result = result;
+	}
 
 }

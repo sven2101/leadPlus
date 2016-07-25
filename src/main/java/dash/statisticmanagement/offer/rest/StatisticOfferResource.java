@@ -1,3 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
 package dash.statisticmanagement.offer.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,45 +32,45 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/api/rest/processes/statistics/offers")
 @Api(value = "Statistic Conversion API")
 public class StatisticOfferResource {
-	
-    @Autowired
-    private IStatisticService 			statisticsService;
-    
-    @Autowired
-    private RequestRepository<Offer, Long> 	offerRepository;
-    
-    @RequestMapping(value="/day", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get daily Offer Statistic", notes = "")
-    public Result getDailyOfferStatistic() {
-	return statisticsService.getDailyStatistic(offerRepository);
-    }
-    
-    @RequestMapping(value="/week", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get weekly Offer Statistic", notes = "")
-    public Result getWeeklyOfferStatistic() {
-	return statisticsService.getWeeklyStatistic(offerRepository);
-    }
-    
-    @RequestMapping(value="/month", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get monthly Offer Statistic", notes = "")
-    public Result getMonthlyOfferStatistic() {
-	return statisticsService.getMonthlyStatistic(offerRepository);
-    }
-    
-    @RequestMapping(value="/year", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get yealry Offer Statistic", notes = "")
-    public Result getYearlyOfferStatistic() {
-	return statisticsService.getYearlyStatistic(offerRepository);
-    }
-    
-    @RequestMapping(value="/all", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get all Offer Statistic", notes = "")
-    public Result getAllOfferStatistic() {
-	return statisticsService.getAllStatistic(offerRepository);
-    }	
+
+	@Autowired
+	private IStatisticService statisticsService;
+
+	@Autowired
+	private RequestRepository<Offer, Long> offerRepository;
+
+	@RequestMapping(value = "/day", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get daily Offer Statistic", notes = "")
+	public Result getDailyOfferStatistic() {
+		return statisticsService.getDailyStatistic(offerRepository);
+	}
+
+	@RequestMapping(value = "/week", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get weekly Offer Statistic", notes = "")
+	public Result getWeeklyOfferStatistic() {
+		return statisticsService.getWeeklyStatistic(offerRepository);
+	}
+
+	@RequestMapping(value = "/month", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get monthly Offer Statistic", notes = "")
+	public Result getMonthlyOfferStatistic() {
+		return statisticsService.getMonthlyStatistic(offerRepository);
+	}
+
+	@RequestMapping(value = "/year", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get yealry Offer Statistic", notes = "")
+	public Result getYearlyOfferStatistic() {
+		return statisticsService.getYearlyStatistic(offerRepository);
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get all Offer Statistic", notes = "")
+	public Result getAllOfferStatistic() {
+		return statisticsService.getAllStatistic(offerRepository);
+	}
 }

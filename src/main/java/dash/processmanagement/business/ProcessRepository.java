@@ -1,3 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
 package dash.processmanagement.business;
 
 import java.util.List;
@@ -15,35 +29,37 @@ import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
 import dash.salemanagement.domain.Sale;
 
-/**
- * Created by Andreas on 12.10.2015.
- */
-
 @Transactional
 @Repository
 public interface ProcessRepository extends JpaRepository<Process, Long> {
 
-    List<Process> findProcessesByStatus(Status status);
+	List<Process> findProcessesByStatus(Status status);
 
-    List<Lead> findByStatusAndLeadIsNotNull(Status status);
+	List<Lead> findByStatusAndLeadIsNotNull(Status status);
 
-    Page<Lead> findByLeadIsNotNull(Pageable pageable);
+	Page<Lead> findByLeadIsNotNull(Pageable pageable);
 
-    Page<Lead> findByLeadInquirerFirstnameContainingOrLeadInquirerLastnameContainingOrLeadInquirerEmailContainingOrLeadInquirerCompanyContainingOrLeadInquirerPhoneContainingOrLeadContainerNameContainingOrLeadContainerDescriptionContainingOrLeadDestinationContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(String firstname, String lastname, String email, String company, String phone, String containerName, String containerDescription, String destination, String message, String status, Pageable pageable);
+	Page<Lead> findByLeadInquirerFirstnameContainingOrLeadInquirerLastnameContainingOrLeadInquirerEmailContainingOrLeadInquirerCompanyContainingOrLeadInquirerPhoneContainingOrLeadContainerNameContainingOrLeadContainerDescriptionContainingOrLeadDestinationContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
+			String firstname, String lastname, String email, String company, String phone, String containerName, String containerDescription,
+			String destination, String message, String status, Pageable pageable);
 
-    List<Offer> findByStatusAndOfferIsNotNull(Status status);
+	List<Offer> findByStatusAndOfferIsNotNull(Status status);
 
-    Page<Offer> findByOfferIsNotNull(Pageable pageable);
+	Page<Offer> findByOfferIsNotNull(Pageable pageable);
 
-    Page<Offer> findByOfferProspectFirstnameContainingOrOfferProspectLastnameContainingOrOfferProspectEmailContainingOrOfferProspectCompanyContainingOrOfferProspectPhoneContainingOrOfferContainerNameContainingOrOfferContainerDescriptionContainingOrOfferDeliveryAddressContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(String firstname, String lastname, String email, String company, String phone, String containerName, String containerDescription, String deliveryAddress, String status, Pageable pageable);
+	Page<Offer> findByOfferProspectFirstnameContainingOrOfferProspectLastnameContainingOrOfferProspectEmailContainingOrOfferProspectCompanyContainingOrOfferProspectPhoneContainingOrOfferContainerNameContainingOrOfferContainerDescriptionContainingOrOfferDeliveryAddressContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(
+			String firstname, String lastname, String email, String company, String phone, String containerName, String containerDescription,
+			String deliveryAddress, String status, Pageable pageable);
 
-    List<Sale> findByStatusAndSaleIsNotNull(Status status);
+	List<Sale> findByStatusAndSaleIsNotNull(Status status);
 
-    Page<Sale> findBySaleIsNotNull(Pageable pageable);
+	Page<Sale> findBySaleIsNotNull(Pageable pageable);
 
-    Page<Sale> findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrSaleContainerNameContainingOrSaleContainerDescriptionContainingOrSaleTransportContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(String firstname, String lastname, String email, String company, String phone, String containerName, String containerDescription, String transport, String status, Pageable pageable);
+	Page<Sale> findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrSaleContainerNameContainingOrSaleContainerDescriptionContainingOrSaleTransportContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
+			String firstname, String lastname, String email, String company, String phone, String containerName, String containerDescription, String transport,
+			String status, Pageable pageable);
 
-    List<Sale> findTop10BySaleIsNotNullOrderBySaleTimestampDesc();
+	List<Sale> findTop10BySaleIsNotNullOrderBySaleTimestampDesc();
 
-    List<Sale> findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
+	List<Sale> findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
 }

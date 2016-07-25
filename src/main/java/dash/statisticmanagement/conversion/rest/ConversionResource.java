@@ -1,3 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
 package dash.statisticmanagement.conversion.rest;
 
 import java.util.List;
@@ -18,58 +32,47 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/api/rest/processes/statistics/conversion")
 @Api(value = "Statistic Profit API")
 public class ConversionResource {
-	
-    @Autowired
-    private IConversionStatisticService		conversionStatisticService;
-       
-    @RequestMapping(value="/day",
-	    	    method = RequestMethod.GET,
-	            produces = {MediaType.APPLICATION_JSON_VALUE},
-		    consumes = {MediaType.APPLICATION_JSON_VALUE})
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get Daily Conversion Statistic", notes = "")
-    public List<Double> getDailyConversionStatistic() {
-	return conversionStatisticService.getDailyConversionStatistic();
-    }
-    
-    @RequestMapping(value="/week",
-	    	    method = RequestMethod.GET,
-	    	    produces = {MediaType.APPLICATION_JSON_VALUE},
-	    	    consumes = {MediaType.APPLICATION_JSON_VALUE})
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get Weekly Conversion Statistic", notes = "")
-    public List<Double> getWeeklyConversionStatistic() {
-	return conversionStatisticService.getWeeklyConversionStatistic();
-    }
-    
-    @RequestMapping(value="/month",
-	    	    method = RequestMethod.GET,
-	    	    produces = {MediaType.APPLICATION_JSON_VALUE},
-	    	    consumes = {MediaType.APPLICATION_JSON_VALUE})
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get Monthly Conversion Statistic", notes = "")
-    public List<Double> getMonthlyConversionStatistic() {
-	return conversionStatisticService.getMonthlyConversionStatistic();
-    }
-    
-    @RequestMapping(value="/year",
-	    	    method = RequestMethod.GET,
-	    	    produces = {MediaType.APPLICATION_JSON_VALUE},
-	    	    consumes = {MediaType.APPLICATION_JSON_VALUE})
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get Yearly Conversion Statistic", notes = "")
-    public List<Double> getYearlyConversionStatistic() {
-	return conversionStatisticService.getYearlyConversionStatistic();
-    }
-    
-    @RequestMapping(value="/all",
-    	    method = RequestMethod.GET,
-    	    produces = {MediaType.APPLICATION_JSON_VALUE},
-    	    consumes = {MediaType.APPLICATION_JSON_VALUE})
-    @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get All Conversion Statistic", notes = "")
-    public List<Double> getAllConversionStatistic() {
-	return conversionStatisticService.getAllConversionStatistic();
-    }	
-}
 
+	@Autowired
+	private IConversionStatisticService conversionStatisticService;
+
+	@RequestMapping(value = "/day", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
+			MediaType.APPLICATION_JSON_VALUE })
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get Daily Conversion Statistic", notes = "")
+	public List<Double> getDailyConversionStatistic() {
+		return conversionStatisticService.getDailyConversionStatistic();
+	}
+
+	@RequestMapping(value = "/week", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
+			MediaType.APPLICATION_JSON_VALUE })
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get Weekly Conversion Statistic", notes = "")
+	public List<Double> getWeeklyConversionStatistic() {
+		return conversionStatisticService.getWeeklyConversionStatistic();
+	}
+
+	@RequestMapping(value = "/month", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
+			MediaType.APPLICATION_JSON_VALUE })
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get Monthly Conversion Statistic", notes = "")
+	public List<Double> getMonthlyConversionStatistic() {
+		return conversionStatisticService.getMonthlyConversionStatistic();
+	}
+
+	@RequestMapping(value = "/year", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
+			MediaType.APPLICATION_JSON_VALUE })
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get Yearly Conversion Statistic", notes = "")
+	public List<Double> getYearlyConversionStatistic() {
+		return conversionStatisticService.getYearlyConversionStatistic();
+	}
+
+	@RequestMapping(value = "/all", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
+			MediaType.APPLICATION_JSON_VALUE })
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get All Conversion Statistic", notes = "")
+	public List<Double> getAllConversionStatistic() {
+		return conversionStatisticService.getAllConversionStatistic();
+	}
+}
