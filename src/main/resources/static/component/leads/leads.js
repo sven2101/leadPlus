@@ -298,7 +298,7 @@ LeadsCtrl.prototype.appendChildRow = function (process, event) {
                 break;
             vm.comments[process.id].push({
                 commentText: result[comment].commentText,
-                date: result[comment].timestamp,
+                timestamp: result[comment].timestamp,
                 creator: result[comment].creator
             });
         }

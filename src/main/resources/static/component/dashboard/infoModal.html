@@ -105,7 +105,7 @@
                         <span class="pull-left" style="font-size: 1.5em;">{{ 'COMMON_COMMENTS' | translate }}</span>
                         <small ng-if="dashboard.infoComments.length>0" class="pull-right text-muted">
                             {{ 'COMMON_COMMENTS_LAST' | translate }}:
-                            {{dashboard.infoComments[dashboard.infoComments.length-1].date|
+                            {{dashboard.infoComments[dashboard.infoComments.length-1].timestamp|
                             date:'dd.MM.yyyy HH:mm:ss'}}
                         </small>
                     </div>
@@ -113,12 +113,12 @@
                         <div ng-if="dashboard.infoComments.length>0" class="row">
                             <div class="col-md-12 ">
                                 <div class="chat-discussion" ng-model="dashboard.infoComments">
-                                    <div ng-repeat="comment in dashboard.infoComments | orderBy: '-date'">
+                                    <div ng-repeat="comment in dashboard.infoComments | orderBy: 'date'">
                                         <div ng-if="$index%2==0" class="chat-message left">
                                             <img class="message-avatar" src="assets/img/guest.png" alt="">
                                             <div class="message">
                                                 <a class="message-author" href="#"> {{comment.creator.username}} </a>
-                                                <span class="message-date"> {{comment.date|  date:'dd.MM.yyyy HH:mm:ss'}} </span>
+                                                <span class="message-date"> {{comment.timestamp|  date:'dd.MM.yyyy HH:mm:ss'}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}
                                             </span>
@@ -128,7 +128,7 @@
                                             <img class="message-avatar" src="assets/img/guest.png" alt="">
                                             <div class="message">
                                                 <a class="message-author"> {{comment.creator.username}} </a>
-                                                <span class="message-date"> {{comment.date |  date:'dd.MM.yyyy HH:mm:ss'}} </span>
+                                                <span class="message-date"> {{comment.timestamp |  date:'dd.MM.yyyy HH:mm:ss'}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}
                                             </span>

@@ -199,7 +199,7 @@ DashboardCtrl.prototype.saveDataToModal = function (info, type, process) {
                 break;
             vm.infoComments.push({
                 commentText: result[comment].commentText,
-                date: result[comment].date,
+                timestamp: result[comment].timestamp,
                 creator: result[comment].creator
             });
         }

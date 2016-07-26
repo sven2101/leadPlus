@@ -40,7 +40,7 @@ LeadsCtrl.prototype.addComment = function (id, source) {
     		commentText: this.commentModalInput[id],
     		timestamp: this.filter('date')(new Date(), "dd.MM.yyyy HH:mm")           
         };
-        this.processesService.addComment({id: id}, comment).$promise.then(function () {
+        this.commentsService.addComment({comment}, comment).$promise.then(function () {
             vm.comments[id].push(comment);
             vm.commentModalInput[id] = '';
         });

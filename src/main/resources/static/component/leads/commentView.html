@@ -3,7 +3,7 @@
         <div class="ibox-title text-left">
             {{ 'COMMON_COMMENTS' | translate }}
             <small ng-if="parent.comments[leadChildData.id].length>0" class="pull-right text-muted">{{ 'COMMON_COMMENTS_LAST' | translate }}:
-                {{(parent.comments[leadChildData.id])[(parent.comments[leadChildData.id]).length-1].date|
+                {{(parent.comments[leadChildData.id])[(parent.comments[leadChildData.id]).length-1].timestamp|
                 date:'dd.MM.yyyy HH:mm:ss'}}
             </small>
         </div>
@@ -11,12 +11,12 @@
             <div class="row" ng-if="parent.comments[leadChildData.id].length>0">
                 <div class="col-md-12">
                     <div class="chat-discussion" ng-model="parent.comments[leadChildData.id]">
-                        <div ng-repeat="comment in parent.comments[leadChildData.id] | orderBy: '-date' | limitTo: 3">
+                        <div ng-repeat="comment in parent.comments[leadChildData.id] | orderBy: 'date' | limitTo: 3">
                             <div ng-if="$index%2==0" class="chat-message left">
                                 <img class="message-avatar" src="assets/img/guest.png" alt="">
                                 <div class="message">
                                     <a class="message-author"> {{comment.creator.username}} </a>
-                                    <span class="message-date"> {{comment.date|  date:'dd.MM.yyyy HH:mm:ss'}} </span>
+                                    <span class="message-date"> {{comment.timestamp|  date:'dd.MM.yyyy HH:mm:ss'}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}
                                             </span>
@@ -26,7 +26,7 @@
                                 <img class="message-avatar" src="assets/img/guest.png" alt="">
                                 <div class="message">
                                     <a class="message-author" href="#"> {{comment.creator.username}} </a>
-                                    <span class="message-date"> {{comment.date |  date:'dd.MM.yyyy HH:mm:ss'}} </span>
+                                    <span class="message-date"> {{comment.timestamp |  date:'dd.MM.yyyy HH:mm:ss'}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}
                                             </span>
