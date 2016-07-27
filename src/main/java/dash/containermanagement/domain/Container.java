@@ -19,9 +19,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-/**
- * Created by Andreas on 10.10.2015.
- */
 @Entity
 public class Container {
 
@@ -69,4 +66,46 @@ public class Container {
 	public void setPriceNetto(double priceNetto) {
 		this.priceNetto = priceNetto;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(priceNetto);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Container other = (Container) obj;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (Double.doubleToLongBits(priceNetto) != Double.doubleToLongBits(other.priceNetto))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Container [id=" + id + ", name=" + name + ", description=" + description + ", priceNetto=" + priceNetto + "]";
+	}
+
 }

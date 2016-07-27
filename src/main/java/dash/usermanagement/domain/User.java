@@ -166,4 +166,10 @@ public class User implements UserDetails {
 		return this.enabled;
 	}
 
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", role=" + role + ", profilPictureURL="
+				+ profilPictureURL + ", language=" + language + ", enabled=" + enabled + "]";
+	}
+
 }

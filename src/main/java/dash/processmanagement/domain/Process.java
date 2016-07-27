@@ -79,10 +79,6 @@ public class Process {
 		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public Lead getLead() {
 		return lead;
 	}
@@ -122,4 +118,56 @@ public class Process {
 	public void setProcessor(User processor) {
 		this.processor = processor;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((lead == null) ? 0 : lead.hashCode());
+		result = prime * result + ((offer == null) ? 0 : offer.hashCode());
+		result = prime * result + ((processor == null) ? 0 : processor.hashCode());
+		result = prime * result + ((sale == null) ? 0 : sale.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Process other = (Process) obj;
+		if (lead == null) {
+			if (other.lead != null)
+				return false;
+		} else if (!lead.equals(other.lead))
+			return false;
+		if (offer == null) {
+			if (other.offer != null)
+				return false;
+		} else if (!offer.equals(other.offer))
+			return false;
+		if (processor == null) {
+			if (other.processor != null)
+				return false;
+		} else if (!processor.equals(other.processor))
+			return false;
+		if (sale == null) {
+			if (other.sale != null)
+				return false;
+		} else if (!sale.equals(other.sale))
+			return false;
+		if (status != other.status)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Process [id=" + id + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale + ", status=" + status + ", processor=" + processor + "]";
+	}
+
 }

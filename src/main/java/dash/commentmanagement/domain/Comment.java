@@ -50,9 +50,6 @@ public class Comment implements Request {
 	@Column(length = 5000)
 	private String commentText;
 
-	/*
-	 * TODO - time is two hours earlier in case of 20:00 it saves 22:00 
-	 */
 	@Column(nullable = true, columnDefinition = "timestamptz")
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
@@ -109,4 +106,53 @@ public class Comment implements Request {
 	public void setTimestamp(Calendar timestamp) {
 		this.timestamp = timestamp;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((commentText == null) ? 0 : commentText.hashCode());
+		result = prime * result + ((creator == null) ? 0 : creator.hashCode());
+		result = prime * result + ((process == null) ? 0 : process.hashCode());
+		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Comment other = (Comment) obj;
+		if (commentText == null) {
+			if (other.commentText != null)
+				return false;
+		} else if (!commentText.equals(other.commentText))
+			return false;
+		if (creator == null) {
+			if (other.creator != null)
+				return false;
+		} else if (!creator.equals(other.creator))
+			return false;
+		if (process == null) {
+			if (other.process != null)
+				return false;
+		} else if (!process.equals(other.process))
+			return false;
+		if (timestamp == null) {
+			if (other.timestamp != null)
+				return false;
+		} else if (!timestamp.equals(other.timestamp))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Comment [id=" + id + ", creator=" + creator + ", process=" + process + ", commentText=" + commentText + ", timestamp=" + timestamp + "]";
+	}
+
 }

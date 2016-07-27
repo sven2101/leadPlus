@@ -153,4 +153,73 @@ public class Offer implements Request {
 		this.containerAmount = containerAmount;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((container == null) ? 0 : container.hashCode());
+		result = prime * result + containerAmount;
+		result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
+		result = prime * result + ((deliveryDate == null) ? 0 : deliveryDate.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(offerPrice);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((prospect == null) ? 0 : prospect.hashCode());
+		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
+		result = prime * result + ((vendor == null) ? 0 : vendor.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Offer other = (Offer) obj;
+		if (container == null) {
+			if (other.container != null)
+				return false;
+		} else if (!container.equals(other.container))
+			return false;
+		if (containerAmount != other.containerAmount)
+			return false;
+		if (deliveryAddress == null) {
+			if (other.deliveryAddress != null)
+				return false;
+		} else if (!deliveryAddress.equals(other.deliveryAddress))
+			return false;
+		if (deliveryDate == null) {
+			if (other.deliveryDate != null)
+				return false;
+		} else if (!deliveryDate.equals(other.deliveryDate))
+			return false;
+		if (Double.doubleToLongBits(offerPrice) != Double.doubleToLongBits(other.offerPrice))
+			return false;
+		if (prospect == null) {
+			if (other.prospect != null)
+				return false;
+		} else if (!prospect.equals(other.prospect))
+			return false;
+		if (timestamp == null) {
+			if (other.timestamp != null)
+				return false;
+		} else if (!timestamp.equals(other.timestamp))
+			return false;
+		if (vendor == null) {
+			if (other.vendor != null)
+				return false;
+		} else if (!vendor.equals(other.vendor))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Offer [id=" + id + ", prospect=" + prospect + ", vendor=" + vendor + ", container=" + container + ", containerAmount=" + containerAmount
+				+ ", timestamp=" + timestamp + ", deliveryDate=" + deliveryDate + ", offerPrice=" + offerPrice + ", deliveryAddress=" + deliveryAddress + "]";
+	}
+
 }

@@ -14,49 +14,6 @@
 
 package dash.processmanagement.domain;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import dash.exceptions.StatusNotFoundException;
-
-/*
- * TODO - replace enum.valueOf()
- */
-
 public enum Status {
-	OPEN("open"), OFFER("offer"), FOLLOWUP("followup"), SALE("sale"), CLOSED("closed");
-
-	private String status;
-
-	Status(String status) {
-		this.status = status;
-	}
-
-	@Override
-	public String toString() {
-		return status;
-	}
-
-	public static Status getStatus(String value) throws StatusNotFoundException {
-		if (null == value)
-			throw new StatusNotFoundException("No Status found.");
-		switch (value) {
-		case "open":
-			return Status.OPEN;
-		case "offer":
-			return Status.OFFER;
-		case "followup":
-			return Status.FOLLOWUP;
-		case "sale":
-			return Status.SALE;
-		case "closed":
-			return Status.CLOSED;
-		default:
-			throw new StatusNotFoundException("No Status found.");
-		}
-	}
-
-	@JsonValue
-	public String getStatus() {
-		return status;
-	}
+	OPEN, OFFER, FOLLOWUP, SALE, CLOSED;
 }

@@ -18,6 +18,8 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,6 +42,8 @@ import dash.usermanagement.settings.language.Language;
 @RestController
 @RequestMapping("/api/rest/registrations")
 public class RegistrationResource {
+
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private INotificationService notificationService;
@@ -67,6 +71,7 @@ public class RegistrationResource {
 				&& !Optional.ofNullable(userRepository.findByEmailIgnoreCase(user.getEmail())).isPresent()) {
 			userRepository.save(user);
 			notificationService.sendNotification(new RegistrationMessage(user));
+			logger.info("User Registration");
 			return new ResponseEntity<Void>(HttpStatus.CREATED);
 		}
 

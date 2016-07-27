@@ -82,7 +82,7 @@ public class ProcessResource {
 	@RequestMapping(value = "/state/{status}/leads", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public List<Lead> getLeadsByProcessStatus(@ApiParam(required = true) @PathVariable String status) throws StatusNotFoundException {
-		return processRepository.findByStatusAndLeadIsNotNull(Status.getStatus(status));
+		return processRepository.findByStatusAndLeadIsNotNull(Status.valueOf(status));
 	}
 
 	// TODO workaround for follow ups
@@ -91,8 +91,8 @@ public class ProcessResource {
 	@RequestMapping(value = "/state/{status}/offers", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public List<Offer> getOffersByProcessStatus(@ApiParam(required = true) @PathVariable String status) throws StatusNotFoundException {
-		List<Offer> returnedOffers = processRepository.findByStatusAndOfferIsNotNull(Status.getStatus(status));
-		if (Status.getStatus(status).equals(Status.OFFER))
+		List<Offer> returnedOffers = processRepository.findByStatusAndOfferIsNotNull(Status.valueOf(status));
+		if (Status.valueOf(status).equals(Status.OFFER))
 			returnedOffers.addAll(processRepository.findByStatusAndOfferIsNotNull(Status.FOLLOWUP));
 		return returnedOffers;
 	}
@@ -101,7 +101,7 @@ public class ProcessResource {
 	@RequestMapping(value = "/state/{status}/sales", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public List<Sale> getSalesByProcessStatus(@ApiParam(required = true) @PathVariable String status) throws StatusNotFoundException {
-		return processRepository.findByStatusAndSaleIsNotNull(Status.getStatus(status));
+		return processRepository.findByStatusAndSaleIsNotNull(Status.valueOf(status));
 	}
 
 	@ApiOperation(value = "Returns status", notes = "")
@@ -177,7 +177,7 @@ public class ProcessResource {
 	@RequestMapping(value = "/{processId}/status", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public void updateStatusByProcessId(@PathVariable Long processId, @RequestBody String status) throws ProcessNotFoundException, StatusNotFoundException {
-		processService.updateStatus(processId, Status.getStatus(status));
+		processService.updateStatus(processId, Status.valueOf(status));
 	}
 
 	@ApiOperation(value = "Returns a list of leads.", notes = "")

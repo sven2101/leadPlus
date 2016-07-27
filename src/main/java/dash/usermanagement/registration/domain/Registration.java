@@ -65,4 +65,9 @@ public class Registration {
 		this.email = email;
 	}
 
+	@Override
+	public String toString() {
+		return "Registration [username=" + username + ", password=" + password + ", email=" + email + "]";
+	}
+
 }

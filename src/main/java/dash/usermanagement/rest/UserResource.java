@@ -110,10 +110,10 @@ public class UserResource {
 	@RequestMapping(value = "/{username}/role", method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseStatus(HttpStatus.OK)
 	public void setRoleForUser(@PathVariable String username, @RequestBody String role) throws Exception {
-		final User User = userRepository.findByUsernameIgnoreCase(username);
-		if (Optional.fromNullable(User).isPresent()) {
-			User.setRole(Role.getRole(role));
-			userRepository.save(User);
+		final User user = userRepository.findByUsernameIgnoreCase(username);
+		if (Optional.fromNullable(user).isPresent()) {
+			user.setRole(Role.valueOf(role));
+			userRepository.save(user);
 		} else {
 			throw new UsernameNotFoundException("User not found.");
 		}

@@ -113,24 +113,38 @@ public class Application {
 
 			admin.setUsername("admin".toLowerCase());
 			admin.setPassword(passwordEncoder().encode("6HzRSZjmj89sQaN5!"));
-			admin.setEmail("admin@***REMOVED***.com");
+			admin.setEmail("admin@eviarc.com");
 			admin.setRole(Role.SUPERADMIN);
 			admin.setEnabled(true);
 			admin.setLanguage(Language.DE);
 
 			userRepository.save(admin);
 		}
+
 		if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("api")).isPresent()) {
 			User apiuser = new User();
 
 			apiuser.setUsername("api".toLowerCase());
 			apiuser.setPassword(passwordEncoder().encode("!APQYtDwgBtNqNY5L"));
-			apiuser.setEmail("api@***REMOVED***.com");
+			apiuser.setEmail("api@eviarc.com");
 			apiuser.setRole(Role.USER);
 			apiuser.setEnabled(true);
 			apiuser.setLanguage(Language.DE);
 
 			userRepository.save(apiuser);
+		}
+
+		if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("test")).isPresent()) {
+			User test = new User();
+
+			test.setUsername("test".toLowerCase());
+			test.setPassword(passwordEncoder().encode("test"));
+			test.setEmail("test@eviarc.com");
+			test.setRole(Role.USER);
+			test.setEnabled(true);
+			test.setLanguage(Language.DE);
+
+			userRepository.save(test);
 		}
 	}
 

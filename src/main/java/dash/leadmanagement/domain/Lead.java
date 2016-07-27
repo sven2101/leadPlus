@@ -144,4 +144,69 @@ public class Lead implements Request {
 	public void setContainer(Container container) {
 		this.container = container;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((container == null) ? 0 : container.hashCode());
+		result = prime * result + containerAmount;
+		result = prime * result + ((destination == null) ? 0 : destination.hashCode());
+		result = prime * result + ((inquirer == null) ? 0 : inquirer.hashCode());
+		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
+		result = prime * result + ((vendor == null) ? 0 : vendor.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Lead other = (Lead) obj;
+		if (container == null) {
+			if (other.container != null)
+				return false;
+		} else if (!container.equals(other.container))
+			return false;
+		if (containerAmount != other.containerAmount)
+			return false;
+		if (destination == null) {
+			if (other.destination != null)
+				return false;
+		} else if (!destination.equals(other.destination))
+			return false;
+		if (inquirer == null) {
+			if (other.inquirer != null)
+				return false;
+		} else if (!inquirer.equals(other.inquirer))
+			return false;
+		if (message == null) {
+			if (other.message != null)
+				return false;
+		} else if (!message.equals(other.message))
+			return false;
+		if (timestamp == null) {
+			if (other.timestamp != null)
+				return false;
+		} else if (!timestamp.equals(other.timestamp))
+			return false;
+		if (vendor == null) {
+			if (other.vendor != null)
+				return false;
+		} else if (!vendor.equals(other.vendor))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Lead [id=" + id + ", inquirer=" + inquirer + ", vendor=" + vendor + ", container=" + container + ", containerAmount=" + containerAmount
+				+ ", destination=" + destination + ", timestamp=" + timestamp + ", message=" + message + "]";
+	}
+
 }
