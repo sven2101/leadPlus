@@ -33,15 +33,16 @@ public class SaleService implements ISaleService {
 	private VendorRepository vendorRepository;
 
 	@Override
-	public void createSale(Sale sale) {
+	public Sale createSale(Sale sale) {
 		if (Optional.ofNullable(sale).isPresent()) {
 			Vendor vendor = vendorRepository.findByName(sale.getVendor().getName());
-			if (vendor == null) {
+			if (!Optional.ofNullable(sale).isPresent()) {
 				vendorRepository.save(sale.getVendor());
 			} else {
 				sale.setVendor(vendor);
 			}
-			saleRepository.save(sale);
+			return saleRepository.save(sale);
 		}
+		return null;
 	}
 }

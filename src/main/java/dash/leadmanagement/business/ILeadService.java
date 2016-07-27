@@ -19,7 +19,8 @@ import org.springframework.stereotype.Service;
 import dash.leadmanagement.domain.Lead;
 
 @Service
+@FunctionalInterface
 public interface ILeadService {
 
-	void createLead(Lead lead);
+	Lead createLead(Lead lead);
 }

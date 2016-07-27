@@ -74,7 +74,7 @@ public class CustomerResource {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Delete a single customer.", notes = "You have to provide a valid customer ID.")
 	public void delete(@ApiParam(required = true) @PathVariable Long id) {
 		customerRepository.delete(id);

@@ -21,9 +21,6 @@ import org.springframework.stereotype.Repository;
 import dash.processmanagement.request.RequestRepository;
 import dash.salemanagement.domain.Sale;
 
-/**
- * Created by Andreas on 08.03.2016.
- */
 @Repository
 @Transactional
 public interface SaleRepository extends RequestRepository<Sale, Long> {

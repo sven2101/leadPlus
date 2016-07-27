@@ -11,18 +11,17 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-
 package dash.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class LanguageNotFoundException extends Exception {
+public class DontMatchException extends Exception {
 
 	private static final long serialVersionUID = 5520905786207281118L;
 
-	public LanguageNotFoundException(String message) {
+	public DontMatchException(String message) {
 		super(message);
 	}
 }

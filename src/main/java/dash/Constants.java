@@ -11,18 +11,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash;
 
-package dash.exceptions;
+public final class Constants {
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class LanguageNotFoundException extends Exception {
-
-	private static final long serialVersionUID = 5520905786207281118L;
-
-	public LanguageNotFoundException(String message) {
-		super(message);
-	}
+	public static final String PROCESS_NOT_FOUND = "Process not found.";
+	public static final String USER_NOT_FOUND = "User not found.";
+	public static final String EMAIL_NOT_FOUND = "Email not found.";
+	public static final String DONT_MATCH = "Password does not match.";
 }

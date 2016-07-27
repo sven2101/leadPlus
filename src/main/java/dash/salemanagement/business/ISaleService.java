@@ -19,7 +19,8 @@ import org.springframework.stereotype.Service;
 import dash.salemanagement.domain.Sale;
 
 @Service
+@FunctionalInterface
 public interface ISaleService {
 
-	void createSale(Sale sale);
+	Sale createSale(Sale sale);
 }

@@ -20,9 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dash.containermanagement.domain.Container;
 
-/**
- * Created by Andreas on 12.10.2015.
- */
 @Repository
 @Transactional
 public interface ContainerRepository extends CrudRepository<Container, Long> {

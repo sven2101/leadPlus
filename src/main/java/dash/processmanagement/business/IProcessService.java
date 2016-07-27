@@ -24,6 +24,7 @@ import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
 import dash.salemanagement.domain.Sale;
+import dash.usermanagement.domain.User;
 
 @Service
 public interface IProcessService {
@@ -34,13 +35,16 @@ public interface IProcessService {
 
 	Process createProcess(Process process);
 
-	void createLead(Long processId, Lead lead) throws ProcessNotFoundException;
+	Lead createLead(Long processId, Lead lead) throws ProcessNotFoundException;
 
-	void createOffer(Long processId, Offer offer) throws ProcessNotFoundException;
+	Offer createOffer(Long processId, Offer offer) throws ProcessNotFoundException;
 
-	void createSale(Long processId, Sale sale) throws ProcessNotFoundException;
+	Sale createSale(Long processId, Sale sale) throws ProcessNotFoundException;
 
-	void createProcessor(Long processId, String username) throws Exception;
+	User createProcessor(Long processId, String username) throws Exception;
 
-	void updateStatus(Long processId, Status status) throws ProcessNotFoundException;
+	Status updateStatus(Long processId, Status status) throws ProcessNotFoundException;
+
+	Process updateProcess(Long processId, Process process) throws ProcessNotFoundException;
+
 }

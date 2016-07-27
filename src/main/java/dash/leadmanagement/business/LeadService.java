@@ -33,15 +33,16 @@ public class LeadService implements ILeadService {
 	private VendorRepository vendorRepository;
 
 	@Override
-	public void createLead(Lead lead) {
+	public Lead createLead(Lead lead) {
 		if (Optional.ofNullable(lead).isPresent()) {
 			Vendor vendor = vendorRepository.findByName(lead.getVendor().getName());
-			if (vendor == null) {
+			if (!Optional.ofNullable(lead).isPresent()) {
 				vendorRepository.save(lead.getVendor());
 			} else {
 				lead.setVendor(vendor);
 			}
-			leadRepository.save(lead);
+			return leadRepository.save(lead);
 		}
+		return null;
 	}
 }

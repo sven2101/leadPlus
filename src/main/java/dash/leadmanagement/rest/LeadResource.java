@@ -54,8 +54,8 @@ public class LeadResource {
 	@ApiOperation(value = "Add a single lead.", notes = "")
 	@RequestMapping(method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseStatus(HttpStatus.CREATED)
-	public void add(@ApiParam(required = true) @RequestBody @Valid Lead lead) {
-		leadService.createLead(lead);
+	public Lead add(@ApiParam(required = true) @RequestBody @Valid Lead lead) {
+		return leadService.createLead(lead);
 	}
 
 	@ApiOperation(value = "Update a single lead.", notes = "")

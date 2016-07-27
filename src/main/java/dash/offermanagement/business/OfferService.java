@@ -33,15 +33,16 @@ public class OfferService implements IOfferService {
 	private VendorRepository vendorRepository;
 
 	@Override
-	public void createOffer(Offer offer) {
+	public Offer createOffer(Offer offer) {
 		if (Optional.ofNullable(offer).isPresent()) {
 			Vendor vendor = vendorRepository.findByName(offer.getVendor().getName());
-			if (vendor == null) {
+			if (!Optional.ofNullable(vendor).isPresent()) {
 				vendorRepository.save(offer.getVendor());
 			} else {
 				offer.setVendor(vendor);
 			}
-			offerRepository.save(offer);
+			return offerRepository.save(offer);
 		}
+		return null;
 	}
 }

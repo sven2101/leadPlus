@@ -14,6 +14,9 @@
 
 package dash.commentmanagement.business;
 
+import static dash.Constants.PROCESS_NOT_FOUND;
+import static dash.Constants.USER_NOT_FOUND;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -46,17 +49,17 @@ public class CommentService implements ICommentService {
 		if (Optional.ofNullable(user).isPresent()) {
 			return commentRepository.save(comment);
 		} else {
-			throw new UsernameNotFoundException("User can't be found.");
+			throw new UsernameNotFoundException(USER_NOT_FOUND);
 		}
 	}
 
 	@Override
-	public List<Comment> findCommentsByProcess(long processId) throws Exception {
+	public List<Comment> findCommentsByProcess(long processId) throws ProcessNotFoundException {
 		final Process process = processRepository.findOne(processId);
 		if (Optional.ofNullable(process).isPresent()) {
 			return commentRepository.findByProcess(process);
 		} else {
-			throw new ProcessNotFoundException("Can't find Process.");
+			throw new ProcessNotFoundException(PROCESS_NOT_FOUND);
 		}
 	}
 

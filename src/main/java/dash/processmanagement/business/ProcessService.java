@@ -14,6 +14,9 @@
 
 package dash.processmanagement.business;
 
+import static dash.Constants.PROCESS_NOT_FOUND;
+import static dash.Constants.USER_NOT_FOUND;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -116,67 +119,90 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public void createLead(Long processId, Lead lead) throws ProcessNotFoundException {
+	public Lead createLead(Long processId, Lead lead) throws ProcessNotFoundException {
 		Process process = processRepository.findOne(processId);
+		Lead createdLead;
 		if (Optional.ofNullable(process).isPresent()) {
-			leadService.createLead(lead);
+			createdLead = leadService.createLead(lead);
 			process.setLead(lead);
 			processRepository.save(process);
 		} else {
-			throw new ProcessNotFoundException("Process not found");
+			throw new ProcessNotFoundException(PROCESS_NOT_FOUND);
 		}
+		return createdLead;
 	}
 
 	@Override
-	public void createOffer(Long processId, Offer offer) throws ProcessNotFoundException {
+	public Offer createOffer(Long processId, Offer offer) throws ProcessNotFoundException {
 		Process process = processRepository.findOne(processId);
+		Offer createdOffer;
 		if (Optional.ofNullable(process).isPresent()) {
-			offerService.createOffer(offer);
+			createdOffer = offerService.createOffer(offer);
 			process.setOffer(offer);
 			processRepository.save(process);
 		} else {
-			throw new ProcessNotFoundException("Process not found");
+			throw new ProcessNotFoundException(PROCESS_NOT_FOUND);
 		}
+		return createdOffer;
 	}
 
 	@Override
-	public void createSale(Long processId, Sale sale) throws ProcessNotFoundException {
+	public Sale createSale(Long processId, Sale sale) throws ProcessNotFoundException {
 		Process process = processRepository.findOne(processId);
+		Sale createdSale;
 		if (Optional.ofNullable(process).isPresent()) {
-			saleService.createSale(sale);
+			createdSale = saleService.createSale(sale);
 			process.setSale(sale);
 			processRepository.save(process);
 		} else {
-			throw new ProcessNotFoundException("Process not found");
+			throw new ProcessNotFoundException(PROCESS_NOT_FOUND);
 		}
+		return createdSale;
 	}
 
 	@Override
-	public void createProcessor(Long processId, String username) throws Exception {
+	public User createProcessor(Long processId, String username) throws Exception {
 		Process process = processRepository.findOne(processId);
 		final User processor = userRepository.findByUsernameIgnoreCase(username);
 		if (!Optional.ofNullable(process).isPresent())
-			throw new ProcessNotFoundException("Process not found");
+			throw new ProcessNotFoundException(PROCESS_NOT_FOUND);
 		if (!Optional.ofNullable(processor).isPresent())
-			throw new UsernameNotFoundException("User not found");
+			throw new UsernameNotFoundException(USER_NOT_FOUND);
 		if (!Optional.ofNullable(process.getProcessor()).isPresent()) {
 			process.setProcessor(processor);
 			processRepository.save(process);
 		}
-
+		return processor;
 	}
 
 	@Override
-	public void updateStatus(Long processId, Status status) throws ProcessNotFoundException {
+	public Status updateStatus(Long processId, Status status) throws ProcessNotFoundException {
 		Process process = processRepository.findOne(processId);
-
 		if (Optional.ofNullable(process).isPresent()) {
 			process.setStatus(status);
 			processRepository.save(process);
-
 		} else {
-			throw new ProcessNotFoundException("Process not found");
+			throw new ProcessNotFoundException(PROCESS_NOT_FOUND);
 		}
+
+		return status;
+	}
+
+	@Override
+	public Process updateProcess(Long processId, Process updateProcess) throws ProcessNotFoundException {
+
+		Process process = processRepository.findOne(processId);
+		if (Optional.ofNullable(process).isPresent()) {
+			process.setLead(updateProcess.getLead());
+			process.setOffer(updateProcess.getOffer());
+			process.setSale(updateProcess.getSale());
+			process.setStatus(updateProcess.getStatus());
+			process.setProcessor(updateProcess.getProcessor());
+			return processRepository.save(process);
+		} else {
+			throw new ProcessNotFoundException(PROCESS_NOT_FOUND);
+		}
+
 	}
 
 }
