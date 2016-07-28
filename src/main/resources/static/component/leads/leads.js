@@ -20,7 +20,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster,
     var vm = this;
     this.filter = $filter;
     this.processesService = Processes;
-    this.commentsService = Comments;
+    this.commentService = Comments;
     this.userService = Profile;
     this.user = {};
     this.windowWidth = $(window).width();
@@ -291,7 +291,7 @@ LeadsCtrl.prototype.appendChildRow = function (process, event) {
     var childScope = this.scope.$new(true);
     childScope.childData = process;
     var vm = this;
-    this.commentsService.getComments({id: process.id}).$promise.then(function (result) {
+    this.commentService.getComments({id: process.id}).$promise.then(function (result) {
         vm.comments[process.id] = [];
         for (var comment in result) {
             if (comment == '$promise')
