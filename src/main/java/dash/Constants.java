@@ -20,6 +20,9 @@ public final class Constants {
 	public static final String EMAIL_NOT_FOUND = "Email not found. ";
 	public static final String DONT_MATCH = "Password does not match. ";
 	public static final String VENDOR_NOT_FOUND = "Vendor not found. ";
+	public static final String SAVE_FAILED_EXCEPTION = "Save failed Exception. ";
+	public static final String UPDATE_FAILED_EXCEPTION = "Update failed Exception. ";
+	public static final String DELETE_FAILED_EXCEPTION = "Delete failed Exception. ";
 
 	public static final String BECAUSE_OF_OBJECT_IS_NULL = " BECAUSE OF OBJECT IS NULL ";
 	public static final String BECAUSE_OF_ILLEGAL_ID = " BECAUSE OF ILLEGAL ID ";

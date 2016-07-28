@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import dash.exceptions.UpdateFailedException;
 import dash.exceptions.VendorNotFoundException;
 import dash.vendormanagement.domain.Vendor;
 
@@ -37,7 +38,7 @@ public class VendorService implements IVendorService {
 	private VendorRepository vendorRepository;
 
 	@Override
-	public Vendor update(Vendor vendor) throws VendorNotFoundException {
+	public Vendor update(Vendor vendor) throws UpdateFailedException {
 		if (Optional.ofNullable(vendor).isPresent()) {
 			Vendor updateVendor;
 			try {
@@ -47,7 +48,7 @@ public class VendorService implements IVendorService {
 				return vendorRepository.save(updateVendor);
 			} catch (IllegalArgumentException iaex) {
 				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
-				throw new VendorNotFoundException(VENDOR_NOT_FOUND);
+				throw UpdateFailedException(VENDOR_NOT_FOUND);
 			}
 		} else {
 			VendorNotFoundException vnfex = new VendorNotFoundException(VENDOR_NOT_FOUND);
