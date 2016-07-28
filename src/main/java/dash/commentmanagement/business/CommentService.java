@@ -45,6 +45,8 @@ public class CommentService implements ICommentService {
 
 	@Override
 	public Comment createComment(Comment comment) throws UsernameNotFoundException {
+		if(comment == null || (comment == null && comment.getCreator() == null))
+			return null;
 		final User user = userRepository.findOne(comment.getCreator().getId());
 		if (Optional.ofNullable(user).isPresent()) {
 			return commentRepository.save(comment);
