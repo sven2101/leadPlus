@@ -39,28 +39,28 @@ public class VendorResource {
 	@Autowired
 	private IVendorService vendorService;
 
-	@ApiOperation(value = "Returns all vendors")
+	@ApiOperation(value = "Returns all vendors.")
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public Iterable<Vendor> getAll() {
 		return vendorService.getAll();
 	}
 
-	@ApiOperation(value = "Returns by specific vendor")
+	@ApiOperation(value = "Returns a specific vendor.")
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Vendor getById(@ApiParam(required = true) @PathVariable Long id) {
+	public Vendor getById(@ApiParam(required = true) @PathVariable Long id) throws VendorNotFoundException {
 		return vendorService.getById(id);
 	}
 
-	@ApiOperation(value = "Adds Vendor")
+	@ApiOperation(value = "Adds Vendor.")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Vendor add(@ApiParam(required = true) @RequestBody final Vendor vendor) {
+	public Vendor add(@ApiParam(required = true) @RequestBody final Vendor vendor) throws VendorNotFoundException {
 		return vendorService.save(vendor);
 	}
 
-	@ApiOperation(value = "Update Vendor")
+	@ApiOperation(value = "Update Vendor.")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public Vendor update(@ApiParam(required = true) @RequestBody final Vendor vendor) throws VendorNotFoundException {
@@ -70,7 +70,7 @@ public class VendorResource {
 	@ApiOperation(value = "Delete a single vendor.", notes = "You have to provide a valid vendor ID.")
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteById(@ApiParam(required = true) @PathVariable Long id) {
-		vendorRepository.delete(id);
+	public void deleteById(@ApiParam(required = true) @PathVariable Long id) throws VendorNotFoundException {
+		vendorService.delete(id);
 	}
 }

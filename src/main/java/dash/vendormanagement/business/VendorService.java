@@ -22,6 +22,7 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.VendorNotFoundException;
@@ -61,12 +62,18 @@ public class VendorService implements IVendorService {
 	}
 
 	@Override
-	public Vendor getById(Long id) throws VendorNotFoundException {
-		try {
-			return vendorRepository.findOne(id);
-		} catch (IllegalArgumentException iaex) {
-			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
-			throw new VendorNotFoundException(VENDOR_NOT_FOUND);
+	public Vendor getById(final Long id) throws VendorNotFoundException {
+		if (Optional.ofNullable(id).isPresent()) {
+			try {
+				return vendorRepository.findOne(id);
+			} catch (Exception ex) {
+				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
+				throw new VendorNotFoundException(VENDOR_NOT_FOUND);
+			}
+		} else {
+			VendorNotFoundException vnfex = new VendorNotFoundException(VENDOR_NOT_FOUND);
+			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, vnfex);
+			throw vnfex;
 		}
 	}
 
@@ -75,9 +82,9 @@ public class VendorService implements IVendorService {
 		if (Optional.ofNullable(vendor).isPresent()) {
 			try {
 				return vendorRepository.save(vendor);
-			} catch (IllegalArgumentException iaex) {
-				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
-				throw new VendorNotFoundException(VENDOR_NOT_FOUND);
+			} catch (Exception ex) {
+				logger.error(VendorService.class.getSimpleName() + ex.getMessage(), ex);
+				return null;
 			}
 		} else {
 			VendorNotFoundException vnfex = new VendorNotFoundException(VENDOR_NOT_FOUND);
@@ -87,12 +94,12 @@ public class VendorService implements IVendorService {
 	}
 
 	@Override
-	public void delete(Vendor vendor) throws VendorNotFoundException {
-		if (Optional.ofNullable(vendor).isPresent()) {
+	public void delete(final Long id) throws VendorNotFoundException {
+		if (Optional.ofNullable(id).isPresent()) {
 			try {
-				vendorRepository.delete(vendor);
-			} catch (IllegalArgumentException iaex) {
-				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
+				vendorRepository.delete(id);
+			} catch (EmptyResultDataAccessException erdaex) {
+				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + erdaex.getMessage(), erdaex);
 				throw new VendorNotFoundException(VENDOR_NOT_FOUND);
 			}
 		} else {

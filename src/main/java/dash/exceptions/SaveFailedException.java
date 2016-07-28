@@ -11,25 +11,18 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.vendormanagement.business;
 
-import java.util.List;
+package dash.exceptions;
 
-import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import dash.exceptions.VendorNotFoundException;
-import dash.vendormanagement.domain.Vendor;
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class SaveFailedException extends Exception {
 
-@Service
-public interface IVendorService {
+	private static final long serialVersionUID = 5520905786207281118L;
 
-	public List<Vendor> getAll();
-
-	public Vendor getById(final Long id) throws VendorNotFoundException;
-
-	public Vendor save(final Vendor vendor) throws VendorNotFoundException;
-
-	public Vendor update(final Vendor vendor) throws VendorNotFoundException;
-
-	public void delete(final Long id) throws VendorNotFoundException;
+	public SaveFailedException(String message) {
+		super(message);
+	}
 }
