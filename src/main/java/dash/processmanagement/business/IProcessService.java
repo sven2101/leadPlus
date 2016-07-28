@@ -19,6 +19,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
@@ -29,22 +30,22 @@ import dash.usermanagement.domain.User;
 @Service
 public interface IProcessService {
 
-	List<?> getElementsByStatus(Status status, String kind);
+	public List<?> getElementsByStatus(Status status, String kind);
 
-	void createProcesses(List<Process> processes);
+	public void createProcesses(List<Process> processes) throws SaveFailedException;
 
-	Process createProcess(Process process);
+	public Process createProcess(final Process process) throws SaveFailedException;
 
-	Lead createLead(Long processId, Lead lead) throws NotFoundException;
+	public Lead createLead(Long processId, Lead lead) throws NotFoundException;
 
-	Offer createOffer(Long processId, Offer offer) throws NotFoundException;
+	public Offer createOffer(Long processId, Offer offer) throws NotFoundException;
 
-	Sale createSale(Long processId, Sale sale) throws NotFoundException;
+	public Sale createSale(Long processId, Sale sale) throws NotFoundException;
 
-	User createProcessor(Long processId, String username) throws Exception;
+	public User createProcessor(Long processId, String username) throws Exception;
 
-	Status updateStatus(Long processId, Status status) throws NotFoundException;
+	public Status updateStatus(Long processId, Status status) throws NotFoundException;
 
-	Process updateProcess(Long processId, Process process) throws NotFoundException;
+	public Process updateProcess(final Process process) throws NotFoundException;
 
 }

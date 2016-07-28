@@ -45,6 +45,13 @@ public class OfferResource {
 	@Autowired
 	private IOfferService offerService;
 
+	@ApiOperation(value = "Returns all offers.")
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public List<Offer> getAll() {
+		return offerService.getAll();
+	}
+
 	@ApiOperation(value = "Return a single offer.", notes = "")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -52,16 +59,9 @@ public class OfferResource {
 		return offerService.getOfferById(id);
 	}
 
-	@ApiOperation(value = "Return all offers.", notes = "")
-	@RequestMapping(method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
-	public List<Offer> getAll() {
-		return offerService.getAll();
-	}
-
 	@ApiOperation(value = "Update a single offer.", notes = "")
 	@RequestMapping(method = RequestMethod.PUT)
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(HttpStatus.OK)
 	public Offer update(@ApiParam(required = true) @RequestBody @Valid final Offer offer) throws UpdateFailedException {
 		return offerService.update(offer);
 	}

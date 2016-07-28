@@ -61,7 +61,7 @@ public class VendorResource {
 	@ApiOperation(value = "Adds Vendor.")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Vendor add(@ApiParam(required = true) @RequestBody final Vendor vendor) throws SaveFailedException {
+	public Vendor save(@ApiParam(required = true) @RequestBody final Vendor vendor) throws SaveFailedException {
 		return vendorService.save(vendor);
 	}
 

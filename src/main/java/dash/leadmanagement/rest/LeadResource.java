@@ -14,6 +14,8 @@
 
 package dash.leadmanagement.rest;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,74 +28,56 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.exceptions.DeleteFailedException;
+import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.business.ILeadService;
-import dash.leadmanagement.business.LeadRepository;
 import dash.leadmanagement.domain.Lead;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping("/api/rest/processes/leads")
-@Api(value = "leads", description = "Lead API")
+@RequestMapping(value = "/api/rest/processes/leads", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@ResponseStatus(HttpStatus.CREATED)
+@Api(value = "leads")
 public class LeadResource {
-
-	@Autowired
-	private LeadRepository leadRepository;
 
 	@Autowired
 	private ILeadService leadService;
 
+	@ApiOperation(value = "Returns all leads.")
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public List<Lead> getAll() {
+		return leadService.getAll();
+	}
+
 	@ApiOperation(value = "Return a single lead.", notes = "")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Lead getLeadById(@ApiParam(required = true) @PathVariable Long id) {
-		return leadRepository.findOne(id);
+	public Lead getLeadById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
+		return leadService.getLeadById(id);
 	}
 
 	@ApiOperation(value = "Add a single lead.", notes = "")
-	@RequestMapping(method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-	@ResponseStatus(HttpStatus.CREATED)
-	public Lead add(@ApiParam(required = true) @RequestBody @Valid Lead lead) {
-		return leadService.createLead(lead);
+	@RequestMapping(method = RequestMethod.POST)
+	public Lead save(@ApiParam(required = true) @RequestBody @Valid final Lead lead) throws SaveFailedException {
+		return leadService.save(lead);
 	}
 
 	@ApiOperation(value = "Update a single lead.", notes = "")
-	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Lead update(@ApiParam(required = true) @PathVariable Long id, @ApiParam(required = true) @RequestBody @Valid Lead updateLead) {
-		Lead lead = leadRepository.findOne(id);
-
-		//set inquirer datas
-		lead.getInquirer().setFirstname(updateLead.getInquirer().getFirstname());
-		lead.getInquirer().setLastname(updateLead.getInquirer().getLastname());
-		lead.getInquirer().setCompany(updateLead.getInquirer().getCompany());
-		lead.getInquirer().setEmail(updateLead.getInquirer().getEmail());
-		lead.getInquirer().setPhone(updateLead.getInquirer().getPhone());
-		lead.getInquirer().setTitle(updateLead.getInquirer().getTitle());
-
-		//set vendor datas
-		lead.getVendor().setName(updateLead.getVendor().getName());
-		lead.getVendor().setPhone(updateLead.getVendor().getPhone());
-
-		//set container datas
-		lead.getContainer().setName(updateLead.getContainer().getName());
-		lead.getContainer().setDescription(updateLead.getContainer().getDescription());
-		lead.getContainer().setPriceNetto(updateLead.getContainer().getPriceNetto());
-
-		//set main data
-		lead.setTimestamp(updateLead.getTimestamp());
-		lead.setContainerAmount(updateLead.getContainerAmount());
-		lead.setDestination(updateLead.getDestination());
-		lead.setMessage(updateLead.getMessage());
-		return leadRepository.save(lead);
+	public Lead update(@ApiParam(required = true) @RequestBody @Valid final Lead lead) throws UpdateFailedException {
+		return leadService.update(lead);
 	}
 
 	@ApiOperation(value = "Delete a single Lead.", notes = "")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void delete(@ApiParam(required = true) @PathVariable Long id) {
-		leadRepository.delete(id);
+	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
+		leadService.delete(id);
 	}
 }

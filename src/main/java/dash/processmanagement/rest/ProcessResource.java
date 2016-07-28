@@ -32,8 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.exceptions.ProcessNotFoundException;
-import dash.exceptions.StatusNotFoundException;
+import dash.exceptions.NotFoundException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.business.IProcessService;
@@ -47,7 +46,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping("/api/rest/processes")
+@RequestMapping(value = "/api/rest/processes", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Process API")
 public class ProcessResource {
 
@@ -81,7 +80,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns list of leads, which are related to a process status.", notes = "")
 	@RequestMapping(value = "/state/{status}/leads", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Lead> getLeadsByProcessStatus(@ApiParam(required = true) @PathVariable String status) throws StatusNotFoundException {
+	public List<Lead> getLeadsByProcessStatus(@ApiParam(required = true) @PathVariable String status) throws NotFoundException {
 		return processRepository.findByStatusAndLeadIsNotNull(Status.valueOf(status));
 	}
 
@@ -90,7 +89,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns list of offers, which are related to a process status.", notes = "")
 	@RequestMapping(value = "/state/{status}/offers", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Offer> getOffersByProcessStatus(@ApiParam(required = true) @PathVariable String status) throws StatusNotFoundException {
+	public List<Offer> getOffersByProcessStatus(@ApiParam(required = true) @PathVariable String status) throws NotFoundException {
 		List<Offer> returnedOffers = processRepository.findByStatusAndOfferIsNotNull(Status.valueOf(status));
 		if (Status.valueOf(status).equals(Status.OFFER))
 			returnedOffers.addAll(processRepository.findByStatusAndOfferIsNotNull(Status.FOLLOWUP));
@@ -100,7 +99,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns list of sales, which are related to a process status.", notes = "")
 	@RequestMapping(value = "/state/{status}/sales", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Sale> getSalesByProcessStatus(@ApiParam(required = true) @PathVariable final Status status) throws StatusNotFoundException {
+	public List<Sale> getSalesByProcessStatus(@ApiParam(required = true) @PathVariable final Status status) throws NotFoundException {
 		return processRepository.findByStatusAndSaleIsNotNull(status);
 	}
 
@@ -112,12 +111,10 @@ public class ProcessResource {
 	}
 
 	@ApiOperation(value = "Update a single process.", notes = "")
-	@RequestMapping(value = "/{processId}", method = RequestMethod.PUT, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Process update(@ApiParam(required = true) @PathVariable Long processId, @ApiParam(required = true) @RequestBody final Process updateProcess)
-			throws ProcessNotFoundException {
-		return processService.updateProcess(processId, updateProcess);
+	public Process update(@ApiParam(required = true) @RequestBody @Valid final Process updateProcess) throws NotFoundException {
+		return processService.updateProcess(updateProcess);
 	}
 
 	@ApiOperation(value = "Returns processor.", notes = "")
@@ -167,7 +164,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Modifie status.", notes = "")
 	@RequestMapping(value = "/{processId}/status", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public void updateStatusByProcessId(@PathVariable Long processId, @RequestBody String status) throws ProcessNotFoundException, StatusNotFoundException {
+	public void updateStatusByProcessId(@PathVariable Long processId, @RequestBody String status) throws NotFoundException {
 		processService.updateStatus(processId, Status.valueOf(status));
 	}
 
@@ -215,7 +212,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a single lead.", notes = "")
 	@RequestMapping(value = "/{processId}/leads", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Lead createLeadByProcess(@PathVariable Long processId, @RequestBody @Valid final Lead lead) throws ProcessNotFoundException {
+	public Lead createLeadByProcess(@PathVariable Long processId, @RequestBody @Valid final Lead lead) throws NotFoundException {
 		return processService.createLead(processId, lead);
 	}
 
@@ -263,7 +260,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a single offer.", notes = "")
 	@RequestMapping(value = "/{processId}/offers", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Offer createOfferByProcess(@PathVariable Long processId, @RequestBody @Valid final Offer offer) throws ProcessNotFoundException {
+	public Offer createOfferByProcess(@PathVariable Long processId, @RequestBody @Valid final Offer offer) throws NotFoundException {
 		return processService.createOffer(processId, offer);
 	}
 
@@ -326,7 +323,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a single sale.", notes = "")
 	@RequestMapping(value = "/{processId}/sales", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Sale createSaleByProcess(@PathVariable Long processId, @RequestBody @Valid final Sale sale) throws ProcessNotFoundException {
+	public Sale createSaleByProcess(@PathVariable Long processId, @RequestBody @Valid final Sale sale) throws NotFoundException {
 		return processService.createSale(processId, sale);
 	}
 }

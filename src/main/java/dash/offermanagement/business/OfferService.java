@@ -34,12 +34,11 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.offermanagement.domain.Offer;
-import dash.salemanagement.business.SaleService;
 
 @Service
 public class OfferService implements IOfferService {
 
-	private static final Logger logger = Logger.getLogger(SaleService.class);
+	private static final Logger logger = Logger.getLogger(OfferService.class);
 
 	@Autowired
 	private OfferRepository offerRepository;
@@ -121,6 +120,5 @@ public class OfferService implements IOfferService {
 			logger.error(OFFER_NOT_FOUND + OfferService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
 			throw dfex;
 		}
-
 	}
 }
