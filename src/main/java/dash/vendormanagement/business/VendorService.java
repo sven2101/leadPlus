@@ -45,12 +45,12 @@ public class VendorService implements IVendorService {
 				updateVendor.setPhone(vendor.getPhone());
 				return vendorRepository.save(updateVendor);
 			} catch (IllegalArgumentException iaex) {
-				logger.error(VENDOR_NOT_FOUND + " IN " + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
+				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
 				throw new VendorNotFoundException(VENDOR_NOT_FOUND);
 			}
 		} else {
 			VendorNotFoundException vnfex = new VendorNotFoundException(VENDOR_NOT_FOUND);
-			logger.error(VENDOR_NOT_FOUND + " IN " + VendorService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, vnfex);
+			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, vnfex);
 			throw vnfex;
 		}
 	}
@@ -65,7 +65,7 @@ public class VendorService implements IVendorService {
 		try {
 			return vendorRepository.findOne(id);
 		} catch (IllegalArgumentException iaex) {
-			logger.error(VENDOR_NOT_FOUND + " IN " + VendorService.class.getSimpleName() + " BECAUSE OF ILLEGAL ID", iaex);
+			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
 			throw new VendorNotFoundException(VENDOR_NOT_FOUND);
 		}
 	}
@@ -76,12 +76,12 @@ public class VendorService implements IVendorService {
 			try {
 				return vendorRepository.save(vendor);
 			} catch (IllegalArgumentException iaex) {
-				logger.error(VENDOR_NOT_FOUND + " IN " + VendorService.class.getSimpleName() + " BECAUSE OF ILLEGAL ID", iaex);
+				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
 				throw new VendorNotFoundException(VENDOR_NOT_FOUND);
 			}
 		} else {
 			VendorNotFoundException vnfex = new VendorNotFoundException(VENDOR_NOT_FOUND);
-			logger.error(VENDOR_NOT_FOUND + " IN " + VendorService.class.getSimpleName() + " BECAUSE OF OBJECT IS NULL", vnfex);
+			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, vnfex);
 			throw vnfex;
 		}
 	}
@@ -92,12 +92,12 @@ public class VendorService implements IVendorService {
 			try {
 				vendorRepository.delete(vendor);
 			} catch (IllegalArgumentException iaex) {
-				logger.error(VENDOR_NOT_FOUND + " IN " + VendorService.class.getSimpleName() + " BECAUSE OF ILLEGAL ID", iaex);
+				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
 				throw new VendorNotFoundException(VENDOR_NOT_FOUND);
 			}
 		} else {
 			VendorNotFoundException vnfex = new VendorNotFoundException(VENDOR_NOT_FOUND);
-			logger.error(VENDOR_NOT_FOUND + " IN " + VendorService.class.getSimpleName() + " BECAUSE OF OBJECT IS NULL", vnfex);
+			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, vnfex);
 			throw vnfex;
 		}
 	}
