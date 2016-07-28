@@ -11,13 +11,29 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-
 package dash.customermanagement.business;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
 
 import dash.customermanagement.domain.Customer;
+import dash.exceptions.DeleteFailedException;
+import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
 
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
+@Service
+public interface ICustomerService {
+
+	public List<Customer> getAll();
+
+	public Customer getCustomerById(final Long id) throws NotFoundException;
+
+	public Customer save(final Customer inquirer) throws SaveFailedException;
+
+	public Customer update(final Customer inquirer) throws UpdateFailedException;
+
+	public void delete(final Long id) throws DeleteFailedException;
 
 }

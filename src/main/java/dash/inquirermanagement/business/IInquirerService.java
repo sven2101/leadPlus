@@ -11,15 +11,29 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-
 package dash.inquirermanagement.business;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+import dash.exceptions.DeleteFailedException;
+import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
 import dash.inquirermanagement.domain.Inquirer;
 
-@Repository
-public interface InquirerRepository extends JpaRepository<Inquirer, Long> {
+@Service
+public interface IInquirerService {
+
+	public List<Inquirer> getAll();
+
+	public Inquirer getInquirerById(final Long id) throws NotFoundException;
+
+	public Inquirer save(final Inquirer inquirer) throws SaveFailedException;
+
+	public Inquirer update(final Inquirer inquirer) throws UpdateFailedException;
+
+	public void delete(final Long id) throws DeleteFailedException;
 
 }

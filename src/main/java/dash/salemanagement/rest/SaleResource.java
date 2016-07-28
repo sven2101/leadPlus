@@ -14,6 +14,8 @@
 
 package dash.salemanagement.rest;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,13 @@ public class SaleResource {
 	@Autowired
 	private ISaleService saleService;
 
+	@ApiOperation(value = "Returns all sales.")
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public List<Sale> getAll() {
+		return saleService.getAll();
+	}
+
 	@ApiOperation(value = "Return a single sale.", notes = "")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -52,7 +61,7 @@ public class SaleResource {
 
 	@ApiOperation(value = "Update a single sale.", notes = "")
 	@RequestMapping(method = RequestMethod.PUT)
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(HttpStatus.OK)
 	public Sale update(@ApiParam(required = true) @RequestBody @Valid final Sale sale) throws UpdateFailedException {
 		return saleService.update(sale);
 	}

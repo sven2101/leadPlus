@@ -11,13 +11,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-
-package dash.leadmanagement.business;
+package dash.inquirermanagement.business;
 
 import static dash.Constants.BECAUSE_OF_ILLEGAL_ID;
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.DELETE_FAILED_EXCEPTION;
-import static dash.Constants.LEAD_NOT_FOUND;
+import static dash.Constants.INQUIRER_NOT_FOUND;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 
@@ -27,80 +26,77 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Service;
 
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
-import dash.leadmanagement.domain.Lead;
+import dash.inquirermanagement.domain.Inquirer;
 
-@Service
-public class LeadService implements ILeadService {
+public class InquirerService implements IInquirerService {
 
-	private static final Logger logger = Logger.getLogger(LeadService.class);
+	private static final Logger logger = Logger.getLogger(InquirerService.class);
 
 	@Autowired
-	private LeadRepository leadRepository;
+	private InquirerRepository inquirerRepository;
 
 	@Override
-	public List<Lead> getAll() {
-		return leadRepository.findAll();
+	public List<Inquirer> getAll() {
+		return inquirerRepository.findAll();
 	}
 
 	@Override
-	public Lead getLeadById(final Long id) throws NotFoundException {
+	public Inquirer getInquirerById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
-				return leadRepository.findOne(id);
+				return inquirerRepository.findOne(id);
 			} catch (Exception ex) {
-				logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
-				throw new NotFoundException(LEAD_NOT_FOUND);
+				logger.error(INQUIRER_NOT_FOUND + InquirerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
+				throw new NotFoundException(INQUIRER_NOT_FOUND);
 			}
 		} else {
-			NotFoundException nfex = new NotFoundException(LEAD_NOT_FOUND);
-			logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
+			NotFoundException nfex = new NotFoundException(INQUIRER_NOT_FOUND);
+			logger.error(INQUIRER_NOT_FOUND + InquirerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
 			throw nfex;
 		}
 	}
 
 	@Override
-	public Lead save(final Lead lead) throws SaveFailedException {
-		if (Optional.ofNullable(lead).isPresent()) {
+	public Inquirer save(final Inquirer inquirer) throws SaveFailedException {
+		if (Optional.ofNullable(inquirer).isPresent()) {
 			try {
-				return leadRepository.save(lead);
+				return inquirerRepository.save(inquirer);
 			} catch (Exception ex) {
-				logger.error(LeadService.class.getSimpleName() + ex.getMessage(), ex);
+				logger.error(InquirerService.class.getSimpleName() + ex.getMessage(), ex);
 				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			}
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
+			logger.error(INQUIRER_NOT_FOUND + InquirerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
 			throw sfex;
 		}
 	}
 
 	@Override
-	public Lead update(final Lead lead) throws UpdateFailedException {
-		if (Optional.ofNullable(lead).isPresent()) {
-			Lead updateLead;
+	public Inquirer update(final Inquirer inquirer) throws UpdateFailedException {
+		if (Optional.ofNullable(inquirer).isPresent()) {
+			Inquirer updateInquirer;
 			try {
-				updateLead = leadRepository.findOne(lead.getId());
-				updateLead.setContainer(lead.getContainer());
-				updateLead.setContainerAmount(lead.getContainerAmount());
-				updateLead.setDestination(lead.getDestination());
-				updateLead.setInquirer(lead.getInquirer());
-				updateLead.setMessage(lead.getMessage());
-				updateLead.setTimestamp(lead.getTimestamp());
-				updateLead.setVendor(lead.getVendor());
-				return leadRepository.save(updateLead);
+				updateInquirer = inquirerRepository.findOne(inquirer.getId());
+				updateInquirer.setCompany(inquirer.getCompany());
+				updateInquirer.setEmail(inquirer.getEmail());
+				updateInquirer.setFirstname(inquirer.getFirstname());
+				updateInquirer.setLastname(inquirer.getLastname());
+				updateInquirer.setPhone(inquirer.getPhone());
+				updateInquirer.setTitle(inquirer.getTitle());
+				return inquirerRepository.save(updateInquirer);
 			} catch (IllegalArgumentException iaex) {
-				logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
+				logger.error(INQUIRER_NOT_FOUND + InquirerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			logger.error(INQUIRER_NOT_FOUND + InquirerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
 			throw ufex;
 		}
 	}
@@ -109,15 +105,16 @@ public class LeadService implements ILeadService {
 	public void delete(final Long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
-				leadRepository.delete(id);
+				inquirerRepository.delete(id);
 			} catch (EmptyResultDataAccessException erdaex) {
-				logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + erdaex.getMessage(), erdaex);
+				logger.error(INQUIRER_NOT_FOUND + InquirerService.class.getSimpleName() + erdaex.getMessage(), erdaex);
 				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
 			}
 		} else {
 			DeleteFailedException dfex = new DeleteFailedException(DELETE_FAILED_EXCEPTION);
-			logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
+			logger.error(INQUIRER_NOT_FOUND + InquirerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
 			throw dfex;
 		}
 	}
+
 }
