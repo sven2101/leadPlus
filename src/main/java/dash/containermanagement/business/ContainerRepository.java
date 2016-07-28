@@ -14,7 +14,7 @@
 
 package dash.containermanagement.business;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +22,6 @@ import dash.containermanagement.domain.Container;
 
 @Repository
 @Transactional
-public interface ContainerRepository extends CrudRepository<Container, Long> {
+public interface ContainerRepository extends JpaRepository<Container, Long> {
 	Container findByName(String name);
 }

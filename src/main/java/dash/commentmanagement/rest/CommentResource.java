@@ -39,14 +39,15 @@ import io.swagger.annotations.ApiParam;
  */
 
 @RestController
-@RequestMapping("/api/rest/comments")
+@RequestMapping(value = "/api/rest/comments", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+		MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Comment API")
 public class CommentResource {
 
 	@Autowired
 	private ICommentService commentService;
 
-	@RequestMapping(value = "/processes/{processId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = "/processes/{processId}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get all Comments for one specific process", notes = ".")
 	public List<Comment> get(@ApiParam(required = true) @PathVariable long processId) throws Exception {
@@ -57,6 +58,6 @@ public class CommentResource {
 	@RequestMapping(value = "/processes", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Comment createComment(@ApiParam(required = true) @RequestBody @Valid Comment comment) throws Exception {
-		return commentService.createComment(comment);
+		return commentService.saveComment(comment);
 	}
 }

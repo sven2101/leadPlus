@@ -16,16 +16,16 @@ package dash.commentmanagement.business;
 
 import java.util.List;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import dash.commentmanagement.domain.Comment;
-import dash.exceptions.ProcessNotFoundException;
+import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
 
 @Service
 public interface ICommentService {
 
-	Comment createComment(Comment comment) throws UsernameNotFoundException;
+	Comment saveComment(final Comment comment) throws SaveFailedException;
 
-	List<Comment> findCommentsByProcess(long processId) throws ProcessNotFoundException;
+	List<Comment> findCommentsByProcess(final long processId) throws NotFoundException;
 }
