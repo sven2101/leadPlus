@@ -21,13 +21,9 @@ import static dash.Constants.USER_NOT_FOUND;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import dash.exceptions.DontMatchException;
 import dash.exceptions.EmailNotFoundException;
@@ -36,26 +32,13 @@ import dash.usermanagement.domain.User;
 import dash.usermanagement.settings.password.PasswordChange;
 
 @Service
-@Transactional
-public class UserService implements UserDetailsService {
+public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-		User user = userRepository.findByUsernameIgnoreCase(username);
-
-		if (!Optional.ofNullable(user).isPresent() || !user.getEnabled())
-			throw new UsernameNotFoundException(USER_NOT_FOUND + username);
-
-		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-				AuthorityUtils.createAuthorityList(user.getRole().toString()));
-	}
 
 	public User updateUser(String username, User updateUser) throws Exception {
 		User user = userRepository.findByUsernameIgnoreCase(username);
