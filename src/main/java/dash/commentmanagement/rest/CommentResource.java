@@ -56,7 +56,7 @@ public class CommentResource {
 	@ApiOperation(value = "Creates a comment.", notes = "")
 	@RequestMapping(value = "/processes", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Comment createProcess(@ApiParam(required = true) @RequestBody @Valid Comment comment) throws Exception {
+	public Comment createComment(@ApiParam(required = true) @RequestBody @Valid Comment comment) throws Exception {
 		return commentService.createComment(comment);
 	}
 }

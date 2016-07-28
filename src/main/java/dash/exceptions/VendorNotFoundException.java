@@ -11,17 +11,18 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash;
 
-public final class Constants {
+package dash.exceptions;
 
-	public static final String PROCESS_NOT_FOUND = "Process not found.";
-	public static final String USER_NOT_FOUND = "User not found.";
-	public static final String EMAIL_NOT_FOUND = "Email not found.";
-	public static final String DONT_MATCH = "Password does not match.";
-	public static final String VENDOR_NOT_FOUND = "Vendor not found.";
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-	public static final String BECAUSE_OF_OBJECT_IS_NULL = " BECAUSE OF OBJECT IS NULL";
-	public static final String BECAUSE_OF_ILLEGAL_ID = " BECAUSE OF ILLEGAL ID";
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class VendorNotFoundException extends Exception {
 
+	private static final long serialVersionUID = 5520905786207281118L;
+
+	public VendorNotFoundException(String message) {
+		super(message);
+	}
 }

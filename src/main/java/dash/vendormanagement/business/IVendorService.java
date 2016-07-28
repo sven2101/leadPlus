@@ -11,17 +11,25 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash;
+package dash.vendormanagement.business;
 
-public final class Constants {
+import java.util.List;
 
-	public static final String PROCESS_NOT_FOUND = "Process not found.";
-	public static final String USER_NOT_FOUND = "User not found.";
-	public static final String EMAIL_NOT_FOUND = "Email not found.";
-	public static final String DONT_MATCH = "Password does not match.";
-	public static final String VENDOR_NOT_FOUND = "Vendor not found.";
+import org.springframework.stereotype.Service;
 
-	public static final String BECAUSE_OF_OBJECT_IS_NULL = " BECAUSE OF OBJECT IS NULL";
-	public static final String BECAUSE_OF_ILLEGAL_ID = " BECAUSE OF ILLEGAL ID";
+import dash.exceptions.VendorNotFoundException;
+import dash.vendormanagement.domain.Vendor;
 
+@Service
+public interface IVendorService {
+
+	public List<Vendor> getAll();
+
+	public Vendor getById(Long id) throws VendorNotFoundException;
+
+	public Vendor save(final Vendor vendor) throws VendorNotFoundException;
+
+	public Vendor update(final Vendor vendor) throws VendorNotFoundException;
+
+	public void delete(final Vendor vendor) throws VendorNotFoundException;
 }

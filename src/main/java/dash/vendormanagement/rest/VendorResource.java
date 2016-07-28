@@ -24,7 +24,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.vendormanagement.business.VendorRepository;
+import dash.exceptions.VendorNotFoundException;
+import dash.vendormanagement.business.IVendorService;
 import dash.vendormanagement.domain.Vendor;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,48 +33,44 @@ import io.swagger.annotations.ApiParam;
 
 @Api(value = "vendors")
 @RestController
-@RequestMapping("/api/rest/vendors")
+@RequestMapping(value = "/api/rest/vendors", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 public class VendorResource {
 
 	@Autowired
-	private VendorRepository vendorRepository;
+	private IVendorService vendorService;
 
 	@ApiOperation(value = "Returns all vendors")
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Iterable<Vendor> get() {
-		return vendorRepository.findAll();
+	public Iterable<Vendor> getAll() {
+		return vendorService.getAll();
 	}
 
-	@ApiOperation(value = "Returns by VendorId specified vendor")
+	@ApiOperation(value = "Returns by specific vendor")
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Vendor findById(@ApiParam(required = true) @PathVariable Long id) {
-		return vendorRepository.findOne(id);
+	public Vendor getById(@ApiParam(required = true) @PathVariable Long id) {
+		return vendorService.getById(id);
 	}
 
 	@ApiOperation(value = "Adds Vendor")
-	@RequestMapping(method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Vendor add(@ApiParam(required = true) @RequestBody final Vendor vendor) {
-		return vendorRepository.save(vendor);
+		return vendorService.save(vendor);
 	}
 
 	@ApiOperation(value = "Update Vendor")
-	@RequestMapping(method = RequestMethod.PUT, value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Vendor update(@ApiParam(required = true) @PathVariable Long id, @ApiParam(required = true) @RequestBody final Vendor updateVendor) {
-		Vendor vendor = vendorRepository.findOne(id);
-		vendor.setName(updateVendor.getName());
-		vendor.setPhone(updateVendor.getPhone());
-		return vendorRepository.save(vendor);
+	public Vendor update(@ApiParam(required = true) @RequestBody final Vendor vendor) throws VendorNotFoundException {
+		return vendorService.update(vendor);
 	}
 
 	@ApiOperation(value = "Delete a single vendor.", notes = "You have to provide a valid vendor ID.")
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void delete(@ApiParam(required = true) @PathVariable Long id) {
+	public void deleteById(@ApiParam(required = true) @PathVariable Long id) {
 		vendorRepository.delete(id);
 	}
 }

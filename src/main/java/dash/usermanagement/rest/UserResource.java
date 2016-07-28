@@ -35,7 +35,7 @@ import dash.usermanagement.settings.password.PasswordChange;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping(value = "/users", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 public class UserResource {
 
 	@Autowired
@@ -46,43 +46,49 @@ public class UserResource {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get a single user.", notes = "Provide a valid user ID.")
 	public Iterable<User> get() {
 		return userRepository.findAll();
 	}
 
-	@RequestMapping(value = "/{username}", method = RequestMethod.GET)
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public User findById(@PathVariable String username) {
-		return userRepository.findByUsernameIgnoreCase(username);
+	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
+	public User findById(@PathVariable Long id) {
+		return userRepository.findOne(id);
 	}
 
-	@RequestMapping(value = "/{username}/update", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{id}/update", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public User updateUser(@PathVariable String username, @RequestBody @Valid final User updateUser) throws Exception {
-		return userService.updateUser(username, updateUser);
+	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
+	public User updateUser(@PathVariable Long id, @RequestBody @Valid final User updateUser) throws Exception {
+		return userService.updateUser(id, updateUser);
 	}
 
-	@RequestMapping(value = "/{username}/pw", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{id}/pw", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public void updatePassword(@PathVariable String username, @RequestBody PasswordChange passwordChange) throws Exception {
-		userService.updatePassword(username, passwordChange);
+	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
+	public void updatePassword(@PathVariable Long id, @RequestBody PasswordChange passwordChange) throws Exception {
+		userService.updatePassword(id, passwordChange);
 	}
 
-	@RequestMapping(value = "/{username}/activate", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{id}/activate", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public User activateUser(@PathVariable String username, @RequestBody Boolean activate) throws UsernameNotFoundException {
-		return userService.activateUser(username, activate);
+	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
+	public User activateUser(@PathVariable Long id, @RequestBody Boolean activate) throws UsernameNotFoundException {
+		return userService.activateUser(id, activate);
 	}
 
-	@RequestMapping(value = "/{username}/role", method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(value = "/{id}/role", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public User setRoleForUser(@PathVariable String username, @RequestBody Role role) throws UsernameNotFoundException {
-		return userService.setRoleForUser(username, role);
+	@ApiOperation(value = "Set a User Role .", notes = "Provide a valid user ID.")
+	public User setRoleForUser(@PathVariable Long id, @RequestBody Role role) throws UsernameNotFoundException {
+		return userService.setRoleForUser(id, role);
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ApiOperation(value = "Delete a single user.", notes = "You have to provide a valid user ID.")
+	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
 	public void delete(@PathVariable Long id) {
 		userRepository.delete(id);
 	}

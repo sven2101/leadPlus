@@ -40,8 +40,8 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public User updateUser(String username, User updateUser) throws Exception {
-		User user = userRepository.findByUsernameIgnoreCase(username);
+	public User updateUser(Long id, User updateUser) throws Exception {
+		User user = userRepository.findOne(id);
 		if (Optional.ofNullable(user).isPresent()) {
 			if (!Optional.ofNullable(userRepository.findByEmailIgnoreCase(updateUser.getEmail())).isPresent()) {
 				user.setEmail(updateUser.getEmail());
@@ -57,8 +57,8 @@ public class UserService {
 		}
 	}
 
-	public void updatePassword(String username, PasswordChange passwordChange) throws Exception {
-		final User user = userRepository.findByUsernameIgnoreCase(username);
+	public void updatePassword(Long id, PasswordChange passwordChange) throws Exception {
+		final User user = userRepository.findOne(id);
 		if (Optional.ofNullable(user).isPresent()) {
 			if (passwordEncoder.matches(passwordChange.getOldPassword(), user.getPassword())) {
 				user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
@@ -71,8 +71,8 @@ public class UserService {
 		}
 	}
 
-	public User activateUser(String username, Boolean activate) throws UsernameNotFoundException {
-		User user = userRepository.findByUsernameIgnoreCase(username);
+	public User activateUser(Long id, Boolean activate) throws UsernameNotFoundException {
+		User user = userRepository.findOne(id);
 		if (Optional.ofNullable(user).isPresent()) {
 			user.setEnabled(activate);
 			return userRepository.save(user);
@@ -81,8 +81,8 @@ public class UserService {
 		}
 	}
 
-	public User setRoleForUser(String username, Role role) throws UsernameNotFoundException {
-		User user = userRepository.findByUsernameIgnoreCase(username);
+	public User setRoleForUser(Long id, Role role) throws UsernameNotFoundException {
+		User user = userRepository.findOne(id);
 		if (Optional.ofNullable(user).isPresent()) {
 			user.setRole(role);
 			return userRepository.save(user);
