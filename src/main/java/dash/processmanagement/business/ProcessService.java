@@ -26,6 +26,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.ProcessNotFoundException;
+import dash.exceptions.SaveFailedException;
 import dash.leadmanagement.business.ILeadService;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.business.IOfferService;
@@ -79,7 +80,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public void createProcesses(List<Process> processes) {
+	public void createProcesses(List<Process> processes) throws SaveFailedException {
 		for (Process process : processes) {
 
 			if (Optional.ofNullable(process.getLead()).isPresent())
@@ -88,7 +89,7 @@ public class ProcessService implements IProcessService {
 				offerService.createOffer(process.getOffer());
 			if (Optional.ofNullable(process.getSale()).isPresent()) {
 				process.setProcessor(userRepository.findByUsernameIgnoreCase("admin"));
-				saleService.createSale(process.getSale());
+				saleService.save(process.getSale());
 			}
 
 			processRepository.save(process);

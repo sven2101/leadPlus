@@ -29,9 +29,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.DeleteFailedException;
+import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
-import dash.exceptions.VendorNotFoundException;
 import dash.vendormanagement.domain.Vendor;
 
 @Service
@@ -41,6 +41,27 @@ public class VendorService implements IVendorService {
 
 	@Autowired
 	private VendorRepository vendorRepository;
+
+	@Override
+	public List<Vendor> getAll() {
+		return vendorRepository.findAll();
+	}
+
+	@Override
+	public Vendor getById(final Long id) throws NotFoundException {
+		if (Optional.ofNullable(id).isPresent()) {
+			try {
+				return vendorRepository.findOne(id);
+			} catch (Exception ex) {
+				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
+				throw new NotFoundException(VENDOR_NOT_FOUND);
+			}
+		} else {
+			NotFoundException vnfex = new NotFoundException(VENDOR_NOT_FOUND);
+			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, vnfex);
+			throw vnfex;
+		}
+	}
 
 	@Override
 	public Vendor update(Vendor vendor) throws UpdateFailedException {
@@ -59,27 +80,6 @@ public class VendorService implements IVendorService {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
 			throw ufex;
-		}
-	}
-
-	@Override
-	public List<Vendor> getAll() {
-		return vendorRepository.findAll();
-	}
-
-	@Override
-	public Vendor getById(final Long id) throws VendorNotFoundException {
-		if (Optional.ofNullable(id).isPresent()) {
-			try {
-				return vendorRepository.findOne(id);
-			} catch (Exception ex) {
-				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
-				throw new VendorNotFoundException(VENDOR_NOT_FOUND);
-			}
-		} else {
-			VendorNotFoundException vnfex = new VendorNotFoundException(VENDOR_NOT_FOUND);
-			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, vnfex);
-			throw vnfex;
 		}
 	}
 

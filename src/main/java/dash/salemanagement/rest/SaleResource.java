@@ -26,68 +26,42 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.salemanagement.business.SaleRepository;
+import dash.exceptions.DeleteFailedException;
+import dash.exceptions.NotFoundException;
+import dash.exceptions.UpdateFailedException;
+import dash.salemanagement.business.ISaleService;
 import dash.salemanagement.domain.Sale;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping("/api/rest/processes/sales")
+@RequestMapping(value = "/api/rest/processes/sales", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Sale API")
 public class SaleResource {
 
 	@Autowired
-	private SaleRepository saleRepository;
+	private ISaleService saleService;
 
 	@ApiOperation(value = "Return a single sale.", notes = "")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Sale getSaleById(@PathVariable Long id) {
-		return saleRepository.findOne(id);
+	public Sale getSaleById(@PathVariable final Long id) throws NotFoundException {
+		return saleService.getSaleById(id);
 	}
 
 	@ApiOperation(value = "Update a single sale.", notes = "")
-	@RequestMapping(method = RequestMethod.PUT, value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public Sale update(@ApiParam(required = true) @PathVariable Long id, @ApiParam(required = true) @RequestBody @Valid Sale updateSale) {
-		Sale sale = saleRepository.findOne(id);
-
-		//set prospect datas
-		sale.getCustomer().setFirstname(updateSale.getCustomer().getFirstname());
-		sale.getCustomer().setLastname(updateSale.getCustomer().getLastname());
-		sale.getCustomer().setCompany(updateSale.getCustomer().getCompany());
-		sale.getCustomer().setEmail(updateSale.getCustomer().getEmail());
-		sale.getCustomer().setPhone(updateSale.getCustomer().getPhone());
-		sale.getCustomer().setTitle(updateSale.getCustomer().getTitle());
-
-		//set vendor datas
-		sale.getVendor().setName(updateSale.getVendor().getName());
-		sale.getVendor().setPhone(updateSale.getVendor().getPhone());
-
-		//set container datas
-		sale.getContainer().setName(updateSale.getContainer().getName());
-		sale.getContainer().setDescription(updateSale.getContainer().getDescription());
-		sale.getContainer().setPriceNetto(updateSale.getContainer().getPriceNetto());
-
-		//set main data
-		sale.setTimestamp(updateSale.getTimestamp());
-		sale.setContainerAmount(updateSale.getContainerAmount());
-		sale.setTransport(updateSale.getTransport());
-		sale.setSaleReturn(updateSale.getSaleReturn());
-		sale.setSaleProfit(updateSale.getSaleProfit());
-
-		saleRepository.save(sale);
-
-		return sale;
+	public Sale update(@ApiParam(required = true) @RequestBody @Valid final Sale sale) throws UpdateFailedException {
+		return saleService.update(sale);
 	}
 
 	@ApiOperation(value = "Delete a single sale.", notes = "")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void delete(@ApiParam(required = true) @PathVariable Long id) {
-		saleRepository.delete(id);
+	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
+		saleService.delete(id);
 	}
 
 }

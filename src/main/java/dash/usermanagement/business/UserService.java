@@ -26,7 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.DontMatchException;
-import dash.exceptions.EmailNotFoundException;
+import dash.exceptions.NotFoundException;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.settings.password.PasswordChange;
@@ -46,7 +46,7 @@ public class UserService {
 			if (!Optional.ofNullable(userRepository.findByEmailIgnoreCase(updateUser.getEmail())).isPresent()) {
 				user.setEmail(updateUser.getEmail());
 			} else if (!updateUser.getEmail().equals(user.getEmail())) {
-				throw new EmailNotFoundException(EMAIL_NOT_FOUND);
+				throw new NotFoundException(EMAIL_NOT_FOUND);
 			}
 
 			user.setLanguage(updateUser.getLanguage());

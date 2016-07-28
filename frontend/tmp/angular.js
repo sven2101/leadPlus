@@ -1215,49 +1215,6 @@ DashboardCtrl.prototype.getConversionrate = function () {
 };
 
 /*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-
-'use strict';
-
-angular.module('app.login', ['ngResource']).controller('LoginCtrl', LoginCtrl);
-
-LoginCtrl.$inject = ['$location', 'Auth', '$scope', 'toaster', '$rootScope', '$translate'];
-
-function LoginCtrl($location, Auth, $scope, toaster, $rootScope, $translate) {
-    this.login = function (credentials) {
-        if (credentials.username == 'apiuser') {
-            $scope.credentials.password = "";
-            toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
-        }
-        else {
-            Auth.login(credentials,
-                function (res) {
-                    $location.path('/dashoard');
-                    $rootScope.setUserDefaultLanguage();
-                    $rootScope.loadLabels();
-                },
-                function (err) {
-                    $scope.credentials.password = "";
-                    toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
-                }
-            );
-        }
-    };
-
-}
-
-/*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
  * NOTICE: All information contained herein is, and remains the property of
@@ -1859,6 +1816,49 @@ LeadsCtrl.prototype.updateRow = function(process) {
 			false);
 	this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
 };
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
+'use strict';
+
+angular.module('app.login', ['ngResource']).controller('LoginCtrl', LoginCtrl);
+
+LoginCtrl.$inject = ['$location', 'Auth', '$scope', 'toaster', '$rootScope', '$translate'];
+
+function LoginCtrl($location, Auth, $scope, toaster, $rootScope, $translate) {
+    this.login = function (credentials) {
+        if (credentials.username == 'apiuser') {
+            $scope.credentials.password = "";
+            toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
+        }
+        else {
+            Auth.login(credentials,
+                function (res) {
+                    $location.path('/dashoard');
+                    $rootScope.setUserDefaultLanguage();
+                    $rootScope.loadLabels();
+                },
+                function (err) {
+                    $scope.credentials.password = "";
+                    toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
+                }
+            );
+        }
+    };
+
+}
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -3874,39 +3874,6 @@ angular.module('app').factory('TestService', [function () { return new TestServi
  * from Eviarc GmbH.
  *******************************************************************************/
 
-'use strict';
-
-/* Directives */
-var app = angular.module("app");
-app.directive("pwCheck", function () {
-    return {
-        require: 'ngModel',
-        link: function (scope, elem, attrs, ctrl) {
-            var firstPassword = '#' + attrs.pwCheck;
-            elem.add(firstPassword).on('keyup', function () {
-                scope.$apply(function () {
-                    //console.info(elem.val() === $(firstPassword).val());
-                    ctrl.$setValidity('pwmatch', elem.val() === $(firstPassword).val());
-                });
-            });
-        }
-    }
-});
-
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-
 var app = angular.module("app");
 app.directive("childrow", function () {
     var directive = {};
@@ -3924,4 +3891,37 @@ app.directive("childrow", function () {
     directive.link = function (scope, element, attrs) {
     };
     return directive;
+});
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
+'use strict';
+
+/* Directives */
+var app = angular.module("app");
+app.directive("pwCheck", function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, elem, attrs, ctrl) {
+            var firstPassword = '#' + attrs.pwCheck;
+            elem.add(firstPassword).on('keyup', function () {
+                scope.$apply(function () {
+                    //console.info(elem.val() === $(firstPassword).val());
+                    ctrl.$setValidity('pwmatch', elem.val() === $(firstPassword).val());
+                });
+            });
+        }
+    }
 });

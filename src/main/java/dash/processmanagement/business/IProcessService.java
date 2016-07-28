@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import dash.exceptions.ProcessNotFoundException;
+import dash.exceptions.NotFoundException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
@@ -35,16 +35,16 @@ public interface IProcessService {
 
 	Process createProcess(Process process);
 
-	Lead createLead(Long processId, Lead lead) throws ProcessNotFoundException;
+	Lead createLead(Long processId, Lead lead) throws NotFoundException;
 
-	Offer createOffer(Long processId, Offer offer) throws ProcessNotFoundException;
+	Offer createOffer(Long processId, Offer offer) throws NotFoundException;
 
-	Sale createSale(Long processId, Sale sale) throws ProcessNotFoundException;
+	Sale createSale(Long processId, Sale sale) throws NotFoundException;
 
 	User createProcessor(Long processId, String username) throws Exception;
 
-	Status updateStatus(Long processId, Status status) throws ProcessNotFoundException;
+	Status updateStatus(Long processId, Status status) throws NotFoundException;
 
-	Process updateProcess(Long processId, Process process) throws ProcessNotFoundException;
+	Process updateProcess(Long processId, Process process) throws NotFoundException;
 
 }

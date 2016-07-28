@@ -14,6 +14,8 @@
 
 package dash.vendormanagement.rest;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,9 +27,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.DeleteFailedException;
+import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
-import dash.exceptions.VendorNotFoundException;
 import dash.vendormanagement.business.IVendorService;
 import dash.vendormanagement.domain.Vendor;
 import io.swagger.annotations.Api;
@@ -45,14 +47,14 @@ public class VendorResource {
 	@ApiOperation(value = "Returns all vendors.")
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Iterable<Vendor> getAll() {
+	public List<Vendor> getAll() {
 		return vendorService.getAll();
 	}
 
 	@ApiOperation(value = "Returns a specific vendor.")
 	@RequestMapping(method = RequestMethod.GET, value = "/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Vendor getById(@ApiParam(required = true) @PathVariable Long id) throws VendorNotFoundException {
+	public Vendor getById(@ApiParam(required = true) @PathVariable Long id) throws NotFoundException {
 		return vendorService.getById(id);
 	}
 

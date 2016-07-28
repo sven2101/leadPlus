@@ -14,13 +14,26 @@
 
 package dash.offermanagement.business;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import dash.exceptions.DeleteFailedException;
+import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
 import dash.offermanagement.domain.Offer;
 
 @Service
-@FunctionalInterface
 public interface IOfferService {
 
-	Offer createOffer(Offer offer);
+	public List<Offer> getAll();
+
+	public Offer getOfferById(final Long id) throws NotFoundException;
+
+	public Offer save(final Offer offer) throws SaveFailedException;
+
+	public Offer update(final Offer offer) throws UpdateFailedException;
+
+	public void delete(final Long id) throws DeleteFailedException;
 }
