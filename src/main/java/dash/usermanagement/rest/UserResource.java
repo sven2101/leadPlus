@@ -27,8 +27,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.base.Optional;
-
 import dash.usermanagement.business.UserRepository;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.Role;
@@ -78,14 +76,8 @@ public class UserResource {
 
 	@RequestMapping(value = "/{username}/role", method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseStatus(HttpStatus.OK)
-	public void setRoleForUser(@PathVariable String username, @RequestBody Role role) throws Exception {
-		final User user = userRepository.findByUsernameIgnoreCase(username);
-		if (Optional.fromNullable(user).isPresent()) {
-			user.setRole(role);
-			userRepository.save(user);
-		} else {
-			throw new UsernameNotFoundException("User not found.");
-		}
+	public User setRoleForUser(@PathVariable String username, @RequestBody Role role) throws UsernameNotFoundException {
+		return userService.setRoleForUser(username, role);
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE)
