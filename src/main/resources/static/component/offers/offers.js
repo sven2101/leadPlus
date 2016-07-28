@@ -14,12 +14,13 @@
 
 'use strict';
 angular.module('app.offers', ['ngResource']).controller('OffersCtrl', OffersCtrl);
-OffersCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', '$filter', 'Profile', '$rootScope', '$translate'];
-function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, $filter, Profile, $rootScope, $translate) {
+OffersCtrl.$inject = ['DTOptionsBuilder', 'DTColumnBuilder', '$compile', '$scope', 'toaster', 'Processes', 'Comments', '$filter', 'Profile', '$rootScope', '$translate'];
+function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, Comments, $filter, Profile, $rootScope, $translate) {
 
     var vm = this;
     this.filter = $filter;
     this.processesService = Processes;
+    this.commentService = Comments;
     this.userService = Profile;
     this.user = {};
     this.windowWidth = $(window).width();
@@ -293,16 +294,16 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster
 
 OffersCtrl.prototype.appendChildRow = function (process, event) {
     var childScope = this.scope.$new(true);
-    childScope.offerChildData = process;
+    childScope.childData = process;
     var vm = this;
-    this.processesService.getComments({id: process.id}).$promise.then(function (result) {
+    this.commentService.getComments({id: process.id}).$promise.then(function (result) {
         vm.comments[process.id] = [];
         for (var comment in result) {
             if (comment == '$promise')
                 break;
             vm.comments[process.id].push({
                 commentText: result[comment].commentText,
-                date: result[comment].date,
+                date: result[comment].timestamp,
                 creator: result[comment].creator
             });
         }

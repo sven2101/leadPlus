@@ -13,47 +13,47 @@
                 <table class="table table-bordered text-left">
                     <tr>
                         <td>{{ 'COMMON_NAME' | translate }}</td>
-                        <td>{{ leadChildData.lead.inquirer.title | translate }}
-                            {{leadChildData.lead.inquirer.firstname}}
-                            {{leadChildData.lead.inquirer.lastname}}
+                        <td>{{ childData.lead.inquirer.title | translate }}
+                            {{childData.lead.inquirer.firstname}}
+                            {{childData.lead.inquirer.lastname}}
                         </td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_PHONE' | translate }}</td>
-                        <td>{{leadChildData.lead.inquirer.phone}}</td>
+                        <td>{{childData.lead.inquirer.phone}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER' | translate }}</td>
-                        <td>{{leadChildData.lead.container.name}}</td>
+                        <td>{{childData.lead.container.name}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_DESC' | translate }}</td>
-                        <td>{{leadChildData.lead.container.description}}</td>
+                        <td>{{childData.lead.container.description}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_AMOUNT' | translate }}</td>
-                        <td>{{leadChildData.lead.containerAmount}}</td>
+                        <td>{{childData.lead.containerAmount}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_SINGLE_PRICE' | translate }}</td>
-                        <td>{{leadChildData.lead.container.priceNetto | currency:'\u20AC'}}</td>
+                        <td>{{childData.lead.container.priceNetto | currency:'\u20AC'}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
-                        <td>{{leadChildData.lead.leadPrice | currency:'\u20AC'}}</td>
+                        <td>{{childData.lead.leadPrice | currency:'\u20AC'}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</td>
-                        <td>{{leadChildData.lead.destination}}</td>
+                        <td>{{childData.lead.destination}}</td>
                     </tr>
                 </table>
             </div>
         </div>
     </div>
-    <div class="col-lg-6" ng-if="leadChildData.processor != null">
+    <div class="col-lg-6" ng-if="childData.processor != null">
         <div class="ibox">
             <div class="ibox-title">
-                <h3>{{ 'COMMON_PROCESSOR' | translate }}: {{leadChildData.processor.username}}</h3>
+                <h3>{{ 'COMMON_PROCESSOR' | translate }}: {{childData.processor.username}}</h3>
             </div>
         </div>
     </div>
@@ -62,9 +62,9 @@
             <div class="ibox-title">
                 <h3>{{ 'COMMON_NOTE' | translate }}</h3>
             </div>
-            <div class="ibox-content text-left">{{leadChildData.lead.message}}</div>
+            <div class="ibox-content text-left">{{childData.lead.message}}</div>
         </div>
     </div>
 </div>
-<div class="row" ng-include="'component/leads/commentView.html'"></div>
-<div class="row" ng-include="'component/leads/allCommentsModal.html'"></div>
+<div class="row" ng-include="'component/common/commentView.html'"></div>
+<div class="row" ng-include="'component/common/allCommentsModal.html'"></div>
