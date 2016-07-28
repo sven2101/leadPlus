@@ -24,7 +24,7 @@ OffersCtrl.prototype.addComment = function (id, source) {
     if (source == 'table' && this.commentInput[id] != '' && !angular.isUndefined(this.commentInput[id])) {
         var comment = {
             commentText: this.commentInput[id],
-            timestamp: this.filter('date')(new Date(), "dd.MM.yyyy HH:mm"),  
+            timestamp: this.filter('date')(new Date(), "dd.MM.yyyy HH:mm:ss"),  
             process: this.processes[id],
             creator: this.user
         };
@@ -36,7 +36,7 @@ OffersCtrl.prototype.addComment = function (id, source) {
     else if (source == 'modal' && this.commentModalInput[id] != '' && !angular.isUndefined(this.commentModalInput[id])) {
         var comment = {
             commentText: this.commentModalInput[id],
-            timestamp: this.filter('date')(new Date(), "dd.MM.yyyy HH:mm"),  
+            timestamp: this.filter('date')(new Date(), "dd.MM.yyyy HH:mm:ss"),  
             process: this.processes[id],
             creator: this.user
         };

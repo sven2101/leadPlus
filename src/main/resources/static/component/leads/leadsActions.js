@@ -26,7 +26,7 @@ LeadsCtrl.prototype.addComment = function (id, source) {
         	process: this.processes[id],
         	creator: this.user,
         	commentText: this.commentInput[id],
-        	timestamp: this.filter('date')(new Date(), "dd.MM.yyyy HH:mm")            
+        	timestamp: this.filter('date')(new Date(), "dd.MM.yyyy HH:mm:ss")            
         };
         this.commentsService.addComment(comment).$promise.then(function () {
             vm.comments[id].push(comment);
@@ -38,7 +38,7 @@ LeadsCtrl.prototype.addComment = function (id, source) {
     		process: this.processes[id],
     		creator: this.user,
     		commentText: this.commentModalInput[id],
-    		timestamp: this.filter('date')(new Date(), "dd.MM.yyyy HH:mm")           
+    		timestamp: this.filter('date')(new Date(), "dd.MM.yyyy HH:mm:ss")           
         };
         this.commentsService.addComment(comment).$promise.then(function () {
             vm.comments[id].push(comment);

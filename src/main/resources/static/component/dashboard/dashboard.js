@@ -228,7 +228,7 @@ DashboardCtrl.prototype.addComment = function (process) {
         	process: process,
         	creator: this.user,
         	commentText: this.commentModalInput,
-        	timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm')
+        	timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm:ss')
         };
         this.commentsService.addComment(comment).$promise.then(function () {
             vm.infoComments.push(comment);
