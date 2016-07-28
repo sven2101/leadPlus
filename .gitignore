@@ -6,3 +6,4 @@
 cbd.iml
 build/
 /bin/
+node_modules/*

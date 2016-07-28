@@ -16,6 +16,7 @@ package dash;
 public final class Constants {
 
 	public static final String PROCESS_NOT_FOUND = "Process not found. ";
+	public static final String CONTAINER_NOT_FOUND = "Container not found. ";
 	public static final String USER_NOT_FOUND = "User not found. ";
 	public static final String EMAIL_NOT_FOUND = "Email not found. ";
 	public static final String DONT_MATCH = "Password does not match. ";

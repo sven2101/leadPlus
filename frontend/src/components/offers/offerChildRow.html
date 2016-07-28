@@ -1,0 +1,82 @@
+<style>
+    .chat-view {
+        word-break: break-all;
+    }
+</style>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h3>{{ 'COMMON_CHILDROW_ADDITONAL_TITLE' | translate }}</h3>
+            </div>
+            <div class="ibox-content">
+                <table class="table table-bordered text-left">
+                    <tr>
+                        <td>{{ 'COMMON_NAME' | translate }}</td>
+                        <td>{{ offerChildData.offer.prospect.title | translate }} {{offerChildData.offer.prospect.firstname}}
+                            {{offerChildData.offer.prospect.lastname}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'COMMON_PHONE' | translate }}</td>
+                        <td>{{offerChildData.offer.prospect.phone}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'COMMON_CONTAINER' | translate }}</td>
+                        <td>{{offerChildData.offer.container.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'COMMON_CONTAINER_DESC' | translate }}</td>
+                        <td>{{offerChildData.offer.container.description}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'COMMON_CONTAINER_AMOUNT' | translate }}</td>
+                        <td>{{offerChildData.offer.containerAmount}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'COMMON_CONTAINER_SINGLE_PRICE' | translate }}</td>
+                        <td>{{offerChildData.offer.container.priceNetto | currency:'\u20AC'}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
+                        <td>{{offerChildData.offer.containerAmount*offerChildData.offer.container.priceNetto |
+                            currency:'\u20AC'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</td>
+                        <td>{{offerChildData.offer.deliveryAddress}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'COMMON_DELIVERY_TIME' | translate }}</td>
+                        <td>{{offerChildData.offer.deliveryDate}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'COMMON_CONTAINER_OFFER_PRICE' | translate }}</td>
+                        <td>{{offerChildData.offer.offerPrice |
+                            currency:'\u20AC'}}
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6" ng-if="offerChildData.processor != null">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h3>{{ 'COMMON_PROCESSOR' | translate }}: {{offerChildData.processor.username}}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="ibox">
+            <div class="ibox-title">
+                <h3>{{ 'COMMON_NOTE' | translate }}</h3>
+            </div>
+            <div class="ibox-content text-left">{{offerChildData.lead.message}}</div>
+        </div>
+    </div>
+</div>
+<div class="row" ng-include="'components/common/commentView.html'"></div>
+<div class="row" ng-include="'components/common/allCommentsModal.html'"></div>

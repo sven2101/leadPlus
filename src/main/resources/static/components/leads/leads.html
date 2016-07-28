@@ -1,0 +1,19 @@
+<style>
+    .important {
+        background: #FFEBEB;
+    }
+</style><meta charset=utf-8><div class="row wrapper border-bottom white-bg page-heading"><div class=col-lg-12><div class=row><div class=col-lg-10><h2>{{ 'LEAD_LEADS' | translate }}</h2><ol class=breadcrumb><li><a href=#/dashboard>Home</a></li><li class=active><strong>{{ 'LEAD_LEADS' | translate }}</strong></li></ol></div></div></div></div><div class="wrapper wrapper-content animated fadeInRight"><div class=row><div class=col-lg-12><div class="ibox float-e-margins"><div class=ibox-title><h5>{{ 'LEAD_MANAGE_LEADS' | translate }}</h5></div><div class=ibox-content><button type=button class="btn btn-success" ng-click=lead.clearNewLead() data-toggle=modal data-target=#newLeadModal><i class="fa fa-plus"></i>&nbsp;{{ 'LEAD_ADD_LEAD' | translate }}</button> <button ng-click=lead.refreshData() type=button class="btn btn-success"><i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}</button> <span class=pull-right style="font-size: 1.5em;">{{ 'LEAD_SHOW_ALL_LEADS' | translate }} &nbsp;<input type=checkbox ng-model=lead.loadAllData ng-change=lead.changeDataInput() class=js-switch ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"></span><br><br><div class="table-responsive text-center"><table id=ngdatatable datatable dt-options=lead.dtOptions dt-columns=lead.dtColumns dt-instance=lead.dtInstance class="table table-bordered table-hover table-condensed text-center" style=width:100%;></table></div></div></div></div></div></div><div ng-include="'components/leads/editLeadModal.html'"></div><div ng-include="'components/leads/addLeadModal.html'"></div><script>
+    jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+        "date-euro-pre": function (date) {
+            return moment(date, 'DD.MM.YYYY HH:mm');
+        },
+
+        "date-euro-asc": function (a, b) {
+            return (a.isBefore(b) ? -1 : (a.isAfter(b) ? 1 : 0));
+        },
+
+        "date-euro-desc": function (a, b) {
+            return (a.isBefore(b) ? 1 : (a.isAfter(b) ? -1 : 0));
+        }
+    });
+</script>
