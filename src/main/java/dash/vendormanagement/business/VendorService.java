@@ -15,6 +15,9 @@ package dash.vendormanagement.business;
 
 import static dash.Constants.BECAUSE_OF_ILLEGAL_ID;
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
+import static dash.Constants.DELETE_FAILED_EXCEPTION;
+import static dash.Constants.SAVE_FAILED_EXCEPTION;
+import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.VENDOR_NOT_FOUND;
 
 import java.util.List;
@@ -25,6 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import dash.exceptions.DeleteFailedException;
+import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.VendorNotFoundException;
 import dash.vendormanagement.domain.Vendor;
@@ -48,12 +53,12 @@ public class VendorService implements IVendorService {
 				return vendorRepository.save(updateVendor);
 			} catch (IllegalArgumentException iaex) {
 				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
-				throw UpdateFailedException(VENDOR_NOT_FOUND);
+				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 		} else {
-			VendorNotFoundException vnfex = new VendorNotFoundException(VENDOR_NOT_FOUND);
-			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, vnfex);
-			throw vnfex;
+			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			throw ufex;
 		}
 	}
 
@@ -79,34 +84,34 @@ public class VendorService implements IVendorService {
 	}
 
 	@Override
-	public Vendor save(Vendor vendor) throws VendorNotFoundException {
+	public Vendor save(Vendor vendor) throws SaveFailedException {
 		if (Optional.ofNullable(vendor).isPresent()) {
 			try {
 				return vendorRepository.save(vendor);
 			} catch (Exception ex) {
 				logger.error(VendorService.class.getSimpleName() + ex.getMessage(), ex);
-				return null;
+				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			}
 		} else {
-			VendorNotFoundException vnfex = new VendorNotFoundException(VENDOR_NOT_FOUND);
-			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, vnfex);
-			throw vnfex;
+			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
+			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
+			throw sfex;
 		}
 	}
 
 	@Override
-	public void delete(final Long id) throws VendorNotFoundException {
+	public void delete(final Long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
 				vendorRepository.delete(id);
 			} catch (EmptyResultDataAccessException erdaex) {
 				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + erdaex.getMessage(), erdaex);
-				throw new VendorNotFoundException(VENDOR_NOT_FOUND);
+				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
 			}
 		} else {
-			VendorNotFoundException vnfex = new VendorNotFoundException(VENDOR_NOT_FOUND);
-			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, vnfex);
-			throw vnfex;
+			DeleteFailedException dfex = new DeleteFailedException(DELETE_FAILED_EXCEPTION);
+			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
+			throw dfex;
 		}
 	}
 }

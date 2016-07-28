@@ -17,6 +17,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import dash.exceptions.DeleteFailedException;
+import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
 import dash.exceptions.VendorNotFoundException;
 import dash.vendormanagement.domain.Vendor;
 
@@ -27,9 +30,9 @@ public interface IVendorService {
 
 	public Vendor getById(final Long id) throws VendorNotFoundException;
 
-	public Vendor save(final Vendor vendor) throws VendorNotFoundException;
+	public Vendor save(final Vendor vendor) throws SaveFailedException;
 
-	public Vendor update(final Vendor vendor) throws VendorNotFoundException;
+	public Vendor update(final Vendor vendor) throws UpdateFailedException;
 
-	public void delete(final Long id) throws VendorNotFoundException;
+	public void delete(final Long id) throws DeleteFailedException;
 }

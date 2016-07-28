@@ -24,5 +24,7 @@ import dash.vendormanagement.domain.Vendor;
 @Repository
 @Transactional
 public interface VendorRepository extends JpaRepository<Vendor, Long> {
+
 	Vendor findByName(String name);
+
 }

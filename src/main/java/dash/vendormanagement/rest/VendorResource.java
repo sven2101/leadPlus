@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.exceptions.DeleteFailedException;
+import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
 import dash.exceptions.VendorNotFoundException;
 import dash.vendormanagement.business.IVendorService;
 import dash.vendormanagement.domain.Vendor;
@@ -56,21 +59,21 @@ public class VendorResource {
 	@ApiOperation(value = "Adds Vendor.")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Vendor add(@ApiParam(required = true) @RequestBody final Vendor vendor) throws VendorNotFoundException {
+	public Vendor add(@ApiParam(required = true) @RequestBody final Vendor vendor) throws SaveFailedException {
 		return vendorService.save(vendor);
 	}
 
 	@ApiOperation(value = "Update Vendor.")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Vendor update(@ApiParam(required = true) @RequestBody final Vendor vendor) throws VendorNotFoundException {
+	public Vendor update(@ApiParam(required = true) @RequestBody final Vendor vendor) throws UpdateFailedException {
 		return vendorService.update(vendor);
 	}
 
 	@ApiOperation(value = "Delete a single vendor.", notes = "You have to provide a valid vendor ID.")
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteById(@ApiParam(required = true) @PathVariable Long id) throws VendorNotFoundException {
+	public void deleteById(@ApiParam(required = true) @PathVariable Long id) throws DeleteFailedException {
 		vendorService.delete(id);
 	}
 }
