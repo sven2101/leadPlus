@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.business.IProcessService;
@@ -114,7 +115,7 @@ public class ProcessResource {
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public Process update(@ApiParam(required = true) @RequestBody @Valid final Process updateProcess) throws NotFoundException {
-		return processService.updateProcess(updateProcess);
+		return processService.update(updateProcess);
 	}
 
 	@ApiOperation(value = "Returns processor.", notes = "")
@@ -128,7 +129,7 @@ public class ProcessResource {
 	@RequestMapping(value = "/{processId}/processors", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public void createProcessorByProcessId(@PathVariable final Long processId, @RequestBody final String username) throws Exception {
-		processService.createProcessor(processId, username);
+		processService.setProcessor(processId, username);
 	}
 
 	@ApiOperation(value = "Remove processor from process", notes = "")
@@ -150,15 +151,15 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a process.", notes = "")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Process createProcess(@RequestBody @Valid final Process process) {
-		return processService.createProcess(process);
+	public Process save(@RequestBody @Valid final Process process) throws SaveFailedException {
+		return processService.save(process);
 	}
 
 	@ApiOperation(value = "Creates processes based on a List of Processes.", notes = "")
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public void createProcesses(@RequestBody final List<Process> processes) {
-		processService.createProcesses(processes);
+	public void saveProcesses(@RequestBody final List<Process> processes) throws SaveFailedException {
+		processService.saveProcesses(processes);
 	}
 
 	@ApiOperation(value = "Modifie status.", notes = "")
@@ -301,7 +302,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns a list of latest 10 sales.", notes = "")
 	@RequestMapping(value = "/sales/latest/{amount}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Sale> getProcessWithLatestSales(@PathVariable final Long amount) {
+	public List<Sale> getProcessWithLatestSales(@PathVariable final int amount) {
 		return processRepository.findTopBySaleIsNotNullOrderBySaleTimestampDesc(amount);
 	}
 

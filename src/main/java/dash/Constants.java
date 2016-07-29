@@ -15,6 +15,7 @@ package dash;
 
 public final class Constants {
 
+	public static final String NOT_FOUND = "Not found. ";
 	public static final String PROCESS_NOT_FOUND = "Process not found. ";
 	public static final String CONTAINER_NOT_FOUND = "Container not found. ";
 	public static final String COMMENT_NOT_FOUND = "Comment not found. ";
@@ -27,7 +28,7 @@ public final class Constants {
 	public static final String LEAD_NOT_FOUND = "Lead not found. ";
 	public static final String INQUIRER_NOT_FOUND = "Inquirer not found. ";
 	public static final String CUSTOMER_NOT_FOUND = "Customer not found. ";
-	
+
 	public static final String USER_EXISTS = "Username already exists. ";
 	public static final String EMAIL_EXISTS = "Email already exists. ";
 

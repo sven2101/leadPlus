@@ -96,7 +96,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process createProcess(Process process) throws SaveFailedException {
+	public Process save(final Process process) throws SaveFailedException {
 		Process createdProcess = null;
 		if (Optional.ofNullable(process).isPresent()) {
 			if (Optional.ofNullable(process.getProcessor()).isPresent()) {
@@ -120,7 +120,6 @@ public class ProcessService implements IProcessService {
 
 	@Override
 	public Lead createLead(Long processId, Lead lead) throws NotFoundException, SaveFailedException {
-
 		Process process = processRepository.findOne(processId);
 		Lead createdLead;
 		if (Optional.ofNullable(process).isPresent()) {
@@ -190,7 +189,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process updateProcess(Process updateProcess) throws NotFoundException {
+	public Process update(final Process updateProcess) throws NotFoundException {
 		Process process = processRepository.findOne(updateProcess.getId());
 		if (Optional.ofNullable(process).isPresent()) {
 			process.setLead(updateProcess.getLead());
@@ -204,10 +203,4 @@ public class ProcessService implements IProcessService {
 		}
 
 	}
-
-	@Override
-	public List<Process> getProcessWithLatestSales(int amount) {
-		return processRepository.findTopBySaleIsNotNullOrderBySaleTimestampDesc(amount);
-	}
-
 }

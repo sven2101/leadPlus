@@ -19,12 +19,16 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,6 +56,16 @@ public class LeadResource {
 	@ResponseStatus(HttpStatus.OK)
 	public List<Lead> getAll() {
 		return leadService.getAll();
+	}
+
+	@ApiOperation(value = "Returns lead Page.")
+	@RequestMapping(method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Lead> getAll(@RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "count", defaultValue = "10", required = false) int count,
+            @RequestParam(value = "order", defaultValue = "ASC", required = false) Sort.Direction direction,
+            @RequestParam(value = "sort", defaultValue = "productName", required = false) string sortPropertyPageable pageable) {
+		return leadService.getAll(pageable);
 	}
 
 	@ApiOperation(value = "Return a single lead.", notes = "")

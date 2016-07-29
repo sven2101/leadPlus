@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.usermanagement.business.UserRepository;
+import dash.exceptions.UpdateFailedException;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
@@ -40,9 +40,6 @@ public class UserResource {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private UserRepository userRepository;
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -75,14 +72,14 @@ public class UserResource {
 	@RequestMapping(value = "/{id}/activate", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
-	public User activateUser(@PathVariable Long id, @RequestBody Boolean activate) throws UsernameNotFoundException {
+	public User activateUser(@PathVariable Long id, @RequestBody Boolean activate) throws UsernameNotFoundException, UpdateFailedException {
 		return userService.activateUser(id, activate);
 	}
 
 	@RequestMapping(value = "/{id}/role", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Set a User Role .", notes = "Provide a valid user ID.")
-	public User setRoleForUser(@PathVariable Long id, @RequestBody Role role) throws UsernameNotFoundException {
+	public User setRoleForUser(@PathVariable Long id, @RequestBody Role role) throws UsernameNotFoundException, UpdateFailedException {
 		return userService.setRoleForUser(id, role);
 	}
 

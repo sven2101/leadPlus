@@ -33,21 +33,21 @@ public interface IProcessService {
 
 	public List<Object> getElementsByStatus(Status status, Workflow workflow);
 
-	public void createProcesses(List<Process> processes) throws SaveFailedException;
+	public void saveProcesses(List<Process> processes) throws SaveFailedException;
 
-	public Process createProcess(final Process process) throws SaveFailedException;
+	public Process save(final Process process) throws SaveFailedException;
 
-	public Lead createLead(Long processId, Lead lead) throws NotFoundException;
+	public Process update(final Process process) throws NotFoundException;
 
-	public Offer createOffer(Long processId, Offer offer) throws NotFoundException;
+	public Lead createLead(Long processId, final Lead lead) throws NotFoundException;
 
-	public Sale createSale(Long processId, Sale sale) throws NotFoundException;
+	public Offer createOffer(Long processId, final Offer offer) throws NotFoundException;
 
-	public User createProcessor(Long processId, String username) throws Exception;
+	public Sale createSale(Long processId, final Sale sale) throws NotFoundException;
+
+	public User setProcessor(Long processId, String username) throws Exception;
 
 	public Status updateStatus(Long processId, Status status) throws NotFoundException;
-
-	public Process updateProcess(final Process process) throws NotFoundException;
 
 	public List<Process> getProcessWithLatestSales(final int amount);
 
