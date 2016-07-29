@@ -1,379 +1,101 @@
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
 
-'use strict';
-
-angular.module('app.dashboard', ['ngResource']).controller('DashboardCtrl', DashboardCtrl);
-
-DashboardCtrl.$inject = ['toaster', 'Processes', 'Comments', '$filter', '$translate', '$rootScope', '$scope', '$interval', 'Profile', 'Leads', 'Offers', 'Sales', 'Profit', 'Turnover'];
-
-function DashboardCtrl(toaster, Processes, Comments, $filter, $translate, $rootScope, $scope, $interval, Profile, Leads, Offers, Sales, Profit, Turnover) {
-
-    var vm = this;
-    this.toaster = toaster;
-    this.filter = $filter;
-    this.orderBy = $filter('orderBy');
-    this.translate = $translate;
-    this.rootScope = $rootScope;
-    this.processesService = Processes;
-    this.commentsService = Comments;
-    this.commentModalInput = '';
-    this.comments = {};
-    this.infoData = {};
-    this.infoType = '';
-    this.infoProcess = {};
-    this.infoComments = [];
-
-    this.leadsAmount = {};
-    this.offersAmount = {};
-    this.salesAmount = {};
-    this.profit = {};
-    this.turnover = {};
-    this.conversionRate = {};
-
-    Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
-        vm.openLead = vm.orderBy(result, 'lead.timestamp', false);
-    });
-    Processes.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
-        vm.openOffer = vm.orderBy(result, 'offer.timestamp', false);
-    });
-    Processes.getLatestSales().$promise.then(function (result) {
-        vm.sales = result;
-    });
-
-    this.user = {};
-    if (!angular.isUndefined($rootScope.globals.currentUser))
-        Profile.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
-            vm.user = result;
-        });
-
-    this.sortableOptions = {
-        update: function (e, ui) {
-            var target = ui.item.sortable.droptargetModel;
-            var source = ui.item.sortable.sourceModel;
-            if ((vm.openLead == target && vm.openOffer == source) ||
-                (vm.openLead == source && vm.sales == target) ||
-                target == source) {
-                ui.item.sortable.cancel();
-            }
-        },
-        stop: function (e, ui) {
-            var target = ui.item.sortable.droptargetModel;
-            var source = ui.item.sortable.sourceModel;
-            var item = ui.item.sortable.model;
-            if (vm.sales == target && vm.openOffer == source) {
-                vm.addOfferToSale(item);
-            }
-            else if (vm.openOffer == target && vm.openLead == source) {
-                vm.addLeadToOffer(item);
-            }
-        },
-        connectWith: ".connectList",
-        items: "li:not(.not-sortable)"
-    };
-
-    var stop;
-    $scope.$on('$destroy', function () {
-        if (angular.isDefined(stop)) {
-            $interval.cancel(stop);
-            stop = undefined;
-        }
-    });
-    stop = $interval(function () {
-        vm.refreshData();
-    }.bind(this), 200000);
-
-    this.leadsService = Leads;
-    this.offersService = Offers;
-    this.salesService = Sales;
-    this.profitService = Profit;
-    this.turnoverService = Turnover;
-
-    this.leadsService.week().$promise.then(function (result) {
-        vm.getLeads(result);
-        vm.salesService.week().$promise.then(function (result) {
-            vm.getSales(result);
-        });
-    });
-    vm.offersService.week().$promise.then(function (result) {
-        vm.getOffers(result);
-    });
-    vm.profitService.week().$promise.then(function (result) {
-        vm.getProfit(result);
-    });
-    vm.turnoverService.week().$promise.then(function (result) {
-        vm.getTurnover(result);
-    });
-
-
-}
-
-DashboardCtrl.prototype.addLeadToOffer = function (process) {
-    var vm = this;
-    var offer = {
-        container: {
-            name: process.lead.container.name,
-            description: process.lead.container.description,
-            priceNetto: process.lead.container.priceNetto
-        },
-        containerAmount: process.lead.containerAmount,
-        deliveryAddress: process.lead.destination,
-        offerPrice: (process.lead.containerAmount * process.lead.container.priceNetto),
-        prospect: {
-            company: process.lead.inquirer.company,
-            email: process.lead.inquirer.email,
-            firstname: process.lead.inquirer.firstname,
-            lastname: process.lead.inquirer.lastname,
-            phone: process.lead.inquirer.phone,
-            title: process.lead.inquirer.title
-        },
-        timestamp: this.filter('date')(new Date(), "dd.MM.yyyy HH:mm"),
-        vendor: process.lead.vendor
-    };
-    this.processesService.addOffer({id: process.id}, offer).$promise.then(function () {
-        vm.processesService.setStatus({id: process.id}, 'offer').$promise.then(function () {
-            vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_NEW_OFFER'));
-            vm.rootScope.leadsCount -= 1;
-            vm.rootScope.offersCount += 1;
-            vm.processesService.setProcessor({id: process.id}, vm.user.username).$promise.then(function () {
-                process.processor = vm.user;
-            });
-            process.offer = offer;
-            vm.openOffer = vm.orderBy(vm.openOffer, 'offer.timestamp', false);
-        });
-    });
-};
-DashboardCtrl.prototype.addOfferToSale = function (process) {
-    var vm = this;
-    var sale = {
-        container: {
-            name: process.offer.container.name,
-            description: process.offer.container.description,
-            priceNetto: process.offer.container.priceNetto
-        },
-        containerAmount: process.offer.containerAmount,
-        transport: process.offer.deliveryAddress,
-        customer: {
-            company: process.offer.prospect.company,
-            email: process.offer.prospect.email,
-            firstname: process.offer.prospect.firstname,
-            lastname: process.offer.prospect.lastname,
-            phone: process.offer.prospect.phone,
-            title: process.offer.prospect.title
-        },
-        saleProfit: 0,
-        saleReturn: process.offer.offerPrice,
-        timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm'),
-        vendor: process.offer.vendor
-    };
-    this.processesService.addSale({id: process.id}, sale).$promise.then(function () {
-        vm.processesService.setStatus({id: process.id}, 'sale').$promise.then(function () {
-            vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_NEW_SALE'));
-            vm.rootScope.offersCount -= 1;
-            process.sale = sale;
-            vm.sales = vm.orderBy(vm.sales, 'sale.timestamp', true);
-        });
-    });
-};
-
-DashboardCtrl.prototype.saveDataToModal = function (info, type, process) {
-    this.infoData = info;
-    this.infoType = type;
-    this.infoProcess = process;
-    var vm = this;
-    this.commentsService.getComments({id: process.id}).$promise.then(function (result) {
-        vm.infoComments = [];
-        for (var comment in result) {
-            if (comment == '$promise')
-                break;
-            vm.infoComments.push({
-                commentText: result[comment].commentText,
-                timestamp: result[comment].timestamp,
-                creator: result[comment].creator
-            });
-        }
-    });
-};
-DashboardCtrl.prototype.refreshData = function () {
-    var vm = this;
-    this.processesService.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
-        vm.openLead = vm.orderBy(result, 'lead.timestamp', false);
-    });
-    this.processesService.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
-        vm.openOffer = vm.orderBy(result, 'offer.timestamp', false);
-    });
-    this.processesService.getLatestSales().$promise.then(function (result) {
-        vm.sales = result;
-    });
-};
-
-DashboardCtrl.prototype.addComment = function (process) {
-    var vm = this;
-    if (angular.isUndefined(this.infoComments)) {
-        this.infoComments = [];
-    }
-    if (this.commentModalInput != '' && !angular.isUndefined(this.commentModalInput)) {
-        var comment = {
-        	process: process,
-        	creator: this.user,
-        	commentText: this.commentModalInput,
-        	timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm:ss')
-        };
-        this.commentsService.addComment(comment).$promise.then(function () {
-            vm.infoComments.push(comment);
-            vm.commentModalInput = '';
-        });
-    }
-};
-
-DashboardCtrl.prototype.getProfit = function (profits) {
-    var summe = 0;
-    for (var profit in profits.result) {
-        summe = summe + profits.result[profit];
-    }
-    this.profit = summe;
-};
-
-DashboardCtrl.prototype.getTurnover = function (turnovers) {
-    var summe = 0;
-    for (var turnover in turnovers.result) {
-        summe = summe + turnovers.result[turnover];
-    }
-    this.turnover = summe;
-};
-
-DashboardCtrl.prototype.getLeads = function (leads) {
-    var summe = 0;
-    for (var lead in leads.result) {
-        summe += leads.result[lead];
-    }
-    this.leadsAmount = summe;
-};
-
-DashboardCtrl.prototype.getOffers = function (offers) {
-    var summe = 0;
-    for (var offer in offers.result) {
-        summe += offers.result[offer];
-    }
-    this.offersAmount = summe;
-};
-
-DashboardCtrl.prototype.getSales = function (sales) {
-    var summe = 0;
-    for (var sale in sales.result) {
-        summe += sales.result[sale];
-    }
-    this.salesAmount = summe;
-    this.getConversionrate();
-};
-
-DashboardCtrl.prototype.getConversionrate = function () {
-    if (this.leadsAmount != 0) {
-        this.conversionRate = (this.salesAmount / this.leadsAmount) * 100;
-    }
-    else
-        this.conversionRate = 0;
-};
 
 /*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.
+ * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
+ * NOTICE: All information contained herein is, and remains the property of
+ * Eviarc GmbH and its suppliers, if any. The intellectual and technical
+ * concepts contained herein are proprietary to Eviarc GmbH, and are protected
+ * by trade secret or copyright law. Dissemination of this information or
+ * reproduction of this material is strictly forbidden unless prior written
+ * permission is obtained from Eviarc GmbH.
+ ******************************************************************************/
 "use strict";
-var LoginController = (function () {
-    function LoginController($location, Auth, $scope, toaster, $rootScope, $translate) {
-        this.$inject = ["$location", "Auth", "$scope", "toaster", "$rootScope", "$translate"];
-        this.location = $location;
-        this.auth = Auth;
-        this.scope = $scope;
-        this.toaster = toaster;
-        this.rootScope = $rootScope;
+var AppController = (function () {
+    function AppController($translate, $scope, $rootScope, $interval, Processes, Profile) {
         this.translate = $translate;
+        this.scope = $scope;
+        this.rootScope = $rootScope;
+        this.interval = $interval;
+        this.processService = Processes;
+        this.profileService = Profile;
+        this.rootScope.leadsCount = 0;
+        this.rootScope.offersCount = 0;
+        this.stop = undefined;
+        this.registerLoadLabels();
+        this.rootScope.loadLabels();
+        this.registerChangeLanguage();
+        this.registerSetUserDefaultLanguage();
+        this.rootScope.setUserDefaultLanguage();
+        this.registerInterval();
     }
-    LoginController.prototype.login = function (credentials) {
+    AppController.prototype.registerLoadLabels = function () {
         var self = this;
-        if (credentials.username === "apiuser") {
-            self.scope.credentials.password = "";
-            self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
-        }
-        else {
-            self.auth.login(credentials, function (res) {
-                self.location.path("/dashoard");
-                self.rootScope.setUserDefaultLanguage();
-                self.rootScope.loadLabels();
-            }, function (err) {
-                self.scope.credentials.password = "";
-                self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
-            });
-        }
+        self.rootScope.loadLabels = function () {
+            if (!angular
+                .isUndefined(self.rootScope.globals.currentUser)) {
+                self.processService.getProcessByLeadAndStatus({
+                    status: "open"
+                }).$promise.then(function (result) {
+                    self.rootScope.leadsCount = result.length;
+                });
+                self.processService.getProcessByOfferAndStatus({
+                    status: "offer"
+                }).$promise.then(function (result) {
+                    self.rootScope.offersCount = result.length;
+                });
+            }
+        };
     };
-    ;
-    return LoginController;
+    AppController.prototype.registerChangeLanguage = function () {
+        var self = this;
+        self.rootScope.changeLanguage = function (langKey) {
+            self.translate.use(langKey);
+            self.rootScope.language = langKey;
+        };
+    };
+    AppController.prototype.registerSetUserDefaultLanguage = function () {
+        var self = this;
+        self.rootScope.setUserDefaultLanguage = function () {
+            if (!angular
+                .isUndefined(self.rootScope.globals.currentUser)) {
+                self.profileService
+                    .get({
+                    username: self.rootScope.globals.currentUser.username
+                }).$promise.then(function (result) {
+                    self.rootScope.changeLanguage(result.language);
+                });
+            }
+        };
+    };
+    AppController.prototype.registerInterval = function () {
+        var self = this;
+        self.rootScope.$on("$destroy", function () {
+            if (angular.isDefined(self.stop)) {
+                self.interval.cancel(self.stop);
+                self.stop = undefined;
+            }
+        });
+        self.stop = self.interval(function () {
+            if (!angular
+                .isUndefined(self.rootScope.globals.currentUser)) {
+                self.processService.getProcessByLeadAndStatus({
+                    status: "open"
+                }).$promise.then(function (result) {
+                    self.rootScope.leadsCount = result.length;
+                });
+                self.processService.getProcessByOfferAndStatus({
+                    status: "offer"
+                }).$promise.then(function (result) {
+                    self.rootScope.offersCount = result.length;
+                });
+            }
+        }.bind(this), 300000);
+    };
+    AppController.$inject = ["$translate", "$scope", "$rootScope", "$interval", "Processes", "Profile"];
+    return AppController;
 }());
-angular.module("app.login", ["ngResource"]).controller("LoginController", LoginController);
-
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-
-'use strict';
-
-angular.module('app.login', ['ngResource']).controller('LoginCtrl', LoginCtrl);
-
-LoginCtrl.$inject = ['$location', 'Auth', '$scope', 'toaster', '$rootScope', '$translate'];
-
-function LoginCtrl($location, Auth, $scope, toaster, $rootScope, $translate) {
-    this.login = function (credentials) {
-        if (credentials.username == 'apiuser') {
-            $scope.credentials.password = "";
-            toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
-        }
-        else {
-            Auth.login(credentials,
-                function (res) {
-                    $location.path('/dashoard');
-                    $rootScope.setUserDefaultLanguage();
-                    $rootScope.loadLabels();
-                },
-                function (err) {
-                    $scope.credentials.password = "";
-                    toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
-                }
-            );
-        }
-    };
-
-}
+angular.module("app").controller("AppController", AppController);
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -387,616 +109,15 @@ function LoginCtrl($location, Auth, $scope, toaster, $rootScope, $translate) {
  ******************************************************************************/
 
 'use strict';
-angular.module('app.leads', [ 'ngResource' ])
-		.controller('LeadsCtrl', LeadsCtrl);
-LeadsCtrl.$inject = [ 'DTOptionsBuilder', 'DTColumnBuilder', '$compile',
-		'$scope', 'toaster', 'Processes', 'Comments', '$filter', 'Profile',
-		'$rootScope', '$translate' ];
-function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
-		toaster, Processes, Comments, $filter, Profile, $rootScope, $translate) {
 
-	var vm = this;
-	this.filter = $filter;
-	this.processesService = Processes;
-	this.commentService = Comments;
-	this.userService = Profile;
-	this.user = {};
-	this.windowWidth = $(window).width();
-	if (!angular.isUndefined($rootScope.globals.currentUser))
-		this.userService.get({
-			username : $rootScope.globals.currentUser.username
-		}).$promise.then(function(result) {
-			vm.user = result;
-		});
-	this.scope = $scope;
-	this.rootScope = $rootScope;
-	this.translate = $translate;
-	this.compile = $compile;
-	this.toaster = toaster;
-	this.commentInput = {};
-	this.commentModalInput = {};
-	this.comments = {};
-	this.currentCommentModalId = '';
-	this.loadAllData = false;
-	this.dtInstance = {};
-	this.processes = {};
-	this.rows = {};
-	this.editProcess = {};
-	this.newLead = {};
-	this.dtOptions = DTOptionsBuilder.newOptions().withOption('ajax', {
-		url : '/api/rest/processes/state/open/leads',
-		error : function(xhr, error, thrown) {
-			console.log(xhr);
-		},
-		type : 'GET'
-	}).withOption('stateSave', true).withDOM(
-			'<"row"<"col-sm-12"l>>' + '<"row"<"col-sm-6"B><"col-sm-6"f>>'
-					+ '<"row"<"col-sm-12"tr>>'
-					+ '<"row"<"col-sm-5"i><"col-sm-7"p>>').withPaginationType(
-			'full_numbers').withButtons([ {
-		extend : 'copyHtml5',
-		exportOptions : {
-			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
-			modifier : {
-				page : 'current'
-			}
-		}
-	}, {
-		extend : 'print',
-		exportOptions : {
-			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
-			modifier : {
-				page : 'current'
-			}
-		}
-	}, {
-		extend : 'csvHtml5',
-		title : $translate('LEAD_LEADS'),
-		exportOptions : {
-			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
-			modifier : {
-				page : 'current'
-			}
-
-		}
-	}, {
-		extend : 'excelHtml5',
-		title : $translate.instant('LEAD_LEADS'),
-		exportOptions : {
-			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
-			modifier : {
-				page : 'current'
-			}
-		}
-	}, {
-		extend : 'pdfHtml5',
-		title : $translate('LEAD_LEADS'),
-		orientation : 'landscape',
-		exportOptions : {
-			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
-			modifier : {
-				page : 'current'
-			}
-		}
-	} ]).withBootstrap().withOption('createdRow', createdRow).withOption(
-			'order', [ 4, 'desc' ]);
-	this.dtColumns = [
-			DTColumnBuilder.newColumn(null).withTitle('').notSortable()
-					.renderWith(addDetailButton),
-			DTColumnBuilder.newColumn('lead.inquirer.lastname').withTitle(
-					$translate('COMMON_NAME')).withClass('text-center'),
-			DTColumnBuilder.newColumn('lead.inquirer.company').withTitle(
-					$translate('COMMON_COMPANY')).withClass('text-center'),
-			DTColumnBuilder.newColumn('lead.inquirer.email').withTitle(
-					$translate('COMMON_EMAIL')).withClass('text-center'),
-			DTColumnBuilder.newColumn('lead.timestamp').withTitle(
-					$translate('COMMON_DATE')).withOption('type', 'date-euro')
-					.withClass('text-center'),
-			DTColumnBuilder.newColumn('lead.inquirer.phone').withTitle(
-					$translate('COMMON_PHONE')).notVisible(),
-			DTColumnBuilder.newColumn('lead.inquirer.firstname').withTitle(
-					$translate('COMMON_FIRSTNAME')).notVisible(),
-			DTColumnBuilder.newColumn('lead.container.name').withTitle(
-					$translate('COMMON_CONTAINER')).notVisible(),
-			DTColumnBuilder.newColumn('lead.destination').withTitle(
-					$translate('COMMON_CONTAINER_DESTINATION')).notVisible(),
-			DTColumnBuilder.newColumn('lead.containerAmount').withTitle(
-					$translate('COMMON_CONTAINER_AMOUNT')).notVisible(),
-			DTColumnBuilder.newColumn(null).withTitle(
-					$translate('COMMON_CONTAINER_SINGLE_PRICE')).renderWith(
-					function(data, type, full) {
-						return $filter('currency')(
-								data.lead.container.priceNetto, '€', 2);
-					}).notVisible(),
-			DTColumnBuilder.newColumn(null).withTitle(
-					$translate('COMMON_CONTAINER_ENTIRE_PRICE'))
-					.renderWith(
-							function(data, type, full) {
-								return $filter('currency')(data.lead.leadPrice,
-										'€', 2);
-							}).notVisible(),
-			DTColumnBuilder.newColumn(null).withTitle(
-					$translate('COMMON_STATUS')).withClass('text-center')
-					.renderWith(addStatusStyle),
-			DTColumnBuilder.newColumn(null).withTitle(
-					'<span class="glyphicon glyphicon-cog"></span>').withClass(
-					'text-center').notSortable().renderWith(addActionsButtons) ];
-
-	if ($rootScope.language == 'de') {
-		vm.dtOptions
-				.withLanguageSource('/assets/datatablesTranslationFiles/German.json');
-	} else {
-		vm.dtOptions
-				.withLanguageSource('/assets/datatablesTranslationFiles/English.json');
-	}
-
-	vm.refreshData = refreshData;
-	function refreshData() {
-		var resetPaging = false;
-		this.dtInstance.reloadData(resetPaging);
-	}
-
-	vm.changeDataInput = changeDataInput;
-	function changeDataInput() {
-		if (vm.loadAllData == true) {
-			vm.dtOptions.withOption('serverSide', true).withOption('ajax', {
-				url : '/api/rest/processes/leads',
-				type : 'GET',
-				pages : 5,
-				dataSrc : 'data',
-				error : function(xhr, error, thrown) {
-					console.log(xhr);
-				}
-			}).withOption('searchDelay', 500);
-		} else {
-			vm.dtOptions.withOption('serverSide', false).withOption('ajax', {
-				url : '/api/rest/processes/state/open/leads',
-				error : function(xhr, error, thrown) {
-					console.log(xhr);
-				},
-				type : 'GET'
-			}).withOption('searchDelay', 0);
-		}
-	}
-
-	function createdRow(row, data, dataIndex) {
-		// Recompiling so we can bind Angular directive to the DT
-		vm.rows[data.id] = row;
-		var currentDate = moment(moment(), "DD.MM.YYYY");
-		var leadDate = moment(data.lead.timestamp, "DD.MM.YYYY");
-		if (currentDate.businessDiff(leadDate, 'days') > 3
-				&& data.status == 'open')
-			$(row).addClass('important');
-		vm.compile(angular.element(row).contents())(vm.scope);
-	}
-
-	function addActionsButtons(data, type, full, meta) {
-		vm.processes[data.id] = data;
-		var disabled = '';
-		var disablePin = '';
-		var hasRightToDelete = '';
-		var closeOrOpenInquiryDisable = '';
-		var openOrLock = $translate.instant('LEAD_CLOSE_LEAD');
-		var faOpenOrLOck = 'fa fa-lock';
-		if (data.status != 'open') {
-			disabled = 'disabled';
-			disablePin = 'disabled';
-			openOrLock = $translate.instant('LEAD_OPEN_LEAD');
-			faOpenOrLOck = 'fa fa-unlock';
-		}
-		if (data.offer != null || data.sale != null) {
-			closeOrOpenInquiryDisable = 'disabled';
-		}
-		if ($rootScope.globals.currentUser.role == 'user') {
-			hasRightToDelete = 'disabled';
-		}
-		if (data.processor != null
-				&& $rootScope.globals.currentUser.username != data.processor.username) {
-			disablePin = 'disabled';
-		}
-		if (vm.windowWidth > 1300) {
-			return '<div style="white-space: nowrap;"><button class="btn btn-white" '
-					+ disabled
-					+ ' ng-click="lead.followUp(lead.processes['
-					+ data.id
-					+ '])" title="'
-					+ $translate.instant('LEAD_FOLLOW_UP')
-					+ '">'
-					+ '   <i class="fa fa-check"></i>'
-					+ '</button>&nbsp;'
-					+ '<button class="btn btn-white" '
-					+ disablePin
-					+ ' ng-click="lead.pin(lead.processes['
-					+ data.id
-					+ '])" title="'
-					+ $translate.instant('LEAD_PIN')
-					+ '">'
-					+ '   <i class="fa fa-thumb-tack"></i>'
-					+ '</button>&nbsp;'
-					+ '<button class="btn btn-white" '
-					+ closeOrOpenInquiryDisable
-					+ ' ng-click="lead.closeOrOpenInquiry(lead.processes['
-					+ data.id
-					+ '])" title="'
-					+ openOrLock
-					+ '">'
-					+ '   <i class="'
-					+ faOpenOrLOck
-					+ '"></i>'
-					+ '</button>'
-					+ '<button class="btn btn-white" '
-					+ closeOrOpenInquiryDisable
-					+ ' ng-click="lead.loadDataToModal(lead.processes['
-					+ data.id
-					+ '])" data-toggle="modal"'
-					+ 'data-target="#editModal" title="'
-					+ $translate.instant('LEAD_EDIT_LEAD')
-					+ '">'
-					+ '<i class="fa fa-edit"></i>'
-					+ '</button>&nbsp;'
-					+ '<button class="btn btn-white" '
-					+ hasRightToDelete
-					+ ' ng-click="lead.deleteRow(lead.processes['
-					+ data.id
-					+ '])" title="'
-					+ $translate.instant('LEAD_DELETE_LEAD')
-					+ '">'
-					+ '   <i class="fa fa-trash-o"></i>'
-					+ '</button></div>';
-		} else {
-			return '<div class="dropdown">'
-					+ '<button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">'
-					+ '<i class="fa fa-wrench"></i></button>'
-					+ '<ul class="dropdown-menu pull-right">'
-					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-					+ disabled
-					+ ' ng-click="lead.followUp(lead.processes['
-					+ data.id
-					+ '])"><i class="fa fa-check">&nbsp;</i>'
-					+ $translate.instant('LEAD_FOLLOW_UP')
-					+ '</button></li>'
-					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-					+ disablePin
-					+ ' ng-click="lead.pin(lead.processes['
-					+ data.id
-					+ '])"><i class="fa fa-thumb-tack">&nbsp;</i>'
-					+ $translate.instant('LEAD_PIN')
-					+ '</button></li>'
-					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-					+ closeOrOpenInquiryDisable
-					+ ' ng-click="lead.closeOrOpenInquiry(lead.processes['
-					+ data.id
-					+ '])"><i class="'
-					+ faOpenOrLOck
-					+ '">&nbsp;</i>'
-					+ openOrLock
-					+ '</button></li>'
-					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-					+ closeOrOpenInquiryDisable
-					+ ' data-toggle="modal" data-target="#editModal" ng-click="lead.loadDataToModal(lead.processes['
-					+ data.id
-					+ '])"><i class="fa fa-edit"">&nbsp;</i>'
-					+ $translate.instant('LEAD_EDIT_LEAD')
-					+ '</button></li>'
-					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-					+ hasRightToDelete
-					+ ' ng-click="lead.deleteRow(lead.processes['
-					+ data.id
-					+ '])"><i class="fa fa-trash-o">&nbsp;</i>'
-					+ $translate.instant('LEAD_DELETE_LEAD')
-					+ '</button></li>'
-					+ '</ul>' + '</div>'
-		}
-	}
-
-	function addStatusStyle(data, type, full, meta) {
-		vm.processes[data.id] = data;
-		var hasProcessor = '';
-		if (data.processor != null)
-			hasProcessor = '&nbsp;<span style="color: #ea394c;"><i class="fa fa-thumb-tack"></i></span>';
-		if (data.status == 'open') {
-			return '<span style="color: green;">'
-					+ $translate.instant('COMMON_STATUS_OPEN') + '</span>'
-					+ hasProcessor;
-		} else if (data.status == 'offer') {
-			return '<span style="color: #f79d3c;">'
-					+ $translate.instant('COMMON_STATUS_OFFER') + '</span>'
-		} else if (data.status == 'followup') {
-			return '<span style="color: #f79d3c;">'
-					+ $translate.instant('COMMON_STATUS_FOLLOW_UP') + '</span>'
-		} else if (data.status == 'sale') {
-			return '<span style="color: #1872ab;">'
-					+ $translate.instant('COMMON_STATUS_SALE') + '</span>'
-		} else if (data.status == 'closed') {
-			return '<span style="color: #ea394c;">'
-					+ $translate.instant('COMMON_STATUS_CLOSED') + '</span>'
-		}
-	}
-
-	function addDetailButton(data, type, full, meta) {
-		vm.processes[data.id] = data;
-		return '<a class="green shortinfo" href="javascript:;"'
-				+ 'ng-click="lead.appendChildRow(lead.processes[' + data.id
-				+ '], $event)" title="Details">'
-				+ '<i class="glyphicon glyphicon-plus-sign"/></a>';
-	}
-}
-
-LeadsCtrl.prototype.appendChildRow = function(process, event) {
-	var childScope = this.scope.$new(true);
-	childScope.childData = process;
-	var vm = this;
-	this.commentService.getComments({
-		id : process.id
-	}).$promise.then(function(result) {
-		vm.comments[process.id] = [];
-		for ( var comment in result) {
-			if (comment == '$promise')
-				break;
-			vm.comments[process.id].push({
-				commentText : result[comment].commentText,
-				timestamp : result[comment].timestamp,
-				creator : result[comment].creator
-			});
-		}
-	});
-	childScope.parent = this;
-
-	var link = angular.element(event.currentTarget), icon = link
-			.find('.glyphicon'), tr = link.parent().parent(), table = this.dtInstance.DataTable, row = table
-			.row(tr);
-
-	if (row.child.isShown()) {
-		icon.removeClass('glyphicon-minus-sign')
-				.addClass('glyphicon-plus-sign');
-		row.child.hide();
-		tr.removeClass('shown');
-	} else {
-		icon.removeClass('glyphicon-plus-sign')
-				.addClass('glyphicon-minus-sign');
-		row.child(
-				this.compile(
-						'<div childrow type="lead" class="clearfix"></div>')(
-						childScope)).show();
-		tr.addClass('shown');
-	}
-};
-
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-
-LeadsCtrl.prototype.loadCurrentIdToModal = function(id) {
-	this.currentCommentModalId = id;
-};
-
-LeadsCtrl.prototype.addComment = function(id, source) {
-	var vm = this;
-	var commentText = '';
-	if (angular.isUndefined(this.comments[id])) {
-		this.comments[id] = [];
-	}
-	if (source == 'table' && this.commentInput[id] != ''
-			&& !angular.isUndefined(this.commentInput[id])) {
-		commentText = this.commentInput[id];
-	} else if (source == 'modal' && this.commentModalInput[id] != ''
-			&& !angular.isUndefined(this.commentModalInput[id])) {
-		commentText = this.commentModalInput[id];
-	}
-	var comment = {
-		process : this.processes[id],
-		creator : this.user,
-		commentText : commentText,
-		timestamp : this.filter('date')(new Date(), "dd.MM.yyyy HH:mm:ss")
-	};
-	this.commentService.addComment(comment).$promise.then(function() {
-		vm.comments[id].push(comment);
-		vm.commentInput[id] = '';
-		vm.commentModalInput[id] = '';
-	});
-};
-
-LeadsCtrl.prototype.saveLead = function() {
-	var vm = this;
-	if (angular.isUndefined(this.newLead.inquirer)) {
-		this.newLead.inquirer = {
-			title : ''
-		}
-	}
-	this.newLead.timestamp = this.filter('date')
-			(new Date(), 'dd.MM.yyyy HH:mm');
-	this.newLead.vendor = {
-		name : "***REMOVED***"
-	};
-	var process = {
-		lead : this.newLead,
-		status : 'open'
-	};
-	this.processesService.addProcess(process).$promise.then(function(result) {
-		vm.toaster.pop('success', '', vm.translate
-				.instant('COMMON_TOAST_SUCCESS_ADD_LEAD'));
-		vm.rootScope.leadsCount += 1;
-		vm.addForm.$setPristine();
-		vm.dtInstance.DataTable.row.add(result).draw();
-	});
-};
-
-LeadsCtrl.prototype.clearNewLead = function() {
-	this.newLead = {};
-	this.newLead.containerAmount = 1;
-	this.newLead.container = {
-		priceNetto : 0
-	}
-};
-
-LeadsCtrl.prototype.followUp = function(process) {
-	var vm = this;
-	var offer = {
-		container : {
-			name : process.lead.container.name,
-			description : process.lead.container.description,
-			priceNetto : process.lead.container.priceNetto
-		},
-		containerAmount : process.lead.containerAmount,
-		deliveryAddress : process.lead.destination,
-		offerPrice : (process.lead.containerAmount * process.lead.container.priceNetto),
-		prospect : {
-			company : process.lead.inquirer.company,
-			email : process.lead.inquirer.email,
-			firstname : process.lead.inquirer.firstname,
-			lastname : process.lead.inquirer.lastname,
-			phone : process.lead.inquirer.phone,
-			title : process.lead.inquirer.title
-		},
-		timestamp : this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm'),
-		vendor : process.lead.vendor
-	};
-	this.processesService.addOffer({
-		id : process.id
-	}, offer).$promise.then(function() {
-		vm.processesService.setStatus({
-			id : process.id
-		}, 'offer').$promise.then(function() {
-			vm.toaster.pop('success', '', vm.translate
-					.instant('COMMON_TOAST_SUCCESS_NEW_OFFER'));
-			vm.rootScope.leadsCount -= 1;
-			vm.rootScope.offersCount += 1;
-			if (process.processor == null) {
-				vm.processesService.setProcessor({
-					id : process.id
-				}, vm.user.username).$promise.then(function() {
-					process.processor = vm.user;
-					process.offer = offer;
-					process.status = 'offer';
-					vm.updateRow(process);
-				});
-			}
-		});
-	});
-};
-
-LeadsCtrl.prototype.pin = function(process) {
-	var vm = this;
-	if (process.processor == null) {
-		this.processesService.setProcessor({
-			id : process.id
-		}, vm.user.username).$promise.then(function() {
-			process.processor = vm.user;
-			vm.updateRow(process);
-		});
-	} else {
-		this.processesService.removeProcessor({
-			id : process.id
-		}).$promise.then(function() {
-			process.processor = null;
-			vm.updateRow(process);
-		});
-	}
-}
-
-LeadsCtrl.prototype.closeOrOpenInquiry = function(process) {
-	var vm = this;
-	if (process.status == "open") {
-		this.processesService.setStatus({
-			id : process.id
-		}, 'closed').$promise.then(function() {
-			vm.toaster.pop('success', '', vm.translate
-					.instant('COMMON_TOAST_SUCCESS_CLOSE_LEAD'));
-			vm.rootScope.leadsCount -= 1;
-			process.status = 'closed';
-			vm.updateRow(process);
-		});
-	} else if (process.status == "closed") {
-		this.processesService.setStatus({
-			id : process.id
-		}, 'open').$promise.then(function() {
-			vm.toaster.pop('success', '', vm.translate
-					.instant('COMMON_TOAST_SUCCESS_OPEN_LEAD'));
-			vm.rootScope.leadsCount += 1;
-			process.status = 'open';
-			vm.updateRow(process);
-		});
-	}
-};
-
-LeadsCtrl.prototype.loadDataToModal = function(process) {
-	this.editProcess = process;
-};
-
-LeadsCtrl.prototype.saveEditedRow = function() {
-	var vm = this;
-	this.processesService.putLead({
-		id : this.editProcess.lead.id
-	}, this.editProcess.lead).$promise.then(function() {
-		vm.toaster.pop('success', '', vm.translate
-				.instant('COMMON_TOAST_SUCCESS_UPDATE_LEAD'));
-		vm.editForm.$setPristine();
-		vm.editProcess.lead.leadPrice = vm.editProcess.lead.containerAmount
-				* vm.editProcess.lead.container.priceNetto;
-		vm.updateRow(vm.editProcess);
-	});
-};
-
-LeadsCtrl.prototype.deleteRow = function(process) {
-	var vm = this;
-	var leadId = process.lead.id;
-	if (process.sale != null || process.offer != null) {
-		vm.toaster.pop('error', '', vm.translate
-				.instant('COMMON_TOAST_FAILURE_DELETE_LEAD'));
-		return;
-	}
-	process.lead = null;
-	this.processesService.putProcess({
-		id : process.id
-	}, process).$promise.then(function() {
-		if (process.offer == null && process.sale == null) {
-			vm.processesService.deleteProcess({
-				id : process.id
-			});
-		}
-		vm.processesService.deleteLead({
-			id : leadId
-		}).$promise.then(function() {
-			vm.toaster.pop('success', '', vm.translate
-					.instant('COMMON_TOAST_SUCCESS_DELETE_LEAD'));
-			vm.rootScope.leadsCount -= 1;
-			vm.dtInstance.DataTable.row(vm.rows[process.id]).remove().draw();
-		});
-	});
-};
-
-LeadsCtrl.prototype.updateRow = function(process) {
-	this.dtInstance.DataTable.row(this.rows[process.id]).data(process).draw(
-			false);
-	this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
-};
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-
-'use strict';
-
+/*
 angular.module('app', [ 'app.services', 'app.dashboard', 'app.login',
 		'app.signup', 'app.leads', 'app.offers', 'app.sales', 'app.statistics',
 		'app.settings', 'app.profile', 'pascalprecht.translate', 'ngResource',
 		'ngRoute', 'ngAnimate', 'ngCookies', 'datatables',
 		'datatables.bootstrap', 'datatables.buttons', 'ui.sortable',
 		'NgSwitchery', 'toaster', 'highcharts-ng','testModule']);
-
+*/
 angular
 		.module('app')
 		.config(
@@ -1128,7 +249,7 @@ angular
 							};
 
 						} ]);
-
+/*
 angular
 		.module('app')
 		.controller(
@@ -1197,6 +318,45 @@ angular
 					}.bind(this), 300000);
 
 				});
+*/
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of
+ * Eviarc GmbH and its suppliers, if any. The intellectual and technical
+ * concepts contained herein are proprietary to Eviarc GmbH, and are protected
+ * by trade secret or copyright law. Dissemination of this information or
+ * reproduction of this material is strictly forbidden unless prior written
+ * permission is obtained from Eviarc GmbH.
+ ******************************************************************************/
+"use strict";
+angular.module("app", [
+    "app.services",
+    "app.dashboard",
+    "app.login",
+    "app.signup",
+    "app.leads",
+    "app.offers",
+    "app.sales",
+    "app.statistics",
+    "app.settings",
+    "app.profile",
+    "pascalprecht.translate",
+    "ngResource",
+    "ngRoute",
+    "ngAnimate",
+    "ngCookies",
+    "datatables",
+    "datatables.bootstrap",
+    "datatables.buttons",
+    "ui.sortable",
+    "NgSwitchery",
+    "toaster",
+    "highcharts-ng",
+    "testModule"
+]);
+
+
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -1904,6 +1064,1006 @@ function config($translateProvider) {
 angular
     .module('app')
     .config(config);
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
+'use strict';
+
+angular.module('app.dashboard', ['ngResource']).controller('DashboardCtrl', DashboardCtrl);
+
+DashboardCtrl.$inject = ['toaster', 'Processes', 'Comments', '$filter', '$translate', '$rootScope', '$scope', '$interval', 'Profile', 'Leads', 'Offers', 'Sales', 'Profit', 'Turnover'];
+
+function DashboardCtrl(toaster, Processes, Comments, $filter, $translate, $rootScope, $scope, $interval, Profile, Leads, Offers, Sales, Profit, Turnover) {
+
+    var vm = this;
+    this.toaster = toaster;
+    this.filter = $filter;
+    this.orderBy = $filter('orderBy');
+    this.translate = $translate;
+    this.rootScope = $rootScope;
+    this.processesService = Processes;
+    this.commentsService = Comments;
+    this.commentModalInput = '';
+    this.comments = {};
+    this.infoData = {};
+    this.infoType = '';
+    this.infoProcess = {};
+    this.infoComments = [];
+
+    this.leadsAmount = {};
+    this.offersAmount = {};
+    this.salesAmount = {};
+    this.profit = {};
+    this.turnover = {};
+    this.conversionRate = {};
+
+    Processes.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
+        vm.openLead = vm.orderBy(result, 'lead.timestamp', false);
+    });
+    Processes.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
+        vm.openOffer = vm.orderBy(result, 'offer.timestamp', false);
+    });
+    Processes.getLatestSales().$promise.then(function (result) {
+        vm.sales = result;
+    });
+
+    this.user = {};
+    if (!angular.isUndefined($rootScope.globals.currentUser))
+        Profile.get({username: $rootScope.globals.currentUser.username}).$promise.then(function (result) {
+            vm.user = result;
+        });
+
+    this.sortableOptions = {
+        update: function (e, ui) {
+            var target = ui.item.sortable.droptargetModel;
+            var source = ui.item.sortable.sourceModel;
+            if ((vm.openLead == target && vm.openOffer == source) ||
+                (vm.openLead == source && vm.sales == target) ||
+                target == source) {
+                ui.item.sortable.cancel();
+            }
+        },
+        stop: function (e, ui) {
+            var target = ui.item.sortable.droptargetModel;
+            var source = ui.item.sortable.sourceModel;
+            var item = ui.item.sortable.model;
+            if (vm.sales == target && vm.openOffer == source) {
+                vm.addOfferToSale(item);
+            }
+            else if (vm.openOffer == target && vm.openLead == source) {
+                vm.addLeadToOffer(item);
+            }
+        },
+        connectWith: ".connectList",
+        items: "li:not(.not-sortable)"
+    };
+
+    var stop;
+    $scope.$on('$destroy', function () {
+        if (angular.isDefined(stop)) {
+            $interval.cancel(stop);
+            stop = undefined;
+        }
+    });
+    stop = $interval(function () {
+        vm.refreshData();
+    }.bind(this), 200000);
+
+    this.leadsService = Leads;
+    this.offersService = Offers;
+    this.salesService = Sales;
+    this.profitService = Profit;
+    this.turnoverService = Turnover;
+
+    this.leadsService.week().$promise.then(function (result) {
+        vm.getLeads(result);
+        vm.salesService.week().$promise.then(function (result) {
+            vm.getSales(result);
+        });
+    });
+    vm.offersService.week().$promise.then(function (result) {
+        vm.getOffers(result);
+    });
+    vm.profitService.week().$promise.then(function (result) {
+        vm.getProfit(result);
+    });
+    vm.turnoverService.week().$promise.then(function (result) {
+        vm.getTurnover(result);
+    });
+
+
+}
+
+DashboardCtrl.prototype.addLeadToOffer = function (process) {
+    var vm = this;
+    var offer = {
+        container: {
+            name: process.lead.container.name,
+            description: process.lead.container.description,
+            priceNetto: process.lead.container.priceNetto
+        },
+        containerAmount: process.lead.containerAmount,
+        deliveryAddress: process.lead.destination,
+        offerPrice: (process.lead.containerAmount * process.lead.container.priceNetto),
+        prospect: {
+            company: process.lead.inquirer.company,
+            email: process.lead.inquirer.email,
+            firstname: process.lead.inquirer.firstname,
+            lastname: process.lead.inquirer.lastname,
+            phone: process.lead.inquirer.phone,
+            title: process.lead.inquirer.title
+        },
+        timestamp: this.filter('date')(new Date(), "dd.MM.yyyy HH:mm"),
+        vendor: process.lead.vendor
+    };
+    this.processesService.addOffer({id: process.id}, offer).$promise.then(function () {
+        vm.processesService.setStatus({id: process.id}, 'offer').$promise.then(function () {
+            vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_NEW_OFFER'));
+            vm.rootScope.leadsCount -= 1;
+            vm.rootScope.offersCount += 1;
+            vm.processesService.setProcessor({id: process.id}, vm.user.username).$promise.then(function () {
+                process.processor = vm.user;
+            });
+            process.offer = offer;
+            vm.openOffer = vm.orderBy(vm.openOffer, 'offer.timestamp', false);
+        });
+    });
+};
+DashboardCtrl.prototype.addOfferToSale = function (process) {
+    var vm = this;
+    var sale = {
+        container: {
+            name: process.offer.container.name,
+            description: process.offer.container.description,
+            priceNetto: process.offer.container.priceNetto
+        },
+        containerAmount: process.offer.containerAmount,
+        transport: process.offer.deliveryAddress,
+        customer: {
+            company: process.offer.prospect.company,
+            email: process.offer.prospect.email,
+            firstname: process.offer.prospect.firstname,
+            lastname: process.offer.prospect.lastname,
+            phone: process.offer.prospect.phone,
+            title: process.offer.prospect.title
+        },
+        saleProfit: 0,
+        saleReturn: process.offer.offerPrice,
+        timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm'),
+        vendor: process.offer.vendor
+    };
+    this.processesService.addSale({id: process.id}, sale).$promise.then(function () {
+        vm.processesService.setStatus({id: process.id}, 'sale').$promise.then(function () {
+            vm.toaster.pop('success', '', vm.translate.instant('COMMON_TOAST_SUCCESS_NEW_SALE'));
+            vm.rootScope.offersCount -= 1;
+            process.sale = sale;
+            vm.sales = vm.orderBy(vm.sales, 'sale.timestamp', true);
+        });
+    });
+};
+
+DashboardCtrl.prototype.saveDataToModal = function (info, type, process) {
+    this.infoData = info;
+    this.infoType = type;
+    this.infoProcess = process;
+    var vm = this;
+    this.commentsService.getComments({id: process.id}).$promise.then(function (result) {
+        vm.infoComments = [];
+        for (var comment in result) {
+            if (comment == '$promise')
+                break;
+            vm.infoComments.push({
+                commentText: result[comment].commentText,
+                timestamp: result[comment].timestamp,
+                creator: result[comment].creator
+            });
+        }
+    });
+};
+DashboardCtrl.prototype.refreshData = function () {
+    var vm = this;
+    this.processesService.getProcessByLeadAndStatus({status: 'open'}).$promise.then(function (result) {
+        vm.openLead = vm.orderBy(result, 'lead.timestamp', false);
+    });
+    this.processesService.getProcessByOfferAndStatus({status: 'offer'}).$promise.then(function (result) {
+        vm.openOffer = vm.orderBy(result, 'offer.timestamp', false);
+    });
+    this.processesService.getLatestSales().$promise.then(function (result) {
+        vm.sales = result;
+    });
+};
+
+DashboardCtrl.prototype.addComment = function (process) {
+    var vm = this;
+    if (angular.isUndefined(this.infoComments)) {
+        this.infoComments = [];
+    }
+    if (this.commentModalInput != '' && !angular.isUndefined(this.commentModalInput)) {
+        var comment = {
+        	process: process,
+        	creator: this.user,
+        	commentText: this.commentModalInput,
+        	timestamp: this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm:ss')
+        };
+        this.commentsService.addComment(comment).$promise.then(function () {
+            vm.infoComments.push(comment);
+            vm.commentModalInput = '';
+        });
+    }
+};
+
+DashboardCtrl.prototype.getProfit = function (profits) {
+    var summe = 0;
+    for (var profit in profits.result) {
+        summe = summe + profits.result[profit];
+    }
+    this.profit = summe;
+};
+
+DashboardCtrl.prototype.getTurnover = function (turnovers) {
+    var summe = 0;
+    for (var turnover in turnovers.result) {
+        summe = summe + turnovers.result[turnover];
+    }
+    this.turnover = summe;
+};
+
+DashboardCtrl.prototype.getLeads = function (leads) {
+    var summe = 0;
+    for (var lead in leads.result) {
+        summe += leads.result[lead];
+    }
+    this.leadsAmount = summe;
+};
+
+DashboardCtrl.prototype.getOffers = function (offers) {
+    var summe = 0;
+    for (var offer in offers.result) {
+        summe += offers.result[offer];
+    }
+    this.offersAmount = summe;
+};
+
+DashboardCtrl.prototype.getSales = function (sales) {
+    var summe = 0;
+    for (var sale in sales.result) {
+        summe += sales.result[sale];
+    }
+    this.salesAmount = summe;
+    this.getConversionrate();
+};
+
+DashboardCtrl.prototype.getConversionrate = function () {
+    if (this.leadsAmount != 0) {
+        this.conversionRate = (this.salesAmount / this.leadsAmount) * 100;
+    }
+    else
+        this.conversionRate = 0;
+};
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
+ * 
+ * NOTICE: All information contained herein is, and remains the property of
+ * Eviarc GmbH and its suppliers, if any. The intellectual and technical
+ * concepts contained herein are proprietary to Eviarc GmbH, and are protected
+ * by trade secret or copyright law. Dissemination of this information or
+ * reproduction of this material is strictly forbidden unless prior written
+ * permission is obtained from Eviarc GmbH.
+ ******************************************************************************/
+
+'use strict';
+angular.module('app.leads', [ 'ngResource' ])
+		.controller('LeadsCtrl', LeadsCtrl);
+LeadsCtrl.$inject = [ 'DTOptionsBuilder', 'DTColumnBuilder', '$compile',
+		'$scope', 'toaster', 'Processes', 'Comments', '$filter', 'Profile',
+		'$rootScope', '$translate' ];
+function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
+		toaster, Processes, Comments, $filter, Profile, $rootScope, $translate) {
+
+	var vm = this;
+	this.filter = $filter;
+	this.processesService = Processes;
+	this.commentService = Comments;
+	this.userService = Profile;
+	this.user = {};
+	this.windowWidth = $(window).width();
+	if (!angular.isUndefined($rootScope.globals.currentUser))
+		this.userService.get({
+			username : $rootScope.globals.currentUser.username
+		}).$promise.then(function(result) {
+			vm.user = result;
+		});
+	this.scope = $scope;
+	this.rootScope = $rootScope;
+	this.translate = $translate;
+	this.compile = $compile;
+	this.toaster = toaster;
+	this.commentInput = {};
+	this.commentModalInput = {};
+	this.comments = {};
+	this.currentCommentModalId = '';
+	this.loadAllData = false;
+	this.dtInstance = {};
+	this.processes = {};
+	this.rows = {};
+	this.editProcess = {};
+	this.newLead = {};
+	this.dtOptions = DTOptionsBuilder.newOptions().withOption('ajax', {
+		url : '/api/rest/processes/state/open/leads',
+		error : function(xhr, error, thrown) {
+			console.log(xhr);
+		},
+		type : 'GET'
+	}).withOption('stateSave', true).withDOM(
+			'<"row"<"col-sm-12"l>>' + '<"row"<"col-sm-6"B><"col-sm-6"f>>'
+					+ '<"row"<"col-sm-12"tr>>'
+					+ '<"row"<"col-sm-5"i><"col-sm-7"p>>').withPaginationType(
+			'full_numbers').withButtons([ {
+		extend : 'copyHtml5',
+		exportOptions : {
+			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
+			modifier : {
+				page : 'current'
+			}
+		}
+	}, {
+		extend : 'print',
+		exportOptions : {
+			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
+			modifier : {
+				page : 'current'
+			}
+		}
+	}, {
+		extend : 'csvHtml5',
+		title : $translate('LEAD_LEADS'),
+		exportOptions : {
+			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
+			modifier : {
+				page : 'current'
+			}
+
+		}
+	}, {
+		extend : 'excelHtml5',
+		title : $translate.instant('LEAD_LEADS'),
+		exportOptions : {
+			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
+			modifier : {
+				page : 'current'
+			}
+		}
+	}, {
+		extend : 'pdfHtml5',
+		title : $translate('LEAD_LEADS'),
+		orientation : 'landscape',
+		exportOptions : {
+			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
+			modifier : {
+				page : 'current'
+			}
+		}
+	} ]).withBootstrap().withOption('createdRow', createdRow).withOption(
+			'order', [ 4, 'desc' ]);
+	this.dtColumns = [
+			DTColumnBuilder.newColumn(null).withTitle('').notSortable()
+					.renderWith(addDetailButton),
+			DTColumnBuilder.newColumn('lead.inquirer.lastname').withTitle(
+					$translate('COMMON_NAME')).withClass('text-center'),
+			DTColumnBuilder.newColumn('lead.inquirer.company').withTitle(
+					$translate('COMMON_COMPANY')).withClass('text-center'),
+			DTColumnBuilder.newColumn('lead.inquirer.email').withTitle(
+					$translate('COMMON_EMAIL')).withClass('text-center'),
+			DTColumnBuilder.newColumn('lead.timestamp').withTitle(
+					$translate('COMMON_DATE')).withOption('type', 'date-euro')
+					.withClass('text-center'),
+			DTColumnBuilder.newColumn('lead.inquirer.phone').withTitle(
+					$translate('COMMON_PHONE')).notVisible(),
+			DTColumnBuilder.newColumn('lead.inquirer.firstname').withTitle(
+					$translate('COMMON_FIRSTNAME')).notVisible(),
+			DTColumnBuilder.newColumn('lead.container.name').withTitle(
+					$translate('COMMON_CONTAINER')).notVisible(),
+			DTColumnBuilder.newColumn('lead.destination').withTitle(
+					$translate('COMMON_CONTAINER_DESTINATION')).notVisible(),
+			DTColumnBuilder.newColumn('lead.containerAmount').withTitle(
+					$translate('COMMON_CONTAINER_AMOUNT')).notVisible(),
+			DTColumnBuilder.newColumn(null).withTitle(
+					$translate('COMMON_CONTAINER_SINGLE_PRICE')).renderWith(
+					function(data, type, full) {
+						return $filter('currency')(
+								data.lead.container.priceNetto, '€', 2);
+					}).notVisible(),
+			DTColumnBuilder.newColumn(null).withTitle(
+					$translate('COMMON_CONTAINER_ENTIRE_PRICE'))
+					.renderWith(
+							function(data, type, full) {
+								return $filter('currency')(data.lead.leadPrice,
+										'€', 2);
+							}).notVisible(),
+			DTColumnBuilder.newColumn(null).withTitle(
+					$translate('COMMON_STATUS')).withClass('text-center')
+					.renderWith(addStatusStyle),
+			DTColumnBuilder.newColumn(null).withTitle(
+					'<span class="glyphicon glyphicon-cog"></span>').withClass(
+					'text-center').notSortable().renderWith(addActionsButtons) ];
+
+	if ($rootScope.language == 'de') {
+		vm.dtOptions
+				.withLanguageSource('/assets/datatablesTranslationFiles/German.json');
+	} else {
+		vm.dtOptions
+				.withLanguageSource('/assets/datatablesTranslationFiles/English.json');
+	}
+
+	vm.refreshData = refreshData;
+	function refreshData() {
+		var resetPaging = false;
+		this.dtInstance.reloadData(resetPaging);
+	}
+
+	vm.changeDataInput = changeDataInput;
+	function changeDataInput() {
+		if (vm.loadAllData == true) {
+			vm.dtOptions.withOption('serverSide', true).withOption('ajax', {
+				url : '/api/rest/processes/leads',
+				type : 'GET',
+				pages : 5,
+				dataSrc : 'data',
+				error : function(xhr, error, thrown) {
+					console.log(xhr);
+				}
+			}).withOption('searchDelay', 500);
+		} else {
+			vm.dtOptions.withOption('serverSide', false).withOption('ajax', {
+				url : '/api/rest/processes/state/open/leads',
+				error : function(xhr, error, thrown) {
+					console.log(xhr);
+				},
+				type : 'GET'
+			}).withOption('searchDelay', 0);
+		}
+	}
+
+	function createdRow(row, data, dataIndex) {
+		// Recompiling so we can bind Angular directive to the DT
+		vm.rows[data.id] = row;
+		var currentDate = moment(moment(), "DD.MM.YYYY");
+		var leadDate = moment(data.lead.timestamp, "DD.MM.YYYY");
+		if (currentDate.businessDiff(leadDate, 'days') > 3
+				&& data.status == 'open')
+			$(row).addClass('important');
+		vm.compile(angular.element(row).contents())(vm.scope);
+	}
+
+	function addActionsButtons(data, type, full, meta) {
+		vm.processes[data.id] = data;
+		var disabled = '';
+		var disablePin = '';
+		var hasRightToDelete = '';
+		var closeOrOpenInquiryDisable = '';
+		var openOrLock = $translate.instant('LEAD_CLOSE_LEAD');
+		var faOpenOrLOck = 'fa fa-lock';
+		if (data.status != 'open') {
+			disabled = 'disabled';
+			disablePin = 'disabled';
+			openOrLock = $translate.instant('LEAD_OPEN_LEAD');
+			faOpenOrLOck = 'fa fa-unlock';
+		}
+		if (data.offer != null || data.sale != null) {
+			closeOrOpenInquiryDisable = 'disabled';
+		}
+		if ($rootScope.globals.currentUser.role == 'user') {
+			hasRightToDelete = 'disabled';
+		}
+		if (data.processor != null
+				&& $rootScope.globals.currentUser.username != data.processor.username) {
+			disablePin = 'disabled';
+		}
+		if (vm.windowWidth > 1300) {
+			return '<div style="white-space: nowrap;"><button class="btn btn-white" '
+					+ disabled
+					+ ' ng-click="lead.followUp(lead.processes['
+					+ data.id
+					+ '])" title="'
+					+ $translate.instant('LEAD_FOLLOW_UP')
+					+ '">'
+					+ '   <i class="fa fa-check"></i>'
+					+ '</button>&nbsp;'
+					+ '<button class="btn btn-white" '
+					+ disablePin
+					+ ' ng-click="lead.pin(lead.processes['
+					+ data.id
+					+ '])" title="'
+					+ $translate.instant('LEAD_PIN')
+					+ '">'
+					+ '   <i class="fa fa-thumb-tack"></i>'
+					+ '</button>&nbsp;'
+					+ '<button class="btn btn-white" '
+					+ closeOrOpenInquiryDisable
+					+ ' ng-click="lead.closeOrOpenInquiry(lead.processes['
+					+ data.id
+					+ '])" title="'
+					+ openOrLock
+					+ '">'
+					+ '   <i class="'
+					+ faOpenOrLOck
+					+ '"></i>'
+					+ '</button>'
+					+ '<button class="btn btn-white" '
+					+ closeOrOpenInquiryDisable
+					+ ' ng-click="lead.loadDataToModal(lead.processes['
+					+ data.id
+					+ '])" data-toggle="modal"'
+					+ 'data-target="#editModal" title="'
+					+ $translate.instant('LEAD_EDIT_LEAD')
+					+ '">'
+					+ '<i class="fa fa-edit"></i>'
+					+ '</button>&nbsp;'
+					+ '<button class="btn btn-white" '
+					+ hasRightToDelete
+					+ ' ng-click="lead.deleteRow(lead.processes['
+					+ data.id
+					+ '])" title="'
+					+ $translate.instant('LEAD_DELETE_LEAD')
+					+ '">'
+					+ '   <i class="fa fa-trash-o"></i>'
+					+ '</button></div>';
+		} else {
+			return '<div class="dropdown">'
+					+ '<button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">'
+					+ '<i class="fa fa-wrench"></i></button>'
+					+ '<ul class="dropdown-menu pull-right">'
+					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+					+ disabled
+					+ ' ng-click="lead.followUp(lead.processes['
+					+ data.id
+					+ '])"><i class="fa fa-check">&nbsp;</i>'
+					+ $translate.instant('LEAD_FOLLOW_UP')
+					+ '</button></li>'
+					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+					+ disablePin
+					+ ' ng-click="lead.pin(lead.processes['
+					+ data.id
+					+ '])"><i class="fa fa-thumb-tack">&nbsp;</i>'
+					+ $translate.instant('LEAD_PIN')
+					+ '</button></li>'
+					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+					+ closeOrOpenInquiryDisable
+					+ ' ng-click="lead.closeOrOpenInquiry(lead.processes['
+					+ data.id
+					+ '])"><i class="'
+					+ faOpenOrLOck
+					+ '">&nbsp;</i>'
+					+ openOrLock
+					+ '</button></li>'
+					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+					+ closeOrOpenInquiryDisable
+					+ ' data-toggle="modal" data-target="#editModal" ng-click="lead.loadDataToModal(lead.processes['
+					+ data.id
+					+ '])"><i class="fa fa-edit"">&nbsp;</i>'
+					+ $translate.instant('LEAD_EDIT_LEAD')
+					+ '</button></li>'
+					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+					+ hasRightToDelete
+					+ ' ng-click="lead.deleteRow(lead.processes['
+					+ data.id
+					+ '])"><i class="fa fa-trash-o">&nbsp;</i>'
+					+ $translate.instant('LEAD_DELETE_LEAD')
+					+ '</button></li>'
+					+ '</ul>' + '</div>'
+		}
+	}
+
+	function addStatusStyle(data, type, full, meta) {
+		vm.processes[data.id] = data;
+		var hasProcessor = '';
+		if (data.processor != null)
+			hasProcessor = '&nbsp;<span style="color: #ea394c;"><i class="fa fa-thumb-tack"></i></span>';
+		if (data.status == 'open') {
+			return '<span style="color: green;">'
+					+ $translate.instant('COMMON_STATUS_OPEN') + '</span>'
+					+ hasProcessor;
+		} else if (data.status == 'offer') {
+			return '<span style="color: #f79d3c;">'
+					+ $translate.instant('COMMON_STATUS_OFFER') + '</span>'
+		} else if (data.status == 'followup') {
+			return '<span style="color: #f79d3c;">'
+					+ $translate.instant('COMMON_STATUS_FOLLOW_UP') + '</span>'
+		} else if (data.status == 'sale') {
+			return '<span style="color: #1872ab;">'
+					+ $translate.instant('COMMON_STATUS_SALE') + '</span>'
+		} else if (data.status == 'closed') {
+			return '<span style="color: #ea394c;">'
+					+ $translate.instant('COMMON_STATUS_CLOSED') + '</span>'
+		}
+	}
+
+	function addDetailButton(data, type, full, meta) {
+		vm.processes[data.id] = data;
+		return '<a class="green shortinfo" href="javascript:;"'
+				+ 'ng-click="lead.appendChildRow(lead.processes[' + data.id
+				+ '], $event)" title="Details">'
+				+ '<i class="glyphicon glyphicon-plus-sign"/></a>';
+	}
+}
+
+LeadsCtrl.prototype.appendChildRow = function(process, event) {
+	var childScope = this.scope.$new(true);
+	childScope.childData = process;
+	var vm = this;
+	this.commentService.getComments({
+		id : process.id
+	}).$promise.then(function(result) {
+		vm.comments[process.id] = [];
+		for ( var comment in result) {
+			if (comment == '$promise')
+				break;
+			vm.comments[process.id].push({
+				commentText : result[comment].commentText,
+				timestamp : result[comment].timestamp,
+				creator : result[comment].creator
+			});
+		}
+	});
+	childScope.parent = this;
+
+	var link = angular.element(event.currentTarget), icon = link
+			.find('.glyphicon'), tr = link.parent().parent(), table = this.dtInstance.DataTable, row = table
+			.row(tr);
+
+	if (row.child.isShown()) {
+		icon.removeClass('glyphicon-minus-sign')
+				.addClass('glyphicon-plus-sign');
+		row.child.hide();
+		tr.removeClass('shown');
+	} else {
+		icon.removeClass('glyphicon-plus-sign')
+				.addClass('glyphicon-minus-sign');
+		row.child(
+				this.compile(
+						'<div childrow type="lead" class="clearfix"></div>')(
+						childScope)).show();
+		tr.addClass('shown');
+	}
+};
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
+ * 
+ * NOTICE: All information contained herein is, and remains the property of
+ * Eviarc GmbH and its suppliers, if any. The intellectual and technical
+ * concepts contained herein are proprietary to Eviarc GmbH, and are protected
+ * by trade secret or copyright law. Dissemination of this information or
+ * reproduction of this material is strictly forbidden unless prior written
+ * permission is obtained from Eviarc GmbH.
+ ******************************************************************************/
+
+LeadsCtrl.prototype.loadCurrentIdToModal = function(id) {
+	this.currentCommentModalId = id;
+};
+
+LeadsCtrl.prototype.addComment = function(id, source) {
+	var vm = this;
+	var commentText = '';
+	if (angular.isUndefined(this.comments[id])) {
+		this.comments[id] = [];
+	}
+	if (source == 'table' && this.commentInput[id] != ''
+			&& !angular.isUndefined(this.commentInput[id])) {
+		commentText = this.commentInput[id];
+	} else if (source == 'modal' && this.commentModalInput[id] != ''
+			&& !angular.isUndefined(this.commentModalInput[id])) {
+		commentText = this.commentModalInput[id];
+	}
+	var comment = {
+		process : this.processes[id],
+		creator : this.user,
+		commentText : commentText,
+		timestamp : this.filter('date')(new Date(), "dd.MM.yyyy HH:mm:ss")
+	};
+	this.commentService.addComment(comment).$promise.then(function() {
+		vm.comments[id].push(comment);
+		vm.commentInput[id] = '';
+		vm.commentModalInput[id] = '';
+	});
+};
+
+LeadsCtrl.prototype.saveLead = function() {
+	var vm = this;
+	if (angular.isUndefined(this.newLead.inquirer)) {
+		this.newLead.inquirer = {
+			title : ''
+		}
+	}
+	this.newLead.timestamp = this.filter('date')
+			(new Date(), 'dd.MM.yyyy HH:mm');
+	this.newLead.vendor = {
+		name : "***REMOVED***"
+	};
+	var process = {
+		lead : this.newLead,
+		status : 'open'
+	};
+	this.processesService.addProcess(process).$promise.then(function(result) {
+		vm.toaster.pop('success', '', vm.translate
+				.instant('COMMON_TOAST_SUCCESS_ADD_LEAD'));
+		vm.rootScope.leadsCount += 1;
+		vm.addForm.$setPristine();
+		vm.dtInstance.DataTable.row.add(result).draw();
+	});
+};
+
+LeadsCtrl.prototype.clearNewLead = function() {
+	this.newLead = {};
+	this.newLead.containerAmount = 1;
+	this.newLead.container = {
+		priceNetto : 0
+	}
+};
+
+LeadsCtrl.prototype.followUp = function(process) {
+	var vm = this;
+	var offer = {
+		container : {
+			name : process.lead.container.name,
+			description : process.lead.container.description,
+			priceNetto : process.lead.container.priceNetto
+		},
+		containerAmount : process.lead.containerAmount,
+		deliveryAddress : process.lead.destination,
+		offerPrice : (process.lead.containerAmount * process.lead.container.priceNetto),
+		prospect : {
+			company : process.lead.inquirer.company,
+			email : process.lead.inquirer.email,
+			firstname : process.lead.inquirer.firstname,
+			lastname : process.lead.inquirer.lastname,
+			phone : process.lead.inquirer.phone,
+			title : process.lead.inquirer.title
+		},
+		timestamp : this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm'),
+		vendor : process.lead.vendor
+	};
+	this.processesService.addOffer({
+		id : process.id
+	}, offer).$promise.then(function() {
+		vm.processesService.setStatus({
+			id : process.id
+		}, 'offer').$promise.then(function() {
+			vm.toaster.pop('success', '', vm.translate
+					.instant('COMMON_TOAST_SUCCESS_NEW_OFFER'));
+			vm.rootScope.leadsCount -= 1;
+			vm.rootScope.offersCount += 1;
+			if (process.processor == null) {
+				vm.processesService.setProcessor({
+					id : process.id
+				}, vm.user.username).$promise.then(function() {
+					process.processor = vm.user;
+					process.offer = offer;
+					process.status = 'offer';
+					vm.updateRow(process);
+				});
+			}
+		});
+	});
+};
+
+LeadsCtrl.prototype.pin = function(process) {
+	var vm = this;
+	if (process.processor == null) {
+		this.processesService.setProcessor({
+			id : process.id
+		}, vm.user.username).$promise.then(function() {
+			process.processor = vm.user;
+			vm.updateRow(process);
+		});
+	} else {
+		this.processesService.removeProcessor({
+			id : process.id
+		}).$promise.then(function() {
+			process.processor = null;
+			vm.updateRow(process);
+		});
+	}
+}
+
+LeadsCtrl.prototype.closeOrOpenInquiry = function(process) {
+	var vm = this;
+	if (process.status == "open") {
+		this.processesService.setStatus({
+			id : process.id
+		}, 'closed').$promise.then(function() {
+			vm.toaster.pop('success', '', vm.translate
+					.instant('COMMON_TOAST_SUCCESS_CLOSE_LEAD'));
+			vm.rootScope.leadsCount -= 1;
+			process.status = 'closed';
+			vm.updateRow(process);
+		});
+	} else if (process.status == "closed") {
+		this.processesService.setStatus({
+			id : process.id
+		}, 'open').$promise.then(function() {
+			vm.toaster.pop('success', '', vm.translate
+					.instant('COMMON_TOAST_SUCCESS_OPEN_LEAD'));
+			vm.rootScope.leadsCount += 1;
+			process.status = 'open';
+			vm.updateRow(process);
+		});
+	}
+};
+
+LeadsCtrl.prototype.loadDataToModal = function(process) {
+	this.editProcess = process;
+};
+
+LeadsCtrl.prototype.saveEditedRow = function() {
+	var vm = this;
+	this.processesService.putLead({
+		id : this.editProcess.lead.id
+	}, this.editProcess.lead).$promise.then(function() {
+		vm.toaster.pop('success', '', vm.translate
+				.instant('COMMON_TOAST_SUCCESS_UPDATE_LEAD'));
+		vm.editForm.$setPristine();
+		vm.editProcess.lead.leadPrice = vm.editProcess.lead.containerAmount
+				* vm.editProcess.lead.container.priceNetto;
+		vm.updateRow(vm.editProcess);
+	});
+};
+
+LeadsCtrl.prototype.deleteRow = function(process) {
+	var vm = this;
+	var leadId = process.lead.id;
+	if (process.sale != null || process.offer != null) {
+		vm.toaster.pop('error', '', vm.translate
+				.instant('COMMON_TOAST_FAILURE_DELETE_LEAD'));
+		return;
+	}
+	process.lead = null;
+	this.processesService.putProcess({
+		id : process.id
+	}, process).$promise.then(function() {
+		if (process.offer == null && process.sale == null) {
+			vm.processesService.deleteProcess({
+				id : process.id
+			});
+		}
+		vm.processesService.deleteLead({
+			id : leadId
+		}).$promise.then(function() {
+			vm.toaster.pop('success', '', vm.translate
+					.instant('COMMON_TOAST_SUCCESS_DELETE_LEAD'));
+			vm.rootScope.leadsCount -= 1;
+			vm.dtInstance.DataTable.row(vm.rows[process.id]).remove().draw();
+		});
+	});
+};
+
+LeadsCtrl.prototype.updateRow = function(process) {
+	this.dtInstance.DataTable.row(this.rows[process.id]).data(process).draw(
+			false);
+	this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
+};
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+"use strict";
+var LoginController = (function () {
+    function LoginController($location, Auth, $scope, toaster, $rootScope, $translate) {
+        this.location = $location;
+        this.auth = Auth;
+        this.scope = $scope;
+        this.toaster = toaster;
+        this.rootScope = $rootScope;
+        this.translate = $translate;
+    }
+    LoginController.prototype.login = function (credentials) {
+        var self = this;
+        if (credentials.username === "apiuser") {
+            self.scope.credentials.password = "";
+            self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
+        }
+        else {
+            self.auth.login(credentials, function (res) {
+                self.location.path("/dashoard");
+                self.rootScope.setUserDefaultLanguage();
+                self.rootScope.loadLabels();
+            }, function (err) {
+                self.scope.credentials.password = "";
+                self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
+            });
+        }
+    };
+    ;
+    LoginController.$inject = ["$location", "Auth", "$scope", "toaster", "$rootScope", "$translate"];
+    return LoginController;
+}());
+angular.module("app.login", ["ngResource"]).controller("LoginController", LoginController);
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
+'use strict';
+
+angular.module('app.login', ['ngResource']).controller('LoginCtrl', LoginCtrl);
+
+LoginCtrl.$inject = ['$location', 'Auth', '$scope', 'toaster', '$rootScope', '$translate'];
+
+function LoginCtrl($location, Auth, $scope, toaster, $rootScope, $translate) {
+    this.login = function (credentials) {
+        if (credentials.username == 'apiuser') {
+            $scope.credentials.password = "";
+            toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
+        }
+        else {
+            Auth.login(credentials,
+                function (res) {
+                    $location.path('/dashoard');
+                    $rootScope.setUserDefaultLanguage();
+                    $rootScope.loadLabels();
+                },
+                function (err) {
+                    $scope.credentials.password = "";
+                    toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
+                }
+            );
+        }
+    };
+
+}
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+"use strict";
+var User = (function () {
+    function User() {
+    }
+    return User;
+}());
+exports.User = User;
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -2995,90 +3155,6 @@ SalesCtrl.prototype.updateRow = function(process) {
 };
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
-var SettingsController = (function () {
-    function SettingsController($filter, toaster, Settings, $rootScope, $translate) {
-        this.deactivateUser = function (user) {
-            var self = this;
-            this.service.activate({ username: user.username }, false).$promise.then(function () {
-                self.filter("filter")(self.users, { id: user.id })[0].enabled = false;
-                self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_ACCESS_REVOKED"));
-            }, function () {
-                self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_ACCESS_REVOKED_ERROR"));
-            });
-        };
-        this.settingsService = Settings;
-        this.rootScope = $rootScope;
-        this.translate = $translate;
-        this.users = [];
-        this.roleSelection = {};
-        this.filter = $filter;
-        this.toaster = toaster;
-        this.counter = 1;
-        var self = this;
-        this.settingsService.query().$promise.then(function (result) {
-            self.users = result;
-            for (var user in result) {
-                if (user === "$promise")
-                    break;
-                self.roleSelection[result[user].id] = result[user].role;
-            }
-        });
-    }
-    SettingsController.prototype.incrementCounter = function () {
-        this.counter++;
-    };
-    SettingsController.prototype.activateUser = function (user) {
-        var self = this;
-        this.settingsService.activate({ username: user.username }, true).$promise.then(function () {
-            self.filter("filter")(self.users, { id: user.id })[0].enabled = true;
-            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_ACCESS_GRANTED"));
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_ACCESS_GRANTED_ERROR"));
-        });
-    };
-    ;
-    SettingsController.prototype.hasRight = function (user) {
-        if (user.username === this.rootScope.globals.currentUser.username
-            || (user.role === this.rootScope.globals.currentUser.role)
-            || this.rootScope.globals.currentUser.role === "user"
-            || user.role === "superadmin") {
-            return true;
-        }
-        else {
-            return false;
-        }
-    };
-    SettingsController.prototype.saveRole = function (user) {
-        var self = this;
-        user.role = this.roleSelection[user.id];
-        this.settingsService.setRole({ username: user.username }, user.role).$promise.then(function () {
-            // set rootScope role
-            self.filter("filter")(self.users, { id: user.id })[0].role = user.role;
-            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_SET_ROLE"));
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_SET_ROLE_ERROR"));
-        });
-    };
-    ;
-    SettingsController.$inject = ["$filter", "toaster", "Settings", "$rootScope", "$translate"];
-    return SettingsController;
-}());
-angular.module("app.settings", ["ngResource"]).controller("SettingsController", SettingsController);
-
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
  *
  * NOTICE:  All information contained herein is, and remains
@@ -3177,9 +3253,92 @@ SettingsCtrl.prototype.saveRole = function (user) {
  * from Eviarc GmbH.
  *******************************************************************************/
 "use strict";
+var SettingsController = (function () {
+    function SettingsController($filter, toaster, Settings, $rootScope, $translate) {
+        this.deactivateUser = function (user) {
+            var self = this;
+            this.service.activate({ username: user.username }, false).$promise.then(function () {
+                self.filter("filter")(self.users, { id: user.id })[0].enabled = false;
+                self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_ACCESS_REVOKED"));
+            }, function () {
+                self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_ACCESS_REVOKED_ERROR"));
+            });
+        };
+        this.settingsService = Settings;
+        this.rootScope = $rootScope;
+        this.translate = $translate;
+        this.users = [];
+        this.roleSelection = {};
+        this.filter = $filter;
+        this.toaster = toaster;
+        this.counter = 1;
+        var self = this;
+        this.settingsService.query().$promise.then(function (result) {
+            self.users = result;
+            for (var user in result) {
+                if (user === "$promise")
+                    break;
+                self.roleSelection[result[user].id] = result[user].role;
+            }
+        });
+    }
+    SettingsController.prototype.incrementCounter = function () {
+        this.counter++;
+    };
+    SettingsController.prototype.activateUser = function (user) {
+        var self = this;
+        this.settingsService.activate({ username: user.username }, true).$promise.then(function () {
+            self.filter("filter")(self.users, { id: user.id })[0].enabled = true;
+            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_ACCESS_GRANTED"));
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_ACCESS_GRANTED_ERROR"));
+        });
+    };
+    ;
+    SettingsController.prototype.hasRight = function (user) {
+        if (user.username === this.rootScope.globals.currentUser.username
+            || (user.role === this.rootScope.globals.currentUser.role)
+            || this.rootScope.globals.currentUser.role === "user"
+            || user.role === "superadmin") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+    SettingsController.prototype.saveRole = function (user) {
+        var self = this;
+        user.role = this.roleSelection[user.id];
+        this.settingsService.setRole({ username: user.username }, user.role).$promise.then(function () {
+            // set rootScope role
+            self.filter("filter")(self.users, { id: user.id })[0].role = user.role;
+            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_SET_ROLE"));
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_SET_ROLE_ERROR"));
+        });
+    };
+    ;
+    SettingsController.$inject = ["$filter", "toaster", "Settings", "$rootScope", "$translate"];
+    return SettingsController;
+}());
+angular.module("app.settings", ["ngResource"]).controller("SettingsController", SettingsController);
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+"use strict";
 var SignUpController = (function () {
     function SignUpController($location, $http, $scope, Auth, toaster, $translate) {
-        this.$inject = ["$location", "$http", "$scope", "Auth", "toaster", "$translate"];
         this.location = $location;
         this.http = $http;
         this.scope = $scope;
@@ -3222,6 +3381,7 @@ var SignUpController = (function () {
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });
     };
+    SignUpController.$inject = ["$location", "$http", "$scope", "Auth", "toaster", "$translate"];
     return SignUpController;
 }());
 angular.module("app.signup", ["ngResource"]).controller("SignUpController", SignUpController);
@@ -3291,78 +3451,6 @@ function SignUpCtrl($location, $http, $scope, Auth, toaster, $translate) {
         );
     }
 }
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
-var User = (function () {
-    function User() {
-    }
-    return User;
-}());
-exports.User = User;
-
-/**
- * Created by Max on 18.06.2016.
- */
-/// <reference path="../../typeDefinitions/angular.d.ts" />
-var TestController = (function () {
-    function TestController() {
-        this.name = "Susi";
-    }
-    TestController.prototype.changeName = function () {
-        this.name = this.name === "Horst" ? "Hans" : "Horst";
-    };
-    return TestController;
-}());
-angular.module("testModule", []);
-angular.module("testModule").controller("TestController", [TestController]);
-
-/**
- * Created by Max on 27.07.2016.
- */
-/// <reference path="../../typeDefinitions/angular.d.ts" />
-var TestService = (function () {
-    function TestService() {
-        this.name = "Susi";
-    }
-    TestService.prototype.changeName = function () {
-        this.name = this.name === "Horst" ? "Torsten" : "Horst";
-    };
-    return TestService;
-}());
-angular.module("app").factory("TestService", [function () { return new TestService(); }]);
-
-/**
- * Created by Max on 27.07.2016.
- */
-/// <reference path="../../typeDefinitions/angular.d.ts" />
-/// <reference path="../../typeDefinitions/jasmine.d.ts" />
-/// <reference path="../../typeDefinitions/angular-mock.d.ts" />
-describe("TestController tests", function () {
-    var testController;
-    beforeEach(function () {
-        angular.module("app");
-        angular.module("testModule");
-    });
-    it("should not return the same name", function () {
-        expect("Horst").toBe("Horst");
-    });
-    it("should be wrong", function () {
-        expect(1).toBe(0);
-    });
-});
-
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -4133,6 +4221,57 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+
+/**
+ * Created by Max on 18.06.2016.
+ */
+/// <reference path="../../typeDefinitions/angular.d.ts" />
+var TestController = (function () {
+    function TestController() {
+        this.name = "Susi";
+    }
+    TestController.prototype.changeName = function () {
+        this.name = this.name === "Horst" ? "Hans" : "Horst";
+    };
+    return TestController;
+}());
+angular.module("testModule", []);
+angular.module("testModule").controller("TestController", [TestController]);
+
+/**
+ * Created by Max on 27.07.2016.
+ */
+/// <reference path="../../typeDefinitions/angular.d.ts" />
+var TestService = (function () {
+    function TestService() {
+        this.name = "Susi";
+    }
+    TestService.prototype.changeName = function () {
+        this.name = this.name === "Horst" ? "Torsten" : "Horst";
+    };
+    return TestService;
+}());
+angular.module("app").factory("TestService", [function () { return new TestService(); }]);
+
+/**
+ * Created by Max on 27.07.2016.
+ */
+/// <reference path="../../typeDefinitions/angular.d.ts" />
+/// <reference path="../../typeDefinitions/jasmine.d.ts" />
+/// <reference path="../../typeDefinitions/angular-mock.d.ts" />
+describe("TestController tests", function () {
+    var testController;
+    beforeEach(function () {
+        angular.module("app");
+        angular.module("testModule");
+    });
+    it("should not return the same name", function () {
+        expect("Horst").toBe("Horst");
+    });
+    it("should be wrong", function () {
+        expect(1).toBe(0);
+    });
+});
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.

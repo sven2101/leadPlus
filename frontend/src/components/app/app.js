@@ -11,6 +11,7 @@
 
 'use strict';
 
+
 angular.module('app', [ 'app.services', 'app.dashboard', 'app.login',
 		'app.signup', 'app.leads', 'app.offers', 'app.sales', 'app.statistics',
 		'app.settings', 'app.profile', 'pascalprecht.translate', 'ngResource',

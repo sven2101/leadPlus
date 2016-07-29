@@ -15,7 +15,7 @@
 
 class LoginController {
 
-    $inject = ["$location", "Auth", "$scope", "toaster", "$rootScope", "$translate"];
+    static $inject = ["$location", "Auth", "$scope", "toaster", "$rootScope", "$translate"];
 
     location;
     auth;

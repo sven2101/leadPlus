@@ -15,7 +15,7 @@
 
 class SignUpController {
 
-    $inject = ["$location", "$http", "$scope", "Auth", "toaster", "$translate"];
+    static $inject = ["$location", "$http", "$scope", "Auth", "toaster", "$translate"];
 
     location;
     http;
