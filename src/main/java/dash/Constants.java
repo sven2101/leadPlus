@@ -29,12 +29,14 @@ public final class Constants {
 	public static final String INQUIRER_NOT_FOUND = "Inquirer not found. ";
 	public static final String CUSTOMER_NOT_FOUND = "Customer not found. ";
 
+	public static final String USER_NOT_ACTIVATED = "User not activated. ";
 	public static final String USER_EXISTS = "Username already exists. ";
 	public static final String EMAIL_EXISTS = "Email already exists. ";
 
 	public static final String SAVE_FAILED_EXCEPTION = "Save failed Exception. ";
 	public static final String UPDATE_FAILED_EXCEPTION = "Update failed Exception. ";
 	public static final String DELETE_FAILED_EXCEPTION = "Delete failed Exception. ";
+	public static final String REGISTER_FAILED_EXCEPTION = "Register failed Exception. ";
 
 	public static final String BECAUSE_OF_OBJECT_IS_NULL = " BECAUSE OF OBJECT IS NULL ";
 	public static final String BECAUSE_OF_ILLEGAL_ID = " BECAUSE OF ILLEGAL ID ";
