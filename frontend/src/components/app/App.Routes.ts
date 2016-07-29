@@ -10,91 +10,88 @@
  ******************************************************************************/
 "use strict";
 
-angular.module("app").config(
-				[
-        "$routeProvider",
-        "$httpProvider",
-        function ($routeProvider, $httpProvider) {
-            $routeProvider
-                .when("/",
-                {
-                    templateUrl: "components/dashboard/dashboard.html",
-                    controller: "DashboardCtrl",
-                    controllerAs: "dashboard",
-                    authenticated: true
-                })
-                .when("/dashboard",
-                {
-                    templateUrl: "components/dashboard/dashboard.html",
-                    controller: "DashboardCtrl",
-                    controllerAs: "dashboard",
-                    authenticated: true
-                })
-                .when("/leads",
-                {
-                    templateUrl: "components/leads/leads.html",
-                    controller: "LeadsCtrl",
-                    controllerAs: "lead",
-                    authenticated: true
-                })
-                .when("/offers",
-                {
-                    templateUrl: "components/offers/offers.html",
-                    controller: "OffersCtrl",
-                    controllerAs: "offer",
-                    authenticated: true
-                })
-                .when("/sales",
-                {
-                    templateUrl: "components/sales/sales.html",
-                    controller: "SalesCtrl",
-                    controllerAs: "sale",
-                    authenticated: true
-                })
-                .when("/statistic",
-                {
-                    templateUrl: "components/statistics/statistics.html",
-                    controller: "StatisticsCtrl",
-                    controllerAs: "statistic",
-                    authenticated: true
-                })
-                .when("/settings",
-                {
-                    templateUrl: "components/settings/settings.html",
-                    controller: "SettingsController",
-                    controllerAs: "setting",
-                    authenticated: true
-                })
-                .when("/profile",
-                {
-                    templateUrl: "components/profile/profile.html",
-                    controller: "ProfileController",
-                    controllerAs: "profile",
-                    authenticated: true
-                })
-                .when("/signup",
-                {
-                    templateUrl: "components/signup/signup.html",
-                    controller: "SignUpController",
-                    controllerAs: "signup"
-                })
-                .when("/login",
-                {
-                    templateUrl: "components/login/login.html",
-                    controller: "LoginController",
-                    controllerAs: "login"
-                }).when("/test",
-                {
-                    templateUrl: "components/test/test.html",
-                    controller: "TestController",
-                    controllerAs: "testCtrl"
-                }).otherwise({
-                    redirectTo: "/"
-                });
+angular.module("app").config(["$routeProvider", "$httpProvider",
+    function ($routeProvider, $httpProvider) {
+        $routeProvider
+            .when("/",
+            {
+                templateUrl: "components/dashboard/dashboard.html",
+                controller: "DashboardCtrl",
+                controllerAs: "dashboard",
+                authenticated: true
+            })
+            .when("/dashboard",
+            {
+                templateUrl: "components/dashboard/dashboard.html",
+                controller: "DashboardCtrl",
+                controllerAs: "dashboard",
+                authenticated: true
+            })
+            .when("/leads",
+            {
+                templateUrl: "components/leads/leads.html",
+                controller: "LeadsCtrl",
+                controllerAs: "lead",
+                authenticated: true
+            })
+            .when("/offers",
+            {
+                templateUrl: "components/offers/offers.html",
+                controller: "OffersCtrl",
+                controllerAs: "offer",
+                authenticated: true
+            })
+            .when("/sales",
+            {
+                templateUrl: "components/sales/sales.html",
+                controller: "SalesCtrl",
+                controllerAs: "sale",
+                authenticated: true
+            })
+            .when("/statistic",
+            {
+                templateUrl: "components/statistics/statistics.html",
+                controller: "StatisticsCtrl",
+                controllerAs: "statistic",
+                authenticated: true
+            })
+            .when("/settings",
+            {
+                templateUrl: "components/settings/settings.html",
+                controller: "SettingsController",
+                controllerAs: "setting",
+                authenticated: true
+            })
+            .when("/profile",
+            {
+                templateUrl: "components/profile/profile.html",
+                controller: "ProfileController",
+                controllerAs: "profile",
+                authenticated: true
+            })
+            .when("/signup",
+            {
+                templateUrl: "components/signup/signup.html",
+                controller: "SignUpController",
+                controllerAs: "signup"
+            })
+            .when("/login",
+            {
+                templateUrl: "components/login/login.html",
+                controller: "LoginController",
+                controllerAs: "login"
+            }).when("/test",
+            {
+                templateUrl: "components/test/test.html",
+                controller: "TestController",
+                controllerAs: "testCtrl"
+            }).otherwise({
+                redirectTo: "/"
+            });
 
-            $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+        $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
-        }])
+    }])
     .run(["$location", "$http", "$rootScope", "Auth", "$cookieStore",
         function ($location, $http, $rootScope, Auth, $cookieStore) {
             $rootScope.globals = $cookieStore.get("globals") || {};

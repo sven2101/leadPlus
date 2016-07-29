@@ -11,14 +11,14 @@
 
 'use strict';
 
-/*
+
 angular.module('app', [ 'app.services', 'app.dashboard', 'app.login',
 		'app.signup', 'app.leads', 'app.offers', 'app.sales', 'app.statistics',
 		'app.settings', 'app.profile', 'pascalprecht.translate', 'ngResource',
 		'ngRoute', 'ngAnimate', 'ngCookies', 'datatables',
 		'datatables.bootstrap', 'datatables.buttons', 'ui.sortable',
 		'NgSwitchery', 'toaster', 'highcharts-ng','testModule']);
-*/
+
 angular
 		.module('app')
 		.config(
@@ -150,7 +150,7 @@ angular
 							};
 
 						} ]);
-/*
+
 angular
 		.module('app')
 		.controller(
@@ -219,4 +219,3 @@ angular
 					}.bind(this), 300000);
 
 				});
-*/
