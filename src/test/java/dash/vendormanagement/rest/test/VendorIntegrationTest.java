@@ -31,12 +31,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
 import dash.test.BaseConfig;
+import dash.test.IIntegrationTest;
 import dash.vendormanagement.domain.Vendor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
 @WebIntegrationTest
-public class VendorIntegrationTest extends BaseConfig {
+public class VendorIntegrationTest extends BaseConfig implements IIntegrationTest {
 
 	private static final String EXTENDED_URI = BASE_URI + "/api/rest/vendors";
 
@@ -47,9 +48,10 @@ public class VendorIntegrationTest extends BaseConfig {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 	}
 
+	@Override
 	@Test
-	public void postVendor() {
-		Vendor vendor = createVendor1();
+	public void post() {
+		Vendor vendor = create();
 		HttpEntity<Vendor> entity = new HttpEntity<Vendor>(vendor, headers);
 
 		ResponseEntity<Vendor> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entity, Vendor.class);
@@ -60,10 +62,11 @@ public class VendorIntegrationTest extends BaseConfig {
 		assertEquals(vendor, responseVendor);
 	}
 
+	@Override
 	@Test
-	public void getProcess() {
+	public void get() {
 
-		HttpEntity<Vendor> entityCreateVendor = new HttpEntity<Vendor>(createVendor5(), headers);
+		HttpEntity<Vendor> entityCreateVendor = new HttpEntity<Vendor>(create1(), headers);
 
 		ResponseEntity<Vendor> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateVendor, Vendor.class);
 		Vendor responseCreateVendor = responseCreate.getBody();
@@ -75,13 +78,14 @@ public class VendorIntegrationTest extends BaseConfig {
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetVendor.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetVendor.getStatusCode());
-		assertEquals(createVendor5(), responseGetVendor.getBody());
+		assertEquals(create1(), responseGetVendor.getBody());
 	}
 
+	@Override
 	@Test
-	public void updateVendor() {
+	public void put() {
 
-		Vendor vendor = createVendor6();
+		Vendor vendor = create2();
 		HttpEntity<Vendor> entityCreateVendor = new HttpEntity<Vendor>(vendor, headers);
 
 		ResponseEntity<Vendor> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateVendor, Vendor.class);
@@ -99,12 +103,14 @@ public class VendorIntegrationTest extends BaseConfig {
 		assertEquals(vendor, responseVendor);
 	}
 
+	@Override
 	@Ignore
-	public void deleteProcess() {
+	public void delete() {
 
 	}
 
-	private Vendor createVendor1() {
+	@Override
+	public Vendor create() {
 
 		Vendor vendor = new Vendor();
 		vendor.setName("Karl Neu 3");
@@ -113,7 +119,7 @@ public class VendorIntegrationTest extends BaseConfig {
 		return vendor;
 	}
 
-	private Vendor createVendor5() {
+	private Vendor create1() {
 
 		Vendor vendor = new Vendor();
 		vendor.setName("Karl Neu 5");
@@ -122,7 +128,7 @@ public class VendorIntegrationTest extends BaseConfig {
 		return vendor;
 	}
 
-	private Vendor createVendor6() {
+	private Vendor create2() {
 
 		Vendor vendor = new Vendor();
 		vendor.setName("Karl Neu 6");

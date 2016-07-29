@@ -24,13 +24,14 @@ import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
+import dash.processmanagement.domain.Workflow;
 import dash.salemanagement.domain.Sale;
 import dash.usermanagement.domain.User;
 
 @Service
 public interface IProcessService {
 
-	public List<?> getElementsByStatus(Status status, String kind);
+	public List<Object> getElementsByStatus(Status status, Workflow workflow);
 
 	public void createProcesses(List<Process> processes) throws SaveFailedException;
 
@@ -47,5 +48,7 @@ public interface IProcessService {
 	public Status updateStatus(Long processId, Status status) throws NotFoundException;
 
 	public Process updateProcess(final Process process) throws NotFoundException;
+
+	public List<Process> getProcessWithLatestSales(final int amount);
 
 }

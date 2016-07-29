@@ -39,12 +39,13 @@ import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
 import dash.salemanagement.domain.Sale;
 import dash.test.BaseConfig;
+import dash.test.IIntegrationTest;
 import dash.vendormanagement.domain.Vendor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
 @WebIntegrationTest
-public class ProcessIntegrationTest extends BaseConfig {
+public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTest {
 
 	private static final String EXTENDED_URI = BASE_URI + "/api/rest/processes";
 
@@ -55,9 +56,10 @@ public class ProcessIntegrationTest extends BaseConfig {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 	}
 
+	@Override
 	@Test
-	public void postProcess() {
-		Process process = createProcess();
+	public void post() {
+		Process process = create();
 		HttpEntity<Process> entity = new HttpEntity<Process>(process, headers);
 
 		ResponseEntity<Process> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entity, Process.class);
@@ -68,10 +70,11 @@ public class ProcessIntegrationTest extends BaseConfig {
 		assertEquals(process, responseProcess);
 	}
 
+	@Override
 	@Test
-	public void getProcess() {
+	public void get() {
 
-		HttpEntity<Process> entityCreateProcess = new HttpEntity<Process>(createProcess(), headers);
+		HttpEntity<Process> entityCreateProcess = new HttpEntity<Process>(create(), headers);
 
 		ResponseEntity<Process> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateProcess, Process.class);
 		Process responseCreateProcess = responseCreate.getBody();
@@ -83,13 +86,14 @@ public class ProcessIntegrationTest extends BaseConfig {
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetProcess.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetProcess.getStatusCode());
-		assertEquals(createProcess(), responseGetProcess.getBody());
+		assertEquals(create(), responseGetProcess.getBody());
 	}
 
+	@Override
 	@Test
-	public void updateProcess() {
+	public void put() {
 
-		Process process = createProcess();
+		Process process = create();
 		HttpEntity<Process> entityCreateProcess = new HttpEntity<Process>(process, headers);
 
 		ResponseEntity<Process> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateProcess, Process.class);
@@ -107,12 +111,14 @@ public class ProcessIntegrationTest extends BaseConfig {
 		assertEquals(process, responseProcess);
 	}
 
+	@Override
 	@Ignore
-	public void deleteProcess() {
+	public void delete() {
 
 	}
 
-	private Process createProcess() {
+	@Override
+	public Process create() {
 
 		Process process = new Process();
 
