@@ -13,8 +13,6 @@
  *******************************************************************************/
 "use strict";
 
-angular.module("app.settings", ["ngResource"]).controller("SettingsController", SettingsController);
-
 class SettingsController {
 
     static $inject = ["$filter", "toaster", "Settings", "$rootScope", "$translate"];
@@ -97,3 +95,6 @@ class SettingsController {
     };
 
 }
+
+angular.module("app.settings", ["ngResource"]).controller("SettingsController", SettingsController);
+

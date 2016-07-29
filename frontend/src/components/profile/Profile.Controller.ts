@@ -15,8 +15,6 @@
 
 import {User} from "../models/User.ts";
 
-angular.module("app.profile", ["ngResource"]).controller("ProfileCtrl", ProfileController);
-
 class ProfileController {
 
     static $inject = ["$rootScope", "toaster", "Profile", "$translate"];
@@ -77,3 +75,5 @@ class ProfileController {
     };
 
 }
+
+angular.module("app.profile", ["ngResource"]).controller("ProfileController", ProfileController);

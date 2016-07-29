@@ -78,7 +78,7 @@ angular
 											'/settings',
 											{
 												templateUrl : 'components/settings/settings.html',
-												controller : 'SettingsCtrl',
+												controller : 'SettingsController',
 												controllerAs : 'setting',
 												authenticated : true
 											})
@@ -86,7 +86,7 @@ angular
 											'/profile',
 											{
 												templateUrl : 'components/profile/profile.html',
-												controller : 'ProfileCtrl',
+												controller : 'ProfileController',
 												controllerAs : 'profile',
 												authenticated : true
 											})
@@ -94,14 +94,14 @@ angular
 											'/signup',
 											{
 												templateUrl : 'components/signup/signup.html',
-												controller : 'SignUpCtrl',
+												controller : 'SignUpController',
 												controllerAs : "signup"
 											})
 									.when(
 											'/login',
 											{
 												templateUrl : 'components/login/login.html',
-												controller : 'LoginCtrl',
+												controller : 'LoginController',
 												controllerAs : 'login'
 											}).when(
 											'/test',

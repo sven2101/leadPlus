@@ -13,14 +13,12 @@
  *******************************************************************************/
 "use strict";
 
-angular.module("app.login", ["ngResource"]).controller("LoginCtrl", LoginController);
-
 class LoginController {
 
     $inject = ["$location", "Auth", "$scope", "toaster", "$rootScope", "$translate"];
 
     location;
-    Auth;
+    auth;
     scope;
     toaster;
     rootScope;
@@ -28,7 +26,7 @@ class LoginController {
 
     constructor($location, Auth, $scope, toaster, $rootScope, $translate) {
         this.location = $location;
-        this.Auth = Auth;
+        this.auth = Auth;
         this.scope = $scope;
         this.toaster = toaster;
         this.rootScope = $rootScope;
@@ -36,22 +34,25 @@ class LoginController {
     }
 
     login(credentials) {
+        let self = this;
         if (credentials.username === "apiuser") {
-            this.scope.credentials.password = "";
-            this.toaster.pop("error", "", this.translate.instant("LOGIN_ERROR"));
+            self.scope.credentials.password = "";
+            self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
         }
         else {
-            this.Auth.login(credentials,
+            self.auth.login(credentials,
                 function (res) {
-                    this.location.path("/dashoard");
-                    this.rootScope.setUserDefaultLanguage();
-                    this.rootScope.loadLabels();
+                    self.location.path("/dashoard");
+                    self.rootScope.setUserDefaultLanguage();
+                    self.rootScope.loadLabels();
                 },
                 function (err) {
-                    this.scope.credentials.password = "";
-                    this.toaster.pop("error", "", this.translate.instant("LOGIN_ERROR"));
+                    self.scope.credentials.password = "";
+                    self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
                 }
             );
         }
     };
 }
+
+angular.module("app.login", ["ngResource"]).controller("LoginController", LoginController);
