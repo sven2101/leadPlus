@@ -18,6 +18,7 @@ import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.DELETE_FAILED_EXCEPTION;
 import static dash.Constants.DONT_MATCH;
 import static dash.Constants.EMAIL_EXISTS;
+import static dash.Constants.REGISTER_FAILED_EXCEPTION;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_EXISTS;
@@ -36,11 +37,14 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.DontMatchException;
 import dash.exceptions.EmailAlreadyExistsException;
 import dash.exceptions.NotFoundException;
+import dash.exceptions.RegisterFailedException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
+import dash.usermanagement.registration.domain.Registration;
+import dash.usermanagement.settings.language.Language;
 import dash.usermanagement.settings.password.PasswordChange;
 
 @Service
@@ -262,6 +266,58 @@ public class UserService implements IUserService {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
 			throw ufex;
+		}
+	}
+
+	public User register(final Registration registration)
+			throws UsernameAlreadyExistsException, EmailAlreadyExistsException, RegisterFailedException {
+		if (Optional.ofNullable(registration).isPresent() && Optional.ofNullable(registration.getUsername()).isPresent()
+				&& Optional.ofNullable(registration.getEmail()).isPresent()
+				&& Optional.ofNullable(registration.getPassword()).isPresent()) {
+			try {
+				if (usernameAlreadyExists(registration.getUsername())) {
+					throw new UsernameAlreadyExistsException(USER_EXISTS);
+				}
+				if (emailAlreadyExists(registration.getEmail())) {
+					throw new EmailAlreadyExistsException(EMAIL_EXISTS);
+				}
+
+				final User user = new User();
+				user.setUsername(registration.getUsername());
+				user.setEmail(registration.getEmail());
+				user.setPassword(passwordEncoder.encode(registration.getPassword()));
+				user.setRole(Role.USER);
+				user.setEnabled(false);
+				user.setLanguage(Language.DE);
+
+				return save(user);
+			} catch (NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
+				throw new RegisterFailedException(REGISTER_FAILED_EXCEPTION);
+			}
+		} else {
+			RegisterFailedException rfex = new RegisterFailedException(REGISTER_FAILED_EXCEPTION);
+			logger.error(REGISTER_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+					rfex);
+			throw rfex;
+		}
+	}
+
+	public Boolean emailAlreadyExists(String email) throws NotFoundException {
+		User user = getUserByEmail(email);
+		if (Optional.ofNullable(user).isPresent()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public Boolean usernameAlreadyExists(String username) throws NotFoundException {
+		User user = getUserByName(username);
+		if (Optional.ofNullable(user).isPresent()) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

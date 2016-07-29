@@ -34,7 +34,7 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.processmanagement.business.ProcessRepository;
 import dash.processmanagement.domain.Process;
-import dash.usermanagement.business.UserRepository;
+import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 
 @Service
@@ -49,27 +49,27 @@ public class CommentService implements ICommentService {
 	@Autowired
 	private ProcessRepository processRepository;
 
-	// TODO replace userRepository with userLoginService
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@Override
 	public Comment saveComment(final Comment comment) throws SaveFailedException {
 		if (Optional.ofNullable(comment).isPresent() && Optional.ofNullable(comment.getCreator()).isPresent()
 				&& Optional.ofNullable(comment.getCreator().getId()).isPresent()) {
-			final User user = userRepository.findOne(comment.getCreator().getId());
-			if (Optional.ofNullable(user).isPresent()) {
-				try {
+			try {
+				final User user = userService.getById(comment.getCreator().getId());
+				if (Optional.ofNullable(user).isPresent()) {
 					return commentRepository.save(comment);
-				} catch (Exception ex) {
-					logger.error(CommentService.class.getSimpleName() + ex.getMessage(), ex);
-					throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
+				} else {
+					SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
+					logger.error(
+							SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_USER_NOT_FOUND,
+							new UsernameNotFoundException(USER_NOT_FOUND));
+					throw sfex;
 				}
-			} else {
-				SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-				logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_USER_NOT_FOUND,
-						new UsernameNotFoundException(USER_NOT_FOUND));
-				throw sfex;
+			} catch (Exception ex) {
+				logger.error(CommentService.class.getSimpleName() + ex.getMessage(), ex);
+				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			}
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);

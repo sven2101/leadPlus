@@ -87,14 +87,13 @@ public class ContainerService implements IContainerService {
 		if (Optional.ofNullable(container).isPresent()) {
 			Container updateContainer;
 			try {
-				updateContainer = containerRepository.findOne(container.getId());
+				updateContainer = getById(container.getId());
 				updateContainer.setDescription(container.getDescription());
 				updateContainer.setName(container.getName());
 				updateContainer.setPriceNetto(container.getPriceNetto());
-				return containerRepository.save(updateContainer);
-			} catch (IllegalArgumentException iaex) {
-				logger.error(UPDATE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID,
-						iaex);
+				return save(updateContainer);
+			} catch (NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + ContainerService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			} catch (Exception ex) {
 				logger.error(UPDATE_FAILED_EXCEPTION + ContainerService.class.getSimpleName(), ex);
