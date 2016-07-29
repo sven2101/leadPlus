@@ -4,18 +4,18 @@
 
 /// <reference path="../../typeDefinitions/angular.d.ts" />
 
-//angular.module('test', []).controller('TestController', TestController);
-class TestController{
-    name:String;
-    constructor(){       
-        this.name='Susi';
+
+class TestController {
+    name: String;
+    constructor() {
+        this.name = "Susi";
     }
 
-    changeName(){
-        this.name = this.name === 'Horst'?'Hans':'Horst';
+    changeName() {
+        this.name = this.name === "Horst" ? "Hans" : "Horst";
     }
 }
-angular.module('testModule', []);
-angular.module('testModule').controller("TestController",[TestController]);
+angular.module("testModule", []);
+angular.module("testModule").controller("TestController", [TestController]);
 
 

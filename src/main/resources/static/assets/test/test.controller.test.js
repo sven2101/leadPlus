@@ -7,14 +7,13 @@
 describe("TestController tests", function () {
     var testController;
     beforeEach(function () {
-        //Ensure angular modules available
-        angular.module('app');
-        angular.module('testModule');
+        angular.module("app");
+        angular.module("testModule");
     });
-    it('should not return the same name', function () {
-        expect('Horst').toBe('Horst');
+    it("should not return the same name", function () {
+        expect("Horst").toBe("Horst");
     });
-    it('should be wrong', function () {
+    it("should be wrong", function () {
         expect(1).toBe(0);
     });
 });

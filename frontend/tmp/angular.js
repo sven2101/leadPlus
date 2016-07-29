@@ -1817,49 +1817,6 @@ LeadsCtrl.prototype.updateRow = function(process) {
 	this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
 };
 /*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-
-'use strict';
-
-angular.module('app.login', ['ngResource']).controller('LoginCtrl', LoginCtrl);
-
-LoginCtrl.$inject = ['$location', 'Auth', '$scope', 'toaster', '$rootScope', '$translate'];
-
-function LoginCtrl($location, Auth, $scope, toaster, $rootScope, $translate) {
-    this.login = function (credentials) {
-        if (credentials.username == 'apiuser') {
-            $scope.credentials.password = "";
-            toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
-        }
-        else {
-            Auth.login(credentials,
-                function (res) {
-                    $location.path('/dashoard');
-                    $rootScope.setUserDefaultLanguage();
-                    $rootScope.loadLabels();
-                },
-                function (err) {
-                    $scope.credentials.password = "";
-                    toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
-                }
-            );
-        }
-    };
-
-}
-
-/*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
  * NOTICE: All information contained herein is, and remains the property of
@@ -2438,6 +2395,49 @@ OffersCtrl.prototype.updateRow = function(process) {
 	this.dtInstance.DataTable.row(this.rows[process.id]).data(process).draw();
 	this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
 }
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
+'use strict';
+
+angular.module('app.login', ['ngResource']).controller('LoginCtrl', LoginCtrl);
+
+LoginCtrl.$inject = ['$location', 'Auth', '$scope', 'toaster', '$rootScope', '$translate'];
+
+function LoginCtrl($location, Auth, $scope, toaster, $rootScope, $translate) {
+    this.login = function (credentials) {
+        if (credentials.username == 'apiuser') {
+            $scope.credentials.password = "";
+            toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
+        }
+        else {
+            Auth.login(credentials,
+                function (res) {
+                    $location.path('/dashoard');
+                    $rootScope.setUserDefaultLanguage();
+                    $rootScope.loadLabels();
+                },
+                function (err) {
+                    $scope.credentials.password = "";
+                    toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
+                }
+            );
+        }
+    };
+
+}
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -3811,18 +3811,17 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
  * Created by Max on 18.06.2016.
  */
 /// <reference path="../../typeDefinitions/angular.d.ts" />
-//angular.module('test', []).controller('TestController', TestController);
 var TestController = (function () {
     function TestController() {
-        this.name = 'Susi';
+        this.name = "Susi";
     }
     TestController.prototype.changeName = function () {
-        this.name = this.name === 'Horst' ? 'Hans' : 'Horst';
+        this.name = this.name === "Horst" ? "Hans" : "Horst";
     };
     return TestController;
 }());
-angular.module('testModule', []);
-angular.module('testModule').controller("TestController", [TestController]);
+angular.module("testModule", []);
+angular.module("testModule").controller("TestController", [TestController]);
 
 /**
  * Created by Max on 27.07.2016.
@@ -3833,14 +3832,13 @@ angular.module('testModule').controller("TestController", [TestController]);
 describe("TestController tests", function () {
     var testController;
     beforeEach(function () {
-        //Ensure angular modules available
-        angular.module('app');
-        angular.module('testModule');
+        angular.module("app");
+        angular.module("testModule");
     });
-    it('should not return the same name', function () {
-        expect('Horst').toBe('Horst');
+    it("should not return the same name", function () {
+        expect("Horst").toBe("Horst");
     });
-    it('should be wrong', function () {
+    it("should be wrong", function () {
         expect(1).toBe(0);
     });
 });
@@ -3851,14 +3849,14 @@ describe("TestController tests", function () {
 /// <reference path="../../typeDefinitions/angular.d.ts" />
 var TestService = (function () {
     function TestService() {
-        this.name = 'Susi';
+        this.name = "Susi";
     }
     TestService.prototype.changeName = function () {
-        this.name = this.name === 'Horst' ? 'Torsten' : 'Horst';
+        this.name = this.name === "Horst" ? "Torsten" : "Horst";
     };
     return TestService;
 }());
-angular.module('app').factory('TestService', [function () { return new TestService(); }]);
+angular.module("app").factory("TestService", [function () { return new TestService(); }]);
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
