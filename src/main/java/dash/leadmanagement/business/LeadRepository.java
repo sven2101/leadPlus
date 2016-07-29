@@ -14,25 +14,15 @@
 
 package dash.leadmanagement.business;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import dash.leadmanagement.domain.Lead;
-import dash.processmanagement.domain.Status;
 import dash.processmanagement.request.RequestRepository;
 
 @Transactional
 @Repository
 public interface LeadRepository extends RequestRepository<Lead, Long> {
-
-	public List<Lead> findByStatusAndLeadIsNotNull(Status status);
-
-	@Override
-	public Page<Lead> findAll(Pageable pageable);
 
 }

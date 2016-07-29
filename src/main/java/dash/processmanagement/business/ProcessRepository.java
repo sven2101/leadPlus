@@ -20,7 +20,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -40,7 +39,6 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 
 	Page<Lead> findByLeadIsNotNull(Pageable pageable);
 
-	@Query("select u from User u where u.firstname like %?1")
 	Page<Lead> findByLeadInquirerFirstnameContainingOrLeadInquirerLastnameContainingOrLeadInquirerEmailContainingOrLeadInquirerCompanyContainingOrLeadInquirerPhoneContainingOrLeadContainerNameContainingOrLeadContainerDescriptionContainingOrLeadDestinationContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
 			String firstname, String lastname, String email, String company, String phone, String containerName, String containerDescription,
 			String destination, String message, String status, Pageable pageable);
@@ -49,8 +47,6 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 
 	Page<Offer> findByOfferIsNotNull(Pageable pageable);
 
-	@Query("select o from Offer o " + "where u.firstname like %?1" + "OfferProspectFirstnameContaining OR" + "OfferProspectLastnameContaining"
-			+ "OfferProspectEmailContaining" + "OfferProspectCompanyContaining" + "OfferProspectPhoneContaining" + "OfferContainerDescriptionContaining")
 	Page<Offer> findByOfferProspectFirstnameContainingOrOfferProspectLastnameContainingOrOfferProspectEmailContainingOrOfferProspectCompanyContainingOrOfferProspectPhoneContainingOrOfferContainerNameContainingOrOfferContainerDescriptionContainingOrOfferDeliveryAddressContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(
 			String firstname, String lastname, String email, String company, String phone, String containerName, String containerDescription,
 			String deliveryAddress, String status, Pageable pageable);
@@ -59,7 +55,6 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 
 	Page<Sale> findBySaleIsNotNull(Pageable pageable);
 
-	@Query("select o from Offer o where u.firstname like %?1")
 	Page<Sale> findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrSaleContainerNameContainingOrSaleContainerDescriptionContainingOrSaleTransportContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
 			String firstname, String lastname, String email, String company, String phone, String containerName, String containerDescription, String transport,
 			String status, Pageable pageable);

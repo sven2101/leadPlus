@@ -41,5 +41,4 @@ public interface ISaleService {
 
 	public void delete(final Long id) throws DeleteFailedException;
 
-	public List<Sale> getLatestSales(int amount) throws NotFoundException;
 }

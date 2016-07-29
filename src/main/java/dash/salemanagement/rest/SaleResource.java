@@ -19,8 +19,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,19 +38,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping(value = "/api/rest/processes/sales", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/sales", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Sale API")
 public class SaleResource {
 
 	@Autowired
 	private ISaleService saleService;
-
-	@ApiOperation(value = "Returns sale Page.")
-	@RequestMapping(method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
-	public Page<Sale> getAll(Pageable pageable) {
-		return saleService.getAll(pageable);
-	}
 
 	@ApiOperation(value = "Returns all sales.")
 	@RequestMapping(method = RequestMethod.GET)
@@ -81,12 +72,4 @@ public class SaleResource {
 	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
 		saleService.delete(id);
 	}
-
-	@ApiOperation(value = "Get latest sales.", notes = "")
-	@RequestMapping(value = "/{amount}", method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
-	public void getLatestSales(@ApiParam(required = true) @PathVariable final int amount) throws NotFoundException {
-		saleService.getLatestSales(amount);
-	}
-
 }

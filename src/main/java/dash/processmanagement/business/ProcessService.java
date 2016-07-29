@@ -80,14 +80,14 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public void createProcesses(List<Process> processes) throws SaveFailedException {
+	public void saveProcesses(List<Process> processes) throws SaveFailedException, NotFoundException {
 		for (Process process : processes) {
 			if (Optional.ofNullable(process.getLead()).isPresent())
 				leadService.save(process.getLead());
 			if (Optional.ofNullable(process.getOffer()).isPresent())
 				offerService.save(process.getOffer());
 			if (Optional.ofNullable(process.getSale()).isPresent()) {
-				process.setProcessor(userRepository.findByUsernameIgnoreCase("admin"));
+				process.setProcessor(userService.getUserByName("admin"));
 				saleService.save(process.getSale());
 			}
 
@@ -96,12 +96,12 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process save(final Process process) throws SaveFailedException {
+	public Process save(final Process process) throws SaveFailedException, NotFoundException {
 		Process createdProcess = null;
 		if (Optional.ofNullable(process).isPresent()) {
 			if (Optional.ofNullable(process.getProcessor()).isPresent()) {
-				if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase(process.getProcessor().getUsername())).isPresent()) {
-					userRepository.save(process.getProcessor());
+				if (!Optional.ofNullable(userService.getUserByName(process.getProcessor().getUsername())).isPresent()) {
+					userService.save(process.getProcessor());
 				}
 			}
 			if (Optional.ofNullable(process.getLead()).isPresent())
@@ -161,9 +161,9 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public User createProcessor(Long processId, String username) throws NotFoundException {
+	public User setProcessor(Long processId, String username) throws NotFoundException {
 		Process process = processRepository.findOne(processId);
-		final User processor = userRepository.findByUsernameIgnoreCase(username);
+		final User processor = userService.getUserByName(username);
 		if (!Optional.ofNullable(process).isPresent())
 			throw new NotFoundException(PROCESS_NOT_FOUND);
 		if (!Optional.ofNullable(processor).isPresent())
@@ -202,5 +202,11 @@ public class ProcessService implements IProcessService {
 			throw new NotFoundException(PROCESS_NOT_FOUND);
 		}
 
+	}
+
+	@Override
+	public List<Process> getProcessWithLatestSales(int amount) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

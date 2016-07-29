@@ -17,13 +17,11 @@ package dash.salemanagement.business;
 import static dash.Constants.BECAUSE_OF_ILLEGAL_ID;
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.DELETE_FAILED_EXCEPTION;
-import static dash.Constants.NOT_FOUND;
 import static dash.Constants.SALE_NOT_FOUND;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.VENDOR_NOT_FOUND;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -124,22 +122,6 @@ public class SaleService implements ISaleService {
 			DeleteFailedException dfex = new DeleteFailedException(DELETE_FAILED_EXCEPTION);
 			logger.error(VENDOR_NOT_FOUND + SaleService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
 			throw dfex;
-		}
-	}
-
-	@Override
-	public List<Sale> getLatestSales(int amount) throws NotFoundException {
-		if (Optional.ofNullable(amount).isPresent() && amount > 0) {
-			try {
-				return saleRepository.findTopBySaleIsNotNullOrderBySaleTimestampDesc(amount);
-			} catch (Exception ex) {
-				logger.error(SaleService.class.getSimpleName() + ex.getMessage(), ex);
-				return new ArrayList<>();
-			}
-		} else {
-			NotFoundException nfex = new NotFoundException(NOT_FOUND);
-			logger.error(SaleService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, nfex);
-			throw nfex;
 		}
 	}
 

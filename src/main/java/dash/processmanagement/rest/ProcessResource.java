@@ -151,14 +151,14 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a process.", notes = "")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Process save(@RequestBody @Valid final Process process) throws SaveFailedException {
+	public Process save(@RequestBody @Valid final Process process) throws SaveFailedException, NotFoundException {
 		return processService.save(process);
 	}
 
 	@ApiOperation(value = "Creates processes based on a List of Processes.", notes = "")
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public void saveProcesses(@RequestBody final List<Process> processes) throws SaveFailedException {
+	public void saveProcesses(@RequestBody final List<Process> processes) throws SaveFailedException, NotFoundException {
 		processService.saveProcesses(processes);
 	}
 
@@ -213,7 +213,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a single lead.", notes = "")
 	@RequestMapping(value = "/{processId}/leads", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Lead createLeadByProcess(@PathVariable final Long processId, @RequestBody @Valid final Lead lead) throws NotFoundException {
+	public Lead createLeadByProcess(@PathVariable final Long processId, @RequestBody @Valid final Lead lead) throws NotFoundException, SaveFailedException {
 		return processService.createLead(processId, lead);
 	}
 
@@ -261,7 +261,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a single offer.", notes = "")
 	@RequestMapping(value = "/{processId}/offers", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Offer createOfferByProcess(@PathVariable final Long processId, @RequestBody @Valid final Offer offer) throws NotFoundException {
+	public Offer createOfferByProcess(@PathVariable final Long processId, @RequestBody @Valid final Offer offer) throws NotFoundException, SaveFailedException {
 		return processService.createOffer(processId, offer);
 	}
 
@@ -316,7 +316,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a single sale.", notes = "")
 	@RequestMapping(value = "/{processId}/sales", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Sale createSaleByProcess(@PathVariable Long processId, @RequestBody @Valid final Sale sale) throws NotFoundException {
+	public Sale createSaleByProcess(@PathVariable Long processId, @RequestBody @Valid final Sale sale) throws NotFoundException, SaveFailedException {
 		return processService.createSale(processId, sale);
 	}
 }

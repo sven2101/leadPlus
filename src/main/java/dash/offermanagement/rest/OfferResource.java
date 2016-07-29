@@ -19,8 +19,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,19 +38,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping(value = "/api/rest/processes/offers", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/offers", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Offers API")
 public class OfferResource {
 
 	@Autowired
 	private IOfferService offerService;
-
-	@ApiOperation(value = "Returns offer Page.")
-	@RequestMapping(method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
-	public Page<Offer> getAll(Pageable pageable) {
-		return offerService.getAll(pageable);
-	}
 
 	@ApiOperation(value = "Returns all offers.")
 	@RequestMapping(method = RequestMethod.GET)

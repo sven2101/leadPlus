@@ -26,6 +26,7 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
 
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
@@ -33,6 +34,7 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.inquirermanagement.domain.Inquirer;
 
+@Service
 public class InquirerService implements IInquirerService {
 
 	private static final Logger logger = Logger.getLogger(InquirerService.class);

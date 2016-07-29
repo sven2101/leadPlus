@@ -26,6 +26,7 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
 
 import dash.customermanagement.domain.Customer;
 import dash.exceptions.DeleteFailedException;
@@ -33,6 +34,7 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 
+@Service
 public class CustomerService implements ICustomerService {
 
 	private static final Logger logger = Logger.getLogger(CustomerService.class);

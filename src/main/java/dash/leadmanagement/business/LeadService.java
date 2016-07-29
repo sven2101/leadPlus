@@ -124,7 +124,7 @@ public class LeadService implements ILeadService {
 	}
 
 	@Override
-	public Page<Lead> getAll(Pageable pageable) {
+	public Page<Lead> getPages(Pageable pageable) {
 		return leadRepository.findAll(pageable);
 	}
 }

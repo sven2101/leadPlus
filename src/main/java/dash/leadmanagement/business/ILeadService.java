@@ -29,7 +29,7 @@ import dash.leadmanagement.domain.Lead;
 @Service
 public interface ILeadService {
 
-	public Page<Lead> getAll(Pageable pageable);
+	public Page<Lead> getPages(Pageable pageable);
 
 	public List<Lead> getAll();
 
