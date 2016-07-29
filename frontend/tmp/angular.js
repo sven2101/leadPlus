@@ -1817,6 +1817,115 @@ LeadsCtrl.prototype.updateRow = function(process) {
 	this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
 };
 /*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+"use strict";
+angular.module("app.login", ["ngResource"]).controller("LoginCtrl", LoginController);
+var LoginController = (function () {
+    function LoginController($location, Auth, $scope, toaster, $rootScope, $translate) {
+        this.$inject = ["$location", "Auth", "$scope", "toaster", "$rootScope", "$translate"];
+        this.location = $location;
+        this.Auth = Auth;
+        this.scope = $scope;
+        this.toaster = toaster;
+        this.rootScope = $rootScope;
+        this.translate = $translate;
+    }
+    LoginController.prototype.login = function (credentials) {
+        if (credentials.username === "apiuser") {
+            this.scope.credentials.password = "";
+            this.toaster.pop("error", "", this.translate.instant("LOGIN_ERROR"));
+        }
+        else {
+            this.Auth.login(credentials, function (res) {
+                this.location.path("/dashoard");
+                this.rootScope.setUserDefaultLanguage();
+                this.rootScope.loadLabels();
+            }, function (err) {
+                this.scope.credentials.password = "";
+                this.toaster.pop("error", "", this.translate.instant("LOGIN_ERROR"));
+            });
+        }
+    };
+    ;
+    return LoginController;
+}());
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
+'use strict';
+
+angular.module('app.login', ['ngResource']).controller('LoginCtrl', LoginCtrl);
+
+LoginCtrl.$inject = ['$location', 'Auth', '$scope', 'toaster', '$rootScope', '$translate'];
+
+function LoginCtrl($location, Auth, $scope, toaster, $rootScope, $translate) {
+    this.login = function (credentials) {
+        if (credentials.username == 'apiuser') {
+            $scope.credentials.password = "";
+            toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
+        }
+        else {
+            Auth.login(credentials,
+                function (res) {
+                    $location.path('/dashoard');
+                    $rootScope.setUserDefaultLanguage();
+                    $rootScope.loadLabels();
+                },
+                function (err) {
+                    $scope.credentials.password = "";
+                    toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
+                }
+            );
+        }
+    };
+
+}
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+"use strict";
+var User = (function () {
+    function User() {
+    }
+    return User;
+}());
+exports.User = User;
+
+/*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
  * NOTICE: All information contained herein is, and remains the property of
@@ -2397,10 +2506,10 @@ OffersCtrl.prototype.updateRow = function(process) {
 }
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
+ * All rights reserved.
  *
  * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
+ * the property of Eviarc GmbH and its suppliers, if any.
  * The intellectual and technical concepts contained
  * herein are proprietary to Eviarc GmbH,
  * and are protected by trade secret or copyright law.
@@ -2408,35 +2517,54 @@ OffersCtrl.prototype.updateRow = function(process) {
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-
-'use strict';
-
-angular.module('app.login', ['ngResource']).controller('LoginCtrl', LoginCtrl);
-
-LoginCtrl.$inject = ['$location', 'Auth', '$scope', 'toaster', '$rootScope', '$translate'];
-
-function LoginCtrl($location, Auth, $scope, toaster, $rootScope, $translate) {
-    this.login = function (credentials) {
-        if (credentials.username == 'apiuser') {
-            $scope.credentials.password = "";
-            toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
-        }
-        else {
-            Auth.login(credentials,
-                function (res) {
-                    $location.path('/dashoard');
-                    $rootScope.setUserDefaultLanguage();
-                    $rootScope.loadLabels();
-                },
-                function (err) {
-                    $scope.credentials.password = "";
-                    toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
-                }
-            );
-        }
+"use strict";
+angular.module("app.profile", ["ngResource"]).controller("ProfileCtrl", ProfileController);
+var ProfileController = (function () {
+    function ProfileController($rootScope, toaster, Profile, $translate) {
+        this.profileService = Profile;
+        this.translate = $translate;
+        var self = this;
+        this.toaster = toaster;
+        this.rootScope = $rootScope;
+        this.oldPassword = "";
+        this.newPassword1 = "";
+        this.newPassword2 = "";
+        this.profileService.get({ username: $rootScope.globals.currentUser.username }).$promise.then(function (result) {
+            self.user = result;
+        });
+    }
+    ProfileController.prototype.submitProfilInfoForm = function (user) {
+        var self = this;
+        this.profileService.update({ username: user.username }, user).$promise.then(function () {
+            self.rootScope.changeLanguage(user.language);
+            self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
+        }, function () {
+            // TODO macht das Sinn?
+            self.user.language = self.user.language;
+            self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
+        });
     };
-
-}
+    ;
+    ProfileController.prototype.submitPasswordForm = function (user) {
+        var self = this;
+        this.profileService.pw({ username: user.username }, {
+            newPassword: this.newPassword1,
+            oldPassword: this.oldPassword
+        }).$promise.then(function () {
+            self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
+            // TODO
+            // self.passwordForm.$setPristine();
+            self.oldPassword = "";
+            self.newPassword1 = "";
+            self.newPassword2 = "";
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
+        });
+    };
+    ;
+    ProfileController.$inject = ["$rootScope", "toaster", "Profile", "$translate"];
+    return ProfileController;
+}());
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -2887,6 +3015,90 @@ SalesCtrl.prototype.updateRow = function(process) {
 };
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+"use strict";
+angular.module("app.settings", ["ngResource"]).controller("SettingsController", SettingsController);
+var SettingsController = (function () {
+    function SettingsController($filter, toaster, Settings, $rootScope, $translate) {
+        this.deactivateUser = function (user) {
+            var self = this;
+            this.service.activate({ username: user.username }, false).$promise.then(function () {
+                self.filter("filter")(self.users, { id: user.id })[0].enabled = false;
+                self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_ACCESS_REVOKED"));
+            }, function () {
+                self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_ACCESS_REVOKED_ERROR"));
+            });
+        };
+        this.settingsService = Settings;
+        this.rootScope = $rootScope;
+        this.translate = $translate;
+        this.users = [];
+        this.roleSelection = {};
+        this.filter = $filter;
+        this.toaster = toaster;
+        this.counter = 1;
+        var self = this;
+        this.settingsService.query().$promise.then(function (result) {
+            self.users = result;
+            for (var user in result) {
+                if (user === "$promise")
+                    break;
+                self.roleSelection[result[user].id] = result[user].role;
+            }
+        });
+    }
+    SettingsController.prototype.incrementCounter = function () {
+        this.counter++;
+    };
+    SettingsController.prototype.activateUser = function (user) {
+        var self = this;
+        this.settingsService.activate({ username: user.username }, true).$promise.then(function () {
+            self.filter("filter")(self.users, { id: user.id })[0].enabled = true;
+            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_ACCESS_GRANTED"));
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_ACCESS_GRANTED_ERROR"));
+        });
+    };
+    ;
+    SettingsController.prototype.hasRight = function (user) {
+        if (user.username === this.rootScope.globals.currentUser.username
+            || (user.role === this.rootScope.globals.currentUser.role)
+            || this.rootScope.globals.currentUser.role === "user"
+            || user.role === "superadmin") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+    SettingsController.prototype.saveRole = function (user) {
+        var self = this;
+        user.role = this.roleSelection[user.id];
+        this.settingsService.setRole({ username: user.username }, user.role).$promise.then(function () {
+            // set rootScope role
+            self.filter("filter")(self.users, { id: user.id })[0].role = user.role;
+            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_SET_ROLE"));
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_SET_ROLE_ERROR"));
+        });
+    };
+    ;
+    SettingsController.$inject = ["$filter", "toaster", "Settings", "$rootScope", "$translate"];
+    return SettingsController;
+}());
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
  *
  * NOTICE:  All information contained herein is, and remains
@@ -3250,6 +3462,28 @@ StatisticsCtrl.prototype.pushProfitAndTurnover = function () {
         color: '#1a7bb9'
     });
 }
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+"use strict";
+angular.module("app.statistics", ["ngResource"]).controller("StatisticsCtrl", StasticController);
+var StasticController = (function () {
+    function StasticController() {
+        this.inject = ["Leads", "Offers", "Sales", "Profit", "Turnover", "$translate", "$interval", "$scope"];
+    }
+    return StasticController;
+}());
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -3792,6 +4026,21 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
     this.checkPromises();
 };
 
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+"use strict";
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
