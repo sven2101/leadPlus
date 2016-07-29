@@ -27,6 +27,9 @@ public final class Constants {
 	public static final String LEAD_NOT_FOUND = "Lead not found. ";
 	public static final String INQUIRER_NOT_FOUND = "Inquirer not found. ";
 	public static final String CUSTOMER_NOT_FOUND = "Customer not found. ";
+	
+	public static final String USER_EXISTS = "Username already exists. ";
+	public static final String EMAIL_EXISTS = "Email already exists. ";
 
 	public static final String SAVE_FAILED_EXCEPTION = "Save failed Exception. ";
 	public static final String UPDATE_FAILED_EXCEPTION = "Update failed Exception. ";

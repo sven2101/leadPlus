@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.business.IProcessService;
@@ -150,14 +151,14 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a process.", notes = "")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Process createProcess(@RequestBody @Valid Process process) {
+	public Process createProcess(@RequestBody @Valid Process process) throws SaveFailedException {
 		return processService.createProcess(process);
 	}
 
 	@ApiOperation(value = "Creates processes based on a List of Processes.", notes = "")
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public void createProcesses(@RequestBody List<Process> processes) {
+	public void createProcesses(@RequestBody List<Process> processes) throws SaveFailedException {
 		processService.createProcesses(processes);
 	}
 

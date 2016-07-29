@@ -12,29 +12,38 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.containermanagement.business;
+package dash.usermanagement.business;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import dash.containermanagement.domain.Container;
 import dash.exceptions.DeleteFailedException;
+import dash.exceptions.DontMatchException;
+import dash.exceptions.EmailAlreadyExistsException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.exceptions.UsernameAlreadyExistsException;
+import dash.usermanagement.domain.User;
+import dash.usermanagement.settings.password.PasswordChange;
 
 @Service
-public interface IContainerService {
+public interface IUserService {
 
-	public List<Container> getAll();
+	public List<User> getAll();
 
-	public Container getById(final Long id) throws NotFoundException;
+	public User getById(final Long id) throws NotFoundException;
 
-	public Container save(final Container container) throws SaveFailedException;
+	public User getUserByName(String username) throws NotFoundException;
 
-	public Container update(final Container container) throws UpdateFailedException;
+	public User save(final User user) throws SaveFailedException;
+
+	public User update(final User user)
+			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
 	public void delete(final Long id) throws DeleteFailedException;
+
+	public void updatePassword(final Long id, final PasswordChange passwordChange) throws UpdateFailedException, DontMatchException;
 
 }

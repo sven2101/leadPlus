@@ -34,7 +34,9 @@ import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
 import dash.salemanagement.business.ISaleService;
 import dash.salemanagement.domain.Sale;
+import dash.usermanagement.business.UserLoginService;
 import dash.usermanagement.business.UserRepository;
+import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 
 @Service
@@ -42,9 +44,9 @@ public class ProcessService implements IProcessService {
 
 	@Autowired
 	private ProcessRepository processRepository;
-
+	
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@Autowired
 	private ILeadService leadService;
@@ -86,7 +88,7 @@ public class ProcessService implements IProcessService {
 			if (Optional.ofNullable(process.getOffer()).isPresent())
 				offerService.save(process.getOffer());
 			if (Optional.ofNullable(process.getSale()).isPresent()) {
-				process.setProcessor(userRepository.findByUsernameIgnoreCase("admin"));
+				process.setProcessor(userService.getUserByName("admin"));
 				saleService.save(process.getSale());
 			}
 
@@ -99,8 +101,8 @@ public class ProcessService implements IProcessService {
 		Process createdProcess = null;
 		if (Optional.ofNullable(process).isPresent()) {
 			if (Optional.ofNullable(process.getProcessor()).isPresent()) {
-				if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase(process.getProcessor().getUsername())).isPresent()) {
-					userRepository.save(process.getProcessor());
+				if (!Optional.ofNullable(userService.getUserByName(process.getProcessor().getUsername())).isPresent()) {
+					userService.save(process.getProcessor());
 				}
 			}
 			if (Optional.ofNullable(process.getLead()).isPresent())
@@ -162,7 +164,7 @@ public class ProcessService implements IProcessService {
 	@Override
 	public User createProcessor(Long processId, String username) throws NotFoundException {
 		Process process = processRepository.findOne(processId);
-		final User processor = userRepository.findByUsernameIgnoreCase(username);
+		final User processor = userService.getUserByName(username);
 		if (!Optional.ofNullable(process).isPresent())
 			throw new NotFoundException(PROCESS_NOT_FOUND);
 		if (!Optional.ofNullable(processor).isPresent())

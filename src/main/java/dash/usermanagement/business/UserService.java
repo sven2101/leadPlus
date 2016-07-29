@@ -14,25 +14,39 @@
 
 package dash.usermanagement.business;
 
+import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
+import static dash.Constants.DELETE_FAILED_EXCEPTION;
 import static dash.Constants.DONT_MATCH;
-import static dash.Constants.EMAIL_NOT_FOUND;
+import static dash.Constants.EMAIL_EXISTS;
+import static dash.Constants.SAVE_FAILED_EXCEPTION;
+import static dash.Constants.UPDATE_FAILED_EXCEPTION;
+import static dash.Constants.USER_EXISTS;
 import static dash.Constants.USER_NOT_FOUND;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import dash.exceptions.DeleteFailedException;
 import dash.exceptions.DontMatchException;
+import dash.exceptions.EmailAlreadyExistsException;
 import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
+import dash.exceptions.UsernameAlreadyExistsException;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.settings.password.PasswordChange;
 
 @Service
-public class UserService {
+public class UserService implements IUserService {
+
+	private static final Logger logger = Logger.getLogger(UserService.class);
 
 	@Autowired
 	private UserRepository userRepository;
@@ -40,54 +54,214 @@ public class UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public User updateUser(Long id, User updateUser) throws Exception {
-		User user = userRepository.findOne(id);
-		if (Optional.ofNullable(user).isPresent()) {
-			if (!Optional.ofNullable(userRepository.findByEmailIgnoreCase(updateUser.getEmail())).isPresent()) {
-				user.setEmail(updateUser.getEmail());
-			} else if (!updateUser.getEmail().equals(user.getEmail())) {
-				throw new NotFoundException(EMAIL_NOT_FOUND);
-			}
-
-			user.setLanguage(updateUser.getLanguage());
-
-			return userRepository.save(user);
-		} else {
-			throw new UsernameNotFoundException(USER_NOT_FOUND);
-		}
+	@Override
+	public List<User> getAll() {
+		return userRepository.findAll();
 	}
 
-	public void updatePassword(Long id, PasswordChange passwordChange) throws Exception {
-		final User user = userRepository.findOne(id);
-		if (Optional.ofNullable(user).isPresent()) {
-			if (passwordEncoder.matches(passwordChange.getOldPassword(), user.getPassword())) {
-				user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
-				userRepository.save(user);
-			} else {
-				throw new DontMatchException(DONT_MATCH);
+	@Override
+	public User getById(final Long id) throws NotFoundException {
+		if (Optional.ofNullable(id).isPresent()) {
+			try {
+				return userRepository.findOne(id);
+			} catch (Exception ex) {
+				logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + ex.getMessage(), ex);
+				throw new NotFoundException(USER_NOT_FOUND);
 			}
 		} else {
-			throw new UsernameNotFoundException(USER_NOT_FOUND);
+			NotFoundException cnfex = new NotFoundException(USER_NOT_FOUND);
+			logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
+			throw cnfex;
 		}
 	}
 
-	public User activateUser(Long id, Boolean activate) throws UsernameNotFoundException {
-		User user = userRepository.findOne(id);
-		if (Optional.ofNullable(user).isPresent()) {
-			user.setEnabled(activate);
-			return userRepository.save(user);
+	public User getUserByName(final String username) throws NotFoundException {
+		if (Optional.ofNullable(username).isPresent()) {
+			try {
+				return userRepository.findByUsernameIgnoreCase(username);
+			} catch (Exception ex) {
+				logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + ex.getMessage(), ex);
+				throw new NotFoundException(USER_NOT_FOUND);
+			}
 		} else {
-			throw new UsernameNotFoundException(USER_NOT_FOUND);
+			NotFoundException cnfex = new NotFoundException(USER_NOT_FOUND);
+			logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
+			throw cnfex;
 		}
 	}
 
-	public User setRoleForUser(Long id, Role role) throws UsernameNotFoundException {
-		User user = userRepository.findOne(id);
-		if (Optional.ofNullable(user).isPresent()) {
-			user.setRole(role);
-			return userRepository.save(user);
+	public User getUserByEmail(final String email) throws NotFoundException {
+		if (Optional.ofNullable(email).isPresent()) {
+			try {
+				return userRepository.findByEmailIgnoreCase(email);
+			} catch (Exception ex) {
+				logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + ex.getMessage(), ex);
+				throw new NotFoundException(USER_NOT_FOUND);
+			}
 		} else {
-			throw new UsernameNotFoundException(USER_NOT_FOUND);
+			NotFoundException cnfex = new NotFoundException(USER_NOT_FOUND);
+			logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
+			throw cnfex;
+		}
+	}
+
+	public User save(final User user) throws SaveFailedException {
+		if (Optional.ofNullable(user).isPresent()) {
+			try {
+				return userRepository.save(user);
+			} catch (Exception ex) {
+				logger.error(UserService.class.getSimpleName() + ex.getMessage(), ex);
+				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
+			}
+		} else {
+			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
+			logger.error(SAVE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
+			throw sfex;
+		}
+	}
+
+	@Override
+	public User update(final User user)
+			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+		if (Optional.ofNullable(user).isPresent()) {
+			try {
+				User updateUser = getById(user.getId());
+				if (Optional.ofNullable(updateUser).isPresent()) {
+					if (!Optional.ofNullable(getUserByName(user.getUsername())).isPresent()) {
+						updateUser.setUsername(user.getUsername());
+					} else if (!user.getUsername().equals(updateUser.getUsername())) {
+						throw new UsernameAlreadyExistsException(USER_EXISTS);
+					}
+					if (!Optional.ofNullable(getUserByEmail(user.getEmail())).isPresent()) {
+						updateUser.setEmail(user.getEmail());
+					} else if (!user.getUsername().equals(updateUser.getUsername())) {
+						throw new EmailAlreadyExistsException(EMAIL_EXISTS);
+					}
+					updateUser.setLanguage(user.getLanguage());
+					updateUser.setProfilPictureURL(user.getProfilPictureURL());
+					return save(updateUser);
+				} else {
+					throw new NotFoundException(USER_NOT_FOUND);
+				}
+			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
+				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			} catch (UsernameAlreadyExistsException uaeex) {
+				logger.error(USER_EXISTS + UserService.class.getSimpleName(), uaeex);
+				throw uaeex;
+			} catch (EmailAlreadyExistsException eaeex) {
+				logger.error(EMAIL_EXISTS + UserService.class.getSimpleName(), eaeex);
+				throw eaeex;
+			} catch (Exception ex) {
+				logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName(), ex);
+				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			}
+
+		} else {
+			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			throw ufex;
+		}
+	}
+
+	@Override
+	public void delete(final Long id) throws DeleteFailedException {
+		if (Optional.ofNullable(id).isPresent()) {
+			try {
+				userRepository.delete(id);
+			} catch (EmptyResultDataAccessException erdaex) {
+				logger.error(DELETE_FAILED_EXCEPTION + UserService.class.getSimpleName() + erdaex.getMessage(), erdaex);
+				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
+			} catch (Exception ex) {
+				logger.error(DELETE_FAILED_EXCEPTION + UserService.class.getSimpleName(), ex);
+				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
+			}
+		} else {
+			DeleteFailedException dfex = new DeleteFailedException(DELETE_FAILED_EXCEPTION);
+			logger.error(DELETE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
+			throw dfex;
+		}
+
+	}
+
+	public void updatePassword(final Long id, final PasswordChange passwordChange)
+			throws UpdateFailedException, DontMatchException {
+		if (Optional.ofNullable(id).isPresent() && Optional.ofNullable(passwordChange).isPresent()) {
+			try {
+				User user = getById(id);
+				if (Optional.ofNullable(user).isPresent()) {
+					if (passwordEncoder.matches(passwordChange.getOldPassword(), user.getPassword())) {
+						user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
+						save(user);
+					}
+				} else {
+					throw new DontMatchException(UPDATE_FAILED_EXCEPTION);
+				}
+			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
+				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			} catch (DontMatchException dmex) {
+				logger.error(DONT_MATCH + UserService.class.getSimpleName(), dmex);
+				throw dmex;
+			} catch (Exception ex) {
+				logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName(), ex);
+				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			}
+
+		} else {
+			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			throw ufex;
+		}
+	}
+
+	public User activateUser(Long id, Boolean activate) throws UpdateFailedException {
+		if (Optional.ofNullable(activate).isPresent() && Optional.ofNullable(id).isPresent()) {
+			try {
+				User user = getById(id);
+				if (Optional.ofNullable(user).isPresent()) {
+					user.setEnabled(activate);
+					return save(user);
+				} else {
+					throw new NotFoundException(USER_NOT_FOUND);
+				}
+			} catch (NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
+				throw new UpdateFailedException(
+						UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
+			} catch (Exception ex) {
+				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
+				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName());
+			}
+		} else {
+			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			throw ufex;
+		}
+	}
+
+	public User setRoleForUser(Long id, Role role) throws UpdateFailedException {
+		if (Optional.ofNullable(role).isPresent() && Optional.ofNullable(id).isPresent()) {
+			try {
+				User user = getById(id);
+				if (Optional.ofNullable(user).isPresent()) {
+					user.setRole(role);
+					return save(user);
+				} else {
+					throw new NotFoundException(USER_NOT_FOUND);
+				}
+			} catch (NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
+				throw new UpdateFailedException(
+						UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
+			} catch (Exception ex) {
+				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
+				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName());
+			}
+		} else {
+			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			throw ufex;
 		}
 	}
 }
