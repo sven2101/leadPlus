@@ -62,7 +62,7 @@ public class UserResource {
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
 	public User updateUser(@PathVariable Long id, @RequestBody @Valid final User updateUser) throws Exception {
-		return userService.updateUser(id, updateUser);
+		return userService.update(updateUser);
 	}
 
 	@RequestMapping(value = "/{id}/pw", method = RequestMethod.PUT)

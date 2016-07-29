@@ -11,7 +11,7 @@ gulp.task('test-task', function() {
     // gulp.src !
     return gulp.src('./foobar')
         .pipe(karma({
-            configFile: 'frontend/test.config.js',
+            configFile: 'frontend/gulp/test.config.js',
             action: 'run'
         }))
         .on('error', function(err) {

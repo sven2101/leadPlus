@@ -4,11 +4,11 @@
 /// <reference path="../../typeDefinitions/angular.d.ts" />
 var TestService = (function () {
     function TestService() {
-        this.name = 'Susi';
+        this.name = "Susi";
     }
     TestService.prototype.changeName = function () {
-        this.name = this.name === 'Horst' ? 'Torsten' : 'Horst';
+        this.name = this.name === "Horst" ? "Torsten" : "Horst";
     };
     return TestService;
 }());
-angular.module('app').factory('TestService', [function () { return new TestService(); }]);
+angular.module("app").factory("TestService", [function () { return new TestService(); }]);
