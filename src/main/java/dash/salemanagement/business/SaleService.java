@@ -52,7 +52,7 @@ public class SaleService implements ISaleService {
 	}
 
 	@Override
-	public Sale getSaleById(final Long id) throws NotFoundException {
+	public Sale getById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
 				return saleRepository.findOne(id);

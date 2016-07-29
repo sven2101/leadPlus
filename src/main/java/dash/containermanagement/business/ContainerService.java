@@ -14,12 +14,11 @@
 
 package dash.containermanagement.business;
 
+import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.CONTAINER_NOT_FOUND;
+import static dash.Constants.DELETE_FAILED_EXCEPTION;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
-import static dash.Constants.DELETE_FAILED_EXCEPTION;
-import static dash.Constants.BECAUSE_OF_ILLEGAL_ID;
-import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,8 +58,7 @@ public class ContainerService implements IContainerService {
 			}
 		} else {
 			NotFoundException cnfex = new NotFoundException(CONTAINER_NOT_FOUND);
-			logger.error(CONTAINER_NOT_FOUND + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					cnfex);
+			logger.error(CONTAINER_NOT_FOUND + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
 			throw cnfex;
 		}
 	}
@@ -76,8 +74,7 @@ public class ContainerService implements IContainerService {
 			}
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(SAVE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					sfex);
+			logger.error(SAVE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
 			throw sfex;
 		}
 	}
@@ -102,8 +99,7 @@ public class ContainerService implements IContainerService {
 
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			logger.error(UPDATE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					ufex);
+			logger.error(UPDATE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
 			throw ufex;
 		}
 	}
@@ -114,8 +110,7 @@ public class ContainerService implements IContainerService {
 			try {
 				containerRepository.delete(id);
 			} catch (EmptyResultDataAccessException erdaex) {
-				logger.error(DELETE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + erdaex.getMessage(),
-						erdaex);
+				logger.error(DELETE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + erdaex.getMessage(), erdaex);
 				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
 			} catch (Exception ex) {
 				logger.error(DELETE_FAILED_EXCEPTION + ContainerService.class.getSimpleName(), ex);
@@ -123,8 +118,7 @@ public class ContainerService implements IContainerService {
 			}
 		} else {
 			DeleteFailedException dfex = new DeleteFailedException(DELETE_FAILED_EXCEPTION);
-			logger.error(DELETE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					dfex);
+			logger.error(DELETE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
 			throw dfex;
 		}
 	}

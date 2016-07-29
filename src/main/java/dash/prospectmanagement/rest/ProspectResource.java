@@ -14,6 +14,8 @@
 
 package dash.prospectmanagement.rest;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,57 +28,48 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.base.Optional;
-
-import dash.prospectmanagement.business.ProspectRepository;
+import dash.exceptions.DeleteFailedException;
+import dash.exceptions.NotFoundException;
+import dash.exceptions.UpdateFailedException;
+import dash.prospectmanagement.business.IProspectService;
 import dash.prospectmanagement.domain.Prospect;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-@RestController
-@RequestMapping("/api/rest/processes/offers/prospects")
+@RestController(value = "Prospect Resource")
+@RequestMapping(value = "/api/rest/prospects", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Prospects API")
 public class ProspectResource {
 
 	@Autowired
-	private ProspectRepository prospectRepository;
+	private IProspectService prospectService;
 
-	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get all Prospects", notes = "")
-	public Iterable<Prospect> get() {
-		return prospectRepository.findAll();
+	public List<Prospect> getAll() {
+		return prospectService.getAll();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get a single prospect.", notes = "You have to provide a valid prospect ID.")
-	public Prospect findById(@ApiParam(required = true) @PathVariable Long id) {
-		return prospectRepository.findOne(id);
+	public Prospect findById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
+		return prospectService.getById(id);
 	}
 
-	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
-			MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update a single prospect.", notes = "You have to provide a valid prospect ID.")
-	public Prospect update(@ApiParam(required = true) @PathVariable Long id, @ApiParam(required = true) @RequestBody @Valid Prospect updateProspect) {
-		Prospect prospect = prospectRepository.findOne(id);
-		if (Optional.fromNullable(prospect).isPresent()) {
-			prospect.setFirstname(updateProspect.getFirstname());
-			prospect.setLastname(updateProspect.getLastname());
-			prospect.setCompany(updateProspect.getCompany());
-			prospect.setEmail(updateProspect.getEmail());
-			prospect.setPhone(updateProspect.getPhone());
-			prospect.setTitle(updateProspect.getTitle());
-		}
-		return prospect;
+	public Prospect update(@ApiParam(required = true) @RequestBody @Valid final Prospect prospect) throws UpdateFailedException {
+		return prospectService.update(prospect);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Delete a single prospect.", notes = "You have to provide a valid prospect ID.")
-	public void delete(@ApiParam(required = true) @PathVariable Long id) {
-		prospectRepository.delete(id);
+	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
+		prospectService.delete(id);
 	}
 }

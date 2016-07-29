@@ -30,7 +30,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.containermanagement.domain.Container;
 import dash.inquirermanagement.domain.Title;
 import dash.prospectmanagement.domain.Prospect;
 import dash.test.BaseConfig;
@@ -90,19 +89,18 @@ public class ProspectIntegrationTest extends BaseConfig implements IIntegrationT
 		Prospect prospect = create();
 		HttpEntity<Prospect> entityCreateProspect = new HttpEntity<Prospect>(prospect, headers);
 
-		ResponseEntity<Container> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateProspect, Container.class);
-		Container responseCreateContainer = responseCreate.getBody();
+		ResponseEntity<Prospect> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateProspect, Prospect.class);
+		Prospect responseCreateProspect = responseCreate.getBody();
 
-		prospect.setEmail("test@eviarc.com");
-		HttpEntity<Prospect> entity = new HttpEntity<Prospect>(prospect, headers);
+		responseCreateProspect.setEmail("test@eviarc.com");
+		HttpEntity<Prospect> entity = new HttpEntity<Prospect>(responseCreateProspect, headers);
 
-		ResponseEntity<Prospect> response = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.PUT, entity, Prospect.class,
-				responseCreateContainer.getId());
+		ResponseEntity<Prospect> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Prospect.class, responseCreateProspect.getId());
 		Prospect responseProspect = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(prospect, responseProspect);
+		assertEquals(responseCreateProspect, responseProspect);
 	}
 
 	@Override

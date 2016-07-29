@@ -30,7 +30,7 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
-import dash.inquirermanagement.business.IInquirerService;
+import dash.inquirermanagement.business.InquirerService;
 import dash.inquirermanagement.domain.Inquirer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,13 +38,13 @@ import io.swagger.annotations.ApiParam;
 
 @RestController(value = "InquirerResource")
 @Api(value = "inquirers")
-@RequestMapping(value = "/api/rest/inquirers", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/inquirers")
 public class InquirerResource {
 
 	@Autowired
-	private IInquirerService inquirerService;
+	private InquirerService inquirerService;
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get all Inquirers", notes = "You have to provide a valid hotel ID.")
 	public Iterable<Inquirer> getAll() {

@@ -55,8 +55,8 @@ public class SaleResource {
 	@ApiOperation(value = "Return a single sale.", notes = "")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Sale getSaleById(@PathVariable final Long id) throws NotFoundException {
-		return saleService.getSaleById(id);
+	public Sale getById(@PathVariable final Long id) throws NotFoundException {
+		return saleService.getById(id);
 	}
 
 	@ApiOperation(value = "Update a single sale.", notes = "")

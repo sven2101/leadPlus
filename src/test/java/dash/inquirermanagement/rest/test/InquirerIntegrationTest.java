@@ -93,16 +93,15 @@ public class InquirerIntegrationTest extends BaseConfig implements IIntegrationT
 		ResponseEntity<Inquirer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateInquirer, Inquirer.class);
 		Inquirer responseCreateInquirer = responseCreate.getBody();
 
-		inquirer.setFirstname("Hans");
-		HttpEntity<Inquirer> entity = new HttpEntity<Inquirer>(inquirer, headers);
+		responseCreateInquirer.setFirstname("Hans");
+		HttpEntity<Inquirer> entity = new HttpEntity<Inquirer>(responseCreateInquirer, headers);
 
-		ResponseEntity<Inquirer> response = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.PUT, entity, Inquirer.class,
-				responseCreateInquirer.getId());
+		ResponseEntity<Inquirer> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Inquirer.class, responseCreateInquirer.getId());
 		Inquirer responseInquirer = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(inquirer, responseInquirer);
+		assertEquals(responseCreateInquirer, responseInquirer);
 	}
 
 	@Override

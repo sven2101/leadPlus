@@ -14,6 +14,7 @@
 
 package dash.processmanagement.business;
 
+import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.PROCESS_NOT_FOUND;
 import static dash.Constants.USER_NOT_FOUND;
 
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,8 @@ import dash.usermanagement.domain.User;
 
 @Service
 public class ProcessService implements IProcessService {
+
+	private static final Logger logger = Logger.getLogger(ProcessService.class);
 
 	@Autowired
 	private ProcessRepository processRepository;
@@ -208,5 +212,21 @@ public class ProcessService implements IProcessService {
 	public List<Process> getProcessWithLatestSales(int amount) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Process getProcessById(Long id) throws NotFoundException {
+		if (Optional.ofNullable(id).isPresent()) {
+			try {
+				return processRepository.findOne(id);
+			} catch (Exception ex) {
+				logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + ex.getMessage(), ex);
+				throw new NotFoundException(PROCESS_NOT_FOUND);
+			}
+		} else {
+			NotFoundException cnfex = new NotFoundException(PROCESS_NOT_FOUND);
+			logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
+			throw cnfex;
+		}
 	}
 }

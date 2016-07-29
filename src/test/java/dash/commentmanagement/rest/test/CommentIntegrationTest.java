@@ -77,7 +77,7 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 
 		HttpEntity<Comment> entityGetComment = new HttpEntity<Comment>(headers);
 
-		ResponseEntity<Comment> responseGetComment = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET, entityGetComment, Comment.class,
+		ResponseEntity<Comment> responseGetComment = restTemplate.exchange(EXTENDED_URI + "processes/{id}", HttpMethod.GET, entityGetComment, Comment.class,
 				responseCreateComment.getId());
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetComment.getHeaders().getContentType().getCharSet());
@@ -85,6 +85,7 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 		assertEquals(create(), responseGetComment.getBody());
 	}
 
+	@Override
 	@Test
 	public void put() {
 
@@ -94,15 +95,15 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 		ResponseEntity<Comment> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateComment, Comment.class);
 		Comment responseCreateComment = responseCreate.getBody();
 
-		comment.setCommentText("Haha");
-		HttpEntity<Comment> entity = new HttpEntity<Comment>(comment, headers);
+		responseCreateComment.setCommentText("Haha");
+		HttpEntity<Comment> entity = new HttpEntity<Comment>(responseCreateComment, headers);
 
-		ResponseEntity<Comment> response = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.PUT, entity, Comment.class, responseCreateComment.getId());
+		ResponseEntity<Comment> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Comment.class, responseCreateComment.getId());
 		Comment responseComment = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(comment, responseComment);
+		assertEquals(responseCreateComment, responseComment);
 	}
 
 	@Override

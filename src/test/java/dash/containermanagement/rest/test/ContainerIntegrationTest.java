@@ -91,16 +91,15 @@ public class ContainerIntegrationTest extends BaseConfig implements IIntegration
 		ResponseEntity<Container> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateContainer, Container.class);
 		Container responseCreateContainer = responseCreate.getBody();
 
-		container.setName("Fuﬂcontainer");
-		HttpEntity<Container> entity = new HttpEntity<Container>(container, headers);
+		responseCreateContainer.setName("Fuﬂcontainer");
+		HttpEntity<Container> entity = new HttpEntity<Container>(responseCreateContainer, headers);
 
-		ResponseEntity<Container> response = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.PUT, entity, Container.class,
-				responseCreateContainer.getId());
+		ResponseEntity<Container> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Container.class, responseCreateContainer.getId());
 		Container responseContainer = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(container, responseContainer);
+		assertEquals(responseCreateContainer, responseContainer);
 	}
 
 	@Override
@@ -119,5 +118,4 @@ public class ContainerIntegrationTest extends BaseConfig implements IIntegration
 
 		return container;
 	}
-
 }

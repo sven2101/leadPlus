@@ -30,17 +30,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.commentmanagement.business.ICommentService;
 import dash.commentmanagement.domain.Comment;
+import dash.exceptions.DeleteFailedException;
+import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-/**
- * Created by Andreas on 12.10.2015.
- */
-
-@RestController
-@RequestMapping(value = "/api/rest/comments", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
-		MediaType.APPLICATION_JSON_VALUE })
+@RestController(value = "Comment Resource")
+@RequestMapping(value = "/api/rest/comments", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Comment API")
 public class CommentResource {
 
@@ -50,14 +49,35 @@ public class CommentResource {
 	@RequestMapping(value = "/processes/{processId}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get all Comments for one specific process", notes = ".")
-	public List<Comment> get(@ApiParam(required = true) @PathVariable long processId) throws Exception {
-		return commentService.findCommentsByProcess(processId);
+	public List<Comment> getCommentsByProcess(@ApiParam(required = true) @PathVariable long processId) throws NotFoundException {
+		return commentService.getCommentsByProcess(processId);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get a Comment by Id", notes = ".")
+	public Comment getById(@ApiParam(required = true) @PathVariable long id) throws NotFoundException {
+		return commentService.getById(id);
 	}
 
 	@ApiOperation(value = "Creates a comment.", notes = "")
-	@RequestMapping(value = "/processes", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Comment createComment(@ApiParam(required = true) @RequestBody @Valid Comment comment) throws Exception {
-		return commentService.saveComment(comment);
+	public Comment save(@ApiParam(required = true) @RequestBody @Valid final Comment comment) throws SaveFailedException {
+		return commentService.save(comment);
+	}
+
+	@ApiOperation(value = "Updates a comment.", notes = "")
+	@RequestMapping(value = "/comments", method = RequestMethod.PUT)
+	@ResponseStatus(HttpStatus.OK)
+	public Comment update(@ApiParam(required = true) @RequestBody @Valid final Comment comment) throws UpdateFailedException {
+		return commentService.update(comment);
+	}
+
+	@ApiOperation(value = "Delets a comment.", notes = "")
+	@RequestMapping(method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.OK)
+	public void delete(@ApiParam(required = true) @RequestBody @Valid final Long id) throws DeleteFailedException {
+		commentService.delete(id);
 	}
 }

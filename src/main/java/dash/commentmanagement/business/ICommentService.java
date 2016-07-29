@@ -19,13 +19,21 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import dash.commentmanagement.domain.Comment;
+import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
 
 @Service
 public interface ICommentService {
 
-	Comment saveComment(final Comment comment) throws SaveFailedException;
+	public Comment getById(final Long id) throws NotFoundException;
 
-	List<Comment> findCommentsByProcess(final long processId) throws NotFoundException;
+	public Comment save(final Comment comment) throws SaveFailedException;
+
+	public Comment update(final Comment comment) throws UpdateFailedException;
+
+	public void delete(final Long id) throws DeleteFailedException;
+
+	public List<Comment> getCommentsByProcess(final long processId) throws NotFoundException;
 }

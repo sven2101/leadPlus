@@ -33,6 +33,8 @@ public interface IProcessService {
 
 	public List<Object> getElementsByStatus(Status status, Workflow workflow);
 
+	public Process getProcessById(final Long id) throws NotFoundException;
+
 	public void saveProcesses(List<Process> processes) throws SaveFailedException, NotFoundException;
 
 	public Process save(final Process process) throws SaveFailedException, NotFoundException;

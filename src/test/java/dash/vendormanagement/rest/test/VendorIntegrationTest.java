@@ -91,16 +91,16 @@ public class VendorIntegrationTest extends BaseConfig implements IIntegrationTes
 		ResponseEntity<Vendor> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateVendor, Vendor.class);
 		Vendor responseCreateVendor = responseCreate.getBody();
 
-		vendor.setName("Uwe");
+		responseCreateVendor.setName("Uwe");
 
-		HttpEntity<Vendor> entity = new HttpEntity<Vendor>(vendor, headers);
+		HttpEntity<Vendor> entity = new HttpEntity<Vendor>(responseCreateVendor, headers);
 
-		ResponseEntity<Vendor> response = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.PUT, entity, Vendor.class, responseCreateVendor.getId());
+		ResponseEntity<Vendor> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Vendor.class, responseCreateVendor.getId());
 		Vendor responseVendor = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(vendor, responseVendor);
+		assertEquals(responseCreateVendor, responseVendor);
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public interface ISaleService {
 
 	public List<Sale> getAll();
 
-	public Sale getSaleById(final Long id) throws NotFoundException;
+	public Sale getById(final Long id) throws NotFoundException;
 
 	public Sale save(final Sale sale) throws SaveFailedException;
 

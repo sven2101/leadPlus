@@ -11,7 +11,8 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.vendormanagement.business;
+
+package dash.prospectmanagement.business;
 
 import java.util.List;
 
@@ -21,21 +22,18 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
-import dash.vendormanagement.domain.Vendor;
+import dash.prospectmanagement.domain.Prospect;
 
 @Service
-public interface IVendorService {
+public interface IProspectService {
 
-	public List<Vendor> getAll();
+	public List<Prospect> getAll();
 
-	public Vendor getById(final Long id) throws NotFoundException;
+	public Prospect getById(final Long id) throws NotFoundException;
 
-	public Vendor save(final Vendor vendor) throws SaveFailedException;
+	public Prospect save(final Prospect prospect) throws SaveFailedException;
 
-	/*
-	 * TODO - update Schlüssel Constraint
-	 */
-	public Vendor update(final Vendor vendor) throws UpdateFailedException;
+	public Prospect update(final Prospect prospect) throws UpdateFailedException;
 
 	public void delete(final Long id) throws DeleteFailedException;
 }

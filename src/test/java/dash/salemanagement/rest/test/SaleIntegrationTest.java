@@ -61,11 +61,11 @@ public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest 
 		HttpEntity<Sale> entity = new HttpEntity<Sale>(sale, headers);
 
 		ResponseEntity<Sale> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entity, Sale.class);
-		Sale responseContainer = response.getBody();
+		Sale responseSale = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
-		assertEquals(sale, responseContainer);
+		assertEquals(sale, responseSale);
 	}
 
 	@Override
@@ -79,12 +79,12 @@ public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest 
 
 		HttpEntity<Sale> entityGetSale = new HttpEntity<Sale>(headers);
 
-		ResponseEntity<Sale> responseGetContainer = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET, entityGetSale, Sale.class,
+		ResponseEntity<Sale> responseGetSale = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET, entityGetSale, Sale.class,
 				responseCreateSale.getId());
 
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetContainer.getHeaders().getContentType().getCharSet());
-		assertEquals(HttpStatus.OK, responseGetContainer.getStatusCode());
-		assertEquals(create(), responseGetContainer.getBody());
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetSale.getHeaders().getContentType().getCharSet());
+		assertEquals(HttpStatus.OK, responseGetSale.getStatusCode());
+		assertEquals(create(), responseGetSale.getBody());
 	}
 
 	@Override
@@ -97,15 +97,15 @@ public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest 
 		ResponseEntity<Sale> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateSale, Sale.class);
 		Sale responseCreateSale = responseCreate.getBody();
 
-		sale.setSaleProfit(999.99);
-		HttpEntity<Sale> entity = new HttpEntity<Sale>(sale, headers);
+		responseCreateSale.setSaleProfit(999.99);
+		HttpEntity<Sale> entity = new HttpEntity<Sale>(responseCreateSale, headers);
 
-		ResponseEntity<Sale> response = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.PUT, entity, Sale.class, responseCreateSale.getId());
+		ResponseEntity<Sale> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Sale.class, responseCreateSale.getId());
 		Sale responseSale = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(sale, responseSale);
+		assertEquals(responseCreateSale, responseSale);
 	}
 
 	@Override
