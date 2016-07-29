@@ -28,6 +28,8 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.DeleteFailedException;
@@ -121,5 +123,10 @@ public class SaleService implements ISaleService {
 			logger.error(VENDOR_NOT_FOUND + SaleService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
 			throw dfex;
 		}
+	}
+
+	@Override
+	public Page<Sale> getAll(Pageable pageable) {
+		return saleRepository.findAll(pageable);
 	}
 }

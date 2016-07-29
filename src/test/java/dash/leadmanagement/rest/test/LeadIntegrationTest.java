@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.apache.http.entity.ContentType;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -34,12 +35,13 @@ import dash.inquirermanagement.domain.Inquirer;
 import dash.inquirermanagement.domain.Title;
 import dash.leadmanagement.domain.Lead;
 import dash.test.BaseConfig;
+import dash.test.IIntegrationTest;
 import dash.vendormanagement.domain.Vendor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
 @WebIntegrationTest
-public class LeadIntegrationTest extends BaseConfig {
+public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest {
 
 	private static final String EXTENDED_URI = BASE_URI + "/api/rest/processes/leads";
 
@@ -50,9 +52,10 @@ public class LeadIntegrationTest extends BaseConfig {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 	}
 
+	@Override
 	@Test
-	public void postLead() {
-		Lead lead = createLead();
+	public void post() {
+		Lead lead = create();
 		HttpEntity<Lead> entity = new HttpEntity<Lead>(lead, headers);
 
 		ResponseEntity<Lead> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entity, Lead.class);
@@ -63,9 +66,10 @@ public class LeadIntegrationTest extends BaseConfig {
 		assertEquals(lead, responseLead);
 	}
 
+	@Override
 	@Test
-	public void getLead() {
-		HttpEntity<Lead> entityCreateLead = new HttpEntity<Lead>(createLead(), headers);
+	public void get() {
+		HttpEntity<Lead> entityCreateLead = new HttpEntity<Lead>(create(), headers);
 
 		ResponseEntity<Lead> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateLead, Lead.class);
 		Lead responseCreateLead = responseCreate.getBody();
@@ -77,10 +81,38 @@ public class LeadIntegrationTest extends BaseConfig {
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetLead.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetLead.getStatusCode());
-		assertEquals(createLead(), responseGetLead.getBody());
+		assertEquals(create(), responseGetLead.getBody());
 	}
 
-	private Lead createLead() {
+	@Override
+	@Test
+	public void put() {
+
+		Lead lead = create();
+		HttpEntity<Lead> entityCreateLead = new HttpEntity<Lead>(lead, headers);
+
+		ResponseEntity<Lead> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateLead, Lead.class);
+		Lead responseCreateLead = responseCreate.getBody();
+
+		lead.setContainerAmount(10);
+		HttpEntity<Lead> entity = new HttpEntity<Lead>(lead, headers);
+
+		ResponseEntity<Lead> response = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.PUT, entity, Lead.class, responseCreateLead.getId());
+		Lead responseLead = response.getBody();
+
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(lead, responseLead);
+	}
+
+	@Override
+	@Ignore
+	public void delete() {
+
+	}
+
+	@Override
+	public Lead create() {
 
 		Inquirer inquirer = new Inquirer();
 		inquirer.setFirstname("Max");
@@ -110,23 +142,4 @@ public class LeadIntegrationTest extends BaseConfig {
 		return lead;
 	}
 
-	@Test
-	public void updateLead() {
-
-		Lead lead = createLead();
-		HttpEntity<Lead> entityCreateLead = new HttpEntity<Lead>(lead, headers);
-
-		ResponseEntity<Lead> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateLead, Lead.class);
-		Lead responseCreateLead = responseCreate.getBody();
-
-		lead.setContainerAmount(10);
-		HttpEntity<Lead> entity = new HttpEntity<Lead>(lead, headers);
-
-		ResponseEntity<Lead> response = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.PUT, entity, Lead.class, responseCreateLead.getId());
-		Lead responseLead = response.getBody();
-
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(lead, responseLead);
-	}
 }

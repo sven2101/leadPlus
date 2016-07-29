@@ -1,3 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
 package dash.containermanagement.business;
 
 import static dash.Constants.CONTAINER_NOT_FOUND;
@@ -73,14 +87,13 @@ public class ContainerService implements IContainerService {
 		if (Optional.ofNullable(container).isPresent()) {
 			Container updateContainer;
 			try {
-				updateContainer = containerRepository.findOne(container.getId());
+				updateContainer = getById(container.getId());
 				updateContainer.setDescription(container.getDescription());
 				updateContainer.setName(container.getName());
 				updateContainer.setPriceNetto(container.getPriceNetto());
-				return containerRepository.save(updateContainer);
-			} catch (IllegalArgumentException iaex) {
-				logger.error(UPDATE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID,
-						iaex);
+				return save(updateContainer);
+			} catch (NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + ContainerService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			} catch (Exception ex) {
 				logger.error(UPDATE_FAILED_EXCEPTION + ContainerService.class.getSimpleName(), ex);

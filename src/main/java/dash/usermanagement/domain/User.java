@@ -61,6 +61,7 @@ public class User implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Language language;
 
+	@JsonIgnore
 	private boolean enabled;
 
 	public User() {
@@ -77,10 +78,6 @@ public class User implements UserDetails {
 
 	public Long getId() {
 		return this.id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	@Override

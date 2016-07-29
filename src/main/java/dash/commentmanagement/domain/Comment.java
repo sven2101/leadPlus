@@ -70,10 +70,6 @@ public class Comment implements Request {
 		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public Process getProcess() {
 		return process;
 	}

@@ -11,9 +11,11 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.containermanagement.rest.test;
+package dash.salemanagement.rest.test;
 
 import static org.junit.Assert.assertEquals;
+
+import java.util.Calendar;
 
 import org.apache.http.entity.ContentType;
 import org.junit.Before;
@@ -31,15 +33,19 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
 import dash.containermanagement.domain.Container;
+import dash.customermanagement.domain.Customer;
+import dash.inquirermanagement.domain.Title;
+import dash.salemanagement.domain.Sale;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
+import dash.vendormanagement.domain.Vendor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
 @WebIntegrationTest
-public class ContainerIntegrationTest extends BaseConfig implements IIntegrationTest {
+public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private static final String EXTENDED_URI = BASE_URI + "/api/rest/containers";
+	private static final String EXTENDED_URI = BASE_URI + "/api/rest/sales";
 
 	@Before
 	public void setup() {
@@ -51,30 +57,30 @@ public class ContainerIntegrationTest extends BaseConfig implements IIntegration
 	@Override
 	@Test
 	public void post() {
-		Container container = create();
-		HttpEntity<Container> entity = new HttpEntity<Container>(container, headers);
+		Sale sale = create();
+		HttpEntity<Sale> entity = new HttpEntity<Sale>(sale, headers);
 
-		ResponseEntity<Container> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entity, Container.class);
-		Container responseContainer = response.getBody();
+		ResponseEntity<Sale> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entity, Sale.class);
+		Sale responseContainer = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
-		assertEquals(container, responseContainer);
+		assertEquals(sale, responseContainer);
 	}
 
 	@Override
 	@Test
 	public void get() {
 
-		HttpEntity<Container> entityCreateContainer = new HttpEntity<Container>(create(), headers);
+		HttpEntity<Sale> entityCreateSale = new HttpEntity<Sale>(create(), headers);
 
-		ResponseEntity<Container> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateContainer, Container.class);
-		Container responseCreateContainer = responseCreate.getBody();
+		ResponseEntity<Sale> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateSale, Sale.class);
+		Sale responseCreateSale = responseCreate.getBody();
 
-		HttpEntity<Container> entityGetContainer = new HttpEntity<Container>(headers);
+		HttpEntity<Sale> entityGetSale = new HttpEntity<Sale>(headers);
 
-		ResponseEntity<Container> responseGetContainer = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET, entityGetContainer, Container.class,
-				responseCreateContainer.getId());
+		ResponseEntity<Sale> responseGetContainer = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET, entityGetSale, Sale.class,
+				responseCreateSale.getId());
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetContainer.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetContainer.getStatusCode());
@@ -85,22 +91,21 @@ public class ContainerIntegrationTest extends BaseConfig implements IIntegration
 	@Test
 	public void put() {
 
-		Container container = create();
-		HttpEntity<Container> entityCreateContainer = new HttpEntity<Container>(container, headers);
+		Sale sale = create();
+		HttpEntity<Sale> entityCreateSale = new HttpEntity<Sale>(sale, headers);
 
-		ResponseEntity<Container> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateContainer, Container.class);
-		Container responseCreateContainer = responseCreate.getBody();
+		ResponseEntity<Sale> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateSale, Sale.class);
+		Sale responseCreateSale = responseCreate.getBody();
 
-		container.setName("Fußcontainer");
-		HttpEntity<Container> entity = new HttpEntity<Container>(container, headers);
+		sale.setSaleProfit(999.99);
+		HttpEntity<Sale> entity = new HttpEntity<Sale>(sale, headers);
 
-		ResponseEntity<Container> response = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.PUT, entity, Container.class,
-				responseCreateContainer.getId());
-		Container responseContainer = response.getBody();
+		ResponseEntity<Sale> response = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.PUT, entity, Sale.class, responseCreateSale.getId());
+		Sale responseSale = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(container, responseContainer);
+		assertEquals(sale, responseSale);
 	}
 
 	@Override
@@ -110,14 +115,19 @@ public class ContainerIntegrationTest extends BaseConfig implements IIntegration
 	}
 
 	@Override
-	public Container create() {
+	public Sale create() {
 
-		Container container = new Container();
-		container.setName("Kühlcontainer");
-		container.setDescription("Dieser Kühlcontainer kühlt am aller besten");
-		container.setPriceNetto(1000.00);
+		Sale sale = new Sale();
+		sale.setContainer(new Container("Fußcontainer", "Guter Container", 1000.00));
+		sale.setContainerAmount(30);
+		sale.setCustomer(new Customer(Title.MR, "Andreas", "Foitzik", "123 GmbH", "test@eviarc.com", "07961/55166", "Hauptstrasse 10"));
+		sale.setSaleProfit(1000.00);
+		sale.setSaleReturn(1000.00);
+		sale.setTimestamp(Calendar.getInstance());
+		sale.setTransport("Hamburg");
+		sale.setVendor(new Vendor("Anbieter GmbH", "07961/55166"));
 
-		return container;
+		return sale;
 	}
 
 }

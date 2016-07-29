@@ -12,17 +12,17 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.salemanagement.business;
+package dash.exceptions;
 
-import javax.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import org.springframework.stereotype.Repository;
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class RegisterFailedException extends Exception {
 
-import dash.processmanagement.request.RequestRepository;
-import dash.salemanagement.domain.Sale;
+	private static final long serialVersionUID = 5520905786207281118L;
 
-@Repository
-@Transactional
-public interface SaleRepository extends RequestRepository<Sale, Long> {
-
+	public RegisterFailedException(String message) {
+		super(message);
+	}
 }

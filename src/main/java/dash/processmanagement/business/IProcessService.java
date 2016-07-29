@@ -24,28 +24,31 @@ import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
+import dash.processmanagement.domain.Workflow;
 import dash.salemanagement.domain.Sale;
 import dash.usermanagement.domain.User;
 
 @Service
 public interface IProcessService {
 
-	public List<?> getElementsByStatus(Status status, String kind);
+	public List<Object> getElementsByStatus(Status status, Workflow workflow);
 
-	public void createProcesses(List<Process> processes) throws SaveFailedException;
+	public void saveProcesses(List<Process> processes) throws SaveFailedException, NotFoundException;
 
-	public Process createProcess(final Process process) throws SaveFailedException;
+	public Process save(final Process process) throws SaveFailedException, NotFoundException;
 
-	public Lead createLead(Long processId, Lead lead) throws NotFoundException;
+	public Process update(final Process process) throws NotFoundException;
 
-	public Offer createOffer(Long processId, Offer offer) throws NotFoundException;
+	public Lead createLead(Long processId, final Lead lead) throws NotFoundException, SaveFailedException;
 
-	public Sale createSale(Long processId, Sale sale) throws NotFoundException;
+	public Offer createOffer(Long processId, final Offer offer) throws NotFoundException, SaveFailedException;
 
-	public User createProcessor(Long processId, String username) throws Exception;
+	public Sale createSale(Long processId, final Sale sale) throws NotFoundException, SaveFailedException;
+
+	public User setProcessor(Long processId, String username) throws Exception;
 
 	public Status updateStatus(Long processId, Status status) throws NotFoundException;
 
-	public Process updateProcess(final Process process) throws NotFoundException;
+	public List<Process> getProcessWithLatestSales(final int amount);
 
 }

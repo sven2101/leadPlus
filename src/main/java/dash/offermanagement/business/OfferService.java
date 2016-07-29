@@ -27,6 +27,8 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.DeleteFailedException;
@@ -120,5 +122,10 @@ public class OfferService implements IOfferService {
 			logger.error(OFFER_NOT_FOUND + OfferService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
 			throw dfex;
 		}
+	}
+
+	@Override
+	public Page<Offer> getAll(Pageable pageable) {
+		return offerRepository.findAll(pageable);
 	}
 }

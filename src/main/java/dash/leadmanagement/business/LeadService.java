@@ -27,6 +27,8 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.DeleteFailedException;
@@ -119,5 +121,10 @@ public class LeadService implements ILeadService {
 			logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
 			throw dfex;
 		}
+	}
+
+	@Override
+	public Page<Lead> getPages(Pageable pageable) {
+		return leadRepository.findAll(pageable);
 	}
 }

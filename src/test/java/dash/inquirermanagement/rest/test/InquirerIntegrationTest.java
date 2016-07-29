@@ -33,11 +33,12 @@ import dash.Application;
 import dash.inquirermanagement.domain.Inquirer;
 import dash.inquirermanagement.domain.Title;
 import dash.test.BaseConfig;
+import dash.test.IIntegrationTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
 @WebIntegrationTest
-public class InquirerIntegrationTest extends BaseConfig {
+public class InquirerIntegrationTest extends BaseConfig implements IIntegrationTest {
 
 	private static final String EXTENDED_URI = BASE_URI + "/api/rest/inquirers";
 
@@ -48,9 +49,10 @@ public class InquirerIntegrationTest extends BaseConfig {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 	}
 
+	@Override
 	@Test
-	public void postInquirer() {
-		Inquirer inquirer = createInquirer();
+	public void post() {
+		Inquirer inquirer = create();
 		HttpEntity<Inquirer> entity = new HttpEntity<Inquirer>(inquirer, headers);
 
 		ResponseEntity<Inquirer> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entity, Inquirer.class);
@@ -61,10 +63,11 @@ public class InquirerIntegrationTest extends BaseConfig {
 		assertEquals(inquirer, responseInquirer);
 	}
 
+	@Override
 	@Test
-	public void getInquirer() {
+	public void get() {
 
-		HttpEntity<Inquirer> entityCreateInquirer = new HttpEntity<Inquirer>(createInquirer(), headers);
+		HttpEntity<Inquirer> entityCreateInquirer = new HttpEntity<Inquirer>(create(), headers);
 
 		ResponseEntity<Inquirer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateInquirer, Inquirer.class);
 		Inquirer responseCreateInquirer = responseCreate.getBody();
@@ -76,14 +79,15 @@ public class InquirerIntegrationTest extends BaseConfig {
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetInquirer.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetInquirer.getStatusCode());
-		assertEquals(createInquirer(), responseGetInquirer.getBody());
+		assertEquals(create(), responseGetInquirer.getBody());
 
 	}
 
+	@Override
 	@Test
-	public void updateInquirer() {
+	public void put() {
 
-		Inquirer inquirer = createInquirer();
+		Inquirer inquirer = create();
 		HttpEntity<Inquirer> entityCreateInquirer = new HttpEntity<Inquirer>(inquirer, headers);
 
 		ResponseEntity<Inquirer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateInquirer, Inquirer.class);
@@ -101,13 +105,14 @@ public class InquirerIntegrationTest extends BaseConfig {
 		assertEquals(inquirer, responseInquirer);
 	}
 
+	@Override
 	@Ignore
-	public void deleteProcess() {
+	public void delete() {
 
 	}
 
-	private Inquirer createInquirer() {
-
+	@Override
+	public Inquirer create() {
 		Inquirer inquirer = new Inquirer();
 		inquirer.setFirstname("Max");
 		inquirer.setLastname("Mustermann");
@@ -115,7 +120,6 @@ public class InquirerIntegrationTest extends BaseConfig {
 		inquirer.setEmail("max.mustermann@einkauf-mustermann.de");
 		inquirer.setPhone("07961/55166");
 		inquirer.setTitle(Title.MR);
-
 		return inquirer;
 	}
 

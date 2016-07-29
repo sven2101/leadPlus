@@ -12,17 +12,8 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.salemanagement.business;
+package dash.processmanagement.domain;
 
-import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Repository;
-
-import dash.processmanagement.request.RequestRepository;
-import dash.salemanagement.domain.Sale;
-
-@Repository
-@Transactional
-public interface SaleRepository extends RequestRepository<Sale, Long> {
-
+public enum Workflow {
+	LEAD, OFFER, CONTACT, SALE;
 }

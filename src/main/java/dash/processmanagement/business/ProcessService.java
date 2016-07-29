@@ -26,15 +26,16 @@ import org.springframework.stereotype.Service;
 
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
-import dash.leadmanagement.business.ILeadService;
+import dash.leadmanagement.business.LeadService;
 import dash.leadmanagement.domain.Lead;
-import dash.offermanagement.business.IOfferService;
+import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
-import dash.salemanagement.business.ISaleService;
+import dash.processmanagement.domain.Workflow;
+import dash.salemanagement.business.SaleService;
 import dash.salemanagement.domain.Sale;
-import dash.usermanagement.business.UserRepository;
+import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 
 @Service
@@ -44,32 +45,32 @@ public class ProcessService implements IProcessService {
 	private ProcessRepository processRepository;
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@Autowired
-	private ILeadService leadService;
+	private LeadService leadService;
 
 	@Autowired
-	private IOfferService offerService;
+	private OfferService offerService;
 
 	@Autowired
-	private ISaleService saleService;
+	private SaleService saleService;
 
 	@Override
-	public List<?> getElementsByStatus(Status status, String kind) {
+	public List<Object> getElementsByStatus(Status status, Workflow workflow) {
 
 		List<Process> processes = processRepository.findProcessesByStatus(status);
 		List<Object> elements = new ArrayList<>();
 
-		if (kind == "lead") {
+		if (workflow == Workflow.LEAD) {
 			for (Process process : processes) {
 				elements.add(process.getLead());
 			}
-		} else if (kind == "offer") {
+		} else if (workflow == Workflow.OFFER) {
 			for (Process process : processes) {
 				elements.add(process.getOffer());
 			}
-		} else if (kind == "sale") {
+		} else if (workflow == Workflow.SALE) {
 			for (Process process : processes) {
 				elements.add(process.getSale());
 			}
@@ -79,14 +80,14 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public void createProcesses(List<Process> processes) throws SaveFailedException {
+	public void saveProcesses(List<Process> processes) throws SaveFailedException, NotFoundException {
 		for (Process process : processes) {
 			if (Optional.ofNullable(process.getLead()).isPresent())
 				leadService.save(process.getLead());
 			if (Optional.ofNullable(process.getOffer()).isPresent())
 				offerService.save(process.getOffer());
 			if (Optional.ofNullable(process.getSale()).isPresent()) {
-				process.setProcessor(userRepository.findByUsernameIgnoreCase("admin"));
+				process.setProcessor(userService.getUserByName("admin"));
 				saleService.save(process.getSale());
 			}
 
@@ -95,12 +96,12 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process createProcess(Process process) throws SaveFailedException {
+	public Process save(final Process process) throws SaveFailedException, NotFoundException {
 		Process createdProcess = null;
 		if (Optional.ofNullable(process).isPresent()) {
 			if (Optional.ofNullable(process.getProcessor()).isPresent()) {
-				if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase(process.getProcessor().getUsername())).isPresent()) {
-					userRepository.save(process.getProcessor());
+				if (!Optional.ofNullable(userService.getUserByName(process.getProcessor().getUsername())).isPresent()) {
+					userService.save(process.getProcessor());
 				}
 			}
 			if (Optional.ofNullable(process.getLead()).isPresent())
@@ -118,7 +119,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Lead createLead(Long processId, Lead lead) throws NotFoundException {
+	public Lead createLead(Long processId, Lead lead) throws NotFoundException, SaveFailedException {
 		Process process = processRepository.findOne(processId);
 		Lead createdLead;
 		if (Optional.ofNullable(process).isPresent()) {
@@ -132,11 +133,11 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Offer createOffer(Long processId, Offer offer) throws NotFoundException {
+	public Offer createOffer(Long processId, Offer offer) throws NotFoundException, SaveFailedException {
 		Process process = processRepository.findOne(processId);
 		Offer createdOffer;
 		if (Optional.ofNullable(process).isPresent()) {
-			createdOffer = offerService.createOffer(offer);
+			createdOffer = offerService.save(offer);
 			process.setOffer(offer);
 			processRepository.save(process);
 		} else {
@@ -146,11 +147,11 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Sale createSale(Long processId, Sale sale) throws NotFoundException {
+	public Sale createSale(Long processId, Sale sale) throws NotFoundException, SaveFailedException {
 		Process process = processRepository.findOne(processId);
 		Sale createdSale;
 		if (Optional.ofNullable(process).isPresent()) {
-			createdSale = saleService.createSale(sale);
+			createdSale = saleService.save(sale);
 			process.setSale(sale);
 			processRepository.save(process);
 		} else {
@@ -160,9 +161,9 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public User createProcessor(Long processId, String username) throws NotFoundException {
+	public User setProcessor(Long processId, String username) throws NotFoundException {
 		Process process = processRepository.findOne(processId);
-		final User processor = userRepository.findByUsernameIgnoreCase(username);
+		final User processor = userService.getUserByName(username);
 		if (!Optional.ofNullable(process).isPresent())
 			throw new NotFoundException(PROCESS_NOT_FOUND);
 		if (!Optional.ofNullable(processor).isPresent())
@@ -188,7 +189,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process updateProcess(Process updateProcess) throws NotFoundException {
+	public Process update(final Process updateProcess) throws NotFoundException {
 		Process process = processRepository.findOne(updateProcess.getId());
 		if (Optional.ofNullable(process).isPresent()) {
 			process.setLead(updateProcess.getLead());
@@ -203,4 +204,9 @@ public class ProcessService implements IProcessService {
 
 	}
 
+	@Override
+	public List<Process> getProcessWithLatestSales(int amount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

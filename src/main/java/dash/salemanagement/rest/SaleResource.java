@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping(value = "/api/rest/processes/sales", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/sales", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Sale API")
 public class SaleResource {
 
@@ -72,5 +72,4 @@ public class SaleResource {
 	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
 		saleService.delete(id);
 	}
-
 }

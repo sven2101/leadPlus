@@ -20,7 +20,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import dash.leadmanagement.domain.Lead;
@@ -31,7 +31,7 @@ import dash.salemanagement.domain.Sale;
 
 @Transactional
 @Repository
-public interface ProcessRepository extends JpaRepository<Process, Long> {
+public interface ProcessRepository extends PagingAndSortingRepository<Process, Long> {
 
 	List<Process> findProcessesByStatus(Status status);
 
@@ -59,7 +59,5 @@ public interface ProcessRepository extends JpaRepository<Process, Long> {
 			String firstname, String lastname, String email, String company, String phone, String containerName, String containerDescription, String transport,
 			String status, Pageable pageable);
 
-	List<Sale> findTop10BySaleIsNotNullOrderBySaleTimestampDesc();
-
-	List<Sale> findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
+	List<Sale> findTopBySaleIsNotNullOrderBySaleTimestampDesc(int amount);
 }

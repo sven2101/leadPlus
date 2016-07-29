@@ -11,18 +11,18 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash.test;
 
-package dash.salemanagement.business;
+public interface IIntegrationTest {
 
-import javax.transaction.Transactional;
+	public void get();
 
-import org.springframework.stereotype.Repository;
+	public void post();
 
-import dash.processmanagement.request.RequestRepository;
-import dash.salemanagement.domain.Sale;
+	public void put();
 
-@Repository
-@Transactional
-public interface SaleRepository extends RequestRepository<Sale, Long> {
+	public void delete();
+
+	public Object create();
 
 }

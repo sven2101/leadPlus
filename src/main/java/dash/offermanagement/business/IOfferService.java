@@ -16,6 +16,8 @@ package dash.offermanagement.business;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.DeleteFailedException;
@@ -27,6 +29,8 @@ import dash.offermanagement.domain.Offer;
 @Service
 public interface IOfferService {
 
+	public Page<Offer> getAll(Pageable pageable);
+
 	public List<Offer> getAll();
 
 	public Offer getOfferById(final Long id) throws NotFoundException;
@@ -36,4 +40,5 @@ public interface IOfferService {
 	public Offer update(final Offer offer) throws UpdateFailedException;
 
 	public void delete(final Long id) throws DeleteFailedException;
+
 }
