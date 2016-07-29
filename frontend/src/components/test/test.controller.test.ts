@@ -5,20 +5,19 @@
 /// <reference path="../../typeDefinitions/jasmine.d.ts" />
 /// <reference path="../../typeDefinitions/angular-mock.d.ts" />
 
-describe("TestController tests", function() {
+describe("TestController tests", function () {
 
     let testController;
-    beforeEach(function() {
-        //Ensure angular modules available
-        angular.module('app');
-        angular.module('testModule');
+    beforeEach(function () {
+        angular.module("app");
+        angular.module("testModule");
     });
 
-    it('should not return the same name', function() {
-        expect('Horst').toBe('Horst');
+    it("should not return the same name", function () {
+        expect("Horst").toBe("Horst");
     });
 
-    it('should be wrong', function() {
+    it("should be wrong", function () {
         expect(1).toBe(0);
     });
 });

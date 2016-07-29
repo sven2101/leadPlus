@@ -21,7 +21,7 @@ gulp.task('typescript', function () {
 });
 */
 
-gulp.task('typescript',['javascript'],function () {
+gulp.task('typescript',['javascript','tslint'],function () {
     return gulp.start('typescript-task');
 });
 

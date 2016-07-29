@@ -7,14 +7,14 @@
 
 class TestService {
 
-    name:String;
-    constructor(){
-        this.name='Susi';
+    name: String;
+    constructor() {
+        this.name = "Susi";
     }
 
-    changeName(){
-        this.name = this.name === 'Horst'?'Torsten':'Horst';
+    changeName() {
+        this.name = this.name === "Horst" ? "Torsten" : "Horst";
     }
 }
 
-angular.module('app').factory('TestService', [ () => new TestService()]);
+angular.module("app").factory("TestService", [() => new TestService()]);

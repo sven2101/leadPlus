@@ -2,15 +2,14 @@
  * Created by Max on 18.06.2016.
  */
 /// <reference path="../../typeDefinitions/angular.d.ts" />
-//angular.module('test', []).controller('TestController', TestController);
 var TestController = (function () {
     function TestController() {
-        this.name = 'Susi';
+        this.name = "Susi";
     }
     TestController.prototype.changeName = function () {
-        this.name = this.name === 'Horst' ? 'Hans' : 'Horst';
+        this.name = this.name === "Horst" ? "Hans" : "Horst";
     };
     return TestController;
 }());
-angular.module('testModule', []);
-angular.module('testModule').controller("TestController", [TestController]);
+angular.module("testModule", []);
+angular.module("testModule").controller("TestController", [TestController]);
