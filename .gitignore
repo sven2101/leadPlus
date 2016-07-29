@@ -7,5 +7,5 @@ cbd.iml
 build/
 /bin/
 node_modules/*
-src/main/resources/static/*
-frontend/tmp/*
+.src/main/resources/static/*
+.frontend/tmp/*
