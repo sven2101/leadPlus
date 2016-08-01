@@ -1,5 +1,607 @@
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
+ * 
+ * NOTICE: All information contained herein is, and remains the property of
+ * Eviarc GmbH and its suppliers, if any. The intellectual and technical
+ * concepts contained herein are proprietary to Eviarc GmbH, and are protected
+ * by trade secret or copyright law. Dissemination of this information or
+ * reproduction of this material is strictly forbidden unless prior written
+ * permission is obtained from Eviarc GmbH.
+ ******************************************************************************/
+
+LeadsCtrl.prototype.loadCurrentIdToModal = function(id) {
+	this.currentCommentModalId = id;
+};
+
+LeadsCtrl.prototype.addComment = function(id, source) {
+	var vm = this;
+	var commentText = '';
+	if (angular.isUndefined(this.comments[id])) {
+		this.comments[id] = [];
+	}
+	if (source == 'table' && this.commentInput[id] != ''
+			&& !angular.isUndefined(this.commentInput[id])) {
+		commentText = this.commentInput[id];
+	} else if (source == 'modal' && this.commentModalInput[id] != ''
+			&& !angular.isUndefined(this.commentModalInput[id])) {
+		commentText = this.commentModalInput[id];
+	}
+	var comment = {
+		process : this.processes[id],
+		creator : this.user,
+		commentText : commentText,
+		timestamp : this.filter('date')(new Date(), "dd.MM.yyyy HH:mm:ss")
+	};
+	this.commentService.addComment(comment).$promise.then(function() {
+		vm.comments[id].push(comment);
+		vm.commentInput[id] = '';
+		vm.commentModalInput[id] = '';
+	});
+};
+
+LeadsCtrl.prototype.saveLead = function() {
+	var vm = this;
+	if (angular.isUndefined(this.newLead.inquirer)) {
+		this.newLead.inquirer = {
+			title : ''
+		}
+	}
+	this.newLead.timestamp = this.filter('date')
+			(new Date(), 'dd.MM.yyyy HH:mm');
+	this.newLead.vendor = {
+		name : "***REMOVED***"
+	};
+	var process = {
+		lead : this.newLead,
+		status : 'open'
+	};
+	this.processesService.addProcess(process).$promise.then(function(result) {
+		vm.toaster.pop('success', '', vm.translate
+				.instant('COMMON_TOAST_SUCCESS_ADD_LEAD'));
+		vm.rootScope.leadsCount += 1;
+		vm.addForm.$setPristine();
+		vm.dtInstance.DataTable.row.add(result).draw();
+	});
+};
+
+LeadsCtrl.prototype.clearNewLead = function() {
+	this.newLead = {};
+	this.newLead.containerAmount = 1;
+	this.newLead.container = {
+		priceNetto : 0
+	}
+};
+
+LeadsCtrl.prototype.followUp = function(process) {
+	var vm = this;
+	var offer = {
+		container : {
+			name : process.lead.container.name,
+			description : process.lead.container.description,
+			priceNetto : process.lead.container.priceNetto
+		},
+		containerAmount : process.lead.containerAmount,
+		deliveryAddress : process.lead.destination,
+		offerPrice : (process.lead.containerAmount * process.lead.container.priceNetto),
+		prospect : {
+			company : process.lead.inquirer.company,
+			email : process.lead.inquirer.email,
+			firstname : process.lead.inquirer.firstname,
+			lastname : process.lead.inquirer.lastname,
+			phone : process.lead.inquirer.phone,
+			title : process.lead.inquirer.title
+		},
+		timestamp : this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm'),
+		vendor : process.lead.vendor
+	};
+	this.processesService.addOffer({
+		id : process.id
+	}, offer).$promise.then(function() {
+		vm.processesService.setStatus({
+			id : process.id
+		}, 'offer').$promise.then(function() {
+			vm.toaster.pop('success', '', vm.translate
+					.instant('COMMON_TOAST_SUCCESS_NEW_OFFER'));
+			vm.rootScope.leadsCount -= 1;
+			vm.rootScope.offersCount += 1;
+			if (process.processor == null) {
+				vm.processesService.setProcessor({
+					id : process.id
+				}, vm.user.username).$promise.then(function() {
+					process.processor = vm.user;
+					process.offer = offer;
+					process.status = 'offer';
+					vm.updateRow(process);
+				});
+			}
+		});
+	});
+};
+
+LeadsCtrl.prototype.pin = function(process) {
+	var vm = this;
+	if (process.processor == null) {
+		this.processesService.setProcessor({
+			id : process.id
+		}, vm.user.username).$promise.then(function() {
+			process.processor = vm.user;
+			vm.updateRow(process);
+		});
+	} else {
+		this.processesService.removeProcessor({
+			id : process.id
+		}).$promise.then(function() {
+			process.processor = null;
+			vm.updateRow(process);
+		});
+	}
+}
+
+LeadsCtrl.prototype.closeOrOpenInquiry = function(process) {
+	var vm = this;
+	if (process.status == "open") {
+		this.processesService.setStatus({
+			id : process.id
+		}, 'closed').$promise.then(function() {
+			vm.toaster.pop('success', '', vm.translate
+					.instant('COMMON_TOAST_SUCCESS_CLOSE_LEAD'));
+			vm.rootScope.leadsCount -= 1;
+			process.status = 'closed';
+			vm.updateRow(process);
+		});
+	} else if (process.status == "closed") {
+		this.processesService.setStatus({
+			id : process.id
+		}, 'open').$promise.then(function() {
+			vm.toaster.pop('success', '', vm.translate
+					.instant('COMMON_TOAST_SUCCESS_OPEN_LEAD'));
+			vm.rootScope.leadsCount += 1;
+			process.status = 'open';
+			vm.updateRow(process);
+		});
+	}
+};
+
+LeadsCtrl.prototype.loadDataToModal = function(process) {
+	this.editProcess = process;
+};
+
+LeadsCtrl.prototype.saveEditedRow = function() {
+	var vm = this;
+	this.processesService.putLead({
+		id : this.editProcess.lead.id
+	}, this.editProcess.lead).$promise.then(function() {
+		vm.toaster.pop('success', '', vm.translate
+				.instant('COMMON_TOAST_SUCCESS_UPDATE_LEAD'));
+		vm.editForm.$setPristine();
+		vm.editProcess.lead.leadPrice = vm.editProcess.lead.containerAmount
+				* vm.editProcess.lead.container.priceNetto;
+		vm.updateRow(vm.editProcess);
+	});
+};
+
+LeadsCtrl.prototype.deleteRow = function(process) {
+	var vm = this;
+	var leadId = process.lead.id;
+	if (process.sale != null || process.offer != null) {
+		vm.toaster.pop('error', '', vm.translate
+				.instant('COMMON_TOAST_FAILURE_DELETE_LEAD'));
+		return;
+	}
+	process.lead = null;
+	this.processesService.putProcess({
+		id : process.id
+	}, process).$promise.then(function() {
+		if (process.offer == null && process.sale == null) {
+			vm.processesService.deleteProcess({
+				id : process.id
+			});
+		}
+		vm.processesService.deleteLead({
+			id : leadId
+		}).$promise.then(function() {
+			vm.toaster.pop('success', '', vm.translate
+					.instant('COMMON_TOAST_SUCCESS_DELETE_LEAD'));
+			vm.rootScope.leadsCount -= 1;
+			vm.dtInstance.DataTable.row(vm.rows[process.id]).remove().draw();
+		});
+	});
+};
+
+LeadsCtrl.prototype.updateRow = function(process) {
+	this.dtInstance.DataTable.row(this.rows[process.id]).data(process).draw(
+			false);
+	this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
+};
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
+ * 
+ * NOTICE: All information contained herein is, and remains the property of
+ * Eviarc GmbH and its suppliers, if any. The intellectual and technical
+ * concepts contained herein are proprietary to Eviarc GmbH, and are protected
+ * by trade secret or copyright law. Dissemination of this information or
+ * reproduction of this material is strictly forbidden unless prior written
+ * permission is obtained from Eviarc GmbH.
+ ******************************************************************************/
+
+'use strict';
+angular.module('app.leads', [ 'ngResource' ])
+		.controller('LeadsCtrl', LeadsCtrl);
+LeadsCtrl.$inject = [ 'DTOptionsBuilder', 'DTColumnBuilder', '$compile',
+		'$scope', 'toaster', 'Processes', 'Comments', '$filter', 'Profile',
+		'$rootScope', '$translate' ];
+function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
+		toaster, Processes, Comments, $filter, Profile, $rootScope, $translate) {
+
+	var vm = this;
+	this.filter = $filter;
+	this.processesService = Processes;
+	this.commentService = Comments;
+	this.userService = Profile;
+	this.user = {};
+	this.windowWidth = $(window).width();
+	if (!angular.isUndefined($rootScope.globals.currentUser))
+		this.userService.get({
+			username : $rootScope.globals.currentUser.username
+		}).$promise.then(function(result) {
+			vm.user = result;
+		});
+	this.scope = $scope;
+	this.rootScope = $rootScope;
+	this.translate = $translate;
+	this.compile = $compile;
+	this.toaster = toaster;
+	this.commentInput = {};
+	this.commentModalInput = {};
+	this.comments = {};
+	this.currentCommentModalId = '';
+	this.loadAllData = false;
+	this.dtInstance = {};
+	this.processes = {};
+	this.rows = {};
+	this.editProcess = {};
+	this.newLead = {};
+	this.dtOptions = DTOptionsBuilder.newOptions().withOption('ajax', {
+		url : '/api/rest/processes/state/open/leads',
+		error : function(xhr, error, thrown) {
+			console.log(xhr);
+		},
+		type : 'GET'
+	}).withOption('stateSave', true).withDOM(
+			'<"row"<"col-sm-12"l>>' + '<"row"<"col-sm-6"B><"col-sm-6"f>>'
+					+ '<"row"<"col-sm-12"tr>>'
+					+ '<"row"<"col-sm-5"i><"col-sm-7"p>>').withPaginationType(
+			'full_numbers').withButtons([ {
+		extend : 'copyHtml5',
+		exportOptions : {
+			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
+			modifier : {
+				page : 'current'
+			}
+		}
+	}, {
+		extend : 'print',
+		exportOptions : {
+			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
+			modifier : {
+				page : 'current'
+			}
+		}
+	}, {
+		extend : 'csvHtml5',
+		title : $translate('LEAD_LEADS'),
+		exportOptions : {
+			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
+			modifier : {
+				page : 'current'
+			}
+
+		}
+	}, {
+		extend : 'excelHtml5',
+		title : $translate.instant('LEAD_LEADS'),
+		exportOptions : {
+			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
+			modifier : {
+				page : 'current'
+			}
+		}
+	}, {
+		extend : 'pdfHtml5',
+		title : $translate('LEAD_LEADS'),
+		orientation : 'landscape',
+		exportOptions : {
+			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
+			modifier : {
+				page : 'current'
+			}
+		}
+	} ]).withBootstrap().withOption('createdRow', createdRow).withOption(
+			'order', [ 4, 'desc' ]);
+	this.dtColumns = [
+			DTColumnBuilder.newColumn(null).withTitle('').notSortable()
+					.renderWith(addDetailButton),
+			DTColumnBuilder.newColumn('lead.inquirer.lastname').withTitle(
+					$translate('COMMON_NAME')).withClass('text-center'),
+			DTColumnBuilder.newColumn('lead.inquirer.company').withTitle(
+					$translate('COMMON_COMPANY')).withClass('text-center'),
+			DTColumnBuilder.newColumn('lead.inquirer.email').withTitle(
+					$translate('COMMON_EMAIL')).withClass('text-center'),
+			DTColumnBuilder.newColumn('lead.timestamp').withTitle(
+					$translate('COMMON_DATE')).withOption('type', 'date-euro')
+					.withClass('text-center'),
+			DTColumnBuilder.newColumn('lead.inquirer.phone').withTitle(
+					$translate('COMMON_PHONE')).notVisible(),
+			DTColumnBuilder.newColumn('lead.inquirer.firstname').withTitle(
+					$translate('COMMON_FIRSTNAME')).notVisible(),
+			DTColumnBuilder.newColumn('lead.container.name').withTitle(
+					$translate('COMMON_CONTAINER')).notVisible(),
+			DTColumnBuilder.newColumn('lead.destination').withTitle(
+					$translate('COMMON_CONTAINER_DESTINATION')).notVisible(),
+			DTColumnBuilder.newColumn('lead.containerAmount').withTitle(
+					$translate('COMMON_CONTAINER_AMOUNT')).notVisible(),
+			DTColumnBuilder.newColumn(null).withTitle(
+					$translate('COMMON_CONTAINER_SINGLE_PRICE')).renderWith(
+					function(data, type, full) {
+						return $filter('currency')(
+								data.lead.container.priceNetto, '€', 2);
+					}).notVisible(),
+			DTColumnBuilder.newColumn(null).withTitle(
+					$translate('COMMON_CONTAINER_ENTIRE_PRICE'))
+					.renderWith(
+							function(data, type, full) {
+								return $filter('currency')(data.lead.leadPrice,
+										'€', 2);
+							}).notVisible(),
+			DTColumnBuilder.newColumn(null).withTitle(
+					$translate('COMMON_STATUS')).withClass('text-center')
+					.renderWith(addStatusStyle),
+			DTColumnBuilder.newColumn(null).withTitle(
+					'<span class="glyphicon glyphicon-cog"></span>').withClass(
+					'text-center').notSortable().renderWith(addActionsButtons) ];
+
+	if ($rootScope.language == 'de') {
+		vm.dtOptions
+				.withLanguageSource('/assets/datatablesTranslationFiles/German.json');
+	} else {
+		vm.dtOptions
+				.withLanguageSource('/assets/datatablesTranslationFiles/English.json');
+	}
+
+	vm.refreshData = refreshData;
+	function refreshData() {
+		var resetPaging = false;
+		this.dtInstance.reloadData(resetPaging);
+	}
+
+	vm.changeDataInput = changeDataInput;
+	function changeDataInput() {
+		if (vm.loadAllData == true) {
+			vm.dtOptions.withOption('serverSide', true).withOption('ajax', {
+				url : '/api/rest/processes/leads',
+				type : 'GET',
+				pages : 5,
+				dataSrc : 'data',
+				error : function(xhr, error, thrown) {
+					console.log(xhr);
+				}
+			}).withOption('searchDelay', 500);
+		} else {
+			vm.dtOptions.withOption('serverSide', false).withOption('ajax', {
+				url : '/api/rest/processes/state/open/leads',
+				error : function(xhr, error, thrown) {
+					console.log(xhr);
+				},
+				type : 'GET'
+			}).withOption('searchDelay', 0);
+		}
+	}
+
+	function createdRow(row, data, dataIndex) {
+		// Recompiling so we can bind Angular directive to the DT
+		vm.rows[data.id] = row;
+		var currentDate = moment(moment(), "DD.MM.YYYY");
+		var leadDate = moment(data.lead.timestamp, "DD.MM.YYYY");
+		if (currentDate.businessDiff(leadDate, 'days') > 3
+				&& data.status == 'open')
+			$(row).addClass('important');
+		vm.compile(angular.element(row).contents())(vm.scope);
+	}
+
+	function addActionsButtons(data, type, full, meta) {
+		vm.processes[data.id] = data;
+		var disabled = '';
+		var disablePin = '';
+		var hasRightToDelete = '';
+		var closeOrOpenInquiryDisable = '';
+		var openOrLock = $translate.instant('LEAD_CLOSE_LEAD');
+		var faOpenOrLOck = 'fa fa-lock';
+		if (data.status != 'open') {
+			disabled = 'disabled';
+			disablePin = 'disabled';
+			openOrLock = $translate.instant('LEAD_OPEN_LEAD');
+			faOpenOrLOck = 'fa fa-unlock';
+		}
+		if (data.offer != null || data.sale != null) {
+			closeOrOpenInquiryDisable = 'disabled';
+		}
+		if ($rootScope.globals.currentUser.role == 'user') {
+			hasRightToDelete = 'disabled';
+		}
+		if (data.processor != null
+				&& $rootScope.globals.currentUser.username != data.processor.username) {
+			disablePin = 'disabled';
+		}
+		if (vm.windowWidth > 1300) {
+			return '<div style="white-space: nowrap;"><button class="btn btn-white" '
+					+ disabled
+					+ ' ng-click="lead.followUp(lead.processes['
+					+ data.id
+					+ '])" title="'
+					+ $translate.instant('LEAD_FOLLOW_UP')
+					+ '">'
+					+ '   <i class="fa fa-check"></i>'
+					+ '</button>&nbsp;'
+					+ '<button class="btn btn-white" '
+					+ disablePin
+					+ ' ng-click="lead.pin(lead.processes['
+					+ data.id
+					+ '])" title="'
+					+ $translate.instant('LEAD_PIN')
+					+ '">'
+					+ '   <i class="fa fa-thumb-tack"></i>'
+					+ '</button>&nbsp;'
+					+ '<button class="btn btn-white" '
+					+ closeOrOpenInquiryDisable
+					+ ' ng-click="lead.closeOrOpenInquiry(lead.processes['
+					+ data.id
+					+ '])" title="'
+					+ openOrLock
+					+ '">'
+					+ '   <i class="'
+					+ faOpenOrLOck
+					+ '"></i>'
+					+ '</button>'
+					+ '<button class="btn btn-white" '
+					+ closeOrOpenInquiryDisable
+					+ ' ng-click="lead.loadDataToModal(lead.processes['
+					+ data.id
+					+ '])" data-toggle="modal"'
+					+ 'data-target="#editModal" title="'
+					+ $translate.instant('LEAD_EDIT_LEAD')
+					+ '">'
+					+ '<i class="fa fa-edit"></i>'
+					+ '</button>&nbsp;'
+					+ '<button class="btn btn-white" '
+					+ hasRightToDelete
+					+ ' ng-click="lead.deleteRow(lead.processes['
+					+ data.id
+					+ '])" title="'
+					+ $translate.instant('LEAD_DELETE_LEAD')
+					+ '">'
+					+ '   <i class="fa fa-trash-o"></i>'
+					+ '</button></div>';
+		} else {
+			return '<div class="dropdown">'
+					+ '<button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">'
+					+ '<i class="fa fa-wrench"></i></button>'
+					+ '<ul class="dropdown-menu pull-right">'
+					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+					+ disabled
+					+ ' ng-click="lead.followUp(lead.processes['
+					+ data.id
+					+ '])"><i class="fa fa-check">&nbsp;</i>'
+					+ $translate.instant('LEAD_FOLLOW_UP')
+					+ '</button></li>'
+					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+					+ disablePin
+					+ ' ng-click="lead.pin(lead.processes['
+					+ data.id
+					+ '])"><i class="fa fa-thumb-tack">&nbsp;</i>'
+					+ $translate.instant('LEAD_PIN')
+					+ '</button></li>'
+					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+					+ closeOrOpenInquiryDisable
+					+ ' ng-click="lead.closeOrOpenInquiry(lead.processes['
+					+ data.id
+					+ '])"><i class="'
+					+ faOpenOrLOck
+					+ '">&nbsp;</i>'
+					+ openOrLock
+					+ '</button></li>'
+					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+					+ closeOrOpenInquiryDisable
+					+ ' data-toggle="modal" data-target="#editModal" ng-click="lead.loadDataToModal(lead.processes['
+					+ data.id
+					+ '])"><i class="fa fa-edit"">&nbsp;</i>'
+					+ $translate.instant('LEAD_EDIT_LEAD')
+					+ '</button></li>'
+					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+					+ hasRightToDelete
+					+ ' ng-click="lead.deleteRow(lead.processes['
+					+ data.id
+					+ '])"><i class="fa fa-trash-o">&nbsp;</i>'
+					+ $translate.instant('LEAD_DELETE_LEAD')
+					+ '</button></li>'
+					+ '</ul>' + '</div>'
+		}
+	}
+
+	function addStatusStyle(data, type, full, meta) {
+		vm.processes[data.id] = data;
+		var hasProcessor = '';
+		if (data.processor != null)
+			hasProcessor = '&nbsp;<span style="color: #ea394c;"><i class="fa fa-thumb-tack"></i></span>';
+		if (data.status == 'open') {
+			return '<span style="color: green;">'
+					+ $translate.instant('COMMON_STATUS_OPEN') + '</span>'
+					+ hasProcessor;
+		} else if (data.status == 'offer') {
+			return '<span style="color: #f79d3c;">'
+					+ $translate.instant('COMMON_STATUS_OFFER') + '</span>'
+		} else if (data.status == 'followup') {
+			return '<span style="color: #f79d3c;">'
+					+ $translate.instant('COMMON_STATUS_FOLLOW_UP') + '</span>'
+		} else if (data.status == 'sale') {
+			return '<span style="color: #1872ab;">'
+					+ $translate.instant('COMMON_STATUS_SALE') + '</span>'
+		} else if (data.status == 'closed') {
+			return '<span style="color: #ea394c;">'
+					+ $translate.instant('COMMON_STATUS_CLOSED') + '</span>'
+		}
+	}
+
+	function addDetailButton(data, type, full, meta) {
+		vm.processes[data.id] = data;
+		return '<a class="green shortinfo" href="javascript:;"'
+				+ 'ng-click="lead.appendChildRow(lead.processes[' + data.id
+				+ '], $event)" title="Details">'
+				+ '<i class="glyphicon glyphicon-plus-sign"/></a>';
+	}
+}
+
+LeadsCtrl.prototype.appendChildRow = function(process, event) {
+	var childScope = this.scope.$new(true);
+	childScope.childData = process;
+	var vm = this;
+	this.commentService.getComments({
+		id : process.id
+	}).$promise.then(function(result) {
+		vm.comments[process.id] = [];
+		for ( var comment in result) {
+			if (comment == '$promise')
+				break;
+			vm.comments[process.id].push({
+				commentText : result[comment].commentText,
+				timestamp : result[comment].timestamp,
+				creator : result[comment].creator
+			});
+		}
+	});
+	childScope.parent = this;
+
+	var link = angular.element(event.currentTarget), icon = link
+			.find('.glyphicon'), tr = link.parent().parent(), table = this.dtInstance.DataTable, row = table
+			.row(tr);
+
+	if (row.child.isShown()) {
+		icon.removeClass('glyphicon-minus-sign')
+				.addClass('glyphicon-plus-sign');
+		row.child.hide();
+		tr.removeClass('shown');
+	} else {
+		icon.removeClass('glyphicon-plus-sign')
+				.addClass('glyphicon-minus-sign');
+		row.child(
+				this.compile(
+						'<div childrow type="lead" class="clearfix"></div>')(
+						childScope)).show();
+		tr.addClass('shown');
+	}
+};
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  *
  * NOTICE: All information contained herein is, and remains the property of
  * Eviarc GmbH and its suppliers, if any. The intellectual and technical
@@ -328,12 +930,49 @@ angular
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
 "use strict";
+angular.module("app", [
+    "app.services",
+    "app.dashboard",
+    "app.login",
+    "app.signup",
+    "app.leads",
+    "app.offers",
+    "app.sales",
+    "app.statistics",
+    "app.settings",
+    "app.profile",
+    "pascalprecht.translate",
+    "ngResource",
+    "ngRoute",
+    "ngAnimate",
+    "ngCookies",
+    "datatables",
+    "datatables.bootstrap",
+    "datatables.buttons",
+    "ui.sortable",
+    "NgSwitchery",
+    "toaster",
+    "highcharts-ng",
+    "testModule"
+]);
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of
+ * Eviarc GmbH and its suppliers, if any. The intellectual and technical
+ * concepts contained herein are proprietary to Eviarc GmbH, and are protected
+ * by trade secret or copyright law. Dissemination of this information or
+ * reproduction of this material is strictly forbidden unless prior written
+ * permission is obtained from Eviarc GmbH.
+ ******************************************************************************/
+"use strict";
 angular.module("app").config(["$routeProvider", "$httpProvider",
     function ($routeProvider, $httpProvider) {
         $routeProvider
             .when("/", {
             templateUrl: "components/dashboard/dashboard.html",
-            controller: "DashboardCtrl",
+            controller: "DashboardController",
             controllerAs: "dashboard",
             authenticated: true
         })
@@ -363,7 +1002,7 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
         })
             .when("/statistic", {
             templateUrl: "components/statistics/statistics.html",
-            controller: "StatisticsCtrl",
+            controller: "StatisticContoller",
             controllerAs: "statistic",
             authenticated: true
         })
@@ -416,43 +1055,6 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             Auth.logout();
         };
     }]);
-
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- *
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-"use strict";
-angular.module("app", [
-    "app.services",
-    "app.dashboard",
-    "app.login",
-    "app.signup",
-    "app.leads",
-    "app.offers",
-    "app.sales",
-    "app.statistics",
-    "app.settings",
-    "app.profile",
-    "pascalprecht.translate",
-    "ngResource",
-    "ngRoute",
-    "ngAnimate",
-    "ngCookies",
-    "datatables",
-    "datatables.bootstrap",
-    "datatables.buttons",
-    "ui.sortable",
-    "NgSwitchery",
-    "toaster",
-    "highcharts-ng",
-    "testModule"
-]);
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -1127,697 +1729,6 @@ function config($translateProvider) {
 angular.module("app").config(config);
 
 /*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-
-'use strict';
-angular.module('app.leads', [ 'ngResource' ])
-		.controller('LeadsCtrl', LeadsCtrl);
-LeadsCtrl.$inject = [ 'DTOptionsBuilder', 'DTColumnBuilder', '$compile',
-		'$scope', 'toaster', 'Processes', 'Comments', '$filter', 'Profile',
-		'$rootScope', '$translate' ];
-function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
-		toaster, Processes, Comments, $filter, Profile, $rootScope, $translate) {
-
-	var vm = this;
-	this.filter = $filter;
-	this.processesService = Processes;
-	this.commentService = Comments;
-	this.userService = Profile;
-	this.user = {};
-	this.windowWidth = $(window).width();
-	if (!angular.isUndefined($rootScope.globals.currentUser))
-		this.userService.get({
-			username : $rootScope.globals.currentUser.username
-		}).$promise.then(function(result) {
-			vm.user = result;
-		});
-	this.scope = $scope;
-	this.rootScope = $rootScope;
-	this.translate = $translate;
-	this.compile = $compile;
-	this.toaster = toaster;
-	this.commentInput = {};
-	this.commentModalInput = {};
-	this.comments = {};
-	this.currentCommentModalId = '';
-	this.loadAllData = false;
-	this.dtInstance = {};
-	this.processes = {};
-	this.rows = {};
-	this.editProcess = {};
-	this.newLead = {};
-	this.dtOptions = DTOptionsBuilder.newOptions().withOption('ajax', {
-		url : '/api/rest/processes/state/open/leads',
-		error : function(xhr, error, thrown) {
-			console.log(xhr);
-		},
-		type : 'GET'
-	}).withOption('stateSave', true).withDOM(
-			'<"row"<"col-sm-12"l>>' + '<"row"<"col-sm-6"B><"col-sm-6"f>>'
-					+ '<"row"<"col-sm-12"tr>>'
-					+ '<"row"<"col-sm-5"i><"col-sm-7"p>>').withPaginationType(
-			'full_numbers').withButtons([ {
-		extend : 'copyHtml5',
-		exportOptions : {
-			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
-			modifier : {
-				page : 'current'
-			}
-		}
-	}, {
-		extend : 'print',
-		exportOptions : {
-			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
-			modifier : {
-				page : 'current'
-			}
-		}
-	}, {
-		extend : 'csvHtml5',
-		title : $translate('LEAD_LEADS'),
-		exportOptions : {
-			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
-			modifier : {
-				page : 'current'
-			}
-
-		}
-	}, {
-		extend : 'excelHtml5',
-		title : $translate.instant('LEAD_LEADS'),
-		exportOptions : {
-			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
-			modifier : {
-				page : 'current'
-			}
-		}
-	}, {
-		extend : 'pdfHtml5',
-		title : $translate('LEAD_LEADS'),
-		orientation : 'landscape',
-		exportOptions : {
-			columns : [ 6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12 ],
-			modifier : {
-				page : 'current'
-			}
-		}
-	} ]).withBootstrap().withOption('createdRow', createdRow).withOption(
-			'order', [ 4, 'desc' ]);
-	this.dtColumns = [
-			DTColumnBuilder.newColumn(null).withTitle('').notSortable()
-					.renderWith(addDetailButton),
-			DTColumnBuilder.newColumn('lead.inquirer.lastname').withTitle(
-					$translate('COMMON_NAME')).withClass('text-center'),
-			DTColumnBuilder.newColumn('lead.inquirer.company').withTitle(
-					$translate('COMMON_COMPANY')).withClass('text-center'),
-			DTColumnBuilder.newColumn('lead.inquirer.email').withTitle(
-					$translate('COMMON_EMAIL')).withClass('text-center'),
-			DTColumnBuilder.newColumn('lead.timestamp').withTitle(
-					$translate('COMMON_DATE')).withOption('type', 'date-euro')
-					.withClass('text-center'),
-			DTColumnBuilder.newColumn('lead.inquirer.phone').withTitle(
-					$translate('COMMON_PHONE')).notVisible(),
-			DTColumnBuilder.newColumn('lead.inquirer.firstname').withTitle(
-					$translate('COMMON_FIRSTNAME')).notVisible(),
-			DTColumnBuilder.newColumn('lead.container.name').withTitle(
-					$translate('COMMON_CONTAINER')).notVisible(),
-			DTColumnBuilder.newColumn('lead.destination').withTitle(
-					$translate('COMMON_CONTAINER_DESTINATION')).notVisible(),
-			DTColumnBuilder.newColumn('lead.containerAmount').withTitle(
-					$translate('COMMON_CONTAINER_AMOUNT')).notVisible(),
-			DTColumnBuilder.newColumn(null).withTitle(
-					$translate('COMMON_CONTAINER_SINGLE_PRICE')).renderWith(
-					function(data, type, full) {
-						return $filter('currency')(
-								data.lead.container.priceNetto, '€', 2);
-					}).notVisible(),
-			DTColumnBuilder.newColumn(null).withTitle(
-					$translate('COMMON_CONTAINER_ENTIRE_PRICE'))
-					.renderWith(
-							function(data, type, full) {
-								return $filter('currency')(data.lead.leadPrice,
-										'€', 2);
-							}).notVisible(),
-			DTColumnBuilder.newColumn(null).withTitle(
-					$translate('COMMON_STATUS')).withClass('text-center')
-					.renderWith(addStatusStyle),
-			DTColumnBuilder.newColumn(null).withTitle(
-					'<span class="glyphicon glyphicon-cog"></span>').withClass(
-					'text-center').notSortable().renderWith(addActionsButtons) ];
-
-	if ($rootScope.language == 'de') {
-		vm.dtOptions
-				.withLanguageSource('/assets/datatablesTranslationFiles/German.json');
-	} else {
-		vm.dtOptions
-				.withLanguageSource('/assets/datatablesTranslationFiles/English.json');
-	}
-
-	vm.refreshData = refreshData;
-	function refreshData() {
-		var resetPaging = false;
-		this.dtInstance.reloadData(resetPaging);
-	}
-
-	vm.changeDataInput = changeDataInput;
-	function changeDataInput() {
-		if (vm.loadAllData == true) {
-			vm.dtOptions.withOption('serverSide', true).withOption('ajax', {
-				url : '/api/rest/processes/leads',
-				type : 'GET',
-				pages : 5,
-				dataSrc : 'data',
-				error : function(xhr, error, thrown) {
-					console.log(xhr);
-				}
-			}).withOption('searchDelay', 500);
-		} else {
-			vm.dtOptions.withOption('serverSide', false).withOption('ajax', {
-				url : '/api/rest/processes/state/open/leads',
-				error : function(xhr, error, thrown) {
-					console.log(xhr);
-				},
-				type : 'GET'
-			}).withOption('searchDelay', 0);
-		}
-	}
-
-	function createdRow(row, data, dataIndex) {
-		// Recompiling so we can bind Angular directive to the DT
-		vm.rows[data.id] = row;
-		var currentDate = moment(moment(), "DD.MM.YYYY");
-		var leadDate = moment(data.lead.timestamp, "DD.MM.YYYY");
-		if (currentDate.businessDiff(leadDate, 'days') > 3
-				&& data.status == 'open')
-			$(row).addClass('important');
-		vm.compile(angular.element(row).contents())(vm.scope);
-	}
-
-	function addActionsButtons(data, type, full, meta) {
-		vm.processes[data.id] = data;
-		var disabled = '';
-		var disablePin = '';
-		var hasRightToDelete = '';
-		var closeOrOpenInquiryDisable = '';
-		var openOrLock = $translate.instant('LEAD_CLOSE_LEAD');
-		var faOpenOrLOck = 'fa fa-lock';
-		if (data.status != 'open') {
-			disabled = 'disabled';
-			disablePin = 'disabled';
-			openOrLock = $translate.instant('LEAD_OPEN_LEAD');
-			faOpenOrLOck = 'fa fa-unlock';
-		}
-		if (data.offer != null || data.sale != null) {
-			closeOrOpenInquiryDisable = 'disabled';
-		}
-		if ($rootScope.globals.currentUser.role == 'user') {
-			hasRightToDelete = 'disabled';
-		}
-		if (data.processor != null
-				&& $rootScope.globals.currentUser.username != data.processor.username) {
-			disablePin = 'disabled';
-		}
-		if (vm.windowWidth > 1300) {
-			return '<div style="white-space: nowrap;"><button class="btn btn-white" '
-					+ disabled
-					+ ' ng-click="lead.followUp(lead.processes['
-					+ data.id
-					+ '])" title="'
-					+ $translate.instant('LEAD_FOLLOW_UP')
-					+ '">'
-					+ '   <i class="fa fa-check"></i>'
-					+ '</button>&nbsp;'
-					+ '<button class="btn btn-white" '
-					+ disablePin
-					+ ' ng-click="lead.pin(lead.processes['
-					+ data.id
-					+ '])" title="'
-					+ $translate.instant('LEAD_PIN')
-					+ '">'
-					+ '   <i class="fa fa-thumb-tack"></i>'
-					+ '</button>&nbsp;'
-					+ '<button class="btn btn-white" '
-					+ closeOrOpenInquiryDisable
-					+ ' ng-click="lead.closeOrOpenInquiry(lead.processes['
-					+ data.id
-					+ '])" title="'
-					+ openOrLock
-					+ '">'
-					+ '   <i class="'
-					+ faOpenOrLOck
-					+ '"></i>'
-					+ '</button>'
-					+ '<button class="btn btn-white" '
-					+ closeOrOpenInquiryDisable
-					+ ' ng-click="lead.loadDataToModal(lead.processes['
-					+ data.id
-					+ '])" data-toggle="modal"'
-					+ 'data-target="#editModal" title="'
-					+ $translate.instant('LEAD_EDIT_LEAD')
-					+ '">'
-					+ '<i class="fa fa-edit"></i>'
-					+ '</button>&nbsp;'
-					+ '<button class="btn btn-white" '
-					+ hasRightToDelete
-					+ ' ng-click="lead.deleteRow(lead.processes['
-					+ data.id
-					+ '])" title="'
-					+ $translate.instant('LEAD_DELETE_LEAD')
-					+ '">'
-					+ '   <i class="fa fa-trash-o"></i>'
-					+ '</button></div>';
-		} else {
-			return '<div class="dropdown">'
-					+ '<button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">'
-					+ '<i class="fa fa-wrench"></i></button>'
-					+ '<ul class="dropdown-menu pull-right">'
-					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-					+ disabled
-					+ ' ng-click="lead.followUp(lead.processes['
-					+ data.id
-					+ '])"><i class="fa fa-check">&nbsp;</i>'
-					+ $translate.instant('LEAD_FOLLOW_UP')
-					+ '</button></li>'
-					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-					+ disablePin
-					+ ' ng-click="lead.pin(lead.processes['
-					+ data.id
-					+ '])"><i class="fa fa-thumb-tack">&nbsp;</i>'
-					+ $translate.instant('LEAD_PIN')
-					+ '</button></li>'
-					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-					+ closeOrOpenInquiryDisable
-					+ ' ng-click="lead.closeOrOpenInquiry(lead.processes['
-					+ data.id
-					+ '])"><i class="'
-					+ faOpenOrLOck
-					+ '">&nbsp;</i>'
-					+ openOrLock
-					+ '</button></li>'
-					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-					+ closeOrOpenInquiryDisable
-					+ ' data-toggle="modal" data-target="#editModal" ng-click="lead.loadDataToModal(lead.processes['
-					+ data.id
-					+ '])"><i class="fa fa-edit"">&nbsp;</i>'
-					+ $translate.instant('LEAD_EDIT_LEAD')
-					+ '</button></li>'
-					+ '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-					+ hasRightToDelete
-					+ ' ng-click="lead.deleteRow(lead.processes['
-					+ data.id
-					+ '])"><i class="fa fa-trash-o">&nbsp;</i>'
-					+ $translate.instant('LEAD_DELETE_LEAD')
-					+ '</button></li>'
-					+ '</ul>' + '</div>'
-		}
-	}
-
-	function addStatusStyle(data, type, full, meta) {
-		vm.processes[data.id] = data;
-		var hasProcessor = '';
-		if (data.processor != null)
-			hasProcessor = '&nbsp;<span style="color: #ea394c;"><i class="fa fa-thumb-tack"></i></span>';
-		if (data.status == 'open') {
-			return '<span style="color: green;">'
-					+ $translate.instant('COMMON_STATUS_OPEN') + '</span>'
-					+ hasProcessor;
-		} else if (data.status == 'offer') {
-			return '<span style="color: #f79d3c;">'
-					+ $translate.instant('COMMON_STATUS_OFFER') + '</span>'
-		} else if (data.status == 'followup') {
-			return '<span style="color: #f79d3c;">'
-					+ $translate.instant('COMMON_STATUS_FOLLOW_UP') + '</span>'
-		} else if (data.status == 'sale') {
-			return '<span style="color: #1872ab;">'
-					+ $translate.instant('COMMON_STATUS_SALE') + '</span>'
-		} else if (data.status == 'closed') {
-			return '<span style="color: #ea394c;">'
-					+ $translate.instant('COMMON_STATUS_CLOSED') + '</span>'
-		}
-	}
-
-	function addDetailButton(data, type, full, meta) {
-		vm.processes[data.id] = data;
-		return '<a class="green shortinfo" href="javascript:;"'
-				+ 'ng-click="lead.appendChildRow(lead.processes[' + data.id
-				+ '], $event)" title="Details">'
-				+ '<i class="glyphicon glyphicon-plus-sign"/></a>';
-	}
-}
-
-LeadsCtrl.prototype.appendChildRow = function(process, event) {
-	var childScope = this.scope.$new(true);
-	childScope.childData = process;
-	var vm = this;
-	this.commentService.getComments({
-		id : process.id
-	}).$promise.then(function(result) {
-		vm.comments[process.id] = [];
-		for ( var comment in result) {
-			if (comment == '$promise')
-				break;
-			vm.comments[process.id].push({
-				commentText : result[comment].commentText,
-				timestamp : result[comment].timestamp,
-				creator : result[comment].creator
-			});
-		}
-	});
-	childScope.parent = this;
-
-	var link = angular.element(event.currentTarget), icon = link
-			.find('.glyphicon'), tr = link.parent().parent(), table = this.dtInstance.DataTable, row = table
-			.row(tr);
-
-	if (row.child.isShown()) {
-		icon.removeClass('glyphicon-minus-sign')
-				.addClass('glyphicon-plus-sign');
-		row.child.hide();
-		tr.removeClass('shown');
-	} else {
-		icon.removeClass('glyphicon-plus-sign')
-				.addClass('glyphicon-minus-sign');
-		row.child(
-				this.compile(
-						'<div childrow type="lead" class="clearfix"></div>')(
-						childScope)).show();
-		tr.addClass('shown');
-	}
-};
-
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-
-LeadsCtrl.prototype.loadCurrentIdToModal = function(id) {
-	this.currentCommentModalId = id;
-};
-
-LeadsCtrl.prototype.addComment = function(id, source) {
-	var vm = this;
-	var commentText = '';
-	if (angular.isUndefined(this.comments[id])) {
-		this.comments[id] = [];
-	}
-	if (source == 'table' && this.commentInput[id] != ''
-			&& !angular.isUndefined(this.commentInput[id])) {
-		commentText = this.commentInput[id];
-	} else if (source == 'modal' && this.commentModalInput[id] != ''
-			&& !angular.isUndefined(this.commentModalInput[id])) {
-		commentText = this.commentModalInput[id];
-	}
-	var comment = {
-		process : this.processes[id],
-		creator : this.user,
-		commentText : commentText,
-		timestamp : this.filter('date')(new Date(), "dd.MM.yyyy HH:mm:ss")
-	};
-	this.commentService.addComment(comment).$promise.then(function() {
-		vm.comments[id].push(comment);
-		vm.commentInput[id] = '';
-		vm.commentModalInput[id] = '';
-	});
-};
-
-LeadsCtrl.prototype.saveLead = function() {
-	var vm = this;
-	if (angular.isUndefined(this.newLead.inquirer)) {
-		this.newLead.inquirer = {
-			title : ''
-		}
-	}
-	this.newLead.timestamp = this.filter('date')
-			(new Date(), 'dd.MM.yyyy HH:mm');
-	this.newLead.vendor = {
-		name : "***REMOVED***"
-	};
-	var process = {
-		lead : this.newLead,
-		status : 'open'
-	};
-	this.processesService.addProcess(process).$promise.then(function(result) {
-		vm.toaster.pop('success', '', vm.translate
-				.instant('COMMON_TOAST_SUCCESS_ADD_LEAD'));
-		vm.rootScope.leadsCount += 1;
-		vm.addForm.$setPristine();
-		vm.dtInstance.DataTable.row.add(result).draw();
-	});
-};
-
-LeadsCtrl.prototype.clearNewLead = function() {
-	this.newLead = {};
-	this.newLead.containerAmount = 1;
-	this.newLead.container = {
-		priceNetto : 0
-	}
-};
-
-LeadsCtrl.prototype.followUp = function(process) {
-	var vm = this;
-	var offer = {
-		container : {
-			name : process.lead.container.name,
-			description : process.lead.container.description,
-			priceNetto : process.lead.container.priceNetto
-		},
-		containerAmount : process.lead.containerAmount,
-		deliveryAddress : process.lead.destination,
-		offerPrice : (process.lead.containerAmount * process.lead.container.priceNetto),
-		prospect : {
-			company : process.lead.inquirer.company,
-			email : process.lead.inquirer.email,
-			firstname : process.lead.inquirer.firstname,
-			lastname : process.lead.inquirer.lastname,
-			phone : process.lead.inquirer.phone,
-			title : process.lead.inquirer.title
-		},
-		timestamp : this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm'),
-		vendor : process.lead.vendor
-	};
-	this.processesService.addOffer({
-		id : process.id
-	}, offer).$promise.then(function() {
-		vm.processesService.setStatus({
-			id : process.id
-		}, 'offer').$promise.then(function() {
-			vm.toaster.pop('success', '', vm.translate
-					.instant('COMMON_TOAST_SUCCESS_NEW_OFFER'));
-			vm.rootScope.leadsCount -= 1;
-			vm.rootScope.offersCount += 1;
-			if (process.processor == null) {
-				vm.processesService.setProcessor({
-					id : process.id
-				}, vm.user.username).$promise.then(function() {
-					process.processor = vm.user;
-					process.offer = offer;
-					process.status = 'offer';
-					vm.updateRow(process);
-				});
-			}
-		});
-	});
-};
-
-LeadsCtrl.prototype.pin = function(process) {
-	var vm = this;
-	if (process.processor == null) {
-		this.processesService.setProcessor({
-			id : process.id
-		}, vm.user.username).$promise.then(function() {
-			process.processor = vm.user;
-			vm.updateRow(process);
-		});
-	} else {
-		this.processesService.removeProcessor({
-			id : process.id
-		}).$promise.then(function() {
-			process.processor = null;
-			vm.updateRow(process);
-		});
-	}
-}
-
-LeadsCtrl.prototype.closeOrOpenInquiry = function(process) {
-	var vm = this;
-	if (process.status == "open") {
-		this.processesService.setStatus({
-			id : process.id
-		}, 'closed').$promise.then(function() {
-			vm.toaster.pop('success', '', vm.translate
-					.instant('COMMON_TOAST_SUCCESS_CLOSE_LEAD'));
-			vm.rootScope.leadsCount -= 1;
-			process.status = 'closed';
-			vm.updateRow(process);
-		});
-	} else if (process.status == "closed") {
-		this.processesService.setStatus({
-			id : process.id
-		}, 'open').$promise.then(function() {
-			vm.toaster.pop('success', '', vm.translate
-					.instant('COMMON_TOAST_SUCCESS_OPEN_LEAD'));
-			vm.rootScope.leadsCount += 1;
-			process.status = 'open';
-			vm.updateRow(process);
-		});
-	}
-};
-
-LeadsCtrl.prototype.loadDataToModal = function(process) {
-	this.editProcess = process;
-};
-
-LeadsCtrl.prototype.saveEditedRow = function() {
-	var vm = this;
-	this.processesService.putLead({
-		id : this.editProcess.lead.id
-	}, this.editProcess.lead).$promise.then(function() {
-		vm.toaster.pop('success', '', vm.translate
-				.instant('COMMON_TOAST_SUCCESS_UPDATE_LEAD'));
-		vm.editForm.$setPristine();
-		vm.editProcess.lead.leadPrice = vm.editProcess.lead.containerAmount
-				* vm.editProcess.lead.container.priceNetto;
-		vm.updateRow(vm.editProcess);
-	});
-};
-
-LeadsCtrl.prototype.deleteRow = function(process) {
-	var vm = this;
-	var leadId = process.lead.id;
-	if (process.sale != null || process.offer != null) {
-		vm.toaster.pop('error', '', vm.translate
-				.instant('COMMON_TOAST_FAILURE_DELETE_LEAD'));
-		return;
-	}
-	process.lead = null;
-	this.processesService.putProcess({
-		id : process.id
-	}, process).$promise.then(function() {
-		if (process.offer == null && process.sale == null) {
-			vm.processesService.deleteProcess({
-				id : process.id
-			});
-		}
-		vm.processesService.deleteLead({
-			id : leadId
-		}).$promise.then(function() {
-			vm.toaster.pop('success', '', vm.translate
-					.instant('COMMON_TOAST_SUCCESS_DELETE_LEAD'));
-			vm.rootScope.leadsCount -= 1;
-			vm.dtInstance.DataTable.row(vm.rows[process.id]).remove().draw();
-		});
-	});
-};
-
-LeadsCtrl.prototype.updateRow = function(process) {
-	this.dtInstance.DataTable.row(this.rows[process.id]).data(process).draw(
-			false);
-	this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
-};
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
-var LoginController = (function () {
-    function LoginController($location, Auth, $scope, toaster, $rootScope, $translate) {
-        this.location = $location;
-        this.auth = Auth;
-        this.scope = $scope;
-        this.toaster = toaster;
-        this.rootScope = $rootScope;
-        this.translate = $translate;
-    }
-    LoginController.prototype.login = function (credentials) {
-        var self = this;
-        if (credentials.username === "apiuser") {
-            self.scope.credentials.password = "";
-            self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
-        }
-        else {
-            self.auth.login(credentials, function (res) {
-                self.location.path("/dashoard");
-                self.rootScope.setUserDefaultLanguage();
-                self.rootScope.loadLabels();
-            }, function (err) {
-                self.scope.credentials.password = "";
-                self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
-            });
-        }
-    };
-    ;
-    LoginController.$inject = ["$location", "Auth", "$scope", "toaster", "$rootScope", "$translate"];
-    return LoginController;
-}());
-angular.module("app.login", ["ngResource"]).controller("LoginController", LoginController);
-
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-
-'use strict';
-
-angular.module('app.login', ['ngResource']).controller('LoginCtrl', LoginCtrl);
-
-LoginCtrl.$inject = ['$location', 'Auth', '$scope', 'toaster', '$rootScope', '$translate'];
-
-function LoginCtrl($location, Auth, $scope, toaster, $rootScope, $translate) {
-    this.login = function (credentials) {
-        if (credentials.username == 'apiuser') {
-            $scope.credentials.password = "";
-            toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
-        }
-        else {
-            Auth.login(credentials,
-                function (res) {
-                    $location.path('/dashoard');
-                    $rootScope.setUserDefaultLanguage();
-                    $rootScope.loadLabels();
-                },
-                function (err) {
-                    $scope.credentials.password = "";
-                    toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
-                }
-            );
-        }
-    };
-
-}
-
-/*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
  *
@@ -2104,6 +2015,435 @@ DashboardCtrl.prototype.getConversionrate = function () {
     else
         this.conversionRate = 0;
 };
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+"use strict";
+var DashboardController = (function () {
+    function DashboardController(toaster, Processes, Comments, $filter, $translate, $rootScope, $scope, $interval, Profile, Leads, Offers, Sales, Profit, Turnover) {
+        this.$inject = ["toaster", "Processes", "Comments", "$filter", "$translate", "$rootScope", "$scope", "$interval", "Profile", "Leads", "Offers", "Sales", "Profit", "Turnover"];
+        this.toaster = toaster;
+        this.filter = $filter;
+        this.orderBy = $filter("orderBy");
+        this.translate = $translate;
+        this.rootScope = $rootScope;
+        this.procesService = Processes;
+        this.commentService = Comments;
+        this.profileService = Profile;
+        this.leadsService = Leads;
+        this.offersService = Offers;
+        this.salesService = Sales;
+        this.profitService = Profit;
+        this.turnoverService = Turnover;
+        this.commentModalInput = "";
+        this.comments = {};
+        this.infoData = {};
+        this.infoType = "";
+        this.infoProcess = {};
+        this.infoComments = [];
+        this.leadsAmount = {};
+        this.offersAmount = {};
+        this.salesAmount = {};
+        this.profit = {};
+        this.turnover = {};
+        this.conversionRate = {};
+        this.user = {};
+        this.sortableOptions = {};
+        this.registerPromise();
+        this.getUser();
+        this.setSortableOptions();
+    }
+    DashboardController.prototype.registerPromise = function () {
+        var self = this;
+        this.procesService.getProcessByLeadAndStatus({ status: "open" }).$promise.then(function (result) {
+            self.openLead = self.orderBy(result, "lead.timestamp", false);
+        });
+        this.procesService.getProcessByOfferAndStatus({ status: "offer" }).$promise.then(function (result) {
+            self.openOffer = self.orderBy(result, "offer.timestamp", false);
+        });
+        this.procesService.getLatestSales().$promise.then(function (result) {
+            self.sales = result;
+        });
+        this.leadsService.week().$promise.then(function (result) {
+            self.getLeads(result);
+            self.salesService.week().$promise.then(function (result) {
+                self.getSales(result);
+            });
+        });
+        this.offersService.week().$promise.then(function (result) {
+            self.getOffers(result);
+        });
+        this.profitService.week().$promise.then(function (result) {
+            self.getProfit(result);
+        });
+        this.turnoverService.week().$promise.then(function (result) {
+            self.getTurnover(result);
+        });
+    };
+    DashboardController.prototype.getUser = function () {
+        var self = this;
+        if (!angular.isUndefined(self.rootScope.globals.currentUser))
+            self.profileService.get({ username: self.rootScope.globals.currentUser.username }).$promise.then(function (result) {
+                self.user = result;
+            });
+    };
+    DashboardController.prototype.setSortableOptions = function () {
+        var self = this;
+        this.sortableOptions = {
+            update: function (e, ui) {
+                var target = ui.item.sortable.droptargetModel;
+                var source = ui.item.sortable.sourceModel;
+                if ((this.openLead === target && this.openOffer === source) ||
+                    (this.openLead === source && this.sales === target) ||
+                    target === source) {
+                    ui.item.sortable.cancel();
+                }
+            },
+            stop: function (e, ui) {
+                var target = ui.item.sortable.droptargetModel;
+                var source = ui.item.sortable.sourceModel;
+                var item = ui.item.sortable.model;
+                if (this.sales === target && this.openOffer === source) {
+                    this.addOfferToSale(item);
+                }
+                else if (this.openOffer === target && this.openLead === source) {
+                    this.addLeadToOffer(item);
+                }
+            },
+            connectWith: ".connectList",
+            items: "li:not(.not-sortable)"
+        };
+    };
+    DashboardController.prototype.addLeadToOffer = function (process) {
+        var self = this;
+        var offer = {
+            container: {
+                name: process.lead.container.name,
+                description: process.lead.container.description,
+                priceNetto: process.lead.container.priceNetto
+            },
+            containerAmount: process.lead.containerAmount,
+            deliveryAddress: process.lead.destination,
+            offerPrice: (process.lead.containerAmount * process.lead.container.priceNetto),
+            prospect: {
+                company: process.lead.inquirer.company,
+                email: process.lead.inquirer.email,
+                firstname: process.lead.inquirer.firstname,
+                lastname: process.lead.inquirer.lastname,
+                phone: process.lead.inquirer.phone,
+                title: process.lead.inquirer.title
+            },
+            timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
+            vendor: process.lead.vendor
+        };
+        this.procesService.addOffer({ id: process.id }, offer).$promise.then(function () {
+            self.procesService.setStatus({ id: process.id }, "offer").$promise.then(function () {
+                self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
+                self.rootScope.leadsCount -= 1;
+                self.rootScope.offersCount += 1;
+                self.procesService.setProcessor({ id: process.id }, self.user.username).$promise.then(function () {
+                    process.processor = self.user;
+                });
+                process.offer = offer;
+                self.openOffer = self.orderBy(self.openOffer, "offer.timestamp", false);
+            });
+        });
+    };
+    DashboardController.prototype.addOfferToSale = function (process) {
+        var self = this;
+        var sale = {
+            container: {
+                name: process.offer.container.name,
+                description: process.offer.container.description,
+                priceNetto: process.offer.container.priceNetto
+            },
+            containerAmount: process.offer.containerAmount,
+            transport: process.offer.deliveryAddress,
+            customer: {
+                company: process.offer.prospect.company,
+                email: process.offer.prospect.email,
+                firstname: process.offer.prospect.firstname,
+                lastname: process.offer.prospect.lastname,
+                phone: process.offer.prospect.phone,
+                title: process.offer.prospect.title
+            },
+            saleProfit: 0,
+            saleReturn: process.offer.offerPrice,
+            timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
+            vendor: process.offer.vendor
+        };
+        this.procesService.addSale({ id: process.id }, sale).$promise.then(function () {
+            self.procesService.setStatus({ id: process.id }, "sale").$promise.then(function () {
+                self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
+                self.rootScope.offersCount -= 1;
+                process.sale = sale;
+                self.sales = self.orderBy(self.sales, "sale.timestamp", true);
+            });
+        });
+    };
+    DashboardController.prototype.saveDataToModal = function (info, type, process) {
+        this.infoData = info;
+        this.infoType = type;
+        this.infoProcess = process;
+        var self = this;
+        this.commentService.getComments({ id: process.id }).$promise.then(function (result) {
+            self.infoComments = [];
+            for (var comment in result) {
+                if (comment === "$promise")
+                    break;
+                self.infoComments.push({
+                    commentText: result[comment].commentText,
+                    timestamp: result[comment].timestamp,
+                    creator: result[comment].creator
+                });
+            }
+        });
+    };
+    DashboardController.prototype.refreshData = function () {
+        var self = this;
+        this.procesService.getProcessByLeadAndStatus({ status: "open" }).$promise.then(function (result) {
+            self.openLead = self.orderBy(result, "lead.timestamp", false);
+        });
+        this.procesService.getProcessByOfferAndStatus({ status: "offer" }).$promise.then(function (result) {
+            self.openOffer = self.orderBy(result, "offer.timestamp", false);
+        });
+        this.procesService.getLatestSales().$promise.then(function (result) {
+            self.sales = result;
+        });
+    };
+    DashboardController.prototype.addComment = function (process) {
+        var self = this;
+        if (angular.isUndefined(this.infoComments)) {
+            this.infoComments = [];
+        }
+        if (this.commentModalInput !== "" && !angular.isUndefined(this.commentModalInput)) {
+            var comment_1 = {
+                process: process,
+                creator: this.user,
+                commentText: this.commentModalInput,
+                timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm:ss")
+            };
+            this.commentService.addComment(comment_1).$promise.then(function () {
+                self.infoComments.push(comment_1);
+                self.commentModalInput = "";
+            });
+        }
+    };
+    DashboardController.prototype.getProfit = function (profits) {
+        var summe = 0;
+        for (var profit in profits.result) {
+            summe = summe + profits.result[profit];
+        }
+        this.profit = summe;
+    };
+    DashboardController.prototype.getTurnover = function (turnovers) {
+        var summe = 0;
+        for (var turnover in turnovers.result) {
+            summe = summe + turnovers.result[turnover];
+        }
+        this.turnover = summe;
+    };
+    DashboardController.prototype.getLeads = function (leads) {
+        var summe = 0;
+        for (var lead in leads.result) {
+            summe += leads.result[lead];
+        }
+        this.leadsAmount = summe;
+    };
+    DashboardController.prototype.getOffers = function (offers) {
+        var summe = 0;
+        for (var offer in offers.result) {
+            summe += offers.result[offer];
+        }
+        this.offersAmount = summe;
+    };
+    DashboardController.prototype.getSales = function (sales) {
+        var summe = 0;
+        for (var sale in sales.result) {
+            summe += sales.result[sale];
+        }
+        this.salesAmount = summe;
+        this.getConversionrate();
+    };
+    DashboardController.prototype.getConversionrate = function () {
+        if (this.leadsAmount !== 0) {
+            this.conversionRate = (this.salesAmount / this.leadsAmount) * 100;
+        }
+        else
+            this.conversionRate = 0;
+    };
+    return DashboardController;
+}());
+angular.module("app.dashboard", ["ngResource"]).controller("DashboardController", DashboardController);
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+"use strict";
+var LoginController = (function () {
+    function LoginController($location, Auth, $scope, toaster, $rootScope, $translate) {
+        this.location = $location;
+        this.auth = Auth;
+        this.scope = $scope;
+        this.toaster = toaster;
+        this.rootScope = $rootScope;
+        this.translate = $translate;
+    }
+    LoginController.prototype.login = function (credentials) {
+        var self = this;
+        if (credentials.username === "apiuser") {
+            self.scope.credentials.password = "";
+            self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
+        }
+        else {
+            self.auth.login(credentials, function (res) {
+                self.location.path("/dashoard");
+                self.rootScope.setUserDefaultLanguage();
+                self.rootScope.loadLabels();
+            }, function (err) {
+                self.scope.credentials.password = "";
+                self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
+            });
+        }
+    };
+    ;
+    LoginController.$inject = ["$location", "Auth", "$scope", "toaster", "$rootScope", "$translate"];
+    return LoginController;
+}());
+angular.module("app.login", ["ngResource"]).controller("LoginController", LoginController);
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
+'use strict';
+
+angular.module('app.login', ['ngResource']).controller('LoginCtrl', LoginCtrl);
+
+LoginCtrl.$inject = ['$location', 'Auth', '$scope', 'toaster', '$rootScope', '$translate'];
+
+function LoginCtrl($location, Auth, $scope, toaster, $rootScope, $translate) {
+    this.login = function (credentials) {
+        if (credentials.username == 'apiuser') {
+            $scope.credentials.password = "";
+            toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
+        }
+        else {
+            Auth.login(credentials,
+                function (res) {
+                    $location.path('/dashoard');
+                    $rootScope.setUserDefaultLanguage();
+                    $rootScope.loadLabels();
+                },
+                function (err) {
+                    $scope.credentials.password = "";
+                    toaster.pop('error', '', $translate.instant('LOGIN_ERROR'));
+                }
+            );
+        }
+    };
+
+}
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
+ *
+ * NOTICE: All information contained herein is, and remains the property of
+ * Eviarc GmbH and its suppliers, if any. The intellectual and technical
+ * concepts contained herein are proprietary to Eviarc GmbH, and are protected
+ * by trade secret or copyright law. Dissemination of this information or
+ * reproduction of this material is strictly forbidden unless prior written
+ * permission is obtained from Eviarc GmbH.
+ ******************************************************************************/
+"use strict";
+var SharedItemsPieChart = (function () {
+    function SharedItemsPieChart(translate) {
+        this.translate = translate;
+        this.chartConfig = {
+            options: {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: "pie"
+                },
+                title: {
+                    text: ""
+                },
+                tooltip: {},
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: false,
+                        cursor: "pointer",
+                        dataLabels: {
+                            enabled: true,
+                            style: {
+                                color: (window["Highcharts"].theme && window["Highcharts"].theme.contrastTextColor) || "black"
+                            }
+                        }
+                    }
+                }
+            },
+            series: [{
+                    name: this.translate.instant("STATISTIC_PARTS"),
+                    colorByPoint: true,
+                    data: []
+                }],
+            loading: false
+        };
+    }
+    return SharedItemsPieChart;
+}());
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+var User = (function () {
+    function User() {
+    }
+    return User;
+}());
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -2698,6 +3038,7 @@ OffersCtrl.prototype.updateRow = function(process) {
  * from Eviarc GmbH.
  *******************************************************************************/
 "use strict";
+/// <reference path="../models/User.ts" />
 var ProfileController = (function () {
     function ProfileController($rootScope, toaster, Profile, $translate) {
         this.profileService = Profile;
@@ -2809,6 +3150,37 @@ ProfileCtrl.prototype.submitPasswordForm = function (user) {
         vm.toaster.pop('error', '', vm.translate.instant('PROFILE_TOAST_PASSWORD_CHANGE_ERROR'));
     });
 };
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+"use strict";
+angular.module("app.services").factory("SaleService", SaleService);
+var SaleService = (function () {
+    function SaleService($resource) {
+        this.resource = $resource;
+        this.routeInit();
+    }
+    SaleService.prototype.routeInit = function () {
+        this.day = { url: "/api/rest/processes/statistics/sales/day", method: "GET" };
+        this.week = { url: "/api/rest/processes/statistics/sales/week", method: "GET" };
+        this.month = { url: "/api/rest/processes/statistics/sales/month", method: "GET" };
+        this.year = { url: "/api/rest/processes/statistics/sales/year", method: "GET" };
+        this.all = { url: "/api/rest/processes/statistics/sales/all", method: "GET" };
+    };
+    SaleService.$inject = ["$resource"];
+    return SaleService;
+}());
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -3505,6 +3877,220 @@ function SignUpCtrl($location, $http, $scope, Auth, toaster, $translate) {
  * from Eviarc GmbH.
  *******************************************************************************/
 
+StatisticsCtrl.prototype.entireStatisticArea = function () {
+    var chartConfig = {
+        options: {
+            chart: {
+                type: 'area'
+            },
+            title: {
+                text: ''
+            },
+            tooltip: {
+                shared: true,
+                valueSuffix: ' €',
+                valueDecimals: 2
+            },
+            xAxis: {
+                categories: [],
+            },
+            loading: false,
+            yAxis: {
+                title: {
+                    text: this.translate.instant('STATISTIC_PROFIT_AND_RETURN_Y_AXIS'),
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value;
+                    }
+                }
+            }
+        },
+        series: []
+    };
+    return chartConfig;
+};
+
+StatisticsCtrl.prototype.entireStatisticSpline = function () {
+    var chartConfig = {
+        options: {
+            chart: {
+                type: 'spline'
+            },
+            title: '',
+            tooltip: {
+                shared: true,
+                valueSuffix: ''
+            },
+            loading: false,
+            xAxis: {
+                categories: []
+            },
+            yAxis: {
+                title: {
+                    text: this.translate.instant('STATISTIC_LEADS_OFFERS_SALES_Y_AXIS')
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            }
+        },
+        series: [],
+        //function (optional)
+        func: function (chart) {
+            //setup some logic for the chart
+        }
+    };
+    return chartConfig;
+};
+
+StatisticsCtrl.prototype.getLeadsConversionRate = function () {
+    var chartConfig = {
+        options: {
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: ''
+            },
+            loading: false,
+            xAxis: {
+                categories: [],
+            },
+            yAxis: {
+                title: {
+                    text: this.translate.instant('STATISTIC_SALES_OF_LEADS_Y_AXIS')
+                },
+                minorGridLineWidth: 1,
+                gridLineWidth: 1,
+                alternateGridColor: null
+
+            },
+            tooltip: {
+                valueSuffix: ' %',
+                valueDecimals: 2
+            },
+            plotOptions: {
+                spline: {
+                    lineWidth: 4,
+                    states: {
+                        hover: {
+                            lineWidth: 5
+                        }
+                    },
+                    marker: {
+                        enabled: false
+                    }
+                }
+            },
+        },
+        series: []
+    };
+
+    return chartConfig;
+};
+
+
+StatisticsCtrl.prototype.getOffersConversionRate = function () {
+    var chartConfig = {
+        options: {
+            chart: {
+                type: 'spline'
+            },
+            title: {
+                text: ''
+            },
+            loading: false,
+            xAxis: {
+                categories: [],
+            },
+            yAxis: {
+                title: {
+                    text: this.translate.instant('STATISTIC_SALES_OF_OFFERS_Y_AXIS')
+                },
+                minorGridLineWidth: 1,
+                gridLineWidth: 1,
+                alternateGridColor: null
+
+            },
+            tooltip: {
+                valueSuffix: ' %',
+                valueDecimals: 2
+            },
+            plotOptions: {
+                spline: {
+                    lineWidth: 4,
+                    states: {
+                        hover: {
+                            lineWidth: 5
+                        }
+                    },
+                    marker: {
+                        enabled: false
+                    }
+                }
+            },
+        },
+        series: []
+    };
+
+    return chartConfig;
+};
+
+StatisticsCtrl.prototype.pushLeadsOffersSales = function () {
+    this.chartEntireStatisticSpline.series.push({
+        name: this.translate.instant('LEADS_MENU'),
+        data: this.leadResult,
+        color: '#ed5565'
+    });
+    this.chartEntireStatisticSpline.series.push({
+        name: this.translate.instant('OFFERS_MENU'),
+        data: this.offerResult,
+        color: '#f8ac59'
+    });
+    this.chartEntireStatisticSpline.series.push({
+        name: this.translate.instant('SALES_MENU'),
+        data: this.saleResult,
+        color: '#1a7bb9'
+    });
+
+}
+
+StatisticsCtrl.prototype.pushProfitAndTurnover = function () {
+    this.chartEntireStatisticArea.series.push({
+        name: this.translate.instant('STATISTIC_TURNOVER'),
+        data: this.turnoverResult,
+        color: '#000000'
+    });
+
+    this.chartEntireStatisticArea.series.push({
+        name: this.translate.instant('STATISTIC_PROFIT'),
+        data: this.profitsResult,
+        color: '#1a7bb9'
+    });
+}
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.  
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.  
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+
 StatisticsCtrl.prototype.getProfit = function (profits) {
     this.profitsResult = profits.result;
     var summe = 0;
@@ -3684,6 +4270,676 @@ StatisticsCtrl.prototype.pushToPieChart = function () {
         color: '#1a7bb9'
     });
 }
+
+/*******************************************************************************
+ * Copyright (c) 2016 Eviarc GmbH.
+ * All rights reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Eviarc GmbH and its suppliers, if any.
+ * The intellectual and technical concepts contained
+ * herein are proprietary to Eviarc GmbH,
+ * and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Eviarc GmbH.
+ *******************************************************************************/
+"use strict";
+var StatisticContoller = (function () {
+    function StatisticContoller(Leads, Offers, Sales, Profit, Turnover, $translate, $interval, $scope) {
+        this.$inject = ["Leads", "Offers", "Sales", "Profit", "Turnover", "$translate", "$interval", "$scope"];
+        this.currentTab = 1;
+        this.selectedPeriod = "day";
+        this.leadResult = {};
+        this.offerResult = {};
+        this.saleResult = {};
+        this.profitsResult = {};
+        this.turnoverResult = {};
+        this.profit = 0;
+        this.turnover = 0;
+        this.leads = 0;
+        this.offers = 0;
+        this.sales = 0;
+        this.efficiency = {};
+        this.conversionrate = {};
+        this.profitPerSale = {};
+        this.timeframe = [];
+        this.weekday = new Array(7);
+        this.month = new Array(12);
+        this.isLeadPromise = false;
+        this.isOfferPromise = false;
+        this.isSalePromise = false;
+        this.isProfitPromise = false;
+        this.isTurnoverPromise = false;
+        this.translate = $translate;
+        this.scope = $scope;
+        this.interval = $interval;
+        this.chartSingleStatisticPie = new SharedItemsPieChart(this.translate);
+        this.chartEntireStatisticSpline = this.entireStatisticSpline();
+        this.chartEntireStatisticArea = this.entireStatisticArea();
+        this.chartLeadsConversionRate = this.getLeadsConversionRate();
+        this.chartOffersConversionRate = this.getOffersConversionRate();
+        this.leadsService = Leads;
+        this.offersService = Offers;
+        this.salesService = Sales;
+        this.profitService = Profit;
+        this.turnoverService = Turnover;
+        this.setWeekDayTranslationsArray();
+        this.setMonthTranslationsArray;
+        this.checkPromises();
+    }
+    StatisticContoller.prototype.registerPromises = function () {
+        var self = this;
+        this.leadsService.day().$promise.then(function (result) {
+            self.getLeads(result);
+            self.isLeadPromise = true;
+        });
+        this.offersService.day().$promise.then(function (result) {
+            self.getOffers(result);
+            self.isOfferPromise = true;
+        });
+        this.salesService.day().$promise.then(function (result) {
+            self.getSales(result);
+            self.isSalePromise = true;
+        });
+        this.profitService.day().$promise.then(function (result) {
+            self.getProfit(result);
+            self.isProfitPromise = true;
+        });
+        this.turnoverService.day().$promise.then(function (result) {
+            self.getTurnover(result);
+            self.isTurnoverPromise = true;
+        });
+    };
+    StatisticContoller.prototype.setWeekDayTranslationsArray = function () {
+        this.weekday[0] = this.translate.instant("SUNDAY");
+        this.weekday[1] = this.translate.instant("MONDAY");
+        this.weekday[2] = this.translate.instant("TUESDAY");
+        this.weekday[3] = this.translate.instant("WEDNESDAY");
+        this.weekday[4] = this.translate.instant("THURSDAY");
+        this.weekday[5] = this.translate.instant("FRIDAY");
+        this.weekday[6] = this.translate.instant("SATURDAY");
+    };
+    StatisticContoller.prototype.setMonthTranslationsArray = function () {
+        this.month[0] = this.translate.instant("JANUARY");
+        this.month[1] = this.translate.instant("FEBRUARY");
+        this.month[2] = this.translate.instant("MARCH");
+        this.month[3] = this.translate.instant("APRIL");
+        this.month[4] = this.translate.instant("MAY");
+        this.month[5] = this.translate.instant("JUNE");
+        this.month[6] = this.translate.instant("JULY");
+        this.month[7] = this.translate.instant("AUGUST");
+        this.month[8] = this.translate.instant("SEPTEMBER");
+        this.month[9] = this.translate.instant("OCTOBER");
+        this.month[10] = this.translate.instant("NOVEMBER");
+        this.month[11] = this.translate.instant("DECEMBER");
+    };
+    StatisticContoller.prototype.checkPromises = function () {
+        var self = this;
+        var stop;
+        this.scope.$on("$destroy", function () {
+            if (angular.isDefined(stop)) {
+                self.interval.cancel(stop);
+                stop = undefined;
+            }
+        });
+        stop = this.interval(function () {
+            if (self.isLeadPromise === true && self.isOfferPromise === true &&
+                self.isSalePromise === true && self.isProfitPromise === true &&
+                self.isTurnoverPromise === true) {
+                self.getEfficiency();
+                self.getProfitPerSale();
+                self.pushProfitAndTurnover();
+                self.getConversionrate();
+                self.pushToPieChart();
+                self.pushLeadsOffersSales();
+                self.leadsConversionRate();
+                self.offersConversionRate();
+                self.interval.cancel(stop);
+            }
+        }.bind(this), 500);
+    };
+    StatisticContoller.prototype.tabOnClick = function (tab) {
+        this.currentTab = tab;
+    };
+    StatisticContoller.prototype.getProfit = function (profits) {
+        this.profitsResult = profits.result;
+        var summe = 0;
+        for (var profit in profits.result) {
+            summe = summe + profits.result[profit];
+        }
+        this.profit = summe;
+    };
+    StatisticContoller.prototype.getTurnover = function (turnovers) {
+        this.turnoverResult = turnovers.result;
+        var summe = 0;
+        for (var turnover in turnovers.result) {
+            summe = summe + turnovers.result[turnover];
+        }
+        this.turnover = summe;
+    };
+    StatisticContoller.prototype.getLeads = function (leads) {
+        this.leadResult = leads.result;
+        var summe = 0;
+        for (var lead in leads.result) {
+            summe += leads.result[lead];
+        }
+        this.leads = summe;
+    };
+    StatisticContoller.prototype.getOffers = function (offers) {
+        this.offerResult = offers.result;
+        var summe = 0;
+        for (var offer in offers.result) {
+            summe += offers.result[offer];
+        }
+        this.offers = summe;
+    };
+    StatisticContoller.prototype.getSales = function (sales) {
+        this.saleResult = sales.result;
+        var summe = 0;
+        for (var sale in sales.result) {
+            summe += sales.result[sale];
+        }
+        this.sales = summe;
+    };
+    StatisticContoller.prototype.getSalesLeadsRatePercentage = function () {
+        if (this.leads !== 0) {
+            return (this.sales / this.leads) * 100;
+        }
+        else
+            return 0;
+    };
+    StatisticContoller.prototype.getSalesOffersRatePercentage = function () {
+        if (this.offers !== 0) {
+            return (this.sales / this.offers) * 100;
+        }
+        else
+            return 0;
+    };
+    StatisticContoller.prototype.getEfficiency = function () {
+        if (this.turnover !== 0) {
+            this.efficiency = (this.profit / this.turnover) * 100;
+        }
+        else
+            this.efficiency = 0;
+    };
+    StatisticContoller.prototype.getConversionrate = function () {
+        if (this.leads !== 0) {
+            this.conversionrate = (this.sales / this.leads) * 100;
+        }
+        else
+            this.conversionrate = 0;
+    };
+    StatisticContoller.prototype.getProfitPerSale = function () {
+        if (this.sales !== 0) {
+            this.profitPerSale = (this.profit / this.sales);
+        }
+        else
+            this.profitPerSale = 0;
+    };
+    StatisticContoller.prototype.leadsConversionRate = function () {
+        var salesToLeadsConversion = new Array();
+        for (var counter in this.saleResult) {
+            var lead = parseInt(this.leadResult[counter], 10);
+            var sale = parseInt(this.saleResult[counter], 10);
+            if (angular.isNumber(lead) && angular.isNumber(sale) && lead !== 0) {
+                salesToLeadsConversion.push((sale / lead) * 100);
+            }
+            else {
+                salesToLeadsConversion.push(0);
+            }
+        }
+        this.chartLeadsConversionRate.series.push({
+            name: this.translate.instant("STATISTIC_SALES_OF_LEADS"),
+            data: salesToLeadsConversion,
+            color: "#ed5565"
+        });
+    };
+    StatisticContoller.prototype.offersConversionRate = function () {
+        var salesToOffersConversion = new Array();
+        for (var counter in this.saleResult) {
+            var offer = parseInt(this.offerResult[counter], 10);
+            var sale = parseInt(this.saleResult[counter], 10);
+            if (angular.isNumber(offer) && angular.isNumber(sale) && offer !== 0) {
+                salesToOffersConversion.push((sale / offer) * 100);
+            }
+            else {
+                salesToOffersConversion.push(0);
+            }
+        }
+        this.chartOffersConversionRate.series.push({
+            name: this.translate.instant("STATISTIC_SALES_OF_OFFERS"),
+            data: salesToOffersConversion,
+            color: "#f8ac59"
+        });
+    };
+    StatisticContoller.prototype.getSharedItemsPieChart = function () {
+        var chartConfig = {
+            options: {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: "pie"
+                },
+                title: {
+                    text: ""
+                },
+                tooltip: {},
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: false,
+                        cursor: "pointer",
+                        dataLabels: {
+                            enabled: true,
+                            style: {
+                                color: (window["Highcharts"].theme && window["Highcharts"].theme.contrastTextColor) || "black"
+                            }
+                        }
+                    }
+                }
+            },
+            series: [{
+                    name: this.translate.instant("STATISTIC_PARTS"),
+                    colorByPoint: true,
+                    data: []
+                }],
+            loading: false
+        };
+        return chartConfig;
+    };
+    StatisticContoller.prototype.pushToPieChart = function () {
+        this.chartSingleStatisticPie.series[0].data.push({
+            name: this.translate.instant("LEADS_MENU"),
+            y: this.leads,
+            color: "#ed5565"
+        });
+        this.chartSingleStatisticPie.series[0].data.push({
+            name: this.translate.instant("OFFERS_MENU"),
+            y: this.offers,
+            color: "#f8ac59"
+        });
+        this.chartSingleStatisticPie.series[0].data.push({
+            name: this.translate.instant("SALES_MENU"),
+            y: this.sales,
+            color: "#1a7bb9"
+        });
+    };
+    StatisticContoller.prototype.entireStatisticArea = function () {
+        var chartConfig = {
+            options: {
+                chart: {
+                    type: "area"
+                },
+                title: {
+                    text: ""
+                },
+                tooltip: {
+                    shared: true,
+                    valueSuffix: " €",
+                    valueDecimals: 2
+                },
+                xAxis: {
+                    categories: []
+                },
+                loading: false,
+                yAxis: {
+                    title: {
+                        text: this.translate.instant("STATISTIC_PROFIT_AND_RETURN_Y_AXIS")
+                    },
+                    labels: {
+                        formatter: function () {
+                            return this.value;
+                        }
+                    }
+                }
+            },
+            series: []
+        };
+        return chartConfig;
+    };
+    StatisticContoller.prototype.entireStatisticSpline = function () {
+        var chartConfig = {
+            options: {
+                chart: {
+                    type: "spline"
+                },
+                title: "",
+                tooltip: {
+                    shared: true,
+                    valueSuffix: ""
+                },
+                loading: false,
+                xAxis: {
+                    categories: []
+                },
+                yAxis: {
+                    title: {
+                        text: this.translate.instant("STATISTIC_LEADS_OFFERS_SALES_Y_AXIS")
+                    },
+                    plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: "#808080"
+                        }]
+                },
+                legend: {
+                    layout: "vertical",
+                    align: "right",
+                    verticalAlign: "middle",
+                    borderWidth: 0
+                }
+            },
+            series: [],
+            // function (optional)
+            func: function (chart) {
+                // setup some logic for the chart
+            }
+        };
+        return chartConfig;
+    };
+    StatisticContoller.prototype.getLeadsConversionRate = function () {
+        var chartConfig = {
+            options: {
+                chart: {
+                    type: "spline"
+                },
+                title: {
+                    text: ""
+                },
+                loading: false,
+                xAxis: {
+                    categories: []
+                },
+                yAxis: {
+                    title: {
+                        text: this.translate.instant("STATISTIC_SALES_OF_LEADS_Y_AXIS")
+                    },
+                    minorGridLineWidth: 1,
+                    gridLineWidth: 1,
+                    alternateGridColor: null
+                },
+                tooltip: {
+                    valueSuffix: " %",
+                    valueDecimals: 2
+                },
+                plotOptions: {
+                    spline: {
+                        lineWidth: 4,
+                        states: {
+                            hover: {
+                                lineWidth: 5
+                            }
+                        },
+                        marker: {
+                            enabled: false
+                        }
+                    }
+                }
+            },
+            series: []
+        };
+        return chartConfig;
+    };
+    StatisticContoller.prototype.getOffersConversionRate = function () {
+        var chartConfig = {
+            options: {
+                chart: {
+                    type: "spline"
+                },
+                title: {
+                    text: ""
+                },
+                loading: false,
+                xAxis: {
+                    categories: []
+                },
+                yAxis: {
+                    title: {
+                        text: this.translate.instant("STATISTIC_SALES_OF_OFFERS_Y_AXIS")
+                    },
+                    minorGridLineWidth: 1,
+                    gridLineWidth: 1,
+                    alternateGridColor: null
+                },
+                tooltip: {
+                    valueSuffix: " %",
+                    valueDecimals: 2
+                },
+                plotOptions: {
+                    spline: {
+                        lineWidth: 4,
+                        states: {
+                            hover: {
+                                lineWidth: 5
+                            }
+                        },
+                        marker: {
+                            enabled: false
+                        }
+                    }
+                }
+            },
+            series: []
+        };
+        return chartConfig;
+    };
+    StatisticContoller.prototype.pushLeadsOffersSales = function () {
+        this.chartEntireStatisticSpline.series.push({
+            name: this.translate.instant("LEADS_MENU"),
+            data: this.leadResult,
+            color: "#ed5565"
+        });
+        this.chartEntireStatisticSpline.series.push({
+            name: this.translate.instant("OFFERS_MENU"),
+            data: this.offerResult,
+            color: "#f8ac59"
+        });
+        this.chartEntireStatisticSpline.series.push({
+            name: this.translate.instant("SALES_MENU"),
+            data: this.saleResult,
+            color: "#1a7bb9"
+        });
+    };
+    StatisticContoller.prototype.pushProfitAndTurnover = function () {
+        this.chartEntireStatisticArea.series.push({
+            name: this.translate.instant("STATISTIC_TURNOVER"),
+            data: this.turnoverResult,
+            color: "#000000"
+        });
+        this.chartEntireStatisticArea.series.push({
+            name: this.translate.instant("STATISTIC_PROFIT"),
+            data: this.profitsResult,
+            color: "#1a7bb9"
+        });
+    };
+    StatisticContoller.prototype.onPeriodChange = function (selectedPeriod) {
+        var self = this;
+        this.isLeadPromise = false;
+        this.isOfferPromise = false;
+        this.isSalePromise = false;
+        this.isProfitPromise = false;
+        this.isTurnoverPromise = false;
+        this.selectedPeriod = selectedPeriod;
+        this.chartSingleStatisticPie.series[0].data = [];
+        this.chartEntireStatisticArea.series = [];
+        this.chartEntireStatisticSpline.series = [];
+        this.chartLeadsConversionRate.series = [];
+        this.chartOffersConversionRate.series = [];
+        this.timeframe = [];
+        var date = Date.now();
+        var currentDate = new Date();
+        var dataProfit = [];
+        var dataReturn = [];
+        var dataLead = [];
+        var dataOffer = [];
+        var dataSale = [];
+        var dataConversionLeads = [];
+        var dataConversionOffers = [];
+        var oneYearAgo = new Date();
+        switch (this.selectedPeriod) {
+            case "day":
+                break;
+            case "week":
+                var oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                while (oneWeekAgo <= currentDate) {
+                    this.timeframe.push(self.weekday[oneWeekAgo.getDay()]);
+                    oneWeekAgo.setDate(oneWeekAgo.getDate() + 1);
+                }
+                break;
+            case "month":
+                var oneMonthAgo = new Date();
+                oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
+                while (oneMonthAgo <= currentDate) {
+                    this.timeframe.push(oneMonthAgo.getDate() + ". " + self.month[oneMonthAgo.getMonth()]);
+                    oneMonthAgo.setDate(oneMonthAgo.getDate() + 1);
+                }
+                break;
+            case "year":
+                oneYearAgo = new Date();
+                oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+                while (oneYearAgo <= currentDate) {
+                    this.timeframe.push(self.month[oneYearAgo.getMonth()]);
+                    oneYearAgo.setMonth(oneYearAgo.getMonth() + 1);
+                }
+                this.timeframe.push(oneYearAgo.toUTCString().split(" ")[2]);
+                break;
+            case "all":
+                oneYearAgo = new Date(2014, 1, 1);
+                while (oneYearAgo <= currentDate) {
+                    this.timeframe.push(oneYearAgo.getFullYear());
+                    oneYearAgo.setFullYear(oneYearAgo.getFullYear() + 1);
+                }
+                break;
+            default:
+                console.log("Timeframe not found");
+        }
+        switch (selectedPeriod) {
+            case "day":
+                this.leadsService.day().$promise.then(function (result) {
+                    self.getLeads(result);
+                    self.isLeadPromise = true;
+                });
+                self.offersService.day().$promise.then(function (result) {
+                    self.getOffers(result);
+                    self.isOfferPromise = true;
+                });
+                self.salesService.day().$promise.then(function (result) {
+                    self.getSales(result);
+                    self.isSalePromise = true;
+                });
+                self.profitService.day().$promise.then(function (result) {
+                    self.getProfit(result);
+                    self.isProfitPromise = true;
+                });
+                self.turnoverService.day().$promise.then(function (result) {
+                    self.getTurnover(result);
+                    self.isTurnoverPromise = true;
+                });
+                break;
+            case "week":
+                this.leadsService.week().$promise.then(function (result) {
+                    self.getLeads(result);
+                    self.isLeadPromise = true;
+                });
+                self.offersService.week().$promise.then(function (result) {
+                    self.getOffers(result);
+                    self.isOfferPromise = true;
+                });
+                self.salesService.week().$promise.then(function (result) {
+                    self.getSales(result);
+                    self.isSalePromise = true;
+                });
+                self.profitService.week().$promise.then(function (result) {
+                    self.getProfit(result);
+                    self.isProfitPromise = true;
+                });
+                self.turnoverService.week().$promise.then(function (result) {
+                    self.getTurnover(result);
+                    self.isTurnoverPromise = true;
+                });
+                break;
+            case "month":
+                this.leadsService.month().$promise.then(function (result) {
+                    self.getLeads(result);
+                    self.isLeadPromise = true;
+                });
+                self.offersService.month().$promise.then(function (result) {
+                    self.getOffers(result);
+                    self.isOfferPromise = true;
+                });
+                self.salesService.month().$promise.then(function (result) {
+                    self.getSales(result);
+                    self.isSalePromise = true;
+                });
+                self.profitService.month().$promise.then(function (result) {
+                    self.getProfit(result);
+                    self.isProfitPromise = true;
+                });
+                self.turnoverService.month().$promise.then(function (result) {
+                    self.getTurnover(result);
+                    self.isTurnoverPromise = true;
+                });
+                break;
+            case "year":
+                this.leadsService.year().$promise.then(function (result) {
+                    self.getLeads(result);
+                    self.isLeadPromise = true;
+                });
+                self.offersService.year().$promise.then(function (result) {
+                    self.getOffers(result);
+                    self.isOfferPromise = true;
+                });
+                self.salesService.year().$promise.then(function (result) {
+                    self.getSales(result);
+                    self.isSalePromise = true;
+                });
+                self.profitService.year().$promise.then(function (result) {
+                    self.getProfit(result);
+                    self.isProfitPromise = true;
+                });
+                self.turnoverService.year().$promise.then(function (result) {
+                    self.getTurnover(result);
+                    self.isTurnoverPromise = true;
+                });
+                break;
+            case "all":
+                this.leadsService.all().$promise.then(function (result) {
+                    self.getLeads(result);
+                    self.isLeadPromise = true;
+                });
+                self.offersService.all().$promise.then(function (result) {
+                    self.getOffers(result);
+                    self.isOfferPromise = true;
+                });
+                self.salesService.all().$promise.then(function (result) {
+                    self.getSales(result);
+                    self.isSalePromise = true;
+                });
+                self.profitService.all().$promise.then(function (result) {
+                    self.getProfit(result);
+                    self.isProfitPromise = true;
+                });
+                self.turnoverService.all().$promise.then(function (result) {
+                    self.getTurnover(result);
+                    self.isTurnoverPromise = true;
+                });
+                break;
+            default:
+                console.log("Time Frame not found.");
+                break;
+        }
+        this.chartEntireStatisticArea.options.xAxis.categories = this.timeframe;
+        this.chartEntireStatisticSpline.options.xAxis.categories = this.timeframe;
+        this.chartLeadsConversionRate.options.xAxis.categories = this.timeframe;
+        this.chartOffersConversionRate.options.xAxis.categories = this.timeframe;
+        this.checkPromises();
+    };
+    ;
+    return StatisticContoller;
+}());
+angular.module("app.statistics", ["ngResource"]).controller("StatisticContoller", StatisticContoller);
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -4047,241 +5303,6 @@ StatisticsCtrl.prototype.onPeriodChange = function (selectedPeriod) {
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-
-StatisticsCtrl.prototype.entireStatisticArea = function () {
-    var chartConfig = {
-        options: {
-            chart: {
-                type: 'area'
-            },
-            title: {
-                text: ''
-            },
-            tooltip: {
-                shared: true,
-                valueSuffix: ' €',
-                valueDecimals: 2
-            },
-            xAxis: {
-                categories: [],
-            },
-            loading: false,
-            yAxis: {
-                title: {
-                    text: this.translate.instant('STATISTIC_PROFIT_AND_RETURN_Y_AXIS'),
-                },
-                labels: {
-                    formatter: function () {
-                        return this.value;
-                    }
-                }
-            }
-        },
-        series: []
-    };
-    return chartConfig;
-};
-
-StatisticsCtrl.prototype.entireStatisticSpline = function () {
-    var chartConfig = {
-        options: {
-            chart: {
-                type: 'spline'
-            },
-            title: '',
-            tooltip: {
-                shared: true,
-                valueSuffix: ''
-            },
-            loading: false,
-            xAxis: {
-                categories: []
-            },
-            yAxis: {
-                title: {
-                    text: this.translate.instant('STATISTIC_LEADS_OFFERS_SALES_Y_AXIS')
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle',
-                borderWidth: 0
-            }
-        },
-        series: [],
-        //function (optional)
-        func: function (chart) {
-            //setup some logic for the chart
-        }
-    };
-    return chartConfig;
-};
-
-StatisticsCtrl.prototype.getLeadsConversionRate = function () {
-    var chartConfig = {
-        options: {
-            chart: {
-                type: 'spline'
-            },
-            title: {
-                text: ''
-            },
-            loading: false,
-            xAxis: {
-                categories: [],
-            },
-            yAxis: {
-                title: {
-                    text: this.translate.instant('STATISTIC_SALES_OF_LEADS_Y_AXIS')
-                },
-                minorGridLineWidth: 1,
-                gridLineWidth: 1,
-                alternateGridColor: null
-
-            },
-            tooltip: {
-                valueSuffix: ' %',
-                valueDecimals: 2
-            },
-            plotOptions: {
-                spline: {
-                    lineWidth: 4,
-                    states: {
-                        hover: {
-                            lineWidth: 5
-                        }
-                    },
-                    marker: {
-                        enabled: false
-                    }
-                }
-            },
-        },
-        series: []
-    };
-
-    return chartConfig;
-};
-
-
-StatisticsCtrl.prototype.getOffersConversionRate = function () {
-    var chartConfig = {
-        options: {
-            chart: {
-                type: 'spline'
-            },
-            title: {
-                text: ''
-            },
-            loading: false,
-            xAxis: {
-                categories: [],
-            },
-            yAxis: {
-                title: {
-                    text: this.translate.instant('STATISTIC_SALES_OF_OFFERS_Y_AXIS')
-                },
-                minorGridLineWidth: 1,
-                gridLineWidth: 1,
-                alternateGridColor: null
-
-            },
-            tooltip: {
-                valueSuffix: ' %',
-                valueDecimals: 2
-            },
-            plotOptions: {
-                spline: {
-                    lineWidth: 4,
-                    states: {
-                        hover: {
-                            lineWidth: 5
-                        }
-                    },
-                    marker: {
-                        enabled: false
-                    }
-                }
-            },
-        },
-        series: []
-    };
-
-    return chartConfig;
-};
-
-StatisticsCtrl.prototype.pushLeadsOffersSales = function () {
-    this.chartEntireStatisticSpline.series.push({
-        name: this.translate.instant('LEADS_MENU'),
-        data: this.leadResult,
-        color: '#ed5565'
-    });
-    this.chartEntireStatisticSpline.series.push({
-        name: this.translate.instant('OFFERS_MENU'),
-        data: this.offerResult,
-        color: '#f8ac59'
-    });
-    this.chartEntireStatisticSpline.series.push({
-        name: this.translate.instant('SALES_MENU'),
-        data: this.saleResult,
-        color: '#1a7bb9'
-    });
-
-}
-
-StatisticsCtrl.prototype.pushProfitAndTurnover = function () {
-    this.chartEntireStatisticArea.series.push({
-        name: this.translate.instant('STATISTIC_TURNOVER'),
-        data: this.turnoverResult,
-        color: '#000000'
-    });
-
-    this.chartEntireStatisticArea.series.push({
-        name: this.translate.instant('STATISTIC_PROFIT'),
-        data: this.profitsResult,
-        color: '#1a7bb9'
-    });
-}
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
-var User = (function () {
-    function User() {
-    }
-    return User;
-}());
-exports.User = User;
 
 /**
  * Created by Max on 18.06.2016.

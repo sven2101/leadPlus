@@ -12,7 +12,7 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-export class User {
+class User {
     id: number;
     username: String;
     email: String;
