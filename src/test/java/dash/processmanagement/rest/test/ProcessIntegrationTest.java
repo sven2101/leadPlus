@@ -47,7 +47,7 @@ import dash.vendormanagement.domain.Vendor;
 @WebIntegrationTest
 public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private static final String EXTENDED_URI = BASE_URI + "/api/rest/processes";
+	private String EXTENDED_URI = BASE_URI + "/api/rest/processes";
 
 	@Before
 	public void setup() {
@@ -68,6 +68,17 @@ public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTe
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 		assertEquals(process, responseProcess);
+	}
+
+	@Test
+	public void getAll() {
+
+		HttpEntity<Process> entityGetProcess = new HttpEntity<Process>(headers);
+
+		ResponseEntity<Process> responseGetProcess = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetProcess, Process.class);
+
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetProcess.getHeaders().getContentType().getCharSet());
+		assertEquals(HttpStatus.OK, responseGetProcess.getStatusCode());
 	}
 
 	@Override
@@ -99,16 +110,16 @@ public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTe
 		ResponseEntity<Process> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateProcess, Process.class);
 		Process responseCreateProcess = responseCreate.getBody();
 
-		process.setStatus(Status.OFFER);
+		responseCreateProcess.setStatus(Status.OFFER);
 
-		HttpEntity<Process> entity = new HttpEntity<Process>(process, headers);
+		HttpEntity<Process> entity = new HttpEntity<Process>(responseCreateProcess, headers);
 
-		ResponseEntity<Process> response = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.PUT, entity, Process.class, responseCreateProcess.getId());
+		ResponseEntity<Process> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Process.class, responseCreateProcess.getId());
 		Process responseProcess = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(process, responseProcess);
+		assertEquals(responseCreateProcess, responseProcess);
 	}
 
 	@Override
@@ -131,7 +142,7 @@ public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTe
 		inquirer.setTitle(Title.MR);
 
 		Vendor vendor = new Vendor();
-		vendor.setName("Karl Neu 10");
+		vendor.setName("Karl Neu 9");
 		vendor.setPhone("0761331234");
 
 		Container container = new Container();

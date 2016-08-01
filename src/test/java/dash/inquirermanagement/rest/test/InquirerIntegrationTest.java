@@ -40,7 +40,7 @@ import dash.test.IIntegrationTest;
 @WebIntegrationTest
 public class InquirerIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private static final String EXTENDED_URI = BASE_URI + "/api/rest/inquirers";
+	private String EXTENDED_URI = BASE_URI + "/api/rest/inquirers";
 
 	@Before
 	public void setup() {

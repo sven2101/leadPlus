@@ -16,6 +16,7 @@ package dash.commentmanagement.domain;
 
 import java.util.Calendar;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,11 +40,11 @@ public class Comment implements Request {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "creator_fk", nullable = false)
 	private User creator;
 
-	@ManyToOne()
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "process_fk", nullable = false)
 	private Process process;
 

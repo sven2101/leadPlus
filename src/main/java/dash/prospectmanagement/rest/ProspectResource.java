@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.prospectmanagement.business.IProspectService;
 import dash.prospectmanagement.domain.Prospect;
@@ -57,6 +58,13 @@ public class ProspectResource {
 	@ApiOperation(value = "Get a single prospect.", notes = "You have to provide a valid prospect ID.")
 	public Prospect findById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
 		return prospectService.getById(id);
+	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation(value = "Create a single prospect.", notes = "You have to provide a valid prospect entity.")
+	public Prospect save(@ApiParam(required = true) @RequestBody @Valid final Prospect prospect) throws SaveFailedException {
+		return prospectService.save(prospect);
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)

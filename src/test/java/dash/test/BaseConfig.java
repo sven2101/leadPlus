@@ -20,9 +20,9 @@ import org.springframework.web.client.RestTemplate;
 
 public class BaseConfig {
 
-	protected final static String BASE_URI = "http://localhost:8080";
-	protected final static String USERNAME = "test";
-	protected final static String PASSWORD = "test";
+	protected String BASE_URI = "http://localhost:5000";
+	protected String USERNAME = "test";
+	protected String PASSWORD = "test";
 
 	protected RestTemplate restTemplate = new TestRestTemplate();
 	protected HttpHeaders headers = new HttpHeaders();

@@ -27,15 +27,15 @@ public class Sale implements Request {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "customer_fk", nullable = true)
 	private Customer customer;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "container_fk")
 	private Container container;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "vendor_fk")
 	private Vendor vendor;
 

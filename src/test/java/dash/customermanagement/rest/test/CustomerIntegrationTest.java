@@ -30,7 +30,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.containermanagement.domain.Container;
 import dash.customermanagement.domain.Customer;
 import dash.inquirermanagement.domain.Title;
 import dash.test.BaseConfig;
@@ -41,7 +40,7 @@ import dash.test.IIntegrationTest;
 @WebIntegrationTest
 public class CustomerIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private static final String EXTENDED_URI = BASE_URI + "/api/rest/customers";
+	private String EXTENDED_URI = BASE_URI + "/api/rest/customers";
 
 	@Before
 	public void setup() {
@@ -67,19 +66,20 @@ public class CustomerIntegrationTest extends BaseConfig implements IIntegrationT
 	@Override
 	@Test
 	public void get() {
-		HttpEntity<Customer> entityCreateCustomer = new HttpEntity<Customer>(create(), headers);
+		Customer customer = create();
+		HttpEntity<Customer> entityCreateCustomer = new HttpEntity<Customer>(customer, headers);
 
 		ResponseEntity<Customer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateCustomer, Customer.class);
-		Customer responseCreateContainer = responseCreate.getBody();
+		Customer responseCreateCustomer = responseCreate.getBody();
 
-		HttpEntity<Container> entityGetContainer = new HttpEntity<Container>(headers);
+		HttpEntity<Customer> entityGetCustomer = new HttpEntity<Customer>(headers);
 
-		ResponseEntity<Container> responseGetContainer = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET, entityGetContainer, Container.class,
-				responseCreateContainer.getId());
+		ResponseEntity<Customer> responseGetCustomer = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET, entityGetCustomer, Customer.class,
+				responseCreateCustomer.getId());
 
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetContainer.getHeaders().getContentType().getCharSet());
-		assertEquals(HttpStatus.OK, responseGetContainer.getStatusCode());
-		assertEquals(create(), responseGetContainer.getBody());
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetCustomer.getHeaders().getContentType().getCharSet());
+		assertEquals(HttpStatus.OK, responseGetCustomer.getStatusCode());
+		assertEquals(customer, responseGetCustomer.getBody());
 	}
 
 	@Override
@@ -91,16 +91,15 @@ public class CustomerIntegrationTest extends BaseConfig implements IIntegrationT
 		ResponseEntity<Customer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateCustomer, Customer.class);
 		Customer responseCreateCustomer = responseCreate.getBody();
 
-		customer.setEmail("test@eviarc.com");
-		HttpEntity<Customer> entity = new HttpEntity<Customer>(customer, headers);
+		responseCreateCustomer.setEmail("test@eviarc.com");
+		HttpEntity<Customer> entity = new HttpEntity<Customer>(responseCreateCustomer, headers);
 
-		ResponseEntity<Customer> response = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.PUT, entity, Customer.class,
-				responseCreateCustomer.getId());
+		ResponseEntity<Customer> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Customer.class, responseCreateCustomer.getId());
 		Customer responseCustomer = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(customer, responseCustomer);
+		assertEquals(responseCreateCustomer, responseCustomer);
 	}
 
 	@Override

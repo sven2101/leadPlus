@@ -48,9 +48,14 @@ public class CustomerService implements ICustomerService {
 	}
 
 	@Override
-	public Customer getCustomerById(final Long id) throws NotFoundException {
+	public Customer getById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
-			return customerRepository.findOne(id);
+			try {
+				return customerRepository.findOne(id);
+			} catch (Exception ex) {
+				logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
+				throw new NotFoundException(CUSTOMER_NOT_FOUND);
+			}
 		} else {
 			NotFoundException nfex = new NotFoundException(CUSTOMER_NOT_FOUND);
 			logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
@@ -59,9 +64,14 @@ public class CustomerService implements ICustomerService {
 	}
 
 	@Override
-	public Customer save(final Customer inquirer) throws SaveFailedException {
-		if (Optional.ofNullable(inquirer).isPresent()) {
-			return customerRepository.save(inquirer);
+	public Customer save(final Customer customer) throws SaveFailedException {
+		if (Optional.ofNullable(customer).isPresent()) {
+			try {
+				return customerRepository.save(customer);
+			} catch (Exception ex) {
+				logger.error(CustomerService.class.getSimpleName() + ex.getMessage(), ex);
+				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
+			}
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
@@ -74,7 +84,7 @@ public class CustomerService implements ICustomerService {
 		if (Optional.ofNullable(customer).isPresent()) {
 			Customer updateCustomer;
 			try {
-				updateCustomer = getCustomerById(customer.getId());
+				updateCustomer = customerRepository.findOne(customer.getId());
 				updateCustomer.setAddress(customer.getAddress());
 				updateCustomer.setCompany(customer.getCompany());
 				updateCustomer.setEmail(customer.getEmail());
@@ -82,9 +92,9 @@ public class CustomerService implements ICustomerService {
 				updateCustomer.setLastname(customer.getLastname());
 				updateCustomer.setPhone(customer.getPhone());
 				updateCustomer.setTitle(customer.getTitle());
-				return save(updateCustomer);
-			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
-				logger.error(ex.getMessage() + CustomerService.class.getSimpleName(), ex);
+				return customerRepository.save(updateCustomer);
+			} catch (IllegalArgumentException iaex) {
+				logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 		} else {
