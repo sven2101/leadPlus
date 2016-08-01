@@ -38,13 +38,13 @@ import io.swagger.annotations.ApiParam;
 
 @RestController(value = "InquirerResource")
 @Api(value = "inquirers")
-@RequestMapping(value = "/api/rest/inquirers")
+@RequestMapping(value = "/api/rest/inquirers", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 public class InquirerResource {
 
 	@Autowired
 	private InquirerService inquirerService;
 
-	@RequestMapping(method = RequestMethod.GET, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get all Inquirers", notes = "You have to provide a valid hotel ID.")
 	public Iterable<Inquirer> getAll() {

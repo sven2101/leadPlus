@@ -50,15 +50,11 @@ public class ContainerService implements IContainerService {
 	@Override
 	public Container getById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
-			try {
-				return containerRepository.findOne(id);
-			} catch (Exception ex) {
-				logger.error(CONTAINER_NOT_FOUND + ContainerService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new NotFoundException(CONTAINER_NOT_FOUND);
-			}
+			return containerRepository.findOne(id);
 		} else {
 			NotFoundException cnfex = new NotFoundException(CONTAINER_NOT_FOUND);
-			logger.error(CONTAINER_NOT_FOUND + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
+			logger.error(CONTAINER_NOT_FOUND + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+					cnfex);
 			throw cnfex;
 		}
 	}
@@ -66,15 +62,11 @@ public class ContainerService implements IContainerService {
 	@Override
 	public Container save(final Container container) throws SaveFailedException {
 		if (Optional.ofNullable(container).isPresent()) {
-			try {
-				return containerRepository.save(container);
-			} catch (Exception ex) {
-				logger.error(ContainerService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			}
+			return containerRepository.save(container);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(SAVE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
+			logger.error(SAVE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+					sfex);
 			throw sfex;
 		}
 	}
@@ -92,14 +84,12 @@ public class ContainerService implements IContainerService {
 			} catch (NotFoundException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + ContainerService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			} catch (Exception ex) {
-				logger.error(UPDATE_FAILED_EXCEPTION + ContainerService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			logger.error(UPDATE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			logger.error(UPDATE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+					ufex);
 			throw ufex;
 		}
 	}
@@ -110,15 +100,14 @@ public class ContainerService implements IContainerService {
 			try {
 				containerRepository.delete(id);
 			} catch (EmptyResultDataAccessException erdaex) {
-				logger.error(DELETE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + erdaex.getMessage(), erdaex);
-				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
-			} catch (Exception ex) {
-				logger.error(DELETE_FAILED_EXCEPTION + ContainerService.class.getSimpleName(), ex);
+				logger.error(DELETE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + erdaex.getMessage(),
+						erdaex);
 				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
 			}
 		} else {
 			DeleteFailedException dfex = new DeleteFailedException(DELETE_FAILED_EXCEPTION);
-			logger.error(DELETE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
+			logger.error(DELETE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+					dfex);
 			throw dfex;
 		}
 	}

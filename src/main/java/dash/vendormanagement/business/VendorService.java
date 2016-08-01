@@ -50,12 +50,7 @@ public class VendorService implements IVendorService {
 	@Override
 	public Vendor getById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
-			try {
-				return vendorRepository.findOne(id);
-			} catch (Exception ex) {
-				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
-				throw new NotFoundException(VENDOR_NOT_FOUND);
-			}
+			return vendorRepository.findOne(id);
 		} else {
 			NotFoundException vnfex = new NotFoundException(VENDOR_NOT_FOUND);
 			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, vnfex);
@@ -68,12 +63,12 @@ public class VendorService implements IVendorService {
 		if (Optional.ofNullable(vendor).isPresent()) {
 			Vendor updateVendor;
 			try {
-				updateVendor = vendorRepository.findOne(vendor.getId());
+				updateVendor = getById(vendor.getId());
 				updateVendor.setName(vendor.getName());
 				updateVendor.setPhone(vendor.getPhone());
-				return vendorRepository.save(updateVendor);
-			} catch (IllegalArgumentException iaex) {
-				logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
+				return save(updateVendor);
+			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + VendorService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 		} else {
@@ -86,12 +81,7 @@ public class VendorService implements IVendorService {
 	@Override
 	public Vendor save(Vendor vendor) throws SaveFailedException {
 		if (Optional.ofNullable(vendor).isPresent()) {
-			try {
-				return vendorRepository.save(vendor);
-			} catch (Exception ex) {
-				logger.error(VendorService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			}
+			return vendorRepository.save(vendor);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(VENDOR_NOT_FOUND + VendorService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);

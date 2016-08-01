@@ -53,12 +53,7 @@ public class OfferService implements IOfferService {
 	@Override
 	public Offer getOfferById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
-			try {
-				return offerRepository.findOne(id);
-			} catch (Exception ex) {
-				logger.error(OFFER_NOT_FOUND + OfferService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
-				throw new NotFoundException(OFFER_NOT_FOUND);
-			}
+			return offerRepository.findOne(id);
 		} else {
 			NotFoundException nfex = new NotFoundException(OFFER_NOT_FOUND);
 			logger.error(OFFER_NOT_FOUND + OfferService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
@@ -69,12 +64,7 @@ public class OfferService implements IOfferService {
 	@Override
 	public Offer save(final Offer offer) throws SaveFailedException {
 		if (Optional.ofNullable(offer).isPresent()) {
-			try {
-				return offerRepository.save(offer);
-			} catch (Exception ex) {
-				logger.error(OfferService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			}
+			return offerRepository.save(offer);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(OFFER_NOT_FOUND + OfferService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
@@ -87,7 +77,7 @@ public class OfferService implements IOfferService {
 		if (Optional.ofNullable(offer).isPresent()) {
 			Offer updateOffer;
 			try {
-				updateOffer = offerRepository.findOne(offer.getId());
+				updateOffer = getOfferById(offer.getId());
 				updateOffer.setContainer(offer.getContainer());
 				updateOffer.setContainerAmount(offer.getContainerAmount());
 				updateOffer.setDeliveryAddress(offer.getDeliveryAddress());
@@ -96,9 +86,9 @@ public class OfferService implements IOfferService {
 				updateOffer.setProspect(offer.getProspect());
 				updateOffer.setTimestamp(offer.getTimestamp());
 				updateOffer.setVendor(offer.getVendor());
-				return offerRepository.save(updateOffer);
-			} catch (IllegalArgumentException iaex) {
-				logger.error(OFFER_NOT_FOUND + OfferService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
+				return save(updateOffer);
+			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + OfferService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 		} else {

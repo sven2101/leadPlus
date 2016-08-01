@@ -53,12 +53,7 @@ public class LeadService implements ILeadService {
 	@Override
 	public Lead getLeadById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
-			try {
 				return leadRepository.findOne(id);
-			} catch (Exception ex) {
-				logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
-				throw new NotFoundException(LEAD_NOT_FOUND);
-			}
 		} else {
 			NotFoundException nfex = new NotFoundException(LEAD_NOT_FOUND);
 			logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
@@ -69,12 +64,7 @@ public class LeadService implements ILeadService {
 	@Override
 	public Lead save(final Lead lead) throws SaveFailedException {
 		if (Optional.ofNullable(lead).isPresent()) {
-			try {
 				return leadRepository.save(lead);
-			} catch (Exception ex) {
-				logger.error(LeadService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			}
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
@@ -87,7 +77,7 @@ public class LeadService implements ILeadService {
 		if (Optional.ofNullable(lead).isPresent()) {
 			Lead updateLead;
 			try {
-				updateLead = leadRepository.findOne(lead.getId());
+				updateLead = getLeadById(lead.getId());
 				updateLead.setContainer(lead.getContainer());
 				updateLead.setContainerAmount(lead.getContainerAmount());
 				updateLead.setDestination(lead.getDestination());
@@ -95,9 +85,9 @@ public class LeadService implements ILeadService {
 				updateLead.setMessage(lead.getMessage());
 				updateLead.setTimestamp(lead.getTimestamp());
 				updateLead.setVendor(lead.getVendor());
-				return leadRepository.save(updateLead);
-			} catch (IllegalArgumentException iaex) {
-				logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
+				return save(updateLead);
+			} catch (IllegalArgumentException | SaveFailedException | NotFoundException ex) {
+				logger.error(ex.getMessage() + LeadService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 		} else {

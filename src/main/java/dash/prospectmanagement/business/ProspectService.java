@@ -51,12 +51,7 @@ public class ProspectService implements IProspectService {
 	@Override
 	public Prospect getById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
-			try {
-				return prospectRepository.findOne(id);
-			} catch (Exception ex) {
-				logger.error(PROSPECT_NOT_FOUND + ProspectService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
-				throw new NotFoundException(PROSPECT_NOT_FOUND);
-			}
+			return prospectRepository.findOne(id);
 		} else {
 			NotFoundException nfex = new NotFoundException(PROSPECT_NOT_FOUND);
 			logger.error(PROSPECT_NOT_FOUND + ProspectService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
@@ -67,12 +62,7 @@ public class ProspectService implements IProspectService {
 	@Override
 	public Prospect save(final Prospect prospect) throws SaveFailedException {
 		if (Optional.ofNullable(prospect).isPresent()) {
-			try {
-				return prospectRepository.save(prospect);
-			} catch (Exception ex) {
-				logger.error(ProspectService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			}
+			return prospectRepository.save(prospect);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(PROSPECT_NOT_FOUND + ProspectService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
@@ -85,7 +75,7 @@ public class ProspectService implements IProspectService {
 		if (Optional.ofNullable(prospect).isPresent()) {
 			Prospect updateProspect;
 			try {
-				updateProspect = prospectRepository.findOne(prospect.getId());
+				updateProspect = getById(prospect.getId());
 				updateProspect.setAddress(prospect.getAddress());
 				updateProspect.setCompany(prospect.getCompany());
 				updateProspect.setEmail(prospect.getEmail());
@@ -93,9 +83,9 @@ public class ProspectService implements IProspectService {
 				updateProspect.setLastname(prospect.getLastname());
 				updateProspect.setPhone(prospect.getPhone());
 				updateProspect.setTitle(prospect.getTitle());
-				return prospectRepository.save(updateProspect);
-			} catch (IllegalArgumentException iaex) {
-				logger.error(PROSPECT_NOT_FOUND + ProspectService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
+				return save(updateProspect);
+			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + ProspectService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 		} else {

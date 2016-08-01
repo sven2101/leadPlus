@@ -35,6 +35,7 @@ import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
 import dash.processmanagement.domain.Workflow;
+import dash.processmanagement.request.Request;
 import dash.salemanagement.business.SaleService;
 import dash.salemanagement.domain.Sale;
 import dash.usermanagement.business.UserService;
@@ -61,10 +62,10 @@ public class ProcessService implements IProcessService {
 	private SaleService saleService;
 
 	@Override
-	public List<Object> getElementsByStatus(Status status, Workflow workflow) {
+	public List<Request> getElementsByStatus(Status status, Workflow workflow) {
 
 		List<Process> processes = processRepository.findProcessesByStatus(status);
-		List<Object> elements = new ArrayList<>();
+		List<Request> elements = new ArrayList<>();
 
 		if (workflow == Workflow.LEAD) {
 			for (Process process : processes) {
@@ -82,6 +83,8 @@ public class ProcessService implements IProcessService {
 
 		return elements;
 	}
+	
+	
 
 	@Override
 	public void saveProcesses(List<Process> processes) throws SaveFailedException, NotFoundException {
@@ -228,5 +231,12 @@ public class ProcessService implements IProcessService {
 			logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
 			throw cnfex;
 		}
+	}
+
+
+
+	@Override
+	public List<Process> getAll() {
+		return (List<Process>) processRepository.findAll();
 	}
 }

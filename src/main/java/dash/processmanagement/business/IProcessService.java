@@ -25,15 +25,18 @@ import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
 import dash.processmanagement.domain.Workflow;
+import dash.processmanagement.request.Request;
 import dash.salemanagement.domain.Sale;
 import dash.usermanagement.domain.User;
 
 @Service
 public interface IProcessService {
 
-	public List<Object> getElementsByStatus(Status status, Workflow workflow);
+	public List<Request> getElementsByStatus(Status status, Workflow workflow);
 
 	public Process getProcessById(final Long id) throws NotFoundException;
+	
+	public List<Process> getAll();
 
 	public void saveProcesses(List<Process> processes) throws SaveFailedException, NotFoundException;
 

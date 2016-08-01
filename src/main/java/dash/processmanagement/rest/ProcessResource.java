@@ -36,10 +36,11 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
-import dash.processmanagement.business.IProcessService;
 import dash.processmanagement.business.ProcessRepository;
+import dash.processmanagement.business.ProcessService;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
+import dash.processmanagement.request.Request;
 import dash.salemanagement.domain.Sale;
 import dash.usermanagement.domain.User;
 import io.swagger.annotations.Api;
@@ -52,30 +53,30 @@ import io.swagger.annotations.ApiParam;
 public class ProcessResource {
 
 	@Autowired
-	private ProcessRepository processRepository;
-
+	private ProcessService processService;
+	
 	@Autowired
-	private IProcessService processService;
+	private ProcessRepository processRepository;
 
 	@ApiOperation(value = "Returns a single process.", notes = "")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Process findById(@ApiParam(required = true) @PathVariable Long id) {
-		return processRepository.findOne(id);
+	public Process findById(@ApiParam(required = true) @PathVariable Long id) throws NotFoundException {
+		return processService.getProcessById(id);
 	}
 
 	@ApiOperation(value = "Returns all processes.", notes = "")
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Iterable<Process> get() {
-		return processRepository.findAll();
+	public List<Process> get() {
+		return processService.getAll();
 	}
 
 	@ApiOperation(value = "Returns processes with a certain state", notes = "")
 	@RequestMapping(value = "/state/{status}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Iterable<Process> get(@ApiParam(required = true) @PathVariable final Status status) {
-		return processRepository.findProcessesByStatus(status);
+	public List<Request> get(@ApiParam(required = true) @PathVariable final Status status) {
+		return processService.getElementsByStatus(status, null);
 	}
 
 	@ApiOperation(value = "Returns list of leads, which are related to a process status.", notes = "")

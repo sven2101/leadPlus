@@ -14,7 +14,6 @@
 
 package dash.commentmanagement.business;
 
-import static dash.Constants.BECAUSE_OF_ILLEGAL_ID;
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.BECAUSE_OF_USER_NOT_FOUND;
 import static dash.Constants.COMMENT_NOT_FOUND;
@@ -67,17 +66,19 @@ public class CommentService implements ICommentService {
 					return commentRepository.save(comment);
 				} else {
 					SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-					logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_USER_NOT_FOUND,
+					logger.error(
+							SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_USER_NOT_FOUND,
 							new UsernameNotFoundException(USER_NOT_FOUND));
 					throw sfex;
 				}
-			} catch (Exception ex) {
-				logger.error(CommentService.class.getSimpleName() + ex.getMessage(), ex);
+			} catch (NotFoundException nfex) {
+				logger.error(CommentService.class.getSimpleName() + nfex.getMessage(), nfex);
 				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			}
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
+			logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+					sfex);
 			throw sfex;
 		}
 
@@ -88,15 +89,11 @@ public class CommentService implements ICommentService {
 		if (Optional.ofNullable(processId).isPresent()) {
 			final Process process = processService.getProcessById(processId);
 			if (Optional.ofNullable(process).isPresent()) {
-				try {
-					return commentRepository.findByProcess(process);
-				} catch (Exception ex) {
-					logger.error(COMMENT_NOT_FOUND + CommentService.class.getSimpleName() + ex.getMessage(), ex);
-					throw new NotFoundException(COMMENT_NOT_FOUND);
-				}
+				return commentRepository.findByProcess(process);
 			} else {
 				NotFoundException pnfex = new NotFoundException(PROCESS_NOT_FOUND);
-				logger.error(PROCESS_NOT_FOUND + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
+				logger.error(PROCESS_NOT_FOUND + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+						pnfex);
 				throw pnfex;
 			}
 		} else {
@@ -111,14 +108,14 @@ public class CommentService implements ICommentService {
 		if (Optional.ofNullable(comment).isPresent()) {
 			Comment updateComment;
 			try {
-				updateComment = commentRepository.findOne(comment.getId());
+				updateComment = getById(comment.getId());
 				updateComment.setCommentText(comment.getCommentText());
 				updateComment.setCreator(comment.getCreator());
 				updateComment.setProcess(comment.getProcess());
 				updateComment.setTimestamp(comment.getTimestamp());
-				return commentRepository.save(updateComment);
-			} catch (IllegalArgumentException iaex) {
-				logger.error(COMMENT_NOT_FOUND + CommentService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
+				return save(updateComment);
+			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + CommentService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 		} else {
@@ -131,12 +128,7 @@ public class CommentService implements ICommentService {
 	@Override
 	public Comment getById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
-			try {
-				return commentRepository.findOne(id);
-			} catch (Exception ex) {
-				logger.error(COMMENT_NOT_FOUND + CommentService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new NotFoundException(COMMENT_NOT_FOUND);
-			}
+			return commentRepository.findOne(id);
 		} else {
 			NotFoundException cnfex = new NotFoundException(COMMENT_NOT_FOUND);
 			logger.error(COMMENT_NOT_FOUND + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);

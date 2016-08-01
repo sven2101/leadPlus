@@ -66,12 +66,7 @@ public class UserService implements IUserService {
 	@Override
 	public User getById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
-			try {
-				return userRepository.findOne(id);
-			} catch (Exception ex) {
-				logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new NotFoundException(USER_NOT_FOUND);
-			}
+			return userRepository.findOne(id);
 		} else {
 			NotFoundException cnfex = new NotFoundException(USER_NOT_FOUND);
 			logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
@@ -82,12 +77,7 @@ public class UserService implements IUserService {
 	@Override
 	public User getUserByName(final String username) throws NotFoundException {
 		if (Optional.ofNullable(username).isPresent()) {
-			try {
-				return userRepository.findByUsernameIgnoreCase(username);
-			} catch (Exception ex) {
-				logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new NotFoundException(USER_NOT_FOUND);
-			}
+			return userRepository.findByUsernameIgnoreCase(username);
 		} else {
 			NotFoundException cnfex = new NotFoundException(USER_NOT_FOUND);
 			logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
@@ -97,12 +87,7 @@ public class UserService implements IUserService {
 
 	public User getUserByEmail(final String email) throws NotFoundException {
 		if (Optional.ofNullable(email).isPresent()) {
-			try {
-				return userRepository.findByEmailIgnoreCase(email);
-			} catch (Exception ex) {
-				logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new NotFoundException(USER_NOT_FOUND);
-			}
+			return userRepository.findByEmailIgnoreCase(email);
 		} else {
 			NotFoundException cnfex = new NotFoundException(USER_NOT_FOUND);
 			logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
@@ -113,12 +98,7 @@ public class UserService implements IUserService {
 	@Override
 	public User save(final User user) throws SaveFailedException {
 		if (Optional.ofNullable(user).isPresent()) {
-			try {
-				return userRepository.save(user);
-			} catch (Exception ex) {
-				logger.error(UserService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			}
+			return userRepository.save(user);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(SAVE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
@@ -127,7 +107,8 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public User update(final User user) throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+	public User update(final User user)
+			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		if (Optional.ofNullable(user).isPresent()) {
 			try {
 				User updateUser = getById(user.getId());
@@ -157,11 +138,7 @@ public class UserService implements IUserService {
 			} catch (EmailAlreadyExistsException eaeex) {
 				logger.error(EMAIL_EXISTS + UserService.class.getSimpleName(), eaeex);
 				throw eaeex;
-			} catch (Exception ex) {
-				logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
-
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
@@ -177,9 +154,6 @@ public class UserService implements IUserService {
 			} catch (EmptyResultDataAccessException erdaex) {
 				logger.error(DELETE_FAILED_EXCEPTION + UserService.class.getSimpleName() + erdaex.getMessage(), erdaex);
 				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
-			} catch (Exception ex) {
-				logger.error(DELETE_FAILED_EXCEPTION + UserService.class.getSimpleName(), ex);
-				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
 			}
 		} else {
 			DeleteFailedException dfex = new DeleteFailedException(DELETE_FAILED_EXCEPTION);
@@ -190,7 +164,8 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public void updatePassword(final Long id, final PasswordChange passwordChange) throws UpdateFailedException, DontMatchException {
+	public void updatePassword(final Long id, final PasswordChange passwordChange)
+			throws UpdateFailedException, DontMatchException {
 		if (Optional.ofNullable(id).isPresent() && Optional.ofNullable(passwordChange).isPresent()) {
 			try {
 				User user = getById(id);
@@ -208,11 +183,7 @@ public class UserService implements IUserService {
 			} catch (DontMatchException dmex) {
 				logger.error(DONT_MATCH + UserService.class.getSimpleName(), dmex);
 				throw dmex;
-			} catch (Exception ex) {
-				logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
-
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
@@ -232,10 +203,8 @@ public class UserService implements IUserService {
 				}
 			} catch (NotFoundException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
-			} catch (Exception ex) {
-				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName());
+				throw new UpdateFailedException(
+						UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
 			}
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
@@ -256,10 +225,8 @@ public class UserService implements IUserService {
 				}
 			} catch (NotFoundException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
-			} catch (Exception ex) {
-				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName());
+				throw new UpdateFailedException(
+						UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
 			}
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
@@ -268,9 +235,11 @@ public class UserService implements IUserService {
 		}
 	}
 
-	public User register(final Registration registration) throws UsernameAlreadyExistsException, EmailAlreadyExistsException, RegisterFailedException {
+	public User register(final Registration registration)
+			throws UsernameAlreadyExistsException, EmailAlreadyExistsException, RegisterFailedException {
 		if (Optional.ofNullable(registration).isPresent() && Optional.ofNullable(registration.getUsername()).isPresent()
-				&& Optional.ofNullable(registration.getEmail()).isPresent() && Optional.ofNullable(registration.getPassword()).isPresent()) {
+				&& Optional.ofNullable(registration.getEmail()).isPresent()
+				&& Optional.ofNullable(registration.getPassword()).isPresent()) {
 			try {
 				if (usernameAlreadyExists(registration.getUsername())) {
 					throw new UsernameAlreadyExistsException(USER_EXISTS);
@@ -294,7 +263,8 @@ public class UserService implements IUserService {
 			}
 		} else {
 			RegisterFailedException rfex = new RegisterFailedException(REGISTER_FAILED_EXCEPTION);
-			logger.error(REGISTER_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, rfex);
+			logger.error(REGISTER_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+					rfex);
 			throw rfex;
 		}
 	}

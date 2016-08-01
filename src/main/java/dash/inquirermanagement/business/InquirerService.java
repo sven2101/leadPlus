@@ -50,12 +50,7 @@ public class InquirerService implements IInquirerService {
 	@Override
 	public Inquirer getInquirerById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
-			try {
 				return inquirerRepository.findOne(id);
-			} catch (Exception ex) {
-				logger.error(INQUIRER_NOT_FOUND + InquirerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
-				throw new NotFoundException(INQUIRER_NOT_FOUND);
-			}
 		} else {
 			NotFoundException nfex = new NotFoundException(INQUIRER_NOT_FOUND);
 			logger.error(INQUIRER_NOT_FOUND + InquirerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
@@ -66,12 +61,7 @@ public class InquirerService implements IInquirerService {
 	@Override
 	public Inquirer save(final Inquirer inquirer) throws SaveFailedException {
 		if (Optional.ofNullable(inquirer).isPresent()) {
-			try {
 				return inquirerRepository.save(inquirer);
-			} catch (Exception ex) {
-				logger.error(InquirerService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			}
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(INQUIRER_NOT_FOUND + InquirerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
@@ -84,16 +74,16 @@ public class InquirerService implements IInquirerService {
 		if (Optional.ofNullable(inquirer).isPresent()) {
 			Inquirer updateInquirer;
 			try {
-				updateInquirer = inquirerRepository.findOne(inquirer.getId());
+				updateInquirer = getInquirerById(inquirer.getId());
 				updateInquirer.setCompany(inquirer.getCompany());
 				updateInquirer.setEmail(inquirer.getEmail());
 				updateInquirer.setFirstname(inquirer.getFirstname());
 				updateInquirer.setLastname(inquirer.getLastname());
 				updateInquirer.setPhone(inquirer.getPhone());
 				updateInquirer.setTitle(inquirer.getTitle());
-				return inquirerRepository.save(updateInquirer);
-			} catch (IllegalArgumentException iaex) {
-				logger.error(INQUIRER_NOT_FOUND + InquirerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
+				return save(updateInquirer);
+			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + InquirerService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 		} else {

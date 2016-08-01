@@ -54,12 +54,7 @@ public class SaleService implements ISaleService {
 	@Override
 	public Sale getById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
-			try {
-				return saleRepository.findOne(id);
-			} catch (Exception ex) {
-				logger.error(SALE_NOT_FOUND + SaleService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
-				throw new NotFoundException(SALE_NOT_FOUND);
-			}
+			return saleRepository.findOne(id);
 		} else {
 			NotFoundException nfex = new NotFoundException(SALE_NOT_FOUND);
 			logger.error(SALE_NOT_FOUND + SaleService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
@@ -70,12 +65,7 @@ public class SaleService implements ISaleService {
 	@Override
 	public Sale save(final Sale sale) throws SaveFailedException {
 		if (Optional.ofNullable(sale).isPresent()) {
-			try {
-				return saleRepository.save(sale);
-			} catch (Exception ex) {
-				logger.error(SaleService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			}
+			return saleRepository.save(sale);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(SALE_NOT_FOUND + SaleService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
@@ -88,7 +78,7 @@ public class SaleService implements ISaleService {
 		if (Optional.ofNullable(sale).isPresent()) {
 			Sale updateSale;
 			try {
-				updateSale = saleRepository.findOne(sale.getId());
+				updateSale = getById(sale.getId());
 				updateSale.setContainer(sale.getContainer());
 				updateSale.setContainerAmount(sale.getContainerAmount());
 				updateSale.setCustomer(sale.getCustomer());
@@ -97,9 +87,9 @@ public class SaleService implements ISaleService {
 				updateSale.setTimestamp(sale.getTimestamp());
 				updateSale.setTransport(sale.getTransport());
 				updateSale.setVendor(sale.getVendor());
-				return saleRepository.save(updateSale);
-			} catch (IllegalArgumentException iaex) {
-				logger.error(SALE_NOT_FOUND + SaleService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
+				return save(updateSale);
+			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + SaleService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 		} else {

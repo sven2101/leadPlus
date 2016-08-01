@@ -23,5 +23,5 @@ import dash.containermanagement.domain.Container;
 @Repository
 @Transactional
 public interface ContainerRepository extends JpaRepository<Container, Long> {
-	Container findByName(String name);
+	Container findByNameIgnoreCase(String name);
 }

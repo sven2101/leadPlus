@@ -47,7 +47,7 @@ import com.google.common.base.Predicate;
 
 import dash.security.AngularCsrfHeaderFilter;
 import dash.security.listener.RESTAuthenticationEntryPoint;
-import dash.usermanagement.business.UserRepository;
+import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.settings.language.Language;
@@ -94,7 +94,7 @@ public class Application {
 	}
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -104,7 +104,7 @@ public class Application {
 	@PostConstruct
 	public void createAdminIfNotExists() throws Exception {
 
-		if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("admin")).isPresent()) {
+		if (!Optional.ofNullable(userService.getUserByName("admin")).isPresent()) {
 			User admin = new User();
 
 			admin.setUsername("admin".toLowerCase());
@@ -114,10 +114,10 @@ public class Application {
 			admin.setEnabled(true);
 			admin.setLanguage(Language.DE);
 
-			userRepository.save(admin);
+			userService.save(admin);
 		}
 
-		if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("api")).isPresent()) {
+		if (!Optional.ofNullable(userService.getUserByName("api")).isPresent()) {
 			User apiuser = new User();
 
 			apiuser.setUsername("api".toLowerCase());
@@ -127,10 +127,10 @@ public class Application {
 			apiuser.setEnabled(true);
 			apiuser.setLanguage(Language.DE);
 
-			userRepository.save(apiuser);
+			userService.save(apiuser);
 		}
 
-		if (!Optional.ofNullable(userRepository.findByUsernameIgnoreCase("test")).isPresent()) {
+		if (!Optional.ofNullable(userService.getUserByName("test")).isPresent()) {
 			User test = new User();
 
 			test.setUsername("test".toLowerCase());
@@ -140,7 +140,7 @@ public class Application {
 			test.setEnabled(true);
 			test.setLanguage(Language.DE);
 
-			userRepository.save(test);
+			userService.save(test);
 		}
 	}
 
