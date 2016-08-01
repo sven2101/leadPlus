@@ -27,15 +27,15 @@ public class Sale implements Request {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@OneToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "customer_fk", nullable = true)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinColumn(name = "customer_fk")
 	private Customer customer;
 
-	@OneToOne(cascade = CascadeType.MERGE)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "container_fk")
 	private Container container;
 
-	@OneToOne(cascade = CascadeType.MERGE)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "vendor_fk")
 	private Vendor vendor;
 
@@ -51,16 +51,6 @@ public class Sale implements Request {
 
 	public Sale() {
 
-	}
-
-	public Sale(int containerAmount, Vendor vendor, String transport, Container container, double saleReturn, double saleProfit, Calendar timestamp) {
-		this.containerAmount = containerAmount;
-		this.vendor = vendor;
-		this.transport = transport;
-		this.container = container;
-		this.saleReturn = saleReturn;
-		this.saleProfit = saleProfit;
-		this.timestamp = timestamp;
 	}
 
 	public long getId() {

@@ -41,15 +41,15 @@ public class Offer implements Request {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@OneToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "prospect_fk", nullable = true)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinColumn(name = "prospect_fk")
 	private Prospect prospect;
 
-	@OneToOne(cascade = CascadeType.MERGE)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "vendor_fk")
 	private Vendor vendor;
 
-	@OneToOne(cascade = CascadeType.MERGE)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "container_fk")
 	private Container container;
 
@@ -70,18 +70,6 @@ public class Offer implements Request {
 
 	public Offer() {
 
-	}
-
-	public Offer(Prospect prospect, Vendor vendor, Container container, int containerAmount, Calendar timestamp, double offerPrice, Calendar deliveryDate,
-			String deliveryAddress) {
-		this.prospect = prospect;
-		this.vendor = vendor;
-		this.container = container;
-		this.containerAmount = containerAmount;
-		this.timestamp = timestamp;
-		this.offerPrice = offerPrice;
-		this.deliveryDate = deliveryDate;
-		this.deliveryAddress = deliveryAddress;
 	}
 
 	public long getId() {

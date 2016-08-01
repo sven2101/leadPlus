@@ -31,14 +31,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import dash.containermanagement.business.IContainerService;
-import dash.customermanagement.business.ICustomerService;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.salemanagement.domain.Sale;
-import dash.vendormanagement.business.IVendorService;
 
 @Service
 public class SaleService implements ISaleService {
@@ -47,15 +44,6 @@ public class SaleService implements ISaleService {
 
 	@Autowired
 	private SaleRepository saleRepository;
-
-	@Autowired
-	private IVendorService vendorService;
-
-	@Autowired
-	private IContainerService containerService;
-
-	@Autowired
-	private ICustomerService customerService;
 
 	@Override
 	public List<Sale> getAll() {
@@ -82,9 +70,6 @@ public class SaleService implements ISaleService {
 	public Sale save(final Sale sale) throws SaveFailedException {
 		if (Optional.ofNullable(sale).isPresent()) {
 			try {
-				vendorService.save(sale.getVendor());
-				containerService.save(sale.getContainer());
-				customerService.save(sale.getCustomer());
 				return saleRepository.save(sale);
 			} catch (Exception ex) {
 				logger.error(SaleService.class.getSimpleName() + ex.getMessage(), ex);
@@ -100,20 +85,10 @@ public class SaleService implements ISaleService {
 	@Override
 	public Sale update(final Sale sale) throws UpdateFailedException {
 		if (Optional.ofNullable(sale).isPresent()) {
-			Sale updateSale;
 			try {
-				updateSale = saleRepository.findOne(sale.getId());
-				updateSale.setContainer(sale.getContainer());
-				updateSale.setContainerAmount(sale.getContainerAmount());
-				updateSale.setCustomer(sale.getCustomer());
-				updateSale.setSaleProfit(sale.getSaleProfit());
-				updateSale.setSaleReturn(sale.getSaleReturn());
-				updateSale.setTimestamp(sale.getTimestamp());
-				updateSale.setTransport(sale.getTransport());
-				updateSale.setVendor(sale.getVendor());
-				return saleRepository.save(updateSale);
-			} catch (IllegalArgumentException iaex) {
-				logger.error(SALE_NOT_FOUND + SaleService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
+				return save(sale);
+			} catch (IllegalArgumentException | SaveFailedException ex) {
+				logger.error(SALE_NOT_FOUND + SaleService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 		} else {

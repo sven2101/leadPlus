@@ -61,13 +61,9 @@ public class VendorService implements IVendorService {
 	@Override
 	public Vendor update(Vendor vendor) throws UpdateFailedException {
 		if (Optional.ofNullable(vendor).isPresent()) {
-			Vendor updateVendor;
 			try {
-				updateVendor = getById(vendor.getId());
-				updateVendor.setName(vendor.getName());
-				updateVendor.setPhone(vendor.getPhone());
-				return save(updateVendor);
-			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				return save(vendor);
+			} catch (IllegalArgumentException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + VendorService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}

@@ -50,7 +50,7 @@ public class InquirerService implements IInquirerService {
 	@Override
 	public Inquirer getInquirerById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
-				return inquirerRepository.findOne(id);
+			return inquirerRepository.findOne(id);
 		} else {
 			NotFoundException nfex = new NotFoundException(INQUIRER_NOT_FOUND);
 			logger.error(INQUIRER_NOT_FOUND + InquirerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
@@ -61,7 +61,7 @@ public class InquirerService implements IInquirerService {
 	@Override
 	public Inquirer save(final Inquirer inquirer) throws SaveFailedException {
 		if (Optional.ofNullable(inquirer).isPresent()) {
-				return inquirerRepository.save(inquirer);
+			return inquirerRepository.save(inquirer);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(INQUIRER_NOT_FOUND + InquirerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
@@ -72,17 +72,9 @@ public class InquirerService implements IInquirerService {
 	@Override
 	public Inquirer update(final Inquirer inquirer) throws UpdateFailedException {
 		if (Optional.ofNullable(inquirer).isPresent()) {
-			Inquirer updateInquirer;
 			try {
-				updateInquirer = getInquirerById(inquirer.getId());
-				updateInquirer.setCompany(inquirer.getCompany());
-				updateInquirer.setEmail(inquirer.getEmail());
-				updateInquirer.setFirstname(inquirer.getFirstname());
-				updateInquirer.setLastname(inquirer.getLastname());
-				updateInquirer.setPhone(inquirer.getPhone());
-				updateInquirer.setTitle(inquirer.getTitle());
-				return save(updateInquirer);
-			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				return save(inquirer);
+			} catch (IllegalArgumentException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + InquirerService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}

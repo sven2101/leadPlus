@@ -32,9 +32,6 @@ public interface IVendorService {
 
 	public Vendor save(final Vendor vendor) throws SaveFailedException;
 
-	/*
-	 * TODO - update Schlüssel Constraint
-	 */
 	public Vendor update(final Vendor vendor) throws UpdateFailedException;
 
 	public void delete(final Long id) throws DeleteFailedException;

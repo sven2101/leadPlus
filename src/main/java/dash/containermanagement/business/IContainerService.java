@@ -16,6 +16,8 @@ package dash.containermanagement.business;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import dash.containermanagement.domain.Container;
@@ -25,6 +27,7 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 
 @Service
+@Transactional
 public interface IContainerService {
 
 	public List<Container> getAll();

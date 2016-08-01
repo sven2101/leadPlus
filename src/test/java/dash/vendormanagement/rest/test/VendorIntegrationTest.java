@@ -16,10 +16,12 @@ package dash.vendormanagement.rest.test;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.http.entity.ContentType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
@@ -32,6 +34,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import dash.Application;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
+import dash.vendormanagement.business.VendorRepository;
 import dash.vendormanagement.domain.Vendor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,11 +44,19 @@ public class VendorIntegrationTest extends BaseConfig implements IIntegrationTes
 
 	private String EXTENDED_URI = BASE_URI + "/api/rest/vendors";
 
+	@Autowired
+	private VendorRepository vendorRepository;
+
 	@Before
 	public void setup() {
 		headers.clear();
 		headers.add("Authorization", "Basic " + base64Creds);
 		headers.setContentType(MediaType.APPLICATION_JSON);
+	}
+
+	@After
+	public void after() {
+		vendorRepository.deleteAll();
 	}
 
 	@Override
@@ -66,7 +77,8 @@ public class VendorIntegrationTest extends BaseConfig implements IIntegrationTes
 	@Test
 	public void get() {
 
-		HttpEntity<Vendor> entityCreateVendor = new HttpEntity<Vendor>(create1(), headers);
+		Vendor vendor = create();
+		HttpEntity<Vendor> entityCreateVendor = new HttpEntity<Vendor>(vendor, headers);
 
 		ResponseEntity<Vendor> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateVendor, Vendor.class);
 		Vendor responseCreateVendor = responseCreate.getBody();
@@ -78,14 +90,14 @@ public class VendorIntegrationTest extends BaseConfig implements IIntegrationTes
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetVendor.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetVendor.getStatusCode());
-		assertEquals(create1(), responseGetVendor.getBody());
+		assertEquals(vendor, responseGetVendor.getBody());
 	}
 
 	@Override
 	@Test
 	public void put() {
 
-		Vendor vendor = create2();
+		Vendor vendor = create();
 		HttpEntity<Vendor> entityCreateVendor = new HttpEntity<Vendor>(vendor, headers);
 
 		ResponseEntity<Vendor> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateVendor, Vendor.class);
@@ -118,23 +130,4 @@ public class VendorIntegrationTest extends BaseConfig implements IIntegrationTes
 
 		return vendor;
 	}
-
-	private Vendor create1() {
-
-		Vendor vendor = new Vendor();
-		vendor.setName("Karl Neu 5");
-		vendor.setPhone("0761331234");
-
-		return vendor;
-	}
-
-	private Vendor create2() {
-
-		Vendor vendor = new Vendor();
-		vendor.setName("Karl Neu 6");
-		vendor.setPhone("0761331234");
-
-		return vendor;
-	}
-
 }

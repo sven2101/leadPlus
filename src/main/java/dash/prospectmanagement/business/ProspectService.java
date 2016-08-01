@@ -73,18 +73,9 @@ public class ProspectService implements IProspectService {
 	@Override
 	public Prospect update(final Prospect prospect) throws UpdateFailedException {
 		if (Optional.ofNullable(prospect).isPresent()) {
-			Prospect updateProspect;
 			try {
-				updateProspect = getById(prospect.getId());
-				updateProspect.setAddress(prospect.getAddress());
-				updateProspect.setCompany(prospect.getCompany());
-				updateProspect.setEmail(prospect.getEmail());
-				updateProspect.setFirstname(prospect.getFirstname());
-				updateProspect.setLastname(prospect.getLastname());
-				updateProspect.setPhone(prospect.getPhone());
-				updateProspect.setTitle(prospect.getTitle());
-				return save(updateProspect);
-			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				return save(prospect);
+			} catch (IllegalArgumentException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + ProspectService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}

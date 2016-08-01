@@ -60,13 +60,6 @@ public class Comment implements Request {
 
 	}
 
-	public Comment(Process process, User creator, String commentText, Calendar timestamp) {
-		this.process = process;
-		this.creator = creator;
-		this.commentText = commentText;
-		this.timestamp = timestamp;
-	}
-
 	public Long getId() {
 		return id;
 	}

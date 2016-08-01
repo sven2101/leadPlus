@@ -18,10 +18,12 @@ import static org.junit.Assert.assertEquals;
 import java.util.Calendar;
 
 import org.apache.http.entity.ContentType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
@@ -32,11 +34,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
+import dash.commentmanagement.business.CommentRepository;
 import dash.commentmanagement.domain.Comment;
+import dash.containermanagement.domain.Container;
+import dash.exceptions.SaveFailedException;
+import dash.inquirermanagement.domain.Inquirer;
+import dash.inquirermanagement.domain.Title;
+import dash.leadmanagement.domain.Lead;
+import dash.offermanagement.domain.Offer;
+import dash.processmanagement.business.ProcessRepository;
 import dash.processmanagement.domain.Process;
+import dash.processmanagement.domain.Status;
+import dash.salemanagement.domain.Sale;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
+import dash.usermanagement.business.IUserService;
+import dash.usermanagement.business.UserRepository;
 import dash.usermanagement.domain.User;
+import dash.usermanagement.settings.language.Language;
+import dash.vendormanagement.domain.Vendor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
@@ -45,11 +61,30 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 
 	private String EXTENDED_URI = BASE_URI + "/api/rest/comments";
 
+	@Autowired
+	private CommentRepository commentRepository;
+
+	@Autowired
+	private IUserService userService;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private ProcessRepository processRepository;
+
 	@Before
 	public void setup() {
 		headers.clear();
 		headers.add("Authorization", "Basic " + base64Creds);
 		headers.setContentType(MediaType.APPLICATION_JSON);
+	}
+
+	@After
+	public void after() {
+		commentRepository.deleteAll();
+		userRepository.deleteAll();
+		processRepository.deleteAll();
 	}
 
 	@Override
@@ -116,9 +151,59 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 	public Comment create() {
 
 		Comment comment = new Comment();
-		comment.setCommentText("Test");
+
+		User user = new User("andreasfoitzik", "Andreas", "Foitzik", "andreas.foitzik@eviarc.com", "test", null, Language.EN);
+		try {
+			comment.setCommentText("Test");
+			comment.setCreator(userService.save(user));
+
+			Process process = new Process();
+
+			Inquirer inquirer = new Inquirer();
+			inquirer.setFirstname("Max");
+			inquirer.setLastname("Mustermann");
+			inquirer.setCompany("Einkauf Mustermann GmbH");
+			inquirer.setEmail("max.mustermann@einkauf-mustermann.de");
+			inquirer.setPhone("07961/55166");
+			inquirer.setTitle(Title.MR);
+
+			Vendor vendor = new Vendor();
+			vendor.setName("Karl Neu 9");
+			vendor.setPhone("0761331234");
+
+			Container container = new Container();
+			container.setName("Kühlcontainer");
+			container.setDescription("Dieser Kühlcontainer kühlt am aller besten");
+			container.setPriceNetto(1000.00);
+
+			Lead lead = new Lead();
+			lead.setInquirer(inquirer);
+			lead.setVendor(vendor);
+			lead.setContainer(container);
+			lead.setContainerAmount(30);
+			lead.setMessage("Test Anfrage");
+			lead.setDestination("Karlsruhe");
+
+			Offer offer = new Offer();
+			offer.setVendor(vendor);
+			offer.setContainer(container);
+
+			Sale sale = new Sale();
+			sale.setVendor(vendor);
+			sale.setContainer(container);
+
+			process.setLead(lead);
+			process.setOffer(offer);
+			process.setSale(sale);
+			process.setProcessor(user);
+			process.setStatus(Status.OPEN);
+
+			comment.setProcess(process);
+
+		} catch (SaveFailedException e) {
+			e.printStackTrace();
+		}
 		comment.setCreator(new User());
-		comment.setProcess(new Process());
 		comment.setTimestamp(Calendar.getInstance());
 
 		return comment;

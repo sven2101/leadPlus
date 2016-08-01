@@ -14,7 +14,6 @@
 
 package dash.customermanagement.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -31,7 +30,6 @@ public class Customer {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@Column(nullable = true)
 	@Enumerated(EnumType.STRING)
 	private Title title;
 
@@ -44,16 +42,6 @@ public class Customer {
 
 	public Customer() {
 
-	}
-
-	public Customer(Title title, String firstname, String lastname, String company, String email, String phone, String address) {
-		this.title = title;
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.company = company;
-		this.email = email;
-		this.phone = phone;
-		this.address = address;
 	}
 
 	public long getId() {

@@ -35,9 +35,9 @@ public interface IOfferService {
 
 	public Offer getOfferById(final Long id) throws NotFoundException;
 
-	public Offer save(final Offer offer) throws SaveFailedException;
+	public Offer save(Offer offer) throws SaveFailedException;
 
-	public Offer update(final Offer offer) throws UpdateFailedException;
+	public Offer update(Offer offer) throws UpdateFailedException;
 
 	public void delete(final Long id) throws DeleteFailedException;
 

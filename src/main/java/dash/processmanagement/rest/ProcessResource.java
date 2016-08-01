@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.business.ProcessRepository;
@@ -54,36 +55,36 @@ public class ProcessResource {
 
 	@Autowired
 	private ProcessService processService;
-	
+
 	@Autowired
 	private ProcessRepository processRepository;
 
 	@ApiOperation(value = "Returns a single process.", notes = "")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Process findById(@ApiParam(required = true) @PathVariable Long id) throws NotFoundException {
-		return processService.getProcessById(id);
+	public Process getById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
+		return processService.getById(id);
 	}
 
 	@ApiOperation(value = "Returns all processes.", notes = "")
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Process> get() {
+	public Iterable<Process> getAll() {
 		return processService.getAll();
 	}
 
 	@ApiOperation(value = "Returns processes with a certain state", notes = "")
 	@RequestMapping(value = "/state/{status}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Request> get(@ApiParam(required = true) @PathVariable final Status status) {
+	public List<Request> getElementsByStatus(@ApiParam(required = true) @PathVariable final Status status) {
 		return processService.getElementsByStatus(status, null);
 	}
 
 	@ApiOperation(value = "Returns list of leads, which are related to a process status.", notes = "")
 	@RequestMapping(value = "/state/{status}/leads", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Lead> getLeadsByProcessStatus(@ApiParam(required = true) @PathVariable String status) throws NotFoundException {
-		return processRepository.findByStatusAndLeadIsNotNull(Status.valueOf(status));
+	public List<Lead> getLeadsByProcessStatus(@ApiParam(required = true) @PathVariable Status status) throws NotFoundException {
+		return processRepository.findByStatusAndLeadIsNotNull(status);
 	}
 
 	// TODO workaround for follow ups
@@ -115,7 +116,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Update a single process.", notes = "")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Process update(@ApiParam(required = true) @RequestBody @Valid final Process updateProcess) throws NotFoundException {
+	public Process update(@ApiParam(required = true) @RequestBody @Valid final Process updateProcess) throws UpdateFailedException {
 		return processService.update(updateProcess);
 	}
 
@@ -166,7 +167,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Modifie status.", notes = "")
 	@RequestMapping(value = "/{processId}/status", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public void updateStatusByProcessId(@PathVariable final Long processId, @RequestBody @Valid final Status status) throws NotFoundException {
+	public void updateStatusByProcessId(@PathVariable final Long processId, @RequestBody @Valid final Status status) throws UpdateFailedException {
 		processService.updateStatus(processId, status);
 	}
 
@@ -255,14 +256,14 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns single offer.", notes = "")
 	@RequestMapping(value = "{processId}/offers", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Offer getOfferByProcess(@PathVariable final Long processId) {
-		return processRepository.findOne(processId).getOffer();
+	public Offer getOfferByProcess(@PathVariable final Long processId) throws NotFoundException {
+		return processService.getById(processId).getOffer();
 	}
 
 	@ApiOperation(value = "Creates a single offer.", notes = "")
 	@RequestMapping(value = "/{processId}/offers", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Offer createOfferByProcess(@PathVariable final Long processId, @RequestBody @Valid final Offer offer) throws NotFoundException, SaveFailedException {
+	public Offer createOfferByProcess(@PathVariable final Long processId, @RequestBody @Valid final Offer offer) throws SaveFailedException {
 		return processService.createOffer(processId, offer);
 	}
 
@@ -310,8 +311,8 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns a single sale.", notes = "")
 	@RequestMapping(value = "{processId}/sales", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Sale getSaleByProcess(@PathVariable Long processId) {
-		return processRepository.findOne(processId).getSale();
+	public Sale getSaleByProcess(@PathVariable final Long processId) throws NotFoundException {
+		return processService.getById(processId).getSale();
 	}
 
 	@ApiOperation(value = "Creates a single sale.", notes = "")

@@ -31,7 +31,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.containermanagement.domain.Container;
 import dash.inquirermanagement.domain.Inquirer;
-import dash.processmanagement.domain.Status;
 import dash.processmanagement.request.Request;
 import dash.vendormanagement.domain.Vendor;
 
@@ -42,16 +41,16 @@ public class Lead implements Request {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "inquirer_fk", nullable = true)
 	private Inquirer inquirer;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "vendor_fk")
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinColumn(name = "vendor_fk", nullable = true)
 	private Vendor vendor;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "container_fk")
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinColumn(name = "container_fk", nullable = true)
 	private Container container;
 
 	private int containerAmount;
@@ -66,18 +65,7 @@ public class Lead implements Request {
 	private String message;
 
 	public Lead() {
-	}
 
-	public Lead(Inquirer inquirer, Vendor vendor, Container container, int containerAmount, String destination, String message, Status status,
-			Calendar timestamp) {
-		super();
-		this.inquirer = inquirer;
-		this.vendor = vendor;
-		this.container = container;
-		this.containerAmount = containerAmount;
-		this.destination = destination;
-		this.timestamp = timestamp;
-		this.message = message;
 	}
 
 	public Long getId() {

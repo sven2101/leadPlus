@@ -16,10 +16,12 @@ package dash.customermanagement.rest.test;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.http.entity.ContentType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
@@ -30,6 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
+import dash.customermanagement.business.CustomerRepository;
 import dash.customermanagement.domain.Customer;
 import dash.inquirermanagement.domain.Title;
 import dash.test.BaseConfig;
@@ -47,6 +50,14 @@ public class CustomerIntegrationTest extends BaseConfig implements IIntegrationT
 		headers.clear();
 		headers.add("Authorization", "Basic " + base64Creds);
 		headers.setContentType(MediaType.APPLICATION_JSON);
+	}
+
+	@Autowired
+	private CustomerRepository customerRepository;
+
+	@After
+	public void after() {
+		customerRepository.deleteAll();
 	}
 
 	@Override

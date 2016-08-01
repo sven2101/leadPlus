@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
@@ -34,25 +35,25 @@ public interface IProcessService {
 
 	public List<Request> getElementsByStatus(Status status, Workflow workflow);
 
-	public Process getProcessById(final Long id) throws NotFoundException;
-	
-	public List<Process> getAll();
+	public Process getById(final Long id) throws NotFoundException;
 
-	public void saveProcesses(List<Process> processes) throws SaveFailedException, NotFoundException;
+	public Iterable<Process> getAll();
 
-	public Process save(final Process process) throws SaveFailedException, NotFoundException;
+	public void saveProcesses(List<Process> processes) throws SaveFailedException;
 
-	public Process update(final Process process) throws NotFoundException;
+	public Process save(final Process process) throws SaveFailedException;
 
-	public Lead createLead(Long processId, final Lead lead) throws NotFoundException, SaveFailedException;
+	public Process update(final Process process) throws UpdateFailedException;
 
-	public Offer createOffer(Long processId, final Offer offer) throws NotFoundException, SaveFailedException;
+	public Lead createLead(Long processId, final Lead lead) throws SaveFailedException;
 
-	public Sale createSale(Long processId, final Sale sale) throws NotFoundException, SaveFailedException;
+	public Offer createOffer(Long processId, final Offer offer) throws SaveFailedException;
+
+	public Sale createSale(Long processId, final Sale sale) throws SaveFailedException;
 
 	public User setProcessor(Long processId, String username) throws Exception;
 
-	public Status updateStatus(Long processId, Status status) throws NotFoundException;
+	public Status updateStatus(Long processId, Status status) throws UpdateFailedException;
 
 	public List<Process> getProcessWithLatestSales(final int amount);
 

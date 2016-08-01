@@ -66,8 +66,7 @@ public class CommentService implements ICommentService {
 					return commentRepository.save(comment);
 				} else {
 					SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-					logger.error(
-							SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_USER_NOT_FOUND,
+					logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_USER_NOT_FOUND,
 							new UsernameNotFoundException(USER_NOT_FOUND));
 					throw sfex;
 				}
@@ -77,8 +76,7 @@ public class CommentService implements ICommentService {
 			}
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					sfex);
+			logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
 			throw sfex;
 		}
 	}
@@ -91,8 +89,7 @@ public class CommentService implements ICommentService {
 				return commentRepository.findByProcess(process);
 			} else {
 				NotFoundException pnfex = new NotFoundException(PROCESS_NOT_FOUND);
-				logger.error(PROCESS_NOT_FOUND + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-						pnfex);
+				logger.error(PROCESS_NOT_FOUND + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
 				throw pnfex;
 			}
 		} else {
@@ -105,15 +102,9 @@ public class CommentService implements ICommentService {
 	@Override
 	public Comment update(final Comment comment) throws UpdateFailedException {
 		if (Optional.ofNullable(comment).isPresent()) {
-			Comment updateComment;
 			try {
-				updateComment = getById(comment.getId());
-				updateComment.setCommentText(comment.getCommentText());
-				updateComment.setCreator(comment.getCreator());
-				updateComment.setProcess(comment.getProcess());
-				updateComment.setTimestamp(comment.getTimestamp());
-				return save(updateComment);
-			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				return save(comment);
+			} catch (IllegalArgumentException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + CommentService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}

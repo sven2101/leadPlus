@@ -62,7 +62,7 @@ public class OfferService implements IOfferService {
 	}
 
 	@Override
-	public Offer save(final Offer offer) throws SaveFailedException {
+	public Offer save(Offer offer) throws SaveFailedException {
 		if (Optional.ofNullable(offer).isPresent()) {
 			return offerRepository.save(offer);
 		} else {
@@ -73,21 +73,11 @@ public class OfferService implements IOfferService {
 	}
 
 	@Override
-	public Offer update(final Offer offer) throws UpdateFailedException {
+	public Offer update(Offer offer) throws UpdateFailedException {
 		if (Optional.ofNullable(offer).isPresent()) {
-			Offer updateOffer;
 			try {
-				updateOffer = getOfferById(offer.getId());
-				updateOffer.setContainer(offer.getContainer());
-				updateOffer.setContainerAmount(offer.getContainerAmount());
-				updateOffer.setDeliveryAddress(offer.getDeliveryAddress());
-				updateOffer.setDeliveryDate(offer.getDeliveryDate());
-				updateOffer.setOfferPrice(offer.getOfferPrice());
-				updateOffer.setProspect(offer.getProspect());
-				updateOffer.setTimestamp(offer.getTimestamp());
-				updateOffer.setVendor(offer.getVendor());
-				return save(updateOffer);
-			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				return save(offer);
+			} catch (IllegalArgumentException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + OfferService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}

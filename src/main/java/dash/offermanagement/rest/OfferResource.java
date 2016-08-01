@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.offermanagement.business.IOfferService;
 import dash.offermanagement.domain.Offer;
@@ -37,7 +38,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-@RestController
+@RestController(value = "Offer Resource")
 @RequestMapping(value = "/api/rest/offers", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Offers API")
 public class OfferResource {
@@ -59,10 +60,17 @@ public class OfferResource {
 		return offerService.getOfferById(id);
 	}
 
+	@ApiOperation(value = "Save a single offer.", notes = "")
+	@RequestMapping(method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	public Offer save(@ApiParam(required = true) @RequestBody @Valid Offer offer) throws SaveFailedException, NotFoundException {
+		return offerService.save(offer);
+	}
+
 	@ApiOperation(value = "Update a single offer.", notes = "")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Offer update(@ApiParam(required = true) @RequestBody @Valid final Offer offer) throws UpdateFailedException {
+	public Offer update(@ApiParam(required = true) @RequestBody @Valid Offer offer) throws UpdateFailedException {
 		return offerService.update(offer);
 	}
 

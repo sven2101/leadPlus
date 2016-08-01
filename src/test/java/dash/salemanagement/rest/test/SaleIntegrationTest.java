@@ -18,10 +18,12 @@ import static org.junit.Assert.assertEquals;
 import java.util.Calendar;
 
 import org.apache.http.entity.ContentType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
@@ -32,12 +34,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
+import dash.containermanagement.business.ContainerRepository;
 import dash.containermanagement.domain.Container;
+import dash.customermanagement.business.CustomerRepository;
 import dash.customermanagement.domain.Customer;
 import dash.inquirermanagement.domain.Title;
+import dash.salemanagement.business.SaleRepository;
 import dash.salemanagement.domain.Sale;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
+import dash.vendormanagement.business.VendorRepository;
 import dash.vendormanagement.domain.Vendor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -47,11 +53,31 @@ public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest 
 
 	private String EXTENDED_URI = BASE_URI + "/api/rest/sales";
 
+	@Autowired
+	private SaleRepository saleRepository;
+
+	@Autowired
+	private VendorRepository vendorRepository;
+
+	@Autowired
+	private ContainerRepository containerRepository;
+
+	@Autowired
+	private CustomerRepository customerRepository;
+
 	@Before
 	public void setup() {
 		headers.clear();
 		headers.add("Authorization", "Basic " + base64Creds);
 		headers.setContentType(MediaType.APPLICATION_JSON);
+	}
+
+	@After
+	public void after() {
+		saleRepository.deleteAll();
+		containerRepository.deleteAll();
+		customerRepository.deleteAll();
+		vendorRepository.deleteAll();
 	}
 
 	@Override
@@ -72,7 +98,8 @@ public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest 
 	@Test
 	public void get() {
 
-		HttpEntity<Sale> entityCreateSale = new HttpEntity<Sale>(create(), headers);
+		Sale sale = create();
+		HttpEntity<Sale> entityCreateSale = new HttpEntity<Sale>(sale, headers);
 
 		ResponseEntity<Sale> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateSale, Sale.class);
 		Sale responseCreateSale = responseCreate.getBody();
@@ -84,7 +111,7 @@ public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest 
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetSale.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetSale.getStatusCode());
-		assertEquals(create(), responseGetSale.getBody());
+		assertEquals(responseCreateSale, responseGetSale.getBody());
 	}
 
 	@Override
@@ -117,15 +144,33 @@ public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest 
 	@Override
 	public Sale create() {
 
+		Container container = new Container();
+		container.setName("Fusscontainer");
+		container.setDescription("Guter Container");
+		container.setPriceNetto(1000.00);
+
+		Customer customer = new Customer();
+		customer.setTitle(Title.MR);
+		customer.setFirstname("Andreas");
+		customer.setLastname("Foitzik");
+		customer.setCompany("123 GmbH");
+		customer.setEmail("123@eviarc.com");
+		customer.setPhone("07961/55166");
+		customer.setAddress("Hauptstrasse 10");
+
+		Vendor vendor = new Vendor();
+		vendor.setName("Schreinereitest2 GmbH");
+		vendor.setPhone("07961/55166");
+
 		Sale sale = new Sale();
-		sale.setContainer(new Container("Fuﬂcontainer", "Guter Container", 1000.00));
+		sale.setContainer(container);
 		sale.setContainerAmount(30);
-		sale.setCustomer(new Customer(Title.MR, "Andreas", "Foitzik", "123 GmbH", "123@eviarc.com", "07961/55166", "Hauptstrasse 10"));
+		sale.setCustomer(customer);
 		sale.setSaleProfit(1000.00);
 		sale.setSaleReturn(1000.00);
 		sale.setTimestamp(Calendar.getInstance());
 		sale.setTransport("Hamburg");
-		sale.setVendor(new Vendor("Schreinereitest2 GmbH", "07961/55166"));
+		sale.setVendor(vendor);
 
 		return sale;
 	}

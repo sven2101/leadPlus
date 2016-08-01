@@ -53,7 +53,7 @@ public class LeadService implements ILeadService {
 	@Override
 	public Lead getLeadById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
-				return leadRepository.findOne(id);
+			return leadRepository.findOne(id);
 		} else {
 			NotFoundException nfex = new NotFoundException(LEAD_NOT_FOUND);
 			logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
@@ -64,7 +64,7 @@ public class LeadService implements ILeadService {
 	@Override
 	public Lead save(final Lead lead) throws SaveFailedException {
 		if (Optional.ofNullable(lead).isPresent()) {
-				return leadRepository.save(lead);
+			return leadRepository.save(lead);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(LEAD_NOT_FOUND + LeadService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
@@ -75,18 +75,9 @@ public class LeadService implements ILeadService {
 	@Override
 	public Lead update(final Lead lead) throws UpdateFailedException {
 		if (Optional.ofNullable(lead).isPresent()) {
-			Lead updateLead;
 			try {
-				updateLead = getLeadById(lead.getId());
-				updateLead.setContainer(lead.getContainer());
-				updateLead.setContainerAmount(lead.getContainerAmount());
-				updateLead.setDestination(lead.getDestination());
-				updateLead.setInquirer(lead.getInquirer());
-				updateLead.setMessage(lead.getMessage());
-				updateLead.setTimestamp(lead.getTimestamp());
-				updateLead.setVendor(lead.getVendor());
-				return save(updateLead);
-			} catch (IllegalArgumentException | SaveFailedException | NotFoundException ex) {
+				return save(lead);
+			} catch (IllegalArgumentException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + LeadService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}

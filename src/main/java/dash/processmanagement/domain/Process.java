@@ -36,15 +36,15 @@ public class Process {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(cascade = CascadeType.MERGE)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "lead_fk", nullable = true)
 	private Lead lead;
 
-	@OneToOne(cascade = CascadeType.MERGE)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "offer_fk", nullable = true)
 	private Offer offer;
 
-	@OneToOne(cascade = CascadeType.MERGE)
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "sale_fk", nullable = true)
 	private Sale sale;
 
@@ -65,14 +65,6 @@ public class Process {
 		this.sale = null;
 		this.status = Status.OPEN;
 		this.processor = null;
-	}
-
-	public Process(Lead lead, Offer offer, Sale sale, Status status, User processor) {
-		this.lead = lead;
-		this.offer = offer;
-		this.sale = sale;
-		this.status = status;
-		this.processor = processor;
 	}
 
 	public Long getId() {

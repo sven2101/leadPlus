@@ -40,15 +40,7 @@ public class Inquirer {
 	private String phone;
 
 	public Inquirer() {
-	}
 
-	public Inquirer(Title title, String firstname, String lastname, String company, String email, String phone) {
-		this.title = title;
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.company = company;
-		this.email = email;
-		this.phone = phone;
 	}
 
 	public Long getId() {

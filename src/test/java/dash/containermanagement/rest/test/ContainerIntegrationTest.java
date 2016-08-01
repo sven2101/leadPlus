@@ -16,10 +16,12 @@ package dash.containermanagement.rest.test;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.http.entity.ContentType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
@@ -30,6 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
+import dash.containermanagement.business.ContainerRepository;
 import dash.containermanagement.domain.Container;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
@@ -106,6 +109,14 @@ public class ContainerIntegrationTest extends BaseConfig implements IIntegration
 	@Ignore
 	public void delete() {
 
+	}
+
+	@Autowired
+	private ContainerRepository containerRepository;
+
+	@After
+	public void after() {
+		containerRepository.deleteAll();
 	}
 
 	@Override

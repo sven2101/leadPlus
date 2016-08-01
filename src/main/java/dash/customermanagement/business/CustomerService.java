@@ -82,19 +82,10 @@ public class CustomerService implements ICustomerService {
 	@Override
 	public Customer update(final Customer customer) throws UpdateFailedException {
 		if (Optional.ofNullable(customer).isPresent()) {
-			Customer updateCustomer;
 			try {
-				updateCustomer = customerRepository.findOne(customer.getId());
-				updateCustomer.setAddress(customer.getAddress());
-				updateCustomer.setCompany(customer.getCompany());
-				updateCustomer.setEmail(customer.getEmail());
-				updateCustomer.setFirstname(customer.getFirstname());
-				updateCustomer.setLastname(customer.getLastname());
-				updateCustomer.setPhone(customer.getPhone());
-				updateCustomer.setTitle(customer.getTitle());
-				return customerRepository.save(updateCustomer);
-			} catch (IllegalArgumentException iaex) {
-				logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, iaex);
+				return save(customer);
+			} catch (IllegalArgumentException | SaveFailedException ex) {
+				logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 		} else {

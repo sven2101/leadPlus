@@ -16,10 +16,12 @@ package dash.leadmanagement.rest.test;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.http.entity.ContentType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
@@ -30,12 +32,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
+import dash.containermanagement.business.ContainerRepository;
 import dash.containermanagement.domain.Container;
+import dash.inquirermanagement.business.InquirerRepository;
 import dash.inquirermanagement.domain.Inquirer;
 import dash.inquirermanagement.domain.Title;
+import dash.leadmanagement.business.LeadRepository;
 import dash.leadmanagement.domain.Lead;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
+import dash.vendormanagement.business.VendorRepository;
 import dash.vendormanagement.domain.Vendor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -43,13 +49,33 @@ import dash.vendormanagement.domain.Vendor;
 @WebIntegrationTest
 public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private String EXTENDED_URI = BASE_URI + "/api/rest/processes/leads";
+	private String EXTENDED_URI = BASE_URI + "/api/rest/leads";
+
+	@Autowired
+	private LeadRepository leadRepository;
+
+	@Autowired
+	private ContainerRepository containerRepository;
+
+	@Autowired
+	private InquirerRepository inquirerRepository;
+
+	@Autowired
+	private VendorRepository vendorRepository;
 
 	@Before
 	public void setup() {
 		headers.clear();
 		headers.add("Authorization", "Basic " + base64Creds);
 		headers.setContentType(MediaType.APPLICATION_JSON);
+	}
+
+	@After
+	public void after() {
+		leadRepository.deleteAll();
+		containerRepository.deleteAll();
+		inquirerRepository.deleteAll();
+		vendorRepository.deleteAll();
 	}
 
 	@Override
@@ -69,7 +95,10 @@ public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest 
 	@Override
 	@Test
 	public void get() {
-		HttpEntity<Lead> entityCreateLead = new HttpEntity<Lead>(create(), headers);
+
+		Lead lead = create();
+
+		HttpEntity<Lead> entityCreateLead = new HttpEntity<Lead>(lead, headers);
 
 		ResponseEntity<Lead> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateLead, Lead.class);
 		Lead responseCreateLead = responseCreate.getBody();
@@ -81,7 +110,7 @@ public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest 
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetLead.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetLead.getStatusCode());
-		assertEquals(create(), responseGetLead.getBody());
+		assertEquals(responseCreateLead, responseGetLead.getBody());
 	}
 
 	@Override
@@ -94,15 +123,15 @@ public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest 
 		ResponseEntity<Lead> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateLead, Lead.class);
 		Lead responseCreateLead = responseCreate.getBody();
 
-		lead.setContainerAmount(10);
-		HttpEntity<Lead> entity = new HttpEntity<Lead>(lead, headers);
+		responseCreateLead.setContainerAmount(10);
+		HttpEntity<Lead> entity = new HttpEntity<Lead>(responseCreateLead, headers);
 
-		ResponseEntity<Lead> response = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.PUT, entity, Lead.class, responseCreateLead.getId());
+		ResponseEntity<Lead> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Lead.class, responseCreateLead.getId());
 		Lead responseLead = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(lead, responseLead);
+		assertEquals(responseCreateLead, responseLead);
 	}
 
 	@Override

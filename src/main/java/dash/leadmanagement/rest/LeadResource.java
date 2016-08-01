@@ -63,6 +63,7 @@ public class LeadResource {
 
 	@ApiOperation(value = "Add a single lead.", notes = "")
 	@RequestMapping(method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
 	public Lead save(@ApiParam(required = true) @RequestBody @Valid final Lead lead) throws SaveFailedException {
 		return leadService.save(lead);
 	}

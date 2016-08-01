@@ -16,10 +16,12 @@ package dash.processmanagement.rest.test;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.http.entity.ContentType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
@@ -35,6 +37,7 @@ import dash.inquirermanagement.domain.Inquirer;
 import dash.inquirermanagement.domain.Title;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
+import dash.processmanagement.business.ProcessRepository;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
 import dash.salemanagement.domain.Sale;
@@ -126,6 +129,14 @@ public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTe
 	@Ignore
 	public void delete() {
 
+	}
+
+	@Autowired
+	private ProcessRepository processRepository;
+
+	@After
+	public void after() {
+		processRepository.deleteAll();
 	}
 
 	@Override

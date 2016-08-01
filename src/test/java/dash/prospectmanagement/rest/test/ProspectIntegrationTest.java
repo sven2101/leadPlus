@@ -16,10 +16,12 @@ package dash.prospectmanagement.rest.test;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.http.entity.ContentType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
@@ -31,6 +33,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
 import dash.inquirermanagement.domain.Title;
+import dash.prospectmanagement.business.ProspectRepository;
 import dash.prospectmanagement.domain.Prospect;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
@@ -107,6 +110,14 @@ public class ProspectIntegrationTest extends BaseConfig implements IIntegrationT
 	@Ignore
 	public void delete() {
 
+	}
+
+	@Autowired
+	private ProspectRepository prospectRepository;
+
+	@After
+	public void after() {
+		prospectRepository.deleteAll();
 	}
 
 	@Override
