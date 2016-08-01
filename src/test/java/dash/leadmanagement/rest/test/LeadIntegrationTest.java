@@ -43,7 +43,7 @@ import dash.vendormanagement.domain.Vendor;
 @WebIntegrationTest
 public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private static final String EXTENDED_URI = BASE_URI + "/api/rest/processes/leads";
+	private String EXTENDED_URI = BASE_URI + "/api/rest/processes/leads";
 
 	@Before
 	public void setup() {

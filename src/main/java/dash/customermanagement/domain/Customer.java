@@ -124,7 +124,6 @@ public class Customer {
 		result = prime * result + ((company == null) ? 0 : company.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
@@ -159,8 +158,6 @@ public class Customer {
 			if (other.firstname != null)
 				return false;
 		} else if (!firstname.equals(other.firstname))
-			return false;
-		if (id != other.id)
 			return false;
 		if (lastname == null) {
 			if (other.lastname != null)

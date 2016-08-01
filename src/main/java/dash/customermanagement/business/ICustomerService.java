@@ -28,7 +28,7 @@ public interface ICustomerService {
 
 	public List<Customer> getAll();
 
-	public Customer getCustomerById(final Long id) throws NotFoundException;
+	public Customer getById(final Long id) throws NotFoundException;
 
 	public Customer save(final Customer inquirer) throws SaveFailedException;
 

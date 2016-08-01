@@ -81,13 +81,12 @@ public class CommentService implements ICommentService {
 					sfex);
 			throw sfex;
 		}
-
 	}
 
 	@Override
 	public List<Comment> getCommentsByProcess(final long processId) throws NotFoundException {
 		if (Optional.ofNullable(processId).isPresent()) {
-			final Process process = processService.getProcessById(processId);
+			final Process process = processService.getById(processId);
 			if (Optional.ofNullable(process).isPresent()) {
 				return commentRepository.findByProcess(process);
 			} else {

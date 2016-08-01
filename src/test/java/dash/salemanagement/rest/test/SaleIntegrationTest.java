@@ -45,7 +45,7 @@ import dash.vendormanagement.domain.Vendor;
 @WebIntegrationTest
 public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private static final String EXTENDED_URI = BASE_URI + "/api/rest/sales";
+	private String EXTENDED_URI = BASE_URI + "/api/rest/sales";
 
 	@Before
 	public void setup() {
@@ -120,12 +120,12 @@ public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest 
 		Sale sale = new Sale();
 		sale.setContainer(new Container("Fuﬂcontainer", "Guter Container", 1000.00));
 		sale.setContainerAmount(30);
-		sale.setCustomer(new Customer(Title.MR, "Andreas", "Foitzik", "123 GmbH", "test@eviarc.com", "07961/55166", "Hauptstrasse 10"));
+		sale.setCustomer(new Customer(Title.MR, "Andreas", "Foitzik", "123 GmbH", "123@eviarc.com", "07961/55166", "Hauptstrasse 10"));
 		sale.setSaleProfit(1000.00);
 		sale.setSaleReturn(1000.00);
 		sale.setTimestamp(Calendar.getInstance());
 		sale.setTransport("Hamburg");
-		sale.setVendor(new Vendor("Anbieter GmbH", "07961/55166"));
+		sale.setVendor(new Vendor("Schreinereitest2 GmbH", "07961/55166"));
 
 		return sale;
 	}

@@ -43,7 +43,7 @@ import dash.usermanagement.domain.User;
 @WebIntegrationTest
 public class CommentIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private static final String EXTENDED_URI = BASE_URI + "/api/rest/comments";
+	private String EXTENDED_URI = BASE_URI + "/api/rest/comments";
 
 	@Before
 	public void setup() {

@@ -32,14 +32,15 @@ import dash.customermanagement.business.ICustomerService;
 import dash.customermanagement.domain.Customer;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-@RestController
-@RequestMapping(value = "/api/rest/processes/sales/customers", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-@Api(value = "Customers API")
+@RestController(value = "Customer Resource")
+@RequestMapping(value = "/api/rest/customers", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@Api(value = "Customer API")
 public class CustomerResource {
 
 	@Autowired
@@ -55,8 +56,15 @@ public class CustomerResource {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get a single customer.", notes = "You have to provide a valid customer ID.")
-	public Customer findById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
-		return customerService.getCustomerById(id);
+	public Customer getById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
+		return customerService.getById(id);
+	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation(value = "Create a single customer.", notes = "You have to provide a valid customer entity.")
+	public Customer save(@ApiParam(required = true) @RequestBody @Valid final Customer customer) throws SaveFailedException {
+		return customerService.save(customer);
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)

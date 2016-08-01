@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.salemanagement.business.ISaleService;
 import dash.salemanagement.domain.Sale;
@@ -57,6 +58,13 @@ public class SaleResource {
 	@ResponseStatus(HttpStatus.OK)
 	public Sale getById(@PathVariable final Long id) throws NotFoundException {
 		return saleService.getById(id);
+	}
+
+	@ApiOperation(value = "Create a single sale.", notes = "")
+	@RequestMapping(method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	public Sale save(@ApiParam(required = true) @RequestBody @Valid final Sale sale) throws SaveFailedException {
+		return saleService.save(sale);
 	}
 
 	@ApiOperation(value = "Update a single sale.", notes = "")

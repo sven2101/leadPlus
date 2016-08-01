@@ -46,7 +46,7 @@ public class Lead implements Request {
 	@JoinColumn(name = "inquirer_fk", nullable = true)
 	private Inquirer inquirer;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "vendor_fk")
 	private Vendor vendor;
 
