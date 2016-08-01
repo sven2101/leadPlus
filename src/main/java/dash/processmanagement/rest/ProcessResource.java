@@ -32,13 +32,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
+import dash.processmanagement.business.IProcessService;
 import dash.processmanagement.business.ProcessRepository;
-import dash.processmanagement.business.ProcessService;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
 import dash.processmanagement.request.Request;
@@ -54,7 +55,7 @@ import io.swagger.annotations.ApiParam;
 public class ProcessResource {
 
 	@Autowired
-	private ProcessService processService;
+	private IProcessService processService;
 
 	@Autowired
 	private ProcessRepository processRepository;
@@ -130,8 +131,8 @@ public class ProcessResource {
 	@ApiOperation(value = "Puts processor to process", notes = "")
 	@RequestMapping(value = "/{processId}/processors", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public void createProcessorByProcessId(@PathVariable final Long processId, @RequestBody final String username) throws Exception {
-		processService.setProcessor(processId, username);
+	public void setProcessor(@PathVariable final Long processId, @RequestBody final long userId) throws Exception {
+		processService.setProcessor(processId, userId);
 	}
 
 	@ApiOperation(value = "Remove processor from process", notes = "")
@@ -146,21 +147,21 @@ public class ProcessResource {
 	@ApiOperation(value = "Delete a single process.", notes = "")
 	@RequestMapping(value = "/{processId}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void delete(@ApiParam(required = true) @PathVariable final Long processId) {
-		processRepository.delete(processId);
+	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
+		processService.delete(id);
 	}
 
 	@ApiOperation(value = "Creates a process.", notes = "")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Process save(@RequestBody @Valid final Process process) throws SaveFailedException, NotFoundException {
+	public Process save(@RequestBody @Valid final Process process) throws SaveFailedException {
 		return processService.save(process);
 	}
 
 	@ApiOperation(value = "Creates processes based on a List of Processes.", notes = "")
 	@RequestMapping(value = "/list", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public void saveProcesses(@RequestBody final List<Process> processes) throws SaveFailedException, NotFoundException {
+	public void saveProcesses(@RequestBody final List<Process> processes) throws SaveFailedException {
 		processService.saveProcesses(processes);
 	}
 
@@ -208,8 +209,8 @@ public class ProcessResource {
 	@ApiOperation(value = "Return a single lead.", notes = "")
 	@RequestMapping(value = "/{processId}/leads", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Lead getLeadByProcess(@PathVariable final Long processId) {
-		return processRepository.findOne(processId).getLead();
+	public Lead getLeadByProcess(@PathVariable final Long processId) throws NotFoundException {
+		return processService.getById(processId).getLead();
 	}
 
 	@ApiOperation(value = "Creates a single lead.", notes = "")

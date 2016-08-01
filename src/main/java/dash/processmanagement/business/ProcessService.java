@@ -15,6 +15,7 @@
 package dash.processmanagement.business;
 
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
+import static dash.Constants.DELETE_FAILED_EXCEPTION;
 import static dash.Constants.OFFER_NOT_FOUND;
 import static dash.Constants.PROCESS_NOT_FOUND;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
@@ -27,8 +28,10 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
@@ -66,7 +69,7 @@ public class ProcessService implements IProcessService {
 	private SaleService saleService;
 
 	@Override
-	public List<Request> getElementsByStatus(Status status, Workflow workflow) {
+	public List<Request> getElementsByStatus(final Status status, final Workflow workflow) {
 
 		List<Process> processes = processRepository.findProcessesByStatus(status);
 		List<Request> elements = new ArrayList<>();
@@ -119,7 +122,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Lead createLead(Long processId, Lead lead) throws SaveFailedException {
+	public Lead createLead(final long processId, final Lead lead) throws SaveFailedException {
 		Process process = processRepository.findOne(processId);
 		Lead createdLead;
 		if (Optional.ofNullable(process).isPresent()) {
@@ -133,7 +136,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Offer createOffer(Long processId, Offer offer) throws SaveFailedException {
+	public Offer createOffer(final long processId, final Offer offer) throws SaveFailedException {
 		Process process = processRepository.findOne(processId);
 		Offer createdOffer;
 		if (Optional.ofNullable(process).isPresent()) {
@@ -147,7 +150,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Sale createSale(Long processId, Sale sale) throws SaveFailedException {
+	public Sale createSale(final long processId, final Sale sale) throws SaveFailedException {
 		Process process = processRepository.findOne(processId);
 		Sale createdSale;
 		if (Optional.ofNullable(process).isPresent()) {
@@ -161,9 +164,9 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public User setProcessor(Long processId, String username) throws NotFoundException {
+	public User setProcessor(final long processId, final long userId) throws NotFoundException {
 		Process process = processRepository.findOne(processId);
-		final User processor = userService.getUserByName(username);
+		final User processor = userService.getById(userId);
 		if (!Optional.ofNullable(process).isPresent())
 			throw new NotFoundException(PROCESS_NOT_FOUND);
 		if (!Optional.ofNullable(processor).isPresent())
@@ -176,7 +179,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Status updateStatus(Long processId, Status status) throws UpdateFailedException {
+	public Status updateStatus(final long processId, final Status status) throws UpdateFailedException {
 		Process process = processRepository.findOne(processId);
 		if (Optional.ofNullable(process).isPresent()) {
 			process.setStatus(status);
@@ -212,7 +215,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process getById(Long id) throws NotFoundException {
+	public Process getById(final long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
 				return processRepository.findOne(id);
@@ -230,5 +233,21 @@ public class ProcessService implements IProcessService {
 	@Override
 	public Iterable<Process> getAll() {
 		return processRepository.findAll();
+	}
+
+	@Override
+	public void delete(final long id) throws DeleteFailedException {
+		if (Optional.ofNullable(id).isPresent()) {
+			try {
+				processRepository.delete(id);
+			} catch (EmptyResultDataAccessException erdaex) {
+				logger.error(PROCESS_NOT_FOUND + OfferService.class.getSimpleName() + erdaex.getMessage(), erdaex);
+				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
+			}
+		} else {
+			DeleteFailedException dfex = new DeleteFailedException(DELETE_FAILED_EXCEPTION);
+			logger.error(PROCESS_NOT_FOUND + OfferService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
+			throw dfex;
+		}
 	}
 }

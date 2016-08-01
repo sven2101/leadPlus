@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
@@ -33,27 +34,29 @@ import dash.usermanagement.domain.User;
 @Service
 public interface IProcessService {
 
-	public List<Request> getElementsByStatus(Status status, Workflow workflow);
+	public List<Request> getElementsByStatus(final Status status, final Workflow workflow);
 
-	public Process getById(final Long id) throws NotFoundException;
+	public Process getById(final long id) throws NotFoundException;
 
 	public Iterable<Process> getAll();
 
-	public void saveProcesses(List<Process> processes) throws SaveFailedException;
+	public void saveProcesses(final List<Process> processes) throws SaveFailedException;
 
 	public Process save(final Process process) throws SaveFailedException;
 
 	public Process update(final Process process) throws UpdateFailedException;
 
-	public Lead createLead(Long processId, final Lead lead) throws SaveFailedException;
+	public void delete(final long processId) throws DeleteFailedException;
 
-	public Offer createOffer(Long processId, final Offer offer) throws SaveFailedException;
+	public Lead createLead(final long processId, final Lead lead) throws SaveFailedException;
 
-	public Sale createSale(Long processId, final Sale sale) throws SaveFailedException;
+	public Offer createOffer(final long processId, final Offer offer) throws SaveFailedException;
 
-	public User setProcessor(Long processId, String username) throws Exception;
+	public Sale createSale(final long processId, final Sale sale) throws SaveFailedException;
 
-	public Status updateStatus(Long processId, Status status) throws UpdateFailedException;
+	public User setProcessor(final long processId, final long userId) throws Exception;
+
+	public Status updateStatus(final long processId, Status status) throws UpdateFailedException;
 
 	public List<Process> getProcessWithLatestSales(final int amount);
 
