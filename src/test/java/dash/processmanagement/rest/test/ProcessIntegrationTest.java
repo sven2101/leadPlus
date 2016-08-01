@@ -16,18 +16,14 @@ package dash.processmanagement.rest.test;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.http.entity.ContentType;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -37,7 +33,6 @@ import dash.inquirermanagement.domain.Inquirer;
 import dash.inquirermanagement.domain.Title;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
-import dash.processmanagement.business.ProcessRepository;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
 import dash.salemanagement.domain.Sale;
@@ -50,14 +45,7 @@ import dash.vendormanagement.domain.Vendor;
 @WebIntegrationTest
 public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private String EXTENDED_URI = BASE_URI + "/api/rest/processes";
-
-	@Before
-	public void setup() {
-		headers.clear();
-		headers.add("Authorization", "Basic " + base64Creds);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-	}
+	private final static String EXTENDED_URI = BASE_URI + REST_PROCESSES;
 
 	@Override
 	@Test
@@ -76,12 +64,11 @@ public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTe
 	@Test
 	public void getAll() {
 
-		HttpEntity<Process> entityGetProcess = new HttpEntity<Process>(headers);
+		HttpEntity<Process> entityGetProcesses = new HttpEntity<Process>(headers);
 
-		ResponseEntity<Process> responseGetProcess = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetProcess, Process.class);
-
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetProcess.getHeaders().getContentType().getCharSet());
-		assertEquals(HttpStatus.OK, responseGetProcess.getStatusCode());
+		ResponseEntity<Object[]> responseGetProcesses = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetProcesses, Object[].class);
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetProcesses.getHeaders().getContentType().getCharSet());
+		assertEquals(HttpStatus.OK, responseGetProcesses.getStatusCode());
 	}
 
 	@Override
@@ -129,14 +116,6 @@ public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTe
 	@Ignore
 	public void delete() {
 
-	}
-
-	@Autowired
-	private ProcessRepository processRepository;
-
-	@After
-	public void after() {
-		processRepository.deleteAll();
 	}
 
 	@Override

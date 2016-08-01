@@ -18,32 +18,24 @@ import static org.junit.Assert.assertEquals;
 import java.util.Calendar;
 
 import org.apache.http.entity.ContentType;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.containermanagement.business.ContainerRepository;
 import dash.containermanagement.domain.Container;
-import dash.customermanagement.business.CustomerRepository;
 import dash.customermanagement.domain.Customer;
 import dash.inquirermanagement.domain.Title;
-import dash.salemanagement.business.SaleRepository;
 import dash.salemanagement.domain.Sale;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
-import dash.vendormanagement.business.VendorRepository;
 import dash.vendormanagement.domain.Vendor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -51,34 +43,7 @@ import dash.vendormanagement.domain.Vendor;
 @WebIntegrationTest
 public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private String EXTENDED_URI = BASE_URI + "/api/rest/sales";
-
-	@Autowired
-	private SaleRepository saleRepository;
-
-	@Autowired
-	private VendorRepository vendorRepository;
-
-	@Autowired
-	private ContainerRepository containerRepository;
-
-	@Autowired
-	private CustomerRepository customerRepository;
-
-	@Before
-	public void setup() {
-		headers.clear();
-		headers.add("Authorization", "Basic " + base64Creds);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-	}
-
-	@After
-	public void after() {
-		saleRepository.deleteAll();
-		containerRepository.deleteAll();
-		customerRepository.deleteAll();
-		vendorRepository.deleteAll();
-	}
+	private final static String EXTENDED_URI = BASE_URI + REST_SALES;
 
 	@Override
 	@Test
@@ -112,6 +77,16 @@ public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetSale.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetSale.getStatusCode());
 		assertEquals(responseCreateSale, responseGetSale.getBody());
+	}
+
+	@Test
+	public void getAll() {
+
+		HttpEntity<Sale> entityGetSales = new HttpEntity<Sale>(headers);
+
+		ResponseEntity<Object[]> responseGetSales = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetSales, Object[].class);
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetSales.getHeaders().getContentType().getCharSet());
+		assertEquals(HttpStatus.OK, responseGetSales.getStatusCode());
 	}
 
 	@Override

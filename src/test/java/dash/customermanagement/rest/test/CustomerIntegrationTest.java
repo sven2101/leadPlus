@@ -16,23 +16,18 @@ package dash.customermanagement.rest.test;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.http.entity.ContentType;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.customermanagement.business.CustomerRepository;
 import dash.customermanagement.domain.Customer;
 import dash.inquirermanagement.domain.Title;
 import dash.test.BaseConfig;
@@ -43,22 +38,7 @@ import dash.test.IIntegrationTest;
 @WebIntegrationTest
 public class CustomerIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private String EXTENDED_URI = BASE_URI + "/api/rest/customers";
-
-	@Before
-	public void setup() {
-		headers.clear();
-		headers.add("Authorization", "Basic " + base64Creds);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-	}
-
-	@Autowired
-	private CustomerRepository customerRepository;
-
-	@After
-	public void after() {
-		customerRepository.deleteAll();
-	}
+	private final static String EXTENDED_URI = BASE_URI + REST_CUSTOMERS;
 
 	@Override
 	@Test
@@ -91,6 +71,16 @@ public class CustomerIntegrationTest extends BaseConfig implements IIntegrationT
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetCustomer.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetCustomer.getStatusCode());
 		assertEquals(customer, responseGetCustomer.getBody());
+	}
+
+	@Test
+	public void getAll() {
+
+		HttpEntity<Customer> entityGetCustomers = new HttpEntity<Customer>(headers);
+
+		ResponseEntity<Object[]> responseGetCustomers = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetCustomers, Object[].class);
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetCustomers.getHeaders().getContentType().getCharSet());
+		assertEquals(HttpStatus.OK, responseGetCustomers.getStatusCode());
 	}
 
 	@Override

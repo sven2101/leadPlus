@@ -16,23 +16,18 @@ package dash.containermanagement.rest.test;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.http.entity.ContentType;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.containermanagement.business.ContainerRepository;
 import dash.containermanagement.domain.Container;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
@@ -42,14 +37,7 @@ import dash.test.IIntegrationTest;
 @WebIntegrationTest
 public class ContainerIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private String EXTENDED_URI = BASE_URI + "/api/rest/containers";
-
-	@Before
-	public void setup() {
-		headers.clear();
-		headers.add("Authorization", "Basic " + base64Creds);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-	}
+	private final static String EXTENDED_URI = BASE_URI + REST_CONTAINERS;
 
 	@Override
 	@Test
@@ -84,6 +72,16 @@ public class ContainerIntegrationTest extends BaseConfig implements IIntegration
 		assertEquals(create(), responseGetContainer.getBody());
 	}
 
+	@Test
+	public void getAll() {
+
+		HttpEntity<Container> entityGetContainers = new HttpEntity<Container>(headers);
+
+		ResponseEntity<Object[]> responseGetContainers = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetContainers, Object[].class);
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetContainers.getHeaders().getContentType().getCharSet());
+		assertEquals(HttpStatus.OK, responseGetContainers.getStatusCode());
+	}
+
 	@Override
 	@Test
 	public void put() {
@@ -109,14 +107,6 @@ public class ContainerIntegrationTest extends BaseConfig implements IIntegration
 	@Ignore
 	public void delete() {
 
-	}
-
-	@Autowired
-	private ContainerRepository containerRepository;
-
-	@After
-	public void after() {
-		containerRepository.deleteAll();
 	}
 
 	@Override

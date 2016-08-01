@@ -33,17 +33,18 @@ public interface IUserService {
 
 	public List<User> getAll();
 
-	public User getById(final Long id) throws NotFoundException;
+	public User getById(final long id) throws NotFoundException;
 
 	public User getUserByName(String username) throws NotFoundException;
 
 	public User save(final User user) throws SaveFailedException;
 
-	public User update(final User user)
-			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
+	public User update(final User user) throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
-	public void delete(final Long id) throws DeleteFailedException;
+	public void delete(final long id) throws DeleteFailedException;
 
-	public void updatePassword(final Long id, final PasswordChange passwordChange) throws UpdateFailedException, DontMatchException;
+	public void updatePassword(final long id, final PasswordChange passwordChange) throws UpdateFailedException, DontMatchException;
+
+	public User activate(final long id) throws UpdateFailedException;
 
 }

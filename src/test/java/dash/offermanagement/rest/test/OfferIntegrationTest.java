@@ -18,32 +18,24 @@ import static org.junit.Assert.assertEquals;
 import java.util.Calendar;
 
 import org.apache.http.entity.ContentType;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.containermanagement.business.ContainerRepository;
 import dash.containermanagement.domain.Container;
 import dash.inquirermanagement.domain.Title;
-import dash.offermanagement.business.OfferRepository;
 import dash.offermanagement.domain.Offer;
-import dash.prospectmanagement.business.ProspectRepository;
 import dash.prospectmanagement.domain.Prospect;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
-import dash.vendormanagement.business.VendorRepository;
 import dash.vendormanagement.domain.Vendor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -51,34 +43,7 @@ import dash.vendormanagement.domain.Vendor;
 @WebIntegrationTest
 public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private String EXTENDED_URI = BASE_URI + "/api/rest/offers";
-
-	@Autowired
-	private OfferRepository offerRepository;
-
-	@Autowired
-	private ContainerRepository containerRepository;
-
-	@Autowired
-	private ProspectRepository prospectRepository;
-
-	@Autowired
-	private VendorRepository vendorRepository;
-
-	@Before
-	public void setup() {
-		headers.clear();
-		headers.add("Authorization", "Basic " + base64Creds);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-	}
-
-	@After
-	public void after() {
-		offerRepository.deleteAll();
-		containerRepository.deleteAll();
-		prospectRepository.deleteAll();
-		vendorRepository.deleteAll();
-	}
+	private final static String EXTENDED_URI = BASE_URI + REST_OFFERS;
 
 	@Override
 	@Ignore
@@ -113,6 +78,16 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetOffer.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetOffer.getStatusCode());
 		assertEquals(responseCreateOffer, responseGetOffer.getBody());
+	}
+
+	@Test
+	public void getAll() {
+
+		HttpEntity<Offer> entityGetOffers = new HttpEntity<Offer>(headers);
+
+		ResponseEntity<Object[]> responseGetOffers = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetOffers, Object[].class);
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetOffers.getHeaders().getContentType().getCharSet());
+		assertEquals(HttpStatus.OK, responseGetOffers.getStatusCode());
 	}
 
 	@Override

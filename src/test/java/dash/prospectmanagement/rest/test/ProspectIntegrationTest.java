@@ -16,24 +16,19 @@ package dash.prospectmanagement.rest.test;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.http.entity.ContentType;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
 import dash.inquirermanagement.domain.Title;
-import dash.prospectmanagement.business.ProspectRepository;
 import dash.prospectmanagement.domain.Prospect;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
@@ -43,14 +38,7 @@ import dash.test.IIntegrationTest;
 @WebIntegrationTest
 public class ProspectIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private String EXTENDED_URI = BASE_URI + "/api/rest/prospects";
-
-	@Before
-	public void setup() {
-		headers.clear();
-		headers.add("Authorization", "Basic " + base64Creds);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-	}
+	private final static String EXTENDED_URI = BASE_URI + REST_PROSPECTS;
 
 	@Override
 	@Test
@@ -85,6 +73,16 @@ public class ProspectIntegrationTest extends BaseConfig implements IIntegrationT
 		assertEquals(create(), responseGetProspect.getBody());
 	}
 
+	@Test
+	public void getAll() {
+
+		HttpEntity<Prospect> entityGetProspects = new HttpEntity<Prospect>(headers);
+
+		ResponseEntity<Object[]> responseGetProspects = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetProspects, Object[].class);
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetProspects.getHeaders().getContentType().getCharSet());
+		assertEquals(HttpStatus.OK, responseGetProspects.getStatusCode());
+	}
+
 	@Override
 	@Test
 	public void put() {
@@ -110,14 +108,6 @@ public class ProspectIntegrationTest extends BaseConfig implements IIntegrationT
 	@Ignore
 	public void delete() {
 
-	}
-
-	@Autowired
-	private ProspectRepository prospectRepository;
-
-	@After
-	public void after() {
-		prospectRepository.deleteAll();
 	}
 
 	@Override

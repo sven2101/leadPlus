@@ -16,23 +16,18 @@ package dash.inquirermanagement.rest.test;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.http.entity.ContentType;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.inquirermanagement.business.InquirerRepository;
 import dash.inquirermanagement.domain.Inquirer;
 import dash.inquirermanagement.domain.Title;
 import dash.test.BaseConfig;
@@ -43,22 +38,7 @@ import dash.test.IIntegrationTest;
 @WebIntegrationTest
 public class InquirerIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private String EXTENDED_URI = BASE_URI + "/api/rest/inquirers";
-
-	@Before
-	public void setup() {
-		headers.clear();
-		headers.add("Authorization", "Basic " + base64Creds);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-	}
-
-	@Autowired
-	private InquirerRepository inquirerRepository;
-
-	@After
-	public void after() {
-		inquirerRepository.deleteAll();
-	}
+	private final static String EXTENDED_URI = BASE_URI + REST_INQUIRERS;
 
 	@Override
 	@Test
@@ -92,6 +72,16 @@ public class InquirerIntegrationTest extends BaseConfig implements IIntegrationT
 		assertEquals(HttpStatus.OK, responseGetInquirer.getStatusCode());
 		assertEquals(create(), responseGetInquirer.getBody());
 
+	}
+
+	@Test
+	public void getAll() {
+
+		HttpEntity<Inquirer> entityGetInquirers = new HttpEntity<Inquirer>(headers);
+
+		ResponseEntity<Object[]> responseGetInquirers = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetInquirers, Object[].class);
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetInquirers.getHeaders().getContentType().getCharSet());
+		assertEquals(HttpStatus.OK, responseGetInquirers.getStatusCode());
 	}
 
 	@Override

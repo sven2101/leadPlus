@@ -65,15 +65,7 @@ public class User implements UserDetails {
 	private boolean enabled;
 
 	public User() {
-	}
 
-	public User(String username, String firstName, String lastName, String email, String passwordHash, String profilPictureURL, Language language) {
-		this.username = username;
-		this.email = email;
-		this.password = passwordHash;
-		this.profilPictureURL = profilPictureURL;
-		this.language = language;
-		this.enabled = false;
 	}
 
 	public Long getId() {

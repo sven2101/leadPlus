@@ -18,8 +18,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.Calendar;
 
 import org.apache.http.entity.ContentType;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,29 +27,24 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.commentmanagement.business.CommentRepository;
 import dash.commentmanagement.domain.Comment;
 import dash.containermanagement.domain.Container;
-import dash.exceptions.SaveFailedException;
+import dash.exceptions.NotFoundException;
 import dash.inquirermanagement.domain.Inquirer;
 import dash.inquirermanagement.domain.Title;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
-import dash.processmanagement.business.ProcessRepository;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
 import dash.salemanagement.domain.Sale;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
 import dash.usermanagement.business.IUserService;
-import dash.usermanagement.business.UserRepository;
 import dash.usermanagement.domain.User;
-import dash.usermanagement.settings.language.Language;
 import dash.vendormanagement.domain.Vendor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -59,33 +52,10 @@ import dash.vendormanagement.domain.Vendor;
 @WebIntegrationTest
 public class CommentIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private String EXTENDED_URI = BASE_URI + "/api/rest/comments";
-
-	@Autowired
-	private CommentRepository commentRepository;
+	private final static String EXTENDED_URI = BASE_URI + REST_COMMENTS;
 
 	@Autowired
 	private IUserService userService;
-
-	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
-	private ProcessRepository processRepository;
-
-	@Before
-	public void setup() {
-		headers.clear();
-		headers.add("Authorization", "Basic " + base64Creds);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-	}
-
-	@After
-	public void after() {
-		commentRepository.deleteAll();
-		userRepository.deleteAll();
-		processRepository.deleteAll();
-	}
 
 	@Override
 	@Test
@@ -120,6 +90,16 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 		assertEquals(create(), responseGetComment.getBody());
 	}
 
+	@Test
+	public void getAllByProcess() {
+
+		HttpEntity<Comment> entityGetComments = new HttpEntity<Comment>(headers);
+
+		ResponseEntity<Object[]> responseGetComments = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetComments, Object[].class);
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetComments.getHeaders().getContentType().getCharSet());
+		assertEquals(HttpStatus.OK, responseGetComments.getStatusCode());
+	}
+
 	@Override
 	@Test
 	public void put() {
@@ -152,10 +132,9 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 
 		Comment comment = new Comment();
 
-		User user = new User("andreasfoitzik", "Andreas", "Foitzik", "andreas.foitzik@eviarc.com", "test", null, Language.EN);
 		try {
 			comment.setCommentText("Test");
-			comment.setCreator(userService.save(user));
+			comment.setCreator(userService.getUserByName("test"));
 
 			Process process = new Process();
 
@@ -195,13 +174,13 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 			process.setLead(lead);
 			process.setOffer(offer);
 			process.setSale(sale);
-			process.setProcessor(user);
+			process.setProcessor(userService.getUserByName("test"));
 			process.setStatus(Status.OPEN);
 
 			comment.setProcess(process);
 
-		} catch (SaveFailedException e) {
-			e.printStackTrace();
+		} catch (NotFoundException ex) {
+			ex.printStackTrace();
 		}
 		comment.setCreator(new User());
 		comment.setTimestamp(Calendar.getInstance());

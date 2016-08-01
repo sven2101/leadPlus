@@ -16,25 +16,20 @@ package dash.vendormanagement.rest.test;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.http.entity.ContentType;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
-import dash.vendormanagement.business.VendorRepository;
 import dash.vendormanagement.domain.Vendor;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -42,22 +37,7 @@ import dash.vendormanagement.domain.Vendor;
 @WebIntegrationTest
 public class VendorIntegrationTest extends BaseConfig implements IIntegrationTest {
 
-	private String EXTENDED_URI = BASE_URI + "/api/rest/vendors";
-
-	@Autowired
-	private VendorRepository vendorRepository;
-
-	@Before
-	public void setup() {
-		headers.clear();
-		headers.add("Authorization", "Basic " + base64Creds);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-	}
-
-	@After
-	public void after() {
-		vendorRepository.deleteAll();
-	}
+	private final static String EXTENDED_URI = BASE_URI + REST_VENDORS;
 
 	@Override
 	@Test
@@ -91,6 +71,16 @@ public class VendorIntegrationTest extends BaseConfig implements IIntegrationTes
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetVendor.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetVendor.getStatusCode());
 		assertEquals(vendor, responseGetVendor.getBody());
+	}
+
+	@Test
+	public void getAll() {
+
+		HttpEntity<Vendor> entityGetVendors = new HttpEntity<Vendor>(headers);
+
+		ResponseEntity<Object[]> responseGetVendors = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetVendors, Object[].class);
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetVendors.getHeaders().getContentType().getCharSet());
+		assertEquals(HttpStatus.OK, responseGetVendors.getStatusCode());
 	}
 
 	@Override

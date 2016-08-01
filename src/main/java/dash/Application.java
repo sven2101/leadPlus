@@ -129,19 +129,6 @@ public class Application {
 
 			userService.save(apiuser);
 		}
-
-		if (!Optional.ofNullable(userService.getUserByName("test")).isPresent()) {
-			User test = new User();
-
-			test.setUsername("test".toLowerCase());
-			test.setPassword(passwordEncoder().encode("test"));
-			test.setEmail("test@eviarc.com");
-			test.setRole(Role.USER);
-			test.setEnabled(true);
-			test.setLanguage(Language.DE);
-
-			userService.save(test);
-		}
 	}
 
 	@Configuration
