@@ -16,21 +16,21 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             .when("/",
             {
                 templateUrl: "components/dashboard/dashboard.html",
-                controller: "DashboardCtrl",
+                controller: "DashboardController",
                 controllerAs: "dashboard",
                 authenticated: true
             })
             .when("/dashboard",
             {
                 templateUrl: "components/dashboard/dashboard.html",
-                controller: "DashboardCtrl",
+                controller: "DashboardController",
                 controllerAs: "dashboard",
                 authenticated: true
             })
             .when("/leads",
             {
                 templateUrl: "components/leads/leads.html",
-                controller: "LeadsCtrl",
+                controller: "LeadController",
                 controllerAs: "lead",
                 authenticated: true
             })
@@ -51,7 +51,7 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             .when("/statistic",
             {
                 templateUrl: "components/statistics/statistics.html",
-                controller: "StatisticsCtrl",
+                controller: "StatisticContoller",
                 controllerAs: "statistic",
                 authenticated: true
             })

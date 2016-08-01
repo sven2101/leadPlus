@@ -31,10 +31,7 @@ gulp.task('angular-task', function () {
         .pipe(gulp.dest(path.angular.dst));       
 });
 */
-gulp.task('angular-task', ['compile'], function () {
-    gulp.src(path.angular.src)
-        .pipe(gulp.dest(path.angular.dst));
-    return gulp.src(path.angular.src)
-        .pipe(concat('angular.js'))
-        .pipe(gulp.dest('frontend/tmp'));
+gulp.task('angular-task', ['compile','javascript','typescript-task'], function () {
+    return gulp.src(path.angular.src)     
+        .pipe(gulp.dest(path.angular.dst));    
 });

@@ -13,7 +13,7 @@
  *******************************************************************************/
 "use strict";
 
-import {User} from "../models/User.ts";
+/// <reference path="../models/User.ts" />
 
 class ProfileController {
 

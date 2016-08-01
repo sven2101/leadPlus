@@ -11,13 +11,24 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+"use strict";
 
-class User {
-    id: number;
-    username: String;
-    email: String;
-    password: String;
-    role: String;
-    profilPictureURL: String;
-    language: String;
-}
+let app = angular.module("app");
+app.directive("childrow", function () {
+    let directive;
+    directive.restrict = "A";
+    directive.templateUrl = function (elem, attr) {
+        if (attr.type === "lead")
+            return "component/leads/leadChildRow.html";
+        else if (attr.type === "offer")
+            return "component/offers/offerChildRow.html";
+        else if (attr.type === "sale")
+            return "component/sales/saleChildRow.html";
+
+    };
+    directive.transclude = true;
+    directive.link = function (scope, element, attrs) {
+    };
+    return directive;
+});
+
