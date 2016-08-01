@@ -11,33 +11,26 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-
 "use strict";
 
-angular.module("app.services").factory("SaleService", SaleService);
+angular.module("app.services", ["ngResource"]).factory("Sales", Sales);
 
-class SaleService {
+class Sales {
 
     static $inject = ["$resource"];
 
     resource;
 
-    day;
-    week;
-    month;
-    year;
-    all;
-
     constructor($resource) {
-        this.resource = $resource;
-        this.routeInit();
+        this.resource = $resource("/api/rest/processes/statistics/sales", {}, {
+            day: { url: "/api/rest/processes/statistics/sales/day", method: "GET" },
+            week: { url: "/api/rest/processes/statistics/sales/week", method: "GET" },
+            month: { url: "/api/rest/processes/statistics/sales/month", method: "GET" },
+            year: { url: "/api/rest/processes/statistics/sales/year", method: "GET" },
+            all: { url: "/api/rest/processes/statistics/sales/all", method: "GET" }
+        });
+
     }
 
-    routeInit() {
-        this.day = { url: "/api/rest/processes/statistics/sales/day", method: "GET" };
-        this.week = { url: "/api/rest/processes/statistics/sales/week", method: "GET" };
-        this.month = { url: "/api/rest/processes/statistics/sales/month", method: "GET" };
-        this.year = { url: "/api/rest/processes/statistics/sales/year", method: "GET" };
-        this.all = { url: "/api/rest/processes/statistics/sales/all", method: "GET" };
-    }
+
 }

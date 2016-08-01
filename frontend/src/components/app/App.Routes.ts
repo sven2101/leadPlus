@@ -23,14 +23,14 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             .when("/dashboard",
             {
                 templateUrl: "components/dashboard/dashboard.html",
-                controller: "DashboardCtrl",
+                controller: "DashboardController",
                 controllerAs: "dashboard",
                 authenticated: true
             })
             .when("/leads",
             {
                 templateUrl: "components/leads/leads.html",
-                controller: "LeadsCtrl",
+                controller: "LeadController",
                 controllerAs: "lead",
                 authenticated: true
             })

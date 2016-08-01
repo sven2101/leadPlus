@@ -77,12 +77,39 @@ module.exports = {
 		componentViews: {
 			src: baseSrcPath + 'components/**/*.html',
 			dst: baseDstPath + 'components'
-		},
+		},		
 		angular: {
+			/*
 			src: [
-				
-				baseTmpPath + 'js/**'
+				baseTmpPath+'js/app/App.Module.js',
+				baseTmpPath+'js/app/App.Controller.js',
+				baseTmpPath+'js/app/App.Routes.js',
+
+				baseTmpPath+'js/app/services.js',
+				baseTmpPath+'js/app/directives/childrow.js',
+				baseTmpPath+'js/app/directives/childrow.js',
+
+				baseTmpPath+'js/dashboard/Dashboard.Controller.js',
+				baseTmpPath+'js/leads/Lead.Controller.js',
+				baseTmpPath+'js/login/Login.Controller.js',
+				baseTmpPath+'js/signup/SignUp.Controller.js',
+				baseTmpPath+'js/offers/offers.js',
+				baseTmpPath+'js/offers/offersAction.js',
+				baseTmpPath+'js/sales/sales.js',
+				baseTmpPath+'js/statistics/Statistic.Controller.js',
+				baseTmpPath+'js/settings/Settings.Controller.js',
+				baseTmpPath+'js/profile/Profile.Controller.js',
+
+				baseTmpPath+'js/models/User.js',
+				baseTmpPath+'js/models/SharedItemsPieChart.js',
+				baseTmpPath+'js/models/EntireStatisticSpline.js',
+				baseTmpPath+'js/models/EntireStatisticArea.js',
+				baseTmpPath+'js/models/LeadsConversionRate.js',
+				baseTmpPath+'js/models/OffersConversionRate.js',
 			],
+
+			*/
+			src: baseTmpPath + 'js/**/*.js',
 			dst: baseDstPath + 'assets'
 		},
 		javascript: {

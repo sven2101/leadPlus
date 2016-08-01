@@ -68,10 +68,10 @@ class StatisticContoller {
         this.interval = $interval;
 
         this.chartSingleStatisticPie = new SharedItemsPieChart(this.translate);
-        this.chartEntireStatisticSpline = this.entireStatisticSpline();
-        this.chartEntireStatisticArea = this.entireStatisticArea();
-        this.chartLeadsConversionRate = this.getLeadsConversionRate();
-        this.chartOffersConversionRate = this.getOffersConversionRate();
+        this.chartEntireStatisticSpline = new EntireStatisticSpline(this.translate);
+        this.chartEntireStatisticArea = new EntireStatisticArea(this.translate);
+        this.chartLeadsConversionRate = new LeadsConversionRate(this.translate);
+        this.chartOffersConversionRate = new OffersConversionRate(this.translate);
 
         this.leadsService = Leads;
         this.offersService = Offers;
@@ -273,44 +273,6 @@ class StatisticContoller {
         });
     }
 
-    getSharedItemsPieChart() {
-        let chartConfig = {
-            options: {
-                chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: "pie"
-                }
-                ,
-                title: {
-                    text: ""
-                },
-                tooltip: {},
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: false,
-                        cursor: "pointer",
-                        dataLabels: {
-                            enabled: true,
-                            style: {
-                                color: (window["Highcharts"].theme && window["Highcharts"].theme.contrastTextColor) || "black"
-                            }
-                        }
-                    }
-                }
-            },
-            series: [{
-                name: this.translate.instant("STATISTIC_PARTS"),
-                colorByPoint: true,
-                data: []
-            }],
-            loading: false
-        };
-
-        return chartConfig;
-    }
-
     pushToPieChart() {
         this.chartSingleStatisticPie.series[0].data.push({
             name: this.translate.instant("LEADS_MENU"),
@@ -331,169 +293,6 @@ class StatisticContoller {
         });
     }
 
-    entireStatisticArea() {
-        let chartConfig = {
-            options: {
-                chart: {
-                    type: "area"
-                },
-                title: {
-                    text: ""
-                },
-                tooltip: {
-                    shared: true,
-                    valueSuffix: " €",
-                    valueDecimals: 2
-                },
-                xAxis: {
-                    categories: [],
-                },
-                loading: false,
-                yAxis: {
-                    title: {
-                        text: this.translate.instant("STATISTIC_PROFIT_AND_RETURN_Y_AXIS"),
-                    },
-                    labels: {
-                        formatter: function () {
-                            return this.value;
-                        }
-                    }
-                }
-            },
-            series: []
-        };
-        return chartConfig;
-    }
-    entireStatisticSpline() {
-        let chartConfig = {
-            options: {
-                chart: {
-                    type: "spline"
-                },
-                title: "",
-                tooltip: {
-                    shared: true,
-                    valueSuffix: ""
-                },
-                loading: false,
-                xAxis: {
-                    categories: []
-                },
-                yAxis: {
-                    title: {
-                        text: this.translate.instant("STATISTIC_LEADS_OFFERS_SALES_Y_AXIS")
-                    },
-                    plotLines: [{
-                        value: 0,
-                        width: 1,
-                        color: "#808080"
-                    }]
-                },
-                legend: {
-                    layout: "vertical",
-                    align: "right",
-                    verticalAlign: "middle",
-                    borderWidth: 0
-                }
-            },
-            series: [],
-            // function (optional)
-            func: function (chart) {
-                // setup some logic for the chart
-            }
-        };
-        return chartConfig;
-    }
-    getLeadsConversionRate() {
-        let chartConfig = {
-            options: {
-                chart: {
-                    type: "spline"
-                },
-                title: {
-                    text: ""
-                },
-                loading: false,
-                xAxis: {
-                    categories: [],
-                },
-                yAxis: {
-                    title: {
-                        text: this.translate.instant("STATISTIC_SALES_OF_LEADS_Y_AXIS")
-                    },
-                    minorGridLineWidth: 1,
-                    gridLineWidth: 1,
-                    alternateGridColor: null
-
-                },
-                tooltip: {
-                    valueSuffix: " %",
-                    valueDecimals: 2
-                },
-                plotOptions: {
-                    spline: {
-                        lineWidth: 4,
-                        states: {
-                            hover: {
-                                lineWidth: 5
-                            }
-                        },
-                        marker: {
-                            enabled: false
-                        }
-                    }
-                },
-            },
-            series: []
-        };
-
-        return chartConfig;
-    }
-    getOffersConversionRate() {
-        let chartConfig = {
-            options: {
-                chart: {
-                    type: "spline"
-                },
-                title: {
-                    text: ""
-                },
-                loading: false,
-                xAxis: {
-                    categories: [],
-                },
-                yAxis: {
-                    title: {
-                        text: this.translate.instant("STATISTIC_SALES_OF_OFFERS_Y_AXIS")
-                    },
-                    minorGridLineWidth: 1,
-                    gridLineWidth: 1,
-                    alternateGridColor: null
-
-                },
-                tooltip: {
-                    valueSuffix: " %",
-                    valueDecimals: 2
-                },
-                plotOptions: {
-                    spline: {
-                        lineWidth: 4,
-                        states: {
-                            hover: {
-                                lineWidth: 5
-                            }
-                        },
-                        marker: {
-                            enabled: false
-                        }
-                    }
-                },
-            },
-            series: []
-        };
-
-        return chartConfig;
-    }
     pushLeadsOffersSales() {
         this.chartEntireStatisticSpline.series.push({
             name: this.translate.instant("LEADS_MENU"),
