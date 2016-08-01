@@ -58,6 +58,7 @@ public class CommentService implements ICommentService {
 
 	@Override
 	public Comment save(final Comment comment) throws SaveFailedException {
+		System.out.println("Comment: " + comment.toString());
 		if (Optional.ofNullable(comment).isPresent() && Optional.ofNullable(comment.getCreator()).isPresent()
 				&& Optional.ofNullable(comment.getCreator().getId()).isPresent()) {
 			try {
