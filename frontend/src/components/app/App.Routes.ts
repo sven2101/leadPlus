@@ -44,7 +44,7 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             .when("/sales",
             {
                 templateUrl: "components/sales/sales.html",
-                controller: "SalesCtrl",
+                controller: "SalesController",
                 controllerAs: "sale",
                 authenticated: true
             })
