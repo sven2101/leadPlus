@@ -1,0 +1,60 @@
+<style>
+    .important {
+        background: #FFEBEB;
+    }
+</style>
+<meta charset="utf-8">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-10">
+                <h2>{{ 'PRODUCT_PRODUCTS' | translate }}</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#/dashboard">Home</a>
+                    </li>
+                    <li class="active">
+                        <strong>{{ 'PRODUCT_PRODUCTS' | translate }}</strong>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>{{ 'PRODUCT_MANAGE_PRODUCTS' | translate }}</h5>
+                </div>
+                <div class="ibox-content">
+                    <button type="button" class="btn btn-success" ng-click="productCtrl.clearProduct()" data-toggle="modal" data-target="#createProductModal">
+                        <i class="fa fa-plus"></i>&nbsp;{{ 'PRODUCT_CREATE' | translate }}
+                    </button>
+                    <button ng-click="productCtrl.refreshData()" type="button" class="btn btn-success">
+                        <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
+                    </button>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>name</th>
+                                <th>description</th>
+                                <th>price</th>
+                            </tr>
+                        </thead>
+                        <tr ng-repeat="product in productCtrl.products">
+                            <td>{{$index+1}}</td>
+                            <td>{{product.name}}</td>
+                            <td>{{product.description}}</td>
+                            <td>{{product.price}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-include="'components/product/CreateProductModal.html'"></div>

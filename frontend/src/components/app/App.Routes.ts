@@ -44,7 +44,7 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             .when("/sales",
             {
                 templateUrl: "components/sales/sales.html",
-                controller: "SalesController",
+                controller: "SaleController",
                 controllerAs: "sale",
                 authenticated: true
             })
@@ -84,7 +84,14 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             {
                 templateUrl: "components/test/test.html",
                 controller: "TestController",
-                controllerAs: "testCtrl"
+                controllerAs: "testCtrl",
+                authenticated: true
+            }).when("/product",
+            {
+                templateUrl: "components/Product/Product.html",
+                controller: "ProductController",
+                controllerAs: "productCtrl",
+                authenticated: true
             }).otherwise({
                 redirectTo: "/"
             });

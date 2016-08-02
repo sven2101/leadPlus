@@ -1,0 +1,48 @@
+<div class="modal inmodal" id="createProductModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">{{ 'PRODUCT_CREATE' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <form name="productCtrl.createProductorm" novalidate>
+                    <div class="row">
+                        <!-- PRODUCTNAME -->
+                        <div class="col-sm-6 b-r">
+                            <div class="form-group" ">
+                                <label>{{ 'PRODUCT_PRODUCTNAME' | translate }}</label>
+                                <input type="text " name="firstname " class="form-control " ng-model="productCtrl.currentProduct.productName
+                                " ng-maxlength="30 ">                               
+                            </div>
+                            <!--DESCRIPTION -->
+                            <div class="form-group ">
+                                <label>{{ 'PRODUCT_DESCRIPTION' | translate }}</label>
+                                <input type="text " name="lastname " class="form-control " ng-model="productCtrl.currentProduct.description
+                                " ng-maxlength="30 ">
+                               </div>
+                            <!-- PRICE -->
+                            <div class="form-group " ">
+                                <label>{{ 'PRODUCT_PRICE' | translate }}</label>
+                                <input type="text" name="company" class="form-control" ng-model="productCtrl.currentProduct.price" ng-maxlength="50">
+                            </div>
+                        </div>
+                        <!-- IMAGE -->
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>{{ 'PRODUCT_IMAGE' | translate }}</label>
+                                <input id="input-1" type="file" class="file">                                
+                                <img ng-src="http://www.containersucher.com/assets/plugindata/w2dblgbb1ca3b3057e90d9af3e514539e33a22/pic1271913090.jpg" height="200" width="200" alt="Description" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}</button>
+                <button type="button" class="btn btn-success" ng-click="productCtrl.saveProduct()" data-dismiss="modal">{{ 'COMMON_SAVE' | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>

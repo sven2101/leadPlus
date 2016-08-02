@@ -258,7 +258,14 @@ function config($translateProvider) {
             SEPTEMBER: "September",
             OCTOBER: "Oktober",
             NOVEMBER: "November",
-            DECEMBER: "Dezember"
+            DECEMBER: "Dezember",
+            PRODUCT_PRODUCTS: "Produkte",
+            PRODUCT_MANAGE_PRODUCTS: "Produkte verwalten",
+            PRODUCT_CREATE: "Neues Produkt",
+            PRODUCT_PRODUCTNAME: "Produktname",
+            PRODUCT_DESCRIPTION: "Beschreibung",
+            PRODUCT_PRICE: "Preis",
+            PRODUCT_IMAGE: "Bild"
 
         })
         .translations("en", {
@@ -500,7 +507,15 @@ function config($translateProvider) {
             SEPTEMBER: "September",
             OCTOBER: "October",
             NOVEMBER: "November",
-            DECEMBER: "December"
+            DECEMBER: "December",
+
+            PRODUCT_PRODUCTS: "Products",
+            PRODUCT_MANAGE_PRODUCTS: "Manage products",
+            PRODUCT_CREATE: "New product",
+            PRODUCT_PRODUCTNAME: "Product name",
+            PRODUCT_DESCRIPTION: "Description",
+            PRODUCT_PRICE: "Price",
+            PRODUCT_IMAGE: "Image"
 
         });
 

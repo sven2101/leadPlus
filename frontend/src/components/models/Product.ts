@@ -10,33 +10,16 @@
  ******************************************************************************/
 "use strict";
 
-angular.module("app",
-    [
-        "app.services",
-        "app.dashboard",
-        "app.login",
-        "app.signup",
-        "app.leads",
-        "app.offers",
-        "app.sales",
-        "app.statistics",
-        "app.settings",
-        "app.profile",
-        "pascalprecht.translate",
-        "ngResource",
-        "ngRoute",
-        "ngAnimate",
-        "ngCookies",
-        "datatables",
-        "datatables.bootstrap",
-        "datatables.buttons",
-        "ui.sortable",
-        "NgSwitchery",
-        "toaster",
-        "highcharts-ng",
-        "testModule",
-        "app.product",
-        "app.product.service"
+class Product {
 
-    ]);
+    productName: String;
+    description: String;
+    price: Number;
+    image: any;
 
+    constructor() {
+        this.productName = "productName";
+        this.description = "description";
+        this.price = 66.66;
+    }
+}
