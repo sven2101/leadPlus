@@ -60,6 +60,7 @@ class LeadController {
         this.translate = $translate;
         this.compile = $compile;
         this.toaster = toaster;
+        this.setUser();
         this.setWindowWith();
         this.setDTOptions();
         this.setDTColumns();
@@ -74,6 +75,16 @@ class LeadController {
 
 
     }
+    setUser() {
+        let self = this;
+        if (!angular.isUndefined(this.rootScope.globals.currentUser))
+            this.userService.get({
+                username: this.rootScope.globals.currentUser.username
+            }).$promise.then(function (result) {
+                self.user = result;
+            });
+    }
+
     setWindowWith() {
         let self = this;
         this.windowWidth = $(window).width();
@@ -191,10 +202,9 @@ class LeadController {
                 .renderWith(this.addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 /* tslint:disable:quotemark */
-                '<span class="glyphicon glyphicon- cog"></span>').withClass(
-                'text-center'
+                '<span class="glyphicon glyphicon- cog"></span>'
                 /* tslint:enable:quotemark */
-                ).notSortable().renderWith("addActionsButtons")];
+            ).withClass("text-center").notSortable().renderWith("addActionsButtons")];
     }
     refreshData() {
         let resetPaging = false;
