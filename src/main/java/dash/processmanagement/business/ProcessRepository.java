@@ -26,8 +26,8 @@ import org.springframework.stereotype.Repository;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.domain.Status;
 import dash.salemanagement.domain.Sale;
+import dash.statusmanagement.domain.Status;
 
 @Transactional
 @Repository
@@ -59,5 +59,7 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 			String firstname, String lastname, String email, String company, String phone, String containerName, String containerDescription, String transport,
 			String status, Pageable pageable);
 
-	List<Sale> findTopBySaleIsNotNullOrderBySaleTimestampDesc(int amount);
+	List<Sale> findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
+
+	List<Sale> findTop10BySaleIsNotNullOrderBySaleTimestampDesc();
 }

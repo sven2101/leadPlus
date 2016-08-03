@@ -40,17 +40,17 @@ class Auth {
             .error(error);
     }
     login(credentials, success, error) {
-
         if (credentials) {
 
             let authorization = btoa(credentials.username + ":" + credentials.password);
             let headers = credentials ? { authorization: "Basic " + authorization } : {};
-
-            this.http.get("user", { headers: headers }).success(function (data) {
-
+            this.http.get("user", { headers: headers }).success(function(data) {
+                console.log(data);
                 if (data.username) {
+
                     this.rootScope.globals = {
                         currentUser: {
+                            id: data.id,
                             username: data.username,
                             role: data.role,
                             authorization: authorization
@@ -75,10 +75,10 @@ class Auth {
         this.http.defaults.headers.common.Authorization = "Basic";
 
         this.http.post("logout", {})
-            .success(function () {
+            .success(function() {
                 self.location.path("#/login");
             })
-            .error(function (data) {
+            .error(function(data) {
                 self.location.path("#/login");
             });
     }

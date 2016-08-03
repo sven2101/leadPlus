@@ -41,32 +41,32 @@ import dash.usermanagement.settings.password.PasswordChange;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/users", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/users", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 public class UserResource {
 
 	@Autowired
 	private UserService userService;
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Get a single user.", notes = "Provide a valid user ID.")
-	public List<User> get() {
+	@ApiOperation(value = "Get all user.", notes = "All users.")
+	public List<User> getAll() {
 		return userService.getAll();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
-	public User findById(@PathVariable final long id) throws NotFoundException {
+	public User getById(@PathVariable final long id) throws NotFoundException {
 		return userService.getById(id);
 	}
 
-	@RequestMapping(value = "/{id}/update", method = RequestMethod.PUT)
+	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
-	public User updateUser(@RequestBody @Valid final User updateUser)
+	public User update(@RequestBody @Valid final User user)
 			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
-		return userService.update(updateUser);
+		return userService.update(user);
 	}
 
 	@RequestMapping(value = "/{id}/pw", method = RequestMethod.PUT)

@@ -15,7 +15,7 @@
 
 class StatisticContoller {
 
-    $inject = ["Leads", "Offers", "Sales", "Profit", "Turnover", "$translate", "$interval", "$scope"];
+    $inject = ["StatisticResource", "$translate", "$interval", "$scope"];
 
     translate;
     scope;
@@ -46,11 +46,7 @@ class StatisticContoller {
     conversionrate = {};
     profitPerSale = {};
 
-    leadsService;
-    offersService;
-    salesService;
-    profitService;
-    turnoverService;
+    StatisticResource;
 
     timeframe = [];
     weekday = new Array(7);
@@ -62,7 +58,7 @@ class StatisticContoller {
     isProfitPromise = false;
     isTurnoverPromise = false;
 
-    constructor(Leads, Offers, Sales, Profit, Turnover, $translate, $interval, $scope) {
+    constructor(StatisticResource, $translate, $interval, $scope) {
         this.translate = $translate;
         this.scope = $scope;
         this.interval = $interval;
@@ -73,34 +69,31 @@ class StatisticContoller {
         this.chartLeadsConversionRate = new LeadsConversionRate(this.translate);
         this.chartOffersConversionRate = new OffersConversionRate(this.translate);
 
-        this.leadsService = Leads;
-        this.offersService = Offers;
-        this.salesService = Sales;
-        this.profitService = Profit;
-        this.turnoverService = Turnover;
+        this.StatisticResource = StatisticResource;
+
         this.setWeekDayTranslationsArray();
         this.setMonthTranslationsArray;
         this.checkPromises();
     }
     registerPromises() {
         let self = this;
-        this.leadsService.day().$promise.then(function (result) {
+        this.StatisticResource.dayLeads().$promise.then(function(result) {
             self.getLeads(result);
             self.isLeadPromise = true;
         });
-        this.offersService.day().$promise.then(function (result) {
+        this.StatisticResource.dayOffers().$promise.then(function(result) {
             self.getOffers(result);
             self.isOfferPromise = true;
         });
-        this.salesService.day().$promise.then(function (result) {
+        this.StatisticResource.daySales().$promise.then(function(result) {
             self.getSales(result);
             self.isSalePromise = true;
         });
-        this.profitService.day().$promise.then(function (result) {
+        this.StatisticResource.dayProfit().$promise.then(function(result) {
             self.getProfit(result);
             self.isProfitPromise = true;
         });
-        this.turnoverService.day().$promise.then(function (result) {
+        this.StatisticResource.dayTurnover().$promise.then(function(result) {
             self.getTurnover(result);
             self.isTurnoverPromise = true;
         });
@@ -131,13 +124,13 @@ class StatisticContoller {
     checkPromises() {
         let self = this;
         let stop;
-        this.scope.$on("$destroy", function () {
+        this.scope.$on("$destroy", function() {
             if (angular.isDefined(stop)) {
                 self.interval.cancel(stop);
                 stop = undefined;
             }
         });
-        stop = this.interval(function () {
+        stop = this.interval(function() {
             if (self.isLeadPromise === true && self.isOfferPromise === true &&
                 self.isSalePromise === true && self.isProfitPromise === true &&
                 self.isTurnoverPromise === true) {
@@ -405,23 +398,23 @@ class StatisticContoller {
 
         switch (selectedPeriod) {
             case "day":
-                this.leadsService.day().$promise.then(function (result) {
+                this.StatisticResource.dayLeads().$promise.then(function(result) {
                     self.getLeads(result);
                     self.isLeadPromise = true;
                 });
-                self.offersService.day().$promise.then(function (result) {
+                self.StatisticResource.dayOffers().$promise.then(function(result) {
                     self.getOffers(result);
                     self.isOfferPromise = true;
                 });
-                self.salesService.day().$promise.then(function (result) {
+                self.StatisticResource.daySales().$promise.then(function(result) {
                     self.getSales(result);
                     self.isSalePromise = true;
                 });
-                self.profitService.day().$promise.then(function (result) {
+                self.StatisticResource.dayProfit().$promise.then(function(result) {
                     self.getProfit(result);
                     self.isProfitPromise = true;
                 });
-                self.turnoverService.day().$promise.then(function (result) {
+                self.StatisticResource.dayTurnover().$promise.then(function(result) {
                     self.getTurnover(result);
                     self.isTurnoverPromise = true;
                 });
@@ -429,92 +422,92 @@ class StatisticContoller {
 
                 break;
             case "week":
-                this.leadsService.week().$promise.then(function (result) {
+                this.StatisticResource.weekLeads().$promise.then(function(result) {
                     self.getLeads(result);
                     self.isLeadPromise = true;
                 });
-                self.offersService.week().$promise.then(function (result) {
+                self.StatisticResource.weekOffers().$promise.then(function(result) {
                     self.getOffers(result);
                     self.isOfferPromise = true;
                 });
-                self.salesService.week().$promise.then(function (result) {
+                self.StatisticResource.weekSales().$promise.then(function(result) {
                     self.getSales(result);
                     self.isSalePromise = true;
                 });
-                self.profitService.week().$promise.then(function (result) {
+                self.StatisticResource.weekProfit().$promise.then(function(result) {
                     self.getProfit(result);
                     self.isProfitPromise = true;
                 });
-                self.turnoverService.week().$promise.then(function (result) {
+                self.StatisticResource.weekTurnover().$promise.then(function(result) {
                     self.getTurnover(result);
                     self.isTurnoverPromise = true;
                 });
 
                 break;
             case "month":
-                this.leadsService.month().$promise.then(function (result) {
+                this.StatisticResource.monthLeads().$promise.then(function(result) {
                     self.getLeads(result);
                     self.isLeadPromise = true;
                 });
-                self.offersService.month().$promise.then(function (result) {
+                self.StatisticResource.monthOffers().$promise.then(function(result) {
                     self.getOffers(result);
                     self.isOfferPromise = true;
                 });
-                self.salesService.month().$promise.then(function (result) {
+                self.StatisticResource.monthSales().$promise.then(function(result) {
                     self.getSales(result);
                     self.isSalePromise = true;
                 });
-                self.profitService.month().$promise.then(function (result) {
+                self.StatisticResource.monthProfit().$promise.then(function(result) {
                     self.getProfit(result);
                     self.isProfitPromise = true;
                 });
-                self.turnoverService.month().$promise.then(function (result) {
+                self.StatisticResource.monthTurnover().$promise.then(function(result) {
                     self.getTurnover(result);
                     self.isTurnoverPromise = true;
                 });
 
                 break;
             case "year":
-                this.leadsService.year().$promise.then(function (result) {
+                this.StatisticResource.yearLeads().$promise.then(function(result) {
                     self.getLeads(result);
                     self.isLeadPromise = true;
                 });
-                self.offersService.year().$promise.then(function (result) {
+                self.StatisticResource.yearOffers().$promise.then(function(result) {
                     self.getOffers(result);
                     self.isOfferPromise = true;
                 });
-                self.salesService.year().$promise.then(function (result) {
+                self.StatisticResource.yearSales().$promise.then(function(result) {
                     self.getSales(result);
                     self.isSalePromise = true;
                 });
-                self.profitService.year().$promise.then(function (result) {
+                self.StatisticResource.yearProfit().$promise.then(function(result) {
                     self.getProfit(result);
                     self.isProfitPromise = true;
                 });
-                self.turnoverService.year().$promise.then(function (result) {
+                self.StatisticResource.yearTurnover().$promise.then(function(result) {
                     self.getTurnover(result);
                     self.isTurnoverPromise = true;
                 });
 
                 break;
             case "all":
-                this.leadsService.all().$promise.then(function (result) {
+                this.StatisticResource.allLeads().$promise.then(function(result) {
                     self.getLeads(result);
                     self.isLeadPromise = true;
                 });
-                self.offersService.all().$promise.then(function (result) {
+                self.StatisticResource.allOffers().$promise.then(function(result) {
                     self.getOffers(result);
                     self.isOfferPromise = true;
                 });
-                self.salesService.all().$promise.then(function (result) {
+                self.StatisticResource.allSales().$promise.then(function(result) {
                     self.getSales(result);
                     self.isSalePromise = true;
                 });
-                self.profitService.all().$promise.then(function (result) {
+                self.StatisticResource.allProfit().$promise.then(function(result) {
                     self.getProfit(result);
                     self.isProfitPromise = true;
                 });
-                self.turnoverService.all().$promise.then(function (result) {
+                self.StatisticResource.allTurnover().$promise.then(function(result) {
                     self.getTurnover(result);
                     self.isTurnoverPromise = true;
                 });

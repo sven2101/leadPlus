@@ -20,7 +20,7 @@ class Product {
 
     constructor() {
         this.name = "";
-        this.description = "";      
+        this.description = "";
         this.id = 0;
     }
 }

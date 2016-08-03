@@ -40,13 +40,13 @@ import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.domain.Status;
-import dash.processmanagement.domain.Workflow;
 import dash.processmanagement.request.Request;
 import dash.salemanagement.business.SaleService;
 import dash.salemanagement.domain.Sale;
+import dash.statusmanagement.domain.Status;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
+import dash.workflowmanagement.domain.Workflow;
 
 @Service
 public class ProcessService implements IProcessService {
@@ -69,7 +69,7 @@ public class ProcessService implements IProcessService {
 	private SaleService saleService;
 
 	@Override
-	public List<Request> getElementsByStatus(final Status status, final Workflow workflow) {
+	public List<Request> getElementsByStatus(final Workflow workflow, final Status status) {
 
 		List<Process> processes = processRepository.findProcessesByStatus(status);
 		List<Request> elements = new ArrayList<>();
@@ -179,19 +179,6 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Status updateStatus(final long processId, final Status status) throws UpdateFailedException {
-		Process process = processRepository.findOne(processId);
-		if (Optional.ofNullable(process).isPresent()) {
-			process.setStatus(status);
-			processRepository.save(process);
-		} else {
-			throw new UpdateFailedException(PROCESS_NOT_FOUND);
-		}
-
-		return status;
-	}
-
-	@Override
 	public Process update(final Process process) throws UpdateFailedException {
 		if (Optional.ofNullable(process).isPresent()) {
 			try {
@@ -248,6 +235,24 @@ public class ProcessService implements IProcessService {
 			DeleteFailedException dfex = new DeleteFailedException(DELETE_FAILED_EXCEPTION);
 			logger.error(PROCESS_NOT_FOUND + OfferService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
 			throw dfex;
+		}
+	}
+
+	@Override
+	public Process removeProcessorByProcessId(final long id) throws UpdateFailedException {
+		if (Optional.ofNullable(id).isPresent()) {
+			try {
+				Process process = getById(id);
+				process.setProcessor(null);
+				return save(process);
+			} catch (EmptyResultDataAccessException | SaveFailedException | NotFoundException ex) {
+				logger.error(ProcessService.class.getSimpleName() + ex.getMessage(), ex);
+				return null;
+			}
+		} else {
+			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			throw ufex;
 		}
 	}
 }

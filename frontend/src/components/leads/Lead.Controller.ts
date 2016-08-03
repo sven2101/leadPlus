@@ -16,11 +16,12 @@
 
 class LeadController {
 
-    $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile", "$scope", "toaster", "Processes", "Comments", "$filter", "Profile", "$rootScope", "$translate"];
+    $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile", "$scope", "toaster", "Processes", "Comments", "Leads", "$filter", "Profile", "$rootScope", "$translate"];
 
     filter;
     processesService;
     commentService;
+    leadService;
     userService;
     DTOptionsBuilder;
     DTColumnBuilder;
@@ -47,10 +48,11 @@ class LeadController {
     dtOptions;
     dtColumns;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, Comments, $filter, Profile, $rootScope, $translate) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, Comments, Leads, $filter, Profile, $rootScope, $translate) {
         this.filter = $filter;
         this.processesService = Processes;
         this.commentService = Comments;
+        this.leadService = Leads;
         this.userService = Profile;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -79,7 +81,7 @@ class LeadController {
         let self = this;
         if (!angular.isUndefined(this.rootScope.globals.currentUser))
             this.userService.get({
-                username: this.rootScope.globals.currentUser.username
+                id: this.rootScope.globals.currentUser.id
             }).$promise.then(function (result) {
                 self.user = result;
             });
@@ -90,7 +92,7 @@ class LeadController {
         this.windowWidth = $(window).width();
         if (!angular.isUndefined(self.rootScope.globals.currentUser))
             this.userService.get({
-                username: self.rootScope.globals.currentUser.username
+                id: self.rootScope.globals.currentUser.id
             }).$promise.then(function (result) {
                 self.user = result;
             });
@@ -99,7 +101,7 @@ class LeadController {
     setDTOptions() {
         let self = this;
         this.dtOptions = self.DTOptionsBuilder.newOptions().withOption("ajax", {
-            url: "/api/rest/processes/state/open/leads",
+            url: "/api/rest/processes/workflow/LEAD/state/OPEN",
             error: function (xhr, error, thrown) {
                 console.log(xhr);
             },
@@ -223,7 +225,7 @@ class LeadController {
             }).withOption("searchDelay", 500);
         } else {
             this.dtOptions.withOption("serverSide", false).withOption("ajax", {
-                url: "/api/rest/processes/state/open/leads",
+                url: "/api/rest/processes/workflow/LEAD/state/OPEN",
                 error: function (xhr, error, thrown) {
                     console.log(xhr);
                 },
@@ -364,7 +366,7 @@ class LeadController {
             lead: this.newLead,
             status: "open"
         };
-        this.processesService.addProcess(process).$promise.then(function (result) {
+        this.processesService.save(process).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
             self.rootScope.leadsCount += 1;

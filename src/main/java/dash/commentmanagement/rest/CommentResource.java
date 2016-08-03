@@ -68,16 +68,16 @@ public class CommentResource {
 	}
 
 	@ApiOperation(value = "Updates a comment.", notes = "")
-	@RequestMapping(value = "/comments", method = RequestMethod.PUT)
+	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public Comment update(@ApiParam(required = true) @RequestBody @Valid final Comment comment) throws UpdateFailedException {
 		return commentService.update(comment);
 	}
 
 	@ApiOperation(value = "Delets a comment.", notes = "")
-	@RequestMapping(method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void delete(@ApiParam(required = true) @RequestBody @Valid final Long id) throws DeleteFailedException {
+	public void delete(@ApiParam(required = true) @RequestBody final Long id) throws DeleteFailedException {
 		commentService.delete(id);
 	}
 }
