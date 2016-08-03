@@ -14,171 +14,61 @@
 
 package dash.statisticmanagement.business;
 
+import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
+import static dash.Constants.STATISTIC_NOT_FOUND;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import dash.exceptions.NotFoundException;
 import dash.processmanagement.request.Request;
 import dash.processmanagement.request.RequestRepository;
-import dash.statisticmanagement.result.domain.Result;
-import dash.utils.YearComparator;
-import dash.utils.YearMonthComparator;
-import dash.utils.YearMonthDayComparator;
+import dash.statisticmanagement.domain.DateRange;
+import dash.statisticmanagement.domain.StatisticHelper;
 
 @Service
 public class StatisticService implements IStatisticService {
 
-	@Autowired
-	private YearComparator yC;
-
-	@Autowired
-	private YearMonthComparator ymC;
-
-	@Autowired
-	private YearMonthDayComparator ymdC;
+	private static final Logger logger = Logger.getLogger(StatisticService.class);
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T> Result getDailyStatistic(RequestRepository<T, Long> repository) {
+	public <T> List<Double> getStatisticByDateRange(RequestRepository<T, Long> repository, DateRange dateRange) throws NotFoundException {
 
-		Calendar from = Calendar.getInstance();
-		from.add(Calendar.DAY_OF_MONTH, -1);
+		StatisticHelper statisticHelper = new StatisticHelper(dateRange);
+		Calendar from = statisticHelper.getFrom();
+		Calendar until = statisticHelper.getUntil();
 
-		Calendar until = Calendar.getInstance();
-		until.add(Calendar.DAY_OF_MONTH, 1);
+		final List<Request> requests = getStatisticBetween(repository, from, until);
 
-		final List<Request> requests = (List<Request>) repository.findByTimestampBetween(from, until);
-
-		Map<String, Double> countOfProcessInDate = new LinkedHashMap<>();
-
-		countOfProcessInDate.put(until.get(Calendar.DAY_OF_MONTH) + "", (double) requests.size());
-
-		return new Result(new ArrayList<Double>(countOfProcessInDate.values()));
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> Result getWeeklyStatistic(RequestRepository<T, Long> repository) {
-
-		Calendar until = Calendar.getInstance();
-		until.add(Calendar.DAY_OF_MONTH, 1);
-
-		Calendar tmp = Calendar.getInstance();
-		tmp.add(Calendar.DAY_OF_YEAR, -6);
-
-		final List<Request> requests = (List<Request>) repository.findByTimestampBetween(tmp, until);
-
-		Map<String, Double> countOfProcessInDate = new LinkedHashMap<>();
-
-		while (ymdC.compare(tmp, until) <= 0) {
-			countOfProcessInDate.put(tmp.get(Calendar.DAY_OF_MONTH) + "", 0.00);
-			tmp.add(Calendar.DAY_OF_MONTH, 1);
-		}
-
+		final Map<String, Double> calendarMap = statisticHelper.getCalendarMap();
 		for (Request request : requests) {
 			Calendar timeStamp = request.getTimestamp();
-			String key = timeStamp.get(Calendar.DAY_OF_MONTH) + "";
-			if (countOfProcessInDate.containsKey(key)) {
-				double value = countOfProcessInDate.get(key) + 1.00;
-				countOfProcessInDate.put(key, value);
+			String key = statisticHelper.getKeyByDateRange(timeStamp, dateRange);
+			if (calendarMap.containsKey(key)) {
+				double value = calendarMap.get(key) + 1.00;
+				calendarMap.put(key, value);
 			}
 		}
-		return new Result(new ArrayList<Double>(countOfProcessInDate.values()));
+		return new ArrayList<>(calendarMap.values());
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
-	public <T> Result getMonthlyStatistic(RequestRepository<T, Long> repository) {
-
-		Calendar until = Calendar.getInstance();
-		until.add(Calendar.DAY_OF_MONTH, 1);
-
-		Calendar tmp = Calendar.getInstance();
-		tmp.add(Calendar.DAY_OF_MONTH, -30);
-
-		final List<Request> requests = (List<Request>) repository.findByTimestampBetween(tmp, until);
-
-		Map<String, Double> countOfProcessInDate = new LinkedHashMap<>();
-
-		while (ymdC.compare(tmp, until) <= 0) {
-			countOfProcessInDate.put(tmp.get(Calendar.DAY_OF_MONTH) + "", 0.00);
-			tmp.add(Calendar.DAY_OF_MONTH, 1);
-		}
-
-		for (Request request : requests) {
-			Calendar timeStamp = request.getTimestamp();
-			String key = timeStamp.get(Calendar.DAY_OF_MONTH) + "";
-			if (countOfProcessInDate.containsKey(key)) {
-				double value = countOfProcessInDate.get(key) + 1.00;
-				countOfProcessInDate.put(key, value);
-			}
-		}
-
-		return new Result(new ArrayList<Double>(countOfProcessInDate.values()));
-	}
-
 	@Override
-	@SuppressWarnings("unchecked")
-	public <T> Result getYearlyStatistic(RequestRepository<T, Long> repository) {
-
-		Calendar until = Calendar.getInstance();
-		until.add(Calendar.DAY_OF_MONTH, 1);
-
-		Calendar tmp = Calendar.getInstance();
-		tmp.add(Calendar.YEAR, -1);
-
-		final List<Request> requests = (List<Request>) repository.findByTimestampBetween(tmp, until);
-
-		Map<String, Double> countOfProcessInDate = new LinkedHashMap<>();
-
-		while (ymC.compare(tmp, until) <= 0) {
-			countOfProcessInDate.put(tmp.get(Calendar.YEAR) + "" + tmp.get(Calendar.MONTH), 0.00);
-			tmp.add(Calendar.MONTH, 1);
-		}
-		for (Request request : requests) {
-			Calendar timeStamp = request.getTimestamp();
-			String key = timeStamp.get(Calendar.YEAR) + "" + timeStamp.get(Calendar.MONTH);
-			if (countOfProcessInDate.containsKey(key)) {
-				double value = countOfProcessInDate.get(key) + 1.00;
-				countOfProcessInDate.put(key, value);
-			}
+	public <T> List<Request> getStatisticBetween(RequestRepository<T, Long> repository, Calendar from, Calendar until) throws NotFoundException {
+		if (Optional.ofNullable(repository).isPresent() && Optional.ofNullable(from).isPresent()
+				&& Optional.ofNullable(until).isPresent()) {
+			return (List<Request>) repository.findByTimestampBetween(from, until);
+		} else {
+			NotFoundException pnfex = new NotFoundException(STATISTIC_NOT_FOUND);
+			logger.error(STATISTIC_NOT_FOUND + this.getClass().getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
+			throw pnfex;
 		}
 
-		return new Result(new ArrayList<Double>(countOfProcessInDate.values()));
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> Result getAllStatistic(RequestRepository<T, Long> repository) {
-
-		Calendar until = Calendar.getInstance();
-		until.add(Calendar.DAY_OF_MONTH, 1);
-
-		Calendar tmp = Calendar.getInstance();
-		tmp.set(2014, 1, 1);
-
-		final List<Request> requests = (List<Request>) repository.findByTimestampBetween(tmp, until);
-
-		Map<String, Double> countOfProcessInDate = new LinkedHashMap<>();
-
-		while (yC.compare(tmp, until) <= 0) {
-			countOfProcessInDate.put(tmp.get(Calendar.YEAR) + "", 0.00);
-			tmp.add(Calendar.YEAR, 1);
-		}
-
-		for (Request request : requests) {
-			Calendar timeStamp = request.getTimestamp();
-			String key = timeStamp.get(Calendar.YEAR) + "";
-			if (countOfProcessInDate.containsKey(key)) {
-				double value = countOfProcessInDate.get(key) + 1.00;
-				countOfProcessInDate.put(key, value);
-			}
-		}
-		return new Result(new ArrayList<Double>(countOfProcessInDate.values()));
 	}
 }

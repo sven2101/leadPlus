@@ -36,11 +36,11 @@ angular.module('app.services', ['ngResource'])
                     var headers = credentials ? {authorization: "Basic " + authorization} : {};
 
                     $http.get('user', {headers: headers}).success(function (data) {
-
                         if (data.username) {
                             $rootScope.globals = {
                                 currentUser: {
-                                    username: data.username,
+                                	id:data.id,
+                                	username: data.username,
                                     role: data.role,
                                     authorization: authorization
                                 }
@@ -123,28 +123,27 @@ angular.module('app.services', ['ngResource'])
             getProcessBySale: {url: '/api/rest/processes/sales', method: 'GET', isArray: true},
           
             getLeadsByStatus: {
-                url: '/api/rest/processes/state/:status/leads',
+                url: '/api/rest/processes/workflow/:workflow/state/:status',
                 method: 'GET',
                 isArray: true
             },
             getOffersByStatus: {
-                url: '/api/rest/processes/state/:status/offers',
+                url: '/api/rest/processes/workflow/:workflow/state/:status',
                 method: 'GET',
                 isArray: true
             },
             getSalesByStatus: {
-                url: '/api/rest/processes/state/:status/sales',
+                url: '/api/rest/processes/workflow/:workflow/state/:status',
                 method: 'GET',
                 isArray: true
             },
             getFollowUpsByStatus: {
-                url: '/api/rest/processes/state/:status/followups',
+                url: '/api/rest/processes/workflow/:workflow/state/:status',
                 method: 'GET',
                 isArray: true
             },
-            
             getLatestSales: {
-                url: '/api/rest/processes/sales/latest', method: 'GET', isArray: true
+                url: '/api/rest/processes/sales/latest/10', method: 'GET', isArray: true
             },            
             getLatest100Sales: {
                 url: '/api/rest/processes/sales/latest/100', method: 'GET', isArray: true
@@ -172,25 +171,40 @@ angular.module('app.services', ['ngResource'])
             setRole: {url: '/users/:userId/role', method: 'POST'}
         });
     }])
-    .service('Statistics', ['$resource', function ($resource) {
+    .service('StatisticResource', ['$resource', function ($resource) {
         return $resource('/api/rest/processes/statistics', {}, {
-            dayLeads: {url: '/api/rest/processes/statistics/leads/day', method: 'GET'},
-            weekLeads: {url: '/api/rest/processes/statistics/leads/week', method: 'GET'},
-            monthLeads: {url: '/api/rest/processes/statistics/leads/month', method: 'GET'},
-            yearLeads: {url: '/api/rest/processes/statistics/leads/year', method: 'GET'},
-            allLeads: {url: '/api/rest/processes/statistics/leads/all', method: 'GET'},
+            dayLeads: {url: '/api/rest/processes/statistics/leads/day', method: 'GET',
+                isArray: true},
+            weekLeads: {url: '/api/rest/processes/statistics/leads/week', method: 'GET',
+                isArray: true},
+            monthLeads: {url: '/api/rest/processes/statistics/leads/month', method: 'GET',
+                isArray: true},
+            yearLeads: {url: '/api/rest/processes/statistics/leads/year', method: 'GET',
+                isArray: true},
+            allLeads: {url: '/api/rest/processes/statistics/leads/all', method: 'GET',
+                isArray: true},
        
-            dayOffers: {url: '/api/rest/processes/statistics/offers/day', method: 'GET'},
-            weekOffers: {url: '/api/rest/processes/statistics/offers/week', method: 'GET'},
-            monthOffers: {url: '/api/rest/processes/statistics/offers/month', method: 'GET'},
-            yearOffers: {url: '/api/rest/processes/statistics/offers/year', method: 'GET'},
-            allOffers: {url: '/api/rest/processes/statistics/offers/all', method: 'GET'},
+            dayOffers: {url: '/api/rest/processes/statistics/offers/day', method: 'GET',
+                isArray: true},
+            weekOffers: {url: '/api/rest/processes/statistics/offers/week', method: 'GET',
+                isArray: true},
+            monthOffers: {url: '/api/rest/processes/statistics/offers/month', method: 'GET',
+                isArray: true},
+            yearOffers: {url: '/api/rest/processes/statistics/offers/year', method: 'GET',
+                isArray: true},
+            allOffers: {url: '/api/rest/processes/statistics/offers/all', method: 'GET',
+                isArray: true},
 
-            daySales: {url: '/api/rest/processes/statistics/sales/day', method: 'GET'},
-            weekSales: {url: '/api/rest/processes/statistics/sales/week', method: 'GET'},
-            monthSales: {url: '/api/rest/processes/statistics/sales/month', method: 'GET'},
-            yearSales: {url: '/api/rest/processes/statistics/sales/year', method: 'GET'},
-            allSales: {url: '/api/rest/processes/statistics/sales/all', method: 'GET'},
+            daySales: {url: '/api/rest/processes/statistics/sales/day', method: 'GET',
+                isArray: true},
+            weekSales: {url: '/api/rest/processes/statistics/sales/week', method: 'GET',
+                isArray: true},
+            monthSales: {url: '/api/rest/processes/statistics/sales/month', method: 'GET',
+                isArray: true},
+            yearSales: {url: '/api/rest/processes/statistics/sales/year', method: 'GET',
+                isArray: true},
+            allSales: {url: '/api/rest/processes/statistics/sales/all', method: 'GET',
+                isArray: true},
             
             dayProfit: {url: '/api/rest/processes/statistics/profit/day', method: 'GET'},
             weekProfit: {url: '/api/rest/processes/statistics/profit/week', method: 'GET'},

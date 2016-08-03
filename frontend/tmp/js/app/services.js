@@ -36,11 +36,11 @@ angular.module('app.services', ['ngResource'])
                     var headers = credentials ? {authorization: "Basic " + authorization} : {};
 
                     $http.get('user', {headers: headers}).success(function (data) {
-
                         if (data.username) {
                             $rootScope.globals = {
                                 currentUser: {
-                                    username: data.username,
+                                	id:data.id,
+                                	username: data.username,
                                     role: data.role,
                                     authorization: authorization
                                 }
@@ -74,118 +74,148 @@ angular.module('app.services', ['ngResource'])
             }
         };
     })
+    .service('Leads', ['$resource', function ($resource) {
+    	 return $resource('/api/rest/leads/:id', {}, {
+             getAll: {url: '/api/rest/leads', method: 'GET'},
+    		 getById: {url: '/api/rest/leads/:id', method: 'GET'},
+             save: {url: '/api/rest/leads/', method: 'POST'},
+             put: {url: '/api/rest/leads', method: 'PUT'},
+             drop: {url: '/api/rest/leads/:id', method: 'DELETE'},
+    	 });
+    }])
+    .service('Offers', ['$resource', function ($resource) {
+    	 return $resource('/api/rest/offers/:id', {}, {
+             getAll: {url: '/api/rest/offers', method: 'GET'},
+             getById: {url: '/api/rest/offers/:id', method: 'GET'},
+             save: {url: '/api/rest/offers/', method: 'POST'},
+             put: {url: '/api/rest/offers', method: 'PUT'},
+             drop: {url: '/api/rest/offers/:id', method: 'DELETE'},
+    	 });
+    }])
+    .service('Sales', ['$resource', function ($resource) {
+    	 return $resource('/api/rest/sales/:id', {}, {
+             getAll: {url: '/api/rest/sales', method: 'GET'},
+             getById: {url: '/api/rest/sales/:id', method: 'GET'},
+             save: {url: '/api/rest/sales/', method: 'POST'},
+             put: {url: '/api/rest/sales', method: 'PUT'},
+             drop: {url: '/api/rest/sales/:id', method: 'DELETE'},
+    	 });
+    }])
     .service('Processes', ['$resource', function ($resource) {
         return $resource('/api/rest/processes/:id', {}, {
-            getLead: {url: '/api/rest/processes/:id/leads', method: 'GET'},
-            addLead: {url: '/api/rest/processes/:id/leads', method: 'POST'},
-            putLead: {url: '/api/rest/processes/leads/:id', method: 'PUT'},
-            deleteLead: {url: '/api/rest/processes/leads/:id', method: 'DELETE'},
-            getOffer: {url: '/api/rest/processes/:id/offers', method: 'GET'},
-            addOffer: {url: '/api/rest/processes/:id/offers', method: 'POST'},
-            putOffer: {url: '/api/rest/processes/offers/:id', method: 'PUT'},
-            deleteOffer: {url: '/api/rest/processes/offers/:id', method: 'DELETE'},
-            getSale: {url: '/api/rest/processes/:id/sales', method: 'GET'},
-            addSale: {url: '/api/rest/processes/:id/sales', method: 'POST'},
-            putSale: {url: '/api/rest/processes/sales/:id', method: 'PUT'},
-            deleteSale: {url: '/api/rest/processes/sales/:id', method: 'DELETE'},
+                    
+        	getById: {url: '/api/rest/processes/:id', method: 'GET'},
+            getStatus: {url: '/api/rest/processes/:id/status', method: 'GET'},
+        	getAll: {url: '/api/rest/processes', method: 'GET', isArray: true},
+        	save: {url: '/api/rest/processes', method: 'POST'},
+        	update: {url: '/api/rest/processes', method: 'PUT'},
+        	drop: {url: '/api/rest/processes/:id', method: 'DELETE'},
+        	
             getProcessor: {url: '/api/rest/processes/:id/processors', method: 'GET'},
             setProcessor: {url: '/api/rest/processes/:id/processors', method: 'PUT'},
-            removeProcessor: {url: '/api/rest/processes/:id/processors/remove', method: 'DELETE'},
-            getStatus: {url: '/api/rest/processes/:id/:status', method: 'GET'},
+            removeProcessor: {url: '/api/rest/processes/:id/processors/remove', method: 'PUT'},
+            
             setStatus: {url: '/api/rest/processes/:id/status', method: 'PUT'},
             getByStatus: {url: '/api/rest/processes/status/:status', method: 'GET', isArray: true},
-            addProcess: {url: '/api/rest/processes', method: 'POST'},
-            putProcess: {url: '/api/rest/processes/:id', method: 'PUT'},
-            deleteProcess: {url: '/api/rest/processes/:id', method: 'DELETE'},
+                        
             getProcessByLead: {url: '/api/rest/processes/leads', method: 'GET', isArray: true},
             getProcessByOffer: {url: '/api/rest/processes/offers', method: 'GET', isArray: true},
             getProcessBySale: {url: '/api/rest/processes/sales', method: 'GET', isArray: true},
-            getProcessByLeadAndStatus: {
-                url: '/api/rest/processes/state/:status/leads',
+          
+            getLeadsByStatus: {
+                url: '/api/rest/processes/workflow/:workflow/state/:status',
                 method: 'GET',
                 isArray: true
             },
-            getProcessByOfferAndStatus: {
-                url: '/api/rest/processes/state/:status/offers',
+            getOffersByStatus: {
+                url: '/api/rest/processes/workflow/:workflow/state/:status',
                 method: 'GET',
                 isArray: true
             },
-            getProcessBySaleAndStatus: {
-                url: '/api/rest/processes/state/:status/sales',
+            getSalesByStatus: {
+                url: '/api/rest/processes/workflow/:workflow/state/:status',
+                method: 'GET',
+                isArray: true
+            },
+            getFollowUpsByStatus: {
+                url: '/api/rest/processes/workflow/:workflow/state/:status',
                 method: 'GET',
                 isArray: true
             },
             getLatestSales: {
-                url: '/api/rest/processes/latestSales', method: 'GET', isArray: true
-            },
+                url: '/api/rest/processes/sales/latest/10', method: 'GET', isArray: true
+            },            
             getLatest100Sales: {
-                url: '/api/rest/processes/latest100Sales', method: 'GET', isArray: true
+                url: '/api/rest/processes/sales/latest/100', method: 'GET', isArray: true
             }
         });
     }])
      .service('Comments', ['$resource', function ($resource) {
         return $resource('/api/rest/comments/', {}, {
-            getComments: {url: '/api/rest/comments/processes/:id', method: 'GET', isArray: true},
-            addComment: {url: '/api/rest/comments/processes', method: 'POST'},
+            getByProcessId: {url: '/api/rest/comments/processes/:processId', method: 'GET', isArray: true},
+            getById: {url: '/api/rest/comments/:id', method: 'GET'},
+            save: {url: '/api/rest/comments/', method: 'POST'},
+            update: {url: '/api/rest/comments', method: 'PUT'},
+            drop: {url: '/api/rest/comments/:id', method: 'DELETE'}
         });
     }])
     .service('Profile', ['$resource', function ($resource) {
-        return $resource('/users/:username', {}, {
-            update: {url: '/users/:username/update', method: 'PUT'},
-            pw: {url: '/users/:username/pw', method: 'PUT'}
+        return $resource('/users/:id', {}, {
+            update: {url: '/users/update', method: 'PUT'},
+            changePassword: {url: '/users/:id/pw', method: 'PUT'}
         });
     }])
     .service('Settings', ['$resource', function ($resource) {
-        return $resource('/users/:username', {username: '@Username'}, {
-            activate: {url: '/users/:username/activate', method: 'PUT'},
-            setRole: {url: '/users/:username/role', method: 'POST'},
-            getSalesStatistics: {url: '/api/rest/processes/statitstics/sales', method: 'POST'},
-            getProfitStatistics: {url: '/api/rest/processes/statitstics/profits', method: 'POST'},
-            getReturnStatistics: {url: '/api/rest/processes/statitstics/returns', method: 'POST'}
+        return $resource('/users/:userId', {userId: '@userId'}, {
+            activate: {url: '/users/:userId/activate', method: 'PUT'},
+            setRole: {url: '/users/:userId/role', method: 'POST'}
         });
     }])
-    .service('Turnover', ['$resource', function ($resource) {
-        return $resource('/api/rest/processes/statistics/turnover', {}, {
-            day: {url: '/api/rest/processes/statistics/turnover/day', method: 'GET'},
-            week: {url: '/api/rest/processes/statistics/turnover/week', method: 'GET'},
-            month: {url: '/api/rest/processes/statistics/turnover/month', method: 'GET'},
-            year: {url: '/api/rest/processes/statistics/turnover/year', method: 'GET'},
-            all: {url: '/api/rest/processes/statistics/turnover/all', method: 'GET'}
-        });
-    }])
-    .service('Profit', ['$resource', function ($resource) {
-        return $resource('/api/rest/processes/statistics/profit', {}, {
-            day: {url: '/api/rest/processes/statistics/profit/day', method: 'GET'},
-            week: {url: '/api/rest/processes/statistics/profit/week', method: 'GET'},
-            month: {url: '/api/rest/processes/statistics/profit/month', method: 'GET'},
-            year: {url: '/api/rest/processes/statistics/profit/year', method: 'GET'},
-            all: {url: '/api/rest/processes/statistics/profit/all', method: 'GET'}
-        });
-    }])
-    .service('Leads', ['$resource', function ($resource) {
-        return $resource('/api/rest/processes/statistics/leads', {}, {
-            day: {url: '/api/rest/processes/statistics/leads/day', method: 'GET'},
-            week: {url: '/api/rest/processes/statistics/leads/week', method: 'GET'},
-            month: {url: '/api/rest/processes/statistics/leads/month', method: 'GET'},
-            year: {url: '/api/rest/processes/statistics/leads/year', method: 'GET'},
-            all: {url: '/api/rest/processes/statistics/leads/all', method: 'GET'}
-        });
-    }])
-    .service('Offers', ['$resource', function ($resource) {
-        return $resource('/api/rest/processes/statistics/offers', {}, {
-            day: {url: '/api/rest/processes/statistics/offers/day', method: 'GET'},
-            week: {url: '/api/rest/processes/statistics/offers/week', method: 'GET'},
-            month: {url: '/api/rest/processes/statistics/offers/month', method: 'GET'},
-            year: {url: '/api/rest/processes/statistics/offers/year', method: 'GET'},
-            all: {url: '/api/rest/processes/statistics/offers/all', method: 'GET'}
-        });
-    }])
-    .service('Sales', ['$resource', function ($resource) {
-        return $resource('/api/rest/processes/statistics/sales', {}, {
-            day: {url: '/api/rest/processes/statistics/sales/day', method: 'GET'},
-            week: {url: '/api/rest/processes/statistics/sales/week', method: 'GET'},
-            month: {url: '/api/rest/processes/statistics/sales/month', method: 'GET'},
-            year: {url: '/api/rest/processes/statistics/sales/year', method: 'GET'},
-            all: {url: '/api/rest/processes/statistics/sales/all', method: 'GET'}
+    .service('StatisticResource', ['$resource', function ($resource) {
+        return $resource('/api/rest/processes/statistics', {}, {
+            dayLeads: {url: '/api/rest/processes/statistics/leads/day', method: 'GET',
+                isArray: true},
+            weekLeads: {url: '/api/rest/processes/statistics/leads/week', method: 'GET',
+                isArray: true},
+            monthLeads: {url: '/api/rest/processes/statistics/leads/month', method: 'GET',
+                isArray: true},
+            yearLeads: {url: '/api/rest/processes/statistics/leads/year', method: 'GET',
+                isArray: true},
+            allLeads: {url: '/api/rest/processes/statistics/leads/all', method: 'GET',
+                isArray: true},
+       
+            dayOffers: {url: '/api/rest/processes/statistics/offers/day', method: 'GET',
+                isArray: true},
+            weekOffers: {url: '/api/rest/processes/statistics/offers/week', method: 'GET',
+                isArray: true},
+            monthOffers: {url: '/api/rest/processes/statistics/offers/month', method: 'GET',
+                isArray: true},
+            yearOffers: {url: '/api/rest/processes/statistics/offers/year', method: 'GET',
+                isArray: true},
+            allOffers: {url: '/api/rest/processes/statistics/offers/all', method: 'GET',
+                isArray: true},
+
+            daySales: {url: '/api/rest/processes/statistics/sales/day', method: 'GET',
+                isArray: true},
+            weekSales: {url: '/api/rest/processes/statistics/sales/week', method: 'GET',
+                isArray: true},
+            monthSales: {url: '/api/rest/processes/statistics/sales/month', method: 'GET',
+                isArray: true},
+            yearSales: {url: '/api/rest/processes/statistics/sales/year', method: 'GET',
+                isArray: true},
+            allSales: {url: '/api/rest/processes/statistics/sales/all', method: 'GET',
+                isArray: true},
+            
+            dayProfit: {url: '/api/rest/processes/statistics/profit/day', method: 'GET'},
+            weekProfit: {url: '/api/rest/processes/statistics/profit/week', method: 'GET'},
+            monthProfit: {url: '/api/rest/processes/statistics/profit/month', method: 'GET'},
+            yearProfit: {url: '/api/rest/processes/statistics/profit/year', method: 'GET'},
+            allProfit: {url: '/api/rest/processes/statistics/profit/all', method: 'GET'},
+            
+            dayTurnover: {url: '/api/rest/processes/statistics/turnover/day', method: 'GET'},
+            weekTurnover: {url: '/api/rest/processes/statistics/turnover/week', method: 'GET'},
+            monthTurnover: {url: '/api/rest/processes/statistics/turnover/month', method: 'GET'},
+            yearTurnover: {url: '/api/rest/processes/statistics/turnover/year', method: 'GET'},
+            allTurnover: {url: '/api/rest/processes/statistics/turnover/all', method: 'GET'}
         });
     }]);

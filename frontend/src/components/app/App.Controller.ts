@@ -45,17 +45,19 @@ class AppController {
     }
     registerLoadLabels() {
         let self = this;
-        self.rootScope.loadLabels = function () {
+        self.rootScope.loadLabels = function() {
             if (!angular
                 .isUndefined(self.rootScope.globals.currentUser)) {
-                self.processService.getProcessByLeadAndStatus({
-                    status: "open"
-                }).$promise.then(function (result) {
+                self.processService.getLeadsByStatus({
+                    workflow: "LEAD",
+                    status: "OPEN"
+                }).$promise.then(function(result) {
                     self.rootScope.leadsCount = result.length;
                 });
-                self.processService.getProcessByOfferAndStatus({
-                    status: "offer"
-                }).$promise.then(function (result) {
+                self.processService.getOffersByStatus({
+                    workflow: "OFFER",
+                    status: "OFFER"
+                }).$promise.then(function(result) {
                     self.rootScope.offersCount = result.length;
                 });
             }
@@ -64,7 +66,7 @@ class AppController {
 
     registerChangeLanguage() {
         let self = this;
-        self.rootScope.changeLanguage = function (langKey) {
+        self.rootScope.changeLanguage = function(langKey) {
             self.translate.use(langKey);
             self.rootScope.language = langKey;
         };
@@ -72,13 +74,13 @@ class AppController {
 
     registerSetUserDefaultLanguage() {
         let self = this;
-        self.rootScope.setUserDefaultLanguage = function () {
+        self.rootScope.setUserDefaultLanguage = function() {
             if (!angular
                 .isUndefined(self.rootScope.globals.currentUser)) {
                 self.profileService
                     .get({
-                        username: self.rootScope.globals.currentUser.username
-                    }).$promise.then(function (result) {
+                        id: self.rootScope.globals.currentUser.id
+                    }).$promise.then(function(result) {
                         self.rootScope.changeLanguage(result.language);
                     });
             }
@@ -86,23 +88,23 @@ class AppController {
     }
     registerInterval() {
         let self = this;
-        self.rootScope.$on("$destroy", function () {
+        self.rootScope.$on("$destroy", function() {
             if (angular.isDefined(self.stop)) {
                 self.interval.cancel(self.stop);
                 self.stop = undefined;
             }
         });
-        self.stop = self.interval(function () {
+        self.stop = self.interval(function() {
             if (!angular
                 .isUndefined(self.rootScope.globals.currentUser)) {
-                self.processService.getProcessByLeadAndStatus({
+                self.processService.getLeadsByStatus({
                     status: "open"
-                }).$promise.then(function (result) {
+                }).$promise.then(function(result) {
                     self.rootScope.leadsCount = result.length;
                 });
-                self.processService.getProcessByOfferAndStatus({
+                self.processService.getOffersByStatus({
                     status: "offer"
-                }).$promise.then(function (result) {
+                }).$promise.then(function(result) {
                     self.rootScope.offersCount = result.length;
                 });
             }

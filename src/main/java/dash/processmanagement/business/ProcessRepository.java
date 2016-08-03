@@ -60,4 +60,6 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 			String status, Pageable pageable);
 
 	List<Sale> findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
+
+	List<Sale> findTop10BySaleIsNotNullOrderBySaleTimestampDesc();
 }

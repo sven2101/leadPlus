@@ -14,6 +14,8 @@
 
 package dash.statisticmanagement.sale.rest;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,15 +24,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.exceptions.NotFoundException;
 import dash.processmanagement.request.RequestRepository;
 import dash.salemanagement.domain.Sale;
 import dash.statisticmanagement.business.IStatisticService;
-import dash.statisticmanagement.result.domain.Result;
+import dash.statisticmanagement.domain.DateRange;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/api/rest/processes/statistics/sales", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/processes/statistics/sales", consumes = {
+		 MediaType.ALL_VALUE  }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Statistic Conversion API")
 public class StatisticSaleResource {
 
@@ -43,35 +47,35 @@ public class StatisticSaleResource {
 	@RequestMapping(value = "/day", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get daily Sale Statistic", notes = "")
-	public Result getDailySaleStatistic() {
-		return statisticsService.getDailyStatistic(saleRepository);
+	public List<Double> getDailySaleStatistic() throws NotFoundException {
+		return statisticsService.getStatisticByDateRange(saleRepository, DateRange.DAILY);
 	}
 
 	@RequestMapping(value = "/week", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get weekly Sale Statistic", notes = "")
-	public Result getWeeklySaleStatistic() {
-		return statisticsService.getWeeklyStatistic(saleRepository);
+	public List<Double> getWeeklySaleStatistic() throws NotFoundException {
+		return statisticsService.getStatisticByDateRange(saleRepository, DateRange.DAILY);
 	}
 
 	@RequestMapping(value = "/month", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get monthly Sale Statistic", notes = "")
-	public Result getMonthlySaleStatistic() {
-		return statisticsService.getMonthlyStatistic(saleRepository);
+	public List<Double> getMonthlySaleStatistic() throws NotFoundException {
+		return statisticsService.getStatisticByDateRange(saleRepository, DateRange.DAILY);
 	}
 
 	@RequestMapping(value = "/year", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get yearly Sale Statistic", notes = "")
-	public Result getYearlySaleStatistic() {
-		return statisticsService.getYearlyStatistic(saleRepository);
+	public List<Double> getYearlySaleStatistic() throws NotFoundException {
+		return statisticsService.getStatisticByDateRange(saleRepository, DateRange.DAILY);
 	}
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get all Sale Statistic", notes = "")
-	public Result getAllSaleStatistic() {
-		return statisticsService.getAllStatistic(saleRepository);
+	public List<Double> getAllSaleStatistic() throws NotFoundException {
+		return statisticsService.getStatisticByDateRange(saleRepository, DateRange.DAILY);
 	}
 }

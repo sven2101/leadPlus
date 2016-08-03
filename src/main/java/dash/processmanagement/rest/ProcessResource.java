@@ -51,7 +51,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Process Resource")
-@RequestMapping(value = "/api/rest/processes", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/processes", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Process API")
 public class ProcessResource {
 
@@ -279,11 +279,18 @@ public class ProcessResource {
 		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(), page.getContent());
 	}
 
+	@ApiOperation(value = "Returns a list of latest 100 sales.", notes = "")
+	@RequestMapping(value = "/sales/latest/100", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public List<Sale> getProcessWithLatest100Sales() {
+		return processRepository.findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
+	}
+	
 	@ApiOperation(value = "Returns a list of latest 10 sales.", notes = "")
 	@RequestMapping(value = "/sales/latest/10", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Sale> getProcessWithLatestSales(@PathVariable final int amount) {
-		return processRepository.findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
+	public List<Sale> getProcessWithLatest10Sales() {
+		return processRepository.findTop10BySaleIsNotNullOrderBySaleTimestampDesc();
 	}
 
 	@ApiOperation(value = "Returns a single sale.", notes = "")
