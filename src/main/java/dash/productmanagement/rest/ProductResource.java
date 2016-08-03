@@ -76,10 +76,8 @@ public class ProductResource {
 		return productService.update(product);
 	}
 
-
 	@ApiOperation(value = "Delete a single product.", notes = "")
 	@RequestMapping(method = RequestMethod.DELETE)
-
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
 		productService.delete(id);
