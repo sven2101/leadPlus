@@ -30,9 +30,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.containermanagement.domain.Container;
 import dash.inquirermanagement.domain.Title;
 import dash.offermanagement.domain.Offer;
+import dash.productmanagement.domain.Product;
 import dash.prospectmanagement.domain.Prospect;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
@@ -121,7 +121,7 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 	public Offer create() {
 		Offer offer = new Offer();
 
-		Container container = new Container();
+		Product container = new Product();
 		container.setName("Fusscontainer");
 		container.setDescription("Dieser Container ist 3 Fuss lang. ");
 		container.setPriceNetto(200.00);

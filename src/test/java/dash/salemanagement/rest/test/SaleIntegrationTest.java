@@ -30,9 +30,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.containermanagement.domain.Container;
 import dash.customermanagement.domain.Customer;
 import dash.inquirermanagement.domain.Title;
+import dash.productmanagement.domain.Product;
 import dash.salemanagement.domain.Sale;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
@@ -119,7 +119,7 @@ public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest 
 	@Override
 	public Sale create() {
 
-		Container container = new Container();
+		Product container = new Product();
 		container.setName("Fusscontainer");
 		container.setDescription("Guter Container");
 		container.setPriceNetto(1000.00);

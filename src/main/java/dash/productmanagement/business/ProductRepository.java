@@ -12,16 +12,16 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.containermanagement.business;
+package dash.productmanagement.business;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import dash.containermanagement.domain.Container;
+import dash.productmanagement.domain.Product;
 
 @Repository
 @Transactional
-public interface ContainerRepository extends JpaRepository<Container, Long> {
-	Container findByNameIgnoreCase(String name);
+public interface ProductRepository extends JpaRepository<Product, Long> {
+	Product findByNameIgnoreCase(String name);
 }

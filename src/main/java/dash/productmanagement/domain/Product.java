@@ -12,7 +12,7 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.containermanagement.domain;
+package dash.productmanagement.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,7 +20,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Container {
+public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +30,11 @@ public class Container {
 	private String description;
 
 	private double priceNetto;
-
-	public Container() {
+	
+	public Product() {
 
 	}
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -83,7 +83,7 @@ public class Container {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Container other = (Container) obj;
+		Product other = (Product) obj;
 		if (description == null) {
 			if (other.description != null)
 				return false;
@@ -101,7 +101,8 @@ public class Container {
 
 	@Override
 	public String toString() {
-		return "Container [id=" + id + ", name=" + name + ", description=" + description + ", priceNetto=" + priceNetto + "]";
+		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", priceNetto=" + priceNetto
+				+ "]";
 	}
 
 }

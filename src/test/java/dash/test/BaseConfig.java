@@ -26,12 +26,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
 import dash.commentmanagement.business.CommentRepository;
-import dash.containermanagement.business.ContainerRepository;
 import dash.customermanagement.business.CustomerRepository;
 import dash.inquirermanagement.business.InquirerRepository;
 import dash.leadmanagement.business.LeadRepository;
 import dash.offermanagement.business.OfferRepository;
 import dash.processmanagement.business.ProcessRepository;
+import dash.productmanagement.business.ProductRepository;
 import dash.prospectmanagement.business.ProspectRepository;
 import dash.salemanagement.business.SaleRepository;
 import dash.usermanagement.business.UserRepository;
@@ -75,7 +75,7 @@ public class BaseConfig {
 	private CommentRepository commentRepository;
 
 	@Autowired
-	private ContainerRepository containerRepository;
+	private ProductRepository containerRepository;
 
 	@Autowired
 	private CustomerRepository customerRepository;

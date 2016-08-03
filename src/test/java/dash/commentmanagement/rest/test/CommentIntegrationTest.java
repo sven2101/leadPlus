@@ -32,7 +32,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
 import dash.commentmanagement.domain.Comment;
-import dash.containermanagement.domain.Container;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.inquirermanagement.domain.Inquirer;
@@ -42,6 +41,7 @@ import dash.offermanagement.domain.Offer;
 import dash.processmanagement.business.IProcessService;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
+import dash.productmanagement.domain.Product;
 import dash.salemanagement.domain.Sale;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
@@ -156,7 +156,7 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 			vendor.setName("Karl Neu 9");
 			vendor.setPhone("0761331234");
 
-			Container container = new Container();
+			Product container = new Product();
 			container.setName("Kühlcontainer");
 			container.setDescription("Dieser Kühlcontainer kühlt am aller besten");
 			container.setPriceNetto(1000.00);

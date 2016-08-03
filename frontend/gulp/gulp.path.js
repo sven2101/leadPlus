@@ -48,7 +48,6 @@ module.exports = {
 			src: [baseSrcPath + 'assets/fonts/**/*',
 				baseSrcPath + 'assets/font-awesome/fonts/**/*'],
 			dest: baseDstPath + 'assets/fonts'
-
 		},
 		assets: {
 			src: [

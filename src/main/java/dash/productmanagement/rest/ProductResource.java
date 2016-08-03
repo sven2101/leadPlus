@@ -12,8 +12,9 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.containermanagement.rest;
+package dash.productmanagement.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -28,56 +29,57 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.containermanagement.business.IContainerService;
-import dash.containermanagement.domain.Container;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.leadmanagement.domain.Lead;
+import dash.productmanagement.business.IProductService;
+import dash.productmanagement.domain.Product;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-@RestController(value = "Container Resource")
-@RequestMapping(value = "/api/rest/containers", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-@Api(value = "containers")
-public class ContainerResource {
+@RestController(value = "Product Resource")
+@RequestMapping(value = "/api/rest/product", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@Api(value = "product")
+public class ProductResource {
 
 	@Autowired
-	private IContainerService containerService;
+	private IProductService productService;
 
-	@ApiOperation(value = "Get all containers.", notes = "")
+	@ApiOperation(value = "Get all products.", notes = "")
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Container> getAll() {
-		return containerService.getAll();
+	public List<Product> getAll() {	
+		return new ArrayList<Product>();
 	}
 
-	@ApiOperation(value = "Get a single container.", notes = "You have to provide a valid container ID.")
+	@ApiOperation(value = "Get a single product.", notes = "You have to provide a valid product ID.")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Container getById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
-		return containerService.getById(id);
+	public Product getById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {		
+		return productService.getById(id);
 	}
 
-	@ApiOperation(value = "Add a single container.", notes = "You have to provide a valid Container Object")
+	@ApiOperation(value = "Add a single product.", notes = "You have to provide a valid product Object")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Container save(@ApiParam(required = true) @RequestBody @Valid final Container container) throws SaveFailedException {
-		return containerService.save(container);
+	public Product save(@ApiParam(required = true) @RequestBody @Valid final Product product) throws SaveFailedException {
+		return productService.save(product);
 	}
 
-	@ApiOperation(value = "Update a single container.", notes = "")
+	@ApiOperation(value = "Update a single product.", notes = "")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Container update(@ApiParam(required = true) @RequestBody @Valid final Container container) throws UpdateFailedException {
-		return containerService.update(container);
+	public Product update(@ApiParam(required = true) @RequestBody @Valid final Product product) throws UpdateFailedException {
+		return productService.update(product);
 	}
 
-	@ApiOperation(value = "Delete a single container.", notes = "")
+	@ApiOperation(value = "Delete a single product.", notes = "")
 	@RequestMapping(method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
-		containerService.delete(id);
+		productService.delete(id);
 	}
 }

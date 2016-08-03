@@ -29,9 +29,9 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import dash.containermanagement.domain.Container;
 import dash.inquirermanagement.domain.Inquirer;
 import dash.processmanagement.request.Request;
+import dash.productmanagement.domain.Product;
 import dash.vendormanagement.domain.Vendor;
 
 @Entity
@@ -51,7 +51,7 @@ public class Lead implements Request {
 
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "container_fk", nullable = true)
-	private Container container;
+	private Product container;
 
 	private int containerAmount;
 	private String destination;
@@ -125,11 +125,11 @@ public class Lead implements Request {
 		return timestamp;
 	}
 
-	public Container getContainer() {
+	public Product getContainer() {
 		return this.container;
 	}
 
-	public void setContainer(Container container) {
+	public void setContainer(Product container) {
 		this.container = container;
 	}
 

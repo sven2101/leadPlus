@@ -91,7 +91,7 @@ class DashboardController {
 
     registerPromise() {
         let self = this;
-        this.procesService.getProcessByLeadAndStatus({ status: "open" }).$promise.then(function (result) {
+        this.procesService.getProcessByLeadAndStatus({ status: "OPEN" }).$promise.then(function (result) {
             self.openLead = self.orderBy(result, "lead.timestamp", false);
         });
         this.procesService.getProcessByOfferAndStatus({ status: "offer" }).$promise.then(function (result) {

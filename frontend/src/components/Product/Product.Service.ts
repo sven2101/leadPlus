@@ -13,38 +13,36 @@
 
 class ProductService {
 
-    $inject = ["toaster", "$translate"];
+    $inject = ["toaster", "$translate", "ProductResource"];
 
-    currentProduct: Product;
     products: Array<Product>;
     toaster;
     translate;
+    productResource;
 
-    constructor(toaster, $translate) {
+    constructor(toaster, $translate, ProductResource) {
         this.toaster = toaster;
         this.translate = $translate;
-
-        this.currentProduct = new Product();
+        this.productResource = ProductResource;
         this.products = new Array<Product>();
-
-        let x = new Product();
-        x.productName = "TestName";
-        x.price = 5.50;
-        x.description = "Das ist ein super tolles Produkt";
-        this.products.push(x);
+        this.getAllProducts();
     }
-    saveProduct() {
-        for (let i = 0; i < this.products.length; i++) {
-            if (this.products[i].productName === this.currentProduct.productName) {
-                this.toaster.pop("error", "", this.translate.instant("SIGNUP_ERROR"));
-                return;
-            }
-        }
-        this.products.push(this.currentProduct);
+    saveProduct(product: Product) {
+        let self = this;
+        console.log(product);
 
+        this.productResource.createProduct(product).$promise.then(function (result: Product) {
+            console.log(result);
+            self.products.push(result);
+        });
     }
-
-
+    getAllProducts() {
+        let self = this;
+        this.productResource.getAllProducts().$promise.then(function (result: Array<Product>) {
+            console.log(result);
+            self.products = result;
+        });
+    }
 }
 
 angular.module("app.product.service", ["ngResource"]).service("ProductService", ProductService);

@@ -16,26 +16,26 @@ class ProductController {
 
     $inject = ["ProductService"];
 
+    createProductForm;
     currentProduct: Product;
     productService: ProductService;
-    products: Array<Product>;
 
-    constructor(ProductService) {
+    constructor(ProductService, $resource) {
         this.productService = ProductService;
-        this.currentProduct = this.productService.currentProduct;
-        this.products = this.productService.products;
     }
 
     refreshData() {
-
+        this.productService.getAllProducts();
     }
 
-    clearProduct() {
+    clearProduct(): void {
+        this.createProductForm.$setPristine();
         this.currentProduct = new Product();
     }
 
     saveProduct() {
-        this.productService.saveProduct();
+        console.log(this.currentProduct);
+        this.productService.saveProduct(this.currentProduct);
     }
 }
 

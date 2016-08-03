@@ -84,7 +84,7 @@ public class Application {
 
 	@SuppressWarnings("unchecked")
 	private Predicate<String> paths() {
-		return or(regex("/api/rest/processes.*"), regex("/api/rest/processes/leads.*"), regex("/api/rest/processes/leads/containers.*"),
+		return or(regex("/api/rest/processes.*"), regex("/api/rest/processes/leads.*"), regex("/api/rest/processes/leads/products.*"),
 				regex("/api/rest/processes/leads/inquirers.*"), regex("/api/rest/processes/leads/vendors.*"), regex("/api/rest/processes/offers.*"),
 				regex("/api/rest/processes/offers/prospects.*"), regex("/api/rest/processes/sales.*"), regex("/api/rest/processes/sales/customers.*"));
 	}
@@ -115,6 +115,18 @@ public class Application {
 			admin.setLanguage(Language.DE);
 
 			userService.save(admin);
+		}
+		if (!Optional.ofNullable(userService.getUserByName("test")).isPresent()) {
+			User test = new User();
+
+			test.setUsername("test".toLowerCase());
+			test.setPassword(passwordEncoder().encode("test"));
+			test.setEmail("test@eviarc.com");
+			test.setRole(Role.SUPERADMIN);
+			test.setEnabled(true);
+			test.setLanguage(Language.DE);
+
+			userService.save(test);
 		}
 
 		if (!Optional.ofNullable(userService.getUserByName("api")).isPresent()) {

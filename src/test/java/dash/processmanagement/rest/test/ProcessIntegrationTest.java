@@ -28,13 +28,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.containermanagement.domain.Container;
 import dash.inquirermanagement.domain.Inquirer;
 import dash.inquirermanagement.domain.Title;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Status;
+import dash.productmanagement.domain.Product;
 import dash.salemanagement.domain.Sale;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
@@ -135,7 +135,7 @@ public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTe
 		vendor.setName("Karl Neu 9");
 		vendor.setPhone("0761331234");
 
-		Container container = new Container();
+		Product container = new Product();
 		container.setName("Kühlcontainer");
 		container.setDescription("Dieser Kühlcontainer kühlt am aller besten");
 		container.setPriceNetto(1000.00);

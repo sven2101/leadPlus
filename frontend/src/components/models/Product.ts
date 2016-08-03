@@ -12,14 +12,15 @@
 
 class Product {
 
-    productName: String;
+    id: number;
+    name: String;
     description: String;
-    price: Number;
+    priceNetto: Number;
     image: any;
 
     constructor() {
-        this.productName = "productName";
-        this.description = "description";
-        this.price = 66.66;
+        this.name = "";
+        this.description = "";      
+        this.id = 0;
     }
 }

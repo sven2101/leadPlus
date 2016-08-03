@@ -12,10 +12,10 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.containermanagement.business;
+package dash.productmanagement.business;
 
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
-import static dash.Constants.CONTAINER_NOT_FOUND;
+import static dash.Constants.Product_NOT_FOUND;
 import static dash.Constants.DELETE_FAILED_EXCEPTION;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
@@ -30,61 +30,61 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import dash.containermanagement.domain.Container;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.productmanagement.domain.Product;
 
 @Service
 @Transactional
-public class ContainerService implements IContainerService {
+public class ProductService implements IProductService {
 
-	private static final Logger logger = Logger.getLogger(ContainerService.class);
+	private static final Logger logger = Logger.getLogger(ProductService.class);
 
 	@Autowired
-	private ContainerRepository containerRepository;
+	private ProductRepository productRepository;
 
 	@Override
-	public List<Container> getAll() {
-		return containerRepository.findAll();
+	public List<Product> getAll() {
+		return productRepository.findAll();
 	}
 
 	@Override
-	public Container getById(final Long id) throws NotFoundException {
+	public Product getById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
-			return containerRepository.findOne(id);
+			return productRepository.findOne(id);
 		} else {
-			NotFoundException cnfex = new NotFoundException(CONTAINER_NOT_FOUND);
-			logger.error(CONTAINER_NOT_FOUND + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
+			NotFoundException cnfex = new NotFoundException(Product_NOT_FOUND);
+			logger.error(Product_NOT_FOUND + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
 			throw cnfex;
 		}
 	}
 
 	@Override
-	public Container save(final Container container) throws SaveFailedException {
-		if (Optional.ofNullable(container).isPresent()) {
-			return containerRepository.save(container);
+	public Product save(final Product product) throws SaveFailedException {
+		if (Optional.ofNullable(product).isPresent()) {
+			return productRepository.save(product);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(SAVE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
+			logger.error(SAVE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
 			throw sfex;
 		}
 	}
 
 	@Override
-	public Container update(final Container container) throws UpdateFailedException {
-		if (Optional.ofNullable(container).isPresent()) {
+	public Product update(final Product product) throws UpdateFailedException {
+		if (Optional.ofNullable(product).isPresent()) {
 			try {
-				return save(container);
+				return save(product);
 			} catch (SaveFailedException ex) {
-				logger.error(ex.getMessage() + ContainerService.class.getSimpleName(), ex);
+				logger.error(ex.getMessage() + ProductService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			}
 
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			logger.error(UPDATE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			logger.error(UPDATE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
 			throw ufex;
 		}
 	}
@@ -93,14 +93,14 @@ public class ContainerService implements IContainerService {
 	public void delete(final Long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
-				containerRepository.delete(id);
+				productRepository.delete(id);
 			} catch (EmptyResultDataAccessException erdaex) {
-				logger.error(DELETE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + erdaex.getMessage(), erdaex);
+				logger.error(DELETE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + erdaex.getMessage(), erdaex);
 				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
 			}
 		} else {
 			DeleteFailedException dfex = new DeleteFailedException(DELETE_FAILED_EXCEPTION);
-			logger.error(DELETE_FAILED_EXCEPTION + ContainerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
+			logger.error(DELETE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
 			throw dfex;
 		}
 	}

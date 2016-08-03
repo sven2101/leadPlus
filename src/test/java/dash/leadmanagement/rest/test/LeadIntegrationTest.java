@@ -28,10 +28,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.containermanagement.domain.Container;
 import dash.inquirermanagement.domain.Inquirer;
 import dash.inquirermanagement.domain.Title;
 import dash.leadmanagement.domain.Lead;
+import dash.productmanagement.domain.Product;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
 import dash.vendormanagement.domain.Vendor;
@@ -130,7 +130,7 @@ public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest 
 		vendor.setName("Karl Neu 2");
 		vendor.setPhone("0761331234");
 
-		Container container = new Container();
+		Product container = new Product();
 		container.setName("Kühlcontainer");
 		container.setDescription("Dieser Kühlcontainer kühlt am aller besten");
 		container.setPriceNetto(1000.00);

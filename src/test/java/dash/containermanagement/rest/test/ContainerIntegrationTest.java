@@ -28,7 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.containermanagement.domain.Container;
+import dash.productmanagement.domain.Product;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
 
@@ -42,11 +42,11 @@ public class ContainerIntegrationTest extends BaseConfig implements IIntegration
 	@Override
 	@Test
 	public void post() {
-		Container container = create();
-		HttpEntity<Container> entity = new HttpEntity<Container>(container, headers);
+		Product container = create();
+		HttpEntity<Product> entity = new HttpEntity<Product>(container, headers);
 
-		ResponseEntity<Container> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entity, Container.class);
-		Container responseContainer = response.getBody();
+		ResponseEntity<Product> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entity, Product.class);
+		Product responseContainer = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -57,14 +57,14 @@ public class ContainerIntegrationTest extends BaseConfig implements IIntegration
 	@Test
 	public void get() {
 
-		HttpEntity<Container> entityCreateContainer = new HttpEntity<Container>(create(), headers);
+		HttpEntity<Product> entityCreateContainer = new HttpEntity<Product>(create(), headers);
 
-		ResponseEntity<Container> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateContainer, Container.class);
-		Container responseCreateContainer = responseCreate.getBody();
+		ResponseEntity<Product> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateContainer, Product.class);
+		Product responseCreateContainer = responseCreate.getBody();
 
-		HttpEntity<Container> entityGetContainer = new HttpEntity<Container>(headers);
+		HttpEntity<Product> entityGetContainer = new HttpEntity<Product>(headers);
 
-		ResponseEntity<Container> responseGetContainer = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET, entityGetContainer, Container.class,
+		ResponseEntity<Product> responseGetContainer = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET, entityGetContainer, Product.class,
 				responseCreateContainer.getId());
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetContainer.getHeaders().getContentType().getCharSet());
@@ -75,7 +75,7 @@ public class ContainerIntegrationTest extends BaseConfig implements IIntegration
 	@Test
 	public void getAll() {
 
-		HttpEntity<Container> entityGetContainers = new HttpEntity<Container>(headers);
+		HttpEntity<Product> entityGetContainers = new HttpEntity<Product>(headers);
 
 		ResponseEntity<Object[]> responseGetContainers = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetContainers, Object[].class);
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetContainers.getHeaders().getContentType().getCharSet());
@@ -86,17 +86,17 @@ public class ContainerIntegrationTest extends BaseConfig implements IIntegration
 	@Test
 	public void put() {
 
-		Container container = create();
-		HttpEntity<Container> entityCreateContainer = new HttpEntity<Container>(container, headers);
+		Product container = create();
+		HttpEntity<Product> entityCreateContainer = new HttpEntity<Product>(container, headers);
 
-		ResponseEntity<Container> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateContainer, Container.class);
-		Container responseCreateContainer = responseCreate.getBody();
+		ResponseEntity<Product> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateContainer, Product.class);
+		Product responseCreateContainer = responseCreate.getBody();
 
 		responseCreateContainer.setName("Fußcontainer");
-		HttpEntity<Container> entity = new HttpEntity<Container>(responseCreateContainer, headers);
+		HttpEntity<Product> entity = new HttpEntity<Product>(responseCreateContainer, headers);
 
-		ResponseEntity<Container> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Container.class, responseCreateContainer.getId());
-		Container responseContainer = response.getBody();
+		ResponseEntity<Product> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Product.class, responseCreateContainer.getId());
+		Product responseContainer = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -110,9 +110,9 @@ public class ContainerIntegrationTest extends BaseConfig implements IIntegration
 	}
 
 	@Override
-	public Container create() {
+	public Product create() {
 
-		Container container = new Container();
+		Product container = new Product();
 		container.setName("Kühlcontainer");
 		container.setDescription("Dieser Kühlcontainer kühlt am aller besten");
 		container.setPriceNetto(1000.00);

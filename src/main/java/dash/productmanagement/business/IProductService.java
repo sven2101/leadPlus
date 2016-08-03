@@ -12,7 +12,7 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.containermanagement.business;
+package dash.productmanagement.business;
 
 import java.util.List;
 
@@ -20,23 +20,23 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import dash.containermanagement.domain.Container;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.productmanagement.domain.Product;
 
 @Service
 @Transactional
-public interface IContainerService {
+public interface IProductService {
 
-	public List<Container> getAll();
+	public List<Product> getAll();
 
-	public Container getById(final Long id) throws NotFoundException;
+	public Product getById(final Long id) throws NotFoundException;
 
-	public Container save(final Container container) throws SaveFailedException;
+	public Product save(final Product product) throws SaveFailedException;
 
-	public Container update(final Container container) throws UpdateFailedException;
+	public Product update(final Product product) throws UpdateFailedException;
 
 	public void delete(final Long id) throws DeleteFailedException;
 
