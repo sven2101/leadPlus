@@ -27,6 +27,7 @@ import javax.persistence.OneToOne;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.salemanagement.domain.Sale;
+import dash.statusmanagement.domain.Status;
 import dash.usermanagement.domain.User;
 
 @Entity

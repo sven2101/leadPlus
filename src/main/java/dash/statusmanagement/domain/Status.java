@@ -12,8 +12,8 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.processmanagement.domain;
+package dash.statusmanagement.domain;
 
-public enum Workflow {
-	LEAD, OFFER, CONTACT, SALE;
+public enum Status {
+	OPEN, OFFER, FOLLOWUP, SALE, CLOSED;
 }

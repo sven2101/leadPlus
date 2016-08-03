@@ -75,7 +75,7 @@ public class ContainerResource {
 	}
 
 	@ApiOperation(value = "Delete a single container.", notes = "")
-	@RequestMapping(method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
 		containerService.delete(id);

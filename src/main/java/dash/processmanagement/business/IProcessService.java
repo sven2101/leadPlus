@@ -25,16 +25,16 @@ import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.domain.Status;
-import dash.processmanagement.domain.Workflow;
 import dash.processmanagement.request.Request;
 import dash.salemanagement.domain.Sale;
+import dash.statusmanagement.domain.Status;
 import dash.usermanagement.domain.User;
+import dash.workflowmanagement.domain.Workflow;
 
 @Service
 public interface IProcessService {
 
-	public List<Request> getElementsByStatus(final Status status, final Workflow workflow);
+	public List<Request> getElementsByStatus(final Workflow workflow, final Status status);
 
 	public Process getById(final long id) throws NotFoundException;
 
@@ -56,8 +56,8 @@ public interface IProcessService {
 
 	public User setProcessor(final long processId, final long userId) throws Exception;
 
-	public Status updateStatus(final long processId, Status status) throws UpdateFailedException;
-
 	public List<Process> getProcessWithLatestSales(final int amount);
+
+	public Process removeProcessorByProcessId(final long processId) throws UpdateFailedException;
 
 }

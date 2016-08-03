@@ -16,7 +16,7 @@
 
 class LeadController {
 
-    $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile", "$scope", "toaster", "Processes", "Comments", "$filter", "Profile", "$rootScope", "$translate"];
+    $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile", "$scope", "toaster", "Processes", "Comments", "Leads", "$filter", "Profile", "$rootScope", "$translate"];
 
     filter;
     processesService;
@@ -47,10 +47,11 @@ class LeadController {
     dtOptions;
     dtColumns;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, Comments, $filter, Profile, $rootScope, $translate) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, Comments, Leads, $filter, Profile, $rootScope, $translate) {
         this.filter = $filter;
         this.processesService = Processes;
         this.commentService = Comments;
+        this.leadService = Leads;
         this.userService = Profile;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
