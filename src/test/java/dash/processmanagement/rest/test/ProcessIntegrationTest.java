@@ -33,7 +33,7 @@ import dash.inquirermanagement.domain.Title;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.domain.Status;
+import dash.statusmanagement.domain.Status;
 import dash.productmanagement.domain.Product;
 import dash.salemanagement.domain.Sale;
 import dash.test.BaseConfig;
