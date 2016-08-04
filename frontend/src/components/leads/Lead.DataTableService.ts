@@ -12,7 +12,7 @@
 
 class LeadDataTableService {
 
-    $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile", "Processes", "Comments", "Leads", "$filter", "Profile", "$rootScope", "$translate"];
+    $inject = ["$rootScope", "DTOptionsBuilder", "DTColumnBuilder", "$compile", "Processes", "Comments", "Leads", "$filter", "Profile", "$rootScope", "$translate"];
 
 
     translate;
@@ -24,14 +24,16 @@ class LeadDataTableService {
     DTColumnBuilder;
     processes;
     filter;
+    rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $compile, Processes, $filter, $translate) {
+    constructor($rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, Processes, $filter, $translate) {
         this.translate = $translate;
         this.compile = $compile;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
         this.processes = Processes;
         this.filter = $filter;
+        this.rootScope = $rootScope;
 
         this.setDTOptions();
         this.setDTColumns();
@@ -153,6 +155,128 @@ class LeadDataTableService {
             }
             /* tslint:enable:quotemark */
         };
+        let vm = this;
+        /* tslint:disable */
+        let addActionsButtons = function (data, type, full, meta) {
+
+            vm.processes[data.id] = data;
+            var disabled = '';
+            var disablePin = '';
+            var hasRightToDelete = '';
+            var closeOrOpenInquiryDisable = '';
+            var openOrLock = vm.translate.instant('LEAD_CLOSE_LEAD');
+            var faOpenOrLOck = 'fa fa-lock';
+            if (data.status != 'open') {
+                disabled = 'disabled';
+                disablePin = 'disabled';
+                openOrLock = vm.translate.instant('LEAD_OPEN_LEAD');
+                faOpenOrLOck = 'fa fa-unlock';
+            }
+            if (data.offer != null || data.sale != null) {
+                closeOrOpenInquiryDisable = 'disabled';
+            }
+            if (vm.rootScope.globals.currentUser.role == 'user') {
+                hasRightToDelete = 'disabled';
+            }
+            if (data.processor != null
+                && vm.rootScope.globals.currentUser.username != data.processor.username) {
+                disablePin = 'disabled';
+            }
+            let windowWidth = $(window).width();          
+            if (windowWidth > 1300) {
+                return '<div style="white-space: nowrap;"><button class="btn btn-white" '
+                    + disabled
+                    + ' ng-click="lead.followUp(lead.processes['
+                    + data.id
+                    + '])" title="'
+                    + vm.translate.instant('LEAD_FOLLOW_UP')
+                    + '">'
+                    + '   <i class="fa fa-check"></i>'
+                    + '</button>&nbsp;'
+                    + '<button class="btn btn-white" '
+                    + disablePin
+                    + ' ng-click="lead.pin(lead.processes['
+                    + data.id
+                    + '])" title="'
+                    + vm.translate.instant('LEAD_PIN')
+                    + '">'
+                    + '   <i class="fa fa-thumb-tack"></i>'
+                    + '</button>&nbsp;'
+                    + '<button class="btn btn-white" '
+                    + closeOrOpenInquiryDisable
+                    + ' ng-click="lead.closeOrOpenInquiry(lead.processes['
+                    + data.id
+                    + '])" title="'
+                    + openOrLock
+                    + '">'
+                    + '   <i class="'
+                    + faOpenOrLOck
+                    + '"></i>'
+                    + '</button>'
+                    + '<button class="btn btn-white" '
+                    + closeOrOpenInquiryDisable
+                    + ' ng-click="lead.loadDataToModal(lead.processes['
+                    + data.id
+                    + '])" data-toggle="modal"'
+                    + 'data-target="#editModal" title="'
+                    + vm.translate.instant('LEAD_EDIT_LEAD')
+                    + '">'
+                    + '<i class="fa fa-edit"></i>'
+                    + '</button>&nbsp;'
+                    + '<button class="btn btn-white" '
+                    + hasRightToDelete
+                    + ' ng-click="lead.deleteRow(lead.processes['
+                    + data.id
+                    + '])" title="'
+                    + vm.translate.instant('LEAD_DELETE_LEAD')
+                    + '">'
+                    + '   <i class="fa fa-trash-o"></i>'
+                    + '</button></div>';
+            } else {
+                return '<div class="dropdown">'
+                    + '<button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">'
+                    + '<i class="fa fa-wrench"></i></button>'
+                    + '<ul class="dropdown-menu pull-right">'
+                    + '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+                    + disabled
+                    + ' ng-click="lead.followUp(lead.processes['
+                    + data.id
+                    + '])"><i class="fa fa-check">&nbsp;</i>'
+                    + vm.translate.instant('LEAD_FOLLOW_UP')
+                    + '</button></li>'
+                    + '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+                    + disablePin
+                    + ' ng-click="lead.pin(lead.processes['
+                    + data.id
+                    + '])"><i class="fa fa-thumb-tack">&nbsp;</i>'
+                    + vm.translate.instant('LEAD_PIN')
+                    + '</button></li>'
+                    + '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+                    + closeOrOpenInquiryDisable
+                    + ' ng-click="lead.closeOrOpenInquiry(lead.processes['
+                    + data.id
+                    + '])"><i class="'
+                    + faOpenOrLOck
+                    + '">&nbsp;</i>'
+                    + openOrLock
+                    + '</button></li>'
+                    + '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+                    + closeOrOpenInquiryDisable
+                    + ' data-toggle="modal" data-target="#editModal" ng-click="lead.loadDataToModal(lead.processes['
+                    + data.id
+                    + '])"><i class="fa fa-edit"">&nbsp;</i>'
+                    + vm.translate.instant('LEAD_EDIT_LEAD')
+                    + '</button></li>'
+                    + '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
+                    + hasRightToDelete
+                    + ' ng-click="lead.deleteRow(lead.processes['
+                    + data.id
+                    + '])"><i class="fa fa-trash-o">&nbsp;</i>'
+                    + vm.translate.instant('LEAD_DELETE_LEAD')
+                    + '</button></li>'
+                    + '</ul>' + '</div>'
+            }
+        }
 
         this.dtColumns = [
             this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
@@ -180,7 +304,9 @@ class LeadDataTableService {
                 this.translate("COMMON_CONTAINER_SINGLE_PRICE")).renderWith(
                 function (data, type, full) {
                     return self.filter("currency")(
-                        data.container.priceNetto, "€", 2);
+                        // data.container.priceNetto
+                        2
+                        , "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_CONTAINER_ENTIRE_PRICE"))
@@ -191,12 +317,12 @@ class LeadDataTableService {
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_STATUS")).withClass("text-center")
-                .renderWith(addStatusStyle)
-            /*this.DTColumnBuilder.newColumn(null).withTitle(
-                /* tslint:disable:quotemark */
-                /*'<span class="glyphicon glyphicon- cog"></span>'*/
-                /* tslint:enable:quotemark */
-           /* ).withClass("text-center").notSortable().renderWith("addActionsButtons")*/];
+                .renderWith(addStatusStyle),
+            this.DTColumnBuilder.newColumn(null).withTitle(
+
+                '<span class="glyphicon glyphicon- cog"></span>'
+                /* tslint:enable */
+            ).withClass("text-center").notSortable().renderWith(addActionsButtons)];
 
     }
 

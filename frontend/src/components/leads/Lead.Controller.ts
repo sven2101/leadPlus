@@ -304,6 +304,7 @@ class LeadController {
     closeOrOpenInquiry = function (process) {
         let self = this;
         if (process.status === "open") {
+
             this.processesService.setStatus({
                 id: process.id
             }, "closed").$promise.then(function () {
