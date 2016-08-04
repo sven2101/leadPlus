@@ -15,7 +15,7 @@
 
 class Auth {
 
-    // $inject = ["$http", "$rootScope", "$cookieStore", "$location", "$window"];
+    $inject = ["$http", "$rootScope", "$cookieStore", "$location", "$window"];
 
     http;
     rootScope;
@@ -83,4 +83,4 @@ class Auth {
             });
     }
 }
-angular.module("app.services", ["ngResource"]).factory("Auth", ["$http", "$rootScope", "$cookieStore", "$location", "$window", (http, $rootScope, $cookieStore, $location, $window) => new Auth(http, $rootScope, $cookieStore, $location, $window)]);
+angular.module("app.services.Auth", ["ngResource"]).service("Auth", Auth);
