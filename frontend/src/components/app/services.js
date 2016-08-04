@@ -102,8 +102,6 @@ angular.module('app.services', ['ngResource'])
     }])
     .service('Processes', ['$resource', function ($resource) {
         return $resource('/api/rest/processes/:id', {}, {
-
-
             getById: { url: '/api/rest/processes/:id', method: 'GET' },
             getStatus: { url: '/api/rest/processes/:id/status', method: 'GET' },
             getAll: { url: '/api/rest/processes', method: 'GET', isArray: true },
@@ -121,7 +119,7 @@ angular.module('app.services', ['ngResource'])
             getProcessByLead: { url: '/api/rest/processes/leads', method: 'GET', isArray: true },
             getProcessByOffer: { url: '/api/rest/processes/offers', method: 'GET', isArray: true },
             getProcessBySale: { url: '/api/rest/processes/sales', method: 'GET', isArray: true },
-
+            
             getLeadsByStatus: {
                 url: '/api/rest/processes/workflow/:workflow/state/:status',
 

@@ -128,6 +128,7 @@ public class ProcessService implements IProcessService {
 		if (Optional.ofNullable(process).isPresent()) {
 			createdLead = leadService.save(lead);
 			process.setLead(lead);
+			process.setStatus(Status.OPEN);
 			processRepository.save(process);
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);

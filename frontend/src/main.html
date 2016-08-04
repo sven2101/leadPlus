@@ -43,7 +43,7 @@
              <li>
                 <a href="#/product"><i class="fa fa-line-chart"></i> <span class="nav-label">{{ 'PRODUCT_PRODUCTS' | translate }}</span></a>
             </li>
-            <li ng-if="globals.currentUser.role == 'admin' || globals.currentUser.role == 'superadmin'">
+            <li ng-if="globals.currentUser.role == 'ADMIN' || globals.currentUser.role == 'SUPERADMIN'">
                 <a href="#/settings"><i class="fa fa-cogs"></i> <span class="nav-label">{{ 'SETTINGS_MENU' | translate }}</span></a>
             </li>
         </ul>

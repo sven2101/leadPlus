@@ -37,7 +37,7 @@ class LeadController {
     comments = {};
     currentCommentModalId = "";
     loadAllData = false;
-    dtInstance;
+    dtInstance = {};
     processes = {};
     rows = {};
     editProcess;
@@ -82,7 +82,7 @@ class LeadController {
         if (!angular.isUndefined(this.rootScope.globals.currentUser))
             this.userService.get({
                 id: this.rootScope.globals.currentUser.id
-            }).$promise.then(function (result) {
+            }).$promise.then(function(result) {
                 self.user = result;
             });
     }
@@ -93,16 +93,27 @@ class LeadController {
         if (!angular.isUndefined(self.rootScope.globals.currentUser))
             this.userService.get({
                 id: self.rootScope.globals.currentUser.id
-            }).$promise.then(function (result) {
+            }).$promise.then(function(result) {
                 self.user = result;
             });
     }
 
     setDTOptions() {
         let self = this;
+        let createdRow = function(row, data, dataIndex) {
+            // Recompiling so we can bind Angular directive to the DT
+            self.rows[data.id] = row;
+            let currentDate = window["moment"](window["moment"]().toString(), "DD.MM.YYYY");
+            let leadDate = window["moment"](data.timestamp, "DD.MM.YYYY");
+            if (currentDate["businessDiff"](leadDate, "days") > 3
+                && data.status === "open")
+                $(row).addClass("important");
+            self.compile(angular.element(row).contents())(this.scope);
+        };
+
         this.dtOptions = self.DTOptionsBuilder.newOptions().withOption("ajax", {
             url: "/api/rest/processes/workflow/LEAD/state/OPEN",
-            error: function (xhr, error, thrown) {
+            error: function(xhr, error, thrown) {
                 console.log(xhr);
             },
             type: "GET"
@@ -160,53 +171,90 @@ class LeadController {
                             page: "current"
                         }
                     }
-                }]).withBootstrap().withOption("createdRow", this.createdRow).withOption(
+                }]).withBootstrap().withOption("createdRow", createdRow).withOption(
             "order", [4, "desc"]);
     }
     setDTColumns() {
+        let self = this;
+        let addDetailButton = function(data, type, full, meta) {
+            self.processes[data.id] = data;
+            /* tslint:disable:quotemark */
+            return '<a class="green shortinfo" href="javascript:;"'
+                + 'ng-click="lead.appendChildRow(lead.processes[' + data.id
+                + '], $event)" title="Details">'
+                + '<i class="glyphicon glyphicon-plus-sign"/></a>';
+            /* tslint:enable:quotemark */
+        };
+        let addStatusStyle = function(data, type, full, meta) {
+            self.processes[data.id] = data;
+            let hasProcessor = "";
+            /* tslint:disable:quotemark */
+            if (data.processor !== null)
+                hasProcessor = '&nbsp;<span style="color: #ea394c;"><i class="fa fa-thumb-tack"></i></span>';
+            if (data.status === 'open') {
+                return '<span style="color: green;">'
+                    + self.translate.instant("COMMON_STATUS_OPEN") + '</span>'
+                    + hasProcessor;
+            } else if (data.status === "offer") {
+                return '<span style="color: #f79d3c;">'
+                    + self.translate.instant("COMMON_STATUS_OFFER") + '</span>';
+            } else if (data.status === "followup") {
+                return '<span style="color: #f79d3c;">'
+                    + self.translate.instant("COMMON_STATUS_FOLLOW_UP") + '</span>';
+            } else if (data.status === "sale") {
+                return '<span style="color: #1872ab;">'
+                    + self.translate.instant("COMMON_STATUS_SALE") + '</span>';
+            } else if (data.status === "closed") {
+                return '<span style="color: #ea394c;">'
+                    + self.translate.instant("COMMON_STATUS_CLOSED") + '</span>';
+            }
+            /* tslint:enable:quotemark */
+        };
+
         this.dtColumns = [
             this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
-                .renderWith(this.addDetailButton),
-            this.DTColumnBuilder.newColumn("lead.inquirer.lastname").withTitle(
+                .renderWith(addDetailButton),
+            this.DTColumnBuilder.newColumn("inquirer.lastname").withTitle(
                 this.translate("COMMON_NAME")).withClass("text-center"),
-            this.DTColumnBuilder.newColumn("lead.inquirer.company").withTitle(
+            this.DTColumnBuilder.newColumn("inquirer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
-            this.DTColumnBuilder.newColumn("lead.inquirer.email").withTitle(
+            this.DTColumnBuilder.newColumn("inquirer.email").withTitle(
                 this.translate("COMMON_EMAIL")).withClass("text-center"),
-            this.DTColumnBuilder.newColumn("lead.timestamp").withTitle(
+            this.DTColumnBuilder.newColumn("timestamp").withTitle(
                 this.translate("COMMON_DATE")).withOption("type", "date-euro")
                 .withClass("text-center"),
-            this.DTColumnBuilder.newColumn("lead.inquirer.phone").withTitle(
+            this.DTColumnBuilder.newColumn("inquirer.phone").withTitle(
                 this.translate("COMMON_PHONE")).notVisible(),
-            this.DTColumnBuilder.newColumn("lead.inquirer.firstname").withTitle(
+            this.DTColumnBuilder.newColumn("inquirer.firstname").withTitle(
                 this.translate("COMMON_FIRSTNAME")).notVisible(),
-            this.DTColumnBuilder.newColumn("lead.container.name").withTitle(
+            this.DTColumnBuilder.newColumn("container.name").withTitle(
                 this.translate("COMMON_CONTAINER")).notVisible(),
-            this.DTColumnBuilder.newColumn("lead.destination").withTitle(
+            this.DTColumnBuilder.newColumn("destination").withTitle(
                 this.translate("COMMON_CONTAINER_DESTINATION")).notVisible(),
-            this.DTColumnBuilder.newColumn("lead.containerAmount").withTitle(
+            this.DTColumnBuilder.newColumn("containerAmount").withTitle(
                 this.translate("COMMON_CONTAINER_AMOUNT")).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_CONTAINER_SINGLE_PRICE")).renderWith(
-                function (data, type, full) {
-                    return this.filter("currency")(
-                        data.lead.container.priceNetto, "€", 2);
+                function(data, type, full) {
+                    return self.filter("currency")(
+                        data.container.priceNetto, "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_CONTAINER_ENTIRE_PRICE"))
                 .renderWith(
-                function (data, type, full) {
-                    return this.filter("currency")(data.lead.leadPrice,
+                function(data, type, full) {
+                    return self.filter("currency")(data.leadPrice,
                         "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_STATUS")).withClass("text-center")
-                .renderWith(this.addStatusStyle),
+                .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 /* tslint:disable:quotemark */
                 '<span class="glyphicon glyphicon- cog"></span>'
                 /* tslint:enable:quotemark */
             ).withClass("text-center").notSortable().renderWith("addActionsButtons")];
+
     }
     refreshData() {
         let resetPaging = false;
@@ -219,65 +267,24 @@ class LeadController {
                 type: "GET",
                 pages: 5,
                 dataSrc: "data",
-                error: function (xhr, error, thrown) {
+                error: function(xhr, error, thrown) {
                     console.log(xhr);
                 }
             }).withOption("searchDelay", 500);
         } else {
             this.dtOptions.withOption("serverSide", false).withOption("ajax", {
                 url: "/api/rest/processes/workflow/LEAD/state/OPEN",
-                error: function (xhr, error, thrown) {
+                error: function(xhr, error, thrown) {
                     console.log(xhr);
                 },
                 type: "GET"
             }).withOption("searchDelay", 0);
         }
     }
-    createdRow(row, data, dataIndex) {
-        // Recompiling so we can bind Angular directive to the DT
-        this.rows[data.id] = row;
-        let currentDate = window["moment"](window["moment"]().toString(), "DD.MM.YYYY");
-        let leadDate = window["moment"](data.lead.timestamp, "DD.MM.YYYY");
-        if (currentDate["businessDiff"](leadDate, "days") > 3
-            && data.status === "open")
-            $(row).addClass("important");
-        this.compile(angular.element(row).contents())(this.scope);
-    }
 
-    addStatusStyle(data, type, full, meta) {
-        this.processes[data.id] = data;
-        let hasProcessor = "";
-        /* tslint:disable:quotemark */
-        if (data.processor !== null)
-            hasProcessor = '&nbsp;<span style="color: #ea394c;"><i class="fa fa-thumb-tack"></i></span>';
-        if (data.status === 'open') {
-            return '<span style="color: green;">'
-                + this.translate.instant("COMMON_STATUS_OPEN") + '</span>'
-                + hasProcessor;
-        } else if (data.status === "offer") {
-            return '<span style="color: #f79d3c;">'
-                + this.translate.instant("COMMON_STATUS_OFFER") + '</span>';
-        } else if (data.status === "followup") {
-            return '<span style="color: #f79d3c;">'
-                + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + '</span>';
-        } else if (data.status === "sale") {
-            return '<span style="color: #1872ab;">'
-                + this.translate.instant("COMMON_STATUS_SALE") + '</span>';
-        } else if (data.status === "closed") {
-            return '<span style="color: #ea394c;">'
-                + this.translate.instant("COMMON_STATUS_CLOSED") + '</span>';
-        }
-        /* tslint:enable:quotemark */
-    }
-    addDetailButton(data, type, full, meta) {
-        this.processes[data.id] = data;
-        /* tslint:disable:quotemark */
-        return '<a class="green shortinfo" href="javascript:;"'
-            + 'ng-click="lead.appendChildRow(lead.processes[' + data.id
-            + '], $event)" title="Details">'
-            + '<i class="glyphicon glyphicon-plus-sign"/></a>';
-        /* tslint:enable:quotemark */
-    }
+
+
+
 
     appendChildRow(process, event) {
         let childScope = this.scope.$new(true);
@@ -285,7 +292,7 @@ class LeadController {
         let self = this;
         this.commentService.getComments({
             id: process.id
-        }).$promise.then(function (result) {
+        }).$promise.then(function(result) {
             self.comments[process.id] = [];
             for (let comment in result) {
                 if (comment === "$promise")
@@ -344,7 +351,7 @@ class LeadController {
             commentText: commentText,
             timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm:ss")
         };
-        this.commentService.addComment(comment).$promise.then(function () {
+        this.commentService.addComment(comment).$promise.then(function() {
             self.comments[id].push(comment);
             self.commentInput[id] = "";
             self.commentModalInput[id] = "";
@@ -354,7 +361,7 @@ class LeadController {
         let self = this;
         if (angular.isUndefined(this.newLead.inquirer)) {
             this.newLead.inquirer = {
-                title: ""
+                title: "UNKNOWN"
             };
         }
         this.newLead.timestamp = this.filter("date")
@@ -364,9 +371,9 @@ class LeadController {
         };
         let process = {
             lead: this.newLead,
-            status: "open"
+            status: "OPEN"
         };
-        this.processesService.save(process).$promise.then(function (result) {
+        this.processesService.save(process).$promise.then(function(result) {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
             self.rootScope.leadsCount += 1;
@@ -382,7 +389,7 @@ class LeadController {
         };
     };
 
-    followUp = function (process) {
+    followUp = function(process) {
         let self = this;
         let offer = {
             container: {
@@ -406,10 +413,10 @@ class LeadController {
         };
         this.processesService.addOffer({
             id: process.id
-        }, offer).$promise.then(function () {
+        }, offer).$promise.then(function() {
             self.processesService.setStatus({
                 id: process.id
-            }, "offer").$promise.then(function () {
+            }, "offer").$promise.then(function() {
                 self.toaster.pop("success", "", self.translate
                     .instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
                 self.rootScope.leadsCount -= 1;
@@ -417,7 +424,7 @@ class LeadController {
                 if (process.processor == null) {
                     self.processesService.setProcessor({
                         id: process.id
-                    }, self.user.username).$promise.then(function () {
+                    }, self.user.username).$promise.then(function() {
                         process.processor = self.user;
                         process.offer = offer;
                         process.status = "offer";
@@ -433,25 +440,25 @@ class LeadController {
         if (process.processor == null) {
             this.processesService.setProcessor({
                 id: process.id
-            }, self.user.username).$promise.then(function () {
+            }, self.user.username).$promise.then(function() {
                 process.processor = self.user;
                 self.updateRow(process);
             });
         } else {
             this.processesService.removeProcessor({
                 id: process.id
-            }).$promise.then(function () {
+            }).$promise.then(function() {
                 process.processor = null;
                 self.updateRow(process);
             });
         }
     }
-    closeOrOpenInquiry = function (process) {
+    closeOrOpenInquiry = function(process) {
         let self = this;
         if (process.status === "open") {
             this.processesService.setStatus({
                 id: process.id
-            }, "closed").$promise.then(function () {
+            }, "closed").$promise.then(function() {
                 self.toaster.pop("success", "", self.translate
                     .instant("COMMON_TOAST_SUCCESS_CLOSE_LEAD"));
                 self.rootScope.leadsCount -= 1;
@@ -461,7 +468,7 @@ class LeadController {
         } else if (process.status === "closed") {
             this.processesService.setStatus({
                 id: process.id
-            }, "open").$promise.then(function () {
+            }, "open").$promise.then(function() {
                 self.toaster.pop("success", "", self.translate
                     .instant("COMMON_TOAST_SUCCESS_OPEN_LEAD"));
                 self.rootScope.leadsCount += 1;
@@ -477,7 +484,7 @@ class LeadController {
         let self = this;
         this.processesService.putLead({
             id: this.editProcess.lead.id
-        }, this.editProcess.lead).$promise.then(function () {
+        }, this.editProcess.lead).$promise.then(function() {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
             self.editForm.$setPristine();
@@ -498,7 +505,7 @@ class LeadController {
         process.lead = null;
         this.processesService.putProcess({
             id: process.id
-        }, process).$promise.then(function () {
+        }, process).$promise.then(function() {
             if (process.offer == null && process.sale == null) {
                 self.processesService.deleteProcess({
                     id: process.id
@@ -506,7 +513,7 @@ class LeadController {
             }
             self.processesService.deleteLead({
                 id: leadId
-            }).$promise.then(function () {
+            }).$promise.then(function() {
                 self.toaster.pop("success", "", self.translate
                     .instant("COMMON_TOAST_SUCCESS_DELETE_LEAD"));
                 self.rootScope.leadsCount -= 1;
