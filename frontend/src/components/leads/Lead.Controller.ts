@@ -191,22 +191,25 @@ class LeadController {
             /* tslint:disable:quotemark */
             if (data.processor !== null)
                 hasProcessor = '&nbsp;<span style="color: #ea394c;"><i class="fa fa-thumb-tack"></i></span>';
-            if (data.status === 'open') {
+            if (data.status === 'OPEN') {
                 return '<span style="color: green;">'
                     + self.translate.instant("COMMON_STATUS_OPEN") + '</span>'
                     + hasProcessor;
-            } else if (data.status === "offer") {
+            } else if (data.status === "OFFER") {
                 return '<span style="color: #f79d3c;">'
                     + self.translate.instant("COMMON_STATUS_OFFER") + '</span>';
-            } else if (data.status === "followup") {
+            } else if (data.status === "FOLLOWUP") {
                 return '<span style="color: #f79d3c;">'
                     + self.translate.instant("COMMON_STATUS_FOLLOW_UP") + '</span>';
-            } else if (data.status === "sale") {
+            } else if (data.status === "SALE") {
                 return '<span style="color: #1872ab;">'
                     + self.translate.instant("COMMON_STATUS_SALE") + '</span>';
-            } else if (data.status === "closed") {
+            } else if (data.status === "CLOSED") {
                 return '<span style="color: #ea394c;">'
                     + self.translate.instant("COMMON_STATUS_CLOSED") + '</span>';
+            }
+            else {
+                return "";
             }
             /* tslint:enable:quotemark */
         };
@@ -248,12 +251,12 @@ class LeadController {
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_STATUS")).withClass("text-center")
-                .renderWith(addStatusStyle),
-            this.DTColumnBuilder.newColumn(null).withTitle(
+                .renderWith(addStatusStyle)
+            /*this.DTColumnBuilder.newColumn(null).withTitle(
                 /* tslint:disable:quotemark */
-                '<span class="glyphicon glyphicon- cog"></span>'
+                /*'<span class="glyphicon glyphicon- cog"></span>'*/
                 /* tslint:enable:quotemark */
-            ).withClass("text-center").notSortable().renderWith("addActionsButtons")];
+           /* ).withClass("text-center").notSortable().renderWith("addActionsButtons")*/];
 
     }
     refreshData() {
