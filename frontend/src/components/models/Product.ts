@@ -18,7 +18,7 @@ class Product {
     priceNetto: Number;
     image: any;
     timestamp: Date;
-    isDeactivated;    
+    isDeactivated;
 
     constructor() {
         this.name = "";
