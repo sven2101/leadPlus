@@ -9,13 +9,18 @@ var gulp = require('gulp'),
     typescript = require('gulp-tsc');
 ts = require('gulp-typescript');
 
-gulp.task('copy',['copy-assets','copy-datatablesTranslationFiles','copy-img','copy-patterns','copy-fonts'],function () {
+gulp.task('copy',['copy-font-awesome','copy-assets','copy-datatablesTranslationFiles','copy-img','copy-patterns','copy-fonts'],function () {
     return null;
 });
 
 gulp.task('copy-assets',function () {
     return gulp.src(path.assets.src)
         .pipe(gulp.dest(path.assets.dest));
+});
+
+gulp.task('copy-font-awesome',function () {
+    return gulp.src(path.fontAwesome.src)
+        .pipe(gulp.dest(path.fontAwesome.dest));
 });
 
 gulp.task('copy-img',function () {

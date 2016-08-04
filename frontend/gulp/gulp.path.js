@@ -34,6 +34,11 @@ module.exports = {
 				baseSrcPath + 'assets/**/*.css'],
 			dest: baseDstPath + 'assets'
 		},
+		fontAwesome: {
+			src: baseSrcPath + 'assets/font-awesome/css/font-awesome.min.css',
+			dest: baseDstPath + ''
+
+		},
 		img: {
 			src: baseSrcPath + 'assets/img/**/*',
 			dest: baseDstPath + 'assets/img'
@@ -47,7 +52,7 @@ module.exports = {
 		fonts: {
 			src: [baseSrcPath + 'assets/fonts/**/*',
 				baseSrcPath + 'assets/font-awesome/fonts/**/*'],
-			dest: baseDstPath + 'assets/fonts'
+			dest: baseDstPath + 'fonts'
 		},
 		assets: {
 			src: [
