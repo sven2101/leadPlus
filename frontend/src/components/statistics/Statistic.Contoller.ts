@@ -242,7 +242,7 @@ class StatisticContoller {
             }
         }
 
-        this.chartLeadsConversionRate.series.push({
+        this.chartLeadsConversionRate.chartConfig.series.push({
             name: this.translate.instant("STATISTIC_SALES_OF_LEADS"),
             data: salesToLeadsConversion,
             color: "#ed5565"
@@ -259,7 +259,7 @@ class StatisticContoller {
                 salesToOffersConversion.push(0);
             }
         }
-        this.chartOffersConversionRate.series.push({
+        this.chartOffersConversionRate.chartConfig.series.push({
             name: this.translate.instant("STATISTIC_SALES_OF_OFFERS"),
             data: salesToOffersConversion,
             color: "#f8ac59"
@@ -267,19 +267,19 @@ class StatisticContoller {
     }
 
     pushToPieChart() {
-        this.chartSingleStatisticPie.series[0].data.push({
+        this.chartSingleStatisticPie.chartConfig.series[0].data.push({
             name: this.translate.instant("LEADS_MENU"),
             y: this.leads,
             color: "#ed5565"
         });
 
-        this.chartSingleStatisticPie.series[0].data.push({
+        this.chartSingleStatisticPie.chartConfig.series[0].data.push({
             name: this.translate.instant("OFFERS_MENU"),
             y: this.offers,
             color: "#f8ac59"
         });
 
-        this.chartSingleStatisticPie.series[0].data.push({
+        this.chartSingleStatisticPie.chartConfig.series[0].data.push({
             name: this.translate.instant("SALES_MENU"),
             y: this.sales,
             color: "#1a7bb9"
@@ -287,17 +287,17 @@ class StatisticContoller {
     }
 
     pushLeadsOffersSales() {
-        this.chartEntireStatisticSpline.series.push({
+        this.chartEntireStatisticSpline.chartConfig.series.push({
             name: this.translate.instant("LEADS_MENU"),
             data: this.leadResult,
             color: "#ed5565"
         });
-        this.chartEntireStatisticSpline.series.push({
+        this.chartEntireStatisticSpline.chartConfig.series.push({
             name: this.translate.instant("OFFERS_MENU"),
             data: this.offerResult,
             color: "#f8ac59"
         });
-        this.chartEntireStatisticSpline.series.push({
+        this.chartEntireStatisticSpline.chartConfig.series.push({
             name: this.translate.instant("SALES_MENU"),
             data: this.saleResult,
             color: "#1a7bb9"
@@ -305,13 +305,13 @@ class StatisticContoller {
 
     }
     pushProfitAndTurnover() {
-        this.chartEntireStatisticArea.series.push({
+        this.chartEntireStatisticArea.chartConfig.series.push({
             name: this.translate.instant("STATISTIC_TURNOVER"),
             data: this.turnoverResult,
             color: "#000000"
         });
 
-        this.chartEntireStatisticArea.series.push({
+        this.chartEntireStatisticArea.chartConfig.series.push({
             name: this.translate.instant("STATISTIC_PROFIT"),
             data: this.profitsResult,
             color: "#1a7bb9"
@@ -328,11 +328,11 @@ class StatisticContoller {
 
         this.selectedPeriod = selectedPeriod;
 
-        this.chartSingleStatisticPie.series[0].data = [];
-        this.chartEntireStatisticArea.series = [];
-        this.chartEntireStatisticSpline.series = [];
-        this.chartLeadsConversionRate.series = [];
-        this.chartOffersConversionRate.series = [];
+        this.chartSingleStatisticPie.chartConfig.series[0].data = [];
+        this.chartEntireStatisticArea.chartConfig.series = [];
+        this.chartEntireStatisticSpline.chartConfig.series = [];
+        this.chartLeadsConversionRate.chartConfig.series = [];
+        this.chartOffersConversionRate.chartConfig.series = [];
 
         this.timeframe = [];
 
@@ -517,10 +517,10 @@ class StatisticContoller {
                 console.log("Time Frame not found.");
                 break;
         }
-        this.chartEntireStatisticArea.options.xAxis.categories = this.timeframe;
-        this.chartEntireStatisticSpline.options.xAxis.categories = this.timeframe;
-        this.chartLeadsConversionRate.options.xAxis.categories = this.timeframe;
-        this.chartOffersConversionRate.options.xAxis.categories = this.timeframe;
+        this.chartEntireStatisticArea.chartConfig.options.xAxis.categories = this.timeframe;
+        this.chartEntireStatisticSpline.chartConfig.options.xAxis.categories = this.timeframe;
+        this.chartLeadsConversionRate.chartConfig.options.xAxis.categories = this.timeframe;
+        this.chartOffersConversionRate.chartConfig.options.xAxis.categories = this.timeframe;
 
         this.checkPromises();
     };
