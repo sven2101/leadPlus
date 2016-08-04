@@ -17,10 +17,13 @@ class Product {
     description: String;
     priceNetto: Number;
     image: any;
+    timestamp: Date;
+    isDeactivated;    
 
     constructor() {
         this.name = "";
         this.description = "";
         this.id = 0;
+        this.isDeactivated = false;
     }
 }

@@ -52,7 +52,7 @@ public class ProductResource {
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public List<Product> getAll() {	
-		return new ArrayList<Product>();
+		return productService.getAll();
 	}
 
 	@ApiOperation(value = "Get a single product.", notes = "You have to provide a valid product ID.")

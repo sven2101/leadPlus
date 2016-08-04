@@ -14,10 +14,18 @@
 
 package dash.productmanagement.domain;
 
+import java.util.Calendar;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Product {
@@ -28,9 +36,47 @@ public class Product {
 
 	private String name;
 	private String description;
+	
+	@Column(nullable = true, columnDefinition = "timestamptz")
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
+	private Calendar timestamp;
+	
+	private boolean isDeactivated;
 
 	private double priceNetto;
 	
+	@Lob
+	private byte[] image;
+	
+	public boolean isDeactivated() {
+		return isDeactivated;
+	}
+
+	public void setDeactivated(boolean isDeactivated) {
+		this.isDeactivated = isDeactivated;
+	}
+
+	public Calendar getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Calendar timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public Product() {
 
 	}

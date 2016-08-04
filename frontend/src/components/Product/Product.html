@@ -21,6 +21,8 @@
         </div>
     </div>
 </div>
+
+
 <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
@@ -29,32 +31,55 @@
                     <h5>{{ 'PRODUCT_MANAGE_PRODUCTS' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
-                    <button type="button" class="btn btn-success" ng-click="productCtrl.clearProduct()" data-toggle="modal" data-target="#createProductModal">
+                    <div class="row m-b-sm m-t-sm">
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-success btn-sm btn-primary" ng-click="productCtrl.clearProduct()" data-toggle="modal"
+                                data-target="#createProductModal">
                         <i class="fa fa-plus"></i>&nbsp;{{ 'PRODUCT_CREATE' | translate }}
                     </button>
-                    <button ng-click="productCtrl.refreshData()" type="button" class="btn btn-success">
+                        </div>
+                        <div class="col-md-1">
+                            <button ng-click="productCtrl.refreshData()" type="button" class="btn btn-success btn-sm btn-primary">
                         <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
                     </button>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>name</th>
-                                <th>description</th>
-                                <th>price</th>
-                            </tr>
-                        </thead>
-                        <tr ng-repeat="product in productCtrl.productService.products">
-                            <td>{{$index+1}}</td>
-                            <td>{{product.name}}</td>
-                            <td>{{product.description}}</td>
-                            <td>{{product.priceNetto}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                        </div>
+                        <div class="col-md-10">
+                            <input type="text" placeholder="Search" class="input-sm form-control" ng-model="searchText">
+                        </div>
+                        <div class="project-list">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <tr ng-repeat="product in productCtrl.productService.products| filter:searchText">
+                                        <td class="project-status">
+                                            <span ng-show="!product.isDeactivated" class="label label-primary">Active</span>
+                                            <span ng-show="product.isDeactivated" class="label label-default">Unactive</span>
+                                        </td>
+                                        <td class="project-title">
+                                            <a href="project_detail.html">{{product.name}}</a>
+                                            <br>
+                                            <small>Created {{product.timestamp}}</small>
+                                        </td>
+                                        <td class="project-completion">
+                                            <small>Completion with: 48%</small>
+                                            <div class="progress progress-mini">
+                                                <div style="width: 48%;" class="progress-bar"></div>
+                                            </div>
+                                        </td>
+                                        <td class="project-people">
+                                            <a href=""><img alt="image" class="img-circle" src="http://www.containersucher.com/assets/plugindata/w2dblgbb1ca3b3057e90d9af3e514539e33a22/pic1271913090.jpg"></a>
+                                        </td>
+                                        <td class="project-actions">
+                                            <button type="button" class="btn btn-white btn-sm" ng-click="productCtrl.editProduct(product)" data-toggle="modal" data-target="#createProductModal">
+                                     <i class="fa fa-pencil"></i>&nbsp;Edit</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div ng-include="'components/product/CreateProductModal.html'"></div>
+
+    <div ng-include=" 'components/product/CreateProductModal.html' "></div>

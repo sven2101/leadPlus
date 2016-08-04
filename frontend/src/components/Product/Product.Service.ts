@@ -27,14 +27,22 @@ class ProductService {
         this.products = new Array<Product>();
         this.getAllProducts();
     }
-    saveProduct(product: Product) {
+    saveProduct(product: Product, insert: boolean) {
         let self = this;
         console.log(product);
+        if (insert) {
+            this.productResource.createProduct(product).$promise.then(function (result: Product) {
+                console.log(result);
+                self.products.push(result);
+            });
+        } else {
+            this.productResource.updateProduct(product).$promise.then(function (result: Product) {
+                console.log(result);
+                product = result;
+            });
+        }
 
-        this.productResource.createProduct(product).$promise.then(function (result: Product) {
-            console.log(result);
-            self.products.push(result);
-        });
+
     }
     getAllProducts() {
         let self = this;

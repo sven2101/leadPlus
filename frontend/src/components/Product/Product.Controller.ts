@@ -14,30 +14,42 @@
 
 class ProductController {
 
-    $inject = ["ProductService"];
+    $inject = ["ProductService", "Upload"];
 
     createProductForm;
     currentProduct: Product;
+    myfile: any;
+    isCurrentProductNew;
     productService: ProductService;
+
 
     constructor(ProductService, $resource) {
         this.productService = ProductService;
     }
 
-    refreshData() {
+    refreshData(): void {
         this.productService.getAllProducts();
     }
 
     clearProduct(): void {
         this.createProductForm.$setPristine();
         this.currentProduct = new Product();
+        this.isCurrentProductNew = true;
     }
 
-    saveProduct() {
-        console.log(this.currentProduct);
-        this.productService.saveProduct(this.currentProduct);
+    editProduct(product: Product): void {
+        this.currentProduct = product;
+        this.isCurrentProductNew = false;
+    }
+
+    saveProduct(): void {
+
+        console.log(this.currentProduct.image);
+        console.log(this.myfile);
+
+        this.productService.saveProduct(this.currentProduct, this.isCurrentProductNew);
     }
 }
 
-angular.module("app.product", ["ngResource"]).controller("ProductController", ProductController);
+angular.module("app.product", ["ngResource", "ngFileUpload"]).controller("ProductController", ProductController);
 

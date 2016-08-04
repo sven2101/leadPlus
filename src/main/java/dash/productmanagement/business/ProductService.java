@@ -20,6 +20,7 @@ import static dash.Constants.DELETE_FAILED_EXCEPTION;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +65,7 @@ public class ProductService implements IProductService {
 	@Override
 	public Product save(final Product product) throws SaveFailedException {
 		if (Optional.ofNullable(product).isPresent()) {
+			product.setTimestamp(Calendar.getInstance());
 			return productRepository.save(product);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
