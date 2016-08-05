@@ -151,7 +151,7 @@ angular.module('app.services', ['ngResource'])
     }])
     .service('Comments', ['$resource', function ($resource) {
         return $resource('/api/rest/comments/', {}, {
-            getByProcessId: { url: '/api/rest/comments/processes/:processId', method: 'GET', isArray: true },
+            getByProcessId: { url: '/api/rest/comments/processes/:id', method: 'GET', isArray: true },
             getById: { url: '/api/rest/comments/:id', method: 'GET' },
             save: { url: '/api/rest/comments/', method: 'POST' },
             update: { url: '/api/rest/comments', method: 'PUT' },

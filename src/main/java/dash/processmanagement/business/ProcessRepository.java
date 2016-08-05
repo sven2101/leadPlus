@@ -35,7 +35,7 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 
 	List<Process> findProcessesByStatus(Status status);
 
-	List<Lead> findByStatusAndLeadIsNotNull(Status status);
+	List<Process> findByStatusAndLeadIsNotNull(Status status);
 
 	Page<Lead> findByLeadIsNotNull(Pageable pageable);
 
@@ -43,7 +43,7 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 			String firstname, String lastname, String email, String company, String phone, String containerName, String containerDescription,
 			String destination, String message, String status, Pageable pageable);
 
-	List<Offer> findByStatusAndOfferIsNotNull(Status status);
+	List<Process> findByStatusAndOfferIsNotNull(Status status);
 
 	Page<Offer> findByOfferIsNotNull(Pageable pageable);
 
@@ -51,7 +51,7 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 			String firstname, String lastname, String email, String company, String phone, String containerName, String containerDescription,
 			String deliveryAddress, String status, Pageable pageable);
 
-	List<Sale> findByStatusAndSaleIsNotNull(Status status);
+	List<Process> findByStatusAndSaleIsNotNull(Status status);
 
 	Page<Sale> findBySaleIsNotNull(Pageable pageable);
 

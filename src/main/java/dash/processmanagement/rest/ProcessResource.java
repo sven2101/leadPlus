@@ -41,7 +41,6 @@ import dash.offermanagement.domain.Offer;
 import dash.processmanagement.business.IProcessService;
 import dash.processmanagement.business.ProcessRepository;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.request.Request;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
 import dash.usermanagement.domain.User;
@@ -78,7 +77,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns processes with a certain state", notes = "")
 	@RequestMapping(value = "workflow/{workflow}/state/{status}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Request> getElementsByStatus(@ApiParam(required = true) @PathVariable final Workflow workflow,
+	public List<Process> getElementsByStatus(@ApiParam(required = true) @PathVariable final Workflow workflow,
 			@ApiParam(required = true) @PathVariable final Status status) {
 		return processService.getElementsByStatus(workflow, status);
 	}

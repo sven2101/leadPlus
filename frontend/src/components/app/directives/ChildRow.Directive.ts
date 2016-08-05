@@ -14,10 +14,11 @@
 "use strict";
 
 let app = angular.module("app");
-app.directive("childrow", function () {
-    let directive;
+app.directive("childrow", function() {
+    let directive: { restrict: string, templateUrl: any, transclude: boolean, link: any };
+    directive = { restrict: null, templateUrl: null, transclude: null, link: null };
     directive.restrict = "A";
-    directive.templateUrl = function (elem, attr) {
+    directive.templateUrl = function(elem, attr) {
         if (attr.type === "lead")
             return "components/leads/leadChildRow.html";
         else if (attr.type === "offer")
@@ -27,7 +28,7 @@ app.directive("childrow", function () {
 
     };
     directive.transclude = true;
-    directive.link = function (scope, element, attrs) {
+    directive.link = function(scope, element, attrs) {
     };
     return directive;
 });

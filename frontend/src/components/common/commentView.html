@@ -15,7 +15,7 @@
                             <div ng-if="$index%2==0" class="chat-message left">
                                 <img class="message-avatar" src="assets/img/guest.png" alt="">
                                 <div class="message">
-                                    <a class="message-author"> {{comment.creator.username}} </a>
+                                    <a class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
                                     <span class="message-date"> {{comment.timestamp|  date:'dd.MM.yyyy HH:mm'}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}
@@ -25,7 +25,7 @@
                             <div ng-if="$index%2!=0" class="chat-message right">
                                 <img class="message-avatar" src="assets/img/guest.png" alt="">
                                 <div class="message">
-                                    <a class="message-author" href="#"> {{comment.creator.username}} </a>
+                                    <a class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
                                     <span class="message-date"> {{comment.timestamp |  date:'dd.MM.yyyy HH:mm'}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}

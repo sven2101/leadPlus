@@ -32,7 +32,7 @@ LeadsCtrl.prototype.addComment = function(id, source) {
 		commentText : commentText,
 		timestamp : this.filter('date')(new Date(), "dd.MM.yyyy HH:mm:ss")
 	};
-	this.commentService.addComment(comment).$promise.then(function() {
+	this.commentService.save(comment).$promise.then(function() {
 		vm.comments[id].push(comment);
 		vm.commentInput[id] = '';
 		vm.commentModalInput[id] = '';
@@ -53,9 +53,9 @@ LeadsCtrl.prototype.saveLead = function() {
 	};
 	var process = {
 		lead : this.newLead,
-		status : 'open'
+		status : 'OPEN'
 	};
-	this.processesService.addProcess(process).$promise.then(function(result) {
+	this.processesService.save(process).$promise.then(function(result) {
 		vm.toaster.pop('success', '', vm.translate
 				.instant('COMMON_TOAST_SUCCESS_ADD_LEAD'));
 		vm.rootScope.leadsCount += 1;

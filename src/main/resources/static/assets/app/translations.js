@@ -50,8 +50,8 @@ function config($translateProvider) {
         SIGNUP_VALIDATE_EMAIL_IN_USE: "E-Mail schon vergeben",
         SIGNUP_VALIDATE_PASSWORD_TO_LONG: "Passwort darf höchstens 20 Zeichen enthalten",
         // Define common elements
-        Herr: "Herr",
-        Frau: "Frau",
+        MR: "Herr",
+        MS: "Frau",
         day: "Heute",
         week: "Woche",
         month: "Monat",
@@ -285,8 +285,8 @@ function config($translateProvider) {
         SIGNUP_VALIDATE_EMAIL_IN_USE: "E-Mail already in use",
         SIGNUP_VALIDATE_PASSWORD_TO_LONG: "Password have to contain 20 or less characters",
         // Define common elements
-        Herr: "Mr.",
-        Frau: "Ms.",
+        MR: "Mr.",
+        MS: "Ms.",
         day: "Today",
         week: "Week",
         month: "Month",

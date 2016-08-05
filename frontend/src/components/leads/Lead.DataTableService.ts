@@ -32,7 +32,7 @@ class LeadDataTableService {
         this.compile = $compile;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
-        this.processes = Processes;
+        this.processes = {};
         this.filter = $filter;
         this.rootScope = $rootScope;
 
@@ -42,7 +42,7 @@ class LeadDataTableService {
 
     setDTOptions() {
         let self = this;
-        let createdRow = function (row, data, dataIndex) {
+        let createdRow = function(row, data, dataIndex) {
             // Recompiling so we can bind Angular directive to the DT
             self.rows[data.id] = row;
             let currentDate = window["moment"](window["moment"]().toString(), "DD.MM.YYYY");
@@ -55,7 +55,7 @@ class LeadDataTableService {
 
         this.dtOptions = self.DTOptionsBuilder.newOptions().withOption("ajax", {
             url: "/api/rest/processes/workflow/LEAD/state/OPEN",
-            error: function (xhr, error, thrown) {
+            error: function(xhr, error, thrown) {
                 console.log(xhr);
             },
             type: "GET"
@@ -119,16 +119,16 @@ class LeadDataTableService {
 
     setDTColumns() {
         let self = this;
-        let addDetailButton = function (data, type, full, meta) {
+        let addDetailButton = function(data, type, full, meta) {
             self.processes[data.id] = data;
             /* tslint:disable:quotemark */
-            return '<a class="green shortinfo" href="javascript:;"'
+            return '<a class="green shortinfo" ng-href="javascript:;"'
                 + 'ng-click="lead.appendChildRow(lead.processes[' + data.id
                 + '], $event)" title="Details">'
                 + '<i class="glyphicon glyphicon-plus-sign"/></a>';
             /* tslint:enable:quotemark */
         };
-        let addStatusStyle = function (data, type, full, meta) {
+        let addStatusStyle = function(data, type, full, meta) {
             self.processes[data.id] = data;
             let hasProcessor = "";
             /* tslint:disable:quotemark */
@@ -158,7 +158,7 @@ class LeadDataTableService {
         };
         let vm = this;
         /* tslint:disable */
-        let addActionsButtons = function (data, type, full, meta) {
+        let addActionsButtons = function(data, type, full, meta) {
 
             vm.processes[data.id] = data;
             var disabled = '';
@@ -303,18 +303,19 @@ class LeadDataTableService {
                 this.translate("COMMON_CONTAINER_AMOUNT")).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_CONTAINER_SINGLE_PRICE")).renderWith(
-                function (data, type, full) {
-                       console.log(data);
-                    return self.filter("currency")(                     
+                function(data, type, full) {
+                    console.log('Container');
+                    console.log(data);
+                    return self.filter("currency")(
 
                         data.container.priceNetto
-                        
+
                         , "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_CONTAINER_ENTIRE_PRICE"))
                 .renderWith(
-                function (data, type, full) {
+                function(data, type, full) {
                     return self.filter("currency")(data.leadPrice,
                         "€", 2);
                 }).notVisible(),

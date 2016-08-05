@@ -25,16 +25,15 @@ import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.request.Request;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
 import dash.usermanagement.domain.User;
 import dash.workflowmanagement.domain.Workflow;
-
+		
 @Service
 public interface IProcessService {
 
-	public List<Request> getElementsByStatus(final Workflow workflow, final Status status);
+	public List<Process> getElementsByStatus(final Workflow workflow, final Status status);
 
 	public Process getById(final long id) throws NotFoundException;
 

@@ -40,7 +40,6 @@ import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.request.Request;
 import dash.salemanagement.business.SaleService;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
@@ -69,26 +68,17 @@ public class ProcessService implements IProcessService {
 	private SaleService saleService;
 
 	@Override
-	public List<Request> getElementsByStatus(final Workflow workflow, final Status status) {
-
-		List<Process> processes = processRepository.findProcessesByStatus(status);
-		List<Request> elements = new ArrayList<>();
-
-		if (workflow == Workflow.LEAD) {
-			for (Process process : processes) {
-				elements.add(process.getLead());
-			}
-		} else if (workflow == Workflow.OFFER) {
-			for (Process process : processes) {
-				elements.add(process.getOffer());
-			}
-		} else if (workflow == Workflow.SALE) {
-			for (Process process : processes) {
-				elements.add(process.getSale());
-			}
+	public List<Process> getElementsByStatus(final Workflow workflow, final Status status) {
+		List<Process> processes = new ArrayList<>();
+		
+		if (workflow.equals(Workflow.LEAD)) {
+			processes = processRepository.findByStatusAndLeadIsNotNull(status);
+		} else if (workflow.equals(Workflow.OFFER)) {
+			processes = processRepository.findByStatusAndOfferIsNotNull(status);
+		} else if (workflow.equals(Workflow.SALE)) {
+			processes = processRepository.findByStatusAndSaleIsNotNull(status);
 		}
-
-		return elements;
+		return processes;
 	}
 
 	@Override
@@ -102,7 +92,8 @@ public class ProcessService implements IProcessService {
 				try {
 					process.setProcessor(userService.getUserByName("admin"));
 				} catch (NotFoundException nfex) {
-					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, nfex);
+					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+							nfex);
 				}
 				saleService.save(process.getSale());
 			}

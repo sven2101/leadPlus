@@ -27,7 +27,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 	this.windowWidth = $(window).width();
 	if (!angular.isUndefined($rootScope.globals.currentUser))
 		this.userService.get({
-			username : $rootScope.globals.currentUser.username
+			id : $rootScope.globals.currentUser.id
 		}).$promise.then(function(result) {
 			vm.user = result;
 		});
@@ -47,7 +47,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 	this.editProcess = {};
 	this.newLead = {};
 	this.dtOptions = DTOptionsBuilder.newOptions().withOption('ajax', {
-		url : '/api/rest/processes/state/open/leads',
+		url : '/api/rest/processes/workflow/LEAD/state/OPEN',
 		error : function(xhr, error, thrown) {
 			console.log(xhr);
 		},
@@ -173,7 +173,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 			}).withOption('searchDelay', 500);
 		} else {
 			vm.dtOptions.withOption('serverSide', false).withOption('ajax', {
-				url : '/api/rest/processes/state/open/leads',
+				url : '/api/rest/processes/workflow/LEAD/state/OPEN',
 				error : function(xhr, error, thrown) {
 					console.log(xhr);
 				},
@@ -188,7 +188,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 		var currentDate = moment(moment(), "DD.MM.YYYY");
 		var leadDate = moment(data.lead.timestamp, "DD.MM.YYYY");
 		if (currentDate.businessDiff(leadDate, 'days') > 3
-				&& data.status == 'open')
+				&& data.status == 'OPEN')
 			$(row).addClass('important');
 		vm.compile(angular.element(row).contents())(vm.scope);
 	}
@@ -200,12 +200,12 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 		var hasRightToDelete = '';
 		var closeOrOpenInquiryDisable = '';
 		var openOrLock = $translate.instant('LEAD_CLOSE_LEAD');
-		var faOpenOrLOck = 'fa fa-lock';
-		if (data.status != 'open') {
+		var faOpenOrLock = 'fa fa-lock';
+		if (data.status != 'OPEN') {
 			disabled = 'disabled';
 			disablePin = 'disabled';
 			openOrLock = $translate.instant('LEAD_OPEN_LEAD');
-			faOpenOrLOck = 'fa fa-unlock';
+			faOpenOrLock = 'fa fa-unlock';
 		}
 		if (data.offer != null || data.sale != null) {
 			closeOrOpenInquiryDisable = 'disabled';
@@ -244,9 +244,9 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 					+ openOrLock
 					+ '">'
 					+ '   <i class="'
-					+ faOpenOrLOck
+					+ faOpenOrLock
 					+ '"></i>'
-					+ '</button>'
+					+ '</button>&nbsp;'
 					+ '<button class="btn btn-white" '
 					+ closeOrOpenInquiryDisable
 					+ ' ng-click="lead.loadDataToModal(lead.processes['
@@ -290,7 +290,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 					+ ' ng-click="lead.closeOrOpenInquiry(lead.processes['
 					+ data.id
 					+ '])"><i class="'
-					+ faOpenOrLOck
+					+ faOpenOrLock
 					+ '">&nbsp;</i>'
 					+ openOrLock
 					+ '</button></li>'
@@ -317,20 +317,20 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 		var hasProcessor = '';
 		if (data.processor != null)
 			hasProcessor = '&nbsp;<span style="color: #ea394c;"><i class="fa fa-thumb-tack"></i></span>';
-		if (data.status == 'open') {
+		if (data.status == 'OPEN') {
 			return '<span style="color: green;">'
 					+ $translate.instant('COMMON_STATUS_OPEN') + '</span>'
 					+ hasProcessor;
-		} else if (data.status == 'offer') {
+		} else if (data.status == 'OFFER') {
 			return '<span style="color: #f79d3c;">'
 					+ $translate.instant('COMMON_STATUS_OFFER') + '</span>'
-		} else if (data.status == 'followup') {
+		} else if (data.status == 'FOLLOWUP') {
 			return '<span style="color: #f79d3c;">'
 					+ $translate.instant('COMMON_STATUS_FOLLOW_UP') + '</span>'
-		} else if (data.status == 'sale') {
+		} else if (data.status == 'SALE') {
 			return '<span style="color: #1872ab;">'
 					+ $translate.instant('COMMON_STATUS_SALE') + '</span>'
-		} else if (data.status == 'closed') {
+		} else if (data.status == 'CLOSED') {
 			return '<span style="color: #ea394c;">'
 					+ $translate.instant('COMMON_STATUS_CLOSED') + '</span>'
 		}
@@ -349,7 +349,7 @@ LeadsCtrl.prototype.appendChildRow = function(process, event) {
 	var childScope = this.scope.$new(true);
 	childScope.childData = process;
 	var vm = this;
-	this.commentService.getComments({
+	this.commentService.getByProcessId({
 		id : process.id
 	}).$promise.then(function(result) {
 		vm.comments[process.id] = [];
