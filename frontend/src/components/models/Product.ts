@@ -26,4 +26,5 @@ class Product {
         this.id = 0;
         this.isDeactivated = false;
     }
+
 }

@@ -12,7 +12,7 @@
 
 class LeadDataTableService {
 
-    $inject = ["$rootScope", "DTOptionsBuilder", "DTColumnBuilder", "$compile", "Processes", "Comments", "Leads", "$filter", "Profile", "$rootScope", "$translate"];
+    $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile", "toaster", "Processes", "Comments", "Leads", "$filter", "Profile", "$rootScope", "$translate", "LeadDataTableService"];
 
 
     translate;
@@ -26,7 +26,8 @@ class LeadDataTableService {
     filter;
     rootScope;
 
-    constructor($rootScope, DTOptionsBuilder, DTColumnBuilder, $compile, Processes, $filter, $translate) {
+
+    constructor(DTOptionsBuilder, DTColumnBuilder, $compile, toaster, Processes, Comments, Leads, $filter, Profile, $rootScope, $translate) {
         this.translate = $translate;
         this.compile = $compile;
         this.DTOptionsBuilder = DTOptionsBuilder;
@@ -49,7 +50,7 @@ class LeadDataTableService {
             if (currentDate["businessDiff"](leadDate, "days") > 3
                 && data.status === "open")
                 $(row).addClass("important");
-            self.compile(angular.element(row).contents())(this.scope);
+            self.compile(angular.element(row).contents())(self.rootScope);
         };
 
         this.dtOptions = self.DTOptionsBuilder.newOptions().withOption("ajax", {
@@ -182,8 +183,8 @@ class LeadDataTableService {
                 && vm.rootScope.globals.currentUser.username != data.processor.username) {
                 disablePin = 'disabled';
             }
-            let windowWidth = $(window).width();          
-            if (windowWidth > 1300) {
+
+            if ($(window).width() > 1300) {
                 return '<div style="white-space: nowrap;"><button class="btn btn-white" '
                     + disabled
                     + ' ng-click="lead.followUp(lead.processes['
@@ -303,9 +304,11 @@ class LeadDataTableService {
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_CONTAINER_SINGLE_PRICE")).renderWith(
                 function (data, type, full) {
-                    return self.filter("currency")(
-                        // data.container.priceNetto
-                        2
+                       console.log(data);
+                    return self.filter("currency")(                     
+
+                        data.container.priceNetto
+                        
                         , "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
@@ -320,7 +323,7 @@ class LeadDataTableService {
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
 
-                '<span class="glyphicon glyphicon- cog"></span>'
+                '<span class="glyphicon glyphicon-cog"></span>'
                 /* tslint:enable */
             ).withClass("text-center").notSortable().renderWith(addActionsButtons)];
 

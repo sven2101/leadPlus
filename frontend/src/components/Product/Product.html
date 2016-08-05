@@ -50,25 +50,22 @@
                             <table class="table table-hover">
                                 <tbody>
                                     <tr ng-repeat="product in productCtrl.productService.products| filter:searchText">
-                                        <td class="project-status">
+                                        <td class="project-status col-md-1">
                                             <span ng-show="!product.isDeactivated" class="label label-primary">Active</span>
                                             <span ng-show="product.isDeactivated" class="label label-default">Unactive</span>
                                         </td>
-                                        <td class="project-title">
+                                        <td class="project-title col-md-2">
                                             <a href="project_detail.html">{{product.name}}</a>
                                             <br>
                                             <small>Created {{product.timestamp}}</small>
                                         </td>
-                                        <td class="project-completion">
-                                            <small>Completion with: 48%</small>
-                                            <div class="progress progress-mini">
-                                                <div style="width: 48%;" class="progress-bar"></div>
-                                            </div>
+                                        <td class="project-completion col-md-7" max>
+                                            <small style="word-wrap: break-word; word-break: break-all;">{{product.description}}</small>                                            
                                         </td>
-                                        <td class="project-people">
+                                        <td class="project-people col-md-1">
                                             <a href=""><img alt="image" class="img-circle" src="http://www.containersucher.com/assets/plugindata/w2dblgbb1ca3b3057e90d9af3e514539e33a22/pic1271913090.jpg"></a>
                                         </td>
-                                        <td class="project-actions">
+                                        <td class="project-actions col-md-1">
                                             <button type="button" class="btn btn-white btn-sm" ng-click="productCtrl.editProduct(product)" data-toggle="modal" data-target="#createProductModal">
                                      <i class="fa fa-pencil"></i>&nbsp;Edit</button>
                                         </td>

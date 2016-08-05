@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping(value = "/api/rest/leads", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/leads", produces = { MediaType.APPLICATION_JSON_VALUE })
 @ResponseStatus(HttpStatus.CREATED)
 @Api(value = "leads")
 public class LeadResource {

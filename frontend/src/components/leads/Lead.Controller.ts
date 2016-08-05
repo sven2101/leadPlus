@@ -331,7 +331,7 @@ class LeadController {
     };
     saveEditedRow() {
         let self = this;
-        this.processesService.putLead({
+        this.processesService.update({
             id: this.editProcess.lead.id
         }, this.editProcess.lead).$promise.then(function () {
             self.toaster.pop("success", "", self.translate
