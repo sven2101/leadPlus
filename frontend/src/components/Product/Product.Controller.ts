@@ -14,7 +14,7 @@
 
 class ProductController {
 
-    $inject = ["ProductService", "Upload"];
+    $inject = [ProductServiceId, "Upload"];
 
     createProductForm;
     currentProduct: Product;

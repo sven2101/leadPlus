@@ -92,6 +92,12 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
                 controller: "ProductController",
                 controllerAs: "productCtrl",
                 authenticated: true
+            }).when("/customer",
+            {
+                templateUrl: "components/Customer/Customer.html",
+                controller: "CustomerController",
+                controllerAs: "customerCtrl",
+                authenticated: true
             }).otherwise({
                 redirectTo: "/"
             });

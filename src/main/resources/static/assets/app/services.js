@@ -33,27 +33,27 @@ angular.module('app.services', ['ngResource'])
                 if (credentials) {
 
                     var authorization = btoa(credentials.username + ":" + credentials.password);
-                    var headers = credentials ? { authorization: "Basic " + authorization } : {};                  
-                        $http.get('user', { headers: headers }).success(function (data) {
+                    var headers = credentials ? { authorization: "Basic " + authorization } : {};
+                    $http.get('user', { headers: headers }).success(function (data) {
 
-                            if (data.username) {
-                                $rootScope.globals = {
-                                    currentUser: {
-                                        id: data.id,
-                                        username: data.username,
-                                        role: data.role,
-                                        authorization: authorization
-                                    }
-                                };
+                        if (data.username) {
+                            $rootScope.globals = {
+                                currentUser: {
+                                    id: data.id,
+                                    username: data.username,
+                                    role: data.role,
+                                    authorization: authorization
+                                }
+                            };
 
-                                $http.defaults.headers.common['Authorization'] = 'Basic ' + authorization;
-                                $cookieStore.put('globals', $rootScope.globals);
+                            $http.defaults.headers.common['Authorization'] = 'Basic ' + authorization;
+                            $cookieStore.put('globals', $rootScope.globals);
 
-                                success(data);
-                            } else {
-                            }
-                        }).error(error);
-                    }                             
+                            success(data);
+                        } else {
+                        }
+                    }).error(error);
+                }
             },
 
             logout: function () {
@@ -119,7 +119,7 @@ angular.module('app.services', ['ngResource'])
             getProcessByLead: { url: '/api/rest/processes/leads', method: 'GET', isArray: true },
             getProcessByOffer: { url: '/api/rest/processes/offers', method: 'GET', isArray: true },
             getProcessBySale: { url: '/api/rest/processes/sales', method: 'GET', isArray: true },
-            
+
             getLeadsByStatus: {
                 url: '/api/rest/processes/workflow/:workflow/state/:status',
 
@@ -255,5 +255,13 @@ angular.module('app.services', ['ngResource'])
             createProduct: { url: '/api/rest/product', method: 'POST' },
             updateProduct: { url: '/api/rest/product', method: 'PUT' },
             deleteProduct: { url: '/api/rest/product', method: 'DELETE' }
+        });
+    }]).service('CustomerResource', ['$resource', function ($resource) {
+        return $resource('/api/rest/customer', {}, {
+            getProductById: { url: '/api/rest/customer/:id', method: 'GET' },
+            getAllProducts: { url: '/api/rest/customer', method: 'GET', isArray: true },
+            createProduct: { url: '/api/rest/customer', method: 'POST' },
+            updateProduct: { url: '/api/rest/customer', method: 'PUT' },
+            deleteProduct: { url: '/api/rest/customer', method: 'DELETE' }
         });
     }]);
