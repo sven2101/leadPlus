@@ -18,7 +18,7 @@ class ProductController {
 
     createProductForm;
     currentProduct: Product;
-    myfile: any;
+    currentEditProduct: Product;
     isCurrentProductNew;
     productService: ProductService;
 
@@ -38,16 +38,24 @@ class ProductController {
     }
 
     editProduct(product: Product): void {
-        this.currentProduct = product;
+        this.currentEditProduct = product;
+        this.currentProduct = new Product();
+        this.deepCopyProduct(this.currentEditProduct, this.currentProduct);
         this.isCurrentProductNew = false;
     }
-
-    saveProduct(): void {
-
-        console.log(this.currentProduct.image);
-        console.log(this.myfile);
-
+    saveProduct() {
+        if (!this.isCurrentProductNew) {
+            this.deepCopyProduct(this.currentProduct, this.currentEditProduct);
+        }
         this.productService.saveProduct(this.currentProduct, this.isCurrentProductNew);
+    }
+    deepCopyProduct(oldProduct: Product, newProduct: Product) {
+        newProduct.id = oldProduct.id;
+        newProduct.description = oldProduct.description;
+        newProduct.name = oldProduct.name;
+        newProduct.priceNetto = oldProduct.priceNetto;
+        newProduct.timestamp = oldProduct.timestamp;
+        newProduct.isDeactivated = oldProduct.isDeactivated;
     }
 }
 

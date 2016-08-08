@@ -26,6 +26,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Product {
@@ -42,6 +43,7 @@ public class Product {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
 	private Calendar timestamp;
 	
+	@JsonProperty("isDeactivated")
 	private boolean isDeactivated;
 
 	private double priceNetto;

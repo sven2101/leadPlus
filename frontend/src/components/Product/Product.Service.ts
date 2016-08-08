@@ -13,6 +13,8 @@
 
 class ProductService {
 
+    ID: String = "ProductService";
+
     $inject = ["toaster", "$translate", "ProductResource"];
 
     products: Array<Product>;
