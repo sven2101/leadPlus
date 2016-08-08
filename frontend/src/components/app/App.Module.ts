@@ -37,7 +37,9 @@ angular.module("app",
         "highcharts-ng",
         "testModule",
         "app.product",
-        "app.product.service"
+        "app.product.service",
+        "app.customer",
+        "app.customer.service"
 
     ]);
 

@@ -249,7 +249,10 @@ function config($translateProvider) {
         PRODUCT_PRODUCTNAME: "Produktname",
         PRODUCT_DESCRIPTION: "Beschreibung",
         PRODUCT_PRICE: "Preis",
-        PRODUCT_IMAGE: "Bild"
+        PRODUCT_IMAGE: "Bild",
+        PRODUCT_EDIT: "Produkt bearbeiten",
+        PRODUCT_DEACTIVATED: "Deaktivieren",
+        PRODUCT_CREATED: "Erstellt"
     })
         .translations("en", {
         // GENERAL
@@ -484,7 +487,10 @@ function config($translateProvider) {
         PRODUCT_PRODUCTNAME: "Product name",
         PRODUCT_DESCRIPTION: "Description",
         PRODUCT_PRICE: "Price",
-        PRODUCT_IMAGE: "Image"
+        PRODUCT_IMAGE: "Image",
+        PRODUCT_EDIT: "Edit Product",
+        PRODUCT_DEACTIVATED: "Deactivate",
+        PRODUCT_CREATED: "Created"
     });
     $translateProvider.preferredLanguage("de");
     $translateProvider.fallbackLanguage("en");

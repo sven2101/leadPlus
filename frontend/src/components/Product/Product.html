@@ -31,52 +31,61 @@
                     <h5>{{ 'PRODUCT_MANAGE_PRODUCTS' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
-                    <div class="row m-b-sm m-t-sm">
-                        <div class="col-md-1">
+
+                    <div class="ibox-content">
+                        <form role="form" class="form-inline">
+
                             <button type="button" class="btn btn-success btn-sm btn-primary" ng-click="productCtrl.clearProduct()" data-toggle="modal"
                                 data-target="#createProductModal">
-                        <i class="fa fa-plus"></i>&nbsp;{{ 'PRODUCT_CREATE' | translate }}
-                    </button>
-                        </div>
-                        <div class="col-md-1">
-                            <button ng-click="productCtrl.refreshData()" type="button" class="btn btn-success btn-sm btn-primary">
-                        <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
-                    </button>
-                        </div>
-                        <div class="col-md-10">
-                            <input type="text" placeholder="Search" class="input-sm form-control" ng-model="searchText">
-                        </div>
-                        <div class="project-list">
-                            <table class="table table-hover">
-                                <tbody>
-                                    <tr ng-repeat="product in productCtrl.productService.products| filter:searchText">
-                                        <td class="project-status col-md-1">
-                                            <span ng-show="!product.isDeactivated" class="label label-primary">Active</span>
-                                            <span ng-show="product.isDeactivated" class="label label-default">Unactive</span>
-                                        </td>
-                                        <td class="project-title col-md-2">
-                                            <a href="project_detail.html">{{product.name}}</a>
-                                            <br>
-                                            <small>Created {{product.timestamp}}</small>
-                                        </td>
-                                        <td class="project-completion col-md-7" max>
-                                            <small style="word-wrap: break-word; word-break: break-all;">{{product.description}}</small>                                            
-                                        </td>
-                                        <td class="project-people col-md-1">
-                                            <a href=""><img alt="image" class="img-circle" src="http://www.containersucher.com/assets/plugindata/w2dblgbb1ca3b3057e90d9af3e514539e33a22/pic1271913090.jpg"></a>
-                                        </td>
-                                        <td class="project-actions col-md-1">
-                                            <button type="button" class="btn btn-white btn-sm" ng-click="productCtrl.editProduct(product)" data-toggle="modal" data-target="#createProductModal">
+                                <i class="fa fa-plus"></i>
+                                &nbsp;{{ 'PRODUCT_CREATE' | translate }}
+                        </button>
+                            <button type="button" ng-click="productCtrl.refreshData()" type="button" class="btn btn-success btn-sm btn-primary">
+                                <i class="fa fa-refresh"></i>
+                                &nbsp;{{ 'COMMON_REFRESH' | translate }}
+                        </button>
+
+                            <span class="pull-right ">
+                                 <input  type="text" placeholder="Search" class="input-sm form-control" ng-model="searchText">
+                         </span>
+
+
+
+                        </form>
+                    </div>
+
+
+                    <div class="project-list">
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr ng-repeat="product in productCtrl.productService.products| filter:searchText">
+                                    <td class="project-status col-md-1">
+                                        <span ng-show="!product.isDeactivated" class="label label-primary">Active</span>
+                                        <span ng-show="product.isDeactivated" class="label label-default">Unactive</span>
+                                    </td>
+                                    <td class="project-title col-md-2">
+                                        <a href="project_detail.html">{{product.name}}</a>
+                                        <br>
+                                        <small>{{ 'PRODUCT_CREATED' | translate }} {{product.timestamp}}</small>
+                                    </td>
+                                    <td class="project-completion col-md-7" max>
+                                        <small style="word-wrap: break-word; word-break: break-all;">{{product.description}}</small>
+                                    </td>
+                                    <td class="project-people col-md-1">
+                                        <a href=""><img alt="image" class="img-circle" src="http://www.containersucher.com/assets/plugindata/w2dblgbb1ca3b3057e90d9af3e514539e33a22/pic1271913090.jpg"></a>
+                                    </td>
+                                    <td class="project-actions col-md-1">
+                                        <button type="button" class="btn btn-white btn-sm" ng-click="productCtrl.editProduct(product)" data-toggle="modal" data-target="#createProductModal">
                                      <i class="fa fa-pencil"></i>&nbsp;Edit</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div ng-include=" 'components/product/CreateProductModal.html' "></div>
+<div ng-include=" 'components/product/CreateProductModal.html' "></div>

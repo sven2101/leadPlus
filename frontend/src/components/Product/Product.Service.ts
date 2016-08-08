@@ -1,4 +1,5 @@
 /// <reference path="../models/Product.ts" />
+/// <reference path="../app/App.Constants.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -11,9 +12,13 @@
  ******************************************************************************/
 "use strict";
 
+const ProductServiceId: String = "ProductService";
+
 class ProductService {
 
-    $inject = ["toaster", "$translate", "ProductResource"];
+    ID: String = "ProductService";
+
+    private $inject = [toasterId, translateId, ProductResourceId];
 
     products: Array<Product>;
     toaster;
