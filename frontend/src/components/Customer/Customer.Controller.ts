@@ -1,5 +1,6 @@
 /// <reference path="./Customer.Service.ts" />
 /// <reference path="../models/Product.ts" />
+/// <reference path="../models/OrderPosition.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -20,6 +21,7 @@ class CustomerController {
     currentCustomer: Customer;
     currentEditCustomer: Customer;
     isCurrentCustomerNew;
+    products = [];
     customerService: CustomerService;
 
     constructor(CustomerService: CustomerService) {
@@ -50,6 +52,10 @@ class CustomerController {
     deepCopyCustomer(oldCustomer: Customer, newCustomer: Customer) {
         newCustomer.id = oldCustomer.id;
         newCustomer.name = oldCustomer.name;
+    }
+    addProduct() {
+        console.log(this.products.length);
+        this.products.push(new OrderPosition());
     }
 
 

@@ -87,4 +87,54 @@
     </div>
 </div>
 
+<div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>{{ 'PRODUCT_MANAGE_PRODUCTS' | translate }}</h5>
+                    </div>
+                    <div class="ibox-content">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>
+                                        <select data-placeholder="Choose a country..." style="width:350px;" class="chosen-select">
+                                            <option ng-repeat="orderPosition in customerCtrl.products">{{orderPosition.amount}}</option>                                             
+                                        </select>
+                                    </th>
+                                    <th>
+                                        <button type="button" class="btn btn-white btn-sm" ng-click="customerCtrl.addProduct()">
+                                     <i class="fa fa-pencil"></i>&nbsp;</button>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="orderPosition in customerCtrl.products">
+                                    <td>{{orderPosition.product.name}}</td>
+                                    <td>{{orderPosition.amount}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-white btn-sm" ng-click="customerCtrl.addProduct()">
+                                        <i class="fa fa-trash"></i>&nbsp;
+                                     </button>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div ng-include=" 'components/Customer/Customer.Modal.html' "></div>
+
+<script>
+   $(".chosen-select").chosen({no_results_text: "Oops, nothing found!"}); 
+  </script>
