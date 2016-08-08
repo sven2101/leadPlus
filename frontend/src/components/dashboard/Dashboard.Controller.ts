@@ -16,16 +16,16 @@
 
 class DashboardController {
 
-    $inject = ["toaster", "Processes", "Comments", "$filter", "$translate", "$rootScope", "$scope", "$interval", "Profile", "StatisticResource"];
+    $inject = ["toaster", "ProcessResource", "CommentResource", "$filter", "$translate", "$rootScope", "$scope", "$interval", "UserResource", "StatisticResource"];
 
     toaster;
     filter;
     orderBy;
     translate;
     rootScope;
-    procesService;
-    commentService;
-    profileService;
+    processResource;
+    commentResource;
+    userResource;
     statisticResource;
     commentModalInput;
     comments;
@@ -48,15 +48,15 @@ class DashboardController {
 
     sortableOptions;
 
-    constructor(toaster, Processes, Comments, $filter, $translate, $rootScope, $scope, $interval, Profile, StatisticResource) {
+    constructor(toaster, ProcessResource, CommentResource, $filter, $translate, $rootScope, $scope, $interval, UserResource, StatisticResource) {
         this.toaster = toaster;
         this.filter = $filter;
         this.orderBy = $filter("orderBy");
         this.translate = $translate;
         this.rootScope = $rootScope;
-        this.procesService = Processes;
-        this.commentService = Comments;
-        this.profileService = Profile;
+        this.processResource = ProcessResource;
+        this.commentResource = CommentResource;
+        this.userResource = UserResource;
         this.statisticResource = StatisticResource;
         this.commentModalInput = "";
         this.comments = {};
@@ -81,13 +81,13 @@ class DashboardController {
 
     registerPromise() {
         let self = this;
-        this.procesService.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function(result) {
+        this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function(result) {
             self.openLead = self.orderBy(result, "lead.timestamp", false);
         });
-        this.procesService.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function(result) {
+        this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function(result) {
             self.openOffer = self.orderBy(result, "offer.timestamp", false);
         });
-        this.procesService.getLatestSales().$promise.then(function(result) {
+        this.processResource.getLatestSales().$promise.then(function(result) {
             self.sales = result;
         });
         this.statisticResource.weekLeads().$promise.then(function(result) {
@@ -110,7 +110,7 @@ class DashboardController {
     getUser() {
         let self = this;
         if (!angular.isUndefined(self.rootScope.globals.currentUser))
-            self.profileService.get({ id: self.rootScope.globals.currentUser.id }).$promise.then(function(result) {
+            self.userResource.get({ id: self.rootScope.globals.currentUser.id }).$promise.then(function(result) {
                 self.user = result;
             });
     }
@@ -164,12 +164,12 @@ class DashboardController {
             timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
             vendor: process.lead.vendor
         };
-        this.procesService.addOffer({ id: process.id }, offer).$promise.then(function() {
-            self.procesService.setStatus({ id: process.id }, "offer").$promise.then(function() {
+        this.processResource.addOffer({ id: process.id }, offer).$promise.then(function() {
+            self.processResource.setStatus({ id: process.id }, "offer").$promise.then(function() {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
-                self.procesService.setProcessor({ id: process.id }, self.user.username).$promise.then(function() {
+                self.processResource.setProcessor({ id: process.id }, self.user.username).$promise.then(function() {
                     process.processor = self.user;
                 });
                 process.offer = offer;
@@ -200,8 +200,8 @@ class DashboardController {
             timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
             vendor: process.offer.vendor
         };
-        this.procesService.addSale({ id: process.id }, sale).$promise.then(function() {
-            self.procesService.setStatus({ id: process.id }, "sale").$promise.then(function() {
+        this.processResource.addSale({ id: process.id }, sale).$promise.then(function() {
+            self.processResource.setStatus({ id: process.id }, "sale").$promise.then(function() {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
                 self.rootScope.offersCount -= 1;
                 process.sale = sale;
@@ -215,7 +215,7 @@ class DashboardController {
         this.infoType = type;
         this.infoProcess = process;
         let self = this;
-        this.commentService.getComments({ id: process.id }).$promise.then(function(result) {
+        this.commentResource.getComments({ id: process.id }).$promise.then(function(result) {
             self.infoComments = [];
             for (let comment in result) {
                 if (comment === "$promise")
@@ -230,13 +230,13 @@ class DashboardController {
     }
     refreshData() {
         let self = this;
-        this.procesService.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function(result) {
+        this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function(result) {
             self.openLead = self.orderBy(result, "lead.timestamp", false);
         });
-        this.procesService.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function(result) {
+        this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function(result) {
             self.openOffer = self.orderBy(result, "offer.timestamp", false);
         });
-        this.procesService.getLatestSales().$promise.then(function(result) {
+        this.processResource.getLatestSales().$promise.then(function(result) {
             self.sales = result;
         });
     }
@@ -252,7 +252,7 @@ class DashboardController {
                 commentText: this.commentModalInput,
                 timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm:ss")
             };
-            this.commentService.addComment(comment).$promise.then(function() {
+            this.commentResource.addComment(comment).$promise.then(function() {
                 self.infoComments.push(comment);
                 self.commentModalInput = "";
             });

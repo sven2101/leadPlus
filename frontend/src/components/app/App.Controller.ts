@@ -12,24 +12,24 @@
 
 class AppController {
 
-    static $inject = ["$translate", "$scope", "$rootScope", "$interval", "Processes", "Profile"];
+    static $inject = ["$translate", "$scope", "$rootScope", "$interval", "ProcessResource", "UserResource"];
 
     translate;
     scope;
     rootScope;
     interval;
-    processService;
-    profileService;
+    processResource;
+    userResource;
 
     stop;
 
-    constructor($translate, $scope, $rootScope, $interval, Processes, Profile) {
+    constructor($translate, $scope, $rootScope, $interval, ProcessResource, UserResource) {
         this.translate = $translate;
         this.scope = $scope;
         this.rootScope = $rootScope;
         this.interval = $interval;
-        this.processService = Processes;
-        this.profileService = Profile;
+        this.processResource = ProcessResource;
+        this.userResource = UserResource;
 
         this.rootScope.leadsCount = 0;
         this.rootScope.offersCount = 0;
@@ -48,13 +48,13 @@ class AppController {
         self.rootScope.loadLabels = function() {
             if (!angular
                 .isUndefined(self.rootScope.globals.currentUser)) {
-                self.processService.getLeadsByStatus({
+                self.processResource.getLeadsByStatus({
                     workflow: "LEAD",
                     status: "OPEN"
                 }).$promise.then(function(result) {
                     self.rootScope.leadsCount = result.length;
                 });
-                self.processService.getOffersByStatus({
+                self.processResource.getOffersByStatus({
                     workflow: "OFFER",
                     status: "OFFER"
                 }).$promise.then(function(result) {
@@ -77,7 +77,7 @@ class AppController {
         self.rootScope.setUserDefaultLanguage = function() {
             if (!angular
                 .isUndefined(self.rootScope.globals.currentUser)) {
-                self.profileService
+                self.userResource
                     .get({
                         id: self.rootScope.globals.currentUser.id
                     }).$promise.then(function(result) {
@@ -97,12 +97,12 @@ class AppController {
         self.stop = self.interval(function() {
             if (!angular
                 .isUndefined(self.rootScope.globals.currentUser)) {
-                self.processService.getLeadsByStatus({
+                self.processResource.getLeadsByStatus({
                     status: "open"
                 }).$promise.then(function(result) {
                     self.rootScope.leadsCount = result.length;
                 });
-                self.processService.getOffersByStatus({
+                self.processResource.getOffersByStatus({
                     status: "offer"
                 }).$promise.then(function(result) {
                     self.rootScope.offersCount = result.length;

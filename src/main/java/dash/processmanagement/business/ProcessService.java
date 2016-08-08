@@ -45,6 +45,8 @@ import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
+import dash.vendormanagement.business.VendorRepository;
+import dash.vendormanagement.business.VendorService;
 import dash.workflowmanagement.domain.Workflow;
 
 @Service
@@ -54,6 +56,9 @@ public class ProcessService implements IProcessService {
 
 	@Autowired
 	private ProcessRepository processRepository;
+	
+	@Autowired
+	private VendorService vendorService;
 
 	@Autowired
 	private UserService userService;
@@ -70,7 +75,7 @@ public class ProcessService implements IProcessService {
 	@Override
 	public List<Process> getElementsByStatus(final Workflow workflow, final Status status) {
 		List<Process> processes = new ArrayList<>();
-		
+
 		if (workflow.equals(Workflow.LEAD)) {
 			processes = processRepository.findByStatusAndLeadIsNotNull(status);
 		} else if (workflow.equals(Workflow.OFFER)) {
@@ -130,10 +135,11 @@ public class ProcessService implements IProcessService {
 	@Override
 	public Offer createOffer(final long processId, final Offer offer) throws SaveFailedException {
 		Process process = processRepository.findOne(processId);
-		Offer createdOffer;
+		Offer createdOffer = null;
 		if (Optional.ofNullable(process).isPresent()) {
-			createdOffer = offerService.save(offer);
+			//createdOffer = offerService.save(offer);
 			process.setOffer(offer);
+			System.out.println(offer);
 			processRepository.save(process);
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
@@ -231,20 +237,35 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process removeProcessorByProcessId(final long id) throws UpdateFailedException {
+	public void removeProcessorByProcessId(final long id) throws UpdateFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
 				Process process = getById(id);
 				process.setProcessor(null);
-				return save(process);
+				save(process);
 			} catch (EmptyResultDataAccessException | SaveFailedException | NotFoundException ex) {
 				logger.error(ProcessService.class.getSimpleName() + ex.getMessage(), ex);
-				return null;
 			}
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
 			throw ufex;
 		}
+	}
+
+	@Override
+	public Process setStatus(long id, String status)
+			throws SaveFailedException, NotFoundException, UpdateFailedException {
+		if (Optional.ofNullable(status).isPresent()) {
+			Process process = getById(id);
+			process.setStatus(Status.valueOf(status));
+			save(process);
+			return process;
+		} else {
+			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			throw ufex;
+		}
+
 	}
 }
