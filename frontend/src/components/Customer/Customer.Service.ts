@@ -18,9 +18,35 @@ class CustomerService {
 
     private $inject = [CustomerResourceId];
 
-    test: String;
-    constructor() {
-        this.test = "Hi";
+    customerResource;
+    customer: Array<Customer>;
+
+    constructor(CustomerResource) {
+        this.customerResource = CustomerResource;
+        this.customer = new Array<Customer>();
+    }
+
+    saveCustomer(customer: Customer, insert: boolean) {
+        let self = this;
+        console.log(customer);
+        if (insert) {
+            this.customerResource.createCustomer(customer).$promise.then(function (result: Customer) {
+                console.log(result);
+                self.customer.push(result);
+            });
+        } else {
+            this.customerResource.updateCustomer(customer).$promise.then(function (result: Customer) {
+                console.log(result);
+                customer = result;
+            });
+        }
+    }
+    getAllCustomer() {
+        let self = this;
+        this.customerResource.getAllCustomer().$promise.then(function (result: Array<Customer>) {
+            console.log(result);
+            self.customer = result;
+        });
     }
 }
 

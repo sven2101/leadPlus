@@ -258,10 +258,10 @@ angular.module('app.services', ['ngResource'])
         });
     }]).service('CustomerResource', ['$resource', function ($resource) {
         return $resource('/api/rest/customer', {}, {
-            getProductById: { url: '/api/rest/customer/:id', method: 'GET' },
-            getAllProducts: { url: '/api/rest/customer', method: 'GET', isArray: true },
-            createProduct: { url: '/api/rest/customer', method: 'POST' },
-            updateProduct: { url: '/api/rest/customer', method: 'PUT' },
-            deleteProduct: { url: '/api/rest/customer', method: 'DELETE' }
+            getCustomerById: { url: '/api/rest/customer/:id', method: 'GET' },
+            getAllCustomer: { url: '/api/rest/customer', method: 'GET', isArray: true },
+            createCustomer: { url: '/api/rest/customer', method: 'POST' },
+            updateCustomer: { url: '/api/rest/customer', method: 'PUT' },
+            deleteCustomer: { url: '/api/rest/customer', method: 'DELETE' }
         });
     }]);

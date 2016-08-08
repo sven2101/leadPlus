@@ -41,7 +41,10 @@
                 <a href="#/statistic"><i class="fa fa-line-chart"></i> <span class="nav-label">{{ 'STATISTIC_MENU' | translate }}</span></a>
             </li>
              <li>
-                <a href="#/product"><i class="fa fa-table"></i> <span class="nav-label">{{ 'PRODUCT_PRODUCTS' | translate }}</span></a>
+                <a href="#/product"><i class="fa fa-table"></i> <span class="nav-label">{{ 'PRODUCT_MENU' | translate }}</span></a>
+            </li>
+             <li>
+                <a href="#/customer"><i class="fa fa-users"></i> <span class="nav-label">{{ 'CUSTOMER_MENU' | translate }}</span></a>
             </li>
             <li ng-if="globals.currentUser.role == 'ADMIN' || globals.currentUser.role == 'SUPERADMIN'">
                 <a href="#/settings"><i class="fa fa-cogs"></i> <span class="nav-label">{{ 'SETTINGS_MENU' | translate }}</span></a>

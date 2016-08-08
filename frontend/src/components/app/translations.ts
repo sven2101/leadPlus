@@ -31,6 +31,9 @@ function config($translateProvider) {
             STATISTIC_MENU: "Statistiken",
             SETTINGS_MENU: "Einstellungen",
             PROFILE_MENU: "Profil",
+            PRODUCT_MENU: "Produkte",
+            CUSTOMER_MENU: "Kunden",
+
             LOGIN: "Anmelden",
             LOGOUT: "Abmelden",
             LANGUAGE: "Sprache",
@@ -284,6 +287,8 @@ function config($translateProvider) {
             STATISTIC_MENU: "Statistics",
             SETTINGS_MENU: "Settings",
             PROFILE_MENU: "Profile",
+            PRODUCT_MENU: "Products",
+            CUSTOMER_MENU: "Customer",
             LOGIN: "Login",
             LOGOUT: "Logout",
             LANGUAGE: "Language",

@@ -1,0 +1,57 @@
+<div class="modal inmodal" id="createCustomerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 ng-show="customerCtrl.isCurrentCustomerNew" class="modal-title">{{ 'PRODUCT_CREATE' | translate }}</h4>
+                <h4 ng-show="!customerCtrl.isCurrentCustomerNew" class="modal-title">{{ 'PRODUCT_EDIT' | translate }}</h4>
+            
+            </div>
+            <div class="modal-body">
+                <form name="customerCtrl.createCustomerForm" novalidate>
+                    <div class="row">
+                        <!-- NAME -->
+                        <div class="col-sm-6 b-r">
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.name.$invalid && !customerCtrl.createCustomerForm.name.$pristine }">
+                                <label>{{ 'PRODUCT_PRODUCTNAME' | translate }}</label>
+                                <input type=" text " name="name " class="form-control " ng-model="customerCtrl.currentCustomer.name" ng-maxlength="30" required>
+                                <p ng-show="customerCtrl.createCustomerForm.name.$invalid && !customerCtrl.createCustomerForm.name.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            </div>
+                            <!--DESCRIPTION -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.description.$invalid && !customerCtrl.createCustomerForm.description.$pristine }">
+                                <label>{{ 'PRODUCT_DESCRIPTION' | translate }}</label>
+                                <textarea style="resize: none" rows="7" type="text " name="description " class="form-control " ng-model="customerCtrl.currentCustomer.description"
+                                    ng-maxlength="500">
+                               <p ng-show="customerCtrl.createCustomerForm.description.$invalid && !customerCtrl.createCustomerForm.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}500{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p> 
+                               </div>
+                            <!-- PRICE -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.priceNetto.$invalid && !customerCtrl.createCustomerForm.priceNetto.$pristine }">
+                                <label>{{ 'PRODUCT_PRICE' | translate }}</label>
+                                <input type="number" name="priceNetto" class="form-control" ng-model="customerCtrl.currentCustomer.priceNetto" ng-maxlength="50" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01">
+                                <p ng-show="customerCtrl.createCustomerForm.priceNetto.$invalid && !customerCtrl.createCustomerForm.priceNetto.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
+                            </div>
+                            <div class="form-group" ng-show="!customerCtrl.isCurrentCustomerNew">
+                                <label class="checkbox-inline"> <input type="checkbox"  ng-model="customerCtrl.currentCustomer.isDeactivated" id="inlineCheckbox1">{{ 'PRODUCT_DEACTIVATED' | translate }}</label>
+                            </div>
+                        </div>
+                        <!-- IMAGE -->
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>{{ 'PRODUCT_IMAGE' | translate }}</label>
+                                <input type="file" ngf-select ng-model="picFile" name="file" accept="image/*" ngf-max-size="2MB">   
+                                <img ngf-thumbnail="picFile" class="thumb"> <button ng-click="picFile = null" ng-show="picFile">Remove</button>
+                                <img ng-src="http://www.containersucher.com/assets/plugindata/w2dblgbb1ca3b3057e90d9af3e514539e33a22/pic1271913090.jpg" height="200"
+                                    width="200" alt="Description" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}</button>
+                <button type="button" class="btn btn-success" ng-disabled="customerCtrl.createCustomerForm.$invalid" ng-click="customerCtrl.saveCustomer()" data-dismiss="modal">{{ 'COMMON_SAVE' | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>

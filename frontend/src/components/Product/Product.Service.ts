@@ -46,8 +46,6 @@ class ProductService {
                 product = result;
             });
         }
-
-
     }
     getAllProducts() {
         let self = this;

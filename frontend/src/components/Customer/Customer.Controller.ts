@@ -16,13 +16,40 @@ class CustomerController {
 
     $inject = [CustomerServiceId];
 
+    createCustomerForm;
+    currentCustomer: Customer;
+    currentEditCustomer: Customer;
+    isCurrentCustomerNew;
     customerService: CustomerService;
-
-    test: String;
 
     constructor(CustomerService: CustomerService) {
         this.customerService = CustomerService;
-        this.test = this.customerService.test;
+    }
+    refreshData(): void {
+        this.customerService.getAllCustomer();
+    }
+
+    clearCustomer(): void {
+        this.createCustomerForm.$setPristine();
+        this.currentCustomer = new Customer();
+        this.isCurrentCustomerNew = true;
+    }
+
+    editCustomer(customer: Customer): void {
+        this.currentEditCustomer = customer;
+        this.currentCustomer = new Customer();
+        this.deepCopyCustomer(this.currentEditCustomer, this.currentCustomer);
+        this.isCurrentCustomerNew = false;
+    }
+    saveCustomer() {
+        if (!this.isCurrentCustomerNew) {
+            this.deepCopyCustomer(this.currentCustomer, this.currentEditCustomer);
+        }
+        this.customerService.saveCustomer(this.currentCustomer, this.isCurrentCustomerNew);
+    }
+    deepCopyCustomer(oldCustomer: Customer, newCustomer: Customer) {
+        newCustomer.id = oldCustomer.id; 
+        newCustomer.name = oldCustomer.name;    
     }
 
 
