@@ -45,7 +45,7 @@ public class Offer implements Request {
 	@JoinColumn(name = "prospect_fk")
 	private Prospect prospect;
 
-	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@OneToOne(cascade = { CascadeType.PERSIST })
 	@JoinColumn(name = "vendor_fk")
 	private Vendor vendor;
 

@@ -48,8 +48,8 @@ class CustomerController {
         this.customerService.saveCustomer(this.currentCustomer, this.isCurrentCustomerNew);
     }
     deepCopyCustomer(oldCustomer: Customer, newCustomer: Customer) {
-        newCustomer.id = oldCustomer.id; 
-        newCustomer.name = oldCustomer.name;    
+        newCustomer.id = oldCustomer.id;
+        newCustomer.name = oldCustomer.name;
     }
 
 
