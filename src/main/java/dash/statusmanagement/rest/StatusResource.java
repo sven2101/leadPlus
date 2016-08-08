@@ -16,7 +16,6 @@ package dash.statusmanagement.rest;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import dash.exceptions.NotFoundException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
-import dash.processmanagement.business.ProcessRepository;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
 import io.swagger.annotations.Api;
@@ -42,8 +40,6 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "State API")
 public class StatusResource {
 
-	@Autowired
-	private ProcessRepository processRepository;
 
 	@ApiOperation(value = "Returns list of leads, which are related to a process status.", notes = "")
 	@RequestMapping(value = "/{status}/leads", method = RequestMethod.GET)

@@ -32,7 +32,7 @@ LeadsCtrl.prototype.addComment = function(id, source) {
 		commentText : commentText,
 		timestamp : this.filter('date')(new Date(), "dd.MM.yyyy HH:mm:ss")
 	};
-	this.commentService.save(comment).$promise.then(function() {
+	this.commentResource.save(comment).$promise.then(function() {
 		vm.comments[id].push(comment);
 		vm.commentInput[id] = '';
 		vm.commentModalInput[id] = '';
@@ -55,7 +55,7 @@ LeadsCtrl.prototype.saveLead = function() {
 		lead : this.newLead,
 		status : 'OPEN'
 	};
-	this.processesService.save(process).$promise.then(function(result) {
+	this.processResource.save(process).$promise.then(function(result) {
 		vm.toaster.pop('success', '', vm.translate
 				.instant('COMMON_TOAST_SUCCESS_ADD_LEAD'));
 		vm.rootScope.leadsCount += 1;
@@ -72,7 +72,7 @@ LeadsCtrl.prototype.clearNewLead = function() {
 	}
 };
 
-LeadsCtrl.prototype.followUp = function(process) {
+LeadsCtrl.prototype.createOffer = function(process) {
 	var vm = this;
 	var offer = {
 		container : {
@@ -94,10 +94,10 @@ LeadsCtrl.prototype.followUp = function(process) {
 		timestamp : this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm'),
 		vendor : process.lead.vendor
 	};
-	this.processesService.addOffer({
+	this.processResource.createOffer({
 		id : process.id
 	}, offer).$promise.then(function() {
-		vm.processesService.setStatus({
+		vm.processResource.setStatus({
 			id : process.id
 		}, 'offer').$promise.then(function() {
 			vm.toaster.pop('success', '', vm.translate
@@ -105,7 +105,7 @@ LeadsCtrl.prototype.followUp = function(process) {
 			vm.rootScope.leadsCount -= 1;
 			vm.rootScope.offersCount += 1;
 			if (process.processor == null) {
-				vm.processesService.setProcessor({
+				vm.processResource.setProcessor({
 					id : process.id
 				}, vm.user.username).$promise.then(function() {
 					process.processor = vm.user;
@@ -121,14 +121,14 @@ LeadsCtrl.prototype.followUp = function(process) {
 LeadsCtrl.prototype.pin = function(process) {
 	var vm = this;
 	if (process.processor == null) {
-		this.processesService.setProcessor({
+		this.processResource.setProcessor({
 			id : process.id
-		}, vm.user.username).$promise.then(function() {
+		}, vm.user.id).$promise.then(function() {
 			process.processor = vm.user;
 			vm.updateRow(process);
 		});
 	} else {
-		this.processesService.removeProcessor({
+		this.processResource.removeProcessor({
 			id : process.id
 		}).$promise.then(function() {
 			process.processor = null;
@@ -139,24 +139,24 @@ LeadsCtrl.prototype.pin = function(process) {
 
 LeadsCtrl.prototype.closeOrOpenInquiry = function(process) {
 	var vm = this;
-	if (process.status == "open") {
-		this.processesService.setStatus({
+	if (process.status == "OPEN") {
+		this.processResource.setStatus({
 			id : process.id
-		}, 'closed').$promise.then(function() {
+		}, 'CLOSED').$promise.then(function() {
 			vm.toaster.pop('success', '', vm.translate
 					.instant('COMMON_TOAST_SUCCESS_CLOSE_LEAD'));
 			vm.rootScope.leadsCount -= 1;
-			process.status = 'closed';
+			process.status = 'CLOSED';
 			vm.updateRow(process);
 		});
-	} else if (process.status == "closed") {
-		this.processesService.setStatus({
+	} else if (process.status == "CLOSED") {
+		this.processResource.setStatus({
 			id : process.id
-		}, 'open').$promise.then(function() {
+		}, 'OPEN').$promise.then(function() {
 			vm.toaster.pop('success', '', vm.translate
 					.instant('COMMON_TOAST_SUCCESS_OPEN_LEAD'));
 			vm.rootScope.leadsCount += 1;
-			process.status = 'open';
+			process.status = 'OPEN';
 			vm.updateRow(process);
 		});
 	}
@@ -168,9 +168,7 @@ LeadsCtrl.prototype.loadDataToModal = function(process) {
 
 LeadsCtrl.prototype.saveEditedRow = function() {
 	var vm = this;
-	this.processesService.putLead({
-		id : this.editProcess.lead.id
-	}, this.editProcess.lead).$promise.then(function() {
+	this.leadResource.update(this.editProcess.lead).$promise.then(function() {
 		vm.toaster.pop('success', '', vm.translate
 				.instant('COMMON_TOAST_SUCCESS_UPDATE_LEAD'));
 		vm.editForm.$setPristine();
@@ -189,15 +187,13 @@ LeadsCtrl.prototype.deleteRow = function(process) {
 		return;
 	}
 	process.lead = null;
-	this.processesService.putProcess({
-		id : process.id
-	}, process).$promise.then(function() {
+	this.processResource.update(process).$promise.then(function() {
 		if (process.offer == null && process.sale == null) {
-			vm.processesService.deleteProcess({
+			vm.processResource.drop({
 				id : process.id
 			});
 		}
-		vm.processesService.deleteLead({
+		vm.leadResource.drop({
 			id : leadId
 		}).$promise.then(function() {
 			vm.toaster.pop('success', '', vm.translate

@@ -13,20 +13,21 @@
 angular.module('app.leads', [ 'ngResource' ])
 		.controller('LeadsCtrl', LeadsCtrl);
 LeadsCtrl.$inject = [ 'DTOptionsBuilder', 'DTColumnBuilder', '$compile',
-		'$scope', 'toaster', 'Processes', 'Comments', '$filter', 'Profile',
-		'$rootScope', '$translate' ];
+		'$scope', 'toaster', 'ProcessResource', 'CommentResource', '$filter',
+		'UserResource', '$rootScope', '$translate', 'LeadResource' ];
 function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
-		toaster, Processes, Comments, $filter, Profile, $rootScope, $translate) {
-
+		toaster, ProcessResource, CommentResource, $filter, UserResource,
+		$rootScope, $translate, LeadResource) {
 	var vm = this;
 	this.filter = $filter;
-	this.processesService = Processes;
-	this.commentService = Comments;
-	this.userService = Profile;
+	this.processResource = ProcessResource;
+	this.commentResource = CommentResource;
+	this.userResource = UserResource;
+	this.leadResource = LeadResource;
 	this.user = {};
 	this.windowWidth = $(window).width();
 	if (!angular.isUndefined($rootScope.globals.currentUser))
-		this.userService.get({
+		this.userResource.get({
 			id : $rootScope.globals.currentUser.id
 		}).$promise.then(function(result) {
 			vm.user = result;
@@ -220,7 +221,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 		if (vm.windowWidth > 1300) {
 			return '<div style="white-space: nowrap;"><button class="btn btn-white" '
 					+ disabled
-					+ ' ng-click="lead.followUp(lead.processes['
+					+ ' ng-click="lead.createOffer(lead.processes['
 					+ data.id
 					+ '])" title="'
 					+ $translate.instant('LEAD_FOLLOW_UP')
@@ -349,7 +350,7 @@ LeadsCtrl.prototype.appendChildRow = function(process, event) {
 	var childScope = this.scope.$new(true);
 	childScope.childData = process;
 	var vm = this;
-	this.commentService.getByProcessId({
+	this.commentResource.getByProcessId({
 		id : process.id
 	}).$promise.then(function(result) {
 		vm.comments[process.id] = [];

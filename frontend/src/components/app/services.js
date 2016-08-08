@@ -73,34 +73,34 @@ angular.module('app.services', ['ngResource'])
             }
         };
     })
-    .service('Leads', ['$resource', function ($resource) {
+    .service('LeadResource', ['$resource', function ($resource) {
         return $resource('/api/rest/leads/:id', {}, {
             getAll: { url: '/api/rest/leads', method: 'GET' },
             getById: { url: '/api/rest/leads/:id', method: 'GET' },
             save: { url: '/api/rest/leads/', method: 'POST' },
-            put: { url: '/api/rest/leads', method: 'PUT' },
+            update: { url: '/api/rest/leads', method: 'PUT' },
             drop: { url: '/api/rest/leads/:id', method: 'DELETE' },
         });
     }])
-    .service('Offers', ['$resource', function ($resource) {
+    .service('OffersResource', ['$resource', function ($resource) {
         return $resource('/api/rest/offers/:id', {}, {
             getAll: { url: '/api/rest/offers', method: 'GET' },
             getById: { url: '/api/rest/offers/:id', method: 'GET' },
             save: { url: '/api/rest/offers/', method: 'POST' },
-            put: { url: '/api/rest/offers', method: 'PUT' },
+            update: { url: '/api/rest/offers', method: 'PUT' },
             drop: { url: '/api/rest/offers/:id', method: 'DELETE' },
         });
     }])
-    .service('Sales', ['$resource', function ($resource) {
+    .service('SaleResource', ['$resource', function ($resource) {
         return $resource('/api/rest/sales/:id', {}, {
             getAll: { url: '/api/rest/sales', method: 'GET' },
             getById: { url: '/api/rest/sales/:id', method: 'GET' },
             save: { url: '/api/rest/sales/', method: 'POST' },
-            put: { url: '/api/rest/sales', method: 'PUT' },
+            update: { url: '/api/rest/sales', method: 'PUT' },
             drop: { url: '/api/rest/sales/:id', method: 'DELETE' },
         });
     }])
-    .service('Processes', ['$resource', function ($resource) {
+    .service('ProcessResource', ['$resource', function ($resource) {
         return $resource('/api/rest/processes/:id', {}, {
             getById: { url: '/api/rest/processes/:id', method: 'GET' },
             getStatus: { url: '/api/rest/processes/:id/status', method: 'GET' },
@@ -108,13 +108,15 @@ angular.module('app.services', ['ngResource'])
             save: { url: '/api/rest/processes', method: 'POST' },
             update: { url: '/api/rest/processes', method: 'PUT' },
             drop: { url: '/api/rest/processes/:id', method: 'DELETE' },
-
+            
+            createOffer:{ url: '/api/rest/processes/:id/offers', method: 'POST' },
+           
             getProcessor: { url: '/api/rest/processes/:id/processors', method: 'GET' },
             setProcessor: { url: '/api/rest/processes/:id/processors', method: 'PUT' },
-            removeProcessor: { url: '/api/rest/processes/:id/processors/remove', method: 'PUT' },
+            removeProcessor: { url: '/api/rest/processes/:id/processors', method: 'DELETE' },
 
-            setStatus: { url: '/api/rest/processes/:id/status', method: 'PUT' },
-            getByStatus: { url: '/api/rest/processes/status/:status', method: 'GET', isArray: true },
+            setStatus: { url: '/api/rest/processes/:id/status/:status', method: 'PUT'},
+            getByStatus: { url: '/api/rest/processes/status/:status', method: 'GET'},
 
             getProcessByLead: { url: '/api/rest/processes/leads', method: 'GET', isArray: true },
             getProcessByOffer: { url: '/api/rest/processes/offers', method: 'GET', isArray: true },
@@ -149,7 +151,7 @@ angular.module('app.services', ['ngResource'])
             }
         });
     }])
-    .service('Comments', ['$resource', function ($resource) {
+    .service('CommentResource', ['$resource', function ($resource) {
         return $resource('/api/rest/comments/', {}, {
             getByProcessId: { url: '/api/rest/comments/processes/:id', method: 'GET', isArray: true },
             getById: { url: '/api/rest/comments/:id', method: 'GET' },
@@ -158,13 +160,13 @@ angular.module('app.services', ['ngResource'])
             drop: { url: '/api/rest/comments/:id', method: 'DELETE' }
         });
     }])
-    .service('Profile', ['$resource', function ($resource) {
+    .service('UserResource', ['$resource', function ($resource) {
         return $resource('/users/:id', {}, {
             update: { url: '/users/update', method: 'PUT' },
             changePassword: { url: '/users/:id/pw', method: 'PUT' }
         });
     }])
-    .service('Settings', ['$resource', function ($resource) {
+    .service('SettingsResource', ['$resource', function ($resource) {
         return $resource('/users/:userId', { userId: '@userId' }, {
             activate: { url: '/users/:userId/activate', method: 'PUT' },
             setRole: { url: '/users/:userId/role', method: 'POST' }
