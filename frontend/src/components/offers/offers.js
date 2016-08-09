@@ -13,21 +13,22 @@
 angular.module('app.offers', [ 'ngResource' ]).controller('OffersCtrl',
 		OffersCtrl);
 OffersCtrl.$inject = [ 'DTOptionsBuilder', 'DTColumnBuilder', '$compile',
-		'$scope', 'toaster', 'Processes', 'Comments', '$filter', 'Profile',
-		'$rootScope', '$translate' ];
+		'$scope', 'toaster', 'ProcessResource', 'CommentResource', '$filter',
+		'UserResource', '$rootScope', '$translate' ];
 function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
-		toaster, Processes, Comments, $filter, Profile, $rootScope, $translate) {
+		toaster, ProcessResource, CommentResource, $filter, UserResource,
+		$rootScope, $translate) {
 
 	var vm = this;
 	this.filter = $filter;
-	this.processesService = Processes;
-	this.commentService = Comments;
-	this.userService = Profile;
+	this.processResource = ProcessResource;
+	this.commentResource = CommentResource;
+	this.userResource = UserResource;
 	this.user = {};
 	this.windowWidth = $(window).width();
 	if (!angular.isUndefined($rootScope.globals.currentUser))
-		this.userService.get({
-			username : $rootScope.globals.currentUser.username
+		this.userResource.get({
+			id : $rootScope.globals.currentUser.id
 		}).$promise.then(function(result) {
 			vm.user = result;
 		});
@@ -47,7 +48,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 	this.editProcess = {};
 	this.newOffer = {};
 	this.dtOptions = DTOptionsBuilder.newOptions().withOption('ajax', {
-		url : '/api/rest/processes/state/offer/offers',
+		url : '/api/rest/processes/workflow/OFFER/state/OFFER',
 		error : function(xhr, error, thrown) {
 			console.log(xhr);
 		},
@@ -183,7 +184,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 			}).withOption('searchDelay', 500);
 		} else {
 			vm.dtOptions.withOption('serverSide', false).withOption('ajax', {
-				url : '/api/rest/processes/state/offer/offers',
+				url : '/api/rest/processes/workflow/OFFER/state/OFFER',
 				error : function(xhr, error, thrown) {
 					console.log(xhr);
 				},
@@ -211,13 +212,13 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 		var disableFollowUp = '';
 		var openOrLock = $translate.instant('OFFER_CLOSE_OFFER');
 		var faOpenOrLOck = 'fa fa-lock';
-		if (data.status != 'offer' && data.status != 'followup') {
+		if (data.status != 'OFFER' && data.status != 'FOLLOWUP') {
 			disableFollowUp = 'disabled';
 			disabled = 'disabled';
 			openOrLock = $translate.instant('OFFER_OPEN_OFFER');
 			faOpenOrLOck = 'fa fa-unlock';
 		}
-		if (data.status == 'followup') {
+		if (data.status == 'FOLLOWUP') {
 			disableFollowUp = 'disabled';
 		}
 		if (data.sale != null) {
@@ -322,16 +323,16 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 
 	function addStatusStyle(data, type, full, meta) {
 		vm.processes[data.id] = data;
-		if (data.status == 'offer' || data.status == 'open') {
+		if (data.status == 'OFFER' || data.status == 'OPEN') {
 			return '<div style="color: green;">'
 					+ $translate.instant('COMMON_STATUS_OPEN') + '</div>'
-		} else if (data.status == 'followup') {
+		} else if (data.status == 'FOLLOWUP') {
 			return '<div style="color: #f79d3c;">'
 					+ $translate.instant('COMMON_STATUS_FOLLOW_UP') + '</div>'
-		} else if (data.status == 'sale') {
+		} else if (data.status == 'SALE') {
 			return '<div style="color: #1872ab;">'
 					+ $translate.instant('COMMON_STATUS_SALE') + '</div>'
-		} else if (data.status == 'closed') {
+		} else if (data.status == 'CLOSED') {
 			return '<div style="color: #ea394c;">'
 					+ $translate.instant('COMMON_STATUS_CLOSED') + '</div>'
 		}
@@ -350,7 +351,7 @@ OffersCtrl.prototype.appendChildRow = function(process, event) {
 	var childScope = this.scope.$new(true);
 	childScope.childData = process;
 	var vm = this;
-	this.commentService.getComments({
+	this.commentResource.getByProcessId({
 		id : process.id
 	}).$promise.then(function(result) {
 		vm.comments[process.id] = [];
