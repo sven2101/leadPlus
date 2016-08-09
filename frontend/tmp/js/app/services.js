@@ -110,6 +110,7 @@ angular.module('app.services', ['ngResource'])
             drop: { url: '/api/rest/processes/:id', method: 'DELETE' },
             
             createOffer:{ url: '/api/rest/processes/:id/offers', method: 'POST' },
+            createSale:{ url: '/api/rest/processes/:id/sales', method: 'POST' },
            
             getProcessor: { url: '/api/rest/processes/:id/processors', method: 'GET' },
             setProcessor: { url: '/api/rest/processes/:id/processors', method: 'PUT' },

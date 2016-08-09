@@ -121,8 +121,8 @@ class DashboardController {
             update: function(e, ui) {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
-                if ((this.openLead === target && this.openOffer === source) ||
-                    (this.openLead === source && this.sales === target) ||
+                if ((self.openLead === target && self.openOffer === source) ||
+                    (self.openLead === source && self.sales === target) ||
                     target === source) {
                     ui.item.sortable.cancel();
                 }
@@ -131,11 +131,11 @@ class DashboardController {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
-                if (this.sales === target && this.openOffer === source) {
-                    this.addOfferToSale(item);
+                if (self.sales === target && self.openOffer === source) {
+                    self.addOfferToSale(item);
                 }
-                else if (this.openOffer === target && this.openLead === source) {
-                    this.addLeadToOffer(item);
+                else if (self.openOffer === target && self.openLead === source) {
+                    self.addLeadToOffer(item);
                 }
             },
             connectWith: ".connectList",
@@ -164,12 +164,12 @@ class DashboardController {
             timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
             vendor: process.lead.vendor
         };
-        this.processResource.addOffer({ id: process.id }, offer).$promise.then(function() {
-            self.processResource.setStatus({ id: process.id }, "offer").$promise.then(function() {
+        this.processResource.createOffer({ id: process.id }, offer).$promise.then(function() {
+            self.processResource.setStatus({ id: process.id }, "OFFER").$promise.then(function() {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
-                self.processResource.setProcessor({ id: process.id }, self.user.username).$promise.then(function() {
+                self.processResource.setProcessor({ id: process.id }, self.user.id).$promise.then(function() {
                     process.processor = self.user;
                 });
                 process.offer = offer;
@@ -200,8 +200,8 @@ class DashboardController {
             timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
             vendor: process.offer.vendor
         };
-        this.processResource.addSale({ id: process.id }, sale).$promise.then(function() {
-            self.processResource.setStatus({ id: process.id }, "sale").$promise.then(function() {
+        this.processResource.createSale({ id: process.id }, sale).$promise.then(function() {
+            self.processResource.setStatus({ id: process.id }, "SALE").$promise.then(function() {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
                 self.rootScope.offersCount -= 1;
                 process.sale = sale;
@@ -215,7 +215,7 @@ class DashboardController {
         this.infoType = type;
         this.infoProcess = process;
         let self = this;
-        this.commentResource.getComments({ id: process.id }).$promise.then(function(result) {
+        this.commentResource.getByProcessId({ id: process.id }).$promise.then(function(result) {
             self.infoComments = [];
             for (let comment in result) {
                 if (comment === "$promise")
@@ -252,7 +252,7 @@ class DashboardController {
                 commentText: this.commentModalInput,
                 timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm:ss")
             };
-            this.commentResource.addComment(comment).$promise.then(function() {
+            this.commentResource.save(comment).$promise.then(function() {
                 self.infoComments.push(comment);
                 self.commentModalInput = "";
             });

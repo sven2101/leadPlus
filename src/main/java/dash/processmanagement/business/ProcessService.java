@@ -139,7 +139,6 @@ public class ProcessService implements IProcessService {
 		if (Optional.ofNullable(process).isPresent()) {
 			//createdOffer = offerService.save(offer);
 			process.setOffer(offer);
-			System.out.println(offer);
 			processRepository.save(process);
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
@@ -150,9 +149,9 @@ public class ProcessService implements IProcessService {
 	@Override
 	public Sale createSale(final long processId, final Sale sale) throws SaveFailedException {
 		Process process = processRepository.findOne(processId);
-		Sale createdSale;
+		Sale createdSale = null;
 		if (Optional.ofNullable(process).isPresent()) {
-			createdSale = saleService.save(sale);
+			//createdSale = saleService.save(sale);
 			process.setSale(sale);
 			processRepository.save(process);
 		} else {

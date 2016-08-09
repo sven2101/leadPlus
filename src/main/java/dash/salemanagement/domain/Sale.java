@@ -35,7 +35,7 @@ public class Sale implements Request {
 	@JoinColumn(name = "container_fk")
 	private Product container;
 
-	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@OneToOne(cascade = { CascadeType.PERSIST })
 	@JoinColumn(name = "vendor_fk")
 	private Vendor vendor;
 
@@ -185,8 +185,9 @@ public class Sale implements Request {
 
 	@Override
 	public String toString() {
-		return "Sale [id=" + id + ", customer=" + customer + ", container=" + container + ", vendor=" + vendor + ", containerAmount=" + containerAmount
-				+ ", transport=" + transport + ", saleReturn=" + saleReturn + ", saleProfit=" + saleProfit + ", timestamp=" + timestamp + "]";
+		return "Sale [id=" + id + ", customer=" + customer + ", container=" + container + ", vendor=" + vendor
+				+ ", containerAmount=" + containerAmount + ", transport=" + transport + ", saleReturn=" + saleReturn
+				+ ", saleProfit=" + saleProfit + ", timestamp=" + timestamp + "]";
 	}
 
 }
