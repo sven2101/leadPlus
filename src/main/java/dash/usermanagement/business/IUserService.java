@@ -39,12 +39,14 @@ public interface IUserService {
 
 	public User save(final User user) throws SaveFailedException;
 
-	public User update(final User user) throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
+	public User update(final User user)
+			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
 	public void delete(final long id) throws DeleteFailedException;
 
-	public void updatePassword(final long id, final PasswordChange passwordChange) throws UpdateFailedException, DontMatchException;
+	public void updatePassword(final long id, final PasswordChange passwordChange)
+			throws UpdateFailedException, DontMatchException;
 
-	public User activate(final long id) throws UpdateFailedException;
+	public User activate(final long id, final boolean enabled) throws UpdateFailedException;
 
 }

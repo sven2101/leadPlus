@@ -194,12 +194,12 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public User activate(final long id) throws UpdateFailedException {
+	public User activate(final long id, final boolean enabled) throws UpdateFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
 				User user = getById(id);
 				if (Optional.ofNullable(user).isPresent()) {
-					user.setEnabled(true);
+					user.setEnabled(enabled);
 					return save(user);
 				} else {
 					throw new NotFoundException(USER_NOT_FOUND);
@@ -216,12 +216,12 @@ public class UserService implements IUserService {
 		}
 	}
 
-	public User setRoleForUser(final Long id, final Role role) throws UpdateFailedException {
+	public User setRoleForUser(final Long id, final String role) throws UpdateFailedException {
 		if (Optional.ofNullable(id).isPresent() && Optional.ofNullable(role).isPresent()) {
 			try {
 				User user = getById(id);
 				if (Optional.ofNullable(user).isPresent()) {
-					user.setRole(role);
+					user.setRole(Role.valueOf(role));
 					return save(user);
 				} else {
 					throw new NotFoundException(USER_NOT_FOUND);

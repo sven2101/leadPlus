@@ -15,9 +15,9 @@
 
 class SettingsController {
 
-    static $inject = ["$filter", "toaster", "Settings", "$rootScope", "$translate"];
+    static $inject = ["$filter", "toaster", "SettingsResource", "$rootScope", "$translate"];
 
-    settingsService;
+    settingsResource;
     rootScope;
     translate;
     users: Array<any>;
@@ -26,8 +26,8 @@ class SettingsController {
     toaster;
     counter;
 
-    constructor($filter, toaster, Settings, $rootScope, $translate) {
-        this.settingsService = Settings;
+    constructor($filter, toaster, SettingsResource, $rootScope, $translate) {
+        this.settingsResource = SettingsResource;
         this.rootScope = $rootScope;
         this.translate = $translate;
         this.users = [];
@@ -37,7 +37,7 @@ class SettingsController {
         this.counter = 1;
 
         let self = this;
-        this.settingsService.query().$promise.then(function (result) {
+        this.settingsResource.getAll().$promise.then(function (result) {
             self.users = result;
             for (let user in result) {
                 if (user === "$promise")
@@ -53,7 +53,7 @@ class SettingsController {
 
     activateUser(user) {
         let self = this;
-        this.settingsService.activate({ username: user.username }, true).$promise.then(function () {
+        this.settingsResource.activate({ id: user.id }, true).$promise.then(function () {
             self.filter("filter")(self.users, { id: user.id })[0].enabled = true;
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_ACCESS_GRANTED"));
         }, function () {
@@ -63,7 +63,7 @@ class SettingsController {
 
     deactivateUser = function (user) {
         let self = this;
-        this.service.activate({ username: user.username }, false).$promise.then(function () {
+        this.settingsResource.activate({ id: user.id }, false).$promise.then(function () {
             self.filter("filter")(self.users, { id: user.id })[0].enabled = false;
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_ACCESS_REVOKED"));
         }, function () {
@@ -74,8 +74,8 @@ class SettingsController {
     hasRight(user): boolean {
         if (user.username === this.rootScope.globals.currentUser.username
             || (user.role === this.rootScope.globals.currentUser.role)
-            || this.rootScope.globals.currentUser.role === "user"
-            || user.role === "superadmin") {
+            || this.rootScope.globals.currentUser.role === "USER"
+            || user.role === "SUPERADMIN") {
             return true;
         } else {
             return false;
@@ -85,7 +85,7 @@ class SettingsController {
     saveRole(user) {
         let self = this;
         user.role = this.roleSelection[user.id];
-        this.settingsService.setRole({ username: user.username }, user.role).$promise.then(function () {
+        this.settingsResource.setRole({ id: user.id }, user.role).$promise.then(function () {
             // set rootScope role
             self.filter("filter")(self.users, { id: user.id })[0].role = user.role;
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_SET_ROLE"));

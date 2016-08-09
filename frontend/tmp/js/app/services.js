@@ -167,9 +167,10 @@ angular.module('app.services', ['ngResource'])
         });
     }])
     .service('SettingsResource', ['$resource', function ($resource) {
-        return $resource('/users/:userId', { userId: '@userId' }, {
-            activate: { url: '/users/:userId/activate', method: 'PUT' },
-            setRole: { url: '/users/:userId/role', method: 'POST' }
+        return $resource('/users/:id', {}, {
+        	getAll: { url: '/users/all', method: 'GET',  isArray: true},
+            activate: { url: '/users/:id/activate', method: 'PUT' },
+            setRole: { url: '/users/:id/role', method: 'PUT' }
         });
     }])
     .service('StatisticResource', ['$resource', function ($resource) {
