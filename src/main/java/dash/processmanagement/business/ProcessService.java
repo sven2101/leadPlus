@@ -45,7 +45,6 @@ import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
-import dash.vendormanagement.business.VendorRepository;
 import dash.vendormanagement.business.VendorService;
 import dash.workflowmanagement.domain.Workflow;
 
@@ -56,7 +55,7 @@ public class ProcessService implements IProcessService {
 
 	@Autowired
 	private ProcessRepository processRepository;
-	
+
 	@Autowired
 	private VendorService vendorService;
 
@@ -109,7 +108,10 @@ public class ProcessService implements IProcessService {
 	@Override
 	public Process save(final Process process) throws SaveFailedException {
 		if (Optional.ofNullable(process).isPresent()) {
-			return processRepository.save(process);
+
+			Process temp = processRepository.save(process);
+
+			return temp;
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(OFFER_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
@@ -137,7 +139,7 @@ public class ProcessService implements IProcessService {
 		Process process = processRepository.findOne(processId);
 		Offer createdOffer = null;
 		if (Optional.ofNullable(process).isPresent()) {
-			//createdOffer = offerService.save(offer);
+			// createdOffer = offerService.save(offer);
 			process.setOffer(offer);
 			System.out.println(offer);
 			processRepository.save(process);

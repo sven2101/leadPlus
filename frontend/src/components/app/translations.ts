@@ -176,6 +176,7 @@ function config($translateProvider) {
             LEAD_CLOSE_LEAD: "Anfrage schließen",
             LEAD_EDIT_LEAD: "Anfrage bearbeiten",
             LEAD_DELETE_LEAD: "Anfrage löschen",
+            LEAD_EDIT_SELECT_PRODUCT: "Produkt wählen",
 
             // Define all offer elements
             OFFER_OFFERS: "Angebote",
@@ -430,6 +431,7 @@ function config($translateProvider) {
             LEAD_CLOSE_LEAD: "Lock lead",
             LEAD_EDIT_LEAD: "Edit lead",
             LEAD_DELETE_LEAD: "Delete lead",
+            LEAD_EDIT_SELECT_PRODUCT: "Choose product",
 
             // Define all offer elements
             OFFER_OFFERS: "Offers",

@@ -15,6 +15,7 @@
 package dash.leadmanagement.domain;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,6 +24,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.inquirermanagement.domain.Inquirer;
 import dash.processmanagement.request.Request;
+import dash.productmanagement.domain.OrderPosition;
 import dash.productmanagement.domain.Product;
 import dash.vendormanagement.domain.Vendor;
 
@@ -44,6 +47,9 @@ public class Lead implements Request {
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "inquirer_fk", nullable = true)
 	private Inquirer inquirer;
+
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "lead")
+	private List<OrderPosition> orderPositions;
 
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "vendor_fk", nullable = true)
@@ -66,6 +72,14 @@ public class Lead implements Request {
 
 	public Lead() {
 
+	}
+
+	public Product getContainer() {
+		return container;
+	}
+
+	public void setContainer(Product container) {
+		this.container = container;
 	}
 
 	public Long getId() {
@@ -97,7 +111,14 @@ public class Lead implements Request {
 	}
 
 	public double getLeadPrice() {
-		return this.containerAmount * this.container.getPriceNetto();
+		int sum = 0;
+		for (int i = 0; i < this.orderPositions.size(); i++) {
+			OrderPosition temp = this.orderPositions.get(i);
+			if (temp != null && temp.getProduct() != null) {
+				sum += temp.getAmount() * temp.getProduct().getPriceNetto();
+			}
+		}
+		return sum;
 	}
 
 	public String getDestination() {
@@ -125,12 +146,16 @@ public class Lead implements Request {
 		return timestamp;
 	}
 
-	public Product getContainer() {
-		return this.container;
+	public List<OrderPosition> getOrderPositions() {
+		return orderPositions;
 	}
 
-	public void setContainer(Product container) {
-		this.container = container;
+	public void setOrderPositions(List<OrderPosition> orderPositions) {
+		this.orderPositions = orderPositions;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	@Override
@@ -140,8 +165,10 @@ public class Lead implements Request {
 		result = prime * result + ((container == null) ? 0 : container.hashCode());
 		result = prime * result + containerAmount;
 		result = prime * result + ((destination == null) ? 0 : destination.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((inquirer == null) ? 0 : inquirer.hashCode());
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		result = prime * result + ((orderPositions == null) ? 0 : orderPositions.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		result = prime * result + ((vendor == null) ? 0 : vendor.hashCode());
 		return result;
@@ -168,6 +195,8 @@ public class Lead implements Request {
 				return false;
 		} else if (!destination.equals(other.destination))
 			return false;
+		if (id != other.id)
+			return false;
 		if (inquirer == null) {
 			if (other.inquirer != null)
 				return false;
@@ -177,6 +206,11 @@ public class Lead implements Request {
 			if (other.message != null)
 				return false;
 		} else if (!message.equals(other.message))
+			return false;
+		if (orderPositions == null) {
+			if (other.orderPositions != null)
+				return false;
+		} else if (!orderPositions.equals(other.orderPositions))
 			return false;
 		if (timestamp == null) {
 			if (other.timestamp != null)
@@ -193,8 +227,9 @@ public class Lead implements Request {
 
 	@Override
 	public String toString() {
-		return "Lead [id=" + id + ", inquirer=" + inquirer + ", vendor=" + vendor + ", container=" + container + ", containerAmount=" + containerAmount
-				+ ", destination=" + destination + ", timestamp=" + timestamp + ", message=" + message + "]";
+		return "Lead [id=" + id + ", inquirer=" + inquirer + ", orderPositions=" + orderPositions + ", vendor=" + vendor
+				+ ", container=" + container + ", containerAmount=" + containerAmount + ", destination=" + destination
+				+ ", timestamp=" + timestamp + ", message=" + message + "]";
 	}
 
 }

@@ -1,3 +1,4 @@
+/// <reference path="../models/AbstractModel.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -10,14 +11,16 @@
  ******************************************************************************/
 "use strict";
 
-class OrderPosition extends AbstractModel {
-
-    amount: number;
-    product: Product;
-
-    constructor() {
-        super();
-        this.amount = 666;
+let findElementById = function (array: Array<AbstractModel>, id: Number): AbstractModel {
+    for (let i = 0; i < array.length; i++) {
+        if (array[i].id === id) {
+            return array[i];
+        }
     }
+    return null;
+};
 
-}
+let isNullOrUndefined = function (object: any): boolean {
+    return object === null || typeof object === "undefined";
+};
+

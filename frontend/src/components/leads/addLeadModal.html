@@ -9,8 +9,8 @@
             <div class="modal-body">
                 <form name="lead.addForm" novalidate>
                     <div class="row">
-                        <!-- TITLE -->
-                        <div class="col-sm-6">
+                        <!-- FIRSTNAME -->
+                        <div class="col-sm-6 b-r">
                             <div class="form-group">
                                 <label>{{ 'COMMON_TITLE' | translate }}</label>
                                 <select name="title" class="form-control" ng-model="lead.newLead.inquirer.title">
@@ -18,11 +18,6 @@
                                     <option value="MS">{{ 'COMMON_TITLE_MS' | translate }}</option>
                                 </select>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <!-- FIRSTNAME -->
-                        <div class="col-sm-6 b-r">
                             <div class="form-group" ng-class="{ 'has-error' : lead.addForm.firstname.$invalid && !lead.addForm.firstname.$pristine }">
                                 <label>{{ 'COMMON_FIRSTNAME' | translate }}</label>
                                 <input type="text" name="firstname" class="form-control" ng-model="lead.newLead.inquirer.firstname" ng-maxlength="30">
@@ -40,6 +35,13 @@
                                 <input type="text" name="company" class="form-control" ng-model="lead.newLead.inquirer.company" ng-maxlength="50">
                                 <p ng-show="lead.addForm.company.$invalid && !lead.addForm.company.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <!-- MESSAGE -->
+                            <div class="form-group">
+                                <label>{{ 'COMMON_NOTE' | translate }}</label>
+                                <textarea class="form-control" rows="5" name="message" style="resize:vertical;" ng-model="lead.newLead.message"></textarea>
+                            </div>
                             <!-- EMAIL -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.addForm.email.$invalid && !lead.addForm.email.$pristine }">
                                 <label>{{ 'COMMON_EMAIL' | translate }}</label>
@@ -53,62 +55,59 @@
                                 <p ng-show="lead.addForm.phone.$invalid && !lead.addForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <!-- CONTAINER NAME -->
-                            <div class="form-group" ng-class="{ 'has-error' : lead.addForm.containerName.$invalid && !lead.addForm.containerName.$pristine }">
-                                <label>{{ 'COMMON_CONTAINER' | translate }} *</label>
-                                <input type="text" name="containerName" class="form-control" ng-model="lead.newLead.container.name" ng-maxlength="50" required>
-                                <p ng-show="lead.addForm.containerName.$invalid && !lead.addForm.containerName.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END'
-                                    | translate }})</p>
-                            </div>
-                            <!-- CONTAINER DESCRIPTION -->
-                            <div class="form-group" ng-class="{ 'has-error' : lead.addForm.containerDescription.$invalid && !lead.addForm.containerDescription.$pristine }">
-                                <label>{{ 'COMMON_CONTAINER_DESC' | translate }}</label>
-                                <input type="text" name="containerDescription" class="form-control" ng-model="lead.newLead.container.description" ng-maxlength="100">
-                                <p ng-show="lead.addForm.containerDescription.$invalid && !lead.addForm.containerDescription.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}100{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-                            </div>
-                            <!-- CONTAINER AMOUNT -->
-                            <div class="form-group" ng-class="{ 'has-error' : lead.addForm.containerAmount.$invalid && !lead.addForm.containerAmount.$pristine }">
-                                <label>{{ 'COMMON_CONTAINER_AMOUNT' | translate }} *</label>
-                                <input type="number" name="containerAmount" class="form-control" ng-model="lead.newLead.containerAmount" required min="1"
-                                    ng-pattern="/^[1-9]+[0-9]*$/">
-                                <p ng-show="lead.addForm.containerAmount.$invalid && !lead.addForm.containerAmount.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
-                            </div>
-                            <!-- PRICE -->
-                            <div class="form-group" ng-class="{ 'has-error' : lead.addForm.nettoPrice.$invalid && !lead.addForm.nettoPrice.$pristine }">
-                                <label>{{ 'COMMON_CONTAINER_SINGLE_PRICE' | translate }} *</label>
-                                <input type="number" name="nettoPrice" class="form-control" ng-model="lead.newLead.container.priceNetto" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
-                                    step="0.01" required>
-                                <p ng-show="lead.addForm.nettoPrice.$invalid && !lead.addForm.nettoPrice.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
-                            </div>
-                            <!-- CONTAINER DESTINATION -->
-                            <div class="form-group" ng-class="{ 'has-error' : lead.addForm.containerDestination.$invalid && !lead.addForm.containerDestination.$pristine }">
-                                <label>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</label>
-                                <input type="text" name="containerDestination" class="form-control" ng-model="lead.newLead.destination" ng-maxlength="50">
-                                <p ng-show="lead.addForm.containerDestination.$invalid && !lead.addForm.containerDestination.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-                            </div>
-                        </div>
-                        <!-- ENTIRE PRICE -->
-                        <div class="col-sm-6 b-r">
-                            <div class="form-group">
-                                <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{lead.newLead.containerAmount * lead.newLead.container.priceNetto
-                                    | currency:'\u20AC'}}</h2>
-                            </div>
-                        </div>
-                        <!-- MESSAGE -->
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>{{ 'COMMON_NOTE' | translate }}</label>
-                                <textarea class="form-control" rows="5" name="message" style="resize:vertical;" ng-model="lead.newLead.message"></textarea>
-                            </div>
+
+
+
+                    </div>
+                    <div>
+                        <h2>{{ 'PRODUCT_MENU' | translate }}</h2>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <select class="form-control" ng-model="lead.currentProductId">
+                                            <option value="-1" selected disabled hidden>{{ 'LEAD_EDIT_SELECT_PRODUCT' | translate }}</option>                                     
+                                            <option value="{{product.id}}" ng-repeat="product in lead.productService.products">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
+                                        </select>
+                                    </th>
+                                    <th class="col-md-1"></th>
+                                    <th style="width:100px">
+                                        <input type="number" class="input-sm form-control" ng-model="lead.currentProductAmount">
+                                    </th>
+                                    <th class="col-md-1">
+                                        <button type="button" class="btn btn-white btn-sm" ng-click="lead.addProduct()">
+                                     <i class="fa fa-plus"></i>&nbsp;</button>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr ng-repeat="orderPosition in lead.currentOrderPositions">
+                                    <td>{{orderPosition.product.name}}</td>
+                                    <td class="col-md-1 ">{{orderPosition.product.priceNetto*orderPosition.amount| currency:'\u20AC'}}</td>
+                                    <td style="width:100px">{{orderPosition.amount}}</td>
+                                    <td class=" col-md-1 ">
+                                        <button type="button " class="btn btn-white btn-sm " ng-click="lead.deleteProduct(lead.currentOrderPositions,$index) ">
+                                        <i class="fa fa-trash "></i>&nbsp;
+                                     </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- ENTIRE PRICE -->
+                    <div>
+                        <div class="form-group ">
+                            <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{lead.sumOrderPositions()| currency:'\u20AC'}}</h2>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}
+            <div class="modal-footer ">
+                <button type="button " class="btn btn-white " data-dismiss="modal ">{{ 'COMMON_CANCEL' | translate }}
                 </button>
-                <button type="button" class="btn btn-success" ng-disabled="lead.addForm.$invalid" ng-click="lead.saveLead()" data-dismiss="modal">{{ 'COMMON_SAVE' | translate }}
+                <button type="button " class="btn btn-success " ng-disabled="lead.addForm.$invalid " ng-click="lead.saveLead()
+                                        " data-dismiss="modal ">{{ 'COMMON_SAVE' | translate }}
                 </button>
             </div>
         </div>
