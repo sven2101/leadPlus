@@ -98,12 +98,14 @@ class AppController {
             if (!angular
                 .isUndefined(self.rootScope.globals.currentUser)) {
                 self.processResource.getLeadsByStatus({
-                    status: "open"
+                    workflow: "LEAD",
+                    status: "OPEN"
                 }).$promise.then(function(result) {
                     self.rootScope.leadsCount = result.length;
                 });
                 self.processResource.getOffersByStatus({
-                    status: "offer"
+                    workflow: "OFFER",
+                    status: "OFFER"
                 }).$promise.then(function(result) {
                     self.rootScope.offersCount = result.length;
                 });

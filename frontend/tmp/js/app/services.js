@@ -162,7 +162,7 @@ angular.module('app.services', ['ngResource'])
     }])
     .service('UserResource', ['$resource', function ($resource) {
         return $resource('/users/:id', {}, {
-            update: { url: '/users/update', method: 'PUT' },
+            update: { url: '/users', method: 'PUT' },
             changePassword: { url: '/users/:id/pw', method: 'PUT' }
         });
     }])

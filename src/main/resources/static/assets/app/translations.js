@@ -16,7 +16,7 @@ function config($translateProvider) {
     var pageTitle = "test";
     var pageLogo = pageTitle + "+";
     $translateProvider
-        .translations("de", {
+        .translations("DE", {
         // GENERAL
         TITLE: pageTitle,
         LOGO: pageLogo,
@@ -256,7 +256,7 @@ function config($translateProvider) {
         PRODUCT_DEACTIVATED: "Deaktivieren",
         PRODUCT_CREATED: "Erstellt"
     })
-        .translations("en", {
+        .translations("EN", {
         // GENERAL
         TITLE: pageTitle,
         LOGO: pageLogo,
@@ -496,8 +496,8 @@ function config($translateProvider) {
         PRODUCT_DEACTIVATED: "Deactivate",
         PRODUCT_CREATED: "Created"
     });
-    $translateProvider.preferredLanguage("de");
-    $translateProvider.fallbackLanguage("en");
+    $translateProvider.preferredLanguage("DE");
+    $translateProvider.fallbackLanguage("EN");
 }
 "use strict";
 angular.module("app").config(config);

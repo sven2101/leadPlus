@@ -17,9 +17,9 @@
 
 class ProfileController {
 
-    static $inject = ["$rootScope", "toaster", "Profile", "$translate"];
+    static $inject = ["$rootScope", "toaster", "UserResource", "$translate"];
 
-    profileService;
+    userService;
     translate;
     user: User;
     toaster;
@@ -27,10 +27,11 @@ class ProfileController {
     oldPassword: String;
     newPassword1: String;
     newPassword2: String;
+    passwordForm;
 
 
-    constructor($rootScope, toaster, Profile, $translate) {
-        this.profileService = Profile;
+    constructor($rootScope, toaster, UserResource, $translate) {
+        this.userService = UserResource;
         this.translate = $translate;
         let self = this;
         this.toaster = toaster;
@@ -38,38 +39,33 @@ class ProfileController {
         this.oldPassword = "";
         this.newPassword1 = "";
         this.newPassword2 = "";
-
-
-        this.profileService.get({ username: $rootScope.globals.currentUser.username }).$promise.then(function (result) {
+        this.userService.get({ id: $rootScope.globals.currentUser.id }).$promise.then(function(result) {
             self.user = result;
         });
     }
 
     submitProfilInfoForm(user) {
         let self = this;
-        this.profileService.update({ username: user.username }, user).$promise.then(function () {
+        this.userService.update(user).$promise.then(function() {
             self.rootScope.changeLanguage(user.language);
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
-        }, function () {
-            // TODO macht das Sinn?
-            self.user.language = self.user.language;
+        }, function() {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
         });
     };
 
     submitPasswordForm(user) {
         let self = this;
-        this.profileService.pw({ username: user.username }, {
+        this.userService.changePassword({ id: user.id }, {
             newPassword: this.newPassword1,
             oldPassword: this.oldPassword
-        }).$promise.then(function () {
+        }).$promise.then(function() {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
-            // TODO
-            // self.passwordForm.$setPristine();
+            self.passwordForm.$setPristine();
             self.oldPassword = "";
             self.newPassword1 = "";
             self.newPassword2 = "";
-        }, function () {
+        }, function() {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
         });
     };
