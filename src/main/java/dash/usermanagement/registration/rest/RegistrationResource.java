@@ -34,7 +34,7 @@ import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
 
 @RestController
-@RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+@RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.ALL_VALUE }, produces = {
 		MediaType.APPLICATION_JSON_VALUE })
 public class RegistrationResource {
 

@@ -80,13 +80,13 @@
                             <td>{{user.id}}</td>
                             <td>{{user.username}}</td>
                             <td><select ng-model="setting.roleSelection[user.id]">
-                                <option ng-if="globals.currentUser.role == 'admin' || globals.currentUser.role == 'superadmin'"
-                                        value="user">{{ 'COMMON_USER' | translate }}
+                                <option ng-if="globals.currentUser.role == 'ADMIN' || globals.currentUser.role == 'SUPERADMIN'"
+                                        value="USER">{{ 'COMMON_USER' | translate }}
                                 </option>
-                                <option ng-if="globals.currentUser.role == 'admin' || globals.currentUser.role == 'superadmin'"
-                                        value="admin">Admin
+                                <option ng-if="globals.currentUser.role == 'ADMIN' || globals.currentUser.role == 'SUPERADMIN'"
+                                        value="ADMIN">Admin
                                 </option>
-                                <option ng-if="globals.currentUser.role == 'superadmin'" value="superadmin">Superadmin
+                                <option ng-if="globals.currentUser.role == 'SUPERADMIN'" value="SUPERADMIN">Superadmin
                                 </option>
                             </select></td>
                             <td>

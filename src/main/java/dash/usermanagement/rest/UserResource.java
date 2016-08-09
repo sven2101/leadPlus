@@ -63,7 +63,7 @@ public class UserResource {
 
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
+	@ApiOperation(value = "Update a single user.", notes = "Provide a valid user ID.")
 	public User update(@RequestBody @Valid final User user)
 			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		return userService.update(user);
@@ -80,14 +80,14 @@ public class UserResource {
 	@RequestMapping(value = "/{id}/activate", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Activate a single user.", notes = "Provide a valid user ID.")
-	public User activate(@PathVariable final long id) throws UpdateFailedException {
-		return userService.activate(id);
+	public User activate(@PathVariable final long id, @RequestBody final boolean enabled) throws UpdateFailedException {
+		return userService.activate(id, enabled);
 	}
 
-	@RequestMapping(value = "/{id}/role", method = RequestMethod.POST)
+	@RequestMapping(value = "/{id}/role", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Set a User Role .", notes = "Provide a valid user ID.")
-	public User setRoleForUser(@PathVariable final long id, @RequestBody final Role role) throws UpdateFailedException {
+	public User setRoleForUser(@PathVariable final long id, @RequestBody final String role) throws UpdateFailedException {
 		return userService.setRoleForUser(id, role);
 	}
 

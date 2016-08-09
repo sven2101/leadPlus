@@ -110,6 +110,7 @@ angular.module('app.services', ['ngResource'])
             drop: { url: '/api/rest/processes/:id', method: 'DELETE' },
             
             createOffer:{ url: '/api/rest/processes/:id/offers', method: 'POST' },
+            createSale:{ url: '/api/rest/processes/:id/sales', method: 'POST' },
            
             getProcessor: { url: '/api/rest/processes/:id/processors', method: 'GET' },
             setProcessor: { url: '/api/rest/processes/:id/processors', method: 'PUT' },
@@ -162,14 +163,15 @@ angular.module('app.services', ['ngResource'])
     }])
     .service('UserResource', ['$resource', function ($resource) {
         return $resource('/users/:id', {}, {
-            update: { url: '/users/update', method: 'PUT' },
+            update: { url: '/users', method: 'PUT' },
             changePassword: { url: '/users/:id/pw', method: 'PUT' }
         });
     }])
     .service('SettingsResource', ['$resource', function ($resource) {
-        return $resource('/users/:userId', { userId: '@userId' }, {
-            activate: { url: '/users/:userId/activate', method: 'PUT' },
-            setRole: { url: '/users/:userId/role', method: 'POST' }
+        return $resource('/users/:id', {}, {
+        	getAll: { url: '/users/all', method: 'GET',  isArray: true},
+            activate: { url: '/users/:id/activate', method: 'PUT' },
+            setRole: { url: '/users/:id/role', method: 'PUT' }
         });
     }])
     .service('StatisticResource', ['$resource', function ($resource) {

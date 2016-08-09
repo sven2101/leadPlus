@@ -107,7 +107,8 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public User update(final User user) throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+	public User update(final User user)
+			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		if (Optional.ofNullable(user).isPresent()) {
 			try {
 				User updateUser = getById(user.getId());
@@ -163,7 +164,8 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public void updatePassword(final long id, final PasswordChange passwordChange) throws UpdateFailedException, DontMatchException {
+	public void updatePassword(final long id, final PasswordChange passwordChange)
+			throws UpdateFailedException, DontMatchException {
 		if (Optional.ofNullable(id).isPresent() && Optional.ofNullable(passwordChange).isPresent()) {
 			try {
 				User user = getById(id);
@@ -171,9 +173,11 @@ public class UserService implements IUserService {
 					if (passwordEncoder.matches(passwordChange.getOldPassword(), user.getPassword())) {
 						user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
 						save(user);
+					} else {
+						throw new DontMatchException(UPDATE_FAILED_EXCEPTION);
 					}
 				} else {
-					throw new DontMatchException(UPDATE_FAILED_EXCEPTION);
+					throw new NotFoundException(USER_NOT_FOUND);
 				}
 			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
@@ -190,19 +194,20 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public User activate(final long id) throws UpdateFailedException {
+	public User activate(final long id, final boolean enabled) throws UpdateFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
 				User user = getById(id);
 				if (Optional.ofNullable(user).isPresent()) {
-					user.setEnabled(true);
+					user.setEnabled(enabled);
 					return save(user);
 				} else {
 					throw new NotFoundException(USER_NOT_FOUND);
 				}
 			} catch (NotFoundException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
+				throw new UpdateFailedException(
+						UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
 			}
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
@@ -211,19 +216,20 @@ public class UserService implements IUserService {
 		}
 	}
 
-	public User setRoleForUser(final Long id, final Role role) throws UpdateFailedException {
+	public User setRoleForUser(final Long id, final String role) throws UpdateFailedException {
 		if (Optional.ofNullable(id).isPresent() && Optional.ofNullable(role).isPresent()) {
 			try {
 				User user = getById(id);
 				if (Optional.ofNullable(user).isPresent()) {
-					user.setRole(role);
+					user.setRole(Role.valueOf(role));
 					return save(user);
 				} else {
 					throw new NotFoundException(USER_NOT_FOUND);
 				}
 			} catch (NotFoundException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
+				throw new UpdateFailedException(
+						UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
 			}
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
@@ -232,9 +238,11 @@ public class UserService implements IUserService {
 		}
 	}
 
-	public User register(final Registration registration) throws UsernameAlreadyExistsException, EmailAlreadyExistsException, RegisterFailedException {
+	public User register(final Registration registration)
+			throws UsernameAlreadyExistsException, EmailAlreadyExistsException, RegisterFailedException {
 		if (Optional.ofNullable(registration).isPresent() && Optional.ofNullable(registration.getUsername()).isPresent()
-				&& Optional.ofNullable(registration.getEmail()).isPresent() && Optional.ofNullable(registration.getPassword()).isPresent()) {
+				&& Optional.ofNullable(registration.getEmail()).isPresent()
+				&& Optional.ofNullable(registration.getPassword()).isPresent()) {
 			try {
 				if (usernameAlreadyExists(registration.getUsername())) {
 					throw new UsernameAlreadyExistsException(USER_EXISTS);
@@ -258,7 +266,8 @@ public class UserService implements IUserService {
 			}
 		} else {
 			RegisterFailedException rfex = new RegisterFailedException(REGISTER_FAILED_EXCEPTION);
-			logger.error(REGISTER_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, rfex);
+			logger.error(REGISTER_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+					rfex);
 			throw rfex;
 		}
 	}

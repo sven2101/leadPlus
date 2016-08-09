@@ -61,7 +61,6 @@ public class User implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Language language;
 
-	@JsonIgnore
 	private boolean enabled;
 
 	public User() {
