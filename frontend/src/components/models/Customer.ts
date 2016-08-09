@@ -10,13 +10,12 @@
  ******************************************************************************/
 "use strict";
 
-class Customer {
+class Customer extends AbstractModel {
 
-    id: number;
     name: String;
 
     constructor() {
-
+        super();
     }
 
 }

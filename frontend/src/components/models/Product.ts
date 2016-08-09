@@ -1,3 +1,4 @@
+/// <reference path="./AbstractModel.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -10,20 +11,19 @@
  ******************************************************************************/
 "use strict";
 
-class Product {
+class Product extends AbstractModel {
 
-    id: number;
     name: String;
     description: String;
-    priceNetto: Number;
+    priceNetto: number;
     image: any;
     timestamp: Date;
     isDeactivated;
 
     constructor() {
+        super();
         this.name = "";
         this.description = "";
-        this.id = 0;
         this.isDeactivated = false;
     }
 

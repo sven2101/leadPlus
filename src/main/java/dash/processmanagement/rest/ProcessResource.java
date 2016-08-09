@@ -97,8 +97,8 @@ public class ProcessResource {
 	public Process setStatusByProcessId(@ApiParam(required = true) @PathVariable final Long id,
 			@ApiParam(required = true) @RequestBody @Valid final String status)
 			throws NotFoundException, SaveFailedException, UpdateFailedException {
-		
-		Process x=processService.setStatus(id, status);
+
+		Process x = processService.setStatus(id, status);
 		return x;
 	}
 

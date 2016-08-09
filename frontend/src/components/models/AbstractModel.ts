@@ -10,14 +10,9 @@
  ******************************************************************************/
 "use strict";
 
-class OrderPosition extends AbstractModel {
-
-    amount: number;
-    product: Product;
-
+class AbstractModel {
+    id: Number;
     constructor() {
-        super();
-        this.amount = 666;
-    }
 
+    }
 }
