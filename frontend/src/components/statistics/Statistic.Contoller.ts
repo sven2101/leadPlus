@@ -423,6 +423,7 @@ class StatisticContoller {
                 break;
             case "week":
                 this.StatisticResource.weekLeads().$promise.then(function(result) {
+                    console.log(result);
                     self.getLeads(result);
                     self.isLeadPromise = true;
                 });
