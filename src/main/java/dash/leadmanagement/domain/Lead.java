@@ -49,7 +49,7 @@ public class Lead implements Request {
 	@JoinColumn(name = "inquirer_fk", nullable = true)
 	private Inquirer inquirer;
 
-	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "lead", fetch = FetchType.EAGER)
+	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "lead", fetch = FetchType.LAZY)
 	private List<OrderPosition> orderPositions;
 
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })

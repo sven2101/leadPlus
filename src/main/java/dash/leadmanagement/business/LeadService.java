@@ -36,6 +36,7 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.domain.Lead;
+import dash.productmanagement.domain.OrderPosition;
 
 @Service
 public class LeadService implements ILeadService {
@@ -64,6 +65,10 @@ public class LeadService implements ILeadService {
 	@Override
 	public Lead save(final Lead lead) throws SaveFailedException {
 		if (Optional.ofNullable(lead).isPresent()) {
+			lead.setContainer(null);
+			for (OrderPosition temp : lead.getOrderPositions()) {
+				temp.setLead(lead);
+			}
 			return leadRepository.save(lead);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
@@ -76,6 +81,10 @@ public class LeadService implements ILeadService {
 	public Lead update(final Lead lead) throws UpdateFailedException {
 		if (Optional.ofNullable(lead).isPresent()) {
 			try {
+				lead.setContainer(null);
+				for (OrderPosition temp : lead.getOrderPositions()) {
+					temp.setLead(lead);
+				}
 				return save(lead);
 			} catch (IllegalArgumentException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + LeadService.class.getSimpleName(), ex);
