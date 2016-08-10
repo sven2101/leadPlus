@@ -14,16 +14,17 @@ angular.module('app.offers', [ 'ngResource' ]).controller('OffersCtrl',
 		OffersCtrl);
 OffersCtrl.$inject = [ 'DTOptionsBuilder', 'DTColumnBuilder', '$compile',
 		'$scope', 'toaster', 'ProcessResource', 'CommentResource', '$filter',
-		'UserResource', '$rootScope', '$translate' ];
+		'UserResource', '$rootScope', '$translate', 'OfferResource' ];
 function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 		toaster, ProcessResource, CommentResource, $filter, UserResource,
-		$rootScope, $translate) {
+		$rootScope, $translate, OfferResource) {
 
 	var vm = this;
 	this.filter = $filter;
 	this.processResource = ProcessResource;
 	this.commentResource = CommentResource;
 	this.userResource = UserResource;
+	this.offerResource = OfferResource;
 	this.user = {};
 	this.windowWidth = $(window).width();
 	if (!angular.isUndefined($rootScope.globals.currentUser))
@@ -156,7 +157,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 					'<span class="glyphicon glyphicon-cog"></span>').withClass(
 					'text-center').notSortable().renderWith(addActionsButtons) ];
 
-	if ($rootScope.language == 'de') {
+	if ($rootScope.language == 'DE') {
 		vm.dtOptions
 				.withLanguageSource('/assets/datatablesTranslationFiles/German.json');
 	} else {
@@ -198,8 +199,8 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 		vm.rows[data.id] = row;
 		var currentDate = moment(moment(), "DD.MM.YYYY");
 		var offerDate = moment(data.offer.timestamp, "DD.MM.YYYY");
-		if ((currentDate.businessDiff(offerDate, 'days') > 3 && data.status == 'offer')
-				|| (currentDate.businessDiff(offerDate, 'days') > 5 && data.status == 'followup'))
+		if ((currentDate.businessDiff(offerDate, 'days') > 3 && data.status == 'OFFER')
+				|| (currentDate.businessDiff(offerDate, 'days') > 5 && data.status == 'FOLLOWUP'))
 			$(row).addClass('important');
 		vm.compile(angular.element(row).contents())(vm.scope);
 	}
@@ -224,7 +225,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 		if (data.sale != null) {
 			closeOrOpenOfferDisable = 'disabled';
 		}
-		if ($rootScope.globals.currentUser.role == 'user') {
+		if ($rootScope.globals.currentUser.role == 'USER') {
 			hasRightToDelete = 'disabled';
 		}
 		if (vm.windowWidth > 1300) {

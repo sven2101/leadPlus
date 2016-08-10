@@ -82,7 +82,7 @@ angular.module('app.services', ['ngResource'])
             drop: { url: '/api/rest/leads/:id', method: 'DELETE' },
         });
     }])
-    .service('OffersResource', ['$resource', function ($resource) {
+    .service('OfferResource', ['$resource', function ($resource) {
         return $resource('/api/rest/offers/:id', {}, {
             getAll: { url: '/api/rest/offers', method: 'GET' },
             getById: { url: '/api/rest/offers/:id', method: 'GET' },

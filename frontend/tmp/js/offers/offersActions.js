@@ -82,7 +82,7 @@ OffersCtrl.prototype.createSale = function(process) {
 		timestamp : this.filter('date')(new Date(), 'dd.MM.yyyy HH:mm'),
 		vendor : process.offer.vendor
 	};
-	this.processResource.addSale({
+	this.processResource.createSale({
 		id : process.id
 	}, sale).$promise.then(function() {
 		vm.processResource.setStatus({
@@ -93,7 +93,7 @@ OffersCtrl.prototype.createSale = function(process) {
 			vm.rootScope.offersCount -= 1;
 			vm.processResource.setProcessor({
 				id : process.id
-			}, vm.user.username).$promise.then(function() {
+			}, vm.user.id).$promise.then(function() {
 				process.processor = vm.user;
 				process.sale = sale;
 				process.status = 'SALE';
@@ -107,10 +107,10 @@ OffersCtrl.prototype.followUp = function(process) {
 	var vm = this;
 	this.processResource.setStatus({
 		id : process.id
-	}, 'followup').$promise.then(function() {
+	}, 'FOLLOWUP').$promise.then(function() {
 		vm.toaster.pop('success', '', vm.translate
 				.instant('COMMON_TOAST_SUCCESS_FOLLOW_UP'));
-		process.status = 'followup';
+		process.status = 'FOLLOWUP';
 		vm.updateRow(process);
 	});
 };
@@ -146,9 +146,7 @@ OffersCtrl.prototype.loadDataToModal = function(offer) {
 
 OffersCtrl.prototype.saveEditedRow = function() {
 	var vm = this;
-	this.processResource.putOffer({
-		id : this.editProcess.offer.id
-	}, this.editProcess.offer).$promise.then(function() {
+	this.offerResource.update(this.editProcess.offer).$promise.then(function() {
 		vm.toaster.pop('success', '', vm.translate
 				.instant('COMMON_TOAST_SUCCESS_UPDATE_OFFER'));
 		vm.editForm.$setPristine();
@@ -166,15 +164,13 @@ OffersCtrl.prototype.deleteRow = function(process) {
 	}
 	process.status = 'CLOSED';
 	process.offer = null;
-	this.processResource.update({
-		id : process.id
-	}, process).$promise.then(function() {
+	this.processResource.update(process).$promise.then(function() {
 		if (process.lead == null && process.sale == null) {
 			vm.processResource.deleteProcess({
 				id : process.id
 			});
 		}
-		vm.processResource.deleteOffer({
+		vm.offerResource.drop({
 			id : offerId
 		}).$promise.then(function() {
 			vm.toaster.pop('success', '', vm.translate

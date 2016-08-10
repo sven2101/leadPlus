@@ -159,7 +159,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 			'<span class="glyphicon glyphicon-cog"></span>').withClass(
 			'text-center').notSortable().renderWith(addActionsButtons)];
 
-	if ($rootScope.language == 'de') {
+	if ($rootScope.language == 'DE') {
 		vm.dtOptions
 			.withLanguageSource('/assets/datatablesTranslationFiles/German.json');
 	} else {
@@ -224,7 +224,7 @@ function LeadsCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 		if (data.offer != null || data.sale != null) {
 			closeOrOpenInquiryDisable = 'disabled';
 		}
-		if ($rootScope.globals.currentUser.role == 'user') {
+		if ($rootScope.globals.currentUser.role == 'USER') {
 			hasRightToDelete = 'disabled';
 		}
 		if (data.processor != null

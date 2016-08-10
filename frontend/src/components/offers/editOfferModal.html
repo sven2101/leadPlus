@@ -15,8 +15,8 @@
                                 <label>{{ 'COMMON_TITLE' | translate }}</label>
                                 <select name="title" class="form-control"
                                         ng-model="offer.editProcess.offer.prospect.title">
-                                    <option value="Herr">{{ 'COMMON_TITLE_MR' | translate }}</option>
-                                    <option value="Frau">{{ 'COMMON_TITLE_MS' | translate }}</option>
+                                    <option value="MR">{{ 'COMMON_TITLE_MR' | translate }}</option>
+                                    <option value="MS">{{ 'COMMON_TITLE_MS' | translate }}</option>
                                 </select>
                             </div>
 
@@ -135,13 +135,13 @@
                             <!-- DELIVERY DATE -->
                             <div class="form-group" id="editOfferDatepicker">
                                 <label>{{ 'COMMON_DELIVERY_TIME' | translate }}</label>
-                                <div ng-show="$root.language == 'de'" class="input-group date" data-date-language="de"
+                                <div ng-show="$root.language == 'DE'" class="input-group date" data-date-language="de"
                                      data-date-format="dd.mm.yyyy">
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     <input type="text" class="form-control" name="deliveryDate"
                                            ng-model="offer.editProcess.offer.deliveryDate">
                                 </div>
-                                <div ng-show="$root.language == 'en'" class="input-group date" data-date-language="en"
+                                <div ng-show="$root.language == 'EN'" class="input-group date" data-date-language="en"
                                      data-date-format="dd.mm.yyyy">
                                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     <input type="text" class="form-control" name="deliveryDate"
