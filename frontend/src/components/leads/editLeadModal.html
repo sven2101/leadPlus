@@ -56,6 +56,12 @@
                                 <input type="text" name="phone" class="form-control" ng-model="lead.editProcess.lead.inquirer.phone" ng-maxlength="50">
                                 <p ng-show="lead.editForm.phone.$invalid && !lead.editForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
+                             <!-- CONTAINER DESTINATION -->
+                            <div class="form-group" ng-class="{ 'has-error' : lead.editForm.containerDestination.$invalid && !lead.editForm.containerDestination.$pristine }">
+                                <label>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</label>
+                                <input type="text" name="containerDestination" class="form-control" ng-model="lead.editProcess.lead.destination" ng-maxlength="50">
+                                <p ng-show="lead.editForm.containerDestination.$invalid && !lead.editForm.containerDestination.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            </div>
                         </div>
                         <div>
                             <h2>{{ 'PRODUCT_MENU' | translate }}</h2>

@@ -54,6 +54,12 @@
                                 <input type="text" name="phone" class="form-control" ng-model="lead.newLead.inquirer.phone" ng-maxlength="50">
                                 <p ng-show="lead.addForm.phone.$invalid && !lead.addForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
+                            <!-- CONTAINER DESTINATION -->
+                            <div class="form-group" ng-class="{ 'has-error' : lead.addForm.containerDestination.$invalid && !lead.addForm.containerDestination.$pristine }">
+                                <label>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</label>
+                                <input type="text" name="containerDestination" class="form-control" ng-model="lead.newLead.destination" ng-maxlength="50">
+                                <p ng-show="lead.addForm.containerDestination.$invalid && !lead.addForm.containerDestination.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            </div>
                         </div>
 
 
@@ -98,7 +104,9 @@
                     <!-- ENTIRE PRICE -->
                     <div>
                         <div class="form-group ">
-                            <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{lead.sumOrderPositions(lead.newLead.orderPositions)| currency:'\u20AC'}}</h2>
+                            <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{lead.sumOrderPositions(lead.newLead.orderPositions)|
+                                currency:'\u20AC'}}
+                            </h2>
                         </div>
                     </div>
                 </form>

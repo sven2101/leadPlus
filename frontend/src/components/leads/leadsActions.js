@@ -177,7 +177,7 @@ LeadsCtrl.prototype.loadDataToModal = function (process) {
 	this.currentProductId = "-1";
     this.currentProductAmount = 1;
 	this.editProcess = process;
-	this.currentOrderPositions = this.editProcess.lead.orderPositions;
+	this.currentOrderPositions = deepCopyArray(this.editProcess.lead.orderPositions);
 };
 
 LeadsCtrl.prototype.saveEditedRow = function () {

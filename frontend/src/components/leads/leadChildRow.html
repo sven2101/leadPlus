@@ -13,30 +13,12 @@
                 <table class="table table-bordered text-left">
                     <tr>
                         <td>{{ 'COMMON_NAME' | translate }}</td>
-                        <td>{{ childData.lead.inquirer.title | translate }}
-                            {{childData.lead.inquirer.firstname}}
-                            {{childData.lead.inquirer.lastname}}
+                        <td>{{ childData.lead.inquirer.title | translate }} {{childData.lead.inquirer.firstname}} {{childData.lead.inquirer.lastname}}
                         </td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_PHONE' | translate }}</td>
                         <td>{{childData.lead.inquirer.phone}}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'COMMON_CONTAINER' | translate }}</td>
-                        <td>{{childData.lead.container.name}}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'COMMON_CONTAINER_DESC' | translate }}</td>
-                        <td>{{childData.lead.container.description}}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'COMMON_CONTAINER_AMOUNT' | translate }}</td>
-                        <td>{{childData.lead.containerAmount}}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'COMMON_CONTAINER_SINGLE_PRICE' | translate }}</td>
-                        <td>{{childData.lead.container.priceNetto | currency:'\u20AC'}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
@@ -65,6 +47,8 @@
             <div class="ibox-content text-left">{{childData.lead.message}}</div>
         </div>
     </div>
+    <div class="col-lg-12" ng-include="'components/common/ProductView.html'"></div>
 </div>
+
 <div class="row" ng-include="'components/common/commentView.html'"></div>
 <div class="row" ng-include="'components/common/allCommentsModal.html'"></div>

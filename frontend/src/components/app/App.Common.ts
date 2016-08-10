@@ -24,3 +24,7 @@ let isNullOrUndefined = function (object: any): boolean {
     return object === null || typeof object === "undefined";
 };
 
+let deepCopyArray = function (old: Array<any>): Array<any> {
+    return JSON.parse(JSON.stringify(old));
+};
+
