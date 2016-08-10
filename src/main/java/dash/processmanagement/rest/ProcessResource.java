@@ -80,7 +80,8 @@ public class ProcessResource {
 	@ResponseStatus(HttpStatus.OK)
 	public List<Process> getElementsByStatus(@ApiParam(required = true) @PathVariable final Workflow workflow,
 			@ApiParam(required = true) @PathVariable final Status status) {
-		return processService.getElementsByStatus(workflow, status);
+		List<Process> x = processService.getElementsByStatus(workflow, status);
+		return x;
 	}
 
 	@ApiOperation(value = "Returns status", notes = "")

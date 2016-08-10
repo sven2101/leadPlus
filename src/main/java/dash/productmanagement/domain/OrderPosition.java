@@ -20,6 +20,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dash.leadmanagement.domain.Lead;
 
 @Entity
@@ -33,6 +35,7 @@ public class OrderPosition {
 	private Product product;
 
 	@ManyToOne
+	@JsonIgnore
 	private Lead lead;
 
 	private int amount;

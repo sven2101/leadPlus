@@ -40,6 +40,7 @@ import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
+import dash.productmanagement.domain.OrderPosition;
 import dash.salemanagement.business.SaleService;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
@@ -108,7 +109,12 @@ public class ProcessService implements IProcessService {
 	@Override
 	public Process save(final Process process) throws SaveFailedException {
 		if (Optional.ofNullable(process).isPresent()) {
-
+			if (process.getLead() != null) {
+				process.getLead().setContainer(null);
+				for (OrderPosition temp : process.getLead().getOrderPositions()) {
+					temp.setLead(process.getLead());
+				}
+			}
 			Process temp = processRepository.save(process);
 
 			return temp;
@@ -153,7 +159,7 @@ public class ProcessService implements IProcessService {
 		Process process = processRepository.findOne(processId);
 		Sale createdSale = null;
 		if (Optional.ofNullable(process).isPresent()) {
-			//createdSale = saleService.save(sale);
+			// createdSale = saleService.save(sale);
 			process.setSale(sale);
 			processRepository.save(process);
 		} else {
@@ -181,6 +187,12 @@ public class ProcessService implements IProcessService {
 	public Process update(final Process process) throws UpdateFailedException {
 		if (Optional.ofNullable(process).isPresent()) {
 			try {
+				if (process.getLead() != null) {
+					process.getLead().setContainer(null);
+					for (OrderPosition temp : process.getLead().getOrderPositions()) {
+						temp.setLead(process.getLead());
+					}
+				}
 				return save(process);
 			} catch (IllegalArgumentException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + ProcessService.class.getSimpleName(), ex);
