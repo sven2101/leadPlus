@@ -32,7 +32,7 @@ SalesCtrl.prototype.addComment = function(id, source) {
 		commentText : commentText,
 		timestamp : this.filter('date')(new Date(), "dd.MM.yyyy HH:mm:ss")
 	};
-	this.commentService.addComment(comment).$promise.then(function() {
+	this.commentResource.save(comment).$promise.then(function() {
 		vm.comments[id].push(comment);
 		vm.commentInput[id] = '';
 		vm.commentModalInput[id] = '';
@@ -44,7 +44,7 @@ SalesCtrl.prototype.addComment = function(id, source) {
  * title: '' } } this.newSale.timestamp = this.filter('date')(new Date(),
  * 'dd.MM.yyyy HH:mm'); this.newSale.vendor = { name: "***REMOVED***" }; var process = {
  * sale: this.newSale, status: 'sale', processor: vm.user };
- * this.processesService.addProcess(process).$promise.then(function () {
+ * this.processResource.addProcess(process).$promise.then(function () {
  * vm.toaster.pop('success', '',
  * vm.translate.instant('COMMON_TOAST_SUCCESS_ADD_SALE'));
  * vm.addForm.$setPristine(); vm.updateRow(process); }); };
@@ -64,9 +64,7 @@ SalesCtrl.prototype.loadDataToModal = function(sale) {
 
 SalesCtrl.prototype.saveEditedRow = function() {
 	var vm = this;
-	this.processesService.putSale({
-		id : this.editProcess.sale.id
-	}, this.editProcess.sale).$promise.then(function() {
+	this.saleResource.update(this.editProcess.sale).$promise.then(function() {
 		vm.toaster.pop('success', '', vm.translate
 				.instant('COMMON_TOAST_SUCCESS_UPDATE_SALE'));
 		vm.editForm.$setPristine();
@@ -77,17 +75,15 @@ SalesCtrl.prototype.saveEditedRow = function() {
 SalesCtrl.prototype.deleteRow = function(process) {
 	var vm = this;
 	var saleId = process.sale.id;
-	process.status = 'closed';
+	process.status = 'CLOSED';
 	process.sale = null;
-	this.processesService.putProcess({
-		id : process.id
-	}, process).$promise.then(function() {
+	this.processResource.update(process).$promise.then(function() {
 		if (process.lead == null && process.sale == null) {
-			vm.processesService.deleteProcess({
+			vm.processResource.deleteProcess({
 				id : process.id
 			});
 		}
-		vm.processesService.deleteSale({
+		vm.saleResource.drop({
 			id : saleId
 		}).$promise.then(function() {
 			vm.toaster.pop('success', '', vm.translate
