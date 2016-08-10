@@ -65,6 +65,7 @@ class StatisticContoller {
 
         this.chartSingleStatisticPie = new SharedItemsPieChart(this.translate);
         this.chartEntireStatisticSpline = new EntireStatisticSpline(this.translate);
+        console.log(this.chartEntireStatisticSpline);
         this.chartEntireStatisticArea = new EntireStatisticArea(this.translate);
         this.chartLeadsConversionRate = new LeadsConversionRate(this.translate);
         this.chartOffersConversionRate = new OffersConversionRate(this.translate);
@@ -169,28 +170,29 @@ class StatisticContoller {
     }
 
     getLeads(leads) {
-        this.leadResult = leads.result;
+        console.log(leads);
+        this.leadResult = leads;
         let summe = 0;
-        for (let lead in leads.result) {
-            summe += leads.result[lead];
+        for (let lead in leads) {
+            summe += leads[lead];
         }
         this.leads = summe;
     }
 
     getOffers(offers) {
-        this.offerResult = offers.result;
+        this.offerResult = offers;
         let summe = 0;
-        for (let offer in offers.result) {
-            summe += offers.result[offer];
+        for (let offer in offers) {
+            summe += offers[offer];
         }
         this.offers = summe;
     }
 
     getSales(sales) {
-        this.saleResult = sales.result;
+        this.saleResult = sales;
         let summe = 0;
-        for (let sale in sales.result) {
-            summe += sales.result[sale];
+        for (let sale in sales) {
+            summe += sales[sale];
         }
         this.sales = summe;
     }
@@ -287,6 +289,7 @@ class StatisticContoller {
     }
 
     pushLeadsOffersSales() {
+        console.log(this.leadResult);
         this.chartEntireStatisticSpline.chartConfig.series.push({
             name: this.translate.instant("LEADS_MENU"),
             data: this.leadResult,
@@ -422,9 +425,9 @@ class StatisticContoller {
 
                 break;
             case "week":
-                this.StatisticResource.weekLeads().$promise.then(function(result) {
-                    console.log(result);
-                    self.getLeads(result);
+                this.StatisticResource.weekLeads().$promise.then(function(value) {
+                    console.log(value);
+                    self.getLeads(value);
                     self.isLeadPromise = true;
                 });
                 self.StatisticResource.weekOffers().$promise.then(function(result) {
