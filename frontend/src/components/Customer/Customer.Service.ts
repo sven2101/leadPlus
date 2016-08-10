@@ -16,7 +16,7 @@ const CustomerServiceId: String = "CustomerService";
 
 class CustomerService {
 
-    private $inject = [CustomerResourceId];
+    private $inject = [customerResourceId];
 
     customerResource;
     customer: Array<Customer>;

@@ -16,9 +16,7 @@ const ProductServiceId: String = "ProductService";
 
 class ProductService {
 
-    ID: String = "ProductService";
-
-    private $inject = [toasterId, translateId, ProductResourceId];
+    private $inject = [toasterId, $translateId, productResourceId];
 
     products: Array<Product>;
     toaster;

@@ -6,3 +6,7 @@
 /// <reference path="moment-node.d.ts" />
 
 declare var moment: moment.MomentStatic;
+
+interface moment {
+    businessDiff?: any
+}

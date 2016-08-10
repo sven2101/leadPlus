@@ -1,3 +1,5 @@
+/// <reference path="./AbstractModel.ts" />
+/// <reference path="./Lead.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -10,12 +12,6 @@
  ******************************************************************************/
 "use strict";
 
-const $translateId: String = "$translate";
-const toasterId: String = "toaster";
-const $filterId: String = "$filter";
-const $scopeId: String = "$scope";
-const $compileId: String = "$compile";
-
-const productResourceId: String = "ProductResource";
-const customerResourceId: String = "CustomerResource";
-const commentResourceId: String = "CommentResource";
+class Process extends AbstractModel {
+    lead: Lead;
+}

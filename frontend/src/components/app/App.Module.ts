@@ -17,7 +17,6 @@ angular.module("app",
         "app.login",
         "app.signup",
         "app.leads",
-        "app.leads.service",
         "app.offers",
         "app.sales",
         "app.statistics",
@@ -39,7 +38,8 @@ angular.module("app",
         "app.product",
         "app.product.service",
         "app.customer",
-        "app.customer.service"
+        "app.customer.service",
+        "app.workflow.service"
 
     ]);
 

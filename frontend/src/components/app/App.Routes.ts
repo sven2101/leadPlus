@@ -30,7 +30,7 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             .when("/leads",
             {
                 templateUrl: "components/leads/leads.html",
-                controller: "LeadsCtrl",
+                controller: "LeadController",
                 controllerAs: "lead",
                 authenticated: true
             })

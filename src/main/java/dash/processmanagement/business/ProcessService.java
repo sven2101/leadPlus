@@ -46,7 +46,6 @@ import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
-import dash.vendormanagement.business.VendorService;
 import dash.workflowmanagement.domain.Workflow;
 
 @Service
@@ -234,6 +233,7 @@ public class ProcessService implements IProcessService {
 	public void delete(final long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
+
 				processRepository.delete(id);
 			} catch (EmptyResultDataAccessException erdaex) {
 				logger.error(PROCESS_NOT_FOUND + OfferService.class.getSimpleName() + erdaex.getMessage(), erdaex);

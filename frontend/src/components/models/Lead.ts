@@ -1,3 +1,5 @@
+/// <reference path="./AbstractModel.ts" />
+/// <reference path="./OrderPosition.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -9,13 +11,18 @@
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
 "use strict";
-
-const $translateId: String = "$translate";
-const toasterId: String = "toaster";
-const $filterId: String = "$filter";
-const $scopeId: String = "$scope";
-const $compileId: String = "$compile";
-
-const productResourceId: String = "ProductResource";
-const customerResourceId: String = "CustomerResource";
-const commentResourceId: String = "CommentResource";
+class Lead extends AbstractModel {
+    orderPositions: Array<OrderPosition>;
+     container: any;
+     containerAmount: number;
+     inquirer: any;
+     timestamp: any;
+     vendor: any;
+     constructor() {
+        super();
+        this.container = {
+            name: "placeholder",
+            priceNetto: 666
+        };
+     }
+}

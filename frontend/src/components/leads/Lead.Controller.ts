@@ -1,3 +1,14 @@
+/// <reference path="../../typeDefinitions/moment.d.ts" />
+/// <reference path="../../typeDefinitions/moment-node.d.ts" />
+/// <reference path="../app/App.Common.ts" />
+/// <reference path="../app/App.Constants.ts" />
+/// <reference path="../models/OrderPosition.ts" />
+/// <reference path="../models/Product.ts" />
+/// <reference path="../models/Process.ts" />
+/// <reference path="../models/Lead.ts" />
+/// <reference path="../models/User.ts" />
+/// <reference path="../Product/Product.Service.ts" />
+/// <reference path="../Workflow/Workflow.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -8,254 +19,89 @@
  * reproduction of this material is strictly forbidden unless prior written
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
+
 "use strict";
-
-/// <reference path='../../typeDefinitions/moment.d.ts' />
-
-
 
 class LeadController {
 
-    $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile", "$scope", "toaster", "Processes", "Comments", "Leads", "$filter", "Profile", "$rootScope", "$translate"];
+    $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile",
+        "$scope", "toaster", "ProcessResource", "CommentResource", "$filter",
+        "UserResource", "$rootScope", "$translate", "LeadResource", ProductServiceId, WorkflowServiceId];
 
-    filter;
-    processesService;
-    commentService;
-    leadService;
-    userService;
-    DTOptionsBuilder;
-    DTColumnBuilder;
-    windowWidth;
+
+
+    productService;
+    workflowService;
     scope;
     rootScope;
+    commentResource;
+    filter;
+    processResource;
+    userResource;
+    leadResource;
     translate;
     compile;
     toaster;
-    user;
+    dtOptions;
+    dtColumns;
+    windowWidth;
+    addForm;
+
+    user: User = new User();
     commentInput = {};
     commentModalInput = {};
     comments = {};
     currentCommentModalId = "";
     loadAllData = false;
-    dtInstance: { reloadData: any, DataTable: any };
-    processes;
+    dtInstance = { DataTable: null };
+    processes = {};
     rows = {};
-    editProcess;
-    newLead;
-    addForm;
-    editForm;
+    editProcess: Process = new Process();
+    newLead: Lead = new Lead();
 
-    dtOptions;
-    dtColumns;
+    currentOrderPositions = [];
+    currentProductId = "-1";
+    currentProductAmount = 1;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope, toaster, Processes, Comments, Leads, $filter, Profile, $rootScope, $translate) {
+
+    constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
+        toaster, ProcessResource, CommentResource, $filter, UserResource,
+        $rootScope, $translate, LeadResource, ProductService, WorkflowService) {
+
+        this.productService = ProductService;
+        this.workflowService = WorkflowService;
         this.filter = $filter;
-        this.processesService = Processes;
-        this.commentService = Comments;
-        this.leadService = Leads;
-        this.userService = Profile;
-        this.DTOptionsBuilder = DTOptionsBuilder;
-        this.DTColumnBuilder = DTColumnBuilder;
-        this.user = {};
+        this.processResource = ProcessResource;
+        this.commentResource = CommentResource;
+        this.userResource = UserResource;
+        this.leadResource = LeadResource;
         this.scope = $scope;
-        this.processes = {};
         this.rootScope = $rootScope;
         this.translate = $translate;
         this.compile = $compile;
         this.toaster = toaster;
-        this.setUser();
-        this.setWindowWith();
-        this.dtInstance = null;
-
 
         let self = this;
-        let createdRow = function(row, data, dataIndex) {
-            // Recompiling so we can bind Angular directive to the DT
-            self.rows[data.id] = row;
-            let currentDate = window["moment"](window["moment"]().toString(), "DD.MM.YYYY");
-            let leadDate = window["moment"](data.timestamp, "DD.MM.YYYY");
-            if (currentDate["businessDiff"](leadDate, "days") > 3
-                && data.status === "open")
-                $(row).addClass("important");
-            self.compile(angular.element(row).contents())(self.rootScope);
-        };
 
-        function addDetailButton(data, type, full, meta) {
-            self.processes[data.id] = data;
-            /* tslint:disable:quotemark */
-            return '<a class="green shortinfo" href="javascript:;"'
-                + 'ng-click="lead.appendChildRow(lead.processes[' + data.id
-                + '], $event)" title="Details">'
-                + '<i class="glyphicon glyphicon-plus-sign"/></a>';
-            /* tslint:enable:quotemark */
-        }
-        let addStatusStyle = function(data, type, full, meta) {
-            self.processes[data.id] = data;
-            let hasProcessor = "";
-            /* tslint:disable:quotemark */
-            if (data.processor !== null)
-                hasProcessor = '&nbsp;<span style="color: #ea394c;"><i class="fa fa-thumb-tack"></i></span>';
-            if (data.status === 'OPEN') {
-                return '<span style="color: green;">'
-                    + self.translate.instant("COMMON_STATUS_OPEN") + '</span>'
-                    + hasProcessor;
-            } else if (data.status === "OFFER") {
-                return '<span style="color: #f79d3c;">'
-                    + self.translate.instant("COMMON_STATUS_OFFER") + '</span>';
-            } else if (data.status === "FOLLOWUP") {
-                return '<span style="color: #f79d3c;">'
-                    + self.translate.instant("COMMON_STATUS_FOLLOW_UP") + '</span>';
-            } else if (data.status === "SALE") {
-                return '<span style="color: #1872ab;">'
-                    + self.translate.instant("COMMON_STATUS_SALE") + '</span>';
-            } else if (data.status === "CLOSED") {
-                return '<span style="color: #ea394c;">'
-                    + self.translate.instant("COMMON_STATUS_CLOSED") + '</span>';
-            }
-            else {
-                return "";
-            }
-            /* tslint:enable:quotemark */
-        };
-        let addActionsButtons = function(data, type, full, meta) {
+        this.windowWidth = $(window).width();
 
-            self.processes[data.id] = data;
-            let disabled = "";
-            let disablePin = "";
-            let hasRightToDelete = "";
-            let closeOrOpenInquiryDisable = "";
-            let openOrLock = self.translate.instant("LEAD_CLOSE_LEAD");
-            let faOpenOrLOck = "fa fa-lock";
-            if (data.status !== "open") {
-                disabled = "disabled";
-                disablePin = "disabled";
-                openOrLock = self.translate.instant("LEAD_OPEN_LEAD");
-                faOpenOrLOck = "fa fa-unlock";
-            }
-            if (data.offer !== null || data.sale !== null) {
-                // closeOrOpenInquiryDisable = "disabled";
-            }
-            if (self.rootScope.globals.currentUser.role === "user") {
-                hasRightToDelete = "disabled";
-            }
+        if (!angular.isUndefined($rootScope.globals.currentUser))
+            this.userResource.get({
+                id: $rootScope.globals.currentUser.id
+            }).$promise.then(function (result) {
+                self.user = result;
+            });
 
-            if (data.processor !== null && !angular.isUndefined(data.processor)
-                && self.rootScope.globals.currentUser.username !== data.processor.username) {
-                disablePin = "disabled";
-            }
-            /* tslint:disable:quotemark */
-            if ($(window).width() > 1300) {
-                return '<div style="white-space: nowrap;"><button class="btn btn-white" '
-                    + disabled
-                    + ' ng-click="lead.followUp(lead.processes['
-                    + data.id
-                    + '])" title="'
-                    + self.translate.instant('LEAD_FOLLOW_UP')
-                    + '">'
-                    + '   <i class="fa fa-check"></i>'
-                    + '</button>&nbsp;'
-                    + '<button class="btn btn-white" '
-                    + disablePin
-                    + ' ng-click="lead.pin(lead.processes['
-                    + data.id
-                    + '])" title="'
-                    + self.translate.instant('LEAD_PIN')
-                    + '">'
-                    + '   <i class="fa fa-thumb-tack"></i>'
-                    + '</button>&nbsp;'
-                    + '<button class="btn btn-white" '
-                    + closeOrOpenInquiryDisable
-                    + ' ng-click="lead.closeOrOpenInquiry(lead.processes['
-                    + data.id
-                    + '])" title="'
-                    + openOrLock
-                    + '">'
-                    + '   <i class="'
-                    + faOpenOrLOck
-                    + '"></i>'
-                    + '</button>'
-                    + '<button class="btn btn-white" '
-                    + closeOrOpenInquiryDisable
-                    + ' ng-click="lead.loadDataToModal(lead.processes['
-                    + data.id
-                    + '])" data-toggle="modal"'
-                    + 'data-target="#editModal" title="'
-                    + self.translate.instant('LEAD_EDIT_LEAD')
-                    + '">'
-                    + '<i class="fa fa-edit"></i>'
-                    + '</button>&nbsp;'
-                    + '<button class="btn btn-white" '
-                    + hasRightToDelete
-                    + ' ng-click="lead.deleteRow(lead.processes['
-                    + data.id
-                    + '])" title="'
-                    + self.translate.instant('LEAD_DELETE_LEAD')
-                    + '">'
-                    + '   <i class="fa fa-trash-o"></i>'
-                    + '</button></div>';
-            } else {
-                return '<div class="dropdown">'
-                    + '<button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">'
-                    + '<i class="fa fa-wrench"></i></button>'
-                    + '<ul class="dropdown-menu pull-right">'
-                    + '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-                    + disabled
-                    + ' ng-click="lead.followUp(lead.processes['
-                    + data.id
-                    + '])"><i class="fa fa-check">&nbsp;</i>'
-                    + self.translate.instant('LEAD_FOLLOW_UP')
-                    + '</button></li>'
-                    + '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-                    + disablePin
-                    + ' ng-click="lead.pin(lead.processes['
-                    + data.id
-                    + '])"><i class="fa fa-thumb-tack">&nbsp;</i>'
-                    + self.translate.instant('LEAD_PIN')
-                    + '</button></li>'
-                    + '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-                    + closeOrOpenInquiryDisable
-                    + ' ng-click="lead.closeOrOpenInquiry(lead.processes['
-                    + data.id
-                    + '])"><i class="'
-                    + faOpenOrLOck
-                    + '">&nbsp;</i>'
-                    + openOrLock
-                    + '</button></li>'
-                    + '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-                    + closeOrOpenInquiryDisable
-                    + ' data-toggle="modal" data-target="#editModal" ng-click="lead.loadDataToModal(lead.processes['
-                    + data.id
-                    + '])"><i class="fa fa-edit"">&nbsp;</i>'
-                    + self.translate.instant('LEAD_EDIT_LEAD')
-                    + '</button></li>'
-                    + '<li><button style="width: 100%; text-align: left;" class="btn btn-white" '
-                    + hasRightToDelete
-                    + ' ng-click="lead.deleteRow(lead.processes['
-                    + data.id
-                    + '])"><i class="fa fa-trash-o">&nbsp;</i>'
-                    + self.translate.instant('LEAD_DELETE_LEAD')
-                    + '</button></li>'
-                    + '</ul>' + '</div>';
-            }
-            /* tslint:enable:quotemark */
-        };
-
-
-        this.dtOptions = this.DTOptionsBuilder.newOptions().withOption("ajax", {
+        this.dtOptions = DTOptionsBuilder.newOptions().withOption("ajax", {
             url: "/api/rest/processes/workflow/LEAD/state/OPEN",
-            error: function(xhr, error, thrown) {
+            error: function (xhr, error, thrown) {
                 console.log(xhr);
             },
             type: "GET"
         }).withOption("stateSave", true).withDOM(
-            /* tslint:disable:quotemark */
-
-            '<"row"<"col-sm-12"l>>' + '<"row"<"col-sm-6"B><"col-sm-6"f>>'
-            + '<"row"<"col-sm-12"tr>>'
-            + '<"row"<"col-sm-5"i><"col-sm-7"p>>'
-
-            /* tslint:enable:quotemark */
-            ).withPaginationType(
+            "<'row'<'col-sm-12'l>>" + "<'row'<'col-sm-6'B><'col-sm-6'f>>"
+            + "<'row'<'col-sm-12'tr>>"
+            + "<'row'<'col-sm-5'i><'col-sm-7'p>>").withPaginationType(
             "full_numbers").withButtons([{
                 extend: "copyHtml5",
                 exportOptions: {
@@ -274,7 +120,7 @@ class LeadController {
                     }
                 }, {
                     extend: "csvHtml5",
-                    title: self.translate("LEAD_LEADS"),
+                    title: $translate("LEAD_LEADS"),
                     exportOptions: {
                         columns: [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12],
                         modifier: {
@@ -284,7 +130,7 @@ class LeadController {
                     }
                 }, {
                     extend: "excelHtml5",
-                    title: self.translate.instant("LEAD_LEADS"),
+                    title: $translate.instant("LEAD_LEADS"),
                     exportOptions: {
                         columns: [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12],
                         modifier: {
@@ -293,7 +139,7 @@ class LeadController {
                     }
                 }, {
                     extend: "pdfHtml5",
-                    title: self.translate("LEAD_LEADS"),
+                    title: $translate("LEAD_LEADS"),
                     orientation: "landscape",
                     exportOptions: {
                         columns: [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12],
@@ -303,118 +149,256 @@ class LeadController {
                     }
                 }]).withBootstrap().withOption("createdRow", createdRow).withOption(
             "order", [4, "desc"]);
+
         this.dtColumns = [
-            this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
+            DTColumnBuilder.newColumn(null).withTitle("").notSortable()
                 .renderWith(addDetailButton),
-            this.DTColumnBuilder.newColumn("inquirer.lastname").withTitle(
-                this.translate("COMMON_NAME")).withClass("text-center"),
-            this.DTColumnBuilder.newColumn("inquirer.company").withTitle(
-                this.translate("COMMON_COMPANY")).withClass("text-center"),
-            this.DTColumnBuilder.newColumn("inquirer.email").withTitle(
-                this.translate("COMMON_EMAIL")).withClass("text-center"),
-            this.DTColumnBuilder.newColumn("timestamp").withTitle(
-                this.translate("COMMON_DATE")).withOption("type", "date-euro")
+            DTColumnBuilder.newColumn("lead.inquirer.lastname").withTitle(
+                $translate("COMMON_NAME")).withClass("text-center"),
+            DTColumnBuilder.newColumn("lead.inquirer.company").withTitle(
+                $translate("COMMON_COMPANY")).withClass("text-center"),
+            DTColumnBuilder.newColumn("lead.inquirer.email").withTitle(
+                $translate("COMMON_EMAIL")).withClass("text-center"),
+            DTColumnBuilder.newColumn("lead.timestamp").withTitle(
+                $translate("COMMON_DATE")).withOption("type", "date-euro")
                 .withClass("text-center"),
-            this.DTColumnBuilder.newColumn("inquirer.phone").withTitle(
-                this.translate("COMMON_PHONE")).notVisible(),
-            this.DTColumnBuilder.newColumn("inquirer.firstname").withTitle(
-                this.translate("COMMON_FIRSTNAME")).notVisible(),
-            this.DTColumnBuilder.newColumn("container.name").withTitle(
-                this.translate("COMMON_CONTAINER")).notVisible(),
-            this.DTColumnBuilder.newColumn("destination").withTitle(
-                this.translate("COMMON_CONTAINER_DESTINATION")).notVisible(),
-            this.DTColumnBuilder.newColumn("containerAmount").withTitle(
-                this.translate("COMMON_CONTAINER_AMOUNT")).notVisible(),
-            this.DTColumnBuilder.newColumn(null).withTitle(
-                this.translate("COMMON_CONTAINER_SINGLE_PRICE")).renderWith(
-                function(data, type, full) {
-                    return self.filter("currency")(
-
-                        data.container.priceNetto
-
-                        , "€", 2);
+            DTColumnBuilder.newColumn("lead.inquirer.phone").withTitle(
+                $translate("COMMON_PHONE")).notVisible(),
+            DTColumnBuilder.newColumn("lead.inquirer.firstname").withTitle(
+                $translate("COMMON_FIRSTNAME")).notVisible(),
+            DTColumnBuilder.newColumn("lead.inquirer.lastname").withTitle(
+                $translate("COMMON_CONTAINER")).notVisible(),
+            DTColumnBuilder.newColumn("lead.inquirer.lastname").withTitle(
+                $translate("COMMON_CONTAINER_DESTINATION")).notVisible(),
+            DTColumnBuilder.newColumn("lead.inquirer.lastname").withTitle(
+                $translate("COMMON_CONTAINER_AMOUNT")).notVisible(),
+            DTColumnBuilder.newColumn(null).withTitle(
+                $translate("COMMON_CONTAINER_SINGLE_PRICE")).renderWith(
+                function (data, type, full) {
+                    return $filter("currency")(
+                        0, "€", 2);
                 }).notVisible(),
-            this.DTColumnBuilder.newColumn(null).withTitle(
-                this.translate("COMMON_CONTAINER_ENTIRE_PRICE"))
+            DTColumnBuilder.newColumn(null).withTitle(
+                $translate("COMMON_CONTAINER_ENTIRE_PRICE"))
                 .renderWith(
-                function(data, type, full) {
-                    return self.filter("currency")(data.leadPrice,
+                function (data, type, full) {
+                    return $filter("currency")(data.lead.leadPrice,
                         "€", 2);
                 }).notVisible(),
-            this.DTColumnBuilder.newColumn(null).withTitle(
-                this.translate("COMMON_STATUS")).withClass("text-center")
+            DTColumnBuilder.newColumn(null).withTitle(
+                $translate("COMMON_STATUS")).withClass("text-center")
                 .renderWith(addStatusStyle),
-            this.DTColumnBuilder.newColumn(null).withTitle(
-                /* tslint:disable:quotemark */
-                '<span class="glyphicon glyphicon-cog"></span>'
-                /* tslint:enable:quotemark */
-            ).withClass("text-center").notSortable().renderWith(addActionsButtons)];
+            DTColumnBuilder.newColumn(null).withTitle(
+                "<span class='glyphicon glyphicon-cog'></span>").withClass(
+                "text-center").notSortable().renderWith(addActionsButtons)];
 
-
-        if (this.rootScope.language === "de") {
-            this.dtOptions
+        if ($rootScope.language === "DE") {
+            self.dtOptions
                 .withLanguageSource("/assets/datatablesTranslationFiles/German.json");
         } else {
-            this.dtOptions
+            self.dtOptions
                 .withLanguageSource("/assets/datatablesTranslationFiles/English.json");
         }
 
-    }
 
-    setUser() {
-        let self = this;
-        if (!angular.isUndefined(this.rootScope.globals.currentUser))
-            this.userService.get({
-                id: this.rootScope.globals.currentUser.id
-            }).$promise.then(function(result) {
-                self.user = result;
-            });
-    }
+        function refreshData() {
+            let resetPaging = false;
+            this.dtInstance.reloadData(resetPaging);
+        }
 
-    setWindowWith() {
-        let self = this;
-        this.windowWidth = $(window).width();
-        if (!angular.isUndefined(self.rootScope.globals.currentUser))
-            this.userService.get({
-                id: self.rootScope.globals.currentUser.id
-            }).$promise.then(function(result) {
-                self.user = result;
-            });
-    }
-    refreshData() {
-        let resetPaging = false;
-        this.dtInstance.reloadData(resetPaging);
-    }
-    changeDataInput() {
-        if (this.loadAllData === true) {
-            this.dtOptions.withOption("serverSide", true).withOption("ajax", {
-                url: "/api/rest/processes/leads",
-                type: "GET",
-                pages: 5,
-                dataSrc: "data",
-                error: function(xhr, error, thrown) {
-                    console.log(xhr);
-                }
-            }).withOption("searchDelay", 500);
-        } else {
-            this.dtOptions.withOption("serverSide", false).withOption("ajax", {
-                url: "/api/rest/processes/workflow/LEAD/state/OPEN",
-                error: function(xhr, error, thrown) {
-                    console.log(xhr);
-                },
-                type: "GET"
-            }).withOption("searchDelay", 0);
+        function changeDataInput() {
+            if (self.loadAllData === true) {
+                self.dtOptions.withOption("serverSide", true).withOption("ajax", {
+                    url: "/api/rest/processes/leads",
+                    type: "GET",
+                    pages: 5,
+                    dataSrc: "data",
+                    error: function (xhr, error, thrown) {
+                        console.log(xhr);
+                    }
+                }).withOption("searchDelay", 500);
+            } else {
+                self.dtOptions.withOption("serverSide", false).withOption("ajax", {
+                    url: "/api/rest/processes/workflow/LEAD/state/OPEN",
+                    error: function (xhr, error, thrown) {
+                        console.log(xhr);
+                    },
+                    type: "GET"
+                }).withOption("searchDelay", 0);
+            }
+        }
+
+        function createdRow(row, data, dataIndex) {
+            // Recompiling so we can bind Angular directive to the DT
+            self.rows[data.id] = row;
+            let currentDate = moment(moment() + "", "DD.MM.YYYY");
+            let leadDate = moment(data.lead.timestamp, "DD.MM.YYYY");
+            if (currentDate["businessDiff"](leadDate, "days") > 3
+                && data.status === "OPEN")
+                $(row).addClass("important");
+            self.compile(angular.element(row).contents())(self.scope);
+        }
+
+        function addActionsButtons(data, type, full, meta) {
+            self.processes[data.id] = data;
+            let disabled = "";
+            let disablePin = "";
+            let hasRightToDelete = "";
+            let closeOrOpenInquiryDisable = "";
+            let openOrLock = $translate.instant("LEAD_CLOSE_LEAD");
+            let faOpenOrLock = "fa fa-lock";
+            if (data.status !== "OPEN") {
+                disabled = "disabled";
+                disablePin = "disabled";
+                openOrLock = $translate.instant("LEAD_OPEN_LEAD");
+                faOpenOrLock = "fa fa-unlock";
+            }
+            if (data.offer !== null || data.sale !== null) {
+                closeOrOpenInquiryDisable = "disabled";
+            }
+            if ($rootScope.globals.currentUser.role === "USER") {
+                hasRightToDelete = "disabled";
+            }
+            if (data.processor !== null
+                && $rootScope.globals.currentUser.username !== data.processor.username) {
+                disablePin = "disabled";
+            }
+            if (self.windowWidth > 1300) {
+                return "<div style='white-space: nowrap;'><button class='btn btn-white' "
+                    + disabled
+                    + " ng-click='lead.createOffer(lead.processes["
+                    + data.id
+                    + "])' title='"
+                    + $translate.instant("LEAD_FOLLOW_UP")
+                    + "'>"
+                    + "   <i class='fa fa-check'></i>"
+                    + "</button>&nbsp;"
+                    + "<button class='btn btn-white' "
+                    + disablePin
+                    + " ng-click='lead.pin(lead.processes["
+                    + data.id
+                    + "])' title='"
+                    + $translate.instant("LEAD_PIN")
+                    + "'>"
+                    + "   <i class='fa fa-thumb-tack'></i>"
+                    + "</button>&nbsp;"
+                    + "<button class='btn btn-white' "
+                    + closeOrOpenInquiryDisable
+                    + " ng-click='lead.closeOrOpenInquiry(lead.processes["
+                    + data.id
+                    + "])' title='"
+                    + openOrLock
+                    + "'>"
+                    + "   <i class='"
+                    + faOpenOrLock
+                    + "'></i>"
+                    + "</button>&nbsp;"
+                    + "<button class='btn btn-white' "
+                    + closeOrOpenInquiryDisable
+                    + " ng-click='lead.loadDataToModal(lead.processes["
+                    + data.id
+                    + "])' data-toggle='modal'"
+                    + "data-target='#editModal' title='"
+                    + $translate.instant("LEAD_EDIT_LEAD")
+                    + "'>"
+                    + "<i class='fa fa-edit'></i>"
+                    + "</button>&nbsp;"
+                    + "<button class='btn btn-white' "
+                    + hasRightToDelete
+                    + " ng-click='lead.deleteRow(lead.processes["
+                    + data.id
+                    + "])' title='"
+                    + $translate.instant("LEAD_DELETE_LEAD")
+                    + "'>"
+                    + "   <i class='fa fa-trash-o'></i>"
+                    + "</button></div>";
+            } else {
+                return "<div class='dropdown'>"
+                    + "<button class='btn btn-white dropdown-toggle' type='button' data-toggle='dropdown'>"
+                    + "<i class='fa fa-wrench'></i></button>"
+                    + "<ul class='dropdown-menu pull-right'>"
+                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
+                    + disabled
+                    + " ng-click='lead.followUp(lead.processes["
+                    + data.id
+                    + "])'><i class='fa fa-check'>&nbsp;</i>"
+                    + $translate.instant("LEAD_FOLLOW_UP")
+                    + "</button></li>"
+                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
+                    + disablePin
+                    + " ng-click='lead.pin(lead.processes["
+                    + data.id
+                    + "])'><i class='fa fa-thumb-tack'>&nbsp;</i>"
+                    + $translate.instant("LEAD_PIN")
+                    + "</button></li>"
+                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
+                    + closeOrOpenInquiryDisable
+                    + " ng-click='lead.closeOrOpenInquiry(lead.processes["
+                    + data.id
+                    + "])'><i class='"
+                    + faOpenOrLock
+                    + "'>&nbsp;</i>"
+                    + openOrLock
+                    + "</button></li>"
+                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
+                    + closeOrOpenInquiryDisable
+                    + " data-toggle='modal' data-target='#editModal' ng-click='lead.loadDataToModal(lead.processes["
+                    + data.id
+                    + "])'><i class='fa fa-edit''>&nbsp;</i>"
+                    + $translate.instant("LEAD_EDIT_LEAD")
+                    + "</button></li>"
+                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
+                    + hasRightToDelete
+                    + " ng-click='lead.deleteRow(lead.processes["
+                    + data.id
+                    + "])'><i class='fa fa-trash-o'>&nbsp;</i>"
+                    + $translate.instant("LEAD_DELETE_LEAD")
+                    + "</button></li>"
+                    + "</ul>" + "</div>";
+            }
+        }
+
+        function addStatusStyle(data, type, full, meta) {
+            self.processes[data.id] = data;
+            let hasProcessor = "";
+            if (data.processor !== null)
+                hasProcessor = "&nbsp;<span style='color: #ea394c;'><i class='fa fa-thumb-tack'></i></span>";
+            if (data.status === "OPEN") {
+                return "<span style='color: green;'>"
+                    + $translate.instant("COMMON_STATUS_OPEN") + "</span>"
+                    + hasProcessor;
+            } else if (data.status === "OFFER") {
+                return "<span style='color: #f79d3c;'>"
+                    + $translate.instant("COMMON_STATUS_OFFER") + "</span>";
+            } else if (data.status === "FOLLOWUP") {
+                return "<span style='color: #f79d3c;'>"
+                    + $translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>";
+            } else if (data.status === "SALE") {
+                return "<span style='color: #1872ab;'>"
+                    + $translate.instant("COMMON_STATUS_SALE") + "</span>";
+            } else if (data.status === "CLOSED") {
+                return "<span style='color: #ea394c;'>"
+                    + $translate.instant("COMMON_STATUS_CLOSED") + "</span>";
+            }
+        }
+
+        function addDetailButton(data, type, full, meta) {
+            self.processes[data.id] = data;
+            return "<a class='green shortinfo' href='javascript:;'"
+                + "ng-click='lead.appendChildRow(lead.processes[" + data.id
+                + "], $event)' title='Details'>"
+                + "<i class='glyphicon glyphicon-plus-sign'/></a>";
         }
     }
 
+
     appendChildRow(process, event) {
-        alert("append child row");
         let childScope = this.scope.$new(true);
         childScope.childData = process;
         let self = this;
-        this.commentService.getComments({
+        this.commentResource.getByProcessId({
             id: process.id
-        }).$promise.then(function(result) {
+        }).$promise.then(function (result) {
             self.comments[process.id] = [];
             for (let comment in result) {
                 if (comment === "$promise")
@@ -442,43 +426,23 @@ class LeadController {
                 .addClass("glyphicon-minus-sign");
             row.child(
                 this.compile(
-                    /* tslint:disable:quotemark */
-                    '<div childrow type="lead" class="clearfix"></div>'
-                    /* tslint:enable:quotemark */
-                )(
+                    "<div childrow type='lead' class='clearfix'></div>")(
                     childScope)).show();
             tr.addClass("shown");
         }
     }
+
+
+
+
     loadCurrentIdToModal(id) {
         this.currentCommentModalId = id;
-    }
+    };
 
     addComment(id, source) {
-        let self = this;
-        let commentText = "";
-        if (angular.isUndefined(this.comments[id])) {
-            this.comments[id] = [];
-        }
-        if (source === "table" && this.commentInput[id] !== ""
-            && !angular.isUndefined(this.commentInput[id])) {
-            commentText = this.commentInput[id];
-        } else if (source === "modal" && this.commentModalInput[id] !== ""
-            && !angular.isUndefined(this.commentModalInput[id])) {
-            commentText = this.commentModalInput[id];
-        }
-        let comment = {
-            process: this.processes[id],
-            creator: this.user,
-            commentText: commentText,
-            timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm:ss")
-        };
-        this.commentService.addComment(comment).$promise.then(function() {
-            self.comments[id].push(comment);
-            self.commentInput[id] = "";
-            self.commentModalInput[id] = "";
-        });
-    }
+        this.workflowService.addComment(id, source, this.processes[id], this.user, this.comments, this.commentInput, this.commentModalInput);
+    };
+
     saveLead() {
         let self = this;
         if (angular.isUndefined(this.newLead.inquirer)) {
@@ -495,33 +459,39 @@ class LeadController {
             lead: this.newLead,
             status: "OPEN"
         };
-        this.processesService.save(process).$promise.then(function(result) {
+        this.processResource.save(process).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
             self.rootScope.leadsCount += 1;
             self.addForm.$setPristine();
             self.dtInstance.DataTable.row.add(result).draw();
         });
-    }
-    clearNewLead() {
-        this.newLead = {};
-        this.newLead.containerAmount = 1;
-        this.newLead.container = {
-            priceNetto: 0
-        };
     };
 
-    followUp = function(process) {
+    clearNewLead() {
+        this.newLead = new Lead();
+        this.newLead.containerAmount = 1;
+        this.newLead.container = {
+            name: "placholder",
+            priceNetto: 666
+        };
+        this.newLead.orderPositions = [];
+        this.currentOrderPositions = [];
+        this.currentProductId = "-1";
+        this.currentProductAmount = 1;
+    };
+
+    createOffer(process) {
         let self = this;
         let offer = {
             container: {
-                name: process.lead.container.name,
-                description: process.lead.container.description,
-                priceNetto: process.lead.container.priceNetto
+                name: "",
+                description: "",
+                priceNetto: 0
             },
             containerAmount: process.lead.containerAmount,
             deliveryAddress: process.lead.destination,
-            offerPrice: (process.lead.containerAmount * process.lead.container.priceNetto),
+            offerPrice: self.sumOrderPositions(process.lead.orderPositions),
             prospect: {
                 company: process.lead.inquirer.company,
                 email: process.lead.inquirer.email,
@@ -533,25 +503,31 @@ class LeadController {
             timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
             vendor: process.lead.vendor
         };
-        this.processesService.addOffer({
+        this.processResource.createOffer({
             id: process.id
-        }, offer).$promise.then(function() {
-            self.processesService.setStatus({
+        }, offer).$promise.then(function () {
+            self.processResource.setStatus({
                 id: process.id
-            }, "offer").$promise.then(function() {
+            }, "OFFER").$promise.then(function () {
                 self.toaster.pop("success", "", self.translate
                     .instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
-                if (process.processor == null) {
-                    self.processesService.setProcessor({
+                if (process.processor === null) {
+                    self.processResource.setProcessor({
                         id: process.id
-                    }, self.user.username).$promise.then(function() {
+                    }, self.user.id).$promise.then(function () {
                         process.processor = self.user;
                         process.offer = offer;
-                        process.status = "offer";
-                        self.updateRow(process);
+                        process.status = "OFFER";
+                        if (self.loadAllData === true) {
+                            self.updateRow(process);
+                        }
                     });
+                }
+                if (self.loadAllData === false) {
+                    self.dtInstance.DataTable.row(self.rows[process.id]).remove()
+                        .draw();
                 }
             });
         });
@@ -559,61 +535,63 @@ class LeadController {
 
     pin(process) {
         let self = this;
-        if (process.processor == null) {
-            this.processesService.setProcessor({
+        if (process.processor === null) {
+            this.processResource.setProcessor({
                 id: process.id
-            }, self.user.username).$promise.then(function() {
+            }, self.user.id).$promise.then(function () {
                 process.processor = self.user;
                 self.updateRow(process);
             });
         } else {
-            this.processesService.removeProcessor({
+            this.processResource.removeProcessor({
                 id: process.id
-            }).$promise.then(function() {
+            }).$promise.then(function () {
                 process.processor = null;
                 self.updateRow(process);
             });
         }
     }
-    closeOrOpenInquiry = function(process) {
-        let self = this;
-        if (process.status === "open") {
 
-            this.processesService.setStatus({
+    closeOrOpenInquiry(process) {
+        let self = this;
+        if (process.status === "OPEN") {
+            this.processResource.setStatus({
                 id: process.id
-            }, "closed").$promise.then(function() {
+            }, "CLOSED").$promise.then(function () {
                 self.toaster.pop("success", "", self.translate
                     .instant("COMMON_TOAST_SUCCESS_CLOSE_LEAD"));
                 self.rootScope.leadsCount -= 1;
-                process.status = "closed";
+                process.status = "CLOSED";
                 self.updateRow(process);
             });
-        } else if (process.status === "closed") {
-            this.processesService.setStatus({
+        } else if (process.status === "CLOSED") {
+            this.processResource.setStatus({
                 id: process.id
-            }, "open").$promise.then(function() {
+            }, "OPEN").$promise.then(function () {
                 self.toaster.pop("success", "", self.translate
                     .instant("COMMON_TOAST_SUCCESS_OPEN_LEAD"));
                 self.rootScope.leadsCount += 1;
-                process.status = "open";
+                process.status = "OPEN";
                 self.updateRow(process);
             });
         }
     };
+
     loadDataToModal(process) {
-        alert("loadDataToModal");
+        this.currentProductId = "-1";
+        this.currentProductAmount = 1;
         this.editProcess = process;
+        this.currentOrderPositions = deepCopyArray(this.editProcess.lead.orderPositions);
     };
-    saveEditedRow() {
+
+    saveEditedRow = function () {
         let self = this;
-        this.processesService.update({
-            id: this.editProcess.lead.id
-        }, this.editProcess.lead).$promise.then(function() {
+        this.editProcess.lead.orderPositions = this.currentOrderPositions;
+        this.leadResource.update(this.editProcess.lead).$promise.then(function () {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
             self.editForm.$setPristine();
-            self.editProcess.lead.leadPrice = self.editProcess.lead.containerAmount
-                * self.editProcess.lead.container.priceNetto;
+            self.editProcess.lead.leadPrice = self.sumOrderPositions(self.editProcess.lead.orderPositions);
             self.updateRow(self.editProcess);
         });
     };
@@ -621,23 +599,21 @@ class LeadController {
     deleteRow(process) {
         let self = this;
         let leadId = process.lead.id;
-        if (process.sale != null || process.offer != null) {
+        if (process.sale !== null || process.offer !== null) {
             self.toaster.pop("error", "", self.translate
                 .instant("COMMON_TOAST_FAILURE_DELETE_LEAD"));
             return;
         }
         process.lead = null;
-        this.processesService.putProcess({
-            id: process.id
-        }, process).$promise.then(function() {
-            if (process.offer == null && process.sale == null) {
-                self.processesService.deleteProcess({
+        this.processResource.update(process).$promise.then(function () {
+            if (process.offer === null && process.sale === null) {
+                self.processResource.drop({
                     id: process.id
                 });
             }
-            self.processesService.deleteLead({
+            self.leadResource.drop({
                 id: leadId
-            }).$promise.then(function() {
+            }).$promise.then(function () {
                 self.toaster.pop("success", "", self.translate
                     .instant("COMMON_TOAST_SUCCESS_DELETE_LEAD"));
                 self.rootScope.leadsCount -= 1;
@@ -651,8 +627,44 @@ class LeadController {
             false);
         this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
     };
+
+    addProduct(array) {
+        if (!isNaN(Number(this.currentProductId))
+            && Number(this.currentProductId) > 0) {
+            let tempProduct = findElementById(this.productService.products,
+                Number(this.currentProductId));
+            let tempOrderPosition = new OrderPosition();
+            tempOrderPosition.product = tempProduct as Product;
+            tempOrderPosition.amount = this.currentProductAmount;
+            array.push(tempOrderPosition);
+        }
+    }
+    deleteProduct(array, index) {
+        array.splice(index, 1);
+    }
+    sumOrderPositions(array) {
+        let sum = 0;
+        if (isNullOrUndefined(array)) {
+            return 0;
+        }
+        for (let i = 0; i < array.length; i++) {
+            let temp = array[i];
+            if (!isNullOrUndefined(temp) && !isNaN(temp.amount)
+                && !isNullOrUndefined(temp.product)
+                && !isNaN(temp.product.priceNetto)) {
+                sum += temp.amount * temp.product.priceNetto;
+            }
+        }
+        return sum;
+    }
+
+
+
+
+
 }
-
-
-
 angular.module("app.leads", ["ngResource"]).controller("LeadController", LeadController);
+
+
+
+
