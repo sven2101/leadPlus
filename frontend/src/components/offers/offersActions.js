@@ -97,8 +97,14 @@ OffersCtrl.prototype.createSale = function(process) {
 				process.processor = vm.user;
 				process.sale = sale;
 				process.status = 'SALE';
-				vm.updateRow(process);
+				if (vm.loadAllData == true) {
+					vm.updateRow(process);
+				}
 			});
+			if (vm.loadAllData == false) {
+				vm.dtInstance.DataTable.row(vm.rows[process.id]).remove()
+						.draw();
+			}
 		});
 	});
 };

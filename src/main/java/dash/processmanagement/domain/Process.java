@@ -52,7 +52,7 @@ public class Process {
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
-	@OneToOne(cascade = CascadeType.MERGE)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "processor_fk", nullable = true)
 	private User processor;
 
