@@ -38,15 +38,13 @@ public class StatisticService implements IStatisticService {
 	private static final Logger logger = Logger.getLogger(StatisticService.class);
 
 	@Override
-	public <T> List<Double> getStatisticByDateRange(RequestRepository<T, Long> repository, DateRange dateRange) throws NotFoundException {
-
+	public <T> List<Double> getStatisticByDateRange(RequestRepository<T, Long> repository, DateRange dateRange)
+			throws NotFoundException {
 		StatisticHelper statisticHelper = new StatisticHelper(dateRange);
-		Calendar from = statisticHelper.getFrom();
-		Calendar until = statisticHelper.getUntil();
-
-		final List<Request> requests = getStatisticBetween(repository, from, until);
-
 		final Map<String, Double> calendarMap = statisticHelper.getCalendarMap();
+		final List<Request> requests = getStatisticBetween(repository, statisticHelper.getFrom(),
+				statisticHelper.getUntil());
+
 		for (Request request : requests) {
 			Calendar timeStamp = request.getTimestamp();
 			String key = statisticHelper.getKeyByDateRange(timeStamp, dateRange);
@@ -60,7 +58,8 @@ public class StatisticService implements IStatisticService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> List<Request> getStatisticBetween(RequestRepository<T, Long> repository, Calendar from, Calendar until) throws NotFoundException {
+	public <T> List<Request> getStatisticBetween(RequestRepository<T, Long> repository, Calendar from, Calendar until)
+			throws NotFoundException {
 		if (Optional.ofNullable(repository).isPresent() && Optional.ofNullable(from).isPresent()
 				&& Optional.ofNullable(until).isPresent()) {
 			return (List<Request>) repository.findByTimestampBetween(from, until);

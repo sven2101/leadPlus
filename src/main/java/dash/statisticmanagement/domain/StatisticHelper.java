@@ -46,17 +46,25 @@ public class StatisticHelper {
 	}
 
 	private void init(DateRange dateRange) {
-		until.add(Calendar.DAY_OF_MONTH, 1);
+		Calendar temp = Calendar.getInstance();
 		if (dateRange.equals(DateRange.ALL)) {
-			from.set(2014, 1, 1);
+			from.set(2014, 0, 1, 0, 0);
+			temp.set(2014, 0, 1, 0, 0);
 		} else {
+			if (dateRange.equals(DateRange.YEARLY)) {
+				from.set(Calendar.DAY_OF_MONTH, 1);
+			}
+			from.set(Calendar.HOUR_OF_DAY, 0);
+			from.set(Calendar.MINUTE, 0);
+			from.set(Calendar.SECOND, 0);
 			from.add(dateRange.getCalendarFrom(), dateRange.getSubtractFromCalendarFrom());
+			temp.add(dateRange.getCalendarFrom(), dateRange.getSubtractFromCalendarFrom());
 		}
 
 		// Generate every entry between from and until and initialize with zero
-		while (calendarComparator.compare(from, until) <= 0) {
-			calendarMap.put(getKeyByDateRange(from, dateRange), 0.00);
-			from.add(dateRange.getCalendarValue(), 1);
+		while (calendarComparator.compare(temp, until) <= 0) {
+			calendarMap.put(getKeyByDateRange(temp, dateRange), 0.00);
+			temp.add(dateRange.getCalendarValue(), 1);
 		}
 	}
 
