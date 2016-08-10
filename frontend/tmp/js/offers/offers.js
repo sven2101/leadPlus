@@ -167,7 +167,7 @@ function OffersCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 
 	vm.refreshData = refreshData;
 	function refreshData() {
-		var resetPaging = true;
+		var resetPaging = false;
 		this.dtInstance.reloadData(resetPaging);
 	}
 

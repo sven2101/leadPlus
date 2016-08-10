@@ -206,8 +206,9 @@ public class Offer implements Request {
 
 	@Override
 	public String toString() {
-		return "Offer [id=" + id + ", prospect=" + prospect + ", vendor=" + vendor + ", container=" + container + ", containerAmount=" + containerAmount
-				+ ", timestamp=" + timestamp + ", deliveryDate=" + deliveryDate + ", offerPrice=" + offerPrice + ", deliveryAddress=" + deliveryAddress + "]";
+		return "Offer [id=" + id + ", prospect=" + prospect + ", vendor=" + vendor + ", container=" + container
+				+ ", containerAmount=" + containerAmount + ", timestamp=" + timestamp + ", deliveryDate=" + deliveryDate
+				+ ", offerPrice=" + offerPrice + ", deliveryAddress=" + deliveryAddress + "]";
 	}
 
 }

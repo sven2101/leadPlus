@@ -13,20 +13,22 @@
 angular.module('app.sales', [ 'ngResource' ])
 		.controller('SalesCtrl', SalesCtrl);
 SalesCtrl.$inject = [ 'DTOptionsBuilder', 'DTColumnBuilder', '$compile',
-		'$scope', 'toaster', 'Processes', 'Comments', '$filter', 'Profile',
-		'$rootScope', '$translate' ];
+		'$scope', 'toaster', 'ProcessResource', 'CommentResource', '$filter',
+		'UserResource', '$rootScope', '$translate', 'SaleResource' ];
 function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
-		toaster, Processes, Comments, $filter, Profile, $rootScope, $translate) {
+		toaster, ProcessResource, CommentResource, $filter, UserResource,
+		$rootScope, $translate, SaleResource) {
 
 	var vm = this;
 	this.filter = $filter;
-	this.processesService = Processes;
-	this.commentService = Comments;
-	this.userService = Profile;
+	this.processResource = ProcessResource;
+	this.commentResource = CommentResource;
+	this.saleResource = SaleResource;
+	this.userResource = UserResource;
 	this.user = {};
 	if (!angular.isUndefined($rootScope.globals.currentUser))
-		this.userService.get({
-			username : $rootScope.globals.currentUser.username
+		this.userResource.get({
+			id : $rootScope.globals.currentUser.id
 		}).$promise.then(function(result) {
 			vm.user = result;
 		});
@@ -46,7 +48,7 @@ function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 	this.editProcess = {};
 	this.newSale = {};
 	this.dtOptions = DTOptionsBuilder.newOptions().withOption('ajax', {
-		url : '/api/rest/processes/latest100Sales',
+		url : '/api/rest/processes/sales/latest/100',
 		error : function(xhr, error, thrown) {
 			console.log(xhr);
 		},
@@ -168,7 +170,7 @@ function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 
 	vm.refreshData = refreshData;
 	function refreshData() {
-		var resetPaging = true;
+		var resetPaging = false;
 		this.dtInstance.reloadData(resetPaging);
 	}
 
@@ -186,7 +188,7 @@ function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 			}).withOption('searchDelay', 500);
 		} else {
 			vm.dtOptions.withOption('serverSide', false).withOption('ajax', {
-				url : '/api/rest/processes/latest100Sales',
+				url : '/api/rest/processes/sales/latest/100',
 				error : function(xhr, error, thrown) {
 					console.log(xhr);
 				},
@@ -204,7 +206,7 @@ function SalesCtrl(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
 	function addActionsButtons(data, type, full, meta) {
 		vm.processes[data.id] = data;
 		var hasRightToDelete = '';
-		if ($rootScope.globals.currentUser.role == 'user') {
+		if ($rootScope.globals.currentUser.role == 'USER') {
 			hasRightToDelete = 'disabled';
 		}
 		return '<button class="btn btn-white" ng-click="sale.loadDataToModal(sale.processes['
@@ -243,7 +245,7 @@ SalesCtrl.prototype.appendChildRow = function(process, event) {
 	var childScope = this.scope.$new(true);
 	childScope.childData = process;
 	var vm = this;
-	this.commentService.getComments({
+	this.commentResource.getByProcessId({
 		id : process.id
 	}).$promise.then(function(result) {
 		vm.comments[process.id] = [];

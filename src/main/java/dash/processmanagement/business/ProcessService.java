@@ -58,9 +58,6 @@ public class ProcessService implements IProcessService {
 	private ProcessRepository processRepository;
 
 	@Autowired
-	private VendorService vendorService;
-
-	@Autowired
 	private UserService userService;
 
 	@Autowired
