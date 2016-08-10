@@ -1,0 +1,25 @@
+<div class="ibox">
+    <div class="ibox-title">
+        <h3>{{ 'PRODUCT_MENU' | translate }}</h3>
+    </div>
+    <div class="ibox-content">
+        <table class="table table-bordered text-left">
+            <thead>
+                <tr>
+                    <th>{{ 'PRODUCT_PRODUCTNAME' | translate }}</th>
+                    <th>{{ 'PRODUCT_PRICE' | translate }}</th>
+                    <th>{{ 'PRODUCT_PRICE' | translate }}</th>
+                    <th>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="orderPosition in childData.lead.orderPositions">
+                    <td>{{orderPosition.product.name}}</td>
+                    <td>{{orderPosition.product.priceNetto| currency:'\u20AC'}}</td>
+                    <td>{{orderPosition.amount}}</td>
+                    <td>{{orderPosition.product.priceNetto*orderPosition.amount| currency:'\u20AC'}}</td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+</div>

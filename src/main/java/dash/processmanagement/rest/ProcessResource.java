@@ -81,6 +81,7 @@ public class ProcessResource {
 	public List<Process> getElementsByStatus(@ApiParam(required = true) @PathVariable final Workflow workflow,
 			@ApiParam(required = true) @PathVariable final Status status) {
 		return processService.getElementsByStatus(workflow, status);
+
 	}
 
 	@ApiOperation(value = "Returns status", notes = "")
@@ -98,8 +99,8 @@ public class ProcessResource {
 			@ApiParam(required = true) @RequestBody @Valid final String status)
 			throws NotFoundException, SaveFailedException, UpdateFailedException {
 
-		Process x = processService.setStatus(id, status);
-		return x;
+		return processService.setStatus(id, status);
+
 	}
 
 	@ApiOperation(value = "Update a single process.", notes = "")

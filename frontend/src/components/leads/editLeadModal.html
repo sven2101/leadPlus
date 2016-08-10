@@ -56,9 +56,13 @@
                                 <input type="text" name="phone" class="form-control" ng-model="lead.editProcess.lead.inquirer.phone" ng-maxlength="50">
                                 <p ng-show="lead.editForm.phone.$invalid && !lead.editForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
+                             <!-- CONTAINER DESTINATION -->
+                            <div class="form-group" ng-class="{ 'has-error' : lead.editForm.containerDestination.$invalid && !lead.editForm.containerDestination.$pristine }">
+                                <label>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</label>
+                                <input type="text" name="containerDestination" class="form-control" ng-model="lead.editProcess.lead.destination" ng-maxlength="50">
+                                <p ng-show="lead.editForm.containerDestination.$invalid && !lead.editForm.containerDestination.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            </div>
                         </div>
-
-
                         <div>
                             <h2>{{ 'PRODUCT_MENU' | translate }}</h2>
                             <table class="table">
@@ -75,18 +79,18 @@
                                             <input type="number" class="input-sm form-control" ng-model="lead.currentProductAmount">
                                         </th>
                                         <th class="col-md-1">
-                                            <button type="button" class="btn btn-white btn-sm" ng-click="lead.addProduct()">
+                                            <button type="button" class="btn btn-white btn-sm" ng-click="lead.addProduct(lead.currentOrderPositions)">
                                      <i class="fa fa-plus"></i>&nbsp;</button>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="orderPosition in lead.editProcess.lead.orderPositions">
+                                    <tr ng-repeat="orderPosition in lead.currentOrderPositions">
                                         <td>{{orderPosition.product.name}}</td>
                                         <td class="col-md-1 ">{{orderPosition.product.priceNetto*orderPosition.amount| currency:'\u20AC'}}</td>
                                         <td style="width:100px">{{orderPosition.amount}}</td>
                                         <td class=" col-md-1 ">
-                                            <button type="button " class="btn btn-white btn-sm " ng-click="lead.deleteProduct(lead.editProcess.orderPositions,$index) ">
+                                            <button type="button " class="btn btn-white btn-sm " ng-click="lead.deleteProduct(lead.currentOrderPositions,$index) ">
                                         <i class="fa fa-trash "></i>&nbsp;
                                      </button>
                                         </td>
@@ -97,7 +101,7 @@
                         <!-- ENTIRE PRICE -->
                         <div>
                             <div class="form-group ">
-                                <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{lead.sumOrderPositions()| currency:'\u20AC'}}</h2>
+                                <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{lead.sumOrderPositions(lead.currentOrderPositions)| currency:'\u20AC'}}</h2>
                             </div>
                         </div>
                 </form>
