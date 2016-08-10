@@ -81,13 +81,13 @@ LeadsCtrl.prototype.createOffer = function (process) {
 	var vm = this;
 	var offer = {
 		container: {
-			name: process.lead.container.name,
-			description: process.lead.container.description,
-			priceNetto: process.lead.container.priceNetto
+			name: "",
+			description: "",
+			priceNetto: 0
 		},
 		containerAmount: process.lead.containerAmount,
 		deliveryAddress: process.lead.destination,
-		offerPrice: (process.lead.containerAmount * process.lead.container.priceNetto),
+		offerPrice: vm.sumOrderPositions( process.lead.orderPositions),
 		prospect: {
 			company: process.lead.inquirer.company,
 			email: process.lead.inquirer.email,
