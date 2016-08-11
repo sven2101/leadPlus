@@ -123,33 +123,12 @@ angular.module('app.services', ['ngResource'])
             getProcessByOffer: { url: '/api/rest/processes/offers', method: 'GET', isArray: true },
             getProcessBySale: { url: '/api/rest/processes/sales', method: 'GET', isArray: true },
 
-            getLeadsByStatus: {
-                url: '/api/rest/processes/workflow/:workflow/state/:status',
-
-                method: 'GET',
-                isArray: true
-            },
-            getOffersByStatus: {
-                url: '/api/rest/processes/workflow/:workflow/state/:status',
-                method: 'GET',
-                isArray: true
-            },
-            getSalesByStatus: {
-                url: '/api/rest/processes/workflow/:workflow/state/:status',
-                method: 'GET',
-                isArray: true
-            },
-            getFollowUpsByStatus: {
-                url: '/api/rest/processes/workflow/:workflow/state/:status',
-                method: 'GET',
-                isArray: true
-            },
-            getLatestSales: {
-                url: '/api/rest/processes/sales/latest/10', method: 'GET', isArray: true
-            },
-            getLatest100Sales: {
-                url: '/api/rest/processes/sales/latest/100', method: 'GET', isArray: true
-            }
+            getLeadsByStatus: {url: '/api/rest/processes/workflow/:workflow/state/:status', method: 'GET', isArray: true},
+            getOffersByStatus: {url: '/api/rest/processes/workflow/:workflow/state/:status',method: 'GET', isArray: true},
+            getSalesByStatus: {url: '/api/rest/processes/workflow/:workflow/state/:status',method: 'GET',isArray: true },
+            getFollowUpsByStatus: {url: '/api/rest/processes/workflow/:workflow/state/:status',method: 'GET',isArray: true },
+            getLatestSales: {url: '/api/rest/processes/sales/latest/10', method: 'GET', isArray: true},
+            getLatest100Sales: {url: '/api/rest/processes/sales/latest/100', method: 'GET', isArray: true}
         });
     }])
     .service('CommentResource', ['$resource', function ($resource) {
@@ -176,81 +155,15 @@ angular.module('app.services', ['ngResource'])
     }])
     .service('StatisticResource', ['$resource', function ($resource) {
         return $resource('/api/rest/processes/statistics', {}, {
-            dayLeads: {
-                url: '/api/rest/processes/statistics/leads/day', method: 'GET',
-                isArray: true
+            getWorkflowStatistic: {
+                url: '/api/rest/processes/statistics/workflow/:workflow/daterange/:dateRange', method: 'GET'
             },
-            weekLeads: {
-                url: '/api/rest/processes/statistics/leads/week', method: 'GET',
-                isArray: true
-            },
-            monthLeads: {
-                url: '/api/rest/processes/statistics/leads/month', method: 'GET',
-                isArray: true
-            },
-            yearLeads: {
-                url: '/api/rest/processes/statistics/leads/year', method: 'GET',
-                isArray: true
-            },
-            allLeads: {
-                url: '/api/rest/processes/statistics/leads/all', method: 'GET',
-                isArray: true
-            },
-
-            dayOffers: {
-                url: '/api/rest/processes/statistics/offers/day', method: 'GET',
-                isArray: true
-            },
-            weekOffers: {
-                url: '/api/rest/processes/statistics/offers/week', method: 'GET',
-                isArray: true
-            },
-            monthOffers: {
-                url: '/api/rest/processes/statistics/offers/month', method: 'GET',
-                isArray: true
-            },
-            yearOffers: {
-                url: '/api/rest/processes/statistics/offers/year', method: 'GET',
-                isArray: true
-            },
-            allOffers: {
-                url: '/api/rest/processes/statistics/offers/all', method: 'GET',
-                isArray: true
-            },
-
-            daySales: {
-                url: '/api/rest/processes/statistics/sales/day', method: 'GET',
-                isArray: true
-            },
-            weekSales: {
-                url: '/api/rest/processes/statistics/sales/week', method: 'GET',
-                isArray: true
-            },
-            monthSales: {
-                url: '/api/rest/processes/statistics/sales/month', method: 'GET',
-                isArray: true
-            },
-            yearSales: {
-                url: '/api/rest/processes/statistics/sales/year', method: 'GET',
-                isArray: true
-            },
-            allSales: {
-                url: '/api/rest/processes/statistics/sales/all', method: 'GET',
-                isArray: true
-            },
-
-            dayProfit: { url: '/api/rest/processes/statistics/profit/day', method: 'GET' },
-            weekProfit: { url: '/api/rest/processes/statistics/profit/week', method: 'GET' },
-            monthProfit: { url: '/api/rest/processes/statistics/profit/month', method: 'GET' },
-            yearProfit: { url: '/api/rest/processes/statistics/profit/year', method: 'GET' },
-            allProfit: { url: '/api/rest/processes/statistics/profit/all', method: 'GET' },
-
-            dayTurnover: { url: '/api/rest/processes/statistics/turnover/day', method: 'GET' },
-            weekTurnover: { url: '/api/rest/processes/statistics/turnover/week', method: 'GET' },
-            monthTurnover: { url: '/api/rest/processes/statistics/turnover/month', method: 'GET' },
-            yearTurnover: { url: '/api/rest/processes/statistics/turnover/year', method: 'GET' },
-            allTurnover: { url: '/api/rest/processes/statistics/turnover/all', method: 'GET' }
-
+            getProfitStatistic: {
+                url: '/api/rest/processes/statistics/profit/:workflow/daterange/:dateRange', method: 'GET'
+            },   
+            getTurnoverStatistic: {
+                url: '/api/rest/processes/statistics/turnover/:workflow/daterange/:dateRange', method: 'GET'
+            }
         });
     }]).service('ProductResource', ['$resource', function ($resource) {
         return $resource('/api/rest/product', {}, {

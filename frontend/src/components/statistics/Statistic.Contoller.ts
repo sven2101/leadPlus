@@ -22,7 +22,7 @@ class StatisticContoller {
     interval;
 
     currentTab = 1;
-    selectedPeriod = "day";
+    dateRange = "DAILY";
 
     chartSingleStatisticPie;
     chartEntireStatisticSpline;
@@ -65,7 +65,6 @@ class StatisticContoller {
 
         this.chartSingleStatisticPie = new SharedItemsPieChart(this.translate);
         this.chartEntireStatisticSpline = new EntireStatisticSpline(this.translate);
-        console.log(this.chartEntireStatisticSpline);
         this.chartEntireStatisticArea = new EntireStatisticArea(this.translate);
         this.chartLeadsConversionRate = new LeadsConversionRate(this.translate);
         this.chartOffersConversionRate = new OffersConversionRate(this.translate);
@@ -73,32 +72,11 @@ class StatisticContoller {
         this.StatisticResource = StatisticResource;
 
         this.setWeekDayTranslationsArray();
-        this.setMonthTranslationsArray;
-        this.checkPromises();
+        this.setMonthTranslationsArray();
+
+        this.onPeriodChange(this.dateRange);
     }
-    registerPromises() {
-        let self = this;
-        this.StatisticResource.dayLeads().$promise.then(function(result) {
-            self.getLeads(result);
-            self.isLeadPromise = true;
-        });
-        this.StatisticResource.dayOffers().$promise.then(function(result) {
-            self.getOffers(result);
-            self.isOfferPromise = true;
-        });
-        this.StatisticResource.daySales().$promise.then(function(result) {
-            self.getSales(result);
-            self.isSalePromise = true;
-        });
-        this.StatisticResource.dayProfit().$promise.then(function(result) {
-            self.getProfit(result);
-            self.isProfitPromise = true;
-        });
-        this.StatisticResource.dayTurnover().$promise.then(function(result) {
-            self.getTurnover(result);
-            self.isTurnoverPromise = true;
-        });
-    }
+
     setWeekDayTranslationsArray() {
         this.weekday[0] = this.translate.instant("SUNDAY");
         this.weekday[1] = this.translate.instant("MONDAY");
@@ -170,29 +148,28 @@ class StatisticContoller {
     }
 
     getLeads(leads) {
-        console.log(leads);
-        this.leadResult = leads;
+        this.leadResult = leads.result;
         let summe = 0;
-        for (let lead in leads) {
-            summe += leads[lead];
+        for (let lead in leads.result) {
+            summe += leads.result[lead];
         }
         this.leads = summe;
     }
 
     getOffers(offers) {
-        this.offerResult = offers;
+        this.offerResult = offers.result;
         let summe = 0;
-        for (let offer in offers) {
-            summe += offers[offer];
+        for (let offer in offers.result) {
+            summe += offers.result[offer];
         }
         this.offers = summe;
     }
 
     getSales(sales) {
-        this.saleResult = sales;
+        this.saleResult = sales.result;
         let summe = 0;
-        for (let sale in sales) {
-            summe += sales[sale];
+        for (let sale in sales.result) {
+            summe += sales.result[sale];
         }
         this.sales = summe;
     }
@@ -289,7 +266,6 @@ class StatisticContoller {
     }
 
     pushLeadsOffersSales() {
-        console.log(this.leadResult);
         this.chartEntireStatisticSpline.chartConfig.series.push({
             name: this.translate.instant("LEADS_MENU"),
             data: this.leadResult,
@@ -320,7 +296,7 @@ class StatisticContoller {
             color: "#1a7bb9"
         });
     }
-    onPeriodChange(selectedPeriod) {
+    onPeriodChange(dateRange) {
         let self = this;
 
         this.isLeadPromise = false;
@@ -329,7 +305,7 @@ class StatisticContoller {
         this.isProfitPromise = false;
         this.isTurnoverPromise = false;
 
-        this.selectedPeriod = selectedPeriod;
+        this.dateRange = dateRange;
 
         this.chartSingleStatisticPie.chartConfig.series[0].data = [];
         this.chartEntireStatisticArea.chartConfig.series = [];
@@ -353,30 +329,28 @@ class StatisticContoller {
         let dataConversionOffers = [];
         let oneYearAgo = new Date();
 
-        switch (this.selectedPeriod) {
-            case "day":
-
+        switch (this.dateRange) {
+            case "DAILY":
                 break;
-            case "week":
+            case "WEEKLY":
                 let oneWeekAgo = new Date();
-                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 6);
                 while (oneWeekAgo <= currentDate) {
                     this.timeframe.push(self.weekday[oneWeekAgo.getDay()]);
                     oneWeekAgo.setDate(oneWeekAgo.getDate() + 1);
                 }
 
                 break;
-            case "month":
+            case "MONTHLY":
                 let oneMonthAgo = new Date();
                 oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
-
                 while (oneMonthAgo <= currentDate) {
                     this.timeframe.push(oneMonthAgo.getDate() + ". " + self.month[oneMonthAgo.getMonth()]);
                     oneMonthAgo.setDate(oneMonthAgo.getDate() + 1);
                 }
 
                 break;
-            case "year":
+            case "YEARLY":
                 oneYearAgo = new Date();
                 oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
                 while (oneYearAgo <= currentDate) {
@@ -386,7 +360,7 @@ class StatisticContoller {
                 }
                 this.timeframe.push(oneYearAgo.toUTCString().split(" ")[2]);
                 break;
-            case "all":
+            case "ALL":
                 oneYearAgo = new Date(2014, 1, 1);
 
                 while (oneYearAgo <= currentDate) {
@@ -399,128 +373,29 @@ class StatisticContoller {
                 console.log("Timeframe not found");
         }
 
-        switch (selectedPeriod) {
-            case "day":
-                this.StatisticResource.dayLeads().$promise.then(function(result) {
-                    self.getLeads(result);
-                    self.isLeadPromise = true;
-                });
-                self.StatisticResource.dayOffers().$promise.then(function(result) {
-                    self.getOffers(result);
-                    self.isOfferPromise = true;
-                });
-                self.StatisticResource.daySales().$promise.then(function(result) {
-                    self.getSales(result);
-                    self.isSalePromise = true;
-                });
-                self.StatisticResource.dayProfit().$promise.then(function(result) {
-                    self.getProfit(result);
-                    self.isProfitPromise = true;
-                });
-                self.StatisticResource.dayTurnover().$promise.then(function(result) {
-                    self.getTurnover(result);
-                    self.isTurnoverPromise = true;
-                });
+
+        this.StatisticResource.getWorkflowStatistic({ workflow: "LEAD", dateRange: dateRange }).$promise.then(function(result) {
+            self.getLeads(result);
+            self.isLeadPromise = true;
+        });
+        self.StatisticResource.getWorkflowStatistic({ workflow: "OFFER", dateRange: dateRange }).$promise.then(function(result) {
+            self.getOffers(result);
+            self.isOfferPromise = true;
+        });
+        self.StatisticResource.getWorkflowStatistic({ workflow: "SALE", dateRange: dateRange }).$promise.then(function(result) {
+            self.getSales(result);
+            self.isSalePromise = true;
+        });
+        self.StatisticResource.getProfitStatistic({ workflow: "SALE", dateRange: dateRange }).$promise.then(function(result) {
+            self.getProfit(result);
+            self.isProfitPromise = true;
+        });
+        self.StatisticResource.getTurnoverStatistic({ workflow: "SALE", dateRange: dateRange }).$promise.then(function(result) {
+            self.getTurnover(result);
+            self.isTurnoverPromise = true;
+        });
 
 
-                break;
-            case "week":
-                this.StatisticResource.weekLeads().$promise.then(function(value) {
-                    console.log(value);
-                    self.getLeads(value);
-                    self.isLeadPromise = true;
-                });
-                self.StatisticResource.weekOffers().$promise.then(function(result) {
-                    self.getOffers(result);
-                    self.isOfferPromise = true;
-                });
-                self.StatisticResource.weekSales().$promise.then(function(result) {
-                    self.getSales(result);
-                    self.isSalePromise = true;
-                });
-                self.StatisticResource.weekProfit().$promise.then(function(result) {
-                    self.getProfit(result);
-                    self.isProfitPromise = true;
-                });
-                self.StatisticResource.weekTurnover().$promise.then(function(result) {
-                    self.getTurnover(result);
-                    self.isTurnoverPromise = true;
-                });
-
-                break;
-            case "month":
-                this.StatisticResource.monthLeads().$promise.then(function(result) {
-                    self.getLeads(result);
-                    self.isLeadPromise = true;
-                });
-                self.StatisticResource.monthOffers().$promise.then(function(result) {
-                    self.getOffers(result);
-                    self.isOfferPromise = true;
-                });
-                self.StatisticResource.monthSales().$promise.then(function(result) {
-                    self.getSales(result);
-                    self.isSalePromise = true;
-                });
-                self.StatisticResource.monthProfit().$promise.then(function(result) {
-                    self.getProfit(result);
-                    self.isProfitPromise = true;
-                });
-                self.StatisticResource.monthTurnover().$promise.then(function(result) {
-                    self.getTurnover(result);
-                    self.isTurnoverPromise = true;
-                });
-
-                break;
-            case "year":
-                this.StatisticResource.yearLeads().$promise.then(function(result) {
-                    self.getLeads(result);
-                    self.isLeadPromise = true;
-                });
-                self.StatisticResource.yearOffers().$promise.then(function(result) {
-                    self.getOffers(result);
-                    self.isOfferPromise = true;
-                });
-                self.StatisticResource.yearSales().$promise.then(function(result) {
-                    self.getSales(result);
-                    self.isSalePromise = true;
-                });
-                self.StatisticResource.yearProfit().$promise.then(function(result) {
-                    self.getProfit(result);
-                    self.isProfitPromise = true;
-                });
-                self.StatisticResource.yearTurnover().$promise.then(function(result) {
-                    self.getTurnover(result);
-                    self.isTurnoverPromise = true;
-                });
-
-                break;
-            case "all":
-                this.StatisticResource.allLeads().$promise.then(function(result) {
-                    self.getLeads(result);
-                    self.isLeadPromise = true;
-                });
-                self.StatisticResource.allOffers().$promise.then(function(result) {
-                    self.getOffers(result);
-                    self.isOfferPromise = true;
-                });
-                self.StatisticResource.allSales().$promise.then(function(result) {
-                    self.getSales(result);
-                    self.isSalePromise = true;
-                });
-                self.StatisticResource.allProfit().$promise.then(function(result) {
-                    self.getProfit(result);
-                    self.isProfitPromise = true;
-                });
-                self.StatisticResource.allTurnover().$promise.then(function(result) {
-                    self.getTurnover(result);
-                    self.isTurnoverPromise = true;
-                });
-
-                break;
-            default:
-                console.log("Time Frame not found.");
-                break;
-        }
         this.chartEntireStatisticArea.chartConfig.options.xAxis.categories = this.timeframe;
         this.chartEntireStatisticSpline.chartConfig.options.xAxis.categories = this.timeframe;
         this.chartLeadsConversionRate.chartConfig.options.xAxis.categories = this.timeframe;

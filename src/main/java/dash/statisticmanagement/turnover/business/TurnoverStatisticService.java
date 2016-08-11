@@ -12,7 +12,7 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.statisticmanagement.profit.business;
+package dash.statisticmanagement.turnover.business;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,7 +26,7 @@ import dash.salemanagement.domain.Sale;
 import dash.statisticmanagement.common.AbstractStatisticService;
 
 @Service
-public class ProfitStatisticService extends AbstractStatisticService {
+public class TurnoverStatisticService extends AbstractStatisticService {
 
 	@Override
 	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests) {
@@ -35,7 +35,7 @@ public class ProfitStatisticService extends AbstractStatisticService {
 			Calendar timeStamp = request.getTimestamp();
 			String key = statisticHelper.getKeyByDateRange(timeStamp, statisticHelper.getDateRange());
 			if (calendarMap.containsKey(key)) {
-				double value = calendarMap.get(key) + sale.getSaleProfit();
+				double value = calendarMap.get(key) + sale.getSaleReturn();
 				calendarMap.put(key, value);
 			}
 		}

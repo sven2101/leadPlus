@@ -12,22 +12,28 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.statisticmanagement.profit.business;
+package dash.statisticmanagement.common;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import dash.exceptions.NotFoundException;
+import dash.processmanagement.request.Request;
+import dash.processmanagement.request.RequestRepository;
+import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.result.domain.Result;
+import dash.workflowmanagement.domain.Workflow;
 
 @Service
-public interface IProfitStatisticService {
+public interface IStatisticService {
 
-	<T> Result getDailyProfitStatistic();
+	Result getStatisticByDateRange(Workflow workflow, DateRange dateRange) throws NotFoundException;
 
-	<T> Result getWeeklyProfitStatistic();
+	<T> List<Request> getStatisticBetween(RequestRepository<T, Long> repository, Calendar from, Calendar until)
+			throws NotFoundException;
 
-	<T> Result getMonthlyProfitStatistic();
-
-	<T> Result getYearlyProfitStatistic();
-
-	<T> Result getAllProfitStatistic();
+	List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests);
 }
