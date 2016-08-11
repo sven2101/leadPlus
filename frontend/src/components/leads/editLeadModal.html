@@ -59,7 +59,7 @@
                              <!-- CONTAINER DESTINATION -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.editForm.containerDestination.$invalid && !lead.editForm.containerDestination.$pristine }">
                                 <label>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</label>
-                                <input type="text" name="containerDestination" class="form-control" ng-model="lead.editProcess.lead.destination" ng-maxlength="50">
+                                <input type="text" name="containerDestination" class="form-control" ng-model="lead.editProcess.lead.deliveryAddress" ng-maxlength="50">
                                 <p ng-show="lead.editForm.containerDestination.$invalid && !lead.editForm.containerDestination.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                         </div>

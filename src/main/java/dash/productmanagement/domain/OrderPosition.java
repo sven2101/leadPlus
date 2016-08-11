@@ -22,7 +22,7 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import dash.leadmanagement.domain.Lead;
+import dash.common.AbstractWorkflow;
 
 @Entity
 public class OrderPosition {
@@ -36,7 +36,7 @@ public class OrderPosition {
 
 	@ManyToOne
 	@JsonIgnore
-	private Lead lead;
+	private AbstractWorkflow workflow;
 
 	private int amount;
 
@@ -68,12 +68,12 @@ public class OrderPosition {
 		this.amount = amount;
 	}
 
-	public Lead getLead() {
-		return lead;
+	public AbstractWorkflow getWorkflow() {
+		return workflow;
 	}
 
-	public void setLead(Lead lead) {
-		this.lead = lead;
+	public void setWorkflow(AbstractWorkflow workflow) {
+		this.workflow = workflow;
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class OrderPosition {
 		int result = 1;
 		result = prime * result + amount;
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((lead == null) ? 0 : lead.hashCode());
+		result = prime * result + ((workflow == null) ? 0 : workflow.hashCode());
 		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		return result;
 	}
@@ -100,10 +100,10 @@ public class OrderPosition {
 			return false;
 		if (id != other.id)
 			return false;
-		if (lead == null) {
-			if (other.lead != null)
+		if (workflow == null) {
+			if (other.workflow != null)
 				return false;
-		} else if (!lead.equals(other.lead))
+		} else if (!workflow.equals(other.workflow))
 			return false;
 		if (product == null) {
 			if (other.product != null)

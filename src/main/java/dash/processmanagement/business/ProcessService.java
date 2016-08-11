@@ -108,7 +108,7 @@ public class ProcessService implements IProcessService {
 			if (process.getLead() != null) {
 				process.getLead().setContainer(null);
 				for (OrderPosition temp : process.getLead().getOrderPositions()) {
-					temp.setLead(process.getLead());
+					temp.setWorkflow(process.getLead());
 				}
 			}
 			Process temp = processRepository.save(process);
@@ -186,7 +186,7 @@ public class ProcessService implements IProcessService {
 				if (process.getLead() != null) {
 					process.getLead().setContainer(null);
 					for (OrderPosition temp : process.getLead().getOrderPositions()) {
-						temp.setLead(process.getLead());
+						temp.setWorkflow(process.getLead());
 					}
 				}
 				return save(process);

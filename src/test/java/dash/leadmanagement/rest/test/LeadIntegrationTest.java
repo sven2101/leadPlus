@@ -141,7 +141,7 @@ public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest 
 		lead.setContainer(container);
 		lead.setContainerAmount(30);
 		lead.setMessage("Test Anfrage");
-		lead.setDestination("Karlsruhe");
+		lead.setDeliveryAddress("Karlsruhe");
 
 		return lead;
 	}

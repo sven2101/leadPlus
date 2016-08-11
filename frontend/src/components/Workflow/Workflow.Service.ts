@@ -16,18 +16,16 @@ const WorkflowServiceId: String = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [commentResourceId, $filterId, $compileId];
+    private $inject = [commentResourceId, $filterId];
 
     commentResource;
     filter;
-    compile;
 
-    constructor(CommentResource, $filter, $compile) {
+    constructor(CommentResource, $filter) {
         this.commentResource = CommentResource;
         this.filter = $filter;
-
-        this.compile = $compile;
     }
+
     addComment(id, source, process, user, comments, commentInput, commentModalInput) {
         let self = this;
         let commentText = "";

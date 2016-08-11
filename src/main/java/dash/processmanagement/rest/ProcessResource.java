@@ -187,7 +187,7 @@ public class ProcessResource {
 					.findByLeadIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
 		else
 			page = processRepository
-					.findByLeadInquirerFirstnameContainingOrLeadInquirerLastnameContainingOrLeadInquirerEmailContainingOrLeadInquirerCompanyContainingOrLeadInquirerPhoneContainingOrLeadContainerNameContainingOrLeadContainerDescriptionContainingOrLeadDestinationContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
+					.findByLeadInquirerFirstnameContainingOrLeadInquirerLastnameContainingOrLeadInquirerEmailContainingOrLeadInquirerCompanyContainingOrLeadInquirerPhoneContainingOrLeadContainerNameContainingOrLeadContainerDescriptionContainingOrLeadDeliveryAddressContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
 							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
 							searchText, searchText, searchText,
 							new PageRequest(start / length, length, sortDirection, sortColumn));
