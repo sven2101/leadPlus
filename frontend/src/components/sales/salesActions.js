@@ -9,34 +9,12 @@
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
 
-SalesCtrl.prototype.loadCurrentIdToModal = function(id) {
+SalesCtrl.prototype.loadCurrentIdToModal = function (id) {
 	this.currentCommentModalId = id;
 };
 
-SalesCtrl.prototype.addComment = function(id, source) {
-	var vm = this;
-	var commentText = '';
-	if (angular.isUndefined(this.comments[id])) {
-		this.comments[id] = [];
-	}
-	if (source == 'table' && this.commentInput[id] != ''
-			&& !angular.isUndefined(this.commentInput[id])) {
-		commentText = this.commentInput[id];
-	} else if (source == 'modal' && this.commentModalInput[id] != ''
-			&& !angular.isUndefined(this.commentModalInput[id])) {
-		commentText = this.commentModalInput[id];
-	}
-	var comment = {
-		process : this.processes[id],
-		creator : this.user,
-		commentText : commentText,
-		timestamp : this.filter('date')(new Date(), "dd.MM.yyyy HH:mm:ss")
-	};
-	this.commentResource.save(comment).$promise.then(function() {
-		vm.comments[id].push(comment);
-		vm.commentInput[id] = '';
-		vm.commentModalInput[id] = '';
-	});
+SalesCtrl.prototype.addComment = function (id, source) {
+	this.workflowService.addComment(id, source, this.processes[id], this.user, this.comments, this.commentInput, this.commentModalInput);
 };
 /*
  * Not in use SalesCtrl.prototype.saveSale = function () { var vm = this; if
@@ -50,50 +28,70 @@ SalesCtrl.prototype.addComment = function(id, source) {
  * vm.addForm.$setPristine(); vm.updateRow(process); }); };
  */
 
-SalesCtrl.prototype.clearNewSale = function() {
+SalesCtrl.prototype.clearNewSale = function () {
 	this.newSale = {};
+	this.newOffer.containerAmount = 1;
+	this.newOffer.container = {
+		name: "placholder",
+		priceNetto: 666
+	};
 	this.newSale.containerAmount = 1;
 	this.newSale.container = {
-		priceNetto : 0
+		priceNetto: 0
 	}
 };
 
-SalesCtrl.prototype.loadDataToModal = function(sale) {
+SalesCtrl.prototype.loadDataToModal = function (sale) {
+	this.currentProductId = "-1";
+	this.currentProductAmount = 1;
 	this.editProcess = sale;
+	this.currentOrderPositions = deepCopyArray(this.editProcess.sale.orderPositions);
+
 };
 
-SalesCtrl.prototype.saveEditedRow = function() {
+SalesCtrl.prototype.saveEditedRow = function () {
 	var vm = this;
-	this.saleResource.update(this.editProcess.sale).$promise.then(function() {
+	this.editProcess.sale.orderPositions = this.currentOrderPositions;
+	this.saleResource.update(this.editProcess.sale).$promise.then(function () {
 		vm.toaster.pop('success', '', vm.translate
-				.instant('COMMON_TOAST_SUCCESS_UPDATE_SALE'));
+			.instant('COMMON_TOAST_SUCCESS_UPDATE_SALE'));
 		vm.editForm.$setPristine();
 		vm.updateRow(vm.editProcess);
 	});
 };
 
-SalesCtrl.prototype.deleteRow = function(process) {
+SalesCtrl.prototype.deleteRow = function (process) {
 	var vm = this;
 	var saleId = process.sale.id;
 	process.status = 'CLOSED';
 	process.sale = null;
-	this.processResource.update(process).$promise.then(function() {
+	this.processResource.update(process).$promise.then(function () {
 		if (process.lead == null && process.sale == null) {
 			vm.processResource.deleteProcess({
-				id : process.id
+				id: process.id
 			});
 		}
 		vm.saleResource.drop({
-			id : saleId
-		}).$promise.then(function() {
+			id: saleId
+		}).$promise.then(function () {
 			vm.toaster.pop('success', '', vm.translate
-					.instant('COMMON_TOAST_SUCCESS_DELETE_SALE'));
+				.instant('COMMON_TOAST_SUCCESS_DELETE_SALE'));
 			vm.dtInstance.DataTable.row(vm.rows[process.id]).remove().draw();
 		});
 	});
 };
 
-SalesCtrl.prototype.updateRow = function(process) {
+SalesCtrl.prototype.updateRow = function (process) {
 	this.dtInstance.DataTable.row(this.rows[process.id]).data(process).draw();
 	this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
 };
+
+SalesCtrl.prototype.addProduct = function (array) {
+	this.workflowService.addProduct(array, this.currentProductId, this.currentProductAmount);
+}
+SalesCtrl.prototype.deleteProduct = function (array, index) {
+	this.workflowService.deleteProduct(array, index);
+}
+SalesCtrl.prototype.sumOrderPositions = function (array) {
+	return this.workflowService.sumOrderPositions(array);
+}

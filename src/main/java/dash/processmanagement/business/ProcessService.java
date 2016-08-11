@@ -85,6 +85,7 @@ public class ProcessService implements IProcessService {
 	@Override
 	public void saveProcesses(List<Process> processes) throws SaveFailedException {
 		for (Process process : processes) {
+			setOrderPositions(process);
 			if (Optional.ofNullable(process.getLead()).isPresent())
 				leadService.save(process.getLead());
 			if (Optional.ofNullable(process.getOffer()).isPresent())
@@ -105,12 +106,7 @@ public class ProcessService implements IProcessService {
 	@Override
 	public Process save(final Process process) throws SaveFailedException {
 		if (Optional.ofNullable(process).isPresent()) {
-			if (process.getLead() != null) {
-				process.getLead().setContainer(null);
-				for (OrderPosition temp : process.getLead().getOrderPositions()) {
-					temp.setWorkflow(process.getLead());
-				}
-			}
+			setOrderPositions(process);
 			Process temp = processRepository.save(process);
 
 			return temp;
@@ -129,6 +125,7 @@ public class ProcessService implements IProcessService {
 			createdLead = leadService.save(lead);
 			process.setLead(lead);
 			process.setStatus(Status.OPEN);
+			setOrderPositions(process);
 			processRepository.save(process);
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
@@ -142,7 +139,14 @@ public class ProcessService implements IProcessService {
 		Offer createdOffer = null;
 		if (Optional.ofNullable(process).isPresent()) {
 			// createdOffer = offerService.save(offer);
+			if (process.getOffer() != null) {
+				process.getOffer().setContainer(null);
+				for (OrderPosition temp : process.getOffer().getOrderPositions()) {
+					temp.setWorkflow(process.getOffer());
+				}
+			}
 			process.setOffer(offer);
+			setOrderPositions(process);
 			processRepository.save(process);
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
@@ -157,6 +161,7 @@ public class ProcessService implements IProcessService {
 		if (Optional.ofNullable(process).isPresent()) {
 			// createdSale = saleService.save(sale);
 			process.setSale(sale);
+			setOrderPositions(process);
 			processRepository.save(process);
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
@@ -174,6 +179,7 @@ public class ProcessService implements IProcessService {
 			throw new NotFoundException(USER_NOT_FOUND);
 		if (!Optional.ofNullable(process.getProcessor()).isPresent()) {
 			process.setProcessor(processor);
+			setOrderPositions(process);
 			processRepository.save(process);
 		}
 		return processor;
@@ -183,12 +189,7 @@ public class ProcessService implements IProcessService {
 	public Process update(final Process process) throws UpdateFailedException {
 		if (Optional.ofNullable(process).isPresent()) {
 			try {
-				if (process.getLead() != null) {
-					process.getLead().setContainer(null);
-					for (OrderPosition temp : process.getLead().getOrderPositions()) {
-						temp.setWorkflow(process.getLead());
-					}
-				}
+				setOrderPositions(process);
 				return save(process);
 			} catch (IllegalArgumentException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + ProcessService.class.getSimpleName(), ex);
@@ -252,6 +253,7 @@ public class ProcessService implements IProcessService {
 			try {
 				Process process = getById(id);
 				process.setProcessor(null);
+				setOrderPositions(process);
 				save(process);
 			} catch (EmptyResultDataAccessException | SaveFailedException | NotFoundException ex) {
 				logger.error(ProcessService.class.getSimpleName() + ex.getMessage(), ex);
@@ -269,6 +271,7 @@ public class ProcessService implements IProcessService {
 		if (Optional.ofNullable(status).isPresent()) {
 			Process process = getById(id);
 			process.setStatus(Status.valueOf(status));
+			setOrderPositions(process);
 			save(process);
 			return process;
 		} else {
@@ -277,5 +280,26 @@ public class ProcessService implements IProcessService {
 			throw ufex;
 		}
 
+	}
+
+	private void setOrderPositions(Process process) {
+		if (process.getLead() != null) {
+			process.getLead().setContainer(null);
+			for (OrderPosition temp : process.getLead().getOrderPositions()) {
+				temp.setWorkflow(process.getLead());
+			}
+		}
+		if (process.getOffer() != null) {
+			process.getOffer().setContainer(null);
+			for (OrderPosition temp : process.getOffer().getOrderPositions()) {
+				temp.setWorkflow(process.getOffer());
+			}
+		}
+		if (process.getSale() != null) {
+			process.getSale().setContainer(null);
+			for (OrderPosition temp : process.getSale().getOrderPositions()) {
+				temp.setWorkflow(process.getSale());
+			}
+		}
 	}
 }

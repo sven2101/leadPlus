@@ -13,8 +13,7 @@
                 <table class="table table-bordered text-left">
                     <tr>
                         <td>{{ 'COMMON_NAME' | translate }}</td>
-                        <td>{{ childData.sale.customer.title | translate }} {{childData.sale.customer.firstname}}
-                            {{childData.sale.customer.lastname}}
+                        <td>{{ childData.sale.customer.title | translate }} {{childData.sale.customer.firstname}} {{childData.sale.customer.lastname}}
                         </td>
                     </tr>
                     <tr>
@@ -43,20 +42,17 @@
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
-                        <td>{{childData.sale.containerAmount*childData.sale.container.priceNetto |
-                            currency:'\u20AC'}}
+                        <td>{{childData.sale.containerAmount*childData.sale.container.priceNetto | currency:'\u20AC'}}
                         </td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_SALE_TURNOVER' | translate }}</td>
-                        <td>{{childData.sale.saleReturn |
-                            currency:'\u20AC'}}
+                        <td>{{childData.sale.saleReturn | currency:'\u20AC'}}
                         </td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_SALE_PROFIT' | translate }}</td>
-                        <td>{{childData.sale.saleProfit |
-                            currency:'\u20AC'}}
+                        <td>{{childData.sale.saleProfit | currency:'\u20AC'}}
                         </td>
                     </tr>
                 </table>
@@ -78,6 +74,7 @@
             <div class="ibox-content text-left">{{childData.lead.message}}</div>
         </div>
     </div>
+    <div class="col-lg-12" ng-include="'components/common/ProductView.html'"></div>
 </div>
 <div class="row" ng-include="'components/common/commentView.html'"></div>
 <div class="row" ng-include="'components/common/allCommentsModal.html'"></div>

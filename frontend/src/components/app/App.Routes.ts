@@ -37,14 +37,14 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             .when("/offers",
             {
                 templateUrl: "components/offers/offers.html",
-                controller: "OffersCtrl",
+                controller: "OffersController",
                 controllerAs: "offer",
                 authenticated: true
             })
             .when("/sales",
             {
                 templateUrl: "components/sales/sales.html",
-                controller: "SalesCtrl",
+                controller: "SaleController",
                 controllerAs: "sale",
                 authenticated: true
             })

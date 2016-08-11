@@ -1,5 +1,6 @@
 /// <reference path="./AbstractModel.ts" />
 /// <reference path="./Lead.ts" />
+/// <reference path="./Offer.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -14,4 +15,6 @@
 
 class Process extends AbstractModel {
     lead: Lead;
+    offer: Offer;
+    sale: Sale;
 }

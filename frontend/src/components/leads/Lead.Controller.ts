@@ -167,13 +167,13 @@ class LeadController {
             DTColumnBuilder.newColumn("lead.inquirer.firstname").withTitle(
                 $translate("COMMON_FIRSTNAME")).notVisible(),
 
-            DTColumnBuilder.newColumn("lead.inquirer.lastname").withTitle(
+            DTColumnBuilder.newColumn("lead.deliveryAddress").withTitle(
                 $translate("COMMON_CONTAINER")).notVisible(),
             DTColumnBuilder.newColumn("lead.deliveryAddress").withTitle(
                 $translate("COMMON_CONTAINER_DESTINATION")).notVisible(),
             DTColumnBuilder.newColumn("lead.inquirer.lastname").withTitle(
                 $translate("COMMON_CONTAINER_AMOUNT")).notVisible(),
-            DTColumnBuilder.newColumn(null).withTitle(
+            DTColumnBuilder.newColumn("null").withTitle(
                 $translate("COMMON_CONTAINER_SINGLE_PRICE")).renderWith(
                 function (data, type, full) {
                     return $filter("currency")(
@@ -183,6 +183,9 @@ class LeadController {
                 $translate("COMMON_CONTAINER_ENTIRE_PRICE"))
                 .renderWith(
                 function (data, type, full) {
+                    if (isNullOrUndefined(data.lead.leadPrice)) {
+                        return $filter("currency")(0, "€", 2);
+                    }
                     return $filter("currency")(data.lead.leadPrice,
                         "€", 2);
                 }).notVisible(),
@@ -393,6 +396,9 @@ class LeadController {
         }
     }
 
+    getOrderPositions(process) {
+        return process.lead.orderPositions;
+    }
 
     appendChildRow(process, event) {
         let childScope = this.scope.$new(true);
@@ -488,6 +494,7 @@ class LeadController {
                 description: "",
                 priceNetto: 0
             },
+            orderPositions: deepCopyArray(process.lead.orderPositions),
             containerAmount: process.lead.containerAmount,
             deliveryAddress: process.lead.deliveryAddress,
             offerPrice: self.sumOrderPositions(process.lead.orderPositions),
@@ -502,6 +509,9 @@ class LeadController {
             timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
             vendor: process.lead.vendor
         };
+        for (let i = 0; i < offer.orderPositions.length; i++) {
+            offer.orderPositions[i].id = 0;
+        }
         this.processResource.createOffer({
             id: process.id
         }, offer).$promise.then(function () {
@@ -628,33 +638,13 @@ class LeadController {
     };
 
     addProduct(array) {
-        if (!isNaN(Number(this.currentProductId))
-            && Number(this.currentProductId) > 0) {
-            let tempProduct = findElementById(this.productService.products,
-                Number(this.currentProductId));
-            let tempOrderPosition = new OrderPosition();
-            tempOrderPosition.product = tempProduct as Product;
-            tempOrderPosition.amount = this.currentProductAmount;
-            array.push(tempOrderPosition);
-        }
+        this.workflowService.addProduct(array, this.currentProductId, this.currentProductAmount);
     }
     deleteProduct(array, index) {
-        array.splice(index, 1);
+        this.workflowService.deleteProduct(array, index);
     }
     sumOrderPositions(array) {
-        let sum = 0;
-        if (isNullOrUndefined(array)) {
-            return 0;
-        }
-        for (let i = 0; i < array.length; i++) {
-            let temp = array[i];
-            if (!isNullOrUndefined(temp) && !isNaN(temp.amount)
-                && !isNullOrUndefined(temp.product)
-                && !isNaN(temp.product.priceNetto)) {
-                sum += temp.amount * temp.product.priceNetto;
-            }
-        }
-        return sum;
+        return this.workflowService.sumOrderPositions(array);
     }
 
 

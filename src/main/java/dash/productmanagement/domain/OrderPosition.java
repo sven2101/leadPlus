@@ -82,7 +82,6 @@ public class OrderPosition {
 		int result = 1;
 		result = prime * result + amount;
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((workflow == null) ? 0 : workflow.hashCode());
 		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		return result;
 	}
@@ -99,11 +98,6 @@ public class OrderPosition {
 		if (amount != other.amount)
 			return false;
 		if (id != other.id)
-			return false;
-		if (workflow == null) {
-			if (other.workflow != null)
-				return false;
-		} else if (!workflow.equals(other.workflow))
 			return false;
 		if (product == null) {
 			if (other.product != null)

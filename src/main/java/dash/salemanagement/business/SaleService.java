@@ -35,6 +35,7 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.productmanagement.domain.OrderPosition;
 import dash.salemanagement.domain.Sale;
 
 @Service
@@ -70,6 +71,12 @@ public class SaleService implements ISaleService {
 	public Sale save(final Sale sale) throws SaveFailedException {
 		if (Optional.ofNullable(sale).isPresent()) {
 			try {
+				if (sale != null) {
+					sale.setContainer(null);
+					for (OrderPosition temp : sale.getOrderPositions()) {
+						temp.setWorkflow(sale);
+					}
+				}
 				return saleRepository.save(sale);
 			} catch (Exception ex) {
 				logger.error(SaleService.class.getSimpleName() + ex.getMessage(), ex);
@@ -86,6 +93,12 @@ public class SaleService implements ISaleService {
 	public Sale update(final Sale sale) throws UpdateFailedException {
 		if (Optional.ofNullable(sale).isPresent()) {
 			try {
+				if (sale != null) {
+					sale.setContainer(null);
+					for (OrderPosition temp : sale.getOrderPositions()) {
+						temp.setWorkflow(sale);
+					}
+				}
 				return save(sale);
 			} catch (IllegalArgumentException | SaveFailedException ex) {
 				logger.error(SALE_NOT_FOUND + SaleService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);

@@ -13,13 +13,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="orderPosition in childData.lead.orderPositions">
+                <tr ng-repeat="orderPosition in parent.getOrderPositions(childData)">
                     <td>{{orderPosition.product.name}}</td>
                     <td>{{orderPosition.product.priceNetto| currency:'\u20AC'}}</td>
                     <td>{{orderPosition.amount}}</td>
                     <td>{{orderPosition.product.priceNetto*orderPosition.amount| currency:'\u20AC'}}</td>
                 </tr>
             </tbody>
-        </table>        
+        </table>
     </div>
 </div>

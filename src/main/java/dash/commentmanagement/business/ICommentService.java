@@ -23,6 +23,7 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.processmanagement.domain.Process;
 
 @Service
 public interface ICommentService {
@@ -36,4 +37,6 @@ public interface ICommentService {
 	public void delete(final Long id) throws DeleteFailedException;
 
 	public List<Comment> getCommentsByProcess(final long processId) throws NotFoundException;
+
+	public void deleteByProcess(Process process) throws DeleteFailedException;
 }

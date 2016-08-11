@@ -67,7 +67,8 @@ public class CommentService implements ICommentService {
 					return commentRepository.save(comment);
 				} else {
 					SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-					logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_USER_NOT_FOUND,
+					logger.error(
+							SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_USER_NOT_FOUND,
 							new UsernameNotFoundException(USER_NOT_FOUND));
 					throw sfex;
 				}
@@ -77,7 +78,8 @@ public class CommentService implements ICommentService {
 			}
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
+			logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+					sfex);
 			throw sfex;
 		}
 	}
@@ -90,7 +92,8 @@ public class CommentService implements ICommentService {
 				return commentRepository.findByProcess(process);
 			} else {
 				NotFoundException pnfex = new NotFoundException(PROCESS_NOT_FOUND);
-				logger.error(PROCESS_NOT_FOUND + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
+				logger.error(PROCESS_NOT_FOUND + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+						pnfex);
 				throw pnfex;
 			}
 		} else {
@@ -132,6 +135,24 @@ public class CommentService implements ICommentService {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
 				commentRepository.delete(id);
+			} catch (EmptyResultDataAccessException erdaex) {
+				logger.error(COMMENT_NOT_FOUND + CommentService.class.getSimpleName() + erdaex.getMessage(), erdaex);
+				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
+			}
+		} else {
+			DeleteFailedException dfex = new DeleteFailedException(DELETE_FAILED_EXCEPTION);
+			logger.error(COMMENT_NOT_FOUND + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
+			throw dfex;
+		}
+	}
+
+	@Override
+	public void deleteByProcess(final Process process) throws DeleteFailedException {
+		if (process != null) {
+			try {
+				for (Comment comment : commentRepository.findByProcess(process)) {
+					commentRepository.delete(comment);
+				}
 			} catch (EmptyResultDataAccessException erdaex) {
 				logger.error(COMMENT_NOT_FOUND + CommentService.class.getSimpleName() + erdaex.getMessage(), erdaex);
 				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);

@@ -36,6 +36,7 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.offermanagement.domain.Offer;
+import dash.productmanagement.domain.OrderPosition;
 
 @Service
 public class OfferService implements IOfferService {
@@ -64,6 +65,12 @@ public class OfferService implements IOfferService {
 	@Override
 	public Offer save(Offer offer) throws SaveFailedException {
 		if (Optional.ofNullable(offer).isPresent()) {
+			if (offer != null) {
+				offer.setContainer(null);
+				for (OrderPosition temp : offer.getOrderPositions()) {
+					temp.setWorkflow(offer);
+				}
+			}
 			return offerRepository.save(offer);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
@@ -76,6 +83,12 @@ public class OfferService implements IOfferService {
 	public Offer update(Offer offer) throws UpdateFailedException {
 		if (Optional.ofNullable(offer).isPresent()) {
 			try {
+				if (offer != null) {
+					offer.setContainer(null);
+					for (OrderPosition temp : offer.getOrderPositions()) {
+						temp.setWorkflow(offer);
+					}
+				}
 				return save(offer);
 			} catch (IllegalArgumentException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + OfferService.class.getSimpleName(), ex);

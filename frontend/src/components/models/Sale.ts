@@ -11,18 +11,17 @@
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
 "use strict";
-class Lead extends AbstractModel {
+class Sale extends AbstractModel {
     orderPositions: Array<OrderPosition>;
     container: any;
     containerAmount: number;
-    inquirer: any;
+    customer: any;
     timestamp: any;
     vendor: any;
     deliveryAddress: any;
-    leadPrice: number;
+    deliveryDate: any;
     constructor() {
         super();
-        this.leadPrice = 0;
         this.container = {
             name: "placeholder",
             priceNetto: 666

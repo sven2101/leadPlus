@@ -1,5 +1,6 @@
 /// <reference path="../models/Product.ts" />
 /// <reference path="../app/App.Constants.ts" />
+/// <reference path="../Product/Product.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -16,14 +17,16 @@ const WorkflowServiceId: String = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [commentResourceId, $filterId];
+    private $inject = [commentResourceId, $filterId, ProductServiceId];
 
     commentResource;
     filter;
+    productService: ProductService;
 
-    constructor(CommentResource, $filter) {
+    constructor(CommentResource, $filter, ProductService) {
         this.commentResource = CommentResource;
         this.filter = $filter;
+        this.productService = ProductService;
     }
 
     addComment(id, source, process, user, comments, commentInput, commentModalInput) {
@@ -50,7 +53,36 @@ class WorkflowService {
             commentInput[id] = "";
             commentModalInput[id] = "";
         });
-    };
+    }
+    addProduct(array, currentProductId, currentProductAmount) {
+        if (!isNaN(Number(currentProductId))
+            && Number(currentProductId) > 0) {
+            let tempProduct = findElementById(this.productService.products,
+                Number(currentProductId));
+            let tempOrderPosition = new OrderPosition();
+            tempOrderPosition.product = tempProduct as Product;
+            tempOrderPosition.amount = currentProductAmount;
+            array.push(tempOrderPosition);
+        }
+    }
+    deleteProduct(array, index) {
+        array.splice(index, 1);
+    }
+    sumOrderPositions(array) {
+        let sum = 0;
+        if (isNullOrUndefined(array)) {
+            return 0;
+        }
+        for (let i = 0; i < array.length; i++) {
+            let temp = array[i];
+            if (!isNullOrUndefined(temp) && !isNaN(temp.amount)
+                && !isNullOrUndefined(temp.product)
+                && !isNaN(temp.product.priceNetto)) {
+                sum += temp.amount * temp.product.priceNetto;
+            }
+        }
+        return sum;
+    }
 }
 
 angular.module("app.workflow.service", ["ngResource"]).service("WorkflowService", WorkflowService);
