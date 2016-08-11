@@ -166,9 +166,10 @@ class LeadController {
                 $translate("COMMON_PHONE")).notVisible(),
             DTColumnBuilder.newColumn("lead.inquirer.firstname").withTitle(
                 $translate("COMMON_FIRSTNAME")).notVisible(),
+
             DTColumnBuilder.newColumn("lead.inquirer.lastname").withTitle(
                 $translate("COMMON_CONTAINER")).notVisible(),
-            DTColumnBuilder.newColumn("lead.inquirer.lastname").withTitle(
+            DTColumnBuilder.newColumn("lead.deliveryAddress").withTitle(
                 $translate("COMMON_CONTAINER_DESTINATION")).notVisible(),
             DTColumnBuilder.newColumn("lead.inquirer.lastname").withTitle(
                 $translate("COMMON_CONTAINER_AMOUNT")).notVisible(),
@@ -185,6 +186,7 @@ class LeadController {
                     return $filter("currency")(data.lead.leadPrice,
                         "€", 2);
                 }).notVisible(),
+
             DTColumnBuilder.newColumn(null).withTitle(
                 $translate("COMMON_STATUS")).withClass("text-center")
                 .renderWith(addStatusStyle),
@@ -432,9 +434,6 @@ class LeadController {
         }
     }
 
-
-
-
     loadCurrentIdToModal(id) {
         this.currentCommentModalId = id;
     };
@@ -490,7 +489,7 @@ class LeadController {
                 priceNetto: 0
             },
             containerAmount: process.lead.containerAmount,
-            deliveryAddress: process.lead.destination,
+            deliveryAddress: process.lead.deliveryAddress,
             offerPrice: self.sumOrderPositions(process.lead.orderPositions),
             prospect: {
                 company: process.lead.inquirer.company,

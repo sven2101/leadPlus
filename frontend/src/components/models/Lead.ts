@@ -13,16 +13,17 @@
 "use strict";
 class Lead extends AbstractModel {
     orderPositions: Array<OrderPosition>;
-     container: any;
-     containerAmount: number;
-     inquirer: any;
-     timestamp: any;
-     vendor: any;
-     constructor() {
+    container: any;
+    containerAmount: number;
+    inquirer: any;
+    timestamp: any;
+    vendor: any;
+    deliveryAddress: any;
+    constructor() {
         super();
         this.container = {
             name: "placeholder",
             priceNetto: 666
         };
-     }
+    }
 }

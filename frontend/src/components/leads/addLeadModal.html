@@ -57,7 +57,7 @@
                             <!-- CONTAINER DESTINATION -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.addForm.containerDestination.$invalid && !lead.addForm.containerDestination.$pristine }">
                                 <label>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</label>
-                                <input type="text" name="containerDestination" class="form-control" ng-model="lead.newLead.destination" ng-maxlength="50">
+                                <input type="text" name="containerDestination" class="form-control" ng-model="lead.newLead.deliveryAddress" ng-maxlength="50">
                                 <p ng-show="lead.addForm.containerDestination.$invalid && !lead.addForm.containerDestination.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                         </div>

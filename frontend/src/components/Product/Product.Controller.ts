@@ -14,7 +14,7 @@
 
 class ProductController {
 
-    $inject = [ProductServiceId, "Upload"];
+    $inject = [ProductServiceId];
 
     createProductForm;
     currentProduct: Product;
@@ -22,8 +22,7 @@ class ProductController {
     isCurrentProductNew;
     productService: ProductService;
 
-
-    constructor(ProductService, $resource) {
+    constructor(ProductService) {
         this.productService = ProductService;
     }
 

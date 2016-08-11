@@ -67,7 +67,7 @@ public class LeadService implements ILeadService {
 		if (Optional.ofNullable(lead).isPresent()) {
 			lead.setContainer(null);
 			for (OrderPosition temp : lead.getOrderPositions()) {
-				temp.setLead(lead);
+				temp.setWorkflow(lead);
 			}
 			return leadRepository.save(lead);
 		} else {
@@ -83,7 +83,7 @@ public class LeadService implements ILeadService {
 			try {
 				lead.setContainer(null);
 				for (OrderPosition temp : lead.getOrderPositions()) {
-					temp.setLead(lead);
+					temp.setWorkflow(lead);
 				}
 				return save(lead);
 			} catch (IllegalArgumentException | SaveFailedException ex) {
