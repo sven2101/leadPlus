@@ -12,22 +12,31 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.statisticmanagement.business;
+package dash.statisticmanagement.workflow.business;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import dash.exceptions.NotFoundException;
 import dash.processmanagement.request.Request;
-import dash.processmanagement.request.RequestRepository;
-import dash.statisticmanagement.domain.DateRange;
+import dash.statisticmanagement.common.AbstractStatisticService;
 
 @Service
-public interface IStatisticService {
+public class WorkflowStatisticService extends AbstractStatisticService {
 
-	<T> List<Double> getStatisticByDateRange(RequestRepository<T, Long> repository, DateRange dateRange) throws NotFoundException;
-
-	<T> List<Request> getStatisticBetween(RequestRepository<T, Long> repository, Calendar from, Calendar until) throws NotFoundException;
+	@Override
+	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests) {
+		for (Request request : requests) {
+			Calendar timeStamp = request.getTimestamp();
+			String key = statisticHelper.getKeyByDateRange(timeStamp, statisticHelper.getDateRange());
+			if (calendarMap.containsKey(key)) {
+				double value = calendarMap.get(key) + 1.00;
+				calendarMap.put(key, value);
+			}
+		}
+		return new ArrayList<>(calendarMap.values());
+	}
 }

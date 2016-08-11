@@ -33,6 +33,8 @@ public class StatisticHelper {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
 	private Calendar until;
 
+	private DateRange dateRange;
+
 	private Map<String, Double> calendarMap;
 
 	private Comparator<Calendar> calendarComparator;
@@ -41,6 +43,7 @@ public class StatisticHelper {
 		from = Calendar.getInstance();
 		until = Calendar.getInstance();
 		calendarMap = new LinkedHashMap<>();
+		this.dateRange = dateRange;
 		calendarComparator = getComparatorByDateRange(dateRange);
 		init(dateRange);
 	}
@@ -74,6 +77,10 @@ public class StatisticHelper {
 
 	public Calendar getUntil() {
 		return until;
+	}
+
+	public DateRange getDateRange() {
+		return dateRange;
 	}
 
 	public Map<String, Double> getCalendarMap() {

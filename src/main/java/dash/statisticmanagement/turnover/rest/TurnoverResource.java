@@ -12,7 +12,7 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.statisticmanagement.profit.rest;
+package dash.statisticmanagement.turnover.rest;
 
 import javax.validation.Valid;
 
@@ -26,20 +26,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;
-import dash.statisticmanagement.profit.business.ProfitStatisticService;
 import dash.statisticmanagement.result.domain.Result;
+import dash.statisticmanagement.turnover.business.TurnoverStatisticService;
 import dash.workflowmanagement.domain.Workflow;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping("/api/rest/processes/statistics/profit")
+@RequestMapping("/api/rest/processes/statistics/turnover")
 @Api(value = "Statistic Profit API")
-public class ProfitResource {
+public class TurnoverResource {
 
 	@Autowired
-	private ProfitStatisticService profitStatisticService;
+	private TurnoverStatisticService turnoverStatisticService;
 
 	@RequestMapping(value = "/{workflow}/daterange/{dateRange}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
@@ -47,6 +47,6 @@ public class ProfitResource {
 	public Result getConversionStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
-		return profitStatisticService.getStatisticByDateRange(workflow, dateRange);
+		return turnoverStatisticService.getStatisticByDateRange(workflow, dateRange);
 	}
 }
