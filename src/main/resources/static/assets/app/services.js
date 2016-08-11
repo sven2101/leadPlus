@@ -15,7 +15,8 @@
 'use strict';
 
 angular.module('app.services', ['ngResource'])
-    .service('Auth', function ($http, $rootScope, $cookieStore, $location, $window) {
+    
+    /*.service('Auth', function ($http, $rootScope, $cookieStore, $location, $window) {
 
         return {
 
@@ -73,6 +74,7 @@ angular.module('app.services', ['ngResource'])
             }
         };
     })
+    */
     .service('LeadResource', ['$resource', function ($resource) {
         return $resource('/api/rest/leads/:id', {}, {
             getAll: { url: '/api/rest/leads', method: 'GET' },

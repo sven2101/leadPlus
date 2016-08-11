@@ -40,15 +40,16 @@ class Auth {
             .error(error);
     }
     login(credentials, success, error) {
+        let self = this;
         if (credentials) {
 
             let authorization = btoa(credentials.username + ":" + credentials.password);
             let headers = credentials ? { authorization: "Basic " + authorization } : {};
-            this.http.get("user", { headers: headers }).success(function(data) {
+            this.http.get("user", { headers: headers }).success(function (data) {
                 console.log(data);
                 if (data.username) {
 
-                    this.rootScope.globals = {
+                    self.rootScope.globals = {
                         currentUser: {
                             id: data.id,
                             username: data.username,
@@ -57,8 +58,8 @@ class Auth {
                         }
                     };
 
-                    this.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
-                    this.cookieStore.put("globals", this.rootScope.globals);
+                    self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
+                    self.cookieStore.put("globals", self.rootScope.globals);
 
                     success(data);
                 } else {
@@ -75,12 +76,12 @@ class Auth {
         this.http.defaults.headers.common.Authorization = "Basic";
 
         this.http.post("logout", {})
-            .success(function() {
+            .success(function () {
                 self.location.path("#/login");
             })
-            .error(function(data) {
+            .error(function (data) {
                 self.location.path("#/login");
             });
     }
 }
-angular.module("app.services.Auth", ["ngResource"]).service("Auth", Auth);
+angular.module("app.authentication", ["ngResource"]).service("Auth", Auth);

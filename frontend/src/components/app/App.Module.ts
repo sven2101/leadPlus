@@ -13,6 +13,7 @@
 angular.module("app",
     [
         "app.services",
+        "app.authentication",
         "app.dashboard",
         "app.login",
         "app.signup",
