@@ -1,4 +1,4 @@
-/// <reference path="../models/Product.ts" />
+/// <reference path="../Product/Product.Model.ts" />
 /// <reference path="../app/App.Constants.ts" />
 /// <reference path="../Product/Product.Service.ts" />
 /*******************************************************************************
@@ -24,7 +24,7 @@ class WorkflowService {
     productService: ProductService;
 
     constructor(CommentResource, $filter, ProductService) {
-        this.commentResource = CommentResource;
+        this.commentResource = CommentResource.resource;
         this.filter = $filter;
         this.productService = ProductService;
     }

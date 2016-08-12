@@ -1,4 +1,5 @@
 /// <reference path="../Common/AbstractModel.Model.ts" />
+/// <reference path="../Common/OrderPosition.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -10,21 +11,20 @@
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
 "use strict";
-
-let findElementById = function (array: Array<AbstractModel>, id: Number): AbstractModel {
-    for (let i = 0; i < array.length; i++) {
-        if (array[i].id === id) {
-            return array[i];
-        }
+class Offer extends AbstractModel {
+    orderPositions: Array<OrderPosition>;
+    container: any;
+    containerAmount: number;
+    prospect: any;
+    timestamp: any;
+    vendor: any;
+    deliveryAddress: any;
+    deliveryDate: any;
+    constructor() {
+        super();
+        this.container = {
+            name: "placeholder",
+            priceNetto: 666
+        };
     }
-    return null;
-};
-
-let isNullOrUndefined = function (object: any): boolean {
-    return object === null || typeof object === "undefined";
-};
-
-let deepCopyArray = function (old: Array<any>): Array<any> {
-    return JSON.parse(JSON.stringify(old));
-};
-
+}

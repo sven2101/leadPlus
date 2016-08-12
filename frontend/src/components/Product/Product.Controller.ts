@@ -1,5 +1,5 @@
 /// <reference path="../Product/Product.Service.ts" />
-/// <reference path="../models/Product.ts" />
+/// <reference path="../Product/Product.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -58,5 +58,5 @@ class ProductController {
     }
 }
 
-angular.module("app.product", ["ngResource", "ngFileUpload"]).controller("ProductController", ProductController);
+angular.module("app.product", ["ngResource"]).controller("ProductController", ProductController);
 

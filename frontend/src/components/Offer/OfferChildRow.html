@@ -1,0 +1,82 @@
+<style>
+.chat-view {
+	word-break: break-all;
+}
+</style>
+<div class="row">
+	<div class="col-lg-6">
+		<div class="ibox">
+			<div class="ibox-title">
+				<h3>{{ 'COMMON_CHILDROW_ADDITONAL_TITLE' | translate }}</h3>
+			</div>
+			<div class="ibox-content">
+				<table class="table table-bordered text-left">
+					<tr>
+						<td>{{ 'COMMON_NAME' | translate }}</td>
+						<td>{{ childData.offer.prospect.title | translate }}
+							{{childData.offer.prospect.firstname}}
+							{{childData.offer.prospect.lastname}}</td>
+					</tr>
+					<tr>
+						<td>{{ 'COMMON_PHONE' | translate }}</td>
+						<td>{{childData.offer.prospect.phone}}</td>
+					</tr>
+					<tr>
+						<td>{{ 'COMMON_CONTAINER' | translate }}</td>
+						<td>{{childData.offer.container.name}}</td>
+					</tr>
+					<tr>
+						<td>{{ 'COMMON_CONTAINER_DESC' | translate }}</td>
+						<td>{{childData.offer.container.description}}</td>
+					</tr>
+					<tr>
+						<td>{{ 'COMMON_CONTAINER_AMOUNT' | translate }}</td>
+						<td>{{childData.offer.containerAmount}}</td>
+					</tr>
+					<tr>
+						<td>{{ 'COMMON_CONTAINER_SINGLE_PRICE' | translate }}</td>
+						<td>{{childData.offer.container.priceNetto |
+							currency:'\u20AC'}}</td>
+					</tr>
+					<tr>
+						<td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
+						<td>{{childData.offer.containerAmount*childData.offer.container.priceNetto
+							| currency:'\u20AC'}}</td>
+					</tr>
+					<tr>
+						<td>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</td>
+						<td>{{childData.offer.deliveryAddress}}</td>
+					</tr>
+					<tr>
+						<td>{{ 'COMMON_DELIVERY_TIME' | translate }}</td>
+						<td>{{childData.offer.deliveryDate}}</td>
+					</tr>
+					<tr>
+						<td>{{ 'COMMON_CONTAINER_OFFER_PRICE' | translate }}</td>
+						<td>{{childData.offer.offerPrice | currency:'\u20AC'}}</td>
+					</tr>
+
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-6" ng-if="childData.processor != null">
+		<div class="ibox">
+			<div class="ibox-title">
+				<h3>{{ 'COMMON_PROCESSOR' | translate }}:
+					{{childData.processor.username}}</h3>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-6">
+		<div class="ibox">
+			<div class="ibox-title">
+				<h3>{{ 'COMMON_NOTE' | translate }}</h3>
+			</div>
+			<div class="ibox-content text-left">{{childData.lead.message}}</div>
+		</div>
+	</div>
+	<div class="col-lg-12" ng-include="'components/Common/ProductView.html'"></div>
+</div>
+<div class="row" ng-include="'components/Common/CommentView.html'"></div>
+<div class="row" ng-include="'components/Common/AllComments.Modal.html'"></div>

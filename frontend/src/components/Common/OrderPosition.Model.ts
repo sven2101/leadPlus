@@ -11,20 +11,14 @@
  ******************************************************************************/
 "use strict";
 
-let findElementById = function (array: Array<AbstractModel>, id: Number): AbstractModel {
-    for (let i = 0; i < array.length; i++) {
-        if (array[i].id === id) {
-            return array[i];
-        }
+class OrderPosition extends AbstractModel {
+
+    amount: number;
+    product: Product;
+
+    constructor() {
+        super();
+        this.amount = 666;
     }
-    return null;
-};
 
-let isNullOrUndefined = function (object: any): boolean {
-    return object === null || typeof object === "undefined";
-};
-
-let deepCopyArray = function (old: Array<any>): Array<any> {
-    return JSON.parse(JSON.stringify(old));
-};
-
+}

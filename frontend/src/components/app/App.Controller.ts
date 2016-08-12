@@ -1,3 +1,4 @@
+/// <reference path="../app/App.Constants.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -12,7 +13,7 @@
 
 class AppController {
 
-    static $inject = ["$translate", "$scope", "$rootScope", "$interval", "ProcessResource", "UserResource"];
+    private $inject = ["$translate", "$scope", "$rootScope", "$interval", "ProcessResource", "UserResource"];
 
     translate;
     scope;
@@ -28,8 +29,8 @@ class AppController {
         this.scope = $scope;
         this.rootScope = $rootScope;
         this.interval = $interval;
-        this.processResource = ProcessResource;
-        this.userResource = UserResource;
+        this.processResource = ProcessResource.resource;
+        this.userResource = UserResource.resource;
 
         this.rootScope.leadsCount = 0;
         this.rootScope.offersCount = 0;
@@ -45,19 +46,19 @@ class AppController {
     }
     registerLoadLabels() {
         let self = this;
-        self.rootScope.loadLabels = function() {
+        self.rootScope.loadLabels = function () {
             if (!angular
                 .isUndefined(self.rootScope.globals.currentUser)) {
                 self.processResource.getLeadsByStatus({
                     workflow: "LEAD",
                     status: "OPEN"
-                }).$promise.then(function(result) {
+                }).$promise.then(function (result) {
                     self.rootScope.leadsCount = result.length;
                 });
                 self.processResource.getOffersByStatus({
                     workflow: "OFFER",
                     status: "OFFER"
-                }).$promise.then(function(result) {
+                }).$promise.then(function (result) {
                     self.rootScope.offersCount = result.length;
                 });
             }
@@ -66,7 +67,7 @@ class AppController {
 
     registerChangeLanguage() {
         let self = this;
-        self.rootScope.changeLanguage = function(langKey) {
+        self.rootScope.changeLanguage = function (langKey) {
             self.translate.use(langKey);
             self.rootScope.language = langKey;
         };
@@ -74,13 +75,13 @@ class AppController {
 
     registerSetUserDefaultLanguage() {
         let self = this;
-        self.rootScope.setUserDefaultLanguage = function() {
+        self.rootScope.setUserDefaultLanguage = function () {
             if (!angular
                 .isUndefined(self.rootScope.globals.currentUser)) {
                 self.userResource
                     .get({
                         id: self.rootScope.globals.currentUser.id
-                    }).$promise.then(function(result) {
+                    }).$promise.then(function (result) {
                         self.rootScope.changeLanguage(result.language);
                     });
             }
@@ -88,25 +89,25 @@ class AppController {
     }
     registerInterval() {
         let self = this;
-        self.rootScope.$on("$destroy", function() {
+        self.rootScope.$on("$destroy", function () {
             if (angular.isDefined(self.stop)) {
                 self.interval.cancel(self.stop);
                 self.stop = undefined;
             }
         });
-        self.stop = self.interval(function() {
+        self.stop = self.interval(function () {
             if (!angular
                 .isUndefined(self.rootScope.globals.currentUser)) {
                 self.processResource.getLeadsByStatus({
                     workflow: "LEAD",
                     status: "OPEN"
-                }).$promise.then(function(result) {
+                }).$promise.then(function (result) {
                     self.rootScope.leadsCount = result.length;
                 });
                 self.processResource.getOffersByStatus({
                     workflow: "OFFER",
                     status: "OFFER"
-                }).$promise.then(function(result) {
+                }).$promise.then(function (result) {
                     self.rootScope.offersCount = result.length;
                 });
             }
@@ -116,4 +117,4 @@ class AppController {
 
 }
 
-angular.module("app").controller("AppController", AppController);
+angular.module(moduleAppController, ["ngResource"]).controller("AppController", AppController);

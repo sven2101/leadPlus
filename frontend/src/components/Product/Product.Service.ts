@@ -1,4 +1,4 @@
-/// <reference path="../models/Product.ts" />
+/// <reference path="../Product/Product.Model.ts" />
 /// <reference path="../app/App.Constants.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -26,7 +26,7 @@ class ProductService {
     constructor(toaster, $translate, ProductResource) {
         this.toaster = toaster;
         this.translate = $translate;
-        this.productResource = ProductResource;
+        this.productResource = ProductResource.resource;
         this.products = new Array<Product>();
         this.getAllProducts();
     }

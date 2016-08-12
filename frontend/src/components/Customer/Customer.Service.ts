@@ -1,5 +1,5 @@
 /// <reference path="../app/App.Constants.ts" />
-/// <reference path="../models/Customer.ts" />
+/// <reference path="../Customer/Customer.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -22,7 +22,7 @@ class CustomerService {
     customer: Array<Customer>;
 
     constructor(CustomerResource) {
-        this.customerResource = CustomerResource;
+        this.customerResource = CustomerResource.resource;
         this.customer = new Array<Customer>();
     }
 

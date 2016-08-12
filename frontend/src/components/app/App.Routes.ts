@@ -15,77 +15,71 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
         $routeProvider
             .when("/",
             {
-                templateUrl: "components/dashboard/dashboard.html",
+                templateUrl: "components/Dashboard/Dashboard.html",
                 controller: "DashboardController",
                 controllerAs: "dashboard",
                 authenticated: true
             })
             .when("/dashboard",
             {
-                templateUrl: "components/dashboard/dashboard.html",
+                templateUrl: "components/Dashboard/Dashboard.html",
                 controller: "DashboardController",
                 controllerAs: "dashboard",
                 authenticated: true
             })
             .when("/leads",
             {
-                templateUrl: "components/leads/leads.html",
+                templateUrl: "components/Lead/Lead.html",
                 controller: "LeadController",
                 controllerAs: "lead",
                 authenticated: true
             })
             .when("/offers",
             {
-                templateUrl: "components/offers/offers.html",
+                templateUrl: "components/Offer/Offer.html",
                 controller: "OffersController",
                 controllerAs: "offer",
                 authenticated: true
             })
             .when("/sales",
             {
-                templateUrl: "components/sales/sales.html",
+                templateUrl: "components/Sale/Sale.html",
                 controller: "SaleController",
                 controllerAs: "sale",
                 authenticated: true
             })
             .when("/statistic",
             {
-                templateUrl: "components/statistics/statistics.html",
+                templateUrl: "components/Statistic/Statistic.html",
                 controller: "StatisticContoller",
                 controllerAs: "statistic",
                 authenticated: true
             })
             .when("/settings",
             {
-                templateUrl: "components/settings/settings.html",
-                controller: "SettingsController",
+                templateUrl: "components/Setting/Setting.html",
+                controller: "SettingController",
                 controllerAs: "setting",
                 authenticated: true
             })
             .when("/profile",
             {
-                templateUrl: "components/profile/profile.html",
+                templateUrl: "components/Profile/Profile.html",
                 controller: "ProfileController",
                 controllerAs: "profile",
                 authenticated: true
             })
             .when("/signup",
             {
-                templateUrl: "components/signup/signup.html",
+                templateUrl: "components/Signup/Signup.html",
                 controller: "SignUpController",
                 controllerAs: "signup"
             })
             .when("/login",
             {
-                templateUrl: "components/login/login.html",
+                templateUrl: "components/Login/Login.html",
                 controller: "LoginController",
                 controllerAs: "login"
-            }).when("/test",
-            {
-                templateUrl: "components/test/test.html",
-                controller: "TestController",
-                controllerAs: "testCtrl",
-                authenticated: true
             }).when("/product",
             {
                 templateUrl: "components/Product/Product.html",

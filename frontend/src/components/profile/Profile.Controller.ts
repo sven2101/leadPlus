@@ -31,7 +31,7 @@ class ProfileController {
 
 
     constructor($rootScope, toaster, UserResource, $translate) {
-        this.userService = UserResource;
+        this.userService = UserResource.resource;
         this.translate = $translate;
         let self = this;
         this.toaster = toaster;

@@ -54,10 +54,10 @@ class DashboardController {
         this.orderBy = $filter("orderBy");
         this.translate = $translate;
         this.rootScope = $rootScope;
-        this.processResource = ProcessResource;
-        this.commentResource = CommentResource;
-        this.userResource = UserResource;
-        this.statisticResource = StatisticResource;
+        this.processResource = ProcessResource.resource;
+        this.commentResource = CommentResource.resource;
+        this.userResource = UserResource.resource;
+        this.statisticResource = StatisticResource.resource;
         this.commentModalInput = "";
         this.comments = {};
         this.infoData = {};

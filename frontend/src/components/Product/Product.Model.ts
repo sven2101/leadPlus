@@ -1,4 +1,4 @@
-/// <reference path="../Common/AbstractModel.Model.ts" />
+/// <reference path="../Common/AbstractModel.Model.ts" />" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -11,20 +11,20 @@
  ******************************************************************************/
 "use strict";
 
-let findElementById = function (array: Array<AbstractModel>, id: Number): AbstractModel {
-    for (let i = 0; i < array.length; i++) {
-        if (array[i].id === id) {
-            return array[i];
-        }
+class Product extends AbstractModel {
+
+    name: String;
+    description: String;
+    priceNetto: number;
+    image: any;
+    timestamp: Date;
+    isDeactivated;
+
+    constructor() {
+        super();
+        this.name = "";
+        this.description = "";
+        this.isDeactivated = false;
     }
-    return null;
-};
 
-let isNullOrUndefined = function (object: any): boolean {
-    return object === null || typeof object === "undefined";
-};
-
-let deepCopyArray = function (old: Array<any>): Array<any> {
-    return JSON.parse(JSON.stringify(old));
-};
-
+}

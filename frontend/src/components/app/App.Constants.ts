@@ -10,12 +10,62 @@
  ******************************************************************************/
 "use strict";
 
-const $translateId: String = "$translate";
-const toasterId: String = "toaster";
-const $filterId: String = "$filter";
-const $scopeId: String = "$scope";
-const $compileId: String = "$compile";
+const $translateId: string = "$translate";
+const toasterId: string = "toaster";
+const $filterId: string = "$filter";
+const $scopeId: string = "$scope";
+const $compileId: string = "$compile";
+const $resourceId: string = "$resource";
+const ngResourceId: string = "ngResource";
 
-const productResourceId: String = "ProductResource";
-const customerResourceId: String = "CustomerResource";
-const commentResourceId: String = "CommentResource";
+const productResourceId: string = "ProductResource";
+const customerResourceId: string = "CustomerResource ";
+const commentResourceId: string = "CommentResource";
+
+const moduleApp: string = "app";
+const moduleAppController: string = moduleApp + ".controller";
+const moduleServices: string = moduleApp + ".services";
+const moduleAuthentication: string = moduleApp + ".authentication";
+const moduleDashboard: string = moduleApp + ".dashboard";
+const moduleLogin: string = moduleApp + ".login";
+const moduleSignup: string = moduleApp + ".signup";
+const moduleLead: string = moduleApp + ".lead";
+const moduleLeadResource: string = moduleLead + ".resource";
+const moduleOffer: string = moduleApp + ".offer";
+const moduleOfferResource: string = moduleOffer + ".resource";
+const moduleSale: string = moduleApp + ".sale";
+const moduleSaleResource: string = moduleSale + ".resource";
+const moduleProcess: string = moduleApp + ".process";
+const moduleProcessResource: string = moduleProcess + ".resource";
+const moduleUser: string = moduleApp + ".user";
+const moduleUserResource: string = moduleUser + ".resource";
+const moduleComment: string = moduleApp + ".comment";
+const moduleCommentResource: string = moduleComment + ".resource";
+const moduleStatistic: string = moduleApp + ".statistics";
+const moduleStatisticResource: string = moduleStatistic + ".resource";
+const moduleSettings: string = moduleApp + ".settings";
+const moduleSettingsResource: string = moduleSettings + ".resource";
+const moduleProfile: string = moduleApp + ".profile";
+const moduleProduct: string = moduleApp + ".product";
+const moduleProductResource: string = moduleProduct + ".resource";
+const moduleProductService: string = moduleProduct + ".service";
+const moduleCustomer: string = moduleApp + ".customer";
+const moduleCustomerResource: string = moduleCustomer + ".resource";
+const moduleCustomerService: string = moduleCustomer + ".service";
+const moduleWorkflow: string = moduleApp + ".workflow";
+const moduleWorkflowService: string = moduleWorkflow + ".service";
+
+const moduleTranslate: string = "pascalprecht.translate";
+const moduleNgResource: string = "ngResource";
+const moduleNgRoute: string = "ngRoute";
+const moduleNgAnimate: string = "ngAnimate";
+const moduleNgCookies: string = "ngCookies";
+const moduleDatatables: string = "datatables";
+const moduleDatatablesBootstrap: string = "datatables.bootstrap";
+const moduleDatatablesButtons: string = "datatables.buttons";
+const moduleUiSortable: string = "ui.sortable";
+const moduleNgSwitchery: string = "NgSwitchery";
+const moduleToaster: string = "toaster";
+const moduleHighchartsNg: string = "highcharts-ng";
+
+
