@@ -20,11 +20,11 @@ app.directive("childrow", function() {
     directive.restrict = "A";
     directive.templateUrl = function(elem, attr) {
         if (attr.type === "lead")
-            return "components/leads/leadChildRow.html";
+            return "components/Lead/LeadChildRow.html";
         else if (attr.type === "offer")
-            return "components/offers/offerChildRow.html";
+            return "components/Offer/OfferChildRow.html";
         else if (attr.type === "sale")
-            return "components/sales/saleChildRow.html";
+            return "components/Sale/SaleChildRow.html";
 
     };
     directive.transclude = true;

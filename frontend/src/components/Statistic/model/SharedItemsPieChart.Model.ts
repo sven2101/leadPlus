@@ -1,3 +1,4 @@
+/// <reference path="../../Statistic/model/AbstractStatisticModel.Model.ts" />" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -10,10 +11,9 @@
  ******************************************************************************/
 "use strict";
 
-class SharedItemsPieChart {
-    chartConfig;
-    translate;
-    constructor(translate) {
+class SharedItemsPieChart extends AbstractStatisticModel {
+    constructor(translate, id) {
+        super(translate, id);
         this.translate = translate;
         this.chartConfig = {
             options: {
@@ -48,5 +48,15 @@ class SharedItemsPieChart {
             }],
             loading: false
         };
+    }
+    pushData(name: String, data: Array<number>, color: String) {
+        this.chartConfig.series[0].data.push({
+            name: this.translate.instant(name),
+            y: data[0],
+            color: color
+        });
+    }
+    clearData() {
+        this.chartConfig.series[0].data = [];
     }
 }

@@ -21,6 +21,7 @@ const ngResourceId: string = "ngResource";
 const productResourceId: string = "ProductResource";
 const customerResourceId: string = "CustomerResource ";
 const commentResourceId: string = "CommentResource";
+const statisticResourceId: string = "StatisticResource";
 
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";
@@ -41,8 +42,9 @@ const moduleUser: string = moduleApp + ".user";
 const moduleUserResource: string = moduleUser + ".resource";
 const moduleComment: string = moduleApp + ".comment";
 const moduleCommentResource: string = moduleComment + ".resource";
-const moduleStatistic: string = moduleApp + ".statistics";
+const moduleStatistic: string = moduleApp + ".statistic";
 const moduleStatisticResource: string = moduleStatistic + ".resource";
+const moduleStatisticService: string = moduleStatistic + ".service";
 const moduleSettings: string = moduleApp + ".settings";
 const moduleSettingsResource: string = moduleSettings + ".resource";
 const moduleProfile: string = moduleApp + ".profile";
@@ -67,5 +69,9 @@ const moduleUiSortable: string = "ui.sortable";
 const moduleNgSwitchery: string = "NgSwitchery";
 const moduleToaster: string = "toaster";
 const moduleHighchartsNg: string = "highcharts-ng";
+
+const workflowLead: string = "LEAD";
+const workflowOffer: string = "OFFER";
+const workflowSale: string = "SALE";
 
 

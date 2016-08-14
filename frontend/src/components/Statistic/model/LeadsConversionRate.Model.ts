@@ -1,3 +1,4 @@
+/// <reference path="../../Statistic/model/AbstractStatisticModel.Model.ts" />" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -10,38 +11,48 @@
  ******************************************************************************/
 "use strict";
 
-class EntireStatisticArea {
-    chartConfig;
-    translate;
-    constructor(translate) {
+class LeadsConversionRate extends AbstractStatisticModel {
+    constructor(translate, id) {
+        super(translate, id);
         this.translate = translate;
         this.chartConfig = {
             options: {
                 chart: {
-                    type: "area"
+                    type: "spline"
                 },
                 title: {
                     text: ""
                 },
-                tooltip: {
-                    shared: true,
-                    valueSuffix: " €",
-                    valueDecimals: 2
-                },
+                loading: false,
                 xAxis: {
                     categories: [],
                 },
-                loading: false,
                 yAxis: {
                     title: {
-                        text: this.translate.instant("STATISTIC_PROFIT_AND_RETURN_Y_AXIS"),
+                        text: this.translate.instant("STATISTIC_SALES_OF_LEADS_Y_AXIS")
                     },
-                    labels: {
-                        formatter: function () {
-                            return this.value;
+                    minorGridLineWidth: 1,
+                    gridLineWidth: 1,
+                    alternateGridColor: null
+
+                },
+                tooltip: {
+                    valueSuffix: " %",
+                    valueDecimals: 2
+                },
+                plotOptions: {
+                    spline: {
+                        lineWidth: 4,
+                        states: {
+                            hover: {
+                                lineWidth: 5
+                            }
+                        },
+                        marker: {
+                            enabled: false
                         }
                     }
-                }
+                },
             },
             series: []
         };

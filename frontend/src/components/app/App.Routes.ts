@@ -50,7 +50,7 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             })
             .when("/statistic",
             {
-                templateUrl: "components/Statistic/Statistic.html",
+                templateUrl: "components/Statistic/view/Statistic.html",
                 controller: "StatisticContoller",
                 controllerAs: "statistic",
                 authenticated: true

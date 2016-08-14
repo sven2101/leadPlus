@@ -1,0 +1,68 @@
+<div ng-if="statistic.currentTab==2">
+    <div ng-if="statistic.dateRange == 'DAILY'">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>{{ 'STATISTIC_ENTIRE_STATISTICS_NOT_AVAILABLE' | translate }}</h5>
+                    </div>
+                    <div class="ibox-content">
+                        {{ 'STATISTIC_ENTIRE_STATISTICS_NOT_AVAILABLE_MESSAGE' | translate }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-if="statistic.dateRange != 'DAILY'">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right">{{ statistic.dateRange | translate }}</span>
+                        <h5>{{ 'STATISTIC_PROFIT_AND_RETURN' | translate }}</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <highchart id="chartEntireStatisticArea" config="statistic.getChartModelById('EATAP').chartConfig"></highchart>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right">{{ statistic.dateRange | translate }}</span>
+                        <h5>{{ 'STATISTIC_LEADS_OFFERS_SALES' | translate }}</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <highchart id="chartEntireStatisticSpline" config="statistic.getChartModelById('ESLOS').chartConfig"></highchart>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right">{{ statistic.dateRange | translate }}</span>
+                        <h5>{{ 'STATISTIC_SALES_OF_LEADS' | translate }}</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <highchart id="chartLeadsConversionRate" config="statistic.getChartModelById('ESLSCR').chartConfig"></highchart>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-success pull-right">{{ statistic.dateRange | translate }}</span>
+                        <h5>{{ 'STATISTIC_SALES_OF_OFFERS' | translate }}</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <highchart id="chartOffersConversionRate" config="statistic.getChartModelById('ESOSCR').chartConfig"></highchart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

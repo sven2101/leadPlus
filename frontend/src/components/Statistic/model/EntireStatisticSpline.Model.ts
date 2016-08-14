@@ -1,3 +1,4 @@
+/// <reference path="../../Statistic/model/AbstractStatisticModel.Model.ts" />" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -10,10 +11,9 @@
  ******************************************************************************/
 "use strict";
 
-class EntireStatisticSpline {
-    chartConfig;
-    translate;
-    constructor(translate) {
+class EntireStatisticSpline extends AbstractStatisticModel {
+    constructor(translate, id) {
+        super(translate, id);
         this.translate = translate;
         this.chartConfig = {
             options: {

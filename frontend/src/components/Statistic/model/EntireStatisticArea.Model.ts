@@ -1,3 +1,4 @@
+/// <reference path="../../Statistic/model/AbstractStatisticModel.Model.ts" />" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -10,49 +11,36 @@
  ******************************************************************************/
 "use strict";
 
-class LeadsConversionRate {
-    chartConfig;
-    translate;
-    constructor(translate) {
-        this.translate = translate;
+class EntireStatisticArea extends AbstractStatisticModel {
+    constructor(translate, id) {
+        super(translate, id);
         this.chartConfig = {
             options: {
                 chart: {
-                    type: "spline"
+                    type: "area"
                 },
                 title: {
                     text: ""
                 },
-                loading: false,
+                tooltip: {
+                    shared: true,
+                    valueSuffix: " €",
+                    valueDecimals: 2
+                },
                 xAxis: {
                     categories: [],
                 },
+                loading: false,
                 yAxis: {
                     title: {
-                        text: this.translate.instant("STATISTIC_SALES_OF_LEADS_Y_AXIS")
+                        text: this.translate.instant("STATISTIC_PROFIT_AND_RETURN_Y_AXIS"),
                     },
-                    minorGridLineWidth: 1,
-                    gridLineWidth: 1,
-                    alternateGridColor: null
-
-                },
-                tooltip: {
-                    valueSuffix: " %",
-                    valueDecimals: 2
-                },
-                plotOptions: {
-                    spline: {
-                        lineWidth: 4,
-                        states: {
-                            hover: {
-                                lineWidth: 5
-                            }
-                        },
-                        marker: {
-                            enabled: false
+                    labels: {
+                        formatter: function () {
+                            return this.value;
                         }
                     }
-                },
+                }
             },
             series: []
         };

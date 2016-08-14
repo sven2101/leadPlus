@@ -46,7 +46,6 @@ public abstract class AbstractStatisticService implements IStatisticService {
 		final Map<String, Double> calendarMap = statisticHelper.getCalendarMap();
 		final List<Request> requests = getStatisticBetween(getRepositoryByWorkflow(workflow), statisticHelper.getFrom(),
 				statisticHelper.getUntil());
-
 		return new Result(buildStatistic(calendarMap, requests));
 	}
 
