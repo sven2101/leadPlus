@@ -11,8 +11,8 @@
  ******************************************************************************/
 "use strict";
 
-class OffersConversionRate extends AbstractStatisticModel {
-    constructor(translate, id) {
+class SplineChart extends AbstractStatisticModel {
+    constructor(translate, id, yName: string, valueSuffix: string) {
         super(translate, id);
         this.translate = translate;
         this.chartConfig = {
@@ -20,41 +20,31 @@ class OffersConversionRate extends AbstractStatisticModel {
                 chart: {
                     type: "spline"
                 },
-                title: {
-                    text: ""
+                title: "",
+                tooltip: {
+                    shared: true,
+                    valueSuffix: valueSuffix
                 },
                 loading: false,
                 xAxis: {
-                    categories: [],
+                    categories: []
                 },
                 yAxis: {
                     title: {
-                        text: this.translate.instant("STATISTIC_SALES_OF_OFFERS_Y_AXIS")
+                        text: this.translate.instant(yName)
                     },
-                    minorGridLineWidth: 1,
-                    gridLineWidth: 1,
-                    alternateGridColor: null
-
-                },
-                tooltip: {
-                    valueSuffix: " %",
-                    valueDecimals: 2
-                },
-                plotOptions: {
-                    spline: {
-                        lineWidth: 4,
-                        states: {
-                            hover: {
-                                lineWidth: 5
-                            }
-                        },
-                        marker: {
-                            enabled: false
-                        }
-                    }
-                },
+                    plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: "#808080"
+                    }]
+                }
             },
-            series: []
+            series: [],
+            // function (optional)
+            func: function (chart) {
+                // setup some logic for the chart
+            }
         };
     }
 }
