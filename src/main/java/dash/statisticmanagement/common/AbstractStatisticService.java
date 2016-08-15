@@ -57,6 +57,8 @@ public abstract class AbstractStatisticService implements IStatisticService {
 			throws NotFoundException {
 		if (Optional.ofNullable(repository).isPresent() && Optional.ofNullable(from).isPresent()
 				&& Optional.ofNullable(until).isPresent()) {
+			System.out.println(from.getTime());
+			System.out.println(until.getTime());
 			return (List<Request>) repository.findByTimestampBetween(from, until);
 		} else {
 			NotFoundException pnfex = new NotFoundException(STATISTIC_NOT_FOUND);

@@ -166,7 +166,6 @@ class LeadController {
                 $translate("COMMON_PHONE")).notVisible(),
             DTColumnBuilder.newColumn("lead.inquirer.firstname").withTitle(
                 $translate("COMMON_FIRSTNAME")).notVisible(),
-
             DTColumnBuilder.newColumn("lead.deliveryAddress").withTitle(
                 $translate("COMMON_CONTAINER")).notVisible(),
             DTColumnBuilder.newColumn("lead.deliveryAddress").withTitle(
@@ -456,7 +455,7 @@ class LeadController {
             };
         }
         this.newLead.timestamp = this.filter("date")
-            (new Date(), "dd.MM.yyyy HH:mm");
+            (new Date(), "dd.MM.yyyy HH:mm", "UTC");
         this.newLead.vendor = {
             name: "***REMOVED***"
         };
