@@ -1,4 +1,5 @@
 /// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Statistic/model/AbstractStatisticModel.Model.ts" />" />
 /// <reference path="../../Statistic/model/SharedItemsPieChart.Model.ts" />" />
 /// <reference path="../../Statistic/model/EntireStatisticSpline.Model.ts" />" />
@@ -17,9 +18,11 @@
  ******************************************************************************/
 "use strict";
 
-const StatisticServiceId: String = "StatisticService";
+const StatisticServiceId: string = "StatisticService";
 
 class StatisticService {
+
+    static serviceId: string = "StatisticService";
 
     private $inject = [toasterId, $translateId, statisticResourceId];
 
@@ -322,4 +325,4 @@ class StatisticService {
     }
 
 }
-angular.module("app.statistic.service", ["ngResource"]).service("StatisticService", StatisticService);
+angular.module(moduleStatisticService, [ngResourceId]).service(StatisticService.serviceId, StatisticService);

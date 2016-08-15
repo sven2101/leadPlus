@@ -15,22 +15,17 @@
  *******************************************************************************/
 "use strict";
 
+const StatisticContollerId: string = "StatisticContoller";
+
 class StatisticContoller {
 
-    $inject = ["$translate", "$interval", "$scope", StatisticServiceId];
+    $inject = [StatisticServiceId];
 
-    translate;
-    scope;
-    interval;
     statisticService;
-
     currentTab = 1;
     dateRange = "DAILY";
 
-    constructor($translate, $interval, $scope, StatisticService) {
-        this.translate = $translate;
-        this.scope = $scope;
-        this.interval = $interval;
+    constructor(StatisticService) {
         this.statisticService = StatisticService;
         this.onPeriodChange(this.dateRange);
     }
@@ -77,4 +72,4 @@ class StatisticContoller {
     }
 }
 
-angular.module("app.statistic", ["ngResource"]).controller("StatisticContoller", StatisticContoller);
+angular.module(moduleStatistic, [ngResourceId]).controller(StatisticContollerId, StatisticContoller);
