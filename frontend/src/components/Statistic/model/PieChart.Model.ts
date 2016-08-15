@@ -11,8 +11,8 @@
  ******************************************************************************/
 "use strict";
 
-class SharedItemsPieChart extends AbstractStatisticModel {
-    constructor(translate, id) {
+class PieChart extends AbstractStatisticModel {
+    constructor(translate, id: string, seriesName: string) {
         super(translate, id);
         this.translate = translate;
         this.chartConfig = {
@@ -42,7 +42,7 @@ class SharedItemsPieChart extends AbstractStatisticModel {
                 }
             },
             series: [{
-                name: this.translate.instant("STATISTIC_PARTS"),
+                name: this.translate.instant(seriesName),
                 colorByPoint: true,
                 data: []
             }],

@@ -11,48 +11,36 @@
  ******************************************************************************/
 "use strict";
 
-class LeadsConversionRate extends AbstractStatisticModel {
-    constructor(translate, id) {
+class AreaChart extends AbstractStatisticModel {
+    constructor(translate, id: string, yname: string, valueSuffix: string) {
         super(translate, id);
-        this.translate = translate;
         this.chartConfig = {
             options: {
                 chart: {
-                    type: "spline"
+                    type: "area"
                 },
                 title: {
                     text: ""
                 },
-                loading: false,
+                tooltip: {
+                    shared: true,
+                    valueSuffix: valueSuffix,
+                    valueDecimals: 2
+                },
                 xAxis: {
                     categories: [],
                 },
+                loading: false,
                 yAxis: {
                     title: {
-                        text: this.translate.instant("STATISTIC_SALES_OF_LEADS_Y_AXIS")
+                        text: this.translate.instant(yname),
                     },
-                    minorGridLineWidth: 1,
-                    gridLineWidth: 1,
-                    alternateGridColor: null
-
-                },
-                tooltip: {
-                    valueSuffix: " %",
-                    valueDecimals: 2
-                },
-                plotOptions: {
-                    spline: {
-                        lineWidth: 4,
-                        states: {
-                            hover: {
-                                lineWidth: 5
-                            }
-                        },
-                        marker: {
-                            enabled: false
+                    labels: {
+                        formatter: function () {
+                            return this.value;
                         }
                     }
-                },
+                }
             },
             series: []
         };
