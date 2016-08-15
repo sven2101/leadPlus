@@ -8,6 +8,10 @@ var gulp = require('gulp'),
     path = require('./gulp.path.js').path,
     order = require("gulp-order"),
     typescript = require('gulp-tsc');
+strip = require('gulp-strip-comments');
+uglify = require("gulp-uglify");
+removeUseStrict = require("gulp-remove-use-strict");
+replace = require('gulp-replace');
 addsrc = require('gulp-add-src');
 livereload = require('gulp-livereload');
 
@@ -31,7 +35,18 @@ gulp.task('angular-task', function () {
         .pipe(gulp.dest(path.angular.dst));       
 });
 */
-gulp.task('angular-task', ['compile','javascript','typescript-task'], function () {
-    return gulp.src(path.angular.src)     
-        .pipe(gulp.dest(path.angular.dst));    
+gulp.task('angular-task', ['compile', 'javascript', 'typescript-task'], function () {
+   return gulp.src(path.angular.src)
+        .pipe(strip())
+        .pipe(replace(/"use strict";/g, ''))
+        .pipe(uglify({         
+            compress: {
+                warnings: true,
+                unused: false,
+            },
+            mangle: false,
+        }))
+        .pipe(addsrc(path.fileHeader))
+        .pipe(concat('angular.js'))
+        .pipe(gulp.dest(path.angular.dst));
 });

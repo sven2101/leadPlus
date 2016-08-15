@@ -81,7 +81,7 @@ module.exports = {
 		componentViews: {
 			src: baseSrcPath + 'components/**/*.html',
 			dst: baseDstPath + 'components'
-		},		
+		},
 		angular: {
 			/*
 			src: [
@@ -138,6 +138,7 @@ module.exports = {
 			src: [baseDstPath + '**/*.js', baseDstPath + '**/*.html']
 		},
 		proxy: 'http://localhost:5000',
-		testConfig: 'frontend/test.config.js'
+		testConfig: 'frontend/test.config.js',
+		fileHeader: baseSrcPath + 'FileHeader.txt'
 	}
 };
