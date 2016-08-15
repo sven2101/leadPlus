@@ -19,17 +19,8 @@
 				        											registration.username.$error.usernameExists ||
 				        											usernameExists 	}">
 
-                <input type="text"
-                       id="username"
-                       name="username"
-                       class="form-control"
-                       placeholder="{{ 'COMMON_USERNAME' | translate }}"
-                       required
-                       ng-pattern="/^[a-zA-Z0-9.-]*$/"
-                       ng-model="user.username"
-                       ng-minlength="2"
-                       ng-maxlength="20"
-                       ng-blur="signup.uniqueUsername(user.username)">
+                <input type="text" id="username" name="username" class="form-control" placeholder="{{ 'COMMON_USERNAME' | translate }}" required
+                    ng-pattern="/^[a-zA-Z0-9.-]*$/" ng-model="user.username" ng-minlength="2" ng-maxlength="20" ng-blur="signup.uniqueUsername(user.username)">
 
                 <span ng-show="usernameExists" class="help-block">{{ 'SIGNUP_VALIDATE_USER_IN_USE' | translate }}</span>
                 <span ng-show="registration.username.$error.minlength" class="help-block">{{ 'SIGNUP_VALIDATE_USER_TO_SHORT' | translate }}</span>
@@ -43,14 +34,8 @@
 												'has-error': 	registration.email.$error.email ||
 																registration.email.$error.emailExists ||
 																emailExists	 }">
-                <input type="email"
-                       id="email"
-                       name="email"
-                       class="form-control"
-                       placeholder="{{ 'COMMON_EMAIL' | translate }}"
-                       required
-                       ng-model="user.email"
-                       ng-blur="signup.uniqueEmail(user.email)">
+                <input type="email" id="email" name="email" class="form-control" placeholder="{{ 'COMMON_EMAIL' | translate }}" required
+                    ng-model="user.email" ng-blur="signup.uniqueEmail(user.email)">
 
                 <span ng-show="emailExists" class="help-block">{{ 'SIGNUP_VALIDATE_EMAIL_IN_USE' | translate }}</span>
                 <span ng-show="registration.email.$error.email" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
@@ -61,18 +46,10 @@
 																				!registration.password.$error.maxlength  ,
 												'has-error has-feedback': 		registration.password.$error.minlength ||
 																				registration.password.$error.maxlength	 }">
-                <input type="password"
-                       id="password"
-                       name="password"
-                       class="form-control"
-                       placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-                       required
-                       ng-model="user.password"
-                       ng-minlength="6"
-                       ng-maxlength="20">
+                <input type="password" id="password" name="password" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
+                    required ng-model="user.password" ng-minlength="6" ng-maxlength="20">
 
-                <span ng-show="registration.password.$dirty && registration.password.$error.required"
-                      class="help-block">Password is required</span>
+                <span ng-show="registration.password.$dirty && registration.password.$error.required" class="help-block">Password is required</span>
                 <span ng-show="registration.password.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
                 <span ng-show="registration.password.$error.maxlength" class="help-block">{{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
             </div>
@@ -83,29 +60,17 @@
 												'has-error has-feedback': 		registration.password2.$error.minlength ||
 																				registration.password2.$error.maxlength	 ||
 																				registration.password2.$error.pwmatch}">
-                <input type="password"
-                       id="password2"
-                       name="password2"
-                       class="form-control"
-                       placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-                       required
-                       ng-model="user.password2"
-                       ng-minlength="6"
-                       ng-maxlength="20"
-                       pw-check="password">
+                <input type="password" id="password2" name="password2" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
+                    required ng-model="user.password2" ng-minlength="6" ng-maxlength="20" pw-check="password">
 
-                <span ng-show="registration.password2.$dirty && registration.password2.$error.required"
-                      class="help-block">Password is required</span>
+                <span ng-show="registration.password2.$dirty && registration.password2.$error.required" class="help-block">Password is required</span>
                 <span ng-show="registration.password2.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
                 <span ng-show="registration.password2.$error.maxlength" class="help-block">{{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
                 <span ng-show="registration.password2.$error.pwmatch" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</span>
             </div>
 
-            <button type="button"
-                    id="registration"
-                    ng-disabled="registration.$invalid || vm.dataLoading || emailExists || usernameExists"
-                    ng-click="signup.signup(user);"
-                    class="btn btn-success block full-width m-b">{{ 'LOGIN_CREATE_ACCOUNT' | translate }}
+            <button type="button" id="registration" ng-disabled="registration.$invalid || vm.dataLoading || emailExists || usernameExists"
+                ng-click="signup.signup(user);" class="btn btn-success block full-width m-b">{{ 'LOGIN_CREATE_ACCOUNT' | translate }}
             </button>
 
             <p class="text-muted text-center">

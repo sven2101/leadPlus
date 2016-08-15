@@ -28,7 +28,7 @@ class StatisticService {
     translate;
     statisticResource;
 
-    SingleStatisticWorkflowPieChart: AbstractStatisticModel;
+    SingleStatisticWorkflowPieChart: PieChart;
     EntireStatisticProfitTurnoverAreaChart: AbstractStatisticModel;
     EntireStatisticWorkflowAmountSplineChart: AbstractStatisticModel;
     EntireStatisticLeadConversionRateSplineChart: AbstractStatisticModel;

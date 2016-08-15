@@ -45,7 +45,7 @@ public abstract class AbstractWorkflow implements Request {
 	private int containerAmount;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = true, columnDefinition = "timestamp")
+	@Column(nullable = true, columnDefinition = "timestamptz")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
 	private Calendar timestamp;
 

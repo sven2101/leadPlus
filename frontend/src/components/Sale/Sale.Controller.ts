@@ -59,7 +59,6 @@ class SaleController {
     newSale = new Sale();
     editForm;
 
-
     constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
         toaster, ProcessResource, CommentResource, $filter, UserResource,
         $rootScope, $translate, SaleResource, ProductService, WorkflowService) {
