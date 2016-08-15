@@ -28,11 +28,11 @@ class StatisticService {
     translate;
     statisticResource;
 
-    SingleStatisticWorkflowPieChart: AbstractStatisticModel;
-    EntireStatisticProfitTurnoverAreaChart: AbstractStatisticModel;
-    EntireStatisticWorkflowAmountSplineChart: AbstractStatisticModel;
-    EntireStatisticLeadConversionRateSplineChart: AbstractStatisticModel;
-    EntireStatisticOfferConversionRateSplineChart: AbstractStatisticModel;
+    SingleStatisticWorkflowPieChart: PieChart;
+    EntireStatisticProfitTurnoverAreaChart: AreaChart;
+    EntireStatisticWorkflowAmountSplineChart: SplineChart;
+    EntireStatisticLeadConversionRateSplineChart: SplineChart;
+    EntireStatisticOfferConversionRateSplineChart: SplineChart;
     statisticModelMap: { [key: string]: AbstractStatisticModel } = {};
 
     leadResultArr = new Array<number>();
@@ -149,7 +149,6 @@ class StatisticService {
         let self = this;
         this.statisticResource.getWorkflowStatistic({ workflow: workflowLead, dateRange: dateRange }).$promise.then(function (result) {
             self.leadResultArr = result.result;
-            console.log(self.leadResultArr);
             self.leadAmount = self.getTotalSumOf(self.leadResultArr);
             self.isLeadPromise = true;
             self.checkPromises();

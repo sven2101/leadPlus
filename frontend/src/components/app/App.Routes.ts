@@ -52,7 +52,7 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             {
                 templateUrl: "components/Statistic/view/Statistic.html",
                 controller: "StatisticContoller",
-                controllerAs: "statistic",
+                controllerAs: "statisticCtrl",
                 authenticated: true
             })
             .when("/settings",
