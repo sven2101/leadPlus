@@ -22,17 +22,17 @@ class StatisticService {
 
     static serviceId: string = "StatisticService";
 
-    private $inject = [toasterId, $translateId, statisticResourceId];
+    private $inject = [toasterId, $translateId, StatisticResourceId];
 
     toaster;
     translate;
     statisticResource;
 
     SingleStatisticWorkflowPieChart: PieChart;
-    EntireStatisticProfitTurnoverAreaChart: AbstractStatisticModel;
-    EntireStatisticWorkflowAmountSplineChart: AbstractStatisticModel;
-    EntireStatisticLeadConversionRateSplineChart: AbstractStatisticModel;
-    EntireStatisticOfferConversionRateSplineChart: AbstractStatisticModel;
+    EntireStatisticProfitTurnoverAreaChart: AreaChart;
+    EntireStatisticWorkflowAmountSplineChart: SplineChart;
+    EntireStatisticLeadConversionRateSplineChart: SplineChart;
+    EntireStatisticOfferConversionRateSplineChart: SplineChart;
     statisticModelMap: { [key: string]: AbstractStatisticModel } = {};
 
     leadResultArr = new Array<number>();
@@ -148,8 +148,7 @@ class StatisticService {
     loadAllResourcesByDateRange(dateRange: String): void {
         let self = this;
         this.statisticResource.getWorkflowStatistic({ workflow: workflowLead, dateRange: dateRange }).$promise.then(function (result) {
-            self.leadResultArr = result.result;
-            console.log(self.leadResultArr);
+            self.leadResultArr = result.result;     
             self.leadAmount = self.getTotalSumOf(self.leadResultArr);
             self.isLeadPromise = true;
             self.checkPromises();
