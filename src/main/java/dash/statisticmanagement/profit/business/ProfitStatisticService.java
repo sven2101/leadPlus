@@ -31,12 +31,14 @@ public class ProfitStatisticService extends AbstractStatisticService {
 	@Override
 	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests) {
 		for (Request request : requests) {
-			Sale sale = (Sale) request;
-			Calendar timeStamp = request.getTimestamp();
-			String key = statisticHelper.getKeyByDateRange(timeStamp, statisticHelper.getDateRange());
-			if (calendarMap.containsKey(key)) {
-				double value = calendarMap.get(key) + sale.getSaleProfit();
-				calendarMap.put(key, value);
+			if (request instanceof Sale) {
+				Sale sale = (Sale) request;
+				Calendar timeStamp = request.getTimestamp();
+				String key = statisticHelper.getKeyByDateRange(timeStamp, statisticHelper.getDateRange());
+				if (calendarMap.containsKey(key)) {
+					double value = calendarMap.get(key) + sale.getSaleProfit();
+					calendarMap.put(key, value);
+				}
 			}
 		}
 		return new ArrayList<>(calendarMap.values());

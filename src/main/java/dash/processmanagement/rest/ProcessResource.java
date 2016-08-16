@@ -299,9 +299,9 @@ public class ProcessResource {
 					.findBySaleIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
 		else
 			page = processRepository
-					.findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrSaleContainerNameContainingOrSaleContainerDescriptionContainingOrSaleTransportContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
+					.findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrSaleContainerNameContainingOrSaleContainerDescriptionContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
 							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
-							searchText, searchText, new PageRequest(start / length, length, sortDirection, sortColumn));
+							searchText, new PageRequest(start / length, length, sortDirection, sortColumn));
 
 		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),
 				page.getContent());

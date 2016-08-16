@@ -1,3 +1,4 @@
+/// <reference path="../app/App.Constants.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -81,28 +82,29 @@ class DashboardController {
 
     registerPromise() {
         let self = this;
-        this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function(result) {
+        this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function (result) {
             self.openLead = self.orderBy(result, "lead.timestamp", false);
         });
-        this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function(result) {
+        this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
             self.openOffer = self.orderBy(result, "offer.timestamp", false);
         });
-        this.processResource.getLatestSales().$promise.then(function(result) {
+        this.processResource.getLatestSales().$promise.then(function (result) {
             self.sales = result;
         });
-        this.statisticResource.weekLeads().$promise.then(function(result) {
+
+        this.statisticResource.getWorkflowStatistic({ workflow: workflowLead, dateRange: "WEEKLY" }).$promise.then(function (result) {
             self.getLeads(result);
-            self.statisticResource.weekSales().$promise.then(function(result) {
+            self.statisticResource.getWorkflowStatistic({ workflow: workflowSale, dateRange: "WEEKLY" }).$promise.then(function (result) {
                 self.getSales(result);
             });
         });
-        this.statisticResource.weekOffers().$promise.then(function(result) {
+        this.statisticResource.getWorkflowStatistic({ workflow: workflowOffer, dateRange: "WEEKLY" }).$promise.then(function (result) {
             self.getOffers(result);
         });
-        this.statisticResource.weekProfit().$promise.then(function(result) {
+        this.statisticResource.getProfitStatistic({ workflow: workflowSale, dateRange: "WEEKLY" }).$promise.then(function (result) {
             self.getProfit(result);
         });
-        this.statisticResource.weekTurnover().$promise.then(function(result) {
+        this.statisticResource.getTurnoverStatistic({ workflow: workflowSale, dateRange: "WEEKLY" }).$promise.then(function (result) {
             self.getTurnover(result);
         });
     }
@@ -110,7 +112,7 @@ class DashboardController {
     getUser() {
         let self = this;
         if (!angular.isUndefined(self.rootScope.globals.currentUser))
-            self.userResource.get({ id: self.rootScope.globals.currentUser.id }).$promise.then(function(result) {
+            self.userResource.get({ id: self.rootScope.globals.currentUser.id }).$promise.then(function (result) {
                 self.user = result;
             });
     }
@@ -118,7 +120,7 @@ class DashboardController {
     setSortableOptions() {
         let self = this;
         this.sortableOptions = {
-            update: function(e, ui) {
+            update: function (e, ui) {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
                 if ((self.openLead === target && self.openOffer === source) ||
@@ -127,7 +129,7 @@ class DashboardController {
                     ui.item.sortable.cancel();
                 }
             },
-            stop: function(e, ui) {
+            stop: function (e, ui) {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
@@ -164,12 +166,12 @@ class DashboardController {
             timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
             vendor: process.lead.vendor
         };
-        this.processResource.createOffer({ id: process.id }, offer).$promise.then(function() {
-            self.processResource.setStatus({ id: process.id }, "OFFER").$promise.then(function() {
+        this.processResource.createOffer({ id: process.id }, offer).$promise.then(function () {
+            self.processResource.setStatus({ id: process.id }, "OFFER").$promise.then(function () {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
-                self.processResource.setProcessor({ id: process.id }, self.user.id).$promise.then(function() {
+                self.processResource.setProcessor({ id: process.id }, self.user.id).$promise.then(function () {
                     process.processor = self.user;
                 });
                 process.offer = offer;
@@ -200,8 +202,8 @@ class DashboardController {
             timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
             vendor: process.offer.vendor
         };
-        this.processResource.createSale({ id: process.id }, sale).$promise.then(function() {
-            self.processResource.setStatus({ id: process.id }, "SALE").$promise.then(function() {
+        this.processResource.createSale({ id: process.id }, sale).$promise.then(function () {
+            self.processResource.setStatus({ id: process.id }, "SALE").$promise.then(function () {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
                 self.rootScope.offersCount -= 1;
                 process.sale = sale;
@@ -215,7 +217,7 @@ class DashboardController {
         this.infoType = type;
         this.infoProcess = process;
         let self = this;
-        this.commentResource.getByProcessId({ id: process.id }).$promise.then(function(result) {
+        this.commentResource.getByProcessId({ id: process.id }).$promise.then(function (result) {
             self.infoComments = [];
             for (let comment in result) {
                 if (comment === "$promise")
@@ -230,13 +232,13 @@ class DashboardController {
     }
     refreshData() {
         let self = this;
-        this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function(result) {
+        this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function (result) {
             self.openLead = self.orderBy(result, "lead.timestamp", false);
         });
-        this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function(result) {
+        this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
             self.openOffer = self.orderBy(result, "offer.timestamp", false);
         });
-        this.processResource.getLatestSales().$promise.then(function(result) {
+        this.processResource.getLatestSales().$promise.then(function (result) {
             self.sales = result;
         });
     }
@@ -252,7 +254,7 @@ class DashboardController {
                 commentText: this.commentModalInput,
                 timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm:ss")
             };
-            this.commentResource.save(comment).$promise.then(function() {
+            this.commentResource.save(comment).$promise.then(function () {
                 self.infoComments.push(comment);
                 self.commentModalInput = "";
             });

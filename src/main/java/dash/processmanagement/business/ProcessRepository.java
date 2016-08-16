@@ -55,9 +55,9 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 
 	Page<Sale> findBySaleIsNotNull(Pageable pageable);
 
-	Page<Sale> findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrSaleContainerNameContainingOrSaleContainerDescriptionContainingOrSaleTransportContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
+	Page<Sale> findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrSaleContainerNameContainingOrSaleContainerDescriptionContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
 			String firstname, String lastname, String email, String company, String phone, String containerName,
-			String containerDescription, String transport, String status, Pageable pageable);
+			String containerDescription, String status, Pageable pageable);
 
 	List<Sale> findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
 
