@@ -2,7 +2,7 @@
 /// <reference path="../Workflow/Workflow.Service.ts" />
 /// <reference path="../Common/Process.Model.ts" />
 /// <reference path="../Offer/Offer.Model.ts" />
-/// <reference path="../Profile/User.Model.ts" />
+/// <reference path="../User/Model/User.Model.ts" />
 /// <reference path="../app/App.Common.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.

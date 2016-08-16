@@ -20,8 +20,6 @@ const StatisticServiceId: string = "StatisticService";
 
 class StatisticService {
 
-    static serviceId: string = "StatisticService";
-
     private $inject = [toasterId, $translateId, StatisticResourceId];
 
     toaster;
@@ -103,6 +101,7 @@ class StatisticService {
         this.weekday[5] = this.translate.instant("FRIDAY");
         this.weekday[6] = this.translate.instant("SATURDAY");
     }
+
     getWeekTranslation(): Array<String> {
         return this.weekday;
     }
@@ -148,7 +147,7 @@ class StatisticService {
     loadAllResourcesByDateRange(dateRange: String): void {
         let self = this;
         this.statisticResource.getWorkflowStatistic({ workflow: workflowLead, dateRange: dateRange }).$promise.then(function (result) {
-            self.leadResultArr = result.result;     
+            self.leadResultArr = result.result;
             self.leadAmount = self.getTotalSumOf(self.leadResultArr);
             self.isLeadPromise = true;
             self.checkPromises();
@@ -314,4 +313,5 @@ class StatisticService {
         return this.singleStatisticProfitPerSale;
     }
 }
-angular.module(moduleStatisticService, [ngResourceId]).service(StatisticService.serviceId, StatisticService);
+
+angular.module(moduleStatisticService, [ngResourceId]).service(StatisticServiceId, StatisticService);
