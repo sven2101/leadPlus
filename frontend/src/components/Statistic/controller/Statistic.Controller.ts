@@ -21,16 +21,16 @@ class StatisticController {
 
     $inject = [StatisticServiceId];
 
-    statisticService;
-    currentTab = 1;
-    dateRange = "DAILY";
+    statisticService: StatisticService;
+    currentTab: number = 1;
+    dateRange: string = "DAILY";
 
     constructor(StatisticService) {
         this.statisticService = StatisticService;
         this.onPeriodChange(this.dateRange);
     }
 
-    tabOnClick(tab) {
+    tabOnClick(tab: number) {
         this.currentTab = tab;
     }
 
@@ -38,7 +38,7 @@ class StatisticController {
         return this.statisticService.getChartModelById(id);
     }
 
-    onPeriodChange(dateRange) {
+    onPeriodChange(dateRange: string) {
         this.statisticService.setPromises(false);
         this.statisticService.clearAllModelsData();
         this.dateRange = dateRange;
@@ -52,7 +52,7 @@ class StatisticController {
     getTurnoverTotal(): number {
         return this.statisticService.getTurnoverTotal();
     }
-    getEfficiency() {
+    getEfficiency(): number {
         return this.statisticService.getEfficiency();
     }
     getLeadConversionRate(): number {

@@ -36,7 +36,7 @@ public class TurnoverStatisticService extends AbstractStatisticService {
 				Calendar timeStamp = request.getTimestamp();
 				String key = statisticHelper.getKeyByDateRange(timeStamp, statisticHelper.getDateRange());
 				if (calendarMap.containsKey(key)) {
-					double value = calendarMap.get(key) + sale.getSaleReturn();
+					double value = calendarMap.get(key) + sale.getSaleTurnover();
 					calendarMap.put(key, value);
 				}
 			}
