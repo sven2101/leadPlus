@@ -160,7 +160,12 @@ class LeadController {
             DTColumnBuilder.newColumn("lead.customer.email").withTitle(
                 $translate("COMMON_EMAIL")).withClass("text-center"),
             DTColumnBuilder.newColumn("lead.timestamp").withTitle(
-                $translate("COMMON_DATE")).withOption("type", "date-euro")
+                $translate("COMMON_DATE")).renderWith(
+                function (data, type, full) {
+                    let utcDate = moment.utc(data, "DD.MM.YYYY HH:mm");
+                    let localDate = moment(utcDate).local();
+                    return localDate.format("DD.MM.YYYY HH:mm");
+                }).withOption("type", "date-euro")
                 .withClass("text-center"),
             DTColumnBuilder.newColumn("lead.customer.phone").withTitle(
                 $translate("COMMON_PHONE")).notVisible(),
@@ -507,7 +512,7 @@ class LeadController {
                 phone: process.lead.customer.phone,
                 title: process.lead.customer.title
             },
-            timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
+            timestamp: moment.utc().format("DD.MM.YYYY HH:mm"),
             vendor: process.lead.vendor
         };
         for (let i = 0; i < offer.orderPositions.length; i++) {

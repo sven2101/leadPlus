@@ -128,7 +128,7 @@ class StatisticService {
             this.isTurnoverPromise === true) {
             this.singleStatisticEfficiency = this.getRatePercentage(this.profitTotal, this.turnoverTotal);
             this.singleStatisticProfitPerSale = (this.getRatePercentage(this.profitTotal, this.saleAmount)) / 100;
-            this.singleStatisticConversionRate = this.getRatePercentage(this.leadAmount, this.saleAmount);
+            this.singleStatisticConversionRate = this.getRatePercentage(this.saleAmount, this.leadAmount);
             this.pushToProfitAndTurnoverAreaChart();
             this.pushToWorkflowPieChart();
             this.pushToWorkflowAmountSplineChart();

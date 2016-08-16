@@ -1,12 +1,8 @@
 package dash.salemanagement.domain;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
 import dash.common.AbstractWorkflow;
-import dash.customermanagement.domain.Customer;
 
 @Entity
 public class Sale extends AbstractWorkflow {

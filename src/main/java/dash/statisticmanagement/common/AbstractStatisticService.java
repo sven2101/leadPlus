@@ -16,6 +16,7 @@ import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.request.Request;
 import dash.processmanagement.request.RequestRepository;
+import dash.salemanagement.domain.Sale;
 import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.domain.StatisticHelper;
 import dash.statisticmanagement.result.domain.Result;
@@ -31,7 +32,7 @@ public abstract class AbstractStatisticService implements IStatisticService {
 	private RequestRepository<Offer, Long> offerRepository;
 
 	@Autowired
-	private RequestRepository<Offer, Long> saleRepository;
+	private RequestRepository<Sale, Long> saleRepository;
 
 	protected StatisticHelper statisticHelper;
 
@@ -57,8 +58,6 @@ public abstract class AbstractStatisticService implements IStatisticService {
 			throws NotFoundException {
 		if (Optional.ofNullable(repository).isPresent() && Optional.ofNullable(from).isPresent()
 				&& Optional.ofNullable(until).isPresent()) {
-			System.out.println(from.getTime());
-			System.out.println(until.getTime());
 			return (List<Request>) repository.findByTimestampBetween(from, until);
 		} else {
 			NotFoundException pnfex = new NotFoundException(STATISTIC_NOT_FOUND);

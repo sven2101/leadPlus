@@ -152,7 +152,12 @@ class SaleController {
             DTColumnBuilder.newColumn("sale.customer.email").withTitle(
                 $translate("COMMON_EMAIL")).withClass("text-center"),
             DTColumnBuilder.newColumn("sale.timestamp").withTitle(
-                $translate("COMMON_DATE")).withOption("type", "date-euro")
+                $translate("COMMON_DATE")).renderWith(
+                function (data, type, full) {
+                    let utcDate = moment.utc(data, "DD.MM.YYYY HH:mm");
+                    let localDate = moment(utcDate).local();
+                    return localDate.format("DD.MM.YYYY HH:mm");
+                }).withOption("type", "date-euro")
                 .withClass("text-center"),
             DTColumnBuilder.newColumn("sale.customer.phone").withTitle(
                 $translate("COMMON_PHONE")).notVisible(),
