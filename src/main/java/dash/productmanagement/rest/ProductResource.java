@@ -14,7 +14,6 @@
 
 package dash.productmanagement.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -33,7 +32,6 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
-import dash.leadmanagement.domain.Lead;
 import dash.productmanagement.business.IProductService;
 import dash.productmanagement.domain.Product;
 import io.swagger.annotations.Api;
@@ -51,14 +49,14 @@ public class ProductResource {
 	@ApiOperation(value = "Get all products.", notes = "")
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Product> getAll() {	
+	public List<Product> getAll() {
 		return productService.getAll();
 	}
 
 	@ApiOperation(value = "Get a single product.", notes = "You have to provide a valid product ID.")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Product getById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {		
+	public Product getById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
 		return productService.getById(id);
 	}
 

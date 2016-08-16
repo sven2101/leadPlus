@@ -169,9 +169,9 @@ angular.module(moduleUserResource, [ngResourceId]).service(UserResource.serviceI
 
 // ----------------------------------------------------------------------------------------
 
-class SettingsResource {
+const SettingResourceId: string = "SettingResource";
 
-    static serviceId: string = "SettingsResource";
+class SettingResource {
 
     private $inject = [$resourceId];
 
@@ -186,7 +186,7 @@ class SettingsResource {
     }
 }
 
-angular.module(moduleSettingsResource, [ngResourceId]).service(SettingsResource.serviceId, SettingsResource);
+angular.module(moduleSettingResource, [ngResourceId]).service(SettingResourceId, SettingResource);
 
 // ----------------------------------------------------------------------------------------
 
@@ -260,3 +260,24 @@ class CustomerResource {
 }
 
 angular.module(moduleCustomerResource, [ngResourceId]).service(CustomerResource.serviceId, CustomerResource);
+
+// ----------------------------------------------------------------------------------------
+
+class SignUpResource {
+
+    static serviceId: string = "SignUpResource";
+
+    private $inject = [$resourceId];
+
+    resource: any;
+
+    constructor($resource) {
+        this.resource = $resource("/api/rest/registrations", {}, {
+            signup: { url: "/api/rest/registrations", method: "POST" },
+            uniqueUsername: { url: "/api/rest/registrations/unique/:username", method: "POST", headers: { "Content-Type": "text/plain" } },
+            uniqueEmail: { url: "/api/rest/registrations/unique/:email", method: "POST", headers: { "Content-Type": "text/plain" } }
+        });
+    }
+}
+
+angular.module(moduleSignupResource, [ngResourceId]).service(SignUpResource.serviceId, SignUpResource);

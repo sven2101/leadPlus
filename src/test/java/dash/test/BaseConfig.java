@@ -40,7 +40,7 @@ import dash.vendormanagement.business.VendorRepository;
 
 public class BaseConfig {
 
-	protected final static String BASE_URI = "http://localhost:5000";
+	protected final static String BASE_URI = "http://localhost:8080";
 	protected final static String USERNAME = "test";
 	protected final static String PASSWORD = "test";
 

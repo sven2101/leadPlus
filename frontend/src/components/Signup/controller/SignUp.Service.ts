@@ -1,3 +1,6 @@
+/// <reference path="../../app/App.Resource.ts" />
+/// <reference path="../../User/model/User.Model.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -13,69 +16,62 @@
  *******************************************************************************/
 "use strict";
 
-class SignUpController {
+const SignUpServiceId: string = "SignUpService";
 
-    static $inject = ["$location", "$http", "$scope", "Auth", "toaster", "$translate"];
+class SignUpService {
 
+    private $inject = [$locationId, $scopeId, toasterId, $translateId, SignUpResource];
+
+    signUpResource;
     location;
-    http;
     scope;
-    auth;
     toaster;
     translate;
 
     emailExists: boolean;
     usernameExists: boolean;
 
-    constructor($location, $http, $scope, Auth, toaster, $translate) {
+    constructor($location, $scope, toaster, $translate, signUpResource: SignUpResource) {
         this.location = $location;
-        this.http = $http;
         this.scope = $scope;
-        this.auth = Auth;
         this.toaster = toaster;
         this.translate = $translate;
+        this.signUpResource = signUpResource;
 
         this.emailExists = false;
         this.usernameExists = false;
     }
 
-    uniqueEmail(email) {
+    uniqueEmail(email: string) {
         let self = this;
-        self.http.post("./api/rest/registrations/unique/email", email, {
-            headers: { "Content-Type": "text/plain" }
-        }).success(function (data, status, headers, config) {
+        this.signUpResource.uniqueEmail().$promise.then(function (data, status, headers, config) {
             self.scope.emailExists = data;
-        }).error(function (data, status, headers, config) {
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });
-    };
+    }
 
-    uniqueUsername(username) {
+    uniqueUsername(username: string) {
         let self = this;
-        self.http.post("./api/rest/registrations/unique/username", username, {
-            headers: { "Content-Type": "text/plain" }
-        }).success(function (data, status, headers, config) {
+        this.signUpResource.uniqueUsername().$promise.then(function (data, status, headers, config) {
             self.scope.usernameExists = data;
-            console.log("User: ", self.scope.usernameExists);
-        }).error(function (data, status, headers, config) {
-            console.log("User: ", data);
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });
-    };
+    }
 
-    signup(user) {
-    let self = this;
-    self.auth.signup(user,
-        function () {
+    signup(user: User) {
+        let self = this;
+        this.signUpResource.signup(user).$promise.then(function () {
             self.scope.user = "";
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
             self.location.path("/login");
-        },
-        function (err) {
+        }, function () {
             self.scope.user = "";
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
-        }
-    );
-}
+        });
+    }
 }
 
-angular.module("app.signup", ["ngResource"]).controller("SignUpController", SignUpController);
+angular.module(moduleSignupService, [ngResourceId]).service(SignUpServiceId, SignUpService);
 

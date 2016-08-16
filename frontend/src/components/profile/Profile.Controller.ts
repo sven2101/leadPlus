@@ -1,3 +1,6 @@
+/// <reference path="../Product/Product.Service.ts" />
+/// <reference path="../User/Model/User.Model.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -12,8 +15,6 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 "use strict";
-
-/// <reference path="../models/User.ts" />
 
 class ProfileController {
 
@@ -39,17 +40,17 @@ class ProfileController {
         this.oldPassword = "";
         this.newPassword1 = "";
         this.newPassword2 = "";
-        this.userService.get({ id: $rootScope.globals.currentUser.id }).$promise.then(function(result) {
+        this.userService.get({ id: $rootScope.globals.currentUser.id }).$promise.then(function (result) {
             self.user = result;
         });
     }
 
     submitProfilInfoForm(user) {
         let self = this;
-        this.userService.update(user).$promise.then(function() {
+        this.userService.update(user).$promise.then(function () {
             self.rootScope.changeLanguage(user.language);
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
-        }, function() {
+        }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
         });
     };
@@ -59,13 +60,13 @@ class ProfileController {
         this.userService.changePassword({ id: user.id }, {
             newPassword: this.newPassword1,
             oldPassword: this.oldPassword
-        }).$promise.then(function() {
+        }).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
             self.passwordForm.$setPristine();
             self.oldPassword = "";
             self.newPassword1 = "";
             self.newPassword2 = "";
-        }, function() {
+        }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
         });
     };

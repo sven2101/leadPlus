@@ -31,14 +31,6 @@ class Auth {
         this.window = $window;
     }
 
-    signup(user, success, error) {
-
-        this.http.post("./api/rest/registrations", user, {
-            headers: { "Content-Type": "application/json" }
-        })
-            .success(success)
-            .error(error);
-    }
     login(credentials, success, error) {
         let self = this;
         if (credentials) {

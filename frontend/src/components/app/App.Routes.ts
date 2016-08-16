@@ -51,13 +51,13 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             .when("/statistic",
             {
                 templateUrl: "components/Statistic/view/Statistic.html",
-                controller: "StatisticContoller",
+                controller: "StatisticController",
                 controllerAs: "statisticCtrl",
                 authenticated: true
             })
             .when("/settings",
             {
-                templateUrl: "components/Setting/Setting.html",
+                templateUrl: "components/Setting/view/Setting.html",
                 controller: "SettingController",
                 controllerAs: "setting",
                 authenticated: true
