@@ -3,7 +3,7 @@
 /// <reference path="../Workflow/Workflow.Service.ts" />
 /// <reference path="../Common/Process.Model.ts" />
 /// <reference path="../Offer/Offer.Model.ts" />
-/// <reference path="../Profile/User.Model.ts" />
+/// <reference path="../User/Model/User.Model.ts" />
 /// <reference path="../app/App.Common.ts" />
 /// <reference path="../common/Process.Model.ts" />
 /*******************************************************************************
@@ -465,7 +465,7 @@ class OffersController {
                 description: "",
                 priceNetto: 0
             },
-            orderPositions: deepCopyArray(process.lead.orderPositions),
+            orderPositions: deepCopy(process.lead.orderPositions),
             containerAmount: process.offer.containerAmount,
             transport: process.offer.deliveryAddress,
             customer: {
@@ -552,7 +552,7 @@ class OffersController {
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = process;
-        this.currentOrderPositions = deepCopyArray(this.editProcess.offer.orderPositions);
+        this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
     };
 
     saveEditedRow() {

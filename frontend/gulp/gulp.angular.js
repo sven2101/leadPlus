@@ -36,9 +36,11 @@ gulp.task('angular-task', function () {
 });
 */
 gulp.task('angular-task', ['compile', 'javascript', 'typescript-task'], function () {
+    
    return gulp.src(path.angular.src)
         .pipe(strip())
         .pipe(replace(/"use strict";/g, ''))
+        /*
         .pipe(uglify({         
             compress: {
                 warnings: true,
@@ -46,7 +48,9 @@ gulp.task('angular-task', ['compile', 'javascript', 'typescript-task'], function
             },
             mangle: false,
         }))
+        */
         .pipe(addsrc(path.fileHeader))
         .pipe(concat('angular.js'))
         .pipe(gulp.dest(path.angular.dst));
+        
 });

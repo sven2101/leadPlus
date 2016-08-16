@@ -6,7 +6,7 @@
 /// <reference path="../Product/Product.Model.ts" />
 /// <reference path="../Common/Process.Model.ts" />
 /// <reference path="../Lead/Lead.Model.ts" />
-/// <reference path="../Profile/User.Model.ts" />
+/// <reference path="../User/Model/User.Model.ts" />
 /// <reference path="../Product/Product.Service.ts" />
 /// <reference path="../Workflow/Workflow.Service.ts" />
 /*******************************************************************************
@@ -499,7 +499,7 @@ class LeadController {
                 description: "",
                 priceNetto: 0
             },
-            orderPositions: deepCopyArray(process.lead.orderPositions),
+            orderPositions: deepCopy(process.lead.orderPositions),
             containerAmount: process.lead.containerAmount,
             deliveryAddress: process.lead.deliveryAddress,
             deliveryDate: null,
@@ -596,7 +596,7 @@ class LeadController {
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = process;
-        this.currentOrderPositions = deepCopyArray(this.editProcess.lead.orderPositions);
+        this.currentOrderPositions = deepCopy(this.editProcess.lead.orderPositions);
     };
 
     saveEditedRow = function () {

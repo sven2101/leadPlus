@@ -35,7 +35,6 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
 import dash.usermanagement.business.UserService;
-import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.settings.password.PasswordChange;
 import io.swagger.annotations.ApiOperation;
@@ -64,8 +63,7 @@ public class UserResource {
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update a single user.", notes = "Provide a valid user ID.")
-	public User update(@RequestBody @Valid final User user)
-			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+	public User update(@RequestBody @Valid final User user) throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		return userService.update(user);
 	}
 

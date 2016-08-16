@@ -15,9 +15,11 @@
  ******************************************************************************/
 "use strict";
 
+const CustomerControllerId: string = "CustomerController";
+
 class CustomerController {
 
-    $inject = [CustomerServiceId, ProductServiceId];
+    $inject = [CustomerServiceId];
 
     createCustomerForm;
     currentCustomer: Customer;
@@ -25,15 +27,8 @@ class CustomerController {
     isCurrentCustomerNew;
     customerService: CustomerService;
 
-    currentOrderPositions: Array<OrderPosition>;
-    currentProductId = "Please choose product";
-    currentProductAmount = 1;
-    productService: ProductService;
-
-    constructor(CustomerService: CustomerService, ProductService: ProductService) {
+    constructor(CustomerService: CustomerService) {
         this.customerService = CustomerService;
-        this.productService = ProductService;
-        this.currentOrderPositions = new Array<OrderPosition>();
     }
     refreshData(): void {
         this.customerService.getAllCustomer();
@@ -48,47 +43,16 @@ class CustomerController {
     editCustomer(customer: Customer): void {
         this.currentEditCustomer = customer;
         this.currentCustomer = new Customer();
-        this.deepCopyCustomer(this.currentEditCustomer, this.currentCustomer);
+        shallowCopy(this.currentEditCustomer, this.currentCustomer);
         this.isCurrentCustomerNew = false;
     }
     saveCustomer() {
         if (!this.isCurrentCustomerNew) {
-            this.deepCopyCustomer(this.currentCustomer, this.currentEditCustomer);
+            shallowCopy(this.currentCustomer, this.currentEditCustomer);
         }
         this.customerService.saveCustomer(this.currentCustomer, this.isCurrentCustomerNew);
     }
-    deepCopyCustomer(oldCustomer: Customer, newCustomer: Customer) {
-        newCustomer.id = oldCustomer.id;
-        newCustomer.name = oldCustomer.name;
-    }
-
-
-    addProduct() {
-        if (!isNaN(Number(this.currentProductId)) && Number(this.currentProductId) > 0) {
-            let tempProduct = findElementById(this.productService.products, Number(this.currentProductId));
-            let tempOrderPosition = new OrderPosition();
-            tempOrderPosition.product = tempProduct as Product;
-            tempOrderPosition.amount = this.currentProductAmount;
-            this.currentOrderPositions.push(tempOrderPosition);
-        }
-    }
-    deleteProduct(index: number) {
-        this.currentOrderPositions.splice(index, 1);
-    }
-    sumOrderPositions(): number {
-        let sum = 0;
-        for (let i = 0; i < this.currentOrderPositions.length; i++) {
-            let temp = this.currentOrderPositions[i];
-            if (!isNullOrUndefined(temp) && !isNaN(temp.amount) && !isNullOrUndefined(temp.product) && !isNaN(temp.product.priceNetto)) {
-                sum += temp.amount * temp.product.priceNetto;
-            }
-        }
-        return sum;
-    }
-
-
-
 }
 
-angular.module("app.customer", ["ngResource"]).controller("CustomerController", CustomerController);
+angular.module(moduleCustomer, [ngResourceId]).controller(CustomerControllerId, CustomerController);
 

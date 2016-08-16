@@ -15,9 +15,9 @@
  *******************************************************************************/
 "use strict";
 
-const StatisticContollerId: string = "StatisticContoller";
+const StatisticControllerId: string = "StatisticController";
 
-class StatisticContoller {
+class StatisticController {
 
     $inject = [StatisticServiceId];
 
@@ -72,4 +72,4 @@ class StatisticContoller {
     }
 }
 
-angular.module(moduleStatistic, [ngResourceId]).controller(StatisticContollerId, StatisticContoller);
+angular.module(moduleStatistic, [ngResourceId]).controller(StatisticControllerId, StatisticController);

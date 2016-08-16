@@ -1,4 +1,6 @@
-/// <reference path="../Common/AbstractModel.Model.ts" />
+/// <reference path="../../Common/AbstractModel.Model.ts" />
+/// <reference path="Role.Model.ts" />
+/// <reference path="Language.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -12,12 +14,18 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+"use strict";
 
 class User extends AbstractModel {
-    username: String;
-    email: String;
-    password: String;
-    role: String;
-    profilPictureURL: String;
-    language: String;
+
+    username: string;
+    email: string;
+    role: Role;
+    profilPictureURL: string;
+    language: Language;
+    enabled: boolean;
+
+    constructor() {
+        super();
+    }
 }

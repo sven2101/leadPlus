@@ -7,7 +7,7 @@
 /// <reference path="../Common/Process.Model.ts" />
 /// <reference path="../Lead/Lead.Model.ts" />
 /// <reference path="../Sale/Sale.Model.ts" />
-/// <reference path="../Profile/User.Model.ts" />
+/// <reference path="../User/Model/User.Model.ts" />
 /// <reference path="../Product/Product.Service.ts" />
 /// <reference path="../Workflow/Workflow.Service.ts" />
 /*******************************************************************************
@@ -355,7 +355,7 @@ class SaleController {
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = sale;
-        this.currentOrderPositions = deepCopyArray(this.editProcess.sale.orderPositions);
+        this.currentOrderPositions = deepCopy(this.editProcess.sale.orderPositions);
 
     };
 

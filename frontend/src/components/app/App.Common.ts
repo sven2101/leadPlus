@@ -24,7 +24,12 @@ let isNullOrUndefined = function (object: any): boolean {
     return object === null || typeof object === "undefined";
 };
 
-let deepCopyArray = function (old: Array<any>): Array<any> {
+let deepCopy = function (old: Object): any {
     return JSON.parse(JSON.stringify(old));
+};
+let shallowCopy = function (oldObject: Object, newObject: Object) {
+    for (let propertyName in oldObject) {
+        newObject[propertyName] = oldObject[propertyName];
+    }
 };
 

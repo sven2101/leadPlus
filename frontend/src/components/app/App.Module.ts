@@ -34,8 +34,9 @@ angular.module("app",
         moduleStatistic,
         moduleStatisticService,
         moduleStatisticResource,
-        moduleSettings,
-        moduleSettingsResource,
+        moduleSetting,
+        moduleSettingResource,
+        moduleSettingService,
         moduleProfile,
         moduleProduct,
         moduleProductService,
@@ -57,5 +58,6 @@ angular.module("app",
         moduleNgSwitchery,
         moduleToaster,
         moduleHighchartsNg,
+
     ]);
 

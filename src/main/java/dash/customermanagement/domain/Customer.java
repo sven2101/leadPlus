@@ -14,12 +14,19 @@
 
 package dash.customermanagement.domain;
 
+import java.util.Calendar;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Customer {
@@ -38,11 +45,20 @@ public class Customer {
 	private String phone;
 	private String address;
 
+	@Column(nullable = true, columnDefinition = "timestamptz")
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
+	private Calendar timestamp;
+
 	public Customer() {
 
 	}
 
 	public long getId() {
+		return id;
+	}
+
+	public long setId() {
 		return id;
 	}
 
@@ -102,6 +118,14 @@ public class Customer {
 		this.address = address;
 	}
 
+	public Calendar getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Calendar timestamp) {
+		this.timestamp = timestamp;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -110,8 +134,10 @@ public class Customer {
 		result = prime * result + ((company == null) ? 0 : company.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
+		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;
 	}
@@ -145,6 +171,8 @@ public class Customer {
 				return false;
 		} else if (!firstname.equals(other.firstname))
 			return false;
+		if (id != other.id)
+			return false;
 		if (lastname == null) {
 			if (other.lastname != null)
 				return false;
@@ -155,6 +183,11 @@ public class Customer {
 				return false;
 		} else if (!phone.equals(other.phone))
 			return false;
+		if (timestamp == null) {
+			if (other.timestamp != null)
+				return false;
+		} else if (!timestamp.equals(other.timestamp))
+			return false;
 		if (title != other.title)
 			return false;
 		return true;
@@ -162,8 +195,9 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", title=" + title + ", firstname=" + firstname + ", lastname=" + lastname + ", company=" + company + ", email=" + email
-				+ ", phone=" + phone + ", address=" + address + "]";
+		return "Customer [id=" + id + ", title=" + title + ", firstname=" + firstname + ", lastname=" + lastname
+				+ ", company=" + company + ", email=" + email + ", phone=" + phone + ", address=" + address
+				+ ", timestamp=" + timestamp + "]";
 	}
 
 }
