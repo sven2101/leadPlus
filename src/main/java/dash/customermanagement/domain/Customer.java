@@ -44,6 +44,7 @@ public class Customer {
 	private String email;
 	private String phone;
 	private String address;
+	private boolean deactivated;
 
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
@@ -52,6 +53,14 @@ public class Customer {
 
 	public Customer() {
 
+	}
+
+	public boolean isDeactivated() {
+		return deactivated;
+	}
+
+	public void setDeactivated(boolean deactivated) {
+		this.deactivated = deactivated;
 	}
 
 	public long getId() {

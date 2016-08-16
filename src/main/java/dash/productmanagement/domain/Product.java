@@ -42,7 +42,7 @@ public class Product {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
 	private Calendar timestamp;
 
-	private boolean isDeactivated;
+	private boolean deactivated;
 
 	private double priceNetto;
 
@@ -50,11 +50,11 @@ public class Product {
 	private byte[] image;
 
 	public boolean isDeactivated() {
-		return isDeactivated;
+		return deactivated;
 	}
 
-	public void setDeactivated(boolean isDeactivated) {
-		this.isDeactivated = isDeactivated;
+	public void setDeactivated(boolean deactivated) {
+		this.deactivated = deactivated;
 	}
 
 	public Calendar getTimestamp() {

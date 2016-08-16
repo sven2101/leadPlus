@@ -27,7 +27,7 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>{{ 'PRODUCT_MANAGE_PRODUCTS' | translate }}</h5>
+                    <h5>{{ 'CUSTOMER_MANAGE_CUSTOMER' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
 
@@ -37,7 +37,7 @@
                             <button type="button" class="btn btn-success btn-sm btn-primary" ng-click="customerCtrl.clearCustomer()" data-toggle="modal"
                                 data-target="#createCustomerModal">
                                 <i class="fa fa-plus"></i>
-                                &nbsp;{{ 'PRODUCT_CREATE' | translate }}
+                                &nbsp;{{ 'CUSTOMER_CREATE' | translate }}
                         </button>
                             <button type="button" ng-click="customerCtrl.refreshData()" type="button" class="btn btn-success btn-sm btn-primary">
                                 <i class="fa fa-refresh"></i>
@@ -59,13 +59,13 @@
                             <tbody>
                                 <tr ng-repeat="customer in customerCtrl.customerService.customer| filter:searchText">
                                     <td class="project-status col-md-1">
-                                        <span ng-show="!customer.isDeactivated" class="label label-primary">Active</span>
-                                        <span ng-show="customer.isDeactivated" class="label label-default">Unactive</span>
+                                        <span ng-show="!customer.deactivated" class="label label-primary">Active</span>
+                                        <span ng-show="customer.deactivated" class="label label-default">Unactive</span>
                                     </td>
                                     <td class="project-title col-md-2">
                                         <a href="project_detail.html">{{customer.firstname}} {{customer.lastname}}</a>
                                         <br>
-                                        <small>{{ 'PRODUCT_CREATED' | translate }} {{customerCtrl.getLocalTimestamp(customer)}}</small>
+                                        <small>{{ 'CUSTOMER_CREATED' | translate }} {{customerCtrl.getLocalTimestamp(customer)}}</small>
                                     </td>
                                     <td class="project-completion col-md-7" max>
                                         <small style="word-wrap: break-word; word-break: break-all;">{{customer.company}}</small>

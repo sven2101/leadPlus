@@ -32,7 +32,7 @@
                                 <p ng-show="productCtrl.createProductForm.priceNetto.$invalid && !productCtrl.createProductForm.priceNetto.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
                             </div>
                             <div class="form-group" ng-show="!productCtrl.isCurrentProductNew">
-                                <label class="checkbox-inline"> <input type="checkbox"  ng-model="productCtrl.currentProduct.isDeactivated" id="inlineCheckbox1">{{ 'PRODUCT_DEACTIVATED' | translate }}</label>
+                                <label class="checkbox-inline"> <input type="checkbox"  ng-model="productCtrl.currentProduct.deactivated" id="inlineCheckbox1">{{ 'PRODUCT_DEACTIVATED' | translate }}</label>
                             </div>
                         </div>
                         <!-- IMAGE -->

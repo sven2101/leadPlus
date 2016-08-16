@@ -18,13 +18,13 @@ class Product extends AbstractModel {
     priceNetto: number;
     image: any;
     timestamp: any;
-    isDeactivated;
+    deactivated;
 
     constructor() {
         super();
         this.name = "";
         this.description = "";
-        this.isDeactivated = false;
+        this.deactivated = false;
     }
 
 }

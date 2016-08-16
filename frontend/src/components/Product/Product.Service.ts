@@ -34,15 +34,18 @@ class ProductService {
 
     saveProduct(product: Product, insert: boolean) {
         let self = this;
-        console.log("ccc");
         if (insert) {
+            console.log("a");
             product.timestamp = newTimestamp();
             this.productResource.createProduct(product).$promise.then(function (result: Product) {
                 self.products.push(result);
 
             });
         } else {
+            console.log("b");
             this.productResource.updateProduct(product).$promise.then(function (result: Product) {
+                console.log(product);
+                console.log(result);
                 product = result;
             });
         }
@@ -51,7 +54,7 @@ class ProductService {
     getActiveProducts(): Array<Product> {
         let temp: Array<Product> = new Array<Product>();
         for (let product of this.products) {
-            if (product.isDeactivated === false) {
+            if (product.deactivated === false) {
                 temp.push(product);
             }
         }
