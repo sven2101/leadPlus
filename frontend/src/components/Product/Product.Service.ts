@@ -30,7 +30,7 @@ class ProductService {
         this.products = new Array<Product>();
         this.getAllProducts();
     }
-    
+
     saveProduct(product: Product, insert: boolean) {
         let self = this;
         console.log(product);

@@ -43,9 +43,9 @@ class CustomerController {
     editCustomer(customer: Customer): void {
         this.currentEditCustomer = customer;
         this.currentCustomer = new Customer();
-        shallowCopy(this.currentEditCustomer, this.currentCustomer);     
+        shallowCopy(this.currentEditCustomer, this.currentCustomer);
         this.isCurrentCustomerNew = false;
-    }    
+    }
     saveCustomer() {
         if (!this.isCurrentCustomerNew) {
             shallowCopy(this.currentCustomer, this.currentEditCustomer);

@@ -93,5 +93,5 @@ class SettingService {
 
 }
 
-angular.module("asdf", [ngResourceId]).service(SettingServiceId, SettingService);
+angular.module(moduleSettingService, [ngResourceId]).service(SettingServiceId, SettingService);
 

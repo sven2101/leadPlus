@@ -58,6 +58,6 @@ angular.module("app",
         moduleNgSwitchery,
         moduleToaster,
         moduleHighchartsNg,
-        "asdf",
+
     ]);
 
