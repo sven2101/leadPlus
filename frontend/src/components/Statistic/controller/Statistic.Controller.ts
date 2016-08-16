@@ -55,8 +55,11 @@ class StatisticController {
     getEfficiency() {
         return this.statisticService.getEfficiency();
     }
-    getConversionRate(): number {
-        return this.statisticService.getConversionRate();
+    getLeadConversionRate(): number {
+        return this.statisticService.getLeadConversionRate();
+    }
+    getOfferConversionRate(): number {
+        return this.statisticService.getOfferConversionRate();
     }
     getProfitPerSale(): number {
         return this.statisticService.getProfitPerSale();

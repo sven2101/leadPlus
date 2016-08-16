@@ -46,7 +46,8 @@ class StatisticService {
     saleAmount = 0;
 
     singleStatisticEfficiency = 0;
-    singleStatisticConversionRate = 0;
+    singleStatisticLeadConversionRate = 0;
+    singleStatisticOfferConversionRate = 0;
     singleStatisticProfitPerSale = 0;
 
     isLeadPromise = false;
@@ -127,7 +128,8 @@ class StatisticService {
             this.isTurnoverPromise === true) {
             this.singleStatisticEfficiency = this.getRatePercentage(this.profitTotal, this.turnoverTotal);
             this.singleStatisticProfitPerSale = (this.getRatePercentage(this.profitTotal, this.saleAmount)) / 100;
-            this.singleStatisticConversionRate = this.getRatePercentage(this.saleAmount, this.leadAmount);
+            this.singleStatisticLeadConversionRate = this.getRatePercentage(this.saleAmount, this.leadAmount);
+            this.singleStatisticOfferConversionRate = this.getRatePercentage(this.saleAmount, this.offerAmount);
             this.pushToProfitAndTurnoverAreaChart();
             this.pushToWorkflowPieChart();
             this.pushToWorkflowAmountSplineChart();
@@ -306,8 +308,11 @@ class StatisticService {
     getEfficiency(): number {
         return this.singleStatisticEfficiency;
     }
-    getConversionRate(): number {
-        return this.singleStatisticConversionRate;
+    getLeadConversionRate(): number {
+        return this.singleStatisticLeadConversionRate;
+    }
+    getOfferConversionRate(): number {
+        return this.singleStatisticOfferConversionRate;
     }
     getProfitPerSale(): number {
         return this.singleStatisticProfitPerSale;
