@@ -73,7 +73,7 @@
                                     <th>
                                         <select class="form-control" ng-model="lead.currentProductId">
                                             <option value="-1" selected disabled hidden>{{ 'LEAD_EDIT_SELECT_PRODUCT' | translate }}</option>                                     
-                                            <option value="{{product.id}}" ng-repeat="product in lead.productService.products">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
+                                            <option value="{{product.id}}" ng-repeat="product in lead.productService.getActiveProducts()">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
                                         </select>
                                     </th>
                                     <th class="col-md-1"></th>

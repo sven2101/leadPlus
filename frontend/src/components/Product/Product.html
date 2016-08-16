@@ -66,7 +66,7 @@
                                     <td class="project-title col-md-2">
                                         <a href="project_detail.html">{{product.name}}</a>
                                         <br>
-                                        <small>{{ 'PRODUCT_CREATED' | translate }} {{product.timestamp}}</small>
+                                        <small>{{ 'PRODUCT_CREATED' | translate }} {{productCtrl.getLocalTimestamp(product)}}</small>
                                     </td>
                                     <td class="project-completion col-md-7" max>
                                         <small style="word-wrap: break-word; word-break: break-all;">{{product.description}}</small>

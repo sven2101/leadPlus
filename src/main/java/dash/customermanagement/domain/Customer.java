@@ -45,7 +45,7 @@ public class Customer {
 	private String phone;
 	private String address;
 
-	@Column(nullable = true, columnDefinition = "timestamptz")
+	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
 	private Calendar timestamp;

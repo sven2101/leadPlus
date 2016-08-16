@@ -1,5 +1,6 @@
 /// <reference path="../Product/Product.Model.ts" />
 /// <reference path="../app/App.Constants.ts" />
+/// <reference path="../app/App.Common.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -12,7 +13,7 @@
  ******************************************************************************/
 "use strict";
 
-const ProductServiceId: String = "ProductService";
+const ProductServiceId: string = "ProductService";
 
 class ProductService {
 
@@ -33,31 +34,36 @@ class ProductService {
 
     saveProduct(product: Product, insert: boolean) {
         let self = this;
-        console.log(product);
+        console.log("ccc");
         if (insert) {
+            product.timestamp = newTimestamp();
             this.productResource.createProduct(product).$promise.then(function (result: Product) {
-                console.log(result);
                 self.products.push(result);
+
             });
         } else {
             this.productResource.updateProduct(product).$promise.then(function (result: Product) {
-                console.log(result);
                 product = result;
             });
         }
     }
 
-    getProducts(): Array<Product> {
-        return this.products;
+    getActiveProducts(): Array<Product> {
+        let temp: Array<Product> = new Array<Product>();
+        for (let product of this.products) {
+            if (product.isDeactivated === false) {
+                temp.push(product);
+            }
+        }
+        return temp;
     }
 
     getAllProducts() {
         let self = this;
         this.productResource.getAllProducts().$promise.then(function (result: Array<Product>) {
-            console.log(result);
             self.products = result;
         });
     }
 }
 
-angular.module("app.product.service", ["ngResource"]).service("ProductService", ProductService);
+angular.module(moduleProductService, [ngResourceId]).service(ProductServiceId, ProductService);

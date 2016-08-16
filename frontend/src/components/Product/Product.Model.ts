@@ -17,7 +17,7 @@ class Product extends AbstractModel {
     description: String;
     priceNetto: number;
     image: any;
-    timestamp: Date;
+    timestamp: any;
     isDeactivated;
 
     constructor() {
