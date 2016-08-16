@@ -30,6 +30,7 @@ class ProductService {
         this.products = new Array<Product>();
         this.getAllProducts();
     }
+    
     saveProduct(product: Product, insert: boolean) {
         let self = this;
         console.log(product);
@@ -45,6 +46,11 @@ class ProductService {
             });
         }
     }
+
+    getProducts(): Array<Product> {
+        return this.products;
+    }
+
     getAllProducts() {
         let self = this;
         this.productResource.getAllProducts().$promise.then(function (result: Array<Product>) {

@@ -24,19 +24,17 @@ class CustomerService {
     constructor(CustomerResource) {
         this.customerResource = CustomerResource.resource;
         this.customer = new Array<Customer>();
+        this.getAllCustomer();
     }
 
     saveCustomer(customer: Customer, insert: boolean) {
         let self = this;
-        console.log(customer);
         if (insert) {
             this.customerResource.createCustomer(customer).$promise.then(function (result: Customer) {
-                console.log(result);
                 self.customer.push(result);
             });
         } else {
             this.customerResource.updateCustomer(customer).$promise.then(function (result: Customer) {
-                console.log(result);
                 customer = result;
             });
         }

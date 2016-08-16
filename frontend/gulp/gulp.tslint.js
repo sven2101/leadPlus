@@ -4,14 +4,15 @@ var gulp = require('gulp'),
     tslint = require("gulp-tslint");
 
 gulp.task("tslint", function () {
-    gulp.src(path.typescript.src)
+
+    return gulp.src(path.typescript.src)
         .pipe(tslint({
             formatter: "prose",
+            emitError: false,
             rulesDirectory: "frontend/gulp/tslintOptions.json"
         }))
         .pipe(tslint.report({
             summarizeFailureOutput: true
         }))
-}
-);
+});
 

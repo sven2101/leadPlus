@@ -63,12 +63,12 @@
                                         <span ng-show="customer.isDeactivated" class="label label-default">Unactive</span>
                                     </td>
                                     <td class="project-title col-md-2">
-                                        <a href="project_detail.html">{{customer.name}}</a>
+                                        <a href="project_detail.html">{{customer.firstname}} {{customer.lastname}}</a>
                                         <br>
                                         <small>{{ 'PRODUCT_CREATED' | translate }} {{customer.timestamp}}</small>
                                     </td>
                                     <td class="project-completion col-md-7" max>
-                                        <small style="word-wrap: break-word; word-break: break-all;">{{customer.description}}</small>
+                                        <small style="word-wrap: break-word; word-break: break-all;">{{customer.company}}</small>
                                     </td>
                                     <td class="project-people col-md-1">
                                         <a href=""><img alt="image" class="img-circle" src="http://www.containersucher.com/assets/plugindata/w2dblgbb1ca3b3057e90d9af3e514539e33a22/pic1271913090.jpg"></a>
@@ -86,58 +86,7 @@
         </div>
     </div>
 </div>
-
-<div>
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>{{ 'PRODUCT_MANAGE_PRODUCTS' | translate }}</h5>
-                    </div>
-
-                    <div class="ibox-content">
-                        <table class="table">
-                            <thead>
-                                <tr>                                 
-                                    <th>                                        
-                                        <select style="width:350px;" required ng-model="customerCtrl.currentProductId" >
-                                            <option selected disabled hidden>Please choose product</option>                                     
-                                            <option value="{{product.id}}" ng-repeat="product in customerCtrl.productService.products">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
-                                        </select>
-                                    </th>
-                                    <th class="col-md-1">
-                                        <input type="number" class="input-sm form-control" ng-model="customerCtrl.currentProductAmount">
-                                    </th>
-                                    <th class="col-md-1">
-                                        <button type="button" class="btn btn-white btn-sm" ng-click="customerCtrl.addProduct()">
-                                     <i class="fa fa-plus"></i>&nbsp;</button>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="orderPosition in customerCtrl.currentOrderPositions">
-                                    <td>{{orderPosition.product.name}}</td>
-                                    <td class="col-md-1">{{orderPosition.amount}}</td>
-                                    <td class="col-md-1">
-                                        <button type="button" class="btn btn-white btn-sm" ng-click="customerCtrl.deleteProduct($index)">
-                                        <i class="fa fa-trash"></i>&nbsp;
-                                     </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <h3>{{customerCtrl.sumOrderPositions()| currency:'\u20AC'}}</h3>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div ng-include=" 'components/Customer/Customer.Modal.html' "></div>
-
 <script>
    $(".chosen-select").chosen(); 
   </script>

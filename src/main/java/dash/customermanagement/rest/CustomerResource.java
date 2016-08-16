@@ -39,7 +39,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Customer Resource")
-@RequestMapping(value = "/api/rest/customers", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/customer", consumes = { MediaType.ALL_VALUE }, produces = {
+		MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Customer API")
 public class CustomerResource {
 
@@ -63,14 +64,16 @@ public class CustomerResource {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Create a single customer.", notes = "You have to provide a valid customer entity.")
-	public Customer save(@ApiParam(required = true) @RequestBody @Valid final Customer customer) throws SaveFailedException {
+	public Customer save(@ApiParam(required = true) @RequestBody @Valid final Customer customer)
+			throws SaveFailedException {
 		return customerService.save(customer);
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update a single customer.", notes = "You have to provide a valid customer ID.")
-	public Customer update(@ApiParam(required = true) @RequestBody @Valid final Customer customer) throws UpdateFailedException {
+	public Customer update(@ApiParam(required = true) @RequestBody @Valid final Customer customer)
+			throws UpdateFailedException {
 		return customerService.update(customer);
 	}
 

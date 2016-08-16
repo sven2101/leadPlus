@@ -13,7 +13,14 @@
 
 class Customer extends AbstractModel {
 
-    name: String;
+    title: string;
+    firstname: string;
+    lastname: string;
+    company: string;
+    email: string;
+    phone: string;
+    address: string;
+    timestamp: any;
 
     constructor() {
         super();

@@ -494,7 +494,7 @@ class LeadController {
                 description: "",
                 priceNetto: 0
             },
-            orderPositions: deepCopyArray(process.lead.orderPositions),
+            orderPositions: deepCopy(process.lead.orderPositions),
             containerAmount: process.lead.containerAmount,
             deliveryAddress: process.lead.deliveryAddress,
             deliveryDate: null,
@@ -591,7 +591,7 @@ class LeadController {
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = process;
-        this.currentOrderPositions = deepCopyArray(this.editProcess.lead.orderPositions);
+        this.currentOrderPositions = deepCopy(this.editProcess.lead.orderPositions);
     };
 
     saveEditedRow = function () {

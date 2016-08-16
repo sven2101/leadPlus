@@ -350,7 +350,7 @@ class SaleController {
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = sale;
-        this.currentOrderPositions = deepCopyArray(this.editProcess.sale.orderPositions);
+        this.currentOrderPositions = deepCopy(this.editProcess.sale.orderPositions);
 
     };
 
