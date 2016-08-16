@@ -25,8 +25,8 @@ class SettingController {
 
     settingService;
 
-    constructor(settingService: SettingService) {
-        this.settingService = settingService;
+    constructor(SettingService) {
+        this.settingService = SettingService;
     }
 
     activateUser(user: User) {
@@ -47,5 +47,5 @@ class SettingController {
 
 }
 
-angular.module(moduleSettings, [ngResourceId]).controller(SettingControllerId, SettingController);
+angular.module(moduleSetting, [ngResourceId]).controller(SettingControllerId, SettingController);
 

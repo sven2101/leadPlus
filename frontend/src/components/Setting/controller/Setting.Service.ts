@@ -22,7 +22,7 @@ const SettingServiceId: string = "SettingService";
 
 class SettingService {
 
-    private $inject = [$filterId, toasterId, $translateId, $rootScopeId, SettingsResource];
+    private $inject = [$filterId, toasterId, $translateId, $rootScopeId, SettingResourceId];
 
     settingsResource;
     rootScope;
@@ -34,12 +34,12 @@ class SettingService {
     users: Array<User>;
     roleSelection: Role;
 
-    constructor($filter, toaster, $translate, $rootScope, settingsResource: SettingsResource) {
+    constructor($filter, toaster, $translate, $rootScope, SettingResource) {
         this.filter = $filter;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
-        this.settingsResource = settingsResource.resource;
+        this.settingsResource = SettingResource.resource;
 
         this.counter = 1;
     }
@@ -93,5 +93,5 @@ class SettingService {
 
 }
 
-angular.module(moduleSettingsService, [ngResourceId]).service(SettingServiceId, SettingService);
+angular.module("asdf", [ngResourceId]).service(SettingServiceId, SettingService);
 

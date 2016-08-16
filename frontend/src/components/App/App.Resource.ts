@@ -169,9 +169,9 @@ angular.module(moduleUserResource, [ngResourceId]).service(UserResource.serviceI
 
 // ----------------------------------------------------------------------------------------
 
-class SettingsResource {
+const SettingResourceId: string = "SettingResource";
 
-    static serviceId: string = "SettingsResource";
+class SettingResource {
 
     private $inject = [$resourceId];
 
@@ -186,7 +186,7 @@ class SettingsResource {
     }
 }
 
-angular.module(moduleSettingsResource, [ngResourceId]).service(SettingsResource.serviceId, SettingsResource);
+angular.module(moduleSettingResource, [ngResourceId]).service(SettingResourceId, SettingResource);
 
 // ----------------------------------------------------------------------------------------
 
