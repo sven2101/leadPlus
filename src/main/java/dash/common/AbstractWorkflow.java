@@ -20,6 +20,7 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import dash.customermanagement.domain.Customer;
 import dash.processmanagement.request.Request;
 import dash.productmanagement.domain.OrderPosition;
 import dash.productmanagement.domain.Product;
@@ -32,6 +33,10 @@ public abstract class AbstractWorkflow implements Request {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private long id;
+
+	@OneToOne(cascade = { CascadeType.PERSIST })
+	@JoinColumn(name = "customer_fk", nullable = true)
+	private Customer customer;
 
 	private String deliveryAddress;
 
@@ -109,6 +114,14 @@ public abstract class AbstractWorkflow implements Request {
 		this.vendor = vendor;
 	}
 
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
 	public double getPrice() {
 		int sum = 0;
 		for (int i = 0; i < this.orderPositions.size(); i++) {
@@ -126,6 +139,7 @@ public abstract class AbstractWorkflow implements Request {
 		int result = 1;
 		result = prime * result + ((container == null) ? 0 : container.hashCode());
 		result = prime * result + containerAmount;
+		result = prime * result + ((customer == null) ? 0 : customer.hashCode());
 		result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((orderPositions == null) ? 0 : orderPositions.hashCode());
@@ -149,6 +163,11 @@ public abstract class AbstractWorkflow implements Request {
 		} else if (!container.equals(other.container))
 			return false;
 		if (containerAmount != other.containerAmount)
+			return false;
+		if (customer == null) {
+			if (other.customer != null)
+				return false;
+		} else if (!customer.equals(other.customer))
 			return false;
 		if (deliveryAddress == null) {
 			if (other.deliveryAddress != null)
@@ -177,9 +196,9 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Override
 	public String toString() {
-		return "AbstractWorkflow [id=" + id + ", deliveryAddress=" + deliveryAddress + ", orderPositions="
-				+ orderPositions + ", container=" + container + ", containerAmount=" + containerAmount + ", timestamp="
-				+ timestamp + ", vendor=" + vendor + "]";
+		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress
+				+ ", orderPositions=" + orderPositions + ", container=" + container + ", containerAmount="
+				+ containerAmount + ", timestamp=" + timestamp + ", vendor=" + vendor + "]";
 	}
 
 }

@@ -16,25 +16,17 @@ package dash.offermanagement.domain;
 
 import java.util.Calendar;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.common.AbstractWorkflow;
-import dash.prospectmanagement.domain.Prospect;
 
 @Entity
 public class Offer extends AbstractWorkflow {
-
-	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinColumn(name = "prospect_fk")
-	private Prospect prospect;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = true, columnDefinition = "timestamptz")
@@ -45,14 +37,6 @@ public class Offer extends AbstractWorkflow {
 
 	public Offer() {
 
-	}
-
-	public Prospect getProspect() {
-		return prospect;
-	}
-
-	public void setProspect(Prospect prospect) {
-		this.prospect = prospect;
 	}
 
 	public double getOfferPrice() {
@@ -79,7 +63,6 @@ public class Offer extends AbstractWorkflow {
 		long temp;
 		temp = Double.doubleToLongBits(offerPrice);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((prospect == null) ? 0 : prospect.hashCode());
 		return result;
 	}
 
@@ -99,17 +82,12 @@ public class Offer extends AbstractWorkflow {
 			return false;
 		if (Double.doubleToLongBits(offerPrice) != Double.doubleToLongBits(other.offerPrice))
 			return false;
-		if (prospect == null) {
-			if (other.prospect != null)
-				return false;
-		} else if (!prospect.equals(other.prospect))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Offer [prospect=" + prospect + ", deliveryDate=" + deliveryDate + ", offerPrice=" + offerPrice + "]";
+		return "Offer [deliveryDate=" + deliveryDate + ", offerPrice=" + offerPrice + "]";
 	}
 
 }

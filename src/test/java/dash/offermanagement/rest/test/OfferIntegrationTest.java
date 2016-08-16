@@ -30,10 +30,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.inquirermanagement.domain.Title;
+import dash.customermanagement.domain.Customer;
+import dash.customermanagement.domain.Title;
 import dash.offermanagement.domain.Offer;
 import dash.productmanagement.domain.Product;
-import dash.prospectmanagement.domain.Prospect;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
 import dash.vendormanagement.domain.Vendor;
@@ -67,15 +67,17 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 
 		HttpEntity<Offer> entityCreateOffer = new HttpEntity<Offer>(offer, headers);
 
-		ResponseEntity<Offer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateOffer, Offer.class);
+		ResponseEntity<Offer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateOffer,
+				Offer.class);
 		Offer responseCreateOffer = responseCreate.getBody();
 
 		HttpEntity<Offer> entityGetOffer = new HttpEntity<Offer>(headers);
 
-		ResponseEntity<Offer> responseGetOffer = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET, entityGetOffer, Offer.class,
-				responseCreateOffer.getId());
+		ResponseEntity<Offer> responseGetOffer = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET,
+				entityGetOffer, Offer.class, responseCreateOffer.getId());
 
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetOffer.getHeaders().getContentType().getCharSet());
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(),
+				responseGetOffer.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetOffer.getStatusCode());
 		assertEquals(responseCreateOffer, responseGetOffer.getBody());
 	}
@@ -85,8 +87,10 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 
 		HttpEntity<Offer> entityGetOffers = new HttpEntity<Offer>(headers);
 
-		ResponseEntity<Object[]> responseGetOffers = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetOffers, Object[].class);
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetOffers.getHeaders().getContentType().getCharSet());
+		ResponseEntity<Object[]> responseGetOffers = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET,
+				entityGetOffers, Object[].class);
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(),
+				responseGetOffers.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetOffers.getStatusCode());
 	}
 
@@ -97,13 +101,15 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 		Offer offer = create();
 		HttpEntity<Offer> entityCreateOffer = new HttpEntity<Offer>(offer, headers);
 
-		ResponseEntity<Offer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateOffer, Offer.class);
+		ResponseEntity<Offer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateOffer,
+				Offer.class);
 		Offer responseCreateOffer = responseCreate.getBody();
 
 		responseCreateOffer.setContainerAmount(10);
 		HttpEntity<Offer> entity = new HttpEntity<Offer>(responseCreateOffer, headers);
 
-		ResponseEntity<Offer> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Offer.class, responseCreateOffer.getId());
+		ResponseEntity<Offer> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Offer.class,
+				responseCreateOffer.getId());
 		Offer responseOffer = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
@@ -126,14 +132,14 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 		container.setDescription("Dieser Container ist 3 Fuss lang. ");
 		container.setPriceNetto(200.00);
 
-		Prospect prospect = new Prospect();
-		prospect.setTitle(Title.MR);
-		prospect.setFirstname("Andreas");
-		prospect.setLastname("Foitzik");
-		prospect.setCompany("eviarc GmbH");
-		prospect.setEmail("test@eviar.com");
-		prospect.setPhone("07961/55166");
-		prospect.setAddress("Hauptstrasse 10");
+		Customer customer = new Customer();
+		customer.setTitle(Title.MR);
+		customer.setFirstname("Andreas");
+		customer.setLastname("Foitzik");
+		customer.setCompany("eviarc GmbH");
+		customer.setEmail("test@eviar.com");
+		customer.setPhone("07961/55166");
+		customer.setAddress("Hauptstrasse 10");
 
 		Vendor vendor = new Vendor();
 		vendor.setName("***REMOVED***");
@@ -144,7 +150,7 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 		offer.setDeliveryAddress("Berlin");
 		offer.setDeliveryDate(Calendar.getInstance());
 		offer.setOfferPrice(200.00);
-		offer.setProspect(prospect);
+		offer.setCustomer(customer);
 		offer.setTimestamp(Calendar.getInstance());
 		offer.setVendor(vendor);
 		return offer;

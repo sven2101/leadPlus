@@ -20,6 +20,9 @@ class Sale extends AbstractModel {
     vendor: any;
     deliveryAddress: any;
     deliveryDate: any;
+    transport: any;
+    saleProfit: number;
+    saleReturn: number;
     constructor() {
         super();
         this.container = {

@@ -167,11 +167,11 @@ public class ProcessResource {
 			@RequestParam(value = "order[0][dir]") String orderDir) {
 		String sortColumn = "lead.timestamp";
 		if (orderCol == 1)
-			sortColumn = "lead.inquirer.lastname";
+			sortColumn = "lead.customer.lastname";
 		else if (orderCol == 2)
-			sortColumn = "lead.inquirer.company";
+			sortColumn = "lead.customer.company";
 		else if (orderCol == 3)
-			sortColumn = "lead.inquirer.email";
+			sortColumn = "lead.customer.email";
 		else if (orderCol == 4)
 			sortColumn = "lead.timestamp";
 		else if (orderCol == 12)
@@ -187,7 +187,7 @@ public class ProcessResource {
 					.findByLeadIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
 		else
 			page = processRepository
-					.findByLeadInquirerFirstnameContainingOrLeadInquirerLastnameContainingOrLeadInquirerEmailContainingOrLeadInquirerCompanyContainingOrLeadInquirerPhoneContainingOrLeadContainerNameContainingOrLeadContainerDescriptionContainingOrLeadDeliveryAddressContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
+					.findByLeadCustomerFirstnameContainingOrLeadCustomerLastnameContainingOrLeadCustomerEmailContainingOrLeadCustomerCompanyContainingOrLeadCustomerPhoneContainingOrLeadContainerNameContainingOrLeadContainerDescriptionContainingOrLeadDeliveryAddressContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
 							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
 							searchText, searchText, searchText,
 							new PageRequest(start / length, length, sortDirection, sortColumn));
@@ -224,11 +224,11 @@ public class ProcessResource {
 			@RequestParam(value = "order[0][dir]") String orderDir) {
 		String sortColumn = "offer.timestamp";
 		if (orderCol == 1)
-			sortColumn = "offer.prospect.lastname";
+			sortColumn = "offer.customer.lastname";
 		else if (orderCol == 2)
-			sortColumn = "offer.prospect.company";
+			sortColumn = "offer.customer.company";
 		else if (orderCol == 3)
-			sortColumn = "offer.prospect.email";
+			sortColumn = "offer.customer.email";
 		else if (orderCol == 4)
 			sortColumn = "offer.timestamp";
 		else if (orderCol == 15)
@@ -244,7 +244,7 @@ public class ProcessResource {
 					.findByOfferIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
 		else
 			page = processRepository
-					.findByOfferProspectFirstnameContainingOrOfferProspectLastnameContainingOrOfferProspectEmailContainingOrOfferProspectCompanyContainingOrOfferProspectPhoneContainingOrOfferContainerNameContainingOrOfferContainerDescriptionContainingOrOfferDeliveryAddressContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(
+					.findByOfferCustomerFirstnameContainingOrOfferCustomerLastnameContainingOrOfferCustomerEmailContainingOrOfferCustomerCompanyContainingOrOfferCustomerPhoneContainingOrOfferContainerNameContainingOrOfferContainerDescriptionContainingOrOfferDeliveryAddressContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(
 							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
 							searchText, searchText, new PageRequest(start / length, length, sortDirection, sortColumn));
 

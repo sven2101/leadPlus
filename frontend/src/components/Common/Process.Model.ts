@@ -15,7 +15,10 @@
 "use strict";
 
 class Process extends AbstractModel {
+    id: number;
     lead: Lead;
     offer: Offer;
     sale: Sale;
+    processor: any;
+    status: any;
 }

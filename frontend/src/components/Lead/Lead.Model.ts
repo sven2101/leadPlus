@@ -15,7 +15,7 @@ class Lead extends AbstractModel {
     orderPositions: Array<OrderPosition>;
     container: any;
     containerAmount: number;
-    inquirer: any;
+    customer: any;
     timestamp: any;
     vendor: any;
     deliveryAddress: any;

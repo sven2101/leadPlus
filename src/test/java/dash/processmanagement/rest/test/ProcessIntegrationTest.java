@@ -28,14 +28,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.inquirermanagement.domain.Inquirer;
-import dash.inquirermanagement.domain.Title;
+import dash.customermanagement.domain.Customer;
+import dash.customermanagement.domain.Title;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
-import dash.statusmanagement.domain.Status;
 import dash.productmanagement.domain.Product;
 import dash.salemanagement.domain.Sale;
+import dash.statusmanagement.domain.Status;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
 import dash.vendormanagement.domain.Vendor;
@@ -66,8 +66,10 @@ public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTe
 
 		HttpEntity<Process> entityGetProcesses = new HttpEntity<Process>(headers);
 
-		ResponseEntity<Object[]> responseGetProcesses = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetProcesses, Object[].class);
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetProcesses.getHeaders().getContentType().getCharSet());
+		ResponseEntity<Object[]> responseGetProcesses = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET,
+				entityGetProcesses, Object[].class);
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(),
+				responseGetProcesses.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetProcesses.getStatusCode());
 	}
 
@@ -77,15 +79,17 @@ public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTe
 
 		HttpEntity<Process> entityCreateProcess = new HttpEntity<Process>(create(), headers);
 
-		ResponseEntity<Process> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateProcess, Process.class);
+		ResponseEntity<Process> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST,
+				entityCreateProcess, Process.class);
 		Process responseCreateProcess = responseCreate.getBody();
 
 		HttpEntity<Process> entityGetProcess = new HttpEntity<Process>(headers);
 
-		ResponseEntity<Process> responseGetProcess = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET, entityGetProcess, Process.class,
-				responseCreateProcess.getId());
+		ResponseEntity<Process> responseGetProcess = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET,
+				entityGetProcess, Process.class, responseCreateProcess.getId());
 
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetProcess.getHeaders().getContentType().getCharSet());
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(),
+				responseGetProcess.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetProcess.getStatusCode());
 		assertEquals(create(), responseGetProcess.getBody());
 	}
@@ -97,14 +101,16 @@ public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTe
 		Process process = create();
 		HttpEntity<Process> entityCreateProcess = new HttpEntity<Process>(process, headers);
 
-		ResponseEntity<Process> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateProcess, Process.class);
+		ResponseEntity<Process> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST,
+				entityCreateProcess, Process.class);
 		Process responseCreateProcess = responseCreate.getBody();
 
 		responseCreateProcess.setStatus(Status.OFFER);
 
 		HttpEntity<Process> entity = new HttpEntity<Process>(responseCreateProcess, headers);
 
-		ResponseEntity<Process> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Process.class, responseCreateProcess.getId());
+		ResponseEntity<Process> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Process.class,
+				responseCreateProcess.getId());
 		Process responseProcess = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
@@ -123,13 +129,13 @@ public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTe
 
 		Process process = new Process();
 
-		Inquirer inquirer = new Inquirer();
-		inquirer.setFirstname("Max");
-		inquirer.setLastname("Mustermann");
-		inquirer.setCompany("Einkauf Mustermann GmbH");
-		inquirer.setEmail("max.mustermann@einkauf-mustermann.de");
-		inquirer.setPhone("07961/55166");
-		inquirer.setTitle(Title.MR);
+		Customer customer = new Customer();
+		customer.setFirstname("Max");
+		customer.setLastname("Mustermann");
+		customer.setCompany("Einkauf Mustermann GmbH");
+		customer.setEmail("max.mustermann@einkauf-mustermann.de");
+		customer.setPhone("07961/55166");
+		customer.setTitle(Title.MR);
 
 		Vendor vendor = new Vendor();
 		vendor.setName("Karl Neu 9");
@@ -141,7 +147,7 @@ public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTe
 		container.setPriceNetto(1000.00);
 
 		Lead lead = new Lead();
-		lead.setInquirer(inquirer);
+		lead.setCustomer(customer);
 		lead.setVendor(vendor);
 		lead.setContainer(container);
 		lead.setContainerAmount(30);

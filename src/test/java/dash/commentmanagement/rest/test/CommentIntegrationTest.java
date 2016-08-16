@@ -32,17 +32,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
 import dash.commentmanagement.domain.Comment;
+import dash.customermanagement.domain.Customer;
+import dash.customermanagement.domain.Title;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
-import dash.inquirermanagement.domain.Inquirer;
-import dash.inquirermanagement.domain.Title;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.business.IProcessService;
 import dash.processmanagement.domain.Process;
-import dash.statusmanagement.domain.Status;
 import dash.productmanagement.domain.Product;
 import dash.salemanagement.domain.Sale;
+import dash.statusmanagement.domain.Status;
 import dash.test.BaseConfig;
 import dash.test.IIntegrationTest;
 import dash.usermanagement.business.IUserService;
@@ -82,28 +82,33 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 		Comment comment = create();
 		HttpEntity<Comment> entityCreateComment = new HttpEntity<Comment>(comment, headers);
 
-		ResponseEntity<Comment> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateComment, Comment.class);
+		ResponseEntity<Comment> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST,
+				entityCreateComment, Comment.class);
 		Comment responseCreateComment = responseCreate.getBody();
 
 		HttpEntity<Comment> entityGetComment = new HttpEntity<Comment>(headers);
 
-		ResponseEntity<Comment> responseGetComment = restTemplate.exchange(EXTENDED_URI + "processes/{id}", HttpMethod.GET, entityGetComment, Comment.class,
-				responseCreateComment.getProcess().getId());
+		ResponseEntity<Comment> responseGetComment = restTemplate.exchange(EXTENDED_URI + "processes/{id}",
+				HttpMethod.GET, entityGetComment, Comment.class, responseCreateComment.getProcess().getId());
 
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetComment.getHeaders().getContentType().getCharSet());
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(),
+				responseGetComment.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetComment.getStatusCode());
 		assertEquals(responseCreateComment, responseGetComment.getBody());
 	}
 
-	//	@Test
-	//	public void getAllByProcess() {
+	// @Test
+	// public void getAllByProcess() {
 	//
-	//		HttpEntity<Comment> entityGetComments = new HttpEntity<Comment>(headers);
+	// HttpEntity<Comment> entityGetComments = new HttpEntity<Comment>(headers);
 	//
-	//		ResponseEntity<Object[]> responseGetComments = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetComments, Object[].class);
-	//		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetComments.getHeaders().getContentType().getCharSet());
-	//		assertEquals(HttpStatus.OK, responseGetComments.getStatusCode());
-	//	}
+	// ResponseEntity<Object[]> responseGetComments =
+	// restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetComments,
+	// Object[].class);
+	// assertEquals(ContentType.APPLICATION_JSON.getCharset(),
+	// responseGetComments.getHeaders().getContentType().getCharSet());
+	// assertEquals(HttpStatus.OK, responseGetComments.getStatusCode());
+	// }
 
 	@Override
 	@Test
@@ -112,13 +117,15 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 		Comment comment = create();
 		HttpEntity<Comment> entityCreateComment = new HttpEntity<Comment>(comment, headers);
 
-		ResponseEntity<Comment> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateComment, Comment.class);
+		ResponseEntity<Comment> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST,
+				entityCreateComment, Comment.class);
 		Comment responseCreateComment = responseCreate.getBody();
 
 		responseCreateComment.setCommentText("Haha");
 		HttpEntity<Comment> entity = new HttpEntity<Comment>(responseCreateComment, headers);
 
-		ResponseEntity<Comment> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Comment.class, responseCreateComment.getId());
+		ResponseEntity<Comment> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Comment.class,
+				responseCreateComment.getId());
 		Comment responseComment = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
@@ -144,13 +151,13 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 
 			Process process = new Process();
 
-			Inquirer inquirer = new Inquirer();
-			inquirer.setFirstname("Max");
-			inquirer.setLastname("Mustermann");
-			inquirer.setCompany("Einkauf Mustermann GmbH");
-			inquirer.setEmail("max.mustermann@einkauf-mustermann.de");
-			inquirer.setPhone("07961/55166");
-			inquirer.setTitle(Title.MR);
+			Customer customer = new Customer();
+			customer.setFirstname("Max");
+			customer.setLastname("Mustermann");
+			customer.setCompany("Einkauf Mustermann GmbH");
+			customer.setEmail("max.mustermann@einkauf-mustermann.de");
+			customer.setPhone("07961/55166");
+			customer.setTitle(Title.MR);
 
 			Vendor vendor = new Vendor();
 			vendor.setName("Karl Neu 9");
@@ -162,7 +169,7 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 			container.setPriceNetto(1000.00);
 
 			Lead lead = new Lead();
-			lead.setInquirer(inquirer);
+			lead.setCustomer(customer);
 			lead.setVendor(vendor);
 			lead.setContainer(container);
 			lead.setContainerAmount(30);
