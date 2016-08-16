@@ -15,11 +15,12 @@ class Offer extends AbstractModel {
     orderPositions: Array<OrderPosition>;
     container: any;
     containerAmount: number;
-    prospect: any;
+    customer: any;
     timestamp: any;
     vendor: any;
     deliveryAddress: any;
     deliveryDate: any;
+    offerPrice: number;
     constructor() {
         super();
         this.container = {

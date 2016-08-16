@@ -27,12 +27,10 @@ import org.springframework.web.client.RestTemplate;
 
 import dash.commentmanagement.business.CommentRepository;
 import dash.customermanagement.business.CustomerRepository;
-import dash.inquirermanagement.business.InquirerRepository;
 import dash.leadmanagement.business.LeadRepository;
 import dash.offermanagement.business.OfferRepository;
 import dash.processmanagement.business.ProcessRepository;
 import dash.productmanagement.business.ProductRepository;
-import dash.prospectmanagement.business.ProspectRepository;
 import dash.salemanagement.business.SaleRepository;
 import dash.usermanagement.business.UserRepository;
 import dash.usermanagement.domain.Role;
@@ -81,16 +79,10 @@ public class BaseConfig {
 	private CustomerRepository customerRepository;
 
 	@Autowired
-	private InquirerRepository inquirerRepository;
-
-	@Autowired
 	private LeadRepository leadRepository;
 
 	@Autowired
 	private OfferRepository offerRepository;
-
-	@Autowired
-	private ProspectRepository prospectRepository;
 
 	@Autowired
 	private SaleRepository saleRepository;
@@ -131,8 +123,6 @@ public class BaseConfig {
 		offerRepository.deleteAll();
 		saleRepository.deleteAll();
 
-		inquirerRepository.deleteAll();
-		prospectRepository.deleteAll();
 		customerRepository.deleteAll();
 
 		containerRepository.deleteAll();

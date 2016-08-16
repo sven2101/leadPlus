@@ -13,26 +13,26 @@
                         <div class="col-sm-6 b-r">
                             <div class="form-group">
                                 <label>{{ 'COMMON_TITLE' | translate }}</label>
-                                <select name="title" class="form-control" ng-model="lead.newLead.inquirer.title">
+                                <select name="title" class="form-control" ng-model="lead.newLead.customer.title">
                                     <option value="MR">{{ 'COMMON_TITLE_MR' | translate }}</option>
                                     <option value="MS">{{ 'COMMON_TITLE_MS' | translate }}</option>
                                 </select>
                             </div>
                             <div class="form-group" ng-class="{ 'has-error' : lead.addForm.firstname.$invalid && !lead.addForm.firstname.$pristine }">
                                 <label>{{ 'COMMON_FIRSTNAME' | translate }}</label>
-                                <input type="text" name="firstname" class="form-control" ng-model="lead.newLead.inquirer.firstname" ng-maxlength="30">
+                                <input type="text" name="firstname" class="form-control" ng-model="lead.newLead.customer.firstname" ng-maxlength="30">
                                 <p ng-show="lead.addForm.firstname.$invalid && !lead.addForm.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                             <!-- LASTNAME -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.addForm.lastname.$invalid && !lead.addForm.lastname.$pristine }">
                                 <label>{{ 'COMMON_LASTNAME' | translate }}</label>
-                                <input type="text" name="lastname" class="form-control" ng-model="lead.newLead.inquirer.lastname" ng-maxlength="30">
+                                <input type="text" name="lastname" class="form-control" ng-model="lead.newLead.customer.lastname" ng-maxlength="30">
                                 <p ng-show="lead.addForm.lastname.$invalid && !lead.addForm.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                             <!-- COMPANY -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.addForm.company.$invalid && !lead.addForm.company.$pristine }">
                                 <label>{{ 'COMMON_COMPANY' | translate }}</label>
-                                <input type="text" name="company" class="form-control" ng-model="lead.newLead.inquirer.company" ng-maxlength="50">
+                                <input type="text" name="company" class="form-control" ng-model="lead.newLead.customer.company" ng-maxlength="50">
                                 <p ng-show="lead.addForm.company.$invalid && !lead.addForm.company.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                         </div>
@@ -45,13 +45,13 @@
                             <!-- EMAIL -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.addForm.email.$invalid && !lead.addForm.email.$pristine }">
                                 <label>{{ 'COMMON_EMAIL' | translate }}</label>
-                                <input type="email" name="email" class="form-control" ng-model="lead.newLead.inquirer.email">
+                                <input type="email" name="email" class="form-control" ng-model="lead.newLead.customer.email">
                                 <p ng-show="lead.addForm.email.$invalid && !lead.addForm.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL'| translate }}</p>
                             </div>
                             <!-- PHONE -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.addForm.phone.$invalid && !lead.addForm.phone.$pristine }">
                                 <label>{{ 'COMMON_PHONE' | translate }}</label>
-                                <input type="text" name="phone" class="form-control" ng-model="lead.newLead.inquirer.phone" ng-maxlength="50">
+                                <input type="text" name="phone" class="form-control" ng-model="lead.newLead.customer.phone" ng-maxlength="50">
                                 <p ng-show="lead.addForm.phone.$invalid && !lead.addForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                             <!-- CONTAINER DESTINATION -->

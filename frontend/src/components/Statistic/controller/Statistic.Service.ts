@@ -148,7 +148,7 @@ class StatisticService {
     loadAllResourcesByDateRange(dateRange: String): void {
         let self = this;
         this.statisticResource.getWorkflowStatistic({ workflow: workflowLead, dateRange: dateRange }).$promise.then(function (result) {
-            self.leadResultArr = result.result;     
+            self.leadResultArr = result.result;
             self.leadAmount = self.getTotalSumOf(self.leadResultArr);
             self.isLeadPromise = true;
             self.checkPromises();

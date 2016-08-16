@@ -11,10 +11,6 @@ import dash.customermanagement.domain.Customer;
 @Entity
 public class Sale extends AbstractWorkflow {
 
-	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinColumn(name = "customer_fk")
-	private Customer customer;
-
 	private String transport;
 	private double saleReturn;
 	private double saleProfit;
@@ -47,19 +43,10 @@ public class Sale extends AbstractWorkflow {
 		this.saleProfit = saleProfit;
 	}
 
-	public Customer getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((customer == null) ? 0 : customer.hashCode());
+		int result = super.hashCode();	
 		long temp;
 		temp = Double.doubleToLongBits(saleProfit);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -77,12 +64,7 @@ public class Sale extends AbstractWorkflow {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Sale other = (Sale) obj;
-		if (customer == null) {
-			if (other.customer != null)
-				return false;
-		} else if (!customer.equals(other.customer))
-			return false;
+		Sale other = (Sale) obj;	
 		if (Double.doubleToLongBits(saleProfit) != Double.doubleToLongBits(other.saleProfit))
 			return false;
 		if (Double.doubleToLongBits(saleReturn) != Double.doubleToLongBits(other.saleReturn))
@@ -97,7 +79,7 @@ public class Sale extends AbstractWorkflow {
 
 	@Override
 	public String toString() {
-		return "Sale [customer=" + customer + ", transport=" + transport + ", saleReturn=" + saleReturn
+		return "Sale [transport=" + transport + ", saleReturn=" + saleReturn
 				+ ", saleProfit=" + saleProfit + "]";
 	}
 

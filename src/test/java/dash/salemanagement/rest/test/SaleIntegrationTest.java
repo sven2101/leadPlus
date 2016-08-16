@@ -31,7 +31,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
 import dash.customermanagement.domain.Customer;
-import dash.inquirermanagement.domain.Title;
+import dash.customermanagement.domain.Title;
 import dash.productmanagement.domain.Product;
 import dash.salemanagement.domain.Sale;
 import dash.test.BaseConfig;

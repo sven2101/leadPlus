@@ -28,8 +28,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import dash.Application;
-import dash.inquirermanagement.domain.Inquirer;
-import dash.inquirermanagement.domain.Title;
+import dash.customermanagement.domain.Customer;
+import dash.customermanagement.domain.Title;
 import dash.leadmanagement.domain.Lead;
 import dash.productmanagement.domain.Product;
 import dash.test.BaseConfig;
@@ -65,15 +65,17 @@ public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest 
 
 		HttpEntity<Lead> entityCreateLead = new HttpEntity<Lead>(lead, headers);
 
-		ResponseEntity<Lead> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateLead, Lead.class);
+		ResponseEntity<Lead> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateLead,
+				Lead.class);
 		Lead responseCreateLead = responseCreate.getBody();
 
 		HttpEntity<Lead> entityGetLead = new HttpEntity<Lead>(headers);
 
-		ResponseEntity<Lead> responseGetLead = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET, entityGetLead, Lead.class,
-				responseCreateLead.getId());
+		ResponseEntity<Lead> responseGetLead = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET,
+				entityGetLead, Lead.class, responseCreateLead.getId());
 
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetLead.getHeaders().getContentType().getCharSet());
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(),
+				responseGetLead.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetLead.getStatusCode());
 		assertEquals(responseCreateLead, responseGetLead.getBody());
 	}
@@ -83,8 +85,10 @@ public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest 
 
 		HttpEntity<Lead> entityGetLeads = new HttpEntity<Lead>(headers);
 
-		ResponseEntity<Object[]> responseGetLeads = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetLeads, Object[].class);
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetLeads.getHeaders().getContentType().getCharSet());
+		ResponseEntity<Object[]> responseGetLeads = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetLeads,
+				Object[].class);
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(),
+				responseGetLeads.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetLeads.getStatusCode());
 	}
 
@@ -95,13 +99,15 @@ public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest 
 		Lead lead = create();
 		HttpEntity<Lead> entityCreateLead = new HttpEntity<Lead>(lead, headers);
 
-		ResponseEntity<Lead> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateLead, Lead.class);
+		ResponseEntity<Lead> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateLead,
+				Lead.class);
 		Lead responseCreateLead = responseCreate.getBody();
 
 		responseCreateLead.setContainerAmount(10);
 		HttpEntity<Lead> entity = new HttpEntity<Lead>(responseCreateLead, headers);
 
-		ResponseEntity<Lead> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Lead.class, responseCreateLead.getId());
+		ResponseEntity<Lead> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Lead.class,
+				responseCreateLead.getId());
 		Lead responseLead = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
@@ -118,13 +124,13 @@ public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest 
 	@Override
 	public Lead create() {
 
-		Inquirer inquirer = new Inquirer();
-		inquirer.setFirstname("Max");
-		inquirer.setLastname("Mustermann");
-		inquirer.setCompany("Einkauf Mustermann GmbH");
-		inquirer.setEmail("max.mustermann@einkauf-mustermann.de");
-		inquirer.setPhone("07961/55166");
-		inquirer.setTitle(Title.MR);
+		Customer customer = new Customer();
+		customer.setFirstname("Max");
+		customer.setLastname("Mustermann");
+		customer.setCompany("Einkauf Mustermann GmbH");
+		customer.setEmail("max.mustermann@einkauf-mustermann.de");
+		customer.setPhone("07961/55166");
+		customer.setTitle(Title.MR);
 
 		Vendor vendor = new Vendor();
 		vendor.setName("Karl Neu 2");
@@ -136,7 +142,7 @@ public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest 
 		container.setPriceNetto(1000.00);
 
 		Lead lead = new Lead();
-		lead.setInquirer(inquirer);
+		lead.setCustomer(customer);
 		lead.setVendor(vendor);
 		lead.setContainer(container);
 		lead.setContainerAmount(30);

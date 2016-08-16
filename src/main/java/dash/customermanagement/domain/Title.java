@@ -12,7 +12,7 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.inquirermanagement.domain;
+package dash.customermanagement.domain;
 
 public enum Title {
 

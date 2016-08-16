@@ -4,6 +4,7 @@
 /// <reference path="../Offer/Offer.Model.ts" />
 /// <reference path="../Profile/User.Model.ts" />
 /// <reference path="../app/App.Common.ts" />
+/// <reference path="../common/Process.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -140,18 +141,18 @@ class OffersController {
         this.dtColumns = [
             DTColumnBuilder.newColumn(null).withTitle("").notSortable()
                 .renderWith(addDetailButton),
-            DTColumnBuilder.newColumn("offer.prospect.lastname").withTitle(
+            DTColumnBuilder.newColumn("offer.customer.lastname").withTitle(
                 $translate("COMMON_NAME")).withClass("text-center"),
-            DTColumnBuilder.newColumn("offer.prospect.company").withTitle(
+            DTColumnBuilder.newColumn("offer.customer.company").withTitle(
                 $translate("COMMON_COMPANY")).withClass("text-center"),
-            DTColumnBuilder.newColumn("offer.prospect.email").withTitle(
+            DTColumnBuilder.newColumn("offer.customer.email").withTitle(
                 $translate("COMMON_EMAIL")).withClass("text-center"),
             DTColumnBuilder.newColumn("offer.timestamp").withTitle(
                 $translate("COMMON_DATE")).withOption("type", "date-euro")
                 .withClass("text-center"),
-            DTColumnBuilder.newColumn("offer.prospect.phone").withTitle(
+            DTColumnBuilder.newColumn("offer.customer.phone").withTitle(
                 $translate("COMMON_PHONE")).notVisible(),
-            DTColumnBuilder.newColumn("offer.prospect.firstname").withTitle(
+            DTColumnBuilder.newColumn("offer.customer.firstname").withTitle(
                 $translate("COMMON_FIRSTNAME")).notVisible(),
 
             DTColumnBuilder.newColumn("offer.deliveryAddress").withTitle(
@@ -448,9 +449,12 @@ class OffersController {
         this.currentProductAmount = 1;
     };
 
-    createSale(process) {
+    createSale(process: Process) {
         let self = this;
-        let sale = {
+        let sale: Sale = {
+            id: 0,
+            deliveryAddress: process.offer.deliveryAddress,
+            deliveryDate: process.offer.deliveryDate,
             container: {
                 name: "",
                 description: "",
@@ -460,12 +464,12 @@ class OffersController {
             containerAmount: process.offer.containerAmount,
             transport: process.offer.deliveryAddress,
             customer: {
-                company: process.offer.prospect.company,
-                email: process.offer.prospect.email,
-                firstname: process.offer.prospect.firstname,
-                lastname: process.offer.prospect.lastname,
-                phone: process.offer.prospect.phone,
-                title: process.offer.prospect.title
+                company: process.offer.customer.company,
+                email: process.offer.customer.email,
+                firstname: process.offer.customer.firstname,
+                lastname: process.offer.customer.lastname,
+                phone: process.offer.customer.phone,
+                title: process.offer.customer.title
             },
             saleProfit: 0,
             saleReturn: process.offer.offerPrice,

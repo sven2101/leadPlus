@@ -153,24 +153,24 @@ class LeadController {
         this.dtColumns = [
             DTColumnBuilder.newColumn(null).withTitle("").notSortable()
                 .renderWith(addDetailButton),
-            DTColumnBuilder.newColumn("lead.inquirer.lastname").withTitle(
+            DTColumnBuilder.newColumn("lead.customer.lastname").withTitle(
                 $translate("COMMON_NAME")).withClass("text-center"),
-            DTColumnBuilder.newColumn("lead.inquirer.company").withTitle(
+            DTColumnBuilder.newColumn("lead.customer.company").withTitle(
                 $translate("COMMON_COMPANY")).withClass("text-center"),
-            DTColumnBuilder.newColumn("lead.inquirer.email").withTitle(
+            DTColumnBuilder.newColumn("lead.customer.email").withTitle(
                 $translate("COMMON_EMAIL")).withClass("text-center"),
             DTColumnBuilder.newColumn("lead.timestamp").withTitle(
                 $translate("COMMON_DATE")).withOption("type", "date-euro")
                 .withClass("text-center"),
-            DTColumnBuilder.newColumn("lead.inquirer.phone").withTitle(
+            DTColumnBuilder.newColumn("lead.customer.phone").withTitle(
                 $translate("COMMON_PHONE")).notVisible(),
-            DTColumnBuilder.newColumn("lead.inquirer.firstname").withTitle(
+            DTColumnBuilder.newColumn("lead.customer.firstname").withTitle(
                 $translate("COMMON_FIRSTNAME")).notVisible(),
             DTColumnBuilder.newColumn("lead.deliveryAddress").withTitle(
                 $translate("COMMON_CONTAINER")).notVisible(),
             DTColumnBuilder.newColumn("lead.deliveryAddress").withTitle(
                 $translate("COMMON_CONTAINER_DESTINATION")).notVisible(),
-            DTColumnBuilder.newColumn("lead.inquirer.lastname").withTitle(
+            DTColumnBuilder.newColumn("lead.customer.lastname").withTitle(
                 $translate("COMMON_CONTAINER_AMOUNT")).notVisible(),
             DTColumnBuilder.newColumn("null").withTitle(
                 $translate("COMMON_CONTAINER_SINGLE_PRICE")).renderWith(
@@ -449,8 +449,8 @@ class LeadController {
 
     saveLead() {
         let self = this;
-        if (angular.isUndefined(this.newLead.inquirer)) {
-            this.newLead.inquirer = {
+        if (angular.isUndefined(this.newLead.customer)) {
+            this.newLead.customer = {
                 title: "UNKNOWN"
             };
         }
@@ -485,9 +485,10 @@ class LeadController {
         this.currentProductAmount = 1;
     };
 
-    createOffer(process) {
+    createOffer(process: Process) {
         let self = this;
-        let offer = {
+        let offer: Offer = {
+            id: 0,
             container: {
                 name: "",
                 description: "",
@@ -496,14 +497,15 @@ class LeadController {
             orderPositions: deepCopyArray(process.lead.orderPositions),
             containerAmount: process.lead.containerAmount,
             deliveryAddress: process.lead.deliveryAddress,
+            deliveryDate: null,
             offerPrice: self.sumOrderPositions(process.lead.orderPositions),
-            prospect: {
-                company: process.lead.inquirer.company,
-                email: process.lead.inquirer.email,
-                firstname: process.lead.inquirer.firstname,
-                lastname: process.lead.inquirer.lastname,
-                phone: process.lead.inquirer.phone,
-                title: process.lead.inquirer.title
+            customer: {
+                company: process.lead.customer.company,
+                email: process.lead.customer.email,
+                firstname: process.lead.customer.firstname,
+                lastname: process.lead.customer.lastname,
+                phone: process.lead.customer.phone,
+                title: process.lead.customer.title
             },
             timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
             vendor: process.lead.vendor
