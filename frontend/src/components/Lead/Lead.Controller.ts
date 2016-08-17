@@ -9,6 +9,7 @@
 /// <reference path="../User/Model/User.Model.ts" />
 /// <reference path="../Product/Product.Service.ts" />
 /// <reference path="../Workflow/Workflow.Service.ts" />
+/// <reference path="../Customer/Customer.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -26,15 +27,17 @@ class LeadController {
 
     $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile",
         "$scope", "toaster", "ProcessResource", "CommentResource", "$filter",
-        "UserResource", "$rootScope", "$translate", "LeadResource", ProductServiceId, WorkflowServiceId];
+        "UserResource", "$rootScope", "$translate", "LeadResource", ProductServiceId, WorkflowServiceId, CustomerServiceId, CustomerResourceId];
 
 
 
     productService;
-    workflowService;
+    workflowService: WorkflowService;
+    customerService: CustomerService;
     scope;
     rootScope;
     commentResource;
+    customerResource;
     filter;
     processResource;
     userResource;
@@ -58,21 +61,26 @@ class LeadController {
     rows = {};
     editProcess: Process = new Process();
     newLead: Lead = new Lead();
+    editLead: Lead = new Lead();
 
     currentOrderPositions = [];
     currentProductId = "-1";
     currentProductAmount = 1;
+    currentCustomerId = "-1";
+    customerSelected: boolean = false;
 
 
     constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
         toaster, ProcessResource, CommentResource, $filter, UserResource,
-        $rootScope, $translate, LeadResource, ProductService, WorkflowService) {
+        $rootScope, $translate, LeadResource, ProductService, WorkflowService, CustomerService, CustomerResource) {
 
         this.productService = ProductService;
         this.workflowService = WorkflowService;
+        this.customerService = CustomerService;
         this.filter = $filter;
         this.processResource = ProcessResource.resource;
         this.commentResource = CommentResource.resource;
+        this.customerResource = CustomerResource.resource;
         this.userResource = UserResource.resource;
         this.leadResource = LeadResource.resource;
         this.scope = $scope;
@@ -468,6 +476,23 @@ class LeadController {
             lead: this.newLead,
             status: "OPEN"
         };
+        let tempLead: Lead = this.newLead;
+        if (isNullOrUndefined(tempLead.customer.id) || isNaN(Number(tempLead.customer.id)) || Number(tempLead.customer.id) <= 0) {
+            tempLead.customer.timestamp = newTimestamp();
+            this.customerResource.createCustomer(tempLead.customer).$promise.then(function (customer) {
+                tempLead.customer = customer;
+                self.processResource.save(process).$promise.then(function (result) {
+                    self.toaster.pop("success", "", self.translate
+                        .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
+                    self.rootScope.leadsCount += 1;
+                    self.addForm.$setPristine();
+                    self.dtInstance.DataTable.row.add(result).draw();
+                    self.customerService.getAllCustomer();
+                });
+            });
+            return;
+        }
+
         this.processResource.save(process).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
@@ -487,7 +512,9 @@ class LeadController {
         this.newLead.orderPositions = [];
         this.currentOrderPositions = [];
         this.currentProductId = "-1";
+        this.currentCustomerId = "-1";
         this.currentProductAmount = 1;
+        this.customerSelected = false;
     };
 
     createOffer(process: Process) {
@@ -504,14 +531,7 @@ class LeadController {
             deliveryAddress: process.lead.deliveryAddress,
             deliveryDate: null,
             offerPrice: self.sumOrderPositions(process.lead.orderPositions),
-            customer: {
-                company: process.lead.customer.company,
-                email: process.lead.customer.email,
-                firstname: process.lead.customer.firstname,
-                lastname: process.lead.customer.lastname,
-                phone: process.lead.customer.phone,
-                title: process.lead.customer.title
-            },
+            customer: process.lead.customer,
             timestamp: moment.utc().format("DD.MM.YYYY HH:mm"),
             vendor: process.lead.vendor
         };
@@ -597,11 +617,36 @@ class LeadController {
         this.currentProductAmount = 1;
         this.editProcess = process;
         this.currentOrderPositions = deepCopy(this.editProcess.lead.orderPositions);
+        this.customerSelected = false;
+        this.currentCustomerId = this.editProcess.lead.customer.id + "";
+        this.selectCustomer(this.editProcess.lead);
+        this.editLead = this.editProcess.lead;
     };
 
     saveEditedRow = function () {
         let self = this;
-        this.editProcess.lead.orderPositions = this.currentOrderPositions;
+        this.editLead.orderPositions = this.currentOrderPositions;
+        let tempLead: Lead = this.editProcess.lead;
+        tempLead.customer.id = this.editLead.customer.id;
+
+        if (isNullOrUndefined(tempLead.customer.id) || isNaN(Number(tempLead.customer.id)) || Number(tempLead.customer.id) <= 0) {
+            tempLead.customer.timestamp = newTimestamp();
+            this.customerResource.createCustomer(tempLead.customer).$promise.then(function (customer) {
+                tempLead.customer = customer;
+
+                self.processResource.save(self.editProcess).$promise.then(function (result) {
+                    self.toaster.pop("success", "", self.translate
+                        .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
+                    self.rootScope.leadsCount += 1;
+                    self.addForm.$setPristine();
+                    self.dtInstance.DataTable.row.add(result).draw();
+                    self.customerService.getAllCustomer();
+                });
+            });
+            return;
+        }
+
+
         this.leadResource.update(this.editProcess.lead).$promise.then(function () {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
@@ -651,6 +696,30 @@ class LeadController {
     }
     sumOrderPositions(array) {
         return this.workflowService.sumOrderPositions(array);
+    }
+
+    selectCustomer(lead: Lead) {
+        if (isNullOrUndefined(Number(this.currentCustomerId)) || Number(this.currentCustomerId) <= 0) {
+            this.customerSelected = false;
+            lead.customer = new Customer();
+            lead.customer.id = 0;
+            this.editLead.customer.id = 0;
+            console.log(this.customerSelected);
+            return;
+        }
+
+        let temp: Customer = findElementById(this.customerService.customer, Number(this.currentCustomerId)) as Customer;
+        if (isNullOrUndefined(temp)) {
+            this.customerSelected = false;
+            lead.customer = new Customer();
+            lead.customer.id = 0;
+            this.editLead.customer.id = 0;
+            console.log(this.customerSelected);
+            return;
+        }
+        lead.customer = deepCopy(temp);
+        this.customerSelected = true;
+        console.log(this.customerSelected);
     }
 
 

@@ -29,7 +29,7 @@ class CustomerService {
         this.getAllCustomer();
     }
 
-    saveCustomer(customer: Customer, insert: boolean) {
+    saveCustomer(customer: Customer, insert: boolean = true) {
         let self = this;
         if (insert) {
             customer.timestamp = newTimestamp();
@@ -42,6 +42,9 @@ class CustomerService {
             });
         }
     }
+    insertCustomer(customer: Customer) {
+        return this.customerResource.createCustomer(customer).$promise;
+    }
     getAllCustomer() {
         let self = this;
         this.customerResource.getAllCustomer().$promise.then(function (result: Array<Customer>) {
@@ -49,6 +52,17 @@ class CustomerService {
             self.customer = result;
         });
     }
+
+    getActiveCustomer(): Array<Customer> {
+        let temp: Array<Customer> = new Array<Customer>();
+        for (let customer of this.customer) {
+            if (customer.deactivated === false) {
+                temp.push(customer);
+            }
+        }
+        return temp;
+    }
+
 }
 
 angular.module(moduleCustomerService, [ngResourceId]).service(CustomerServiceId, CustomerService);
