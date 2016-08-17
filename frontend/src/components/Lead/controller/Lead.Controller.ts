@@ -613,7 +613,6 @@ class LeadController {
     };
 
     loadDataToModal(process) {
-        console.log(process);
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = process;
@@ -628,12 +627,12 @@ class LeadController {
         let self = this;
         shallowCopy(this.editLead, this.editProcess.lead);
         this.editProcess.lead.orderPositions = this.currentOrderPositions;
-        let tempLead: Lead = this.editProcess.lead;
-        console.log(this.editProcess.lead.customer);
-        if (isNullOrUndefined(tempLead.customer.id) || isNaN(Number(tempLead.customer.id)) || Number(tempLead.customer.id) <= 0) {
-            tempLead.customer.timestamp = newTimestamp();
-            this.customerResource.createCustomer(tempLead.customer).$promise.then(function (customer) {
-                tempLead.customer = customer;
+
+        let temp: any = this.editProcess.lead;
+        if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
+            temp.customer.timestamp = newTimestamp();
+            this.customerResource.createCustomer(temp.customer).$promise.then(function (customer) {
+                temp.customer = customer;
 
                 self.processResource.save(self.editProcess).$promise.then(function (result) {
                     self.toaster.pop("success", "", self.translate
@@ -697,11 +696,11 @@ class LeadController {
         return this.workflowService.sumOrderPositions(array);
     }
 
-    selectCustomer(lead: Lead) {
+    selectCustomer(workflow: any) {
         if (isNullOrUndefined(Number(this.currentCustomerId)) || Number(this.currentCustomerId) <= 0) {
             this.customerSelected = false;
-            lead.customer = new Customer();
-            lead.customer.id = 0;
+            workflow.customer = new Customer();
+            workflow.customer.id = 0;
             console.log(this.customerSelected);
             return;
         }
@@ -709,15 +708,16 @@ class LeadController {
         let temp: Customer = findElementById(this.customerService.customer, Number(this.currentCustomerId)) as Customer;
         if (isNullOrUndefined(temp)) {
             this.customerSelected = false;
-            lead.customer = new Customer();
-            lead.customer.id = 0;
+            workflow.customer = new Customer();
+            workflow.customer.id = 0;
             console.log(this.customerSelected);
             return;
         }
-        lead.customer = deepCopy(temp);
+        workflow.customer = deepCopy(temp);
         this.customerSelected = true;
         console.log(this.customerSelected);
     }
+
 
 
 

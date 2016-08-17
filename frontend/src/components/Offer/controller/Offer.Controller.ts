@@ -1,3 +1,4 @@
+
 /// <reference path="../../../typeDefinitions/moment.d.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../Workflow/Workflow.Service.ts" />
@@ -6,6 +7,8 @@
 /// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../common/Process.Model.ts" />
+/// <reference path="../../Customer/model/Customer.Model.ts" />
+/// <reference path="../../Customer/controller/Customer.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -23,12 +26,14 @@ class OffersController {
 
     $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile",
         "$scope", "toaster", "ProcessResource", "CommentResource", "$filter",
-        "UserResource", "$rootScope", "$translate", "OfferResource", ProductServiceId, WorkflowServiceId];
+        "UserResource", "$rootScope", "$translate", "OfferResource", ProductServiceId, WorkflowServiceId, CustomerServiceId, CustomerResourceId];
 
     filter;
     processResource;
     commentResource;
+    customerResource;
     workflowService;
+    customerService;
     productService;
     userResource;
     offerResource;
@@ -51,15 +56,18 @@ class OffersController {
     rows = {};
     editProcess: Process;
     newOffer: Offer;
+    editOffer: Offer;
     currentOrderPositions = [];
     currentProductId = "-1";
+    currentCustomerId = "-1";
+    customerSelected: boolean = false;
     currentProductAmount = 1;
     dtInstance = { DataTable: null };
     editForm;
 
     constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
         toaster, ProcessResource, CommentResource, $filter, UserResource,
-        $rootScope, $translate, OfferResource, ProductService, WorkflowService) {
+        $rootScope, $translate, OfferResource, ProductService, WorkflowService, CustomerService, CustomerResource) {
 
         this.filter = $filter;
         this.processResource = ProcessResource.resource;
@@ -68,11 +76,13 @@ class OffersController {
         this.productService = ProductService;
         this.userResource = UserResource.resource;
         this.offerResource = OfferResource.resource;
+        this.customerResource = CustomerResource.resource;
         this.scope = $scope;
         this.rootScope = $rootScope;
         this.translate = $translate;
         this.compile = $compile;
         this.toaster = toaster;
+        this.customerService = CustomerService;
 
         let self = this;
         this.windowWidth = $(window).width();
@@ -469,14 +479,7 @@ class OffersController {
             orderPositions: deepCopy(process.lead.orderPositions),
             containerAmount: process.offer.containerAmount,
             transport: process.offer.deliveryAddress,
-            customer: {
-                company: process.offer.customer.company,
-                email: process.offer.customer.email,
-                firstname: process.offer.customer.firstname,
-                lastname: process.offer.customer.lastname,
-                phone: process.offer.customer.phone,
-                title: process.offer.customer.title
-            },
+            customer: process.offer.customer,
             saleProfit: 0,
             saleReturn: process.offer.offerPrice,
             timestamp: moment.utc().format("DD.MM.YYYY HH:mm"),
@@ -554,11 +557,35 @@ class OffersController {
         this.currentProductAmount = 1;
         this.editProcess = process;
         this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
+        this.customerSelected = this.editProcess.offer.customer.id > 0;
+        this.currentCustomerId = this.editProcess.offer.customer.id + "";
+        this.editOffer = deepCopy(this.editProcess.offer);
     };
 
     saveEditedRow() {
         let self = this;
+        shallowCopy(this.editOffer, this.editProcess.offer);
         this.editProcess.offer.orderPositions = this.currentOrderPositions;
+
+        let temp: any = this.editProcess.offer;
+        if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
+            temp.customer.timestamp = newTimestamp();
+            this.customerResource.createCustomer(temp.customer).$promise.then(function (customer) {
+                temp.customer = customer;
+
+                self.processResource.save(self.editProcess).$promise.then(function (result) {
+                    self.toaster.pop("success", "", self.translate
+                        .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
+                    self.editForm.$setPristine();
+                    self.updateRow(self.editProcess);
+                    self.customerService.getAllCustomer();
+                });
+            });
+            return;
+        }
+
+
+
         this.offerResource.update(this.editProcess.offer).$promise.then(function () {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_OFFER"));
@@ -607,6 +634,29 @@ class OffersController {
     }
     sumOrderPositions(array) {
         return this.workflowService.sumOrderPositions(array);
+    }
+
+
+    selectCustomer(workflow: any) {
+        if (isNullOrUndefined(Number(this.currentCustomerId)) || Number(this.currentCustomerId) <= 0) {
+            this.customerSelected = false;
+            workflow.customer = new Customer();
+            workflow.customer.id = 0;
+            console.log(this.customerSelected);
+            return;
+        }
+
+        let temp: Customer = findElementById(this.customerService.customer, Number(this.currentCustomerId)) as Customer;
+        if (isNullOrUndefined(temp)) {
+            this.customerSelected = false;
+            workflow.customer = new Customer();
+            workflow.customer.id = 0;
+            console.log(this.customerSelected);
+            return;
+        }
+        workflow.customer = deepCopy(temp);
+        this.customerSelected = true;
+        console.log(this.customerSelected);
     }
 
 }
