@@ -1,3 +1,6 @@
+/// <reference path="../app/App.Constants.ts" />
+/// <reference path="../app/App.Authentication.Service.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -29,21 +32,21 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             })
             .when("/leads",
             {
-                templateUrl: "components/Lead/Lead.html",
+                templateUrl: "components/Lead/view/Lead.html",
                 controller: "LeadController",
                 controllerAs: "lead",
                 authenticated: true
             })
             .when("/offers",
             {
-                templateUrl: "components/Offer/Offer.html",
+                templateUrl: "components/Offer/view/Offer.html",
                 controller: "OffersController",
                 controllerAs: "offer",
                 authenticated: true
             })
             .when("/sales",
             {
-                templateUrl: "components/Sale/Sale.html",
+                templateUrl: "components/Sale/view/Sale.html",
                 controller: "SaleController",
                 controllerAs: "sale",
                 authenticated: true
@@ -64,7 +67,7 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             })
             .when("/profile",
             {
-                templateUrl: "components/Profile/Profile.html",
+                templateUrl: "components/Profile/view/Profile.html",
                 controller: "ProfileController",
                 controllerAs: "profile",
                 authenticated: true
@@ -77,18 +80,18 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             })
             .when("/login",
             {
-                templateUrl: "components/Login/Login.html",
+                templateUrl: "components/Login/view/Login.html",
                 controller: "LoginController",
                 controllerAs: "login"
             }).when("/product",
             {
-                templateUrl: "components/Product/Product.html",
+                templateUrl: "components/Product/view/Product.html",
                 controller: "ProductController",
                 controllerAs: "productCtrl",
                 authenticated: true
             }).when("/customer",
             {
-                templateUrl: "components/Customer/Customer.html",
+                templateUrl: "components/Customer/view/Customer.html",
                 controller: "CustomerController",
                 controllerAs: "customerCtrl",
                 authenticated: true
@@ -99,7 +102,7 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
     }])
-    .run(["$location", "$http", "$rootScope", "Auth", "$cookieStore",
+    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookieStoreId,
         function ($location, $http, $rootScope, Auth, $cookieStore) {
             $rootScope.globals = $cookieStore.get("globals") || {};
             if ($rootScope.globals.currentUser) {

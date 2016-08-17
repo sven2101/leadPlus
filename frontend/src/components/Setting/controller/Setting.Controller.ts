@@ -24,9 +24,11 @@ class SettingController {
     private $inject = [SettingServiceId];
 
     settingService;
+    user: User;
 
     constructor(SettingService) {
         this.settingService = SettingService;
+        this.user = new User();
     }
 
     activateUser(user: User) {

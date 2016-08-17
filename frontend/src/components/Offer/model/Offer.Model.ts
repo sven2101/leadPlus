@@ -1,5 +1,5 @@
-/// <reference path="../Common/AbstractModel.Model.ts" />
-/// <reference path="../app/App.Common.ts" />
+/// <reference path="../../Common/AbstractModel.Model.ts" />
+/// <reference path="../../Common/OrderPosition.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -10,20 +10,24 @@
  * reproduction of this material is strictly forbidden unless prior written
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
+
 "use strict";
 
-class Customer extends AbstractModel {
-
-    title: string;
-    firstname: string;
-    lastname: string;
-    company: string;
-    email: string;
-    phone: string;
-    address: string;
+class Offer extends AbstractModel {
+    orderPositions: Array<OrderPosition>;
+    container: any;
+    containerAmount: number;
+    customer: any;
     timestamp: any;
-    deactivated: boolean;
+    vendor: any;
+    deliveryAddress: any;
+    deliveryDate: any;
+    offerPrice: number;
     constructor() {
         super();
+        this.container = {
+            name: "placeholder",
+            priceNetto: 666
+        };
     }
 }

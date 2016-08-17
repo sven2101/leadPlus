@@ -19,9 +19,10 @@ angular.module("app",
         moduleApp,
         moduleAppController,
         moduleProcessResource,
-        moduleAuthentication,
+        moduleAuthService,
         moduleDashboard,
         moduleLogin,
+        moduleLoginService,
         moduleSignup,
         moduleSignupService,
         moduleSignupResource,
@@ -60,6 +61,7 @@ angular.module("app",
         moduleNgSwitchery,
         moduleToaster,
         moduleHighchartsNg,
+
 
     ]);
 

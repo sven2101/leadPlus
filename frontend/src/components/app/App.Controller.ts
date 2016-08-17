@@ -1,4 +1,6 @@
 /// <reference path="../app/App.Constants.ts" />
+/// <reference path="../app/App.Resource.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -11,9 +13,11 @@
  ******************************************************************************/
 "use strict";
 
+const AppControllerId: string = "AppController";
+
 class AppController {
 
-    private $inject = ["$translate", "$scope", "$rootScope", "$interval", "ProcessResource", "UserResource"];
+    private $inject = [$translateId, $scopeId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId];
 
     translate;
     scope;
@@ -117,4 +121,4 @@ class AppController {
 
 }
 
-angular.module(moduleAppController, ["ngResource"]).controller("AppController", AppController);
+angular.module(moduleAppController, [ngResourceId]).controller("AppController", AppController);

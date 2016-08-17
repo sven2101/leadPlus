@@ -1,5 +1,5 @@
-/// <reference path="../Product/Product.Service.ts" />
-/// <reference path="../User/Model/User.Model.ts" />
+/// <reference path="../../Product/controller/Product.Service.ts" />
+/// <reference path="../../User/model/User.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
