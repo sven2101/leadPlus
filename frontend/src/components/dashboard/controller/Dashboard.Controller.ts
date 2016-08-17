@@ -1,4 +1,6 @@
 /// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../common/model/Process.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -17,8 +19,9 @@
 
 class DashboardController {
 
-    $inject = ["toaster", "ProcessResource", "CommentResource", "$filter", "$translate", "$rootScope", "$scope", "$interval", "UserResource", "StatisticResource"];
+    $inject = ["toaster", "ProcessResource", "CommentResource", "$filter", "$translate", "$rootScope", "$scope", "$interval", "UserResource", "StatisticResource", WorkflowServiceId];
 
+    workflowService: WorkflowService;
     toaster;
     filter;
     orderBy;
@@ -49,7 +52,8 @@ class DashboardController {
 
     sortableOptions;
 
-    constructor(toaster, ProcessResource, CommentResource, $filter, $translate, $rootScope, $scope, $interval, UserResource, StatisticResource) {
+    constructor(toaster, ProcessResource, CommentResource, $filter, $translate, $rootScope, $scope, $interval, UserResource, StatisticResource, WorkflowService) {
+        this.workflowService = WorkflowService;
         this.toaster = toaster;
         this.filter = $filter;
         this.orderBy = $filter("orderBy");
@@ -109,6 +113,13 @@ class DashboardController {
         });
     }
 
+    createOffer(process: Process) {
+        let self = this;
+        this.workflowService.addLeadToOffer(process, this.user).$promise.then(function () {
+            self.openOffer = self.orderBy(self.openOffer, "offer.timestamp", false);
+        });
+    }
+
     getUser() {
         let self = this;
         if (!angular.isUndefined(self.rootScope.globals.user))
@@ -117,68 +128,6 @@ class DashboardController {
             });
     }
 
-    setSortableOptions() {
-        let self = this;
-        this.sortableOptions = {
-            update: function (e, ui) {
-                let target = ui.item.sortable.droptargetModel;
-                let source = ui.item.sortable.sourceModel;
-                if ((self.openLead === target && self.openOffer === source) ||
-                    (self.openLead === source && self.sales === target) ||
-                    target === source) {
-                    ui.item.sortable.cancel();
-                }
-            },
-            stop: function (e, ui) {
-                let target = ui.item.sortable.droptargetModel;
-                let source = ui.item.sortable.sourceModel;
-                let item = ui.item.sortable.model;
-                if (self.sales === target && self.openOffer === source) {
-                    self.addOfferToSale(item);
-                }
-                else if (self.openOffer === target && self.openLead === source) {
-                    self.addLeadToOffer(item);
-                }
-            },
-            connectWith: ".connectList",
-            items: "li:not(.not-sortable)"
-        };
-    }
-    addLeadToOffer(process) {
-        let self = this;
-        let offer = {
-            container: {
-                name: process.lead.container.name,
-                description: process.lead.container.description,
-                priceNetto: process.lead.container.priceNetto
-            },
-            containerAmount: process.lead.containerAmount,
-            deliveryAddress: process.lead.destination,
-            offerPrice: (process.lead.containerAmount * process.lead.container.priceNetto),
-            prospect: {
-                company: process.lead.inquirer.company,
-                email: process.lead.inquirer.email,
-                firstname: process.lead.inquirer.firstname,
-                lastname: process.lead.inquirer.lastname,
-                phone: process.lead.inquirer.phone,
-                title: process.lead.inquirer.title
-            },
-            timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
-            vendor: process.lead.vendor
-        };
-        this.processResource.createOffer({ id: process.id }, offer).$promise.then(function () {
-            self.processResource.setStatus({ id: process.id }, "OFFER").$promise.then(function () {
-                self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
-                self.rootScope.leadsCount -= 1;
-                self.rootScope.offersCount += 1;
-                self.processResource.setProcessor({ id: process.id }, self.user.id).$promise.then(function () {
-                    process.processor = self.user;
-                });
-                process.offer = offer;
-                self.openOffer = self.orderBy(self.openOffer, "offer.timestamp", false);
-            });
-        });
-    }
     addOfferToSale(process) {
         let self = this;
         let sale = {
@@ -210,6 +159,34 @@ class DashboardController {
                 self.sales = self.orderBy(self.sales, "sale.timestamp", true);
             });
         });
+    }
+
+    setSortableOptions() {
+        let self = this;
+        this.sortableOptions = {
+            update: function (e, ui) {
+                let target = ui.item.sortable.droptargetModel;
+                let source = ui.item.sortable.sourceModel;
+                if ((self.openLead === target && self.openOffer === source) ||
+                    (self.openLead === source && self.sales === target) ||
+                    target === source) {
+                    ui.item.sortable.cancel();
+                }
+            },
+            stop: function (e, ui) {
+                let target = ui.item.sortable.droptargetModel;
+                let source = ui.item.sortable.sourceModel;
+                let item = ui.item.sortable.model;
+                if (self.sales === target && self.openOffer === source) {
+                    self.addOfferToSale(item);
+                }
+                else if (self.openOffer === target && self.openLead === source) {
+                    self.createOffer(item);
+                }
+            },
+            connectWith: ".connectList",
+            items: "li:not(.not-sortable)"
+        };
     }
 
     saveDataToModal(info, type, process) {

@@ -519,54 +519,15 @@ class LeadController {
 
     createOffer(process: Process) {
         let self = this;
-        let offer: Offer = {
-            id: 0,
-            container: {
-                name: "",
-                description: "",
-                priceNetto: 0
-            },
-            orderPositions: deepCopy(process.lead.orderPositions),
-            containerAmount: process.lead.containerAmount,
-            deliveryAddress: process.lead.deliveryAddress,
-            deliveryDate: null,
-            offerPrice: self.sumOrderPositions(process.lead.orderPositions),
-            customer: process.lead.customer,
-            timestamp: moment.utc().format("DD.MM.YYYY HH:mm"),
-            vendor: process.lead.vendor
-        };
-        for (let i = 0; i < offer.orderPositions.length; i++) {
-            offer.orderPositions[i].id = 0;
-        }
-        this.processResource.createOffer({
-            id: process.id
-        }, offer).$promise.then(function () {
-            self.processResource.setStatus({
-                id: process.id
-            }, "OFFER").$promise.then(function () {
-                self.toaster.pop("success", "", self.translate
-                    .instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
-                self.rootScope.leadsCount -= 1;
-                self.rootScope.offersCount += 1;
-                if (process.processor === null) {
-                    self.processResource.setProcessor({
-                        id: process.id
-                    }, self.user.id).$promise.then(function () {
-                        process.processor = self.user;
-                        process.offer = offer;
-                        process.status = "OFFER";
-                        if (self.loadAllData === true) {
-                            self.updateRow(process);
-                        }
-                    });
-                }
-                if (self.loadAllData === false) {
-                    self.dtInstance.DataTable.row(self.rows[process.id]).remove()
-                        .draw();
-                }
-            });
+        this.workflowService.addLeadToOffer(process, this.user).$promise.then(function () {
+            if (self.loadAllData === true) {
+                self.updateRow(process);
+            } else if (self.loadAllData === false) {
+                self.dtInstance.DataTable.row(self.rows[process.id]).remove()
+                    .draw();
+            }
         });
-    };
+    }
 
     pin(process) {
         let self = this;

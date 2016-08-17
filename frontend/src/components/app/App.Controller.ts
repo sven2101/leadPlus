@@ -17,10 +17,9 @@ const AppControllerId: string = "AppController";
 
 class AppController {
 
-    private $inject = [$translateId, $scopeId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId];
+    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId];
 
     translate;
-    scope;
     rootScope;
     interval;
     processResource;
@@ -28,9 +27,8 @@ class AppController {
 
     stop;
 
-    constructor($translate, $scope, $rootScope, $interval, ProcessResource, UserResource) {
+    constructor($translate, $rootScope, $interval, ProcessResource, UserResource) {
         this.translate = $translate;
-        this.scope = $scope;
         this.rootScope = $rootScope;
         this.interval = $interval;
         this.processResource = ProcessResource.resource;

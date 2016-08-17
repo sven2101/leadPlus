@@ -23,7 +23,7 @@ const ProfileServiceId: string = "ProfileService";
 
 class ProfileService {
 
-    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, AuthServiceId, 'FileUploader'];
+    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, AuthServiceId, FileUploaderId];
 
     userResource;
     translate;

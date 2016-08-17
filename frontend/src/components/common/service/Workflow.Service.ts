@@ -1,8 +1,9 @@
 /// <reference path="../../Product/model/Product.Model.ts" />
+/// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../common/model/OrderPosition.Model.ts" />
-
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -15,19 +16,27 @@
  ******************************************************************************/
 "use strict";
 
-const WorkflowServiceId: String = "WorkflowService";
+const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [commentResourceId, $filterId, ProductServiceId];
+    private $inject = [commentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, ProductServiceId];
 
     commentResource;
+    processResource;
     filter;
+    toaster;
+    rootScope;
+    translate;
     productService: ProductService;
 
-    constructor(CommentResource, $filter, ProductService) {
+    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, ProductService) {
         this.commentResource = CommentResource.resource;
+        this.processResource = ProcessResource.resource;
         this.filter = $filter;
+        this.toaster = toaster;
+        this.rootScope = $rootScope;
+        this.translate = $translate;
         this.productService = ProductService;
     }
 
@@ -44,6 +53,7 @@ class WorkflowService {
             && !angular.isUndefined(commentModalInput[id])) {
             commentText = commentModalInput[id];
         }
+
         let comment = {
             process: process,
             creator: user,
@@ -85,6 +95,49 @@ class WorkflowService {
         }
         return sum;
     }
-}
 
-angular.module("app.workflow.service", ["ngResource"]).service("WorkflowService", WorkflowService);
+    addLeadToOffer(process: Process, user: User): any {
+        let self = this;
+        let offer: Offer = {
+            id: 0,
+            container: {
+                name: "",
+                description: "",
+                priceNetto: 0
+            },
+            orderPositions: deepCopy(process.lead.orderPositions),
+            containerAmount: process.lead.containerAmount,
+            deliveryAddress: process.lead.deliveryAddress,
+            deliveryDate: null,
+            offerPrice: self.sumOrderPositions(process.lead.orderPositions),
+            customer: process.lead.customer,
+            timestamp: moment.utc().format("DD.MM.YYYY HH:mm"),
+            vendor: process.lead.vendor
+        };
+        for (let i = 0; i < offer.orderPositions.length; i++) {
+            offer.orderPositions[i].id = 0;
+        }
+        this.processResource.createOffer({
+            id: process.id
+        }, offer).$promise.then(function () {
+            self.processResource.setStatus({
+                id: process.id
+            }, "OFFER").$promise.then(function () {
+                self.toaster.pop("success", "", self.translate
+                    .instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
+                self.rootScope.leadsCount -= 1;
+                self.rootScope.offersCount += 1;
+                if (process.processor === null) {
+                    self.processResource.setProcessor({
+                        id: process.id
+                    }, user.id).$promise.then(function () {
+                        process.processor = user;
+                    });
+                }
+                process.offer = offer;
+                process.status = "OFFER";
+            });
+        });
+    }
+}
+angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);
