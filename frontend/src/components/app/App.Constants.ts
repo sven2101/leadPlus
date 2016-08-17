@@ -23,6 +23,7 @@ const $httpId: string = "$http";
 const $cookieStoreId: string = "$cookieStore";
 const $windowId: string = "$window";
 const $intervalId: string = "$interval";
+const FileUploaderId: string = "FileUploader"
 
 const productResourceId: string = "ProductResource";
 const customerResourceId: string = "CustomerResource ";
@@ -59,6 +60,7 @@ const moduleSetting: string = moduleApp + ".settings";
 const moduleSettingResource: string = moduleSetting + ".resource";
 const moduleSettingService: string = moduleSetting + ".service";
 const moduleProfile: string = moduleApp + ".profile";
+const moduleProfileService: string = moduleProfile + ".service";
 const moduleProduct: string = moduleApp + ".product";
 const moduleProductResource: string = moduleProduct + ".resource";
 const moduleProductService: string = moduleProduct + ".service";

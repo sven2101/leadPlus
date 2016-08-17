@@ -1,6 +1,7 @@
 /// <reference path="../../common/model/AbstractModel.Model.ts" />
 /// <reference path="Role.Model.ts" />
 /// <reference path="Language.Model.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  

@@ -86,9 +86,9 @@ class OffersController {
 
         let self = this;
         this.windowWidth = $(window).width();
-        if (!angular.isUndefined($rootScope.globals.currentUser))
+        if (!angular.isUndefined($rootScope.globals.user))
             this.userResource.get({
-                id: $rootScope.globals.currentUser.id
+                id: $rootScope.globals.user.id
             }).$promise.then(function (result) {
                 self.user = result;
             });
@@ -277,7 +277,7 @@ class OffersController {
             if (data.sale !== null) {
                 closeOrOpenOfferDisable = "disabled";
             }
-            if ($rootScope.globals.currentUser.role === "USER") {
+            if ($rootScope.globals.user.role === "USER") {
                 hasRightToDelete = "disabled";
             }
             if (self.windowWidth > 1300) {

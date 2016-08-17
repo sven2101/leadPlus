@@ -6,7 +6,7 @@
                             <img alt="image" class="img-circle" src="assets/img/guest.png"/>
                              </span>
                     <a data-toggle="dropdown" class="dropdown-toggle">
-                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{globals.currentUser.username}}</strong>
+                            <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{globals.user.username}}</strong>
                              </span> <span class="text-muted text-xs block">{{ 'TITLE' | translate }}<b
                                     class="caret"></b></span> </span>
                     </a>
@@ -46,7 +46,7 @@
              <li>
                 <a href="#/customer"><i class="fa fa-users"></i> <span class="nav-label">{{ 'CUSTOMER_MENU' | translate }}</span></a>
             </li>
-            <li ng-if="globals.currentUser.role == 'ADMIN' || globals.currentUser.role == 'SUPERADMIN'">
+            <li ng-if="globals.user.role == 'ADMIN' || globals.user.role == 'SUPERADMIN'">
                 <a href="#/settings"><i class="fa fa-cogs"></i> <span class="nav-label">{{ 'SETTINGS_MENU' | translate }}</span></a>
             </li>
         </ul>

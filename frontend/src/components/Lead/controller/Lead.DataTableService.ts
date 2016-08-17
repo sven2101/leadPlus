@@ -176,11 +176,11 @@ class LeadDataTableService {
             if (data.offer != null || data.sale != null) {
                 closeOrOpenInquiryDisable = 'disabled';
             }
-            if (vm.rootScope.globals.currentUser.role == 'user') {
+            if (vm.rootScope.globals.user.role == 'user') {
                 hasRightToDelete = 'disabled';
             }
             if (data.processor != null
-                && vm.rootScope.globals.currentUser.username != data.processor.username) {
+                && vm.rootScope.globals.user.username != data.processor.username) {
                 disablePin = 'disabled';
             }
 

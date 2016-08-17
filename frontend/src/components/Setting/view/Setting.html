@@ -35,7 +35,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-model="setting.user" ng-repeat="user in setting.settingService.users | orderBy:'username'" ng-if="user.username != globals.currentUser.username && user.username != 'api'">
+                            <tr ng-model="setting.user" ng-repeat="user in setting.settingService.users | orderBy:'username'" ng-if="user.username != globals.user.username && user.username != 'api'">
                                 <td>{{user.id}}</td>
                                 <td>{{user.username}}</td>
                                 <td>{{user.email}}</td>
@@ -73,18 +73,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-model="setting.user" ng-repeat="user in setting.settingService.users | orderBy:'username'" ng-if="user.role !='superadmin' && user.username != globals.currentUser.username  && user.username != 'api'">
+                            <tr ng-model="setting.user" ng-repeat="user in setting.settingService.users | orderBy:'username'" ng-if="user.role !='superadmin' && user.username != globals.user.username  && user.username != 'api'">
                                 <td>{{user.id}}</td>
                                 <td>{{user.username}}</td>
                                 <td>
                                     <select ng-model="setting.roleSelection[user.id]">
-                                        <option ng-if="globals.currentUser.role == 'ADMIN' || globals.currentUser.role == 'SUPERADMIN'"
+                                        <option ng-if="globals.user.role == 'ADMIN' || globals.user.role == 'SUPERADMIN'"
                                                 value="USER">{{ 'COMMON_USER' | translate }}
                                         </option>
-                                        <option ng-if="globals.currentUser.role == 'ADMIN' || globals.currentUser.role == 'SUPERADMIN'"
+                                        <option ng-if="globals.user.role == 'ADMIN' || globals.user.role == 'SUPERADMIN'"
                                                 value="ADMIN">Admin
                                         </option>
-                                        <option ng-if="globals.currentUser.role == 'SUPERADMIN'" value="SUPERADMIN">Superadmin
+                                        <option ng-if="globals.user.role == 'SUPERADMIN'" value="SUPERADMIN">Superadmin
                                         </option>
                                     </select>
                                 </td>

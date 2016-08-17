@@ -162,6 +162,7 @@ function config($translateProvider) {
             PROFILE_TOAST_PROFILE_INFORMATION_ERROR: "Profilinformationen konnten nicht aktualisiert werden",
             PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS: "Passwort wurde geändert",
             PROFILE_TOAST_PASSWORD_CHANGE_ERROR: "Passwort konnte nicht geändert werden",
+            PROFILE_PICTURE_MANAGEMENT: "Profilbildverwaltung",
 
             // Define all lead elements
             LEAD_LEADS: "Anfragen",
@@ -425,6 +426,7 @@ function config($translateProvider) {
             PROFILE_TOAST_PROFILE_INFORMATION_ERROR: "Profil cannot be saved",
             PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS: "Password changed",
             PROFILE_TOAST_PASSWORD_CHANGE_ERROR: "Password cannot be saved",
+            PROFILE_PICTURE_MANAGEMENT: "Profile picture management",
 
             // Define all lead elements
             LEAD_LEADS: "Leads",

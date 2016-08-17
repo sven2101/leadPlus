@@ -48,11 +48,12 @@ class AppController {
         this.registerInterval();
 
     }
+
     registerLoadLabels() {
         let self = this;
         self.rootScope.loadLabels = function () {
             if (!angular
-                .isUndefined(self.rootScope.globals.currentUser)) {
+                .isUndefined(self.rootScope.globals.user)) {
                 self.processResource.getLeadsByStatus({
                     workflow: "LEAD",
                     status: "OPEN"
@@ -81,16 +82,17 @@ class AppController {
         let self = this;
         self.rootScope.setUserDefaultLanguage = function () {
             if (!angular
-                .isUndefined(self.rootScope.globals.currentUser)) {
+                .isUndefined(self.rootScope.globals.user)) {
                 self.userResource
                     .get({
-                        id: self.rootScope.globals.currentUser.id
+                        id: self.rootScope.globals.user.id
                     }).$promise.then(function (result) {
                         self.rootScope.changeLanguage(result.language);
                     });
             }
         };
     }
+
     registerInterval() {
         let self = this;
         self.rootScope.$on("$destroy", function () {
@@ -101,7 +103,7 @@ class AppController {
         });
         self.stop = self.interval(function () {
             if (!angular
-                .isUndefined(self.rootScope.globals.currentUser)) {
+                .isUndefined(self.rootScope.globals.user)) {
                 self.processResource.getLeadsByStatus({
                     workflow: "LEAD",
                     status: "OPEN"
@@ -117,8 +119,6 @@ class AppController {
             }
         }.bind(this), 300000);
     }
-
-
 }
 
 angular.module(moduleAppController, [ngResourceId]).controller("AppController", AppController);

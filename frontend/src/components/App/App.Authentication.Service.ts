@@ -1,4 +1,5 @@
 /// <reference path="../app/App.Constants.ts" />
+/// <reference path="../User/model/User.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -26,6 +27,7 @@ class AuthService {
     cookieStore;
     location;
     window;
+    user: User;
 
     constructor($http, $rootScope, $cookieStore, $location, $window) {
         this.http = $http;
@@ -42,11 +44,15 @@ class AuthService {
             let authorization = btoa(credentials.username + ":" + credentials.password);
             let headers = credentials ? { authorization: "Basic " + authorization } : {};
             this.http.get("user", { headers: headers }).success(function (data) {
-                console.log(data);
+                self.user = data;
+
                 if (data.username) {
+                    self.user = data;
+                    console.log(data);
+                    console.log(self.user);
 
                     self.rootScope.globals = {
-                        currentUser: {
+                        user: {
                             id: data.id,
                             username: data.username,
                             role: data.role,
@@ -66,12 +72,12 @@ class AuthService {
     }
 
     logout() {
-        let self = this;
+        this.user = null;
         this.rootScope.globals = {};
-        console.log("Globals: ", this.rootScope.globals);
         this.cookieStore.remove("globals");
         this.http.defaults.headers.common.Authorization = "Basic";
 
+        let self = this;
         this.http.post("logout", {})
             .success(function () {
                 self.location.path("#/login");
