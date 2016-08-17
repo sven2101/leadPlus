@@ -2,13 +2,13 @@
 /// <reference path="../../../typeDefinitions/moment-node.d.ts" />
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../app/App.Constants.ts" />
-/// <reference path="../../Common/OrderPosition.Model.ts" />
+/// <reference path="../../Common/model/OrderPosition.Model.ts" />
 /// <reference path="../../Product/model/Product.Model.ts" />
-/// <reference path="../../Common/Process.Model.ts" />
+/// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../Lead/model/Lead.Model.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
-/// <reference path="../../Workflow/Workflow.Service.ts" />
+/// <reference path="../../common/service/Workflow.Service.ts" />
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.

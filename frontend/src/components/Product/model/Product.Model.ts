@@ -1,4 +1,4 @@
-/// <reference path="../../Common/AbstractModel.Model.ts" />
+/// <reference path="../../common/model/AbstractModel.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.

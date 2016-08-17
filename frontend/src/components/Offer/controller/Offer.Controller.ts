@@ -1,12 +1,12 @@
 
 /// <reference path="../../../typeDefinitions/moment.d.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
-/// <reference path="../../Workflow/Workflow.Service.ts" />
-/// <reference path="../../Common/Process.Model.ts" />
+/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../Offer/model/Offer.Model.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../app/App.Common.ts" />
-/// <reference path="../../common/Process.Model.ts" />
+/// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../Customer/model/Customer.Model.ts" />
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 

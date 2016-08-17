@@ -1,8 +1,4 @@
-/// <reference path="../Common/AbstractModel.Model.ts" />
-/// <reference path="../Lead/model/Lead.Model.ts" />
-/// <reference path="../Offer/model/Offer.Model.ts" />
-/// <reference path="../Sale/model/Sale.Model.ts" />
-
+/// <reference path="../../common/model/AbstractModel.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -15,11 +11,14 @@
  ******************************************************************************/
 "use strict";
 
-class Process extends AbstractModel {
-    id: number;
-    lead: Lead;
-    offer: Offer;
-    sale: Sale;
-    processor: any;
-    status: any;
+class OrderPosition extends AbstractModel {
+
+    amount: number;
+    product: Product;
+
+    constructor() {
+        super();
+        this.amount = 666;
+    }
+
 }

@@ -1,6 +1,7 @@
-/// <reference path="../Product/model/Product.Model.ts" />
-/// <reference path="../app/App.Constants.ts" />
-/// <reference path="../Product/controller/Product.Service.ts" />
+/// <reference path="../../Product/model/Product.Model.ts" />
+/// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../Product/controller/Product.Service.ts" />
+/// <reference path="../../common/model/OrderPosition.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.

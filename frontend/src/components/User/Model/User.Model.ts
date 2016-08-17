@@ -1,4 +1,4 @@
-/// <reference path="../../Common/AbstractModel.Model.ts" />
+/// <reference path="../../common/model/AbstractModel.Model.ts" />
 /// <reference path="Role.Model.ts" />
 /// <reference path="Language.Model.ts" />
 /*******************************************************************************
