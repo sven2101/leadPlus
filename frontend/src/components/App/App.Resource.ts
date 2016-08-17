@@ -274,8 +274,8 @@ class SignupResource {
     constructor($resource) {
         this.resource = $resource("/api/rest/registrations", {}, {
             signup: { url: "/api/rest/registrations", method: "POST" },
-            uniqueUsername: { url: "/api/rest/registrations/unique/username", method: "POST" },
-            uniqueEmail: { url: "/api/rest/registrations/unique/email", method: "POST" }
+            uniqueUsername: { url: "/api/rest/registrations/unique/username", method: "POST", headers: { "Content-Type": "application/json" } },
+            uniqueEmail: { url: "/api/rest/registrations/unique/email", method: "POST", headers: { "Content-Type": "application/json" } }
         });
     }
 }

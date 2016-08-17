@@ -11,6 +11,7 @@
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
 "use strict";
+
 class Sale extends AbstractModel {
     orderPositions: Array<OrderPosition>;
     container: any;
@@ -25,9 +26,5 @@ class Sale extends AbstractModel {
     saleReturn: number;
     constructor() {
         super();
-        this.container = {
-            name: "placeholder",
-            priceNetto: 666
-        };
     }
 }

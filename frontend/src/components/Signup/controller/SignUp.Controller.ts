@@ -1,4 +1,5 @@
 /// <reference path="../../Signup/controller/SignUp.Service.ts" />
+/// <reference path="../../Signup/model/Signup.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -22,21 +23,23 @@ class SignupController {
     private $inject = [SignupServiceId];
 
     signupService;
+    user: Signup;
 
     constructor(SignupService) {
         this.signupService = SignupService;
+        this.user = new Signup();
     }
 
-    uniqueEmail(email: string): void {
-        this.signupService.uniqueEmail(email);
+    uniqueUsername(): void {
+        this.signupService.uniqueUsername(this.user);
     }
 
-    uniqueUsername(username: string): void {
-        this.signupService.uniqueUsername(username);
+    uniqueEmail(): void {
+        this.signupService.uniqueEmail(this.user);
     }
 
-    signup(user: User): void {
-        this.signupService.signup(user);
+    signup(): void {
+        this.signupService.signup(this.user);
     }
 }
 

@@ -1,5 +1,5 @@
 /// <reference path="../../app/App.Resource.ts" />
-/// <reference path="../../User/model/User.Model.ts" />
+/// <reference path="../../Signup/model/Signup.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -27,9 +27,8 @@ class SignupService {
     toaster;
     translate;
 
-    user: User;
-    emailExists: boolean;
-    usernameExists: boolean;
+    usernameExist: boolean;
+    emailExist: boolean;
 
     constructor($location, toaster, $translate, SignupResource) {
         this.location = $location;
@@ -37,40 +36,36 @@ class SignupService {
         this.translate = $translate;
         this.signupResource = SignupResource.resource;
 
-        this.emailExists = false;
-        this.usernameExists = false;
+        this.usernameExist = false;
+        this.emailExist = false;
     }
 
-    uniqueEmail(email: string): void {
+    uniqueUsername(user: Signup): void {
         let self = this;
-        console.log("Email: " + email);
-        this.signupResource.uniqueEmail({ email }).$promise.then(function (result) {
-            self.emailExists = result;
-            console.log(result);
+        this.signupResource.uniqueUsername({ username: user.username, email: user.email, password: user.password, password2: user.password2 }).$promise.then(function (data, headersGetter, status) {
+            self.usernameExist = data.validation;
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });
     }
 
-    uniqueUsername(username: string): void {
+    uniqueEmail(user: Signup): void {
         let self = this;
-        console.log("Username Data: " + username);
-        this.signupResource.uniqueUsername({ username }).$promise.then(function (result) {
-            self.usernameExists = result;
-            console.log(result);
+        this.signupResource.uniqueEmail({ username: user.username, email: user.email, password: user.password, password2: user.password2 }).$promise.then(function (data, headersGetter, status) {
+            self.emailExist = data.validation;
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });
     }
 
-    signup(user: User): void {
+    signup(user: Signup): void {
         let self = this;
-        this.signupResource.signup({ user: user }).$promise.then(function () {
-            self.user.username = "";
+        this.signupResource.signup({ username: user.username, email: user.email, password: user.password, password2: user.password2 }).$promise.then(function () {
+            user = null;
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
             self.location.path("/login");
         }, function () {
-            self.user.username = "";
+            user = null;
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });
     }

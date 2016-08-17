@@ -24,21 +24,19 @@ public class Registration {
 	private String username;
 
 	@NotNull
+	@Size(min = 2, max = 50)
+	private String email;
+
+	@NotNull
 	@Size(min = 2, max = 30)
 	private String password;
 
 	@NotNull
-	@Size(min = 2, max = 50)
-	private String email;
+	@Size(min = 2, max = 30)
+	private String password2;
 
 	public Registration() {
 
-	}
-
-	public Registration(String username, String password, String email) {
-		this.username = username;
-		this.password = password;
-		this.email = email;
 	}
 
 	public String getUsername() {
@@ -49,14 +47,6 @@ public class Registration {
 		this.username = username;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public String getEmail() {
 		return email;
 	}
@@ -65,9 +55,25 @@ public class Registration {
 		this.email = email;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getPassword2() {
+		return password2;
+	}
+
+	public void setPassword2(String password2) {
+		this.password2 = password2;
+	}
+
 	@Override
 	public String toString() {
-		return "Registration [username=" + username + ", password=" + password + ", email=" + email + "]";
+		return "Registration [username=" + username + ", email=" + email + ", password=" + password + ", password2=" + password2 + "]";
 	}
 
 }

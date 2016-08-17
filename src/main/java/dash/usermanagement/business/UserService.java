@@ -44,6 +44,7 @@ import dash.exceptions.UsernameAlreadyExistsException;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
+import dash.usermanagement.registration.domain.Validation;
 import dash.usermanagement.settings.language.Language;
 import dash.usermanagement.settings.password.PasswordChange;
 
@@ -57,6 +58,9 @@ public class UserService implements IUserService {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private Validation validation;
 
 	@Override
 	public List<User> getAll() {
@@ -238,10 +242,10 @@ public class UserService implements IUserService {
 		if (Optional.ofNullable(registration).isPresent() && Optional.ofNullable(registration.getUsername()).isPresent()
 				&& Optional.ofNullable(registration.getEmail()).isPresent() && Optional.ofNullable(registration.getPassword()).isPresent()) {
 			try {
-				if (usernameAlreadyExists(registration.getUsername())) {
+				if (usernameAlreadyExists(registration.getUsername()).isValidation()) {
 					throw new UsernameAlreadyExistsException(USER_EXISTS);
 				}
-				if (emailAlreadyExists(registration.getEmail())) {
+				if (emailAlreadyExists(registration.getEmail()).isValidation()) {
 					throw new EmailAlreadyExistsException(EMAIL_EXISTS);
 				}
 
@@ -265,15 +269,17 @@ public class UserService implements IUserService {
 		}
 	}
 
-	public Boolean emailAlreadyExists(String email) throws NotFoundException {
+	public Validation emailAlreadyExists(String email) throws NotFoundException {
+		this.validation.setValidation(false);
 		if (getUserByEmail(email) != null)
-			return true;
-		return false;
+			this.validation.setValidation(true);
+		return this.validation;
 	}
 
-	public Boolean usernameAlreadyExists(String username) throws NotFoundException {
+	public Validation usernameAlreadyExists(String username) throws NotFoundException {
+		this.validation.setValidation(false);
 		if (getUserByName(username) != null)
-			return true;
-		return false;
+			this.validation.setValidation(true);
+		return this.validation;
 	}
 }
