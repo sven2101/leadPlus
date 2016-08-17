@@ -1,7 +1,7 @@
-/// <reference path="../app/App.Constants.ts" />
-/// <reference path="../app/App.Resource.ts" />
-/// <reference path="../../typeDefinitions/Moment.d.ts" />
-/// <reference path="../Customer/Customer.Model.ts" />
+/// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../app/App.Resource.ts" />
+/// <reference path="../../../typeDefinitions/Moment.d.ts" />
+/// <reference path="../../Customer/model/Customer.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 

@@ -49,9 +49,11 @@ class SettingService {
                     break;
             }
         });
+        console.log("Users: " + this.users);
         this.counter = 1;
-
     }
+
+    incrementCounter()
 
     incrementCounter() {
         this.counter++;

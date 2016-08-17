@@ -1,5 +1,5 @@
-/// <reference path="../Common/AbstractModel.Model.ts" />
-/// <reference path="../Common/OrderPosition.Model.ts" />
+/// <reference path="../../Common/AbstractModel.Model.ts" />
+/// <reference path="../../app/App.Common.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -12,18 +12,17 @@
  ******************************************************************************/
 "use strict";
 
-class Sale extends AbstractModel {
-    orderPositions: Array<OrderPosition>;
-    container: any;
-    containerAmount: number;
-    customer: any;
+class Customer extends AbstractModel {
+
+    title: string;
+    firstname: string;
+    lastname: string;
+    company: string;
+    email: string;
+    phone: string;
+    address: string;
     timestamp: any;
-    vendor: any;
-    deliveryAddress: any;
-    deliveryDate: any;
-    transport: any;
-    saleProfit: number;
-    saleReturn: number;
+    deactivated: boolean;
     constructor() {
         super();
     }

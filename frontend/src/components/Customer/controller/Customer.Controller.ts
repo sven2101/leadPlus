@@ -1,8 +1,9 @@
-/// <reference path="./Customer.Service.ts" />
-/// <reference path="../app/App.Common.ts" />
-/// <reference path="../Product/Product.Service.ts" />
-/// <reference path="../Product/Product.Model.ts" />
-/// <reference path="../Common/OrderPosition.Model.ts" />
+/// <reference path="../../Customer/controller/Customer.Service.ts" />
+/// <reference path="../../app/App.Common.ts" />
+/// <reference path="../../Product/controller/Product.Service.ts" />
+/// <reference path="../../Product/model/Product.Model.ts" />
+/// <reference path="../../Common/OrderPosition.Model.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 

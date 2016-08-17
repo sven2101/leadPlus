@@ -1,3 +1,5 @@
+/// <reference path="../app/App.Constants.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -13,9 +15,11 @@
  *******************************************************************************/
 "use strict";
 
-class Auth {
+const AuthServiceId: string = "AuthService";
 
-    $inject = ["$http", "$rootScope", "$cookieStore", "$location", "$window"];
+class AuthService {
+
+    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, $windowId];
 
     http;
     rootScope;
@@ -60,6 +64,7 @@ class Auth {
 
         }
     }
+
     logout() {
         let self = this;
         this.rootScope.globals = {};
@@ -76,4 +81,5 @@ class Auth {
             });
     }
 }
-angular.module("app.authentication", ["ngResource"]).service("Auth", Auth);
+
+angular.module(moduleAuthService, [ngResourceId]).service(AuthServiceId, AuthService);

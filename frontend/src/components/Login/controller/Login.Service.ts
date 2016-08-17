@@ -1,3 +1,7 @@
+/// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../app/App.Authentication.Service.ts" />
+
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -13,21 +17,22 @@
  *******************************************************************************/
 "use strict";
 
-class LoginController {
+const LoginServiceId: string = "LoginService";
 
-    static $inject = ["$location", "Auth", "$scope", "toaster", "$rootScope", "$translate"];
+class LoginService {
+
+    private $inject = [$locationId, AuthServiceId, toasterId, $rootScopeId, $translateId];
 
     location;
-    auth;
+    authService: AuthService;
     scope;
     toaster;
     rootScope;
     translate;
 
-    constructor($location, Auth, $scope, toaster, $rootScope, $translate) {
+    constructor($location, AuthService: AuthService, toaster, $rootScope, $translate) {
         this.location = $location;
-        this.auth = Auth;
-        this.scope = $scope;
+        this.authService = AuthService;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
@@ -40,7 +45,7 @@ class LoginController {
             self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
         }
         else {
-            self.auth.login(credentials,
+            self.authService.login(credentials,
                 function (res) {
                     self.location.path("/dashoard");
                     self.rootScope.setUserDefaultLanguage();
@@ -55,4 +60,4 @@ class LoginController {
     };
 }
 
-angular.module("app.login", ["ngResource"]).controller("LoginController", LoginController);
+angular.module(moduleLoginService, [ngResourceId]).service(LoginServiceId, LoginService);

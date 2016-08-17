@@ -1,5 +1,5 @@
-/// <reference path="../Common/AbstractModel.Model.ts" />
-/// <reference path="../Common/OrderPosition.Model.ts" />
+/// <reference path="../../Common/AbstractModel.Model.ts" />
+/// <reference path="../../Common/OrderPosition.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
