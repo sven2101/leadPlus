@@ -32,6 +32,9 @@ let shallowCopy = function (oldObject: Object, newObject: Object) {
     for (let propertyName in oldObject) {
         newObject[propertyName] = oldObject[propertyName];
     }
+    if (!isNullOrUndefined(oldObject["id"])) {
+        newObject["id"] = oldObject["id"];
+    }
 };
 
 

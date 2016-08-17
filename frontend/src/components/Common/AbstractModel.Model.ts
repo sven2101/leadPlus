@@ -13,6 +13,6 @@
 class AbstractModel {
     id: Number;
     constructor() {
-
+        this.id = 0;
     }
 }

@@ -34,7 +34,7 @@ public abstract class AbstractWorkflow implements Request {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private long id;
 
-	@OneToOne(cascade = { CascadeType.PERSIST })
+	@OneToOne
 	@JoinColumn(name = "customer_fk", nullable = true)
 	private Customer customer;
 

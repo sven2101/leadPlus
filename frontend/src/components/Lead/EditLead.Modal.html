@@ -11,8 +11,15 @@
                     <div class="row">
                         <div class="col-sm-6 b-r">
                             <div class="form-group">
+                                <label>Customer stuff</label>
+                                <select class="form-control" ng-model="lead.currentCustomerId" ng-change="lead.selectCustomer(lead.editLead)">
+                                            <option value="-1" selected >Select Customer</option>                                                                     
+                                            <option value="{{customer.id}}" ng-repeat="customer in lead.customerService.getActiveCustomer()">{{customer.firstname}} {{customer.lastname}}</option>                                          
+                                        </select>
+                            </div>
+                            <div class="form-group">
                                 <label>{{ 'COMMON_TITLE' | translate }}</label>
-                                <select name="title" class="form-control" ng-model="lead.editProcess.lead.customer.title">
+                                <select name="title" class="form-control" ng-model="lead.editLead.customer.title" ng-disabled="lead.customerSelected">
                                     <option value="MR">{{ 'COMMON_TITLE_MR' | translate }}</option>
                                     <option value="MS">{{ 'COMMON_TITLE_MS' | translate }}</option>
                                 </select>
@@ -20,46 +27,46 @@
                             <!-- FIRSTNAME -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.editForm.firstname.$invalid && !lead.editForm.firstname.$pristine }">
                                 <label>{{ 'COMMON_FIRSTNAME' | translate }}</label>
-                                <input type="text" name="firstname" class="form-control" ng-model="lead.editProcess.lead.customer.firstname" ng-maxlength="30">
+                                <input type="text" name="firstname" class="form-control" ng-model="lead.editLead.customer.firstname" ng-maxlength="30" ng-disabled="lead.customerSelected">
                                 <p ng-show="lead.editForm.firstname.$invalid && !lead.editForm.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                             <!-- LASTNAME -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.editForm.lastname.$invalid && !lead.editForm.lastname.$pristine }">
                                 <label>{{ 'COMMON_LASTNAME' | translate }}</label>
-                                <input type="text" name="lastname" class="form-control" ng-model="lead.editProcess.lead.customer.lastname" ng-maxlength="30">
+                                <input type="text" name="lastname" class="form-control" ng-model="lead.editLead.customer.lastname" ng-maxlength="30" ng-disabled="lead.customerSelected">
                                 <p ng-show="lead.editForm.lastname.$invalid && !lead.editForm.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                             <!-- COMPANY -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.editForm.company.$invalid && !lead.editForm.company.$pristine }">
                                 <label>{{ 'COMMON_COMPANY' | translate }}</label>
-                                <input type="text" name="company" class="form-control" ng-model="lead.editProcess.lead.customer.company" ng-maxlength="50">
+                                <input type="text" name="company" class="form-control" ng-model="lead.editLead.customer.company" ng-maxlength="50" ng-disabled="lead.customerSelected">
                                 <p ng-show="lead.editForm.company.$invalid && !lead.editForm.company.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <!-- MESSAGE -->
-                            <div>
-                                <div class="form-group">
-                                    <label>{{ 'COMMON_NOTE' | translate }}</label>
-                                    <textarea class="form-control" rows="5" name="message" style="resize:vertical;" ng-model="lead.editProcess.lead.message"></textarea>
-                                </div>
-                            </div>
                             <!-- EMAIL -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.editForm.email.$invalid && !lead.editForm.email.$pristine }">
                                 <label>{{ 'COMMON_EMAIL' | translate }}</label>
-                                <input type="email" name="email" class="form-control" ng-model="lead.editProcess.lead.customer.email">
+                                <input type="email" name="email" class="form-control" ng-model="lead.editLead.customer.email" ng-disabled="lead.customerSelected">
                                 <p ng-show="lead.editForm.email.$invalid && !lead.editForm.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL'| translate }}</p>
                             </div>
                             <!-- PHONE -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.editForm.phone.$invalid && !lead.editForm.phone.$pristine }">
                                 <label>{{ 'COMMON_PHONE' | translate }}</label>
-                                <input type="text" name="phone" class="form-control" ng-model="lead.editProcess.lead.customer.phone" ng-maxlength="50">
+                                <input type="text" name="phone" class="form-control" ng-model="lead.editLead.customer.phone" ng-maxlength="50" ng-disabled="lead.customerSelected">
                                 <p ng-show="lead.editForm.phone.$invalid && !lead.editForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
-                             <!-- CONTAINER DESTINATION -->
+                            <!-- MESSAGE -->
+                            <div>
+                                <div class="form-group">
+                                    <label>{{ 'COMMON_NOTE' | translate }}</label>
+                                    <textarea class="form-control" rows="5" name="message" style="resize:vertical;" ng-model="lead.editLead.message"></textarea>
+                                </div>
+                            </div>
+                            <!-- CONTAINER DESTINATION -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.editForm.containerDestination.$invalid && !lead.editForm.containerDestination.$pristine }">
                                 <label>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</label>
-                                <input type="text" name="containerDestination" class="form-control" ng-model="lead.editProcess.lead.deliveryAddress" ng-maxlength="50">
+                                <input type="text" name="containerDestination" class="form-control" ng-model="lead.editLead.deliveryAddress" ng-maxlength="50">
                                 <p ng-show="lead.editForm.containerDestination.$invalid && !lead.editForm.containerDestination.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                         </div>
@@ -101,7 +108,9 @@
                         <!-- ENTIRE PRICE -->
                         <div>
                             <div class="form-group ">
-                                <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{lead.sumOrderPositions(lead.currentOrderPositions)| currency:'\u20AC'}}</h2>
+                                <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{lead.sumOrderPositions(lead.currentOrderPositions)|
+                                    currency:'\u20AC'}}
+                                </h2>
                             </div>
                         </div>
                 </form>

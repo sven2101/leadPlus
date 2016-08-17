@@ -240,9 +240,9 @@ angular.module(moduleProductResource, [ngResourceId]).service(ProductResource.se
 
 // ----------------------------------------------------------------------------------------
 
-class CustomerResource {
+const CustomerResourceId: string = "CustomerResource";
 
-    static serviceId: string = "CustomerResource";
+class CustomerResource {
 
     private $inject = [$resourceId];
 
@@ -259,7 +259,7 @@ class CustomerResource {
     }
 }
 
-angular.module(moduleCustomerResource, [ngResourceId]).service(CustomerResource.serviceId, CustomerResource);
+angular.module(moduleCustomerResource, [ngResourceId]).service(CustomerResourceId, CustomerResource);
 
 // ----------------------------------------------------------------------------------------
 
