@@ -15,29 +15,29 @@
  *******************************************************************************/
 "use strict";
 
-const SignUpControllerId: string = "SignUpController";
+const SignupControllerId: string = "SignupController";
 
-class SignUpController {
+class SignupController {
 
-    private $inject = [SignUpServiceId];
+    private $inject = [SignupServiceId];
 
-    signUpService;
+    signupService;
 
-    constructor(signUpService: SignUpService) {
-        this.signUpService = signUpService;
+    constructor(SignupService) {
+        this.signupService = SignupService;
     }
 
-    uniqueEmail(email: string) {
-        this.signUpService.uniqueEmail(email);
+    uniqueEmail(email: string): void {
+        this.signupService.uniqueEmail(email);
     }
 
-    uniqueUsername(username: string) {
-        this.signUpService.uniqueUsername(username);
+    uniqueUsername(username: string): void {
+        this.signupService.uniqueUsername(username);
     }
 
-    signup(user: User) {
-        this.signUpService.signup(user);
+    signup(user: User): void {
+        this.signupService.signup(user);
     }
 }
 
-angular.module(moduleSignup, [ngResourceId]).controller(SignUpControllerId, SignUpController);
+angular.module(moduleSignup, [ngResourceId]).controller(SignupControllerId, SignupController);

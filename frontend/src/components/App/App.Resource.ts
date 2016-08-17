@@ -14,9 +14,9 @@
  *******************************************************************************/
 "use strict";
 
-class LeadResource {
+const LeadResourceId: string = "LeadResource";
 
-    static serviceId: string = "LeadResource";
+class LeadResource {
 
     private $inject = [$resourceId];
 
@@ -33,13 +33,13 @@ class LeadResource {
     }
 }
 
-angular.module(moduleLeadResource, [ngResourceId]).service(LeadResource.serviceId, LeadResource);
+angular.module(moduleLeadResource, [ngResourceId]).service(LeadResourceId, LeadResource);
 
 // ----------------------------------------------------------------------------------------
 
-class OfferResource {
+const OfferResourceId: string = "OfferResource";
 
-    static serviceId: string = "OfferResource";
+class OfferResource {
 
     private $inject = [$resourceId];
 
@@ -56,13 +56,13 @@ class OfferResource {
     }
 }
 
-angular.module(moduleOfferResource, [ngResourceId]).service(OfferResource.serviceId, OfferResource);
+angular.module(moduleOfferResource, [ngResourceId]).service(OfferResourceId, OfferResource);
 
 // ----------------------------------------------------------------------------------------
 
-class SaleResource {
+const SaleResourceId: string = "SaleResource";
 
-    static serviceId: string = "SaleResource";
+class SaleResource {
 
     resource: any;
 
@@ -77,13 +77,13 @@ class SaleResource {
     }
 }
 
-angular.module(moduleSaleResource, [ngResourceId]).service(SaleResource.serviceId, SaleResource);
+angular.module(moduleSaleResource, [ngResourceId]).service(SaleResourceId, SaleResource);
 
 // ----------------------------------------------------------------------------------------
 
-class ProcessResource {
+const ProcessResourceId: string = "ProcessResource";
 
-    static serviceId: string = "ProcessResource";
+class ProcessResource {
 
     private $inject = [$resourceId];
 
@@ -122,13 +122,13 @@ class ProcessResource {
     }
 }
 
-angular.module(moduleProcessResource, [ngResourceId]).service(ProcessResource.serviceId, ProcessResource);
+angular.module(moduleProcessResource, [ngResourceId]).service(ProcessResourceId, ProcessResource);
 
 // ----------------------------------------------------------------------------------------
 
-class CommentResource {
+const CommentResourceId: string = "CommentResource";
 
-    static serviceId: string = "CommentResource";
+class CommentResource {
 
     private $inject = [$resourceId];
 
@@ -145,13 +145,13 @@ class CommentResource {
     }
 }
 
-angular.module(moduleCommentResource, [ngResourceId]).service(CommentResource.serviceId, CommentResource);
+angular.module(moduleCommentResource, [ngResourceId]).service(CommentResourceId, CommentResource);
 
 // ----------------------------------------------------------------------------------------
 
-class UserResource {
+const UserResourceId: string = "UserResource";
 
-    static serviceId: string = "UserResource";
+class UserResource {
 
     private $inject = [$resourceId];
 
@@ -165,7 +165,7 @@ class UserResource {
     }
 }
 
-angular.module(moduleUserResource, [ngResourceId]).service(UserResource.serviceId, UserResource);
+angular.module(moduleUserResource, [ngResourceId]).service(UserResourceId, UserResource);
 
 // ----------------------------------------------------------------------------------------
 
@@ -217,9 +217,9 @@ angular.module(moduleStatisticResource, [ngResourceId]).service(StatisticResourc
 
 // ----------------------------------------------------------------------------------------
 
-class ProductResource {
+const ProductResourceId: string = "ProductResource";
 
-    static serviceId: string = "ProductResource";
+class ProductResource {
 
     private $inject = [$resourceId];
 
@@ -236,13 +236,13 @@ class ProductResource {
     }
 }
 
-angular.module(moduleProductResource, [ngResourceId]).service(ProductResource.serviceId, ProductResource);
+angular.module(moduleProductResource, [ngResourceId]).service(ProductResourceId, ProductResource);
 
 // ----------------------------------------------------------------------------------------
 
-class CustomerResource {
+const CustomerResourceId: string = "CustomerResource";
 
-    static serviceId: string = "CustomerResource";
+class CustomerResource {
 
     private $inject = [$resourceId];
 
@@ -259,13 +259,13 @@ class CustomerResource {
     }
 }
 
-angular.module(moduleCustomerResource, [ngResourceId]).service(CustomerResource.serviceId, CustomerResource);
+angular.module(moduleCustomerResource, [ngResourceId]).service(CustomerResourceId, CustomerResource);
 
 // ----------------------------------------------------------------------------------------
 
-class SignUpResource {
+const SignupResourceId: string = "SignupResource";
 
-    static serviceId: string = "SignUpResource";
+class SignupResource {
 
     private $inject = [$resourceId];
 
@@ -274,10 +274,10 @@ class SignUpResource {
     constructor($resource) {
         this.resource = $resource("/api/rest/registrations", {}, {
             signup: { url: "/api/rest/registrations", method: "POST" },
-            uniqueUsername: { url: "/api/rest/registrations/unique/:username", method: "POST", headers: { "Content-Type": "text/plain" } },
-            uniqueEmail: { url: "/api/rest/registrations/unique/:email", method: "POST", headers: { "Content-Type": "text/plain" } }
+            uniqueUsername: { url: "/api/rest/registrations/unique/username", method: "POST" },
+            uniqueEmail: { url: "/api/rest/registrations/unique/email", method: "POST" }
         });
     }
 }
 
-angular.module(moduleSignupResource, [ngResourceId]).service(SignUpResource.serviceId, SignUpResource);
+angular.module(moduleSignupResource, [ngResourceId]).service(SignupResourceId, SignupResource);

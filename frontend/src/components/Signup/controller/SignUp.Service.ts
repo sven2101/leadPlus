@@ -16,62 +16,65 @@
  *******************************************************************************/
 "use strict";
 
-const SignUpServiceId: string = "SignUpService";
+const SignupServiceId: string = "SignupService";
 
-class SignUpService {
+class SignupService {
 
-    private $inject = [$locationId, $scopeId, toasterId, $translateId, SignUpResource];
+    private $inject = [$locationId, toasterId, $translateId, SignupResourceId];
 
-    signUpResource;
+    signupResource;
     location;
-    scope;
     toaster;
     translate;
 
+    user: User;
     emailExists: boolean;
     usernameExists: boolean;
 
-    constructor($location, $scope, toaster, $translate, signUpResource: SignUpResource) {
+    constructor($location, toaster, $translate, SignupResource) {
         this.location = $location;
-        this.scope = $scope;
         this.toaster = toaster;
         this.translate = $translate;
-        this.signUpResource = signUpResource;
+        this.signupResource = SignupResource.resource;
 
         this.emailExists = false;
         this.usernameExists = false;
     }
 
-    uniqueEmail(email: string) {
+    uniqueEmail(email: string): void {
         let self = this;
-        this.signUpResource.uniqueEmail().$promise.then(function (data, status, headers, config) {
-            self.scope.emailExists = data;
+        console.log("Email: " + email);
+        this.signupResource.uniqueEmail({ email }).$promise.then(function (result) {
+            self.emailExists = result;
+            console.log(result);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });
     }
 
-    uniqueUsername(username: string) {
+    uniqueUsername(username: string): void {
         let self = this;
-        this.signUpResource.uniqueUsername().$promise.then(function (data, status, headers, config) {
-            self.scope.usernameExists = data;
+        console.log("Username Data: " + username);
+        this.signupResource.uniqueUsername({ username }).$promise.then(function (result) {
+            self.usernameExists = result;
+            console.log(result);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });
     }
 
-    signup(user: User) {
+    signup(user: User): void {
         let self = this;
-        this.signUpResource.signup(user).$promise.then(function () {
-            self.scope.user = "";
+        this.signupResource.signup({ user: user }).$promise.then(function () {
+            self.user.username = "";
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
             self.location.path("/login");
         }, function () {
-            self.scope.user = "";
+            self.user.username = "";
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });
     }
 }
 
-angular.module(moduleSignupService, [ngResourceId]).service(SignUpServiceId, SignUpService);
+angular.module(moduleSignupService, [ngResourceId]).service(SignupServiceId, SignupService);
 

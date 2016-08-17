@@ -12,12 +12,12 @@
             <div class="form-group" ng-class="{  'has-success': 	!registration.username.$error.required &&
             														!registration.username.$error.username &&
 																	!registration.username.$error.usernameExists &&
-																	!usernameExists	,
+																	!signup.usernameExists	,
 												 'has-error': 		registration.username.$error.required ||
 												 					registration.username.$error.minlength ||
 				        											registration.username.$error.maxlength ||
 				        											registration.username.$error.usernameExists ||
-				        											usernameExists 	}">
+				        											signup.usernameExists 	}">
 
                 <input type="text" id="username" name="username" class="form-control" placeholder="{{ 'COMMON_USERNAME' | translate }}" required
                     ng-pattern="/^[a-zA-Z0-9.-]*$/" ng-model="user.username" ng-minlength="2" ng-maxlength="20" ng-blur="signup.uniqueUsername(user.username)">
@@ -30,10 +30,10 @@
             <div class="form-group" ng-class="{ 'has-success': 	!registration.email.$error.required &&
 																!registration.email.$error.email && 
 																!registration.email.$error.emailExists &&
-																!emailExists ,
+																!signup.emailExists ,
 												'has-error': 	registration.email.$error.email ||
 																registration.email.$error.emailExists ||
-																emailExists	 }">
+																signup.emailExists	 }">
                 <input type="email" id="email" name="email" class="form-control" placeholder="{{ 'COMMON_EMAIL' | translate }}" required
                     ng-model="user.email" ng-blur="signup.uniqueEmail(user.email)">
 

@@ -34,8 +34,7 @@ import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
 
 @RestController
-@RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.ALL_VALUE }, produces = {
-		MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 public class RegistrationResource {
 
 	@Autowired
@@ -43,21 +42,20 @@ public class RegistrationResource {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public User register(@RequestBody @Valid Registration registration)
+	public User register(@RequestBody @Valid final Registration registration)
 			throws UsernameAlreadyExistsException, EmailAlreadyExistsException, RegisterFailedException {
 		return userService.register(registration);
 	}
 
 	@RequestMapping(value = "/unique/email", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Boolean emailAlreadyExists(@RequestBody String email) throws NotFoundException {
-		return userService.emailAlreadyExists(email);
+	public Boolean emailAlreadyExists(@RequestBody final Registration registration) throws NotFoundException {
+		return userService.emailAlreadyExists(registration.getEmail());
 	}
 
 	@RequestMapping(value = "/unique/username", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Boolean usernameAlreadyExists(@RequestBody String username) throws NotFoundException {
-		return userService.usernameAlreadyExists(username);
+	public Boolean usernameAlreadyExists(@RequestBody final Registration registration) throws NotFoundException {
+		return userService.usernameAlreadyExists(registration.getUsername());
 	}
-
 }
