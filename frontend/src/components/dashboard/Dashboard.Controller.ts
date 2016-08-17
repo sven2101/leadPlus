@@ -111,8 +111,8 @@ class DashboardController {
 
     getUser() {
         let self = this;
-        if (!angular.isUndefined(self.rootScope.globals.currentUser))
-            self.userResource.get({ id: self.rootScope.globals.currentUser.id }).$promise.then(function (result) {
+        if (!angular.isUndefined(self.rootScope.globals.user))
+            self.userResource.get({ id: self.rootScope.globals.user.id }).$promise.then(function (result) {
                 self.user = result;
             });
     }

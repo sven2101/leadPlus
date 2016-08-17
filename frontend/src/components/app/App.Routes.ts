@@ -105,15 +105,15 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
     .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookieStoreId,
         function ($location, $http, $rootScope, Auth, $cookieStore) {
             $rootScope.globals = $cookieStore.get("globals") || {};
-            if ($rootScope.globals.currentUser) {
+            if ($rootScope.globals.user) {
                 $http.defaults.headers.common["Authorization"] = "Basic "
-                    + $rootScope.globals.currentUser.authorization;
+                    + $rootScope.globals.user.authorization;
             }
             $rootScope.$on("$routeChangeStart", function (event,
                 next, current) {
 
                 if (next.authenticated === true) {
-                    if (!$rootScope.globals.currentUser) {
+                    if (!$rootScope.globals.user) {
                         $location.path("/login");
                     }
                 }

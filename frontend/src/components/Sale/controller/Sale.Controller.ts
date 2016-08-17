@@ -78,9 +78,9 @@ class SaleController {
 
         let self = this;
 
-        if (!angular.isUndefined($rootScope.globals.currentUser))
+        if (!angular.isUndefined($rootScope.globals.user))
             this.userResource.get({
-                id: $rootScope.globals.currentUser.id
+                id: $rootScope.globals.user.id
             }).$promise.then(function (result) {
                 self.user = result;
             });
@@ -253,7 +253,7 @@ class SaleController {
         function addActionsButtons(data, type, full, meta) {
             self.processes[data.id] = data;
             let hasRightToDelete = "";
-            if ($rootScope.globals.currentUser.role === "USER") {
+            if ($rootScope.globals.user.role === "USER") {
                 hasRightToDelete = "disabled";
             }
             return "<button class='btn btn-white' ng-click='sale.loadDataToModal(sale.processes["

@@ -1,7 +1,7 @@
 /// <reference path="../../app/App.Resource.ts" />
-/// <reference path="../../User/Model/User.Model.ts" />
-/// <reference path="../../User/Model/Role.Model.ts" />
-/// <reference path="../../User/Model/Language.Model.ts" />
+/// <reference path="../../User/model/User.Model.ts" />
+/// <reference path="../../User/model/Role.Model.ts" />
+/// <reference path="../../User/model/Language.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -32,7 +32,7 @@ class SettingService {
     counter;
 
     users: Array<User>;
-    roleSelection: Role;
+    role: Role;
 
     constructor($filter, toaster, $translate, $rootScope, SettingResource) {
         this.filter = $filter;
@@ -52,8 +52,6 @@ class SettingService {
         console.log("Users: " + this.users);
         this.counter = 1;
     }
-
-    incrementCounter()
 
     incrementCounter() {
         this.counter++;
@@ -80,9 +78,9 @@ class SettingService {
     }
 
     hasRight(user: User): boolean {
-        if (user.username === this.rootScope.globals.currentUser.username
-            || (user.role === this.rootScope.globals.currentUser.role)
-            || this.rootScope.globals.currentUser.role === Role.USER
+        if (user.username === this.rootScope.globals.user.username
+            || (user.role === this.rootScope.globals.user.role)
+            || this.rootScope.globals.user.role === Role.USER
             || user.role === Role.SUPERADMIN) {
             return true;
         } else {
@@ -92,7 +90,7 @@ class SettingService {
 
     saveRole(user: User) {
         let self = this;
-        user.role = this.roleSelection;
+        user.role = this.role;
         this.settingsResource.setRole({ id: user.id }, user.role).$promise.then(function () {
             // set rootScope role
             self.filter("filter")(self.users, { id: user.id })[0].role = user.role;
