@@ -48,7 +48,6 @@ class CustomerService {
     getAllCustomer() {
         let self = this;
         this.customerResource.getAllCustomer().$promise.then(function (result: Array<Customer>) {
-            console.log(result);
             self.customer = result;
         });
     }
