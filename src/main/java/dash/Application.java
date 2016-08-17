@@ -51,6 +51,7 @@ import dash.security.listener.RESTAuthenticationEntryPoint;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
+import dash.usermanagement.registration.domain.Validation;
 import dash.usermanagement.settings.language.Language;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
@@ -103,6 +104,11 @@ public class Application {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public Validation validation() {
+		return new Validation();
 	}
 
 	@PostConstruct
@@ -178,8 +184,8 @@ public class Application {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 
-			http.httpBasic().and().authorizeRequests().antMatchers("/", "/assets/**", "/app/**", "/components/**", "/api/rest/registrations/**").permitAll()
-					.anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class).csrf()
+			http.httpBasic().and().authorizeRequests().antMatchers("/", "/assets/**", "/fonts/**", "/app/**", "/components/**", "/api/rest/registrations/**")
+					.permitAll().anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class).csrf()
 					.csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout().logoutUrl("/logout").logoutSuccessUrl("/").and().headers()
 					.frameOptions().sameOrigin().httpStrictTransportSecurity().disable();
 

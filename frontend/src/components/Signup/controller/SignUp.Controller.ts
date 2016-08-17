@@ -1,4 +1,5 @@
 /// <reference path="../../Signup/controller/SignUp.Service.ts" />
+/// <reference path="../../Signup/model/Signup.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -15,29 +16,31 @@
  *******************************************************************************/
 "use strict";
 
-const SignUpControllerId: string = "SignUpController";
+const SignupControllerId: string = "SignupController";
 
-class SignUpController {
+class SignupController {
 
-    private $inject = [SignUpServiceId];
+    private $inject = [SignupServiceId];
 
-    signUpService;
+    signupService;
+    user: Signup;
 
-    constructor(signUpService: SignUpService) {
-        this.signUpService = signUpService;
+    constructor(SignupService) {
+        this.signupService = SignupService;
+        this.user = new Signup();
     }
 
-    uniqueEmail(email: string) {
-        this.signUpService.uniqueEmail(email);
+    uniqueUsername(): void {
+        this.signupService.uniqueUsername(this.user);
     }
 
-    uniqueUsername(username: string) {
-        this.signUpService.uniqueUsername(username);
+    uniqueEmail(): void {
+        this.signupService.uniqueEmail(this.user);
     }
 
-    signup(user: User) {
-        this.signUpService.signup(user);
+    signup(): void {
+        this.signupService.signup(this.user);
     }
 }
 
-angular.module(moduleSignup, [ngResourceId]).controller(SignUpControllerId, SignUpController);
+angular.module(moduleSignup, [ngResourceId]).controller(SignupControllerId, SignupController);

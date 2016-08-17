@@ -71,8 +71,8 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             })
             .when("/signup",
             {
-                templateUrl: "components/Signup/Signup.html",
-                controller: "SignUpController",
+                templateUrl: "components/Signup/view/signup.html",
+                controller: "SignupController",
                 controllerAs: "signup"
             })
             .when("/login",

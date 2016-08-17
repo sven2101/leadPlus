@@ -14,8 +14,6 @@
 
 package dash.usermanagement.registration.rest;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,10 +30,10 @@ import dash.exceptions.UsernameAlreadyExistsException;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
+import dash.usermanagement.registration.domain.Validation;
 
 @RestController
-@RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.ALL_VALUE }, produces = {
-		MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.ALL_VALUE })
 public class RegistrationResource {
 
 	@Autowired
@@ -43,21 +41,20 @@ public class RegistrationResource {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public User register(@RequestBody @Valid Registration registration)
+	public User register(@RequestBody final Registration registration)
 			throws UsernameAlreadyExistsException, EmailAlreadyExistsException, RegisterFailedException {
 		return userService.register(registration);
 	}
 
 	@RequestMapping(value = "/unique/email", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Boolean emailAlreadyExists(@RequestBody String email) throws NotFoundException {
-		return userService.emailAlreadyExists(email);
+	public Validation emailAlreadyExists(@RequestBody final Registration registration) throws NotFoundException {
+		return userService.emailAlreadyExists(registration.getEmail());
 	}
 
 	@RequestMapping(value = "/unique/username", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Boolean usernameAlreadyExists(@RequestBody String username) throws NotFoundException {
-		return userService.usernameAlreadyExists(username);
+	public Validation usernameAlreadyExists(@RequestBody final Registration registration) throws NotFoundException {
+		return userService.usernameAlreadyExists(registration.getUsername());
 	}
-
 }

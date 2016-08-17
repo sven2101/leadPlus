@@ -41,7 +41,16 @@ class SettingService {
         this.translate = $translate;
         this.settingsResource = SettingResource.resource;
 
+        let self = this;
+        this.settingsResource.getAll().$promise.then(function (result) {
+            self.users = result;
+            for (let user in result) {
+                if (user === "$promise")
+                    break;
+            }
+        });
         this.counter = 1;
+
     }
 
     incrementCounter() {
