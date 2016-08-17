@@ -60,13 +60,13 @@
                             <tbody>
                                 <tr ng-repeat="product in productCtrl.productService.products| filter:searchText">
                                     <td class="project-status col-md-1">
-                                        <span ng-show="!product.isDeactivated" class="label label-primary">Active</span>
-                                        <span ng-show="product.isDeactivated" class="label label-default">Unactive</span>
+                                        <span ng-show="!product.deactivated" class="label label-primary">Active</span>
+                                        <span ng-show="product.deactivated" class="label label-default">Unactive</span>
                                     </td>
                                     <td class="project-title col-md-2">
                                         <a href="project_detail.html">{{product.name}}</a>
                                         <br>
-                                        <small>{{ 'PRODUCT_CREATED' | translate }} {{product.timestamp}}</small>
+                                        <small>{{ 'PRODUCT_CREATED' | translate }} {{productCtrl.getLocalTimestamp(product)}}</small>
                                     </td>
                                     <td class="project-completion col-md-7" max>
                                         <small style="word-wrap: break-word; word-break: break-all;">{{product.description}}</small>

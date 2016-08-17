@@ -274,6 +274,14 @@ function config($translateProvider) {
             PRODUCT_DEACTIVATED: "Deaktivieren",
             PRODUCT_CREATED: "Erstellt",
 
+            CUSTOMER_MANAGE_CUSTOMER: "Kunden verwalten",
+            CUSTOMER_CREATE: "Neuer Kunde",
+            CUSTOMER_EDIT: "Kunde bearbeiten",
+            CUSTOMER_DEACTIVATED: "Deaktivieren",
+            CUSTOMER_CREATED: "Erstellt",
+
+
+
         })
         .translations("EN", {
             // GENERAL
@@ -529,6 +537,12 @@ function config($translateProvider) {
             PRODUCT_EDIT: "Edit Product",
             PRODUCT_DEACTIVATED: "Deactivate",
             PRODUCT_CREATED: "Created",
+
+            CUSTOMER_MANAGE_CUSTOMER: "Manage customer",
+            CUSTOMER_CREATE: "New customer",
+            CUSTOMER_EDIT: "Edit customer",
+            CUSTOMER_DEACTIVATED: "Deactivate",
+            CUSTOMER_CREATED: "Created",
 
         });
 

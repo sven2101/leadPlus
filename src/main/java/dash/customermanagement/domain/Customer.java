@@ -44,14 +44,23 @@ public class Customer {
 	private String email;
 	private String phone;
 	private String address;
+	private boolean deactivated;
 
-	@Column(nullable = true, columnDefinition = "timestamptz")
+	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
 	private Calendar timestamp;
 
 	public Customer() {
 
+	}
+
+	public boolean isDeactivated() {
+		return deactivated;
+	}
+
+	public void setDeactivated(boolean deactivated) {
+		this.deactivated = deactivated;
 	}
 
 	public long getId() {

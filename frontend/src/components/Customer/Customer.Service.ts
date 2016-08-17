@@ -1,4 +1,6 @@
 /// <reference path="../app/App.Constants.ts" />
+/// <reference path="../app/App.Resource.ts" />
+/// <reference path="../../typeDefinitions/Moment.d.ts" />
 /// <reference path="../Customer/Customer.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -12,16 +14,16 @@
  ******************************************************************************/
 "use strict";
 
-const CustomerServiceId: String = "CustomerService";
+const CustomerServiceId: string = "CustomerService";
 
 class CustomerService {
 
     private $inject = [customerResourceId];
 
-    customerResource;
+    customerResource: any;
     customer: Array<Customer>;
 
-    constructor(CustomerResource) {
+    constructor(CustomerResource: CustomerResource) {
         this.customerResource = CustomerResource.resource;
         this.customer = new Array<Customer>();
         this.getAllCustomer();
@@ -30,6 +32,7 @@ class CustomerService {
     saveCustomer(customer: Customer, insert: boolean) {
         let self = this;
         if (insert) {
+            customer.timestamp = newTimestamp();
             this.customerResource.createCustomer(customer).$promise.then(function (result: Customer) {
                 self.customer.push(result);
             });
@@ -48,4 +51,4 @@ class CustomerService {
     }
 }
 
-angular.module("app.customer.service", ["ngResource"]).service("CustomerService", CustomerService);
+angular.module(moduleCustomerService, [ngResourceId]).service(CustomerServiceId, CustomerService);

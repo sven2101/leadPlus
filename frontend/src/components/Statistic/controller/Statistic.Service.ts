@@ -22,9 +22,9 @@ class StatisticService {
 
     private $inject = [toasterId, $translateId, StatisticResourceId];
 
-    toaster;
-    translate;
-    statisticResource;
+    toaster: any;
+    translate: any;
+    statisticResource: any;
 
     SingleStatisticWorkflowPieChart: PieChart;
     EntireStatisticProfitTurnoverAreaChart: AreaChart;
@@ -33,30 +33,31 @@ class StatisticService {
     EntireStatisticOfferConversionRateSplineChart: SplineChart;
     statisticModelMap: { [key: string]: AbstractStatisticModel } = {};
 
-    leadResultArr = new Array<number>();
-    offerResultArr = new Array<number>();
-    saleResultArr = new Array<number>();
-    profitResultArr = new Array<number>();
-    turnoverResultArr = new Array<number>();
+    leadResultArr: Array<number> = new Array<number>();
+    offerResultArr: Array<number> = new Array<number>();
+    saleResultArr: Array<number> = new Array<number>();
+    profitResultArr: Array<number> = new Array<number>();
+    turnoverResultArr: Array<number> = new Array<number>();
 
-    profitTotal = 0;
-    turnoverTotal = 0;
-    leadAmount = 0;
-    offerAmount = 0;
-    saleAmount = 0;
+    profitTotal: number = 0;
+    turnoverTotal: number = 0;
+    leadAmount: number = 0;
+    offerAmount: number = 0;
+    saleAmount: number = 0;
 
-    singleStatisticEfficiency = 0;
-    singleStatisticConversionRate = 0;
-    singleStatisticProfitPerSale = 0;
+    singleStatisticEfficiency: number = 0;
+    singleStatisticLeadConversionRate: number = 0;
+    singleStatisticOfferConversionRate: number = 0;
+    singleStatisticProfitPerSale: number = 0;
 
-    isLeadPromise = false;
-    isOfferPromise = false;
-    isSalePromise = false;
-    isProfitPromise = false;
-    isTurnoverPromise = false;
+    isLeadPromise: boolean = false;
+    isOfferPromise: boolean = false;
+    isSalePromise: boolean = false;
+    isProfitPromise: boolean = false;
+    isTurnoverPromise: boolean = false;
 
-    weekday = new Array<String>(7);
-    month = new Array<String>(12);
+    weekday: Array<string> = new Array<string>(7);
+    month: Array<string> = new Array<string>(12);
 
     constructor(toaster, $translate, StatisticResource) {
         this.toaster = toaster;
@@ -102,7 +103,7 @@ class StatisticService {
         this.weekday[6] = this.translate.instant("SATURDAY");
     }
 
-    getWeekTranslation(): Array<String> {
+    getWeekTranslation(): Array<string> {
         return this.weekday;
     }
 
@@ -127,7 +128,8 @@ class StatisticService {
             this.isTurnoverPromise === true) {
             this.singleStatisticEfficiency = this.getRatePercentage(this.profitTotal, this.turnoverTotal);
             this.singleStatisticProfitPerSale = (this.getRatePercentage(this.profitTotal, this.saleAmount)) / 100;
-            this.singleStatisticConversionRate = this.getRatePercentage(this.saleAmount, this.leadAmount);
+            this.singleStatisticLeadConversionRate = this.getRatePercentage(this.saleAmount, this.leadAmount);
+            this.singleStatisticOfferConversionRate = this.getRatePercentage(this.saleAmount, this.offerAmount);
             this.pushToProfitAndTurnoverAreaChart();
             this.pushToWorkflowPieChart();
             this.pushToWorkflowAmountSplineChart();
@@ -144,8 +146,8 @@ class StatisticService {
         this.isTurnoverPromise = value;
     }
 
-    loadAllResourcesByDateRange(dateRange: String): void {
-        let self = this;
+    loadAllResourcesByDateRange(dateRange: string) {
+        let self: StatisticService = this;
         this.statisticResource.getWorkflowStatistic({ workflow: workflowLead, dateRange: dateRange }).$promise.then(function (result) {
             self.leadResultArr = result.result;
             self.leadAmount = self.getTotalSumOf(self.leadResultArr);
@@ -178,17 +180,17 @@ class StatisticService {
         });
     }
 
-    setTimeSegmentByDateRange(dateRange: String): Array<String> {
-        let currentDate = new Date();
-        let oneYearAgo = new Date();
-        let timeSegment = new Array<String>();
+    setTimeSegmentByDateRange(dateRange: string): Array<string> {
+        let currentDate: Date = new Date();
+        let oneYearAgo: Date = new Date();
+        let timeSegment: Array<string> = new Array<string>();
 
         switch (dateRange) {
             case "DAILY": {
                 break;
             }
             case "WEEKLY": {
-                let oneWeekAgo = new Date();
+                let oneWeekAgo: Date = new Date();
                 oneWeekAgo.setDate(oneWeekAgo.getDate() - 6);
                 while (oneWeekAgo <= currentDate) {
                     timeSegment.push(this.weekday[oneWeekAgo.getDay()]);
@@ -197,7 +199,7 @@ class StatisticService {
                 break;
             }
             case "MONTHLY": {
-                let oneMonthAgo = new Date();
+                let oneMonthAgo: Date = new Date();
                 oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
                 while (oneMonthAgo <= currentDate) {
                     timeSegment.push(oneMonthAgo.getDate() + ". " + this.month[oneMonthAgo.getMonth()]);
@@ -225,21 +227,21 @@ class StatisticService {
                 break;
             }
             default: {
-                console.log("Timeframe not found");
+                console.log("Timesegment not found");
             }
         }
         this.setTimeSegment(timeSegment);
         return timeSegment;
     }
 
-    setTimeSegment(timeSegment: Array<String>) {
+    setTimeSegment(timeSegment: Array<string>) {
         this.EntireStatisticProfitTurnoverAreaChart.chartConfig.options.xAxis.categories = timeSegment;
         this.EntireStatisticWorkflowAmountSplineChart.chartConfig.options.xAxis.categories = timeSegment;
         this.EntireStatisticLeadConversionRateSplineChart.chartConfig.options.xAxis.categories = timeSegment;
         this.EntireStatisticOfferConversionRateSplineChart.chartConfig.options.xAxis.categories = timeSegment;
     }
 
-    getMonthTranslation(): Array<String> {
+    getMonthTranslation(): Array<string> {
         return this.month;
     }
 
@@ -259,8 +261,8 @@ class StatisticService {
         this.EntireStatisticProfitTurnoverAreaChart.pushData("STATISTIC_PROFIT", this.profitResultArr, "#1a7bb9");
     }
 
-    pushConversionRateSplineChartByModel(model: AbstractStatisticModel, firstAmount: Array<number>, secondAmount: Array<number>, name: String, color: String) {
-        let conversion = new Array();
+    pushConversionRateSplineChartByModel(model: AbstractStatisticModel, firstAmount: Array<number>, secondAmount: Array<number>, name: string, color: string) {
+        let conversion: Array<number> = new Array<number>();
         for (let counter in firstAmount) {
             let first = firstAmount[counter];
             let second = secondAmount[counter];
@@ -274,7 +276,7 @@ class StatisticService {
     }
 
     getTotalSumOf(array: Array<number>): number {
-        let total = 0;
+        let total: number = 0;
         for (let amount of array) {
             total += amount;
         }
@@ -306,8 +308,11 @@ class StatisticService {
     getEfficiency(): number {
         return this.singleStatisticEfficiency;
     }
-    getConversionRate(): number {
-        return this.singleStatisticConversionRate;
+    getLeadConversionRate(): number {
+        return this.singleStatisticLeadConversionRate;
+    }
+    getOfferConversionRate(): number {
+        return this.singleStatisticOfferConversionRate;
     }
     getProfitPerSale(): number {
         return this.singleStatisticProfitPerSale;

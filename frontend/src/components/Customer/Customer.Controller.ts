@@ -52,6 +52,9 @@ class CustomerController {
         }
         this.customerService.saveCustomer(this.currentCustomer, this.isCurrentCustomerNew);
     }
+    getLocalTimestamp: any = function (customer: Customer) {
+        return toLocalDate(customer.timestamp);
+    };
 }
 
 angular.module(moduleCustomer, [ngResourceId]).controller(CustomerControllerId, CustomerController);

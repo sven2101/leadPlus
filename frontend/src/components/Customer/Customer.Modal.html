@@ -4,8 +4,8 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span
                         aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 ng-show="customerCtrl.isCurrentCustomerNew" class="modal-title">{{ 'PRODUCT_CREATE' | translate }}</h4>
-                <h4 ng-show="!customerCtrl.isCurrentCustomerNew" class="modal-title">{{ 'PRODUCT_EDIT' | translate }}</h4>
+                <h4 ng-show="customerCtrl.isCurrentCustomerNew" class="modal-title">{{ 'CUSTOMER_CREATE' | translate }}</h4>
+                <h4 ng-show="!customerCtrl.isCurrentCustomerNew" class="modal-title">{{ 'CUSTOMER_EDIT' | translate }}</h4>
 
             </div>
             <div class="modal-body">
@@ -32,14 +32,17 @@
                                 <input type="text" name="lastname" class="form-control" ng-model="customerCtrl.currentCustomer.lastname" ng-maxlength="30">
                                 <p ng-show="customerCtrl.createCustomerForm.lastname.$invalid && !customerCtrl.createCustomerForm.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
+                            <div class="form-group" ng-show="!customerCtrl.isCurrentCustomerNew">
+                                <label class="checkbox-inline"> <input type="checkbox"  ng-model="customerCtrl.currentCustomer.deactivated" id="inlineCheckbox1">{{ 'PRODUCT_DEACTIVATED' | translate }}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
                             <!-- COMPANY -->
                             <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.company.$invalid && !customerCtrl.createCustomerForm.company.$pristine }">
                                 <label>{{ 'COMMON_COMPANY' | translate }}</label>
                                 <input type="text" name="company" class="form-control" ng-model="customerCtrl.currentCustomer.company" ng-maxlength="50">
                                 <p ng-show="customerCtrl.createCustomerForm.company.$invalid && !customerCtrl.createCustomerForm.company.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
-                        </div>
-                        <div class="col-sm-6">
                             <!-- EMAIL -->
                             <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.email.$invalid && !customerCtrl.createCustomerForm.email.$pristine }">
                                 <label>{{ 'COMMON_EMAIL' | translate }}</label>

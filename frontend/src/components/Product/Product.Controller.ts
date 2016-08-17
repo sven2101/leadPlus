@@ -1,5 +1,6 @@
 /// <reference path="../Product/Product.Service.ts" />
 /// <reference path="../Product/Product.Model.ts" />
+/// <reference path="../app/App.Common.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -12,6 +13,8 @@
  ******************************************************************************/
 "use strict";
 
+const ProductControllerId: string = "ProductController";
+
 class ProductController {
 
     $inject = [ProductServiceId];
@@ -22,7 +25,7 @@ class ProductController {
     isCurrentProductNew;
     productService: ProductService;
 
-    constructor(ProductService) {
+    constructor(ProductService: ProductService) {
         this.productService = ProductService;
     }
 
@@ -39,24 +42,19 @@ class ProductController {
     editProduct(product: Product): void {
         this.currentEditProduct = product;
         this.currentProduct = new Product();
-        this.deepCopyProduct(this.currentEditProduct, this.currentProduct);
+        shallowCopy(this.currentEditProduct, this.currentProduct);
         this.isCurrentProductNew = false;
     }
     saveProduct() {
         if (!this.isCurrentProductNew) {
-            this.deepCopyProduct(this.currentProduct, this.currentEditProduct);
+            shallowCopy(this.currentProduct, this.currentEditProduct);
         }
         this.productService.saveProduct(this.currentProduct, this.isCurrentProductNew);
     }
-    deepCopyProduct(oldProduct: Product, newProduct: Product) {
-        newProduct.id = oldProduct.id;
-        newProduct.description = oldProduct.description;
-        newProduct.name = oldProduct.name;
-        newProduct.priceNetto = oldProduct.priceNetto;
-        newProduct.timestamp = oldProduct.timestamp;
-        newProduct.isDeactivated = oldProduct.isDeactivated;
-    }
+    getLocalTimestamp: any = function (product: Product) {
+        return toLocalDate(product.timestamp);
+    };
 }
 
-angular.module("app.product", ["ngResource"]).controller("ProductController", ProductController);
+angular.module(moduleProduct, [ngResourceId]).controller(ProductControllerId, ProductController);
 

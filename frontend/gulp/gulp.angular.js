@@ -49,6 +49,7 @@ gulp.task('angular-task', ['compile', 'javascript', 'typescript-task'], function
             mangle: false,
         }))
         */
+        .pipe(concat('angular.js'))
         .pipe(addsrc(path.fileHeader))
         .pipe(concat('angular.js'))
         .pipe(gulp.dest(path.angular.dst));

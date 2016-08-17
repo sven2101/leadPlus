@@ -1,4 +1,5 @@
 /// <reference path="../Common/AbstractModel.Model.ts" />
+/// <reference path="../../typeDefinitions/Moment.d.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -31,5 +32,14 @@ let shallowCopy = function (oldObject: Object, newObject: Object) {
     for (let propertyName in oldObject) {
         newObject[propertyName] = oldObject[propertyName];
     }
+};
+
+
+let newTimestamp = function (pattern: string = "DD.MM.YYYY HH:mm") {
+    return moment.utc().format(pattern);
+};
+
+let toLocalDate = function (date: any, pattern: string = "DD.MM.YYYY HH:mm") {
+    return moment(moment.utc(date, pattern)).local().format(pattern);
 };
 

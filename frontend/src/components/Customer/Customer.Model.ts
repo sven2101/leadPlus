@@ -1,4 +1,5 @@
 /// <reference path="../Common/AbstractModel.Model.ts" />
+/// <reference path="../app/App.Common.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -21,9 +22,8 @@ class Customer extends AbstractModel {
     phone: string;
     address: string;
     timestamp: any;
-
+    deactivated: boolean;
     constructor() {
         super();
     }
-
 }

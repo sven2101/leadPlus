@@ -49,7 +49,7 @@ class PieChart extends AbstractStatisticModel {
             loading: false
         };
     }
-    pushData(name: String, data: Array<number>, color: String) {
+    pushData(name: string, data: Array<number>, color: string) {
         this.chartConfig.series[0].data.push({
             name: this.translate.instant(name),
             y: data[0],
