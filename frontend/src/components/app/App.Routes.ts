@@ -18,16 +18,16 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
         $routeProvider
             .when("/",
             {
-                templateUrl: "components/Dashboard/Dashboard.html",
+                templateUrl: "components/Dashboard/view/Dashboard.html",
                 controller: "DashboardController",
-                controllerAs: "dashboard",
+                controllerAs: "dashboardCtrl",
                 authenticated: true
             })
             .when("/dashboard",
             {
-                templateUrl: "components/Dashboard/Dashboard.html",
+                templateUrl: "components/Dashboard/view/Dashboard.html",
                 controller: "DashboardController",
-                controllerAs: "dashboard",
+                controllerAs: "dashboardCtrl",
                 authenticated: true
             })
             .when("/leads",

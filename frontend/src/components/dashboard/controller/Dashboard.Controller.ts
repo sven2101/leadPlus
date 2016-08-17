@@ -1,4 +1,4 @@
-/// <reference path="../app/App.Constants.ts" />
+/// <reference path="../../app/App.Constants.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  

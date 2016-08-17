@@ -33,6 +33,7 @@ const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";
 const moduleServices: string = moduleApp + ".services";
 const moduleDashboard: string = moduleApp + ".dashboard";
+const moduleDashboardService: string = moduleDashboard + ".service";
 const moduleAuthService: string = moduleApp + "authentication.service";
 const moduleLogin: string = moduleApp + ".login";
 const moduleLoginService: string = moduleLogin + ".service";
