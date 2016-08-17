@@ -61,7 +61,7 @@ class LeadController {
     rows = {};
     editProcess: Process = new Process();
     newLead: Lead = new Lead();
-    editLead: Lead = new Lead();
+    editLead: Lead;
 
     currentOrderPositions = [];
     currentProductId = "-1";
@@ -613,22 +613,23 @@ class LeadController {
     };
 
     loadDataToModal(process) {
+        console.log(process);
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = process;
         this.currentOrderPositions = deepCopy(this.editProcess.lead.orderPositions);
-        this.customerSelected = false;
+        this.customerSelected = this.editProcess.lead.customer.id > 0;
         this.currentCustomerId = this.editProcess.lead.customer.id + "";
-        this.selectCustomer(this.editProcess.lead);
-        this.editLead = this.editProcess.lead;
+        this.editLead = deepCopy(this.editProcess.lead);
+
     };
 
     saveEditedRow = function () {
         let self = this;
-        this.editLead.orderPositions = this.currentOrderPositions;
+        shallowCopy(this.editLead, this.editProcess.lead);
+        this.editProcess.lead.orderPositions = this.currentOrderPositions;
         let tempLead: Lead = this.editProcess.lead;
-        tempLead.customer.id = this.editLead.customer.id;
-
+        console.log(this.editProcess.lead.customer);
         if (isNullOrUndefined(tempLead.customer.id) || isNaN(Number(tempLead.customer.id)) || Number(tempLead.customer.id) <= 0) {
             tempLead.customer.timestamp = newTimestamp();
             this.customerResource.createCustomer(tempLead.customer).$promise.then(function (customer) {
@@ -637,15 +638,13 @@ class LeadController {
                 self.processResource.save(self.editProcess).$promise.then(function (result) {
                     self.toaster.pop("success", "", self.translate
                         .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
-                    self.rootScope.leadsCount += 1;
-                    self.addForm.$setPristine();
-                    self.dtInstance.DataTable.row.add(result).draw();
+                    self.editForm.$setPristine();
+                    self.updateRow(self.editProcess);
                     self.customerService.getAllCustomer();
                 });
             });
             return;
         }
-
 
         this.leadResource.update(this.editProcess.lead).$promise.then(function () {
             self.toaster.pop("success", "", self.translate
@@ -703,7 +702,6 @@ class LeadController {
             this.customerSelected = false;
             lead.customer = new Customer();
             lead.customer.id = 0;
-            this.editLead.customer.id = 0;
             console.log(this.customerSelected);
             return;
         }
@@ -713,7 +711,6 @@ class LeadController {
             this.customerSelected = false;
             lead.customer = new Customer();
             lead.customer.id = 0;
-            this.editLead.customer.id = 0;
             console.log(this.customerSelected);
             return;
         }

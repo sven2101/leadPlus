@@ -14,23 +14,16 @@
 
 package dash.processmanagement.domain;
 
-import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import dash.commentmanagement.domain.Comment;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.salemanagement.domain.Sale;
@@ -62,10 +55,6 @@ public class Process {
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "processor_fk", nullable = true)
 	private User processor;
-
-	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
-	@JsonIgnore
-	private List<Comment> comments;
 
 	public Process() {
 

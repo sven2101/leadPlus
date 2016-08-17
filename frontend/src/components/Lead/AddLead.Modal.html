@@ -14,7 +14,7 @@
                             <div class="form-group">
                                 <label>Customer stuff</label>
                                 <select class="form-control" ng-model="lead.currentCustomerId" ng-change="lead.selectCustomer(lead.newLead)">
-                                            <option value="-1" selected disabled hidden>Select Customer</option> 
+                                            <option value="-1" selected> - Select Customer - </option> 
                                             <option value="0"></option>                                    
                                             <option value="{{customer.id}}" ng-repeat="customer in lead.customerService.getActiveCustomer()">{{customer.firstname}} {{customer.lastname}}</option>                                          
                                         </select>
@@ -28,14 +28,18 @@
                             </div>
                             <div class="form-group" ng-class="{ 'has-error' : lead.addForm.firstname.$invalid && !lead.addForm.firstname.$pristine }">
                                 <label>{{ 'COMMON_FIRSTNAME' | translate }}</label>
-                                <input type="text" name="firstname" class="form-control" ng-model="lead.newLead.customer.firstname" ng-maxlength="30" ng-disabled="lead.customerSelected">
-                                <p ng-show="lead.addForm.firstname.$invalid && !lead.addForm.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                                <input required type="text" name="firstname" class="form-control" ng-model="lead.newLead.customer.firstname" ng-maxlength="30"
+                                    ng-disabled="lead.customerSelected">
+                                <p ng-show="lead.addForm.firstname.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                                <p ng-show="lead.addForm.firstname.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
                             </div>
                             <!-- LASTNAME -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.addForm.lastname.$invalid && !lead.addForm.lastname.$pristine }">
                                 <label>{{ 'COMMON_LASTNAME' | translate }}</label>
-                                <input type="text" name="lastname" class="form-control" ng-model="lead.newLead.customer.lastname" ng-maxlength="30" ng-disabled="lead.customerSelected">
+                                <input required type="text" name="lastname" class="form-control" ng-model="lead.newLead.customer.lastname" ng-maxlength="30"
+                                    ng-disabled="lead.customerSelected">
                                 <p ng-show="lead.addForm.lastname.$invalid && !lead.addForm.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                                <p ng-show="lead.addForm.lastname.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
                             </div>
                             <!-- COMPANY -->
                             <div class="form-group" ng-class="{ 'has-error' : lead.addForm.company.$invalid && !lead.addForm.company.$pristine }">

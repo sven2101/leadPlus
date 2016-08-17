@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -34,7 +35,7 @@ public abstract class AbstractWorkflow implements Request {
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private long id;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "customer_fk", nullable = true)
 	private Customer customer;
 
