@@ -1,5 +1,7 @@
 /// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../statistic/controller/Statistic.Service.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -19,9 +21,10 @@
 
 class DashboardController {
 
-    $inject = ["toaster", "ProcessResource", "CommentResource", "$filter", "$translate", "$rootScope", "$scope", "$interval", "UserResource", "StatisticResource", WorkflowServiceId];
+    $inject = [toasterId, ProcessResourceId, CommentResourceId, UserResourceId, $filterId, $translateId, $rootScopeId, "$scope", $intervalId, WorkflowServiceId, StatisticServiceId];
 
     workflowService: WorkflowService;
+    statisticService: StatisticService;
     toaster;
     filter;
     orderBy;
@@ -52,8 +55,9 @@ class DashboardController {
 
     sortableOptions;
 
-    constructor(toaster, ProcessResource, CommentResource, $filter, $translate, $rootScope, $scope, $interval, UserResource, StatisticResource, WorkflowService) {
+    constructor(toaster, ProcessResource, CommentResource, UserResource, $filter, $translate, $rootScope, $scope, $interval, WorkflowService, StatisticService) {
         this.workflowService = WorkflowService;
+        this.statisticService = StatisticService;
         this.toaster = toaster;
         this.filter = $filter;
         this.orderBy = $filter("orderBy");
@@ -62,7 +66,6 @@ class DashboardController {
         this.processResource = ProcessResource.resource;
         this.commentResource = CommentResource.resource;
         this.userResource = UserResource.resource;
-        this.statisticResource = StatisticResource.resource;
         this.commentModalInput = "";
         this.comments = {};
         this.infoData = {};
@@ -115,9 +118,17 @@ class DashboardController {
 
     createOffer(process: Process) {
         let self = this;
-        this.workflowService.addLeadToOffer(process, this.user).$promise.then(function () {
+        this.workflowService.addLeadToOffer(process, this.user).then(function (isResolved: boolean) {
             self.openOffer = self.orderBy(self.openOffer, "offer.timestamp", false);
         });
+    }
+
+    createSale(process: Process) {
+        let self = this;
+        this.workflowService.addOfferToSale(process, this.user).then(function (isResolved: boolean) {
+            self.sales = self.orderBy(self.sales, "sale.timestamp", true);
+        });
+
     }
 
     getUser() {
@@ -126,39 +137,6 @@ class DashboardController {
             self.userResource.get({ id: self.rootScope.globals.user.id }).$promise.then(function (result) {
                 self.user = result;
             });
-    }
-
-    addOfferToSale(process) {
-        let self = this;
-        let sale = {
-            container: {
-                name: process.offer.container.name,
-                description: process.offer.container.description,
-                priceNetto: process.offer.container.priceNetto
-            },
-            containerAmount: process.offer.containerAmount,
-            transport: process.offer.deliveryAddress,
-            customer: {
-                company: process.offer.prospect.company,
-                email: process.offer.prospect.email,
-                firstname: process.offer.prospect.firstname,
-                lastname: process.offer.prospect.lastname,
-                phone: process.offer.prospect.phone,
-                title: process.offer.prospect.title
-            },
-            saleProfit: 0,
-            saleReturn: process.offer.offerPrice,
-            timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm"),
-            vendor: process.offer.vendor
-        };
-        this.processResource.createSale({ id: process.id }, sale).$promise.then(function () {
-            self.processResource.setStatus({ id: process.id }, "SALE").$promise.then(function () {
-                self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
-                self.rootScope.offersCount -= 1;
-                process.sale = sale;
-                self.sales = self.orderBy(self.sales, "sale.timestamp", true);
-            });
-        });
     }
 
     setSortableOptions() {
@@ -178,7 +156,7 @@ class DashboardController {
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
                 if (self.sales === target && self.openOffer === source) {
-                    self.addOfferToSale(item);
+                    self.createSale(item);
                 }
                 else if (self.openOffer === target && self.openLead === source) {
                     self.createOffer(item);

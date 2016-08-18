@@ -467,53 +467,15 @@ class OffersController {
 
     createSale(process: Process) {
         let self = this;
-        let sale: Sale = {
-            id: 0,
-            deliveryAddress: process.offer.deliveryAddress,
-            deliveryDate: process.offer.deliveryDate,
-            container: {
-                name: "",
-                description: "",
-                priceNetto: 0
-            },
-            orderPositions: deepCopy(process.lead.orderPositions),
-            containerAmount: process.offer.containerAmount,
-            transport: process.offer.deliveryAddress,
-            customer: process.offer.customer,
-            saleProfit: 0,
-            saleReturn: process.offer.offerPrice,
-            timestamp: moment.utc().format("DD.MM.YYYY HH:mm"),
-            vendor: process.offer.vendor
-        };
-        for (let i = 0; i < sale.orderPositions.length; i++) {
-            sale.orderPositions[i].id = 0;
-        }
-        this.processResource.createSale({
-            id: process.id
-        }, sale).$promise.then(function () {
-            self.processResource.setStatus({
-                id: process.id
-            }, "SALE").$promise.then(function () {
-                self.toaster.pop("success", "", self.translate
-                    .instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
-                self.rootScope.offersCount -= 1;
-                self.processResource.setProcessor({
-                    id: process.id
-                }, self.user.id).$promise.then(function () {
-                    process.processor = self.user;
-                    process.sale = sale;
-                    process.status = "SALE";
-                    if (self.loadAllData === true) {
-                        self.updateRow(process);
-                    }
-                });
-                if (self.loadAllData === false) {
-                    self.dtInstance.DataTable.row(self.rows[process.id]).remove()
-                        .draw();
-                }
-            });
+        this.workflowService.addOfferToSale(process, this.user).then(function (isResolved: boolean) {
+            if (self.loadAllData === true) {
+                self.updateRow(process);
+            } else if (self.loadAllData === false) {
+                self.dtInstance.DataTable.row(self.rows[process.id]).remove()
+                    .draw();
+            }
         });
-    };
+    }
 
     followUp(process) {
         let self = this;
