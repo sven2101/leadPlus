@@ -24,7 +24,7 @@
                         <i class="fa fa-comments fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">{{dashboard.salesAmount}}/{{dashboard.leadsAmount}}</div>
+                        <div class="huge">{{dashboardCtrl.salesAmount}}/{{dashboardCtrl.leadsAmount}}</div>
                         <div>{{ 'DASHBOARD_COMPLETION' | translate }}</div>
                     </div>
                 </div>
@@ -34,19 +34,19 @@
                         <span class="pull-left span-left-margin">
                              <label class="control-label">{{ 'LEADS_MENU' | translate }}</label>
                         </span>
-                    <span class="pull-right badge span-right-margin">{{dashboard.leadsAmount}} </span>
+                    <span class="pull-right badge span-right-margin">{{dashboardCtrl.leadsAmount}} </span>
                 </div>
                 <div class="row">
                         <span class="pull-left span-left-margin">
                              <label class="control-label">{{ 'OFFERS_MENU' | translate }} </label>
                         </span>
-                    <span class="pull-right badge span-right-margin">{{dashboard.offersAmount}} </span>
+                    <span class="pull-right badge span-right-margin">{{dashboardCtrl.offersAmount}} </span>
                 </div>
                 <div class="row">
                         <span class="pull-left span-left-margin">
                              <label class="control-label">{{ 'SALES_MENU' | translate }} </label>
                         </span>
-                    <span class="pull-right badge span-right-margin">{{dashboard.salesAmount}} </span>
+                    <span class="pull-right badge span-right-margin">{{dashboardCtrl.salesAmount}} </span>
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@
                         <i class="fa fa-usd fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">{{dashboard.profit | currency:'\u20AC'}}</div>
+                        <div class="huge">{{dashboardCtrl.profit | currency:'\u20AC'}}</div>
                         <div>{{ 'COMMON_SALE_PROFIT' | translate }}</div>
                     </div>
                 </div>
@@ -69,13 +69,13 @@
                         <span class="pull-left span-left-margin">
                              <label class="control-label">{{ 'COMMON_SALE_RETURN' | translate }} </label>
                         </span>
-                    <span class="pull-right badge span-right-margin">{{dashboard.turnover | currency:'\u20AC'}} </span>
+                    <span class="pull-right badge span-right-margin">{{dashboardCtrl.turnover | currency:'\u20AC'}} </span>
                 </div>
                 <div class="row">
                         <span class="pull-left span-left-margin">
                              <label class="control-label">{{ 'COMMON_SALE_PROFIT' | translate }} </label>
                         </span>
-                    <span class="pull-right badge span-right-margin">{{dashboard.profit | currency:'\u20AC'}} </span>
+                    <span class="pull-right badge span-right-margin">{{dashboardCtrl.profit | currency:'\u20AC'}} </span>
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
                         <i class="fa fa-area-chart fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge">{{dashboard.conversionRate | number:2}}%</div>
+                        <div class="huge">{{dashboardCtrl.conversionRate | number:2}}%</div>
                         <div>{{ 'COMMON_CONVERSIONRATE' | translate }} &nbsp;&nbsp;</div>
                     </div>
                 </div>
@@ -98,7 +98,7 @@
                         <span class="pull-left span-left-margin">
                              <label class="control-label">{{ 'COMMON_CONVERSIONRATE' | translate }} </label>
                         </span>
-                    <span class="pull-right badge span-right-margin">{{dashboard.conversionRate | number:2}}%</span>
+                    <span class="pull-right badge span-right-margin">{{dashboardCtrl.conversionRate | number:2}}%</span>
                 </div>
             </div>
         </div>

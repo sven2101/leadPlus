@@ -135,7 +135,7 @@ class SaleController {
                     title: $translate("SALE_SALES"),
                     orientation: "landscape",
                     exportOptions: {
-                        columns: [6, 1, 2, 8, 7, 9, 10, 11, 12, 13, 14],
+                        columns: [6, 1, 2, 8, 8, 9, 10, 11, 12, 13],
                         modifier: {
                             page: "current"
                         }
@@ -165,8 +165,6 @@ class SaleController {
                 $translate("COMMON_FIRSTNAME")).notVisible(),
             DTColumnBuilder.newColumn("sale.customer.lastname").withTitle(
                 $translate("COMMON_CONTAINER")).notVisible(),
-            DTColumnBuilder.newColumn("sale.transport").withTitle(
-                $translate("COMMON_CONTAINER_DESTINATION")).notVisible(),
             DTColumnBuilder.newColumn("sale.customer.lastname").withTitle(
                 $translate("COMMON_CONTAINER_AMOUNT")).notVisible(),
             DTColumnBuilder.newColumn(null).withTitle(

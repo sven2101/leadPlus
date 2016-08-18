@@ -25,11 +25,6 @@ const $windowId: string = "$window";
 const $intervalId: string = "$interval";
 const FileUploaderId: string = "FileUploader";
 
-const productResourceId: string = "ProductResource";
-const customerResourceId: string = "CustomerResource ";
-const commentResourceId: string = "CommentResource";
-const statisticResourceId: string = "StatisticResource";
-
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";
 const moduleServices: string = moduleApp + ".services";

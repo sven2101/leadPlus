@@ -519,7 +519,7 @@ class LeadController {
 
     createOffer(process: Process) {
         let self = this;
-        this.workflowService.addLeadToOffer(process, this.user).$promise.then(function () {
+        this.workflowService.addLeadToOffer(process, this.user).then(function (isResolved: boolean) {
             if (self.loadAllData === true) {
                 self.updateRow(process);
             } else if (self.loadAllData === false) {
@@ -662,7 +662,6 @@ class LeadController {
             this.customerSelected = false;
             workflow.customer = new Customer();
             workflow.customer.id = 0;
-            console.log(this.customerSelected);
             return;
         }
 
@@ -671,12 +670,10 @@ class LeadController {
             this.customerSelected = false;
             workflow.customer = new Customer();
             workflow.customer.id = 0;
-            console.log(this.customerSelected);
             return;
         }
         workflow.customer = deepCopy(temp);
         this.customerSelected = true;
-        console.log(this.customerSelected);
     }
 
 
