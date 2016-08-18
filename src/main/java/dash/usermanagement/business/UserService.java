@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.DontMatchException;
@@ -41,6 +42,7 @@ import dash.exceptions.RegisterFailedException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
+import dash.filemanagement.business.IFileService;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
@@ -61,6 +63,9 @@ public class UserService implements IUserService {
 
 	@Autowired
 	private Validation validation;
+
+	@Autowired
+	private IFileService fileService;
 
 	@Override
 	public List<User> getAll() {
@@ -127,7 +132,7 @@ public class UserService implements IUserService {
 						throw new EmailAlreadyExistsException(EMAIL_EXISTS);
 					}
 					updateUser.setLanguage(user.getLanguage());
-					updateUser.setProfilPictureURL(user.getProfilPictureURL());
+					updateUser.setProfilPicture(user.getProfilPicture());
 					return save(updateUser);
 				} else {
 					throw new NotFoundException(USER_NOT_FOUND);
@@ -281,5 +286,13 @@ public class UserService implements IUserService {
 		if (getUserByName(username) != null)
 			this.validation.setValidation(true);
 		return this.validation;
+	}
+
+	@Override
+	public User setProfilePicture(long id, MultipartFile file)
+			throws NotFoundException, SaveFailedException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+		User user = getById(id);
+		user.setProfilPicture(fileService.save(file));
+		return update(user);
 	}
 }

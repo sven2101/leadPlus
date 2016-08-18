@@ -16,6 +16,7 @@ package dash.usermanagement.domain;
 
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -23,6 +24,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -30,6 +32,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import dash.filemanagement.domain.File;
 import dash.usermanagement.settings.language.Language;
 
 @Entity
@@ -56,7 +59,8 @@ public class User implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	private String profilPictureURL;
+	@OneToOne(cascade = CascadeType.ALL)
+	private File profilPicture;
 
 	@Enumerated(EnumType.STRING)
 	private Language language;
@@ -105,12 +109,12 @@ public class User implements UserDetails {
 		return password;
 	}
 
-	public String getProfilPictureURL() {
-		return profilPictureURL;
+	public File getProfilPicture() {
+		return profilPicture;
 	}
 
-	public void setProfilPictureURL(String profilPictureURL) {
-		this.profilPictureURL = profilPictureURL;
+	public void setProfilPicture(File profilPicture) {
+		this.profilPicture = profilPicture;
 	}
 
 	public Language getLanguage() {
@@ -163,7 +167,7 @@ public class User implements UserDetails {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((language == null) ? 0 : language.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((profilPictureURL == null) ? 0 : profilPictureURL.hashCode());
+		result = prime * result + ((profilPicture == null) ? 0 : profilPicture.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
@@ -197,10 +201,10 @@ public class User implements UserDetails {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (profilPictureURL == null) {
-			if (other.profilPictureURL != null)
+		if (profilPicture == null) {
+			if (other.profilPicture != null)
 				return false;
-		} else if (!profilPictureURL.equals(other.profilPictureURL))
+		} else if (!profilPicture.equals(other.profilPicture))
 			return false;
 		if (role != other.role)
 			return false;
@@ -215,7 +219,7 @@ public class User implements UserDetails {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", role=" + role + ", profilPictureURL="
-				+ profilPictureURL + ", language=" + language + ", enabled=" + enabled + "]";
+				+ profilPicture + ", language=" + language + ", enabled=" + enabled + "]";
 	}
 
 }

@@ -25,13 +25,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.DontMatchException;
 import dash.exceptions.EmailAlreadyExistsException;
 import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
 import dash.usermanagement.business.UserService;
@@ -94,5 +97,13 @@ public class UserResource {
 	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
 	public void delete(@PathVariable final long id) throws DeleteFailedException {
 		userService.delete(id);
+	}
+
+	@RequestMapping(value = "/{id}/profile/picture", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Post a file. ", notes = "")
+	public User setProfilePicture(@PathVariable final long id, @RequestParam("file") MultipartFile file)
+			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+		return userService.setProfilePicture(id, file);
 	}
 }

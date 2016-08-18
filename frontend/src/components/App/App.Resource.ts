@@ -165,7 +165,11 @@ class UserResource {
     constructor($resource) {
         this.resource = $resource("/users/:id", {}, {
             update: { url: "/users", method: "PUT" },
-            changePassword: { url: "/users/:id/pw", method: "PUT" }
+            changePassword: { url: "/users/:id/pw", method: "PUT" },
+            setProfilePicture: {
+                url: "/users/:id/profile/picture", method: "POST", transformRequest: angular.identity,
+                headers: { "Content-Type": undefined }
+            }
         });
     }
 }
@@ -286,3 +290,25 @@ class SignupResource {
 }
 
 angular.module(moduleSignupResource, [ngResourceId]).service(SignupResourceId, SignupResource);
+
+// ----------------------------------------------------------------------------------------
+
+const FileResourceId: string = "FileResource";
+
+class FileResource {
+
+    private $inject = [$resourceId];
+
+    resource: any;
+
+    constructor($resource) {
+        this.resource = $resource("/api/rest/files", {}, {
+            uploadFiles: {
+                url: "/api/rest/files", method: "POST", transformRequest: angular.identity,
+                headers: { "Content-Type": undefined }
+            }
+        });
+    }
+}
+
+angular.module(moduleFileResource, [ngResourceId]).service(FileResourceId, FileResource);

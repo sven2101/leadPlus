@@ -26,6 +26,7 @@ const $intervalId: string = "$interval";
 const FileUploaderId: string = "FileUploader";
 const $routeParamsId: string = "$routeParams";
 
+
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";
 const moduleServices: string = moduleApp + ".services";
@@ -66,6 +67,9 @@ const moduleCustomerResource: string = moduleCustomer + ".resource";
 const moduleCustomerService: string = moduleCustomer + ".service";
 const moduleWorkflow: string = moduleApp + ".workflow";
 const moduleWorkflowService: string = moduleWorkflow + ".service";
+const moduleFile: string = moduleApp + ".file";
+const moduleFileResource: string = moduleFile + ".resource";
+const moduleFileService: string = moduleFile + ".service";
 
 const moduleTranslate: string = "pascalprecht.translate";
 const moduleNgResource: string = "ngResource";

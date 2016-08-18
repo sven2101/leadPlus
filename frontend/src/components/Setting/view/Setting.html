@@ -35,17 +35,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-model="setting.user" ng-repeat="user in setting.settingService.users | orderBy:'username'" ng-if="user.username != globals.user.username && user.username != 'api'">
+                            <tr ng-model="settingCtrl.user" ng-repeat="user in settingCtrl.settingService.users | orderBy:'username'" ng-if="user.username != globals.user.username && user.username != 'api'">
                                 <td>{{user.id}}</td>
                                 <td>{{user.username}}</td>
                                 <td>{{user.email}}</td>
                                 <td ng-if="user.enabled==false">
-                                    <button ng-click="setting.activateUser(user)" type="button" class="btn btn-success">
+                                    <button ng-click="settingCtrl.activateUser(user)" type="button" class="btn btn-success">
                                     <i class="fa fa-check"></i>&nbsp;{{ 'SETTING_ACTIVATE_USER' | translate }}
                                 </button>
                                 </td>
                                 <td ng-if="user.enabled==true">
-                                    <button ng-click="setting.deactivateUser(user)" type="button" class="btn btn-success" ng-disabled="setting.hasRight(user)">
+                                    <button ng-click="settingCtrl.deactivateUser(user)" type="button" class="btn btn-success" ng-disabled="setting.hasRight(user)">
                                     <i class="fa fa-ban"></i>&nbsp;{{ 'SETTING_DEACTIVATE_USER' | translate }}
                                 </button>
                                 </td>
@@ -73,11 +73,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-model="setting.user" ng-repeat="user in setting.settingService.users | orderBy:'username'" ng-if="user.role !='superadmin' && user.username != globals.user.username  && user.username != 'api'">
+                            <tr ng-model="settingCtrl.user" ng-repeat="user in settingCtrl.settingService.users | orderBy:'username'" ng-if="user.role !='superadmin' && user.username != globals.user.username  && user.username != 'api'">
                                 <td>{{user.id}}</td>
                                 <td>{{user.username}}</td>
                                 <td>
-                                    <select ng-model="setting.roleSelection[user.id]">
+                                    <select ng-model="settingCtrl.roleSelection[user.id]">
                                         <option ng-if="globals.user.role == 'ADMIN' || globals.user.role == 'SUPERADMIN'"
                                                 value="USER">{{ 'COMMON_USER' | translate }}
                                         </option>
@@ -89,7 +89,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <button ng-click="setting.saveRole(user)" type="button" class="btn btn-success" ng-disabled="setting.hasRight(user)">
+                                    <button ng-click="settingCtrl.saveRole(user)" type="button" class="btn btn-success" ng-disabled="settingCtrl.hasRight(user)">
                                     <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
                                 </button>
                                 </td>
