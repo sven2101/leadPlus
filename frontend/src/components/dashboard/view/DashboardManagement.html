@@ -25,9 +25,9 @@
                                 <h3>{{ 'DASHBOARD_OPEN_LEADS' | translate }}</h3>
                                 <ul ui-sortable="dashboardCtrl.sortableOptions"
                                     class="sortable-list connectList agile-list" id="lead"
-                                    ng-model="dashboardCtrl.openLead">
+                                    ng-model="dashboardCtrl.dashboardService.openLeads">
                                     <li class="danger-element draggable"
-                                        ng-repeat="process in dashboardCtrl.openLead | limitTo:10">
+                                        ng-repeat="process in dashboardCtrl.getOpenLeads() | limitTo:10">
                                         {{process.lead.containerAmount}}x {{process.lead.container.name}}
                                         <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
                                         <div class="agile-detail">
@@ -50,9 +50,9 @@
                                 <h3>{{ 'DASHBOARD_OPEN_OFFERS' | translate }}</h3>
                                 <ul ui-sortable="dashboardCtrl.sortableOptions"
                                     class="sortable-list connectList agile-list" id="offer"
-                                    ng-model="dashboardCtrl.openOffer">
+                                    ng-model="dashboardCtrl.dashboardService.openOffers">
                                     <li class="warning-element draggable"
-                                        ng-repeat="process in dashboardCtrl.openOffer | limitTo:10">
+                                        ng-repeat="process in dashboardCtrl.getOpenOffers() | limitTo:10">
                                         {{process.offer.containerAmount}}x {{process.offer.container.name}}
                                         <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
                                         <div class="agile-detail">
@@ -75,9 +75,9 @@
                                 <h3>{{ 'DASHBOARD_LATEST_SALES' | translate }}</h3>
                                 <ul ui-sortable="dashboardCtrl.sortableOptions"
                                     class="sortable-list connectList agile-list" id="sale"
-                                    ng-model="dashboardCtrl.sales">
+                                    ng-model="dashboardCtrl.dashboardService.closedSales">
                                     <li class="info-element not-sortable draggable"
-                                        ng-repeat="process in dashboardCtrl.sales">
+                                        ng-repeat="process in dashboardCtrl.getClosedSales()">
                                         {{process.sale.containerAmount}}x {{process.sale.container.name}}
                                         <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
                                         <div class="agile-detail">

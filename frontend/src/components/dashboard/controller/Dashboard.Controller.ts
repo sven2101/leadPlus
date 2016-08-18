@@ -2,7 +2,9 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../common/service/Workflow.Service.ts" />
 /// <reference path="../../statistic/controller/Statistic.Service.ts" />
+/// <reference path="../../dashboard/controller/Dashboard.Service.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
+/// <reference path="../../common/model/Commentary.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -16,250 +18,89 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-
 "use strict";
+
+const DashboardControllerId: string = "DashboardController";
 
 class DashboardController {
 
-    $inject = [toasterId, ProcessResourceId, CommentResourceId, UserResourceId, $filterId, $translateId, $rootScopeId, "$scope", $intervalId, WorkflowServiceId, StatisticServiceId];
+    $inject = [$rootScopeId, WorkflowServiceId, StatisticServiceId, DashboardServiceId];
 
     workflowService: WorkflowService;
     statisticService: StatisticService;
-    toaster;
-    filter;
-    orderBy;
-    translate;
+    dashboardService: DashboardService;
     rootScope;
-    processResource;
-    commentResource;
-    userResource;
-    statisticResource;
-    commentModalInput;
-    comments;
-    infoData;
-    infoType;
-    infoProcess;
-    infoComments;
+    commentModalInput: string;
+    infoData: AbstractModel;
+    infoType: string;
+    infoProcess: Process;
+    infoComments: Array<Commentary>;
+    user: User;
+    sortableOptions: any;
 
-    leadsAmount;
-    offersAmount;
-    salesAmount;
-    profit;
-    turnover;
-    conversionRate;
-
-    openLead;
-    openOffer;
-    sales;
-    user;
-
-    sortableOptions;
-
-    constructor(toaster, ProcessResource, CommentResource, UserResource, $filter, $translate, $rootScope, $scope, $interval, WorkflowService, StatisticService) {
+    constructor($rootScope, WorkflowService, StatisticService, DashboardService) {
         this.workflowService = WorkflowService;
         this.statisticService = StatisticService;
-        this.toaster = toaster;
-        this.filter = $filter;
-        this.orderBy = $filter("orderBy");
-        this.translate = $translate;
+        this.dashboardService = DashboardService;
         this.rootScope = $rootScope;
-        this.processResource = ProcessResource.resource;
-        this.commentResource = CommentResource.resource;
-        this.userResource = UserResource.resource;
-        this.commentModalInput = "";
-        this.comments = {};
-        this.infoData = {};
-        this.infoType = "";
-        this.infoProcess = {};
-        this.infoComments = [];
-
-        this.leadsAmount = {};
-        this.offersAmount = {};
-        this.salesAmount = {};
-        this.profit = {};
-        this.turnover = {};
-        this.conversionRate = {};
-        this.user = {};
-        this.sortableOptions = {};
-
-        this.registerPromise();
-        this.getUser();
-        this.setSortableOptions();
-    }
-
-    registerPromise() {
-        let self = this;
-        this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function (result) {
-            self.openLead = self.orderBy(result, "lead.timestamp", false);
-        });
-        this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
-            self.openOffer = self.orderBy(result, "offer.timestamp", false);
-        });
-        this.processResource.getLatestSales().$promise.then(function (result) {
-            self.sales = result;
-        });
-
-        this.statisticResource.getWorkflowStatistic({ workflow: workflowLead, dateRange: "WEEKLY" }).$promise.then(function (result) {
-            self.getLeads(result);
-            self.statisticResource.getWorkflowStatistic({ workflow: workflowSale, dateRange: "WEEKLY" }).$promise.then(function (result) {
-                self.getSales(result);
-            });
-        });
-        this.statisticResource.getWorkflowStatistic({ workflow: workflowOffer, dateRange: "WEEKLY" }).$promise.then(function (result) {
-            self.getOffers(result);
-        });
-        this.statisticResource.getProfitStatistic({ workflow: workflowSale, dateRange: "WEEKLY" }).$promise.then(function (result) {
-            self.getProfit(result);
-        });
-        this.statisticResource.getTurnoverStatistic({ workflow: workflowSale, dateRange: "WEEKLY" }).$promise.then(function (result) {
-            self.getTurnover(result);
-        });
+        this.user = this.rootScope.currentUser;
+        this.statisticService.loadAllResourcesByDateRange("WEEKLY");
+        this.sortableOptions = this.dashboardService.setSortableOptions(this.user);
+        this.refreshData();
     }
 
     createOffer(process: Process) {
-        let self = this;
-        this.workflowService.addLeadToOffer(process, this.user).then(function (isResolved: boolean) {
-            self.openOffer = self.orderBy(self.openOffer, "offer.timestamp", false);
-        });
+        this.dashboardService.createOffer(process, this.user);
     }
 
     createSale(process: Process) {
-        let self = this;
-        this.workflowService.addOfferToSale(process, this.user).then(function (isResolved: boolean) {
-            self.sales = self.orderBy(self.sales, "sale.timestamp", true);
-        });
-
-    }
-
-    getUser() {
-        let self = this;
-        if (!angular.isUndefined(self.rootScope.globals.user))
-            self.userResource.get({ id: self.rootScope.globals.user.id }).$promise.then(function (result) {
-                self.user = result;
-            });
-    }
-
-    setSortableOptions() {
-        let self = this;
-        this.sortableOptions = {
-            update: function (e, ui) {
-                let target = ui.item.sortable.droptargetModel;
-                let source = ui.item.sortable.sourceModel;
-                if ((self.openLead === target && self.openOffer === source) ||
-                    (self.openLead === source && self.sales === target) ||
-                    target === source) {
-                    ui.item.sortable.cancel();
-                }
-            },
-            stop: function (e, ui) {
-                let target = ui.item.sortable.droptargetModel;
-                let source = ui.item.sortable.sourceModel;
-                let item = ui.item.sortable.model;
-                if (self.sales === target && self.openOffer === source) {
-                    self.createSale(item);
-                }
-                else if (self.openOffer === target && self.openLead === source) {
-                    self.createOffer(item);
-                }
-            },
-            connectWith: ".connectList",
-            items: "li:not(.not-sortable)"
-        };
+        this.dashboardService.createSale(process, this.user);
     }
 
     saveDataToModal(info, type, process) {
         this.infoData = info;
         this.infoType = type;
         this.infoProcess = process;
-        let self = this;
-        this.commentResource.getByProcessId({ id: process.id }).$promise.then(function (result) {
-            self.infoComments = [];
-            for (let comment in result) {
-                if (comment === "$promise")
-                    break;
-                self.infoComments.push({
-                    commentText: result[comment].commentText,
-                    timestamp: result[comment].timestamp,
-                    creator: result[comment].creator
-                });
-            }
-        });
+        this.infoComments = this.workflowService.getCommentsByProcessId(process.id);
     }
     refreshData() {
-        let self = this;
-        this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function (result) {
-            self.openLead = self.orderBy(result, "lead.timestamp", false);
-        });
-        this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
-            self.openOffer = self.orderBy(result, "offer.timestamp", false);
-        });
-        this.processResource.getLatestSales().$promise.then(function (result) {
-            self.sales = result;
-        });
+        this.dashboardService.initDashboard();
     }
     addComment(process) {
-        let self = this;
-        if (angular.isUndefined(this.infoComments)) {
-            this.infoComments = [];
-        }
-        if (this.commentModalInput !== "" && !angular.isUndefined(this.commentModalInput)) {
-            let comment = {
-                process: process,
-                creator: this.user,
-                commentText: this.commentModalInput,
-                timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm:ss")
-            };
-            this.commentResource.save(comment).$promise.then(function () {
-                self.infoComments.push(comment);
-                self.commentModalInput = "";
-            });
-        }
+        console.log(process);
+        let self: DashboardController = this;
+        this.workflowService.addComment(this.infoComments, process, this.user, this.commentModalInput).then(function () {
+            self.commentModalInput = "";
+        });
     }
 
-    getProfit(profits) {
-        let summe = 0;
-        for (let profit in profits.result) {
-            summe = summe + profits.result[profit];
-        }
-        this.profit = summe;
+    getOpenLeads(): Array<Lead> {
+        return this.dashboardService.getOpenLeads();
     }
-
-    getTurnover(turnovers) {
-        let summe = 0;
-        for (let turnover in turnovers.result) {
-            summe = summe + turnovers.result[turnover];
-        }
-        this.turnover = summe;
+    getOpenOffers(): Array<Offer> {
+        return this.dashboardService.getOpenOffers();
     }
-    getLeads(leads) {
-        let summe = 0;
-        for (let lead in leads.result) {
-            summe += leads.result[lead];
-        }
-        this.leadsAmount = summe;
+    getClosedSales(): Array<Sale> {
+        return this.dashboardService.getClosedSales();
     }
-    getOffers(offers) {
-        let summe = 0;
-        for (let offer in offers.result) {
-            summe += offers.result[offer];
-        }
-        this.offersAmount = summe;
+    getProfit(): number {
+        return this.statisticService.getProfitTotal();
     }
-    getSales(sales) {
-        let summe = 0;
-        for (let sale in sales.result) {
-            summe += sales.result[sale];
-        }
-        this.salesAmount = summe;
-        this.getConversionrate();
+    getTurnover(): number {
+        return this.statisticService.getTurnoverTotal();
     }
-    getConversionrate() {
-        if (this.leadsAmount !== 0) {
-            this.conversionRate = (this.salesAmount / this.leadsAmount) * 100;
-        }
-        else
-            this.conversionRate = 0;
+    getLeads(): number {
+        return this.statisticService.getLeadAmount();
+    }
+    getOffers(): number {
+        return this.statisticService.getOfferAmount();
+    }
+    getSales(): number {
+        return this.statisticService.getSaleAmount();
+    }
+    getConversionrate(): number {
+        return this.statisticService.getLeadConversionRate();
     }
 }
 
-angular.module("app.dashboard", ["ngResource"]).controller("DashboardController", DashboardController);
+angular.module(moduleDashboard, [ngResourceId]).controller(DashboardControllerId, DashboardController);

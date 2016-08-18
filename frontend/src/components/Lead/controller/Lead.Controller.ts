@@ -51,8 +51,8 @@ class LeadController {
     addForm;
 
     user: User = new User();
-    commentInput = {};
-    commentModalInput = {};
+    commentInput: string;
+    commentModalInput: string;
     comments = {};
     currentCommentModalId = "";
     loadAllData = false;
@@ -456,8 +456,10 @@ class LeadController {
         this.currentCommentModalId = id;
     };
 
-    addComment(id, source) {
-        this.workflowService.addComment(id, source, this.processes[id], this.user, this.comments, this.commentInput, this.commentModalInput);
+    addComment(id: number, input: string) {
+        this.workflowService.addComment(this.comments[id], this.processes[id], this.user, input[id]).then(function () {
+            input[id] = "";
+        });
     };
 
     saveLead() {

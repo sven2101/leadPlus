@@ -147,6 +147,12 @@ class StatisticService {
     }
 
     loadAllResourcesByDateRange(dateRange: string) {
+        this.loadWorkflowResourcesByDateRange(dateRange);
+        this.loadProfitResourcesByDateRange(dateRange);
+        this.loadTurnoverResourcesByDateRange(dateRange);
+    }
+
+    loadWorkflowResourcesByDateRange(dateRange: string) {
         let self: StatisticService = this;
         this.statisticResource.getWorkflowStatistic({ workflow: workflowLead, dateRange: dateRange }).$promise.then(function (result) {
             self.leadResultArr = result.result;
@@ -166,12 +172,20 @@ class StatisticService {
             self.isSalePromise = true;
             self.checkPromises();
         });
+    }
+
+    loadProfitResourcesByDateRange(dateRange: string) {
+        let self: StatisticService = this;
         this.statisticResource.getProfitStatistic({ workflow: workflowSale, dateRange: dateRange }).$promise.then(function (result) {
             self.profitResultArr = result.result;
             self.profitTotal = self.getTotalSumOf(self.profitResultArr);
             self.isProfitPromise = true;
             self.checkPromises();
         });
+    }
+
+    loadTurnoverResourcesByDateRange(dateRange: string) {
+        let self: StatisticService = this;
         this.statisticResource.getTurnoverStatistic({ workflow: workflowSale, dateRange: dateRange }).$promise.then(function (result) {
             self.turnoverResultArr = result.result;
             self.turnoverTotal = self.getTotalSumOf(self.turnoverResultArr);

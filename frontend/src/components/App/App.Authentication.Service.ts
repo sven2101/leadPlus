@@ -50,7 +50,6 @@ class AuthService {
                     self.user = data;
                     console.log(data);
                     console.log(self.user);
-
                     self.rootScope.globals = {
                         user: {
                             id: data.id,

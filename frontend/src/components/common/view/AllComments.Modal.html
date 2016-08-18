@@ -49,15 +49,10 @@
                             <div class="chat-message-form" style="width:100%">
 
                                 <div class="form-group" style="width:100%">
-                                <textarea class="form-control message-input"
-                                          ng-model="parent.commentModalInput[parent.currentCommentModalId]"
-                                          style="resize: none; width:100%;box-sizing: border-box;"
-                                          name="message"
-                                          placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}"/>
+                                    <textarea class="form-control message-input" ng-model="parent.commentModalInput[parent.currentCommentModalId]" style="resize: none; width:100%;box-sizing: border-box;"
+                                        name="message" placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}" />
                                 </div>
-                                <button style="width:40%; margin-top: 10px;"
-                                        class="btn btn-success"
-                                        ng-click="parent.addComment(parent.currentCommentModalId,'modal')">
+                                <button style="width:40%; margin-top: 10px;" class="btn btn-success" ng-click="parent.addComment(parent.currentCommentModalId,parent.commentModalInput)">
                                     <i class="fa fa-comment-o"></i>&nbsp; {{ 'COMMON_COMMENTS_ADD' | translate }}
                                 </button>
                             </div>

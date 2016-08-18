@@ -4,6 +4,7 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../common/model/OrderPosition.Model.ts" />
+/// <reference path="../../common/model/Commentary.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -20,8 +21,7 @@ const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, "$q", ProductServiceId];
-
+    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $qId, ProductServiceId];
     commentResource;
     processResource;
     filter;
@@ -42,32 +42,39 @@ class WorkflowService {
         this.productService = ProductService;
     }
 
-    addComment(id, source, process, user, comments, commentInput, commentModalInput) {
-        let self = this;
-        let commentText = "";
-        if (angular.isUndefined(comments[id])) {
-            comments[id] = [];
+    addComment(comments: Array<Commentary>, process: Process, user: User, commentText: string): any {
+        let defer = this.$q.defer();
+        if (angular.isUndefined(commentText) || commentText === "") {
+            defer.reject(false);
+            return defer.promise;
         }
-        if (source === "table" && commentInput[id] !== ""
-            && !angular.isUndefined(commentInput[id])) {
-            commentText = commentInput[id];
-        } else if (source === "modal" && commentModalInput[id] !== ""
-            && !angular.isUndefined(commentModalInput[id])) {
-            commentText = commentModalInput[id];
-        }
-
-        let comment = {
+        let self: WorkflowService = this;
+        let comment: Commentary = {
+            id: null,
             process: process,
             creator: user,
             commentText: commentText,
-            timestamp: this.filter("date")(new Date(), "dd.MM.yyyy HH:mm:ss")
+            timestamp: moment.utc().format("DD.MM.YYYY HH:mm"),
         };
         this.commentResource.save(comment).$promise.then(function () {
-            comments[id].push(comment);
-            commentInput[id] = "";
-            commentModalInput[id] = "";
+            comments.push(comment);
+            defer.resolve(true);
+        }, function () {
+            defer.reject(false);
         });
+        return defer.promise;
     }
+
+    getCommentsByProcessId(id: number): Array<Commentary> {
+        let comments: Array<Commentary> = new Array<Commentary>();
+        this.commentResource.getByProcessId({ id: id }).$promise.then(function (result) {
+            for (let comment of result) {
+                comments.push(comment);
+            }
+        });
+        return comments;
+    }
+
     addProduct(array, currentProductId, currentProductAmount) {
         if (!isNaN(Number(currentProductId))
             && Number(currentProductId) > 0) {

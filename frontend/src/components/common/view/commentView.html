@@ -17,7 +17,7 @@
                                 <div class="message">
                                     <a class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
                                     <span class="message-date"> {{comment.timestamp|  date:'dd.MM.yyyy HH:mm'}} </span>
-                                            <span class="message-content">
+                                    <span class="message-content">
                                                 {{comment.commentText}}
                                             </span>
                                 </div>
@@ -27,16 +27,14 @@
                                 <div class="message">
                                     <a class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
                                     <span class="message-date"> {{comment.timestamp |  date:'dd.MM.yyyy HH:mm'}} </span>
-                                            <span class="message-content">
+                                    <span class="message-content">
                                                 {{comment.commentText}}
                                             </span>
                                 </div>
                             </div>
                         </div>
                         </br>
-                        <div ng-if="parent.comments[childData.id].length>3"
-                             class="text-center"><a ng-click="parent.loadCurrentIdToModal(childData.id)"
-                                                    data-toggle="modal" data-target="#commentModal">{{ 'COMMON_COMMENTS_HISTORY' | translate }}</a>
+                        <div ng-if="parent.comments[childData.id].length>3" class="text-center"><a ng-click="parent.loadCurrentIdToModal(childData.id)" data-toggle="modal" data-target="#commentModal">{{ 'COMMON_COMMENTS_HISTORY' | translate }}</a>
                         </div>
                     </div>
                 </div>
@@ -46,14 +44,10 @@
                     <div class="chat-message-form" style="width:100%">
 
                         <div class="form-group" style="width:100%">
-                                <textarea class="form-control message-input"
-                                          ng-model="parent.commentInput[childData.id]"
-                                          style="resize: none; width:100%;box-sizing: border-box;"
-                                          name="message"
-                                          placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}"/>
+                            <textarea class="form-control message-input" ng-model="parent.commentInput[childData.id]" style="resize: none; width:100%;box-sizing: border-box;"
+                                name="message" placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}" />
                         </div>
-                        <button style="width:200px; margin-top: 10px;"
-                                class="btn btn-success" ng-click="parent.addComment(childData.id,'table')">
+                        <button style="width:200px; margin-top: 10px;" class="btn btn-success" ng-click="parent.addComment(childData.id,parent.commentInput)">
                             <i class="fa fa-comment-o"></i>&nbsp;{{ 'COMMON_COMMENTS_ADD' | translate }}
                         </button>
                     </div>
