@@ -36,7 +36,7 @@ class CustomerController {
     }
 
     clearCustomer(): void {
-        // this.createCustomerForm.$setPristine();
+        this.createCustomerForm.$setPristine();
         this.currentCustomer = new Customer();
         this.isCurrentCustomerNew = true;
     }

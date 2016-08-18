@@ -59,6 +59,7 @@ const moduleProduct: string = moduleApp + ".product";
 const moduleProductResource: string = moduleProduct + ".resource";
 const moduleProductService: string = moduleProduct + ".service";
 const moduleCustomer: string = moduleApp + ".customer";
+const moduleCustomerDetail: string = moduleCustomer + ".detail";
 const moduleCustomerResource: string = moduleCustomer + ".resource";
 const moduleCustomerService: string = moduleCustomer + ".service";
 const moduleWorkflow: string = moduleApp + ".workflow";
