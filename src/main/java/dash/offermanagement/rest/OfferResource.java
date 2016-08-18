@@ -39,7 +39,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Offer Resource")
-@RequestMapping(value = "/api/rest/offers", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/offers", consumes = { MediaType.ALL_VALUE }, produces = {
+		MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Offers API")
 public class OfferResource {
 
@@ -63,7 +64,8 @@ public class OfferResource {
 	@ApiOperation(value = "Save a single offer.", notes = "")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Offer save(@ApiParam(required = true) @RequestBody @Valid Offer offer) throws SaveFailedException, NotFoundException {
+	public Offer save(@ApiParam(required = true) @RequestBody @Valid Offer offer)
+			throws SaveFailedException, NotFoundException {
 		return offerService.save(offer);
 	}
 
@@ -79,5 +81,12 @@ public class OfferResource {
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
 		offerService.delete(id);
+	}
+
+	@ApiOperation(value = "Return customers offers.", notes = "")
+	@RequestMapping(value = "/customer/{id}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public List<Offer> getByCustomer(@ApiParam(required = true) @PathVariable final Long id) {
+		return offerService.getByCustomer(id);
 	}
 }

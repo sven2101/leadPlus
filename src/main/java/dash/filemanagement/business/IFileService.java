@@ -11,35 +11,22 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash.filemanagement.business;
 
-package dash.leadmanagement.business;
-
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
-import dash.exceptions.UpdateFailedException;
-import dash.leadmanagement.domain.Lead;
+import dash.filemanagement.domain.File;
 
 @Service
-public interface ILeadService {
+public interface IFileService {
 
-	public Page<Lead> getPages(Pageable pageable);
+	public File save(final MultipartFile multipartFile) throws SaveFailedException;
 
-	public List<Lead> getAll();
+	public void delete(final long id) throws DeleteFailedException;
 
-	public Lead getLeadById(final Long id) throws NotFoundException;
-
-	public Lead save(final Lead lead) throws SaveFailedException;
-
-	public Lead update(final Lead lead) throws UpdateFailedException;
-
-	public void delete(final Long id) throws DeleteFailedException;
-
-	public List<Lead> getByCustomer(Long id);
+	public File getById(final long id) throws NotFoundException;
 }

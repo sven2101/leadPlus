@@ -17,6 +17,7 @@ package dash.usermanagement.business;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.DontMatchException;
@@ -39,14 +40,15 @@ public interface IUserService {
 
 	public User save(final User user) throws SaveFailedException;
 
-	public User update(final User user)
-			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
+	public User update(final User user) throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
 	public void delete(final long id) throws DeleteFailedException;
 
-	public void updatePassword(final long id, final PasswordChange passwordChange)
-			throws UpdateFailedException, DontMatchException;
+	public void updatePassword(final long id, final PasswordChange passwordChange) throws UpdateFailedException, DontMatchException;
 
 	public User activate(final long id, final boolean enabled) throws UpdateFailedException;
+
+	public User setProfilePicture(final long id, final MultipartFile file)
+			throws NotFoundException, SaveFailedException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
 }

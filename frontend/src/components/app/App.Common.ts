@@ -46,3 +46,5 @@ let toLocalDate = function (date: any, pattern: string = "DD.MM.YYYY HH:mm") {
     return moment(moment.utc(date, pattern)).local().format(pattern);
 };
 
+
+

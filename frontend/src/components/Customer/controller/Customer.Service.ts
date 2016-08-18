@@ -23,6 +23,7 @@ class CustomerService {
     customerResource: any;
     customer: Array<Customer>;
 
+
     constructor(CustomerResource: CustomerResource) {
         this.customerResource = CustomerResource.resource;
         this.customer = new Array<Customer>();
@@ -61,6 +62,8 @@ class CustomerService {
         }
         return temp;
     }
+
+
 
 }
 

@@ -121,4 +121,9 @@ public class OfferService implements IOfferService {
 	public Page<Offer> getAll(Pageable pageable) {
 		return offerRepository.findAll(pageable);
 	}
+
+	@Override
+	public List<Offer> getByCustomer(Long id) {
+		return offerRepository.findByCustomerId(id);
+	}
 }

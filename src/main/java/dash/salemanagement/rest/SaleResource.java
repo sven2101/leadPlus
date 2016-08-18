@@ -81,4 +81,12 @@ public class SaleResource {
 	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
 		saleService.delete(id);
 	}
+
+	@ApiOperation(value = "Return customers sales.", notes = "")
+	@RequestMapping(value = "/customer/{id}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public List<Sale> getByCustomer(@ApiParam(required = true) @PathVariable final Long id) {
+		return saleService.getByCustomer(id);
+	}
+
 }

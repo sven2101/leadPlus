@@ -62,27 +62,27 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
             {
                 templateUrl: "components/Setting/view/Setting.html",
                 controller: "SettingController",
-                controllerAs: "setting",
+                controllerAs: "settingCtrl",
                 authenticated: true
             })
             .when("/profile",
             {
                 templateUrl: "components/Profile/view/Profile.html",
                 controller: "ProfileController",
-                controllerAs: "profile",
+                controllerAs: "profileCtrl",
                 authenticated: true
             })
             .when("/signup",
             {
                 templateUrl: "components/Signup/view/signup.html",
                 controller: "SignupController",
-                controllerAs: "signup"
+                controllerAs: "signupCtrl"
             })
             .when("/login",
             {
                 templateUrl: "components/Login/view/Login.html",
                 controller: "LoginController",
-                controllerAs: "login"
+                controllerAs: "loginCtrl"
             }).when("/product",
             {
                 templateUrl: "components/Product/view/Product.html",
@@ -94,6 +94,12 @@ angular.module("app").config(["$routeProvider", "$httpProvider",
                 templateUrl: "components/Customer/view/Customer.html",
                 controller: "CustomerController",
                 controllerAs: "customerCtrl",
+                authenticated: true
+            }).when("/customer/detail/:customerId",
+            {
+                templateUrl: "components/Customer/view/CustomerDetail.html",
+                controller: "CustomerDetailController",
+                controllerAs: "customerDetailCtrl",
                 authenticated: true
             }).otherwise({
                 redirectTo: "/"

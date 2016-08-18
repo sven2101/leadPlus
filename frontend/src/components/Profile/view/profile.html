@@ -94,8 +94,11 @@
                 </div>
                 <div class="ibox-content">
                     <div class="fileinput fileinput-new" data-provides="fileinput">
-                        <span class="btn btn-default btn-file"><span>Choose file</span><input type="file" /></span>
-                        <span class="fileinput-filename"></span><span class="fileinput-new">No file chosen</span>
+                        <input type="file" id="file1" name="file" multiple ng-files="profileCtrl.getTheFiles($files)" />
+                        <br/>
+                        <button class="btn btn-success" type="button" ng-click="profileCtrl.uploadFiles()" value="Upload">
+                            <i class="fa fa-save"></i>Upload
+                        </button>
                     </div>
                 </div>
             </div>

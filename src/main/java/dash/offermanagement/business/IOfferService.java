@@ -41,4 +41,6 @@ public interface IOfferService {
 
 	public void delete(final Long id) throws DeleteFailedException;
 
+	List<Offer> getByCustomer(Long id);
+
 }

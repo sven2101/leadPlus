@@ -62,20 +62,21 @@
                                         <span ng-show="!customer.deactivated" class="label label-primary">Active</span>
                                         <span ng-show="customer.deactivated" class="label label-default">Unactive</span>
                                     </td>
-                                    <td class="project-title col-md-2">
-                                        <a href="project_detail.html">{{customer.firstname}} {{customer.lastname}}</a>
+                                    <td ng-click="customerCtrl.goToCustomerDetail(customer.id)" style="cursor: pointer;" class="project-title col-md-2">
+                                        <a ">{{customer.firstname}} {{customer.lastname}}</a>
                                         <br>
                                         <small>{{ 'CUSTOMER_CREATED' | translate }} {{customerCtrl.getLocalTimestamp(customer)}}</small>
                                     </td>
-                                    <td class="project-completion col-md-7" max>
-                                        <small style="word-wrap: break-word; word-break: break-all;">{{customer.company}}</small>
+                                    <td class="project-completion col-md-7 " max>
+                                        <small style="word-wrap: break-word; word-break: break-all; ">{{customer.company}}</small>
                                     </td>
-                                    <td class="project-people col-md-1">
-                                        <a href=""><img alt="image" class="img-circle" src="http://www.containersucher.com/assets/plugindata/w2dblgbb1ca3b3057e90d9af3e514539e33a22/pic1271913090.jpg"></a>
+                                    <td class="project-people col-md-1 ">
+                                        <a href=" "><img alt="image " class="img-circle " src="http://www.containersucher.com/assets/plugindata/w2dblgbb1ca3b3057e90d9af3e514539e33a22/pic1271913090.jpg "></a>
                                     </td>
-                                    <td class="project-actions col-md-1">
-                                        <button type="button" class="btn btn-white btn-sm" ng-click="customerCtrl.editCustomer(customer)" data-toggle="modal" data-target="#createCustomerModal">
-                                     <i class="fa fa-pencil"></i>&nbsp;Edit</button>
+                                    <td class="project-actions col-md-1 ">
+                                        <button type="button " class="btn btn-white btn-sm " ng-click="customerCtrl.editCustomer(customer)
+                                            " data-toggle="modal " data-target="#createCustomerModal ">
+                                     <i class="fa fa-pencil "></i>&nbsp;Edit</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -88,5 +89,5 @@
 </div>
 <div ng-include=" 'components/Customer/view/Customer.Modal.html' "></div>
 <script>
-   $(".chosen-select").chosen(); 
+   $(".chosen-select ").chosen(); 
   </script>

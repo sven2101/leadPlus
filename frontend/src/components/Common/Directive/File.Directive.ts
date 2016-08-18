@@ -11,22 +11,20 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+"use strict";
 
-package dash.salemanagement.business;
+angular.module("app")
+    .directive("ngFiles", ["$parse", function ($parse) {
 
-import java.util.List;
+    function fn_link(scope, element, attrs) {
+        let onChange = $parse(attrs.ngFiles);
+        element.on("change", function (event) {
+            onChange(scope, { $files: event.target.files });
+        });
+    }
 
-import javax.transaction.Transactional;
+    return {
+        link: fn_link
+    };
+}]);
 
-import org.springframework.stereotype.Repository;
-
-import dash.processmanagement.request.RequestRepository;
-import dash.salemanagement.domain.Sale;
-
-@Repository
-@Transactional
-public interface SaleRepository extends RequestRepository<Sale, Long> {
-
-	List<Sale> findByCustomerId(Long id);
-
-}

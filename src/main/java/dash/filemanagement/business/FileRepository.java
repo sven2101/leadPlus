@@ -11,22 +11,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash.filemanagement.business;
 
-package dash.salemanagement.business;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import dash.filemanagement.domain.File;
 
-import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Repository;
-
-import dash.processmanagement.request.RequestRepository;
-import dash.salemanagement.domain.Sale;
-
-@Repository
-@Transactional
-public interface SaleRepository extends RequestRepository<Sale, Long> {
-
-	List<Sale> findByCustomerId(Long id);
+public interface FileRepository extends JpaRepository<File, Long> {
 
 }

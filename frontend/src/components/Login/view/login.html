@@ -9,16 +9,13 @@
         </br>
         <form name="loginform">
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="{{ 'COMMON_USERNAME' | translate }}" required=""
-                       ng-model="credentials.username">
+                <input type="text" class="form-control" placeholder="{{ 'COMMON_USERNAME' | translate }}" required="" ng-model="credentials.username">
             </div>
             <div class="form-group">
-                <input type="password" name="loginPassword" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-                       required=""
-                       ng-model="credentials.password">
+                <input type="password" name="loginPassword" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}" required=""
+                    ng-model="credentials.password">
             </div>
-            <button type="submit" class="btn btn-success block full-width m-b" ng-click="login.login(credentials)"
-                    OnClick="document.loginform.loginPassword.focus();">{{ 'LOGIN' | translate }}
+            <button type="submit" class="btn btn-success block full-width m-b" ng-click="loginCtrl.login(credentials)" OnClick="document.loginform.loginPassword.focus();">{{ 'LOGIN' | translate }}
             </button>
         </form>
         <p class="text-muted text-center">

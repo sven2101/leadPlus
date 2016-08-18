@@ -81,4 +81,11 @@ public class LeadResource {
 	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
 		leadService.delete(id);
 	}
+
+	@ApiOperation(value = "Return customers leads.", notes = "")
+	@RequestMapping(value = "/customer/{id}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public List<Lead> getByCustomer(@ApiParam(required = true) @PathVariable final Long id) {
+		return leadService.getByCustomer(id);
+	}
 }
