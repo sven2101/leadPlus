@@ -33,6 +33,7 @@ function config($translateProvider) {
             PROFILE_MENU: "Profil",
             PRODUCT_MENU: "Produkte",
             CUSTOMER_MENU: "Kunden",
+            CUSTOMER_DETAIL_MENU: "Kundendetails",
 
             LOGIN: "Anmelden",
             LOGOUT: "Abmelden",
@@ -299,6 +300,8 @@ function config($translateProvider) {
             PROFILE_MENU: "Profile",
             PRODUCT_MENU: "Products",
             CUSTOMER_MENU: "Customer",
+            CUSTOMER_DETAIL_MENU: "Customer details",
+
             LOGIN: "Login",
             LOGOUT: "Logout",
             LANGUAGE: "Language",
@@ -545,6 +548,8 @@ function config($translateProvider) {
             CUSTOMER_EDIT: "Edit customer",
             CUSTOMER_DEACTIVATED: "Deactivate",
             CUSTOMER_CREATED: "Created",
+
+
 
         });
 
