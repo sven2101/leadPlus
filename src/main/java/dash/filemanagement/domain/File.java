@@ -27,8 +27,7 @@ public class File {
 
 	private String name;
 	private String mimeType;
-	private int size;
-	private String title;
+	private long size;
 	private String description;
 	private boolean deaktiviert;
 
@@ -58,20 +57,12 @@ public class File {
 		this.mimeType = mimeType;
 	}
 
-	public int getSize() {
+	public long getSize() {
 		return size;
 	}
 
-	public void setSize(int size) {
+	public void setSize(long size) {
 		this.size = size;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	public String getDescription() {

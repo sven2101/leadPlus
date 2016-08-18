@@ -36,6 +36,14 @@ class ProfileController {
     submitPasswordForm() {
         this.submitPasswordForm();
     }
+
+    uploadFiles() {
+        this.profileService.uploadFiles();
+    }
+
+    getTheFiles($files) {
+        this.profileService.getTheFiles($files);
+    }
 }
 
 angular.module(moduleProfile, [ngResourceId]).controller(ProfileControllerId, ProfileController);

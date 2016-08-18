@@ -14,33 +14,51 @@
 package dash.filemanagement.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
-import dash.filemanagement.business.FileRepository;
+import dash.exceptions.DeleteFailedException;
+import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
+import dash.filemanagement.business.IFileService;
 import dash.filemanagement.domain.File;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
-@RequestMapping(value = "/files", method = RequestMethod.POST)
-@RestController
+@RestController(value = "File Resource")
+@RequestMapping(value = "/api/rest/files")
+@Api(value = "File API")
 public class FileResource {
 
 	@Autowired
-	private FileRepository fileRepository;
+	private IFileService fileService;
 
 	@RequestMapping(method = RequestMethod.POST)
-	public String handleFileUpload(@RequestParam CommonsMultipartFile file) throws Exception {
-
-		if (file != null) {
-			System.out.println("Saving file: " + file.getOriginalFilename());
-			File uploadFile = new File();
-			uploadFile.setName(file.getOriginalFilename());
-			uploadFile.setContent(file.getBytes());
-			fileRepository.save(uploadFile);
-		}
-
-		return "Success";
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation(value = "Post a file. ", notes = "")
+	public File save(@RequestParam("file") MultipartFile file) throws SaveFailedException {
+		return fileService.save(file);
 	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get file by Id. ", notes = "")
+	public File getById(@ApiParam(required = true) @PathVariable final long id) throws NotFoundException {
+		return fileService.getById(id);
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Delete a file. ", notes = "")
+	public void delete(@ApiParam(required = true) @PathVariable final long id) throws DeleteFailedException {
+		fileService.delete(id);
+	}
+
 }

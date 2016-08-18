@@ -23,7 +23,7 @@ const ProfileServiceId: string = "ProfileService";
 
 class ProfileService {
 
-    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, AuthServiceId];
+    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, AuthServiceId, FileResourceId];
 
     userResource;
     translate;
@@ -32,21 +32,24 @@ class ProfileService {
     authService;
     passwordForm;
 
+    fileResource;
+    formdata;
+
     user: User;
     oldPassword: string;
     newPassword1: string;
     newPassword2: string;
 
-    constructor($rootScope, toaster, $translate, UserResource, AuthService: AuthService) {
+    constructor($rootScope, toaster, $translate, UserResource, AuthService: AuthService, FileResource) {
         this.userResource = UserResource.resource;
         this.translate = $translate;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.authService = AuthService;
         this.user = this.authService.user;
-        console.log("User: ");
-        console.log(this.user);
-        console.log(this.authService.user);
+
+        this.fileResource = FileResource.resource;
+        this.formdata = new FormData();
     }
 
     submitProfilInfoForm() {
@@ -70,8 +73,20 @@ class ProfileService {
         });
     }
 
-    uploadfile() {
+    uploadFiles() {
+        let self = this;
+        console.log("file");
+        console.log(this.formdata);
+        this.userResource.setProfilePicture({id: 1}, this.formdata).$promise.then(function () {
+            self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
+        });
+    }
 
+    getTheFiles($files) {
+        console.log($files);
+        this.formdata.append("file", $files[0]);
     }
 }
 

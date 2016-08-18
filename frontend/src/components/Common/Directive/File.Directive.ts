@@ -11,22 +11,20 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.filemanagement.business;
+"use strict";
 
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+angular.module("app")
+    .directive("ngFiles", ["$parse", function ($parse) {
 
-import dash.exceptions.DeleteFailedException;
-import dash.exceptions.NotFoundException;
-import dash.exceptions.SaveFailedException;
-import dash.filemanagement.domain.File;
+    function fn_link(scope, element, attrs) {
+        let onChange = $parse(attrs.ngFiles);
+        element.on("change", function (event) {
+            onChange(scope, { $files: event.target.files });
+        });
+    }
 
-@Service
-public interface IFileService {
+    return {
+        link: fn_link
+    };
+}]);
 
-	public File save(final MultipartFile multipartFile) throws SaveFailedException;
-
-	public void delete(final long id) throws DeleteFailedException;
-
-	public File getById(final long id) throws NotFoundException;
-}
