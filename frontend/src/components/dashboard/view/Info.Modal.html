@@ -10,90 +10,90 @@
                 <button type="button" class="close" data-dismiss="modal"><span
                         aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">{{ 'COMMON_DETAILS' | translate }}</h4>
-                <h2>{{dashboard.infoData.container.name}}</h2>
+                <h2>{{dashboardCtrl.infoData.container.name}}</h2>
             </div>
             <div class="modal-body">
                 <table class="table table-bordered text-left">
                     <tr>
                         <td>{{ 'COMMON_NAME' | translate }}</td>
-                        <td ng-if="dashboard.infoType == 'lead'">{{ dashboard.infoData.inquirer.title | translate }}
-                            {{dashboard.infoData.inquirer.firstname}}
-                            {{dashboard.infoData.inquirer.lastname}}
+                        <td ng-if="dashboardCtrl.infoType == 'lead'">{{ dashboardCtrl.infoData.inquirer.title | translate }}
+                            {{dashboardCtrl.infoData.inquirer.firstname}}
+                            {{dashboardCtrl.infoData.inquirer.lastname}}
                         </td>
-                        <td ng-if="dashboard.infoType == 'offer'">{{ dashboard.infoData.prospect.title | translate }}
-                            {{dashboard.infoData.prospect.firstname}}
-                            {{dashboard.infoData.prospect.lastname}}
+                        <td ng-if="dashboardCtrl.infoType == 'offer'">{{ dashboardCtrl.infoData.prospect.title | translate }}
+                            {{dashboardCtrl.infoData.prospect.firstname}}
+                            {{dashboardCtrl.infoData.prospect.lastname}}
                         </td>
-                        <td ng-if="dashboard.infoType == 'sale'">{{ dashboard.infoData.customer.title | translate }}
-                            {{dashboard.infoData.customer.firstname}}
-                            {{dashboard.infoData.customer.lastname}}
+                        <td ng-if="dashboardCtrl.infoType == 'sale'">{{ dashboardCtrl.infoData.customer.title | translate }}
+                            {{dashboardCtrl.infoData.customer.firstname}}
+                            {{dashboardCtrl.infoData.customer.lastname}}
                         </td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_EMAIL' | translate }}</td>
-                        <td ng-if="dashboard.infoType == 'lead'">{{dashboard.infoData.inquirer.email}}</td>
-                        <td ng-if="dashboard.infoType == 'offer'">{{dashboard.infoData.prospect.email}}</td>
-                        <td ng-if="dashboard.infoType == 'sale'">{{dashboard.infoData.customer.email}}</td>
+                        <td ng-if="dashboardCtrl.infoType == 'lead'">{{dashboardCtrl.infoData.inquirer.email}}</td>
+                        <td ng-if="dashboardCtrl.infoType == 'offer'">{{dashboardCtrl.infoData.prospect.email}}</td>
+                        <td ng-if="dashboardCtrl.infoType == 'sale'">{{dashboardCtrl.infoData.customer.email}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_PHONE' | translate }}</td>
-                        <td ng-if="dashboard.infoType == 'lead'">{{dashboard.infoData.inquirer.phone}}</td>
-                        <td ng-if="dashboard.infoType == 'offer'">{{dashboard.infoData.prospect.phone}}</td>
-                        <td ng-if="dashboard.infoType == 'sale'">{{dashboard.infoData.customer.phone}}</td>
+                        <td ng-if="dashboardCtrl.infoType == 'lead'">{{dashboardCtrl.infoData.inquirer.phone}}</td>
+                        <td ng-if="dashboardCtrl.infoType == 'offer'">{{dashboardCtrl.infoData.prospect.phone}}</td>
+                        <td ng-if="dashboardCtrl.infoType == 'sale'">{{dashboardCtrl.infoData.customer.phone}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER' | translate }}</td>
-                        <td>{{dashboard.infoData.container.name}}</td>
+                        <td>{{dashboardCtrl.infoData.container.name}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_DESC' | translate }}</td>
-                        <td>{{dashboard.infoData.container.description}}</td>
+                        <td>{{dashboardCtrl.infoData.container.description}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_AMOUNT' | translate }}</td>
-                        <td>{{dashboard.infoData.containerAmount}}</td>
+                        <td>{{dashboardCtrl.infoData.containerAmount}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_SINGLE_PRICE' | translate }}</td>
-                        <td>{{dashboard.infoData.container.priceNetto | currency:'\u20AC'}}</td>
+                        <td>{{dashboardCtrl.infoData.container.priceNetto | currency:'\u20AC'}}</td>
                     </tr>
-                    <tr ng-if="dashboard.infoType == 'lead'">
+                    <tr ng-if="dashboardCtrl.infoType == 'lead'">
                         <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
-                        <td>{{dashboard.infoData.leadPrice | currency:'\u20AC'}}</td>
+                        <td>{{dashboardCtrl.infoData.leadPrice | currency:'\u20AC'}}</td>
                     </tr>
-                    <tr ng-if="dashboard.infoType == 'offer' || dashboard.infoType == 'sale' ">
+                    <tr ng-if="dashboardCtrl.infoType == 'offer' || dashboardCtrl.infoType == 'sale' ">
                         <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
-                        <td>{{dashboard.infoData.containerAmount*dashboard.infoData.container.priceNetto |
+                        <td>{{dashboardCtrl.infoData.containerAmount*dashboardCtrl.infoData.container.priceNetto |
                             currency:'\u20AC'}}
                         </td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</td>
-                        <td ng-if="dashboard.infoType == 'lead'">{{dashboard.infoData.destination}}</td>
-                        <td ng-if="dashboard.infoType == 'offer'">{{dashboard.infoData.deliveryAddress}}</td>
-                        <td ng-if="dashboard.infoType == 'sale'">{{dashboard.infoData.transport}}</td>
+                        <td ng-if="dashboardCtrl.infoType == 'lead'">{{dashboardCtrl.infoData.destination}}</td>
+                        <td ng-if="dashboardCtrl.infoType == 'offer'">{{dashboardCtrl.infoData.deliveryAddress}}</td>
+                        <td ng-if="dashboardCtrl.infoType == 'sale'">{{dashboardCtrl.infoData.transport}}</td>
                     </tr>
-                    <tr ng-if="dashboard.infoType == 'offer'">
+                    <tr ng-if="dashboardCtrl.infoType == 'offer'">
                         <td>{{ 'COMMON_DELIVERY_TIME' | translate }}</td>
-                        <td>{{dashboard.infoData.deliveryDate |
+                        <td>{{dashboardCtrl.infoData.deliveryDate |
                             date:'dd-MM-yyyy'}}
                         </td>
                     </tr>
-                    <tr ng-if="dashboard.infoType == 'offer'">
+                    <tr ng-if="dashboardCtrl.infoType == 'offer'">
                         <td>{{ 'COMMON_CONTAINER_OFFER_PRICE' | translate }}</td>
-                        <td>{{dashboard.infoData.offerPrice |
+                        <td>{{dashboardCtrl.infoData.offerPrice |
                             currency:'\u20AC'}}
                         </td>
                     </tr>
-                    <tr ng-if="dashboard.infoType == 'sale'">
+                    <tr ng-if="dashboardCtrl.infoType == 'sale'">
                         <td>{{ 'COMMON_SALE_RETURN' | translate }}</td>
-                        <td>{{dashboard.infoData.saleReturn|
+                        <td>{{dashboardCtrl.infoData.saleReturn|
                             currency:'\u20AC'}}
                         </td>
                     </tr>
-                    <tr ng-if="dashboard.infoType == 'sale'">
+                    <tr ng-if="dashboardCtrl.infoType == 'sale'">
                         <td>{{ 'COMMON_SALE_PROFIT' | translate }}</td>
-                        <td>{{dashboard.infoData.saleProfit|
+                        <td>{{dashboardCtrl.infoData.saleProfit|
                             currency:'\u20AC'}}
                         </td>
                     </tr>
@@ -103,17 +103,17 @@
 
                     <div class="text-left">
                         <span class="pull-left" style="font-size: 1.5em;">{{ 'COMMON_COMMENTS' | translate }}</span>
-                        <small ng-if="dashboard.infoComments.length>0" class="pull-right text-muted">
+                        <small ng-if="dashboardCtrl.infoComments.length>0" class="pull-right text-muted">
                             {{ 'COMMON_COMMENTS_LAST' | translate }}:
-                            {{dashboard.infoComments[dashboard.infoComments.length-1].timestamp|
+                            {{dashboardCtrl.infoComments[dashboardCtrl.infoComments.length-1].timestamp|
                             date:'dd.MM.yyyy HH:mm'}}
                         </small>
                     </div>
                     <div class=" text-left">
-                        <div ng-if="dashboard.infoComments.length>0" class="row">
+                        <div ng-if="dashboardCtrl.infoComments.length>0" class="row">
                             <div class="col-md-12 ">
-                                <div class="chat-discussion" ng-model="dashboard.infoComments">
-                                    <div ng-repeat="comment in dashboard.infoComments | orderBy: '-timestamp'">
+                                <div class="chat-discussion" ng-model="dashboardCtrl.infoComments">
+                                    <div ng-repeat="comment in dashboardCtrl.infoComments | orderBy: '-timestamp'">
                                         <div ng-if="$index%2==0" class="chat-message left">
                                             <img class="message-avatar" src="assets/img/guest.png" alt="">
                                             <div class="message">
@@ -144,14 +144,14 @@
 
                                     <div class="form-group" style="width:100%">
                                 <textarea class="form-control message-input"
-                                          ng-model="dashboard.commentModalInput"
+                                          ng-model="dashboardCtrl.commentModalInput"
                                           style="resize: none; width:100%;box-sizing: border-box;"
                                           name="message"
                                           placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}"/>
                                     </div>
                                     <button style="width:35%; margin-top: 10px;"
                                             class="btn btn-success"
-                                            ng-click="dashboard.addComment(dashboard.infoProcess)">
+                                            ng-click="dashboardCtrl.addComment(dashboardCtrl.infoProcess)">
                                         <i class="fa fa-comment-o"></i>&nbsp;{{ 'COMMON_COMMENTS_ADD' | translate }}
                                     </button>
                                 </div>

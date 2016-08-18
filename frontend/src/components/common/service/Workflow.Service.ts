@@ -20,7 +20,7 @@ const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [commentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, ProductServiceId];
+    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, "$q", ProductServiceId];
 
     commentResource;
     processResource;
@@ -28,15 +28,17 @@ class WorkflowService {
     toaster;
     rootScope;
     translate;
+    $q;
     productService: ProductService;
 
-    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, ProductService) {
+    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $q, ProductService) {
         this.commentResource = CommentResource.resource;
         this.processResource = ProcessResource.resource;
         this.filter = $filter;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
+        this.$q = $q;
         this.productService = ProductService;
     }
 
@@ -97,6 +99,7 @@ class WorkflowService {
     }
 
     addLeadToOffer(process: Process, user: User): any {
+        let defer = this.$q.defer();
         let self = this;
         let offer: Offer = {
             id: 0,
@@ -136,8 +139,64 @@ class WorkflowService {
                 }
                 process.offer = offer;
                 process.status = "OFFER";
+                defer.resolve(true);
+            }, function () {
+                defer.reject(false);
             });
+        }, function () {
+            defer.reject(false);
         });
+        return defer.promise;
+    }
+
+    addOfferToSale(process: Process, user: User): any {
+        let defer = this.$q.defer();
+        let self = this;
+        let sale: Sale = {
+            id: 0,
+            deliveryAddress: process.offer.deliveryAddress,
+            deliveryDate: process.offer.deliveryDate,
+            container: {
+                name: "",
+                description: "",
+                priceNetto: 0
+            },
+            orderPositions: deepCopy(process.lead.orderPositions),
+            containerAmount: process.offer.containerAmount,
+            transport: process.offer.deliveryAddress,
+            customer: process.offer.customer,
+            saleProfit: 0,
+            saleReturn: process.offer.offerPrice,
+            timestamp: moment.utc().format("DD.MM.YYYY HH:mm"),
+            vendor: process.offer.vendor
+        };
+        for (let i = 0; i < sale.orderPositions.length; i++) {
+            sale.orderPositions[i].id = 0;
+        }
+        this.processResource.createSale({
+            id: process.id
+        }, sale).$promise.then(function () {
+            self.processResource.setStatus({
+                id: process.id
+            }, "SALE").$promise.then(function () {
+                self.toaster.pop("success", "", self.translate
+                    .instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
+                self.rootScope.offersCount -= 1;
+                self.processResource.setProcessor({
+                    id: process.id
+                }, user.id).$promise.then(function () {
+                    process.processor = user;
+                });
+                process.sale = sale;
+                process.status = "SALE";
+                defer.resolve(true);
+            }, function () {
+                defer.reject(false);
+            });
+        }, function () {
+            defer.reject(false);
+        });
+        return defer.promise;
     }
 }
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);
