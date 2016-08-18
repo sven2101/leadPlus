@@ -23,7 +23,6 @@ const $httpId: string = "$http";
 const $cookieStoreId: string = "$cookieStore";
 const $windowId: string = "$window";
 const $intervalId: string = "$interval";
-const FileUploaderId: string = "FileUploader";
 
 const productResourceId: string = "ProductResource";
 const customerResourceId: string = "CustomerResource ";
@@ -69,6 +68,9 @@ const moduleCustomerResource: string = moduleCustomer + ".resource";
 const moduleCustomerService: string = moduleCustomer + ".service";
 const moduleWorkflow: string = moduleApp + ".workflow";
 const moduleWorkflowService: string = moduleWorkflow + ".service";
+const moduleFile: string = moduleApp + ".file";
+const moduleFileResource: string = moduleFile + ".resource";
+const moduleFileService: string = moduleFile + ".service";
 
 const moduleTranslate: string = "pascalprecht.translate";
 const moduleNgResource: string = "ngResource";

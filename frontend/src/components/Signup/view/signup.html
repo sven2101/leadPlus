@@ -20,9 +20,9 @@
 				        											signup.signupService.usernameExist 	}">
 
                 <input type="text" id="username" name="username" class="form-control" placeholder="{{ 'COMMON_USERNAME' | translate }}" required
-                    ng-pattern="/^[a-zA-Z0-9.-]*$/" ng-model="signup.user.username" ng-minlength="2" ng-maxlength="20" ng-blur="signup.uniqueUsername()">
+                    ng-pattern="/^[a-zA-Z0-9.-]*$/" ng-model="signupCtrl.user.username" ng-minlength="2" ng-maxlength="20" ng-blur="signupCtrl.uniqueUsername()">
 
-                <span ng-show="signup.signupService.usernameExist" class="help-block">{{ 'SIGNUP_VALIDATE_USER_IN_USE' | translate }}</span>
+                <span ng-show="signupCtrl.signupService.usernameExist" class="help-block">{{ 'SIGNUP_VALIDATE_USER_IN_USE' | translate }}</span>
                 <span ng-show="registration.username.$error.minlength" class="help-block">{{ 'SIGNUP_VALIDATE_USER_TO_SHORT' | translate }}</span>
                 <span ng-show="registration.username.$error.maxlength" class="help-block">{{ 'SIGNUP_VALIDATE_USER_TO_LONG' | translate }}</span>
             </div>
@@ -30,14 +30,14 @@
             <div class="form-group" ng-class="{ 'has-success': 	!registration.email.$error.required &&
 																!registration.email.$error.email && 
 																!registration.email.$error.emailExist &&
-																!signup.signupService.emailExist ,
+																!signupCtrl.signupService.emailExist ,
 												'has-error': 	registration.email.$error.email ||
 																registration.email.$error.emailExist ||
-																signup.signupService.emailExist	 }">
+																signupCtrl.signupService.emailExist	 }">
                 <input type="email" id="email" name="email" class="form-control" placeholder="{{ 'COMMON_EMAIL' | translate }}" required
-                    ng-model="signup.user.email" ng-blur="signup.uniqueEmail()">
+                    ng-model="signupCtrl.user.email" ng-blur="signupCtrl.uniqueEmail()">
 
-                <span ng-show="signup.signupService.emailExist" class="help-block">{{ 'SIGNUP_VALIDATE_EMAIL_IN_USE' | translate }}</span>
+                <span ng-show="signupCtrl.signupService.emailExist" class="help-block">{{ 'SIGNUP_VALIDATE_EMAIL_IN_USE' | translate }}</span>
                 <span ng-show="registration.email.$error.email" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
                 <span ng-show="registration.email.$error.emailExist" class="help-block">{{ 'SIGNUP_VALIDATE_EMAIL_IN_USE' | translate }}</span>
             </div>
@@ -47,7 +47,7 @@
 												'has-error has-feedback': 		registration.password.$error.minlength ||
 																				registration.password.$error.maxlength	 }">
                 <input type="password" id="password" name="password" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-                    required ng-model="signup.user.password" ng-minlength="6" ng-maxlength="20">
+                    required ng-model="signupCtrl.user.password" ng-minlength="6" ng-maxlength="20">
 
                 <span ng-show="registration.password.$dirty && registration.password.$error.required" class="help-block">Password is required</span>
                 <span ng-show="registration.password.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
@@ -61,7 +61,7 @@
 																				registration.password2.$error.maxlength	 ||
 																				registration.password2.$error.pwmatch}">
                 <input type="password" id="password2" name="password2" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-                    required ng-model="signup.user.password2" ng-minlength="6" ng-maxlength="20" pw-check="password">
+                    required ng-model="signupCtrl.user.password2" ng-minlength="6" ng-maxlength="20" pw-check="password">
 
                 <span ng-show="registration.password2.$dirty && registration.password2.$error.required" class="help-block">Password is required</span>
                 <span ng-show="registration.password2.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
@@ -70,7 +70,7 @@
             </div>
 
             <button type="button" id="registration" ng-disabled="registration.$invalid || vm.dataLoading || emailExist || usernameExist"
-                ng-click="signup.signup();" class="btn btn-success block full-width m-b">{{ 'LOGIN_CREATE_ACCOUNT' | translate }}
+                ng-click="signupCtrl.signup();" class="btn btn-success block full-width m-b">{{ 'LOGIN_CREATE_ACCOUNT' | translate }}
             </button>
 
             <p class="text-muted text-center">

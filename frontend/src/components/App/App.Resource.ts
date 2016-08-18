@@ -281,3 +281,23 @@ class SignupResource {
 }
 
 angular.module(moduleSignupResource, [ngResourceId]).service(SignupResourceId, SignupResource);
+
+// ----------------------------------------------------------------------------------------
+
+const FileResourceId: string = "FileResource";
+
+class FileResource {
+
+    private $inject = [$resourceId];
+
+    resource: any;
+
+    constructor($resource) {
+        this.resource = $resource("/api/rest/files", {}, {
+            upload: {
+                 url: "/api/rest/files", method: "POST" }
+        });
+    }
+}
+
+angular.module(moduleFileResource, [ngResourceId]).service(FileResourceId, FileResource);

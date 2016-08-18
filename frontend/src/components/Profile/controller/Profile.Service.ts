@@ -23,7 +23,7 @@ const ProfileServiceId: string = "ProfileService";
 
 class ProfileService {
 
-    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, AuthServiceId, FileUploaderId];
+    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, AuthServiceId];
 
     userResource;
     translate;
@@ -37,7 +37,7 @@ class ProfileService {
     newPassword1: string;
     newPassword2: string;
 
-    constructor($rootScope, toaster, $translate, UserResource, AuthService: AuthService, FileUploader) {
+    constructor($rootScope, toaster, $translate, UserResource, AuthService: AuthService) {
         this.userResource = UserResource.resource;
         this.translate = $translate;
         this.toaster = toaster;
@@ -57,7 +57,7 @@ class ProfileService {
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
         });
-    };
+    }
 
     submitPasswordForm() {
         let self = this;
@@ -68,7 +68,11 @@ class ProfileService {
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
         });
-    };
+    }
+
+    uploadfile() {
+
+    }
 }
 
 angular.module(moduleProfileService, [ngResourceId]).service(ProfileServiceId, ProfileService);
