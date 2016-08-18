@@ -82,13 +82,18 @@ module.exports = {
 			src: baseSrcPath + 'components/**/*.html',
 			dst: baseDstPath + 'components'
 		},
-		angular: {		
+		angular: {
 			src: [
-					baseTmpPath + 'js/App/App.Constants.js',
-					baseTmpPath + 'js/App/App.Module.js',
-					baseTmpPath + 'js/App/App.Controller.js',
-					baseTmpPath + 'js/**/*.js'
-						],
+				baseTmpPath + 'js/App/App.Constants.js',
+				baseTmpPath + 'js/App/App.Module.js',
+				baseTmpPath + 'js/App/App.Controller.js',
+				baseTmpPath + 'js/App/App.Resource.js',
+				baseTmpPath + 'js/App/App.Common.js',
+				//baseTmpPath + 'js/App/App.Route.js',
+				baseTmpPath + 'js/App/App.Translation.js',
+
+				baseTmpPath + 'js/**/*.js'
+			],
 			dst: baseDstPath + 'assets'
 		},
 		javascript: {

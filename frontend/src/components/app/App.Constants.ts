@@ -24,6 +24,7 @@ const $cookieStoreId: string = "$cookieStore";
 const $windowId: string = "$window";
 const $intervalId: string = "$interval";
 const FileUploaderId: string = "FileUploader";
+const $routeParamsId: string = "$routeParams";
 
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";

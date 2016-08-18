@@ -41,4 +41,6 @@ public interface ISaleService {
 
 	public void delete(final Long id) throws DeleteFailedException;
 
+	List<Sale> getByCustomer(Long id);
+
 }

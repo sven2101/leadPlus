@@ -40,4 +40,6 @@ public interface ILeadService {
 	public Lead update(final Lead lead) throws UpdateFailedException;
 
 	public void delete(final Long id) throws DeleteFailedException;
+
+	public List<Lead> getByCustomer(Long id);
 }

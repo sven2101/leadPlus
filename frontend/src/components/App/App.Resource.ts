@@ -26,6 +26,7 @@ class LeadResource {
         this.resource = $resource("/api/rest/leads/:id", {}, {
             getAll: { url: "/api/rest/leads", method: "GET" },
             getById: { url: "/api/rest/leads/:id", method: "GET" },
+            getByCustomerId: { url: "/api/rest/leads/customer/:id", method: "GET", isArray: true },
             save: { url: "/api/rest/leads/", method: "POST" },
             update: { url: "/api/rest/leads", method: "PUT" },
             drop: { url: "/api/rest/leads/:id", method: "DELETE" }
@@ -49,6 +50,7 @@ class OfferResource {
         this.resource = $resource("/api/rest/offers/:id", {}, {
             getAll: { url: "/api/rest/offers", method: "GET" },
             getById: { url: "/api/rest/offers/:id", method: "GET" },
+            getByCustomerId: { url: "/api/rest/offers/customer/:id", method: "GET", isArray: true },
             save: { url: "/api/rest/offers/", method: "POST" },
             update: { url: "/api/rest/offers", method: "PUT" },
             drop: { url: "/api/rest/offers/:id", method: "DELETE" },
@@ -64,12 +66,15 @@ const SaleResourceId: string = "SaleResource";
 
 class SaleResource {
 
+    private $inject = [$resourceId];
+
     resource: any;
 
     constructor($resource) {
-        this.resource = ("/api/rest/sales/:id", {}, {
+        this.resource = $resource("/api/rest/sales/:id", {}, {
             getAll: { url: "/api/rest/sales", method: "GET" },
             getById: { url: "/api/rest/sales/:id", method: "GET" },
+            getByCustomerId: { url: "/api/rest/sales/customer/:id", method: "GET", isArray: true },
             save: { url: "/api/rest/sales/", method: "POST" },
             update: { url: "/api/rest/sales", method: "PUT" },
             drop: { url: "/api/rest/sales/:id", method: "DELETE" },

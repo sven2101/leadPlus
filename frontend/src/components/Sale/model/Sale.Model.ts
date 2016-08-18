@@ -1,6 +1,6 @@
 /// <reference path="../../common/model/AbstractModel.Model.ts" />
 /// <reference path="../../common/model/OrderPosition.Model.ts" />
-
+/// <reference path="../../common/model/IWorkflow.Interface.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -13,11 +13,11 @@
  ******************************************************************************/
 "use strict";
 
-class Sale extends AbstractModel {
+class Sale extends AbstractModel implements IWorkflow {
     orderPositions: Array<OrderPosition>;
     container: any;
     containerAmount: number;
-    customer: any;
+    customer: Customer;
     timestamp: any;
     vendor: any;
     deliveryAddress: any;

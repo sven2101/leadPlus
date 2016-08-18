@@ -282,7 +282,11 @@ function config($translateProvider) {
             CUSTOMER_DEACTIVATED: "Deaktivieren",
             CUSTOMER_CREATED: "Erstellt",
 
-
+            CUSTOMER_DETAIL_LEAD: "Anfrage",
+            CUSTOMER_DETAIL_OFFER: "Angebot",
+            CUSTOMER_DETAIL_SALE: "Verkauf",
+            CUSTOMER_DETAIL_TIMELINE: "Kunden Timeline",
+            CUSTOMER_DETAIL_CREATED: "wurde erstellt",
 
         })
         .translations("EN", {
@@ -533,9 +537,9 @@ function config($translateProvider) {
             DECEMBER: "December",
 
             PRODUCT_PRODUCTS: "Products",
-            PRODUCT_MANAGE_PRODUCTS: "Manage products",
+            PRODUCT_MANAGE_PRODUCTS: "Manage Products",
             PRODUCT_CREATE: "New product",
-            PRODUCT_PRODUCTNAME: "Product name",
+            PRODUCT_PRODUCTNAME: "Product Name",
             PRODUCT_DESCRIPTION: "Description",
             PRODUCT_PRICE: "Price",
             PRODUCT_IMAGE: "Image",
@@ -543,13 +547,17 @@ function config($translateProvider) {
             PRODUCT_DEACTIVATED: "Deactivate",
             PRODUCT_CREATED: "Created",
 
-            CUSTOMER_MANAGE_CUSTOMER: "Manage customer",
-            CUSTOMER_CREATE: "New customer",
-            CUSTOMER_EDIT: "Edit customer",
+            CUSTOMER_MANAGE_CUSTOMER: "Manage Customer",
+            CUSTOMER_CREATE: "New Customer",
+            CUSTOMER_EDIT: "Edit cCstomer",
             CUSTOMER_DEACTIVATED: "Deactivate",
             CUSTOMER_CREATED: "Created",
 
-
+            CUSTOMER_DETAIL_LEAD: "Lead",
+            CUSTOMER_DETAIL_OFFER: "Offer",
+            CUSTOMER_DETAIL_SALE: "Sale",
+            CUSTOMER_DETAIL_TIMELINE: "Customer Timeline",
+            CUSTOMER_DETAIL_CREATED: "has been created",
 
         });
 

@@ -117,4 +117,9 @@ public class LeadService implements ILeadService {
 	public Page<Lead> getPages(Pageable pageable) {
 		return leadRepository.findAll(pageable);
 	}
+
+	@Override
+	public List<Lead> getByCustomer(Long id) {
+		return leadRepository.findByCustomerId(id);
+	}
 }

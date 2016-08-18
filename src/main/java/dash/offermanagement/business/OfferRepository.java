@@ -14,6 +14,8 @@
 
 package dash.offermanagement.business;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
@@ -24,5 +26,7 @@ import dash.processmanagement.request.RequestRepository;
 @Transactional
 @Repository
 public interface OfferRepository extends RequestRepository<Offer, Long> {
+
+	List<Offer> findByCustomerId(Long id);
 
 }

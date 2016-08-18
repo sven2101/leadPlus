@@ -20,16 +20,18 @@ const CustomerControllerId: string = "CustomerController";
 
 class CustomerController {
 
-    $inject = [CustomerServiceId];
+    $inject = [CustomerServiceId, $locationId];
 
     createCustomerForm;
     currentCustomer: Customer;
     currentEditCustomer: Customer;
     isCurrentCustomerNew;
     customerService: CustomerService;
+    location;
 
-    constructor(CustomerService: CustomerService) {
+    constructor(CustomerService: CustomerService, $location) {
         this.customerService = CustomerService;
+        this.location = $location;
     }
     refreshData(): void {
         this.customerService.getAllCustomer();
@@ -56,6 +58,9 @@ class CustomerController {
     getLocalTimestamp: any = function (customer: Customer) {
         return toLocalDate(customer.timestamp);
     };
+    goToCustomerDetail(customerId: number) {
+        this.location.path("customer/detail/" + customerId);
+    }
 }
 
 angular.module(moduleCustomer, [ngResourceId]).controller(CustomerControllerId, CustomerController);

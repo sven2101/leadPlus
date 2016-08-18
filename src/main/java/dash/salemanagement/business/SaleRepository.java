@@ -14,6 +14,8 @@
 
 package dash.salemanagement.business;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
@@ -24,5 +26,7 @@ import dash.salemanagement.domain.Sale;
 @Repository
 @Transactional
 public interface SaleRepository extends RequestRepository<Sale, Long> {
+
+	List<Sale> findByCustomerId(Long id);
 
 }

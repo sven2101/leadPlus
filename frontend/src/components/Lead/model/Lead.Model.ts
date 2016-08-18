@@ -1,5 +1,7 @@
 /// <reference path="../../common/model/AbstractModel.Model.ts" />
 /// <reference path="../../common/model/OrderPosition.Model.ts" />
+/// <reference path="../../common/model/IWorkflow.Interface.ts" />
+/// <reference path="../../Customer/model/Customer.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -11,15 +13,16 @@
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
 "use strict";
-class Lead extends AbstractModel {
+class Lead extends AbstractModel implements IWorkflow {
     orderPositions: Array<OrderPosition>;
     container: any;
     containerAmount: number;
-    customer: any;
+    customer: Customer;
     timestamp: any;
     vendor: any;
     deliveryAddress: any;
     leadPrice: number;
+    message: string;
     constructor() {
         super();
         this.leadPrice = 0;

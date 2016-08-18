@@ -131,4 +131,9 @@ public class SaleService implements ISaleService {
 	public Page<Sale> getAll(Pageable pageable) {
 		return saleRepository.findAll(pageable);
 	}
+
+	@Override
+	public List<Sale> getByCustomer(Long id) {
+		return saleRepository.findByCustomerId(id);
+	}
 }

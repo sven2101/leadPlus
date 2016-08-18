@@ -463,9 +463,9 @@ class LeadController {
     saveLead() {
         let self = this;
         if (angular.isUndefined(this.newLead.customer)) {
-            this.newLead.customer = {
-                title: "UNKNOWN"
-            };
+            this.newLead.customer = new Customer();
+            this.newLead.customer.title = "UNKNOWN";
+
         }
         this.newLead.timestamp = this.filter("date")
             (new Date(), "dd.MM.yyyy HH:mm", "UTC");
