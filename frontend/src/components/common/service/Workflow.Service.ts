@@ -5,6 +5,7 @@
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../common/model/OrderPosition.Model.ts" />
 /// <reference path="../../common/model/Commentary.Model.ts" />
+/// <reference path="../../app/App.Common.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -54,7 +55,7 @@ class WorkflowService {
             process: process,
             creator: user,
             commentText: commentText,
-            timestamp: moment.utc().format("DD.MM.YYYY HH:mm:ss"),
+            timestamp: newTimestamp("DD.MM.YYYY HH:mm:ss"),
         };
         this.commentResource.save(comment).$promise.then(function () {
             comments.push(comment);
@@ -121,7 +122,7 @@ class WorkflowService {
             deliveryDate: null,
             offerPrice: self.sumOrderPositions(process.lead.orderPositions),
             customer: process.lead.customer,
-            timestamp: moment.utc().format("DD.MM.YYYY HH:mm"),
+            timestamp: newTimestamp(),
             vendor: process.lead.vendor
         };
         for (let i = 0; i < offer.orderPositions.length; i++) {
@@ -174,7 +175,7 @@ class WorkflowService {
             customer: process.offer.customer,
             saleProfit: 0,
             saleReturn: process.offer.offerPrice,
-            timestamp: moment.utc().format("DD.MM.YYYY HH:mm"),
+            timestamp: newTimestamp(),
             vendor: process.offer.vendor
         };
         for (let i = 0; i < sale.orderPositions.length; i++) {

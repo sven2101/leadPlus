@@ -5,6 +5,7 @@
 /// <reference path="../../dashboard/controller/Dashboard.Service.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../common/model/Commentary.Model.ts" />
+/// <reference path="../../common/model/IWorkflow.Interface.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -31,10 +32,10 @@ class DashboardController {
     dashboardService: DashboardService;
     rootScope;
     commentModalInput: string;
-    infoData: AbstractModel;
-    infoType: string;
-    infoProcess: Process;
-    infoComments: Array<Commentary>;
+    workflowModalData: IWorkflow;
+    workflowModalType: string;
+    workflowModalProcess: Process;
+    workflowComments: Array<Commentary>;
     user: User;
     sortableOptions: any;
 
@@ -58,17 +59,17 @@ class DashboardController {
     }
 
     saveDataToModal(info, type, process) {
-        this.infoData = info;
-        this.infoType = type;
-        this.infoProcess = process;
-        this.infoComments = this.workflowService.getCommentsByProcessId(process.id);
+        this.workflowModalData = info;
+        this.workflowModalType = type;
+        this.workflowModalProcess = process;
+        this.workflowComments = this.workflowService.getCommentsByProcessId(process.id);
     }
     refreshData() {
         this.dashboardService.initDashboard();
     }
     addComment(process) {
         let self: DashboardController = this;
-        this.workflowService.addComment(this.infoComments, process, this.user, this.commentModalInput).then(function () {
+        this.workflowService.addComment(this.workflowComments, process, this.user, this.commentModalInput).then(function () {
             self.commentModalInput = "";
         });
     }

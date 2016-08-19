@@ -19,7 +19,7 @@ function config($translateProvider) {
     let pageLogo = pageTitle + "+";
 
     $translateProvider
-        .translations(Language.DE, {
+        .translations(Language[Language.DE], {
             // GENERAL
             TITLE: pageTitle,
             LOGO: pageLogo,
@@ -290,7 +290,7 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_CREATED: "wurde erstellt",
 
         })
-        .translations(Language.EN, {
+        .translations(Language[Language.EN], {
             // GENERAL
             TITLE: pageTitle,
             LOGO: pageLogo,
@@ -562,8 +562,8 @@ function config($translateProvider) {
 
         });
 
-    $translateProvider.preferredLanguage(Language.DE);
-    $translateProvider.fallbackLanguage(Language.EN);
+    $translateProvider.preferredLanguage(Language[Language.DE]);
+    $translateProvider.fallbackLanguage(Language[Language.EN]);
 
 }
 "use strict";

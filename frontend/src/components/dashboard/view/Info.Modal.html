@@ -10,66 +10,66 @@
                 <button type="button" class="close" data-dismiss="modal"><span
                         aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title">{{ 'COMMON_DETAILS' | translate }}</h4>
-                <h2>{{dashboardCtrl.infoData.container.name}}</h2>
+                <h2>{{dashboardCtrl.workflowModalData.container.name}}</h2>
             </div>
             <div class="modal-body">
                 <table class="table table-bordered text-left">
                     <tr>
                         <td>{{ 'COMMON_NAME' | translate }}</td>
-                        <td>{{ dashboardCtrl.infoData.customer.title | translate }}
-                            {{dashboardCtrl.infoData.customer.firstname}}
-                            {{dashboardCtrl.infoData.customer.lastname}}
+                        <td>{{ dashboardCtrl.workflowModalData.customer.title | translate }}
+                            {{dashboardCtrl.workflowModalData.customer.firstname}}
+                            {{dashboardCtrl.workflowModalData.customer.lastname}}
                         </td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_EMAIL' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.customer.email}}</td>
+                        <td>{{dashboardCtrl.workflowModalData.customer.email}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_PHONE' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.customer.phone}}</td>
+                        <td>{{dashboardCtrl.workflowModalData.customer.phone}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.container.name}}</td>
+                        <td>{{dashboardCtrl.workflowModalData.container.name}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_DESC' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.container.description}}</td>
+                        <td>{{dashboardCtrl.workflowModalData.container.description}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_AMOUNT' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.containerAmount}}</td>
+                        <td>{{dashboardCtrl.workflowModalData.containerAmount}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_SINGLE_PRICE' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.container.priceNetto | currency:'\u20AC'}}</td>
+                        <td>{{dashboardCtrl.workflowModalData.container.priceNetto | currency:'\u20AC'}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.deliveryAddress}}</td>
+                        <td>{{dashboardCtrl.workflowModalData.deliveryAddress}}</td>
                     </tr>
                     <tr ng-if="dashboardCtrl.infoType == 'offer'">
                         <td>{{ 'COMMON_DELIVERY_TIME' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.deliveryDate |
+                        <td>{{dashboardCtrl.workflowModalData.deliveryDate |
                             date:'dd-MM-yyyy'}}
                         </td>
                     </tr>
                     <tr ng-if="dashboardCtrl.infoType == 'offer'">
                         <td>{{ 'COMMON_CONTAINER_OFFER_PRICE' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.offerPrice |
+                        <td>{{dashboardCtrl.workflowModalData.offerPrice |
                             currency:'\u20AC'}}
                         </td>
                     </tr>
                     <tr ng-if="dashboardCtrl.infoType == 'sale'">
                         <td>{{ 'COMMON_SALE_RETURN' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.saleTurnover|
+                        <td>{{dashboardCtrl.workflowModalData.saleTurnover|
                             currency:'\u20AC'}}
                         </td>
                     </tr>
                     <tr ng-if="dashboardCtrl.infoType == 'sale'">
                         <td>{{ 'COMMON_SALE_PROFIT' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.saleProfit|
+                        <td>{{dashboardCtrl.workflowModalData.saleProfit|
                             currency:'\u20AC'}}
                         </td>
                     </tr>
@@ -78,17 +78,17 @@
                 <div class="chat-view">
                     <div class="text-left">
                         <span class="pull-left" style="font-size: 1.5em;">{{ 'COMMON_COMMENTS' | translate }}</span>
-                        <small ng-if="dashboardCtrl.infoComments.length>0" class="pull-right text-muted">
+                        <small ng-if="dashboardCtrl.workflowComments.length>0" class="pull-right text-muted">
                             {{ 'COMMON_COMMENTS_LAST' | translate }}:
-                            {{dashboardCtrl.infoComments[dashboardCtrl.infoComments.length-1].timestamp|
+                            {{dashboardCtrl.workflowComments[dashboardCtrl.workflowComments.length-1].timestamp|
                             date:'dd.MM.yyyy HH:mm'}}
                         </small>
                     </div>
                     <div class=" text-left">
-                        <div ng-if="dashboardCtrl.infoComments.length>0" class="row">
+                        <div ng-if="dashboardCtrl.workflowComments.length>0" class="row">
                             <div class="col-md-12 ">
-                                <div class="chat-discussion" ng-model="dashboardCtrl.infoComments">
-                                    <div ng-repeat="comment in dashboardCtrl.infoComments | orderBy: '-timestamp'">
+                                <div class="chat-discussion" ng-model="dashboardCtrl.workflowComments">
+                                    <div ng-repeat="comment in dashboardCtrl.workflowComments | orderBy: '-timestamp'">
                                         <div ng-if="$index%2==0" class="chat-message left">
                                             <img class="message-avatar" src="assets/img/guest.png" alt="">
                                             <div class="message">
@@ -126,7 +126,7 @@
                                     </div>
                                     <button style="width:35%; margin-top: 10px;"
                                             class="btn btn-success"
-                                            ng-click="dashboardCtrl.addComment(dashboardCtrl.infoProcess)">
+                                            ng-click="dashboardCtrl.addComment(dashboardCtrl.workflowModalProcess)">
                                         <i class="fa fa-comment-o"></i>&nbsp;{{ 'COMMON_COMMENTS_ADD' | translate }}
                                     </button>
                                 </div>
