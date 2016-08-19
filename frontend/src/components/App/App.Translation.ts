@@ -1,3 +1,4 @@
+/// <reference path="../User/Model/Language.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -18,7 +19,7 @@ function config($translateProvider) {
     let pageLogo = pageTitle + "+";
 
     $translateProvider
-        .translations("DE", {
+        .translations(Language.DE, {
             // GENERAL
             TITLE: pageTitle,
             LOGO: pageLogo,
@@ -289,7 +290,7 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_CREATED: "wurde erstellt",
 
         })
-        .translations("EN", {
+        .translations(Language.EN, {
             // GENERAL
             TITLE: pageTitle,
             LOGO: pageLogo,
@@ -561,8 +562,8 @@ function config($translateProvider) {
 
         });
 
-    $translateProvider.preferredLanguage("DE");
-    $translateProvider.fallbackLanguage("EN");
+    $translateProvider.preferredLanguage(Language.DE);
+    $translateProvider.fallbackLanguage(Language.EN);
 
 }
 "use strict";

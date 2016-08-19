@@ -27,6 +27,8 @@ const $qId: string = "$q";
 const FileUploaderId: string = "FileUploader";
 const $routeParamsId: string = "$routeParams";
 const $ngImgCropId: string = "ngImgCrop";
+const $routeProviderId: string = "$routeProvider";
+const $httpProviderId: string = "$httpProvider";
 
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";

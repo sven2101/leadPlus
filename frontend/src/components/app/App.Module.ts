@@ -14,7 +14,7 @@
  ******************************************************************************/
 "use strict";
 
-angular.module("app",
+angular.module(moduleApp,
     [
         moduleApp,
         moduleAppController,
@@ -65,7 +65,4 @@ angular.module("app",
         moduleNgSwitchery,
         moduleToaster,
         moduleHighchartsNg,
-
-
     ]);
-
