@@ -20,21 +20,23 @@ const AuthServiceId: string = "AuthService";
 
 class AuthService {
 
-    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, $windowId];
+    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, $windowId, $compileId];
 
     http;
     rootScope;
     cookieStore;
     location;
     window;
+    compile;
     user: User;
 
-    constructor($http, $rootScope, $cookieStore, $location, $window) {
+    constructor($http, $rootScope, $cookieStore, $location, $window, $compile) {
         this.http = $http;
         this.rootScope = $rootScope;
         this.cookieStore = $cookieStore;
         this.location = $location;
         this.window = $window;
+        this.compile = $compile;
     }
 
     login(credentials, success, error) {
@@ -48,8 +50,7 @@ class AuthService {
 
                 if (data.username) {
                     self.user = data;
-                    console.log(data);
-                    console.log(self.user);
+
                     self.rootScope.globals = {
                         user: {
                             id: data.id,

@@ -52,7 +52,7 @@ class LoginService {
                     self.rootScope.loadLabels();
                 },
                 function (err) {
-                    self.scope.credentials.password = "";
+                    // self.scope.credentials.password = "";
                     self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
                 }
             );

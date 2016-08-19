@@ -23,7 +23,7 @@ const ProfileServiceId: string = "ProfileService";
 
 class ProfileService {
 
-    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, AuthServiceId, FileResourceId];
+    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, AuthServiceId, FileResourceId, $ngImgCropId];
 
     userResource;
     translate;
@@ -31,7 +31,8 @@ class ProfileService {
     rootScope;
     authService;
     passwordForm;
-
+    ngImgCrop;
+    
     fileResource;
     formdata;
 
@@ -40,7 +41,7 @@ class ProfileService {
     newPassword1: string;
     newPassword2: string;
 
-    constructor($rootScope, toaster, $translate, UserResource, AuthService: AuthService, FileResource) {
+    constructor($rootScope, toaster, $translate, UserResource, AuthService: AuthService, FileResource, ngImgCrop) {
         this.userResource = UserResource.resource;
         this.translate = $translate;
         this.toaster = toaster;
@@ -50,6 +51,7 @@ class ProfileService {
 
         this.fileResource = FileResource.resource;
         this.formdata = new FormData();
+        this.ngImgCrop = ngImgCrop;
     }
 
     submitProfilInfoForm() {
@@ -75,9 +77,7 @@ class ProfileService {
 
     uploadFiles() {
         let self = this;
-        console.log("file");
-        console.log(this.formdata);
-        this.userResource.setProfilePicture({id: 1}, this.formdata).$promise.then(function () {
+        this.userResource.setProfilePicture({ id: 1 }, this.formdata).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
