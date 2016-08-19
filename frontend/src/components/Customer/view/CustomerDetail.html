@@ -98,7 +98,7 @@
                             <div class="vertical-timeline-content">
                                 <h2>{{customerDetailCtrl.currentCustomer.firstname}} {{customerDetailCtrl.currentCustomer.lastname}}
                                     {{ 'CUSTOMER_DETAIL_CREATED' | translate }}</h2>
-                                <span class="vertical-date"><strong>{{customerDetailCtrl.currentCustomer.timestamp}}</strong></span>
+                                <span class="vertical-date"><strong>{{customerDetailCtrl.toLocalDate(customerDetailCtrl.currentCustomer.timestamp)}}</strong></span>
                             </div>
                         </div>
                     </div>

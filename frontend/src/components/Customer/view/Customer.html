@@ -62,12 +62,16 @@
                                         <span ng-show="!customer.deactivated" class="label label-primary">Active</span>
                                         <span ng-show="customer.deactivated" class="label label-default">Unactive</span>
                                     </td>
+                                    <td ng-click="customerCtrl.goToCustomerDetail(customer.id)" style="cursor: pointer;">
+                                        <a ng-href="#/customer/detail/{{customer.id}} " class="btn btn-xs btn-success btn-circle
+                                            " type="button "><i style="color:white; " class="fa fa-user "></i></a></td>
                                     <td ng-click="customerCtrl.goToCustomerDetail(customer.id)" style="cursor: pointer;" class="project-title col-md-2">
+
                                         <a ">{{customer.firstname}} {{customer.lastname}}</a>
                                         <br>
                                         <small>{{ 'CUSTOMER_CREATED' | translate }} {{customerCtrl.getLocalTimestamp(customer)}}</small>
-                                    </td>
-                                    <td >
+                                       
+                                    </td>                                  
                                        {{customer.email}}
                                     </td>
                                      <td >

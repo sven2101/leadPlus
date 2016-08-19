@@ -10,6 +10,8 @@
 /// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Customer/model/Customer.Model.ts" />
+/// <reference path="../../Customer/controller/Customer.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -26,15 +28,17 @@ class SaleController {
 
     $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile",
         "$scope", "toaster", "ProcessResource", "CommentResource", "$filter",
-        "UserResource", "$rootScope", "$translate", "SaleResource", ProductServiceId, WorkflowServiceId];
+        "UserResource", "$rootScope", "$translate", "SaleResource", ProductServiceId, WorkflowServiceId, CustomerServiceId, CustomerResourceId];
 
     filter;
     processResource;
     commentResource;
     saleResource;
     userResource;
+    customerResource;
     workflowService;
     productService;
+    customerService: CustomerService;
     scope;
     rootScope;
     translate;
@@ -52,24 +56,29 @@ class SaleController {
     currentOrderPositions = [];
     currentProductId = "-1";
     currentProductAmount = 1;
+    currentCustomerId = "-1";
+    customerSelected: boolean = false;
     dtInstance = { DataTable: null };
     processes = {};
     rows = {};
     editProcess = new Process();
     newSale = new Sale();
+    editSale: Sale;
     editForm;
 
     constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
         toaster, ProcessResource, CommentResource, $filter, UserResource,
-        $rootScope, $translate, SaleResource, ProductService, WorkflowService) {
+        $rootScope, $translate, SaleResource, ProductService, WorkflowService, CustomerService, CustomerResource) {
 
         this.filter = $filter;
         this.processResource = ProcessResource.resource;
         this.commentResource = CommentResource.resource;
         this.saleResource = SaleResource.resource;
         this.userResource = UserResource.resource;
+        this.customerResource = CustomerResource.resource;
         this.workflowService = WorkflowService;
         this.productService = ProductService;
+        this.customerService = CustomerService;
         this.scope = $scope;
         this.rootScope = $rootScope;
         this.translate = $translate;
@@ -355,11 +364,34 @@ class SaleController {
         this.editProcess = sale;
         this.currentOrderPositions = deepCopy(this.editProcess.sale.orderPositions);
 
+        this.customerSelected = this.editProcess.sale.customer.id > 0;
+        this.currentCustomerId = this.editProcess.sale.customer.id + "";
+        this.editSale = deepCopy(this.editProcess.sale);
+
     };
 
     saveEditedRow() {
         let self = this;
+        shallowCopy(this.editSale, this.editProcess.sale);
         this.editProcess.sale.orderPositions = this.currentOrderPositions;
+
+        let temp: any = this.editProcess.sale;
+        if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
+            temp.customer.timestamp = newTimestamp();
+            this.customerResource.createCustomer(temp.customer).$promise.then(function (customer) {
+                temp.customer = customer;
+
+                self.processResource.save(self.editProcess).$promise.then(function (result) {
+                    self.toaster.pop("success", "", self.translate
+                        .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
+                    self.editForm.$setPristine();
+                    self.updateRow(self.editProcess);
+                    self.customerService.getAllCustomer();
+                });
+            });
+            return;
+        }
+
         this.saleResource.update(this.editProcess.sale).$promise.then(function () {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_SALE"));
@@ -402,6 +434,28 @@ class SaleController {
     }
     sumOrderPositions(array) {
         return this.workflowService.sumOrderPositions(array);
+    }
+
+    selectCustomer(workflow: any) {
+        if (isNullOrUndefined(Number(this.currentCustomerId)) || Number(this.currentCustomerId) <= 0) {
+            this.customerSelected = false;
+            workflow.customer = new Customer();
+            workflow.customer.id = 0;
+            console.log(this.customerSelected);
+            return;
+        }
+
+        let temp: Customer = findElementById(this.customerService.customer, Number(this.currentCustomerId)) as Customer;
+        if (isNullOrUndefined(temp)) {
+            this.customerSelected = false;
+            workflow.customer = new Customer();
+            workflow.customer.id = 0;
+            console.log(this.customerSelected);
+            return;
+        }
+        workflow.customer = deepCopy(temp);
+        this.customerSelected = true;
+        console.log(this.customerSelected);
     }
 
 }
