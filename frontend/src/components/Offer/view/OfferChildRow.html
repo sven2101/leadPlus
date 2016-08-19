@@ -1,7 +1,7 @@
 <style>
-.chat-view {
-	word-break: break-all;
-}
+	.chat-view {
+		word-break: break-all;
+	}
 </style>
 <div class="row">
 	<div class="col-lg-6">
@@ -13,9 +13,9 @@
 				<table class="table table-bordered text-left">
 					<tr>
 						<td>{{ 'COMMON_NAME' | translate }}</td>
-						<td>{{ childData.offer.customer.title | translate }}
-							{{childData.offer.customer.firstname}}
-							{{childData.offer.customer.lastname}}</td>
+						<td>{{ childData.offer.customer.title | translate }} {{childData.offer.customer.firstname}} {{childData.offer.customer.lastname}}
+							<a ng-href="#/customer/detail/{{childData.offer.customer.id}}" class="btn btn-xs btn-success btn-circle pull-right" type="button"><i class="fa fa-user"></i></a>
+						</td>
 					</tr>
 					<tr>
 						<td>{{ 'COMMON_PHONE' | translate }}</td>
@@ -35,13 +35,12 @@
 					</tr>
 					<tr>
 						<td>{{ 'COMMON_CONTAINER_SINGLE_PRICE' | translate }}</td>
-						<td>{{childData.offer.container.priceNetto |
-							currency:'\u20AC'}}</td>
+						<td>{{childData.offer.container.priceNetto | currency:'\u20AC'}}
+						</td>
 					</tr>
 					<tr>
 						<td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
-						<td>{{childData.offer.containerAmount*childData.offer.container.priceNetto
-							| currency:'\u20AC'}}</td>
+						<td>{{childData.offer.containerAmount*childData.offer.container.priceNetto | currency:'\u20AC'}}</td>
 					</tr>
 					<tr>
 						<td>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</td>
@@ -63,8 +62,8 @@
 	<div class="col-lg-6" ng-if="childData.processor != null">
 		<div class="ibox">
 			<div class="ibox-title">
-				<h3>{{ 'COMMON_PROCESSOR' | translate }}:
-					{{childData.processor.username}}</h3>
+				<h3>{{ 'COMMON_PROCESSOR' | translate }}: {{childData.processor.username}}
+				</h3>
 			</div>
 		</div>
 	</div>
