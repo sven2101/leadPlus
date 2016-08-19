@@ -54,7 +54,7 @@ class WorkflowService {
             process: process,
             creator: user,
             commentText: commentText,
-            timestamp: moment.utc().format("DD.MM.YYYY HH:mm"),
+            timestamp: moment.utc().format("DD.MM.YYYY HH:mm:ss"),
         };
         this.commentResource.save(comment).$promise.then(function () {
             comments.push(comment);

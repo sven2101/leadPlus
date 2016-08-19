@@ -67,7 +67,6 @@ class DashboardController {
         this.dashboardService.initDashboard();
     }
     addComment(process) {
-        console.log(process);
         let self: DashboardController = this;
         this.workflowService.addComment(this.infoComments, process, this.user, this.commentModalInput).then(function () {
             self.commentModalInput = "";
@@ -89,13 +88,13 @@ class DashboardController {
     getTurnover(): number {
         return this.statisticService.getTurnoverTotal();
     }
-    getLeads(): number {
+    getLeadAmount(): number {
         return this.statisticService.getLeadAmount();
     }
-    getOffers(): number {
+    getOfferAmount(): number {
         return this.statisticService.getOfferAmount();
     }
-    getSales(): number {
+    getSaleAmount(): number {
         return this.statisticService.getSaleAmount();
     }
     getConversionrate(): number {
