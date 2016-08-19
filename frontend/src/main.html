@@ -3,7 +3,8 @@
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
                 <div class="dropdown profile-element"> <span>
-                            <img alt="image" class="img-circle" src="assets/img/guest.png"/>
+                            <!--<img alt="image" class="img-circle" src="assets/img/guest.png"/>-->
+                             <img ng-src="data:image/JPEG;base64,{{globals.user.profilePicture}}">
                              </span>
                     <a data-toggle="dropdown" class="dropdown-toggle">
                             <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{globals.user.username}}</strong>

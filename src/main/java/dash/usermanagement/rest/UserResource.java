@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.codec.Base64;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,7 @@ import dash.usermanagement.settings.password.PasswordChange;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/users", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/users", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.ALL_VALUE })
 public class UserResource {
 
 	@Autowired
@@ -97,6 +98,13 @@ public class UserResource {
 	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
 	public void delete(@PathVariable final long id) throws DeleteFailedException {
 		userService.delete(id);
+	}
+
+	@RequestMapping(value = "/{id}/profile/picture", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get user Profile Picture.")
+	public byte[] getProfilePictureById(@PathVariable final long id) throws NotFoundException {
+		return Base64.encode(userService.getById(id).getProfilPicture().getContent());
 	}
 
 	@RequestMapping(value = "/{id}/profile/picture", method = RequestMethod.POST)

@@ -27,8 +27,6 @@ const $qId: string = "$q";
 const FileUploaderId: string = "FileUploader";
 const $routeParamsId: string = "$routeParams";
 
-
-
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";
 const moduleServices: string = moduleApp + ".services";

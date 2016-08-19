@@ -53,6 +53,7 @@ public class PrincipleResource {
 			map.put("role", authority.getAuthority());
 		}
 
+		map.put("email", internalUser.getEmail());
 		map.put("username", user.getName());
 		map.put("id", String.valueOf(internalUser.getId()));
 

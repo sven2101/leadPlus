@@ -20,21 +20,23 @@ const AuthServiceId: string = "AuthService";
 
 class AuthService {
 
-    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, $windowId];
+    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, $windowId, $compileId];
 
     http;
     rootScope;
     cookieStore;
     location;
     window;
+    compile;
     user: User;
 
-    constructor($http, $rootScope, $cookieStore, $location, $window) {
+    constructor($http, $rootScope, $cookieStore, $location, $window, $compile) {
         this.http = $http;
         this.rootScope = $rootScope;
         this.cookieStore = $cookieStore;
         this.location = $location;
         this.window = $window;
+        this.compile = $compile;
     }
 
     login(credentials, success, error) {
@@ -48,13 +50,13 @@ class AuthService {
 
                 if (data.username) {
                     self.user = data;
-                    console.log(data);
-                    console.log(self.user);
+
                     self.rootScope.globals = {
                         user: {
                             id: data.id,
                             username: data.username,
                             role: data.role,
+                            profilePicture: "",
                             authorization: authorization
                         }
                     };
@@ -62,12 +64,30 @@ class AuthService {
                     self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
                     self.cookieStore.put("globals", self.rootScope.globals);
 
+                    self.loadProfile(headers);
                     success(data);
                 } else {
                 }
             }).error(error);
 
+
+
         }
+    }
+
+    loadProfile(headers) {
+        let self = this;
+        this.http.get("users/1/profile/picture", { headers: headers }).success(function (data) {
+            self.user = data;
+            console.log("Data 2 ");
+            console.log(data);
+
+            self.compile.aHrefSanitizationWhitelist(/^\s*(https?|file|ftp|blob):|data:image\//);
+            self.rootScope.globals.user.profilePicture = data;
+
+        }).error(function (data) {
+            console.log("Data 3 ");
+        });
     }
 
     logout() {
