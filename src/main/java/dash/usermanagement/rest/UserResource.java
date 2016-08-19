@@ -19,9 +19,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.codec.Base64;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +45,7 @@ import dash.usermanagement.settings.password.PasswordChange;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/users", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.ALL_VALUE })
+@RequestMapping(value = "/users")
 public class UserResource {
 
 	@Autowired
@@ -103,8 +104,13 @@ public class UserResource {
 	@RequestMapping(value = "/{id}/profile/picture", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get user Profile Picture.")
-	public byte[] getProfilePictureById(@PathVariable final long id) throws NotFoundException {
-		return Base64.encode(userService.getById(id).getProfilPicture().getContent());
+	public ResponseEntity<byte[]> getProfilePictureById(@PathVariable final long id) throws NotFoundException {
+		byte[] body = userService.getById(id).getProfilPicture().getContent();
+		HttpHeaders header = new HttpHeaders();
+		header.setContentType(MediaType.MULTIPART_FORM_DATA);
+		header.setContentLength(body.length);
+
+		return new ResponseEntity<byte[]>(body, header, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}/profile/picture", method = RequestMethod.POST)

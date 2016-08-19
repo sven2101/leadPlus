@@ -26,6 +26,7 @@ const $intervalId: string = "$interval";
 const $qId: string = "$q";
 const FileUploaderId: string = "FileUploader";
 const $routeParamsId: string = "$routeParams";
+const $ngImgCropId: string = "ngImgCrop";
 
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";

@@ -23,10 +23,13 @@ class ProfileController {
 
     private $inject = [ProfileServiceId];
 
+    myImage = "";
+    myCroppedImage = "";
     profileService;
 
     constructor(ProfileService: ProfileService) {
         this.profileService = ProfileService;
+        angular.element(document.querySelector("#fileInput")).on("change", this.handleFileSelect);
     }
 
     submitProfilInfoForm() {
@@ -44,6 +47,19 @@ class ProfileController {
     getTheFiles($files) {
         this.profileService.getTheFiles($files);
     }
+
+    handleFileSelect(evt) {
+        let file = evt.currentTarget.files[0];
+        let reader = new FileReader();
+        let self = this;
+        reader.onload = function (evt) {
+            this.$apply(function ($scope) {
+                //  self.myImage = evt.target.;
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+
 }
 
 angular.module(moduleProfile, [ngResourceId]).controller(ProfileControllerId, ProfileController);
