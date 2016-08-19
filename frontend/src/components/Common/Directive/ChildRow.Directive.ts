@@ -1,3 +1,4 @@
+/// <reference path="../../app/App.Constants.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -13,7 +14,7 @@
  *******************************************************************************/
 "use strict";
 
-angular.module("app")
+angular.module(moduleApp)
     .directive("childrow", function () {
         let directive: { restrict: string, templateUrl: any, transclude: boolean, link: any };
         directive = { restrict: null, templateUrl: null, transclude: null, link: null };

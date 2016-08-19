@@ -1,3 +1,4 @@
+/// <reference path="../../app/App.Constants.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -13,7 +14,7 @@
  **************Z****************************************************************/
 "use strict";
 
-angular.module("app")
+angular.module(moduleApp)
     .directive("pwCheck", function () {
         return {
             require: "ngModel",

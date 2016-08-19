@@ -13,7 +13,7 @@
  ******************************************************************************/
 "use strict";
 
-angular.module("app").config(["$routeProvider", "$httpProvider",
+angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
     function ($routeProvider, $httpProvider) {
         $routeProvider
             .when("/",

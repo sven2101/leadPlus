@@ -129,4 +129,4 @@ class AppController {
     }
 }
 
-angular.module(moduleAppController, [ngResourceId]).controller("AppController", AppController);
+angular.module(moduleAppController, [ngResourceId]).controller(AppControllerId, AppController);
