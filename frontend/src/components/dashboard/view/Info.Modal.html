@@ -16,30 +16,18 @@
                 <table class="table table-bordered text-left">
                     <tr>
                         <td>{{ 'COMMON_NAME' | translate }}</td>
-                        <td ng-if="dashboardCtrl.infoType == 'lead'">{{ dashboardCtrl.infoData.inquirer.title | translate }}
-                            {{dashboardCtrl.infoData.inquirer.firstname}}
-                            {{dashboardCtrl.infoData.inquirer.lastname}}
-                        </td>
-                        <td ng-if="dashboardCtrl.infoType == 'offer'">{{ dashboardCtrl.infoData.prospect.title | translate }}
-                            {{dashboardCtrl.infoData.prospect.firstname}}
-                            {{dashboardCtrl.infoData.prospect.lastname}}
-                        </td>
-                        <td ng-if="dashboardCtrl.infoType == 'sale'">{{ dashboardCtrl.infoData.customer.title | translate }}
+                        <td>{{ dashboardCtrl.infoData.customer.title | translate }}
                             {{dashboardCtrl.infoData.customer.firstname}}
                             {{dashboardCtrl.infoData.customer.lastname}}
                         </td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_EMAIL' | translate }}</td>
-                        <td ng-if="dashboardCtrl.infoType == 'lead'">{{dashboardCtrl.infoData.inquirer.email}}</td>
-                        <td ng-if="dashboardCtrl.infoType == 'offer'">{{dashboardCtrl.infoData.prospect.email}}</td>
-                        <td ng-if="dashboardCtrl.infoType == 'sale'">{{dashboardCtrl.infoData.customer.email}}</td>
+                        <td>{{dashboardCtrl.infoData.customer.email}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_PHONE' | translate }}</td>
-                        <td ng-if="dashboardCtrl.infoType == 'lead'">{{dashboardCtrl.infoData.inquirer.phone}}</td>
-                        <td ng-if="dashboardCtrl.infoType == 'offer'">{{dashboardCtrl.infoData.prospect.phone}}</td>
-                        <td ng-if="dashboardCtrl.infoType == 'sale'">{{dashboardCtrl.infoData.customer.phone}}</td>
+                        <td>{{dashboardCtrl.infoData.customer.phone}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER' | translate }}</td>
@@ -57,21 +45,9 @@
                         <td>{{ 'COMMON_CONTAINER_SINGLE_PRICE' | translate }}</td>
                         <td>{{dashboardCtrl.infoData.container.priceNetto | currency:'\u20AC'}}</td>
                     </tr>
-                    <tr ng-if="dashboardCtrl.infoType == 'lead'">
-                        <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.leadPrice | currency:'\u20AC'}}</td>
-                    </tr>
-                    <tr ng-if="dashboardCtrl.infoType == 'offer' || dashboardCtrl.infoType == 'sale' ">
-                        <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.containerAmount*dashboardCtrl.infoData.container.priceNetto |
-                            currency:'\u20AC'}}
-                        </td>
-                    </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</td>
-                        <td ng-if="dashboardCtrl.infoType == 'lead'">{{dashboardCtrl.infoData.destination}}</td>
-                        <td ng-if="dashboardCtrl.infoType == 'offer'">{{dashboardCtrl.infoData.deliveryAddress}}</td>
-                        <td ng-if="dashboardCtrl.infoType == 'sale'">{{dashboardCtrl.infoData.transport}}</td>
+                        <td>{{dashboardCtrl.infoData.deliveryAddress}}</td>
                     </tr>
                     <tr ng-if="dashboardCtrl.infoType == 'offer'">
                         <td>{{ 'COMMON_DELIVERY_TIME' | translate }}</td>
@@ -87,7 +63,7 @@
                     </tr>
                     <tr ng-if="dashboardCtrl.infoType == 'sale'">
                         <td>{{ 'COMMON_SALE_RETURN' | translate }}</td>
-                        <td>{{dashboardCtrl.infoData.saleReturn|
+                        <td>{{dashboardCtrl.infoData.saleTurnover|
                             currency:'\u20AC'}}
                         </td>
                     </tr>
@@ -100,7 +76,6 @@
 
                 </table>
                 <div class="chat-view">
-
                     <div class="text-left">
                         <span class="pull-left" style="font-size: 1.5em;">{{ 'COMMON_COMMENTS' | translate }}</span>
                         <small ng-if="dashboardCtrl.infoComments.length>0" class="pull-right text-muted">

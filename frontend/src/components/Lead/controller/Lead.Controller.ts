@@ -677,12 +677,6 @@ class LeadController {
         workflow.customer = deepCopy(temp);
         this.customerSelected = true;
     }
-
-
-
-
-
-
 }
 angular.module("app.lead", ["ngResource"]).controller("LeadController", LeadController);
 

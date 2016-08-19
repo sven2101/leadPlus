@@ -448,9 +448,12 @@ class OffersController {
         this.currentCommentModalId = id;
     };
 
-    addComment(id, source) {
-        this.workflowService.addComment(id, source, this.processes[id], this.user, this.comments, this.commentInput, this.commentModalInput);
+     addComment(id: number, input: string) {
+        this.workflowService.addComment(this.comments[id], this.processes[id], this.user, input[id]).then(function () {
+            input[id] = "";
+        });
     };
+
 
     clearNewOffer() {
         this.newOffer = new Offer();
