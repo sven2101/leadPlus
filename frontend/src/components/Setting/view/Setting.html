@@ -35,7 +35,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-model="settingCtrl.user" ng-repeat="user in settingCtrl.settingService.users | orderBy:'username'" ng-if="user.username != globals.user.username && user.username != 'api'">
+                            <tr ng-repeat="user in settingCtrl.settingService.users | orderBy:'username'" ng-if="user.username != globals.user.username && user.username != 'api'">
                                 <td>{{user.id}}</td>
                                 <td>{{user.username}}</td>
                                 <td>{{user.email}}</td>
@@ -73,7 +73,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-model="settingCtrl.user" ng-repeat="user in settingCtrl.settingService.users | orderBy:'username'" ng-if="user.role !='superadmin' && user.username != globals.user.username  && user.username != 'api'">
+                            <tr ng-repeat="user in settingCtrl.users | orderBy:'username'" ng-if="user.role !='superadmin' && user.username != globals.user.username  && user.username != 'api'">
                                 <td>{{user.id}}</td>
                                 <td>{{user.username}}</td>
                                 <td>
@@ -89,7 +89,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <button ng-click="settingCtrl.saveRole(user)" type="button" class="btn btn-success" ng-disabled="settingCtrl.hasRight(user)">
+                                    <button ng-click="settingCtrl.changeRole(user)" type="button" class="btn btn-success" ng-disabled="settingCtrl.hasRight(user)">
                                     <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
                                 </button>
                                 </td>

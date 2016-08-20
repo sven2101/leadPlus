@@ -31,8 +31,8 @@ class SettingService {
     toaster;
     counter;
 
+    roleSelection = Array<any>();
     users: Array<User>;
-    role: Role;
 
     constructor($filter, toaster, $translate, $rootScope, SettingResource) {
         this.filter = $filter;
@@ -47,9 +47,9 @@ class SettingService {
             for (let user in result) {
                 if (user === "$promise")
                     break;
+                self.roleSelection[result[user].id] = result[user].role;
             }
         });
-        console.log("Users: " + this.users);
         this.counter = 1;
     }
 
@@ -87,19 +87,6 @@ class SettingService {
             return false;
         }
     }
-
-    saveRole(user: User) {
-        let self = this;
-        user.role = this.role;
-        this.settingsResource.setRole({ id: user.id }, user.role).$promise.then(function () {
-            // set rootScope role
-            self.filter("filter")(self.users, { id: user.id })[0].role = user.role;
-            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_SET_ROLE"));
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_SET_ROLE_ERROR"));
-        });
-    }
-
 }
 
 angular.module(moduleSettingService, [ngResourceId]).service(SettingServiceId, SettingService);

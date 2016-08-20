@@ -40,6 +40,7 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
 import dash.usermanagement.business.UserService;
+import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.settings.password.PasswordChange;
 import io.swagger.annotations.ApiOperation;
@@ -75,7 +76,8 @@ public class UserResource {
 	@RequestMapping(value = "/{id}/pw", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update password of a single user.", notes = "Provide a valid user ID.")
-	public void updatePassword(@PathVariable final long id, @RequestBody final PasswordChange passwordChange) throws UpdateFailedException, DontMatchException {
+	public void updatePassword(@PathVariable final long id, @RequestBody @Valid final PasswordChange passwordChange)
+			throws UpdateFailedException, DontMatchException {
 		userService.updatePassword(id, passwordChange);
 	}
 
@@ -86,10 +88,10 @@ public class UserResource {
 		return userService.activate(id, enabled);
 	}
 
-	@RequestMapping(value = "/{id}/role", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{id}/role/{role}/update", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Set a User Role .", notes = "Provide a valid user ID.")
-	public User setRoleForUser(@PathVariable final long id, @RequestBody final String role) throws UpdateFailedException {
+	public User setRoleForUser(@PathVariable final long id, @PathVariable @Valid final Role role) throws UpdateFailedException {
 		return userService.setRoleForUser(id, role);
 	}
 

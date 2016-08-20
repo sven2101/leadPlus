@@ -222,12 +222,12 @@ public class UserService implements IUserService {
 		}
 	}
 
-	public User setRoleForUser(final Long id, final String role) throws UpdateFailedException {
+	public User setRoleForUser(final Long id, final Role role) throws UpdateFailedException {
 		if (Optional.ofNullable(id).isPresent() && Optional.ofNullable(role).isPresent()) {
 			try {
 				User user = getById(id);
 				if (Optional.ofNullable(user).isPresent()) {
-					user.setRole(Role.valueOf(role));
+					user.setRole(role);
 					return save(user);
 				} else {
 					throw new NotFoundException(USER_NOT_FOUND);

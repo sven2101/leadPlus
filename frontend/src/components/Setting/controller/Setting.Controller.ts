@@ -21,14 +21,36 @@ const SettingControllerId: string = "SettingController";
 
 class SettingController {
 
-    private $inject = [SettingServiceId];
+    private $inject = [$filterId, toasterId, $translateId, $rootScopeId, SettingServiceId, SettingResourceId];
+
+    rootScope;
+    translate;
+    filter;
+    toaster;
 
     settingService;
-    user: User;
+    settingResource;
+    roleSelection = Array<any>();
+    users: Array<User>;
 
-    constructor(SettingService) {
+    constructor($filter, toaster, $translate, $rootScope, SettingService, SettingResource) {
+        this.filter = $filter;
+        this.toaster = toaster;
+        this.rootScope = $rootScope;
+        this.translate = $translate;
         this.settingService = SettingService;
-        this.user = new User();
+        this.settingResource = SettingResource.resource;
+
+        let self = this;
+
+        this.settingResource.getAll().$promise.then(function (result) {
+            self.users = result;
+            for (let user in result) {
+                if (user === "$promise")
+                    break;
+                self.roleSelection[result[user].id] = result[user].role;
+            }
+        });
     }
 
     activateUser(user: User) {
@@ -44,7 +66,14 @@ class SettingController {
     }
 
     changeRole(user: User) {
-        this.settingService.changeRole(user);
+        let self = this;
+        this.settingResource.changeRole({ id: 4, role: this.roleSelection[user.id] }, {}).$promise.then(function () {
+            // set rootScope role
+            self.filter("filter")(self.users, { id: user.id })[0].role = user.role;
+            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_SET_ROLE"));
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_SET_ROLE_ERROR"));
+        });
     }
 
 }
