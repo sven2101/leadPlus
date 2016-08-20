@@ -16,16 +16,19 @@ package dash.productmanagement.domain;
 
 import java.util.Calendar;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import dash.filemanagement.domain.File;
 
 @Entity
 public class Product {
@@ -46,8 +49,8 @@ public class Product {
 
 	private double priceNetto;
 
-	@Lob
-	private byte[] image;
+	@OneToOne(cascade = CascadeType.ALL)
+	private File image;
 
 	public boolean isDeactivated() {
 		return deactivated;
@@ -65,11 +68,11 @@ public class Product {
 		this.timestamp = timestamp;
 	}
 
-	public byte[] getImage() {
+	public File getImage() {
 		return image;
 	}
 
-	public void setImage(byte[] image) {
+	public void setImage(File image) {
 		this.image = image;
 	}
 
@@ -147,8 +150,7 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", priceNetto=" + priceNetto
-				+ "]";
+		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", priceNetto=" + priceNetto + "]";
 	}
 
 }

@@ -56,6 +56,8 @@ class AuthService {
                             id: data.id,
                             username: data.username,
                             role: data.role,
+                            email: data.email,
+                            language: data.language,
                             authorization: authorization
                         }
                     };

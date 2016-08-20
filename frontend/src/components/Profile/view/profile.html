@@ -24,17 +24,17 @@
                     <h5>{{ 'PROFILE_PROFILE_INFORMATION' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
-                    <form name="profilInfoForm" ng-submit="profile.submitProfilInfoForm()" novalidate>
+                    <form name="profilInfoForm" ng-submit="profileCtrl.submitProfilInfoForm()" novalidate>
                         <!-- EMAIL -->
                         <div class="form-group" ng-class="{ 'has-error' : profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine }">
                             <label>{{ 'COMMON_EMAIL' | translate }}</label>
-                            <input type="email" name="email" class="form-control" ng-model="profile.profileService.user.email">
+                            <input type="email" name="email" class="form-control" ng-model="profileCtrl.profileService.rootScope.globals.user.email">
                             <p ng-show="profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
                         </div>
                         <!-- default language -->
                         <div class="form-group">
                             <label>{{ 'PROFILE_DEFAULT_LANGUAGE' | translate }}</label>
-                            <select class="form-control" ng-model="profile.profileService.user.language">
+                            <select class="form-control" ng-model="profileCtrl.profileService.rootScope.globals.user.language">
                                 <option value="DE">Deutsch(de)</option>
                                 <option value="EN">English(en)</option>
                             </select>
@@ -54,30 +54,30 @@
                     <h5>{{ 'PROFILE_PASSWORD_MANAGEMENT' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
-                    <form name="profile.passwordForm" ng-submit="profile.submitPasswordForm()" novalidate>
+                    <form name="profileCtrl.profileService.passwordForm" ng-submit="profileCtrl.submitPasswordForm()" novalidate>
                         <!-- password -->
-                        <div class="form-group" ng-class="{ 'has-error' : profile.profileService.passwordForm.oldPassword.$invalid && !profile.profileService.passwordForm.oldPassword.$pristine }">
+                        <div class="form-group" ng-class="{ 'has-error' : profileCtrl.profileService.profileService.passwordForm.oldPassword.$invalid && !profileCtrl.profileService.passwordForm.oldPassword.$pristine }">
                             <label>{{ 'PROFILE_OLD_PASSWORD' | translate }}</label>
-                            <input type="password" name="oldPassword" class="form-control" ng-model="profile.oldPassword" required>
-                            <p ng-show="profile.profileService.passwordForm.oldPassword.$invalid && !profile.profileService.passwordForm.oldPassword.$pristine"
+                            <input type="password" name="oldPassword" class="form-control" ng-model="profileCtrl.profileService.oldPassword" required>
+                            <p ng-show="profileCtrl.profileService.passwordForm.oldPassword.$invalid && !profileCtrl.profileService.passwordForm.oldPassword.$pristine"
                                 class="help-block">{{ 'PROFILE_VALIDATE_OLD_PASSWORD' | translate }}</p>
                         </div>
-                        <div class="form-group" ng-class="{ 'has-error' : profile.profileService.passwordForm.newPassword1.$invalid && !profile.profileService.passwordForm.newPassword1.$pristine }">
+                        <div class="form-group" ng-class="{ 'has-error' : profileCtrl.profileService.passwordForm.newPassword1.$invalid && !profileCtrl.profileService.passwordForm.newPassword1.$pristine }">
                             <label>{{ 'COMMON_NEW_PASSWORD' | translate }}</label>
-                            <input type="password" name="newPassword1" id="newPassword1" class="form-control" ng-model="profile.newPassword1" required
+                            <input type="password" name="newPassword1" id="newPassword1" class="form-control" ng-model="profileCtrl.profileService.newPassword1" required
                                 ng-minlength="6" />
-                            <p ng-show="profile.profileService.passwordForm.newPassword1.$invalid && !profile.profileService.passwordForm.newPassword1.$pristine"
+                            <p ng-show="profileCtrl.profileService.passwordForm.newPassword1.$invalid && !profileCtrl.profileService.passwordForm.newPassword1.$pristine"
                                 class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</p>
                         </div>
-                        <div class="form-group" ng-class="{ 'has-error' : profile.profileService.passwordForm.newPassword2.$invalid && !profile.profileService.passwordForm.newPassword2.$pristine }">
+                        <div class="form-group" ng-class="{ 'has-error' : profileCtrl.profileService.passwordForm.newPassword2.$invalid && !profileCtrl.profileService.passwordForm.newPassword2.$pristine }">
                             <label>{{ 'COMMON_NEW_PASSWORD' | translate }}</label>
-                            <input type="password" name="newPassword2" id="newPassword2" class="form-control" ng-model="profile.profileService.newPassword2"
+                            <input type="password" name="newPassword2" id="newPassword2" class="form-control" ng-model="profileCtrl.profileService.newPassword2"
                                 required ng-minlength="6" pw-check="newPassword1" />
-                            <p ng-show="profile.profileService.passwordForm.newPassword2.$invalid && !profile.profileService.passwordForm.newPassword2.$pristine"
+                            <p ng-show="profileCtrl.profileService.passwordForm.newPassword2.$invalid && !profileCtrl.profileService.passwordForm.newPassword2.$pristine"
                                 class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</p>
-                            <p ng-show="profile.profileService.passwordForm.newPassword2.$error.pwmatch" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</p>
+                            <p ng-show="profileCtrl.profileService.passwordForm.newPassword2.$error.pwmatch" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</p>
                         </div>
-                        <button class="btn btn-success" type="submit" ng-disabled="profile.profileService.passwordForm.$invalid">
+                        <button class="btn btn-success" type="submit" ng-disabled="profileCtrl.profileService.passwordForm.$invalid">
                             <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
                         </button>
                     </form>

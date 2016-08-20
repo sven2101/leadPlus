@@ -72,11 +72,10 @@ public class UserResource {
 		return userService.update(user);
 	}
 
-	@RequestMapping(value = "/{id}/pw", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{id}/pw", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
-	public void updatePassword(@PathVariable Long id, @RequestBody @Valid final PasswordChange passwordChange)
-			throws UpdateFailedException, DontMatchException {
+	@ApiOperation(value = "Update password of a single user.", notes = "Provide a valid user ID.")
+	public void updatePassword(@PathVariable final long id, @RequestBody final PasswordChange passwordChange) throws UpdateFailedException, DontMatchException {
 		userService.updatePassword(id, passwordChange);
 	}
 

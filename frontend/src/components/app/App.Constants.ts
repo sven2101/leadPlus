@@ -85,6 +85,7 @@ const moduleDatatablesButtons: string = "datatables.buttons";
 const moduleUiSortable: string = "ui.sortable";
 const moduleNgSwitchery: string = "NgSwitchery";
 const moduleToaster: string = "toaster";
+const moduleNgImgCrop: string = "ngImgCrop";
 const moduleHighchartsNg: string = "highcharts-ng";
 
 const workflowLead: string = "LEAD";

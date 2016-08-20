@@ -65,4 +65,5 @@ angular.module(moduleApp,
         moduleNgSwitchery,
         moduleToaster,
         moduleHighchartsNg,
+        moduleNgImgCrop,
     ]);

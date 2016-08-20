@@ -176,7 +176,7 @@ public class UserService implements IUserService {
 		if (Optional.ofNullable(id).isPresent() && Optional.ofNullable(passwordChange).isPresent()) {
 			try {
 				User user = getById(id);
-				if (Optional.ofNullable(user).isPresent()) {
+				if (user != null && passwordChange.getOldPassword() != null && passwordChange.getNewPassword() != null) {
 					if (passwordEncoder.matches(passwordChange.getOldPassword(), user.getPassword())) {
 						user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
 						save(user);

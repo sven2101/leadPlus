@@ -37,7 +37,7 @@ class ProfileController {
     }
 
     submitPasswordForm() {
-        this.submitPasswordForm();
+        this.profileService.submitPasswordForm();
     }
 
     uploadFiles() {
