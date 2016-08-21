@@ -1,6 +1,7 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../Setting/controller/Setting.Service.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
+/// <reference path="../../Setting/model/Setting.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -27,7 +28,9 @@ class SettingController {
     translate;
     filter;
     toaster;
+    currentTab: number = 1;
 
+    setting: Setting;
     settingService;
     settingResource;
     roleSelection = Array<any>();
@@ -41,8 +44,9 @@ class SettingController {
         this.settingService = SettingService;
         this.settingResource = SettingResource.resource;
 
-        let self = this;
+        this.setting = new Setting();
 
+        let self = this;
         this.settingResource.getAll().$promise.then(function (result) {
             self.users = result;
             for (let user in result) {
@@ -51,6 +55,10 @@ class SettingController {
                 self.roleSelection[result[user].id] = result[user].role;
             }
         });
+    }
+
+    tabOnClick(tab: number) {
+        this.currentTab = tab;
     }
 
     activateUser(user: User) {
@@ -74,6 +82,11 @@ class SettingController {
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_SET_ROLE_ERROR"));
         });
+    }
+
+    testConnection() {
+        console.log("TEST");
+        console.log(this.setting);
     }
 
 }

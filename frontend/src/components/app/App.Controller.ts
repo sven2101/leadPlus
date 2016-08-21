@@ -45,7 +45,6 @@ class AppController {
         this.registerSetUserDefaultLanguage();
         this.rootScope.setUserDefaultLanguage();
         this.registerInterval();
-
     }
 
     registerLoadLabels() {

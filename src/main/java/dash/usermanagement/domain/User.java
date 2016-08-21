@@ -33,6 +33,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.filemanagement.domain.File;
+import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.settings.language.Language;
 
 @Entity
@@ -64,6 +65,9 @@ public class User implements UserDetails {
 
 	@Enumerated(EnumType.STRING)
 	private Language language;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	private Smtp smtp;
 
 	private boolean enabled;
 
@@ -115,6 +119,14 @@ public class User implements UserDetails {
 
 	public void setProfilPicture(File profilPicture) {
 		this.profilPicture = profilPicture;
+	}
+
+	public Smtp getSmtp() {
+		return smtp;
+	}
+
+	public void setSmtp(Smtp smtp) {
+		this.smtp = smtp;
 	}
 
 	public Language getLanguage() {

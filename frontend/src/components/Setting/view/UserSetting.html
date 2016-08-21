@@ -1,0 +1,84 @@
+<div ng-if="settingCtrl.currentTab==1">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>{{ 'SETTING_ACCESS_MANAGEMENT' | translate }}</h5>
+                </div>
+                <div class="ibox-content">
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                                <th class="text-center">ID</th>
+                                <th class="text-center">{{ 'COMMON_USERNAME' | translate }}</th>
+                                <th class="text-center">{{ 'COMMON_EMAIL' | translate }}</th>
+                                <th class="text-center"><i class="fa fa-cog"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="user in settingCtrl.settingService.users | orderBy:'username'" ng-if="user.username != globals.user.username && user.username != 'api'">
+                                <td>{{user.id}}</td>
+                                <td>{{user.username}}</td>
+                                <td>{{user.email}}</td>
+                                <td ng-if="user.enabled==false">
+                                    <button ng-click="settingCtrl.activateUser(user)" type="button" class="btn btn-success">
+                                    <i class="fa fa-check"></i>&nbsp;{{ 'SETTING_ACTIVATE_USER' | translate }}
+                                </button>
+                                </td>
+                                <td ng-if="user.enabled==true">
+                                    <button ng-click="settingCtrl.deactivateUser(user)" type="button" class="btn btn-success" ng-disabled="setting.hasRight(user)">
+                                    <i class="fa fa-ban"></i>&nbsp;{{ 'SETTING_DEACTIVATE_USER' | translate }}
+                                </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>{{ 'SETTING_ROLE_MANAGEMENT' | translate }}</h5>
+                </div>
+                <div class="ibox-content">
+                    <table class="table text-center">
+                        <thead>
+                            <tr>
+                                <th class="text-center">ID</th>
+                                <th class="text-center">{{ 'COMMON_USERNAME' | translate }}</th>
+                                <th class="text-center">{{ 'COMMON_ROLE' | translate }}</th>
+                                <th class="text-center"><i class="fa fa-cog"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="user in settingCtrl.users | orderBy:'username'" ng-if="user.role !='superadmin' && user.username != globals.user.username  && user.username != 'api'">
+                                <td>{{user.id}}</td>
+                                <td>{{user.username}}</td>
+                                <td>
+                                    <select ng-model="settingCtrl.roleSelection[user.id]">
+                                        <option ng-if="globals.user.role == 'ADMIN' || globals.user.role == 'SUPERADMIN'"
+                                                value="USER">{{ 'COMMON_USER' | translate }}
+                                        </option>
+                                        <option ng-if="globals.user.role == 'ADMIN' || globals.user.role == 'SUPERADMIN'"
+                                                value="ADMIN">Admin
+                                        </option>
+                                        <option ng-if="globals.user.role == 'SUPERADMIN'" value="SUPERADMIN">Superadmin
+                                        </option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button ng-click="settingCtrl.changeRole(user)" type="button" class="btn btn-success" ng-disabled="settingCtrl.hasRight(user)">
+                                    <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
+                                </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

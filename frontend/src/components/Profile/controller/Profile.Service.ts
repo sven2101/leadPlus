@@ -23,7 +23,7 @@ const ProfileServiceId: string = "ProfileService";
 
 class ProfileService {
 
-    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId];
+    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $ngImgCropId];
 
     userResource;
     translate;
@@ -33,18 +33,20 @@ class ProfileService {
     passwordForm;
     fileResource;
     formdata;
+    ngImgCrop;
 
     oldPassword: string;
     newPassword1: string;
     newPassword2: string;
 
-    constructor($rootScope, toaster, $translate, UserResource, FileResource) {
+    constructor($rootScope, toaster, $translate, UserResource, FileResource, $ngImgCrop) {
         this.userResource = UserResource.resource;
         this.translate = $translate;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.fileResource = FileResource.resource;
         this.formdata = new FormData();
+        this.ngImgCrop = $ngImgCrop;
     }
 
     submitProfilInfoForm() {

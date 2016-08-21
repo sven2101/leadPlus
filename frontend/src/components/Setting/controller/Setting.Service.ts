@@ -50,11 +50,6 @@ class SettingService {
                 self.roleSelection[result[user].id] = result[user].role;
             }
         });
-        this.counter = 1;
-    }
-
-    incrementCounter() {
-        this.counter++;
     }
 
     activateUser(user: User) {
