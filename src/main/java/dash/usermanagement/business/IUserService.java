@@ -26,6 +26,7 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
+import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.settings.password.PasswordChange;
 
@@ -49,6 +50,9 @@ public interface IUserService {
 	public User activate(final long id, final boolean enabled) throws UpdateFailedException;
 
 	public User setProfilePicture(final long id, final MultipartFile file)
+			throws NotFoundException, SaveFailedException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
+
+	public User setSmtpConnection(long id, Smtp smtp)
 			throws NotFoundException, SaveFailedException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
 }

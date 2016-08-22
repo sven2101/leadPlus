@@ -47,6 +47,8 @@ class AuthService {
             let headers = credentials ? { authorization: "Basic " + authorization } : {};
             this.http.get("user", { headers: headers }).success(function (data) {
                 self.user = data;
+                console.log("Login - Data");
+                console.log(data);
 
                 if (data.username) {
                     self.user = data;
@@ -58,6 +60,8 @@ class AuthService {
                             role: data.role,
                             email: data.email,
                             language: data.language,
+                            setting: data.setting,
+                            profilePicture: data.profilePicture,
                             authorization: authorization
                         }
                     };

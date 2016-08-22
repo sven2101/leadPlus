@@ -39,11 +39,13 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
+import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.settings.password.PasswordChange;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -120,5 +122,13 @@ public class UserResource {
 	public User setProfilePicture(@PathVariable final long id, @RequestParam("file") MultipartFile file)
 			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		return userService.setProfilePicture(id, file);
+	}
+
+	@RequestMapping(value = "/{id}/smtps", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Post a smtp connection. ", notes = "")
+	public User setSmtpConnection(@PathVariable final long id, @ApiParam(required = true) @RequestBody @Valid final Smtp smtp)
+			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+		return userService.setSmtpConnection(id, smtp);
 	}
 }

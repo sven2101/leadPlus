@@ -40,14 +40,14 @@ public class PrincipleResource {
 	private UserService userService;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<Map<String, String>> getUser(Principal user) throws NotFoundException {
+	public ResponseEntity<Map<String, Object>> getUser(Principal user) throws NotFoundException {
 
 		User internalUser = userService.getUserByName(user.getName());
 
-		Map<String, String> map = new LinkedHashMap<String, String>();
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
 
 		if (!Optional.ofNullable(user).isPresent())
-			return new ResponseEntity<Map<String, String>>(map, HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.UNAUTHORIZED);
 
 		for (GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
 			map.put("role", authority.getAuthority());
@@ -57,8 +57,10 @@ public class PrincipleResource {
 		map.put("email", internalUser.getEmail());
 		map.put("id", String.valueOf(internalUser.getId()));
 		map.put("language", String.valueOf(internalUser.getLanguage()));
+		map.put("setting", internalUser.getSmtp());
+		map.put("profilePicture", internalUser.getProfilPicture());
 
-		return new ResponseEntity<Map<String, String>>(map, HttpStatus.OK);
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}
 
 }

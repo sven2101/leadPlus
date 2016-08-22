@@ -43,6 +43,7 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
 import dash.filemanagement.business.IFileService;
+import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
@@ -295,4 +296,13 @@ public class UserService implements IUserService {
 		user.setProfilPicture(fileService.save(file));
 		return update(user);
 	}
+
+	@Override
+	public User setSmtpConnection(long id, final Smtp smtp)
+			throws NotFoundException, SaveFailedException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+		User user = getById(id);
+		user.setSmtp(smtp);
+		return update(user);
+	}
+
 }

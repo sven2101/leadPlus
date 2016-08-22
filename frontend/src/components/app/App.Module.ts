@@ -52,6 +52,7 @@ angular.module(moduleApp,
         moduleCustomerDetail,
         moduleWorkflowService,
         moduleFileResource,
+        moduleSmtpResource,
 
         moduleTranslate,
         moduleNgResource,

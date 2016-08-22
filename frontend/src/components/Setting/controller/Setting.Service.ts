@@ -2,6 +2,7 @@
 /// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../User/model/Role.Model.ts" />
 /// <reference path="../../User/model/Language.Model.ts" />
+/// <reference path="../../Setting/model/Setting.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -22,9 +23,12 @@ const SettingServiceId: string = "SettingService";
 
 class SettingService {
 
-    private $inject = [$filterId, toasterId, $translateId, $rootScopeId, SettingResourceId];
+    private $inject = [$filterId, toasterId, $translateId, $rootScopeId, SettingResourceId, SmtpResourceId, UserResourceId];
 
     settingsResource;
+    smtpResource;
+    userResource;
+
     rootScope;
     translate;
     filter;
@@ -34,12 +38,14 @@ class SettingService {
     roleSelection = Array<any>();
     users: Array<User>;
 
-    constructor($filter, toaster, $translate, $rootScope, SettingResource) {
+    constructor($filter, toaster, $translate, $rootScope, SettingResource, SmtpResource, UserResource) {
         this.filter = $filter;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
         this.settingsResource = SettingResource.resource;
+        this.smtpResource = SmtpResource.resource;
+        this.userResource = UserResource.resource;
 
         let self = this;
         this.settingsResource.getAll().$promise.then(function (result) {
@@ -81,6 +87,28 @@ class SettingService {
         } else {
             return false;
         }
+    }
+
+    testConnection(smtp: Setting) {
+        let self = this;
+        console.log("Smtp");
+        console.log(this.rootScope.globals.user.setting);
+        this.smtpResource.test(this.rootScope.globals.user.setting).$promise.then(function () {
+            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST"));
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST_ERROR"));
+        });
+    }
+
+    save(smtp: Setting) {
+        let self = this;
+        console.log("Smtp");
+        console.log(this.rootScope.globals.user.setting);
+        this.userResource.setSmtpConnection({ id: this.rootScope.globals.user.id }, this.rootScope.globals.user.setting).$promise.then(function () {
+            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE"));
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE_ERROR"));
+        });
     }
 }
 

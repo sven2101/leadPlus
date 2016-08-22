@@ -26,7 +26,7 @@ const $intervalId: string = "$interval";
 const $qId: string = "$q";
 const FileUploaderId: string = "FileUploader";
 const $routeParamsId: string = "$routeParams";
-const $ngImgCropId: string = "ngImgCrop";
+const ngImgCropId: string = "ngImgCrop";
 const $routeProviderId: string = "$routeProvider";
 const $httpProviderId: string = "$httpProvider";
 
@@ -73,6 +73,8 @@ const moduleWorkflowService: string = moduleWorkflow + ".service";
 const moduleFile: string = moduleApp + ".file";
 const moduleFileResource: string = moduleFile + ".resource";
 const moduleFileService: string = moduleFile + ".service";
+const moduleSmtp: string = moduleApp + ".smtp";
+const moduleSmtpResource: string = moduleSmtp + ".resource";
 
 const moduleTranslate: string = "pascalprecht.translate";
 const moduleNgResource: string = "ngResource";

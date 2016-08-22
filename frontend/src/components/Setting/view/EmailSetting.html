@@ -10,34 +10,34 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_SENDER' | translate }}* </label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" ng-model="settingCtrl.setting.sender"></div>
+                                <input type="text" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.sender"></div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_RESPONSE_ADRESS' | translate }}** </label>
+                            <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_EMAIL' | translate }}* </label>
                             <div class="col-sm-10">
-                                <input type="email" class="form-control" ng-model="settingCtrl.setting.responseAdress"></div>
+                                <input type="email" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.email"></div>
                         </div>
                         <div class="hr-line-dashed"></div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_SERVER' | translate }}* </label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" ng-model="settingCtrl.setting.server"></div>
+                                <input type="text" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.server"></div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_USERNAME' | translate }}* </label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" ng-model="settingCtrl.setting.username"></div>
+                                <input type="text" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.username"></div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_PASSWORD' | translate }}* </label>
                             <div class="col-sm-10">
-                                <input type="password" class="form-control" ng-model="settingCtrl.setting.password"></div>
+                                <input type="password" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.password"></div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_ENCRYPTION' | translate }}* </label>
                             <div class="col-sm-10">
-                                <select class="form-control m-b" name="account" ng-model="settingCtrl.setting.encryption">
+                                <select class="form-control m-b" name="account" ng-model="settingCtrl.rootScope.globals.user.setting.encryption">
                                         <option>SSL</option>
                                         <option>TLS</option>
                                     </select></div>
@@ -45,7 +45,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_PORT' | translate }}* </label>
                             <div class="col-sm-10">
-                                <input type="number" class="form-control" ng-model="settingCtrl.setting.port">
+                                <input type="number" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.port">
                                 Keine Eingabe = Standardport (TLS = 25 / SSL = 465)</div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="hr-line-dashed"></div>
 
-                        <button class="btn btn-success" type="submit" ng-disabled="profilInfoForm.$invalid">
+                        <button class="btn btn-success" type="submit" ng-click="settingCtrl.save()" ng-disabled="profilInfoForm.$invalid">
                             <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
                         </button>
                     </form>

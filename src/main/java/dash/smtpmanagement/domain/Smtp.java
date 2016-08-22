@@ -31,7 +31,8 @@ public class Smtp {
 	private String responseAdress;
 	private String server;
 	private String username;
-	private boolean password;
+	private String password;
+	private String email;
 	private Encryption encryption;
 	private int port;
 	private boolean connection;
@@ -49,6 +50,14 @@ public class Smtp {
 
 	public void setSender(String sender) {
 		this.sender = sender;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getResponseAdress() {
@@ -75,11 +84,11 @@ public class Smtp {
 		this.username = username;
 	}
 
-	public boolean isPassword() {
+	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(boolean password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
@@ -105,6 +114,76 @@ public class Smtp {
 
 	public void setConnection(boolean connection) {
 		this.connection = connection;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (connection ? 1231 : 1237);
+		result = prime * result + ((encryption == null) ? 0 : encryption.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + port;
+		result = prime * result + ((responseAdress == null) ? 0 : responseAdress.hashCode());
+		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
+		result = prime * result + ((server == null) ? 0 : server.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Smtp other = (Smtp) obj;
+		if (connection != other.connection)
+			return false;
+		if (encryption != other.encryption)
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
+		if (port != other.port)
+			return false;
+		if (responseAdress == null) {
+			if (other.responseAdress != null)
+				return false;
+		} else if (!responseAdress.equals(other.responseAdress))
+			return false;
+		if (sender == null) {
+			if (other.sender != null)
+				return false;
+		} else if (!sender.equals(other.sender))
+			return false;
+		if (server == null) {
+			if (other.server != null)
+				return false;
+		} else if (!server.equals(other.server))
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Smtp [id=" + id + ", sender=" + sender + ", responseAdress=" + responseAdress + ", server=" + server + ", username=" + username + ", password="
+				+ password + ", encryption=" + encryption + ", port=" + port + ", connection=" + connection + "]";
 	}
 
 }

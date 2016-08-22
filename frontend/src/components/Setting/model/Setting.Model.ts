@@ -5,7 +5,7 @@
 class Setting {
 
     sender: string;
-    responseAdress: string;
+    email: string;
     server: string;
     username: string;
     password: string;

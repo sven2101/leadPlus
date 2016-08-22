@@ -54,7 +54,7 @@ class ProfileController {
         let self = this;
         reader.onload = function (evt) {
             this.$apply(function ($scope) {
-                //  self.myImage = evt.target.;
+               // self.myImage = evt.target.result;
             });
         };
         reader.readAsDataURL(file);

@@ -85,8 +85,11 @@ class SettingController {
     }
 
     testConnection() {
-        console.log("TEST");
-        console.log(this.setting);
+        this.settingService.testConnection(this.setting);
+    }
+
+    save() {
+        this.settingService.save(this.setting);
     }
 
 }

@@ -169,7 +169,8 @@ class UserResource {
             setProfilePicture: {
                 url: "/users/:id/profile/picture", method: "POST", transformRequest: angular.identity,
                 headers: { "Content-Type": undefined }
-            }
+            },
+            setSmtpConnection: { url: "/users/:id/smtps", method: "POST" }
         });
     }
 }
@@ -312,3 +313,23 @@ class FileResource {
 }
 
 angular.module(moduleFileResource, [ngResourceId]).service(FileResourceId, FileResource);
+
+// ----------------------------------------------------------------------------------------
+
+const SmtpResourceId: string = "SmtpResource";
+
+class SmtpResource {
+
+    private $inject = [$resourceId];
+
+    resource: any;
+
+    constructor($resource) {
+        this.resource = $resource("/api/rest/smtps", {}, {
+            save: { url: "/api/rest/smtps/", method: "POST" },
+            test: { url: "/api/rest/smtps/connections/test", method: "POST" }
+        });
+    }
+}
+
+angular.module(moduleSmtpResource, [ngResourceId]).service(SmtpResourceId, SmtpResource);
