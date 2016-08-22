@@ -35,6 +35,7 @@ import dash.test.IIntegrationTest;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
 @WebIntegrationTest
+@Ignore
 public class ProductIntegrationTest extends BaseConfig implements IIntegrationTest {
 
 	private final static String EXTENDED_URI = BASE_URI + REST_CONTAINERS;

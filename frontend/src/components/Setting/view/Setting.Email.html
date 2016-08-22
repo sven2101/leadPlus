@@ -1,0 +1,162 @@
+<div ng-if="settingCtrl.currentTab==2">
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>{{ 'SETTING_EMAIL_MANAGEMENT' | translate }}</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">Config option 1</a>
+                                </li>
+                                <li><a href="#">Config option 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <form method="get" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_SENDER' | translate }}* </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.sender"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_EMAIL' | translate }}* </label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.email"></div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_SERVER' | translate }}* </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.server"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_USERNAME' | translate }}* </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.username"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_PASSWORD' | translate }}* </label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.password"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_ENCRYPTION' | translate }}* </label>
+                                <div class="col-sm-10">
+                                    <select class="form-control m-b" name="account" ng-model="settingCtrl.rootScope.globals.user.setting.encryption">
+                                        <option>SSL</option>
+                                        <option>TLS</option>
+                                    </select></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_PORT' | translate }}* </label>
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.port">                                    Keine Eingabe = Standardport (TLS = 25 / SSL = 465)</div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_CONNECTION_TEST' | translate }}* </label>
+                                <div class="col-sm-4">
+                                    <button class="btn btn-primary" ng-click="settingCtrl.testConnection()">
+                                    <i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;{{ 'SETTING_EMAIL_MANAGEMENT_CONNECTION_TEST' | translate }}
+                                </button>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
+                            <button class="btn btn-success" type="submit" ng-click="settingCtrl.save()" ng-disabled="profilInfoForm.$invalid">
+                            <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
+                        </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>{{ 'SETTING_EMAIL_TEMPLATES_MANAGEMENT' | translate }}</h5>
+            </div>
+            <div class="ibox-content">
+                <form name="profilInfoForm" ng-submit="profileCtrl.submitProfilInfoForm()" novalidate>
+                    <!-- EMAIL -->
+                    <div class="form-group" ng-class="{ 'has-error' : profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine }">
+                        <label>{{ 'COMMON_EMAIL' | translate }}</label>
+                        <input type="email" name="email" class="form-control" ng-model="profileCtrl.profileService.rootScope.globals.user.email">
+                        <p ng-show="profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
+                    </div>
+                    <!-- default language -->
+                    <div class="form-group">
+                        <label>{{ 'PROFILE_DEFAULT_LANGUAGE' | translate }}</label>
+                        <select class="form-control" ng-model="profileCtrl.profileService.rootScope.globals.user.language">
+                                <option value="DE">Deutsch(de)</option>
+                                <option value="EN">English(en)</option>
+                            </select>
+                    </div>
+                    <button class="btn btn-success" type="submit" ng-disabled="profilInfoForm.$invalid">
+                            <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
+                        </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Wyswig Summernote Editor</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#">Config option 1</a>
+                            </li>
+                            <li><a href="#">Config option 2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content no-padding">
+
+                    <div class="summernote">
+                        <h3>Lorem Ipsum is simply</h3>
+                        dummy text of the printing and typesetting industry. <strong>Lorem Ipsum has been the industry's</strong>                        standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled
+                        it to make a type specimen book. It has survived not only five centuries, but also the leap into
+                        electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the
+                        release of Letraset sheets containing Lorem Ipsum passages, and more recently with
+                        <br/>
+                        <br/>
+                        <ul>
+                            <li>Remaining essentially unchanged</li>
+                            <li>Make a type specimen book</li>
+                            <li>Unknown printer</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

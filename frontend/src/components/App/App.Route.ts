@@ -41,7 +41,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             {
                 templateUrl: "components/Offer/view/Offer.html",
                 controller: "OffersController",
-                controllerAs: "offer",
+                controllerAs: "offerCtrl",
                 authenticated: true
             })
             .when("/sales",

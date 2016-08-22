@@ -51,6 +51,7 @@ import dash.vendormanagement.domain.Vendor;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(Application.class)
 @WebIntegrationTest
+@Ignore
 public class CommentIntegrationTest extends BaseConfig implements IIntegrationTest {
 
 	private final static String EXTENDED_URI = BASE_URI + REST_COMMENTS;
@@ -82,17 +83,15 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 		Comment comment = create();
 		HttpEntity<Comment> entityCreateComment = new HttpEntity<Comment>(comment, headers);
 
-		ResponseEntity<Comment> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST,
-				entityCreateComment, Comment.class);
+		ResponseEntity<Comment> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateComment, Comment.class);
 		Comment responseCreateComment = responseCreate.getBody();
 
 		HttpEntity<Comment> entityGetComment = new HttpEntity<Comment>(headers);
 
-		ResponseEntity<Comment> responseGetComment = restTemplate.exchange(EXTENDED_URI + "processes/{id}",
-				HttpMethod.GET, entityGetComment, Comment.class, responseCreateComment.getProcess().getId());
+		ResponseEntity<Comment> responseGetComment = restTemplate.exchange(EXTENDED_URI + "processes/{id}", HttpMethod.GET, entityGetComment, Comment.class,
+				responseCreateComment.getProcess().getId());
 
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(),
-				responseGetComment.getHeaders().getContentType().getCharSet());
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetComment.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetComment.getStatusCode());
 		assertEquals(responseCreateComment, responseGetComment.getBody());
 	}
@@ -117,15 +116,13 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 		Comment comment = create();
 		HttpEntity<Comment> entityCreateComment = new HttpEntity<Comment>(comment, headers);
 
-		ResponseEntity<Comment> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST,
-				entityCreateComment, Comment.class);
+		ResponseEntity<Comment> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateComment, Comment.class);
 		Comment responseCreateComment = responseCreate.getBody();
 
 		responseCreateComment.setCommentText("Haha");
 		HttpEntity<Comment> entity = new HttpEntity<Comment>(responseCreateComment, headers);
 
-		ResponseEntity<Comment> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Comment.class,
-				responseCreateComment.getId());
+		ResponseEntity<Comment> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Comment.class, responseCreateComment.getId());
 		Comment responseComment = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());

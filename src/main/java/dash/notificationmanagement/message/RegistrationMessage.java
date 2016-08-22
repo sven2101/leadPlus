@@ -16,7 +16,7 @@ package dash.notificationmanagement.message;
 
 import org.springframework.context.annotation.Configuration;
 
-import dash.notificationmanagement.IMessage;
+import dash.notificationmanagement.business.IMessage;
 import dash.usermanagement.domain.User;
 
 @Configuration

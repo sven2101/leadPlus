@@ -12,7 +12,7 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.notificationmanagement;
+package dash.notificationmanagement.business;
 
 import dash.usermanagement.domain.User;
 

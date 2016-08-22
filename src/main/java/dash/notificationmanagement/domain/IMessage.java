@@ -12,9 +12,15 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.notificationmanagement;
+package dash.notificationmanagement.domain;
 
-public interface INotificationService {
+import dash.customermanagement.domain.Customer;
 
-	void sendNotification(IMessage message);
+public interface IMessage {
+
+	Customer getRecipient();
+
+	String getSubject();
+
+	String getContent();
 }

@@ -41,7 +41,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-mail")
     compile("org.springframework.boot:spring-boot-starter-security")
  	compile("org.springframework.boot:spring-boot-starter-jdbc")
- 
+    compile("org.freemarker:freemarker")
+    
     compile("postgresql:postgresql:9.0-801.jdbc4")
  		
     compile("com.fasterxml.jackson.core:jackson-databind")

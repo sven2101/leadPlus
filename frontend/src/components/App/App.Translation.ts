@@ -194,6 +194,9 @@ function config($translateProvider) {
             OFFER_CLOSE_OFFER: "Angebot schließen",
             OFFER_EDIT_OFFER: "Angebot bearbeiten",
             OFFER_DELETE_OFFER: "Angebot löschen",
+            OFFER_TAB_OFFERS: "Angebot - Angebote",
+            OFFER_TAB_FILES: "Angebote - Dateien",
+            OFFER_TAB_TEMPLATES: "Angebote - Vorlagen",
 
             // Define all offer elements
             SALE_SALES: "Verkäufe",
@@ -481,6 +484,9 @@ function config($translateProvider) {
             OFFER_CLOSE_OFFER: "Lock offer",
             OFFER_EDIT_OFFER: "Edit offer",
             OFFER_DELETE_OFFER: "Delete offer",
+            OFFER_TAB_OFFERS: "Offer - Offers",
+            OFFER_TAB_FILES: "Offer - Files",
+            OFFER_TAB_TEMPLATES: "Offer - Templates",
 
             // Define all sale elements
             SALE_SALES: "Sales",

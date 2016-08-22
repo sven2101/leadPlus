@@ -62,6 +62,7 @@ public class SmtpService implements ISmtpService {
 			transport.close();
 		} catch (MessagingException me) {
 			logger.error("Problem sending email", me);
+			return false;
 		}
 
 		return true;

@@ -65,6 +65,8 @@ class OffersController {
     dtInstance = { DataTable: null };
     editForm;
 
+    currentTab: number = 1;
+
     constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
         toaster, ProcessResource, CommentResource, $filter, UserResource,
         $rootScope, $translate, OfferResource, ProductService, WorkflowService, CustomerService, CustomerResource) {
@@ -400,6 +402,10 @@ class OffersController {
         }
     }
 
+    tabOnClick(tab: number) {
+        this.currentTab = tab;
+    }
+
     getOrderPositions(process) {
         return process.offer.orderPositions;
     }
@@ -448,7 +454,7 @@ class OffersController {
         this.currentCommentModalId = id;
     };
 
-     addComment(id: number, input: string) {
+    addComment(id: number, input: string) {
         this.workflowService.addComment(this.comments[id], this.processes[id], this.user, input[id]).then(function () {
             input[id] = "";
         });

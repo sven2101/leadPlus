@@ -1,0 +1,53 @@
+<div ng-if="offerCtrl.currentTab==1">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>{{ 'OFFER_MANAGE_OFFERS' | translate }}</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <!--
+                    <button type="button" class="btn btn-success" ng-click="offer.clearNewOffer()" data-toggle="modal"
+                            data-target="#newOfferModal">
+                        <i class="fa fa-plus"></i>&nbsp;{{ 'OFFER_ADD_OFFER' | translate }}
+                    </button>
+                    -->
+                        <button ng-click="offerCtrl.refreshData()" type="button" class="btn btn-success">
+                        <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
+                    </button>
+                        <span class="pull-right" style=" font-size: 1.5em;">{{ 'OFFER_SHOW_ALL_OFFERS' | translate }} &nbsp;<input type="checkbox"
+                                                                                               ng-model="offerCtrl.loadAllData"
+                                                                                               ng-change="offerCtrl.changeDataInput()"
+                                                                                               class="js-switch"
+                                                                                               ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
+                        </br>
+                        </br>
+                        <div class="table-responsive text-center">
+                            <table datatable="" dt-options="offerCtrl.dtOptions" dt-columns="offerCtrl.dtColumns" dt-instance="offerCtrl.dtInstance"
+                                class="table table-bordered table-hover table-condensed text-center" style="width:100%;"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-include="'components/Offer/view/EditOffer.Modal.html'"></div>
+<!--<div ng-include="'components/offers/addOfferModal.html'"></div>-->
+<!--Page level script-->
+<script>
+    jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+        "date-euro-pre": function (date) {
+            return moment(date, 'DD.MM.YYYY HH:mm');
+        },
+
+        "date-euro-asc": function (a, b) {
+            return (a.isBefore(b) ? -1 : (a.isAfter(b) ? 1 : 0));
+        },
+
+        "date-euro-desc": function (a, b) {
+            return (a.isBefore(b) ? 1 : (a.isAfter(b) ? -1 : 0));
+        }
+    });
+</script>
