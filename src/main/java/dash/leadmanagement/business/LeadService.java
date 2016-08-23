@@ -65,7 +65,6 @@ public class LeadService implements ILeadService {
 	@Override
 	public Lead save(final Lead lead) throws SaveFailedException {
 		if (Optional.ofNullable(lead).isPresent()) {
-			lead.setContainer(null);
 			for (OrderPosition temp : lead.getOrderPositions()) {
 				temp.setWorkflow(lead);
 			}
@@ -81,7 +80,6 @@ public class LeadService implements ILeadService {
 	public Lead update(final Lead lead) throws UpdateFailedException {
 		if (Optional.ofNullable(lead).isPresent()) {
 			try {
-				lead.setContainer(null);
 				for (OrderPosition temp : lead.getOrderPositions()) {
 					temp.setWorkflow(lead);
 				}

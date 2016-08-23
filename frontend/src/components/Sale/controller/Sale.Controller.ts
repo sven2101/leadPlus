@@ -349,15 +349,6 @@ class SaleController {
 
     clearNewSale() {
         this.newSale = new Sale();
-        this.newSale.containerAmount = 1;
-        this.newSale.container = {
-            name: "placholder",
-            priceNetto: 666
-        };
-        this.newSale.containerAmount = 1;
-        this.newSale.container = {
-            priceNetto: 0
-        };
     };
 
     loadDataToModal(sale) {

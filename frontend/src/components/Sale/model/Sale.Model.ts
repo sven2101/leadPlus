@@ -15,8 +15,6 @@
 
 class Sale extends AbstractModel implements IWorkflow {
     orderPositions: Array<OrderPosition>;
-    container: any;
-    containerAmount: number;
     customer: Customer;
     timestamp: any;
     vendor: any;

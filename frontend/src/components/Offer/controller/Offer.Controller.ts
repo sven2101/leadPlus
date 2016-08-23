@@ -463,11 +463,6 @@ class OffersController {
 
     clearNewOffer() {
         this.newOffer = new Offer();
-        this.newOffer.containerAmount = 1;
-        this.newOffer.container = {
-            name: "placholder",
-            priceNetto: 666
-        };
         this.newOffer.orderPositions = [];
         this.currentOrderPositions = [];
         this.currentProductId = "-1";

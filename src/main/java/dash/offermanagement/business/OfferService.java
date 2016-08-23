@@ -35,8 +35,13 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.notificationmanagement.business.INotificationService;
+import dash.notificationmanagement.domain.IMessage;
+import dash.notificationmanagement.domain.OfferMessage;
 import dash.offermanagement.domain.Offer;
 import dash.productmanagement.domain.OrderPosition;
+import dash.usermanagement.business.IUserService;
+import dash.usermanagement.domain.User;
 
 @Service
 public class OfferService implements IOfferService {
@@ -46,13 +51,19 @@ public class OfferService implements IOfferService {
 	@Autowired
 	private OfferRepository offerRepository;
 
+	@Autowired
+	private INotificationService notificationService;
+
+	@Autowired
+	private IUserService userService;
+
 	@Override
 	public List<Offer> getAll() {
 		return offerRepository.findAll();
 	}
 
 	@Override
-	public Offer getOfferById(final Long id) throws NotFoundException {
+	public Offer getOfferById(final long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
 			return offerRepository.findOne(id);
 		} else {
@@ -63,10 +74,9 @@ public class OfferService implements IOfferService {
 	}
 
 	@Override
-	public Offer save(Offer offer) throws SaveFailedException {
+	public Offer save(final Offer offer) throws SaveFailedException {
 		if (Optional.ofNullable(offer).isPresent()) {
 			if (offer != null) {
-				offer.setContainer(null);
 				for (OrderPosition temp : offer.getOrderPositions()) {
 					temp.setWorkflow(offer);
 				}
@@ -80,11 +90,10 @@ public class OfferService implements IOfferService {
 	}
 
 	@Override
-	public Offer update(Offer offer) throws UpdateFailedException {
+	public Offer update(final Offer offer) throws UpdateFailedException {
 		if (Optional.ofNullable(offer).isPresent()) {
 			try {
 				if (offer != null) {
-					offer.setContainer(null);
 					for (OrderPosition temp : offer.getOrderPositions()) {
 						temp.setWorkflow(offer);
 					}
@@ -102,7 +111,7 @@ public class OfferService implements IOfferService {
 	}
 
 	@Override
-	public void delete(final Long id) throws DeleteFailedException {
+	public void delete(final long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
 				offerRepository.delete(id);
@@ -123,7 +132,34 @@ public class OfferService implements IOfferService {
 	}
 
 	@Override
-	public List<Offer> getByCustomer(Long id) {
+	public List<Offer> getByCustomer(final long id) {
 		return offerRepository.findByCustomerId(id);
 	}
+
+	@Override
+	public Offer generateOfferFile(final long offerId, final long templateId) {
+		//reading word Template
+
+		//generating PDF File
+
+		//save PDF File in Database
+		return null;
+	}
+
+	@Override
+	public Offer sendOffer(final long offerId, final String username) throws NotFoundException {
+		Offer offer = getOfferById(offerId);
+		User user = userService.getById(offerId);
+
+		//NotificationService
+
+		IMessage message = new OfferMessage(offer.getCustomer());
+		notificationService.sendNotification(message, user);
+		//get User SMTP Service
+
+		//get Template Renderer and pass in Customer and Offer
+
+		return null;
+	}
+
 }

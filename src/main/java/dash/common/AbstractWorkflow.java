@@ -45,10 +45,8 @@ public abstract class AbstractWorkflow implements Request {
 	private List<OrderPosition> orderPositions;
 
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinColumn(name = "container_fk")
-	private Product container;
-
-	private int containerAmount;
+	@JoinColumn(name = "product_fk")
+	private Product product;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = true, columnDefinition = "timestamp")
@@ -75,22 +73,15 @@ public abstract class AbstractWorkflow implements Request {
 		this.orderPositions = orderPositions;
 	}
 
-	public Product getContainer() {
-		return container;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setContainer(Product container) {
-		this.container = container;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
-	public int getContainerAmount() {
-		return containerAmount;
-	}
-
-	public void setContainerAmount(int containerAmount) {
-		this.containerAmount = containerAmount;
-	}
-
+	@Override
 	public Calendar getTimestamp() {
 		return timestamp;
 	}
@@ -138,8 +129,7 @@ public abstract class AbstractWorkflow implements Request {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((container == null) ? 0 : container.hashCode());
-		result = prime * result + containerAmount;
+		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		result = prime * result + ((customer == null) ? 0 : customer.hashCode());
 		result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
@@ -158,12 +148,10 @@ public abstract class AbstractWorkflow implements Request {
 		if (getClass() != obj.getClass())
 			return false;
 		AbstractWorkflow other = (AbstractWorkflow) obj;
-		if (container == null) {
-			if (other.container != null)
+		if (product == null) {
+			if (other.product != null)
 				return false;
-		} else if (!container.equals(other.container))
-			return false;
-		if (containerAmount != other.containerAmount)
+		} else if (!product.equals(other.product))
 			return false;
 		if (customer == null) {
 			if (other.customer != null)
@@ -197,9 +185,8 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Override
 	public String toString() {
-		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress
-				+ ", orderPositions=" + orderPositions + ", container=" + container + ", containerAmount="
-				+ containerAmount + ", timestamp=" + timestamp + ", vendor=" + vendor + "]";
+		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress + ", orderPositions=" + orderPositions
+				+ ", product=" + product + ", timestamp=" + timestamp + ", vendor=" + vendor + "]";
 	}
 
 }

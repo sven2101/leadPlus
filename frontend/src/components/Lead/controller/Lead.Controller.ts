@@ -506,11 +506,6 @@ class LeadController {
 
     clearNewLead() {
         this.newLead = new Lead();
-        this.newLead.containerAmount = 1;
-        this.newLead.container = {
-            name: "placholder",
-            priceNetto: 666
-        };
         this.newLead.orderPositions = [];
         this.currentOrderPositions = [];
         this.currentProductId = "-1";

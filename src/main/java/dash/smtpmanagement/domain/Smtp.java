@@ -29,7 +29,7 @@ public class Smtp {
 
 	private String sender;
 	private String responseAdress;
-	private String server;
+	private String host;
 	private String username;
 	private String password;
 	private String email;
@@ -68,12 +68,12 @@ public class Smtp {
 		this.responseAdress = responseAdress;
 	}
 
-	public String getServer() {
-		return server;
+	public String getHost() {
+		return host;
 	}
 
-	public void setServer(String server) {
-		this.server = server;
+	public void setHost(String host) {
+		this.host = host;
 	}
 
 	public String getUsername() {
@@ -127,7 +127,7 @@ public class Smtp {
 		result = prime * result + port;
 		result = prime * result + ((responseAdress == null) ? 0 : responseAdress.hashCode());
 		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
-		result = prime * result + ((server == null) ? 0 : server.hashCode());
+		result = prime * result + ((host == null) ? 0 : host.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -167,10 +167,10 @@ public class Smtp {
 				return false;
 		} else if (!sender.equals(other.sender))
 			return false;
-		if (server == null) {
-			if (other.server != null)
+		if (host == null) {
+			if (other.host != null)
 				return false;
-		} else if (!server.equals(other.server))
+		} else if (!host.equals(other.host))
 			return false;
 		if (username == null) {
 			if (other.username != null)
@@ -182,7 +182,7 @@ public class Smtp {
 
 	@Override
 	public String toString() {
-		return "Smtp [id=" + id + ", sender=" + sender + ", responseAdress=" + responseAdress + ", server=" + server + ", username=" + username + ", password="
+		return "Smtp [id=" + id + ", sender=" + sender + ", responseAdress=" + responseAdress + ", server=" + host + ", username=" + username + ", password="
 				+ password + ", encryption=" + encryption + ", port=" + port + ", connection=" + connection + "]";
 	}
 

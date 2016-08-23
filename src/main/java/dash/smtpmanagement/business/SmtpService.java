@@ -70,9 +70,9 @@ public class SmtpService implements ISmtpService {
 
 	private Session newSession(Smtp smtp) {
 		Properties props = new Properties();
-		props.setProperty("mail.smtp.host", smtp.getServer());
+		props.setProperty("mail.smtp.host", smtp.getHost());
 		props.setProperty("mail.smtp.port", String.valueOf(smtp.getPort()));
-		props.put("mail.smtp.ssl.trust", smtp.getServer());
+		props.put("mail.smtp.ssl.trust", smtp.getHost());
 		props.put("mail.smtp.auth", "true");
 		final String mailUser = smtp.getUsername();
 		final String mailPassword = smtp.getPassword();

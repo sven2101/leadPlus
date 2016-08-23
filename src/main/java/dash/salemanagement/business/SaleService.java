@@ -72,7 +72,6 @@ public class SaleService implements ISaleService {
 		if (Optional.ofNullable(sale).isPresent()) {
 			try {
 				if (sale != null) {
-					sale.setContainer(null);
 					for (OrderPosition temp : sale.getOrderPositions()) {
 						temp.setWorkflow(sale);
 					}
@@ -94,7 +93,6 @@ public class SaleService implements ISaleService {
 		if (Optional.ofNullable(sale).isPresent()) {
 			try {
 				if (sale != null) {
-					sale.setContainer(null);
 					for (OrderPosition temp : sale.getOrderPositions()) {
 						temp.setWorkflow(sale);
 					}

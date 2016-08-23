@@ -15,8 +15,6 @@
 "use strict";
 class Lead extends AbstractModel implements IWorkflow {
     orderPositions: Array<OrderPosition>;
-    container: any;
-    containerAmount: number;
     customer: Customer;
     timestamp: any;
     vendor: any;
@@ -26,9 +24,5 @@ class Lead extends AbstractModel implements IWorkflow {
     constructor() {
         super();
         this.leadPrice = 0;
-        this.container = {
-            name: "placeholder",
-            priceNetto: 666
-        };
     }
 }

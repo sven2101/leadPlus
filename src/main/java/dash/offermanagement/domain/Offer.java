@@ -18,12 +18,14 @@ import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.common.AbstractWorkflow;
+import dash.filemanagement.domain.File;
 
 @Entity
 public class Offer extends AbstractWorkflow {
@@ -34,6 +36,9 @@ public class Offer extends AbstractWorkflow {
 	private Calendar deliveryDate;
 
 	private double offerPrice;
+
+	@OneToOne
+	private File offer;
 
 	public Offer() {
 
@@ -53,6 +58,14 @@ public class Offer extends AbstractWorkflow {
 
 	public void setDeliveryDate(Calendar deliveryDate) {
 		this.deliveryDate = deliveryDate;
+	}
+
+	public File getOffer() {
+		return offer;
+	}
+
+	public void setOffer(File offer) {
+		this.offer = offer;
 	}
 
 	@Override

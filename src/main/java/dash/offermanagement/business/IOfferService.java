@@ -33,14 +33,18 @@ public interface IOfferService {
 
 	public List<Offer> getAll();
 
-	public Offer getOfferById(final Long id) throws NotFoundException;
+	public Offer getOfferById(final long id) throws NotFoundException;
 
-	public Offer save(Offer offer) throws SaveFailedException;
+	public Offer save(final Offer offer) throws SaveFailedException;
 
-	public Offer update(Offer offer) throws UpdateFailedException;
+	public Offer update(final Offer offer) throws UpdateFailedException;
 
-	public void delete(final Long id) throws DeleteFailedException;
+	public void delete(final long id) throws DeleteFailedException;
 
-	List<Offer> getByCustomer(Long id);
+	public List<Offer> getByCustomer(final long id);
+
+	public Offer generateOfferFile(final long offerId, final long templateId);
+
+	public Offer sendOffer(final long offerId, final String username) throws NotFoundException;
 
 }

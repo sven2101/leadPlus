@@ -16,8 +16,6 @@
 
 class Offer extends AbstractModel implements IWorkflow {
     orderPositions: Array<OrderPosition>;
-    container: any;
-    containerAmount: number;
     customer: Customer;
     timestamp: any;
     vendor: any;
@@ -26,9 +24,5 @@ class Offer extends AbstractModel implements IWorkflow {
     offerPrice: number;
     constructor() {
         super();
-        this.container = {
-            name: "placeholder",
-            priceNetto: 666
-        };
     }
 }

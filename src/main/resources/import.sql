@@ -1,0 +1,1 @@
+insert into product(deactivated, description, image, name, price_netto, timestamp) values (true, 'test', '', 'Schrank', 2000.00, CURRENT_TIMESTAMP)

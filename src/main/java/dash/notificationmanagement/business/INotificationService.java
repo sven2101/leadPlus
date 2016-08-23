@@ -14,7 +14,10 @@
 
 package dash.notificationmanagement.business;
 
+import dash.notificationmanagement.domain.IMessage;
+import dash.usermanagement.domain.User;
+
 public interface INotificationService {
 
-	void sendNotification(IMessage message);
+	void sendNotification(IMessage message, User user);
 }

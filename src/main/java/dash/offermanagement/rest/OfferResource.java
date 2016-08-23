@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,8 +40,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Offer Resource")
-@RequestMapping(value = "/api/rest/offers", consumes = { MediaType.ALL_VALUE }, produces = {
-		MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/offers", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Offers API")
 public class OfferResource {
 
@@ -57,15 +57,14 @@ public class OfferResource {
 	@ApiOperation(value = "Return a single offer.", notes = "")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Offer getOfferById(@PathVariable final Long id) throws NotFoundException {
+	public Offer getOfferById(@PathVariable final long id) throws NotFoundException {
 		return offerService.getOfferById(id);
 	}
 
 	@ApiOperation(value = "Save a single offer.", notes = "")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Offer save(@ApiParam(required = true) @RequestBody @Valid Offer offer)
-			throws SaveFailedException, NotFoundException {
+	public Offer save(@ApiParam(required = true) @RequestBody @Valid Offer offer) throws SaveFailedException, NotFoundException {
 		return offerService.save(offer);
 	}
 
@@ -79,14 +78,28 @@ public class OfferResource {
 	@ApiOperation(value = "Delete a single offer.", notes = "")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
+	public void delete(@ApiParam(required = true) @PathVariable final long id) throws DeleteFailedException {
 		offerService.delete(id);
 	}
 
 	@ApiOperation(value = "Return customers offers.", notes = "")
 	@RequestMapping(value = "/customer/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Offer> getByCustomer(@ApiParam(required = true) @PathVariable final Long id) {
+	public List<Offer> getByCustomer(@ApiParam(required = true) @PathVariable final long id) {
 		return offerService.getByCustomer(id);
+	}
+
+	@ApiOperation(value = "Generate a single offer file.", notes = "")
+	@RequestMapping(value = "/{offerId}/files/templates/{templateId}/generate", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public Offer generateOfferFile(@PathVariable final long offerId, @PathVariable final long templateId) throws NotFoundException {
+		return offerService.generateOfferFile(offerId, templateId);
+	}
+
+	@ApiOperation(value = "Send an offer to a customer.", notes = "")
+	@RequestMapping(value = "/{id}/send", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public Offer sendOffer(@PathVariable final long id) throws NotFoundException {
+		return offerService.sendOffer(id, SecurityContextHolder.getContext().getAuthentication().getName());
 	}
 }

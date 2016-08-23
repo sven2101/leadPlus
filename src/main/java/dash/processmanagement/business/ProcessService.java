@@ -94,8 +94,7 @@ public class ProcessService implements IProcessService {
 				try {
 					process.setProcessor(userService.getUserByName("admin"));
 				} catch (NotFoundException nfex) {
-					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-							nfex);
+					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, nfex);
 				}
 				saleService.save(process.getSale());
 			}
@@ -138,9 +137,7 @@ public class ProcessService implements IProcessService {
 		Process process = processRepository.findOne(processId);
 		Offer createdOffer = null;
 		if (Optional.ofNullable(process).isPresent()) {
-			// createdOffer = offerService.save(offer);
 			if (process.getOffer() != null) {
-				process.getOffer().setContainer(null);
 				for (OrderPosition temp : process.getOffer().getOrderPositions()) {
 					temp.setWorkflow(process.getOffer());
 				}
@@ -159,7 +156,6 @@ public class ProcessService implements IProcessService {
 		Process process = processRepository.findOne(processId);
 		Sale createdSale = null;
 		if (Optional.ofNullable(process).isPresent()) {
-			// createdSale = saleService.save(sale);
 			process.setSale(sale);
 			setOrderPositions(process);
 			processRepository.save(process);
@@ -266,8 +262,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process setStatus(long id, String status)
-			throws SaveFailedException, NotFoundException, UpdateFailedException {
+	public Process setStatus(long id, String status) throws SaveFailedException, NotFoundException, UpdateFailedException {
 		if (Optional.ofNullable(status).isPresent()) {
 			Process process = getById(id);
 			process.setStatus(Status.valueOf(status));
@@ -284,19 +279,16 @@ public class ProcessService implements IProcessService {
 
 	private void setOrderPositions(Process process) {
 		if (process.getLead() != null) {
-			process.getLead().setContainer(null);
 			for (OrderPosition temp : process.getLead().getOrderPositions()) {
 				temp.setWorkflow(process.getLead());
 			}
 		}
 		if (process.getOffer() != null) {
-			process.getOffer().setContainer(null);
 			for (OrderPosition temp : process.getOffer().getOrderPositions()) {
 				temp.setWorkflow(process.getOffer());
 			}
 		}
 		if (process.getSale() != null) {
-			process.getSale().setContainer(null);
 			for (OrderPosition temp : process.getSale().getOrderPositions()) {
 				temp.setWorkflow(process.getSale());
 			}

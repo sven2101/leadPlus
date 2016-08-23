@@ -14,7 +14,34 @@
 
 package dash.notificationmanagement.domain;
 
-public interface INotificationService {
+import java.util.HashMap;
+import java.util.Map;
 
-	void sendNotification(IMessage message);
+import dash.customermanagement.domain.Customer;
+
+public class RegistrationMessage extends AbstractMessage {
+
+	private TemplateRenderer renderer;
+
+	public RegistrationMessage(Customer recipient) {
+		super(recipient);
+		this.renderer = new TemplateRenderer("offer.ftl");
+	}
+
+	@Override
+	public String getSubject() {
+		return "Angebot";
+	}
+
+	@Override
+	public String getContent() {
+		Map<String, Object> ctx = new HashMap<>(1);
+		ctx.put("user", recipient);
+		try {
+			return renderer.render(ctx);
+		} catch (Exception e) {
+			throw new RuntimeException("Problem rendering registration email content", e);
+
+		}
+	}
 }

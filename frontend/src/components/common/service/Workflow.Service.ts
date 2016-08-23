@@ -111,13 +111,7 @@ class WorkflowService {
         let self = this;
         let offer: Offer = {
             id: 0,
-            container: {
-                name: "",
-                description: "",
-                priceNetto: 0
-            },
             orderPositions: deepCopy(process.lead.orderPositions),
-            containerAmount: process.lead.containerAmount,
             deliveryAddress: process.lead.deliveryAddress,
             deliveryDate: null,
             offerPrice: self.sumOrderPositions(process.lead.orderPositions),
@@ -128,20 +122,13 @@ class WorkflowService {
         for (let i = 0; i < offer.orderPositions.length; i++) {
             offer.orderPositions[i].id = 0;
         }
-        this.processResource.createOffer({
-            id: process.id
-        }, offer).$promise.then(function () {
-            self.processResource.setStatus({
-                id: process.id
-            }, "OFFER").$promise.then(function () {
-                self.toaster.pop("success", "", self.translate
-                    .instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
+        this.processResource.createOffer({ id: process.id }, offer).$promise.then(function () {
+            self.processResource.setStatus({ id: process.id }, "OFFER").$promise.then(function () {
+                self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
                 if (process.processor === null) {
-                    self.processResource.setProcessor({
-                        id: process.id
-                    }, user.id).$promise.then(function () {
+                    self.processResource.setProcessor({ id: process.id }, user.id).$promise.then(function () {
                         process.processor = user;
                     });
                 }
@@ -164,13 +151,7 @@ class WorkflowService {
             id: 0,
             deliveryAddress: process.offer.deliveryAddress,
             deliveryDate: process.offer.deliveryDate,
-            container: {
-                name: "",
-                description: "",
-                priceNetto: 0
-            },
             orderPositions: deepCopy(process.lead.orderPositions),
-            containerAmount: process.offer.containerAmount,
             transport: process.offer.deliveryAddress,
             customer: process.offer.customer,
             saleProfit: 0,
