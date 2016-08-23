@@ -6,6 +6,11 @@
 /// <reference path="../../common/model/OrderPosition.Model.ts" />
 /// <reference path="../../common/model/Commentary.Model.ts" />
 /// <reference path="../../app/App.Common.ts" />
+/// <reference path="../../app/App.Common.ts" />
+/// <reference path="../../Common/model/Status.Model.ts" />
+/// <reference path="../../Common/model/Workflow.Model.ts" />
+/// <reference path="../../Dashboard/controller/Dashboard.Controller.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -22,7 +27,7 @@ const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $qId, ProductServiceId];
+    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $qId, ProductServiceId, $uibModalId];
     commentResource;
     processResource;
     filter;
@@ -31,8 +36,9 @@ class WorkflowService {
     translate;
     $q;
     productService: ProductService;
+    uibModal;
 
-    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $q, ProductService) {
+    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $q, ProductService, $uibModal) {
         this.commentResource = CommentResource.resource;
         this.processResource = ProcessResource.resource;
         this.filter = $filter;
@@ -41,6 +47,7 @@ class WorkflowService {
         this.translate = $translate;
         this.$q = $q;
         this.productService = ProductService;
+        this.uibModal = $uibModal;
     }
 
     addComment(comments: Array<Commentary>, process: Process, user: User, commentText: string): any {
@@ -87,9 +94,11 @@ class WorkflowService {
             array.push(tempOrderPosition);
         }
     }
+
     deleteProduct(array, index) {
         array.splice(index, 1);
     }
+
     sumOrderPositions(array) {
         let sum = 0;
         if (isNullOrUndefined(array)) {
@@ -104,6 +113,21 @@ class WorkflowService {
             }
         }
         return sum;
+    }
+
+    openOfferModal(offer: Offer) {
+        console.log("Offer");
+        console.log(offer);
+        this.uibModal.open({
+            templateUrl: "http://localhost:8080/components/Common/view/Offer.Gen.Modal.html",
+            controller: WorkflowController,
+            controllerAs: "workflowCtrl",
+            resolve: {
+                offer: function () {
+                    return offer;
+                }
+            }
+        });
     }
 
     addLeadToOffer(process: Process, user: User): any {
@@ -122,8 +146,9 @@ class WorkflowService {
         for (let i = 0; i < offer.orderPositions.length; i++) {
             offer.orderPositions[i].id = 0;
         }
+        this.openOfferModal(offer);
         this.processResource.createOffer({ id: process.id }, offer).$promise.then(function () {
-            self.processResource.setStatus({ id: process.id }, "OFFER").$promise.then(function () {
+            self.processResource.setStatus({ id: process.id }, Status.OFFER).$promise.then(function () {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
@@ -133,7 +158,7 @@ class WorkflowService {
                     });
                 }
                 process.offer = offer;
-                process.status = "OFFER";
+                process.status = Status.OFFER;
                 defer.resolve(true);
             }, function () {
                 defer.reject(false);
@@ -162,22 +187,15 @@ class WorkflowService {
         for (let i = 0; i < sale.orderPositions.length; i++) {
             sale.orderPositions[i].id = 0;
         }
-        this.processResource.createSale({
-            id: process.id
-        }, sale).$promise.then(function () {
-            self.processResource.setStatus({
-                id: process.id
-            }, "SALE").$promise.then(function () {
-                self.toaster.pop("success", "", self.translate
-                    .instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
+        this.processResource.createSale({ id: process.id }, sale).$promise.then(function () {
+            self.processResource.setStatus({ id: process.id }, Status.SALE).$promise.then(function () {
+                self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
                 self.rootScope.offersCount -= 1;
-                self.processResource.setProcessor({
-                    id: process.id
-                }, user.id).$promise.then(function () {
+                self.processResource.setProcessor({ id: process.id }, user.id).$promise.then(function () {
                     process.processor = user;
                 });
                 process.sale = sale;
-                process.status = "SALE";
+                process.status = Status.SALE;
                 defer.resolve(true);
             }, function () {
                 defer.reject(false);
@@ -188,4 +206,30 @@ class WorkflowService {
         return defer.promise;
     }
 }
+
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);
+
+const WorkflowControllerId: string = "WorkflowController";
+
+class WorkflowController {
+
+    $inject = ["$uibModalInstance", "offer"];
+
+    uibModalInstance;
+    offer: Offer;
+
+    constructor($uibModalInstance, offer) {
+        this.uibModalInstance = $uibModalInstance;
+        this.offer = offer;
+    }
+
+    ok() {
+        this.uibModalInstance.close();
+    }
+
+    cancel() {
+        this.uibModalInstance.dismiss("cancel");
+    }
+}
+
+angular.module(moduleWorkflow, ["summernote"]).service(WorkflowControllerId, WorkflowController);

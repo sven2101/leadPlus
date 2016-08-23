@@ -29,6 +29,7 @@ const $routeParamsId: string = "$routeParams";
 const ngImgCropId: string = "ngImgCrop";
 const $routeProviderId: string = "$routeProvider";
 const $httpProviderId: string = "$httpProvider";
+const $uibModalId: string = "$uibModal";
 
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";
@@ -89,6 +90,8 @@ const moduleNgSwitchery: string = "NgSwitchery";
 const moduleToaster: string = "toaster";
 const moduleNgImgCrop: string = "ngImgCrop";
 const moduleHighchartsNg: string = "highcharts-ng";
+const moduleUIBootstrap: string = "ui.bootstrap";
+const moduleSummernote: string = "summernote";
 
 const workflowLead: string = "LEAD";
 const workflowOffer: string = "OFFER";

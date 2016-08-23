@@ -67,4 +67,6 @@ angular.module(moduleApp,
         moduleToaster,
         moduleHighchartsNg,
         moduleNgImgCrop,
+        moduleUIBootstrap,
+        moduleSummernote,
     ]);

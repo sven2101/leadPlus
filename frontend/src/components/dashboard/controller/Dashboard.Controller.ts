@@ -51,10 +51,12 @@ class DashboardController {
     }
 
     createOffer(process: Process) {
+        console.log("Offer");
         this.dashboardService.createOffer(process, this.user);
     }
 
     createSale(process: Process) {
+        console.log("Sale");
         this.dashboardService.createSale(process, this.user);
     }
 
@@ -64,9 +66,11 @@ class DashboardController {
         this.workflowModalProcess = process;
         this.workflowComments = this.workflowService.getCommentsByProcessId(process.id);
     }
+
     refreshData() {
         this.dashboardService.initDashboard();
     }
+
     addComment(process) {
         let self: DashboardController = this;
         this.workflowService.addComment(this.workflowComments, process, this.user, this.commentModalInput).then(function () {

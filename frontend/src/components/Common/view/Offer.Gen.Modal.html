@@ -1,0 +1,205 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content animated fadeIn">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">{{ 'OFFER_EDIT_OFFER_MODAL' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+            <form novalidate>
+                <div class="row">
+                    <div class="col-sm-6 b-r">
+                        <div class="form-group">
+                            <label>{{ 'CUSTOMER_MENU' | translate }}</label>
+                            <select class="form-control" ng-model="workflowCtrl.offer.currentCustomerId" ng-change="offer.selectCustomer(offer.editOffer)">
+                                            <option value="-1" selected > - Select Customer - </option>                                                                     
+                                            <option value="{{customer.id}}" ng-repeat="customer in workflowCtrl.offer.customerService.getActiveCustomer()">{{customer.firstname}} {{customer.lastname}}</option>                                          
+                                        </select>
+                        </div>
+                        <!-- TITLE -->
+                        <div class="form-group">
+                            <label>{{ 'COMMON_TITLE' | translate }}</label>
+                            <select name="title" class="form-control" ng-model="workflowCtrl.offer.customer.title" ng-disabled="offer.customerSelected">
+                                    <option value="MR">{{ 'COMMON_TITLE_MR' | translate }}</option>
+                                    <option value="MS">{{ 'COMMON_TITLE_MS' | translate }}</option>
+                                </select>
+                        </div>
+
+                        <!-- FIRSTNAME -->
+                        <div class="form-group" ng-class="{ 'has-error' : offer.editForm.firstname.$invalid && !offer.editForm.firstname.$pristine }">
+                            <label>{{ 'COMMON_FIRSTNAME' | translate }}</label>
+                            <input required type="text" name="firstname" class="form-control" ng-model="workflowCtrl.offer.customer.firstname" ng-maxlength="30"
+                                ng-disabled="offer.customerSelected">
+                            <p ng-show="offer.editForm.firstname.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            <p ng-show="offer.editForm.firstname.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+                        </div>
+                        <!-- LASTNAME -->
+                        <div class="form-group" ng-class="{ 'has-error' : offer.editForm.lastname.$invalid && !offer.editForm.lastname.$pristine }">
+                            <label>{{ 'COMMON_LASTNAME' | translate }}</label>
+                            <input required type="text" name="lastname" class="form-control" ng-model="workflowCtrl.offer.customer.lastname" ng-maxlength="30"
+                                ng-disabled="offer.customerSelected">
+                            <p ng-show="offer.editForm.lastname.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            <p ng-show="offer.editForm.lastname.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+                        </div>
+                        <!-- COMPANY -->
+                        <div class="form-group" ng-class="{ 'has-error' : offer.editForm.company.$invalid && !offer.editForm.company.$pristine }">
+                            <label>{{ 'COMMON_COMPANY' | translate }}</label>
+                            <input type="text" name="company" class="form-control" ng-model="workflowCtrl.offer.customer.company" ng-maxlength="50" ng-disabled="offer.customerSelected">
+                            <p ng-show="offer.editForm.company.$invalid && !offer.editForm.company.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <!-- EMAIL -->
+                        <div class="form-group" ng-class="{ 'has-error' : offer.editForm.email.$invalid && !offer.editForm.email.$pristine }" ng-disabled="offer.customerSelected">
+                            <label>{{ 'COMMON_EMAIL' | translate }}</label>
+                            <input type="email" name="email" class="form-control" ng-model="workflowCtrl.offer.customer.email">
+                            <p ng-show="offer.editForm.email.$invalid && !offer.editForm.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL'| translate }}</p>
+                        </div>
+                        <!-- PHONE -->
+                        <div class="form-group" ng-class="{ 'has-error' : offer.editForm.phone.$invalid && !offer.editForm.phone.$pristine }" ng-disabled="offer.customerSelected">
+                            <label>{{ 'COMMON_PHONE' | translate }}</label>
+                            <input type="text" name="phone" class="form-control" ng-model="workflowCtrl.offer.customer.phone" ng-maxlength="50">
+                            <p ng-show="offer.editForm.phone.$invalid && !offer.editForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                        </div>
+                        <!-- CONTAINER DESTINATION -->
+                        <div class="form-group" ng-class="{ 'has-error' : offer.editForm.destination.$invalid && !offer.editForm.destination.$pristine }">
+                            <label>{{ 'COMMON_CONTAINER_DESTINATION'| translate }}</label>
+                            <input type="text" name="destination" class="form-control" ng-model="workflowCtrl.offer.deliveryAddress" ng-maxlength="50">
+                            <p ng-show="offer.editForm.destination.$invalid && !offer.editForm.destination.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                        </div>
+                        <!-- DELIVERY DATE -->
+                        <div class="form-group" id="editOfferDatepicker">
+                            <label>{{ 'COMMON_DELIVERY_TIME' | translate }}</label>
+                            <div ng-show="$root.language == 'DE'" class="input-group date" data-date-language="de" data-date-format="dd.mm.yyyy">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                <input type="text" class="form-control" name="deliveryDate" ng-model="workflowCtrl.offer.deliveryDate">
+                            </div>
+                            <div ng-show="$root.language == 'EN'" class="input-group date" data-date-language="en" data-date-format="dd.mm.yyyy">
+                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                <input type="text" class="form-control" name="deliveryDate" ng-model="workflowCtrl.offer.deliveryDate">
+                            </div>
+                        </div>
+                        <!-- OFFER PRICE -->
+                        <div class="form-group" ng-class="{ 'has-error' : offer.editForm.offerPrice.$invalid && !offer.editForm.offerPrice.$pristine }">
+                            <label>{{ 'COMMON_CONTAINER_OFFER_PRICE'| translate }} *</label>
+                            <input type="number" name="offerPrice" class="form-control" ng-model="workflowCtrl.offer.offerPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+                                step="0.01" required>
+                            <p ng-show="offer.editForm.offerPrice.$invalid && !offer.editForm.offerPrice.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h2>{{ 'PRODUCT_MENU' | translate }}</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <select class="form-control" ng-model="workflowCtrl.offer.currentProductId">
+                                            <option value="-1" selected disabled hidden>{{ 'LEAD_EDIT_SELECT_PRODUCT' | translate }}</option>                                     
+                                            <option value="{{product.id}}" ng-repeat="product in workflowCtrl.offer.productService.products">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
+                                        </select>
+                                </th>
+                                <th class="col-md-1"></th>
+                                <th style="width:100px">
+                                    <input type="number" class="input-sm form-control" ng-model="workflowCtrl.offer.currentProductAmount">
+                                </th>
+                                <th class="col-md-1">
+                                    <button type="button" class="btn btn-white btn-sm" ng-click="workflowCtrl.offer.addProduct(offer.currentOrderPositions)">
+                                     <i class="fa fa-plus"></i>&nbsp;</button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="orderPosition in workflowCtrl.offer.currentOrderPositions">
+                                <td>{{orderPosition.product.name}}</td>
+                                <td class="col-md-1 ">{{orderPosition.product.priceNetto*orderPosition.amount| currency:'\u20AC'}}</td>
+                                <td style="width:100px">{{orderPosition.amount}}</td>
+                                <td class=" col-md-1 ">
+                                    <button type="button " class="btn btn-white btn-sm " ng-click="offer.deleteProduct(offer.currentOrderPositions,$index) ">
+                                        <i class="fa fa-trash "></i>&nbsp;
+                                     </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- ENTIRE PRICE -->
+                <div>
+                    <div class="form-group ">
+                        <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{offer.sumOrderPositions(offer.currentOrderPositions)|
+                            currency:'\u20AC'}}
+                        </h2>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="form-group ">
+                        <h2>Angebot - Template</h2>
+                        <select class="form-control">
+                                <option value="DE">Deutsch(de)</option>
+                                <option value="EN">English(en)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="form-group ">
+                        <h2>Email</h2>
+                        <select class="form-control">
+                                <option value="DE">Deutsch(de)</option>
+                                <option value="EN">English(en)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Empfänger</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.password"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Betreff</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.password"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Anhang</label>
+                    <div class="col-sm-10">
+                        <h4>Example <span class="label label-default"><i class="fa fa-file-pdf-o" aria-hidden="true">Anhang</i></span></h4>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Anhang</label>
+                    <div>
+                        <h4>code : HTML string in summernote</h4>
+                        <summernote airMode ></summernote>
+                    </div>
+                </div>
+
+
+
+
+            </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL'| translate }}
+                </button>
+                <button type="submit" class="btn btn-success" ng-disabled="offer.editForm.$invalid" ng-click="offer.saveEditedRow()" data-dismiss="modal">{{ 'COMMON_SAVE'| translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+    $(document).ready(function () {
+        $('#editOfferDatepicker .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true
+        });
+    });
+</script>

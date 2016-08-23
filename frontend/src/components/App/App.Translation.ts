@@ -197,6 +197,7 @@ function config($translateProvider) {
             OFFER_TAB_OFFERS: "Angebot - Angebote",
             OFFER_TAB_FILES: "Angebote - Dateien",
             OFFER_TAB_TEMPLATES: "Angebote - Vorlagen",
+            OFFER_GENERATION_AND_SENDING: "Angebot generieren und versenden",
 
             // Define all offer elements
             SALE_SALES: "Verkäufe",
@@ -487,6 +488,7 @@ function config($translateProvider) {
             OFFER_TAB_OFFERS: "Offer - Offers",
             OFFER_TAB_FILES: "Offer - Files",
             OFFER_TAB_TEMPLATES: "Offer - Templates",
+            OFFER_GENERATION_AND_SENDING: "Generate and Send Offer",
 
             // Define all sale elements
             SALE_SALES: "Sales",

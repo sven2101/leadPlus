@@ -28,6 +28,7 @@ let isNullOrUndefined = function (object: any): boolean {
 let deepCopy = function (old: Object): any {
     return JSON.parse(JSON.stringify(old));
 };
+
 let shallowCopy = function (oldObject: Object, newObject: Object) {
     for (let propertyName in oldObject) {
         newObject[propertyName] = oldObject[propertyName];
@@ -36,7 +37,6 @@ let shallowCopy = function (oldObject: Object, newObject: Object) {
         newObject["id"] = oldObject["id"];
     }
 };
-
 
 let newTimestamp = function (pattern: string = "DD.MM.YYYY HH:mm") {
     return moment.utc().format(pattern);

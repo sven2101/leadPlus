@@ -40,7 +40,6 @@ class DashboardService {
         this.toaster = toaster;
         this.translate = $translate;
         this.orderBy = $filter("orderBy");
-
         this.initDashboard();
     }
 
