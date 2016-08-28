@@ -6,9 +6,11 @@
 /// <reference path="../../Product/model/Product.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../Lead/model/Lead.Model.ts" />
+/// <reference path="../../Lead/controller/Lead.DataTableService.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../common/service/AbstractWorkflow.ts" />
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -23,17 +25,18 @@
 
 "use strict";
 
-class LeadController {
+class LeadController extends AbstractWorkflow {
 
     $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile",
         "$scope", "toaster", "ProcessResource", "CommentResource", "$filter",
-        "UserResource", "$rootScope", "$translate", "LeadResource", ProductServiceId, WorkflowServiceId, CustomerServiceId, CustomerResourceId];
+        "UserResource", "$rootScope", "$translate", "LeadResource", ProductServiceId, WorkflowServiceId, CustomerServiceId, CustomerResourceId, "LeadDataTableService"];
 
 
 
     productService;
     workflowService: WorkflowService;
     customerService: CustomerService;
+    leadDataTableService: LeadDataTableService;
     scope;
     rootScope;
     commentResource;
@@ -47,8 +50,8 @@ class LeadController {
     toaster;
     dtOptions;
     dtColumns;
-    windowWidth;
     addForm;
+    editForm: any;
 
     user: User = new User();
     commentInput: string;
@@ -63,6 +66,9 @@ class LeadController {
     newLead: Lead = new Lead();
     editLead: Lead;
 
+    allDataRoute: string;
+    openDataRoute: string;
+
     currentOrderPositions = [];
     currentProductId = "-1";
     currentProductAmount = 1;
@@ -72,11 +78,12 @@ class LeadController {
 
     constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
         toaster, ProcessResource, CommentResource, $filter, UserResource,
-        $rootScope, $translate, LeadResource, ProductService, WorkflowService, CustomerService, CustomerResource) {
-
+        $rootScope, $translate, LeadResource, ProductService, WorkflowService, CustomerService, CustomerResource, LeadDataTableService) {
+        super();
         this.productService = ProductService;
         this.workflowService = WorkflowService;
         this.customerService = CustomerService;
+        this.leadDataTableService = LeadDataTableService;
         this.filter = $filter;
         this.processResource = ProcessResource.resource;
         this.commentResource = CommentResource.resource;
@@ -88,135 +95,26 @@ class LeadController {
         this.translate = $translate;
         this.compile = $compile;
         this.toaster = toaster;
-
+        this.allDataRoute = "/api/rest/processes/leads";
+        this.openDataRoute = "/api/rest/processes/workflow/LEAD/state/OPEN";
         let self = this;
-
-        this.windowWidth = $(window).width();
-
-        if (!angular.isUndefined($rootScope.globals.user))
-            this.userResource.get({
-                id: $rootScope.globals.user.id
-            }).$promise.then(function (result) {
-                self.user = result;
-            });
-
-        this.dtOptions = DTOptionsBuilder.newOptions().withOption("ajax", {
-            url: "/api/rest/processes/workflow/LEAD/state/OPEN",
-            error: function (xhr, error, thrown) {
-                console.log(xhr);
-            },
-            type: "GET"
-        }).withOption("stateSave", true).withDOM(
-            "<'row'<'col-sm-12'l>>" + "<'row'<'col-sm-6'B><'col-sm-6'f>>"
-            + "<'row'<'col-sm-12'tr>>"
-            + "<'row'<'col-sm-5'i><'col-sm-7'p>>").withPaginationType(
-            "full_numbers").withButtons([{
-                extend: "copyHtml5",
-                exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12],
-                    modifier: {
-                        page: "current"
-                    }
-                }
-            }, {
-                    extend: "print",
-                    exportOptions: {
-                        columns: [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12],
-                        modifier: {
-                            page: "current"
-                        }
-                    }
-                }, {
-                    extend: "csvHtml5",
-                    title: $translate("LEAD_LEADS"),
-                    exportOptions: {
-                        columns: [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12],
-                        modifier: {
-                            page: "current"
-                        }
-
-                    }
-                }, {
-                    extend: "excelHtml5",
-                    title: $translate.instant("LEAD_LEADS"),
-                    exportOptions: {
-                        columns: [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12],
-                        modifier: {
-                            page: "current"
-                        }
-                    }
-                }, {
-                    extend: "pdfHtml5",
-                    title: $translate("LEAD_LEADS"),
-                    orientation: "landscape",
-                    exportOptions: {
-                        columns: [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12],
-                        modifier: {
-                            page: "current"
-                        }
-                    }
-                }]).withBootstrap().withOption("createdRow", createdRow).withOption(
-            "order", [4, "desc"]);
-
-        this.dtColumns = [
-            DTColumnBuilder.newColumn(null).withTitle("").notSortable()
-                .renderWith(addDetailButton),
-            DTColumnBuilder.newColumn("lead.customer.lastname").withTitle(
-                $translate("COMMON_NAME")).withClass("text-center"),
-            DTColumnBuilder.newColumn("lead.customer.company").withTitle(
-                $translate("COMMON_COMPANY")).withClass("text-center"),
-            DTColumnBuilder.newColumn("lead.customer.email").withTitle(
-                $translate("COMMON_EMAIL")).withClass("text-center"),
-            DTColumnBuilder.newColumn("lead.timestamp").withTitle(
-                $translate("COMMON_DATE")).renderWith(
-                function (data, type, full) {
-                    let utcDate = moment.utc(data, "DD.MM.YYYY HH:mm");
-                    let localDate = moment(utcDate).local();
-                    return localDate.format("DD.MM.YYYY HH:mm");
-                }).withOption("type", "date-euro")
-                .withClass("text-center"),
-            DTColumnBuilder.newColumn("lead.customer.phone").withTitle(
-                $translate("COMMON_PHONE")).notVisible(),
-            DTColumnBuilder.newColumn("lead.customer.firstname").withTitle(
-                $translate("COMMON_FIRSTNAME")).notVisible(),
-            DTColumnBuilder.newColumn("lead.deliveryAddress").withTitle(
-                $translate("COMMON_CONTAINER")).notVisible(),
-            DTColumnBuilder.newColumn("lead.deliveryAddress").withTitle(
-                $translate("COMMON_CONTAINER_DESTINATION")).notVisible(),
-            DTColumnBuilder.newColumn("lead.customer.lastname").withTitle(
-                $translate("COMMON_CONTAINER_AMOUNT")).notVisible(),
-            DTColumnBuilder.newColumn("null").withTitle(
-                $translate("COMMON_CONTAINER_SINGLE_PRICE")).renderWith(
-                function (data, type, full) {
-                    return $filter("currency")(
-                        0, "€", 2);
-                }).notVisible(),
-            DTColumnBuilder.newColumn(null).withTitle(
-                $translate("COMMON_CONTAINER_ENTIRE_PRICE"))
-                .renderWith(
-                function (data, type, full) {
-                    if (isNullOrUndefined(data.lead.leadPrice)) {
-                        return $filter("currency")(0, "€", 2);
-                    }
-                    return $filter("currency")(data.lead.leadPrice,
-                        "€", 2);
-                }).notVisible(),
-
-            DTColumnBuilder.newColumn(null).withTitle(
-                $translate("COMMON_STATUS")).withClass("text-center")
-                .renderWith(addStatusStyle),
-            DTColumnBuilder.newColumn(null).withTitle(
-                "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").notSortable().renderWith(addActionsButtons)];
-
-        if ($rootScope.language === "DE") {
-            self.dtOptions
-                .withLanguageSource("/assets/datatablesTranslationFiles/German.json");
-        } else {
-            self.dtOptions
-                .withLanguageSource("/assets/datatablesTranslationFiles/English.json");
-        }
-
+        this.user = this.rootScope.currentUser;
+        this.dtOptions = DTOptionsBuilder.newOptions()
+            .withOption("ajax", {
+                url: this.openDataRoute,
+                error: function (xhr, error, thrown) {
+                    console.log(xhr);
+                },
+                type: "GET"
+            })
+            .withOption("stateSave", true)
+            .withDOM(this.workflowService.getDomString())
+            .withPaginationType("full_numbers")
+            .withButtons(this.workflowService.getButtons($translate("LEAD_LEADS"), [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12]))
+            .withBootstrap()
+            .withOption("createdRow", createdRow)
+            .withOption("order", [4, "desc"])
+            .withLanguageSource(this.workflowService.getLanguageSource($rootScope.language));
 
         function refreshData() {
             let resetPaging = false;
@@ -224,179 +122,35 @@ class LeadController {
         }
 
         function changeDataInput() {
-            if (self.loadAllData === true) {
-                self.dtOptions.withOption("serverSide", true).withOption("ajax", {
-                    url: "/api/rest/processes/leads",
-                    type: "GET",
-                    pages: 5,
-                    dataSrc: "data",
-                    error: function (xhr, error, thrown) {
-                        console.log(xhr);
-                    }
-                }).withOption("searchDelay", 500);
-            } else {
-                self.dtOptions.withOption("serverSide", false).withOption("ajax", {
-                    url: "/api/rest/processes/workflow/LEAD/state/OPEN",
-                    error: function (xhr, error, thrown) {
-                        console.log(xhr);
-                    },
-                    type: "GET"
-                }).withOption("searchDelay", 0);
+            let searchDelay: number = 0;
+            if (this.loadAllData === true) {
+                searchDelay = 500;
             }
+            self.dtOptions.withOption("serverSide", this.loadAllData)
+                .withOption("ajax", this.workflowService.getData(this.loadAllData, this.allDataRoute, this.openDataRoute))
+                .withOption("searchDelay", searchDelay);
         }
 
         function createdRow(row, data, dataIndex) {
             // Recompiling so we can bind Angular directive to the DT
             self.rows[data.id] = row;
-            let currentDate = moment(moment() + "", "DD.MM.YYYY");
+            let currentDate = moment(moment().utc + "", "DD.MM.YYYY");
             let leadDate = moment(data.lead.timestamp, "DD.MM.YYYY");
             if (currentDate["businessDiff"](leadDate, "days") > 3
-                && data.status === "OPEN")
+                && data.status === "OPEN") {
                 $(row).addClass("important");
+            }
             self.compile(angular.element(row).contents())(self.scope);
         }
 
         function addActionsButtons(data, type, full, meta) {
             self.processes[data.id] = data;
-            let disabled = "";
-            let disablePin = "";
-            let hasRightToDelete = "";
-            let closeOrOpenInquiryDisable = "";
-            let openOrLock = $translate.instant("LEAD_CLOSE_LEAD");
-            let faOpenOrLock = "fa fa-lock";
-            if (data.status !== "OPEN") {
-                disabled = "disabled";
-                disablePin = "disabled";
-                openOrLock = $translate.instant("LEAD_OPEN_LEAD");
-                faOpenOrLock = "fa fa-unlock";
-            }
-            if (data.offer !== null || data.sale !== null) {
-                closeOrOpenInquiryDisable = "disabled";
-            }
-            if ($rootScope.globals.user.role === "USER") {
-                hasRightToDelete = "disabled";
-            }
-            if (data.processor !== null
-                && $rootScope.globals.user.username !== data.processor.username) {
-                disablePin = "disabled";
-            }
-            if (self.windowWidth > 1300) {
-                return "<div style='white-space: nowrap;'><button class='btn btn-white' "
-                    + disabled
-                    + " ng-click='lead.createOffer(lead.processes["
-                    + data.id
-                    + "])' title='"
-                    + $translate.instant("LEAD_FOLLOW_UP")
-                    + "'>"
-                    + "   <i class='fa fa-check'></i>"
-                    + "</button>&nbsp;"
-                    + "<button class='btn btn-white' "
-                    + disablePin
-                    + " ng-click='lead.pin(lead.processes["
-                    + data.id
-                    + "])' title='"
-                    + $translate.instant("LEAD_PIN")
-                    + "'>"
-                    + "   <i class='fa fa-thumb-tack'></i>"
-                    + "</button>&nbsp;"
-                    + "<button class='btn btn-white' "
-                    + closeOrOpenInquiryDisable
-                    + " ng-click='lead.closeOrOpenInquiry(lead.processes["
-                    + data.id
-                    + "])' title='"
-                    + openOrLock
-                    + "'>"
-                    + "   <i class='"
-                    + faOpenOrLock
-                    + "'></i>"
-                    + "</button>&nbsp;"
-                    + "<button class='btn btn-white' "
-                    + closeOrOpenInquiryDisable
-                    + " ng-click='lead.loadDataToModal(lead.processes["
-                    + data.id
-                    + "])' data-toggle='modal'"
-                    + "data-target='#editModal' title='"
-                    + $translate.instant("LEAD_EDIT_LEAD")
-                    + "'>"
-                    + "<i class='fa fa-edit'></i>"
-                    + "</button>&nbsp;"
-                    + "<button class='btn btn-white' "
-                    + hasRightToDelete
-                    + " ng-click='lead.deleteRow(lead.processes["
-                    + data.id
-                    + "])' title='"
-                    + $translate.instant("LEAD_DELETE_LEAD")
-                    + "'>"
-                    + "   <i class='fa fa-trash-o'></i>"
-                    + "</button></div>";
-            } else {
-                return "<div class='dropdown'>"
-                    + "<button class='btn btn-white dropdown-toggle' type='button' data-toggle='dropdown'>"
-                    + "<i class='fa fa-wrench'></i></button>"
-                    + "<ul class='dropdown-menu pull-right'>"
-                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                    + disabled
-                    + " ng-click='lead.followUp(lead.processes["
-                    + data.id
-                    + "])'><i class='fa fa-check'>&nbsp;</i>"
-                    + $translate.instant("LEAD_FOLLOW_UP")
-                    + "</button></li>"
-                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                    + disablePin
-                    + " ng-click='lead.pin(lead.processes["
-                    + data.id
-                    + "])'><i class='fa fa-thumb-tack'>&nbsp;</i>"
-                    + $translate.instant("LEAD_PIN")
-                    + "</button></li>"
-                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                    + closeOrOpenInquiryDisable
-                    + " ng-click='lead.closeOrOpenInquiry(lead.processes["
-                    + data.id
-                    + "])'><i class='"
-                    + faOpenOrLock
-                    + "'>&nbsp;</i>"
-                    + openOrLock
-                    + "</button></li>"
-                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                    + closeOrOpenInquiryDisable
-                    + " data-toggle='modal' data-target='#editModal' ng-click='lead.loadDataToModal(lead.processes["
-                    + data.id
-                    + "])'><i class='fa fa-edit''>&nbsp;</i>"
-                    + $translate.instant("LEAD_EDIT_LEAD")
-                    + "</button></li>"
-                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                    + hasRightToDelete
-                    + " ng-click='lead.deleteRow(lead.processes["
-                    + data.id
-                    + "])'><i class='fa fa-trash-o'>&nbsp;</i>"
-                    + $translate.instant("LEAD_DELETE_LEAD")
-                    + "</button></li>"
-                    + "</ul>" + "</div>";
-            }
+            return self.leadDataTableService.getActionButtonsHTML(data, self.user);
         }
 
         function addStatusStyle(data, type, full, meta) {
             self.processes[data.id] = data;
-            let hasProcessor = "";
-            if (data.processor !== null)
-                hasProcessor = "&nbsp;<span style='color: #ea394c;'><i class='fa fa-thumb-tack'></i></span>";
-            if (data.status === "OPEN") {
-                return "<span style='color: green;'>"
-                    + $translate.instant("COMMON_STATUS_OPEN") + "</span>"
-                    + hasProcessor;
-            } else if (data.status === "OFFER") {
-                return "<span style='color: #f79d3c;'>"
-                    + $translate.instant("COMMON_STATUS_OFFER") + "</span>";
-            } else if (data.status === "FOLLOWUP") {
-                return "<span style='color: #f79d3c;'>"
-                    + $translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>";
-            } else if (data.status === "SALE") {
-                return "<span style='color: #1872ab;'>"
-                    + $translate.instant("COMMON_STATUS_SALE") + "</span>";
-            } else if (data.status === "CLOSED") {
-                return "<span style='color: #ea394c;'>"
-                    + $translate.instant("COMMON_STATUS_CLOSED") + "</span>";
-            }
+            return self.leadDataTableService.getStatusStyleHTML(data);
         }
 
         function addDetailButton(data, type, full, meta) {
@@ -406,6 +160,8 @@ class LeadController {
                 + "], $event)' title='Details'>"
                 + "<i class='glyphicon glyphicon-plus-sign'/></a>";
         }
+
+        this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
     }
 
     getOrderPositions(process) {
@@ -414,42 +170,8 @@ class LeadController {
 
     appendChildRow(process, event) {
         let childScope = this.scope.$new(true);
-        childScope.childData = process;
-        let self = this;
-        this.commentResource.getByProcessId({
-            id: process.id
-        }).$promise.then(function (result) {
-            self.comments[process.id] = [];
-            for (let comment in result) {
-                if (comment === "$promise")
-                    break;
-                self.comments[process.id].push({
-                    commentText: result[comment].commentText,
-                    timestamp: result[comment].timestamp,
-                    creator: result[comment].creator
-                });
-            }
-        });
-        childScope.parent = this;
-
-        let link = angular.element(event.currentTarget), icon = link
-            .find(".glyphicon"), tr = link.parent().parent(), table = this.dtInstance.DataTable, row = table
-                .row(tr);
-
-        if (row.child.isShown()) {
-            icon.removeClass("glyphicon-minus-sign")
-                .addClass("glyphicon-plus-sign");
-            row.child.hide();
-            tr.removeClass("shown");
-        } else {
-            icon.removeClass("glyphicon-plus-sign")
-                .addClass("glyphicon-minus-sign");
-            row.child(
-                this.compile(
-                    "<div childrow type='lead' class='clearfix'></div>")(
-                    childScope)).show();
-            tr.addClass("shown");
-        }
+        this.comments[process.id] = this.workflowService.getCommentsByProcessId(process.id);
+        this.workflowService.appendChildRow(childScope, process, this.dtInstance, this);
     }
 
     loadCurrentIdToModal(id) {
@@ -581,7 +303,7 @@ class LeadController {
 
     };
 
-    saveEditedRow = function () {
+    saveEditedRow() {
         let self = this;
         shallowCopy(this.editLead, this.editProcess.lead);
         this.editProcess.lead.orderPositions = this.currentOrderPositions;

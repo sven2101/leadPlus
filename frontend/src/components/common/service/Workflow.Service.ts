@@ -9,6 +9,7 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../Common/model/Status.Model.ts" />
 /// <reference path="../../Common/model/Workflow.Model.ts" />
+/// <reference path="../../Common/service/AbstractWorkflow.ts" />
 /// <reference path="../../Dashboard/controller/Dashboard.Controller.ts" />
 
 /*******************************************************************************
@@ -27,24 +28,26 @@ const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $qId, ProductServiceId, $uibModalId];
+    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, $uibModalId];
     commentResource;
     processResource;
     filter;
     toaster;
     rootScope;
     translate;
+    compile;
     $q;
     productService: ProductService;
     uibModal;
 
-    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $q, ProductService, $uibModal) {
+    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $compile, $q, ProductService, $uibModal) {
         this.commentResource = CommentResource.resource;
         this.processResource = ProcessResource.resource;
         this.filter = $filter;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
+        this.compile = $compile;
         this.$q = $q;
         this.productService = ProductService;
         this.uibModal = $uibModal;
@@ -205,8 +208,119 @@ class WorkflowService {
         });
         return defer.promise;
     }
-}
 
+    getButtons(title: string, columns: Array<number>): Array<any> {
+        return [{
+            extend: "copyHtml5",
+            exportOptions: {
+                columns: columns,
+                modifier: {
+                    page: "current"
+                }
+            }
+        }, {
+                extend: "print",
+                exportOptions: {
+                    columns: columns,
+                    modifier: {
+                        page: "current"
+                    }
+                }
+            }, {
+                extend: "csvHtml5",
+                title: title,
+                exportOptions: {
+                    columns: columns,
+                    modifier: {
+                        page: "current"
+                    }
+
+                }
+            }, {
+                extend: "excelHtml5",
+                title: title,
+                exportOptions: {
+                    columns: columns,
+                    modifier: {
+                        page: "current"
+                    }
+                }
+            }, {
+                extend: "pdfHtml5",
+                title: title,
+                orientation: "landscape",
+                exportOptions: {
+                    columns: columns,
+                    modifier: {
+                        page: "current"
+                    }
+                }
+            }];
+    }
+
+    getDomString(): string {
+        return "<'row'<'col-sm-12'l>>" + "<'row'<'col-sm-6'B><'col-sm-6'f>>"
+            + "<'row'<'col-sm-12'tr>>"
+            + "<'row'<'col-sm-5'i><'col-sm-7'p>>";
+    }
+
+    getLanguageSource(language: string): string {
+        switch (language) {
+            case Language[Language.DE]:
+                return "/assets/datatablesTranslationFiles/German.json";
+            case Language[Language.EN]:
+                return "/assets/datatablesTranslationFiles/English.json";
+            default:
+                return "/assets/datatablesTranslationFiles/English.json";
+        }
+    }
+
+    getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): any {
+        if (loadAllData === true) {
+            return {
+                url: allDataRoute,
+                type: "GET",
+                pages: 5,
+                dataSrc: "data",
+                error: function (xhr, error, thrown) {
+                    console.log(xhr);
+                }
+            };
+        } else {
+            return {
+                url: latestDataRoute,
+                error: function (xhr, error, thrown) {
+                    console.log(xhr);
+                },
+                type: "GET"
+            };
+        }
+    }
+
+    appendChildRow(childScope: any, process: Process, dtInstance: any, parent: AbstractWorkflow) {
+        childScope.childData = process;
+        childScope.parent = parent;
+
+        let link = angular.element(event.currentTarget), icon = link
+            .find(".glyphicon"), tr = link.parent().parent(), table = dtInstance.DataTable, row = table
+                .row(tr);
+
+        if (row.child.isShown()) {
+            icon.removeClass("glyphicon-minus-sign")
+                .addClass("glyphicon-plus-sign");
+            row.child.hide();
+            tr.removeClass("shown");
+        } else {
+            icon.removeClass("glyphicon-plus-sign")
+                .addClass("glyphicon-minus-sign");
+            row.child(
+                this.compile(
+                    "<div childrow type='lead' class='clearfix'></div>")(
+                    childScope)).show();
+            tr.addClass("shown");
+        }
+    }
+}
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);
 
 const WorkflowControllerId: string = "WorkflowController";

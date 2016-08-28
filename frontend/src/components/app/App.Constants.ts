@@ -44,6 +44,7 @@ const moduleSignupResource: string = moduleSignup + ".resource";
 const moduleSignupService: string = moduleSignup + ".service";
 const moduleLead: string = moduleApp + ".lead";
 const moduleLeadResource: string = moduleLead + ".resource";
+const moduleLeadService: string = moduleLead + ".service";
 const moduleOffer: string = moduleApp + ".offer";
 const moduleOfferResource: string = moduleOffer + ".resource";
 const moduleSale: string = moduleApp + ".sale";
