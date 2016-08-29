@@ -61,4 +61,11 @@ public class FileResource {
 		fileService.delete(id);
 	}
 
+	@RequestMapping(value = "/emails/templates", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation(value = "Post a file. ", notes = "")
+	public File saveEmailTemplate(@RequestParam("file") MultipartFile file) throws SaveFailedException {
+		return fileService.saveEmailTemplate(file);
+	}
+
 }
