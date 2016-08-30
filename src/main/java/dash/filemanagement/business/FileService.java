@@ -66,7 +66,6 @@ public class FileService implements IFileService {
 			logger.error(FILE_NOT_FOUND + FileService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
 			throw sfex;
 		}
-
 	}
 
 	@Override
@@ -100,6 +99,35 @@ public class FileService implements IFileService {
 			logger.error(FILE_NOT_FOUND + FileService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
 			throw nfex;
 		}
+	}
+
+	@Override
+	public File saveEmailTemplate(final MultipartFile multipartFile) throws SaveFailedException {
+		if (multipartFile != null) {
+			try {
+
+				File file = new File();
+				file.setName(multipartFile.getOriginalFilename());
+				file.setDescription("");
+				file.setContent(multipartFile.getBytes());
+				file.setSize(multipartFile.getSize());
+				file.setMimeType(multipartFile.getContentType());
+				file.setSize(multipartFile.getSize());
+				file.setDeaktiviert(false);
+
+				return fileRepository.save(file);
+			} catch (Exception ex) {
+				logger.error(FileService.class.getSimpleName() + ex.getMessage(), ex);
+				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
+			}
+		} else
+
+		{
+			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
+			logger.error(FILE_NOT_FOUND + FileService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
+			throw sfex;
+		}
+
 	}
 
 }

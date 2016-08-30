@@ -90,26 +90,30 @@
         <div class="ibox float-e-margins">
             <div class="ibox-title">
                 <h5>{{ 'SETTING_EMAIL_TEMPLATES_MANAGEMENT' | translate }}</h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <a class="close-link">
-                            <i class="fa fa-times"></i>
-                        </a>
-                    </div>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-wrench"></i>
+                    </a>
+                    <a class="close-link">
+                        <i class="fa fa-times"></i>
+                    </a>
                 </div>
-                <div class="ibox-content no-padding">
-
+            </div>
+            <div class="ibox-content">
+                <form class="form-horizontal">
                     <div class="summernote">
                         <summernote></summernote>
                     </div>
-
-                </div>
+                </form>
             </div>
+
+            <button class="btn btn-success" type="submit" ng-click="settingCtrl.save()" ng-disabled="profilInfoForm.$invalid">
+            <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
         </div>
     </div>
+</div>
+</div>
 </div>

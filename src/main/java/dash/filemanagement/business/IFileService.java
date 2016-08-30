@@ -29,4 +29,7 @@ public interface IFileService {
 	public void delete(final long id) throws DeleteFailedException;
 
 	public File getById(final long id) throws NotFoundException;
+
+	public File saveEmailTemplate(final MultipartFile multipartFile) throws SaveFailedException;
+
 }

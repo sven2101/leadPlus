@@ -125,6 +125,7 @@ class WorkflowService {
             templateUrl: "http://localhost:8080/components/Common/view/Offer.Gen.Modal.html",
             controller: WorkflowController,
             controllerAs: "workflowCtrl",
+            size: "lg",
             resolve: {
                 offer: function () {
                     return offer;
