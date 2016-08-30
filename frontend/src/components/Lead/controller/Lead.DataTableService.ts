@@ -13,7 +13,7 @@
 
 class LeadDataTableService {
 
-    $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$filter", "$rootScope", "$translate"];
+    $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$filter", "$compile", "$rootScope", "$translate"];
 
 
     translate;
@@ -22,13 +22,15 @@ class LeadDataTableService {
     DTOptionsBuilder;
     DTColumnBuilder;
     filter;
+    compile;
     rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $rootScope, $translate) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
         this.filter = $filter;
+        this.compile = $compile;
         this.rootScope = $rootScope;
 
     }
@@ -84,72 +86,39 @@ class LeadDataTableService {
                 "text-center").notSortable().renderWith(addActionsButtons)];
     }
 
-    getActionButtonsHTML(data: Process, user: User): string {
-        let disabled = "";
-        let disablePin = "";
-        let hasRightToDelete = "";
-        let closeOrOpenInquiryDisable = "";
-        let openOrLock = this.translate.instant("LEAD_CLOSE_LEAD");
-        let faOpenOrLock = "fa fa-lock";
-        if (data.status !== "OPEN") {
-            disabled = "disabled";
-            disablePin = "disabled";
-            openOrLock = this.translate.instant("LEAD_OPEN_LEAD");
-            faOpenOrLock = "fa fa-unlock";
+    setActionButtonsConfig(user: User, templateData: any) {
+        let config = {
+            "disabled": false,
+            "disablePin": false,
+            "hasRightToDelete": false,
+            "closeOrOpenInquiryDisable": false,
+            "openOrLock": this.translate.instant("LEAD_CLOSE_LEAD"),
+            "faOpenOrLock": "fa fa-lock"
+        };
+        if (templateData.process.status !== "OPEN") {
+            config.disabled = true;
+            config.disablePin = true;
+            config.openOrLock = this.translate.instant("LEAD_OPEN_LEAD");
+            config.faOpenOrLock = "fa fa-unlock";
         }
-        if (data.offer !== null || data.sale !== null) {
-            closeOrOpenInquiryDisable = "disabled";
+        if (templateData.process.offer !== null || templateData.process.sale !== null) {
+            config.closeOrOpenInquiryDisable = true;
         }
         if (user.role === Role.USER) {
-            hasRightToDelete = "disabled";
+            config.hasRightToDelete = true;
         }
-        if (data.processor !== null
-            && user.username !== data.processor.username) {
-            disablePin = "disabled";
+        if (templateData.process.processor !== null
+            && user.username !== templateData.process.processor.username) {
+            config.disablePin = true;
         }
+        templateData.config = config;
+    }
+
+    getActionButtonsHTML(user: User, templateData: any): string {
+        this.setActionButtonsConfig(user, templateData);
         if ($(window).width() > 1300) {
-            return "<div style='white-space: nowrap;'><button class='btn btn-white' " + disabled
-                + " ng-click='lead.createOffer(lead.processes[" + data.id + "])' title='" + this.translate.instant("LEAD_FOLLOW_UP") + "'>"
-                + "<i class='fa fa-check'></i></button>&nbsp;<button class='btn btn-white' "
-                + disablePin
-                + " ng-click='lead.pin(lead.processes["
-                + data.id
-                + "])' title='"
-                + this.translate.instant("LEAD_PIN")
-                + "'>"
-                + "   <i class='fa fa-thumb-tack'></i>"
-                + "</button>&nbsp;"
-                + "<button class='btn btn-white' "
-                + closeOrOpenInquiryDisable
-                + " ng-click='lead.closeOrOpenInquiry(lead.processes["
-                + data.id
-                + "])' title='"
-                + openOrLock
-                + "'>"
-                + "   <i class='"
-                + faOpenOrLock
-                + "'></i>"
-                + "</button>&nbsp;"
-                + "<button class='btn btn-white' "
-                + closeOrOpenInquiryDisable
-                + " ng-click='lead.loadDataToModal(lead.processes["
-                + data.id
-                + "])' data-toggle='modal'"
-                + "data-target='#editModal' title='"
-                + this.translate.instant("LEAD_EDIT_LEAD")
-                + "'>"
-                + "<i class='fa fa-edit'></i>"
-                + "</button>&nbsp;"
-                + "<button class='btn btn-white' "
-                + hasRightToDelete
-                + " ng-click='lead.deleteRow(lead.processes["
-                + data.id
-                + "])' title='"
-                + this.translate.instant("LEAD_DELETE_LEAD")
-                + "'>"
-                + "   <i class='fa fa-trash-o'></i>"
-                + "</button></div>";
-        } else {
+            return "<div actionbuttons templatedata='" + JSON.stringify(templateData) + "'></div>";
+        } else {/*
             return "<div class='dropdown'>"
                 + "<button class='btn btn-white dropdown-toggle' type='button' data-toggle='dropdown'>"
                 + "<i class='fa fa-wrench'></i></button>"
@@ -192,6 +161,7 @@ class LeadDataTableService {
                 + this.translate.instant("LEAD_DELETE_LEAD")
                 + "</button></li>"
                 + "</ul>" + "</div>";
+                */
         }
     }
 

@@ -144,8 +144,8 @@ class LeadController extends AbstractWorkflow {
         }
 
         function addActionsButtons(data, type, full, meta) {
-            self.processes[data.id] = data;
-            return self.leadDataTableService.getActionButtonsHTML(data, self.user);
+            let templatedata = { "process": self.processes[data.id] };
+            return self.leadDataTableService.getActionButtonsHTML(self.user, templatedata);
         }
 
         function addStatusStyle(data, type, full, meta) {

@@ -1,0 +1,22 @@
+<div style="white-space: nowrap;">
+    <button class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.lead.createOffer(parent.lead.processes[directiveData.process.id]) "
+        title="{{'LEAD_FOLLOW_UP' | translate }}">
+        <i class="fa fa-check"></i>
+    </button>&nbsp;
+    <button class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.lead.pin(parent.lead.processes[directiveData.process.id])"
+        title="{{'LEAD_PIN'| translate }}">
+         <i class="fa fa-thumb-tack"></i>
+    </button>&nbsp;
+    <button class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenInquiryDisable" ng-click="parent.lead.closeOrOpenInquiry(parent.lead.processes[directiveData.process.id])"
+        title="{{directiveData.config.openOrLock}}">
+         <i class="{{directiveData.config.faOpenOrLock}}"></i>
+    </button>&nbsp;
+    <button class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenInquiryDisable" ng-click="parent.lead.loadDataToModal(parent.lead.processes[directiveData.process.id])"
+        data-toggle="modal" data-target="#editModal" title="{{'LEAD_EDIT_LEAD' | translate }}">
+    <i class="fa fa-edit"></i>
+    </button>&nbsp;
+    <button class="btn btn-white" ng-disabled="directiveData.config.hasRightToDelete" ng-click="parent.lead.deleteRow(parent.lead.processes[directiveData.process.id])"
+        title="{{'LEAD_DELETE_LEAD' | translate }}">
+    <i class="fa fa-trash-o"></i>
+   </button>
+</div>
