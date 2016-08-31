@@ -15,27 +15,15 @@
 "use strict";
 
 angular.module(moduleApp)
-    .directive("actionbuttons", function () {
-        let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
-        directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
+    .directive("editlead", function () {
+        let directive: { restrict: string, templateUrl: any, transclude: boolean, link: any };
+        directive = { restrict: null, templateUrl: null, transclude: null, link: null };
         directive.restrict = "A";
-        directive.scope = {
-            templatedata: "@"
-        };
         directive.templateUrl = function (elem, attr) {
-            if (attr.template === "standard") {
-                return "components/Lead/view/Lead.ActionButtons.html";
-            }
-            else if (attr.template === "dropdown") {
-                return "components/Lead/view/Lead.ActionButtons2.html";
-            }
+            return "components/Lead/view/Lead.Edit.Modal.html";
         };
         directive.transclude = true;
-        directive.link = function (scope, element, attrs) {
-            let templateData = JSON.parse(scope.templatedata);
-            scope.directiveData = templateData;
-            scope.parent = scope.$parent;
-        };
+        directive.link = function (scope, element, attrs) { };
         return directive;
     });
 

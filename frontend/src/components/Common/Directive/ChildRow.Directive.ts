@@ -26,7 +26,6 @@ angular.module(moduleApp)
                 return "components/Offer/view/OfferChildRow.html";
             else if (attr.type === "sale")
                 return "components/Sale/view/SaleChildRow.html";
-
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {

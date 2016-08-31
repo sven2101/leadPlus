@@ -51,12 +51,10 @@ class DashboardController {
     }
 
     createOffer(process: Process) {
-        console.log("Offer");
         this.dashboardService.createOffer(process, this.user);
     }
 
     createSale(process: Process) {
-        console.log("Sale");
         this.dashboardService.createSale(process, this.user);
     }
 

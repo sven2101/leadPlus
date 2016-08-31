@@ -1,6 +1,6 @@
 /// <reference path="../app/App.Constants.ts" />
 /// <reference path="../User/model/User.Model.ts" />
-
+/// <reference path="../app/App.Resource.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -20,23 +20,20 @@ const AuthServiceId: string = "AuthService";
 
 class AuthService {
 
-    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, $windowId, $compileId];
+    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, UserResourceId];
 
     http;
     rootScope;
     cookieStore;
     location;
-    window;
-    compile;
-    user: User;
+    userResource;
 
-    constructor($http, $rootScope, $cookieStore, $location, $window, $compile) {
+    constructor($http, $rootScope, $cookieStore, $location, UserResource) {
         this.http = $http;
         this.rootScope = $rootScope;
         this.cookieStore = $cookieStore;
         this.location = $location;
-        this.window = $window;
-        this.compile = $compile;
+        this.userResource = UserResource.resource;
     }
 
     login(credentials, success, error) {
@@ -46,13 +43,7 @@ class AuthService {
             let authorization = btoa(credentials.username + ":" + credentials.password);
             let headers = credentials ? { authorization: "Basic " + authorization } : {};
             this.http.get("user", { headers: headers }).success(function (data) {
-                self.user = data;
-                console.log("Login - Data");
-                console.log(data);
-
                 if (data.username) {
-                    self.user = data;
-
                     self.rootScope.globals = {
                         user: {
                             id: data.id,
@@ -65,12 +56,12 @@ class AuthService {
                             authorization: authorization
                         }
                     };
-
                     self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
                     self.cookieStore.put("globals", self.rootScope.globals);
-
+                    self.setCurrentUser();
                     success(data);
                 } else {
+                    console.log("username is null");
                 }
             }).error(error);
 
@@ -78,7 +69,7 @@ class AuthService {
     }
 
     logout() {
-        this.user = null;
+        this.rootScope.currentUser = null;
         this.rootScope.globals = {};
         this.cookieStore.remove("globals");
         this.http.defaults.headers.common.Authorization = "Basic";
@@ -90,6 +81,14 @@ class AuthService {
             })
             .error(function (data) {
                 self.location.path("#/login");
+            });
+    }
+
+    setCurrentUser() {
+        let self = this;
+        if (!angular.isUndefined(self.rootScope.globals.user))
+            self.userResource.get({ id: self.rootScope.globals.user.id }).$promise.then(function (result) {
+                self.rootScope.currentUser = result;
             });
     }
 }

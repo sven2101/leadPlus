@@ -12,6 +12,8 @@
 
 const $translateId: string = "$translate";
 const toasterId: string = "toaster";
+const DTOptionsBuilderId: string = "DTOptionsBuilder";
+const DTColumnBuilderId: string = "DTColumnBuilder";
 const $filterId: string = "$filter";
 const $scopeId: string = "$scope";
 const $compileId: string = "$compile";
@@ -45,6 +47,7 @@ const moduleSignupService: string = moduleSignup + ".service";
 const moduleLead: string = moduleApp + ".lead";
 const moduleLeadResource: string = moduleLead + ".resource";
 const moduleLeadService: string = moduleLead + ".service";
+const moduleLeadDataTableService: string = moduleLead + ".dataTableService";
 const moduleOffer: string = moduleApp + ".offer";
 const moduleOfferResource: string = moduleOffer + ".resource";
 const moduleSale: string = moduleApp + ".sale";

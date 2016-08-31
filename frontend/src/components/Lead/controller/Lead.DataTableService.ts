@@ -1,4 +1,7 @@
 /// <reference path="../../app/App.Common.ts" />
+/// <reference path="../../User/Model/User.Model.ts" />
+/// <reference path="../../common/model/Process.Model.ts" />
+/// <reference path="../../common/service/Workflow.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -11,11 +14,15 @@
  ******************************************************************************/
 "use strict";
 
+const LeadDataTableServiceId: string = "LeadDataTableService";
+const allDataRoute = "/api/rest/processes/leads";
+const openDataRoute = "/api/rest/processes/workflow/LEAD/state/OPEN";
+
 class LeadDataTableService {
 
-    $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$filter", "$compile", "$rootScope", "$translate"];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId];
 
-
+    workflowService: WorkflowService;
     translate;
     dtOptions;
     dtColumns;
@@ -25,14 +32,49 @@ class LeadDataTableService {
     compile;
     rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
         this.filter = $filter;
         this.compile = $compile;
         this.rootScope = $rootScope;
+        this.workflowService = WorkflowService;
+    }
 
+    getDTOptionsConfiguration(createdRow: Function) {
+        return this.DTOptionsBuilder.newOptions()
+            .withOption("ajax", {
+                url: openDataRoute,
+                error: function (xhr, error, thrown) {
+                    console.log(xhr);
+                },
+                type: "GET"
+            })
+            .withOption("stateSave", true)
+            .withDOM(this.workflowService.getDomString())
+            .withPaginationType("full_numbers")
+            .withButtons(this.workflowService.getButtons(this.translate("LEAD_LEADS"), [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12]))
+            .withBootstrap()
+            .withOption("createdRow", createdRow)
+            .withOption("order", [4, "desc"])
+            .withLanguageSource(this.workflowService.getLanguageSource(this.rootScope.language));
+    }
+
+    configRow(row: any, data: Process) {
+        let currentDate = moment(moment().utc + "", "DD.MM.YYYY");
+        let leadDate = moment(data.lead.timestamp, "DD.MM.YYYY");
+        if (currentDate["businessDiff"](leadDate, "days") > 3
+            && data.status === "OPEN") {
+            $(row).addClass("important");
+        }
+    }
+
+    getDetailHTML(id: number): string {
+        return "<a class='green shortinfo' href='javascript:;'"
+            + "ng-click='lead.appendChildRow(lead.processes[" + id
+            + "], $event)' title='Details'>"
+            + "<i class='glyphicon glyphicon-plus-sign'/></a>";
     }
 
     getDTColumnConfiguration(addDetailButton: Function, addStatusStyle: Function, addActionsButtons: Function): Array<any> {
@@ -117,51 +159,9 @@ class LeadDataTableService {
     getActionButtonsHTML(user: User, templateData: any): string {
         this.setActionButtonsConfig(user, templateData);
         if ($(window).width() > 1300) {
-            return "<div actionbuttons templatedata='" + JSON.stringify(templateData) + "'></div>";
-        } else {/*
-            return "<div class='dropdown'>"
-                + "<button class='btn btn-white dropdown-toggle' type='button' data-toggle='dropdown'>"
-                + "<i class='fa fa-wrench'></i></button>"
-                + "<ul class='dropdown-menu pull-right'>"
-                + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                + disabled
-                + " ng-click='lead.followUp(lead.processes["
-                + data.id
-                + "])'><i class='fa fa-check'>&nbsp;</i>"
-                + this.translate.instant("LEAD_FOLLOW_UP")
-                + "</button></li>"
-                + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                + disablePin
-                + " ng-click='lead.pin(lead.processes["
-                + data.id
-                + "])'><i class='fa fa-thumb-tack'>&nbsp;</i>"
-                + this.translate.instant("LEAD_PIN")
-                + "</button></li>"
-                + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                + closeOrOpenInquiryDisable
-                + " ng-click='lead.closeOrOpenInquiry(lead.processes["
-                + data.id
-                + "])'><i class='"
-                + faOpenOrLock
-                + "'>&nbsp;</i>"
-                + openOrLock
-                + "</button></li>"
-                + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                + closeOrOpenInquiryDisable
-                + " data-toggle='modal' data-target='#editModal' ng-click='lead.loadDataToModal(lead.processes["
-                + data.id
-                + "])'><i class='fa fa-edit''>&nbsp;</i>"
-                + this.translate.instant("LEAD_EDIT_LEAD")
-                + "</button></li>"
-                + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                + hasRightToDelete
-                + " ng-click='lead.deleteRow(lead.processes["
-                + data.id
-                + "])'><i class='fa fa-trash-o'>&nbsp;</i>"
-                + this.translate.instant("LEAD_DELETE_LEAD")
-                + "</button></li>"
-                + "</ul>" + "</div>";
-                */
+            return "<div actionbuttons template='standard' templatedata='" + JSON.stringify(templateData) + "'></div>";
+        } else {
+            return "<div actionbuttons template='dropdown' templatedata='" + JSON.stringify(templateData) + "'></div>";
         }
     }
 
@@ -190,4 +190,4 @@ class LeadDataTableService {
 
 }
 
-angular.module("app.lead.service", ["ngResource"]).service("LeadDataTableService", LeadDataTableService);
+angular.module(moduleLeadDataTableService, [ngResourceId]).service(LeadDataTableServiceId, LeadDataTableService);

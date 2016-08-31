@@ -29,7 +29,7 @@
                     <h5>{{ 'LEAD_MANAGE_LEADS' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
-                    <button type="button" class="btn btn-success" ng-click="lead.clearNewLead()" data-toggle="modal" data-target="#newLeadModal">
+                    <button type="button" class="btn btn-success" ng-click="lead.clearNewLead()" data-toggle="modal" data-target="#editModal">
                         <i class="fa fa-plus"></i>&nbsp;{{ 'LEAD_ADD_LEAD' | translate }}
                     </button>
                     <button ng-click="lead.refreshData()" type="button" class="btn btn-success">
@@ -52,8 +52,7 @@
         </div>
     </div>
 </div>
-<div ng-include="'components/Lead/view/Lead.Edit.Modal.html'"></div>
-<div ng-include="'components/Lead/view/Lead.Add.Modal.html'"></div>
+<div editlead></div>
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {

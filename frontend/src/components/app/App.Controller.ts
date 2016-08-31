@@ -24,7 +24,6 @@ class AppController {
     interval;
     processResource;
     userResource;
-
     stop;
 
     constructor($translate, $rootScope, $interval, ProcessResource, UserResource) {
@@ -117,7 +116,6 @@ class AppController {
             }
         }.bind(this), 300000);
     }
-
 
     setCurrentUser() {
         let self = this;

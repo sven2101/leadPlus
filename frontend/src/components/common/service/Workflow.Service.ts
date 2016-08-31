@@ -28,7 +28,7 @@ const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, $uibModalId];
+    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId];
     commentResource;
     processResource;
     filter;
@@ -38,9 +38,10 @@ class WorkflowService {
     compile;
     $q;
     productService: ProductService;
+    customerService: CustomerService;
     uibModal;
 
-    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $compile, $q, ProductService, $uibModal) {
+    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal) {
         this.commentResource = CommentResource.resource;
         this.processResource = ProcessResource.resource;
         this.filter = $filter;
@@ -50,6 +51,7 @@ class WorkflowService {
         this.compile = $compile;
         this.$q = $q;
         this.productService = ProductService;
+        this.customerService = CustomerService;
         this.uibModal = $uibModal;
     }
 
@@ -68,6 +70,8 @@ class WorkflowService {
             timestamp: newTimestamp("DD.MM.YYYY HH:mm:ss"),
         };
         this.commentResource.save(comment).$promise.then(function () {
+            let timestamp = toLocalDate(comment.timestamp);
+            comment.timestamp = timestamp;
             comments.push(comment);
             defer.resolve(true);
         }, function () {
@@ -80,13 +84,15 @@ class WorkflowService {
         let comments: Array<Commentary> = new Array<Commentary>();
         this.commentResource.getByProcessId({ id: id }).$promise.then(function (result) {
             for (let comment of result) {
+                let timestamp = toLocalDate(comment.timestamp);
+                comment.timestamp = timestamp;
                 comments.push(comment);
             }
         });
         return comments;
     }
 
-    addProduct(array, currentProductId, currentProductAmount) {
+    addProduct(array: Array<OrderPosition>, currentProductId: string, currentProductAmount: number) {
         if (!isNaN(Number(currentProductId))
             && Number(currentProductId) > 0) {
             let tempProduct = findElementById(this.productService.products,
@@ -98,11 +104,11 @@ class WorkflowService {
         }
     }
 
-    deleteProduct(array, index) {
+    deleteProduct(array: Array<OrderPosition>, index: number) {
         array.splice(index, 1);
     }
 
-    sumOrderPositions(array) {
+    sumOrderPositions(array: Array<OrderPosition>) {
         let sum = 0;
         if (isNullOrUndefined(array)) {
             return 0;
@@ -276,6 +282,16 @@ class WorkflowService {
         }
     }
 
+    changeDataInput(loadAllData: boolean, dtOptions: any, allDataRoute: string, latestDataRoute: string) {
+        let searchDelay: number = 0;
+        if (loadAllData === true) {
+            searchDelay = 500;
+        }
+        dtOptions.withOption("serverSide", loadAllData)
+            .withOption("ajax", this.getData(loadAllData, allDataRoute, latestDataRoute))
+            .withOption("searchDelay", searchDelay);
+    }
+
     getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): any {
         if (loadAllData === true) {
             return {
@@ -320,6 +336,24 @@ class WorkflowService {
                     childScope)).show();
             tr.addClass("shown");
         }
+    }
+
+    selectCustomer(workflow: any, currentCustomerId: string, customerSelected: boolean) {
+        if (isNullOrUndefined(Number(currentCustomerId)) || Number(currentCustomerId) <= 0) {
+            customerSelected = false;
+            workflow.customer = new Customer();
+            workflow.customer.id = 0;
+            return;
+        }
+        let temp: Customer = findElementById(this.customerService.customer, Number(currentCustomerId)) as Customer;
+        if (isNullOrUndefined(temp)) {
+            customerSelected = false;
+            workflow.customer = new Customer();
+            workflow.customer.id = 0;
+            return;
+        }
+        workflow.customer = deepCopy(temp);
+        customerSelected = true;
     }
 }
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);
