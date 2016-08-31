@@ -34,7 +34,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             {
                 templateUrl: "components/Lead/view/Lead.html",
                 controller: "LeadController",
-                controllerAs: "lead",
+                controllerAs: "leadCtrl",
                 authenticated: true
             })
             .when("/offers",

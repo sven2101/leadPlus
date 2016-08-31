@@ -25,37 +25,33 @@ const DashboardControllerId: string = "DashboardController";
 
 class DashboardController {
 
-    $inject = [$rootScopeId, WorkflowServiceId, StatisticServiceId, DashboardServiceId];
+    $inject = [WorkflowServiceId, StatisticServiceId, DashboardServiceId];
 
     workflowService: WorkflowService;
     statisticService: StatisticService;
     dashboardService: DashboardService;
-    rootScope;
     commentModalInput: string;
     workflowModalData: IWorkflow;
     workflowModalType: string;
     workflowModalProcess: Process;
     workflowComments: Array<Commentary>;
-    user: User;
     sortableOptions: any;
 
-    constructor($rootScope, WorkflowService, StatisticService, DashboardService) {
+    constructor(WorkflowService, StatisticService, DashboardService) {
         this.workflowService = WorkflowService;
         this.statisticService = StatisticService;
         this.dashboardService = DashboardService;
-        this.rootScope = $rootScope;
-        this.user = this.rootScope.currentUser;
         this.statisticService.loadAllResourcesByDateRange("WEEKLY");
-        this.sortableOptions = this.dashboardService.setSortableOptions(this.user);
+        this.sortableOptions = this.dashboardService.setSortableOptions();
         this.refreshData();
     }
 
     createOffer(process: Process) {
-        this.dashboardService.createOffer(process, this.user);
+        this.dashboardService.createOffer(process);
     }
 
     createSale(process: Process) {
-        this.dashboardService.createSale(process, this.user);
+        this.dashboardService.createSale(process);
     }
 
     saveDataToModal(info, type, process) {
@@ -71,7 +67,7 @@ class DashboardController {
 
     addComment(process) {
         let self: DashboardController = this;
-        this.workflowService.addComment(this.workflowComments, process, this.user, this.commentModalInput).then(function () {
+        this.workflowService.addComment(this.workflowComments, process, this.commentModalInput).then(function () {
             self.commentModalInput = "";
         });
     }

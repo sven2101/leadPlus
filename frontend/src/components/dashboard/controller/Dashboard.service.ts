@@ -21,25 +21,29 @@ const DashboardServiceId: string = "DashboardService";
 
 class DashboardService {
 
-    private $inject = [ProcessResourceId, toasterId, $translateId, $filterId, WorkflowServiceId];
+    private $inject = [ProcessResourceId, toasterId, $rootScopeId, $translateId, $filterId, WorkflowServiceId];
 
     processResource: any;
     workflowService: WorkflowService;
     toaster: any;
     translate: any;
     orderBy: any;
-
+    rootScope: any;
 
     openLeads: Array<Lead>;
     openOffers: Array<Offer>;
     closedSales: Array<Sale>;
 
-    constructor(ProcessResource, toaster, $translate, $filter, WorkflowService) {
+    user: User;
+
+    constructor(ProcessResource, toaster, $rootScope, $translate, $filter, WorkflowService) {
         this.processResource = ProcessResource.resource;
         this.workflowService = WorkflowService;
         this.toaster = toaster;
+        this.rootScope = $rootScope;
         this.translate = $translate;
         this.orderBy = $filter("orderBy");
+        this.user = $rootScope.currentUser;
         this.initDashboard();
     }
 
@@ -56,7 +60,7 @@ class DashboardService {
         });
     }
 
-    setSortableOptions(user: User): any {
+    setSortableOptions(): any {
         let self: DashboardService = this;
         return {
             update: function (e, ui) {
@@ -73,10 +77,10 @@ class DashboardService {
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
                 if (self.closedSales === target && self.openOffers === source) {
-                    self.createSale(item, user);
+                    self.createSale(item);
                 }
                 else if (self.openOffers === target && self.openLeads === source) {
-                    self.createOffer(item, user);
+                    self.createOffer(item);
                 }
             },
             connectWith: ".connectList",
@@ -84,16 +88,16 @@ class DashboardService {
         };
     }
 
-    createOffer(process: Process, user: User) {
+    createOffer(process: Process) {
         let self = this;
-        this.workflowService.addLeadToOffer(process, user).then(function (isResolved: boolean) {
+        this.workflowService.addLeadToOffer(process).then(function (isResolved: boolean) {
             self.openOffers = self.orderBy(self.openOffers, "offer.timestamp", false);
         });
     }
 
-    createSale(process: Process, user: User) {
+    createSale(process: Process) {
         let self = this;
-        this.workflowService.addOfferToSale(process, user).then(function (isResolved: boolean) {
+        this.workflowService.addOfferToSale(process).then(function (isResolved: boolean) {
             self.closedSales = self.orderBy(self.closedSales, "sale.timestamp", true);
         });
     }

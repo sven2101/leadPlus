@@ -1,5 +1,6 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../User/Model/User.Model.ts" />
 /// <reference path="../../Common/model/OrderPosition.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
@@ -98,7 +99,7 @@ class LeadService {
 
     createOffer(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {
         let self = this;
-        this.workflowService.addLeadToOffer(process, this.user).then(function (isResolved: boolean) {
+        this.workflowService.addLeadToOffer(process).then(function (isResolved: boolean) {
             if (loadAllData === true) {
                 self.updateRow(process, loadAllData, scope);
             } else if (loadAllData === false) {
@@ -174,11 +175,11 @@ class LeadService {
             return;
         }
 
-        this.leadResource.update(editProcess.lead).$promise.then(function () {
+        this.leadResource.update(editProcess.lead).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
             editForm.$setPristine();
-            editProcess.lead.leadPrice = self.workflowService.sumOrderPositions(editProcess.lead.orderPositions);
+            editProcess.lead = result;
             self.updateRow(editProcess, dtInstance, scope);
         });
     }

@@ -27,7 +27,7 @@ angular.module(moduleApp)
                 return "components/Lead/view/Lead.ActionButtons.html";
             }
             else if (attr.template === "dropdown") {
-                return "components/Lead/view/Lead.ActionButtons2.html";
+                return "components/Lead/view/Lead.ActionButtons.Dropdown.html";
             }
         };
         directive.transclude = true;

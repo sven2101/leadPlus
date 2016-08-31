@@ -46,13 +46,14 @@ class SettingService {
         this.settingsResource = SettingResource.resource;
         this.smtpResource = SmtpResource.resource;
         this.userResource = UserResource.resource;
+        this.loadUsers();
+    }
 
+    loadUsers() {
         let self = this;
         this.settingsResource.getAll().$promise.then(function (result) {
             self.users = result;
-            for (let user in result) {
-                if (user === "$promise")
-                    break;
+            for (let user of result) {
                 self.roleSelection[result[user].id] = result[user].role;
             }
         });
@@ -75,6 +76,17 @@ class SettingService {
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_ACCESS_REVOKED"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_ACCESS_REVOKED_ERROR"));
+        });
+    }
+
+    changeRole(user: User) {
+        let self = this;
+        this.settingsResource.changeRole({ id: 4, role: this.roleSelection[user.id] }, {}).$promise.then(function () {
+            // set rootScope role
+            self.filter("filter")(self.users, { id: user.id })[0].role = user.role;
+            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_SET_ROLE"));
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_SET_ROLE_ERROR"));
         });
     }
 

@@ -59,9 +59,6 @@ class ProfileService {
 
     submitPasswordForm() {
         let self = this;
-        console.log("PW:");
-        console.log(this.newPassword1);
-        console.log(this.oldPassword);
         this.userResource.changePassword({ id: this.rootScope.globals.user.id }, { newPassword: this.newPassword1, oldPassword: this.oldPassword }).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
             self.passwordForm.$setPristine();

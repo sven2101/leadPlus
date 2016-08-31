@@ -24,26 +24,26 @@
 
 "use strict";
 
+const LeadControllerId: string = "LeadController";
+
 class LeadController extends AbstractWorkflow {
 
-    $inject = [$compileId, $scopeId, $rootScopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId];
+    $inject = [$compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId];
 
     workflowService: WorkflowService;
     leadDataTableService: LeadDataTableService;
     leadService: LeadService;
     scope;
-    rootScope;
     compile;
     dtOptions;
     dtColumns;
+    dtInstance: any = { DataTable: null };
 
-    user: User;
     commentInput: string;
     commentModalInput: string;
     comments: { [key: number]: Array<Commentary> } = {};
     currentCommentModalId: string = "";
     loadAllData: boolean = false;
-    dtInstance: any = { DataTable: null };
     processes: { [key: number]: Process } = {};
     editForm: any;
     editProcess: Process;
@@ -56,16 +56,14 @@ class LeadController extends AbstractWorkflow {
     currentCustomerId = "-1";
     customerSelected: boolean = false;
 
-    constructor($compile, $scope, $rootScope, WorkflowService, LeadDataTableService, LeadService) {
+    constructor($compile, $scope, WorkflowService, LeadDataTableService, LeadService) {
         super();
         this.workflowService = WorkflowService;
         this.leadDataTableService = LeadDataTableService;
         this.leadService = LeadService;
         this.scope = $scope;
-        this.rootScope = $rootScope;
         this.compile = $compile;
 
-        this.user = this.rootScope.currentUser;
         let self = this;
         function refreshData() {
             let resetPaging = false;
@@ -81,7 +79,7 @@ class LeadController extends AbstractWorkflow {
         }
         function addActionsButtons(data: Process, type, full, meta) {
             let templatedata = { "process": self.processes[data.id] };
-            return self.leadDataTableService.getActionButtonsHTML(self.user, templatedata);
+            return self.leadDataTableService.getActionButtonsHTML(templatedata);
         }
         function addStatusStyle(data: Process, type, full, meta) {
             self.processes[data.id] = data;
@@ -98,7 +96,7 @@ class LeadController extends AbstractWorkflow {
     appendChildRow(process: Process, event: any) {
         let childScope = this.scope.$new(true);
         this.comments[process.id] = this.workflowService.getCommentsByProcessId(process.id);
-        this.workflowService.appendChildRow(childScope, process, this.dtInstance, this);
+        this.workflowService.appendChildRow(childScope, process, this.dtInstance, this, "lead");
     }
 
     loadCurrentIdToModal(id: string) {
@@ -117,7 +115,7 @@ class LeadController extends AbstractWorkflow {
     }
 
     addComment(id: number, input: string) {
-        this.workflowService.addComment(this.comments[id], this.processes[id], this.user, input[id]).then(function () {
+        this.workflowService.addComment(this.comments[id], this.processes[id], input[id]).then(function () {
             input[id] = "";
         });
     }
@@ -179,7 +177,7 @@ class LeadController extends AbstractWorkflow {
         this.workflowService.selectCustomer(workflow, this.currentCustomerId, this.customerSelected);
     }
 }
-angular.module("app.lead", ["ngResource"]).controller("LeadController", LeadController);
+angular.module(moduleLead, [ngResourceId]).controller(LeadControllerId, LeadController);
 
 
 

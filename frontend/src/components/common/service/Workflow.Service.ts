@@ -41,6 +41,8 @@ class WorkflowService {
     customerService: CustomerService;
     uibModal;
 
+    user: User;
+
     constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal) {
         this.commentResource = CommentResource.resource;
         this.processResource = ProcessResource.resource;
@@ -53,9 +55,10 @@ class WorkflowService {
         this.productService = ProductService;
         this.customerService = CustomerService;
         this.uibModal = $uibModal;
+        this.user = $rootScope.currentUser;
     }
 
-    addComment(comments: Array<Commentary>, process: Process, user: User, commentText: string): any {
+    addComment(comments: Array<Commentary>, process: Process, commentText: string): any {
         let defer = this.$q.defer();
         if (angular.isUndefined(commentText) || commentText === "") {
             defer.reject(false);
@@ -65,7 +68,7 @@ class WorkflowService {
         let comment: Commentary = {
             id: null,
             process: process,
-            creator: user,
+            creator: this.user,
             commentText: commentText,
             timestamp: newTimestamp("DD.MM.YYYY HH:mm:ss"),
         };
@@ -140,7 +143,7 @@ class WorkflowService {
         });
     }
 
-    addLeadToOffer(process: Process, user: User): any {
+    addLeadToOffer(process: Process): any {
         let defer = this.$q.defer();
         let self = this;
         let offer: Offer = {
@@ -163,8 +166,8 @@ class WorkflowService {
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
                 if (process.processor === null) {
-                    self.processResource.setProcessor({ id: process.id }, user.id).$promise.then(function () {
-                        process.processor = user;
+                    self.processResource.setProcessor({ id: process.id }, self.user.id).$promise.then(function () {
+                        process.processor = self.user;
                     });
                 }
                 process.offer = offer;
@@ -179,7 +182,7 @@ class WorkflowService {
         return defer.promise;
     }
 
-    addOfferToSale(process: Process, user: User): any {
+    addOfferToSale(process: Process): any {
         let defer = this.$q.defer();
         let self = this;
         let sale: Sale = {
@@ -201,8 +204,8 @@ class WorkflowService {
             self.processResource.setStatus({ id: process.id }, Status.SALE).$promise.then(function () {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
                 self.rootScope.offersCount -= 1;
-                self.processResource.setProcessor({ id: process.id }, user.id).$promise.then(function () {
-                    process.processor = user;
+                self.processResource.setProcessor({ id: process.id }, self.user.id).$promise.then(function () {
+                    process.processor = self.user;
                 });
                 process.sale = sale;
                 process.status = Status.SALE;
@@ -314,7 +317,7 @@ class WorkflowService {
         }
     }
 
-    appendChildRow(childScope: any, process: Process, dtInstance: any, parent: AbstractWorkflow) {
+    appendChildRow(childScope: any, process: Process, dtInstance: any, parent: AbstractWorkflow, type: string) {
         childScope.childData = process;
         childScope.parent = parent;
 
@@ -332,7 +335,7 @@ class WorkflowService {
                 .addClass("glyphicon-minus-sign");
             row.child(
                 this.compile(
-                    "<div childrow type='lead' class='clearfix'></div>")(
+                    "<div childrow type='" + type + "' class='clearfix'></div>")(
                     childScope)).show();
             tr.addClass("shown");
         }

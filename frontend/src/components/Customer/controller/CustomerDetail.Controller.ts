@@ -27,7 +27,7 @@ const CustomerDetailControllerId: string = "CustomerDetailController";
 
 class CustomerDetailController {
 
-    $inject = [CustomerServiceId, $routeParamsId, CustomerResourceId, LeadResourceId, OfferResourceId, SaleResourceId, "$q", WorkflowServiceId, $filterId];
+    $inject = [CustomerServiceId, $routeParamsId, CustomerResourceId, LeadResourceId, OfferResourceId, SaleResourceId, $qId, WorkflowServiceId, $filterId];
 
     customerService: CustomerService;
     workflowService: WorkflowService;

@@ -471,7 +471,7 @@ class OffersController {
 
     createSale(process: Process) {
         let self = this;
-        this.workflowService.addOfferToSale(process, this.user).then(function (isResolved: boolean) {
+        this.workflowService.addOfferToSale(process).then(function (isResolved: boolean) {
             if (self.loadAllData === true) {
                 self.updateRow(process);
             } else if (self.loadAllData === false) {

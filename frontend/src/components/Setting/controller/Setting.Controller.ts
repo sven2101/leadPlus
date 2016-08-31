@@ -2,7 +2,6 @@
 /// <reference path="../../Setting/controller/Setting.Service.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../Setting/model/Setting.Model.ts" />
-
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -22,39 +21,18 @@ const SettingControllerId: string = "SettingController";
 
 class SettingController {
 
-    private $inject = [$filterId, toasterId, $translateId, $rootScopeId, SettingServiceId, SettingResourceId];
+    private $inject = [SettingServiceId];
 
-    rootScope;
-    translate;
-    filter;
-    toaster;
     currentTab: number = 1;
-
     setting: Setting;
-    settingService;
+    settingService: SettingService;
     settingResource;
     roleSelection = Array<any>();
-    users: Array<User>;
 
-    constructor($filter, toaster, $translate, $rootScope, SettingService, SettingResource) {
-        this.filter = $filter;
-        this.toaster = toaster;
-        this.rootScope = $rootScope;
-        this.translate = $translate;
+    constructor(SettingService) {
         this.settingService = SettingService;
-        this.settingResource = SettingResource.resource;
-
         this.setting = new Setting();
-
-        let self = this;
-        this.settingResource.getAll().$promise.then(function (result) {
-            self.users = result;
-            for (let user in result) {
-                if (user === "$promise")
-                    break;
-                self.roleSelection[result[user].id] = result[user].role;
-            }
-        });
+        this.settingService.loadUsers();
     }
 
     tabOnClick(tab: number) {
@@ -74,14 +52,7 @@ class SettingController {
     }
 
     changeRole(user: User) {
-        let self = this;
-        this.settingResource.changeRole({ id: 4, role: this.roleSelection[user.id] }, {}).$promise.then(function () {
-            // set rootScope role
-            self.filter("filter")(self.users, { id: user.id })[0].role = user.role;
-            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_SET_ROLE"));
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_SET_ROLE_ERROR"));
-        });
+        this.settingService.changeRole(user);
     }
 
     testConnection() {
@@ -91,8 +62,6 @@ class SettingController {
     save() {
         this.settingService.save(this.setting);
     }
-
 }
-
 angular.module(moduleSetting, [ngResourceId]).controller(SettingControllerId, SettingController);
 

@@ -23,7 +23,7 @@ class ProductController {
     createProductForm;
     currentProduct: Product;
     currentEditProduct: Product;
-    isCurrentProductNew;
+    isCurrentProductNew: boolean;
     productService: ProductService;
 
     constructor(ProductService: ProductService) {

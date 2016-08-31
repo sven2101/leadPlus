@@ -4,30 +4,30 @@
     </button>
     <ul class="dropdown-menu pull-right">
         <li>
-            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.parent.lead.followUp(parent.parent.lead.processes[directiveData.process.id])">
+            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.parent.leadCtrl.followUp(parent.parent.leadCtrl.processes[directiveData.process.id])">
                  <i class="fa fa-check">&nbsp;</i>{{'LEAD_FOLLOW_UP' | translate }}
             </button>
         </li>
         <li>
-            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.lead.pin(parent.lead.processes[directiveData.process.id])">
+            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.leadCtrl.pin(parent.leadCtrl.processes[directiveData.process.id])">
                   <i class="fa fa-thumb-tack">&nbsp;</i>{{'LEAD_PIN' | translate }}
             </button>
         </li>
         <li>
             <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenInquiryDisable"
-                ng-click="parent.lead.closeOrOpenInquiry(parent.lead.processes[directiveData.process.id])"> 
+                ng-click="parent.leadCtrl.closeOrOpenInquiry(parent.leadCtrl.processes[directiveData.process.id])"> 
                     <i class="{{directiveData.config.faOpenOrLock}}">&nbsp;</i>{{directiveData.config.openOrLock}}
             </button>
         </li>
         <li>
             <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenInquiryDisable"
-                data-toggle="modal" data-target="#editModal" ng-click="parent.lead.loadDataToModal(parent.lead.processes[directiveData.process.id])">
+                data-toggle="modal" data-target="#editModal" ng-click="parent.leadCtrl.loadDataToModal(parent.leadCtrl.processes[directiveData.process.id])">
                     <i class="fa fa-edit">&nbsp;</i>{{'LEAD_EDIT_LEAD' | translate }}
             </button>
         </li>
         <li>
             <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.hasRightToDelete"
-                ng-click="parent.lead.deleteRow(parent.lead.processes[directiveData.process.id])">
+                ng-click="parent.leadCtrl.deleteRow(parent.leadCtrl.processes[directiveData.process.id])">
                    <i class="fa fa-trash-o">&nbsp;</i>{{'LEAD_DELETE_LEAD' | translate }}
             </button>
         </li>

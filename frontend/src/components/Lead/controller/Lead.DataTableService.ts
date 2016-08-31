@@ -32,6 +32,8 @@ class LeadDataTableService {
     compile;
     rootScope;
 
+    user: User;
+
     constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
@@ -40,6 +42,7 @@ class LeadDataTableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
+        this.user = $rootScope.currentUser;
     }
 
     getDTOptionsConfiguration(createdRow: Function) {
@@ -72,7 +75,7 @@ class LeadDataTableService {
 
     getDetailHTML(id: number): string {
         return "<a class='green shortinfo' href='javascript:;'"
-            + "ng-click='lead.appendChildRow(lead.processes[" + id
+            + "ng-click='leadCtrl.appendChildRow(leadCtrl.processes[" + id
             + "], $event)' title='Details'>"
             + "<i class='glyphicon glyphicon-plus-sign'/></a>";
     }
@@ -156,8 +159,8 @@ class LeadDataTableService {
         templateData.config = config;
     }
 
-    getActionButtonsHTML(user: User, templateData: any): string {
-        this.setActionButtonsConfig(user, templateData);
+    getActionButtonsHTML(templateData: any): string {
+        this.setActionButtonsConfig(this.user, templateData);
         if ($(window).width() > 1300) {
             return "<div actionbuttons template='standard' templatedata='" + JSON.stringify(templateData) + "'></div>";
         } else {
