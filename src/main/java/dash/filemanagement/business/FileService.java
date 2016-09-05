@@ -108,26 +108,24 @@ public class FileService implements IFileService {
 
 				File file = new File();
 				file.setName(multipartFile.getOriginalFilename());
-				file.setDescription("");
+				file.setDescription("Template");
 				file.setContent(multipartFile.getBytes());
 				file.setSize(multipartFile.getSize());
 				file.setMimeType(multipartFile.getContentType());
 				file.setSize(multipartFile.getSize());
 				file.setDeaktiviert(false);
 
+				System.out.println("File" + file.toString());
 				return fileRepository.save(file);
 			} catch (Exception ex) {
 				logger.error(FileService.class.getSimpleName() + ex.getMessage(), ex);
 				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			}
-		} else
-
-		{
+		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(FILE_NOT_FOUND + FileService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
 			throw sfex;
 		}
-
 	}
 
 }

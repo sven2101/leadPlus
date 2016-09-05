@@ -144,18 +144,14 @@ public class ProcessIntegrationTest extends BaseConfig implements IIntegrationTe
 		Lead lead = new Lead();
 		lead.setCustomer(customer);
 		lead.setVendor(vendor);
-		lead.setContainer(container);
-		lead.setContainerAmount(30);
 		lead.setMessage("Test Anfrage");
 		lead.setDeliveryAddress("Karlsruhe");
 
 		Offer offer = new Offer();
 		offer.setVendor(vendor);
-		offer.setContainer(container);
 
 		Sale sale = new Sale();
 		sale.setVendor(vendor);
-		sale.setContainer(container);
 
 		process.setLead(lead);
 		process.setOffer(offer);

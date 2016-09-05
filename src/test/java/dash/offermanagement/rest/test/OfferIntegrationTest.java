@@ -101,7 +101,6 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 		ResponseEntity<Offer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateOffer, Offer.class);
 		Offer responseCreateOffer = responseCreate.getBody();
 
-		responseCreateOffer.setContainerAmount(10);
 		HttpEntity<Offer> entity = new HttpEntity<Offer>(responseCreateOffer, headers);
 
 		ResponseEntity<Offer> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Offer.class, responseCreateOffer.getId());
@@ -140,8 +139,6 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 		vendor.setName("***REMOVED***");
 		vendor.setPhone("031/7891");
 
-		offer.setContainer(container);
-		offer.setContainerAmount(30);
 		offer.setDeliveryAddress("Berlin");
 		offer.setDeliveryDate(Calendar.getInstance());
 		offer.setOfferPrice(200.00);

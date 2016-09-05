@@ -2,6 +2,8 @@
 /// <reference path="../../Setting/controller/Setting.Service.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../Setting/model/Setting.Model.ts" />
+/// <reference path="../../Setting/model/Template.Model.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -21,18 +23,24 @@ const SettingControllerId: string = "SettingController";
 
 class SettingController {
 
-    private $inject = [SettingServiceId];
+    private $inject = [SettingServiceId, TemplateResourceId];
+
+    createTemplateForm;
 
     currentTab: number = 1;
     setting: Setting;
     settingService: SettingService;
-    settingResource;
+    templateResource;
     roleSelection = Array<any>();
+    template: Template;
+    templates = Array<Template>();
 
-    constructor(SettingService) {
+    constructor(SettingService, TemplateResource) {
         this.settingService = SettingService;
+        this.templateResource = TemplateResource.resource;
         this.setting = new Setting();
         this.settingService.loadUsers();
+        this.getAllTemplates();
     }
 
     tabOnClick(tab: number) {
@@ -61,6 +69,27 @@ class SettingController {
 
     save() {
         this.settingService.save(this.setting);
+    }
+
+    openEmailTemplateModal() {
+        this.settingService.openEmailTemplateModal();
+    }
+
+    saveEmailTemplate() {
+        this.settingService.saveEmailTemplate(this.template);
+    }
+
+    clearTemplate(): void {
+        this.createTemplateForm.$setPristine();
+        this.template = new Template();
+    }
+
+    getAllTemplates() {
+        let self = this;
+        this.templateResource.getAllTemplates().$promise.then(function (result) {
+            // self.templates = result;
+            console.log(result);
+        });
     }
 }
 angular.module(moduleSetting, [ngResourceId]).controller(SettingControllerId, SettingController);

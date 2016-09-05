@@ -46,12 +46,14 @@ class ProductController {
         shallowCopy(this.currentEditProduct, this.currentProduct);
         this.isCurrentProductNew = false;
     }
+
     saveProduct() {
         if (!this.isCurrentProductNew) {
             shallowCopy(this.currentProduct, this.currentEditProduct);
         }
         this.productService.saveProduct(this.currentProduct, this.isCurrentProductNew);
     }
+
     getLocalTimestamp: any = function (product: Product) {
         return toLocalDate(product.timestamp);
     };

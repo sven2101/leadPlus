@@ -139,8 +139,6 @@ public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest 
 		vendor.setPhone("07961/55166");
 
 		Sale sale = new Sale();
-		sale.setContainer(container);
-		sale.setContainerAmount(30);
 		sale.setCustomer(customer);
 		sale.setSaleProfit(1000.00);
 		sale.setTimestamp(Calendar.getInstance());

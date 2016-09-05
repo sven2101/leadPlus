@@ -76,6 +76,7 @@ function config($translateProvider) {
             COMMON_FIRSTNAME: "Vorname",
             COMMON_LASTNAME: "Nachname",
             COMMON_USERNAME: "Benutzername",
+            COMMON_DESCRIPTION: "Beschreibung",
             COMMON_PASSWORD: "Passwort",
             COMMON_USER: "Benutzer",
             COMMON_ROLE: "Rolle",
@@ -237,6 +238,8 @@ function config($translateProvider) {
             SETTING_TOAST_ACCESS_REVOKED_ERROR: "Der Benutzer konnte nicht deaktiviert werden",
             SETTING_TOAST_SET_ROLE: "Die Rolle wurde geändert",
             SETTING_TOAST_SET_ROLE_ERROR: "Die Rolle konnte nicht geändert werden",
+            SETTING_EMAIL_TEMPLATE_CREATE: "Email Template erstellen",
+            SETTING_EMAIL_TEMPLATE_TEXT: "Template",
 
             // Define statistic elements
             STATISTIC_PERIOD: "Zeitraum",
@@ -367,6 +370,7 @@ function config($translateProvider) {
             COMMON_FIRSTNAME: "Firstname",
             COMMON_LASTNAME: "Lastname",
             COMMON_USERNAME: "Username",
+            COMMON_DESCRIPTION: "Description",
             COMMON_PASSWORD: "Password",
             COMMON_USER: "User",
             COMMON_ROLE: "Role",
@@ -524,7 +528,9 @@ function config($translateProvider) {
             SETTING_TOAST_ACCESS_REVOKED: "User is deactivated",
             SETTING_TOAST_ACCESS_REVOKED_ERROR: "User cannot be deactivated",
             SETTING_TOAST_SET_ROLE: "Role has changed",
-            SETTING_TOAST_SET_ROLE_ERROR: "Role cannot be cahgend",
+            SETTING_TOAST_SET_ROLE_ERROR: "Role cannot be changed",
+            SETTING_EMAIL_TEMPLATE_CREATE: "Create Email Template",
+            SETTING_EMAIL_TEMPLATE_TEXT: "Template",
 
             // Define statistic elements
             STATISTIC_PERIOD: "Period",

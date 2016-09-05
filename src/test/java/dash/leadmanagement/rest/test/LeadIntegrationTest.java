@@ -99,7 +99,6 @@ public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest 
 		ResponseEntity<Lead> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateLead, Lead.class);
 		Lead responseCreateLead = responseCreate.getBody();
 
-		responseCreateLead.setContainerAmount(10);
 		HttpEntity<Lead> entity = new HttpEntity<Lead>(responseCreateLead, headers);
 
 		ResponseEntity<Lead> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Lead.class, responseCreateLead.getId());
@@ -139,8 +138,6 @@ public class LeadIntegrationTest extends BaseConfig implements IIntegrationTest 
 		Lead lead = new Lead();
 		lead.setCustomer(customer);
 		lead.setVendor(vendor);
-		lead.setContainer(container);
-		lead.setContainerAmount(30);
 		lead.setMessage("Test Anfrage");
 		lead.setDeliveryAddress("Karlsruhe");
 

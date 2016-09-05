@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">{{ 'SETTING_EMAIL_TEMPLATE_CREATE' | translate }}</h4>
+</div>
+<div class="modal-body">
+    <form name="createTemplate">
+        <div class="row">
+
+            <!-- Name -->
+            <div class="form-group">
+                <label>{{ 'COMMON_NAME' | translate }}</label>
+                <input required type="text" name="name" class="form-control" ng-model="settingCtrl.template.name" ng-maxlength="30">
+                <p ng-show="template.createTemplate.name.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                <p ng-show="template.createTemplate.name.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+            </div>
+            <!-- Description -->
+            <div class="form-group" ng-class="{ 'has-error' : template.createTemplate.description.$invalid && !template.createTemplate.description.$pristine }">
+                <label>{{ 'COMMON_DESCRIPTION' | translate }}</label>
+                <input required type="text" name="description" class="form-control" ng-model="settingCtrl.template.description" ng-maxlength="30">
+                <p ng-show="template.createTemplate.description.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                <p ng-show="template.createTemplate.description.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+            </div>
+            <!-- Template -->
+            <div class="form-group" ng-class="{ 'has-error' : template.createTemplate.content.$invalid && !template.createTemplate.content.$pristine }">
+                <label>{{ 'SETTING_EMAIL_TEMPLATE_TEXT' | translate }}</label>
+                <div class="summernote">
+                    <summernote required type="text" name="content" class="form-control" ng-model="settingCtrl.template.content"></summernote>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL'| translate }}
+                </button>
+            <button type="submit" class="btn btn-success" ng-disabled="template.createTemplate.$invalid" ng-click="settingCtrl.saveEmailTemplate(settingCtrl.template)"
+                data-dismiss="modal">{{ 'COMMON_SAVE'| translate }}
+                </button>
+        </div>
+    </form>
+</div>

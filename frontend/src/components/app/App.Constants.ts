@@ -80,6 +80,8 @@ const moduleFileResource: string = moduleFile + ".resource";
 const moduleFileService: string = moduleFile + ".service";
 const moduleSmtp: string = moduleApp + ".smtp";
 const moduleSmtpResource: string = moduleSmtp + ".resource";
+const moduleTemplate: string = moduleApp + ".template";
+const moduleTemplateResource: string = moduleTemplate + ".resource";
 
 const moduleTranslate: string = "pascalprecht.translate";
 const moduleNgResource: string = "ngResource";

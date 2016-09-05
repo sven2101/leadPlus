@@ -316,6 +316,26 @@ angular.module(moduleFileResource, [ngResourceId]).service(FileResourceId, FileR
 
 // ----------------------------------------------------------------------------------------
 
+const TemplateResourceId: string = "TemplateResource";
+
+class TemplateResource {
+
+    private $inject = [$resourceId];
+
+    resource: any;
+
+    constructor($resource) {
+        this.resource = $resource("/api/rest/templates", {}, {
+            getAllTemplates: { url: "/api/rest/templates", method: "GET", isArray: true },
+            uploadTemplate: { url: "/api/rest/templates", method: "POST" }
+        });
+    }
+}
+
+angular.module(moduleTemplateResource, [ngResourceId]).service(TemplateResourceId, TemplateResource);
+
+// ----------------------------------------------------------------------------------------
+
 const SmtpResourceId: string = "SmtpResource";
 
 class SmtpResource {

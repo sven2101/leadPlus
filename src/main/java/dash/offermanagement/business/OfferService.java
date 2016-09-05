@@ -36,8 +36,6 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.notificationmanagement.business.INotificationService;
-import dash.notificationmanagement.domain.IMessage;
-import dash.notificationmanagement.domain.OfferMessage;
 import dash.offermanagement.domain.Offer;
 import dash.productmanagement.domain.OrderPosition;
 import dash.usermanagement.business.IUserService;
@@ -153,8 +151,8 @@ public class OfferService implements IOfferService {
 
 		//NotificationService
 
-		IMessage message = new OfferMessage(offer.getCustomer());
-		notificationService.sendNotification(message, user);
+		//		IMessage message = new OfferMessage(offer.getCustomer());
+		//		notificationService.sendNotification(message, user);
 		//get User SMTP Service
 
 		//get Template Renderer and pass in Customer and Offer

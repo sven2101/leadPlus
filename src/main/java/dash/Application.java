@@ -77,7 +77,7 @@ public class Application {
 	}
 
 	@Bean
-	public Docket vortoApi() {
+	public Docket leadApi() {
 		StopWatch watch = new StopWatch();
 		watch.start();
 		Docket docket = new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).useDefaultResponseMessages(false).select().paths(paths()).build();

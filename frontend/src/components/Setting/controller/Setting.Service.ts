@@ -3,6 +3,8 @@
 /// <reference path="../../User/model/Role.Model.ts" />
 /// <reference path="../../User/model/Language.Model.ts" />
 /// <reference path="../../Setting/model/Setting.Model.ts" />
+/// <reference path="../../Setting/controller/Setting.Controller.ts" />
+/// <reference path="../../Setting/model/Template.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -23,11 +25,13 @@ const SettingServiceId: string = "SettingService";
 
 class SettingService {
 
-    private $inject = [$filterId, toasterId, $translateId, $rootScopeId, SettingResourceId, SmtpResourceId, UserResourceId];
+    private $inject = [$filterId, toasterId, $translateId, $rootScopeId, SettingResourceId, SmtpResourceId, UserResourceId, FileResourceId, TemplateResourceId, $uibModalId];
 
     settingsResource;
     smtpResource;
     userResource;
+    fileResource;
+    templateResource;
 
     rootScope;
     translate;
@@ -35,10 +39,12 @@ class SettingService {
     toaster;
     counter;
 
+    uibModal;
+
     roleSelection = Array<any>();
     users: Array<User>;
 
-    constructor($filter, toaster, $translate, $rootScope, SettingResource, SmtpResource, UserResource) {
+    constructor($filter, toaster, $translate, $rootScope, SettingResource, SmtpResource, UserResource, FileResource, TemplateResource, $uibModal) {
         this.filter = $filter;
         this.toaster = toaster;
         this.rootScope = $rootScope;
@@ -46,7 +52,12 @@ class SettingService {
         this.settingsResource = SettingResource.resource;
         this.smtpResource = SmtpResource.resource;
         this.userResource = UserResource.resource;
+        this.fileResource = FileResource.resource;
+        this.templateResource = TemplateResource.resource;
+
         this.loadUsers();
+        this.uibModal = $uibModal;
+
     }
 
     loadUsers() {
@@ -122,6 +133,33 @@ class SettingService {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE_ERROR"));
         });
     }
+
+    openEmailTemplateModal() {
+        this.uibModal.open({
+            templateUrl: "http://localhost:8080/components/Setting/view/Setting.Email.Template.Modal.html",
+            controller: SettingController,
+            controllerAs: "settingCtrl",
+            size: "lg",
+            resolve: {
+                offer: function () {
+                    return "";
+                }
+            }
+        });
+    }
+
+    saveEmailTemplate(template: Template) {
+        console.log("createEmailTemplateModal");
+        console.log(template);
+
+        let self = this;
+        this.templateResource.uploadTemplate({ template }).$promise.then(function () {
+            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE"));
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE_ERROR"));
+        });
+    }
+
 }
 
 angular.module(moduleSettingService, [ngResourceId]).service(SettingServiceId, SettingService);
