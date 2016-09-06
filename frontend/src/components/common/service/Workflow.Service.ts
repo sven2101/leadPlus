@@ -10,7 +10,9 @@
 /// <reference path="../../Common/model/Status.Model.ts" />
 /// <reference path="../../Common/model/Workflow.Model.ts" />
 /// <reference path="../../Common/service/AbstractWorkflow.ts" />
+/// <reference path="../../Common/service/Workflow.Controller.ts" />
 /// <reference path="../../Dashboard/controller/Dashboard.Controller.ts" />
+/// <reference path="../../Customer/controller/Customer.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -29,8 +31,10 @@ const WorkflowServiceId: string = "WorkflowService";
 class WorkflowService {
 
     private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId];
+
     commentResource;
     processResource;
+
     filter;
     toaster;
     rootScope;
@@ -128,10 +132,8 @@ class WorkflowService {
     }
 
     openOfferModal(offer: Offer) {
-        console.log("Offer");
-        console.log(offer);
         this.uibModal.open({
-            templateUrl: "http://localhost:8080/components/Common/view/Offer.Gen.Modal.html",
+            templateUrl: "http://localhost:8080/components/Common/view/Workflow.Offer.Send.Modal.html",
             controller: WorkflowController,
             controllerAs: "workflowCtrl",
             size: "lg",
@@ -159,7 +161,10 @@ class WorkflowService {
         for (let i = 0; i < offer.orderPositions.length; i++) {
             offer.orderPositions[i].id = 0;
         }
+
+        console.log("Offer: ", offer);
         this.openOfferModal(offer);
+
         this.processResource.createOffer({ id: process.id }, offer).$promise.then(function () {
             self.processResource.setStatus({ id: process.id }, Status.OFFER).$promise.then(function () {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
@@ -360,28 +365,3 @@ class WorkflowService {
     }
 }
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);
-
-const WorkflowControllerId: string = "WorkflowController";
-
-class WorkflowController {
-
-    $inject = ["$uibModalInstance", "offer"];
-
-    uibModalInstance;
-    offer: Offer;
-
-    constructor($uibModalInstance, offer) {
-        this.uibModalInstance = $uibModalInstance;
-        this.offer = offer;
-    }
-
-    ok() {
-        this.uibModalInstance.close();
-    }
-
-    cancel() {
-        this.uibModalInstance.dismiss("cancel");
-    }
-}
-
-angular.module(moduleWorkflow, ["summernote"]).service(WorkflowControllerId, WorkflowController);

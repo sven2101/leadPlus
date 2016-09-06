@@ -21,6 +21,7 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.notificationmanagement.domain.OfferMessage;
 import dash.templatemanagement.domain.Template;
 
 @Service
@@ -35,4 +36,7 @@ public interface ITemplateService {
 	public void delete(final long id) throws DeleteFailedException;
 
 	public Template update(final Template template) throws UpdateFailedException;
+
+	public OfferMessage generate(final long templateId, final long offerId) throws NotFoundException;
+
 }

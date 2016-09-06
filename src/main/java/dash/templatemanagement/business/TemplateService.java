@@ -32,6 +32,9 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.notificationmanagement.domain.OfferMessage;
+import dash.offermanagement.business.IOfferService;
+import dash.offermanagement.domain.Offer;
 import dash.templatemanagement.domain.Template;
 
 @Service
@@ -41,6 +44,9 @@ public class TemplateService implements ITemplateService {
 
 	@Autowired
 	private TemplateRepository templateRepository;
+
+	@Autowired
+	private IOfferService offerService;
 
 	@Override
 	public List<Template> getAll() {
@@ -110,6 +116,12 @@ public class TemplateService implements ITemplateService {
 			logger.error(UPDATE_FAILED_EXCEPTION + TemplateService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
 			throw ufex;
 		}
+	}
+
+	@Override
+	public OfferMessage generate(final long templateId, final long offerId) throws NotFoundException {
+		Offer offer = offerService.getOfferById(offerId);
+		return new OfferMessage(offer, "Hello ${user}");
 	}
 
 	//	public File getEmailTemplateById(final long id) throws NotFoundException {

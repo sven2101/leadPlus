@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Template Resource")
-@RequestMapping(value = "/api/rest/templates", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/templates", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.ALL_VALUE })
 @Api(value = "Template API")
 public class TemplateResource {
 
@@ -78,6 +78,14 @@ public class TemplateResource {
 	@ApiOperation(value = "Delete a template. ", notes = "")
 	public void delete(@ApiParam(required = true) @PathVariable final long id) throws DeleteFailedException {
 		templateService.delete(id);
+	}
+
+	@RequestMapping(value = "/{templateId}/offers/{offerId}/generate", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Generate a email content based on a template and an offer.", notes = "")
+	public void generate(@ApiParam(required = true) @PathVariable final long templateId, @ApiParam(required = true) @PathVariable final long offerId)
+			throws NotFoundException {
+		templateService.generate(templateId, offerId);
 	}
 
 }

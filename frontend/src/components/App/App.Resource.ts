@@ -329,7 +329,8 @@ class TemplateResource {
             getAllTemplates: { url: "/api/rest/templates", method: "GET", isArray: true },
             uploadTemplate: { url: "/api/rest/templates", method: "POST" },
             updateTemplate: { url: "/api/rest/templates", method: "PUT" },
-            deleteTemplate: { url: "/api/rest/templates/:id", method: "DELETE" }
+            deleteTemplate: { url: "/api/rest/templates/:id", method: "DELETE" },
+            generate: { url: "/api/rest/templates/:templateId/offers/:offerId/generate", method: "GET" }
         });
     }
 }
