@@ -18,6 +18,7 @@ import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.DELETE_FAILED_EXCEPTION;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.TEMPLATE_NOT_FOUND;
+import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
 import dash.templatemanagement.domain.Template;
 
 @Service
@@ -49,7 +51,6 @@ public class TemplateService implements ITemplateService {
 	public Template save(final Template template) throws SaveFailedException {
 		if (template != null) {
 			try {
-				System.out.println("Template" + template);
 				return templateRepository.save(template);
 			} catch (Exception ex) {
 				logger.error(TemplateService.class.getSimpleName() + ex.getMessage(), ex);
@@ -92,6 +93,22 @@ public class TemplateService implements ITemplateService {
 			NotFoundException nfex = new NotFoundException(TEMPLATE_NOT_FOUND);
 			logger.error(TEMPLATE_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
 			throw nfex;
+		}
+	}
+
+	@Override
+	public Template update(final Template template) throws UpdateFailedException {
+		if (template != null) {
+			try {
+				return save(template);
+			} catch (SaveFailedException ex) {
+				logger.error(ex.getMessage() + TemplateService.class.getSimpleName(), ex);
+				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			}
+		} else {
+			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			logger.error(UPDATE_FAILED_EXCEPTION + TemplateService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			throw ufex;
 		}
 	}
 

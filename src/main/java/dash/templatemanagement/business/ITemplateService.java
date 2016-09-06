@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
 import dash.templatemanagement.domain.Template;
 
 @Service
@@ -27,10 +28,11 @@ public interface ITemplateService {
 
 	public List<Template> getAll();
 
+	public Template getById(final long id) throws NotFoundException;
+
 	public Template save(final Template template) throws SaveFailedException;
 
 	public void delete(final long id) throws DeleteFailedException;
 
-	public Template getById(final long id) throws NotFoundException;
-
+	public Template update(final Template template) throws UpdateFailedException;
 }

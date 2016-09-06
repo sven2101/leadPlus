@@ -13,6 +13,7 @@
  *******************************************************************************/
 package dash.templatemanagement.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,18 +23,20 @@ import javax.persistence.Id;
 public class Template {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Long id;
 
 	private String name;
 	private String description;
 	private String content;
+	private boolean deactivated;
 
 	public Template() {
 
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -61,9 +64,17 @@ public class Template {
 		this.content = content;
 	}
 
+	public boolean isDeactivated() {
+		return deactivated;
+	}
+
+	public void setDeactivated(boolean deactivated) {
+		this.deactivated = deactivated;
+	}
+
 	@Override
 	public String toString() {
-		return "Template [id=" + id + ", name=" + name + ", description=" + description + ", content=" + content + "]";
+		return "Template [id=" + id + ", name=" + name + ", description=" + description + ", content=" + content + ", deactivated=" + deactivated + "]";
 	}
 
 }

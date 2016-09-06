@@ -9,18 +9,6 @@
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
                             </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#">Config option 1</a>
-                                </li>
-                                <li><a href="#">Config option 2</a>
-                                </li>
-                            </ul>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
                         </div>
                     </div>
                     <div class="ibox-content">
@@ -94,38 +82,45 @@
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
                             </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
                         </div>
                     </div>
                     <div class="ibox-content">
                         <button type="button" class="btn btn-success" ng-click="settingCtrl.openEmailTemplateModal()" data-toggle="modal">
                             <i class="fa fa-plus"></i>&nbsp; Neues Template
                         </button>
+
+                        <br/>
+                        <br/>
+
+                        <div class="project-list">
+                            <table class="table table-hover">
+                                <tbody>
+                                    <tr ng-repeat="template in settingCtrl.settingService.templates">
+                                        <td class="project-status col-md-1">
+                                            <span ng-show="!template.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
+                                            <span ng-show="template.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
+                                        </td>
+                                        <td class="project-title col-md-2">
+                                            <small>{{template.name}}</small>
+                                        </td>
+                                        <td class="project-completion col-md-7" max>
+                                            <small style="word-wrap: break-word; word-break: break-all;">{{template.description}}</small>
+                                        </td>
+                                        <td class="project-actions col-md-3">
+                                            <button type="button" class="btn btn-white btn-sm" ng-click="settingCtrl.openEditEmailTemplateModal(template)" title="{{ 'SETTING_EMAIL_TEMPLATE_EDIT' | translate }}">
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        </button>
+                                            <button type="button" class="btn btn-white btn-sm" ng-click="settingCtrl.openEmailTemplateDeleteModal(template)" title="{{ 'SETTING_EMAIL_TEMPLATE_DELETE' | translate }}">
+                                            <i class="fa fa-trash" aria-hidden="true">
+                                        </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
-                    <div class="project-list">
-                        <table class="table table-hover">
-                            <tbody>
-                                <tr ng-repeat="template in settingCtrl.templates">
-                                    <td class="project-title col-md-2">
-                                        <small>{{template.name}}</small>
-                                    </td>
-                                    <td class="project-completion col-md-7" max>
-                                        <small style="word-wrap: break-word; word-break: break-all;">{{template.description}}</small>
-                                    </td>                                   
-                                    <td class="project-actions col-md-1">
-                                        <button type="button" class="btn btn-white btn-sm" ng-click="settingCtrl.openEmailTemplateModal(template)" data-toggle="modal">
-                                     <i class="fa fa-pencil"></i>&nbsp;Edit</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+
                 </div>
             </div>
         </div>

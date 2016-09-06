@@ -15,10 +15,13 @@ package dash.templatemanagement.rest;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
+import dash.exceptions.UpdateFailedException;
 import dash.templatemanagement.business.ITemplateService;
 import dash.templatemanagement.domain.Template;
 import io.swagger.annotations.Api;
@@ -34,7 +38,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Template Resource")
-@RequestMapping(value = "/api/rest/templatesasdf", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/templates", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Template API")
 public class TemplateResource {
 
@@ -48,14 +52,6 @@ public class TemplateResource {
 		return templateService.getAll();
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.CREATED)
-	@ApiOperation(value = "Post a template. ", notes = "")
-	public Template save(final Template template) throws SaveFailedException {
-		System.out.println("template" + template);
-		return templateService.save(template);
-	}
-
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get template by Id. ", notes = "")
@@ -63,9 +59,23 @@ public class TemplateResource {
 		return templateService.getById(id);
 	}
 
+	@RequestMapping(method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation(value = "Post a template. ", notes = "")
+	public Template save(@ApiParam(required = true) @RequestBody @Valid final Template template) throws SaveFailedException {
+		return templateService.save(template);
+	}
+
+	@ApiOperation(value = "Update a single template.", notes = "")
+	@RequestMapping(method = RequestMethod.PUT)
+	@ResponseStatus(HttpStatus.OK)
+	public Template update(@ApiParam(required = true) @RequestBody @Valid final Template template) throws UpdateFailedException {
+		return templateService.update(template);
+	}
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Delete a file. ", notes = "")
+	@ApiOperation(value = "Delete a template. ", notes = "")
 	public void delete(@ApiParam(required = true) @PathVariable final long id) throws DeleteFailedException {
 		templateService.delete(id);
 	}

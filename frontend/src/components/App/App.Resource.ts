@@ -236,12 +236,12 @@ class ProductResource {
     resource: any;
 
     constructor($resource) {
-        this.resource = $resource("/api/rest/product", {}, {
-            getProductById: { url: "/api/rest/product/:id", method: "GET" },
-            getAllProducts: { url: "/api/rest/product", method: "GET", isArray: true },
-            createProduct: { url: "/api/rest/product", method: "POST" },
-            updateProduct: { url: "/api/rest/product", method: "PUT" },
-            deleteProduct: { url: "/api/rest/product", method: "DELETE" }
+        this.resource = $resource("/api/rest/products", {}, {
+            getProductById: { url: "/api/rest/products/:id", method: "GET" },
+            getAllProducts: { url: "/api/rest/products", method: "GET", isArray: true },
+            createProduct: { url: "/api/rest/products", method: "POST" },
+            updateProduct: { url: "/api/rest/products", method: "PUT" },
+            deleteProduct: { url: "/api/rest/products", method: "DELETE" }
         });
     }
 }
@@ -327,7 +327,9 @@ class TemplateResource {
     constructor($resource) {
         this.resource = $resource("/api/rest/templates", {}, {
             getAllTemplates: { url: "/api/rest/templates", method: "GET", isArray: true },
-            uploadTemplate: { url: "/api/rest/templates", method: "POST" }
+            uploadTemplate: { url: "/api/rest/templates", method: "POST" },
+            updateTemplate: { url: "/api/rest/templates", method: "PUT" },
+            deleteTemplate: { url: "/api/rest/templates/:id", method: "DELETE" }
         });
     }
 }

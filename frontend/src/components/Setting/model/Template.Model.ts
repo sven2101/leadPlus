@@ -7,6 +7,7 @@ class Template extends AbstractModel {
     name: string;
     description: string;
     content: string;
+    deactivated: boolean;
 
     constructor() {
         super();

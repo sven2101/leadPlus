@@ -28,19 +28,21 @@ class SettingController {
     createTemplateForm;
 
     currentTab: number = 1;
-    setting: Setting;
     settingService: SettingService;
-    templateResource;
+
     roleSelection = Array<any>();
+
+    templateResource;
+
+    setting: Setting;
     template: Template;
-    templates = Array<Template>();
 
     constructor(SettingService, TemplateResource) {
         this.settingService = SettingService;
-        this.templateResource = TemplateResource.resource;
         this.setting = new Setting();
+        this.template = new Template();
         this.settingService.loadUsers();
-        this.getAllTemplates();
+        this.templateResource = TemplateResource.resource;
     }
 
     tabOnClick(tab: number) {
@@ -72,24 +74,15 @@ class SettingController {
     }
 
     openEmailTemplateModal() {
-        this.settingService.openEmailTemplateModal();
+        this.settingService.openEmailTemplateModal(new Template());
     }
 
-    saveEmailTemplate() {
-        this.settingService.saveEmailTemplate(this.template);
+    openEditEmailTemplateModal(template: Template) {
+        this.settingService.openEmailTemplateModal(template);
     }
 
-    clearTemplate(): void {
-        this.createTemplateForm.$setPristine();
-        this.template = new Template();
-    }
-
-    getAllTemplates() {
-        let self = this;
-        this.templateResource.getAllTemplates().$promise.then(function (result) {
-            // self.templates = result;
-            console.log(result);
-        });
+    openEmailTemplateDeleteModal(template: Template) {
+        this.settingService.openEmailTemplateDeleteModal(template);
     }
 }
 angular.module(moduleSetting, [ngResourceId]).controller(SettingControllerId, SettingController);

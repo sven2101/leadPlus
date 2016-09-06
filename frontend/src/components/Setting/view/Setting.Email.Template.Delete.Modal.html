@@ -1,0 +1,12 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" ng-click="settingEmailTemplateCtrl.closeEmailTemplateModal()">
+        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">{{ 'SETTING_EMAIL_TEMPLATE_DELETE' | translate }}</h4>
+</div>
+<div class="modal-body">
+    <p> {{ 'SETTING_EMAIL_TEMPLATE_DELETE_CONFIRMATION_1' | translate }} <b> {{settingEmailTemplateCtrl.template.name }} </b> {{ 'SETTING_EMAIL_TEMPLATE_DELETE_CONFIRMATION_2' | translate }}  ?</p>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-white" ng-click="settingEmailTemplateCtrl.closeEmailTemplateModal()">{{ 'COMMON_CANCEL'| translate }}</button>
+        <button type="submit" class="btn btn-success" ng-click="settingEmailTemplateCtrl.deleteEmailTemplate()">{{ 'COMMON_DELETE'| translate }}</button>
+    </div>
+</div>

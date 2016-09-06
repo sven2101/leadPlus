@@ -37,14 +37,12 @@ class ProductService {
     saveProduct(product: Product, insert: boolean) {
         let self = this;
         if (insert) {
-            console.log("a");
             product.timestamp = newTimestamp();
             this.productResource.createProduct(product).$promise.then(function (result: Product) {
                 self.products.push(result);
 
             });
         } else {
-            console.log("b");
             this.productResource.updateProduct(product).$promise.then(function (result: Product) {
                 console.log(product);
                 console.log(result);

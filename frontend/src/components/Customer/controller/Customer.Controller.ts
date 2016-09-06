@@ -49,15 +49,18 @@ class CustomerController {
         shallowCopy(this.currentEditCustomer, this.currentCustomer);
         this.isCurrentCustomerNew = false;
     }
+
     saveCustomer() {
         if (!this.isCurrentCustomerNew) {
             shallowCopy(this.currentCustomer, this.currentEditCustomer);
         }
         this.customerService.saveCustomer(this.currentCustomer, this.isCurrentCustomerNew);
     }
+
     getLocalTimestamp: any = function (customer: Customer) {
         return toLocalDate(customer.timestamp);
     };
+
     goToCustomerDetail(customerId: number) {
         this.location.path("customer/detail/" + customerId);
     }

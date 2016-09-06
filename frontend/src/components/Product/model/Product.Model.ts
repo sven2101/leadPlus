@@ -20,7 +20,7 @@ class Product extends AbstractModel {
     priceNetto: number;
     image: any;
     timestamp: any;
-    deactivated;
+    deactivated: boolean;
 
     constructor() {
         super();

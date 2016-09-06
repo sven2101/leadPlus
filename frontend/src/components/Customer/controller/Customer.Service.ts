@@ -43,9 +43,11 @@ class CustomerService {
             });
         }
     }
+
     insertCustomer(customer: Customer) {
         return this.customerResource.createCustomer(customer).$promise;
     }
+
     getAllCustomer() {
         let self = this;
         this.customerResource.getAllCustomer().$promise.then(function (result: Array<Customer>) {

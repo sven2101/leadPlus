@@ -26,8 +26,6 @@
                                 <input required type="text" name="firstname" class="form-control" ng-model="customerCtrl.currentCustomer.firstname" ng-maxlength="30">
                                 <p ng-show="customerCtrl.createCustomerForm.firstname.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                                 <p ng-show="customerCtrl.createCustomerForm.firstname.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
-
-
                             </div>
                             <!-- LASTNAME -->
                             <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.lastname.$invalid && !customerCtrl.createCustomerForm.lastname.$pristine }">

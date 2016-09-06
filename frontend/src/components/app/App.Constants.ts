@@ -64,6 +64,7 @@ const moduleStatisticService: string = moduleStatistic + ".service";
 const moduleSetting: string = moduleApp + ".settings";
 const moduleSettingResource: string = moduleSetting + ".resource";
 const moduleSettingService: string = moduleSetting + ".service";
+const moduleSettingEmailTemplate: string = moduleApp + ".settings.email.template";
 const moduleProfile: string = moduleApp + ".profile";
 const moduleProfileService: string = moduleProfile + ".service";
 const moduleProduct: string = moduleApp + ".product";
