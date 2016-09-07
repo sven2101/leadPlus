@@ -131,20 +131,6 @@ class WorkflowService {
         return sum;
     }
 
-    openOfferModal(offer: Offer) {
-        this.uibModal.open({
-            templateUrl: "http://localhost:8080/components/Common/view/Workflow.Offer.Send.Modal.html",
-            controller: WorkflowController,
-            controllerAs: "workflowCtrl",
-            size: "lg",
-            resolve: {
-                offer: function () {
-                    return offer;
-                }
-            }
-        });
-    }
-
     addLeadToOffer(process: Process): any {
         let defer = this.$q.defer();
         let self = this;
@@ -162,11 +148,8 @@ class WorkflowService {
             offer.orderPositions[i].id = 0;
         }
 
-        console.log("Offer: ", offer);
-        this.openOfferModal(offer);
-
-        this.processResource.createOffer({ id: process.id }, offer).$promise.then(function () {
-            self.processResource.setStatus({ id: process.id }, Status.OFFER).$promise.then(function () {
+        this.processResource.createOffer({ id: process.id }, offer).$promise.then(function (resultOffer: Offer) {
+            self.processResource.setStatus({ id: process.id }, Status.OFFER).$promise.then(function (resultProcess: Process) {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
@@ -175,9 +158,11 @@ class WorkflowService {
                         process.processor = self.user;
                     });
                 }
-                process.offer = offer;
-                process.status = Status.OFFER;
-                defer.resolve(true);
+
+                process.offer = resultOffer;
+                process.status = resultProcess.status;
+
+                defer.resolve(process);
             }, function () {
                 defer.reject(false);
             });

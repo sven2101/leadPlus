@@ -5,6 +5,8 @@
 /// <reference path="../../sale/model/Sale.Model.ts" />
 /// <reference path="../../common/service/Workflow.Service.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
+/// <reference path="../../common/service/Workflow.Controller.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -21,7 +23,7 @@ const DashboardServiceId: string = "DashboardService";
 
 class DashboardService {
 
-    private $inject = [ProcessResourceId, toasterId, $rootScopeId, $translateId, $filterId, WorkflowServiceId];
+    private $inject = [ProcessResourceId, toasterId, $rootScopeId, $translateId, $filterId, WorkflowServiceId, $uibModalId];
 
     processResource: any;
     workflowService: WorkflowService;
@@ -34,9 +36,11 @@ class DashboardService {
     openOffers: Array<Offer>;
     closedSales: Array<Sale>;
 
+    uibModal;
+
     user: User;
 
-    constructor(ProcessResource, toaster, $rootScope, $translate, $filter, WorkflowService) {
+    constructor(ProcessResource, toaster, $rootScope, $translate, $filter, WorkflowService, $uibModal) {
         this.processResource = ProcessResource.resource;
         this.workflowService = WorkflowService;
         this.toaster = toaster;
@@ -44,6 +48,7 @@ class DashboardService {
         this.translate = $translate;
         this.orderBy = $filter("orderBy");
         this.user = $rootScope.currentUser;
+        this.uibModal = $uibModal;
         this.initDashboard();
     }
 
@@ -90,8 +95,24 @@ class DashboardService {
 
     createOffer(process: Process) {
         let self = this;
-        this.workflowService.addLeadToOffer(process).then(function (isResolved: boolean) {
+        this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
             self.openOffers = self.orderBy(self.openOffers, "offer.timestamp", false);
+            console.log("Process: ", tmpprocess);
+            self.openOfferModal(tmpprocess);
+        });
+    }
+
+    openOfferModal(process: Process) {
+        this.uibModal.open({
+            templateUrl: "http://localhost:8080/components/Common/view/Workflow.Offer.Send.Modal.html",
+            controller: WorkflowController,
+            controllerAs: "workflowCtrl",
+            size: "lg",
+            resolve: {
+                offer: function () {
+                    return process.offer;
+                }
+            }
         });
     }
 

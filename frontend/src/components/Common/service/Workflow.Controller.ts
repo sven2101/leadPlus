@@ -49,6 +49,8 @@ class WorkflowController {
     generate(template: Template, offer: Offer) {
         console.log("Generate");
         console.log(this.template);
+        console.log("Offer");
+        console.log(offer);
         this.templateResource.generate({ templateId: this.template, offerId: offer.id }).$promise.then(function (result) {
             console.log(result);
         });

@@ -106,9 +106,7 @@ public class ProcessService implements IProcessService {
 	public Process save(final Process process) throws SaveFailedException {
 		if (Optional.ofNullable(process).isPresent()) {
 			setOrderPositions(process);
-			Process temp = processRepository.save(process);
-
-			return temp;
+			return processRepository.save(process);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(OFFER_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
@@ -119,23 +117,19 @@ public class ProcessService implements IProcessService {
 	@Override
 	public Lead createLead(final long processId, final Lead lead) throws SaveFailedException {
 		Process process = processRepository.findOne(processId);
-		Lead createdLead;
 		if (Optional.ofNullable(process).isPresent()) {
-			createdLead = leadService.save(lead);
 			process.setLead(lead);
 			process.setStatus(Status.OPEN);
 			setOrderPositions(process);
-			processRepository.save(process);
+			return processRepository.save(process).getLead();
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
 		}
-		return createdLead;
 	}
 
 	@Override
 	public Offer createOffer(final long processId, final Offer offer) throws SaveFailedException {
 		Process process = processRepository.findOne(processId);
-		Offer createdOffer = null;
 		if (Optional.ofNullable(process).isPresent()) {
 			if (process.getOffer() != null) {
 				for (OrderPosition temp : process.getOffer().getOrderPositions()) {
@@ -144,11 +138,10 @@ public class ProcessService implements IProcessService {
 			}
 			process.setOffer(offer);
 			setOrderPositions(process);
-			processRepository.save(process);
+			return processRepository.save(process).getOffer();
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
 		}
-		return createdOffer;
 	}
 
 	@Override
@@ -267,8 +260,7 @@ public class ProcessService implements IProcessService {
 			Process process = getById(id);
 			process.setStatus(Status.valueOf(status));
 			setOrderPositions(process);
-			save(process);
-			return process;
+			return save(process);
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
