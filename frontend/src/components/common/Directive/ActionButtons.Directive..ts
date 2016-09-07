@@ -20,21 +20,22 @@ angular.module(moduleApp)
         directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
         directive.restrict = "A";
         directive.scope = {
-            templatedata: "@"
+            templatedata: "@",
+            type: "@",
+            parent: "="
         };
         directive.templateUrl = function (elem, attr) {
             if (attr.template === "standard") {
-                return "components/Lead/view/Lead.ActionButtons.html";
+                return "components/common/view/Workflow.ActionButtons.html";
             }
             else if (attr.template === "dropdown") {
-                return "components/Lead/view/Lead.ActionButtons.Dropdown.html";
+                return "components/common/view/Workflow.ActionButtons.Dropdown.html";
             }
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {
             let templateData = JSON.parse(scope.templatedata);
             scope.directiveData = templateData;
-            scope.parent = scope.$parent;
         };
         return directive;
     });

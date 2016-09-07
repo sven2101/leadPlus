@@ -14,11 +14,11 @@
  ******************************************************************************/
 "use strict";
 
-const LeadDataTableServiceId: string = "LeadDataTableService";
-const allDataRoute = "/api/rest/processes/leads";
-const openDataRoute = "/api/rest/processes/workflow/LEAD/state/OPEN";
+const OfferDataTableServiceId: string = "OfferDataTableService";
+const allDataOfferRoute = "/api/rest/processes/offers";
+const openDataOfferRoute = "/api/rest/processes/workflow/OFFER/state/OFFER";
 
-class LeadDataTableService {
+class OfferDataTableService {
 
     $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId];
 
@@ -48,7 +48,7 @@ class LeadDataTableService {
     getDTOptionsConfiguration(createdRow: Function) {
         return this.DTOptionsBuilder.newOptions()
             .withOption("ajax", {
-                url: openDataRoute,
+                url: openDataOfferRoute,
                 error: function (xhr, error, thrown) {
                     console.log(xhr);
                 },
@@ -57,7 +57,7 @@ class LeadDataTableService {
             .withOption("stateSave", true)
             .withDOM(this.workflowService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowService.getButtons(this.translate("LEAD_LEADS"), [6, 1, 2, 3, 5, 7, 9, 10, 11, 8, 12]))
+            .withButtons(this.workflowService.getButtons(this.translate("OFFER_OFFERS"), [6, 1, 2, 3, 5, 7, 10, 11, 12, 8, 9, 13, 14, 15]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("order", [4, "desc"])
@@ -66,16 +66,16 @@ class LeadDataTableService {
 
     configRow(row: any, data: Process) {
         let currentDate = moment(moment().utc + "", "DD.MM.YYYY");
-        let leadDate = moment(data.lead.timestamp, "DD.MM.YYYY");
-        if (currentDate["businessDiff"](leadDate, "days") > 3
-            && data.status === "OPEN") {
+        let offerDate = moment(data.offer.timestamp, "DD.MM.YYYY");
+        if ((currentDate["businessDiff"](offerDate, "days") > 3 && data.status === "OFFER")
+            || (currentDate["businessDiff"](offerDate, "days") > 5 && data.status === "FOLLOWUP")) {
             $(row).addClass("important");
         }
     }
 
     getDetailHTML(id: number): string {
         return "<a class='green shortinfo' href='javascript:;'"
-            + "ng-click='leadCtrl.appendChildRow(leadCtrl.processes[" + id
+            + "ng-click='offerCtrl.appendChildRow(offerCtrl.processes[" + id
             + "], $event)' title='Details'>"
             + "<i class='glyphicon glyphicon-plus-sign'/></a>";
     }
@@ -85,24 +85,26 @@ class LeadDataTableService {
         return [
             this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
                 .renderWith(addDetailButton),
-            this.DTColumnBuilder.newColumn("lead.customer.lastname").withTitle(
+            this.DTColumnBuilder.newColumn("offer.customer.lastname").withTitle(
                 this.translate("COMMON_NAME")).withClass("text-center"),
-            this.DTColumnBuilder.newColumn("lead.customer.company").withTitle(
+            this.DTColumnBuilder.newColumn("offer.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
-            this.DTColumnBuilder.newColumn("lead.customer.email").withTitle(
+            this.DTColumnBuilder.newColumn("offer.customer.email").withTitle(
                 this.translate("COMMON_EMAIL")).withClass("text-center"),
-            this.DTColumnBuilder.newColumn("lead.timestamp").withTitle(
+            this.DTColumnBuilder.newColumn("offer.timestamp").withTitle(
                 this.translate("COMMON_DATE")).renderWith(
                 function (data, type, full) {
                     return toLocalDate(data);
                 }).withOption("type", "date-euro")
                 .withClass("text-center"),
-            this.DTColumnBuilder.newColumn("lead.customer.phone").withTitle(
+            this.DTColumnBuilder.newColumn("offer.customer.phone").withTitle(
                 this.translate("COMMON_PHONE")).notVisible(),
-            this.DTColumnBuilder.newColumn("lead.customer.firstname").withTitle(
+            this.DTColumnBuilder.newColumn("offer.customer.firstname").withTitle(
                 this.translate("COMMON_FIRSTNAME")).notVisible(),
-            this.DTColumnBuilder.newColumn("lead.deliveryAddress").withTitle(
-                this.translate("COMMON_CONTAINER")).notVisible(),
+            this.DTColumnBuilder.newColumn("offer.deliveryAddress").withTitle(
+                this.translate("COMMON_CONTAINER_DESTINATION")).notVisible(),
+            this.DTColumnBuilder.newColumn("offer.deliveryDate").withTitle(
+                this.translate("COMMON_DELIVERY_TIME")).notVisible(),
             this.DTColumnBuilder.newColumn("null").withTitle(
                 this.translate("COMMON_CONTAINER_SINGLE_PRICE")).renderWith(
                 function (data, type, full) {
@@ -113,12 +115,14 @@ class LeadDataTableService {
                 this.translate("COMMON_CONTAINER_ENTIRE_PRICE"))
                 .renderWith(
                 function (data, type, full) {
-                    if (isNullOrUndefined(data.lead.leadPrice)) {
+                    if (isNullOrUndefined(data.offer.offerPrice)) {
                         return self.filter("currency")(0, "€", 2);
                     }
-                    return self.filter("currency")(data.lead.leadPrice,
+                    return self.filter("currency")(data.offer.offerPrice,
                         "€", 2);
                 }).notVisible(),
+            this.DTColumnBuilder.newColumn("processor.username").withTitle(
+                this.translate("COMMON_PROCESSOR")).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_STATUS")).withClass("text-center")
                 .renderWith(addStatusStyle),
@@ -130,27 +134,26 @@ class LeadDataTableService {
     setActionButtonsConfig(user: User, templateData: any) {
         let config = {
             "disabled": false,
-            "disablePin": false,
+            "disableFollowUp": false,
             "hasRightToDelete": false,
             "closeOrOpenDisable": false,
-            "openOrLock": this.translate.instant("LEAD_CLOSE_LEAD"),
+            "openOrLock": this.translate.instant("OFFER_CLOSE_OFFER"),
             "faOpenOrLock": "fa fa-lock"
         };
-        if (templateData.process.status !== "OPEN") {
+        if (templateData.process.status !== "OFFER" && templateData.process.status !== "FOLLOWUP") {
             config.disabled = true;
-            config.disablePin = true;
-            config.openOrLock = this.translate.instant("LEAD_OPEN_LEAD");
+            config.disableFollowUp = true;
+            config.openOrLock = this.translate.instant("OFFER_OPEN_OFFER");
             config.faOpenOrLock = "fa fa-unlock";
         }
-        if (templateData.process.offer !== null || templateData.process.sale !== null) {
+        if (templateData.process.status === "FOLLOWUP") {
+            config.disableFollowUp = true;
+        }
+        if (templateData.process.sale !== null) {
             config.closeOrOpenDisable = true;
         }
         if (user.role === Role.USER) {
             config.hasRightToDelete = true;
-        }
-        if (templateData.process.processor !== null
-            && user.username !== templateData.process.processor.username) {
-            config.disablePin = true;
         }
         templateData.config = config;
     }
@@ -158,23 +161,16 @@ class LeadDataTableService {
     getActionButtonsHTML(templateData: any): string {
         this.setActionButtonsConfig(this.user, templateData);
         if ($(window).width() > 1300) {
-            return "<div actionbuttons template='standard' type='lead' parent='leadCtrl' templatedata='" + JSON.stringify(templateData) + "'></div>";
+            return "<div actionbuttons template='standard' parent='offerCtrl' type='offer' templatedata='" + JSON.stringify(templateData) + "'></div>";
         } else {
-            return "<div actionbuttons template='dropdown' type='lead' parent='leadCtrl' templatedata='" + JSON.stringify(templateData) + "'></div>";
+            return "<div actionbuttons template='dropdown' parent='offerCtrl' type='offer' templatedata='" + JSON.stringify(templateData) + "'></div>";
         }
     }
 
     getStatusStyleHTML(data: Process): string {
-        let hasProcessor: string = "";
-        if (data.processor !== null)
-            hasProcessor = "&nbsp;<span style='color: #ea394c;'><i class='fa fa-thumb-tack'></i></span>";
-        if (data.status === "OPEN") {
+        if (data.status === "OPEN" || data.status === "OFFER") {
             return "<span style='color: green;'>"
-                + this.translate.instant("COMMON_STATUS_OPEN") + "</span>"
-                + hasProcessor;
-        } else if (data.status === "OFFER") {
-            return "<span style='color: #f79d3c;'>"
-                + this.translate.instant("COMMON_STATUS_OFFER") + "</span>";
+                + this.translate.instant("COMMON_STATUS_OPEN") + "</span>";
         } else if (data.status === "FOLLOWUP") {
             return "<span style='color: #f79d3c;'>"
                 + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>";
@@ -188,5 +184,4 @@ class LeadDataTableService {
     }
 
 }
-
-angular.module(moduleLeadDataTableService, [ngResourceId]).service(LeadDataTableServiceId, LeadDataTableService);
+angular.module(moduleOfferDataTableService, [ngResourceId]).service(OfferDataTableServiceId, OfferDataTableService);

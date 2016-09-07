@@ -47,7 +47,7 @@ class LeadController extends AbstractWorkflow {
     processes: { [key: number]: Process } = {};
     editForm: any;
     editProcess: Process;
-    editLead: Lead = new Lead();
+    editWorkflowUnit: Lead = new Lead();
     edit: boolean;
 
     currentOrderPositions: Array<OrderPosition>;
@@ -111,7 +111,7 @@ class LeadController extends AbstractWorkflow {
         this.currentOrderPositions = deepCopy(this.editProcess.lead.orderPositions);
         this.customerSelected = this.editProcess.lead.customer.id > 0;
         this.currentCustomerId = this.editProcess.lead.customer.id + "";
-        this.editLead = deepCopy(this.editProcess.lead);
+        this.editWorkflowUnit = deepCopy(this.editProcess.lead);
     }
 
     addComment(id: number, input: string) {
@@ -122,18 +122,18 @@ class LeadController extends AbstractWorkflow {
 
     saveLead(edit: boolean) {
         if (edit === true) {
-            this.leadService.saveEditedRow(this.editLead, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope, this.editForm);
+            this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope, this.editForm);
         }
         else {
-            this.leadService.saveLead(this.editForm, this.dtInstance, this.editLead, this.currentOrderPositions);
+            this.leadService.saveLead(this.editForm, this.dtInstance, this.editWorkflowUnit, this.currentOrderPositions);
         }
     }
 
     clearNewLead() {
         this.edit = false;
-        this.editLead = new Lead();
+        this.editWorkflowUnit = new Lead();
         this.editProcess = new Process();
-        this.editLead.orderPositions = new Array<OrderPosition>();
+        this.editWorkflowUnit.orderPositions = new Array<OrderPosition>();
         this.currentOrderPositions = new Array<OrderPosition>();
         this.currentProductId = "-1";
         this.currentCustomerId = "-1";
@@ -149,7 +149,7 @@ class LeadController extends AbstractWorkflow {
         this.leadService.pin(process, this.dtInstance, this.scope);
     }
 
-    closeOrOpenInquiry(process: Process) {
+    closeOrOpen(process: Process) {
         this.leadService.closeOrOpenInquiry(process, this.dtInstance, this.scope);
     }
 
