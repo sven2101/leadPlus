@@ -9,7 +9,7 @@ gulp.task("tslint", function () {
         .pipe(tslint({
             formatter: "prose",
             emitError: false,
-            rulesDirectory: "frontend/gulp/tslintOptions.json"
+            configuration: "frontend/gulp/tslintOptions.json"
         }))
         .pipe(tslint.report({
             summarizeFailureOutput: true

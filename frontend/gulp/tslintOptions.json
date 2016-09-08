@@ -1,8 +1,8 @@
 {
-    "rulesDirectory": ["path/to/custom/rules/direcotry/", "another/path/"],
+   
     "rules": {
         "class-name": true,
-        "typedef": [true, "call-signature", "parameter", "member-variable-declaration"],
+        "typedef": [false, "call-signature", "parameter", "member-variable-declaration"],
         "curly": true,
         "no-console": [false, "log", "error","console"],
         "interface-name": [true, "always-prefix"],
@@ -24,7 +24,7 @@
             "property-declaration": "nospace",
             "variable-declaration": "nospace"
         }],
-        "variable-name": [true, "ban-keywords"],
+        "variable-name": [false, "ban-keywords"],
         "whitespace": [true,
             "check-branch",
             "check-decl",

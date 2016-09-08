@@ -20,12 +20,15 @@ angular.module(moduleApp)
         directive = { restrict: null, templateUrl: null, transclude: null, link: null };
         directive.restrict = "A";
         directive.templateUrl = function (elem, attr) {
-            if (attr.type === "lead")
+            if (attr.type === "lead") {
                 return "components/Lead/view/LeadChildRow.html";
-            else if (attr.type === "offer")
+            }
+            else if (attr.type === "offer") {
                 return "components/Offer/view/OfferChildRow.html";
-            else if (attr.type === "sale")
+            }
+            else if (attr.type === "sale") {
                 return "components/Sale/view/SaleChildRow.html";
+            }
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {

@@ -166,8 +166,9 @@ class LeadDataTableService {
 
     getStatusStyleHTML(data: Process): string {
         let hasProcessor: string = "";
-        if (data.processor !== null)
+        if (data.processor !== null) {
             hasProcessor = "&nbsp;<span style='color: #ea394c;'><i class='fa fa-thumb-tack'></i></span>";
+        }
         if (data.status === "OPEN") {
             return "<span style='color: green;'>"
                 + this.translate.instant("COMMON_STATUS_OPEN") + "</span>"

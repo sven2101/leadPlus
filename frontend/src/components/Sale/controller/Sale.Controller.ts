@@ -87,12 +87,14 @@ class SaleController {
 
         let self = this;
 
-        if (!angular.isUndefined($rootScope.globals.user))
+        if (!angular.isUndefined($rootScope.globals.user)) {
             this.userResource.get({
                 id: $rootScope.globals.user.id
             }).$promise.then(function (result) {
                 self.user = result;
             });
+        }
+
 
         this.dtOptions = DTOptionsBuilder.newOptions().withOption("ajax", {
             url: "/api/rest/processes/sales/latest/100",
@@ -307,8 +309,10 @@ class SaleController {
         }).$promise.then(function (result) {
             self.comments[process.id] = [];
             for (let comment in result) {
-                if (comment === "$promise")
+                if (comment === "$promise") {
                     break;
+                }
+
                 self.comments[process.id].push({
                     commentText: result[comment].commentText,
                     timestamp: result[comment].timestamp,
@@ -341,7 +345,7 @@ class SaleController {
         this.currentCommentModalId = id;
     };
 
-     addComment(id: number, input: string) {
+    addComment(id: number, input: string) {
         this.workflowService.addComment(this.comments[id], this.processes[id], this.user, input[id]).then(function () {
             input[id] = "";
         });
