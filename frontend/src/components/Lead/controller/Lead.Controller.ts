@@ -70,7 +70,7 @@ class LeadController extends AbstractWorkflow {
             this.dtInstance.reloadData(resetPaging);
         }
         function changeDataInput() {
-            self.workflowService.changeDataInput(self.loadAllData, self.dtOptions, allDataRoute, openDataRoute);
+            self.workflowService.changeDataInput(self.loadAllData, self.dtOptions, allDataLeadRoute, openDataLeadRoute);
         }
         function createdRow(row, data: Process, dataIndex) {
             self.leadService.setRow(data.id, row);
@@ -141,7 +141,7 @@ class LeadController extends AbstractWorkflow {
         this.customerSelected = false;
     }
 
-    createOffer(process: Process) {
+    createNextWorkflowUnit(process: Process) {
         this.leadService.createOffer(process, this.loadAllData, this.dtInstance, this.scope);
     }
 
