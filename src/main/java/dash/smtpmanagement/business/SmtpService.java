@@ -14,9 +14,6 @@
 
 package dash.smtpmanagement.business;
 
-import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
-import static dash.Constants.SAVE_FAILED_EXCEPTION;
-
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -27,12 +24,10 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sun.mail.smtp.SMTPMessage;
 
-import dash.exceptions.SaveFailedException;
 import dash.smtpmanagement.domain.Smtp;
 
 @Service
@@ -40,11 +35,8 @@ public class SmtpService implements ISmtpService {
 
 	private static final Logger logger = Logger.getLogger(SmtpService.class);
 
-	@Autowired
-	private SmtpRepository smtpRepository;
-
 	@Override
-	public boolean testConnection(final Smtp smtp) {
+	public boolean test(final Smtp smtp) {
 
 		try {
 			final Session emailSession = newSession(smtp);
@@ -60,6 +52,7 @@ public class SmtpService implements ISmtpService {
 			smtpMessage.setReturnOption(1);
 			transport.sendMessage(smtpMessage, InternetAddress.parse("andreas.foitzik@live.com"));
 			transport.close();
+			System.out.println("SMTP successfully tested.");
 		} catch (MessagingException me) {
 			logger.error("Problem sending email", me);
 			return false;
@@ -84,16 +77,4 @@ public class SmtpService implements ISmtpService {
 			}
 		});
 	}
-
-	@Override
-	public Smtp save(final Smtp smtp) throws SaveFailedException {
-		if (smtp != null) {
-			return smtpRepository.save(smtp);
-		} else {
-			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(SAVE_FAILED_EXCEPTION + SmtpService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
-			throw sfex;
-		}
-	}
-
 }

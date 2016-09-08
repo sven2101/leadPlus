@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.exceptions.SaveFailedException;
 import dash.smtpmanagement.business.ISmtpService;
 import dash.smtpmanagement.domain.Smtp;
 import io.swagger.annotations.Api;
@@ -43,15 +42,9 @@ public class SmtpResource {
 	@ApiOperation(value = "Testing Connection.")
 	@RequestMapping(value = "/connections/test", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Boolean testConnection(@RequestBody @Valid final Smtp smtp) {
-		return smtpService.testConnection(smtp);
-	}
-
-	@ApiOperation(value = "Add a single smtp.", notes = "You have to provide a valid smtp Object")
-	@RequestMapping(method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.CREATED)
-	public Smtp save(@ApiParam(required = true) @RequestBody @Valid final Smtp smtp) throws SaveFailedException {
-		return smtpService.save(smtp);
+	public Boolean testConnection(@ApiParam(required = true) @RequestBody @Valid final Smtp smtp) {
+		System.out.println("SMTP: " + smtp.toString());
+		return smtpService.test(smtp);
 	}
 
 }

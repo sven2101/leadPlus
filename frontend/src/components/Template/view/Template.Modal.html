@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <button type="button" class="close" ng-click="settingEmailTemplateCtrl.closeEmailTemplateModal()">
+    <button type="button" class="close" ng-click="templateCtrl.closeEmailTemplateModal()">
         <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
     <h4 class="modal-title">{{ 'SETTING_EMAIL_TEMPLATE_CREATE' | translate }}</h4>
 </div>
@@ -9,36 +9,35 @@
             <!-- Name -->
             <div class="form-group">
                 <label>{{ 'COMMON_NAME' | translate }}</label>
-                <input required type="text" name="name" class="form-control" ng-model="settingEmailTemplateCtrl.template.name" ng-maxlength="30">
+                <input required type="text" name="name" class="form-control" ng-model="templateCtrl.template.name" ng-maxlength="30">
                 <p ng-show="template.createTemplate.name.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                 <p ng-show="template.createTemplate.name.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
             </div>
             <!-- Description -->
             <div class="form-group" ng-class="{ 'has-error' : template.createTemplate.description.$invalid && !template.createTemplate.description.$pristine }">
                 <label>{{ 'COMMON_DESCRIPTION' | translate }}</label>
-                <input required type="text" name="description" class="form-control" ng-model="settingEmailTemplateCtrl.template.description"
-                    ng-maxlength="30">
+                <input required type="text" name="description" class="form-control" ng-model="templateCtrl.template.description" ng-maxlength="30">
                 <p ng-show="template.createTemplate.description.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                 <p ng-show="template.createTemplate.description.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
             </div>
             <!-- Deactivated -->
             <div class="form-group">
-                <label class="checkbox-inline "> <input type="checkbox " ng-model="settingEmailTemplateCtrl.template.deactivated">{{ 'COMMON_DEACTIVATED' | translate }}</label>
+                <label class="checkbox-inline "> <input type="checkbox " ng-model="templateCtrl.template.deactivated">{{ 'COMMON_DEACTIVATED' | translate }}</label>
             </div>
             <!-- Template -->
             <div class="form-group " ng-class="{ 'has-error' : template.createTemplate.content.$invalid && !template.createTemplate.content.$pristine
                 } ">
                 <label>{{ 'SETTING_EMAIL_TEMPLATE_TEXT' | translate }}</label>
                 <div class="summernote ">
-                    <summernote required type="text " name="content " class="form-control " ng-model="settingEmailTemplateCtrl.template.content "></summernote>
+                    <summernote required type="text " name="content " class="form-control " ng-model="templateCtrl.template.content "></summernote>
                 </div>
             </div>
 
         </div>
         <div class="modal-footer ">
-            <button type="button " class="btn btn-white " data-dismiss="modal " ng-click="settingEmailTemplateCtrl.closeEmailTemplateModal() ">{{ 'COMMON_CANCEL'| translate }}
+            <button type="button " class="btn btn-white " data-dismiss="modal " ng-click="templateCtrl.closeEmailTemplateModal() ">{{ 'COMMON_CANCEL'| translate }}
                 </button>
-            <button type="submit " class="btn btn-success " ng-disabled="template.createTemplate.$invalid " ng-click="settingEmailTemplateCtrl.saveEmailTemplate() "
+            <button type="submit " class="btn btn-success " ng-disabled="template.createTemplate.$invalid " ng-click="templateCtrl.saveEmailTemplate() "
                 data-dismiss="modal ">{{ 'COMMON_SAVE'| translate }}
                 </button>
         </div>

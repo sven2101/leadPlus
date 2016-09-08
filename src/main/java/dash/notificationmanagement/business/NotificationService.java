@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
 import com.sun.mail.smtp.SMTPMessage;
 
 import dash.exceptions.SMTPdoesntExistsException;
-import dash.notificationmanagement.domain.IMessage;
+import dash.notificationmanagement.domain.Notification;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 
@@ -41,11 +41,12 @@ public class NotificationService implements INotificationService {
 	private UserService userService;
 
 	@Override
-	public void sendNotification(IMessage message) throws SMTPdoesntExistsException {
-		doSendEmail(message);
+	public void sendNotification(Notification notification) throws SMTPdoesntExistsException {
+		doSendEmail(notification);
 	}
 
-	public void doSendEmail(IMessage message) throws SMTPdoesntExistsException {
+	public void doSendEmail(Notification notification) throws SMTPdoesntExistsException {
+		System.out.println("Notification: " + notification.toString());
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		try {
 			User principle = userService.getUserByName(auth.getName());
@@ -58,13 +59,13 @@ public class NotificationService implements INotificationService {
 				SMTPMessage smtpMessage = new SMTPMessage(emailSession);
 
 				smtpMessage.setFrom(new InternetAddress(userService.getUserByName(auth.getName()).getSmtp().getEmail()));
-				smtpMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(message.getRecipient().getEmail()));
+				smtpMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(notification.getRecipient()));
 				smtpMessage.setHeader("Content-Type", "text/html");
-				smtpMessage.setSubject(message.getSubject());
-				smtpMessage.setContent(message.getContent(), "text/html");
+				smtpMessage.setSubject(notification.getSubject());
+				smtpMessage.setContent(notification.getContent(), "text/html");
 				smtpMessage.setNotifyOptions(SMTPMessage.NOTIFY_SUCCESS);
 				smtpMessage.setReturnOption(1);
-				transport.sendMessage(smtpMessage, InternetAddress.parse(message.getRecipient().getEmail()));
+				transport.sendMessage(smtpMessage, InternetAddress.parse(notification.getRecipient()));
 				transport.close();
 
 				System.out.println("SMTP - DONE");

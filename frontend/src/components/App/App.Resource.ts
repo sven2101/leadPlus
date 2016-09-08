@@ -326,10 +326,10 @@ class TemplateResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/templates", {}, {
-            getAllTemplates: { url: "/api/rest/templates", method: "GET", isArray: true },
-            uploadTemplate: { url: "/api/rest/templates", method: "POST" },
-            updateTemplate: { url: "/api/rest/templates", method: "PUT" },
-            deleteTemplate: { url: "/api/rest/templates/:id", method: "DELETE" },
+            getAll: { url: "/api/rest/templates", method: "GET", isArray: true },
+            save: { url: "/api/rest/templates", method: "POST" },
+            update: { url: "/api/rest/templates", method: "PUT" },
+            remove: { url: "/api/rest/templates/:id", method: "DELETE" },
             generate: { url: "/api/rest/templates/:templateId/offers/:offerId/generate", method: "GET" }
         });
     }
@@ -349,7 +349,7 @@ class SmtpResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/smtps", {}, {
-            save: { url: "/api/rest/smtps/", method: "POST" },
+            save: { url: "/api/rest/smtps/users/:id", method: "POST" },
             test: { url: "/api/rest/smtps/connections/test", method: "POST" }
         });
     }

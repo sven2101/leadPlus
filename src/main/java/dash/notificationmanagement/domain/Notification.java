@@ -14,20 +14,56 @@
 package dash.notificationmanagement.domain;
 
 import dash.filemanagement.domain.File;
-import dash.offermanagement.domain.Offer;
-import freemarker.cache.StringTemplateLoader;
 
 public class Notification {
 
+	private String recipient;
 	private String subject;
 	private String content;
 	private File attachement;
 
-	public Notification(Offer offer, String template) {
-		super(offer.getCustomer());
-		this.stringLoader = new StringTemplateLoader();
-		this.template = template;
-		this.attachement = null;
+	public Notification(String recipient, String subject, String content, File attachement) {
+		this.recipient = recipient;
+		this.subject = subject;
+		this.content = content;
+		this.attachement = attachement;
+	}
+
+	public String getRecipient() {
+		return recipient;
+	}
+
+	public void setRecipient(String recipient) {
+		this.recipient = recipient;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public File getAttachement() {
+		return attachement;
+	}
+
+	public void setAttachement(File attachement) {
+		this.attachement = attachement;
+	}
+
+	@Override
+	public String toString() {
+		return "Notification [recipient=" + recipient + ", subject=" + subject + ", content=" + content + ", attachement=" + attachement + "]";
 	}
 
 }

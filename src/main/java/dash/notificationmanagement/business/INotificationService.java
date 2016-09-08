@@ -15,9 +15,9 @@
 package dash.notificationmanagement.business;
 
 import dash.exceptions.SMTPdoesntExistsException;
-import dash.notificationmanagement.domain.IMessage;
+import dash.notificationmanagement.domain.Notification;
 
 public interface INotificationService {
 
-	void sendNotification(IMessage message) throws SMTPdoesntExistsException;
+	void sendNotification(Notification notification) throws SMTPdoesntExistsException;
 }

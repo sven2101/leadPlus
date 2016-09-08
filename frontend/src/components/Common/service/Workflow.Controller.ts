@@ -2,7 +2,7 @@
 /// <reference path="../../Offer/model/Offer.Model.ts" />
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Resource.ts" />
-/// <reference path="../../Setting/model/Template.Model.ts" />
+/// <reference path="../../Template/model/Template.Model.ts" />
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 /// <reference path="../../Notification/controller/Notification.Service.ts" />
 

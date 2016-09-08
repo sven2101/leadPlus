@@ -1,8 +1,5 @@
 /// <reference path="../../app/App.Constants.ts" />
-/// <reference path="../../Setting/controller/Setting.Service.ts" />
-/// <reference path="../../User/model/User.Model.ts" />
-/// <reference path="../../Setting/model/Setting.Model.ts" />
-/// <reference path="../../Setting/model/Template.Model.ts" />
+/// <reference path="../../Template/model/Template.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -19,35 +16,35 @@
  *******************************************************************************/
 "use strict";
 
-const SettingEmailTemplateControllerId: string = "SettingEmailTemplateController";
+const TemplateControllerId: string = "TemplateController";
 
-class SettingEmailTemplateController {
+class TemplateController {
 
-    private $inject = [SettingServiceId, "$uibModalInstance", "template"];
+    private $inject = [TemplateServiceId, "$uibModalInstance", "template"];
 
     uibModalInstance;
-    settingService;
+    templateService;
     template: Template;
 
-    constructor(SettingService, $uibModalInstance, template) {
-        this.settingService = SettingService;
+    constructor(TemplateService, $uibModalInstance, template) {
+        this.templateService = TemplateService;
         this.uibModalInstance = $uibModalInstance;
         this.template = template;
     }
 
-    saveEmailTemplate() {
+    save() {
         if (this.template.id === 0) {
-            this.settingService.saveEmailTemplate(this.template);
+            this.templateService.save(this.template);
         } else {
-            this.settingService.updateEmailTemplate(this.template);
+            this.templateService.update(this.template);
         }
 
         this.template = null;
         this.closeEmailTemplateModal();
     }
 
-    deleteEmailTemplate() {
-        this.settingService.deleteEmailTemplate(this.template);
+    remove() {
+        this.templateService.remove(this.template);
         this.closeEmailTemplateModal();
     }
 
@@ -56,4 +53,4 @@ class SettingEmailTemplateController {
     }
 
 }
-angular.module(moduleSettingEmailTemplate, [ngResourceId]).controller(SettingEmailTemplateControllerId, SettingEmailTemplateController);
+angular.module(moduleTemplate, [ngResourceId]).controller(TemplateControllerId, TemplateController);

@@ -16,17 +16,10 @@ package dash.smtpmanagement.business;
 
 import org.springframework.stereotype.Service;
 
-import dash.exceptions.SaveFailedException;
 import dash.smtpmanagement.domain.Smtp;
 
 @Service
 public interface ISmtpService {
 
-	public Smtp save(final Smtp smtp) throws SaveFailedException;
-	//
-	//	public Sale update(final Sale sale) throws UpdateFailedException;
-	//
-	//	public void delete(final Long id) throws DeleteFailedException;
-
-	public boolean testConnection(final Smtp smtp);
+	public boolean test(final Smtp smtp);
 }

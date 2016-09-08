@@ -1,11 +1,4 @@
 /// <reference path="../../app/App.Resource.ts" />
-/// <reference path="../../User/model/User.Model.ts" />
-/// <reference path="../../User/model/Role.Model.ts" />
-/// <reference path="../../User/model/Language.Model.ts" />
-/// <reference path="../../Setting/model/Setting.Model.ts" />
-/// <reference path="../../Setting/controller/Setting.Controller.ts" />
-/// <reference path="../../Setting/controller/Setting.Email.Template.Controller.ts" />
-/// <reference path="../../Setting/model/Template.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.

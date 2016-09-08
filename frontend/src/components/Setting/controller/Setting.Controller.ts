@@ -1,8 +1,10 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../Setting/controller/Setting.Service.ts" />
+/// <reference path="../../Smtp/controller/Smtp.Service.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../Setting/model/Setting.Model.ts" />
-/// <reference path="../../Setting/model/Template.Model.ts" />
+/// <reference path="../../Template/model/Template.Model.ts" />
+/// <reference path="../../Template/controller/Template.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -23,26 +25,33 @@ const SettingControllerId: string = "SettingController";
 
 class SettingController {
 
-    private $inject = [SettingServiceId, TemplateResourceId];
+    private $inject = [SettingServiceId, SmtpServiceId, TemplateServiceId];
 
     createTemplateForm;
 
     currentTab: number = 1;
+
     settingService: SettingService;
+    smtpService: SmtpService;
+    templateService: TemplateService;
 
     roleSelection = Array<any>();
 
-    templateResource;
-
+    smtp: Smtp;
     setting: Setting;
     template: Template;
 
-    constructor(SettingService, TemplateResource) {
-        this.settingService = SettingService;
+    constructor(SettingService, SmtpService, TemplateService) {
+        this.smtp = new Smtp();
         this.setting = new Setting();
         this.template = new Template();
+
+        this.settingService = SettingService;
+        this.templateService = TemplateService;
+        this.smtpService = SmtpService;
+
         this.settingService.loadUsers();
-        this.templateResource = TemplateResource.resource;
+
     }
 
     tabOnClick(tab: number) {
@@ -65,24 +74,24 @@ class SettingController {
         this.settingService.changeRole(user);
     }
 
-    testConnection() {
-        this.settingService.testConnection(this.setting);
-    }
-
-    save() {
-        this.settingService.save(this.setting);
-    }
-
     openEmailTemplateModal() {
-        this.settingService.openEmailTemplateModal(new Template());
+        this.templateService.openEmailTemplateModal(new Template());
     }
 
     openEditEmailTemplateModal(template: Template) {
-        this.settingService.openEmailTemplateModal(template);
+        this.templateService.openEmailTemplateModal(template);
     }
 
     openEmailTemplateDeleteModal(template: Template) {
-        this.settingService.openEmailTemplateDeleteModal(template);
+        this.templateService.openEmailTemplateDeleteModal(template);
+    }
+
+    testSmtpConnection() {
+        this.smtpService.test(this.smtp);
+    }
+
+    saveSmtpConnection() {
+        this.smtpService.save(this.smtp);
     }
 }
 angular.module(moduleSetting, [ngResourceId]).controller(SettingControllerId, SettingController);
