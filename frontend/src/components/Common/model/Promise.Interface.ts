@@ -1,3 +1,3 @@
 interface IPromise<T> {
-    then(result: T);
+    then(callback: (result: T) => any);
 }
