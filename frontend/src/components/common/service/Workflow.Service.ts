@@ -307,9 +307,11 @@ class WorkflowService {
         }
     }
 
-    appendChildRow(childScope: any, process: Process, dtInstance: any, parent: AbstractWorkflow, type: string) {
-        childScope.childData = process;
+    appendChildRow(childScope: any, process: Process, workflowUnit: IWorkflow, dtInstance: any, parent: AbstractWorkflow, type: string) {
+        childScope.workflowUnit = workflowUnit;
+        childScope.process = process;
         childScope.parent = parent;
+        childScope.type = type;
 
         let link = angular.element(event.currentTarget), icon = link
             .find(".glyphicon"), tr = link.parent().parent(), table = dtInstance.DataTable, row = table

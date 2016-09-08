@@ -96,7 +96,7 @@ class LeadController extends AbstractWorkflow {
     appendChildRow(process: Process, event: any) {
         let childScope = this.scope.$new(true);
         this.comments[process.id] = this.workflowService.getCommentsByProcessId(process.id);
-        this.workflowService.appendChildRow(childScope, process, this.dtInstance, this, "lead");
+        this.workflowService.appendChildRow(childScope, process, process.lead, this.dtInstance, this, "lead");
     }
 
     loadCurrentIdToModal(id: string) {
@@ -120,7 +120,7 @@ class LeadController extends AbstractWorkflow {
         });
     }
 
-    saveLead(edit: boolean) {
+    save(edit: boolean) {
         if (edit === true) {
             this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope, this.editForm);
         }

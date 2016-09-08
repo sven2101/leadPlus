@@ -18,16 +18,24 @@ angular.module(moduleApp)
     .directive("editworkflow", function () {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
         directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
-          directive.scope = {
+        directive.scope = {
             type: "@",
-            parent: "="
+            parent: "=",
+            modaltitle: "@"
         };
         directive.restrict = "A";
         directive.templateUrl = function (elem, attr) {
             return "components/common/view/Workflow.Edit.Modal.html";
         };
         directive.transclude = true;
-        directive.link = function (scope, element, attrs) { };
+        directive.link = function (scope, element, attrs) {
+            if (scope.type === "lead") {
+                scope.service = scope.parent.leadService;
+            }
+            else if (scope.type === "offer") {
+                scope.service = scope.parent.offerService;
+            }
+        };
         return directive;
     });
 

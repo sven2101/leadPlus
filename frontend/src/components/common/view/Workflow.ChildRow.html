@@ -13,30 +13,38 @@
                 <table class="table table-bordered text-left">
                     <tr>
                         <td>{{ 'COMMON_NAME' | translate }}</td>
-                        <td>{{ childData.lead.customer.title | translate }} {{childData.lead.customer.firstname}} {{childData.lead.customer.lastname}}
-                            <a ng-href="#/customer/detail/{{childData.lead.customer.id}}" class="btn btn-xs btn-success btn-circle pull-right" type="button"><i class="fa fa-user"></i></a>
+                        <td>{{ workflowUnit.customer.title | translate }} {{workflowUnit.customer.firstname}} {{workflowUnit.customer.lastname}}
+                            <a ng-href="#/customer/detail/{{workflowUnit.customer.id}}" class="btn btn-xs btn-success btn-circle pull-right" type="button"><i class="fa fa-user"></i></a>
                         </td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_PHONE' | translate }}</td>
-                        <td>{{childData.lead.customer.phone}}</td>
+                        <td>{{workflowUnit.customer.phone}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
-                        <td>{{childData.lead.price | currency:'\u20AC'}}</td>
+                        <td>{{workflowUnit.price | currency:'\u20AC'}}</td>
                     </tr>
                     <tr>
                         <td>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</td>
-                        <td>{{childData.lead.deliveryAddress}}</td>
+                        <td>{{workflowUnit.deliveryAddress}}</td>
+                    </tr>
+                    <tr ng-if="type=='offer'">
+                        <td>{{ 'COMMON_DELIVERY_TIME' | translate }}</td>
+                        <td>{{workflowUnit.deliveryDate}}</td>
+                    </tr>
+                    <tr ng-if="type=='offer'">
+                        <td>{{ 'COMMON_CONTAINER_OFFER_PRICE' | translate }}</td>
+                        <td>{{workflowUnit.offerPrice | currency:'\u20AC'}}</td>
                     </tr>
                 </table>
             </div>
         </div>
     </div>
-    <div class="col-lg-6" ng-if="childData.processor != null">
+    <div class="col-lg-6" ng-if="process.processor != null">
         <div class="ibox">
             <div class="ibox-title">
-                <h3>{{ 'COMMON_PROCESSOR' | translate }}: {{childData.processor.username}}</h3>
+                <h3>{{ 'COMMON_PROCESSOR' | translate }}: {{process.processor.username}}</h3>
             </div>
         </div>
     </div>
@@ -45,7 +53,7 @@
             <div class="ibox-title">
                 <h3>{{ 'COMMON_NOTE' | translate }}</h3>
             </div>
-            <div class="ibox-content text-left">{{childData.lead.message}}</div>
+            <div class="ibox-content text-left">{{workflowUnit.message}}</div>
         </div>
     </div>
     <div class="col-lg-12" ng-include="'components/Common/view/ProductView.html'"></div>

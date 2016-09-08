@@ -102,7 +102,7 @@ class OfferController extends AbstractWorkflow {
     appendChildRow(process: Process, event: any) {
         let childScope = this.scope.$new(true);
         this.comments[process.id] = this.workflowService.getCommentsByProcessId(process.id);
-        this.workflowService.appendChildRow(childScope, process, this.dtInstance, this, "offer");
+        this.workflowService.appendChildRow(childScope, process, process.offer, this.dtInstance, this, "offer");
     }
 
     loadCurrentIdToModal(id: string) {
@@ -126,7 +126,7 @@ class OfferController extends AbstractWorkflow {
         });
     }
 
-    saveOffer(edit: boolean) {
+    save(edit: boolean) {
         this.offerService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope, this.editForm);
     }
 
