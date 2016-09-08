@@ -40,7 +40,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             .when("/offers",
             {
                 templateUrl: "components/Offer/view/Offer.html",
-                controller: "OffersController",
+                controller: "OfferController",
                 controllerAs: "offerCtrl",
                 authenticated: true
             })

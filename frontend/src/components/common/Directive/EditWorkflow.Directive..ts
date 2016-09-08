@@ -15,12 +15,16 @@
 "use strict";
 
 angular.module(moduleApp)
-    .directive("editlead", function () {
-        let directive: { restrict: string, templateUrl: any, transclude: boolean, link: any };
-        directive = { restrict: null, templateUrl: null, transclude: null, link: null };
+    .directive("editworkflow", function () {
+        let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
+        directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
+          directive.scope = {
+            type: "@",
+            parent: "="
+        };
         directive.restrict = "A";
         directive.templateUrl = function (elem, attr) {
-            return "components/Lead/view/Lead.Edit.Modal.html";
+            return "components/common/view/Workflow.Edit.Modal.html";
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) { };

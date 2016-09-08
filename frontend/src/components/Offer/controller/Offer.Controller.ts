@@ -1,15 +1,16 @@
-
 /// <reference path="../../../typeDefinitions/moment.d.ts" />
-/// <reference path="../../Product/controller/Product.Service.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../../typeDefinitions/moment-node.d.ts" />
+/// <reference path="../../app/App.Common.ts" />
+/// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../Common/model/OrderPosition.Model.ts" />
+/// <reference path="../../Product/model/Product.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../Offer/model/Offer.Model.ts" />
+/// <reference path="../../Offer/controller/Offer.DataTableService.ts" />
+/// <reference path="../../Offer/controller/Offer.Service.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
-/// <reference path="../../app/App.Common.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
-/// <reference path="../../Customer/model/Customer.Model.ts" />
-/// <reference path="../../Customer/controller/Customer.Service.ts" />
-
+/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../common/service/AbstractWorkflow.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -20,614 +21,164 @@
  * reproduction of this material is strictly forbidden unless prior written
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
+
 "use strict";
 
-class OffersController {
+const OfferControllerId: string = "OfferController";
 
-    $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile",
-        "$scope", "toaster", "ProcessResource", "CommentResource", "$filter",
-        "UserResource", "$rootScope", "$translate", "OfferResource", ProductServiceId, WorkflowServiceId, CustomerServiceId, CustomerResourceId];
+class OfferController extends AbstractWorkflow {
 
-    filter;
-    processResource;
-    commentResource;
-    customerResource;
-    workflowService;
-    customerService;
-    productService;
-    userResource;
-    offerResource;
+    $inject = [$compileId, $scopeId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId];
+
+    workflowService: WorkflowService;
+    offerDataTableService: OfferDataTableService;
+    offerService: OfferService;
     scope;
-    rootScope;
-    translate;
     compile;
-    toaster;
     dtOptions;
     dtColumns;
+    dtInstance: any = { DataTable: null };
 
-    user = new User();
-    windowWidth;
-    commentInput = {};
-    commentModalInput = {};
-    comments = {};
-    currentCommentModalId = "";
-    loadAllData = false;
-    processes = {};
-    rows = {};
+    commentInput: string;
+    commentModalInput: string;
+    comments: { [key: number]: Array<Commentary> } = {};
+    currentCommentModalId: string = "";
+    loadAllData: boolean = false;
+    processes: { [key: number]: Process } = {};
+    editForm: any;
     editProcess: Process;
-    newOffer: Offer;
-    editOffer: Offer;
-    currentOrderPositions = [];
+    editWorkflowUnit: Offer = new Offer();
+    edit: boolean;
+
+    currentOrderPositions: Array<OrderPosition>;
     currentProductId = "-1";
+    currentProductAmount = 1;
     currentCustomerId = "-1";
     customerSelected: boolean = false;
-    currentProductAmount = 1;
-    dtInstance = { DataTable: null };
-    editForm;
 
     currentTab: number = 1;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
-        toaster, ProcessResource, CommentResource, $filter, UserResource,
-        $rootScope, $translate, OfferResource, ProductService, WorkflowService, CustomerService, CustomerResource) {
-
-        this.filter = $filter;
-        this.processResource = ProcessResource.resource;
-        this.commentResource = CommentResource.resource;
+    constructor($compile, $scope, WorkflowService, OfferDataTableService, OfferService) {
+        super();
         this.workflowService = WorkflowService;
-        this.productService = ProductService;
-        this.userResource = UserResource.resource;
-        this.offerResource = OfferResource.resource;
-        this.customerResource = CustomerResource.resource;
+        this.offerDataTableService = OfferDataTableService;
+        this.offerService = OfferService;
         this.scope = $scope;
-        this.rootScope = $rootScope;
-        this.translate = $translate;
         this.compile = $compile;
-        this.toaster = toaster;
-        this.customerService = CustomerService;
 
         let self = this;
-        this.windowWidth = $(window).width();
-        if (!angular.isUndefined($rootScope.globals.user))
-            this.userResource.get({
-                id: $rootScope.globals.user.id
-            }).$promise.then(function (result) {
-                self.user = result;
-            });
-
-        this.dtOptions = DTOptionsBuilder.newOptions().withOption("ajax", {
-            url: "/api/rest/processes/workflow/OFFER/state/OFFER",
-            error: function (xhr, error, thrown) {
-                console.log(xhr);
-            },
-            type: "GET"
-        }).withDOM(
-            "<'row'<'col-sm-12'l>>" + "<'row'<'col-sm-6'B><'col-sm-6'f>>"
-            + "<'row'<'col-sm-12'tr>>"
-            + "<'row'<'col-sm-5'i><'col-sm-7'p>>").withPaginationType(
-            "full_numbers").withOption("stateSave", true).withButtons([{
-                extend: "copyHtml5",
-                exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 7, 10, 11, 12, 8, 9, 13, 14, 15],
-                    modifier: {
-                        page: "current"
-                    }
-                }
-            }, {
-                    extend: "print",
-                    exportOptions: {
-                        columns: [6, 1, 2, 3, 5, 7, 10, 11, 12, 8, 9, 13, 14, 15],
-                        modifier: {
-                            page: "current"
-                        }
-                    }
-                }, {
-                    extend: "csvHtml5",
-                    title: $translate("OFFER_OFFERS"),
-                    exportOptions: {
-                        columns: [6, 1, 2, 3, 5, 7, 10, 11, 12, 8, 9, 13, 14, 15],
-                        modifier: {
-                            page: "current"
-                        }
-
-                    }
-                }, {
-                    extend: "excelHtml5",
-                    title: $translate.instant("OFFER_OFFERS"),
-                    exportOptions: {
-                        columns: [6, 1, 2, 3, 5, 7, 10, 11, 12, 8, 9, 13, 14, 15],
-                        modifier: {
-                            page: "current"
-                        }
-                    }
-                }, {
-                    extend: "pdfHtml5",
-                    title: $translate("OFFER_OFFERS"),
-                    orientation: "landscape",
-                    exportOptions: {
-                        columns: [6, 1, 2, 7, 10, 11, 12, 8, 9, 13, 14],
-                        modifier: {
-                            page: "current"
-                        }
-                    }
-                }]).withBootstrap().withOption("createdRow", createdRow).withOption(
-            "order", [4, "desc"]);
-        this.dtColumns = [
-            DTColumnBuilder.newColumn(null).withTitle("").notSortable()
-                .renderWith(addDetailButton),
-            DTColumnBuilder.newColumn("offer.customer.lastname").withTitle(
-                $translate("COMMON_NAME")).withClass("text-center"),
-            DTColumnBuilder.newColumn("offer.customer.company").withTitle(
-                $translate("COMMON_COMPANY")).withClass("text-center"),
-            DTColumnBuilder.newColumn("offer.customer.email").withTitle(
-                $translate("COMMON_EMAIL")).withClass("text-center"),
-            DTColumnBuilder.newColumn("offer.timestamp").withTitle(
-                $translate("COMMON_DATE")).renderWith(
-                function (data, type, full) {
-                    let utcDate = moment.utc(data, "DD.MM.YYYY HH:mm");
-                    let localDate = moment(utcDate).local();
-                    return localDate.format("DD.MM.YYYY HH:mm");
-                }).withOption("type", "date-euro")
-                .withClass("text-center"),
-            DTColumnBuilder.newColumn("offer.customer.phone").withTitle(
-                $translate("COMMON_PHONE")).notVisible(),
-            DTColumnBuilder.newColumn("offer.customer.firstname").withTitle(
-                $translate("COMMON_FIRSTNAME")).notVisible(),
-            DTColumnBuilder.newColumn("offer.deliveryAddress").withTitle(
-                $translate("COMMON_CONTAINER")).notVisible(),
-            DTColumnBuilder.newColumn("offer.deliveryAddress").withTitle(
-                $translate("COMMON_CONTAINER_DESTINATION")).notVisible(),
-            DTColumnBuilder.newColumn("offer.deliveryDate").withTitle(
-                $translate("COMMON_DELIVERY_TIME")).notVisible(),
-            DTColumnBuilder.newColumn("offer.deliveryAddress").withTitle(
-                $translate("COMMON_CONTAINER_AMOUNT")).notVisible(),
-            DTColumnBuilder.newColumn(null).withTitle(
-                $translate("COMMON_CONTAINER_SINGLE_PRICE")).renderWith(
-                function (data, type, full) {
-                    return $filter("currency")(
-                        0, "€", 2);
-                }).notVisible(),
-            DTColumnBuilder.newColumn(null).withTitle(
-                $translate("COMMON_CONTAINER_ENTIRE_PRICE")).renderWith(
-                function (data, type, full) {
-                    return $filter("currency")(
-                        0, "€", 2);
-                }).notVisible(),
-
-            DTColumnBuilder.newColumn(null).withTitle(
-                $translate("COMMON_CONTAINER_OFFER_PRICE")).renderWith(
-                function (data, type, full) {
-                    if (isNullOrUndefined(data.offer.offerPrice)) {
-                        return $filter("currency")(0, "€", 2);
-                    }
-                    return $filter("currency")(data.offer.offerPrice, "€",
-                        2);
-                }).notVisible(),
-            DTColumnBuilder.newColumn("processor.username").withTitle(
-                $translate("COMMON_PROCESSOR")).notVisible(),
-            DTColumnBuilder.newColumn(null).withTitle(
-                $translate("COMMON_STATUS")).withClass("text-center")
-                .renderWith(addStatusStyle),
-            DTColumnBuilder.newColumn(null).withTitle(
-                "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").notSortable().renderWith(addActionsButtons)];
-
-        if ($rootScope.language === "DE") {
-            self.dtOptions
-                .withLanguageSource("/assets/datatablesTranslationFiles/German.json");
-        } else {
-            self.dtOptions
-                .withLanguageSource("/assets/datatablesTranslationFiles/English.json");
-        }
-
-
         function refreshData() {
             let resetPaging = false;
             this.dtInstance.reloadData(resetPaging);
         }
-
         function changeDataInput() {
-            if (self.loadAllData === true) {
-                self.dtOptions.withOption("serverSide", true).withOption("ajax", {
-                    url: "/api/rest/processes/offers",
-                    type: "GET",
-                    pages: 5,
-                    dataSrc: "data",
-                    error: function (xhr, error, thrown) {
-                        console.log(xhr);
-                    }
-                }).withOption("searchDelay", 500);
-            } else {
-                self.dtOptions.withOption("serverSide", false).withOption("ajax", {
-                    url: "/api/rest/processes/workflow/OFFER/state/OFFER",
-                    error: function (xhr, error, thrown) {
-                        console.log(xhr);
-                    },
-                    type: "GET"
-                }).withOption("searchDelay", 0);
-            }
+            self.workflowService.changeDataInput(self.loadAllData, self.dtOptions, allDataOfferRoute, openDataOfferRoute);
         }
-
-        function createdRow(row, data, dataIndex) {
-            // Recompiling so we can bind Angular directive to the DT
-            self.rows[data.id] = row;
-            let currentDate = moment(moment() + "", "DD.MM.YYYY");
-            let offerDate = moment(data.offer.timestamp, "DD.MM.YYYY");
-            if ((currentDate["businessDiff"](offerDate, "days") > 3 && data.status === "OFFER")
-                || (currentDate["businessDiff"](offerDate, "days") > 5 && data.status === "FOLLOWUP"))
-                $(row).addClass("important");
+        function createdRow(row, data: Process, dataIndex) {
+            self.offerService.setRow(data.id, row);
+            self.offerDataTableService.configRow(row, data);
             self.compile(angular.element(row).contents())(self.scope);
         }
-
-        function addActionsButtons(data, type, full, meta) {
-            self.processes[data.id] = data;
-            let disabled = "";
-            let hasRightToDelete = "";
-            let closeOrOpenOfferDisable = "";
-            let disableFollowUp = "";
-            let openOrLock = $translate.instant("OFFER_CLOSE_OFFER");
-            let faOpenOrLOck = "fa fa-lock";
-            if (data.status !== "OFFER" && data.status !== "FOLLOWUP") {
-                disableFollowUp = "disabled";
-                disabled = "disabled";
-                openOrLock = $translate.instant("OFFER_OPEN_OFFER");
-                faOpenOrLOck = "fa fa-unlock";
-            }
-            if (data.status === "FOLLOWUP") {
-                disableFollowUp = "disabled";
-            }
-            if (data.sale !== null) {
-                closeOrOpenOfferDisable = "disabled";
-            }
-            if ($rootScope.globals.user.role === "USER") {
-                hasRightToDelete = "disabled";
-            }
-            if (self.windowWidth > 1300) {
-                return "<div style='white-space: nowrap;'><button class='btn btn-white' "
-                    + disabled
-                    + " ng-click='offer.createSale(offer.processes["
-                    + data.id
-                    + "])' title='"
-                    + $translate.instant("OFFER_CREATE_SALE")
-                    + "'>"
-                    + " <i class='fa fa-check'></i>"
-                    + "</button>&nbsp;"
-                    + "<button class='btn btn-white' "
-                    + disableFollowUp
-                    + " ng-click='offer.followUp(offer.processes["
-                    + data.id
-                    + "])' title='"
-                    + $translate.instant("OFFER_FOLLOW_UP")
-                    + "'>"
-                    + "<i class='fa fa-eye'></i>"
-                    + "</button>&nbsp;"
-                    + "<button class='btn btn-white' "
-                    + closeOrOpenOfferDisable
-                    + " ng-click='offer.closeOrOpenOffer(offer.processes["
-                    + data.id
-                    + "])' title='"
-                    + openOrLock
-                    + "'>"
-                    + "   <i class='"
-                    + faOpenOrLOck
-                    + "'></i>"
-                    + "</button>&nbsp;"
-                    + "<button class='btn btn-white' "
-                    + closeOrOpenOfferDisable
-                    + " ng-click='offer.loadDataToModal(offer.processes["
-                    + data.id
-                    + "])' data-toggle='modal'"
-                    + "data-target='#editModal' title='"
-                    + $translate.instant("OFFER_EDIT_OFFER")
-                    + "'>"
-                    + "<i class='fa fa-edit'></i>"
-                    + "</button>&nbsp;"
-                    + "<button class='btn btn-white'"
-                    + hasRightToDelete
-                    + " ng-click='offer.deleteRow(offer.processes["
-                    + data.id
-                    + "])' title='"
-                    + $translate.instant("OFFER_DELETE_OFFER")
-                    + "'>"
-                    + "   <i class='fa fa-trash-o'></i>"
-                    + "</button></div>";
-            } else {
-                return "<div class='dropdown'>"
-                    + "<button class='btn btn-white dropdown-toggle' type='button' data-toggle='dropdown'>"
-                    + "<i class='fa fa-wrench'></i></button>"
-                    + "<ul class='dropdown-menu pull-right'>"
-                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                    + disabled
-                    + " ng-click='offer.createSale(offer.processes["
-                    + data.id
-                    + "])'><i class='fa fa-check'>&nbsp;</i>"
-                    + $translate.instant("OFFER_CREATE_SALE")
-                    + "</button></li>"
-                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                    + disableFollowUp
-                    + " ng-click='offer.followUp(offer.processes["
-                    + data.id
-                    + "])'><i class='fa fa-eye'>&nbsp;</i>"
-                    + $translate.instant("OFFER_FOLLOW_UP")
-                    + "</button></li>"
-                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                    + closeOrOpenOfferDisable
-                    + " ng-click='offer.closeOrOpenOffer(offer.processes["
-                    + data.id
-                    + "])'><i class='"
-                    + faOpenOrLOck
-                    + "'>&nbsp;</i>"
-                    + openOrLock
-                    + "</button></li>"
-                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                    + closeOrOpenOfferDisable
-                    + " data-toggle='modal' data-target='#editModal' ng-click='offer.loadDataToModal(offer.processes["
-                    + data.id
-                    + "])'><i class='fa fa-edit''>&nbsp;</i>"
-                    + $translate.instant("OFFER_EDIT_OFFER")
-                    + "</button></li>"
-                    + "<li><button style='width: 100%; text-align: left;' class='btn btn-white' "
-                    + hasRightToDelete
-                    + " ng-click='offer.deleteRow(offer.processes["
-                    + data.id
-                    + "])'><i class='fa fa-trash-o'>&nbsp;</i>"
-                    + $translate.instant("OFFER_DELETE_OFFER")
-                    + "</button></li>" + "</ul>" + "</div>";
-            }
+        function addActionsButtons(data: Process, type, full, meta) {
+            let templatedata = { "process": self.processes[data.id] };
+            return self.offerDataTableService.getActionButtonsHTML(templatedata);
         }
-
-        function addStatusStyle(data, type, full, meta) {
+        function addStatusStyle(data: Process, type, full, meta) {
             self.processes[data.id] = data;
-            if (data.status === "OFFER" || data.status === "OPEN") {
-                return "<div style='color: green;'>"
-                    + $translate.instant("COMMON_STATUS_OPEN") + "</div>";
-            } else if (data.status === "FOLLOWUP") {
-                return "<div style='color: #f79d3c;'>"
-                    + $translate.instant("COMMON_STATUS_FOLLOW_UP") + "</div>";
-            } else if (data.status === "SALE") {
-                return "<div style='color: #1872ab;'>"
-                    + $translate.instant("COMMON_STATUS_SALE") + "</div>";
-            } else if (data.status === "CLOSED") {
-                return "<div style='color: #ea394c;'>"
-                    + $translate.instant("COMMON_STATUS_CLOSED") + "</div>";
-            }
+            return self.offerDataTableService.getStatusStyleHTML(data);
         }
-
-        function addDetailButton(data, type, full, meta) {
+        function addDetailButton(data: Process, type, full, meta) {
             self.processes[data.id] = data;
-            return "<a class='green shortinfo' href='javascript:;'"
-                + "ng-click='offer.appendChildRow(offer.processes[" + data.id
-                + "], $event)' title='Details'>"
-                + "<i class='glyphicon glyphicon-plus-sign'/></a>";
+            return self.offerDataTableService.getDetailHTML(data.id);
         }
+        this.dtOptions = this.offerDataTableService.getDTOptionsConfiguration(createdRow);
+        this.dtColumns = this.offerDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
     }
 
     tabOnClick(tab: number) {
         this.currentTab = tab;
     }
 
-    getOrderPositions(process) {
-        return process.offer.orderPositions;
-    }
-
-    appendChildRow(process, event) {
+    appendChildRow(process: Process, event: any) {
         let childScope = this.scope.$new(true);
-        childScope.childData = process;
-        let self = this;
-        this.commentResource.getByProcessId({
-            id: process.id
-        }).$promise.then(function (result) {
-            self.comments[process.id] = [];
-            for (let comment in result) {
-                if (comment === "$promise")
-                    break;
-                self.comments[process.id].push({
-                    commentText: result[comment].commentText,
-                    timestamp: result[comment].timestamp,
-                    creator: result[comment].creator
-                });
-            }
-        });
-        childScope.parent = this;
-
-        let link = angular.element(event.currentTarget), icon = link
-            .find(".glyphicon"), tr = link.parent().parent(), table = this.dtInstance.DataTable, row = table
-                .row(tr);
-
-        if (row.child.isShown()) {
-            icon.removeClass("glyphicon-minus-sign")
-                .addClass("glyphicon-plus-sign");
-            row.child.hide();
-            tr.removeClass("shown");
-        } else {
-            icon.removeClass("glyphicon-plus-sign")
-                .addClass("glyphicon-minus-sign");
-            row.child(
-                this.compile(
-                    "<div childrow type='offer' class='clearfix'></div>")(
-                    childScope)).show();
-            tr.addClass("shown");
-        }
+        this.comments[process.id] = this.workflowService.getCommentsByProcessId(process.id);
+        this.workflowService.appendChildRow(childScope, process, this.dtInstance, this, "offer");
     }
 
-    loadCurrentIdToModal(id) {
+    loadCurrentIdToModal(id: string) {
         this.currentCommentModalId = id;
-    };
-
-    addComment(id: number, input: string) {
-        this.workflowService.addComment(this.comments[id], this.processes[id], this.user, input[id]).then(function () {
-            input[id] = "";
-        });
-    };
-
-
-    clearNewOffer() {
-        this.newOffer = new Offer();
-        this.newOffer.orderPositions = [];
-        this.currentOrderPositions = [];
-        this.currentProductId = "-1";
-        this.currentProductAmount = 1;
-    };
-
-    createSale(process: Process) {
-        let self = this;
-        this.workflowService.addOfferToSale(process).then(function (isResolved: boolean) {
-            if (self.loadAllData === true) {
-                self.updateRow(process);
-            } else if (self.loadAllData === false) {
-                self.dtInstance.DataTable.row(self.rows[process.id]).remove()
-                    .draw();
-            }
-        });
     }
 
-    followUp(process) {
-        let self = this;
-        this.processResource.setStatus({
-            id: process.id
-        }, "FOLLOWUP").$promise.then(function () {
-            self.toaster.pop("success", "", self.translate
-                .instant("COMMON_TOAST_SUCCESS_FOLLOW_UP"));
-            process.status = "FOLLOWUP";
-            self.updateRow(process);
-        });
-    };
-
-    closeOrOpenOffer(process) {
-        let self = this;
-        if (process.status === "OFFER" || process.status === "FOLLOWUP") {
-            this.processResource.setStatus({
-                id: process.id
-            }, "CLOSED").$promise.then(function () {
-                self.toaster.pop("success", "", self.translate
-                    .instant("COMMON_TOAST_SUCCESS_CLOSE_OFFER"));
-                self.rootScope.offersCount -= 1;
-                process.status = "CLOSED";
-                self.updateRow(process);
-            });
-        } else if (process.status === "CLOSED") {
-            this.processResource.setStatus({
-                id: process.id
-            }, "OFFER").$promise.then(function () {
-                self.toaster.pop("success", "", self.translate
-                    .instant("COMMON_TOAST_SUCCESS_OPEN_OFFER"));
-                self.rootScope.offersCount += 1;
-                process.status = "OFFER";
-                self.updateRow(process);
-            });
-        }
-    };
-
-    loadDataToModal(process) {
+    loadDataToModal(process: Process) {
+        this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = process;
         this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
         this.customerSelected = this.editProcess.offer.customer.id > 0;
         this.currentCustomerId = this.editProcess.offer.customer.id + "";
-        this.editOffer = deepCopy(this.editProcess.offer);
-    };
-
-    saveEditedRow() {
-        let self = this;
-        shallowCopy(this.editOffer, this.editProcess.offer);
-        this.editProcess.offer.orderPositions = this.currentOrderPositions;
-
-        let temp: any = this.editProcess.offer;
-        if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
-            temp.customer.timestamp = newTimestamp();
-            this.customerResource.createCustomer(temp.customer).$promise.then(function (customer) {
-                temp.customer = customer;
-
-                self.processResource.save(self.editProcess).$promise.then(function (result) {
-                    self.toaster.pop("success", "", self.translate
-                        .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
-                    self.editForm.$setPristine();
-                    self.updateRow(self.editProcess);
-                    self.customerService.getAllCustomer();
-                });
-            });
-            return;
-        }
-
-
-
-        this.offerResource.update(this.editProcess.offer).$promise.then(function () {
-            self.toaster.pop("success", "", self.translate
-                .instant("COMMON_TOAST_SUCCESS_UPDATE_OFFER"));
-            self.editForm.$setPristine();
-            self.updateRow(self.editProcess);
-        });
-    };
-
-    deleteRow(process) {
-        let self = this;
-        let offerId = process.offer.id;
-        if (process.sale !== null) {
-            self.toaster.pop("error", "", self.translate
-                .instant("COMMON_TOAST_FAILURE_DELETE_OFFER"));
-            return;
-        }
-        process.status = "CLOSED";
-        process.offer = null;
-        this.processResource.update(process).$promise.then(function () {
-            if (process.lead === null && process.sale === null) {
-                self.processResource.deleteProcess({
-                    id: process.id
-                });
-            }
-            self.offerResource.drop({
-                id: offerId
-            }).$promise.then(function () {
-                self.toaster.pop("success", "", self.translate
-                    .instant("COMMON_TOAST_SUCCESS_DELETE_OFFER"));
-                self.rootScope.offersCount -= 1;
-                self.dtInstance.DataTable.row(self.rows[process.id]).remove().draw();
-            });
-        });
-    };
-
-    updateRow(process) {
-        this.dtInstance.DataTable.row(this.rows[process.id]).data(process).draw();
-        this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
+        this.editWorkflowUnit = deepCopy(this.editProcess.offer);
     }
 
-    addProduct(array) {
+    addComment(id: number, input: string) {
+        this.workflowService.addComment(this.comments[id], this.processes[id], input[id]).then(function () {
+            input[id] = "";
+        });
+    }
+
+    saveOffer(edit: boolean) {
+        this.offerService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope, this.editForm);
+    }
+
+    clearNewOffer() {
+        this.edit = false;
+        this.editWorkflowUnit = new Offer();
+        this.editProcess = new Process();
+        this.editWorkflowUnit.orderPositions = new Array<OrderPosition>();
+        this.currentOrderPositions = new Array<OrderPosition>();
+        this.currentProductId = "-1";
+        this.currentCustomerId = "-1";
+        this.currentProductAmount = 1;
+        this.customerSelected = false;
+    }
+
+    createSale(process: Process) {
+        this.offerService.createSale(process, this.loadAllData, this.dtInstance, this.scope);
+    }
+
+    closeOrOpen(process: Process) {
+        this.offerService.closeOrOpenOffer(process, this.dtInstance, this.scope);
+    }
+
+    deleteRow(process: Process) {
+        this.offerService.deleteRow(process, this.dtInstance);
+    }
+
+    addProduct(array: Array<OrderPosition>) {
         this.workflowService.addProduct(array, this.currentProductId, this.currentProductAmount);
     }
-    deleteProduct(array, index) {
+
+    deleteProduct(array: Array<OrderPosition>, index: number) {
         this.workflowService.deleteProduct(array, index);
     }
-    sumOrderPositions(array) {
+
+    getOrderPositions(process: Process) {
+        return process.offer.orderPositions;
+    }
+
+    sumOrderPositions(array: Array<OrderPosition>) {
         return this.workflowService.sumOrderPositions(array);
     }
 
-
     selectCustomer(workflow: any) {
-        if (isNullOrUndefined(Number(this.currentCustomerId)) || Number(this.currentCustomerId) <= 0) {
-            this.customerSelected = false;
-            workflow.customer = new Customer();
-            workflow.customer.id = 0;
-            console.log(this.customerSelected);
-            return;
-        }
-
-        let temp: Customer = findElementById(this.customerService.customer, Number(this.currentCustomerId)) as Customer;
-        if (isNullOrUndefined(temp)) {
-            this.customerSelected = false;
-            workflow.customer = new Customer();
-            workflow.customer.id = 0;
-            console.log(this.customerSelected);
-            return;
-        }
-        workflow.customer = deepCopy(temp);
-        this.customerSelected = true;
-        console.log(this.customerSelected);
+        this.workflowService.selectCustomer(workflow, this.currentCustomerId, this.customerSelected);
     }
 
+    followUp(process: Process) {
+        this.offerService.followUp(process, this.loadAllData, this.scope);
+    }
 }
-
-angular.module("app.offer", ["ngResource"]).controller("OffersController", OffersController);
+angular.module(moduleOffer, [ngResourceId]).controller(OfferControllerId, OfferController);
 
 
 

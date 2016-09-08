@@ -7,12 +7,6 @@
                         <h5>{{ 'OFFER_MANAGE_OFFERS' | translate }}</h5>
                     </div>
                     <div class="ibox-content">
-                        <!--
-                    <button type="button" class="btn btn-success" ng-click="offer.clearNewOffer()" data-toggle="modal"
-                            data-target="#newOfferModal">
-                        <i class="fa fa-plus"></i>&nbsp;{{ 'OFFER_ADD_OFFER' | translate }}
-                    </button>
-                    -->
                         <button ng-click="offerCtrl.refreshData()" type="button" class="btn btn-success">
                         <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
                     </button>
@@ -33,8 +27,7 @@
         </div>
     </div>
 </div>
-<div ng-include="'components/Offer/view/Offer.Edit.Modal.html'"></div>
-<!--<div ng-include="'components/offers/addOfferModal.html'"></div>-->
+<div editworkflow parent="offerCtrl" type="offer"></div>
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {
