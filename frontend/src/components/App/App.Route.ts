@@ -48,7 +48,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             {
                 templateUrl: "components/Sale/view/Sale.html",
                 controller: "SaleController",
-                controllerAs: "sale",
+                controllerAs: "saleCtrl",
                 authenticated: true
             })
             .when("/statistic",

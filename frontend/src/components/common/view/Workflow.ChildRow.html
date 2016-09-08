@@ -37,6 +37,16 @@
                         <td>{{ 'COMMON_CONTAINER_OFFER_PRICE' | translate }}</td>
                         <td>{{workflowUnit.offerPrice | currency:'\u20AC'}}</td>
                     </tr>
+                    <tr ng-if="type=='sale'">
+                        <td>{{ 'COMMON_CONTAINER_SALE_TURNOVER' | translate }}</td>
+                        <td>{{workflowUnit.saleTurnover | currency:'\u20AC'}}
+                        </td>
+                    </tr>
+                    <tr ng-if="type=='sale'">
+                        <td>{{ 'COMMON_CONTAINER_SALE_PROFIT' | translate }}</td>
+                        <td>{{workflowUnit.saleProfit | currency:'\u20AC'}}
+                        </td>
+                    </tr>
                 </table>
             </div>
         </div>

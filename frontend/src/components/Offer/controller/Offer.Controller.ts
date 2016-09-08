@@ -142,7 +142,7 @@ class OfferController extends AbstractWorkflow {
         this.customerSelected = false;
     }
 
-    createSale(process: Process) {
+    createNextWorkflowUnit(process: Process) {
         this.offerService.createSale(process, this.loadAllData, this.dtInstance, this.scope);
     }
 

@@ -3,22 +3,23 @@
         <i class="fa fa-wrench"></i>
     </button>
     <ul class="dropdown-menu pull-right">
-        <li>
-            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.followUp(parent.processes[directiveData.process.id])">
+        <li ng-if="type=='lead' || type =='offer'">
+            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.createNextWorkflowUnit(parent.processes[directiveData.process.id])">
                  <i class="fa fa-check">&nbsp;</i>{{directiveData.translation.nextWorkflowUnit}}
             </button>
         </li>
-        <li>
-            <button ng-if="type=='lead'" style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disablePin"
-                ng-click="parent.pin(parent.processes[directiveData.process.id])">
+        <li ng-if="type=='lead'">
+            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.pin(parent.processes[directiveData.process.id])">
                   <i class="fa fa-thumb-tack">&nbsp;</i>{{'LEAD_PIN' | translate }}
             </button>
-            <button ng-if="type=='offer'" class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.followUp(parent.processes[directiveData.process.id])"
+        </li>
+        <li ng-if="type=='offer'">
+            <button class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.followUp(parent.processes[directiveData.process.id])"
                 title="{{'OFFER_FOLLOW_UP'| translate }}">
          <i class="fa fa-eye"></i>
         </button>
         </li>
-        <li>
+        <li ng-if="type=='lead' || type =='offer'">
             <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenInquiryDisable"
                 ng-click="parent.closeOrOpenInquiry(parent.processes[directiveData.process.id])"> 
                     <i class="{{directiveData.config.faOpenOrLock}}">&nbsp;</i>{{directiveData.config.openOrLock}}
