@@ -1,5 +1,6 @@
 /// <reference path="../../common/model/AbstractModel.Model.ts" />
-/// <reference path="../../Product/model/Product.Model.ts" />
+/// <reference path="../../Customer/model/Customer.Model.ts" />
+/// <reference path="../../File/model/File.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -13,13 +14,14 @@
  ******************************************************************************/
 "use strict";
 
-class OrderPosition extends AbstractModel {
+class Notification extends AbstractModel {
 
-    amount: number;
-    product: Product;
+    recipient: Customer;
+    subject: string;
+    content: string;
+    attachment: File;
 
     constructor() {
         super();
     }
-
 }

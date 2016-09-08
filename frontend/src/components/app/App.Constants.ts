@@ -83,6 +83,9 @@ const moduleSmtp: string = moduleApp + ".smtp";
 const moduleSmtpResource: string = moduleSmtp + ".resource";
 const moduleTemplate: string = moduleApp + ".template";
 const moduleTemplateResource: string = moduleTemplate + ".resource";
+const moduleNotification: string = moduleApp + ".notification";
+const moduleNotificationResource: string = moduleNotification + ".resource";
+const moduleNotificationService: string = moduleNotification + ".service";
 
 const moduleTranslate: string = "pascalprecht.translate";
 const moduleNgResource: string = "ngResource";

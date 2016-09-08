@@ -21,12 +21,11 @@ class CustomerService {
     private $inject = [CustomerResourceId];
 
     customerResource: any;
-    customer: Array<Customer>;
-
+    customers: Array<Customer>;
 
     constructor(CustomerResource: CustomerResource) {
         this.customerResource = CustomerResource.resource;
-        this.customer = new Array<Customer>();
+        this.customers = new Array<Customer>();
         this.getAllCustomer();
     }
 
@@ -35,7 +34,7 @@ class CustomerService {
         if (insert) {
             customer.timestamp = newTimestamp();
             this.customerResource.createCustomer(customer).$promise.then(function (result: Customer) {
-                self.customer.push(result);
+                self.customers.push(result);
             });
         } else {
             this.customerResource.updateCustomer(customer).$promise.then(function (result: Customer) {
@@ -51,22 +50,19 @@ class CustomerService {
     getAllCustomer() {
         let self = this;
         this.customerResource.getAllCustomer().$promise.then(function (result: Array<Customer>) {
-            self.customer = result;
+            self.customers = result;
         });
     }
 
-    getActiveCustomer(): Array<Customer> {
+    getActiveCustomers(): Array<Customer> {
         let temp: Array<Customer> = new Array<Customer>();
-        for (let customer of this.customer) {
+        for (let customer of this.customers) {
             if (customer.deactivated === false) {
                 temp.push(customer);
             }
         }
         return temp;
     }
-
-
-
 }
 
 angular.module(moduleCustomerService, [ngResourceId]).service(CustomerServiceId, CustomerService);

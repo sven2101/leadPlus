@@ -153,9 +153,9 @@ class WorkflowService {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
-                if (process.processor === null) {
-                    self.processResource.setProcessor({ id: process.id }, self.user.id).$promise.then(function () {
-                        process.processor = self.user;
+                if (resultProcess.processor === null) {
+                    self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function (resultUser: User) {
+                        process.processor = resultUser;
                     });
                 }
 
@@ -338,7 +338,7 @@ class WorkflowService {
             workflow.customer.id = 0;
             return;
         }
-        let temp: Customer = findElementById(this.customerService.customer, Number(currentCustomerId)) as Customer;
+        let temp: Customer = findElementById(this.customerService.customers, Number(currentCustomerId)) as Customer;
         if (isNullOrUndefined(temp)) {
             customerSelected = false;
             workflow.customer = new Customer();

@@ -14,7 +14,7 @@
                                 <label>{{ 'CUSTOMER_MENU' | translate }}</label>
                                 <select class="form-control" ng-model="offer.currentCustomerId" ng-change="offer.selectCustomer(offer.editOffer)">
                                             <option value="-1" selected > - Select Customer - </option>                                                                     
-                                            <option value="{{customer.id}}" ng-repeat="customer in offer.customerService.getActiveCustomer()">{{customer.firstname}} {{customer.lastname}}</option>                                          
+                                            <option value="{{customer.id}}" ng-repeat="customer in offer.customerService.getActiveCustomers()">{{customer.firstname}} {{customer.lastname}}</option>                                          
                                         </select>
                             </div>
                             <!-- TITLE -->

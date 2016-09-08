@@ -9,9 +9,9 @@
             <div class="col-sm-6 b-r">
                 <div class="form-group">
                     <label>{{ 'CUSTOMER_MENU' | translate }}</label>
-                    <select class="form-control" ng-model="workflowCtrl.offer.currentCustomerId" ng-change="offer.selectCustomer(offer.editOffer)">
+                    <select class="form-control" ng-model="workflowCtrl.offer.customer.id" ng-change="workflowCtrl.selectCustomer(workflowCtrl.offer)">
                         <option value="-1" selected > - Select Customer - </option>                                                                     
-                        <option value="{{customer.id}}" ng-repeat="customer in workflowCtrl.offer.customerService.getActiveCustomer()">{{customer.firstname}} {{customer.lastname}}</option>                                          
+                        <option value="{{customer.id}}" ng-repeat="customer in workflowCtrl.customerService.getActiveCustomers()">{{customer.firstname}} {{customer.lastname}}</option>                                          
                     </select>
                 </div>
                 <!-- TITLE -->
@@ -22,7 +22,6 @@
                         <option value="MS">{{ 'COMMON_TITLE_MS' | translate }}</option>
                     </select>
                 </div>
-
                 <!-- FIRSTNAME -->
                 <div class="form-group" ng-class="{ 'has-error' : offer.editForm.firstname.$invalid && !offer.editForm.firstname.$pristine }">
                     <label>{{ 'COMMON_FIRSTNAME' | translate }}</label>
@@ -88,8 +87,7 @@
             </div>
         </div>
 
-
-        <div>
+        <div class="row">
             <h2>{{ 'PRODUCT_MENU' | translate }}</h2>
             <table class="table">
                 <thead>
@@ -97,7 +95,7 @@
                         <th>
                             <select class="form-control" ng-model="workflowCtrl.offer.currentProductId">
                                 <option value="-1" selected disabled hidden>{{ 'LEAD_EDIT_SELECT_PRODUCT' | translate }}</option>                                     
-                                <option value="{{product.id}}" ng-repeat="product in workflowCtrl.offer.productService.products">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
+                                <option value="{{product.id}}" ng-repeat="product in workflowCtrl.productService.getActiveProducts()">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
                             </select>
                         </th>
                         <th class="col-md-1"></th>
@@ -157,51 +155,52 @@
                 </select>
             </div>
         </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Empfänger</label>
-            <div class="col-sm-10">
-                <input type="email" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.password"></div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Betreff</label>
-            <div class="col-sm-10">
-                <input type="email" class="form-control" ng-model="settingCtrl.rootScope.globals.user.setting.password"></div>
-        </div>
         <div class="hr-line-dashed"></div>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Anhang</label>
-            <div class="col-sm-10">
-                <h4>Example <span class="label label-default"><i class="fa fa-file-pdf-o" aria-hidden="true">Anhang</i></span></h4>
+        <div class="row">
+            <div>
+                <div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Empfänger</label>
+                        <input type="email" class="form-control" ng-model="workflowCtrl.message.recipient.email">{{workflowCtrl.message.recipient.email}}
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Betreff</label>
+                        <input type="email" class="form-control" ng-model="workflowCtrl.message.subject">{{workflowCtrl.message.subject}}
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Anhang</label>
+                        <h4>Example <span class="label label-default"><i class="fa fa-file-pdf-o" aria-hidden="true">Anhang {{workflowCtrl.message.attachement}}</i></span></h4>
+                    </div>
+                </div>
             </div>
         </div>
 
         <br/>
         <br/>
         <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
 
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Message</label>
-            <form class="form-horizontal">
-                <div class="summernote">
-                    <summernote></summernote>
-                </div>
-            </form>
+        <div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Message</label>
+                <form class="form-horizontal">
+                    <div class="summernote">
+                        <summernote ng-model="workflowCtrl.message.content">{{workflowCtrl.message.content}}</summernote>
+                    </div>
+                </form>
+            </div>
         </div>
+
     </form>
 </div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-white" ng-click="workflowCtrl.close()">{{ 'COMMON_CANCEL'| translate }}</button>
-    <button type="submit" class="btn btn-success" ng-disabled="offer.editForm.$invalid" ng-click="workflowCtrl.send()">{{ 'COMMON_SAVE'| translate }}</button>
+    <button type="submit" class="btn btn-success" ng-disabled="offer.editForm.$invalid" ng-click="workflowCtrl.send()">{{ 'COMMON_SEND'| translate }}</button>
 </div>
 
 <script>

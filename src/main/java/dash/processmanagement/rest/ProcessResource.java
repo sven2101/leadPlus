@@ -117,8 +117,8 @@ public class ProcessResource {
 	@ApiOperation(value = "Puts processor to process", notes = "")
 	@RequestMapping(value = "/{id}/processors", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public void setProcessor(@ApiParam(required = true) @PathVariable final Long id, @RequestBody final long userId) throws Exception {
-		processService.setProcessor(id, userId);
+	public User setProcessor(@ApiParam(required = true) @PathVariable final Long id, @RequestBody final long userId) throws NotFoundException {
+		return processService.setProcessor(id, userId);
 	}
 
 	@ApiOperation(value = "Remove processor from process", notes = "")

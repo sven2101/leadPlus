@@ -1,6 +1,3 @@
-/// <reference path="../../common/model/AbstractModel.Model.ts" />
-/// <reference path="../../Product/model/Product.Model.ts" />
-
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -13,13 +10,6 @@
  ******************************************************************************/
 "use strict";
 
-class OrderPosition extends AbstractModel {
-
-    amount: number;
-    product: Product;
-
-    constructor() {
-        super();
-    }
+interface Promise<T> {
 
 }

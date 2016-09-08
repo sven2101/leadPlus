@@ -69,6 +69,7 @@ function config($translateProvider) {
             MONTHLY: "Monat",
             YEARLY: "Jahr",
             ALL: "Alle",
+            COMMON_SEND: "Senden",
             COMMON_DELETE: "Löschen",
             COMMON_DETAILS: "Details",
             COMMON_ACTIVATED: "Aktiviert",
@@ -376,6 +377,7 @@ function config($translateProvider) {
             MONTHLY: "Month",
             YEARLY: "Year",
             ALL: "All",
+            COMMON_SEND: "Send",
             COMMON_DELETE: "Delete",
             COMMON_DETAILS: "Details",
             COMMON_ACTIVATED: "Activated",
@@ -464,6 +466,10 @@ function config($translateProvider) {
             DASHBOARD_INFO_BUTTON: "Info",
             DASHBOARD_GOTO_BUTTON: "Go to",
             DASHBOARD_COMPLETION: "Sales statements",
+
+            // Define notification elements
+            NOTIICATION_SEND: "Notification successfully send",
+            NOTIICATION_SEND_ERROR: "Error sending Notification",
 
             // Define profile elements
             PROFILE_PROFILE_INFORMATION: "Profile information",

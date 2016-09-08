@@ -29,7 +29,7 @@ import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
 import dash.usermanagement.domain.User;
 import dash.workflowmanagement.domain.Workflow;
-		
+
 @Service
 public interface IProcessService {
 
@@ -38,7 +38,7 @@ public interface IProcessService {
 	public Process getById(final long id) throws NotFoundException;
 
 	public Iterable<Process> getAll();
-	
+
 	public Process setStatus(final long id, final String status) throws SaveFailedException, NotFoundException, UpdateFailedException;
 
 	public void saveProcesses(final List<Process> processes) throws SaveFailedException;
@@ -55,7 +55,7 @@ public interface IProcessService {
 
 	public Sale createSale(final long processId, final Sale sale) throws SaveFailedException;
 
-	public User setProcessor(final long processId, final long userId) throws Exception;
+	public User setProcessor(final long processId, final long userId) throws NotFoundException;
 
 	public List<Process> getProcessWithLatestSales(final int amount);
 

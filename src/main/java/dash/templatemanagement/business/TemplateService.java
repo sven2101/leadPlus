@@ -121,21 +121,6 @@ public class TemplateService implements ITemplateService {
 	@Override
 	public OfferMessage generate(final long templateId, final long offerId) throws NotFoundException {
 		Offer offer = offerService.getOfferById(offerId);
-		System.out.println("Offer " + offer);
-		System.out.println("Customer " + offer.getCustomer());
-
 		return new OfferMessage(offer, "Hello ${user}");
 	}
-
-	//	public File getEmailTemplateById(final long id) throws NotFoundException {
-	//
-	//		StringTemplateLoader stringLoader = new StringTemplateLoader();
-	//		String firstTemplate = "firstTemplate";
-	//		stringLoader.putTemplate(firstTemplate, freemarkerTemplate);
-	//		Configuration cfg = new Configuration();
-	//		cfg.setTemplateLoader(stringLoader);
-	//		Template template = cfg.getTemplate(firstTemplate);
-	//
-	//	}
-
 }

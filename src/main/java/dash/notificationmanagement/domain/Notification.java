@@ -11,13 +11,23 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash.notificationmanagement.domain;
 
-package dash.notificationmanagement.business;
+import dash.filemanagement.domain.File;
+import dash.offermanagement.domain.Offer;
+import freemarker.cache.StringTemplateLoader;
 
-import dash.exceptions.SMTPdoesntExistsException;
-import dash.notificationmanagement.domain.IMessage;
+public class Notification {
 
-public interface INotificationService {
+	private String subject;
+	private String content;
+	private File attachement;
 
-	void sendNotification(IMessage message) throws SMTPdoesntExistsException;
+	public Notification(Offer offer, String template) {
+		super(offer.getCustomer());
+		this.stringLoader = new StringTemplateLoader();
+		this.template = template;
+		this.attachement = null;
+	}
+
 }

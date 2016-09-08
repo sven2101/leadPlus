@@ -18,6 +18,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import dash.filemanagement.domain.File;
 import dash.offermanagement.domain.Offer;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
@@ -26,11 +27,13 @@ public class OfferMessage extends AbstractMessage {
 
 	private StringTemplateLoader stringLoader;
 	private String template;
+	private File attachement;
 
 	public OfferMessage(Offer offer, String template) {
 		super(offer.getCustomer());
 		this.stringLoader = new StringTemplateLoader();
 		this.template = template;
+		this.attachement = null;
 	}
 
 	@Override

@@ -12,12 +12,17 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.notificationmanagement.business;
+package dash.exceptions;
 
-import dash.exceptions.SMTPdoesntExistsException;
-import dash.notificationmanagement.domain.IMessage;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public interface INotificationService {
+@ResponseStatus(HttpStatus.CONFLICT)
+public class SMTPdoesntExistsException extends Exception {
 
-	void sendNotification(IMessage message) throws SMTPdoesntExistsException;
+	private static final long serialVersionUID = 5520905786207281118L;
+
+	public SMTPdoesntExistsException(String message) {
+		super(message);
+	}
 }

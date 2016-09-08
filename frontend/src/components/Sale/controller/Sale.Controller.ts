@@ -438,7 +438,7 @@ class SaleController {
             return;
         }
 
-        let temp: Customer = findElementById(this.customerService.customer, Number(this.currentCustomerId)) as Customer;
+        let temp: Customer = findElementById(this.customerService.customers, Number(this.currentCustomerId)) as Customer;
         if (isNullOrUndefined(temp)) {
             this.customerSelected = false;
             workflow.customer = new Customer();

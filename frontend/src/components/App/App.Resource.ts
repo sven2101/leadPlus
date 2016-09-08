@@ -356,3 +356,22 @@ class SmtpResource {
 }
 
 angular.module(moduleSmtpResource, [ngResourceId]).service(SmtpResourceId, SmtpResource);
+
+// ----------------------------------------------------------------------------------------
+
+const NotificationResourceId: string = "NotifictionResource";
+
+class NotifictionResource {
+
+    private $inject = [$resourceId];
+
+    resource: any;
+
+    constructor($resource) {
+        this.resource = $resource("/api/rest/notifications/offers/send", {}, {
+            send: { url: "/api/rest/notifications/", method: "POST" }
+        });
+    }
+}
+
+angular.module(moduleNotificationResource, [ngResourceId]).service(NotificationResourceId, NotifictionResource);
