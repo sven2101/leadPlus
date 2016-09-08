@@ -20,7 +20,7 @@ gulp.task('concat-assetsJs', ['copy'], function () {
         .pipe(gulp.dest(path.assetsJs.dest));
 });
 
-gulp.task('concat-scripts', ['concat-assetsJs','angular'], function () {
+gulp.task('concat-scripts', ['concat-assetsJs'], function () {
     return gulp.start('concat-scripts-task');
 });
 
