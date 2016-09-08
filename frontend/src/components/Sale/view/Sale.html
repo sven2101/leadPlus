@@ -24,26 +24,20 @@
                     <h5>{{ 'SALE_MANAGE_SALES' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
-                    <!--
-                    <button type="button" class="btn btn-success" ng-click="sale.clearNewSale()" data-toggle="modal"
-                            data-target="#newSaleModal">
-                        <i class="fa fa-plus"></i>&nbsp;{{ 'SALE_ADD_SALE' | translate }}
-                    </button>
-                    -->
-                    <button ng-click="sale.refreshData()" type="button" class="btn btn-success">
+                    <button ng-click="saleCtrl.refreshData()" type="button" class="btn btn-success">
                         <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
                     </button>
                     <span class="pull-right"
                           style=" font-size: 1.5em;">{{ 'SALE_SHOW_ALL_SALES' | translate }} &nbsp;<input
                             type="checkbox"
-                            ng-model="sale.loadAllData"
-                            ng-change="sale.changeDataInput()"
+                            ng-model="saleCtrl.loadAllData"
+                            ng-change="saleCtrl.changeDataInput()"
                             class="js-switch"
                             ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
                     </br></br>
                     <div class="table-responsive text-center">
-                        <table datatable="" dt-options="sale.dtOptions" dt-columns="sale.dtColumns"
-                               dt-instance="sale.dtInstance"
+                        <table datatable="" dt-options="saleCtrl.dtOptions" dt-columns="saleCtrl.dtColumns"
+                               dt-instance="saleCtrl.dtInstance"
                                class="table table-bordered table-hover table-condensed text-center"
                                style="width:100%;"></table>
                     </div>
@@ -52,8 +46,7 @@
         </div>
     </div>
 </div>
-<div ng-include="'components/Sale/view/EditSale.Modal.html'"></div>
-<!--<div ng-include="'components/sales/addSaleModal.html'"></div>-->
+<div editworkflow parent="saleCtrl" type="sale" modaltitle="{{'SALE_EDIT_SALE_MODAL'| translate}}"></div>
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {

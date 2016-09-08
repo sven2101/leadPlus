@@ -37,6 +37,27 @@ gulp.task('typescript-task', function () {
     }
 
 });
+gulp.task('typescript/angular-task',['tslint'], function () {
+    return gulp.src(path.typescript.src)
+        .pipe(ts({
+
+        }))
+        .pipe(strip())
+        .pipe(replace(/"use strict";/g, ''))
+        /*
+        .pipe(uglify({         
+            compress: {
+                warnings: true,
+                unused: false,
+            },
+            mangle: false,
+        }))
+        */
+        .pipe(concat('angular.js'))
+        .pipe(addsrc(path.fileHeader))
+        .pipe(concat('angular.js'))
+        .pipe(gulp.dest(path.angular.dst));
+});
 gulp.task('javascript', function () {
     return gulp.src(path.javascript.src)
         .pipe(gulp.dest(path.javascript.dst));

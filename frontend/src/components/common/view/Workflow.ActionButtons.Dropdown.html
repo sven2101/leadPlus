@@ -3,32 +3,38 @@
         <i class="fa fa-wrench"></i>
     </button>
     <ul class="dropdown-menu pull-right">
-        <li>
-            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.parent.leadCtrl.followUp(parent.parent.leadCtrl.processes[directiveData.process.id])">
-                 <i class="fa fa-check">&nbsp;</i>{{'LEAD_FOLLOW_UP' | translate }}
+        <li ng-if="type=='lead' || type =='offer'">
+            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.createNextWorkflowUnit(parent.processes[directiveData.process.id])">
+                 <i class="fa fa-check">&nbsp;</i>{{directiveData.translation.nextWorkflowUnit}}
             </button>
         </li>
-        <li>
-            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.leadCtrl.pin(parent.leadCtrl.processes[directiveData.process.id])">
+        <li ng-if="type=='lead'">
+            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.pin(parent.processes[directiveData.process.id])">
                   <i class="fa fa-thumb-tack">&nbsp;</i>{{'LEAD_PIN' | translate }}
             </button>
         </li>
-        <li>
+        <li ng-if="type=='offer'">
+            <button class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.followUp(parent.processes[directiveData.process.id])"
+                title="{{'OFFER_FOLLOW_UP'| translate }}">
+         <i class="fa fa-eye"></i>
+        </button>
+        </li>
+        <li ng-if="type=='lead' || type =='offer'">
             <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenInquiryDisable"
-                ng-click="parent.leadCtrl.closeOrOpenInquiry(parent.leadCtrl.processes[directiveData.process.id])"> 
+                ng-click="parent.closeOrOpenInquiry(parent.processes[directiveData.process.id])"> 
                     <i class="{{directiveData.config.faOpenOrLock}}">&nbsp;</i>{{directiveData.config.openOrLock}}
             </button>
         </li>
         <li>
             <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenInquiryDisable"
-                data-toggle="modal" data-target="#editModal" ng-click="parent.leadCtrl.loadDataToModal(parent.leadCtrl.processes[directiveData.process.id])">
-                    <i class="fa fa-edit">&nbsp;</i>{{'LEAD_EDIT_LEAD' | translate }}
+                data-toggle="modal" data-target="#editModal" ng-click="parent.loadDataToModal(parent.processes[directiveData.process.id])">
+                    <i class="fa fa-edit">&nbsp;</i>{{directiveData.translation.editWorkflowUnit}}
             </button>
         </li>
         <li>
             <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.hasRightToDelete"
-                ng-click="parent.leadCtrl.deleteRow(parent.leadCtrl.processes[directiveData.process.id])">
-                   <i class="fa fa-trash-o">&nbsp;</i>{{'LEAD_DELETE_LEAD' | translate }}
+                ng-click="parent.deleteRow(parent.processes[directiveData.process.id])">
+                   <i class="fa fa-trash-o">&nbsp;</i>{{directiveData.translation.deleteWorkflowUnit}}
             </button>
         </li>
     </ul>

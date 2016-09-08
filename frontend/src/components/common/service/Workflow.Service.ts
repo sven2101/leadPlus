@@ -8,6 +8,7 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../Common/model/Status.Model.ts" />
+/// <reference path="../../Common/model/Promise.Interface.ts" />
 /// <reference path="../../Common/model/Workflow.Model.ts" />
 /// <reference path="../../Common/service/AbstractWorkflow.ts" />
 /// <reference path="../../Common/service/Workflow.Controller.ts" />
@@ -62,7 +63,7 @@ class WorkflowService {
         this.user = $rootScope.currentUser;
     }
 
-    addComment(comments: Array<Commentary>, process: Process, commentText: string): any {
+    addComment(comments: Array<Commentary>, process: Process, commentText: string): IPromise<boolean> {
         let defer = this.$q.defer();
         if (angular.isUndefined(commentText) || commentText === "") {
             defer.reject(false);
@@ -131,7 +132,7 @@ class WorkflowService {
         return sum;
     }
 
-    addLeadToOffer(process: Process): any {
+    addLeadToOffer(process: Process): IPromise<Process> {
         let defer = this.$q.defer();
         let self = this;
         let offer: Offer = {
@@ -172,7 +173,7 @@ class WorkflowService {
         return defer.promise;
     }
 
-    addOfferToSale(process: Process): any {
+    addOfferToSale(process: Process): IPromise<boolean> {
         let defer = this.$q.defer();
         let self = this;
         let sale: Sale = {
@@ -307,9 +308,11 @@ class WorkflowService {
         }
     }
 
-    appendChildRow(childScope: any, process: Process, dtInstance: any, parent: AbstractWorkflow, type: string) {
-        childScope.childData = process;
+    appendChildRow(childScope: any, process: Process, workflowUnit: IWorkflow, dtInstance: any, parent: AbstractWorkflow, type: string) {
+        childScope.workflowUnit = workflowUnit;
+        childScope.process = process;
         childScope.parent = parent;
+        childScope.type = type;
 
         let link = angular.element(event.currentTarget), icon = link
             .find(".glyphicon"), tr = link.parent().parent(), table = dtInstance.DataTable, row = table

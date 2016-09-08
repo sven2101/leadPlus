@@ -99,7 +99,7 @@ class LeadService {
 
     createOffer(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {
         let self = this;
-        this.workflowService.addLeadToOffer(process).then(function (isResolved: boolean) {
+        this.workflowService.addLeadToOffer(process).then(function (isResolved: any) {
             if (loadAllData === true) {
                 self.updateRow(process, loadAllData, scope);
             } else if (loadAllData === false) {

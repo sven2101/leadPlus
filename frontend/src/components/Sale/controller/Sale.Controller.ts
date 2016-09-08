@@ -2,16 +2,15 @@
 /// <reference path="../../../typeDefinitions/moment-node.d.ts" />
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../app/App.Constants.ts" />
-/// <reference path="../../common/model/OrderPosition.Model.ts" />
+/// <reference path="../../Common/model/OrderPosition.Model.ts" />
 /// <reference path="../../Product/model/Product.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
-/// <reference path="../../Lead/model/Lead.Model.ts" />
 /// <reference path="../../Sale/model/Sale.Model.ts" />
+/// <reference path="../../Sale/controller/Sale.DataTableService.ts" />
+/// <reference path="../../Sale/controller/Sale.Service.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
-/// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../common/service/Workflow.Service.ts" />
-/// <reference path="../../Customer/model/Customer.Model.ts" />
-/// <reference path="../../Customer/controller/Customer.Service.ts" />
+/// <reference path="../../common/service/AbstractWorkflow.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -22,436 +21,151 @@
  * reproduction of this material is strictly forbidden unless prior written
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
+
 "use strict";
 
-class SaleController {
+const SaleControllerId: string = "SaleController";
 
-    $inject = ["DTOptionsBuilder", "DTColumnBuilder", "$compile",
-        "$scope", "toaster", "ProcessResource", "CommentResource", "$filter",
-        "UserResource", "$rootScope", "$translate", "SaleResource", ProductServiceId, WorkflowServiceId, CustomerServiceId, CustomerResourceId];
+class SaleController extends AbstractWorkflow {
 
-    filter;
-    processResource;
-    commentResource;
-    saleResource;
-    userResource;
-    customerResource;
-    workflowService;
-    productService;
-    customerService: CustomerService;
+    $inject = [$compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId];
+
+    workflowService: WorkflowService;
+    saleDataTableService: SaleDataTableService;
+    saleService: SaleService;
     scope;
-    rootScope;
-    translate;
     compile;
-    toaster;
     dtOptions;
     dtColumns;
+    dtInstance: any = { DataTable: null };
 
-    user = new User();
-    commentInput = {};
-    commentModalInput = {};
-    comments = {};
-    currentCommentModalId = "";
-    loadAllData = false;
-    currentOrderPositions = [];
+    commentInput: string;
+    commentModalInput: string;
+    comments: { [key: number]: Array<Commentary> } = {};
+    currentCommentModalId: string = "";
+    loadAllData: boolean = false;
+    processes: { [key: number]: Process } = {};
+    editForm: any;
+    editProcess: Process;
+    editWorkflowUnit: Sale = new Sale();
+    edit: boolean;
+
+    currentOrderPositions: Array<OrderPosition>;
     currentProductId = "-1";
     currentProductAmount = 1;
     currentCustomerId = "-1";
     customerSelected: boolean = false;
-    dtInstance = { DataTable: null };
-    processes = {};
-    rows = {};
-    editProcess = new Process();
-    newSale = new Sale();
-    editSale: Sale;
-    editForm;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $compile, $scope,
-        toaster, ProcessResource, CommentResource, $filter, UserResource,
-        $rootScope, $translate, SaleResource, ProductService, WorkflowService, CustomerService, CustomerResource) {
+    currentTab: number = 1;
 
-        this.filter = $filter;
-        this.processResource = ProcessResource.resource;
-        this.commentResource = CommentResource.resource;
-        this.saleResource = SaleResource.resource;
-        this.userResource = UserResource.resource;
-        this.customerResource = CustomerResource.resource;
+    constructor($compile, $scope, WorkflowService, SaleDataTableService, SaleService) {
+        super();
         this.workflowService = WorkflowService;
-        this.productService = ProductService;
-        this.customerService = CustomerService;
+        this.saleDataTableService = SaleDataTableService;
+        this.saleService = SaleService;
         this.scope = $scope;
-        this.rootScope = $rootScope;
-        this.translate = $translate;
         this.compile = $compile;
-        this.toaster = toaster;
 
         let self = this;
-
-        if (!angular.isUndefined($rootScope.globals.user))
-            this.userResource.get({
-                id: $rootScope.globals.user.id
-            }).$promise.then(function (result) {
-                self.user = result;
-            });
-
-        this.dtOptions = DTOptionsBuilder.newOptions().withOption("ajax", {
-            url: "/api/rest/processes/sales/latest/100",
-            error: function (xhr, error, thrown) {
-                console.log(xhr);
-            },
-            type: "GET"
-        }).withDOM(
-            "<'row'<'col-sm-12'l>>" + "<'row'<'col-sm-6'B><'col-sm-6'f>>"
-            + "<'row'<'col-sm-12'tr>>"
-            + "<'row'<'col-sm-5'i><'col-sm-7'p>>").withPaginationType(
-            "full_numbers").withOption("stateSave", true).withButtons([{
-                extend: "copyHtml5",
-                exportOptions: {
-                    columns: [6, 1, 2, 3, 5, 8, 7, 9, 10, 11, 12, 13, 14],
-                    modifier: {
-                        page: "current"
-                    }
-                }
-            }, {
-                    extend: "print",
-                    exportOptions: {
-                        columns: [6, 1, 2, 3, 5, 8, 7, 9, 10, 11, 12, 13, 14],
-                        modifier: {
-                            page: "current"
-                        }
-                    }
-                }, {
-                    extend: "csvHtml5",
-                    title: $translate("SALE_SALES"),
-                    exportOptions: {
-                        columns: [6, 1, 2, 3, 5, 8, 7, 9, 10, 11, 12, 13, 14],
-                        modifier: {
-                            page: "current"
-                        }
-
-                    }
-                }, {
-                    extend: "excelHtml5",
-                    title: $translate.instant("SALE_SALES"),
-                    exportOptions: {
-                        columns: [6, 1, 2, 3, 5, 8, 7, 9, 10, 11, 12, 13, 14],
-                        modifier: {
-                            page: "current"
-                        }
-                    }
-                }, {
-                    extend: "pdfHtml5",
-                    title: $translate("SALE_SALES"),
-                    orientation: "landscape",
-                    exportOptions: {
-                        columns: [6, 1, 2, 8, 8, 9, 10, 11, 12, 13],
-                        modifier: {
-                            page: "current"
-                        }
-                    }
-                }]).withBootstrap().withOption("createdRow", createdRow).withOption(
-            "order", [4, "desc"]);
-        this.dtColumns = [
-            DTColumnBuilder.newColumn(null).withTitle("").notSortable()
-                .renderWith(addDetailButton),
-            DTColumnBuilder.newColumn("sale.customer.lastname").withTitle(
-                $translate("COMMON_NAME")).withClass("text-center"),
-            DTColumnBuilder.newColumn("sale.customer.company").withTitle(
-                $translate("COMMON_COMPANY")).withClass("text-center"),
-            DTColumnBuilder.newColumn("sale.customer.email").withTitle(
-                $translate("COMMON_EMAIL")).withClass("text-center"),
-            DTColumnBuilder.newColumn("sale.timestamp").withTitle(
-                $translate("COMMON_DATE")).renderWith(
-                function (data, type, full) {
-                    let utcDate = moment.utc(data, "DD.MM.YYYY HH:mm");
-                    let localDate = moment(utcDate).local();
-                    return localDate.format("DD.MM.YYYY HH:mm");
-                }).withOption("type", "date-euro")
-                .withClass("text-center"),
-            DTColumnBuilder.newColumn("sale.customer.phone").withTitle(
-                $translate("COMMON_PHONE")).notVisible(),
-            DTColumnBuilder.newColumn("sale.customer.firstname").withTitle(
-                $translate("COMMON_FIRSTNAME")).notVisible(),
-            DTColumnBuilder.newColumn("sale.customer.lastname").withTitle(
-                $translate("COMMON_CONTAINER")).notVisible(),
-            DTColumnBuilder.newColumn("sale.customer.lastname").withTitle(
-                $translate("COMMON_CONTAINER_AMOUNT")).notVisible(),
-            DTColumnBuilder.newColumn(null).withTitle(
-                $translate("COMMON_CONTAINER_SINGLE_PRICE")).renderWith(
-                function (data, type, full) {
-                    return $filter("currency")(
-                        0, "€", 2);
-                }).notVisible(),
-            DTColumnBuilder.newColumn(null).withTitle(
-                $translate("COMMON_CONTAINER_ENTIRE_PRICE")).renderWith(
-                function (data, type, full) {
-                    return $filter("currency")(
-                        0, "€", 2);
-                }).notVisible(),
-            DTColumnBuilder.newColumn(null).withTitle(
-                $translate("COMMON_CONTAINER_SALE_TURNOVER")).renderWith(
-                function (data, type, full) {
-                    if (isNullOrUndefined(data.sale.saleReturn)) {
-                        return $filter("currency")(0, "€", 2);
-                    }
-                    return $filter("currency")
-                        (data.sale.saleReturn, "€", 2);
-                }).notVisible(),
-            DTColumnBuilder.newColumn(null).withTitle(
-                $translate("COMMON_CONTAINER_SALE_PROFIT")).renderWith(
-                function (data, type, full) {
-                    if (isNullOrUndefined(data.sale.saleProfit)) {
-                        return $filter("currency")(0, "€", 2);
-                    }
-                    return $filter("currency")
-                        (data.sale.saleProfit, "€", 2);
-                }).notVisible(),
-            DTColumnBuilder.newColumn("processor.username").withTitle(
-                $translate("COMMON_PROCESSOR")).notVisible(),
-            DTColumnBuilder.newColumn(null).withTitle(
-                $translate("COMMON_STATUS")).withClass("text-center")
-                .renderWith(addStatusStyle),
-            DTColumnBuilder.newColumn(null).withTitle(
-                "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").notSortable().renderWith(addActionsButtons)];
-
-        if ($rootScope.language === "de") {
-            self.dtOptions
-                .withLanguageSource("/assets/datatablesTranslationFiles/German.json");
-        } else {
-            self.dtOptions
-                .withLanguageSource("/assets/datatablesTranslationFiles/English.json");
-        }
-
-
         function refreshData() {
             let resetPaging = false;
             this.dtInstance.reloadData(resetPaging);
         }
-
         function changeDataInput() {
-            if (self.loadAllData === true) {
-                self.dtOptions.withOption("serverSide", true).withOption("ajax", {
-                    url: "/api/rest/processes/sales",
-                    type: "GET",
-                    pages: 5,
-                    dataSrc: "data",
-                    error: function (xhr, error, thrown) {
-                        console.log(xhr);
-                    }
-                }).withOption("searchDelay", 500);
-            } else {
-                self.dtOptions.withOption("serverSide", false).withOption("ajax", {
-                    url: "/api/rest/processes/sales/latest/100",
-                    error: function (xhr, error, thrown) {
-                        console.log(xhr);
-                    },
-                    type: "GET"
-                }).withOption("searchDelay", 0);
-            }
+            self.workflowService.changeDataInput(self.loadAllData, self.dtOptions, allDataSaleRoute, openDataSaleRoute);
         }
-
-        function createdRow(row, data, dataIndex) {
-            // Recompiling so we can bind Angular directive to the DT
-            self.rows[data.id] = row;
+        function createdRow(row, data: Process, dataIndex) {
+            self.saleService.setRow(data.id, row);
             self.compile(angular.element(row).contents())(self.scope);
         }
-
-        function addActionsButtons(data, type, full, meta) {
+        function addActionsButtons(data: Process, type, full, meta) {
+            let templatedata = { "process": self.processes[data.id] };
+            return self.saleDataTableService.getActionButtonsHTML(templatedata);
+        }
+        function addStatusStyle(data: Process, type, full, meta) {
             self.processes[data.id] = data;
-            let hasRightToDelete = "";
-            if ($rootScope.globals.user.role === "USER") {
-                hasRightToDelete = "disabled";
-            }
-            return "<button class='btn btn-white' ng-click='sale.loadDataToModal(sale.processes["
-                + data.id
-                + "])' data-toggle='modal'"
-                + "data-target='#editModal' title='"
-                + $translate.instant("SALE_EDIT_SALE")
-                + "'>"
-                + "<i class='fa fa-edit'></i>"
-                + "</button>&nbsp;"
-                + "<button class='btn btn-white'"
-                + hasRightToDelete
-                + " ng-click='sale.deleteRow(sale.processes["
-                + data.id
-                + "])' title='"
-                + $translate.instant("SALE_DELETE_SALE")
-                + "'>"
-                + "   <i class='fa fa-trash-o'></i>" + "</button>";
+            return self.saleDataTableService.getStatusStyleHTML(data);
         }
-
-        function addStatusStyle(data, type, full, meta) {
-            return "<div style='color: #1872ab;'>"
-                + $translate.instant("COMMON_STATUS_SALE") + "</div>";
-        }
-
-        function addDetailButton(data, type, full, meta) {
+        function addDetailButton(data: Process, type, full, meta) {
             self.processes[data.id] = data;
-            return "<a class='green shortinfo' href='javascript:;'"
-                + "ng-click='sale.appendChildRow(sale.processes[" + data.id
-                + "], $event)' title='Details'>"
-                + "<i class='glyphicon glyphicon-plus-sign'/></a>";
+            return self.saleDataTableService.getDetailHTML(data.id);
         }
+        this.dtOptions = this.saleDataTableService.getDTOptionsConfiguration(createdRow);
+        this.dtColumns = this.saleDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
     }
-    getOrderPositions(process) {
+
+    tabOnClick(tab: number) {
+        this.currentTab = tab;
+    }
+
+    appendChildRow(process: Process, event: any) {
+        let childScope = this.scope.$new(true);
+        this.comments[process.id] = this.workflowService.getCommentsByProcessId(process.id);
+        this.workflowService.appendChildRow(childScope, process, process.sale, this.dtInstance, this, "sale");
+    }
+
+    loadCurrentIdToModal(id: string) {
+        this.currentCommentModalId = id;
+    }
+
+    loadDataToModal(process: Process) {
+        this.edit = true;
+        this.currentProductId = "-1";
+        this.currentProductAmount = 1;
+        this.editProcess = process;
+        this.currentOrderPositions = deepCopy(this.editProcess.sale.orderPositions);
+        this.customerSelected = this.editProcess.sale.customer.id > 0;
+        this.currentCustomerId = this.editProcess.sale.customer.id + "";
+        this.editWorkflowUnit = deepCopy(this.editProcess.sale);
+    }
+
+    addComment(id: number, input: string) {
+        this.workflowService.addComment(this.comments[id], this.processes[id], input[id]).then(function () {
+            input[id] = "";
+        });
+    }
+
+    save(edit: boolean) {
+        this.saleService.save(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope, this.editForm);
+    }
+
+    clearNewSale() {
+        this.edit = false;
+        this.editWorkflowUnit = new Sale();
+        this.editProcess = new Process();
+        this.editWorkflowUnit.orderPositions = new Array<OrderPosition>();
+        this.currentOrderPositions = new Array<OrderPosition>();
+        this.currentProductId = "-1";
+        this.currentCustomerId = "-1";
+        this.currentProductAmount = 1;
+        this.customerSelected = false;
+    }
+
+    deleteRow(process: Process) {
+        this.saleService.deleteRow(process, this.dtInstance);
+    }
+
+    addProduct(array: Array<OrderPosition>) {
+        this.workflowService.addProduct(array, this.currentProductId, this.currentProductAmount);
+    }
+
+    deleteProduct(array: Array<OrderPosition>, index: number) {
+        this.workflowService.deleteProduct(array, index);
+    }
+
+    getOrderPositions(process: Process) {
         return process.sale.orderPositions;
     }
 
-    appendChildRow(process, event) {
-        let childScope = this.scope.$new(true);
-        childScope.childData = process;
-        let self = this;
-        this.commentResource.getByProcessId({
-            id: process.id
-        }).$promise.then(function (result) {
-            self.comments[process.id] = [];
-            for (let comment in result) {
-                if (comment === "$promise")
-                    break;
-                self.comments[process.id].push({
-                    commentText: result[comment].commentText,
-                    timestamp: result[comment].timestamp,
-                    creator: result[comment].creator
-                });
-            }
-        });
-        childScope.parent = this;
-
-        let link = angular.element(event.currentTarget), icon = link
-            .find(".glyphicon"), tr = link.parent().parent(), table = this.dtInstance.DataTable, row = table
-                .row(tr);
-
-        if (row.child.isShown()) {
-            icon.removeClass("glyphicon-minus-sign")
-                .addClass("glyphicon-plus-sign");
-            row.child.hide();
-            tr.removeClass("shown");
-        } else {
-            icon.removeClass("glyphicon-plus-sign")
-                .addClass("glyphicon-minus-sign");
-            row.child(
-                this.compile(
-                    "<div childrow type='sale' class='clearfix'></div>")(
-                    childScope)).show();
-            tr.addClass("shown");
-        }
-    }
-    loadCurrentIdToModal(id) {
-        this.currentCommentModalId = id;
-    };
-
-     addComment(id: number, input: string) {
-        this.workflowService.addComment(this.comments[id], this.processes[id], this.user, input[id]).then(function () {
-            input[id] = "";
-        });
-    };
-
-    clearNewSale() {
-        this.newSale = new Sale();
-    };
-
-    loadDataToModal(sale) {
-        this.currentProductId = "-1";
-        this.currentProductAmount = 1;
-        this.editProcess = sale;
-        this.currentOrderPositions = deepCopy(this.editProcess.sale.orderPositions);
-
-        this.customerSelected = this.editProcess.sale.customer.id > 0;
-        this.currentCustomerId = this.editProcess.sale.customer.id + "";
-        this.editSale = deepCopy(this.editProcess.sale);
-
-    };
-
-    saveEditedRow() {
-        let self = this;
-        shallowCopy(this.editSale, this.editProcess.sale);
-        this.editProcess.sale.orderPositions = this.currentOrderPositions;
-
-        let temp: any = this.editProcess.sale;
-        if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
-            temp.customer.timestamp = newTimestamp();
-            this.customerResource.createCustomer(temp.customer).$promise.then(function (customer) {
-                temp.customer = customer;
-
-                self.processResource.save(self.editProcess).$promise.then(function (result) {
-                    self.toaster.pop("success", "", self.translate
-                        .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
-                    self.editForm.$setPristine();
-                    self.updateRow(self.editProcess);
-                    self.customerService.getAllCustomer();
-                });
-            });
-            return;
-        }
-
-        this.saleResource.update(this.editProcess.sale).$promise.then(function () {
-            self.toaster.pop("success", "", self.translate
-                .instant("COMMON_TOAST_SUCCESS_UPDATE_SALE"));
-            self.editForm.$setPristine();
-            self.updateRow(self.editProcess);
-        });
-    };
-
-    deleteRow(process) {
-        let self = this;
-        let saleId = process.sale.id;
-        process.status = "CLOSED";
-        process.sale = null;
-        this.processResource.update(process).$promise.then(function () {
-            if (process.lead === null && process.sale === null) {
-                self.processResource.deleteProcess({
-                    id: process.id
-                });
-            }
-            self.saleResource.drop({
-                id: saleId
-            }).$promise.then(function () {
-                self.toaster.pop("success", "", self.translate
-                    .instant("COMMON_TOAST_SUCCESS_DELETE_SALE"));
-                self.dtInstance.DataTable.row(self.rows[process.id]).remove().draw();
-            });
-        });
-    };
-
-    updateRow(process) {
-        this.dtInstance.DataTable.row(this.rows[process.id]).data(process).draw();
-        this.compile(angular.element(this.rows[process.id]).contents())(this.scope);
-    };
-
-    addProduct(array) {
-        this.workflowService.addProduct(array, this.currentProductId, this.currentProductAmount);
-    }
-    deleteProduct(array, index) {
-        this.workflowService.deleteProduct(array, index);
-    }
-    sumOrderPositions(array) {
+    sumOrderPositions(array: Array<OrderPosition>) {
         return this.workflowService.sumOrderPositions(array);
     }
 
     selectCustomer(workflow: any) {
-        if (isNullOrUndefined(Number(this.currentCustomerId)) || Number(this.currentCustomerId) <= 0) {
-            this.customerSelected = false;
-            workflow.customer = new Customer();
-            workflow.customer.id = 0;
-            console.log(this.customerSelected);
-            return;
-        }
-
-        let temp: Customer = findElementById(this.customerService.customers, Number(this.currentCustomerId)) as Customer;
-        if (isNullOrUndefined(temp)) {
-            this.customerSelected = false;
-            workflow.customer = new Customer();
-            workflow.customer.id = 0;
-            console.log(this.customerSelected);
-            return;
-        }
-        workflow.customer = deepCopy(temp);
-        this.customerSelected = true;
-        console.log(this.customerSelected);
+        this.workflowService.selectCustomer(workflow, this.currentCustomerId, this.customerSelected);
     }
-
 }
-angular.module("app.sale", ["ngResource"]).controller("SaleController", SaleController);
+angular.module(moduleSale, [ngResourceId]).controller(SaleControllerId, SaleController);
+
 
 

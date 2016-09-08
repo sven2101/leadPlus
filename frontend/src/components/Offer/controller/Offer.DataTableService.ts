@@ -15,8 +15,8 @@
 "use strict";
 
 const OfferDataTableServiceId: string = "OfferDataTableService";
-const allDataOfferRoute = "/api/rest/processes/offers";
-const openDataOfferRoute = "/api/rest/processes/workflow/OFFER/state/OFFER";
+const allDataOfferRoute: string = "/api/rest/processes/offers";
+const openDataOfferRoute: string = "/api/rest/processes/workflow/OFFER/state/OFFER";
 
 class OfferDataTableService {
 
@@ -105,12 +105,6 @@ class OfferDataTableService {
                 this.translate("COMMON_CONTAINER_DESTINATION")).notVisible(),
             this.DTColumnBuilder.newColumn("offer.deliveryDate").withTitle(
                 this.translate("COMMON_DELIVERY_TIME")).notVisible(),
-            this.DTColumnBuilder.newColumn("null").withTitle(
-                this.translate("COMMON_CONTAINER_SINGLE_PRICE")).renderWith(
-                function (data, type, full) {
-                    return self.filter("currency")(
-                        0, "€", 2);
-                }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_CONTAINER_ENTIRE_PRICE"))
                 .renderWith(
@@ -156,6 +150,12 @@ class OfferDataTableService {
             config.hasRightToDelete = true;
         }
         templateData.config = config;
+        let translation = {
+            "nextWorkflowUnit": this.translate.instant("OFFER_CREATE_SALE"),
+            "editWorkflowUnit": this.translate.instant("OFFER_EDIT_OFFER"),
+            "deleteWorkflowUnit": this.translate.instant("OFFER_DELETE_OFFER"),
+        };
+        templateData.translation = translation;
     }
 
     getActionButtonsHTML(templateData: any): string {
