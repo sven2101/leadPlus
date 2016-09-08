@@ -227,7 +227,6 @@ public class ProcessService implements IProcessService {
 	public void delete(final long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
-
 				processRepository.delete(id);
 			} catch (EmptyResultDataAccessException erdaex) {
 				logger.error(PROCESS_NOT_FOUND + OfferService.class.getSimpleName() + erdaex.getMessage(), erdaex);

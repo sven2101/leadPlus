@@ -65,13 +65,6 @@ class LeadController extends AbstractWorkflow {
         this.compile = $compile;
 
         let self = this;
-        function refreshData() {
-            let resetPaging = false;
-            this.dtInstance.reloadData(resetPaging);
-        }
-        function changeDataInput() {
-            self.workflowService.changeDataInput(self.loadAllData, self.dtOptions, allDataLeadRoute, openDataLeadRoute);
-        }
         function createdRow(row, data: Process, dataIndex) {
             self.leadService.setRow(data.id, row);
             self.leadDataTableService.configRow(row, data);
@@ -91,6 +84,15 @@ class LeadController extends AbstractWorkflow {
         }
         this.dtOptions = this.leadDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
+    }
+
+    changeDataInput() {
+        this.workflowService.changeDataInput(this.loadAllData, this.dtOptions, allDataLeadRoute, openDataLeadRoute);
+    }
+
+    refreshData() {
+        let resetPaging = false;
+        this.dtInstance.reloadData(resetPaging);
     }
 
     appendChildRow(process: Process, event: any) {
@@ -130,6 +132,7 @@ class LeadController extends AbstractWorkflow {
     }
 
     clearNewLead() {
+        this.editForm.$setPristine();
         this.edit = false;
         this.editWorkflowUnit = new Lead();
         this.editProcess = new Process();
@@ -150,7 +153,7 @@ class LeadController extends AbstractWorkflow {
     }
 
     closeOrOpen(process: Process) {
-        this.leadService.closeOrOpenInquiry(process, this.dtInstance, this.scope);
+        this.leadService.closeOrOpenInquiry(process, this.dtInstance, this.scope, this.loadAllData);
     }
 
     deleteRow(process: Process) {
@@ -174,7 +177,7 @@ class LeadController extends AbstractWorkflow {
     }
 
     selectCustomer(workflow: any) {
-        this.workflowService.selectCustomer(workflow, this.currentCustomerId, this.customerSelected);
+        this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
 }
 angular.module(moduleLead, [ngResourceId]).controller(LeadControllerId, LeadController);

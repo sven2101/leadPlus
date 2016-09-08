@@ -35,7 +35,7 @@
                     <h1>{{ 'CUSTOMER_DETAIL_TIMELINE' | translate }} - {{customerDetailCtrl.currentCustomer.firstname}} {{customerDetailCtrl.currentCustomer.lastname}}</h1>
                 </div>
                 <div class="ibox-content" id="ibox-content">
-                    <div id="vertical-timeline" class="vertical-container dark-timeline">
+                    <div id="vertical-timeline" class="vertical-PRODUCT dark-timeline">
 
                         <div ng-repeat="workflow in customerDetailCtrl.workflows" class="vertical-timeline-block">
 
@@ -67,8 +67,8 @@
                                                 <tr>
                                                     <th>{{ 'PRODUCT_PRODUCTNAME' | translate }}</th>
                                                     <th>{{ 'PRODUCT_PRICE' | translate }}</th>
-                                                    <th>{{ 'COMMON_CONTAINER_AMOUNT' | translate }}</th>
-                                                    <th>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</th>
+                                                    <th>{{ 'COMMON_PRODUCT_AMOUNT' | translate }}</th>
+                                                    <th>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -82,7 +82,7 @@
                                         </table>
                                         <!-- ENTIRE PRICE -->
                                         <div>
-                                            <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{customerDetailCtrl.sumOrderPositions(workflow.orderPositions)|
+                                            <h2>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}: {{customerDetailCtrl.sumOrderPositions(workflow.orderPositions)|
                                                 currency:'\u20AC'}}
                                             </h2>
                                         </div>

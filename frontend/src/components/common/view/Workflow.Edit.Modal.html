@@ -13,7 +13,7 @@
                             <div class="form-group">
                                 <label>{{ 'CUSTOMER_MENU' | translate }}</label>
                                 <select class="form-control" ng-model="parent.currentCustomerId" ng-change="parent.selectCustomer(parent.editWorkflowUnit)">
-                                    <option value="-1" selected > - Select Customer - </option>                                                                     
+                                    <option value="-1" selected > - {{ 'CUSTOMER_CREATE' | translate }} - </option>                                                                     
                                     <option value="{{customer.id}}" ng-repeat="customer in service.customerService.getActiveCustomer()">{{customer.firstname}} {{customer.lastname}}</option>                                          
                                 </select>
                             </div>
@@ -26,19 +26,19 @@
                             </div>
                             <!-- FIRSTNAME -->
                             <div class="form-group" ng-class="{ 'has-error' : parent.editForm.firstname.$invalid && !parent.editForm.firstname.$pristine }">
-                                <label>{{ 'COMMON_FIRSTNAME' | translate }}*</label>
+                                <label>{{ 'COMMON_FIRSTNAME' | translate }}<span style="color:red">*</span></label>
                                 <input required type="text" name="firstname" class="form-control" ng-model="parent.editWorkflowUnit.customer.firstname" ng-maxlength="30"
                                     ng-disabled="parent.customerSelected">
                                 <p ng-show="parent.editForm.firstname.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-                                <p ng-show="parent.editForm.firstname.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+                                <p ng-show="parent.editForm.firstname.$error.required && !parent.editForm.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
                             </div>
                             <!-- LASTNAME -->
                             <div class="form-group" ng-class="{ 'has-error' : parent.editForm.lastname.$invalid && !parent.editForm.lastname.$pristine }">
-                                <label>{{ 'COMMON_LASTNAME' | translate }}</label>
+                                <label>{{ 'COMMON_LASTNAME' | translate }}<span style="color:red">*</span></label>
                                 <input required type="text" name="lastname" class="form-control" ng-model="parent.editWorkflowUnit.customer.lastname" ng-maxlength="30"
                                     ng-disabled="parent.customerSelected">
                                 <p ng-show="parent.editForm.lastname.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-                                <p ng-show="parent.editForm.lastname.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+                                <p ng-show="parent.editForm.lastname.$error.required && !parent.editForm.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
                             </div>
                             <!-- COMPANY -->
                             <div class="form-group" ng-class="{ 'has-error' : parent.editForm.company.$invalid && !parent.editForm.company.$pristine }">
@@ -71,7 +71,7 @@
                             </div>
                             <!-- Delivery Address -->
                             <div class="form-group" ng-class="{ 'has-error' : parent.editForm.deliveryAddress.$invalid && !parent.editForm.deliveryAddress.$pristine }">
-                                <label>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</label>
+                                <label>{{ 'COMMON_PRODUCT_DESTINATION' | translate }}</label>
                                 <input type="text" name="deliveryAddress" class="form-control" ng-model="parent.editWorkflowUnit.deliveryAddress" ng-maxlength="50">
                                 <p ng-show="parent.editForm.deliveryAddress.$invalid && !parent.editForm.deliveryAddress.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
@@ -89,21 +89,21 @@
                             </div>
                             <!-- OFFER PRICE -->
                             <div ng-if="type=='offer'" class="form-group" ng-class="{ 'has-error' : parent.editForm.offerPrice.$invalid && !parent.editForm.offerPrice.$pristine }">
-                                <label>{{ 'COMMON_CONTAINER_OFFER_PRICE'| translate }} *</label>
+                                <label>{{ 'COMMON_PRODUCT_OFFER_PRICE'| translate }} *</label>
                                 <input type="number" name="offerPrice" class="form-control" ng-model="parent.editWorkflowUnit.offerPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
                                     step="0.01" required>
                                 <p ng-show="parent.editForm.offerPrice.$invalid && !parent.editForm.offerPrice.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
                             </div>
                             <!-- SALE TURNOVER -->
                             <div ng-if="type=='sale'" class="form-group" ng-class="{ 'has-error' : parent.editForm.saleTurnover.$invalid && !parent.editForm.saleTurnover.$pristine }">
-                                <label>{{ 'COMMON_CONTAINER_SALE_TURNOVER'| translate }} *</label>
+                                <label>{{ 'COMMON_PRODUCT_SALE_TURNOVER'| translate }} *</label>
                                 <input type="number" name="saleTurnover" class="form-control" ng-model="parent.editWorkflowUnit.saleTurnover" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
                                     step="0.01" required>
                                 <p ng-show="parent.editForm.saleTurnover.$invalid && !parent.editForm.saleTurnover.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
                             </div>
                             <!-- SALE PROFIT -->
                             <div ng-if="type=='sale'" class="form-group" ng-class="{ 'has-error' : parent.editForm.saleProfit.$invalid && !parent.editForm.saleProfit.$pristine }">
-                                <label>{{ 'COMMON_CONTAINER_SALE_PROFIT'| translate }} *</label>
+                                <label>{{ 'COMMON_PRODUCT_SALE_PROFIT'| translate }} *</label>
                                 <input type="number" name="saleProfit" class="form-control" ng-model="parent.editWorkflowUnit.saleProfit" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
                                     step="0.01" required>
                                 <p ng-show="parent.editForm.saleProfit.$invalid && !parent.editForm.saleProfit.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
@@ -152,7 +152,7 @@
                         <div class="col-sm-12">
                             <div>
                                 <div class="form-group ">
-                                    <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{parent.sumOrderPositions(parent.currentOrderPositions)|
+                                    <h2>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}: {{parent.sumOrderPositions(parent.currentOrderPositions)|
                                         currency:'\u20AC'}}
                                     </h2>
                                 </div>
