@@ -78,7 +78,7 @@ class WorkflowService {
             timestamp: newTimestamp("DD.MM.YYYY HH:mm:ss"),
         };
         this.commentResource.save(comment).$promise.then(function () {
-            let timestamp = toLocalDate(comment.timestamp);
+            let timestamp = toLocalDate(comment.timestamp, "DD.MM.YYYY HH:mm:ss");
             comment.timestamp = timestamp;
             comments.push(comment);
             defer.resolve(true);
@@ -221,6 +221,8 @@ class WorkflowService {
             }
         }, {
                 extend: "print",
+                orientation: "landscape",
+                title: title,
                 exportOptions: {
                     columns: columns,
                     modifier: {
@@ -334,22 +336,20 @@ class WorkflowService {
         }
     }
 
-    selectCustomer(workflow: any, currentCustomerId: string, customerSelected: boolean) {
+    selectCustomer(workflow: any, currentCustomerId: string): boolean {
         if (isNullOrUndefined(Number(currentCustomerId)) || Number(currentCustomerId) <= 0) {
-            customerSelected = false;
             workflow.customer = new Customer();
             workflow.customer.id = 0;
-            return;
+            return false;
         }
         let temp: Customer = findElementById(this.customerService.customers, Number(currentCustomerId)) as Customer;
         if (isNullOrUndefined(temp)) {
-            customerSelected = false;
             workflow.customer = new Customer();
             workflow.customer.id = 0;
-            return;
+            return false;
         }
         workflow.customer = deepCopy(temp);
-        customerSelected = true;
+        return true;
     }
 }
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);

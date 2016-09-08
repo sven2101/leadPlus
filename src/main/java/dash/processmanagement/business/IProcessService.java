@@ -39,7 +39,8 @@ public interface IProcessService {
 
 	public Iterable<Process> getAll();
 
-	public Process setStatus(final long id, final String status) throws SaveFailedException, NotFoundException, UpdateFailedException;
+	public Process setStatus(final long id, final String status)
+			throws SaveFailedException, NotFoundException, UpdateFailedException;
 
 	public void saveProcesses(final List<Process> processes) throws SaveFailedException;
 
@@ -55,10 +56,12 @@ public interface IProcessService {
 
 	public Sale createSale(final long processId, final Sale sale) throws SaveFailedException;
 
-	public User setProcessor(final long processId, final long userId) throws NotFoundException;
+	public User setProcessor(final long processId, final long userId) throws Exception;
 
 	public List<Process> getProcessWithLatestSales(final int amount);
 
 	public void removeProcessorByProcessId(final long processId) throws UpdateFailedException;
+
+	public List<Process> getProcessesByProcessor(final long processorId);
 
 }

@@ -21,6 +21,9 @@ import static dash.Constants.PROCESS_NOT_FOUND;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_NOT_FOUND;
+import static dash.processmanagement.business.ProcessSpecs.isOpen;
+import static dash.processmanagement.business.ProcessSpecs.isProcessor;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +97,8 @@ public class ProcessService implements IProcessService {
 				try {
 					process.setProcessor(userService.getUserByName("admin"));
 				} catch (NotFoundException nfex) {
-					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, nfex);
+					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+							nfex);
 				}
 				saleService.save(process.getSale());
 			}
@@ -223,7 +227,6 @@ public class ProcessService implements IProcessService {
 	public void delete(final long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
-
 				processRepository.delete(id);
 			} catch (EmptyResultDataAccessException erdaex) {
 				logger.error(PROCESS_NOT_FOUND + OfferService.class.getSimpleName() + erdaex.getMessage(), erdaex);
@@ -255,7 +258,8 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process setStatus(long id, String status) throws SaveFailedException, NotFoundException, UpdateFailedException {
+	public Process setStatus(long id, String status)
+			throws SaveFailedException, NotFoundException, UpdateFailedException {
 		if (Optional.ofNullable(status).isPresent()) {
 			Process process = getById(id);
 			process.setStatus(Status.valueOf(status));
@@ -285,5 +289,10 @@ public class ProcessService implements IProcessService {
 				temp.setWorkflow(process.getSale());
 			}
 		}
+	}
+
+	@Override
+	public List<Process> getProcessesByProcessor(long processorId) {
+		return processRepository.findAll(where(isProcessor(processorId)).and(isOpen()));
 	}
 }

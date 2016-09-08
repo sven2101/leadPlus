@@ -67,13 +67,6 @@ class OfferController extends AbstractWorkflow {
         this.compile = $compile;
 
         let self = this;
-        function refreshData() {
-            let resetPaging = false;
-            this.dtInstance.reloadData(resetPaging);
-        }
-        function changeDataInput() {
-            self.workflowService.changeDataInput(self.loadAllData, self.dtOptions, allDataOfferRoute, openDataOfferRoute);
-        }
         function createdRow(row, data: Process, dataIndex) {
             self.offerService.setRow(data.id, row);
             self.offerDataTableService.configRow(row, data);
@@ -93,6 +86,15 @@ class OfferController extends AbstractWorkflow {
         }
         this.dtOptions = this.offerDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.offerDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
+    }
+
+    refreshData() {
+        let resetPaging = false;
+        this.dtInstance.reloadData(resetPaging);
+    }
+
+    changeDataInput() {
+        this.workflowService.changeDataInput(this.loadAllData, this.dtOptions, allDataOfferRoute, openDataOfferRoute);
     }
 
     tabOnClick(tab: number) {
@@ -171,7 +173,7 @@ class OfferController extends AbstractWorkflow {
     }
 
     selectCustomer(workflow: any) {
-        this.workflowService.selectCustomer(workflow, this.currentCustomerId, this.customerSelected);
+        this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
 
     followUp(process: Process) {

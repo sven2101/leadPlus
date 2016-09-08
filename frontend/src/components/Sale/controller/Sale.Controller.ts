@@ -67,13 +67,6 @@ class SaleController extends AbstractWorkflow {
         this.compile = $compile;
 
         let self = this;
-        function refreshData() {
-            let resetPaging = false;
-            this.dtInstance.reloadData(resetPaging);
-        }
-        function changeDataInput() {
-            self.workflowService.changeDataInput(self.loadAllData, self.dtOptions, allDataSaleRoute, openDataSaleRoute);
-        }
         function createdRow(row, data: Process, dataIndex) {
             self.saleService.setRow(data.id, row);
             self.compile(angular.element(row).contents())(self.scope);
@@ -92,6 +85,14 @@ class SaleController extends AbstractWorkflow {
         }
         this.dtOptions = this.saleDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.saleDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
+    }
+
+    refreshData() {
+        let resetPaging = false;
+        this.dtInstance.reloadData(resetPaging);
+    }
+    changeDataInput() {
+        this.workflowService.changeDataInput(this.loadAllData, this.dtOptions, allDataSaleRoute, openDataSaleRoute);
     }
 
     tabOnClick(tab: number) {
@@ -162,7 +163,7 @@ class SaleController extends AbstractWorkflow {
     }
 
     selectCustomer(workflow: any) {
-        this.workflowService.selectCustomer(workflow, this.currentCustomerId, this.customerSelected);
+        this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
 }
 angular.module(moduleSale, [ngResourceId]).controller(SaleControllerId, SaleController);

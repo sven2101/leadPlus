@@ -30,23 +30,7 @@
                         <td>{{dashboardCtrl.workflowModalData.customer.phone}}</td>
                     </tr>
                     <tr>
-                        <td>{{ 'COMMON_CONTAINER' | translate }}</td>
-                        <td>{{dashboardCtrl.workflowModalData.container.name}}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'COMMON_CONTAINER_DESC' | translate }}</td>
-                        <td>{{dashboardCtrl.workflowModalData.container.description}}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'COMMON_CONTAINER_AMOUNT' | translate }}</td>
-                        <td>{{dashboardCtrl.workflowModalData.containerAmount}}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'COMMON_CONTAINER_SINGLE_PRICE' | translate }}</td>
-                        <td>{{dashboardCtrl.workflowModalData.container.priceNetto | currency:'\u20AC'}}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</td>
+                        <td>{{ 'COMMON_PRODUCT_DESTINATION' | translate }}</td>
                         <td>{{dashboardCtrl.workflowModalData.deliveryAddress}}</td>
                     </tr>
                     <tr ng-if="dashboardCtrl.infoType == 'offer'">
@@ -56,7 +40,7 @@
                         </td>
                     </tr>
                     <tr ng-if="dashboardCtrl.infoType == 'offer'">
-                        <td>{{ 'COMMON_CONTAINER_OFFER_PRICE' | translate }}</td>
+                        <td>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</td>
                         <td>{{dashboardCtrl.workflowModalData.offerPrice |
                             currency:'\u20AC'}}
                         </td>
