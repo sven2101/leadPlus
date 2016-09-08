@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span
                         aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">{{ 'LEAD_EDIT_LEAD_MODAL' | translate }}</h4>
+                <h4 class="modal-title">{{modaltitle}}</h4>
             </div>
             <div class="modal-body">
                 <form name="parent.editForm" novalidate>
@@ -14,7 +14,7 @@
                                 <label>{{ 'CUSTOMER_MENU' | translate }}</label>
                                 <select class="form-control" ng-model="parent.currentCustomerId" ng-change="parent.selectCustomer(parent.editWorkflowUnit)">
                                     <option value="-1" selected > - Select Customer - </option>                                                                     
-                                    <option value="{{customer.id}}" ng-repeat="customer in parent.leadService.customerService.getActiveCustomer()">{{customer.firstname}} {{customer.lastname}}</option>                                          
+                                    <option value="{{customer.id}}" ng-repeat="customer in service.customerService.getActiveCustomer()">{{customer.firstname}} {{customer.lastname}}</option>                                          
                                 </select>
                             </div>
                             <div class="form-group">
@@ -43,11 +43,10 @@
                             <!-- COMPANY -->
                             <div class="form-group" ng-class="{ 'has-error' : parent.editForm.company.$invalid && !parent.editForm.company.$pristine }">
                                 <label>{{ 'COMMON_COMPANY' | translate }}</label>
-                                <input type="text" name="company" class="form-control" ng-model="parent.editWorkflowUnit.customer.company" ng-maxlength="50" ng-disabled="parent.customerSelected">
+                                <input type="text" name="company" class="form-control" ng-model="parent.editWorkflowUnit.customer.company" ng-maxlength="50"
+                                    ng-disabled="parent.customerSelected">
                                 <p ng-show="parent.editForm.company.$invalid && !parent.editForm.company.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
-                        </div>
-                        <div class="col-sm-6">
                             <!-- EMAIL -->
                             <div class="form-group" ng-class="{ 'has-error' : parent.editForm.email.$invalid && !parent.editForm.email.$pristine }">
                                 <label>{{ 'COMMON_EMAIL' | translate }}</label>
@@ -57,9 +56,12 @@
                             <!-- PHONE -->
                             <div class="form-group" ng-class="{ 'has-error' : parent.editForm.phone.$invalid && !parent.editForm.phone.$pristine }">
                                 <label>{{ 'COMMON_PHONE' | translate }}</label>
-                                <input type="text" name="phone" class="form-control" ng-model="parent.editWorkflowUnit.customer.phone" ng-maxlength="50" ng-disabled="parent.customerSelected">
+                                <input type="text" name="phone" class="form-control" ng-model="parent.editWorkflowUnit.customer.phone" ng-maxlength="50"
+                                    ng-disabled="parent.customerSelected">
                                 <p ng-show="parent.editForm.phone.$invalid && !parent.editForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
+                        </div>
+                        <div class="col-sm-6">
                             <!-- MESSAGE -->
                             <div>
                                 <div class="form-group">
@@ -67,14 +69,35 @@
                                     <textarea class="form-control" rows="5" name="message" style="resize:vertical;" ng-model="parent.editWorkflowUnit.message"></textarea>
                                 </div>
                             </div>
-                            <!-- CONTAINER DESTINATION -->
-                            <div class="form-group" ng-class="{ 'has-error' : parent.editForm.containerDestination.$invalid && !parent.editForm.containerDestination.$pristine }">
+                            <!-- Delivery Address -->
+                            <div class="form-group" ng-class="{ 'has-error' : parent.editForm.deliveryAddress.$invalid && !parent.editForm.deliveryAddress.$pristine }">
                                 <label>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</label>
-                                <input type="text" name="containerDestination" class="form-control" ng-model="parent.editWorkflowUnit.deliveryAddress" ng-maxlength="50">
-                                <p ng-show="parent.editForm.containerDestination.$invalid && !parent.editForm.containerDestination.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                                <input type="text" name="deliveryAddress" class="form-control" ng-model="parent.editWorkflowUnit.deliveryAddress" ng-maxlength="50">
+                                <p ng-show="parent.editForm.deliveryAddress.$invalid && !parent.editForm.deliveryAddress.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            </div>
+                            <!-- DELIVERY DATE -->
+                            <div ng-show="type=='offer'" class="form-group" id="editOfferDatepicker">
+                                <label>{{ 'COMMON_DELIVERY_TIME' | translate }}</label>
+                                <div ng-show="$root.language == 'DE'" class="input-group date" data-date-language="de" data-date-format="dd.mm.yyyy">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="deliveryDate" ng-model="parent.editWorkflowUnit.deliveryDate">
+                                </div>
+                                <div ng-show="$root.language == 'EN'" class="input-group date" data-date-language="en" data-date-format="dd.mm.yyyy">
+                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="deliveryDate" ng-model="parent.editWorkflowUnit.deliveryDate">
+                                </div>
+                            </div>
+                            <!-- OFFER PRICE -->
+                            <div ng-if="type=='offer'" class="form-group" ng-class="{ 'has-error' : parent.editForm.offerPrice.$invalid && !parent.editForm.offerPrice.$pristine }">
+                                <label>{{ 'COMMON_CONTAINER_OFFER_PRICE'| translate }} *</label>
+                                <input type="number" name="offerPrice" class="form-control" ng-model="parent.editWorkflowUnit.offerPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+                                    step="0.01" required>
+                                <p ng-show="parent.editForm.offerPrice.$invalid && !parent.editForm.offerPrice.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
                             </div>
                         </div>
-                        <div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
                             <h2>{{ 'PRODUCT_MENU' | translate }}</h2>
                             <table class="table">
                                 <thead>
@@ -82,7 +105,7 @@
                                         <th>
                                             <select class="form-control" ng-model="parent.currentProductId">
                                             <option value="-1" selected disabled hidden>{{ 'LEAD_EDIT_SELECT_PRODUCT' | translate }}</option>                                     
-                                            <option value="{{product.id}}" ng-repeat="product in parent.leadService.productService.getActiveProducts()">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
+                                            <option value="{{product.id}}" ng-repeat="product in service.productService.getActiveProducts()">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
                                         </select>
                                         </th>
                                         <th class="col-md-1"></th>
@@ -109,23 +132,39 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!-- ENTIRE PRICE -->
-                        <div>
-                            <div class="form-group ">
-                                <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{parent.sumOrderPositions(parent.currentOrderPositions)|
-                                    currency:'\u20AC'}}
-                                </h2>
+                    </div>
+                    <!-- ENTIRE PRICE -->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div>
+                                <div class="form-group ">
+                                    <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{parent.sumOrderPositions(parent.currentOrderPositions)|
+                                        currency:'\u20AC'}}
+                                    </h2>
+                                </div>
                             </div>
                         </div>
+                    </div>
                 </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL'| translate }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL'| translate }}
                 </button>
-                    <button type="submit" class="btn btn-success" ng-disabled="parent.editForm.$invalid" ng-click="parent.saveLead(parent.edit)"
-                        data-dismiss="modal">{{ 'COMMON_SAVE'| translate }}
+                <button type="submit" class="btn btn-success" ng-disabled="parent.editForm.$invalid" ng-click="parent.save(parent.edit)"
+                    data-dismiss="modal">{{ 'COMMON_SAVE'| translate }}
                 </button>
-                </div>
             </div>
         </div>
     </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#editOfferDatepicker .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true
+        });
+    });
+</script>

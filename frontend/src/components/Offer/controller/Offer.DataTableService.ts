@@ -156,6 +156,12 @@ class OfferDataTableService {
             config.hasRightToDelete = true;
         }
         templateData.config = config;
+        let translation = {
+            "nextWorkflowUnit": this.translate.instant("OFFER_CREATE_SALE"),
+            "editWorkflowUnit": this.translate.instant("OFFER_EDIT_OFFER"),
+            "deleteWorkflowUnit": this.translate.instant("OFFER_DELETE_OFFER"),
+        };
+        templateData.translation = translation;
     }
 
     getActionButtonsHTML(templateData: any): string {

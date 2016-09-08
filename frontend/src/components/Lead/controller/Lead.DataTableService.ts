@@ -153,6 +153,12 @@ class LeadDataTableService {
             config.disablePin = true;
         }
         templateData.config = config;
+        let translation = {
+            "nextWorkflowUnit": this.translate.instant("LEAD_FOLLOW_UP"),
+            "editWorkflowUnit": this.translate.instant("LEAD_EDIT_LEAD"),
+            "deleteWorkflowUnit": this.translate.instant("LEAD_DELETE_LEAD"),
+        };
+        templateData.translation = translation;
     }
 
     getActionButtonsHTML(templateData: any): string {

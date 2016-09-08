@@ -1,6 +1,6 @@
 <div style="white-space: nowrap;">
     <button class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.createOffer(parent.processes[directiveData.process.id]) "
-        title="{{'LEAD_FOLLOW_UP' | translate }}">
+        title="{{directiveData.translation.nextWorkflowUnit}}">
         <i class="fa fa-check"></i>
     </button>&nbsp;
     <button ng-if="type=='lead'" class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.pin(parent.processes[directiveData.process.id])"
@@ -16,11 +16,11 @@
          <i class="{{directiveData.config.faOpenOrLock}}"></i>
     </button>&nbsp;
     <button class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenDisable" ng-click="parent.loadDataToModal(parent.processes[directiveData.process.id])"
-        data-toggle="modal" data-target="#editModal" title="{{'LEAD_EDIT_LEAD' | translate }}">
+        data-toggle="modal" data-target="#editModal" title="{{directiveData.translation.editWorkflowUnit}}">
     <i class="fa fa-edit"></i>
     </button>&nbsp;
     <button class="btn btn-white" ng-disabled="directiveData.config.hasRightToDelete" ng-click="parent.deleteRow(parent.processes[directiveData.process.id])"
-        title="{{'LEAD_DELETE_LEAD' | translate }}">
+        title="{{directiveData.translation.deleteWorkflowUnit}}">
     <i class="fa fa-trash-o"></i>
    </button>
 </div>
