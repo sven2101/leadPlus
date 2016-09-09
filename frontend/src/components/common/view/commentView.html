@@ -2,16 +2,16 @@
     <div class="ibox chat-view">
         <div class="ibox-title text-left">
             {{ 'COMMON_COMMENTS' | translate }}
-            <small ng-if="parent.comments[process.id].length>0" class="pull-right text-muted">{{ 'COMMON_COMMENTS_LAST' | translate }}:
-                {{(parent.comments[process.id])[(parent.comments[process.id]).length-1].timestamp|
+            <small ng-if="process.comments.length>0" class="pull-right text-muted">{{ 'COMMON_COMMENTS_LAST' | translate }}:
+                {{process.comments[process.comments.length-1].timestamp|
                 date:'dd.MM.yyyy HH:mm'}}
             </small>
         </div>
         <div class="ibox-content text-left">
-            <div class="row" ng-if="parent.comments[process.id].length>0">
+            <div class="row" ng-if="process.comments.length>0">
                 <div class="col-md-12">
-                    <div class="chat-discussion" ng-model="parent.comments[process.id]">
-                        <div ng-repeat="comment in parent.comments[process.id] | orderBy: '-timestamp' | limitTo: 3">
+                    <div class="chat-discussion" ng-model="process.comments">
+                        <div ng-repeat="comment in process.comments | orderBy: '-timestamp' | limitTo: 3">
                             <div ng-if="$index%2==0" class="chat-message left">
                                 <img class="message-avatar" src="assets/img/guest.png" alt="">
                                 <div class="message">
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                         </br>
-                        <div ng-if="parent.comments[process.id].length>3" class="text-center"><a ng-click="parent.loadCurrentIdToModal(process.id)" data-toggle="modal" data-target="#commentModal">{{ 'COMMON_COMMENTS_HISTORY' | translate }}</a>
+                        <div ng-if="process.comments.length>3" class="text-center"><a data-toggle="modal" data-target="#commentModal">{{ 'COMMON_COMMENTS_HISTORY' | translate }}</a>
                         </div>
                     </div>
                 </div>

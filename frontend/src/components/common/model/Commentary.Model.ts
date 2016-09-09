@@ -1,6 +1,5 @@
 /// <reference path="../../common/model/AbstractModel.Model.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -17,7 +16,6 @@ class Commentary extends AbstractModel {
     commentText: string;
     timestamp: any;
     creator: User;
-    process: Process;
 
     constructor() {
         super();

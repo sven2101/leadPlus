@@ -57,13 +57,15 @@ public class CommentService implements ICommentService {
 	private IUserService userService;
 
 	@Override
-	public Comment save(final Comment comment) throws SaveFailedException {
-		System.out.println("Comment: " + comment.toString());
-		if (Optional.ofNullable(comment).isPresent() && Optional.ofNullable(comment.getCreator()).isPresent()
+	public Comment save(final Comment comment, final Long processId) throws SaveFailedException {
+		if (processId > 0 && Optional.ofNullable(comment).isPresent()
+				&& Optional.ofNullable(comment.getCreator()).isPresent()
 				&& Optional.ofNullable(comment.getCreator().getId()).isPresent()) {
 			try {
 				final User user = userService.getById(comment.getCreator().getId());
-				if (Optional.ofNullable(user).isPresent()) {
+				final Process process = processService.getById(processId);
+				if (Optional.ofNullable(user).isPresent() && process != null) {
+					comment.setProcess(process);
 					return commentRepository.save(comment);
 				} else {
 					SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
@@ -107,7 +109,7 @@ public class CommentService implements ICommentService {
 	public Comment update(final Comment comment) throws UpdateFailedException {
 		if (Optional.ofNullable(comment).isPresent()) {
 			try {
-				return save(comment);
+				return save(comment, comment.getProcess().getId());
 			} catch (IllegalArgumentException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + CommentService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);

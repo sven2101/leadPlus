@@ -2,6 +2,7 @@
 /// <reference path="../../Lead/model/Lead.Model.ts" />
 /// <reference path="../../Offer/model/Offer.Model.ts" />
 /// <reference path="../../Sale/model/Sale.Model.ts" />
+/// <reference path="../../common/model/Commentary.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -22,4 +23,9 @@ class Process extends AbstractModel {
     sale: Sale;
     processor: any;
     status: any;
+    comments: Array<Commentary>;
+    constructor() {
+        super();
+        this.comments = new Array<Commentary>();
+    }
 }

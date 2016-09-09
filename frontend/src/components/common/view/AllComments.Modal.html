@@ -11,15 +11,15 @@
                 <div class="text-left">
                     {{ 'COMMON_COMMENTS' | translate }}
                     <small class="pull-right text-muted">{{ 'COMMON_COMMENTS_LAST' | translate }}:
-                        {{(parent.comments[parent.currentCommentModalId])[(parent.comments[parent.currentCommentModalId]).length-1].timestamp|
+                        {{process.comments[process.comments.length-1].timestamp|
                         date:'dd.MM.yyyy HH:mm'}}
                     </small>
                 </div>
                 <div class=" text-left">
                     <div class="row">
                         <div class="col-md-12 ">
-                            <div class="chat-discussion" ng-model="parent.comments[parent.currentCommentModalId]">
-                                <div ng-repeat="comment in parent.comments[parent.currentCommentModalId] | orderBy: '-timestamp'">
+                            <div class="chat-discussion" ng-model="process.comments">
+                                <div ng-repeat="comment in process.comments | orderBy: '-timestamp'">
                                     <div ng-if="$index%2==0" class="chat-message left">
                                         <img class="message-avatar" src="assets/img/guest.png" alt="">
                                         <div class="message">
@@ -49,10 +49,10 @@
                             <div class="chat-message-form" style="width:100%">
 
                                 <div class="form-group" style="width:100%">
-                                    <textarea class="form-control message-input" ng-model="parent.commentModalInput[parent.currentCommentModalId]" style="resize: none; width:100%;box-sizing: border-box;"
+                                    <textarea class="form-control message-input" ng-model="parent.commentModalInput[process.id]" style="resize: none; width:100%;box-sizing: border-box;"
                                         name="message" placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}" />
                                 </div>
-                                <button style="width:40%; margin-top: 10px;" class="btn btn-success" ng-click="parent.addComment(parent.currentCommentModalId,parent.commentModalInput)">
+                                <button style="width:40%; margin-top: 10px;" class="btn btn-success" ng-click="parent.addComment(process.id,parent.commentModalInput)">
                                     <i class="fa fa-comment-o"></i>&nbsp; {{ 'COMMON_COMMENTS_ADD' | translate }}
                                 </button>
                             </div>

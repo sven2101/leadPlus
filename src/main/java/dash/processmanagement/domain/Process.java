@@ -14,16 +14,21 @@
 
 package dash.processmanagement.domain;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import dash.commentmanagement.domain.Comment;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.salemanagement.domain.Sale;
@@ -49,6 +54,9 @@ public class Process {
 	@JoinColumn(name = "sale_fk", nullable = true)
 	private Sale sale;
 
+	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
+	private List<Comment> comments;
+
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
@@ -70,6 +78,10 @@ public class Process {
 
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Lead getLead() {
@@ -112,10 +124,20 @@ public class Process {
 		this.processor = processor;
 	}
 
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lead == null) ? 0 : lead.hashCode());
 		result = prime * result + ((offer == null) ? 0 : offer.hashCode());
 		result = prime * result + ((processor == null) ? 0 : processor.hashCode());
@@ -133,6 +155,16 @@ public class Process {
 		if (getClass() != obj.getClass())
 			return false;
 		Process other = (Process) obj;
+		if (comments == null) {
+			if (other.comments != null)
+				return false;
+		} else if (!comments.equals(other.comments))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
 		if (lead == null) {
 			if (other.lead != null)
 				return false;
@@ -160,8 +192,8 @@ public class Process {
 
 	@Override
 	public String toString() {
-		return "Process [id=" + id + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale + ", status=" + status
-				+ ", processor=" + processor + "]";
+		return "Process [id=" + id + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale + ", comments=" + comments
+				+ ", status=" + status + ", processor=" + processor + "]";
 	}
 
 }

@@ -63,24 +63,27 @@ class WorkflowService {
         this.user = $rootScope.currentUser;
     }
 
-    addComment(comments: Array<Commentary>, process: Process, commentText: string): IPromise<boolean> {
+    addComment(process: Process, commentText: string): IPromise<boolean> {
         let defer = this.$q.defer();
         if (angular.isUndefined(commentText) || commentText === "") {
             defer.reject(false);
             return defer.promise;
         }
+        if (isNullOrUndefined(process.comments)) {
+            process.comments = new Array<Commentary>();
+        }
         let self: WorkflowService = this;
         let comment: Commentary = {
             id: null,
-            process: process,
             creator: this.user,
             commentText: commentText,
             timestamp: newTimestamp("DD.MM.YYYY HH:mm:ss"),
         };
-        this.commentResource.save(comment).$promise.then(function () {
+
+        this.commentResource.save({ id: process.id }, comment).$promise.then(function () {
             let timestamp = toLocalDate(comment.timestamp, "DD.MM.YYYY HH:mm:ss");
             comment.timestamp = timestamp;
-            comments.push(comment);
+            process.comments.push(comment);
             defer.resolve(true);
         }, function () {
             defer.reject(false);
@@ -116,7 +119,7 @@ class WorkflowService {
         array.splice(index, 1);
     }
 
-    sumOrderPositions(array: Array<OrderPosition>) {
+    sumOrderPositions(array: Array<OrderPosition>): number {
         let sum = 0;
         if (isNullOrUndefined(array)) {
             return 0;
