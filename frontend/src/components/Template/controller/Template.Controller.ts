@@ -40,15 +40,15 @@ class TemplateController {
         }
 
         this.template = null;
-        this.closeEmailTemplateModal();
+        this.close();
     }
 
     remove() {
         this.templateService.remove(this.template);
-        this.closeEmailTemplateModal();
+        this.close();
     }
 
-    closeEmailTemplateModal() {
+    close() {
         this.uibModalInstance.close();
     }
 

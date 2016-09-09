@@ -57,7 +57,7 @@ class SettingService {
 
         this.loadUsers();
         this.templateService = TemplateService;
-        this.templateService.getAllTemplates();
+        this.templateService.getAll();
     }
 
     loadUsers() {

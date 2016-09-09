@@ -30,10 +30,10 @@ class TemplateService {
     uibModal;
     templates: Array<Template>;
 
-    constructor(toaster, $translate, $rootScope, TemplateResource, uibModal) {
+    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal) {
         this.toaster = toaster;
         this.translate = $translate;
-        this.uibModal = uibModal;
+        this.uibModal = $uibModal;
         this.templateResource = TemplateResource.resource;
     }
 

@@ -96,7 +96,7 @@
                         <div class="project-list">
                             <table class="table table-hover">
                                 <tbody>
-                                    <tr ng-repeat="template in settingCtrl.settingService.templates">
+                                    <tr ng-repeat="template in settingCtrl.templateService.templates">
                                         <td class="project-status col-md-1">
                                             <span ng-show="!template.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
                                             <span ng-show="template.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
