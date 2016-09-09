@@ -25,7 +25,7 @@ const SettingControllerId: string = "SettingController";
 
 class SettingController {
 
-    private $inject = [SettingServiceId, SmtpServiceId, TemplateServiceId];
+    private $inject = [SettingServiceId, SmtpServiceId, TemplateServiceId, $rootScopeId];
 
     createTemplateForm;
 
@@ -41,17 +41,19 @@ class SettingController {
     setting: Setting;
     template: Template;
 
-    constructor(SettingService, SmtpService, TemplateService) {
+    rootScope;
+
+    constructor(SettingService, SmtpService, TemplateService, $rootScope) {
         this.smtp = new Smtp();
-        this.setting = new Setting();
         this.template = new Template();
 
         this.settingService = SettingService;
         this.templateService = TemplateService;
         this.smtpService = SmtpService;
 
-        this.settingService.loadUsers();
+        this.rootScope = $rootScope;
 
+        this.settingService.loadUsers();
     }
 
     tabOnClick(tab: number) {
@@ -87,11 +89,11 @@ class SettingController {
     }
 
     testSmtpConnection() {
-        this.smtpService.test(this.smtp);
+        this.smtpService.test(this.rootScope.globals.user.smtp);
     }
 
     saveSmtpConnection() {
-        this.smtpService.save(this.smtp);
+        this.smtpService.save(this.rootScope.globals.user.smtp);
     }
 }
 angular.module(moduleSetting, [ngResourceId]).controller(SettingControllerId, SettingController);

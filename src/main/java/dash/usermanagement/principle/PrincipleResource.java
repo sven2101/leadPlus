@@ -57,7 +57,7 @@ public class PrincipleResource {
 		map.put("email", internalUser.getEmail());
 		map.put("id", String.valueOf(internalUser.getId()));
 		map.put("language", String.valueOf(internalUser.getLanguage()));
-		map.put("setting", internalUser.getSmtp());
+		map.put("smtp", internalUser.getSmtp());
 		map.put("profilePicture", internalUser.getProfilPicture());
 
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
