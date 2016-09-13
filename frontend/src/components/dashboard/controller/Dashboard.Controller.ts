@@ -34,7 +34,6 @@ class DashboardController {
     workflowModalData: IWorkflow;
     workflowModalType: string;
     workflowModalProcess: Process;
-    workflowComments: Array<Commentary>;
     sortableOptions: any;
     todos: Array<Process> = [];
 
@@ -60,7 +59,6 @@ class DashboardController {
         this.workflowModalData = info;
         this.workflowModalType = type;
         this.workflowModalProcess = process;
-        this.workflowComments = this.workflowService.getCommentsByProcessId(process.id);
     }
 
     refreshData() {
@@ -69,7 +67,7 @@ class DashboardController {
 
     addComment(process) {
         let self: DashboardController = this;
-        this.workflowService.addComment(this.workflowComments, process, this.commentModalInput).then(function () {
+        this.workflowService.addComment(process, this.commentModalInput).then(function () {
             self.commentModalInput = "";
         });
     }

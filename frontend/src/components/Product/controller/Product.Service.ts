@@ -51,6 +51,13 @@ class ProductService {
         }
     }
 
+    getAllProducts() {
+        let self = this;
+        this.productResource.getAllProducts().$promise.then(function (result: Array<Product>) {
+            self.products = result;
+        });
+    }
+
     getActiveProducts(): Array<Product> {
         let temp: Array<Product> = new Array<Product>();
         for (let product of this.products) {
@@ -59,13 +66,6 @@ class ProductService {
             }
         }
         return temp;
-    }
-
-    getAllProducts() {
-        let self = this;
-        this.productResource.getAllProducts().$promise.then(function (result: Array<Product>) {
-            self.products = result;
-        });
     }
 }
 

@@ -29,10 +29,13 @@ class CustomerController {
     customerService: CustomerService;
     location;
 
+    customers: Array<Customer>;
+
     constructor(CustomerService: CustomerService, $location) {
         this.customerService = CustomerService;
         this.location = $location;
     }
+
     refreshData(): void {
         this.customerService.getAllCustomer();
     }

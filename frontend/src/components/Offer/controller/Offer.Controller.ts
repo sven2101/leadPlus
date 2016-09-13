@@ -41,8 +41,6 @@ class OfferController extends AbstractWorkflow {
 
     commentInput: string;
     commentModalInput: string;
-    comments: { [key: number]: Array<Commentary> } = {};
-    currentCommentModalId: string = "";
     loadAllData: boolean = false;
     processes: { [key: number]: Process } = {};
     editForm: any;
@@ -67,13 +65,6 @@ class OfferController extends AbstractWorkflow {
         this.compile = $compile;
 
         let self = this;
-        function refreshData() {
-            let resetPaging = false;
-            this.dtInstance.reloadData(resetPaging);
-        }
-        function changeDataInput() {
-            self.workflowService.changeDataInput(self.loadAllData, self.dtOptions, allDataOfferRoute, openDataOfferRoute);
-        }
         function createdRow(row, data: Process, dataIndex) {
             self.offerService.setRow(data.id, row);
             self.offerDataTableService.configRow(row, data);
@@ -95,18 +86,22 @@ class OfferController extends AbstractWorkflow {
         this.dtColumns = this.offerDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
     }
 
+    refreshData() {
+        let resetPaging = false;
+        this.dtInstance.reloadData(resetPaging);
+    }
+
+    changeDataInput() {
+        this.workflowService.changeDataInput(this.loadAllData, this.dtOptions, allDataOfferRoute, openDataOfferRoute);
+    }
+
     tabOnClick(tab: number) {
         this.currentTab = tab;
     }
 
     appendChildRow(process: Process, event: any) {
         let childScope = this.scope.$new(true);
-        this.comments[process.id] = this.workflowService.getCommentsByProcessId(process.id);
         this.workflowService.appendChildRow(childScope, process, process.offer, this.dtInstance, this, "offer");
-    }
-
-    loadCurrentIdToModal(id: string) {
-        this.currentCommentModalId = id;
     }
 
     loadDataToModal(process: Process) {
@@ -121,7 +116,7 @@ class OfferController extends AbstractWorkflow {
     }
 
     addComment(id: number, input: string) {
-        this.workflowService.addComment(this.comments[id], this.processes[id], input[id]).then(function () {
+        this.workflowService.addComment(this.processes[id], input[id]).then(function () {
             input[id] = "";
         });
     }
@@ -162,16 +157,18 @@ class OfferController extends AbstractWorkflow {
         this.workflowService.deleteProduct(array, index);
     }
 
-    getOrderPositions(process: Process) {
-        return process.offer.orderPositions;
+    getOrderPositions(process: Process): Array<OrderPosition> {
+        if (!isNullOrUndefined(process.offer)) {
+            return process.offer.orderPositions;
+        }
     }
 
-    sumOrderPositions(array: Array<OrderPosition>) {
+    sumOrderPositions(array: Array<OrderPosition>): number {
         return this.workflowService.sumOrderPositions(array);
     }
 
     selectCustomer(workflow: any) {
-        this.workflowService.selectCustomer(workflow, this.currentCustomerId, this.customerSelected);
+        this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
 
     followUp(process: Process) {

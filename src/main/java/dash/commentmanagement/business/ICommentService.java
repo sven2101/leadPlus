@@ -30,7 +30,7 @@ public interface ICommentService {
 
 	public Comment getById(final Long id) throws NotFoundException;
 
-	public Comment save(final Comment comment) throws SaveFailedException;
+	public Comment save(final Comment comment, final Long processId) throws SaveFailedException;
 
 	public Comment update(final Comment comment) throws UpdateFailedException;
 

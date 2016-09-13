@@ -22,11 +22,11 @@
                         <td>{{workflowUnit.customer.phone}}</td>
                     </tr>
                     <tr>
-                        <td>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}</td>
+                        <td>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</td>
                         <td>{{workflowUnit.price | currency:'\u20AC'}}</td>
                     </tr>
                     <tr>
-                        <td>{{ 'COMMON_CONTAINER_DESTINATION' | translate }}</td>
+                        <td>{{ 'COMMON_PRODUCT_DESTINATION' | translate }}</td>
                         <td>{{workflowUnit.deliveryAddress}}</td>
                     </tr>
                     <tr ng-if="type=='offer'">
@@ -34,16 +34,16 @@
                         <td>{{workflowUnit.deliveryDate}}</td>
                     </tr>
                     <tr ng-if="type=='offer'">
-                        <td>{{ 'COMMON_CONTAINER_OFFER_PRICE' | translate }}</td>
+                        <td>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</td>
                         <td>{{workflowUnit.offerPrice | currency:'\u20AC'}}</td>
                     </tr>
                     <tr ng-if="type=='sale'">
-                        <td>{{ 'COMMON_CONTAINER_SALE_TURNOVER' | translate }}</td>
+                        <td>{{ 'COMMON_PRODUCT_SALE_TURNOVER' | translate }}</td>
                         <td>{{workflowUnit.saleTurnover | currency:'\u20AC'}}
                         </td>
                     </tr>
                     <tr ng-if="type=='sale'">
-                        <td>{{ 'COMMON_CONTAINER_SALE_PROFIT' | translate }}</td>
+                        <td>{{ 'COMMON_PRODUCT_SALE_PROFIT' | translate }}</td>
                         <td>{{workflowUnit.saleProfit | currency:'\u20AC'}}
                         </td>
                     </tr>

@@ -14,10 +14,10 @@
 
 package dash.notificationmanagement.business;
 
-import dash.notificationmanagement.domain.IMessage;
-import dash.usermanagement.domain.User;
+import dash.exceptions.SMTPdoesntExistsException;
+import dash.notificationmanagement.domain.Notification;
 
 public interface INotificationService {
 
-	void sendNotification(IMessage message, User user);
+	void sendNotification(final long userId, Notification notification) throws SMTPdoesntExistsException;
 }

@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import dash.commentmanagement.domain.Comment;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -112,6 +113,10 @@ public class ProcessService implements IProcessService {
 	public Process save(final Process process) throws SaveFailedException {
 		if (Optional.ofNullable(process).isPresent()) {
 			setOrderPositions(process);
+			if (process.getComments() != null)
+				for (Comment comment : process.getComments()) {
+					comment.setProcess(process);
+				}
 			return processRepository.save(process);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
@@ -184,7 +189,6 @@ public class ProcessService implements IProcessService {
 	public Process update(final Process process) throws UpdateFailedException {
 		if (Optional.ofNullable(process).isPresent()) {
 			try {
-				setOrderPositions(process);
 				return save(process);
 			} catch (IllegalArgumentException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + ProcessService.class.getSimpleName(), ex);
@@ -229,7 +233,6 @@ public class ProcessService implements IProcessService {
 	public void delete(final long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
-
 				processRepository.delete(id);
 			} catch (EmptyResultDataAccessException erdaex) {
 				logger.error(PROCESS_NOT_FOUND + OfferService.class.getSimpleName() + erdaex.getMessage(), erdaex);

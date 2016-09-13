@@ -144,7 +144,7 @@ class CommentResource {
         this.resource = $resource("/api/rest/comments/", {}, {
             getByProcessId: { url: "/api/rest/comments/processes/:id", method: "GET", isArray: true },
             getById: { url: "/api/rest/comments/:id", method: "GET" },
-            save: { url: "/api/rest/comments/", method: "POST" },
+            save: { url: "/api/rest/comments/:id", method: "POST" },
             update: { url: "/api/rest/comments", method: "PUT" },
             drop: { url: "/api/rest/comments/:id", method: "DELETE" }
         });
@@ -327,10 +327,10 @@ class TemplateResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/templates", {}, {
-            getAllTemplates: { url: "/api/rest/templates", method: "GET", isArray: true },
-            uploadTemplate: { url: "/api/rest/templates", method: "POST" },
-            updateTemplate: { url: "/api/rest/templates", method: "PUT" },
-            deleteTemplate: { url: "/api/rest/templates/:id", method: "DELETE" },
+            getAll: { url: "/api/rest/templates", method: "GET", isArray: true },
+            save: { url: "/api/rest/templates", method: "POST" },
+            update: { url: "/api/rest/templates", method: "PUT" },
+            remove: { url: "/api/rest/templates/:id", method: "DELETE" },
             generate: { url: "/api/rest/templates/:templateId/offers/:offerId/generate", method: "GET" }
         });
     }
@@ -350,10 +350,29 @@ class SmtpResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/smtps", {}, {
-            save: { url: "/api/rest/smtps/", method: "POST" },
+            save: { url: "/api/rest/smtps/users/:id", method: "POST" },
             test: { url: "/api/rest/smtps/connections/test", method: "POST" }
         });
     }
 }
 
 angular.module(moduleSmtpResource, [ngResourceId]).service(SmtpResourceId, SmtpResource);
+
+// ----------------------------------------------------------------------------------------
+
+const NotificationResourceId: string = "NotifictionResource";
+
+class NotifictionResource {
+
+    private $inject = [$resourceId];
+
+    resource: any;
+
+    constructor($resource) {
+        this.resource = $resource("/api/rest/notifications", {}, {
+            send: { url: "/api/rest/notifications/users/:id/offers/send", method: "POST" }
+        });
+    }
+}
+
+angular.module(moduleNotificationResource, [ngResourceId]).service(NotificationResourceId, NotifictionResource);

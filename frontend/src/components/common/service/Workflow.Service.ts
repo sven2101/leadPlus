@@ -63,24 +63,27 @@ class WorkflowService {
         this.user = $rootScope.currentUser;
     }
 
-    addComment(comments: Array<Commentary>, process: Process, commentText: string): IPromise<boolean> {
+    addComment(process: Process, commentText: string): IPromise<boolean> {
         let defer = this.$q.defer();
         if (angular.isUndefined(commentText) || commentText === "") {
             defer.reject(false);
             return defer.promise;
         }
+        if (isNullOrUndefined(process.comments)) {
+            process.comments = new Array<Commentary>();
+        }
         let self: WorkflowService = this;
         let comment: Commentary = {
             id: null,
-            process: process,
             creator: this.user,
             commentText: commentText,
             timestamp: newTimestamp("DD.MM.YYYY HH:mm:ss"),
         };
-        this.commentResource.save(comment).$promise.then(function () {
-            let timestamp = toLocalDate(comment.timestamp);
+
+        this.commentResource.save({ id: process.id }, comment).$promise.then(function () {
+            let timestamp = toLocalDate(comment.timestamp, "DD.MM.YYYY HH:mm:ss");
             comment.timestamp = timestamp;
-            comments.push(comment);
+            process.comments.push(comment);
             defer.resolve(true);
         }, function () {
             defer.reject(false);
@@ -116,7 +119,7 @@ class WorkflowService {
         array.splice(index, 1);
     }
 
-    sumOrderPositions(array: Array<OrderPosition>) {
+    sumOrderPositions(array: Array<OrderPosition>): number {
         let sum = 0;
         if (isNullOrUndefined(array)) {
             return 0;
@@ -154,9 +157,9 @@ class WorkflowService {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
-                if (process.processor === null) {
-                    self.processResource.setProcessor({ id: process.id }, self.user.id).$promise.then(function () {
-                        process.processor = self.user;
+                if (resultProcess.processor === null) {
+                    self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function (resultUser: User) {
+                        process.processor = resultUser;
                     });
                 }
 
@@ -221,6 +224,8 @@ class WorkflowService {
             }
         }, {
                 extend: "print",
+                orientation: "landscape",
+                title: title,
                 exportOptions: {
                     columns: columns,
                     modifier: {
@@ -334,22 +339,20 @@ class WorkflowService {
         }
     }
 
-    selectCustomer(workflow: any, currentCustomerId: string, customerSelected: boolean) {
+    selectCustomer(workflow: any, currentCustomerId: string): boolean {
         if (isNullOrUndefined(Number(currentCustomerId)) || Number(currentCustomerId) <= 0) {
-            customerSelected = false;
             workflow.customer = new Customer();
             workflow.customer.id = 0;
-            return;
+            return false;
         }
-        let temp: Customer = findElementById(this.customerService.customer, Number(currentCustomerId)) as Customer;
+        let temp: Customer = findElementById(this.customerService.customers, Number(currentCustomerId)) as Customer;
         if (isNullOrUndefined(temp)) {
-            customerSelected = false;
             workflow.customer = new Customer();
             workflow.customer.id = 0;
-            return;
+            return false;
         }
         workflow.customer = deepCopy(temp);
-        customerSelected = true;
+        return true;
     }
 }
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);

@@ -100,12 +100,7 @@ class LeadService {
     createOffer(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {
         let self = this;
         this.workflowService.addLeadToOffer(process).then(function (isResolved: any) {
-            if (loadAllData === true) {
-                self.updateRow(process, loadAllData, scope);
-            } else if (loadAllData === false) {
-                dtInstance.DataTable.row(self.rows[process.id]).remove()
-                    .draw();
-            }
+            self.removeOrUpdateRow(process, loadAllData, dtInstance, scope);
         });
     }
 
@@ -128,7 +123,7 @@ class LeadService {
         }
     }
 
-    closeOrOpenInquiry(process: Process, dtInstance: any, scope: any) {
+    closeOrOpenInquiry(process: Process, dtInstance: any, scope: any, loadAllData: boolean) {
         let self = this;
         if (process.status === "OPEN") {
             this.processResource.setStatus({
@@ -138,7 +133,7 @@ class LeadService {
                     .instant("COMMON_TOAST_SUCCESS_CLOSE_LEAD"));
                 self.rootScope.leadsCount -= 1;
                 process.status = "CLOSED";
-                self.updateRow(process, dtInstance, scope);
+                self.removeOrUpdateRow(process, loadAllData, dtInstance, scope);
             });
         } else if (process.status === "CLOSED") {
             this.processResource.setStatus({
@@ -163,12 +158,12 @@ class LeadService {
             temp.customer.timestamp = newTimestamp();
             this.customerResource.createCustomer(temp.customer).$promise.then(function (customer) {
                 temp.customer = customer;
-
                 self.processResource.save(editProcess).$promise.then(function (result) {
                     self.toaster.pop("success", "", self.translate
-                        .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
+                        .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
                     editForm.$setPristine();
-                    self.updateRow(editProcess, dtInstance, scope);
+                    editProcess.lead.price = result.lead.price;
+                    self.updateRow(result, dtInstance, scope);
                     self.customerService.getAllCustomer();
                 });
             });
@@ -179,7 +174,7 @@ class LeadService {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
             editForm.$setPristine();
-            editProcess.lead = result;
+            editProcess.lead.price = result.price;
             self.updateRow(editProcess, dtInstance, scope);
         });
     }
@@ -218,6 +213,15 @@ class LeadService {
         dtInstance.DataTable.row(this.rows[process.id]).data(process).draw(
             false);
         this.compile(angular.element(this.rows[process.id]).contents())(scope);
+    }
+
+    removeOrUpdateRow(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {
+        if (loadAllData === true) {
+            this.updateRow(process, dtInstance, scope);
+        } else if (loadAllData === false) {
+            dtInstance.DataTable.row(this.rows[process.id]).remove()
+                .draw();
+        }
     }
 }
 

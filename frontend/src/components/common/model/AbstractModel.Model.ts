@@ -11,7 +11,9 @@
 "use strict";
 
 class AbstractModel {
+
     id: number;
+
     constructor() {
         this.id = 0;
     }

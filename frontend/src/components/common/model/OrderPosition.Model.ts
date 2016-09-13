@@ -1,4 +1,6 @@
 /// <reference path="../../common/model/AbstractModel.Model.ts" />
+/// <reference path="../../Product/model/Product.Model.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -18,7 +20,6 @@ class OrderPosition extends AbstractModel {
 
     constructor() {
         super();
-        this.amount = 666;
     }
 
 }

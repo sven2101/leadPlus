@@ -31,6 +31,7 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.notificationmanagement.domain.OfferMessage;
 import dash.templatemanagement.business.ITemplateService;
 import dash.templatemanagement.domain.Template;
 import io.swagger.annotations.Api;
@@ -83,9 +84,9 @@ public class TemplateResource {
 	@RequestMapping(value = "/{templateId}/offers/{offerId}/generate", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Generate a email content based on a template and an offer.", notes = "")
-	public void generate(@ApiParam(required = true) @PathVariable final long templateId, @ApiParam(required = true) @PathVariable final long offerId)
+	public OfferMessage generate(@ApiParam(required = true) @PathVariable final long templateId, @ApiParam(required = true) @PathVariable final long offerId)
 			throws NotFoundException {
-		templateService.generate(templateId, offerId);
+		return templateService.generate(templateId, offerId);
 	}
 
 }

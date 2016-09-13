@@ -69,6 +69,7 @@ function config($translateProvider) {
             MONTHLY: "Monat",
             YEARLY: "Jahr",
             ALL: "Alle",
+            COMMON_SEND: "Senden",
             COMMON_DELETE: "Löschen",
             COMMON_DETAILS: "Details",
             COMMON_ACTIVATED: "Aktiviert",
@@ -94,15 +95,13 @@ function config($translateProvider) {
             COMMON_REFRESH: "Aktualisieren",
             COMMON_PROCESSOR: "Bearbeiter",
             COMMON_CHILDROW_ADDITONAL_TITLE: "Zusätzliche Informationen",
-            COMMON_CONTAINER: "Container",
-            COMMON_CONTAINER_DESC: "Container Beschreibung",
-            COMMON_CONTAINER_AMOUNT: "Menge",
-            COMMON_CONTAINER_SINGLE_PRICE: "Einzelpreis",
-            COMMON_CONTAINER_ENTIRE_PRICE: "Gesamtpreis",
-            COMMON_CONTAINER_OFFER_PRICE: "Angebotspreis",
-            COMMON_CONTAINER_DESTINATION: "Lieferort",
-            COMMON_CONTAINER_SALE_TURNOVER: "Umsatz",
-            COMMON_CONTAINER_SALE_PROFIT: "Gewinn",
+            COMMON_PRODUCT_AMOUNT: "Menge",
+            COMMON_PRODUCT_SINGLE_PRICE: "Einzelpreis",
+            COMMON_PRODUCT_ENTIRE_PRICE: "Gesamtpreis",
+            COMMON_PRODUCT_OFFER_PRICE: "Angebotspreis",
+            COMMON_PRODUCT_DESTINATION: "Lieferort",
+            COMMON_PRODUCT_SALE_TURNOVER: "Umsatz",
+            COMMON_PRODUCT_SALE_PROFIT: "Gewinn",
             COMMON_DELIVERY_TIME: "Lieferdatum",
             COMMON_SALE_RETURN: "Umsatz",
             COMMON_SALE_PROFIT: "Gewinn",
@@ -303,6 +302,8 @@ function config($translateProvider) {
             OCTOBER: "Oktober",
             NOVEMBER: "November",
             DECEMBER: "Dezember",
+
+            // Define product elements
             PRODUCT_PRODUCTS: "Produkte",
             PRODUCT_MANAGE_PRODUCTS: "Produkte verwalten",
             PRODUCT_CREATE: "Neues Produkt",
@@ -314,12 +315,12 @@ function config($translateProvider) {
             PRODUCT_DEACTIVATED: "Deaktivieren",
             PRODUCT_CREATED: "Erstellt",
 
+            // Define customer elements
             CUSTOMER_MANAGE_CUSTOMER: "Kunden verwalten",
             CUSTOMER_CREATE: "Neuer Kunde",
             CUSTOMER_EDIT: "Kunde bearbeiten",
             CUSTOMER_DEACTIVATED: "Deaktivieren",
             CUSTOMER_CREATED: "Erstellt",
-
             CUSTOMER_DETAIL_LEAD: "Anfrage",
             CUSTOMER_DETAIL_OFFER: "Angebot",
             CUSTOMER_DETAIL_SALE: "Verkauf",
@@ -376,6 +377,7 @@ function config($translateProvider) {
             MONTHLY: "Month",
             YEARLY: "Year",
             ALL: "All",
+            COMMON_SEND: "Send",
             COMMON_DELETE: "Delete",
             COMMON_DETAILS: "Details",
             COMMON_ACTIVATED: "Activated",
@@ -401,15 +403,13 @@ function config($translateProvider) {
             COMMON_REFRESH: "Refresh",
             COMMON_PROCESSOR: "Processor",
             COMMON_CHILDROW_ADDITONAL_TITLE: "Additional informationen",
-            COMMON_CONTAINER: "Container",
-            COMMON_CONTAINER_DESC: "Container description",
-            COMMON_CONTAINER_AMOUNT: "Amount",
-            COMMON_CONTAINER_SINGLE_PRICE: "Unit price",
-            COMMON_CONTAINER_ENTIRE_PRICE: "Entire price",
-            COMMON_CONTAINER_OFFER_PRICE: "Offer price",
-            COMMON_CONTAINER_DESTINATION: "Place of delivery",
-            COMMON_CONTAINER_SALE_TURNOVER: "Turnover",
-            COMMON_CONTAINER_SALE_PROFIT: "Profit",
+            COMMON_PRODUCT_AMOUNT: "Amount",
+            COMMON_PRODUCT_SINGLE_PRICE: "Unit price",
+            COMMON_PRODUCT_ENTIRE_PRICE: "Entire price",
+            COMMON_PRODUCT_OFFER_PRICE: "Offer price",
+            COMMON_PRODUCT_DESTINATION: "Place of delivery",
+            COMMON_PRODUCT_SALE_TURNOVER: "Turnover",
+            COMMON_PRODUCT_SALE_PROFIT: "Profit",
             COMMON_DELIVERY_TIME: "Delivery date",
             COMMON_SALE_RETURN: "Turnover",
             COMMON_SALE_PROFIT: "Profit",
@@ -464,6 +464,10 @@ function config($translateProvider) {
             DASHBOARD_INFO_BUTTON: "Info",
             DASHBOARD_GOTO_BUTTON: "Go to",
             DASHBOARD_COMPLETION: "Sales statements",
+
+            // Define notification elements
+            NOTIICATION_SEND: "Notification successfully send",
+            NOTIICATION_SEND_ERROR: "Error sending Notification",
 
             // Define profile elements
             PROFILE_PROFILE_INFORMATION: "Profile information",
@@ -608,6 +612,7 @@ function config($translateProvider) {
             NOVEMBER: "November",
             DECEMBER: "December",
 
+            // Define product elements
             PRODUCT_PRODUCTS: "Products",
             PRODUCT_MANAGE_PRODUCTS: "Manage Products",
             PRODUCT_CREATE: "New product",
@@ -619,12 +624,12 @@ function config($translateProvider) {
             PRODUCT_DEACTIVATED: "Deactivate",
             PRODUCT_CREATED: "Created",
 
+            // Define customer elements
             CUSTOMER_MANAGE_CUSTOMER: "Manage Customer",
             CUSTOMER_CREATE: "New Customer",
             CUSTOMER_EDIT: "Edit cCstomer",
             CUSTOMER_DEACTIVATED: "Deactivate",
             CUSTOMER_CREATED: "Created",
-
             CUSTOMER_DETAIL_LEAD: "Lead",
             CUSTOMER_DETAIL_OFFER: "Offer",
             CUSTOMER_DETAIL_SALE: "Sale",

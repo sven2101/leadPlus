@@ -41,8 +41,6 @@ class LeadController extends AbstractWorkflow {
 
     commentInput: string;
     commentModalInput: string;
-    comments: { [key: number]: Array<Commentary> } = {};
-    currentCommentModalId: string = "";
     loadAllData: boolean = false;
     processes: { [key: number]: Process } = {};
     editForm: any;
@@ -65,13 +63,6 @@ class LeadController extends AbstractWorkflow {
         this.compile = $compile;
 
         let self = this;
-        function refreshData() {
-            let resetPaging = false;
-            this.dtInstance.reloadData(resetPaging);
-        }
-        function changeDataInput() {
-            self.workflowService.changeDataInput(self.loadAllData, self.dtOptions, allDataLeadRoute, openDataLeadRoute);
-        }
         function createdRow(row, data: Process, dataIndex) {
             self.leadService.setRow(data.id, row);
             self.leadDataTableService.configRow(row, data);
@@ -93,14 +84,18 @@ class LeadController extends AbstractWorkflow {
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
     }
 
-    appendChildRow(process: Process, event: any) {
-        let childScope = this.scope.$new(true);
-        this.comments[process.id] = this.workflowService.getCommentsByProcessId(process.id);
-        this.workflowService.appendChildRow(childScope, process, process.lead, this.dtInstance, this, "lead");
+    changeDataInput() {
+        this.workflowService.changeDataInput(this.loadAllData, this.dtOptions, allDataLeadRoute, openDataLeadRoute);
     }
 
-    loadCurrentIdToModal(id: string) {
-        this.currentCommentModalId = id;
+    refreshData() {
+        let resetPaging = false;
+        this.dtInstance.reloadData(resetPaging);
+    }
+
+    appendChildRow(process: Process, event: any) {
+        let childScope = this.scope.$new(true);
+        this.workflowService.appendChildRow(childScope, process, process.lead, this.dtInstance, this, "lead");
     }
 
     loadDataToModal(process: Process) {
@@ -115,7 +110,7 @@ class LeadController extends AbstractWorkflow {
     }
 
     addComment(id: number, input: string) {
-        this.workflowService.addComment(this.comments[id], this.processes[id], input[id]).then(function () {
+        this.workflowService.addComment(this.processes[id], input[id]).then(function () {
             input[id] = "";
         });
     }
@@ -130,6 +125,7 @@ class LeadController extends AbstractWorkflow {
     }
 
     clearNewLead() {
+        this.editForm.$setPristine();
         this.edit = false;
         this.editWorkflowUnit = new Lead();
         this.editProcess = new Process();
@@ -150,7 +146,7 @@ class LeadController extends AbstractWorkflow {
     }
 
     closeOrOpen(process: Process) {
-        this.leadService.closeOrOpenInquiry(process, this.dtInstance, this.scope);
+        this.leadService.closeOrOpenInquiry(process, this.dtInstance, this.scope, this.loadAllData);
     }
 
     deleteRow(process: Process) {
@@ -165,16 +161,18 @@ class LeadController extends AbstractWorkflow {
         this.workflowService.deleteProduct(array, index);
     }
 
-    getOrderPositions(process: Process) {
-        return process.lead.orderPositions;
+    getOrderPositions(process: Process): Array<OrderPosition> {
+        if (!isNullOrUndefined(process.lead)) {
+            return process.lead.orderPositions;
+        }
     }
 
-    sumOrderPositions(array: Array<OrderPosition>) {
+    sumOrderPositions(array: Array<OrderPosition>): number {
         return this.workflowService.sumOrderPositions(array);
     }
 
     selectCustomer(workflow: any) {
-        this.workflowService.selectCustomer(workflow, this.currentCustomerId, this.customerSelected);
+        this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
 }
 angular.module(moduleLead, [ngResourceId]).controller(LeadControllerId, LeadController);

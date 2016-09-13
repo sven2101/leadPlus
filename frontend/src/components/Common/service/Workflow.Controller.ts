@@ -2,7 +2,11 @@
 /// <reference path="../../Offer/model/Offer.Model.ts" />
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Resource.ts" />
-/// <reference path="../../Setting/model/Template.Model.ts" />
+/// <reference path="../../Template/model/Template.Model.ts" />
+/// <reference path="../../Notification/model/Notification.Model.ts" />
+/// <reference path="../../Notification/controller/Notification.Service.ts" />
+/// <reference path="../../Customer/controller/Customer.Service.ts" />
+/// <reference path="../../Product/controller/Product.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -20,21 +24,32 @@ const WorkflowControllerId: string = "WorkflowController";
 
 class WorkflowController {
 
-    $inject = ["$uibModalInstance", "offer", TemplateResourceId];
+    $inject = ["$uibModalInstance", "offer", TemplateResourceId, CustomerServiceId, ProductServiceId, NotificationServiceId];
 
     uibModalInstance;
-
 
     templateResource;
     templates: Array<Template>;
     offer: Offer;
     template: Template;
+    notification: Notification;
 
-    constructor($uibModalInstance, offer, TemplateResource) {
+    customers: Array<Customer> = [];
+    customer: Customer;
+
+    customerService: CustomerService;
+    productService: ProductService;
+    notificationService: NotificationService;
+
+    constructor($uibModalInstance, offer, TemplateResource, CustomerService, ProductService, NotificationService) {
         this.uibModalInstance = $uibModalInstance;
         this.offer = offer;
         this.template = new Template();
+        this.notification = new Notification();
         this.templateResource = TemplateResource.resource;
+        this.customerService = CustomerService;
+        this.productService = ProductService;
+        this.notificationService = NotificationService;
         this.getAllTemplates();
     }
 
@@ -47,12 +62,10 @@ class WorkflowController {
     }
 
     generate(template: Template, offer: Offer) {
-        console.log("Generate");
-        console.log(this.template);
-        console.log("Offer");
-        console.log(offer);
-        this.templateResource.generate({ templateId: this.template, offerId: offer.id }).$promise.then(function (result) {
-            console.log(result);
+        let self = this;
+        this.templateResource.generate({ templateId: this.template, offerId: offer.id }).$promise.then(function (resultMessage: Notification) {
+            console.log(resultMessage);
+            self.notification = resultMessage;
         });
     }
 
@@ -62,6 +75,11 @@ class WorkflowController {
             self.templates = result;
         });
     }
+
+    send() {
+        this.notificationService.send(this.notification);
+    }
+
 }
 
 angular.module(moduleWorkflow, ["summernote"]).service(WorkflowControllerId, WorkflowController);
