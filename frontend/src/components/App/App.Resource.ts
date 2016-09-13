@@ -332,7 +332,12 @@ class TemplateResource {
             save: { url: "/api/rest/templates", method: "POST" },
             update: { url: "/api/rest/templates", method: "PUT" },
             remove: { url: "/api/rest/templates/:id", method: "DELETE" },
-            generate: { url: "/api/rest/templates/:templateId/offers/:offerId/generate", method: "GET" }
+            generate: {
+                url: "/api/rest/templates/:templateId/offers/:offerId/generate", method: "GET", params: {
+                    templateId: "@templateId",
+                    offerId: "@offerId"
+                }
+            }
         });
     }
 }
@@ -361,9 +366,9 @@ angular.module(moduleSmtpResource, [ngResourceId]).service(SmtpResourceId, SmtpR
 
 // ----------------------------------------------------------------------------------------
 
-const NotificationResourceId: string = "NotifictionResource";
+const NotificationResourceId: string = "NotificationResource";
 
-class NotifictionResource {
+class NotificationResource {
 
     private $inject = [$resourceId];
 
@@ -376,4 +381,4 @@ class NotifictionResource {
     }
 }
 
-angular.module(moduleNotificationResource, [ngResourceId]).service(NotificationResourceId, NotifictionResource);
+angular.module(moduleNotificationResource, [ngResourceId]).service(NotificationResourceId, NotificationResource);

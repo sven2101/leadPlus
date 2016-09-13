@@ -1,4 +1,5 @@
 /// <reference path="../../Setting/model/Encryption.Model.ts" />
+/// <reference path="../../Common/model/AbstractModel.Model.ts" />
 
 "use strict";
 

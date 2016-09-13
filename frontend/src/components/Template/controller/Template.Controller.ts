@@ -1,4 +1,5 @@
 /// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../Template/controller/Template.Service.ts" />
 /// <reference path="../../Template/model/Template.Model.ts" />
 
 /*******************************************************************************

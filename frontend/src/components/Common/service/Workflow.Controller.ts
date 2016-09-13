@@ -1,4 +1,3 @@
-/// <reference path="../../Common/model/Workflow.Model.ts" />
 /// <reference path="../../Offer/model/Offer.Model.ts" />
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Resource.ts" />
@@ -7,6 +6,7 @@
 /// <reference path="../../Notification/controller/Notification.Service.ts" />
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
+/// <reference path="../../Template/controller/Template.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -24,11 +24,10 @@ const WorkflowControllerId: string = "WorkflowController";
 
 class WorkflowController {
 
-    $inject = ["$uibModalInstance", "offer", TemplateResourceId, CustomerServiceId, ProductServiceId, NotificationServiceId];
+    $inject = ["offer", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId];
 
     uibModalInstance;
 
-    templateResource;
     templates: Array<Template>;
     offer: Offer;
     template: Template;
@@ -40,16 +39,18 @@ class WorkflowController {
     customerService: CustomerService;
     productService: ProductService;
     notificationService: NotificationService;
+    templateService: TemplateService;
 
-    constructor($uibModalInstance, offer, TemplateResource, CustomerService, ProductService, NotificationService) {
-        this.uibModalInstance = $uibModalInstance;
+    constructor(offer, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService) {
         this.offer = offer;
+        this.uibModalInstance = $uibModalInstance;
         this.template = new Template();
         this.notification = new Notification();
-        this.templateResource = TemplateResource.resource;
+        this.notificationService = NotificationService;
+        this.templateService = TemplateService;
         this.customerService = CustomerService;
         this.productService = ProductService;
-        this.notificationService = NotificationService;
+
         this.getAllTemplates();
     }
 
@@ -62,18 +63,11 @@ class WorkflowController {
     }
 
     generate(template: Template, offer: Offer) {
-        let self = this;
-        this.templateResource.generate({ templateId: this.template, offerId: offer.id }).$promise.then(function (resultMessage: Notification) {
-            console.log(resultMessage);
-            self.notification = resultMessage;
-        });
+        this.templateService.generate(this.template, this.offer).then((result) => this.notification = result, (error) => console.log(error));
     }
 
     getAllTemplates() {
-        let self = this;
-        this.templateResource.getAllTemplates().$promise.then(function (result: Array<Template>) {
-            self.templates = result;
-        });
+        this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
     }
 
     send() {

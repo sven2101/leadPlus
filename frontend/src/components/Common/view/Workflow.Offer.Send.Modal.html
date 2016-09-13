@@ -149,9 +149,9 @@
             <div class="form-group ">
                 <h2>Email - Template</h2>
 
-                <select class="form-control" ng-model="workflowCtrl.template" ng-change="workflowCtrl.generate(template, workflowCtrl.offer)">
+                <select class="form-control" ng-model="workflowCtrl.template" ng-change="workflowCtrl.generate(workflowCtrl.template, workflowCtrl.offer)">
                     <option value="-1" selected> - Select Template - </option>                                                                     
-                    <option value="{{template.id}}" ng-repeat="template in workflowCtrl.templates">{{template.name}}</option>                                          
+                    <option value="{{template}}" ng-repeat="template in workflowCtrl.templates">{{template.name}}</option>                                          
                 </select>
             </div>
         </div>
