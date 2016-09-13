@@ -93,10 +93,9 @@
                 <li class="dropdown">
                     <a class="dropdown-toggle count-info" data-toggle="dropdown">
                         <i class="fa fa-envelope"></i>
-                        <!--
-                        TODO
+
                         <span class="label label-primary">5</span>
-                        -->
+
                     </a>
                     <ul class="dropdown-menu dropdown-messages">
                         <li>
@@ -104,20 +103,41 @@
                                 <a class="pull-left">
                                     <img alt="image" class="img-circle" src="assets/img/guest.png">
                                 </a>
+                                <!--
                                 <div class="media-body">
                                     <small class="pull-right">Coming soon</small>
                                     <strong>Coming soon</strong> <br>
                                     <small class="text-muted">Coming soon</small>
                                 </div>
+                                -->
+                                <div class="media-body">
+                                    <strong>Todos</strong> <br>
+
+                                </div>
                             </div>
                         </li>
-                        <li class="divider"></li>
                         <li>
-                            <div class="text-center link-block">
-                                <a>
-                                    <i class="fa fa-envelope"></i> <strong>Comming soon</strong>
-                                </a>
-                            </div>
+                            <table class="table table-hover">
+                                <tbody>
+                                    <tr ng-repeat="todo in appCtrl.todos">
+                                        <td class="project-status">
+                                            <span ng-if="todo.status=='OPEN'" class="label label-danger">Lead</span>
+                                            <span ng-if="todo.status=='OFFER'" class="label label-warning">Offer</span>
+                                            <span ng-if="todo.status=='FOLLOWUP'" class="label">Follow up</span>
+                                        </td>
+                                        <td align="left" class="project-title">
+                                            <a ng-if="todo.status=='OPEN'">{{todo.lead.customer.firstname}} {{todo.lead.customer.lastname}}</a>
+                                            <a ng-if="todo.status=='OFFER'">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</a>
+                                            <a ng-if="todo.status=='FOLLOWUP'">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</a>
+                                        </td>
+                                        <td class="project-completion">
+                                            <small ng-if="todo.status=='OPEN'">{{appCtrl.sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</small>
+                                            <small ng-if="todo.status=='OFFER'">{{appCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</small>
+                                            <small ng-if="todo.status=='FOLLOWUP'">{{appCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</small>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </li>
                     </ul>
                 </li>

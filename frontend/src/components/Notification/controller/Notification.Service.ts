@@ -35,6 +35,7 @@ class NotificationService {
     }
 
     send(notification: Notification) {
+        /*
         let self = this;
         console.log("Notification", notification);
         this.notificationResource.send({ id: this.rootScope.globals.user.id }, notification).$promise.then(function () {
@@ -42,6 +43,7 @@ class NotificationService {
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));
         });
+        */
     }
 
 }

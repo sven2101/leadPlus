@@ -3,7 +3,7 @@
         title="{{directiveData.translation.nextWorkflowUnit}}">
         <i class="fa fa-check"></i>
     </button>
-    <button ng-if="type=='lead'" class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.pin(parent.processes[directiveData.process.id])"
+    <button ng-if="type=='lead'|| type =='offer'" class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.pin(parent.processes[directiveData.process.id])"
         title="{{'LEAD_PIN'| translate }}">
          <i class="fa fa-thumb-tack"></i>
         </button>

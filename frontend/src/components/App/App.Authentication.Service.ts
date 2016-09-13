@@ -62,6 +62,7 @@ class AuthService {
                     self.cookieStore.put("globals", self.rootScope.globals);
                     self.setCurrentUser();
                     success(data);
+                    self.rootScope.$broadcast("onTodosChange");
                 } else {
                     console.log("username is null");
                 }

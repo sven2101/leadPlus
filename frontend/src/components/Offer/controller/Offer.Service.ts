@@ -64,6 +64,7 @@ class OfferService {
                 dtInstance.DataTable.row(self.rows[process.id]).remove()
                     .draw();
             }
+            self.rootScope.$broadcast("onTodosChange");
         });
     }
 
@@ -77,7 +78,9 @@ class OfferService {
                 .instant("COMMON_TOAST_SUCCESS_FOLLOW_UP"));
             process.status = "FOLLOWUP";
             self.updateRow(process, loadAllData, scope);
+            self.rootScope.$broadcast("onTodosChange");
         });
+
     }
 
 
@@ -121,6 +124,7 @@ class OfferService {
                     editForm.$setPristine();
                     self.updateRow(editProcess, dtInstance, scope);
                     self.customerService.getAllCustomer();
+
                 });
             });
             return;
@@ -132,6 +136,9 @@ class OfferService {
             editForm.$setPristine();
             editProcess.offer = result;
             self.updateRow(editProcess, dtInstance, scope);
+            if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
+                self.rootScope.$broadcast("onTodosChange");
+            }
         });
     }
 
@@ -157,6 +164,7 @@ class OfferService {
                     .instant("COMMON_TOAST_SUCCESS_DELETE_OFFER"));
                 self.rootScope.offersCount -= 1;
                 dtInstance.DataTable.row(self.rows[process.id]).remove().draw();
+                self.rootScope.$broadcast("onTodosChange");
             });
         });
     }
@@ -169,6 +177,28 @@ class OfferService {
         dtInstance.DataTable.row(this.rows[process.id]).data(process).draw(
             false);
         this.compile(angular.element(this.rows[process.id]).contents())(scope);
+
+    }
+
+    pin(process: Process, dtInstance: any, scope: any) {
+        let self = this;
+        if (process.processor === null) {
+            this.processResource.setProcessor({
+                id: process.id
+            }, self.user.id).$promise.then(function () {
+                process.processor = self.user;
+                self.updateRow(process, dtInstance, scope);
+                self.rootScope.$broadcast("onTodosChange");
+            });
+        } else {
+            this.processResource.removeProcessor({
+                id: process.id
+            }).$promise.then(function () {
+                process.processor = null;
+                self.updateRow(process, dtInstance, scope);
+                self.rootScope.$broadcast("onTodosChange");
+            });
+        }
     }
 }
 

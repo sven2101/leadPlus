@@ -1,5 +1,6 @@
 /// <reference path="../app/App.Constants.ts" />
 /// <reference path="../app/App.Resource.ts" />
+/// <reference path="../dashboard/controller/Dashboard.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -25,6 +26,7 @@ class AppController {
     processResource;
     userResource;
     stop;
+    todos: Array<Process> = [];
 
     constructor($translate, $rootScope, $interval, ProcessResource, UserResource) {
         this.translate = $translate;
@@ -34,6 +36,8 @@ class AppController {
         this.userResource = UserResource.resource;
 
         this.rootScope.leadsCount = 0;
+        this.rootScope.todos = "test";
+
         this.rootScope.offersCount = 0;
         this.stop = undefined;
         this.setCurrentUser();
@@ -44,7 +48,16 @@ class AppController {
         this.registerSetUserDefaultLanguage();
         this.rootScope.setUserDefaultLanguage();
         this.registerInterval();
+
+        let self = this;
+        $rootScope.$on("todosChanged", (event, result) => {
+            this.todos = result;
+        });
+        setInterval(function () {
+            self.rootScope.$broadcast("onTodosChange");
+        }, 300000);
     }
+
 
     registerLoadLabels() {
         let self = this;
@@ -124,6 +137,23 @@ class AppController {
                 self.rootScope.currentUser = result;
             });
         }
+    }
+
+
+    sumOrderPositions(array: Array<OrderPosition>): number {
+        let sum = 0;
+        if (isNullOrUndefined(array)) {
+            return 0;
+        }
+        for (let i = 0; i < array.length; i++) {
+            let temp = array[i];
+            if (!isNullOrUndefined(temp) && !isNaN(temp.amount)
+                && !isNullOrUndefined(temp.product)
+                && !isNaN(temp.product.priceNetto)) {
+                sum += temp.amount * temp.product.priceNetto;
+            }
+        }
+        return sum;
     }
 }
 
