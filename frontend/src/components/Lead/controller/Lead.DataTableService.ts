@@ -125,6 +125,7 @@ class LeadDataTableService {
         let config = {
             "disabled": false,
             "disablePin": false,
+            "disablePinDropdown": true,
             "hasRightToDelete": false,
             "closeOrOpenDisable": false,
             "openOrLock": this.translate.instant("LEAD_CLOSE_LEAD"),
@@ -138,6 +139,9 @@ class LeadDataTableService {
         }
         if (templateData.process.offer !== null || templateData.process.sale !== null) {
             config.closeOrOpenDisable = true;
+        }
+        if (user.role === Role.SUPERADMIN || user.role === Role.ADMIN) {
+            config.disablePinDropdown = false;
         }
         if (user.role === Role.USER) {
             config.hasRightToDelete = true;

@@ -108,17 +108,22 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
     }])
-    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookieStoreId,
-        function ($location, $http, $rootScope, Auth, $cookieStore) {
+    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookieStoreId, $injectorId,
+        function ($location, $http, $rootScope, Auth, $cookieStore, $injector) {
             $rootScope.globals = $cookieStore.get("globals") || {};
             if ($rootScope.globals.user) {
                 $http.defaults.headers.common["Authorization"] = "Basic "
                     + $rootScope.globals.user.authorization;
             }
+            let initialLoaded = true;
             $rootScope.$on("$routeChangeStart", function (event,
                 next, current) {
 
                 if (next.authenticated === true) {
+                    if (initialLoaded) {
+                        $injector.get("DashboardService");
+                        initialLoaded = false;
+                    }
                     if (!$rootScope.globals.user) {
                         $location.path("/login");
                     }

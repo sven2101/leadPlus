@@ -175,8 +175,8 @@ class OfferController extends AbstractWorkflow {
         this.offerService.followUp(process, this.loadAllData, this.scope);
     }
 
-     pin(process: Process) {
-        this.offerService.pin(process, this.dtInstance, this.scope);
+    pin(process: Process, user: User) {
+        this.offerService.pin(process, this.dtInstance, this.scope, user);
     }
 }
 angular.module(moduleOffer, [ngResourceId]).controller(OfferControllerId, OfferController);

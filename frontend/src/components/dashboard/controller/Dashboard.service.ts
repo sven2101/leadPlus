@@ -54,10 +54,15 @@ class DashboardService {
         this.user = $rootScope.currentUser;
         this.uibModal = $uibModal;
         this.initDashboard();
+        this.refreshTodos();
 
         $rootScope.$on("onTodosChange", (event) => {
             this.refreshTodos();
         });
+        let self = this;
+        setInterval(function () {
+            self.refreshTodos();
+        }, 5 * 60 * 1000);
     }
 
     initDashboard() {
@@ -144,7 +149,8 @@ class DashboardService {
     refreshTodos(): void {
 
         this.processResource.getTodos({ processorId: this.rootScope.globals.user.id }).$promise.then((data) => {
-            this.todos = this.orderByTimestamp(data); this.rootScope.$broadcast("todosChanged", this.todos);
+            this.todos = this.orderByTimestamp(data);
+            this.rootScope.$broadcast("todosChanged", this.todos);
         }, (error) => console.log(error));
 
     }

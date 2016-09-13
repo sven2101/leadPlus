@@ -49,13 +49,9 @@ class AppController {
         this.rootScope.setUserDefaultLanguage();
         this.registerInterval();
 
-        let self = this;
         $rootScope.$on("todosChanged", (event, result) => {
             this.todos = result;
         });
-        setInterval(function () {
-            self.rootScope.$broadcast("onTodosChange");
-        }, 300000);
     }
 
 

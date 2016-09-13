@@ -177,11 +177,11 @@ public class ProcessService implements IProcessService {
 			throw new NotFoundException(PROCESS_NOT_FOUND);
 		if (!Optional.ofNullable(processor).isPresent())
 			throw new NotFoundException(USER_NOT_FOUND);
-		if (!Optional.ofNullable(process.getProcessor()).isPresent()) {
-			process.setProcessor(processor);
-			setOrderPositions(process);
-			processRepository.save(process);
-		}
+
+		process.setProcessor(processor);
+		setOrderPositions(process);
+		processRepository.save(process);
+
 		return processor;
 	}
 
@@ -280,6 +280,9 @@ public class ProcessService implements IProcessService {
 	}
 
 	private void setOrderPositions(Process process) {
+		if (process == null) {
+			return;
+		}
 		if (process.getLead() != null) {
 			for (OrderPosition temp : process.getLead().getOrderPositions()) {
 				temp.setWorkflow(process.getLead());

@@ -146,6 +146,7 @@ function config($translateProvider) {
             COMMON_STATUS_FOLLOW_UP: "Follow up",
             COMMON_STATUS_SALE: "Verkauf",
             COMMON_STATUS_CLOSED: "Geschlossen",
+            COMMON_EMPTY_PROCESSOR: "Niemand",
 
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Anfragen verwalten",
@@ -328,6 +329,8 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_TIMELINE: "Kunden Timeline",
             CUSTOMER_DETAIL_CREATED: "wurde erstellt",
 
+            TODO_NO_TODOS: "keine Todos vorhanden"
+
         })
         .translations(Language[Language.EN], {
             // GENERAL
@@ -455,6 +458,7 @@ function config($translateProvider) {
             COMMON_STATUS_FOLLOW_UP: "Follow up",
             COMMON_STATUS_SALE: "Sale",
             COMMON_STATUS_CLOSED: "Closed",
+            COMMON_EMPTY_PROCESSOR: "Nobody",
 
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Manage leads",
@@ -637,6 +641,8 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_SALE: "Sale",
             CUSTOMER_DETAIL_TIMELINE: "Customer Timeline",
             CUSTOMER_DETAIL_CREATED: "has been created",
+
+            TODO_NO_TODOS: "no todos existing"
 
         });
 

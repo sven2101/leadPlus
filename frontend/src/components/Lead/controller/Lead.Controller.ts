@@ -141,8 +141,8 @@ class LeadController extends AbstractWorkflow {
         this.leadService.createOffer(process, this.loadAllData, this.dtInstance, this.scope);
     }
 
-    pin(process: Process) {
-        this.leadService.pin(process, this.dtInstance, this.scope);
+    pin(process: Process, user: User) {
+        this.leadService.pin(process, this.dtInstance, this.scope, user);
     }
 
     closeOrOpen(process: Process) {

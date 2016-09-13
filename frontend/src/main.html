@@ -92,12 +92,12 @@
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle count-info" data-toggle="dropdown">
-                        <i class="fa fa-envelope"></i>
+                        <i class="fa fa-envelope fa-lg"></i>
 
-                        <span class="label label-primary">5</span>
+                        <span ng-if="appCtrl.todos.length>0" class="label label-danger">{{ appCtrl.todos.length}}</span>
 
                     </a>
-                    <ul class="dropdown-menu dropdown-messages">
+                    <ul style="min-width:400px" class="dropdown-menu dropdown-messages">
                         <li>
                             <div class="dropdown-messages-box">
                                 <a class="pull-left">
@@ -119,7 +119,7 @@
                         <li>
                             <table class="table table-hover">
                                 <tbody>
-                                    <tr ng-repeat="todo in appCtrl.todos">
+                                    <tr style="cursor:pointer" ng-repeat="todo in appCtrl.todos">
                                         <td class="project-status">
                                             <span ng-if="todo.status=='OPEN'" class="label label-danger">Lead</span>
                                             <span ng-if="todo.status=='OFFER'" class="label label-warning">Offer</span>
@@ -138,6 +138,7 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <div ng-if="appCtrl.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius: 5px;">{{ 'TODO_NO_TODOS' | translate }}</div>
                         </li>
                     </ul>
                 </li>

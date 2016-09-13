@@ -31,10 +31,11 @@ const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId];
+    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId, UserResourceId];
 
     commentResource;
     processResource;
+    userResource;
 
     filter;
     toaster;
@@ -45,12 +46,14 @@ class WorkflowService {
     productService: ProductService;
     customerService: CustomerService;
     uibModal;
+    users: Array<User> = [];
 
     user: User;
 
-    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal) {
+    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource) {
         this.commentResource = CommentResource.resource;
         this.processResource = ProcessResource.resource;
+        this.userResource = UserResource.resource;
         this.filter = $filter;
         this.toaster = toaster;
         this.rootScope = $rootScope;
@@ -61,6 +64,7 @@ class WorkflowService {
         this.customerService = CustomerService;
         this.uibModal = $uibModal;
         this.user = $rootScope.globals.user;
+        this.refreshUsers();
     }
 
     addComment(process: Process, commentText: string): IPromise<boolean> {
@@ -353,6 +357,12 @@ class WorkflowService {
         }
         workflow.customer = deepCopy(temp);
         return true;
+    }
+    refreshUsers(): void {
+        this.userResource.getAll().$promise.then((data) => {
+            this.users = data;
+        }, (error) => console.log(error));
+
     }
 }
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);

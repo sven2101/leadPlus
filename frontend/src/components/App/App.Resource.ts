@@ -171,6 +171,7 @@ class UserResource {
                 url: "/users/:id/profile/picture", method: "POST", transformRequest: angular.identity,
                 headers: { "Content-Type": undefined }
             },
+            getAll: { url: "/users/all", method: "GET", isArray: true },
             setSmtpConnection: { url: "/users/:id/smtps", method: "POST" }
         });
     }

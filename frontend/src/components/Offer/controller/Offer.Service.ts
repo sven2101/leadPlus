@@ -180,17 +180,17 @@ class OfferService {
 
     }
 
-    pin(process: Process, dtInstance: any, scope: any) {
+    pin(process: Process, dtInstance: any, scope: any, user: User) {
         let self = this;
-        if (process.processor === null) {
+        if (user !== null) {
             this.processResource.setProcessor({
                 id: process.id
-            }, self.user.id).$promise.then(function () {
-                process.processor = self.user;
+            }, user.id).$promise.then(function () {
+                process.processor = user;
                 self.updateRow(process, dtInstance, scope);
                 self.rootScope.$broadcast("onTodosChange");
             });
-        } else {
+        } else if (process.processor !== null) {
             this.processResource.removeProcessor({
                 id: process.id
             }).$promise.then(function () {

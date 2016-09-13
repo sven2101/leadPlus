@@ -32,6 +32,7 @@ const ngImgCropId: string = "ngImgCrop";
 const $routeProviderId: string = "$routeProvider";
 const $httpProviderId: string = "$httpProvider";
 const $uibModalId: string = "$uibModal";
+const $injectorId: string = "$injector";
 
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";

@@ -20,20 +20,22 @@ const AuthServiceId: string = "AuthService";
 
 class AuthService {
 
-    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, UserResourceId];
+    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, UserResourceId, $injectorId];
 
     http;
     rootScope;
     cookieStore;
     location;
     userResource;
+    injector;
 
-    constructor($http, $rootScope, $cookieStore, $location, UserResource) {
+    constructor($http, $rootScope, $cookieStore, $location, UserResource, $injector) {
         this.http = $http;
         this.rootScope = $rootScope;
         this.cookieStore = $cookieStore;
         this.location = $location;
         this.userResource = UserResource.resource;
+        this.injector = $injector;
     }
 
     login(credentials, success, error) {
@@ -62,6 +64,7 @@ class AuthService {
                     self.cookieStore.put("globals", self.rootScope.globals);
                     self.setCurrentUser();
                     success(data);
+                    self.injector.get("DashboardService");
                     self.rootScope.$broadcast("onTodosChange");
                 } else {
                     console.log("username is null");
