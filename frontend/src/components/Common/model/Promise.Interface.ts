@@ -1,3 +1,4 @@
 interface IPromise<T> {
-    then(callback: (result: T) => any);
+    then(callback: (result: T) => any, error?: (result: T) => any);
+
 }

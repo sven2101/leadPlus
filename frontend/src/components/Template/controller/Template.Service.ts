@@ -21,19 +21,21 @@ const TemplateServiceId: string = "TemplateService";
 
 class TemplateService {
 
-    private $inject = [toasterId, $translateId, TemplateResourceId, $uibModalId];
+    private $inject = [toasterId, $translateId, TemplateResourceId, $uibModalId, $qId];
 
     templateResource;
 
     translate;
     toaster;
     uibModal;
+    q;
     templates: Array<Template>;
 
-    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal) {
+    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q) {
         this.toaster = toaster;
         this.translate = $translate;
         this.uibModal = $uibModal;
+        this.q = $q;
         this.templateResource = TemplateResource.resource;
     }
 
@@ -95,11 +97,31 @@ class TemplateService {
         });
     }
 
-    getAll() {
+    generate(template: Template, offer: Offer): IPromise<Notification> {
+        let defer = this.q.defer();
+        let self = this;
+        console.log(JSON.parse(JSON.stringify(template)).id);
+        console.log("Template: ", template["id"]);
+        console.log("Template: ", template);
+        this.templateResource.generate({ templateId: 1, offerId: offer.id }).$promise.then(function (resultMessage: Notification) {
+            console.log(resultMessage);
+            defer.resolve(resultMessage);
+        }, function (error: any) {
+            defer.reject(error);
+        });
+        return defer.promise;
+    }
+
+    getAll(): IPromise<Array<Template>> {
+        let defer = this.q.defer();
         let self = this;
         this.templateResource.getAll().$promise.then(function (result: Array<Template>) {
             self.templates = result;
+            defer.resolve(result);
+        }, function (error: any) {
+            defer.reject(error);
         });
+        return defer.promise;
     }
 }
 

@@ -20,24 +20,24 @@ const NotificationServiceId: string = "NotificationService";
 
 class NotificationService {
 
-    private $inject = [NotificationResourceId, toasterId, $translateId, $rootScopeId];
+    private $inject = [toasterId, $translateId, $rootScopeId, NotificationResourceId];
 
-    notificationResource;
     toaster;
     translate;
     rootScope;
+    notificationResource;
 
-    constructor(NotificationResource, toaster, translate, $rootScope) {
+    constructor(toaster, $translate, $rootScope, NotificationResource) {
         this.notificationResource = NotificationResource.resource;
         this.toaster = toaster;
-        this.translate = translate;
+        this.translate = $translate;
         this.rootScope = $rootScope;
     }
 
     send(notification: Notification) {
         let self = this;
         console.log("Notification", notification);
-        this.notificationResource.send({id: this.rootScope}, notification).$promise.then(function () {
+        this.notificationResource.send({ id: this.rootScope.globals.user.id }, notification).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));

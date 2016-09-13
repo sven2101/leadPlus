@@ -166,6 +166,8 @@ class WorkflowService {
                 process.offer = resultOffer;
                 process.status = resultProcess.status;
 
+                self.openEmailTemplateModal(process.offer);
+
                 defer.resolve(process);
             }, function () {
                 defer.reject(false);
@@ -174,6 +176,21 @@ class WorkflowService {
             defer.reject(false);
         });
         return defer.promise;
+    }
+
+    openEmailTemplateModal(offer: Offer) {
+        console.log("Offer: ", offer);
+        this.uibModal.open({
+            templateUrl: "http://localhost:8080/components/Common/view/Workflow.Offer.Send.Modal.html",
+            controller: "WorkflowController",
+            controllerAs: "workflowCtrl",
+            size: "lg",
+            resolve: {
+                offer: function () {
+                    return offer;
+                }
+            }
+        });
     }
 
     addOfferToSale(process: Process): IPromise<boolean> {

@@ -44,7 +44,7 @@ class DashboardController {
         this.statisticService.loadAllResourcesByDateRange("WEEKLY");
         this.sortableOptions = this.dashboardService.setSortableOptions();
         this.refreshData();
-        this.dashboardService.getTodos(2).$promise.then((processes) => this.todos = processes);
+        // this.dashboardService.getTodos(2).$promise.then((processes) => this.todos = processes);
     }
 
     createOffer(process: Process) {
