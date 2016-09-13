@@ -19,5 +19,5 @@ import dash.notificationmanagement.domain.Notification;
 
 public interface INotificationService {
 
-	void sendNotification(Notification notification) throws SMTPdoesntExistsException;
+	void sendNotification(final long userId, Notification notification) throws SMTPdoesntExistsException;
 }

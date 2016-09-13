@@ -5,6 +5,8 @@
 /// <reference path="../../Template/model/Template.Model.ts" />
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 /// <reference path="../../Notification/controller/Notification.Service.ts" />
+/// <reference path="../../Customer/controller/Customer.Service.ts" />
+/// <reference path="../../Product/controller/Product.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.

@@ -23,33 +23,31 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.sun.mail.smtp.SMTPMessage;
 
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.notificationmanagement.domain.Notification;
-import dash.usermanagement.business.UserService;
+import dash.usermanagement.business.IUserService;
 import dash.usermanagement.domain.User;
 
 @Service
 public class NotificationService implements INotificationService {
 
 	@Autowired
-	private UserService userService;
+	private IUserService userService;
 
 	@Override
-	public void sendNotification(Notification notification) throws SMTPdoesntExistsException {
-		doSendEmail(notification);
+	public void sendNotification(final long userId, final Notification notification) throws SMTPdoesntExistsException {
+		doSendEmail(userId, notification);
 	}
 
-	public void doSendEmail(Notification notification) throws SMTPdoesntExistsException {
+	public void doSendEmail(final long userId, Notification notification) throws SMTPdoesntExistsException {
 		System.out.println("Notification: " + notification.toString());
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
 		try {
-			User principle = userService.getUserByName(auth.getName());
+			User principle = userService.getById(userId);
 			if (principle.getSmtp() != null) {
 
 				final Session emailSession = newSession(principle);
@@ -58,7 +56,7 @@ public class NotificationService implements INotificationService {
 
 				SMTPMessage smtpMessage = new SMTPMessage(emailSession);
 
-				smtpMessage.setFrom(new InternetAddress(userService.getUserByName(auth.getName()).getSmtp().getEmail()));
+				smtpMessage.setFrom(new InternetAddress(principle.getSmtp().getEmail()));
 				smtpMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(notification.getRecipient()));
 				smtpMessage.setHeader("Content-Type", "text/html");
 				smtpMessage.setSubject(notification.getSubject());

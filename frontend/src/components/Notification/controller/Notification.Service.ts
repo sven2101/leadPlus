@@ -33,7 +33,8 @@ class NotificationService {
 
     send(notification: Notification) {
         let self = this;
-        this.notificationResource.send(notification).$promise.then(function () {
+        console.log("Notification", notification);
+        this.notificationResource.send({id: }notification).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));

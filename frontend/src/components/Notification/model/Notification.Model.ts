@@ -16,7 +16,7 @@
 
 class Notification extends AbstractModel {
 
-    recipient: Customer;
+    recipient: string;
     subject: string;
     content: string;
     attachment: File;

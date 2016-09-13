@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,10 +43,11 @@ public class NotificationResource {
 	private INotificationService notificationService;
 
 	@ApiOperation(value = "Send a single Notification.", notes = "")
-	@RequestMapping(value = "/api/rest/notifications/offers/send", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/rest/notifications/users/{id}/offers/send", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public void sendOffer(@ApiParam(required = true) @RequestBody @Valid final Notification notification) throws SMTPdoesntExistsException {
-		notificationService.sendNotification(notification);
+	public void sendOffer(@ApiParam(required = true) @PathVariable final Long id,
+			@ApiParam(required = true) @RequestBody @Valid final Notification notification) throws SMTPdoesntExistsException {
+		notificationService.sendNotification(id, notification);
 	}
 
 }
