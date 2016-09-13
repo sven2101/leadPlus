@@ -5,6 +5,7 @@
 /// <reference path="../../sale/model/Sale.Model.ts" />
 /// <reference path="../../common/service/Workflow.Service.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
+/// <reference path="../../common/model/Promise.interface.ts" />
 /// <reference path="../../common/service/Workflow.Controller.ts" />
 
 /*******************************************************************************
@@ -23,7 +24,7 @@ const DashboardServiceId: string = "DashboardService";
 
 class DashboardService {
 
-    private $inject = [ProcessResourceId, toasterId, $rootScopeId, $translateId, $filterId, WorkflowServiceId, $uibModalId];
+    private $inject = [ProcessResourceId, toasterId, $rootScopeId, $translateId, $filterId, WorkflowServiceId, $uibModalId, $qId];
 
     processResource: any;
     workflowService: WorkflowService;
@@ -31,6 +32,7 @@ class DashboardService {
     translate: any;
     orderBy: any;
     rootScope: any;
+    q: any;
 
     openLeads: Array<Lead>;
     openOffers: Array<Offer>;
@@ -40,13 +42,14 @@ class DashboardService {
 
     user: User;
 
-    constructor(ProcessResource, toaster, $rootScope, $translate, $filter, WorkflowService, $uibModal) {
+    constructor(ProcessResource, toaster, $rootScope, $translate, $filter, WorkflowService, $uibModal, $q) {
         this.processResource = ProcessResource.resource;
         this.workflowService = WorkflowService;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
         this.orderBy = $filter("orderBy");
+        this.q = $q;
         this.user = $rootScope.currentUser;
         this.uibModal = $uibModal;
         this.initDashboard();
@@ -131,6 +134,11 @@ class DashboardService {
     }
     getClosedSales(): Array<Sale> {
         return this.closedSales;
+    }
+
+    getTodos(processorId: number): IPromise<Array<Process>> {
+        let defer = this.q.defer();
+        return this.processResource.getTodos({ processorId: processorId });
     }
 }
 angular.module(moduleDashboardService, [ngResourceId]).service(DashboardServiceId, DashboardService);

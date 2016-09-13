@@ -122,7 +122,8 @@ class ProcessResource {
             getSalesByStatus: { url: "/api/rest/processes/workflow/:workflow/state/:status", method: "GET", isArray: true },
             getFollowUpsByStatus: { url: "/api/rest/processes/workflow/:workflow/state/:status", method: "GET", isArray: true },
             getLatestSales: { url: "/api/rest/processes/sales/latest/10", method: "GET", isArray: true },
-            getLatest100Sales: { url: "/api/rest/processes/sales/latest/100", method: "GET", isArray: true }
+            getLatest100Sales: { url: "/api/rest/processes/sales/latest/100", method: "GET", isArray: true },
+            getTodos: { url: "/api/rest/processes/processor/:processorId", method: "GET" },
         });
     }
 }

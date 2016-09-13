@@ -23,12 +23,19 @@ public class ProcessSpecs {
 		};
 	}
 
-	public static Specification<Process> isOpen() {
+	public static Specification<Process> isClosed() {
 		return new Specification<Process>() {
 			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-				return builder.notEqual(root.get(Process_.status), Status.CLOSED);
+				return builder.equal(root.get(Process_.status), Status.CLOSED);
 			}
+		};
+	}
 
+	public static Specification<Process> isSale() {
+		return new Specification<Process>() {
+			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+				return builder.equal(root.get(Process_.status), Status.SALE);
+			}
 		};
 	}
 
