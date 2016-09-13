@@ -21,8 +21,10 @@ import static dash.Constants.PROCESS_NOT_FOUND;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_NOT_FOUND;
-import static dash.processmanagement.business.ProcessSpecs.isOpen;
+import static dash.processmanagement.business.ProcessSpecs.isClosed;
 import static dash.processmanagement.business.ProcessSpecs.isProcessor;
+import static dash.processmanagement.business.ProcessSpecs.isSale;
+import static org.springframework.data.jpa.domain.Specifications.not;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.util.ArrayList;
@@ -294,6 +296,6 @@ public class ProcessService implements IProcessService {
 
 	@Override
 	public List<Process> getProcessesByProcessor(long processorId) {
-		return processRepository.findAll(where(isProcessor(processorId)).and(isOpen()));
+		return processRepository.findAll(where(isProcessor(processorId)).and(not(isClosed())).and(not(isSale())));
 	}
 }
