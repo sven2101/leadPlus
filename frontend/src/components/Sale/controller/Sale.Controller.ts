@@ -41,8 +41,6 @@ class SaleController extends AbstractWorkflow {
 
     commentInput: string;
     commentModalInput: string;
-    comments: { [key: number]: Array<Commentary> } = {};
-    currentCommentModalId: string = "";
     loadAllData: boolean = false;
     processes: { [key: number]: Process } = {};
     editForm: any;
@@ -101,12 +99,7 @@ class SaleController extends AbstractWorkflow {
 
     appendChildRow(process: Process, event: any) {
         let childScope = this.scope.$new(true);
-        this.comments[process.id] = this.workflowService.getCommentsByProcessId(process.id);
         this.workflowService.appendChildRow(childScope, process, process.sale, this.dtInstance, this, "sale");
-    }
-
-    loadCurrentIdToModal(id: string) {
-        this.currentCommentModalId = id;
     }
 
     loadDataToModal(process: Process) {
@@ -121,7 +114,7 @@ class SaleController extends AbstractWorkflow {
     }
 
     addComment(id: number, input: string) {
-        this.workflowService.addComment(this.comments[id], this.processes[id], input[id]).then(function () {
+        this.workflowService.addComment(this.processes[id], input[id]).then(function () {
             input[id] = "";
         });
     }
@@ -154,11 +147,13 @@ class SaleController extends AbstractWorkflow {
         this.workflowService.deleteProduct(array, index);
     }
 
-    getOrderPositions(process: Process) {
-        return process.sale.orderPositions;
+    getOrderPositions(process: Process): Array<OrderPosition> {
+        if (isNullOrUndefined(process.sale)) {
+            return process.sale.orderPositions;
+        }
     }
 
-    sumOrderPositions(array: Array<OrderPosition>) {
+    sumOrderPositions(array: Array<OrderPosition>): number {
         return this.workflowService.sumOrderPositions(array);
     }
 

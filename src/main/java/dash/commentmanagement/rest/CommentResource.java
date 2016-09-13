@@ -39,7 +39,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Comment Resource")
-@RequestMapping(value = "/api/rest/comments", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/comments", consumes = { MediaType.ALL_VALUE }, produces = {
+		MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Comment API")
 public class CommentResource {
 
@@ -49,7 +50,8 @@ public class CommentResource {
 	@RequestMapping(value = "/processes/{processId}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get all Comments for one specific process", notes = ".")
-	public List<Comment> getCommentsByProcess(@ApiParam(required = true) @PathVariable long processId) throws NotFoundException {
+	public List<Comment> getCommentsByProcess(@ApiParam(required = true) @PathVariable long processId)
+			throws NotFoundException {
 		return commentService.getCommentsByProcess(processId);
 	}
 
@@ -61,16 +63,18 @@ public class CommentResource {
 	}
 
 	@ApiOperation(value = "Creates a comment.", notes = "")
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/{id}", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Comment save(@ApiParam(required = true) @RequestBody @Valid final Comment comment) throws SaveFailedException {
-		return commentService.save(comment);
+	public Comment save(@ApiParam(required = true) @PathVariable Long id,
+			@ApiParam(required = true) @RequestBody @Valid final Comment comment) throws SaveFailedException {
+		return commentService.save(comment, id);
 	}
 
 	@ApiOperation(value = "Updates a comment.", notes = "")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Comment update(@ApiParam(required = true) @RequestBody @Valid final Comment comment) throws UpdateFailedException {
+	public Comment update(@ApiParam(required = true) @RequestBody @Valid final Comment comment)
+			throws UpdateFailedException {
 		return commentService.update(comment);
 	}
 

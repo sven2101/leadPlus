@@ -62,17 +62,17 @@
                 <div class="chat-view">
                     <div class="text-left">
                         <span class="pull-left" style="font-size: 1.5em;">{{ 'COMMON_COMMENTS' | translate }}</span>
-                        <small ng-if="dashboardCtrl.workflowComments.length>0" class="pull-right text-muted">
+                        <small ng-if="dashboardCtrl.workflowModalProcess.comments.length>0" class="pull-right text-muted">
                             {{ 'COMMON_COMMENTS_LAST' | translate }}:
-                            {{dashboardCtrl.workflowComments[dashboardCtrl.workflowComments.length-1].timestamp|
+                            {{dashboardCtrl.workflowModalProcess.comments[dashboardCtrl.workflowModalProcess.comments.length-1].timestamp|
                             date:'dd.MM.yyyy HH:mm'}}
                         </small>
                     </div>
                     <div class=" text-left">
-                        <div ng-if="dashboardCtrl.workflowComments.length>0" class="row">
+                        <div ng-if="dashboardCtrl.workflowModalProcess.comments.length>0" class="row">
                             <div class="col-md-12 ">
-                                <div class="chat-discussion" ng-model="dashboardCtrl.workflowComments">
-                                    <div ng-repeat="comment in dashboardCtrl.workflowComments | orderBy: '-timestamp'">
+                                <div class="chat-discussion" ng-model="dashboardCtrl.workflowModalProcess.comments">
+                                    <div ng-repeat="comment in dashboardCtrl.workflowModalProcess.comments | orderBy: '-timestamp'">
                                         <div ng-if="$index%2==0" class="chat-message left">
                                             <img class="message-avatar" src="assets/img/guest.png" alt="">
                                             <div class="message">

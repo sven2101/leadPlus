@@ -16,7 +16,6 @@ package dash.commentmanagement.domain;
 
 import java.util.Calendar;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,6 +27,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.request.Request;
@@ -40,12 +40,13 @@ public class Comment implements Request {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(cascade = CascadeType.MERGE)
+	@ManyToOne
 	@JoinColumn(name = "creator_fk", nullable = false)
 	private User creator;
 
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "process_fk", nullable = false)
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(nullable = false)
 	private Process process;
 
 	@Column(length = 5000)
@@ -62,6 +63,10 @@ public class Comment implements Request {
 
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Process getProcess() {
@@ -103,7 +108,7 @@ public class Comment implements Request {
 		int result = 1;
 		result = prime * result + ((commentText == null) ? 0 : commentText.hashCode());
 		result = prime * result + ((creator == null) ? 0 : creator.hashCode());
-		result = prime * result + ((process == null) ? 0 : process.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		return result;
 	}
@@ -127,10 +132,10 @@ public class Comment implements Request {
 				return false;
 		} else if (!creator.equals(other.creator))
 			return false;
-		if (process == null) {
-			if (other.process != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!process.equals(other.process))
+		} else if (!id.equals(other.id))
 			return false;
 		if (timestamp == null) {
 			if (other.timestamp != null)
@@ -142,7 +147,8 @@ public class Comment implements Request {
 
 	@Override
 	public String toString() {
-		return "Comment [id=" + id + ", creator=" + creator + ", process=" + process + ", commentText=" + commentText + ", timestamp=" + timestamp + "]";
+		return "Comment [id=" + id + ", creator=" + creator + ", commentText=" + commentText + ", timestamp="
+				+ timestamp + "]";
 	}
 
 }

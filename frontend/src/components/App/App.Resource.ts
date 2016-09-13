@@ -143,7 +143,7 @@ class CommentResource {
         this.resource = $resource("/api/rest/comments/", {}, {
             getByProcessId: { url: "/api/rest/comments/processes/:id", method: "GET", isArray: true },
             getById: { url: "/api/rest/comments/:id", method: "GET" },
-            save: { url: "/api/rest/comments/", method: "POST" },
+            save: { url: "/api/rest/comments/:id", method: "POST" },
             update: { url: "/api/rest/comments", method: "PUT" },
             drop: { url: "/api/rest/comments/:id", method: "DELETE" }
         });
