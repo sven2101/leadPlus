@@ -101,6 +101,7 @@ class LeadService {
         let self = this;
         this.workflowService.addLeadToOffer(process).then(function (isResolved: any) {
             self.removeOrUpdateRow(process, loadAllData, dtInstance, scope);
+            self.rootScope.$broadcast("onTodosChange");
         });
     }
 
@@ -112,6 +113,7 @@ class LeadService {
             }, self.user.id).$promise.then(function () {
                 process.processor = self.user;
                 self.updateRow(process, dtInstance, scope);
+                self.rootScope.$broadcast("onTodosChange");
             });
         } else {
             this.processResource.removeProcessor({
@@ -119,6 +121,7 @@ class LeadService {
             }).$promise.then(function () {
                 process.processor = null;
                 self.updateRow(process, dtInstance, scope);
+                self.rootScope.$broadcast("onTodosChange");
             });
         }
     }
@@ -176,6 +179,9 @@ class LeadService {
             editForm.$setPristine();
             editProcess.lead.price = result.price;
             self.updateRow(editProcess, dtInstance, scope);
+            if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
+                self.rootScope.$broadcast("onTodosChange");
+            }
         });
     }
 
@@ -201,6 +207,7 @@ class LeadService {
                     .instant("COMMON_TOAST_SUCCESS_DELETE_LEAD"));
                 self.rootScope.leadsCount -= 1;
                 dtInstance.DataTable.row(self.rows[process.id]).remove().draw();
+                self.rootScope.$broadcast("onTodosChange");
             });
         });
     }

@@ -1,46 +1,57 @@
-<div class="row">
-    <div class="col-lg-12">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5>ToDo</h5>
-            </div>
-            <div class="ibox-content">
-                <div class="row m-b-sm m-t-sm">
-                    <div class="col-md-1">
-                        <button type="button" id="loading-example-btn" class="btn btn-white btn-sm"><i class="fa fa-refresh"></i> Refresh</button>
-                    </div>
-                    <div class="col-md-11">
-                        <div class="input-group"><input type="text" placeholder="Search" class="input-sm form-control"> <span class="input-group-btn">
-                                        <button type="button" class="btn btn-sm btn-primary"> Go!</button> </span></div>
-                    </div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>ToDo</h5>
                 </div>
+                <div class="ibox-content">
 
-                <div class="project-list">
+                    <form role="form" class="form-inline">
+                        <!--
+                    <div class="col-md-1">
+                        <button ng-click="dashboardCtrl.refreshTodos();" type="button" id="loading-example-btn" class="btn btn-white btn-sm"><i class="fa fa-refresh"></i> Refresh</button>
+                    </div>
+                    -->
+                        <span class="pull-right ">
+                                 <input  type="text" placeholder="Search" class="input-sm form-control" ng-model="searchText">
+                         </span>
 
-                    <table class="table table-hover">
-                        <tbody>
-                            <tr ng-repeat="">
-                                <td class="project-status">
-                                    <span class="label label-primary">Active</span>
-                                </td>
-                                <td class="project-title">
-                                    <a>Contract with Zender Company</a>
-                                    <br>
-                                    <small>Created 14.08.2014</small>
-                                </td>
-                                <td class="project-completion">
-                                    <small>Completion with: 48%</small>
-                                    <div class="progress progress-mini">
-                                        <div style="width: 48%;" class="progress-bar"></div>
-                                    </div>
-                                </td>                          
-                                <td class="project-actions">
-                                    <a href="#" class="btn btn-white btn-sm"><i class="fa fa-folder"></i> View </a>
-                                    <a href="#" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> Edit </a>
-                                </td>
-                            </tr>                                           
-                        </tbody>
-                    </table>
+
+
+                    </form>
+
+                    <div class="project-list">
+
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr ng-repeat="todo in dashboardCtrl.dashboardService.todos|filter:searchText">
+                                    <td class="project-status">
+                                        <span ng-if="todo.status=='OPEN'" class="label label-danger">Lead</span>
+                                        <span ng-if="todo.status=='OFFER'" class="label label-warning">Offer</span>
+                                        <span ng-if="todo.status=='FOLLOWUP'" class="label">Follow up</span>
+                                    </td>
+                                    <td align="left" class="project-title">
+                                        <a ng-if="todo.status=='OPEN'">{{todo.lead.customer.firstname}} {{todo.lead.customer.lastname}}</a>
+                                        <a ng-if="todo.status=='OFFER'">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</a>
+                                        <a ng-if="todo.status=='FOLLOWUP'">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</a>
+                                        <br>
+                                        <small ng-if="todo.status=='OPEN'">{{ 'COMMON_CREATED' | translate }} {{dashboardCtrl.toLocalDate(todo.lead.timestamp)}}</small>
+                                        <small ng-if="todo.status=='OFFER'">{{ 'COMMON_CREATED' | translate }} {{dashboardCtrl.toLocalDate(todo.offer.timestamp)}}</small>
+                                        <small ng-if="todo.status=='FOLLOWUP'">{{ 'COMMON_CREATED' | translate }} {{dashboardCtrl.toLocalDate(todo.offer.timestamp)}}</small>
+                                    </td>
+                                    <td class="project-completion">
+                                        <strong ng-if="todo.status=='OPEN'">{{dashboardCtrl.sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</strong>
+                                        <strong ng-if="todo.status=='OFFER'">{{dashboardCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</strong>
+                                        <strong ng-if="todo.status=='FOLLOWUP'">{{dashboardCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</strong>
+                                    </td>
+                                    <td class="project-actions">
+                                        <a class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> Go to </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

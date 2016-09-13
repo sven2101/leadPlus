@@ -32,27 +32,28 @@
                 </div>
                 <div class="ibox-content">
 
-                    <div class="ibox-content">
-                        <form role="form" class="form-inline">
 
-                            <button type="button" class="btn btn-success btn-sm btn-primary" ng-click="productCtrl.clearProduct()" data-toggle="modal"
-                                data-target="#createProductModal">
+                    <form role="form" class="form-inline">
+
+                        <button type="button" class="btn btn-success btn-sm btn-primary" ng-click="productCtrl.clearProduct()" data-toggle="modal"
+                            data-target="#createProductModal">
                                 <i class="fa fa-plus"></i>
                                 &nbsp;{{ 'PRODUCT_CREATE' | translate }}
                         </button>
+                        <!--
                             <button type="button" ng-click="productCtrl.refreshData()" type="button" class="btn btn-success btn-sm btn-primary">
                                 <i class="fa fa-refresh"></i>
                                 &nbsp;{{ 'COMMON_REFRESH' | translate }}
                         </button>
-
-                            <span class="pull-right ">
+                            -->
+                        <span class="pull-right ">
                                  <input  type="text" placeholder="Search" class="input-sm form-control" ng-model="searchText">
                          </span>
 
 
 
-                        </form>
-                    </div>
+                    </form>
+
 
 
                     <div class="project-list">

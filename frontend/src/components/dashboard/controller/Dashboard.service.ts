@@ -41,6 +41,7 @@ class DashboardService {
     uibModal;
 
     user: User;
+    todos: Array<Process> = [];
 
     constructor(ProcessResource, toaster, $rootScope, $translate, $filter, WorkflowService, $uibModal, $q) {
         this.processResource = ProcessResource.resource;
@@ -53,6 +54,10 @@ class DashboardService {
         this.user = $rootScope.currentUser;
         this.uibModal = $uibModal;
         this.initDashboard();
+
+        $rootScope.$on("onTodosChange", (event) => {
+            this.refreshTodos();
+        });
     }
 
     initDashboard() {
@@ -136,9 +141,21 @@ class DashboardService {
         return this.closedSales;
     }
 
-    getTodos(processorId: number): IPromise<Array<Process>> {
-        let defer = this.q.defer();
-        return this.processResource.getTodos({ processorId: processorId });
+    refreshTodos(): void {
+
+        this.processResource.getTodos({ processorId: this.rootScope.globals.user.id }).$promise.then((data) => {
+            this.todos = this.orderByTimestamp(data); this.rootScope.$broadcast("todosChanged", this.todos);
+        }, (error) => console.log(error));
+
+    }
+
+    orderByTimestamp(todos: Array<Process>): Array<Process> {
+        return todos.sort((a, b) => {
+            let tempA = isNullOrUndefined(a.offer) ? a.lead.timestamp : a.offer.timestamp;
+            let tempB = isNullOrUndefined(b.offer) ? b.lead.timestamp : b.offer.timestamp;
+            return tempA - tempB;
+
+        });
     }
 }
 angular.module(moduleDashboardService, [ngResourceId]).service(DashboardServiceId, DashboardService);

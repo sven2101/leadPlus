@@ -60,7 +60,7 @@ class WorkflowService {
         this.productService = ProductService;
         this.customerService = CustomerService;
         this.uibModal = $uibModal;
-        this.user = $rootScope.currentUser;
+        this.user = $rootScope.globals.user;
     }
 
     addComment(process: Process, commentText: string): IPromise<boolean> {

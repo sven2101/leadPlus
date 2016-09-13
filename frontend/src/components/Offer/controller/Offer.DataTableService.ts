@@ -168,9 +168,14 @@ class OfferDataTableService {
     }
 
     getStatusStyleHTML(data: Process): string {
+        let hasProcessor: string = "";
+        if (data.processor !== null) {
+            hasProcessor = "&nbsp;<span style='color: #ea394c;'><i class='fa fa-thumb-tack'></i></span>";
+        }
         if (data.status === "OPEN" || data.status === "OFFER") {
             return "<span style='color: green;'>"
-                + this.translate.instant("COMMON_STATUS_OPEN") + "</span>";
+                + this.translate.instant("COMMON_STATUS_OPEN") + "</span>"
+                + hasProcessor;
         } else if (data.status === "FOLLOWUP") {
             return "<span style='color: #f79d3c;'>"
                 + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>";

@@ -35,7 +35,6 @@ class DashboardController {
     workflowModalType: string;
     workflowModalProcess: Process;
     sortableOptions: any;
-    todos: Array<Process> = [];
 
     constructor(WorkflowService, StatisticService, DashboardService) {
         this.workflowService = WorkflowService;
@@ -44,7 +43,12 @@ class DashboardController {
         this.statisticService.loadAllResourcesByDateRange("WEEKLY");
         this.sortableOptions = this.dashboardService.setSortableOptions();
         this.refreshData();
-        this.dashboardService.getTodos(2).$promise.then((processes) => this.todos = processes);
+        this.refreshTodos();
+
+    }
+
+    refreshTodos(): void {
+        this.dashboardService.refreshTodos();
     }
 
     createOffer(process: Process) {
@@ -99,6 +103,14 @@ class DashboardController {
     getConversionrate(): number {
         return this.statisticService.getLeadConversionRate();
     }
+    toLocalDate(timestamp: any): any {
+        return toLocalDate(timestamp);
+    }
+    sumOrderPositions(array: Array<OrderPosition>): number {
+        return this.workflowService.sumOrderPositions(array);
+    }
+
+
 }
 
 angular.module(moduleDashboard, [ngResourceId]).controller(DashboardControllerId, DashboardController);
