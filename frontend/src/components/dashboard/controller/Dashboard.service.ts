@@ -34,9 +34,13 @@ class DashboardService {
     rootScope: any;
     q: any;
 
-    openLeads: Array<Lead>;
-    openOffers: Array<Offer>;
-    closedSales: Array<Sale>;
+    openLeads: Array<Process>;
+    openOffers: Array<Process>;
+    closedSales: Array<Process>;
+
+    openLeadsValue: number = 0;
+    openOffersValue: number = 0;
+    closedSalesValue: number = 0;
 
     uibModal;
 
@@ -69,14 +73,36 @@ class DashboardService {
         let self = this;
         this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function (result) {
             self.openLeads = self.orderBy(result, "lead.timestamp", false);
+            self.sumLeads();
         });
         this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
             self.openOffers = self.orderBy(result, "offer.timestamp", false);
+            self.sumOffers();
         });
         this.processResource.getLatestSales().$promise.then(function (result) {
             self.closedSales = result;
+            self.sumSales();
         });
     }
+    sumLeads(): void {
+        this.openLeadsValue = 0;
+        for (let i = 0; i < this.openLeads.length; i++) {
+            this.openLeadsValue += this.workflowService.sumOrderPositions(this.openLeads[i].lead.orderPositions);
+        }
+    }
+    sumOffers(): void {
+        this.openOffersValue = 0;
+        for (let i = 0; i < this.openOffers.length; i++) {
+            this.openOffersValue += this.workflowService.sumOrderPositions(this.openOffers[i].offer.orderPositions);
+        }
+    }
+    sumSales(): void {
+        this.closedSalesValue = 0;
+        for (let i = 0; i < this.closedSales.length; i++) {
+            this.closedSalesValue += this.workflowService.sumOrderPositions(this.closedSales[i].sale.orderPositions);
+        }
+    }
+
 
     setSortableOptions(): any {
         let self: DashboardService = this;
@@ -111,6 +137,8 @@ class DashboardService {
         this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
             self.openOffers = self.orderBy(self.openOffers, "offer.timestamp", false);
             self.openOfferModal(tmpprocess);
+            self.sumLeads();
+            self.sumOffers();
         });
     }
 
@@ -132,16 +160,19 @@ class DashboardService {
         let self = this;
         this.workflowService.addOfferToSale(process).then(function (isResolved: boolean) {
             self.closedSales = self.orderBy(self.closedSales, "sale.timestamp", true);
+            self.sumOffers();
+            self.sumSales();
         });
+
     }
 
-    getOpenLeads(): Array<Lead> {
+    getOpenLeads(): Array<Process> {
         return this.openLeads;
     }
-    getOpenOffers(): Array<Offer> {
+    getOpenOffers(): Array<Process> {
         return this.openOffers;
     }
-    getClosedSales(): Array<Sale> {
+    getClosedSales(): Array<Process> {
         return this.closedSales;
     }
 

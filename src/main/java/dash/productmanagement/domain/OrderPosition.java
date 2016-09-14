@@ -42,6 +42,8 @@ public class OrderPosition {
 
 	private int amount;
 
+	private double price;
+
 	public OrderPosition() {
 
 	}
@@ -78,12 +80,23 @@ public class OrderPosition {
 		this.workflow = workflow;
 	}
 
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + amount;
 		result = prime * result + (int) (id ^ (id >>> 32));
+		long temp;
+		temp = Double.doubleToLongBits(price);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		return result;
 	}
@@ -101,12 +114,19 @@ public class OrderPosition {
 			return false;
 		if (id != other.id)
 			return false;
+		if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
+			return false;
 		if (product == null) {
 			if (other.product != null)
 				return false;
 		} else if (!product.equals(other.product))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "OrderPosition [id=" + id + ", product=" + product + ", amount=" + amount + ", price=" + price + "]";
 	}
 
 }

@@ -59,7 +59,7 @@
                     <div class="project-list">
                         <table class="table table-hover">
                             <tbody>
-                                <tr ng-repeat="product in productCtrl.productService.products| filter:searchText">
+                                <tr ng-repeat="product in productCtrl.productService.products| filter:searchText |orderBy:'name'">
                                     <td class="project-status col-md-1">
                                         <span ng-show="!product.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
                                         <span ng-show="product.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>

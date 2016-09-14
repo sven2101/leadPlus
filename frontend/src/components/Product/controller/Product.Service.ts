@@ -46,8 +46,6 @@ class ProductService {
             });
         } else {
             this.productResource.updateProduct(product).$promise.then(function (result: Product) {
-                console.log(product);
-                console.log(result);
                 product = result;
             });
         }
