@@ -57,6 +57,7 @@ class ProductService {
         let defer = this.q.defer();
         let self = this;
         this.productResource.getAllProducts().$promise.then(function (result: Array<Product>) {
+            self.products = result;
             defer.resolve(self.products);
         }, function (error: any) {
             defer.reject(error);
