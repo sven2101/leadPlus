@@ -19,6 +19,8 @@ import java.util.Calendar;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,6 +42,9 @@ public class Product {
 	private String name;
 	private String description;
 
+	@Enumerated(EnumType.STRING)
+	private ProductState productState;
+
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
@@ -51,6 +56,14 @@ public class Product {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private File image;
+
+	public ProductState getProductState() {
+		return productState;
+	}
+
+	public void setProductState(ProductState productState) {
+		this.productState = productState;
+	}
 
 	public boolean isDeactivated() {
 		return deactivated;
@@ -116,11 +129,16 @@ public class Product {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((image == null) ? 0 : image.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(priceNetto);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((productState == null) ? 0 : productState.hashCode());
+		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		return result;
 	}
 
@@ -133,10 +151,19 @@ public class Product {
 		if (getClass() != obj.getClass())
 			return false;
 		Product other = (Product) obj;
+		if (deactivated != other.deactivated)
+			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
+			return false;
+		if (id != other.id)
+			return false;
+		if (image == null) {
+			if (other.image != null)
+				return false;
+		} else if (!image.equals(other.image))
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -145,12 +172,21 @@ public class Product {
 			return false;
 		if (Double.doubleToLongBits(priceNetto) != Double.doubleToLongBits(other.priceNetto))
 			return false;
+		if (productState != other.productState)
+			return false;
+		if (timestamp == null) {
+			if (other.timestamp != null)
+				return false;
+		} else if (!timestamp.equals(other.timestamp))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", priceNetto=" + priceNetto + "]";
+		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", productState="
+				+ productState + ", timestamp=" + timestamp + ", deactivated=" + deactivated + ", priceNetto="
+				+ priceNetto + ", image=" + image + "]";
 	}
 
 }

@@ -1,4 +1,5 @@
 /// <reference path="../../common/model/AbstractModel.Model.ts" />
+/// <reference path="./ProductState.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -21,12 +22,14 @@ class Product extends AbstractModel {
     image: any;
     timestamp: any;
     deactivated: boolean;
+    productState: ProductState;
 
     constructor() {
         super();
         this.name = "";
         this.description = "";
         this.deactivated = false;
+        this.productState = ProductState.NEW;
     }
 
 }

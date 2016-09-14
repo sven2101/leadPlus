@@ -31,6 +31,15 @@
                                 <input type="number" name="priceNetto" class="form-control" ng-model="productCtrl.currentProduct.priceNetto" ng-maxlength="50" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01">
                                 <p ng-show="productCtrl.createProductForm.priceNetto.$invalid && !productCtrl.createProductForm.priceNetto.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
                             </div>
+                            <div class="form-group">
+                                <label>productState</label>
+                                <select ng-model="productCtrl.currentProduct.productState">
+                                    <option value="NEW">neu</option>
+                                    <option value="USED">gebraucht</option>
+                                </select>
+                                
+                               
+                            </div>
                             <div class="form-group" ng-show="!productCtrl.isCurrentProductNew">
                                 <label class="checkbox-inline"> <input type="checkbox"  ng-model="productCtrl.currentProduct.deactivated" id="inlineCheckbox1">{{ 'COMMON_DEACTIVATE' | translate }}</label>
                             </div>
