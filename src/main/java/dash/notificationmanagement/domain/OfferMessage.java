@@ -18,6 +18,8 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dash.filemanagement.domain.File;
 import dash.offermanagement.domain.Offer;
 import freemarker.cache.StringTemplateLoader;
@@ -26,12 +28,17 @@ import freemarker.template.Configuration;
 public class OfferMessage extends AbstractMessage {
 
 	private StringTemplateLoader stringLoader;
+
+	@JsonIgnore
+	private Offer offer;
+
 	private String template;
 	private File attachement;
 
 	public OfferMessage(Offer offer, String template) {
-		super(offer.getCustomer());
+		super(offer.getCustomer().getEmail());
 		this.stringLoader = new StringTemplateLoader();
+		this.offer = offer;
 		this.template = template;
 		this.attachement = null;
 	}
@@ -55,11 +62,16 @@ public class OfferMessage extends AbstractMessage {
 			template = cfg.getTemplate("greetTemplate");
 			writer = new StringWriter();
 			Map mapping = new HashMap();
-			mapping.put("user", "Andreas Foitzik");
+			mapping.put("titel", String.valueOf(this.offer.getCustomer().getTitle()));
+			mapping.put("firstname", String.valueOf(this.offer.getCustomer().getFirstname()));
+			mapping.put("lastname", String.valueOf(this.offer.getCustomer().getLastname()));
+			mapping.put("deliveryAddress", String.valueOf(this.offer.getDeliveryAddress()));
+			mapping.put("offerPrice", String.valueOf(this.offer.getOfferPrice()));
+			mapping.put("deliveryDate", String.valueOf(this.offer.getDeliveryDate()));
 			template.process(mapping, writer);
 
 		} catch (Exception ex) {
-			throw new RuntimeException("Problem rendering registration email content", ex);
+			throw new RuntimeException("Problem rendering email content", ex);
 		}
 
 		System.out.println("Template Renderer: " + writer.toString());

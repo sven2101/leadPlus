@@ -17,11 +17,13 @@ package dash.notificationmanagement.business;
 import java.util.Properties;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,28 +31,29 @@ import com.sun.mail.smtp.SMTPMessage;
 
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.notificationmanagement.domain.Notification;
+import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.business.IUserService;
 import dash.usermanagement.domain.User;
 
 @Service
 public class NotificationService implements INotificationService {
 
+	private static final Logger logger = Logger.getLogger(NotificationService.class);
+
 	@Autowired
 	private IUserService userService;
 
 	@Override
-	public void sendNotification(final long userId, final Notification notification) throws SMTPdoesntExistsException {
+	public void sendNotification(final long userId, final Notification notification) throws SMTPdoesntExistsException, MessagingException {
 		doSendEmail(userId, notification);
 	}
 
-	public void doSendEmail(final long userId, Notification notification) throws SMTPdoesntExistsException {
-		System.out.println("Notification: " + notification.toString());
-
+	public void doSendEmail(final long userId, Notification notification) throws SMTPdoesntExistsException, MessagingException {
 		try {
 			User principle = userService.getById(userId);
 			if (principle.getSmtp() != null) {
 
-				final Session emailSession = newSession(principle);
+				final Session emailSession = newSession(principle.getSmtp());
 				Transport transport = emailSession.getTransport("smtp");
 				transport.connect();
 
@@ -65,22 +68,24 @@ public class NotificationService implements INotificationService {
 				smtpMessage.setReturnOption(1);
 				transport.sendMessage(smtpMessage, InternetAddress.parse(notification.getRecipient()));
 				transport.close();
-
-				System.out.println("SMTP - DONE");
 			} else {
 				throw new SMTPdoesntExistsException("No valid SMTP Data for this User");
 			}
 		} catch (Exception ex) {
-			System.out.println("Exception");
+			MessagingException mex = new MessagingException("Messaging Failed");
+			logger.error(NotificationService.class.getSimpleName(), mex);
+			throw mex;
 		}
 	}
 
-	private Session newSession(User user) {
+	private Session newSession(Smtp smtp) {
 		Properties props = new Properties();
-		props.setProperty("mail.smtp.host", user.getSmtp().getHost());
-		props.setProperty("mail.smtp.port", String.valueOf(user.getSmtp().getPort()));
-		final String mailUser = user.getSmtp().getUsername();
-		final String mailPassword = user.getSmtp().getPassword();
+		props.setProperty("mail.smtp.host", smtp.getHost());
+		props.setProperty("mail.smtp.port", String.valueOf(smtp.getPort()));
+		props.put("mail.smtp.ssl.trust", smtp.getHost());
+		props.put("mail.smtp.auth", "true");
+		final String mailUser = smtp.getUsername();
+		final String mailPassword = smtp.getPassword();
 
 		return Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			@Override

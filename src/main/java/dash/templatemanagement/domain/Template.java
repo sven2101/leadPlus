@@ -29,6 +29,8 @@ public class Template {
 
 	private String name;
 	private String description;
+
+	@Column(length = 4096)
 	private String content;
 	private boolean deactivated;
 

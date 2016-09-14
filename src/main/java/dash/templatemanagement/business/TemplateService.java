@@ -34,7 +34,6 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.notificationmanagement.domain.OfferMessage;
 import dash.offermanagement.business.IOfferService;
-import dash.offermanagement.domain.Offer;
 import dash.templatemanagement.domain.Template;
 
 @Service
@@ -120,7 +119,6 @@ public class TemplateService implements ITemplateService {
 
 	@Override
 	public OfferMessage generate(final long templateId, final long offerId) throws NotFoundException {
-		Offer offer = offerService.getOfferById(offerId);
-		return new OfferMessage(offer, "Hello ${user}");
+		return new OfferMessage(offerService.getOfferById(offerId), getById(templateId).getContent());
 	}
 }

@@ -14,11 +14,9 @@
 
 package dash.notificationmanagement.domain;
 
-import dash.customermanagement.domain.Customer;
-
 public interface IMessage {
 
-	Customer getRecipient();
+	String getRecipient();
 
 	String getSubject();
 

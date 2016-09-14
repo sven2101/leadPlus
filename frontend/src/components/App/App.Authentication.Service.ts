@@ -75,7 +75,7 @@ class AuthService {
     }
 
     logout() {
-        this.rootScope.currentUser = null;
+        this.rootScope.globals.user = null;
         this.rootScope.globals = {};
         this.cookieStore.remove("globals");
         this.http.defaults.headers.common.Authorization = "Basic";

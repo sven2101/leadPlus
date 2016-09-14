@@ -22,11 +22,7 @@ public class Notification {
 	private String content;
 	private File attachement;
 
-	public Notification(String recipient, String subject, String content, File attachement) {
-		this.recipient = recipient;
-		this.subject = subject;
-		this.content = content;
-		this.attachement = attachement;
+	public Notification() {
 	}
 
 	public String getRecipient() {

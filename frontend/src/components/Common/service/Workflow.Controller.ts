@@ -24,7 +24,7 @@ const WorkflowControllerId: string = "WorkflowController";
 
 class WorkflowController {
 
-    $inject = ["offer", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId];
+    $inject = ["offer", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId];
 
     uibModalInstance;
 
@@ -40,17 +40,21 @@ class WorkflowController {
     productService: ProductService;
     notificationService: NotificationService;
     templateService: TemplateService;
+    workflowService: WorkflowService;
 
-    constructor(offer, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService) {
+    customerSelected: boolean = false;
+    currentCustomerId: string = "-1";
+
+    constructor(offer, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService) {
         this.offer = offer;
         this.uibModalInstance = $uibModalInstance;
-        this.template = new Template();
         this.notification = new Notification();
         this.notificationService = NotificationService;
         this.templateService = TemplateService;
         this.customerService = CustomerService;
         this.productService = ProductService;
-
+        this.workflowService = WorkflowService;
+        this.currentCustomerId = String(this.offer.customer.id);
         this.getAllTemplates();
     }
 
@@ -62,8 +66,8 @@ class WorkflowController {
         this.uibModalInstance.close();
     }
 
-    generate(template: Template, offer: Offer) {
-        this.templateService.generate(this.template, this.offer).then((result) => this.notification = result, (error) => console.log(error));
+    generate(templateId: string, offer: Offer) {
+        this.templateService.generate(templateId, offer).then((result) => this.notification = result, (error) => console.log(error));
     }
 
     getAllTemplates() {
@@ -71,7 +75,12 @@ class WorkflowController {
     }
 
     send() {
+        console.log("Notif");
         this.notificationService.send(this.notification);
+    }
+
+    selectCustomer(workflow: any) {
+        this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
 
 }

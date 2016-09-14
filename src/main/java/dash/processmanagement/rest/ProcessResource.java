@@ -50,8 +50,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Process Resource")
-@RequestMapping(value = "/api/rest/processes", consumes = { MediaType.ALL_VALUE }, produces = {
-		MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/processes", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Process API")
 public class ProcessResource {
 
@@ -87,8 +86,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns status", notes = "")
 	@RequestMapping(value = "/{processId}/status", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Status getStatusByProcessId(@ApiParam(required = true) @PathVariable final Long processId)
-			throws NotFoundException {
+	public Status getStatusByProcessId(@ApiParam(required = true) @PathVariable final Long processId) throws NotFoundException {
 		return processService.getById(processId).getStatus();
 	}
 
@@ -96,8 +94,7 @@ public class ProcessResource {
 	@RequestMapping(value = "/{id}/status", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public Process setStatusByProcessId(@ApiParam(required = true) @PathVariable final Long id,
-			@ApiParam(required = true) @RequestBody @Valid final String status)
-			throws NotFoundException, SaveFailedException, UpdateFailedException {
+			@ApiParam(required = true) @RequestBody @Valid final String status) throws NotFoundException, SaveFailedException, UpdateFailedException {
 
 		return processService.setStatus(id, status);
 
@@ -106,8 +103,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Update a single process.", notes = "")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Process update(@ApiParam(required = true) @RequestBody @Valid final Process updateProcess)
-			throws UpdateFailedException {
+	public Process update(@ApiParam(required = true) @RequestBody @Valid final Process updateProcess) throws UpdateFailedException {
 		return processService.update(updateProcess);
 	}
 
@@ -121,16 +117,14 @@ public class ProcessResource {
 	@ApiOperation(value = "Puts processor to process", notes = "")
 	@RequestMapping(value = "/{id}/processors", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public void setProcessor(@ApiParam(required = true) @PathVariable final Long id, @RequestBody final long userId)
-			throws Exception {
+	public void setProcessor(@ApiParam(required = true) @PathVariable final Long id, @RequestBody final long userId) throws Exception {
 		processService.setProcessor(id, userId);
 	}
 
 	@ApiOperation(value = "Remove processor from process", notes = "")
 	@RequestMapping(value = "/{id}/processors", method = { RequestMethod.DELETE })
 	@ResponseStatus(HttpStatus.OK)
-	public void removeProcessorByProcessId(@ApiParam(required = true) @PathVariable final Long id)
-			throws UpdateFailedException {
+	public void removeProcessorByProcessId(@ApiParam(required = true) @PathVariable final Long id) throws UpdateFailedException {
 		processService.removeProcessorByProcessId(id);
 	}
 
@@ -161,9 +155,8 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns a list of leads.", notes = "")
 	@RequestMapping(value = "/leads", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public DatatableServerSideJsonObject getProcessWithLeads(@RequestParam Integer draw, @RequestParam Integer start,
-			@RequestParam Integer length, @RequestParam(value = "search[value]") String searchText,
-			@RequestParam(value = "order[0][column]") int orderCol,
+	public DatatableServerSideJsonObject getProcessWithLeads(@RequestParam Integer draw, @RequestParam Integer start, @RequestParam Integer length,
+			@RequestParam(value = "search[value]") String searchText, @RequestParam(value = "order[0][column]") int orderCol,
 			@RequestParam(value = "order[0][dir]") String orderDir) {
 		String sortColumn = "lead.timestamp";
 		if (orderCol == 1)
@@ -183,17 +176,14 @@ public class ProcessResource {
 		Page page;
 
 		if (null == searchText || searchText.equals(""))
-			page = processRepository
-					.findByLeadIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
+			page = processRepository.findByLeadIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
 		else
 			page = processRepository
-					.findByLeadCustomerFirstnameContainingOrLeadCustomerLastnameContainingOrLeadCustomerEmailContainingOrLeadCustomerCompanyContainingOrLeadCustomerPhoneContainingOrLeadProductNameContainingOrLeadProductDescriptionContainingOrLeadDeliveryAddressContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
-							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
-							searchText, searchText, searchText,
+					.findByLeadCustomerFirstnameContainingOrLeadCustomerLastnameContainingOrLeadCustomerEmailContainingOrLeadCustomerCompanyContainingOrLeadCustomerPhoneContainingOrLeadDeliveryAddressContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
+							searchText, searchText, searchText, searchText, searchText, searchText, searchText, searchText,
 							new PageRequest(start / length, length, sortDirection, sortColumn));
 
-		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),
-				page.getContent());
+		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(), page.getContent());
 	}
 
 	@ApiOperation(value = "Return a single lead.", notes = "")
@@ -206,8 +196,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a single lead.", notes = "")
 	@RequestMapping(value = "/{processId}/leads", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Lead createLeadByProcess(@PathVariable final Long processId, @RequestBody @Valid final Lead lead)
-			throws NotFoundException, SaveFailedException {
+	public Lead createLeadByProcess(@PathVariable final Long processId, @RequestBody @Valid final Lead lead) throws NotFoundException, SaveFailedException {
 		return processService.createLead(processId, lead);
 	}
 
@@ -218,9 +207,8 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns a list of offers.", notes = "")
 	@RequestMapping(value = "/offers", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public DatatableServerSideJsonObject getProcessWithOffers(@RequestParam Integer draw, @RequestParam Integer start,
-			@RequestParam Integer length, @RequestParam(value = "search[value]") String searchText,
-			@RequestParam(value = "order[0][column]") int orderCol,
+	public DatatableServerSideJsonObject getProcessWithOffers(@RequestParam Integer draw, @RequestParam Integer start, @RequestParam Integer length,
+			@RequestParam(value = "search[value]") String searchText, @RequestParam(value = "order[0][column]") int orderCol,
 			@RequestParam(value = "order[0][dir]") String orderDir) {
 		String sortColumn = "offer.timestamp";
 		if (orderCol == 1)
@@ -240,16 +228,14 @@ public class ProcessResource {
 		Page page;
 
 		if (null == searchText || searchText.equals(""))
-			page = processRepository
-					.findByOfferIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
+			page = processRepository.findByOfferIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
 		else
 			page = processRepository
-					.findByOfferCustomerFirstnameContainingOrOfferCustomerLastnameContainingOrOfferCustomerEmailContainingOrOfferCustomerCompanyContainingOrOfferCustomerPhoneContainingOrOfferProductNameContainingOrOfferProductDescriptionContainingOrOfferDeliveryAddressContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(
+					.findByOfferCustomerFirstnameContainingOrOfferCustomerLastnameContainingOrOfferCustomerEmailContainingOrOfferCustomerCompanyContainingOrOfferCustomerPhoneContainingOrOfferDeliveryAddressContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(
 							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
-							searchText, searchText, new PageRequest(start / length, length, sortDirection, sortColumn));
+							new PageRequest(start / length, length, sortDirection, sortColumn));
 
-		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),
-				page.getContent());
+		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(), page.getContent());
 	}
 
 	@ApiOperation(value = "Returns single offer.", notes = "")
@@ -262,8 +248,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a single offer.", notes = "")
 	@RequestMapping(value = "/{processId}/offers", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Offer createOfferByProcess(@PathVariable final Long processId, @RequestBody @Valid final Offer offer)
-			throws SaveFailedException {
+	public Offer createOfferByProcess(@PathVariable final Long processId, @RequestBody @Valid final Offer offer) throws SaveFailedException {
 		return processService.createOffer(processId, offer);
 	}
 
@@ -273,9 +258,8 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns a list of sales.", notes = "")
 	@RequestMapping(value = "/sales", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public DatatableServerSideJsonObject getProcessWithSales(@RequestParam Integer draw, @RequestParam Integer start,
-			@RequestParam Integer length, @RequestParam(value = "search[value]") String searchText,
-			@RequestParam(value = "order[0][column]") int orderCol,
+	public DatatableServerSideJsonObject getProcessWithSales(@RequestParam Integer draw, @RequestParam Integer start, @RequestParam Integer length,
+			@RequestParam(value = "search[value]") String searchText, @RequestParam(value = "order[0][column]") int orderCol,
 			@RequestParam(value = "order[0][dir]") String orderDir) {
 		String sortColumn = "sale.timestamp";
 		if (orderCol == 1)
@@ -295,16 +279,14 @@ public class ProcessResource {
 		Page page;
 
 		if (null == searchText || searchText.equals(""))
-			page = processRepository
-					.findBySaleIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
+			page = processRepository.findBySaleIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
 		else
 			page = processRepository
-					.findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrSaleProductNameContainingOrSaleProductDescriptionContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
-							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
-							searchText, new PageRequest(start / length, length, sortDirection, sortColumn));
+					.findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
+							searchText, searchText, searchText, searchText, searchText, searchText,
+							new PageRequest(start / length, length, sortDirection, sortColumn));
 
-		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),
-				page.getContent());
+		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(), page.getContent());
 	}
 
 	@ApiOperation(value = "Returns a list of latest 100 sales.", notes = "")
@@ -331,8 +313,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a single sale.", notes = "")
 	@RequestMapping(value = "/{processId}/sales", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Sale createSaleByProcess(@PathVariable Long processId, @RequestBody @Valid final Sale sale)
-			throws NotFoundException, SaveFailedException {
+	public Sale createSaleByProcess(@PathVariable Long processId, @RequestBody @Valid final Sale sale) throws NotFoundException, SaveFailedException {
 		return processService.createSale(processId, sale);
 	}
 
