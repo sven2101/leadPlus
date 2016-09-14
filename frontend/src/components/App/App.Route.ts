@@ -121,11 +121,13 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
 
                 if (next.authenticated === true) {
                     if (initialLoaded) {
-                        $injector.get("DashboardService");
+
                         initialLoaded = false;
                     }
                     if (!$rootScope.globals.user) {
                         $location.path("/login");
+                    } else {
+                        $injector.get("DashboardService");
                     }
                 }
             });
