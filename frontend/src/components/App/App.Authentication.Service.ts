@@ -79,15 +79,22 @@ class AuthService {
         this.rootScope.globals = {};
         this.cookieStore.remove("globals");
         this.http.defaults.headers.common.Authorization = "Basic";
-
+        location.reload(true);
+        /*
         let self = this;
         this.http.post("logout", {})
             .success(function () {
-                self.location.path("#/login");
+                // self.location.path("#/login");
+                self.rootScope.$broadcast("$destroy");
+                // location.reload();
             })
             .error(function (data) {
-                self.location.path("#/login");
+                // self.location.path("#/login");
+                self.rootScope.$broadcast("$destroy");
+                // location.reload();
+
             });
+        */
     }
 
     setCurrentUser() {

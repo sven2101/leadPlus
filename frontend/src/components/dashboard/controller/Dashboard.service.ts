@@ -147,6 +147,9 @@ class DashboardService {
     }
 
     refreshTodos(): void {
+        if (isNullOrUndefined(this.rootScope.globals.user)) {
+            return;
+        }
 
         this.processResource.getTodos({ processorId: this.rootScope.globals.user.id }).$promise.then((data) => {
             this.todos = this.orderByTimestamp(data);

@@ -14,6 +14,6 @@
 "use strict";
 
 enum Language {
-    EN,
-    DE
+    EN = <any>"EN",
+    DE = <any>"DE"
 }

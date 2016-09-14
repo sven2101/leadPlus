@@ -95,6 +95,7 @@ class LeadService {
             addForm.$setPristine();
             dtInstance.DataTable.row.add(result).draw();
         });
+
     }
 
     createOffer(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {
@@ -169,6 +170,9 @@ class LeadService {
                     editProcess.lead.price = result.lead.price;
                     self.updateRow(result, dtInstance, scope);
                     self.customerService.getAllCustomer();
+                    if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
+                        self.rootScope.$broadcast("onTodosChange");
+                    }
                 });
             });
             return;
