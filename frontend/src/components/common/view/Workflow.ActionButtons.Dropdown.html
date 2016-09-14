@@ -1,41 +1,58 @@
-<div class="dropdown">
-    <button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown">
+<div style="min-width:100px" class="text-center btn-group" role="group" aria-label="...">
+    <div class="btn-group" role="group" style="margin-left:-51px;min-height:34px;position: fixed;z-index: 10">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-wrench"></i>
+           <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu pull-right">
-        <li ng-if="type=='lead' || type =='offer'">
-            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.createNextWorkflowUnit(parent.processes[directiveData.process.id])">
+        <ul class="dropdown-menu">
+            <li ng-if="type=='lead' || type =='offer'">
+                <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.createNextWorkflowUnit(parent.processes[directiveData.process.id])">
                  <i class="fa fa-check">&nbsp;</i>{{directiveData.translation.nextWorkflowUnit}}
             </button>
-        </li>
-        <li ng-if="type=='lead'">
-            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.pin(parent.processes[directiveData.process.id])">
+            </li>
+            <li ng-if="directiveData.config.disablePinDropdown">
+                <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.pin(parent.processes[directiveData.process.id])">
                   <i class="fa fa-thumb-tack">&nbsp;</i>{{'LEAD_PIN' | translate }}
             </button>
-        </li>
-        <li ng-if="type=='offer'">
-            <button class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.followUp(parent.processes[directiveData.process.id])"
-                title="{{'OFFER_FOLLOW_UP'| translate }}">
+            </li>
+            <li ng-if="type=='offer'">
+                <button class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.followUp(parent.processes[directiveData.process.id])"
+                    title="{{'OFFER_FOLLOW_UP'| translate }}">
          <i class="fa fa-eye"></i>
         </button>
-        </li>
-        <li ng-if="type=='lead' || type =='offer'">
-            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenInquiryDisable"
-                ng-click="parent.closeOrOpenInquiry(parent.processes[directiveData.process.id])"> 
+            </li>
+            <li ng-if="type=='lead' || type =='offer'">
+                <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenInquiryDisable"
+                    ng-click="parent.closeOrOpenInquiry(parent.processes[directiveData.process.id])"> 
                     <i class="{{directiveData.config.faOpenOrLock}}">&nbsp;</i>{{directiveData.config.openOrLock}}
             </button>
-        </li>
-        <li>
-            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenInquiryDisable"
-                data-toggle="modal" data-target="#editModal" ng-click="parent.loadDataToModal(parent.processes[directiveData.process.id])">
+            </li>
+            <li>
+                <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenInquiryDisable"
+                    data-toggle="modal" data-target="#editModal" ng-click="parent.loadDataToModal(parent.processes[directiveData.process.id])">
                     <i class="fa fa-edit">&nbsp;</i>{{directiveData.translation.editWorkflowUnit}}
             </button>
-        </li>
-        <li>
-            <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.hasRightToDelete"
-                ng-click="parent.deleteRow(parent.processes[directiveData.process.id])">
+            </li>
+            <li>
+                <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.hasRightToDelete"
+                    ng-click="parent.deleteRow(parent.processes[directiveData.process.id])">
                    <i class="fa fa-trash-o">&nbsp;</i>{{directiveData.translation.deleteWorkflowUnit}}
             </button>
-        </li>
-    </ul>
-</div>
+            </li>
+        </ul>
+    </div>
+    <div style="position: fixed;z-index: 10" ng-if="!directiveData.config.disablePinDropdown&&(type=='lead'|| type =='offer')"
+        class="btn-group" role="group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       <i class="fa fa-thumb-tack"></i>
+      <span class="caret"></span>
+    </button>
+        <ul style="max-height: 200px; overflow-x: hidden;" class="dropdown-menu">
+            <li ng-click="parent.pin(parent.processes[directiveData.process.id],null)"><a>{{ 'COMMON_EMPTY_PROCESSOR' | translate }}</a></li>
+            <li role="separator" class="divider"></li>
+            <li ng-click="parent.pin(parent.processes[directiveData.process.id],user)" ng-repeat="user in parent.workflowService.users">
+                <a ng-style="user.id==directiveData.process.processor.id?{'font-weight': 'bold','font-style':'italic'}:{'font-weight': 'normal','font-style':'normal'}">{{user.username}}</a>
+            </li>
+        </ul>
+    </div>
+    <div>

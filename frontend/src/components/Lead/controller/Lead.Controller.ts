@@ -174,6 +174,9 @@ class LeadController extends AbstractWorkflow {
     selectCustomer(workflow: any) {
         this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
+    preventPropagation($event) {
+        $event.stopPropagation();
+    }
 }
 angular.module(moduleLead, [ngResourceId]).controller(LeadControllerId, LeadController);
 

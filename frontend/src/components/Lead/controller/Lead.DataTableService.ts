@@ -122,7 +122,6 @@ class LeadDataTableService {
     }
 
     setActionButtonsConfig(user: User, templateData: any) {
-        console.log(user);
         let config = {
             "disabled": false,
             "disablePin": false,
