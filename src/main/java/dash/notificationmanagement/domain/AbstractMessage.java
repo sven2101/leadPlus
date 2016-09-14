@@ -13,18 +13,16 @@
  *******************************************************************************/
 package dash.notificationmanagement.domain;
 
-import dash.customermanagement.domain.Customer;
-
 public abstract class AbstractMessage implements IMessage {
 
-	protected Customer recipient;
+	protected String recipient;
 
-	public AbstractMessage(Customer recipient) {
+	public AbstractMessage(String recipient) {
 		this.recipient = recipient;
 	}
 
 	@Override
-	public Customer getRecipient() {
+	public String getRecipient() {
 		return recipient;
 	}
 

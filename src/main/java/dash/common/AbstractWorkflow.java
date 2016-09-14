@@ -24,7 +24,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import dash.customermanagement.domain.Customer;
 import dash.processmanagement.request.Request;
 import dash.productmanagement.domain.OrderPosition;
-import dash.productmanagement.domain.Product;
 import dash.vendormanagement.domain.Vendor;
 
 @Entity
@@ -43,10 +42,6 @@ public abstract class AbstractWorkflow implements Request {
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "workflow", fetch = FetchType.LAZY)
 	private List<OrderPosition> orderPositions;
-
-	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	@JoinColumn(name = "product_fk")
-	private Product product;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = true, columnDefinition = "timestamp")
@@ -71,14 +66,6 @@ public abstract class AbstractWorkflow implements Request {
 
 	public void setOrderPositions(List<OrderPosition> orderPositions) {
 		this.orderPositions = orderPositions;
-	}
-
-	public Product getProduct() {
-		return product;
-	}
-
-	public void setProduct(Product product) {
-		this.product = product;
 	}
 
 	@Override
@@ -129,7 +116,6 @@ public abstract class AbstractWorkflow implements Request {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		result = prime * result + ((customer == null) ? 0 : customer.hashCode());
 		result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
@@ -148,11 +134,6 @@ public abstract class AbstractWorkflow implements Request {
 		if (getClass() != obj.getClass())
 			return false;
 		AbstractWorkflow other = (AbstractWorkflow) obj;
-		if (product == null) {
-			if (other.product != null)
-				return false;
-		} else if (!product.equals(other.product))
-			return false;
 		if (customer == null) {
 			if (other.customer != null)
 				return false;
@@ -185,9 +166,8 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Override
 	public String toString() {
-		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress
-				+ ", orderPositions=" + orderPositions + ", product=" + product + ", timestamp=" + timestamp
-				+ ", vendor=" + vendor + "]";
+		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress + ", orderPositions=" + orderPositions
+				+ ", timestamp=" + timestamp + ", vendor=" + vendor + "]";
 	}
 
 }

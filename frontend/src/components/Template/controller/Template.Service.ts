@@ -1,6 +1,7 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Template/model/Template.Model.ts" />
 /// <reference path="../../Template/controller/Template.Controller.ts" />
+/// <reference path="../../Common/model/Promise.Interface.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -97,13 +98,10 @@ class TemplateService {
         });
     }
 
-    generate(template: Template, offer: Offer): IPromise<Notification> {
+    generate(templateId: string, offer: Offer): IPromise<Notification> {
         let defer = this.q.defer();
         let self = this;
-        console.log(JSON.parse(JSON.stringify(template)).id);
-        console.log("Template: ", template["id"]);
-        console.log("Template: ", template);
-        this.templateResource.generate({ templateId: 1, offerId: offer.id }).$promise.then(function (resultMessage: Notification) {
+        this.templateResource.generate({ templateId: templateId, offerId: offer.id }).$promise.then(function (resultMessage: Notification) {
             console.log(resultMessage);
             defer.resolve(resultMessage);
         }, function (error: any) {

@@ -9,7 +9,7 @@
             <div class="col-sm-6 b-r">
                 <div class="form-group">
                     <label>{{ 'CUSTOMER_MENU' | translate }}</label>
-                    <select class="form-control" ng-model="workflowCtrl.offer.customer.id" ng-change="workflowCtrl.selectCustomer(workflowCtrl.offer)">
+                    <select class="form-control" ng-model="workflowCtrl.currentCustomerId" ng-change="workflowCtrl.selectCustomer(workflowCtrl.offer)">
                         <option value="-1" selected > - Select Customer - </option>                                                                     
                         <option value="{{customer.id}}" ng-repeat="customer in workflowCtrl.customerService.getActiveCustomers()">{{customer.firstname}} {{customer.lastname}}</option>                                          
                     </select>
@@ -17,7 +17,7 @@
                 <!-- TITLE -->
                 <div class="form-group">
                     <label>{{ 'COMMON_TITLE' | translate }}</label>
-                    <select name="title" class="form-control" ng-model="workflowCtrl.offer.customer.title" ng-disabled="offer.customerSelected">
+                    <select name="title" class="form-control" ng-model="workflowCtrl.offer.customer.title" ng-disabled="workflowCtrl.customerSelected">
                         <option value="MR">{{ 'COMMON_TITLE_MR' | translate }}</option>
                         <option value="MS">{{ 'COMMON_TITLE_MS' | translate }}</option>
                     </select>
@@ -26,7 +26,7 @@
                 <div class="form-group" ng-class="{ 'has-error' : offer.editForm.firstname.$invalid && !offer.editForm.firstname.$pristine }">
                     <label>{{ 'COMMON_FIRSTNAME' | translate }}</label>
                     <input required type="text" name="firstname" class="form-control" ng-model="workflowCtrl.offer.customer.firstname" ng-maxlength="30"
-                        ng-disabled="offer.customerSelected">
+                        ng-disabled="workflowCtrl.customerSelected">
                     <p ng-show="offer.editForm.firstname.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                     <p ng-show="offer.editForm.firstname.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
                 </div>
@@ -34,34 +34,34 @@
                 <div class="form-group" ng-class="{ 'has-error' : offer.editForm.lastname.$invalid && !offer.editForm.lastname.$pristine }">
                     <label>{{ 'COMMON_LASTNAME' | translate }}</label>
                     <input required type="text" name="lastname" class="form-control" ng-model="workflowCtrl.offer.customer.lastname" ng-maxlength="30"
-                        ng-disabled="offer.customerSelected">
+                        ng-disabled="workflowCtrl.customerSelected">
                     <p ng-show="offer.editForm.lastname.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                     <p ng-show="offer.editForm.lastname.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
                 </div>
                 <!-- COMPANY -->
                 <div class="form-group" ng-class="{ 'has-error' : offer.editForm.company.$invalid && !offer.editForm.company.$pristine }">
                     <label>{{ 'COMMON_COMPANY' | translate }}</label>
-                    <input type="text" name="company" class="form-control" ng-model="workflowCtrl.offer.customer.company" ng-maxlength="50" ng-disabled="offer.customerSelected">
+                    <input type="text" name="company" class="form-control" ng-model="workflowCtrl.offer.customer.company" ng-maxlength="50" ng-disabled="workflowCtrl.customerSelected">
                     <p ng-show="offer.editForm.company.$invalid && !offer.editForm.company.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                 </div>
             </div>
 
             <div class="col-sm-6">
                 <!-- EMAIL -->
-                <div class="form-group" ng-class="{ 'has-error' : offer.editForm.email.$invalid && !offer.editForm.email.$pristine }" ng-disabled="offer.customerSelected">
+                <div class="form-group" ng-class="{ 'has-error' : offer.editForm.email.$invalid && !offer.editForm.email.$pristine }">
                     <label>{{ 'COMMON_EMAIL' | translate }}</label>
-                    <input type="email" name="email" class="form-control" ng-model="workflowCtrl.offer.customer.email">
+                    <input type="email" name="email" class="form-control" ng-model="workflowCtrl.offer.customer.email" ng-disabled="workflowCtrl.customerSelected">
                     <p ng-show="offer.editForm.email.$invalid && !offer.editForm.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL'| translate }}</p>
                 </div>
                 <!-- PHONE -->
-                <div class="form-group" ng-class="{ 'has-error' : offer.editForm.phone.$invalid && !offer.editForm.phone.$pristine }" ng-disabled="offer.customerSelected">
+                <div class="form-group" ng-class="{ 'has-error' : offer.editForm.phone.$invalid && !offer.editForm.phone.$pristine }">
                     <label>{{ 'COMMON_PHONE' | translate }}</label>
-                    <input type="text" name="phone" class="form-control" ng-model="workflowCtrl.offer.customer.phone" ng-maxlength="50">
+                    <input type="text" name="phone" class="form-control" ng-model="workflowCtrl.offer.customer.phone" ng-maxlength="50" ng-disabled="workflowCtrl.customerSelected">
                     <p ng-show="offer.editForm.phone.$invalid && !offer.editForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                 </div>
                 <!-- CONTAINER DESTINATION -->
                 <div class="form-group" ng-class="{ 'has-error' : offer.editForm.destination.$invalid && !offer.editForm.destination.$pristine }">
-                    <label>{{ 'COMMON_CONTAINER_DESTINATION'| translate }}</label>
+                    <label>{{ 'COMMON_PRODUCT_DESTINATION'| translate }}</label>
                     <input type="text" name="destination" class="form-control" ng-model="workflowCtrl.offer.deliveryAddress" ng-maxlength="50">
                     <p ng-show="offer.editForm.destination.$invalid && !offer.editForm.destination.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                 </div>
@@ -79,7 +79,7 @@
                 </div>
                 <!-- OFFER PRICE -->
                 <div class="form-group" ng-class="{ 'has-error' : offer.editForm.offerPrice.$invalid && !offer.editForm.offerPrice.$pristine }">
-                    <label>{{ 'COMMON_CONTAINER_OFFER_PRICE'| translate }} *</label>
+                    <label>{{ 'COMMON_PRODUCT_OFFER_PRICE'| translate }} *</label>
                     <input type="number" name="offerPrice" class="form-control" ng-model="workflowCtrl.offer.offerPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
                         step="0.01" required>
                     <p ng-show="offer.editForm.offerPrice.$invalid && !offer.editForm.offerPrice.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
@@ -127,7 +127,7 @@
         <!-- ENTIRE PRICE -->
         <div>
             <div class="form-group ">
-                <h2>{{ 'COMMON_CONTAINER_ENTIRE_PRICE' | translate }}: {{offer.sumOrderPositions(offer.currentOrderPositions)|
+                <h2>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}: {{offer.sumOrderPositions(offer.currentOrderPositions)|
                     currency:'\u20AC'}}
                 </h2>
             </div>
@@ -149,9 +149,9 @@
             <div class="form-group ">
                 <h2>Email - Template</h2>
 
-                <select class="form-control" ng-model="workflowCtrl.template" ng-change="workflowCtrl.generate(workflowCtrl.template, workflowCtrl.offer)">
+                <select class="form-control" ng-model="templateId" ng-change="workflowCtrl.generate(templateId, workflowCtrl.offer)">
                     <option value="-1" selected> - Select Template - </option>                                                                     
-                    <option value="{{template}}" ng-repeat="template in workflowCtrl.templates">{{template.name}}</option>                                          
+                    <option value="{{template.id}}" ng-repeat="template in workflowCtrl.templates">{{template.name}}</option>                                          
                 </select>
             </div>
         </div>
@@ -162,19 +162,19 @@
                 <div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Empfänger</label>
-                        <input type="email" class="form-control" ng-model="workflowCtrl.message.recipient.email">{{workflowCtrl.message.recipient.email}}
+                        <input type="email" class="form-control" ng-model="workflowCtrl.notification.recipient">{{workflowCtrl.notification.recipient.email}}
                     </div>
                 </div>
                 <div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Betreff</label>
-                        <input type="email" class="form-control" ng-model="workflowCtrl.message.subject">{{workflowCtrl.message.subject}}
+                        <input type="text" class="form-control" ng-model="workflowCtrl.notification.subject">{{workflowCtrl.notification.subject}}
                     </div>
                 </div>
                 <div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Anhang</label>
-                        <h4>Example <span class="label label-default"><i class="fa fa-file-pdf-o" aria-hidden="true">Anhang {{workflowCtrl.message.attachement}}</i></span></h4>
+                        <h4>Example <span class="label label-default"><i class="fa fa-file-pdf-o" aria-hidden="true">Anhang {{workflowCtrl.notification.attachement}}</i></span></h4>
                     </div>
                 </div>
             </div>
@@ -189,7 +189,7 @@
                 <label class="col-sm-2 control-label">Message</label>
                 <form class="form-horizontal">
                     <div class="summernote">
-                        <summernote ng-model="workflowCtrl.message.content">{{workflowCtrl.message.content}}</summernote>
+                        <summernote ng-model="workflowCtrl.notification.content">{{workflowCtrl.notification.content}}</summernote>
                     </div>
                 </form>
             </div>

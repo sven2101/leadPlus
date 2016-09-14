@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.exceptions.SMTPdoesntExistsException;
 import dash.notificationmanagement.business.INotificationService;
 import dash.notificationmanagement.domain.Notification;
 import io.swagger.annotations.Api;
@@ -35,18 +34,17 @@ import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(value = "/api/rest/notifications", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
-@ResponseStatus(HttpStatus.CREATED)
-@Api(value = "notifications")
+@Api(value = "Notifications API")
 public class NotificationResource {
 
 	@Autowired
 	private INotificationService notificationService;
 
 	@ApiOperation(value = "Send a single Notification.", notes = "")
-	@RequestMapping(value = "/api/rest/notifications/users/{id}/offers/send", method = RequestMethod.POST)
+	@RequestMapping(value = "/users/{id}/offers/send", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	public void sendOffer(@ApiParam(required = true) @PathVariable final Long id,
-			@ApiParam(required = true) @RequestBody @Valid final Notification notification) throws SMTPdoesntExistsException {
+			@ApiParam(required = true) @RequestBody @Valid final Notification notification) throws Exception {
 		notificationService.sendNotification(id, notification);
 	}
 
