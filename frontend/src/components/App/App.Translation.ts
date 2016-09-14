@@ -74,6 +74,7 @@ function config($translateProvider) {
             COMMON_DETAILS: "Details",
             COMMON_ACTIVATED: "Aktiviert",
             COMMON_DEACTIVATED: "Deaktiviert",
+            COMMON_DEACTIVATE: "Deaktivieren",
             COMMON_CREATED: "Erstellt",
             COMMON_TITLE: "Anrede",
             COMMON_TITLE_MR: "Herr",
@@ -316,6 +317,8 @@ function config($translateProvider) {
             PRODUCT_EDIT: "Produkt bearbeiten",
             PRODUCT_DEACTIVATED: "Deaktivieren",
             PRODUCT_CREATED: "Erstellt",
+            PRODUCT_PRODUCT_STATE_NEW: "Neu",
+            PRODUCT_PRODUCT_STATE_USED: "Gebraucht",
 
             // Define customer elements
             CUSTOMER_MANAGE_CUSTOMER: "Kunden verwalten",
@@ -386,6 +389,7 @@ function config($translateProvider) {
             COMMON_DETAILS: "Details",
             COMMON_ACTIVATED: "Activated",
             COMMON_DEACTIVATED: "Deactivated",
+            COMMON_DEACTIVATE: "Deactivate",
             COMMON_CREATED: "Created",
             COMMON_TITLE: "Title",
             COMMON_TITLE_MR: "Mr",
@@ -629,6 +633,8 @@ function config($translateProvider) {
             PRODUCT_EDIT: "Edit Product",
             PRODUCT_DEACTIVATED: "Deactivate",
             PRODUCT_CREATED: "Created",
+            PRODUCT_PRODUCT_STATE_NEW: "New",
+            PRODUCT_PRODUCT_STATE_USED: "Used",
 
             // Define customer elements
             CUSTOMER_MANAGE_CUSTOMER: "Manage Customer",
