@@ -23,18 +23,16 @@
 
 const WorkflowControllerId: string = "WorkflowController";
 
-class WorkflowController {
+class WorkflowController extends AbstractWorkflow {
 
-    $inject = ["offer", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId];
 
     uibModalInstance;
 
-    customer: Customer;
-    offer: Offer;
+    editWorkflowUnit: Process;
     template: Template = new Template();
     notification: Notification = new Notification();
 
-    customers: Array<Customer> = [];
     templates: Array<Template> = [];
     products: Array<Product> = [];
 
@@ -44,20 +42,42 @@ class WorkflowController {
     templateService: TemplateService;
     workflowService: WorkflowService;
 
+    currentOrderPositions: Array<OrderPosition>;
+    currentProductId = "-1";
+    currentProductAmount = 1;
+    currentCustomerId = "-1";
     customerSelected: boolean = false;
-    currentCustomerId: string = "-1";
 
-    constructor(offer, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService) {
-        this.offer = offer;
+    editForm: any;
+    editProcess: Process;
+    edit: boolean;
+
+    constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService) {
+        super();
+        this.editWorkflowUnit = process;
         this.uibModalInstance = $uibModalInstance;
+
         this.notificationService = NotificationService;
         this.templateService = TemplateService;
         this.customerService = CustomerService;
         this.productService = ProductService;
         this.workflowService = WorkflowService;
-        this.currentCustomerId = String(this.offer.customer.id);
+
         this.getAllActiveTemplates();
         this.getAllActiveProducts();
+
+        this.loadDataToModal(process);
+    }
+
+    loadDataToModal(process: Process) {
+        this.edit = true;
+        this.currentProductId = "-1";
+        this.currentProductAmount = 1;
+        this.editProcess = process;
+        this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
+        this.customerSelected = this.editProcess.offer.customer.id > 0;
+        this.currentCustomerId = this.editProcess.offer.customer.id + "";
+        this.editWorkflowUnit = deepCopy(this.editProcess.offer);
     }
 
     ok() {

@@ -110,20 +110,19 @@ class DashboardService {
         let self = this;
         this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
             self.openOffers = self.orderBy(self.openOffers, "offer.timestamp", false);
-            console.log("Process: ", tmpprocess);
             self.openOfferModal(tmpprocess);
         });
     }
 
     openOfferModal(process: Process) {
         this.uibModal.open({
-            templateUrl: "http://localhost:8080/components/Common/view/Workflow.Offer.Send.Modal.html",
+            template: "<div sendworkflow parent='workflowCtrl' type='offer'></div>",
             controller: WorkflowController,
             controllerAs: "workflowCtrl",
             size: "lg",
             resolve: {
-                offer: function () {
-                    return process.offer;
+                process: function () {
+                    return process;
                 }
             }
         });

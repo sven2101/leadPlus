@@ -125,7 +125,7 @@ class LeadController extends AbstractWorkflow {
     }
 
     clearNewLead() {
-        this.editForm.$setPristine();
+        // this.editForm.$setPristine();
         this.edit = false;
         this.editWorkflowUnit = new Lead();
         this.editProcess = new Process();
