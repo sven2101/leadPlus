@@ -76,13 +76,13 @@ class DashboardController {
         });
     }
 
-    getOpenLeads(): Array<Lead> {
+    getOpenLeads(): Array<Process> {
         return this.dashboardService.getOpenLeads();
     }
-    getOpenOffers(): Array<Offer> {
+    getOpenOffers(): Array<Process> {
         return this.dashboardService.getOpenOffers();
     }
-    getClosedSales(): Array<Sale> {
+    getClosedSales(): Array<Process> {
         return this.dashboardService.getClosedSales();
     }
     getProfit(): number {
