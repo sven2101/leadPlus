@@ -19,16 +19,18 @@ const ProductServiceId: string = "ProductService";
 
 class ProductService {
 
-    private $inject = [toasterId, $translateId, ProductResourceId];
+    private $inject = [toasterId, $translateId, ProductResourceId, $qId];
 
     products: Array<Product>;
     toaster;
     translate;
     productResource;
+    q;
 
-    constructor(toaster, $translate, ProductResource) {
+    constructor(toaster, $translate, ProductResource, $q) {
         this.toaster = toaster;
         this.translate = $translate;
+        this.q = $q;
         this.productResource = ProductResource.resource;
         this.products = new Array<Product>();
         this.getAllProducts();
@@ -51,11 +53,15 @@ class ProductService {
         }
     }
 
-    getAllProducts() {
+    getAllProducts(): IPromise<Array<Product>> {
+        let defer = this.q.defer();
         let self = this;
         this.productResource.getAllProducts().$promise.then(function (result: Array<Product>) {
-            self.products = result;
+            defer.resolve(self.products);
+        }, function (error: any) {
+            defer.reject(error);
         });
+        return defer.promise;
     }
 
     getActiveProducts(): Array<Product> {

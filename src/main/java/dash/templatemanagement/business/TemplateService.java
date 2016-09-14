@@ -16,6 +16,7 @@ package dash.templatemanagement.business;
 import static dash.Constants.BECAUSE_OF_ILLEGAL_ID;
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.DELETE_FAILED_EXCEPTION;
+import static dash.Constants.OFFER_NOT_FOUND;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.TEMPLATE_NOT_FOUND;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
@@ -34,6 +35,7 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.notificationmanagement.domain.OfferMessage;
 import dash.offermanagement.business.IOfferService;
+import dash.offermanagement.domain.Offer;
 import dash.templatemanagement.domain.Template;
 
 @Service
@@ -118,7 +120,19 @@ public class TemplateService implements ITemplateService {
 	}
 
 	@Override
-	public OfferMessage generate(final long templateId, final long offerId) throws NotFoundException {
-		return new OfferMessage(offerService.getOfferById(offerId), getById(templateId).getContent());
+	public OfferMessage generate(final long templateId, final long offerId, final Offer offer) throws NotFoundException {
+		if (offer != null && offerId == offer.getId()) {
+			try {
+				return new OfferMessage(offerService.save(offer), getById(templateId).getContent());
+			} catch (Exception ex) {
+				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
+				throw new NotFoundException(OFFER_NOT_FOUND);
+			}
+		} else {
+			NotFoundException nfex = new NotFoundException(OFFER_NOT_FOUND);
+			logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
+			throw nfex;
+		}
+
 	}
 }

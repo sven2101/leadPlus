@@ -7,6 +7,7 @@
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../Template/controller/Template.Service.ts" />
+/// <reference path="../../Common/service/Workflow.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -28,13 +29,14 @@ class WorkflowController {
 
     uibModalInstance;
 
-    templates: Array<Template>;
+    customer: Customer;
     offer: Offer;
-    template: Template;
-    notification: Notification;
+    template: Template = new Template();
+    notification: Notification = new Notification();
 
     customers: Array<Customer> = [];
-    customer: Customer;
+    templates: Array<Template> = [];
+    products: Array<Product> = [];
 
     customerService: CustomerService;
     productService: ProductService;
@@ -48,14 +50,14 @@ class WorkflowController {
     constructor(offer, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService) {
         this.offer = offer;
         this.uibModalInstance = $uibModalInstance;
-        this.notification = new Notification();
         this.notificationService = NotificationService;
         this.templateService = TemplateService;
         this.customerService = CustomerService;
         this.productService = ProductService;
         this.workflowService = WorkflowService;
         this.currentCustomerId = String(this.offer.customer.id);
-        this.getAllTemplates();
+        this.getAllActiveTemplates();
+        this.getAllActiveProducts();
     }
 
     ok() {
@@ -70,12 +72,15 @@ class WorkflowController {
         this.templateService.generate(templateId, offer).then((result) => this.notification = result, (error) => console.log(error));
     }
 
-    getAllTemplates() {
+    getAllActiveTemplates() {
         this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
     }
 
+    getAllActiveProducts() {
+        this.productService.getAllProducts().then((result) => this.products = result, (error) => console.log(error));
+    }
+
     send() {
-        console.log("Notif");
         this.notificationService.send(this.notification);
     }
 
