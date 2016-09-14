@@ -101,7 +101,7 @@ class TemplateService {
     generate(templateId: string, offer: Offer): IPromise<Notification> {
         let defer = this.q.defer();
         let self = this;
-        this.templateResource.generate({ templateId: templateId, offerId: offer.id }).$promise.then(function (resultMessage: Notification) {
+        this.templateResource.generate({ templateId: templateId, offerId: offer.id }, offer).$promise.then(function (resultMessage: Notification) {
             console.log(resultMessage);
             defer.resolve(resultMessage);
         }, function (error: any) {

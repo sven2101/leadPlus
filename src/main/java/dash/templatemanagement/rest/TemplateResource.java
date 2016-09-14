@@ -32,6 +32,7 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.notificationmanagement.domain.OfferMessage;
+import dash.offermanagement.domain.Offer;
 import dash.templatemanagement.business.ITemplateService;
 import dash.templatemanagement.domain.Template;
 import io.swagger.annotations.Api;
@@ -81,12 +82,12 @@ public class TemplateResource {
 		templateService.delete(id);
 	}
 
-	@RequestMapping(value = "/{templateId}/offers/{offerId}/generate", method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value = "/{templateId}/offers/{offerId}/generate", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Generate a email content based on a template and an offer.", notes = "")
-	public OfferMessage generate(@ApiParam(required = true) @PathVariable final long templateId, @ApiParam(required = true) @PathVariable final long offerId)
-			throws NotFoundException {
-		return templateService.generate(templateId, offerId);
+	public OfferMessage generate(@ApiParam(required = true) @PathVariable final long templateId, @ApiParam(required = true) @PathVariable final long offerId,
+			@ApiParam(required = true) @RequestBody @Valid final Offer offer) throws NotFoundException {
+		return templateService.generate(templateId, offerId, offer);
 	}
 
 }

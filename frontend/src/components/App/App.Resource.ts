@@ -333,7 +333,7 @@ class TemplateResource {
             update: { url: "/api/rest/templates", method: "PUT" },
             remove: { url: "/api/rest/templates/:id", method: "DELETE" },
             generate: {
-                url: "/api/rest/templates/:templateId/offers/:offerId/generate", method: "GET", params: {
+                url: "/api/rest/templates/:templateId/offers/:offerId/generate", method: "POST", params: {
                     templateId: "@templateId",
                     offerId: "@offerId"
                 }

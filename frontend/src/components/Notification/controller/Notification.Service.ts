@@ -37,9 +37,7 @@ class NotificationService {
     send(notification: Notification) {
 
         let self = this;
-        console.log("Notification", notification);
         this.notificationResource.send({ id: this.rootScope.globals.user.id }, notification).$promise.then(function () {
-            console.log("Notification Success: ", notification);
             self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));
