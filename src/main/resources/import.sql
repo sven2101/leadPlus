@@ -19,14 +19,14 @@ INSERT INTO public.template(content, deactivated, description, name)
     VALUES ('Test Template', false, 'Anfrage Template', 'Container-Anfrage-Vorlage');
 
 -- Products
-INSERT INTO public.product(deactivated, description, name, price_netto, timestamp)
-	VALUES (false, 'Der beste Seecontainer der Welt', 'Seecontainer', 2000.00, CURRENT_TIMESTAMP);
+INSERT INTO public.product(deactivated, description, name, price_netto, timestamp,product_state)
+	VALUES (false, 'Der beste Seecontainer der Welt', 'Seecontainer', 2000.00, CURRENT_TIMESTAMP,'NEW');
 	
-INSERT INTO public.product(deactivated, description, name, price_netto, timestamp)
-	VALUES (false, 'Der beste Frachtcontainer der Welt', 'Frachtcontainer', 2000.00, CURRENT_TIMESTAMP);
+INSERT INTO public.product(deactivated, description, name, price_netto, timestamp,product_state)
+	VALUES (false, 'Der beste Frachtcontainer der Welt', 'Frachtcontainer', 2000.00, CURRENT_TIMESTAMP,'NEW');
 	
-INSERT INTO public.product(deactivated, description, name, price_netto, timestamp)
-	VALUES (false, 'Der beste Handelscontainer der Welt', 'Handelscontainer', 2000.00, CURRENT_TIMESTAMP);
+INSERT INTO public.product(deactivated, description, name, price_netto, timestamp,product_state)
+	VALUES (false, 'Der beste Handelscontainer der Welt', 'Handelscontainer', 2000.00, CURRENT_TIMESTAMP,'USED');
 
 -- Vendors	
 INSERT INTO public.vendor(name, phone)
