@@ -14,7 +14,7 @@
 "use strict";
 
 enum Role {
-    ADMIN,
-    SUPERADMIN,
-    USER
+    ADMIN = <any>"ADMIN",
+    SUPERADMIN = <any>"SUPERADMIN",
+    USER = <any>"USER"
 }

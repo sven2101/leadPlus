@@ -124,7 +124,9 @@ class OfferService {
                     editForm.$setPristine();
                     self.updateRow(editProcess, dtInstance, scope);
                     self.customerService.getAllCustomer();
-
+                    if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
+                        self.rootScope.$broadcast("onTodosChange");
+                    }
                 });
             });
             return;
