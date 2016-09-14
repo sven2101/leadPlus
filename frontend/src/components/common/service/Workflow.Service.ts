@@ -115,6 +115,7 @@ class WorkflowService {
             let tempOrderPosition = new OrderPosition();
             tempOrderPosition.product = tempProduct as Product;
             tempOrderPosition.amount = currentProductAmount;
+            tempOrderPosition.price = tempOrderPosition.product.priceNetto;
             array.push(tempOrderPosition);
         }
     }
@@ -133,10 +134,13 @@ class WorkflowService {
             if (!isNullOrUndefined(temp) && !isNaN(temp.amount)
                 && !isNullOrUndefined(temp.product)
                 && !isNaN(temp.product.priceNetto)) {
-                sum += temp.amount * temp.product.priceNetto;
+                sum += temp.amount * temp.price;
             }
         }
         return sum;
+    }
+    calculateDiscount(oldPrice: number, newPrice: number): number {
+        return Math.round((((oldPrice - newPrice) / oldPrice) * 100));
     }
 
     addLeadToOffer(process: Process): IPromise<Process> {

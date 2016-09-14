@@ -319,6 +319,7 @@ function config($translateProvider) {
             PRODUCT_CREATED: "Erstellt",
             PRODUCT_PRODUCT_STATE_NEW: "Neu",
             PRODUCT_PRODUCT_STATE_USED: "Gebraucht",
+            PRODUCT_DISCOUNT: "Rabatt",
 
             // Define customer elements
             CUSTOMER_MANAGE_CUSTOMER: "Kunden verwalten",
@@ -635,6 +636,7 @@ function config($translateProvider) {
             PRODUCT_CREATED: "Created",
             PRODUCT_PRODUCT_STATE_NEW: "New",
             PRODUCT_PRODUCT_STATE_USED: "Used",
+            PRODUCT_DISCOUNT: "Discount",
 
             // Define customer elements
             CUSTOMER_MANAGE_CUSTOMER: "Manage Customer",

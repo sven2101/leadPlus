@@ -135,7 +135,17 @@
                                 <tbody>
                                     <tr ng-repeat="orderPosition in parent.currentOrderPositions">
                                         <td>{{orderPosition.product.name}}</td>
-                                        <td class="col-md-1 ">{{orderPosition.product.priceNetto*orderPosition.amount| currency:'\u20AC'}}</td>
+                                        <td class="col-md-2">
+                                            {{ 'PRODUCT_DISCOUNT' | translate }} {{parent.workflowService.calculateDiscount(orderPosition.product.priceNetto,orderPosition.price)}}%
+                                        </td>
+                                        <td class="col-md-3 ">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">€</span>
+                                                <input type="number" ng-model="orderPosition.price" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100"
+                                                    class="form-control currency" id="c2" />
+                                            </div>
+                                        </td>
+
                                         <td style="width:100px">{{orderPosition.amount}}</td>
                                         <td class=" col-md-1 ">
                                             <button type="button " class="btn btn-white btn-sm " ng-click="parent.deleteProduct(parent.currentOrderPositions,$index) ">
