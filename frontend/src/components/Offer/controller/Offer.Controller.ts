@@ -166,6 +166,10 @@ class OfferController extends AbstractWorkflow {
     pin(process: Process, user: User) {
         this.offerService.pin(process, this.dtInstance, this.scope, user);
     }
+
+    rollBack(process: Process): void {
+        this.offerService.rollBack(process, this.dtInstance, this.scope);
+    }
 }
 angular.module(moduleOffer, [ngResourceId]).controller(OfferControllerId, OfferController);
 

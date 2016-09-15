@@ -70,6 +70,7 @@ function config($translateProvider) {
             YEARLY: "Jahr",
             ALL: "Alle",
             COMMON_CURRENCY: "€",
+            COMMON_RESET: "Zurücksetzen",
             COMMON_SEND: "Senden",
             COMMON_DELETE: "Löschen",
             COMMON_DETAILS: "Details",
@@ -189,6 +190,7 @@ function config($translateProvider) {
             LEAD_DELETE_LEAD: "Anfrage löschen",
             LEAD_EDIT_SELECT_PRODUCT: "Produkt wählen",
 
+
             // Define all offer elements
             OFFER_OFFERS: "Angebote",
             OFFER_MANAGE_OFFERS: "Angebote verwalten",
@@ -206,6 +208,7 @@ function config($translateProvider) {
             OFFER_TAB_FILES: "Angebote - Dateien",
             OFFER_TAB_TEMPLATES: "Angebote - Vorlagen",
             OFFER_GENERATION_AND_SENDING: "Angebot generieren und versenden",
+            OFFER_ROLLBACK: "Zurücksetzen zu Angebot",
 
             // Define all offer elements
             SALE_SALES: "Verkäufe",
@@ -216,6 +219,7 @@ function config($translateProvider) {
             SALE_EDIT_SALE_MODAL: "Verkauf bearbeiten",
             SALE_SHOW_ALL_SALES: "Alle Verkäufe",
             SALE_DELETE_SALE: "Verkauf löschen",
+            SALE_ROLLBACK: "Zurücksetzen zu Angebot",
 
             // Define setting elements
             SETTING_USER: "Benutzer",
@@ -388,6 +392,7 @@ function config($translateProvider) {
             YEARLY: "Year",
             ALL: "All",
             COMMON_CURRENCY: "€",
+            COMMON_RESET: "Reset",
             COMMON_SEND: "Send",
             COMMON_DELETE: "Delete",
             COMMON_DETAILS: "Details",
@@ -528,6 +533,7 @@ function config($translateProvider) {
             OFFER_TAB_FILES: "Offer - Files",
             OFFER_TAB_TEMPLATES: "Offer - Templates",
             OFFER_GENERATION_AND_SENDING: "Generate and Send Offer",
+            OFFER_ROLLBACK: "Reset to lead",
 
             // Define all sale elements
             SALE_SALES: "Sales",
@@ -538,6 +544,7 @@ function config($translateProvider) {
             SALE_EDIT_SALE_MODAL: "Edit sale",
             SALE_SHOW_ALL_SALES: "Total sales",
             SALE_DELETE_SALE: "Delete sale",
+            SALE_ROLLBACK: "Reset to Offer",
 
             // Define setting elements
             SETTING_USER_MANAGEMENT: "User Management",

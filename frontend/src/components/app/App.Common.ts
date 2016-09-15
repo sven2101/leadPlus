@@ -46,5 +46,22 @@ let toLocalDate = function (date: any, pattern: string = "DD.MM.YYYY HH:mm") {
     return moment(moment.utc(date, pattern)).local().format(pattern);
 };
 
+let partial = function (func: any, []) {
+    let args = Array.prototype.slice.call(arguments, 1);
+    return function () {
+        let allArguments = args.concat(Array.prototype.slice.call(arguments));
+        return func.apply(this, allArguments);
+    };
+};
+
+let size = function (obj) {
+    let size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            size++;
+        }
+    }
+    return size;
+};
 
 

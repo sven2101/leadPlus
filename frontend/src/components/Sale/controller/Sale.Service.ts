@@ -114,6 +114,21 @@ class SaleService {
             false);
         this.compile(angular.element(this.rows[process.id]).contents())(scope);
     }
+
+    rollBack(process: Process, dtInstance: any, scope: any): void {
+        if (isNullOrUndefined(process)) {
+            return;
+        }
+        let sale = process.sale;
+        process.sale = null;
+        process.status = Status.OFFER;
+        let self = this;
+        this.processResource.save(process).$promise.then(function (result) {
+            self.saleResource.drop({
+                id: sale.id
+            }).$promise.then(() => { dtInstance.DataTable.row(self.rows[process.id]).remove().draw(); self.rootScope.offersCount += 1; });
+        });
+    }
 }
 
 angular.module(moduleSaleService, [ngResourceId]).service(SaleServiceId, SaleService);

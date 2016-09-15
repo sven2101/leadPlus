@@ -125,6 +125,7 @@ class SaleDataTableService {
     setActionButtonsConfig(user: User, templateData: any) {
         let config = {
             "hasRightToDelete": false,
+            "rollBackDisabled": false
         };
         if (user.role === Role.USER) {
             config.hasRightToDelete = true;
@@ -133,6 +134,7 @@ class SaleDataTableService {
         let translation = {
             "editWorkflowUnit": this.translate.instant("SALE_EDIT_SALE"),
             "deleteWorkflowUnit": this.translate.instant("SALE_DELETE_SALE"),
+            "rollBackWorkflowUnit": this.translate.instant("SALE_ROLLBACK"),
         };
         templateData.translation = translation;
     }

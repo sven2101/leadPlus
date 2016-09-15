@@ -133,6 +133,7 @@ class OfferDataTableService {
             "disablePinDropdown": false,
             "hasRightToDelete": false,
             "closeOrOpenDisable": false,
+            "rollBackDisabled": false,
             "openOrLock": this.translate.instant("OFFER_CLOSE_OFFER"),
             "faOpenOrLock": "fa fa-lock"
         };
@@ -157,6 +158,7 @@ class OfferDataTableService {
             "nextWorkflowUnit": this.translate.instant("OFFER_CREATE_SALE"),
             "editWorkflowUnit": this.translate.instant("OFFER_EDIT_OFFER"),
             "deleteWorkflowUnit": this.translate.instant("OFFER_DELETE_OFFER"),
+            "rollBackWorkflowUnit": this.translate.instant("OFFER_ROLLBACK"),
         };
         templateData.translation = translation;
     }
