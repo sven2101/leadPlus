@@ -109,16 +109,16 @@
                     <tr>
                         <th>
                             <select class="form-control" ng-model="parent.currentProductId">
-                                            <option value="-1" selected disabled hidden>{{ 'LEAD_EDIT_SELECT_PRODUCT' | translate }}</option>                                     
-                                            <option value="{{product.id}}" ng-repeat="product in service.productService.getActiveProducts()">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
-                                        </select>
+                                <option value="-1" selected disabled hidden>{{ 'LEAD_EDIT_SELECT_PRODUCT' | translate }}</option>                                     
+                                <option value="{{product.id}}" ng-repeat="product in service.productService.getActiveProducts()">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
+                            </select>
                         </th>
                         <th class="col-md-1"></th>
                         <th style="width:100px">
                             <input type="number" class="input-sm form-control" ng-model="parent.currentProductAmount">
                         </th>
                         <th class="col-md-1">
-                            <button type="button" class="btn btn-white btn-sm" ng-click="parent.addProduct(parent.currentOrderPositions)">
+                            <button type="button" class="btn btn-white btn-sm" ng-click="parent.addProduct(parent.currentOrderPositions, parent.currentProductId, parent.currentProductAmount)">
                                      <i class="fa fa-plus"></i>&nbsp;</button>
                         </th>
                     </tr>
@@ -161,3 +161,15 @@
         </div>
     </div>
 </form>
+
+<script>
+    $(document).ready(function () {
+        $('#editOfferDatepicker .input-group.date').datepicker({
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true
+        });
+    });
+</script>

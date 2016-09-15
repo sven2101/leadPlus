@@ -55,7 +55,7 @@ class LeadController extends AbstractWorkflow {
     customerSelected: boolean = false;
 
     constructor($compile, $scope, WorkflowService, LeadDataTableService, LeadService) {
-        super();
+        super(WorkflowService);
         this.workflowService = WorkflowService;
         this.leadDataTableService = LeadDataTableService;
         this.leadService = LeadService;
@@ -125,7 +125,7 @@ class LeadController extends AbstractWorkflow {
     }
 
     clearNewLead() {
-        // this.editForm.$setPristine();
+        this.editForm.$setPristine();
         this.edit = false;
         this.editWorkflowUnit = new Lead();
         this.editProcess = new Process();
@@ -153,29 +153,18 @@ class LeadController extends AbstractWorkflow {
         this.leadService.deleteRow(process, this.dtInstance);
     }
 
-    addProduct(array: Array<OrderPosition>) {
-        this.workflowService.addProduct(array, this.currentProductId, this.currentProductAmount);
+    selectCustomer(workflow: any) {
+        this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
 
-    deleteProduct(array: Array<OrderPosition>, index: number) {
-        this.workflowService.deleteProduct(array, index);
+    preventPropagation($event) {
+        $event.stopPropagation();
     }
 
     getOrderPositions(process: Process): Array<OrderPosition> {
         if (!isNullOrUndefined(process.lead)) {
             return process.lead.orderPositions;
         }
-    }
-
-    sumOrderPositions(array: Array<OrderPosition>): number {
-        return this.workflowService.sumOrderPositions(array);
-    }
-
-    selectCustomer(workflow: any) {
-        this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
-    }
-    preventPropagation($event) {
-        $event.stopPropagation();
     }
 }
 angular.module(moduleLead, [ngResourceId]).controller(LeadControllerId, LeadController);

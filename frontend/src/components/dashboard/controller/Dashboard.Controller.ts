@@ -6,6 +6,10 @@
 /// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../common/model/Commentary.Model.ts" />
 /// <reference path="../../common/model/IWorkflow.Interface.ts" />
+/// <reference path="../../Lead/controller/Lead.Service.ts" />
+/// <reference path="../../Offer/controller/Offer.Service.ts" />
+/// <reference path="../../Sale/controller/Sale.Service.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -42,6 +46,7 @@ class DashboardController {
         this.dashboardService = DashboardService;
         this.statisticService.loadAllResourcesByDateRange("WEEKLY");
         this.sortableOptions = this.dashboardService.setSortableOptions();
+
         this.refreshData();
         this.refreshTodos();
 

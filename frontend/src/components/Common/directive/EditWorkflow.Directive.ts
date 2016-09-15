@@ -29,6 +29,11 @@ angular.module(moduleApp)
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {
+
+            console.log("Scope ", scope);
+            console.log("Controller ", scope.parent);
+            console.log("Type", scope.type);
+
             if (scope.type === "lead") {
                 scope.service = scope.parent.leadService;
             }
@@ -38,6 +43,7 @@ angular.module(moduleApp)
             else if (scope.type === "sale") {
                 scope.service = scope.parent.saleService;
             }
+            console.log("Service ", scope.service);
         };
         return directive;
     });
