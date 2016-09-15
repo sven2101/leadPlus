@@ -130,6 +130,7 @@ class LeadDataTableService {
             "closeOrOpenDisable": false,
             "openOrLock": this.translate.instant("LEAD_CLOSE_LEAD"),
             "faOpenOrLock": "fa fa-lock"
+
         };
         if (templateData.process.status !== "OPEN") {
             config.disabled = true;
@@ -152,7 +153,7 @@ class LeadDataTableService {
         let translation = {
             "nextWorkflowUnit": this.translate.instant("LEAD_FOLLOW_UP"),
             "editWorkflowUnit": this.translate.instant("LEAD_EDIT_LEAD"),
-            "deleteWorkflowUnit": this.translate.instant("LEAD_DELETE_LEAD"),
+            "deleteWorkflowUnit": this.translate.instant("LEAD_DELETE_LEAD")
         };
         templateData.translation = translation;
     }

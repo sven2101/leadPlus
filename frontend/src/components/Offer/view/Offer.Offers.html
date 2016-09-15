@@ -28,6 +28,8 @@
     </div>
 </div>
 <div editworkflow parent="offerCtrl" type="offer" modaltitle="{{'OFFER_EDIT_OFFER_MODAL'| translate}}"></div>
+<div confirmationmodal modalid="deleteConfirmationModal" parent="offerCtrl" title="{{'OFFER_DELETE_OFFER'| translate}}" body="" submittext="{{'COMMON_DELETE'| translate}}"></div>
+<div confirmationmodal modalid="rollbackConfirmationModal" parent="offerCtrl" title="{{'OFFER_ROLLBACK'| translate}}" body="" submittext="{{'COMMON_RESET'| translate}}"></div>
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {

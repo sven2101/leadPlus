@@ -202,6 +202,21 @@ class OfferService {
             });
         }
     }
+
+    rollBack(process: Process, dtInstance: any, scope: any): void {
+        if (isNullOrUndefined(process)) {
+            return;
+        }
+        let offer = process.offer;
+        process.offer = null;
+        process.status = Status.OPEN;
+        let self = this;
+        this.processResource.save(process).$promise.then(function (result) {
+            self.offerResource.drop({
+                id: offer.id
+            }).$promise.then(() => dtInstance.DataTable.row(self.rows[process.id]).remove().draw());
+        });
+    }
 }
 
 angular.module(moduleOfferService, [ngResourceId]).service(OfferServiceId, OfferService);

@@ -43,7 +43,7 @@
 </div>
 -->
 
-<div style="min-width:250px" class="text-center btn-group" role="group" aria-label="...">
+<div style="min-width:270px" class="text-center btn-group" role="group" aria-label="...">
     <button style="min-height:34px" ng-if="type=='lead' || type =='offer'" class="btn btn-white" ng-disabled="directiveData.config.disabled"
         ng-click="parent.createNextWorkflowUnit(parent.processes[directiveData.process.id])" title="{{directiveData.translation.nextWorkflowUnit}}">
         <i class="fa fa-check"></i>
@@ -60,17 +60,33 @@
         data-toggle="modal" data-target="#editModal" title="{{directiveData.translation.editWorkflowUnit}}">
     <i class="fa fa-edit"></i>
     </button>
+    <!--
     <button style="min-height:34px" class="btn btn-white" ng-disabled="directiveData.config.hasRightToDelete" ng-click="parent.deleteRow(parent.processes[directiveData.process.id])"
         title="{{directiveData.translation.deleteWorkflowUnit}}">
     <i class="fa fa-trash-o"></i>
    </button>
+    -->
+
+
+
+    <button style="min-height:34px" class="btn btn-white" ng-disabled="directiveData.config.hasRightToDelete" ng-click="openModal(parent.processes[directiveData.process.id],'deleteRow')"
+        title="{{directiveData.translation.deleteWorkflowUnit}}" data-toggle="modal" data-target="#deleteConfirmationModal">
+    <i class="fa fa-trash-o"></i>
+   </button>
+
+    <button ng-if="type!='lead'" style="min-height:34px" class="btn btn-white" ng-disabled="directiveData.config.rollBackDisabled"
+        ng-click="openModal(parent.processes[directiveData.process.id],'rollBack')" title="{{directiveData.translation.rollBackWorkflowUnit}}"
+        data-toggle="modal" data-target="#rollbackConfirmationModal">
+ <i class="fa fa-reply" aria-hidden="true"></i>
+   </button>
+
     <button style="min-height:34px" ng-if="(type=='lead'|| type =='offer')&&directiveData.config.disablePinDropdown" class="btn btn-white"
         ng-disabled="directiveData.config.disablePin" ng-click="parent.pin(parent.processes[directiveData.process.id],directiveData.process.processor==null?parent.workflowService.user:null)"
         title="{{'LEAD_PIN'| translate }}">
          <i class="fa fa-thumb-tack"></i>
     </button>
-    <div ng-style="type=='lead'?{'margin-left':'-52px','position': 'fixed','z-index': '10'}:{'margin-left':'-32px','position': 'fixed','z-index': '10'}" ng-if="!directiveData.config.disablePinDropdown&&(type=='lead'|| type =='offer')"
-        class="btn-group" role="group">
+    <div ng-style="type=='lead'?{'margin-left':'-62px','position': 'fixed','z-index': '10'}:{'margin-left':'-23px','position': 'fixed','z-index': '10'}"
+        ng-if="!directiveData.config.disablePinDropdown&&(type=='lead'|| type =='offer')" class="btn-group" role="group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
        <i class="fa fa-thumb-tack"></i>
       <span class="caret"></span>

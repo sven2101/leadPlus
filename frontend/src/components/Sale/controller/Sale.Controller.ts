@@ -148,6 +148,10 @@ class SaleController extends AbstractWorkflow {
     selectCustomer(workflow: any) {
         this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
+
+    rollBack(process: Process): void {
+        this.saleService.rollBack(process, this.dtInstance, this.scope);
+    }
 }
 angular.module(moduleSale, [ngResourceId]).controller(SaleControllerId, SaleController);
 

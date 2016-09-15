@@ -1,4 +1,5 @@
 /// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../app/App.Common.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -15,7 +16,7 @@
 "use strict";
 
 angular.module(moduleApp)
-    .directive("actionbuttons", function () {
+    .directive("actionbuttons", function ($rootScope) {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
         directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
         directive.restrict = "A";
@@ -36,6 +37,11 @@ angular.module(moduleApp)
         directive.link = function (scope, element, attrs) {
             let templateData = JSON.parse(scope.templatedata);
             scope.directiveData = templateData;
+            scope.partial = null;
+            scope.openModal = function (payload: any, method: any) {
+                console.log("send");
+                $rootScope.$broadcast("confirmationModalFunction", { "payload": payload, "method": method });
+            };
         };
         return directive;
     });

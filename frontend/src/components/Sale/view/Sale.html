@@ -27,19 +27,17 @@
                     <button ng-click="saleCtrl.refreshData()" type="button" class="btn btn-success">
                         <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
                     </button>
-                    <span class="pull-right"
-                          style=" font-size: 1.5em;">{{ 'SALE_SHOW_ALL_SALES' | translate }} &nbsp;<input
+                    <span class="pull-right" style=" font-size: 1.5em;">{{ 'SALE_SHOW_ALL_SALES' | translate }} &nbsp;<input
                             type="checkbox"
                             ng-model="saleCtrl.loadAllData"
                             ng-change="saleCtrl.changeDataInput()"
                             class="js-switch"
                             ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
-                    </br></br>
+                    </br>
+                    </br>
                     <div class="table-responsive text-center">
-                        <table datatable="" dt-options="saleCtrl.dtOptions" dt-columns="saleCtrl.dtColumns"
-                               dt-instance="saleCtrl.dtInstance"
-                               class="table table-bordered table-hover table-condensed text-center"
-                               style="width:100%;"></table>
+                        <table datatable="" dt-options="saleCtrl.dtOptions" dt-columns="saleCtrl.dtColumns" dt-instance="saleCtrl.dtInstance" class="table table-bordered table-hover table-condensed text-center"
+                            style="width:100%;"></table>
                     </div>
                 </div>
             </div>
@@ -47,6 +45,10 @@
     </div>
 </div>
 <div editworkflow parent="saleCtrl" type="sale" modaltitle="{{'SALE_EDIT_SALE_MODAL'| translate}}"></div>
+<div confirmationmodal modalid="deleteConfirmationModal" parent="saleCtrl" title="{{'SALE_DELETE_SALE'| translate}}" body=""
+    submittext="{{'COMMON_DELETE'| translate}}"></div>
+<div confirmationmodal modalid="rollbackConfirmationModal" parent="saleCtrl" title="{{'SALE_ROLLBACK'| translate}}" body=""
+    submittext="{{'COMMON_RESET'| translate}}"></div>
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {
