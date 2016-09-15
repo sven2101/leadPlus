@@ -214,7 +214,7 @@ class OfferService {
         this.processResource.save(process).$promise.then(function (result) {
             self.offerResource.drop({
                 id: offer.id
-            }).$promise.then(() => dtInstance.DataTable.row(self.rows[process.id]).remove().draw());
+            }).$promise.then(() => { dtInstance.DataTable.row(self.rows[process.id]).remove().draw(); self.rootScope.leadsCount += 1; self.rootScope.offersCount -= 1; });
         });
     }
 }

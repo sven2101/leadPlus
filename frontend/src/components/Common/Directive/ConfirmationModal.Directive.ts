@@ -20,10 +20,9 @@ angular.module(moduleApp)
             scope.currentProcess = null;
             scope.currentFunction = null;
             scope.$on("confirmationModalFunction", function (evt, data) {
-                console.log("recieved");
+
                 scope.currentProcess = data.payload;
                 scope.currentFunction = data.method;
-                console.log(data);
             });
             scope.submitFunction = function () {
                 switch (scope.currentFunction) {

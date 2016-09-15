@@ -126,7 +126,7 @@ class SaleService {
         this.processResource.save(process).$promise.then(function (result) {
             self.saleResource.drop({
                 id: sale.id
-            }).$promise.then(() => dtInstance.DataTable.row(self.rows[process.id]).remove().draw());
+            }).$promise.then(() => { dtInstance.DataTable.row(self.rows[process.id]).remove().draw(); self.rootScope.offersCount += 1; });
         });
     }
 }
