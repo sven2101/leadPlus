@@ -57,7 +57,7 @@ class OfferController extends AbstractWorkflow {
     currentTab: number = 1;
 
     constructor($compile, $scope, WorkflowService, OfferDataTableService, OfferService) {
-        super();
+        super(WorkflowService);
         this.workflowService = WorkflowService;
         this.offerDataTableService = OfferDataTableService;
         this.offerService = OfferService;
@@ -149,22 +149,10 @@ class OfferController extends AbstractWorkflow {
         this.offerService.deleteRow(process, this.dtInstance);
     }
 
-    addProduct(array: Array<OrderPosition>) {
-        this.workflowService.addProduct(array, this.currentProductId, this.currentProductAmount);
-    }
-
-    deleteProduct(array: Array<OrderPosition>, index: number) {
-        this.workflowService.deleteProduct(array, index);
-    }
-
     getOrderPositions(process: Process): Array<OrderPosition> {
         if (!isNullOrUndefined(process.offer)) {
             return process.offer.orderPositions;
         }
-    }
-
-    sumOrderPositions(array: Array<OrderPosition>): number {
-        return this.workflowService.sumOrderPositions(array);
     }
 
     selectCustomer(workflow: any) {

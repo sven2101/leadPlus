@@ -25,11 +25,11 @@ const WorkflowControllerId: string = "WorkflowController";
 
 class WorkflowController extends AbstractWorkflow {
 
-    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId];
 
     uibModalInstance;
 
-    editWorkflowUnit: Process;
+    editWorkflowUnit: Offer;
     template: Template = new Template();
     notification: Notification = new Notification();
 
@@ -52,11 +52,14 @@ class WorkflowController extends AbstractWorkflow {
     editProcess: Process;
     edit: boolean;
 
-    constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService) {
-        super();
-        this.editWorkflowUnit = process;
-        this.uibModalInstance = $uibModalInstance;
+    leadService: LeadService;
+    offerService: OfferService;
+    saleService: SaleService;
 
+    constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService) {
+        super(WorkflowService);
+        this.editWorkflowUnit = process.offer;
+        this.uibModalInstance = $uibModalInstance;
         this.notificationService = NotificationService;
         this.templateService = TemplateService;
         this.customerService = CustomerService;
@@ -65,6 +68,10 @@ class WorkflowController extends AbstractWorkflow {
 
         this.getAllActiveTemplates();
         this.getAllActiveProducts();
+
+        this.leadService = LeadService;
+        this.offerService = OfferService;
+        this.saleService = SaleService;
 
         this.loadDataToModal(process);
     }
@@ -98,6 +105,12 @@ class WorkflowController extends AbstractWorkflow {
 
     getAllActiveProducts() {
         this.productService.getAllProducts().then((result) => this.products = result, (error) => console.log(error));
+    }
+
+    getOrderPositions(process: Process): Array<OrderPosition> {
+        if (!isNullOrUndefined(process.offer)) {
+            return process.offer.orderPositions;
+        }
     }
 
     send() {
