@@ -40,6 +40,8 @@ public abstract class AbstractWorkflow implements Request {
 
 	private String deliveryAddress;
 
+	private double deliveryCosts;
+
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "workflow", fetch = FetchType.LAZY)
 	private List<OrderPosition> orderPositions;
 
@@ -51,6 +53,14 @@ public abstract class AbstractWorkflow implements Request {
 	@OneToOne(cascade = { CascadeType.PERSIST })
 	@JoinColumn(name = "vendor_fk", nullable = true)
 	private Vendor vendor;
+
+	public double getDeliveryCosts() {
+		return deliveryCosts;
+	}
+
+	public void setDeliveryCosts(double deliveryCosts) {
+		this.deliveryCosts = deliveryCosts;
+	}
 
 	public long getId() {
 		return id;
@@ -106,7 +116,7 @@ public abstract class AbstractWorkflow implements Request {
 		for (int i = 0; i < this.orderPositions.size(); i++) {
 			OrderPosition temp = this.orderPositions.get(i);
 			if (temp != null && temp.getProduct() != null) {
-				sum += temp.getAmount() * temp.getProduct().getPriceNetto();
+				sum += temp.getAmount() * temp.getPrice();
 			}
 		}
 		return sum;
@@ -118,6 +128,9 @@ public abstract class AbstractWorkflow implements Request {
 		int result = 1;
 		result = prime * result + ((customer == null) ? 0 : customer.hashCode());
 		result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(deliveryCosts);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((orderPositions == null) ? 0 : orderPositions.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
@@ -144,6 +157,8 @@ public abstract class AbstractWorkflow implements Request {
 				return false;
 		} else if (!deliveryAddress.equals(other.deliveryAddress))
 			return false;
+		if (Double.doubleToLongBits(deliveryCosts) != Double.doubleToLongBits(other.deliveryCosts))
+			return false;
 		if (id != other.id)
 			return false;
 		if (orderPositions == null) {
@@ -166,8 +181,9 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Override
 	public String toString() {
-		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress + ", orderPositions=" + orderPositions
-				+ ", timestamp=" + timestamp + ", vendor=" + vendor + "]";
+		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress
+				+ ", deliveryCosts=" + deliveryCosts + ", orderPositions=" + orderPositions + ", timestamp=" + timestamp
+				+ ", vendor=" + vendor + "]";
 	}
 
 }

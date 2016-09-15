@@ -23,7 +23,11 @@ class Sale extends AbstractModel implements IWorkflow {
     transport: any;
     saleProfit: number;
     saleReturn: number;
+    deliveryCosts: number;
     constructor() {
         super();
+        this.deliveryCosts = 0;
+        this.saleProfit = 0;
+        this.saleReturn = 0;
     }
 }

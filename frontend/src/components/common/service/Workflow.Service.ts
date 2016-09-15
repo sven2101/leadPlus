@@ -140,7 +140,8 @@ class WorkflowService {
         return sum;
     }
     calculateDiscount(oldPrice: number, newPrice: number): number {
-        return Math.round((((oldPrice - newPrice) / oldPrice) * 100));
+        let temp = Math.round((((oldPrice - newPrice) / oldPrice) * 100));
+        return isNaN(temp) ? 0 : temp;
     }
 
     addLeadToOffer(process: Process): IPromise<Process> {
@@ -151,10 +152,11 @@ class WorkflowService {
             orderPositions: deepCopy(process.lead.orderPositions),
             deliveryAddress: process.lead.deliveryAddress,
             deliveryDate: null,
-            offerPrice: self.sumOrderPositions(process.lead.orderPositions),
+            offerPrice: self.sumOrderPositions(process.lead.orderPositions) + process.lead.deliveryCosts,
             customer: process.lead.customer,
             timestamp: newTimestamp(),
-            vendor: process.lead.vendor
+            vendor: process.lead.vendor,
+            deliveryCosts: process.lead.deliveryCosts
         };
         for (let i = 0; i < offer.orderPositions.length; i++) {
             offer.orderPositions[i].id = 0;
@@ -197,7 +199,8 @@ class WorkflowService {
             saleProfit: 0,
             saleReturn: process.offer.offerPrice,
             timestamp: newTimestamp(),
-            vendor: process.offer.vendor
+            vendor: process.offer.vendor,
+            deliveryCosts: process.offer.deliveryCosts
         };
         for (let i = 0; i < sale.orderPositions.length; i++) {
             sale.orderPositions[i].id = 0;
