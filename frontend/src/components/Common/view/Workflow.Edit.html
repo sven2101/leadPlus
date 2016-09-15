@@ -130,30 +130,40 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>
+                        <th class="col-md-5">
                             <select class="form-control" ng-model="parent.currentProductId">
                                             <option value="-1" selected disabled hidden>{{ 'LEAD_EDIT_SELECT_PRODUCT' | translate }}</option>                                     
                                             <option value="{{product.id}}" ng-repeat="product in service.productService.getActiveProducts()">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
                                         </select>
                         </th>
-                        <th class="col-md-1"></th>
-                        <th style="width:100px">
-                            <input min="1" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" name="addOrderPosition" type="number" class="input-sm form-control" ng-model="parent.currentProductAmount">
+                        <th class="col-md-2"></th>
+                        <th class="col-md-2">
+                            <div style="text-align:right">
+                                {{ 'COMMON_PRODUCT_AMOUNT'| translate }}:
+                            </div>
                         </th>
                         <th class="col-md-1">
-                            <button ng-disabled="parent.editForm.addOrderPosition.$invalid||parent.currentProductId==-1" type="button" class="btn btn-white btn-sm" ng-click="parent.addProduct(parent.currentOrderPositions)">
+                            <input min="1" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" name="addOrderPosition" type="number" class="input-sm form-control"
+                                ng-model="parent.currentProductAmount">
+                        </th>
+                        <th class="col-md-1">
+                            <button ng-disabled="parent.editForm.addOrderPosition.$invalid||parent.currentProductId==-1" type="button" class="btn btn-white btn-sm"
+                                ng-click="parent.addProduct(parent.currentOrderPositions)">
                                      <i class="fa fa-plus"></i>&nbsp;</button>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="orderPosition in parent.currentOrderPositions">
-                        <td>{{orderPosition.product.name}}</td>
+                        <td class="col-md-4">
+                            {{orderPosition.product.name}}
+                        </td>
                         <td class="col-md-2">
                             {{ 'PRODUCT_DISCOUNT' | translate }} {{parent.workflowService.calculateDiscount(orderPosition.product.priceNetto,orderPosition.price)}}%
                         </td>
-                        <td class="col-md-3 ">
+                        <td class="col-md-2">
                             <div class="input-group">
+                                <label></label>
                                 <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
 
                                 <input type="number" name="{{'orderPosition'+$index}}" class="form-control" ng-model="orderPosition.price" " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ "
@@ -165,7 +175,7 @@
                             <p ng-show="parent.editForm[ 'orderPosition'+$index].$invalid && !parent.editForm[
                                     'orderPosition'+$index].$pristine " class="help-block ">{{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }}</p>
                         </td>
-                        <td style="width:100px ">{{orderPosition.amount}}</td>
+                        <td class="col-md-1 ">{{orderPosition.amount}}</td>
                         <td class=" col-md-1 ">
                             <button type="button " class="btn btn-white btn-sm " ng-click="parent.deleteProduct(parent.currentOrderPositions,$index) ">
                                         <i class="fa fa-trash "></i>&nbsp;
