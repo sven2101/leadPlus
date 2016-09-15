@@ -22,7 +22,10 @@ class Offer extends AbstractModel implements IWorkflow {
     deliveryAddress: any;
     deliveryDate: any;
     offerPrice: number;
+    deliveryCosts: number;
     constructor() {
         super();
+        this.deliveryCosts = 0;
+        this.offerPrice = 0;
     }
 }

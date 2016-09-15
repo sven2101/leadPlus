@@ -19,10 +19,10 @@ class Lead extends AbstractModel implements IWorkflow {
     timestamp: any;
     vendor: any;
     deliveryAddress: any;
-    price: number;
     message: string;
+    deliveryCosts: number;
     constructor() {
         super();
-        this.price = 0;
+        this.deliveryCosts = 0;
     }
 }

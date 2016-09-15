@@ -167,7 +167,6 @@ class LeadService {
                     self.toaster.pop("success", "", self.translate
                         .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
                     editForm.$setPristine();
-                    editProcess.lead.price = result.lead.price;
                     self.updateRow(result, dtInstance, scope);
                     self.customerService.getAllCustomer();
                     if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
@@ -182,7 +181,6 @@ class LeadService {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
             editForm.$setPristine();
-            editProcess.lead.price = result.price;
             self.updateRow(editProcess, dtInstance, scope);
             if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
                 self.rootScope.$broadcast("onTodosChange");
