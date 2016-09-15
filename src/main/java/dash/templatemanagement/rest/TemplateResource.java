@@ -13,13 +13,19 @@
  *******************************************************************************/
 package dash.templatemanagement.rest;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -90,4 +96,23 @@ public class TemplateResource {
 		return templateService.generate(templateId, offerId, offer);
 	}
 
+	@RequestMapping(value = "/{templateId}/offers/{offerId}/pdf/generate", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation(value = "Generate a pdf based on a template and an offer.", notes = "")
+	public Response generatePdf(@ApiParam(required = true) @PathVariable final long templateId, @ApiParam(required = true) @PathVariable final long offerId,
+			@ApiParam(required = true) @RequestBody @Valid final Offer offer) throws NotFoundException, IOException {
+
+		//templateService.generatePdf(templateId, offerId, offer);
+		//File reportFile = new File("d:\\abc.pdf");
+
+		File reportFile = new File(filePath);
+		String name = reportName + "." + "pdf";
+		ResponseBuilder response = Response.ok(new     TemporaryFileInputStream(reportFile));
+		response.header("Content-Disposition", "attachment; filename=" + name);
+		response.header("Content-Type", "application/pdf");
+		response.header("Access-Control-Expose-Headers", "x-filename");
+		response.header("x-filename", name);
+
+		return response.build();
+	}
 }

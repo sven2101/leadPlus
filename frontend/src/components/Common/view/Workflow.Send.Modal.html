@@ -10,11 +10,14 @@
         <div class="form-group ">
             <h2>Angebot - Template</h2>
             <select class="form-control">
-                    <option value="DE">Deutsch(de)</option>
-                    <option value="EN">English(en)</option>
-                </select>
+                <option value="DE">Deutsch(de)</option>
+                <option value="EN">English(en)</option>
+            </select>
         </div>
     </div>
+
+    <button type="button" class="btn btn-white" ng-click="parent.generatePDF(templateId, parent.editWorkflowUnit)">PD generieren</button>
+
     <div class="hr-line-dashed"></div>
 
     <div>

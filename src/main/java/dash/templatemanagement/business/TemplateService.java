@@ -21,10 +21,16 @@ import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.TEMPLATE_NOT_FOUND;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -133,6 +139,57 @@ public class TemplateService implements ITemplateService {
 			logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
 			throw nfex;
 		}
+	}
+
+	@Override
+	public byte[] generatePdf(final long templateId, final long offerId, final Offer offer) throws NotFoundException {
+		if (offer != null && offerId == offer.getId()) {
+			try {
+				return doIt("test", "test");
+			} catch (Exception ex) {
+				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
+				throw new NotFoundException(OFFER_NOT_FOUND);
+			}
+		} else {
+			NotFoundException nfex = new NotFoundException(OFFER_NOT_FOUND);
+			logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
+			throw nfex;
+		}
+	}
+
+	public byte[] doIt(String file, String message) throws Exception {
+
+		// Create a document and add a page to it
+		PDDocument document = new PDDocument();
+		PDPage page = new PDPage();
+		document.addPage(page);
+
+		// Create a new font object selecting one of the PDF base fonts
+		PDFont font = PDType1Font.HELVETICA_BOLD;
+
+		// Start a new content stream which will "hold" the to be created content
+		PDPageContentStream contentStream = new PDPageContentStream(document, page);
+
+		// Define a text content stream using the selected font, moving the cursor and drawing the text "Hello World"
+		contentStream.beginText();
+		contentStream.setFont(font, 12);
+		contentStream.moveTextPositionByAmount(100, 700);
+		contentStream.drawString("Hello World");
+		contentStream.endText();
+
+		// Make sure that the content stream is closed:
+		contentStream.close();
+
+		document.toString();
+
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			document.save("d:\\abc.pdf");
+			document.close();
+		} catch (Exception ex) {
+			logger.error(ex);
+		}
+		return null;
 
 	}
 }

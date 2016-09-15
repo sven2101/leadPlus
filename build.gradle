@@ -41,6 +41,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-mail")
     compile("org.springframework.boot:spring-boot-starter-security")
  	compile("org.springframework.boot:spring-boot-starter-jdbc")
+ 	
+ 	compile("org.apache.pdfbox:pdfbox:1.8.9")
     compile("org.freemarker:freemarker")
     
     compile("postgresql:postgresql:9.0-801.jdbc4")

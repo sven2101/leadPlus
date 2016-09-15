@@ -337,6 +337,12 @@ class TemplateResource {
                     templateId: "@templateId",
                     offerId: "@offerId"
                 }
+            },
+            generatePDF: {
+                url: "/api/rest/templates/:templateId/offers/:offerId/pdf/generate", method: "POST", params: {
+                    templateId: "@templateId",
+                    offerId: "@offerId"
+                }
             }
         });
     }

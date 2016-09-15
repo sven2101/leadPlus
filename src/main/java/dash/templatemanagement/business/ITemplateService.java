@@ -40,4 +40,6 @@ public interface ITemplateService {
 
 	public OfferMessage generate(final long templateId, final long offerId, final Offer offer) throws NotFoundException;
 
+	public byte[] generatePdf(final long templateId, final long offerId, final Offer offer) throws NotFoundException;
+
 }

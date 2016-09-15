@@ -26,12 +26,6 @@ class AbstractWorkflow {
         this.workflowService.deleteProduct(array, index);
     }
 
-    getOrderPositions(process: Process): Array<OrderPosition> {
-        if (!isNullOrUndefined(process.lead)) {
-            return process.lead.orderPositions;
-        }
-    }
-
     sumOrderPositions(array: Array<OrderPosition>): number {
         return this.workflowService.sumOrderPositions(array);
     }

@@ -1,5 +1,7 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Template/model/Template.Model.ts" />
+/// <reference path="../../Offer/model/Offer.Model.ts" />
+/// <reference path="../../Notification/model/Notification.Model.ts" />
 /// <reference path="../../Template/controller/Template.Controller.ts" />
 /// <reference path="../../Common/model/Promise.Interface.ts" />
 
@@ -22,7 +24,7 @@ const TemplateServiceId: string = "TemplateService";
 
 class TemplateService {
 
-    private $inject = [toasterId, $translateId, TemplateResourceId, $uibModalId, $qId];
+    private $inject = [toasterId, $translateId, TemplateResourceId, $uibModalId, $qId, $windowId];
 
     templateResource;
 
@@ -30,13 +32,15 @@ class TemplateService {
     toaster;
     uibModal;
     q;
+    window;
     templates: Array<Template>;
 
-    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q) {
+    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q, $window) {
         this.toaster = toaster;
         this.translate = $translate;
         this.uibModal = $uibModal;
         this.q = $q;
+        this.window = $window;
         this.templateResource = TemplateResource.resource;
     }
 
@@ -104,6 +108,22 @@ class TemplateService {
         this.templateResource.generate({ templateId: templateId, offerId: offer.id }, offer).$promise.then(function (resultMessage: Notification) {
             console.log(resultMessage);
             defer.resolve(resultMessage);
+        }, function (error: any) {
+            defer.reject(error);
+        });
+        return defer.promise;
+    }
+
+    generatePDF(templateId: string, offer: Offer) {
+        let defer = this.q.defer();
+        let self = this;
+        this.templateResource.generatePDF({ templateId: templateId, offerId: offer.id }, offer).$promise.then(function (result) {
+            console.log("PDf result: ", result);
+            console.log(result);
+            let file = new Blob([result], { type: "application/pdf" });
+            let fileURL = URL.createObjectURL(file);
+            self.window.open(fileURL);
+            defer.resolve(result);
         }, function (error: any) {
             defer.reject(error);
         });
