@@ -55,6 +55,9 @@ public class PrincipleResource {
 
 		map.put("username", user.getName());
 		map.put("email", internalUser.getEmail());
+		map.put("firstname", internalUser.getFirstname());
+		map.put("lastname", internalUser.getLastname());
+		map.put("email", internalUser.getEmail());
 		map.put("id", String.valueOf(internalUser.getId()));
 		map.put("language", String.valueOf(internalUser.getLanguage()));
 		map.put("smtp", internalUser.getSmtp());

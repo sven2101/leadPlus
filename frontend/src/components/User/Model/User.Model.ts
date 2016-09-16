@@ -25,6 +25,8 @@ class User extends AbstractModel {
     profilPictureURL: string;
     language: Language;
     enabled: boolean;
+    firstname: string;
+    lastname: string;
 
     constructor() {
         super();

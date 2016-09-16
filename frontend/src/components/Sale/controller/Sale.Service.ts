@@ -83,8 +83,8 @@ class SaleService {
             self.updateRow(editProcess, dtInstance, scope);
         });
     }
-
-    deleteRow(process: Process, dtInstance: any) {
+    // deprecated
+    deleteRowOld(process: Process, dtInstance: any) {
         let self = this;
         let saleId = process.sale.id;
 
@@ -127,6 +127,18 @@ class SaleService {
             self.saleResource.drop({
                 id: sale.id
             }).$promise.then(() => { dtInstance.DataTable.row(self.rows[process.id]).remove().draw(); self.rootScope.offersCount += 1; });
+        });
+    }
+    deleteRow(process: Process, dtInstance: any): void {
+        let self = this;
+        this.workflowService.deletProcess(process).then((data) => {
+            self.toaster.pop("success", "", self.translate
+                .instant("COMMON_TOAST_SUCCESS_DELETE_SALE"));
+                dtInstance.DataTable.row(self.rows[process.id]).remove().draw();
+            self.rootScope.$broadcast("onTodosChange");
+        }, (error) => {
+            self.toaster.pop("error", "", self.translate
+                .instant("COMMON_TOAST_FAILURE_DELETE_SALE"));
         });
     }
 }

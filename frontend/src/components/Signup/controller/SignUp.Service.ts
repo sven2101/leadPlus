@@ -60,7 +60,7 @@ class SignupService {
 
     signup(user: Signup): void {
         let self = this;
-        this.signupResource.signup({ username: user.username, email: user.email, password: user.password, password2: user.password2 }).$promise.then(function () {
+        this.signupResource.signup({ username: user.username, email: user.email, password: user.password, password2: user.password2, firstname: user.firstname, lastname: user.lastname }).$promise.then(function () {
             user = null;
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
             self.location.path("/login");

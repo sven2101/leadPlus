@@ -47,8 +47,14 @@ public class User implements UserDetails {
 	@Column(name = "id")
 	private Long id;
 
-	@Column(unique = true, length = 30, nullable = false)
+	@Column(length = 30)
 	private String username;
+
+	@Column(length = 50)
+	private String firstname;
+
+	@Column(unique = true, length = 50, nullable = false)
+	private String lastname;
 
 	@Column(unique = true, length = 50, nullable = false)
 	private String email;
@@ -73,6 +79,30 @@ public class User implements UserDetails {
 
 	public User() {
 
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Long getId() {
@@ -176,11 +206,14 @@ public class User implements UserDetails {
 		int result = 1;
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + (enabled ? 1231 : 1237);
+		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((language == null) ? 0 : language.hashCode());
+		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((profilPicture == null) ? 0 : profilPicture.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result + ((smtp == null) ? 0 : smtp.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -201,12 +234,22 @@ public class User implements UserDetails {
 			return false;
 		if (enabled != other.enabled)
 			return false;
+		if (firstname == null) {
+			if (other.firstname != null)
+				return false;
+		} else if (!firstname.equals(other.firstname))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
 		if (language != other.language)
+			return false;
+		if (lastname == null) {
+			if (other.lastname != null)
+				return false;
+		} else if (!lastname.equals(other.lastname))
 			return false;
 		if (password == null) {
 			if (other.password != null)
@@ -220,6 +263,11 @@ public class User implements UserDetails {
 			return false;
 		if (role != other.role)
 			return false;
+		if (smtp == null) {
+			if (other.smtp != null)
+				return false;
+		} else if (!smtp.equals(other.smtp))
+			return false;
 		if (username == null) {
 			if (other.username != null)
 				return false;
@@ -230,8 +278,9 @@ public class User implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", role=" + role + ", profilPictureURL="
-				+ profilPicture + ", language=" + language + ", enabled=" + enabled + "]";
+		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
+				+ ", email=" + email + ", password=" + password + ", role=" + role + ", profilPicture=" + profilPicture
+				+ ", language=" + language + ", smtp=" + smtp + ", enabled=" + enabled + "]";
 	}
 
 }

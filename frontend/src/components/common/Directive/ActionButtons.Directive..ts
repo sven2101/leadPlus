@@ -39,7 +39,6 @@ angular.module(moduleApp)
             scope.directiveData = templateData;
             scope.partial = null;
             scope.openModal = function (payload: any, method: any) {
-                console.log("send");
                 $rootScope.$broadcast("confirmationModalFunction", { "payload": payload, "method": method });
             };
         };

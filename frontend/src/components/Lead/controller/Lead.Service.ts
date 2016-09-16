@@ -187,8 +187,8 @@ class LeadService {
             }
         });
     }
-
-    deleteRow(process: Process, dtInstance: any) {
+    // deprecated
+    deleteRowOld(process: Process, dtInstance: any) {
         let self = this;
         let leadId = process.lead.id;
         if (process.sale !== null || process.offer !== null) {
@@ -232,6 +232,19 @@ class LeadService {
             dtInstance.DataTable.row(this.rows[process.id]).remove()
                 .draw();
         }
+    }
+    deleteRow(process: Process, dtInstance: any): void {
+        let self = this;
+        this.workflowService.deletProcess(process).then((data) => {
+            self.toaster.pop("success", "", self.translate
+                .instant("COMMON_TOAST_SUCCESS_DELETE_LEAD"));
+            self.rootScope.leadsCount -= 1;
+            dtInstance.DataTable.row(self.rows[process.id]).remove().draw();
+            self.rootScope.$broadcast("onTodosChange");
+        }, (error) => {
+            self.toaster.pop("error", "", self.translate
+                .instant("COMMON_TOAST_FAILURE_DELETE_LEAD"));
+        });
     }
 }
 

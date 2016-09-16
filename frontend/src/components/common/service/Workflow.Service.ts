@@ -371,5 +371,37 @@ class WorkflowService {
         }, (error) => console.log(error));
 
     }
+    deletProcess(process): IPromise<any> {
+        let defer = this.$q.defer();
+        if (isNullOrUndefined(process)) {
+            defer.reject("null or undefined");
+            return defer.promise;
+        }
+        let self = this;
+        this.processResource.drop({
+            id: process.id
+        }).$promise.then(function (data) {
+            defer.resolve(data);
+        }, function (error) {
+            defer.reject(error);
+        });
+        return defer.promise;
+    }
+    saveProcess(process): IPromise<Process> {
+        let defer = this.$q.defer();
+        if (isNullOrUndefined(process)) {
+            defer.reject("null or undefined");
+            return defer.promise;
+        }
+        let self = this;
+        this.processResource.drop({
+            id: process.id
+        }).$promise.then(function (data) {
+            defer.resolve(data);
+        }, function (error) {
+            defer.reject(error);
+        });
+        return defer.promise;
+    }
 }
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);

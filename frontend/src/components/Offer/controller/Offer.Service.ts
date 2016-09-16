@@ -143,8 +143,8 @@ class OfferService {
             }
         });
     }
-
-    deleteRow(process: Process, dtInstance: any) {
+    // deprecated
+    deleteRowOld(process: Process, dtInstance: any) {
         let self = this;
         let offerId = process.offer.id;
         if (process.sale !== null) {
@@ -215,6 +215,20 @@ class OfferService {
             self.offerResource.drop({
                 id: offer.id
             }).$promise.then(() => { dtInstance.DataTable.row(self.rows[process.id]).remove().draw(); self.rootScope.leadsCount += 1; self.rootScope.offersCount -= 1; });
+        });
+    }
+
+    deleteRow(process: Process, dtInstance: any): void {
+        let self = this;
+        this.workflowService.deletProcess(process).then((data) => {
+            self.toaster.pop("success", "", self.translate
+                .instant("COMMON_TOAST_SUCCESS_DELETE_OFFER"));
+            self.rootScope.offersCount -= 1;
+            dtInstance.DataTable.row(self.rows[process.id]).remove().draw();
+            self.rootScope.$broadcast("onTodosChange");
+        }, (error) => {
+            self.toaster.pop("error", "", self.translate
+                .instant("COMMON_TOAST_FAILURE_DELETE_OFFER"));
         });
     }
 }
