@@ -332,6 +332,10 @@ function config($translateProvider) {
             PRODUCT_PRODUCT_STATE_NEW: "Neu",
             PRODUCT_PRODUCT_STATE_USED: "Gebraucht",
             PRODUCT_DISCOUNT: "Rabatt",
+            PRODUCT_TOAST_SAVE: "Produkt wurde erfolgreich angelegt",
+            PRODUCT_TOAST_SAVE_ERROR: "Produkt konnte nicht angelegt werden",
+            PRODUCT_TOAST_UPDATE: "Produkt wurde erfolgreich aktuallisiert",
+            PRODUCT_TOAST_UPDATE_ERROR: "Produkt konnte nicht aktuallisiert werden",
 
             // Define customer elements
             CUSTOMER_MANAGE_CUSTOMER: "Kunden verwalten",
@@ -660,6 +664,10 @@ function config($translateProvider) {
             PRODUCT_PRODUCT_STATE_NEW: "New",
             PRODUCT_PRODUCT_STATE_USED: "Used",
             PRODUCT_DISCOUNT: "Discount",
+            PRODUCT_TOAST_SAVE: "Creating product was successful",
+            PRODUCT_TOAST_SAVE_ERROR: "Creating product was unsuccessful",
+            PRODUCT_TOAST_UPDATE: "Updating product was successful",
+            PRODUCT_TOAST_UPDATE_ERROR: "Updating product was unsuccessful",
 
             // Define customer elements
             CUSTOMER_MANAGE_CUSTOMER: "Manage Customer",

@@ -1,6 +1,7 @@
 /// <reference path="../app/App.Constants.ts" />
 /// <reference path="../app/App.Resource.ts" />
 /// <reference path="../dashboard/controller/Dashboard.Service.ts" />
+/// <reference path="../Profile/controller/Profile.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -18,7 +19,7 @@ const AppControllerId: string = "AppController";
 
 class AppController {
 
-    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId];
+    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId];
 
     translate;
     rootScope;
@@ -28,13 +29,15 @@ class AppController {
     stop;
     todos: Array<Process> = [];
 
-    constructor($translate, $rootScope, $interval, ProcessResource, UserResource) {
+    profileService: ProfileService;
+
+    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService) {
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.interval = $interval;
         this.processResource = ProcessResource.resource;
         this.userResource = UserResource.resource;
-
+        this.profileService = ProfileService;
         this.rootScope.leadsCount = 0;
         this.rootScope.todos = "test";
 

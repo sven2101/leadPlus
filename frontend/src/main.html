@@ -4,16 +4,22 @@
             <li class="nav-header">
                 <div class="dropdown profile-element">
                     <span>
-                        <img class="img-circle" height="80px" weigth="80px" ng-src="{{globals.user.pictureLink}}"/>
+                        <img class="img-circle" height="80px" weigth="80px"  ng-src="data:image/jpeg;base64,{{appCtrl.profileService.user.picture.content}}" id="photo-id"/>
                     </span>
                     <a data-toggle="dropdown" class="dropdown-toggle">
-                        <span class="clear"> <span class="block m-t-xs">
-                            <strong class="font-bold" ng-if="(globals.user.firstname==null||globals.user.firstname=='')&&(globals.user.lastname==null||globals.user.lastname=='')">
-                                {{globals.user.username}}</strong>
-                            <strong class="font-bold" ng-if="!((globals.user.firstname==null||globals.user.firstname=='')&&(globals.user.lastname==null||globals.user.lastname==''))">
-                                 {{globals.user.firstname}} {{globals.user.lastname}}</strong>
-                             </span> <span class="text-muted text-xs block">{{ 'TITLE' | translate }}<b
-                                    class="caret"></b></span> </span>
+                        <span class="clear"> 
+                            <span class="block m-t-xs">
+                                <strong class="font-bold" ng-if="(globals.user.firstname==null||globals.user.firstname=='')&&(globals.user.lastname==null||globals.user.lastname=='')">
+                                    {{globals.user.username}}
+                                </strong>
+                                <strong class="font-bold" ng-if="!((globals.user.firstname==null||globals.user.firstname=='')&&(globals.user.lastname==null||globals.user.lastname==''))">
+                                    {{globals.user.firstname}} {{globals.user.lastname}}
+                                 </strong>
+                            </span>
+                        <span class="text-muted text-xs block">{{ 'TITLE' | translate }}<b
+                                    class="caret"></b>
+                            </span>
+                        </span>
                     </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs">
                         <li><a href="#/profile">{{ 'PROFILE_MENU' | translate }}</a></li>

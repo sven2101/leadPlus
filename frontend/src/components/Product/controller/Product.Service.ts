@@ -45,15 +45,21 @@ class ProductService {
             product.timestamp = newTimestamp();
             this.productResource.createProduct(product).$promise.then(function (result: Product) {
                 self.productResource.uploadImage({ id: result.id }, self.formdata).$promise.then(function (result: Product) {
-                    self.products.push(result);
-                    self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
+                    // self.products.push(result);
+                    self.getAllProducts();
+                    self.toaster.pop("success", "", self.translate.instant("PRODUCT_TOAST_SAVE"));
                 }, function () {
-                    self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
+                    self.toaster.pop("error", "", self.translate.instant("PRODUCT_TOAST_SAVE_ERROR"));
                 });
             });
         } else {
-            this.productResource.updateProduct(product).$promise.then(function (result: Product) {
-                product = result;
+            this.productResource.createProduct(product).$promise.then(function (result: Product) {
+                self.productResource.uploadImage({ id: result.id }, self.formdata).$promise.then(function (result: Product) {
+                    self.getAllProducts();
+                    self.toaster.pop("success", "", self.translate.instant("PRODUCT_TOAST_UPDATE"));
+                }, function () {
+                    self.toaster.pop("error", "", self.translate.instant("PRODUCT_TOAST_UPDATE_ERROR"));
+                });
             });
         }
     }

@@ -38,20 +38,15 @@
                                 &nbsp;{{ 'PRODUCT_CREATE' | translate }}
                         </button>
                         <!--
-                            <button type="button" ng-click="productCtrl.refreshData()" type="button" class="btn btn-success btn-sm btn-primary">
-                                <i class="fa fa-refresh"></i>
-                                &nbsp;{{ 'COMMON_REFRESH' | translate }}
+                        <button type="button" ng-click="productCtrl.refreshData()" type="button" class="btn btn-success btn-sm btn-primary">
+                            <i class="fa fa-refresh"></i>
+                            &nbsp;{{ 'COMMON_REFRESH' | translate }}
                         </button>
                             -->
                         <span class="pull-right ">
-                                 <input  type="text" placeholder="Search" class="input-sm form-control" ng-model="searchText">
-                         </span>
-
-
-
+                            <input  type="text" placeholder="Search" class="input-sm form-control" ng-model="searchText">
+                        </span>
                     </form>
-
-
 
                     <div class="project-list">
                         <table class="table table-hover">
@@ -71,12 +66,8 @@
                                     </td>
                                     <td class="project-people col-md-1">
                                         <a href="">
-                                            <!-- 
-                                            <img alt="image" class="img-circle" ng-src="data:image/jpeg;base64,{{productCtrl.arrayBufferToBase64(product.picture.content)}}"
+                                            <img class="img-circle" height="80px" weigth="80px" ng-src="data:image/jpeg;base64,{{product.picture.content}}" id="photo-id"
                                             />
-                                            -->
-                                            <img alt="image" class="img-circle" ng-src="http://localhost:8080/api/rest/products/{{product.id}}/image">
-
                                         </a>
                                     </td>
                                     <td class="project-actions col-md-1">

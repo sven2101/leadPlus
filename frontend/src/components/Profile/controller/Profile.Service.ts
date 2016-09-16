@@ -34,6 +34,7 @@ class ProfileService {
     fileResource;
     formdata;
     q;
+    user: User = new User();
 
     oldPassword: string;
     newPassword1: string;
@@ -77,6 +78,7 @@ class ProfileService {
         let self = this;
         this.userResource.setProfilePicture({ id: this.rootScope.globals.user.id }, this.formdata).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
+            self.getById();
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
         });
@@ -87,6 +89,7 @@ class ProfileService {
         let self = this;
         this.userResource.getById({ id: this.rootScope.globals.user.id }).$promise.then(function (resultUser: User) {
             console.log("User: ", resultUser);
+            self.user = resultUser;
             defer.resolve(resultUser);
         }, function (error: any) {
             defer.reject(error);

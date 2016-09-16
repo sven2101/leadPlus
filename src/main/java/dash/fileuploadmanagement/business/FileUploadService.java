@@ -19,7 +19,14 @@ import static dash.Constants.DELETE_FAILED_EXCEPTION;
 import static dash.Constants.FILE_NOT_FOUND;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
+
+import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +58,7 @@ public class FileUploadService implements IFileUploadService {
 				file.setSize(multipartFile.getSize());
 				file.setMimeType(multipartFile.getContentType());
 				file.setSize(multipartFile.getSize());
+				file.setCroppedContent(cropImageSquare(file));
 
 				return fileRepository.save(file);
 			} catch (Exception ex) {
@@ -97,6 +105,38 @@ public class FileUploadService implements IFileUploadService {
 			logger.error(FILE_NOT_FOUND + FileUploadService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
 			throw nfex;
 		}
+	}
+
+	private byte[] cropImageSquare(FileUpload image) throws IOException {
+		// Get a BufferedImage object from a byte array
+		InputStream in = new ByteArrayInputStream(image.getContent());
+		BufferedImage originalImage = ImageIO.read(in);
+
+		// Get image dimensions
+		int height = originalImage.getHeight();
+		int width = originalImage.getWidth();
+
+		// Compute the size of the square
+		int squareSize = (height > width ? width : height);
+
+		// Coordinates of the image's middle
+		int xc = width / 2;
+		int yc = height / 2;
+
+		// Crop
+		BufferedImage croppedImage = originalImage.getSubimage(xc - (squareSize / 2), // x coordinate of the upper-left corner
+				yc - (squareSize / 2), // y coordinate of the upper-left corner
+				squareSize, // widht
+				squareSize // height
+		);
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(originalImage, image.getFilename().split(".")[0], baos);
+		baos.flush();
+		byte[] imageInByte = baos.toByteArray();
+		baos.close();
+
+		return imageInByte;
 	}
 
 }
