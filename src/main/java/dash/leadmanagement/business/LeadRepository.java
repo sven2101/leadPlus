@@ -27,5 +27,5 @@ import dash.processmanagement.request.RequestRepository;
 @Repository
 public interface LeadRepository extends RequestRepository<Lead, Long> {
 
-	List<Lead> findByCustomerId(Long id);
+	List<Lead> findByCustomerIdAndDeleted(Long id, boolean deleted);
 }

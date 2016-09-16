@@ -54,7 +54,10 @@
     <div class="col-lg-6" ng-if="process.processor != null">
         <div class="ibox">
             <div class="ibox-title">
-                <h3>{{ 'COMMON_PROCESSOR' | translate }}: {{process.processor.username}}</h3>
+                <h3 ng-if="(process.processor.firstname==null||process.processor.firstname=='')&&(process.processor.lastname==null||process.processor.lastname=='')">
+                    {{ 'COMMON_PROCESSOR' | translate }}: {{process.processor.username}}</h3>
+                <h3 ng-if="!((process.processor.firstname==null||process.processor.firstname=='')&&(process.processor.lastname==null||process.processor.lastname==''))">
+                    {{ 'COMMON_PROCESSOR' | translate }}: {{process.processor.firstname}} {{process.processor.lastname}}</h3>
             </div>
         </div>
     </div>

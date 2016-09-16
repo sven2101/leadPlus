@@ -27,6 +27,6 @@ import dash.processmanagement.request.RequestRepository;
 @Repository
 public interface OfferRepository extends RequestRepository<Offer, Long> {
 
-	List<Offer> findByCustomerId(Long id);
+	List<Offer> findByCustomerIdAndDeleted(Long id, boolean deleted);
 
 }

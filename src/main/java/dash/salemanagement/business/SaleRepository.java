@@ -27,6 +27,6 @@ import dash.salemanagement.domain.Sale;
 @Transactional
 public interface SaleRepository extends RequestRepository<Sale, Long> {
 
-	List<Sale> findByCustomerId(Long id);
+	List<Sale> findByCustomerIdAndDeleted(Long id, boolean deleted);
 
 }

@@ -131,16 +131,16 @@ public class OfferService implements IOfferService {
 
 	@Override
 	public List<Offer> getByCustomer(final long id) {
-		return offerRepository.findByCustomerId(id);
+		return offerRepository.findByCustomerIdAndDeleted(id, false);
 	}
 
 	@Override
 	public Offer generateOfferFile(final long offerId, final long templateId) {
-		//reading word Template
+		// reading word Template
 
-		//generating PDF File
+		// generating PDF File
 
-		//save PDF File in Database
+		// save PDF File in Database
 		return null;
 	}
 
@@ -149,13 +149,13 @@ public class OfferService implements IOfferService {
 		Offer offer = getOfferById(offerId);
 		User user = userService.getById(offerId);
 
-		//NotificationService
+		// NotificationService
 
-		//		IMessage message = new OfferMessage(offer.getCustomer());
-		//		notificationService.sendNotification(message, user);
-		//get User SMTP Service
+		// IMessage message = new OfferMessage(offer.getCustomer());
+		// notificationService.sendNotification(message, user);
+		// get User SMTP Service
 
-		//get Template Renderer and pass in Customer and Offer
+		// get Template Renderer and pass in Customer and Offer
 
 		return null;
 	}

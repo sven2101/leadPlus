@@ -44,6 +44,7 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	
 	private boolean deleted;
 
 	private String name;

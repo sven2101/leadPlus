@@ -132,6 +132,6 @@ public class SaleService implements ISaleService {
 
 	@Override
 	public List<Sale> getByCustomer(Long id) {
-		return saleRepository.findByCustomerId(id);
+		return saleRepository.findByCustomerIdAndDeleted(id, false);
 	}
 }

@@ -7,7 +7,11 @@
                         <img class="img-circle" height="80px" weigth="80px" ng-src="{{globals.user.pictureLink}}"/>
                     </span>
                     <a data-toggle="dropdown" class="dropdown-toggle">
-                        <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{globals.user.firstname}} {{globals.user.lastname}}</strong>
+                        <span class="clear"> <span class="block m-t-xs">
+                            <strong class="font-bold" ng-if="(globals.user.firstname==null||globals.user.firstname=='')&&(globals.user.lastname==null||globals.user.lastname=='')">
+                                {{globals.user.username}}</strong>
+                            <strong class="font-bold" ng-if="!((globals.user.firstname==null||globals.user.firstname=='')&&(globals.user.lastname==null||globals.user.lastname==''))">
+                                 {{globals.user.firstname}} {{globals.user.lastname}}</strong>
                              </span> <span class="text-muted text-xs block">{{ 'TITLE' | translate }}<b
                                     class="caret"></b></span> </span>
                     </a>

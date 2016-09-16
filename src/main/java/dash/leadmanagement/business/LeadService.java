@@ -118,6 +118,6 @@ public class LeadService implements ILeadService {
 
 	@Override
 	public List<Lead> getByCustomer(Long id) {
-		return leadRepository.findByCustomerId(id);
+		return leadRepository.findByCustomerIdAndDeleted(id, false);
 	}
 }
