@@ -21,7 +21,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.apache.pdfbox.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -71,14 +70,16 @@ public class TemplateResource {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Post a template. ", notes = "")
-	public Template save(@ApiParam(required = true) @RequestBody @Valid final Template template) throws SaveFailedException {
+	public Template save(@ApiParam(required = true) @RequestBody @Valid final Template template)
+			throws SaveFailedException {
 		return templateService.save(template);
 	}
 
 	@ApiOperation(value = "Update a single template.", notes = "")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Template update(@ApiParam(required = true) @RequestBody @Valid final Template template) throws UpdateFailedException {
+	public Template update(@ApiParam(required = true) @RequestBody @Valid final Template template)
+			throws UpdateFailedException {
 		return templateService.update(template);
 	}
 
@@ -92,7 +93,8 @@ public class TemplateResource {
 	@RequestMapping(value = "/{templateId}/offers/{offerId}/generate", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Generate a email content based on a template and an offer.", notes = "")
-	public OfferMessage generate(@ApiParam(required = true) @PathVariable final long templateId, @ApiParam(required = true) @PathVariable final long offerId,
+	public OfferMessage generate(@ApiParam(required = true) @PathVariable final long templateId,
+			@ApiParam(required = true) @PathVariable final long offerId,
 			@ApiParam(required = true) @RequestBody @Valid final Offer offer) throws NotFoundException {
 		return templateService.generate(templateId, offerId, offer);
 	}
@@ -101,21 +103,23 @@ public class TemplateResource {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Generate a pdf based on a template and an offer.", notes = "")
 	public ResponseEntity<byte[]> generatePdf(@ApiParam(required = true) @PathVariable final long templateId,
-			@ApiParam(required = true) @PathVariable final long offerId, @ApiParam(required = true) @RequestBody @Valid final Offer offer)
-			throws NotFoundException, IOException {
+			@ApiParam(required = true) @PathVariable final long offerId,
+			@ApiParam(required = true) @RequestBody @Valid final Offer offer) throws NotFoundException, IOException {
 
 		FileInputStream fileStream;
 		try {
 			fileStream = new FileInputStream(new File("D:/abc.pdf"));
 			System.out.println("PDF: " + fileStream.toString());
-			byte[] contents = IOUtils.toByteArray(fileStream);
+			// byte[] contents = IOUtils.toByteArray(fileStream);
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.parseMediaType("application/pdf"));
 			String filename = "abc.pdf";
 			headers.setContentDispositionFormData(filename, filename);
 			fileStream.close();
-			ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(contents, headers, HttpStatus.OK);
-			return response;
+			// ResponseEntity<byte[]> response = new
+			// ResponseEntity<byte[]>(contents, headers, HttpStatus.OK);
+			// return response;
+			return null;
 		} catch (FileNotFoundException e) {
 			System.err.println(e);
 		} catch (IOException e) {
