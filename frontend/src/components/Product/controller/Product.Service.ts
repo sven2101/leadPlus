@@ -44,7 +44,6 @@ class ProductService {
         if (insert) {
             product.timestamp = newTimestamp();
             this.productResource.createProduct(product).$promise.then(function (result: Product) {
-                console.log("image", self.formdata);
                 self.productResource.uploadImage({ id: result.id }, self.formdata).$promise.then(function (result: Product) {
                     self.products.push(result);
                     self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
@@ -82,6 +81,7 @@ class ProductService {
     }
 
     getTheFiles($files) {
+        console.log("files: ", $files);
         this.formdata.append("file", $files[0]);
     }
 }

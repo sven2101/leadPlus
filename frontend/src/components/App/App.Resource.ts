@@ -165,6 +165,7 @@ class UserResource {
 
     constructor($resource) {
         this.resource = $resource("/users/:id", {}, {
+            getById: { url: "/users/:id", method: "GET" },
             update: { url: "/users", method: "PUT" },
             changePassword: { url: "/users/:id/pw", method: "POST" },
             setProfilePicture: {
@@ -250,6 +251,10 @@ class ProductResource {
             deleteProduct: { url: "/api/rest/products", method: "DELETE" },
             uploadImage: {
                 url: "/api/rest/products/:id/image", params: { file: "@file" }, method: "POST", transformRequest: angular.identity,
+                headers: { "Content-Type": undefined }
+            },
+            getImage: {
+                url: "/api/rest/products/:id/image", method: "GET", transformRequest: angular.identity,
                 headers: { "Content-Type": undefined }
             },
         });

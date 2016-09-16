@@ -44,7 +44,6 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	
 	private boolean deleted;
 
 	private String name;
@@ -63,7 +62,7 @@ public class Product {
 	private double priceNetto;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private FileUpload fileUpload;
+	private FileUpload picture;
 
 	public boolean isDeleted() {
 		return deleted;
@@ -97,12 +96,12 @@ public class Product {
 		this.timestamp = timestamp;
 	}
 
-	public FileUpload getFileUpload() {
-		return fileUpload;
+	public FileUpload getPicture() {
+		return picture;
 	}
 
-	public void setFileUpload(FileUpload fileUpload) {
-		this.fileUpload = fileUpload;
+	public void setPicture(FileUpload picture) {
+		this.picture = picture;
 	}
 
 	public void setId(long id) {
@@ -148,7 +147,7 @@ public class Product {
 		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((fileUpload == null) ? 0 : fileUpload.hashCode());
+		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		long temp;
@@ -177,10 +176,10 @@ public class Product {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (fileUpload == null) {
-			if (other.fileUpload != null)
+		if (picture == null) {
+			if (other.picture != null)
 				return false;
-		} else if (!fileUpload.equals(other.fileUpload))
+		} else if (!picture.equals(other.picture))
 			return false;
 		if (id != other.id)
 			return false;
@@ -203,9 +202,8 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description
-				+ ", productState=" + productState + ", timestamp=" + timestamp + ", deactivated=" + deactivated
-				+ ", priceNetto=" + priceNetto + ", fileUpload=" + fileUpload + "]";
+		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description + ", productState=" + productState
+				+ ", timestamp=" + timestamp + ", deactivated=" + deactivated + ", priceNetto=" + priceNetto + ", fileUpload=" + picture + "]";
 	}
 
 }

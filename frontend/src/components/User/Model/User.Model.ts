@@ -1,4 +1,6 @@
 /// <reference path="../../common/model/AbstractModel.Model.ts" />
+/// <reference path="../../FileUpload/model/FileUpload.Model.ts" />
+
 /// <reference path="Role.Model.ts" />
 /// <reference path="Language.Model.ts" />
 
@@ -22,7 +24,7 @@ class User extends AbstractModel {
     username: string;
     email: string;
     role: Role;
-    profilPictureURL: string;
+    picture: FileUpload;
     language: Language;
     enabled: boolean;
     firstname: string;

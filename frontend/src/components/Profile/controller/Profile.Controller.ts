@@ -1,6 +1,8 @@
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../Profile/controller/Profile.Service.ts" />
+/// <reference path="../../Profile/controller/Profile.Service.ts" />
+/// <reference path="../../FileUpload/model/FileUpload.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -26,10 +28,12 @@ class ProfileController {
     myImage = "";
     myCroppedImage = "";
     profileService;
-    fileSelected: boolean = false;
+
+    user: User;
 
     constructor(ProfileService: ProfileService) {
         this.profileService = ProfileService;
+        this.getById();
     }
 
     submitProfilInfoForm() {
@@ -44,9 +48,11 @@ class ProfileController {
         this.profileService.uploadFiles();
     }
 
+    getById() {
+        this.profileService.getById().then((result) => this.user = result, (error) => console.log(error));
+    }
+
     getTheFiles($files) {
-        this.fileSelected = true;
-        console.log("fileSelected", this.fileSelected);
         this.profileService.getTheFiles($files);
     }
 }

@@ -1,5 +1,6 @@
 /// <reference path="../../common/model/AbstractModel.Model.ts" />
 /// <reference path="./ProductState.ts" />
+/// <reference path="../../FileUpload/model/FileUpload.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -23,6 +24,7 @@ class Product extends AbstractModel {
     timestamp: any;
     deactivated: boolean;
     productState: ProductState;
+    picture: FileUpload;
 
     constructor() {
         super();

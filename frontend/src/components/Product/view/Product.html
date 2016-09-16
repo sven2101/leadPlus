@@ -31,10 +31,7 @@
                     <h5>{{ 'PRODUCT_MANAGE_PRODUCTS' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
-
-
                     <form role="form" class="form-inline">
-
                         <button type="button" class="btn btn-success btn-sm btn-primary" ng-click="productCtrl.clearProduct()" data-toggle="modal"
                             data-target="#createProductModal">
                                 <i class="fa fa-plus"></i>
@@ -73,7 +70,14 @@
                                         <small style="word-wrap: break-word; word-break: break-all;">{{product.description}}</small>
                                     </td>
                                     <td class="project-people col-md-1">
-                                        <a href=""><img alt="image" class="img-circle" src="http://www.containersucher.com/assets/plugindata/w2dblgbb1ca3b3057e90d9af3e514539e33a22/pic1271913090.jpg"></a>
+                                        <a href="">
+                                            <!-- 
+                                            <img alt="image" class="img-circle" ng-src="data:image/jpeg;base64,{{productCtrl.arrayBufferToBase64(product.picture.content)}}"
+                                            />
+                                            -->
+                                            <img alt="image" class="img-circle" ng-src="http://localhost:8080/api/rest/products/{{product.id}}/image">
+
+                                        </a>
                                     </td>
                                     <td class="project-actions col-md-1">
                                         <button type="button" class="btn btn-white btn-sm" ng-click="productCtrl.editProduct(product)" data-toggle="modal" data-target="#createProductModal">

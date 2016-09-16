@@ -44,16 +44,10 @@
                         </div>
                         <!-- IMAGE -->
                         <div class="col-sm-6">
-                            <!--<div class="form-group">
-                                <label>{{ 'PRODUCT_IMAGE' | translate }}</label>
-                                <input type="file" ngf-select ng-model="picFile" name="file" accept="image/*" ngf-max-size="2MB">   
-                                <img ngf-thumbnail="picFile" class="thumb"> <button ng-click="picFile = null" ng-show="picFile">Remove</button>
-                                <img ng-src="http://www.containersucher.com/assets/plugindata/w2dblgbb1ca3b3057e90d9af3e514539e33a22/pic1271913090.jpg" height="200"
-                                    width="200" alt="Description" />
-                            </div>-->
+                            <label>{{ 'PRODUCT_IMAGE' | translate }}</label>
                             <div class="fileinput fileinput-new" data-provides="fileinput">
                                 <span class="btn btn-default btn-file"><span class="fileinput-new">Select file</span>
-                                <span class="fileinput-exists">Change</span><input type="file" name="..." multiple ng-files="profileCtrl.getTheFiles($files)"
+                                <span class="fileinput-exists">Change</span><input type="file" name="..." multiple ng-files="productCtrl.getTheFiles($files)"
                             required/></span>
                                 <span class="fileinput-filename"></span>
                                 <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>

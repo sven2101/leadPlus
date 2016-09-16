@@ -67,7 +67,7 @@ public class User implements UserDetails {
 	private Role role;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private FileUpload profilPicture;
+	private FileUpload picture;
 
 	@Enumerated(EnumType.STRING)
 	private Language language;
@@ -143,12 +143,12 @@ public class User implements UserDetails {
 		return password;
 	}
 
-	public FileUpload getProfilPicture() {
-		return profilPicture;
+	public FileUpload getPicture() {
+		return picture;
 	}
 
-	public void setProfilPicture(FileUpload profilPicture) {
-		this.profilPicture = profilPicture;
+	public void setProfilPicture(FileUpload picture) {
+		this.picture = picture;
 	}
 
 	public Smtp getSmtp() {
@@ -211,7 +211,7 @@ public class User implements UserDetails {
 		result = prime * result + ((language == null) ? 0 : language.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((profilPicture == null) ? 0 : profilPicture.hashCode());
+		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
 		result = prime * result + ((smtp == null) ? 0 : smtp.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
@@ -256,10 +256,10 @@ public class User implements UserDetails {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (profilPicture == null) {
-			if (other.profilPicture != null)
+		if (picture == null) {
+			if (other.picture != null)
 				return false;
-		} else if (!profilPicture.equals(other.profilPicture))
+		} else if (!picture.equals(other.picture))
 			return false;
 		if (role != other.role)
 			return false;
@@ -278,9 +278,8 @@ public class User implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
-				+ ", email=" + email + ", password=" + password + ", role=" + role + ", profilPicture=" + profilPicture
-				+ ", language=" + language + ", smtp=" + smtp + ", enabled=" + enabled + "]";
+		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password="
+				+ password + ", role=" + role + ", profilPicture=" + picture + ", language=" + language + ", smtp=" + smtp + ", enabled=" + enabled + "]";
 	}
 
 }

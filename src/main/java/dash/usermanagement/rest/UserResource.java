@@ -109,8 +109,8 @@ public class UserResource {
 	@ApiOperation(value = "Get user Profile Picture.")
 	public ResponseEntity<?> getProfilePictureById(@PathVariable final long id) throws NotFoundException {
 		User user = userService.getById(id);
-		if (user != null && user.getProfilPicture() != null) {
-			byte[] body = user.getProfilPicture().getContent();
+		if (user != null && user.getPicture() != null) {
+			byte[] body = user.getPicture().getContent();
 			HttpHeaders header = new HttpHeaders();
 			header.setContentType(MediaType.MULTIPART_FORM_DATA);
 			header.setContentLength(body.length);

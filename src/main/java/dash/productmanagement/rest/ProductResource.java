@@ -19,8 +19,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,6 +79,21 @@ public class ProductResource {
 	public Product setImage(@PathVariable final long id, @RequestParam("file") MultipartFile file)
 			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		return productService.setImage(id, file);
+	}
+
+	@RequestMapping(value = "/{id}/image", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get user Product Picture.")
+	public ResponseEntity<?> getProductPictureById(@PathVariable final long id) throws NotFoundException {
+		Product product = productService.getById(id);
+		if (product != null && product.getPicture() != null) {
+			byte[] body = product.getPicture().getContent();
+			HttpHeaders header = new HttpHeaders();
+			header.setContentType(MediaType.MULTIPART_FORM_DATA);
+			header.setContentLength(body.length);
+			return new ResponseEntity<byte[]>(body, header, HttpStatus.OK);
+		}
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 
 	@ApiOperation(value = "Update a single product.", notes = "")

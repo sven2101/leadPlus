@@ -113,7 +113,7 @@ public class ProductService implements IProductService {
 	@Override
 	public Product setImage(final long id, MultipartFile multipartFile) throws NotFoundException, SaveFailedException, UpdateFailedException {
 		Product product = getById(id);
-		product.setFileUpload(fileUploadService.save(multipartFile));
-		return update(product);
+		product.setPicture(fileUploadService.save(multipartFile));
+		return save(product);
 	}
 }

@@ -4,11 +4,10 @@
 
 class FileUpload extends AbstractModel {
 
-    name: string;
+    filename: string;
     mimeType: string;
     size: number;
-    description: number;
-    deactivated: boolean;
+
     content: Array<any>;
 
     constructor() {

@@ -23,7 +23,7 @@ const ProfileServiceId: string = "ProfileService";
 
 class ProfileService {
 
-    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId];
+    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId];
 
     userResource;
     translate;
@@ -33,18 +33,20 @@ class ProfileService {
     passwordForm;
     fileResource;
     formdata;
+    q;
 
     oldPassword: string;
     newPassword1: string;
     newPassword2: string;
 
-    constructor($rootScope, toaster, $translate, UserResource, FileResource) {
+    constructor($rootScope, toaster, $translate, UserResource, FileResource, $q) {
         this.userResource = UserResource.resource;
         this.translate = $translate;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.fileResource = FileResource.resource;
         this.formdata = new FormData();
+        this.q = $q;
     }
 
     submitProfilInfoForm() {
@@ -78,6 +80,18 @@ class ProfileService {
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
         });
+    }
+
+    getById(): IPromise<User> {
+        let defer = this.q.defer();
+        let self = this;
+        this.userResource.getById({ id: this.rootScope.globals.user.id }).$promise.then(function (resultUser: User) {
+            console.log("User: ", resultUser);
+            defer.resolve(resultUser);
+        }, function (error: any) {
+            defer.reject(error);
+        });
+        return defer.promise;
     }
 
     getTheFiles($files) {
