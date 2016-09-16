@@ -1,5 +1,6 @@
 <div style="min-width:100px" class="text-center btn-group" role="group" aria-label="...">
-    <div class="btn-group" role="group" style="margin-left:-51px;min-height:34px;position: fixed;z-index: 10">
+    <!--  style="margin-left:-51px;min-height:34px;position: fixed;z-index: 10" -->
+    <div class="btn-group" role="group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa fa-wrench"></i>
            <span class="caret"></span>
@@ -39,7 +40,7 @@
                    <i class="fa fa-trash-o">&nbsp;</i>{{directiveData.translation.deleteWorkflowUnit}}
             </button>
             </li>
-            <li ng-if="type!='lead'>
+            <li ng-if="type!='lead'">
                 <button style="width: 100%; text-align: left;" class="btn btn-white" ng-disabled="directiveData.config.rollBackDisabled" ng-click="parent.rollBack(parent.processes[directiveData.process.id])"
                     title="{{directiveData.translation.rollBackWorkflowUnit}}">
                 <i class="fa fa-reply" aria-hidden="true"></i>
@@ -47,7 +48,8 @@
             </li>
         </ul>
     </div>
-    <div style="position: fixed;z-index: 10" ng-if="!directiveData.config.disablePinDropdown&&(type=='lead'|| type =='offer')"
+    <!-- style="position: fixed;z-index: 10" -->
+    <div ng-if="!directiveData.config.disablePinDropdown&&(type=='lead'|| type =='offer')"
         class="btn-group" role="group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
        <i class="fa fa-thumb-tack"></i>

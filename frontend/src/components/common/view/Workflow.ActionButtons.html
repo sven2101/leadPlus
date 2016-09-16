@@ -85,8 +85,8 @@
         title="{{'LEAD_PIN'| translate }}">
          <i class="fa fa-thumb-tack"></i>
     </button>
-    <div ng-style="type=='lead'?{'margin-left':'-62px','position': 'fixed','z-index': '10'}:{'margin-left':'-23px','position': 'fixed','z-index': '10'}"
-        ng-if="!directiveData.config.disablePinDropdown&&(type=='lead'|| type =='offer')" class="btn-group" role="group">
+    <!-- ng-style="type=='lead'?{'margin-left':'-62px','position': 'fixed','z-index': '10'}:{'margin-left':'-23px','position': 'fixed','z-index': '10'}" -->
+    <div ng-if="!directiveData.config.disablePinDropdown&&(type=='lead'|| type =='offer')" class="btn-group" role="group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
        <i class="fa fa-thumb-tack"></i>
       <span class="caret"></span>
