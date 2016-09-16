@@ -58,7 +58,7 @@ public class FileUploadService implements IFileUploadService {
 				file.setSize(multipartFile.getSize());
 				file.setMimeType(multipartFile.getContentType());
 				file.setSize(multipartFile.getSize());
-				file.setCroppedContent(cropImageSquare(file));
+				//				file.setCroppedContent(cropImageSquare(file));
 
 				return fileRepository.save(file);
 			} catch (Exception ex) {

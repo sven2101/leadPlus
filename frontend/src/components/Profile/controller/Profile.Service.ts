@@ -34,7 +34,7 @@ class ProfileService {
     fileResource;
     formdata;
     q;
-    user: User = new User();
+    user: User;
 
     oldPassword: string;
     newPassword1: string;
@@ -47,6 +47,8 @@ class ProfileService {
         this.rootScope = $rootScope;
         this.fileResource = FileResource.resource;
         this.formdata = new FormData();
+        this.user = new User();
+        this.user.picture = new FileUpload();
         this.q = $q;
     }
 

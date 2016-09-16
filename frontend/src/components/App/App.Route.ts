@@ -1,5 +1,6 @@
 /// <reference path="../app/App.Constants.ts" />
 /// <reference path="../app/App.Authentication.Service.ts" />
+/// <reference path="../Profile/controller/Profile.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -108,8 +109,8 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
     }])
-    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookieStoreId, $injectorId,
-        function ($location, $http, $rootScope, Auth, $cookieStore, $injector) {
+    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookieStoreId, $injectorId, ProfileServiceId,
+        function ($location, $http, $rootScope, Auth, $cookieStore, $injector, ProfileService) {
             $rootScope.globals = $cookieStore.get("globals") || {};
             if ($rootScope.globals.user) {
                 $http.defaults.headers.common["Authorization"] = "Basic "
