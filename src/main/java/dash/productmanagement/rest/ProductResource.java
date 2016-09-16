@@ -71,19 +71,19 @@ public class ProductResource {
 		return productService.save(product);
 	}
 
-	@ApiOperation(value = "Update a single product.", notes = "")
-	@RequestMapping(method = RequestMethod.PUT)
-	@ResponseStatus(HttpStatus.OK)
-	public Product update(@ApiParam(required = true) @RequestBody @Valid final Product product) throws UpdateFailedException {
-		return productService.update(product);
-	}
-
 	@RequestMapping(value = "/{id}/image", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Post a file. ", notes = "")
 	public Product setImage(@PathVariable final long id, @RequestParam("file") MultipartFile file)
 			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		return productService.setImage(id, file);
+	}
+
+	@ApiOperation(value = "Update a single product.", notes = "")
+	@RequestMapping(method = RequestMethod.PUT)
+	@ResponseStatus(HttpStatus.OK)
+	public Product update(@ApiParam(required = true) @RequestBody @Valid final Product product) throws UpdateFailedException {
+		return productService.update(product);
 	}
 
 	@ApiOperation(value = "Delete a single product.", notes = "")

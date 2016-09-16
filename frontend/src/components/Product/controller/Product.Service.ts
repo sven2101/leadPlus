@@ -1,6 +1,7 @@
 /// <reference path="../../Product/model/Product.Model.ts" />
 /// <reference path="../../app/App.Constants.ts" />
-/// <reference path="../../app/App.Common.ts" />
+/// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../Common/model/Promise.Interface.ts" />
 /// <reference path="../../app/App.Resource.ts" />
 
 /*******************************************************************************
@@ -26,6 +27,7 @@ class ProductService {
     translate;
     productResource;
     q;
+    formdata;
 
     constructor(toaster, $translate, ProductResource, $q) {
         this.toaster = toaster;
@@ -33,6 +35,7 @@ class ProductService {
         this.q = $q;
         this.productResource = ProductResource.resource;
         this.products = new Array<Product>();
+        this.formdata = new FormData();
         this.getAllProducts();
     }
 
@@ -41,8 +44,13 @@ class ProductService {
         if (insert) {
             product.timestamp = newTimestamp();
             this.productResource.createProduct(product).$promise.then(function (result: Product) {
-                self.products.push(result);
-
+                console.log("image", self.formdata);
+                self.productResource.uploadImage({ id: result.id }, self.formdata).$promise.then(function (result: Product) {
+                    self.products.push(result);
+                    self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
+                }, function () {
+                    self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
+                });
             });
         } else {
             this.productResource.updateProduct(product).$promise.then(function (result: Product) {
@@ -71,6 +79,10 @@ class ProductService {
             }
         }
         return temp;
+    }
+
+    getTheFiles($files) {
+        this.formdata.append("file", $files[0]);
     }
 }
 

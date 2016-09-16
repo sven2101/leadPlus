@@ -54,6 +54,10 @@ class ProductController {
         this.productService.saveProduct(this.currentProduct, this.isCurrentProductNew);
     }
 
+    getTheFiles($files) {
+        this.productService.getTheFiles($files);
+    }
+
     getLocalTimestamp: any = function (product: Product) {
         return toLocalDate(product.timestamp);
     };

@@ -168,11 +168,11 @@ class UserResource {
             update: { url: "/users", method: "PUT" },
             changePassword: { url: "/users/:id/pw", method: "POST" },
             setProfilePicture: {
-                url: "/users/:id/profile/picture", params: {file: "@file"}, method: "POST", transformRequest: angular.identity,
+                url: "/users/:id/profile/picture", params: { file: "@file" }, method: "POST", transformRequest: angular.identity,
                 headers: { "Content-Type": undefined }
             },
             getProfilePicture: {
-                url: "/users/:id/profile/picture", params: {file: "@file"}, method: "GET", transformRequest: angular.identity,
+                url: "/users/:id/profile/picture", params: { file: "@file" }, method: "GET", transformRequest: angular.identity,
                 headers: { "Content-Type": undefined }
             },
             getAll: { url: "/users/all", method: "GET", isArray: true },
@@ -247,7 +247,11 @@ class ProductResource {
             getAllProducts: { url: "/api/rest/products", method: "GET", isArray: true },
             createProduct: { url: "/api/rest/products", method: "POST" },
             updateProduct: { url: "/api/rest/products", method: "PUT" },
-            deleteProduct: { url: "/api/rest/products", method: "DELETE" }
+            deleteProduct: { url: "/api/rest/products", method: "DELETE" },
+            uploadImage: {
+                url: "/api/rest/products/:id/image", params: { file: "@file" }, method: "POST", transformRequest: angular.identity,
+                headers: { "Content-Type": undefined }
+            },
         });
     }
 }
