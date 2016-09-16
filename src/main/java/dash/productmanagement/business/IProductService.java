@@ -19,6 +19,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
@@ -37,6 +38,8 @@ public interface IProductService {
 	public Product save(final Product product) throws SaveFailedException;
 
 	public Product update(final Product product) throws UpdateFailedException;
+
+	public Product setImage(final long id, final MultipartFile multipartFile) throws NotFoundException, SaveFailedException, UpdateFailedException;
 
 	public void delete(final Long id) throws DeleteFailedException;
 

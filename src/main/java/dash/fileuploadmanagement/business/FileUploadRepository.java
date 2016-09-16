@@ -11,12 +11,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.filemanagement.business;
+package dash.fileuploadmanagement.business;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import dash.filemanagement.domain.File;
+import dash.fileuploadmanagement.domain.FileUpload;
 
-public interface FileRepository extends JpaRepository<File, Long> {
+public interface FileUploadRepository extends JpaRepository<FileUpload, Long> {
 
 }

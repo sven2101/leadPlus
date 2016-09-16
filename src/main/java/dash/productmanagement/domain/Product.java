@@ -30,7 +30,7 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import dash.filemanagement.domain.File;
+import dash.fileuploadmanagement.domain.FileUpload;
 
 @Entity
 public class Product {
@@ -55,7 +55,7 @@ public class Product {
 	private double priceNetto;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private File image;
+	private FileUpload fileUpload;
 
 	public ProductState getProductState() {
 		return productState;
@@ -81,12 +81,12 @@ public class Product {
 		this.timestamp = timestamp;
 	}
 
-	public File getImage() {
-		return image;
+	public FileUpload getFileUpload() {
+		return fileUpload;
 	}
 
-	public void setImage(File image) {
-		this.image = image;
+	public void setFileUpload(FileUpload fileUpload) {
+		this.fileUpload = fileUpload;
 	}
 
 	public void setId(long id) {
@@ -132,7 +132,7 @@ public class Product {
 		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((image == null) ? 0 : image.hashCode());
+		result = prime * result + ((fileUpload == null) ? 0 : fileUpload.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(priceNetto);
@@ -160,10 +160,10 @@ public class Product {
 			return false;
 		if (id != other.id)
 			return false;
-		if (image == null) {
-			if (other.image != null)
+		if (fileUpload == null) {
+			if (other.fileUpload != null)
 				return false;
-		} else if (!image.equals(other.image))
+		} else if (!fileUpload.equals(other.fileUpload))
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -184,9 +184,8 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", productState="
-				+ productState + ", timestamp=" + timestamp + ", deactivated=" + deactivated + ", priceNetto="
-				+ priceNetto + ", image=" + image + "]";
+		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", productState=" + productState + ", timestamp=" + timestamp
+				+ ", deactivated=" + deactivated + ", priceNetto=" + priceNetto + ", fileUpload=" + fileUpload + "]";
 	}
 
 }

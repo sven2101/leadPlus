@@ -33,6 +33,7 @@ const $routeProviderId: string = "$routeProvider";
 const $httpProviderId: string = "$httpProvider";
 const $uibModalId: string = "$uibModal";
 const $injectorId: string = "$injector";
+const $sceId: string = "$sce";
 
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";
@@ -108,6 +109,7 @@ const moduleNgImgCrop: string = "ngImgCrop";
 const moduleHighchartsNg: string = "highcharts-ng";
 const moduleUIBootstrap: string = "ui.bootstrap";
 const moduleSummernote: string = "summernote";
+const moduleDropzone: string = "dropzone";
 
 const workflowLead: string = "LEAD";
 const workflowOffer: string = "OFFER";

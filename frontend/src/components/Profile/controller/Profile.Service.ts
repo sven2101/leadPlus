@@ -71,7 +71,7 @@ class ProfileService {
         });
     }
 
-    uploadFiles() {
+    uploadFiles(file: any) {
         let self = this;
         this.userResource.setProfilePicture({ id: this.rootScope.globals.user.id }, this.formdata).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));

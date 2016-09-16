@@ -11,7 +11,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.filemanagement.domain;
+package dash.fileuploadmanagement.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,21 +19,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class File {
+public class FileUpload {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	private long id;
 
-	private String name;
+	private String filename;
 	private String mimeType;
 	private long size;
-	private String description;
-	private boolean deaktiviert;
 
 	private byte[] content;
 
-	public File() {
+	public FileUpload() {
 
 	}
 
@@ -41,12 +39,12 @@ public class File {
 		return id;
 	}
 
-	public String getName() {
-		return name;
+	public String getFilename() {
+		return filename;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFilename(String filename) {
+		this.filename = filename;
 	}
 
 	public String getMimeType() {
@@ -63,22 +61,6 @@ public class File {
 
 	public void setSize(long size) {
 		this.size = size;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public boolean isDeaktiviert() {
-		return deaktiviert;
-	}
-
-	public void setDeaktiviert(boolean deaktiviert) {
-		this.deaktiviert = deaktiviert;
 	}
 
 	public byte[] getContent() {

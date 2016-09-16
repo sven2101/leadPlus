@@ -2,11 +2,10 @@
     <div class="sidebar-collapse">
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
-                <div class="dropdown profile-element"> <span>
-                            <!--<img alt="image" class="img-circle" src="assets/img/guest.png"/>
-                             <img ng-src="data:image/JPEG;base64,{{globals.user.profilePicture}}">-->
-                             <img class="img-circle" height="80px" weigth="80px" src="http://localhost:8080/users/1/profile/picture"/>
-                             </span>
+                <div class="dropdown profile-element">
+                    <span>
+                        <img class="img-circle" height="80px" weigth="80px" ng-src="{{globals.user.pictureLink}}"/>
+                    </span>
                     <a data-toggle="dropdown" class="dropdown-toggle">
                         <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{globals.user.username}}</strong>
                              </span> <span class="text-muted text-xs block">{{ 'TITLE' | translate }}<b

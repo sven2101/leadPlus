@@ -25,13 +25,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import dash.exceptions.DeleteFailedException;
+import dash.exceptions.EmailAlreadyExistsException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.exceptions.UsernameAlreadyExistsException;
 import dash.productmanagement.business.IProductService;
 import dash.productmanagement.domain.Product;
 import io.swagger.annotations.Api;
@@ -72,6 +76,14 @@ public class ProductResource {
 	@ResponseStatus(HttpStatus.OK)
 	public Product update(@ApiParam(required = true) @RequestBody @Valid final Product product) throws UpdateFailedException {
 		return productService.update(product);
+	}
+
+	@RequestMapping(value = "/{id}/image", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Post a file. ", notes = "")
+	public Product setImage(@PathVariable final long id, @RequestParam("file") MultipartFile file)
+			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+		return productService.setImage(id, file);
 	}
 
 	@ApiOperation(value = "Delete a single product.", notes = "")

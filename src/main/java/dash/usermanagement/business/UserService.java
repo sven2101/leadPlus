@@ -42,7 +42,7 @@ import dash.exceptions.RegisterFailedException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
-import dash.filemanagement.business.IFileService;
+import dash.fileuploadmanagement.business.IFileUploadService;
 import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
@@ -66,7 +66,7 @@ public class UserService implements IUserService {
 	private Validation validation;
 
 	@Autowired
-	private IFileService fileService;
+	private IFileUploadService fileUploadService;
 
 	@Override
 	public List<User> getAll() {
@@ -293,7 +293,7 @@ public class UserService implements IUserService {
 	public User setProfilePicture(long id, MultipartFile file)
 			throws NotFoundException, SaveFailedException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		User user = getById(id);
-		user.setProfilPicture(fileService.save(file));
+		user.setProfilPicture(fileUploadService.save(file));
 		return update(user);
 	}
 

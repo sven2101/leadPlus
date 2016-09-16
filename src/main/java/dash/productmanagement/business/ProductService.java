@@ -29,11 +29,13 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.fileuploadmanagement.business.IFileUploadService;
 import dash.productmanagement.domain.Product;
 
 @Service
@@ -44,6 +46,9 @@ public class ProductService implements IProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
+
+	@Autowired
+	private IFileUploadService fileUploadService;
 
 	@Override
 	public List<Product> getAll() {
@@ -67,8 +72,7 @@ public class ProductService implements IProductService {
 			return productRepository.save(product);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(SAVE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					sfex);
+			logger.error(SAVE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
 			throw sfex;
 		}
 	}
@@ -85,8 +89,7 @@ public class ProductService implements IProductService {
 
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			logger.error(UPDATE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					ufex);
+			logger.error(UPDATE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
 			throw ufex;
 		}
 	}
@@ -97,15 +100,20 @@ public class ProductService implements IProductService {
 			try {
 				productRepository.delete(id);
 			} catch (EmptyResultDataAccessException erdaex) {
-				logger.error(DELETE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + erdaex.getMessage(),
-						erdaex);
+				logger.error(DELETE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + erdaex.getMessage(), erdaex);
 				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
 			}
 		} else {
 			DeleteFailedException dfex = new DeleteFailedException(DELETE_FAILED_EXCEPTION);
-			logger.error(DELETE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					dfex);
+			logger.error(DELETE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
 			throw dfex;
 		}
+	}
+
+	@Override
+	public Product setImage(final long id, MultipartFile multipartFile) throws NotFoundException, SaveFailedException, UpdateFailedException {
+		Product product = getById(id);
+		product.setFileUpload(fileUploadService.save(multipartFile));
+		return update(product);
 	}
 }

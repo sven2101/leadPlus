@@ -32,7 +32,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import dash.filemanagement.domain.File;
+import dash.fileuploadmanagement.domain.FileUpload;
 import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.settings.language.Language;
 
@@ -61,7 +61,7 @@ public class User implements UserDetails {
 	private Role role;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private File profilPicture;
+	private FileUpload profilPicture;
 
 	@Enumerated(EnumType.STRING)
 	private Language language;
@@ -113,11 +113,11 @@ public class User implements UserDetails {
 		return password;
 	}
 
-	public File getProfilPicture() {
+	public FileUpload getProfilPicture() {
 		return profilPicture;
 	}
 
-	public void setProfilPicture(File profilPicture) {
+	public void setProfilPicture(FileUpload profilPicture) {
 		this.profilPicture = profilPicture;
 	}
 

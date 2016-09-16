@@ -64,8 +64,8 @@
                         </div>
                         <div class="form-group" ng-class="{ 'has-error' : profileCtrl.profileService.passwordForm.newPassword1.$invalid && !profileCtrl.profileService.passwordForm.newPassword1.$pristine }">
                             <label>{{ 'COMMON_NEW_PASSWORD' | translate }}</label>
-                            <input type="password" name="newPassword1" id="newPassword1" class="form-control" ng-model="profileCtrl.profileService.newPassword1" required
-                                ng-minlength="6" />
+                            <input type="password" name="newPassword1" id="newPassword1" class="form-control" ng-model="profileCtrl.profileService.newPassword1"
+                                required ng-minlength="6" />
                             <p ng-show="profileCtrl.profileService.passwordForm.newPassword1.$invalid && !profileCtrl.profileService.passwordForm.newPassword1.$pristine"
                                 class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</p>
                         </div>
@@ -91,28 +91,41 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>{{ 'PROFILE_PICTURE_MANAGEMENT' | translate }}</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#">Config option 1</a>
+                            </li>
+                            <li><a href="#">Config option 2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
                 </div>
                 <div class="ibox-content">
-                    <div class="fileinput fileinput-new" data-provides="fileinput">
-                        <div>Select an image file: <input type="file" id="fileInput" /></div>
-                        <div class="cropArea">
-                            <img-crop image="myImage" result-image="myCroppedImage"></img-crop>
+                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                            <span class="fileinput-filename"></span>
                         </div>
-                        <div>Cropped Image:</div>
-                        <div><img ng-src="{{myCroppedImage}}" /></div>
-                        <br/><br/><br/>
-
-                        
-                        
-                        <input type="file" id="file1" name="file" multiple ng-files="profileCtrl.getTheFiles($files)" />
-                        <br/>
-                        <button class="btn btn-success" type="button" ng-click="profileCtrl.uploadFiles()" value="Upload">
-                            <i class="fa fa-save"></i>Upload
-                        </button>
+                        <span class="input-group-addon btn btn-default btn-file"><span class="fileinput-new">Select file</span>
+                        <span class="fileinput-exists">Change</span><input type="file" name="file" multiple ng-files="profileCtrl.getTheFiles($files)"
+                            required/></span>
+                        <a href="#" class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
                     </div>
+                    <br/>
+                    <button class="btn btn-success" type="button" ng-click="profileCtrl.uploadFiles()" value="Upload" ng-disabled="profileCtrl.fileSelected == false">
+                        <i class="fa fa-save"></i>Upload
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>

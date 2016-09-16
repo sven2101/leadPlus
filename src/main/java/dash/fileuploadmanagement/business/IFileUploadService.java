@@ -11,7 +11,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.filemanagement.business;
+package dash.fileuploadmanagement.business;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,17 +19,15 @@ import org.springframework.web.multipart.MultipartFile;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
-import dash.filemanagement.domain.File;
+import dash.fileuploadmanagement.domain.FileUpload;
 
 @Service
-public interface IFileService {
+public interface IFileUploadService {
 
-	public File save(final MultipartFile multipartFile) throws SaveFailedException;
+	public FileUpload save(final MultipartFile multipartFile) throws SaveFailedException;
 
 	public void delete(final long id) throws DeleteFailedException;
 
-	public File getById(final long id) throws NotFoundException;
-
-	public File saveEmailTemplate(final MultipartFile multipartFile) throws SaveFailedException;
+	public FileUpload getById(final long id) throws NotFoundException;
 
 }

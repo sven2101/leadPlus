@@ -168,7 +168,11 @@ class UserResource {
             update: { url: "/users", method: "PUT" },
             changePassword: { url: "/users/:id/pw", method: "POST" },
             setProfilePicture: {
-                url: "/users/:id/profile/picture", method: "POST", transformRequest: angular.identity,
+                url: "/users/:id/profile/picture", params: {file: "@file"}, method: "POST", transformRequest: angular.identity,
+                headers: { "Content-Type": undefined }
+            },
+            getProfilePicture: {
+                url: "/users/:id/profile/picture", params: {file: "@file"}, method: "GET", transformRequest: angular.identity,
                 headers: { "Content-Type": undefined }
             },
             getAll: { url: "/users/all", method: "GET", isArray: true },
@@ -342,7 +346,7 @@ class TemplateResource {
                 url: "/api/rest/templates/:templateId/offers/:offerId/pdf/generate", method: "POST", params: {
                     templateId: "@templateId",
                     offerId: "@offerId"
-                }
+                }, responseType: "arraybuffer"
             }
         });
     }

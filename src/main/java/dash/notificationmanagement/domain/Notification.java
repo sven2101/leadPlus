@@ -13,14 +13,14 @@
  *******************************************************************************/
 package dash.notificationmanagement.domain;
 
-import dash.filemanagement.domain.File;
+import dash.fileuploadmanagement.domain.FileUpload;
 
 public class Notification {
 
 	private String recipient;
 	private String subject;
 	private String content;
-	private File attachement;
+	private FileUpload attachement;
 
 	public Notification() {
 	}
@@ -49,11 +49,11 @@ public class Notification {
 		this.content = content;
 	}
 
-	public File getAttachement() {
+	public FileUpload getAttachement() {
 		return attachement;
 	}
 
-	public void setAttachement(File attachement) {
+	public void setAttachement(FileUpload attachement) {
 		this.attachement = attachement;
 	}
 

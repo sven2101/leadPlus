@@ -26,10 +26,10 @@ class ProfileController {
     myImage = "";
     myCroppedImage = "";
     profileService;
+    fileSelected: boolean = false;
 
     constructor(ProfileService: ProfileService) {
         this.profileService = ProfileService;
-        angular.element(document.querySelector("#fileInput")).on("change", this.handleFileSelect);
     }
 
     submitProfilInfoForm() {
@@ -45,21 +45,10 @@ class ProfileController {
     }
 
     getTheFiles($files) {
+        this.fileSelected = true;
+        console.log("fileSelected", this.fileSelected);
         this.profileService.getTheFiles($files);
     }
-
-    handleFileSelect(evt) {
-        let file = evt.currentTarget.files[0];
-        let reader = new FileReader();
-        let self = this;
-        reader.onload = function (evt) {
-            this.$apply(function ($scope) {
-               // self.myImage = evt.target.result;
-            });
-        };
-        reader.readAsDataURL(file);
-    }
-
 }
 
 angular.module(moduleProfile, [ngResourceId]).controller(ProfileControllerId, ProfileController);

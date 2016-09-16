@@ -25,7 +25,7 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.common.AbstractWorkflow;
-import dash.filemanagement.domain.File;
+import dash.fileuploadmanagement.domain.FileUpload;
 
 @Entity
 public class Offer extends AbstractWorkflow {
@@ -38,7 +38,7 @@ public class Offer extends AbstractWorkflow {
 	private double offerPrice;
 
 	@OneToOne
-	private File offer;
+	private FileUpload offer;
 
 	public Offer() {
 
@@ -60,11 +60,11 @@ public class Offer extends AbstractWorkflow {
 		this.deliveryDate = deliveryDate;
 	}
 
-	public File getOffer() {
+	public FileUpload getOffer() {
 		return offer;
 	}
 
-	public void setOffer(File offer) {
+	public void setOffer(FileUpload offer) {
 		this.offer = offer;
 	}
 

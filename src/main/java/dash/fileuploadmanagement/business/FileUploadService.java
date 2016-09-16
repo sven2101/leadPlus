@@ -11,7 +11,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.filemanagement.business;
+package dash.fileuploadmanagement.business;
 
 import static dash.Constants.BECAUSE_OF_ILLEGAL_ID;
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
@@ -30,40 +30,38 @@ import org.springframework.web.multipart.MultipartFile;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
-import dash.filemanagement.domain.File;
+import dash.fileuploadmanagement.domain.FileUpload;
 
 @Service
-public class FileService implements IFileService {
+public class FileUploadService implements IFileUploadService {
 
-	private static final Logger logger = Logger.getLogger(FileService.class);
+	private static final Logger logger = Logger.getLogger(FileUploadService.class);
 
 	@Autowired
-	private FileRepository fileRepository;
+	private FileUploadRepository fileRepository;
 
 	@Override
-	public File save(final MultipartFile multipartFile) throws SaveFailedException {
+	public FileUpload save(final MultipartFile multipartFile) throws SaveFailedException {
 		if (multipartFile != null) {
 			try {
 
-				File file = new File();
-				file.setName(multipartFile.getOriginalFilename());
-				file.setDescription("");
+				FileUpload file = new FileUpload();
+				file.setFilename(multipartFile.getOriginalFilename());
 				file.setContent(multipartFile.getBytes());
 				file.setSize(multipartFile.getSize());
 				file.setMimeType(multipartFile.getContentType());
 				file.setSize(multipartFile.getSize());
-				file.setDeaktiviert(false);
 
 				return fileRepository.save(file);
 			} catch (Exception ex) {
-				logger.error(FileService.class.getSimpleName() + ex.getMessage(), ex);
+				logger.error(FileUploadService.class.getSimpleName() + ex.getMessage(), ex);
 				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			}
 		} else
 
 		{
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(FILE_NOT_FOUND + FileService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
+			logger.error(FILE_NOT_FOUND + FileUploadService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
 			throw sfex;
 		}
 	}
@@ -74,57 +72,30 @@ public class FileService implements IFileService {
 			try {
 				fileRepository.delete(id);
 			} catch (EmptyResultDataAccessException erdaex) {
-				logger.error(FILE_NOT_FOUND + FileService.class.getSimpleName() + erdaex.getMessage(), erdaex);
+				logger.error(FILE_NOT_FOUND + FileUploadService.class.getSimpleName() + erdaex.getMessage(), erdaex);
 				throw new DeleteFailedException(DELETE_FAILED_EXCEPTION);
 			}
 		} else {
 			DeleteFailedException dfex = new DeleteFailedException(DELETE_FAILED_EXCEPTION);
-			logger.error(FILE_NOT_FOUND + FileService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
+			logger.error(FILE_NOT_FOUND + FileUploadService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, dfex);
 			throw dfex;
 		}
 
 	}
 
 	@Override
-	public File getById(final long id) throws NotFoundException {
+	public FileUpload getById(final long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
 				return fileRepository.findOne(id);
 			} catch (Exception ex) {
-				logger.error(FILE_NOT_FOUND + FileService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
+				logger.error(FILE_NOT_FOUND + FileUploadService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw new NotFoundException(FILE_NOT_FOUND);
 			}
 		} else {
 			NotFoundException nfex = new NotFoundException(FILE_NOT_FOUND);
-			logger.error(FILE_NOT_FOUND + FileService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
+			logger.error(FILE_NOT_FOUND + FileUploadService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
 			throw nfex;
-		}
-	}
-
-	@Override
-	public File saveEmailTemplate(final MultipartFile multipartFile) throws SaveFailedException {
-		if (multipartFile != null) {
-			try {
-
-				File file = new File();
-				file.setName(multipartFile.getOriginalFilename());
-				file.setDescription("Template");
-				file.setContent(multipartFile.getBytes());
-				file.setSize(multipartFile.getSize());
-				file.setMimeType(multipartFile.getContentType());
-				file.setSize(multipartFile.getSize());
-				file.setDeaktiviert(false);
-
-				System.out.println("File" + file.toString());
-				return fileRepository.save(file);
-			} catch (Exception ex) {
-				logger.error(FileService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			}
-		} else {
-			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(FILE_NOT_FOUND + FileService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
-			throw sfex;
 		}
 	}
 

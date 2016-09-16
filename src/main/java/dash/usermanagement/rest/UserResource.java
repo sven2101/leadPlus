@@ -107,13 +107,16 @@ public class UserResource {
 	@RequestMapping(value = "/{id}/profile/picture", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get user Profile Picture.")
-	public ResponseEntity<byte[]> getProfilePictureById(@PathVariable final long id) throws NotFoundException {
-		byte[] body = userService.getById(id).getProfilPicture().getContent();
-		HttpHeaders header = new HttpHeaders();
-		header.setContentType(MediaType.MULTIPART_FORM_DATA);
-		header.setContentLength(body.length);
-
-		return new ResponseEntity<byte[]>(body, header, HttpStatus.OK);
+	public ResponseEntity<?> getProfilePictureById(@PathVariable final long id) throws NotFoundException {
+		User user = userService.getById(id);
+		if (user != null && user.getProfilPicture() != null) {
+			byte[] body = user.getProfilPicture().getContent();
+			HttpHeaders header = new HttpHeaders();
+			header.setContentType(MediaType.MULTIPART_FORM_DATA);
+			header.setContentLength(body.length);
+			return new ResponseEntity<byte[]>(body, header, HttpStatus.OK);
+		}
+		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 	}
 
 	@RequestMapping(value = "/{id}/profile/picture", method = RequestMethod.POST)

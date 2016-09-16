@@ -55,7 +55,7 @@ class AuthService {
                             role: data.role,
                             email: data.email,
                             language: data.language,
-                            profilePicture: data.profilePicture,
+                            pictureLink: "http://localhost:8080/users/" + data.id + "/profile/picture",
                             smtp: data.smtp,
                             authorization: authorization
                         }

@@ -184,12 +184,13 @@ public class TemplateService implements ITemplateService {
 
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try {
-			document.save("d:\\abc.pdf");
+			document.save(out);
 			document.close();
 		} catch (Exception ex) {
 			logger.error(ex);
 		}
-		return null;
+
+		return out.toByteArray();
 
 	}
 }

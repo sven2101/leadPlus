@@ -24,7 +24,7 @@ const TemplateServiceId: string = "TemplateService";
 
 class TemplateService {
 
-    private $inject = [toasterId, $translateId, TemplateResourceId, $uibModalId, $qId, $windowId];
+    private $inject = [toasterId, $translateId, TemplateResourceId, $uibModalId, $qId, $windowId, $sceId];
 
     templateResource;
 
@@ -33,9 +33,11 @@ class TemplateService {
     uibModal;
     q;
     window;
+    sce;
+    content: any;
     templates: Array<Template>;
 
-    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q, $window) {
+    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q, $window, $sce) {
         this.toaster = toaster;
         this.translate = $translate;
         this.uibModal = $uibModal;
@@ -122,6 +124,7 @@ class TemplateService {
             console.log(result);
             let file = new Blob([result], { type: "application/pdf" });
             let fileURL = URL.createObjectURL(file);
+
             self.window.open(fileURL);
             defer.resolve(result);
         }, function (error: any) {
