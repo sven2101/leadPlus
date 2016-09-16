@@ -26,6 +26,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -34,11 +37,15 @@ import dash.processmanagement.request.Request;
 import dash.usermanagement.domain.User;
 
 @Entity
+@SQLDelete(sql = "UPDATE comment SET deleted = '1' WHERE id = ?")
+@Where(clause = "deleted <> '1'")
 public class Comment implements Request {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	private boolean deleted;
 
 	@ManyToOne
 	@JoinColumn(name = "creator_fk", nullable = false)
@@ -59,6 +66,14 @@ public class Comment implements Request {
 
 	public Comment() {
 
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public Long getId() {
@@ -108,7 +123,9 @@ public class Comment implements Request {
 		int result = 1;
 		result = prime * result + ((commentText == null) ? 0 : commentText.hashCode());
 		result = prime * result + ((creator == null) ? 0 : creator.hashCode());
+		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((process == null) ? 0 : process.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		return result;
 	}
@@ -132,10 +149,17 @@ public class Comment implements Request {
 				return false;
 		} else if (!creator.equals(other.creator))
 			return false;
+		if (deleted != other.deleted)
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
+			return false;
+		if (process == null) {
+			if (other.process != null)
+				return false;
+		} else if (!process.equals(other.process))
 			return false;
 		if (timestamp == null) {
 			if (other.timestamp != null)
@@ -147,8 +171,8 @@ public class Comment implements Request {
 
 	@Override
 	public String toString() {
-		return "Comment [id=" + id + ", creator=" + creator + ", commentText=" + commentText + ", timestamp="
-				+ timestamp + "]";
+		return "Comment [id=" + id + ", deleted=" + deleted + ", creator=" + creator + ", process=" + process
+				+ ", commentText=" + commentText + ", timestamp=" + timestamp + "]";
 	}
 
 }

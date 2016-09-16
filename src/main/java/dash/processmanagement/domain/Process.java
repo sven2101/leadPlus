@@ -28,6 +28,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import dash.commentmanagement.domain.Comment;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
@@ -36,11 +39,17 @@ import dash.statusmanagement.domain.Status;
 import dash.usermanagement.domain.User;
 
 @Entity
+// Override the default Hibernation delete and set the deleted flag rather than
+// deleting the record from the db.
+@SQLDelete(sql = "UPDATE process SET deleted = '1' WHERE id = ?")
+@Where(clause = "deleted <> '1'")
 public class Process {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	private boolean deleted;
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "lead_fk", nullable = true)
@@ -74,6 +83,14 @@ public class Process {
 		this.sale = null;
 		this.status = Status.OPEN;
 		this.processor = null;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	public Long getId() {
@@ -137,6 +154,7 @@ public class Process {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
+		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lead == null) ? 0 : lead.hashCode());
 		result = prime * result + ((offer == null) ? 0 : offer.hashCode());
@@ -159,6 +177,8 @@ public class Process {
 			if (other.comments != null)
 				return false;
 		} else if (!comments.equals(other.comments))
+			return false;
+		if (deleted != other.deleted)
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -192,8 +212,8 @@ public class Process {
 
 	@Override
 	public String toString() {
-		return "Process [id=" + id + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale + ", comments=" + comments
-				+ ", status=" + status + ", processor=" + processor + "]";
+		return "Process [id=" + id + ", deleted=" + deleted + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale
+				+ ", comments=" + comments + ", status=" + status + ", processor=" + processor + "]";
 	}
 
 }

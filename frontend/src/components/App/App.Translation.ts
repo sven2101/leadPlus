@@ -214,7 +214,7 @@ function config($translateProvider) {
             OFFER_TAB_FILES: "Angebote - Dateien",
             OFFER_TAB_TEMPLATES: "Angebote - Vorlagen",
             OFFER_GENERATION_AND_SENDING: "Angebot generieren und versenden",
-            OFFER_ROLLBACK: "Zurücksetzen zu Angebot",
+            OFFER_ROLLBACK: "Zurücksetzen zu Anfrage",
 
             // Define all offer elements
             SALE_SALES: "Verkäufe",

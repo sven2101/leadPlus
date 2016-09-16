@@ -21,16 +21,23 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.common.AbstractWorkflow;
 
 @Entity
+@SQLDelete(sql = "UPDATE order_position SET deleted = '1' WHERE id = ?")
+@Where(clause = "deleted <> '1'")
 public class OrderPosition {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+
+	private boolean deleted;
 
 	@ManyToOne
 	private Product product;
@@ -88,11 +95,20 @@ public class OrderPosition {
 		this.price = price;
 	}
 
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + amount;
+		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + (int) (id ^ (id >>> 32));
 		long temp;
 		temp = Double.doubleToLongBits(price);
@@ -112,6 +128,8 @@ public class OrderPosition {
 		OrderPosition other = (OrderPosition) obj;
 		if (amount != other.amount)
 			return false;
+		if (deleted != other.deleted)
+			return false;
 		if (id != other.id)
 			return false;
 		if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
@@ -126,7 +144,8 @@ public class OrderPosition {
 
 	@Override
 	public String toString() {
-		return "OrderPosition [id=" + id + ", product=" + product + ", amount=" + amount + ", price=" + price + "]";
+		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", product=" + product + ", workflow=" + workflow
+				+ ", amount=" + amount + ", price=" + price + "]";
 	}
 
 }

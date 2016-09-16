@@ -26,9 +26,14 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
+@SQLDelete(sql = "UPDATE customer SET deleted = '1' WHERE id = ?")
+@Where(clause = "deleted <> '1'")
 public class Customer {
 
 	@Id
@@ -38,6 +43,7 @@ public class Customer {
 	@Enumerated(EnumType.STRING)
 	private Title title;
 
+	private boolean deleted;
 	private String firstname;
 	private String lastname;
 	private String company;
@@ -135,12 +141,26 @@ public class Customer {
 		this.timestamp = timestamp;
 	}
 
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((company == null) ? 0 : company.hashCode());
+		result = prime * result + (deactivated ? 1231 : 1237);
+		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
@@ -169,6 +189,10 @@ public class Customer {
 			if (other.company != null)
 				return false;
 		} else if (!company.equals(other.company))
+			return false;
+		if (deactivated != other.deactivated)
+			return false;
+		if (deleted != other.deleted)
 			return false;
 		if (email == null) {
 			if (other.email != null)
@@ -204,9 +228,9 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", title=" + title + ", firstname=" + firstname + ", lastname=" + lastname
-				+ ", company=" + company + ", email=" + email + ", phone=" + phone + ", address=" + address
-				+ ", timestamp=" + timestamp + "]";
+		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname
+				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone
+				+ ", address=" + address + ", deactivated=" + deactivated + ", timestamp=" + timestamp + "]";
 	}
 
 }

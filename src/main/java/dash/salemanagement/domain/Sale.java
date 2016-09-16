@@ -2,9 +2,14 @@ package dash.salemanagement.domain;
 
 import javax.persistence.Entity;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import dash.common.AbstractWorkflow;
 
 @Entity
+@SQLDelete(sql = "UPDATE sale SET deleted = '1' WHERE id = ?")
+@Where(clause = "deleted <> '1'")
 public class Sale extends AbstractWorkflow {
 
 	private double saleTurnover;

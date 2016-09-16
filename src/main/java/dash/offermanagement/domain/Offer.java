@@ -22,12 +22,17 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.common.AbstractWorkflow;
 import dash.fileuploadmanagement.domain.FileUpload;
 
 @Entity
+@SQLDelete(sql = "UPDATE offer SET deleted = '1' WHERE id = ?")
+@Where(clause = "deleted <> '1'")
 public class Offer extends AbstractWorkflow {
 
 	@Temporal(TemporalType.TIMESTAMP)

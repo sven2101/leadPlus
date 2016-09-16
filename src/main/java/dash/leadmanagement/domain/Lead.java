@@ -17,9 +17,14 @@ package dash.leadmanagement.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import dash.common.AbstractWorkflow;
 
 @Entity
+@SQLDelete(sql = "UPDATE lead SET deleted = '1' WHERE id = ?")
+@Where(clause = "deleted <> '1'")
 public class Lead extends AbstractWorkflow {
 
 	@Column(length = 4096)

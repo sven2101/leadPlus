@@ -28,16 +28,23 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.fileuploadmanagement.domain.FileUpload;
 
 @Entity
+@SQLDelete(sql = "UPDATE product SET deleted = '1' WHERE id = ?")
+@Where(clause = "deleted <> '1'")
 public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+
+	private boolean deleted;
 
 	private String name;
 	private String description;
@@ -56,6 +63,14 @@ public class Product {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private FileUpload fileUpload;
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 
 	public ProductState getProductState() {
 		return productState;
@@ -130,9 +145,10 @@ public class Product {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (deactivated ? 1231 : 1237);
+		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((fileUpload == null) ? 0 : fileUpload.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(priceNetto);
@@ -153,17 +169,19 @@ public class Product {
 		Product other = (Product) obj;
 		if (deactivated != other.deactivated)
 			return false;
+		if (deleted != other.deleted)
+			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (id != other.id)
-			return false;
 		if (fileUpload == null) {
 			if (other.fileUpload != null)
 				return false;
 		} else if (!fileUpload.equals(other.fileUpload))
+			return false;
+		if (id != other.id)
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -184,8 +202,9 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", productState=" + productState + ", timestamp=" + timestamp
-				+ ", deactivated=" + deactivated + ", priceNetto=" + priceNetto + ", fileUpload=" + fileUpload + "]";
+		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description
+				+ ", productState=" + productState + ", timestamp=" + timestamp + ", deactivated=" + deactivated
+				+ ", priceNetto=" + priceNetto + ", fileUpload=" + fileUpload + "]";
 	}
 
 }

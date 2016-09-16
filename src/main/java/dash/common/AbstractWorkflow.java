@@ -40,6 +40,8 @@ public abstract class AbstractWorkflow implements Request {
 
 	private String deliveryAddress;
 
+	private boolean deleted;
+
 	private double deliveryCosts;
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "workflow", fetch = FetchType.LAZY)
@@ -53,6 +55,14 @@ public abstract class AbstractWorkflow implements Request {
 	@OneToOne(cascade = { CascadeType.PERSIST })
 	@JoinColumn(name = "vendor_fk", nullable = true)
 	private Vendor vendor;
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 
 	public double getDeliveryCosts() {
 		return deliveryCosts;
@@ -127,6 +137,7 @@ public abstract class AbstractWorkflow implements Request {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((customer == null) ? 0 : customer.hashCode());
+		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(deliveryCosts);
@@ -151,6 +162,8 @@ public abstract class AbstractWorkflow implements Request {
 			if (other.customer != null)
 				return false;
 		} else if (!customer.equals(other.customer))
+			return false;
+		if (deleted != other.deleted)
 			return false;
 		if (deliveryAddress == null) {
 			if (other.deliveryAddress != null)
@@ -182,8 +195,8 @@ public abstract class AbstractWorkflow implements Request {
 	@Override
 	public String toString() {
 		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress
-				+ ", deliveryCosts=" + deliveryCosts + ", orderPositions=" + orderPositions + ", timestamp=" + timestamp
-				+ ", vendor=" + vendor + "]";
+				+ ", deleted=" + deleted + ", deliveryCosts=" + deliveryCosts + ", orderPositions=" + orderPositions
+				+ ", timestamp=" + timestamp + ", vendor=" + vendor + "]";
 	}
 
 }
