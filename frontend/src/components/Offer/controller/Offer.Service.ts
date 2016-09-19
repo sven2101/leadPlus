@@ -52,7 +52,7 @@ class OfferService {
         this.workflowService = WorkflowService;
         this.customerService = CustomerService;
         this.productService = ProductService;
-        this.user = $rootScope.currentUser;
+        this.user = $rootScope.globals.user;
     }
 
     createSale(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {

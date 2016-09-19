@@ -43,7 +43,6 @@ class AppController {
 
         this.rootScope.offersCount = 0;
         this.stop = undefined;
-        this.setCurrentUser();
 
         this.registerLoadLabels();
         this.rootScope.loadLabels();
@@ -128,16 +127,6 @@ class AppController {
             }
         }.bind(this), 300000);
     }
-
-    setCurrentUser() {
-        let self = this;
-        if (!angular.isUndefined(self.rootScope.globals.user)) {
-            self.userResource.get({ id: self.rootScope.globals.user.id }).$promise.then(function (result) {
-                self.rootScope.currentUser = result;
-            });
-        }
-    }
-
 
     sumOrderPositions(array: Array<OrderPosition>): number {
         let sum = 0;

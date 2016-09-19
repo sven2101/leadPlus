@@ -64,7 +64,6 @@ class AuthService {
                     };
                     self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
                     self.cookieStore.put("globals", self.rootScope.globals);
-                    self.setCurrentUser();
                     success(data);
                     self.injector.get("DashboardService");
                     self.rootScope.$broadcast("onTodosChange");
@@ -97,16 +96,6 @@ class AuthService {
 
             });
         */
-    }
-
-    setCurrentUser() {
-        let self = this;
-        if (!angular.isUndefined(self.rootScope.globals.user)) {
-            self.userResource.get({ id: self.rootScope.globals.user.id }).$promise.then(function (result) {
-                self.rootScope.currentUser = result;
-            });
-        }
-
     }
 }
 

@@ -42,7 +42,7 @@ class SaleDataTableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
-        this.user = $rootScope.currentUser;
+        this.user = $rootScope.globals.user;
     }
 
     getDTOptionsConfiguration(createdRow: Function) {
