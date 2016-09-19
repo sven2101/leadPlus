@@ -37,7 +37,7 @@
                                                                     registration.firstname.$pristine	 }">
 
                 <input type="text" id="firstname" name="firstname" class="form-control" placeholder="{{ 'COMMON_FIRSTNAME' | translate }}" required
-                    ng-pattern="/^[a-zA-Z0-9.-]*$/" ng-model="signupCtrl.user.firstname" ng-minlength="2" ng-maxlength="50">
+                    ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/" ng-model="signupCtrl.user.firstname" ng-minlength="2" ng-maxlength="50">
 
                 <span ng-show="registration.firstname.$error.required&&!registration.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
                 <span ng-show="registration.firstname.$error.minlength&&!registration.firstname.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_FIRSTNAME_TO_SHORT' | translate }}</span>
@@ -54,7 +54,7 @@
                                                                     registration.lastname.$pristine	 }">
 
                 <input type="text" id="lastname" name="lastname" class="form-control" placeholder="{{ 'COMMON_LASTNAME' | translate }}" required
-                    ng-pattern="/^[a-zA-Z0-9.-]*$/" ng-model="signupCtrl.user.lastname" ng-minlength="2" ng-maxlength="50">
+                    ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/" ng-model="signupCtrl.user.lastname" ng-minlength="2" ng-maxlength="50">
 
                 <span ng-show="registration.lastname.$error.required&&!registration.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
                 <span ng-show="registration.lastname.$error.minlength&&!registration.lastname.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_LASTNAME_TO_SHORT' | translate }}</span>

@@ -105,6 +105,20 @@ public class UserService implements IUserService {
 		}
 	}
 
+	public User checkUserNameExists(final String username) {
+		if (Optional.ofNullable(username).isPresent()) {
+			return userRepository.findByUsernameIgnoreCase(username);
+		} else
+			return null;
+	}
+
+	public User checkEmailExists(final String email) {
+		if (Optional.ofNullable(email).isPresent()) {
+			return userRepository.findByEmailIgnoreCase(email);
+		}
+		return null;
+	}
+
 	@Override
 	public User save(final User user) throws SaveFailedException {
 		if (Optional.ofNullable(user).isPresent()) {
@@ -275,7 +289,7 @@ public class UserService implements IUserService {
 				user.setLanguage(Language.DE);
 
 				return save(user);
-			} catch (NotFoundException | SaveFailedException ex) {
+			} catch (SaveFailedException ex) {
 				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
 				throw new RegisterFailedException(REGISTER_FAILED_EXCEPTION);
 			}
@@ -287,16 +301,16 @@ public class UserService implements IUserService {
 		}
 	}
 
-	public Validation emailAlreadyExists(String email) throws NotFoundException {
+	public Validation emailAlreadyExists(String email) {
 		this.validation.setValidation(false);
-		if (getUserByEmail(email) != null)
+		if (checkEmailExists(email) != null)
 			this.validation.setValidation(true);
 		return this.validation;
 	}
 
-	public Validation usernameAlreadyExists(String username) throws NotFoundException {
+	public Validation usernameAlreadyExists(String username) {
 		this.validation.setValidation(false);
-		if (getUserByName(username) != null)
+		if (checkUserNameExists(username) != null)
 			this.validation.setValidation(true);
 		return this.validation;
 	}

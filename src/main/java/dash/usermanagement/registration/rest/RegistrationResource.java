@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.EmailAlreadyExistsException;
-import dash.exceptions.NotFoundException;
 import dash.exceptions.RegisterFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
 import dash.usermanagement.business.UserService;
@@ -33,7 +32,8 @@ import dash.usermanagement.registration.domain.Registration;
 import dash.usermanagement.registration.domain.Validation;
 
 @RestController
-@RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.ALL_VALUE })
+@RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+		MediaType.ALL_VALUE })
 public class RegistrationResource {
 
 	@Autowired
@@ -48,13 +48,13 @@ public class RegistrationResource {
 
 	@RequestMapping(value = "/unique/email", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Validation emailAlreadyExists(@RequestBody final Registration registration) throws NotFoundException {
+	public Validation emailAlreadyExists(@RequestBody final Registration registration) {
 		return userService.emailAlreadyExists(registration.getEmail());
 	}
 
 	@RequestMapping(value = "/unique/username", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Validation usernameAlreadyExists(@RequestBody final Registration registration) throws NotFoundException {
+	public Validation usernameAlreadyExists(@RequestBody final Registration registration) {
 		return userService.usernameAlreadyExists(registration.getUsername());
 	}
 }
