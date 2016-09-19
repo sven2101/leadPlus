@@ -6,6 +6,7 @@
 <div class="modal-body">
     <div edit></div>
     <!-- ENTIRE PRICE -->
+    <!--
     <div>
         <div class="form-group ">
             <h2>Angebot - Template</h2>
@@ -15,62 +16,87 @@
             </select>
         </div>
     </div>
-
-    <button type="button" class="btn btn-white" ng-click="parent.generatePDF(templateId, parent.editWorkflowUnit)">PD generieren</button>
+    -->
+    <!-- <button type="button" class="btn btn-white" ng-click="parent.generatePDF(templateId, parent.editWorkflowUnit)">PD generieren</button> -->
 
     <embed ng-src="{{parent.content}}" style="width:200px;height:200px;"></embed>
 
     <div class="hr-line-dashed"></div>
 
     <div>
-        <div class="form-group ">
-            <h2>Email - Template</h2>
-
+        <div class="form-group">
+            <label>Email - Template</label>
             <select class="form-control" ng-model="templateId" ng-change="parent.generate(templateId, parent.editWorkflowUnit)">
-                    <option value="-1" selected> - Select Template - </option>                                                                     
-                    <option value="{{template.id}}" ng-repeat="template in parent.templates">{{template.name}}</option>                                          
-                </select>
+                <option value="-1" selected> - Select Template - </option>                                                                     
+                <option value="{{template.id}}" ng-repeat="template in parent.templates">{{template.name}}</option>                                          
+            </select>
         </div>
     </div>
     <div class="hr-line-dashed"></div>
 
-    <div class="row">
-        <div>
-            <div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Empfänger</label>
-                    <input type="email" class="form-control" ng-model="parent.notification.recipient">
-                </div>
-            </div>
-            <div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Betreff</label>
-                    <input type="text" class="form-control" ng-model="parent.notification.subject">
-                </div>
-            </div>
-            <div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">Anhang</label>
-                    <h4>Example <span class="label label-default"><i class="fa fa-file-pdf-o" aria-hidden="true">Anhang {{parent.notification.attachement}}</i></span></h4>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <br/>
-    <br/>
-    <br/>
-
     <div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Message</label>
-            <form class="form-horizontal">
-                <div class="summernote">
-                    <summernote ng-model="parent.notification.content">{{parent.notification.content}}</summernote>
-                </div>
-            </form>
+            <label>Empfänger</label>
+            <input type="email" class="form-control" ng-model="parent.notification.recipient">
+        </div>
+
+        <div class="form-group">
+            <label>Betreff</label>
+            <input type="text" class="form-control" ng-model="parent.notification.subject">
+        </div>
+
+        <div class="form-group">
+            <label>Anhang</label>
+            <br/>
+            <div class="fileinput fileinput-new" data-provides="fileinput">
+                <span class="btn btn-default btn-file"><span class="fileinput-new">Select file</span>
+                <span class="fileinput-exists">Change <i class="fa fa-file-pdf-o" aria-hidden="true"></i></span>
+                <input type="file" name="..." multiple ng-files="productCtrl.getTheFiles($files)" /></span>
+                <span class="fileinput-filename"></span>
+                <br/>
+                <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
+            </div>
+            <br/>
+            <span ng-model="productCtrl.currentProduct.picture.filename"></span>
         </div>
     </div>
+
+    <br/>
+    <br/>
+    <br/>
+
+    <div class="wrapper wrapper-content">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Wyswig Summernote Editor</h5>
+                        </div>
+                        <div class="ibox-content no-padding">
+
+                            <div class="summernote">
+                                <h3>Lorem Ipsum is simply</h3>
+                                dummy text of the printing and typesetting industry. <strong>Lorem Ipsum has been the industry's</strong>                                standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
+                                scrambled it to make a type specimen book. It has survived not only five centuries, but also
+                                the leap into electronic typesetting, remaining essentially unchanged. It was popularised
+                                in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+                                recently with
+                                <br/>
+                                <br/>
+                                <ul>
+                                    <li>Remaining essentially unchanged</li>
+                                    <li>Make a type specimen book</li>
+                                    <li>Unknown printer</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
 </div>
 </div>
