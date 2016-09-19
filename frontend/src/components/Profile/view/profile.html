@@ -23,18 +23,42 @@
                 <div class="ibox-title">
                     <h5>{{ 'PROFILE_PROFILE_INFORMATION' | translate }}</h5>
                 </div>
-                <div class="ibox-content">
+                <div class="ibox-content">          
                     <form name="profilInfoForm" ng-submit="profileCtrl.submitProfilInfoForm()" novalidate>
                         <!-- EMAIL -->
                         <div class="form-group" ng-class="{ 'has-error' : profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine }">
                             <label>{{ 'COMMON_EMAIL' | translate }}</label>
-                            <input type="email" name="email" class="form-control" ng-model="profileCtrl.profileService.rootScope.globals.user.email">
+                            <input type="email" name="email" class="form-control" ng-model="profileCtrl.currentUser.email">
                             <p ng-show="profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
                         </div>
+
+                        <div class="form-group" >
+
+                            <input type="text" id="firstname" name="firstname" class="form-control" placeholder="{{ 'COMMON_FIRSTNAME' | translate }}"
+                                required ng-pattern="/^[a-zA-Z0-9.-]*$/" ng-model="profileCtrl.currentUser.firstname" ng-minlength="2"
+                                ng-maxlength="50">
+
+                            <span ng-show="profilInfoForm.firstname.$error.required&&!profilInfoForm.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+                            <span ng-show="profilInfoForm.firstname.$error.minlength&&!profilInfoForm.firstname.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_FIRSTNAME_TO_SHORT' | translate }}</span>
+                            <span ng-show="profilInfoForm.firstname.$error.maxlength&&!profilInfoForm.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <input type="text" id="lastname" name="lastname" class="form-control" placeholder="{{ 'COMMON_LASTNAME' | translate }}" required
+                                ng-pattern="/^[a-zA-Z0-9.-]*$/" ng-model="profileCtrl.currentUser.lastname" ng-minlength="2" ng-maxlength="50">
+
+                            <span ng-show="profilInfoForm.lastname.$error.required&&!profilInfoForm.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+                            <span ng-show="profilInfoForm.lastname.$error.minlength&&!profilInfoForm.lastname.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_LASTNAME_TO_SHORT' | translate }}</span>
+                            <span ng-show="profilInfoForm.lastname.$error.maxlength&&!profilInfoForm.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+
+                        </div>
+
                         <!-- default language -->
                         <div class="form-group">
                             <label>{{ 'PROFILE_DEFAULT_LANGUAGE' | translate }}</label>
-                            <select class="form-control" ng-model="profileCtrl.profileService.rootScope.globals.user.language">
+                            <select class="form-control" ng-model="profileCtrl.currentUser.language">
                                 <option value="DE">Deutsch(de)</option>
                                 <option value="EN">English(en)</option>
                             </select>

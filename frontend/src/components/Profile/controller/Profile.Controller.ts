@@ -1,8 +1,8 @@
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../Profile/controller/Profile.Service.ts" />
-/// <reference path="../../Profile/controller/Profile.Service.ts" />
 /// <reference path="../../FileUpload/model/FileUpload.Model.ts" />
+/// <reference path="../../App/App.Common.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -23,21 +23,25 @@ const ProfileControllerId: string = "ProfileController";
 
 class ProfileController {
 
-    private $inject = [ProfileServiceId];
+    private $inject = [ProfileServiceId, $rootScopeId];
 
     myImage = "";
     myCroppedImage = "";
-    profileService;
+    profileService: ProfileService;
+    rootscope;
+    currentUser;
 
     user: User;
 
-    constructor(ProfileService: ProfileService) {
+    constructor(ProfileService: ProfileService, $rootScope) {
         this.profileService = ProfileService;
+        this.rootscope = $rootScope;
+        this.currentUser = deepCopy(this.rootscope.globals.user);
         this.getById();
     }
 
     submitProfilInfoForm() {
-        this.profileService.submitProfilInfoForm();
+        this.profileService.submitProfilInfoForm(this.currentUser);
     }
 
     submitPasswordForm() {

@@ -23,7 +23,7 @@ const ProfileServiceId: string = "ProfileService";
 
 class ProfileService {
 
-    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId];
+    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId, $cookieStoreId];
 
     userResource;
     translate;
@@ -34,13 +34,14 @@ class ProfileService {
     fileResource;
     formdata;
     q;
+    cookieStore;
     user: User;
 
     oldPassword: string;
     newPassword1: string;
     newPassword2: string;
 
-    constructor($rootScope, toaster, $translate, UserResource, FileResource, $q) {
+    constructor($rootScope, toaster, $translate, UserResource, FileResource, $q, $cookieStore) {
         this.userResource = UserResource.resource;
         this.translate = $translate;
         this.toaster = toaster;
@@ -50,11 +51,15 @@ class ProfileService {
         this.user = new User();
         this.user.picture = new FileUpload();
         this.q = $q;
+        this.cookieStore = $cookieStore;
     }
 
-    submitProfilInfoForm() {
+    submitProfilInfoForm(user: User) {
         let self = this;
-        this.userResource.update(this.rootScope.globals.user).$promise.then(function () {
+        this.userResource.update(user).$promise.then(function (data) {
+            self.rootScope.globals.user.firstname = data.firstname;
+            self.rootScope.globals.user.lastname = data.lastname;
+            self.cookieStore.put("globals", self.rootScope.globals);
             self.rootScope.changeLanguage(self.rootScope.globals.user.language);
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
         }, function () {
@@ -76,7 +81,7 @@ class ProfileService {
         });
     }
 
-    uploadFiles(file: any) {
+    uploadFiles() {
         let self = this;
         this.userResource.setProfilePicture({ id: this.rootScope.globals.user.id }, this.formdata).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
