@@ -57,7 +57,7 @@ class LeadDataTableService {
             .withOption("stateSave", true)
             .withDOM(this.workflowService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowService.getButtons(this.translate("LEAD_LEADS"), [6, 1, 2, 3, 4, 5, 7, 8, 9]))
+            .withButtons(this.workflowService.getButtons(this.translate("LEAD_LEADS"), [6, 1, 2, 3, 4, 5, 7, 9, 8, 10]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("order", [4, "desc"])
@@ -111,6 +111,16 @@ class LeadDataTableService {
                         return self.filter("currency")(0, "€", 2);
                     }
                     return self.filter("currency")(data.lead.price,
+                        "€", 2);
+                }).notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(
+                this.translate("COMMON_PRODUCT_DELIVERYCOSTS"))
+                .renderWith(
+                function (data, type, full) {
+                    if (isNullOrUndefined(data.lead.deliveryCosts)) {
+                        return self.filter("currency")(0, "€", 2);
+                    }
+                    return self.filter("currency")(data.lead.deliveryCosts,
                         "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(

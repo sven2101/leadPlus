@@ -43,8 +43,9 @@ class AppController {
 
         this.rootScope.offersCount = 0;
         this.stop = undefined;
-        this.setCurrentUser();
+
         this.setCurrentUserPicture();
+
 
         this.registerLoadLabels();
         this.rootScope.loadLabels();
@@ -130,14 +131,6 @@ class AppController {
         }.bind(this), 300000);
     }
 
-    setCurrentUser() {
-        let self = this;
-        if (!angular.isUndefined(self.rootScope.globals.user)) {
-            self.userResource.get({ id: self.rootScope.globals.user.id }).$promise.then(function (result) {
-                self.rootScope.currentUser = result;
-            });
-        }
-    }
     setCurrentUserPicture() {
         let self = this;
         if (!isNullOrUndefined(self.rootScope.globals.user)) {
@@ -147,6 +140,7 @@ class AppController {
         }
 
     }
+
 
 
     sumOrderPositions(array: Array<OrderPosition>): number {

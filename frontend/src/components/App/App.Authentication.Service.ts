@@ -100,7 +100,6 @@ class AuthService {
         */
     }
 
-
 }
 
 angular.module(moduleAuthService, [ngResourceId]).service(AuthServiceId, AuthService);

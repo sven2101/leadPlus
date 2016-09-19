@@ -52,7 +52,7 @@ class SaleService {
         this.workflowService = WorkflowService;
         this.customerService = CustomerService;
         this.productService = ProductService;
-        this.user = $rootScope.currentUser;
+        this.user = $rootScope.globals.user;
     }
 
     save(editSale: Sale, editProcess: Process, currentOrderPositions: Array<OrderPosition>, dtInstance: any, scope: any, editForm: any) {
