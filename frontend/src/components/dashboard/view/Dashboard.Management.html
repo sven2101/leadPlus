@@ -22,21 +22,24 @@
                     <div class="col-lg-4">
                         <div class="ibox">
                             <div class="ibox-content">
-                                <h3>{{ 'DASHBOARD_OPEN_LEADS' | translate }} {{dashboardCtrl.dashboardService.openLeadsValue| currency:'\u20AC'}}</h3>
-                                <ul ui-sortable="dashboardCtrl.sortableOptions"
-                                    class="sortable-list connectList agile-list" id="lead"
-                                    ng-model="dashboardCtrl.dashboardService.openLeads">
-                                    <li class="danger-element draggable"
-                                        ng-repeat="process in dashboardCtrl.getOpenLeads() | limitTo:10">
-                                        {{process.lead.containerAmount}}x {{process.lead.container.name}}
-                                        <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
+                                <h3>{{ 'DASHBOARD_OPEN_LEADS' | translate }} {{dashboardCtrl.dashboardService.openLeadsValue|
+                                    currency:'\u20AC'}}
+                                </h3>
+                                <ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="lead" ng-model="dashboardCtrl.dashboardService.openLeads">
+                                    <li class="danger-element draggable" ng-repeat="process in dashboardCtrl.getOpenLeads() | limitTo:10">
+                                        {{process.lead.customer.company}}
+
+                                        <span style=" width: 40px;height: 40px;position: relative;overflow: hidden;border-radius: 50%;" class="pull-right"><img alt="image" style=" display: inline;margin: 0 auto;height: 100%;width: auto;"
+                                        ng-src="data:image/jpeg;base64,{{process.processor.picture.content}}" /></span>
+                                        <span style="margin-top:10px" class="pull-right" ng-if="process.processor != null">{{process.processor.firstname[0]+"."}} {{process.processor.lastname[0]+"."}} &nbsp;&nbsp;&nbsp;</span>
+                                        <a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.lead,'lead',process)" class="pull-right btn btn-xs btn-white" data-toggle="modal"
+                                            data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |
+                                                translate }}</a>&nbsp;&nbsp;&nbsp;
                                         <div class="agile-detail">
-                                            <a ng-click="dashboardCtrl.saveDataToModal(process.lead,'lead',process)"
-                                               class="pull-right btn btn-xs btn-white"
-                                               data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |
-                                                translate }}</a>
-                                            <a href="#/leads" class="pull-right btn btn-xs btn-white">{{
+                           
+                                            <a style="min-width:50px;margin-right:-50px" href="#/leads" class="pull-right btn btn-xs btn-white">{{
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
+                                            
                                             <i class="fa fa-clock-o"></i> {{process.lead.timestamp}}
                                         </div>
                                     </li>
@@ -47,18 +50,16 @@
                     <div class="col-lg-4">
                         <div class="ibox">
                             <div class="ibox-content">
-                                <h3>{{ 'DASHBOARD_OPEN_OFFERS' | translate }} {{dashboardCtrl.dashboardService.openOffersValue| currency:'\u20AC'}}</h3>
-                                <ul ui-sortable="dashboardCtrl.sortableOptions"
-                                    class="sortable-list connectList agile-list" id="offer"
-                                    ng-model="dashboardCtrl.dashboardService.openOffers">
-                                    <li class="warning-element draggable"
-                                        ng-repeat="process in dashboardCtrl.getOpenOffers() | limitTo:10">
+                                <h3>{{ 'DASHBOARD_OPEN_OFFERS' | translate }} {{dashboardCtrl.dashboardService.openOffersValue|
+                                    currency:'\u20AC'}}
+                                </h3>
+                                <ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="offer" ng-model="dashboardCtrl.dashboardService.openOffers">
+                                    <li class="warning-element draggable" ng-repeat="process in dashboardCtrl.getOpenOffers() | limitTo:10">
                                         {{process.offer.containerAmount}}x {{process.offer.container.name}}
                                         <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
                                         <div class="agile-detail">
-                                            <a ng-click="dashboardCtrl.saveDataToModal(process.offer,'offer',process)"
-                                               class="pull-right btn btn-xs btn-white"
-                                               data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |
+                                            <a ng-click="dashboardCtrl.saveDataToModal(process.offer,'offer',process)" class="pull-right btn btn-xs btn-white" data-toggle="modal"
+                                                data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |
                                                 translate }}</a>
                                             <a href="#/offers" class="pull-right btn btn-xs btn-white">{{
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
@@ -72,18 +73,16 @@
                     <div class="col-lg-4">
                         <div class="ibox">
                             <div class="ibox-content">
-                                <h3>{{ 'DASHBOARD_LATEST_SALES' | translate }} {{dashboardCtrl.dashboardService.closedSalesValue| currency:'\u20AC'}}</h3>
-                                <ul ui-sortable="dashboardCtrl.sortableOptions"
-                                    class="sortable-list connectList agile-list" id="sale"
-                                    ng-model="dashboardCtrl.dashboardService.closedSales">
-                                    <li class="info-element not-sortable draggable"
-                                        ng-repeat="process in dashboardCtrl.getClosedSales()">
+                                <h3>{{ 'DASHBOARD_LATEST_SALES' | translate }} {{dashboardCtrl.dashboardService.closedSalesValue|
+                                    currency:'\u20AC'}}
+                                </h3>
+                                <ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="sale" ng-model="dashboardCtrl.dashboardService.closedSales">
+                                    <li class="info-element not-sortable draggable" ng-repeat="process in dashboardCtrl.getClosedSales()">
                                         {{process.sale.containerAmount}}x {{process.sale.container.name}}
                                         <span class="pull-right" ng-if="process.processor != null">{{process.processor.username}}</span>
                                         <div class="agile-detail">
-                                            <a ng-click="dashboardCtrl.saveDataToModal(process.sale,'sale',process)"
-                                               class="pull-right btn btn-xs btn-white"
-                                               data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |
+                                            <a ng-click="dashboardCtrl.saveDataToModal(process.sale,'sale',process)" class="pull-right btn btn-xs btn-white" data-toggle="modal"
+                                                data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |
                                                 translate }}</a>
                                             <a href="#/sales" class="pull-right btn btn-xs btn-white">{{
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
