@@ -29,9 +29,7 @@ class ProfileController {
     myCroppedImage = "";
     profileService: ProfileService;
     rootscope;
-    currentUser;
-
-    user: User;
+    currentUser: User;
 
     constructor(ProfileService: ProfileService, $rootScope) {
         this.profileService = ProfileService;
@@ -53,7 +51,7 @@ class ProfileController {
     }
 
     getById() {
-        this.profileService.getById().then((result) => this.user = result, (error) => console.log(error));
+        this.profileService.getById().then((result) => this.currentUser = result, (error) => console.log(error));
     }
 
     getTheFiles($files) {

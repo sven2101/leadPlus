@@ -3,9 +3,17 @@
         <ul class="nav metismenu" id="side-menu">
             <li class="nav-header">
                 <div class="dropdown profile-element">
-                    <span>
-                        <img class="img-circle" height="80px" weigth="80px"  ng-src="data:image/jpeg;base64,{{appCtrl.profileService.user.picture.content}}" id="photo-id"/>
-                    </span>
+                    <div style="margin-top:-20px" class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-6">
+                            <span class="pull-left" style=" width: 85px; height:85px;position: relative;overflow: hidden;border-radius: 50%;">
+                        <!-- <img class="img-circle" height="80px" weigth="80px"  ng-src="data:image/jpeg;base64,{{appCtrl.profileService.user.picture.content}}" id="photo-id"/> -->
+                            <img alt="image" style=" display: inline;margin: 0 auto;height: 100%;width: auto;" ng-src="data:image/jpeg;base64,{{globals.user.picture.content}}" />
+                        </span>
+                        </div>
+                        <div class="col-md-4"></div>
+
+                    </div>
                     <a data-toggle="dropdown" class="dropdown-toggle">
                         <span class="clear"> 
                             <span class="block m-t-xs">

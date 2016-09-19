@@ -26,6 +26,10 @@
                         <td>{{workflowUnit.price | currency:'\u20AC'}}</td>
                     </tr>
                     <tr>
+                        <td>{{ 'COMMON_PRODUCT_DELIVERYCOSTS' | translate }}</td>
+                        <td>{{workflowUnit.deliveryCosts | currency:'\u20AC'}}</td>
+                    </tr>
+                    <tr>
                         <td>{{ 'COMMON_PRODUCT_DESTINATION' | translate }}</td>
                         <td>{{workflowUnit.deliveryAddress}}</td>
                     </tr>

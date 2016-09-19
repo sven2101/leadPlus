@@ -55,7 +55,7 @@ class DashboardService {
         this.translate = $translate;
         this.orderBy = $filter("orderBy");
         this.q = $q;
-        this.user = $rootScope.currentUser;
+        this.user = $rootScope.globals.user;
         this.uibModal = $uibModal;
         this.initDashboard();
         this.refreshTodos();

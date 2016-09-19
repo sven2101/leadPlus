@@ -52,7 +52,7 @@ class LeadService {
         this.workflowService = WorkflowService;
         this.customerService = CustomerService;
         this.productService = ProductService;
-        this.user = $rootScope.currentUser;
+        this.user = $rootScope.globals.user;
     }
 
     saveLead(addForm: any, dtInstance: any, newLead: Lead, currentOrderPositions: Array<OrderPosition>) {
