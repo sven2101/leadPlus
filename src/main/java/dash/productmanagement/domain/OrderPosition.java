@@ -144,8 +144,8 @@ public class OrderPosition {
 
 	@Override
 	public String toString() {
-		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", product=" + product + ", workflow=" + workflow
-				+ ", amount=" + amount + ", price=" + price + "]";
+		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", product=" + product + ", amount=" + amount
+				+ ", price=" + price + "]";
 	}
 
 }

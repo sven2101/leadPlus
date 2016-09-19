@@ -171,8 +171,8 @@ public class Comment implements Request {
 
 	@Override
 	public String toString() {
-		return "Comment [id=" + id + ", deleted=" + deleted + ", creator=" + creator + ", process=" + process
-				+ ", commentText=" + commentText + ", timestamp=" + timestamp + "]";
+		return "Comment [id=" + id + ", deleted=" + deleted + ", creator=" + creator + ", commentText=" + commentText
+				+ ", timestamp=" + timestamp + "]";
 	}
 
 }
