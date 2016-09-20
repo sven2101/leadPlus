@@ -1,0 +1,122 @@
+<form name="parent.editOrderForm">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>{{ 'PRODUCT_MENU' | translate }}</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-md-5">
+                            <select class="form-control" ng-model="parent.currentProductId">
+                            <option value="-1" selected disabled hidden>{{ 'LEAD_EDIT_SELECT_PRODUCT' | translate }}</option>                                     
+                            <option value="{{product.id}}" ng-repeat="product in service.productService.getActiveProducts()">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
+                        </select>
+                        </th>
+                        <th class="col-md-2"></th>
+                        <th class="col-md-2"></th>
+                        <th class="col-md-2">
+                            <div style="text-align:right">
+                                {{ 'COMMON_PRODUCT_AMOUNT'| translate }}:
+                            </div>
+                        </th>
+                        <th class="col-md-2">
+                            <input min="1" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" name="addOrderPosition" type="number" class="input-sm form-control"
+                                ng-model="parent.currentProductAmount" required>
+                        </th>
+                        <th class="col-md-1">
+                            <button ng-disabled="parent.editOrderForm.addOrderPosition.$invalid||parent.currentProductId==-1" type="button" class="btn btn-white btn-sm"
+                                ng-click="parent.addProduct(parent.currentOrderPositions, parent.currentProductId, parent.currentProductAmount)">
+                                     <i class="fa fa-plus"></i>&nbsp;</button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <th>{{ 'PRODUCT_PRODUCTNAME' | translate }}</th>
+                    <th class="text-center">{{ 'PRODUCT_DISCOUNT' | translate }}</th>
+                    <th class="text-center">{{ 'COMMON_PRODUCT_SINGLE_PRICE' | translate }}</th>
+                    <th class="text-center">{{ 'COMMON_PRODUCT_AMOUNT'| translate }}</th>
+                    <th class="text-center">{{ 'PRODUCT_PRICE' | translate }}</th>
+                    <tr ng-repeat="orderPosition in parent.currentOrderPositions">
+                        <td class="col-md-3">
+                            {{orderPosition.product.name}} ({{orderPosition.product.priceNetto| currency:'\u20AC'}})
+                        </td>
+                        <td class="col-md-2 text-center ">
+                            <div class="input-group " ng-class="{ 'has-error' : parent.editOrderForm[
+                                    'orderPositionDiscount'+$index].$invalid && !parent.editOrderForm[ 'orderPositionDiscount'+$index].$pristine } ">
+                                <span class="input-group-addon ">%</span>
+                                <input type="number " name="{{ 'orderPositionDiscount'+$index}} " class="form-control
+                                    " ng-model="orderPosition.discount " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " min="0 "
+                                    max="100 " step="0.1 " data-number-to-fixed="2 " data-number-stepfactor="100
+                                    " class="form-control currency " ng-keyup="parent.workflowService.setPrice(orderPosition) "
+                                    id="c3 " required>
+                            </div>
+                        </td>
+                        <td class="col-md-2 text-center">
+                            <div class="input-group" ng-class="{ 'has-error' : parent.editOrderForm['orderPosition'+$index].$invalid && !parent.editOrderForm['orderPosition'+$index].$pristine  }">
+                                <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
+                                <input type="number" name="{{'orderPosition'+$index}}" class="form-control" ng-model="orderPosition.price" " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ "
+                                    min="0 " step="0.01 " data-number-to-fixed="2 " data-number-stepfactor="100
+                                    " class="form-control currency " ng-keyup="parent.workflowService.setDiscount(orderPosition) "
+                                    id="c2 " required>
+                            </div>
+                        </td>
+                        <td class="col-md-2 text-center ">{{orderPosition.amount}}</td>
+                        <td class="col-md-2 text-center "> {{orderPosition.price*orderPosition.amount|
+                        currency:'\u20AC'}}
+                        </td>
+                        <td class=" col-md-1 ">
+                            <button type="button " class="btn btn-white btn-sm " ng-click="parent.deleteProduct(parent.currentOrderPositions,$index) ">
+                                        <i class="fa fa-trash "></i>&nbsp;
+                                     </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ENTIRE PRICE -->
+    <div class="row ">
+        <div class="col-sm-6 ">
+            <div>
+                <div class="form-group ">
+                    <table class="table ">
+                        <tr>
+                            <td></td>
+                            <td>{{ 'COMMON_PRODUCT_BASE_PRICE' | translate }}</td><td>{{parent.sumBasicPriceOrderPositions(parent.currentOrderPositions)|
+                        currency:'\u20AC'}}</td>
+                        </tr>
+                         <tr>
+                            <td><b>-</b></td>
+                            <td>{{ 'PRODUCT_DISCOUNT' | translate }}</td>
+                            <td>{{parent.sumBasicPriceOrderPositions(parent.currentOrderPositions) - parent.sumOrderPositions(parent.currentOrderPositions)|
+                             currency:'\u20AC'}} ({{parent.workflowService.calculateDiscount(parent.sumBasicPriceOrderPositions(parent.currentOrderPositions),parent.sumOrderPositions(parent.currentOrderPositions))}}%)
+                          </td>
+                        </tr>
+                        <tr>
+                            <td><b>+</b></td>
+                            <td>{{ 'COMMON_PRODUCT_DELIVERYCOSTS' | translate }}</td>
+                            <td>{{parent.editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</td>
+                        </tr>
+                         <tr>
+                            <td><b>=</b></td>
+                            <td><h3>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</h3></td>
+                            <td><h3>{{parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</h3></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $('#editOfferDatepicker .input-group.date').datepicker({
+            todayBtn: "linked ",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true
+        });
+    });
+</script>

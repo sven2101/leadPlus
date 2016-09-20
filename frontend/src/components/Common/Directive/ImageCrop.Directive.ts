@@ -48,7 +48,7 @@ angular.module(moduleApp)
                     $inputImage.addClass("hide");
                 }
             };
-            scope.buildImageCropper();           
+            scope.buildImageCropper();
 
             scope.$on("saveCroppedImage", function (evt, data) {
                 let $image = $(".image-crop > img") as any;
