@@ -7,14 +7,18 @@
             <thead>
                 <tr>
                     <th>{{ 'PRODUCT_PRODUCTNAME' | translate }}</th>
-                    <th>{{ 'PRODUCT_PRICE' | translate }}</th>
+                    <th>{{ 'PRODUCT_DISCOUNT' | translate }}</th>
+                    <th>{{ 'COMMON_PRODUCT_SINGLE_PRICE' | translate }}</th>
                     <th>{{ 'COMMON_PRODUCT_AMOUNT' | translate }}</th>
                     <th>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="orderPosition in parent.getOrderPositions(process)">
-                    <td>{{orderPosition.product.name}}</td>
+                    <td>{{orderPosition.product.name}} ({{orderPosition.product.priceNetto| currency:'\u20AC'}})</td>
+                    <td>{{orderPosition.product.priceNetto-parent.workflowService.calculatePrice(orderPosition.product.priceNetto,orderPosition.discount)|
+                        currency:'\u20AC'}} ({{orderPosition.discount}}%)
+                    </td>
                     <td>{{orderPosition.price| currency:'\u20AC'}}</td>
                     <td>{{orderPosition.amount}}</td>
                     <td>{{orderPosition.price*orderPosition.amount| currency:'\u20AC'}}</td>

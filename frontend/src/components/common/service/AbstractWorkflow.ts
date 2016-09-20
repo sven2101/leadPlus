@@ -1,3 +1,4 @@
+/// <reference path="../../common/service/Workflow.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
