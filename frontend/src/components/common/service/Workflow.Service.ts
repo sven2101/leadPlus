@@ -174,7 +174,8 @@ class WorkflowService {
         orderPosition.price = this.calculatePrice(orderPosition.product.priceNetto, orderPosition.discount);
     }
 
-    addLeadToOffer(process: Process): IPromise<Process> {
+    addLeadToOffer(process: Process): IPromise<Process> {        
+
         let defer = this.$q.defer();
         let self = this;
         let offer: Offer = {
@@ -193,6 +194,7 @@ class WorkflowService {
         }
 
         this.processResource.createOffer({ id: process.id }, offer).$promise.then(function (resultOffer: Offer) {
+
             self.processResource.setStatus({ id: process.id }, Status.OFFER).$promise.then(function (resultProcess: Process) {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
                 self.rootScope.leadsCount -= 1;

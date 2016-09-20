@@ -29,7 +29,7 @@ const DashboardControllerId: string = "DashboardController";
 
 class DashboardController {
 
-    $inject = [WorkflowServiceId, StatisticServiceId, DashboardServiceId];
+    $inject = [WorkflowServiceId, StatisticServiceId, DashboardServiceId, $rootScopeId];
 
     workflowService: WorkflowService;
     statisticService: StatisticService;
@@ -39,11 +39,13 @@ class DashboardController {
     workflowModalType: string;
     workflowModalProcess: Process;
     sortableOptions: any;
+    rootScope;
 
-    constructor(WorkflowService, StatisticService, DashboardService) {
+    constructor(WorkflowService, StatisticService, DashboardService, $rootScope) {
         this.workflowService = WorkflowService;
         this.statisticService = StatisticService;
         this.dashboardService = DashboardService;
+        this.rootScope = $rootScope;
         this.statisticService.loadAllResourcesByDateRange("WEEKLY");
         this.sortableOptions = this.dashboardService.setSortableOptions();
 

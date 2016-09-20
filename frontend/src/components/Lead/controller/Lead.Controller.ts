@@ -54,8 +54,8 @@ class LeadController extends AbstractWorkflow {
     currentCustomerId = "-1";
     customerSelected: boolean = false;
 
-    constructor($compile, $scope, WorkflowService, LeadDataTableService, LeadService, ) {
-        super(WorkflowService); 
+    constructor($compile, $scope, WorkflowService, LeadDataTableService, LeadService) {
+        super(WorkflowService);
         this.workflowService = WorkflowService;
         this.leadDataTableService = LeadDataTableService;
         this.leadService = LeadService;
@@ -83,7 +83,7 @@ class LeadController extends AbstractWorkflow {
         this.dtOptions = this.leadDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
 
-      
+
     }
 
     changeDataInput() {
