@@ -5,9 +5,9 @@
     <div id="wizard" role="application" class="wizard clearfix">
         <div class="steps clearfix">
             <ul role="tablist">
-                <li ng-click="parent.tabOnClick(1)" role="tab" class="{{parent.currentTab1Class}}" aria-disabled="false" aria-selected="true"><a aria-controls="wizard-p-0"><span class="current-info audible">current step: </span><span class="number">1.</span>Angebot editieren</a></li>
-                <li ng-click="parent.tabOnClick(2)" role="tab" class="{{parent.currentTab2Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-1"><span class="number">2.</span> Produkte selektieren</a></li>
-                <li ng-click="parent.tabOnClick(3)" role="tab" class="{{parent.currentTab3Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-2"><span class="number">3.</span> Angebot versenden</a></li>
+                <li ng-click="parent.tabOnClick(1)" role="tab" class="{{parent.currentTab1Class}}" aria-disabled="false" aria-selected="true"><a aria-controls="wizard-p-0"><span class="current-info audible">current step: </span><span class="number">1.</span> Kunde</a></li>
+                <li ng-click="parent.tabOnClick(2)" role="tab" class="{{parent.currentTab2Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-1"><span class="number">2.</span> Bestellung</a></li>
+                <li ng-click="parent.tabOnClick(3)" role="tab" class="{{parent.currentTab3Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-2"><span class="number">3.</span> Email</a></li>
             </ul>
         </div>
         <div class="clearfix">
@@ -19,10 +19,8 @@
         </div>
         <div class="actions clearfix">
             <ul role="menu" aria-label="Pagination">
-                <li class="" aria-disabled="false"><a href="#previous" role="menuitem">Previous</a></li>
-                <li aria-hidden="true" aria-disabled="true" class="disabled" style="display: none;"><a href="#next" role="menuitem">Next</a></li>
-                <li aria-hidden="false"><a href="#finish" role="menuitem">Finish</a></li>
-                <li><a href="#cancel" role="menuitem">Cancel</a></li>
+                <li ng-if="parent.currentTab==3" aria-hidden="false" style="background:red;"><a role="menuitem">Angebot versenden</a></li>
+                <li><a ng-click="parent.close()" role="menuitem">Cancel</a></li>
             </ul>
         </div>
     </div>

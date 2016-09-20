@@ -1,5 +1,5 @@
 <div ng-if="parent.currentTab==3">
-    <h1 id="wizard-h-2" tabindex="-1" class="title current">Third Step</h1>
+    <h1 id="wizard-h-2" tabindex="-1" class="title current">Angebot v</h1>
     <div class="current" id="wizard-p-2" role="tabpanel" aria-labelledby="wizard-h-2" aria-hidden="false" style="display: block;">
         <div class="m-t-md">
 
@@ -39,23 +39,19 @@
                     <br/>
                     <span ng-model="productCtrl.currentProduct.picture.filename"></span>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="ibox float-e-margins">
-                        <div class="ibox-title">
-                            <h5>Nachricht</h5>
-                        </div>
-                        <div class="ibox-content no-padding">
-
-                            <div class="summernote">
-                                <summernote ng-model="parent.notification.content">{{parent.notification.content}}</summernote>
-                            </div>
-
-                        </div>
+                <div class="form-group">
+                    <label>Nachricht</label>
+                    <br/>
+                    <div class="summernote">
+                        <summernote ng-model="parent.notification.content">{{parent.notification.content}}</summernote>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script language="javascript" type="text/javascript">
+$(".btn-toolbar").css("margin-left","0");
+$(".note-toolbar").css("margin-left","4");
+</script>
