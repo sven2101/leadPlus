@@ -115,6 +115,7 @@ class WorkflowService {
             let tempOrderPosition = new OrderPosition();
             tempOrderPosition.product = tempProduct as Product;
             tempOrderPosition.amount = currentProductAmount;
+            tempOrderPosition.discount = 0;
             tempOrderPosition.price = tempOrderPosition.product.priceNetto;
             array.push(tempOrderPosition);
         }
@@ -132,16 +133,45 @@ class WorkflowService {
         for (let i = 0; i < array.length; i++) {
             let temp = array[i];
             if (!isNullOrUndefined(temp) && !isNaN(temp.amount)
-                && !isNullOrUndefined(temp.product)
-                && !isNaN(temp.product.priceNetto)) {
+                && !isNaN(temp.price)) {
                 sum += temp.amount * temp.price;
             }
         }
         return sum;
     }
+
+    sumBasicPriceOrderPositions(array: Array<OrderPosition>): number {
+        let sum = 0;
+        if (isNullOrUndefined(array)) {
+            return 0;
+        }
+        for (let i = 0; i < array.length; i++) {
+            let temp = array[i];
+            if (!isNullOrUndefined(temp) && !isNaN(temp.amount)
+                && !isNullOrUndefined(temp.product)
+                && !isNaN(temp.product.priceNetto)) {
+                sum += temp.amount * temp.product.priceNetto;
+            }
+        }
+        return sum;
+    }
+
     calculateDiscount(oldPrice: number, newPrice: number): number {
-        let temp = Math.round((((oldPrice - newPrice) / oldPrice) * 100));
+        let temp = Math.round((((oldPrice - newPrice) / oldPrice) * 100) * 100) / 100;
+        return isNaN(temp) || temp < 0 ? 0 : temp;
+    }
+
+    calculatePrice(oldPrice: number, discount: number): number {
+        let temp = Math.round(oldPrice * (1 - (discount / 100)));
         return isNaN(temp) ? 0 : temp;
+    }
+
+    setDiscount(orderPosition: OrderPosition) {
+        orderPosition.discount = this.calculateDiscount(orderPosition.product.priceNetto, orderPosition.price);
+    }
+
+    setPrice(orderPosition: OrderPosition) {
+        orderPosition.price = this.calculatePrice(orderPosition.product.priceNetto, orderPosition.discount);
     }
 
     addLeadToOffer(process: Process): IPromise<Process> {

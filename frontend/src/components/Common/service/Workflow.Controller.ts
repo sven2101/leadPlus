@@ -56,6 +56,11 @@ class WorkflowController extends AbstractWorkflow {
     offerService: OfferService;
     saleService: SaleService;
 
+    currentTab: number = 1;
+    currentTab1Class: any = "current";
+    currentTab2Class: any = "done";
+    currentTab3Class: any = "done";
+
     constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService) {
         super(WorkflowService);
         this.editWorkflowUnit = process.offer;
@@ -74,6 +79,23 @@ class WorkflowController extends AbstractWorkflow {
         this.saleService = SaleService;
 
         this.loadDataToModal(process);
+    }
+
+    tabOnClick(tab: number) {
+        this.currentTab = tab;
+        if (this.currentTab === 1) {
+            this.currentTab1Class = "current";
+            this.currentTab2Class = "done";
+            this.currentTab3Class = "done";
+        } else if (this.currentTab === 2) {
+            this.currentTab1Class = "done";
+            this.currentTab2Class = "current";
+            this.currentTab3Class = "done";
+        } else if (this.currentTab === 3) {
+            this.currentTab1Class = "done";
+            this.currentTab2Class = "done";
+            this.currentTab3Class = "current";
+        }
     }
 
     loadDataToModal(process: Process) {

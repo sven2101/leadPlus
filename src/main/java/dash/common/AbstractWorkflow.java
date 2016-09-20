@@ -122,7 +122,7 @@ public abstract class AbstractWorkflow implements Request {
 	}
 
 	public double getPrice() {
-		int sum = 0;
+		double sum = this.deliveryCosts;
 		for (int i = 0; i < this.orderPositions.size(); i++) {
 			OrderPosition temp = this.orderPositions.get(i);
 			if (temp != null && temp.getProduct() != null) {

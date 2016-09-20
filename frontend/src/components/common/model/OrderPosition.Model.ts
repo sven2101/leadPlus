@@ -18,6 +18,7 @@ class OrderPosition extends AbstractModel {
     amount: number;
     product: Product;
     price: number;
+    discount: number;
 
     constructor() {
         super();

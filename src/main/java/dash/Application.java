@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
+66ä.34	6 u6t   ^npyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
  *
  * NOTICE:  All information contained herein is, and remains
@@ -75,16 +75,14 @@ public class Application {
 	@Bean
 	@ConditionalOnMissingBean
 	public Docket multipartApi() {
-		return new Docket(DocumentationType.SWAGGER_2).groupName("Lead-Management-REST-API").apiInfo(apiInfo()).select()
-				.paths(paths()).build();
+		return new Docket(DocumentationType.SWAGGER_2).groupName("Lead-Management-REST-API").apiInfo(apiInfo()).select().paths(paths()).build();
 	}
 
 	@Bean
 	public Docket leadApi() {
 		StopWatch watch = new StopWatch();
 		watch.start();
-		Docket docket = new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).useDefaultResponseMessages(false)
-				.select().paths(paths()).build();
+		Docket docket = new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).useDefaultResponseMessages(false).select().paths(paths()).build();
 		watch.stop();
 		return docket;
 	}
@@ -92,17 +90,14 @@ public class Application {
 	@SuppressWarnings("unchecked")
 	private Predicate<String> paths() {
 
-		return or(regex("/api/rest/processes.*"), regex("/api/rest/processes/leads.*"),
-				regex("/api/rest/processes/leads/containers.*"), regex("/api/rest/processes/leads/inquirers.*"),
-				regex("/api/rest/processes/leads/vendors.*"), regex("/api/rest/processes/offers.*"),
-				regex("/api/rest/processes/offers/prospects.*"), regex("/api/rest/processes/sales.*"),
-				regex("/api/rest/processes/sales/customers.*"));
+		return or(regex("/api/rest/processes.*"), regex("/api/rest/processes/leads.*"), regex("/api/rest/processes/leads/containers.*"),
+				regex("/api/rest/processes/leads/inquirers.*"), regex("/api/rest/processes/leads/vendors.*"), regex("/api/rest/processes/offers.*"),
+				regex("/api/rest/processes/offers/prospects.*"), regex("/api/rest/processes/sales.*"), regex("/api/rest/processes/sales/customers.*"));
 
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("Applica").description("Applica - Lead Management Tool").license("")
-				.licenseUrl("").version("1.0").build();
+		return new ApiInfoBuilder().title("Applica").description("Applica - Lead Management Tool").license("").licenseUrl("").version("1.0").build();
 	}
 
 	@Autowired
@@ -227,14 +222,10 @@ public class Application {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 
-			http.httpBasic().and().authorizeRequests()
-					.antMatchers("/", "/assets/**", "/fonts/**", "/app/**", "/components/**",
-							"/api/rest/registrations/**")
-					.permitAll().anyRequest().authenticated().and()
-					.addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class).csrf()
-					.csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout().logoutUrl("/logout")
-					.logoutSuccessUrl("/").and().headers().frameOptions().sameOrigin().httpStrictTransportSecurity()
-					.disable();
+			http.httpBasic().and().authorizeRequests().antMatchers("/", "/assets/**", "/fonts/**", "/app/**", "/components/**", "/api/rest/registrations/**")
+					.permitAll().anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class).csrf()
+					.csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout().logoutUrl("/logout").logoutSuccessUrl("/").and().headers()
+					.frameOptions().sameOrigin().httpStrictTransportSecurity().disable();
 
 			http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
 		}
