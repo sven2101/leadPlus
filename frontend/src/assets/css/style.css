@@ -117,6 +117,8 @@ h5 {
   background-color: #1ab394;
   outline: 0;
 }
+.dropdown-menu.right { left: auto; right: 0;}
+.dropdown-menu.left { right: auto; left: 0;}
 .dropdown-menu > li > a.font-bold {
   font-weight: 600;
 }
@@ -1635,6 +1637,7 @@ table.dataTable thead .sorting_desc_disabled {
 }
 .dataTables_wrapper {
   padding-bottom: 30px;
+  margin-bottom:110px;
 }
 .dataTables_length {
   float: left;

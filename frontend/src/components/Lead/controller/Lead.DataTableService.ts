@@ -139,8 +139,8 @@ class LeadDataTableService {
             "hasRightToDelete": false,
             "closeOrOpenDisable": false,
             "openOrLock": this.translate.instant("LEAD_CLOSE_LEAD"),
-            "faOpenOrLock": "fa fa-lock"
-
+            "faOpenOrLock": "fa fa-lock",
+            "minwidth": 140
         };
         if (templateData.process.status !== "OPEN") {
             config.disabled = true;
@@ -151,8 +151,11 @@ class LeadDataTableService {
         if (templateData.process.offer !== null || templateData.process.sale !== null) {
             config.closeOrOpenDisable = true;
         }
-        if (user.role === Role.USER) {
+        if (isNullOrUndefined(templateData.process.offer) && (isNullOrUndefined(templateData.process.processor) || (templateData.process.processor !== null
+            && user.username === templateData.process.processor.username))) {
             config.hasRightToDelete = true;
+        }
+        if (user.role === Role.USER) {
             config.disablePinDropdown = true;
         }
         if (templateData.process.processor !== null
