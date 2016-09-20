@@ -44,22 +44,20 @@ class ProductService {
         if (insert) {
             product.timestamp = newTimestamp();
             this.productResource.createProduct(product).$promise.then(function (result: Product) {
-                self.productResource.uploadImage({ id: result.id }, self.formdata).$promise.then(function (result: Product) {
-                    // self.products.push(result);
-                    self.getAllProducts();
-                    self.toaster.pop("success", "", self.translate.instant("PRODUCT_TOAST_SAVE"));
-                }, function () {
-                    self.toaster.pop("error", "", self.translate.instant("PRODUCT_TOAST_SAVE_ERROR"));
-                });
+                // self.products.push(result);
+                self.getAllProducts();
+                self.toaster.pop("success", "", self.translate.instant("PRODUCT_TOAST_SAVE"));
+
+            }, function () {
+                self.toaster.pop("error", "", self.translate.instant("PRODUCT_TOAST_SAVE_ERROR"));
             });
         } else {
             this.productResource.createProduct(product).$promise.then(function (result: Product) {
-                self.productResource.uploadImage({ id: result.id }, self.formdata).$promise.then(function (result: Product) {
-                    self.getAllProducts();
-                    self.toaster.pop("success", "", self.translate.instant("PRODUCT_TOAST_UPDATE"));
-                }, function () {
-                    self.toaster.pop("error", "", self.translate.instant("PRODUCT_TOAST_UPDATE_ERROR"));
-                });
+                self.getAllProducts();
+                self.toaster.pop("success", "", self.translate.instant("PRODUCT_TOAST_UPDATE"));
+
+            }, function () {
+                self.toaster.pop("error", "", self.translate.instant("PRODUCT_TOAST_UPDATE_ERROR"));
             });
         }
     }

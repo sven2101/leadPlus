@@ -22,10 +22,6 @@
                         <td>{{workflowUnit.customer.phone}}</td>
                     </tr>
                     <tr>
-                        <td>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</td>
-                        <td>{{workflowUnit.price | currency:'\u20AC'}}</td>
-                    </tr>
-                    <tr>
                         <td>{{ 'COMMON_PRODUCT_DELIVERYCOSTS' | translate }}</td>
                         <td>{{workflowUnit.deliveryCosts | currency:'\u20AC'}}</td>
                     </tr>
@@ -36,6 +32,10 @@
                     <tr ng-if="type=='offer'">
                         <td>{{ 'COMMON_DELIVERY_TIME' | translate }}</td>
                         <td>{{workflowUnit.deliveryDate}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</br>{{'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate}}</td>
+                        <td style="vertical-align:middle">{{parent.sumOrderPositions(workflowUnit.orderPositions)+workflowUnit.deliveryCosts| currency:'\u20AC'}}</td>
                     </tr>
                     <tr ng-if="type=='offer'">
                         <td>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</td>

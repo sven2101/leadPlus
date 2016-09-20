@@ -1,3 +1,4 @@
+/// <reference path="../../common/service/Workflow.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -28,5 +29,9 @@ class AbstractWorkflow {
 
     sumOrderPositions(array: Array<OrderPosition>): number {
         return this.workflowService.sumOrderPositions(array);
+    }
+
+    sumBasicPriceOrderPositions(array: Array<OrderPosition>): number {
+        return this.workflowService.sumBasicPriceOrderPositions(array);
     }
 }

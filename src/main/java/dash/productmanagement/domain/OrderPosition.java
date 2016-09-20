@@ -51,12 +51,22 @@ public class OrderPosition {
 
 	private double price;
 
+	private double discount;
+
 	public OrderPosition() {
 
 	}
 
 	public long getId() {
 		return id;
+	}
+
+	public double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
 	}
 
 	public void setId(long id) {
@@ -109,8 +119,10 @@ public class OrderPosition {
 		int result = 1;
 		result = prime * result + amount;
 		result = prime * result + (deleted ? 1231 : 1237);
-		result = prime * result + (int) (id ^ (id >>> 32));
 		long temp;
+		temp = Double.doubleToLongBits(discount);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + (int) (id ^ (id >>> 32));
 		temp = Double.doubleToLongBits(price);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((product == null) ? 0 : product.hashCode());
@@ -130,6 +142,8 @@ public class OrderPosition {
 			return false;
 		if (deleted != other.deleted)
 			return false;
+		if (Double.doubleToLongBits(discount) != Double.doubleToLongBits(other.discount))
+			return false;
 		if (id != other.id)
 			return false;
 		if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
@@ -145,7 +159,7 @@ public class OrderPosition {
 	@Override
 	public String toString() {
 		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", product=" + product + ", amount=" + amount
-				+ ", price=" + price + "]";
+				+ ", price=" + price + ", discount=" + discount + "]";
 	}
 
 }

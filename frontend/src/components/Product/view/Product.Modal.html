@@ -46,23 +46,14 @@
                         <div class="col-sm-6">
                             <label>{{ 'PRODUCT_IMAGE' | translate }}</label>
                             <br/>
-                            <div class="fileinput fileinput-new" data-provides="fileinput">
-                                <span class="btn btn-default btn-file"><span class="fileinput-new">Select file</span>
-                                <span class="fileinput-exists">Change</span><input  type="file" name="..." multiple ng-files="productCtrl.getTheFiles($files)"
-                            required/></span>
-                                <span class="fileinput-filename"></span>
-                                <br/>
-                                <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
-                            </div> 
-                            <br/>
-                            <span ng-model="productCtrl.currentProduct.picture.filename"></span>
+                            <div ng-if="productCtrl.showImageCropper" id="imageCropDiv" imagecrop defaultpicture="productCtrl.currentProduct.picture" event="productImageSaved"></div>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}</button>
-                <button type="button" class="btn btn-success" ng-disabled="productCtrl.createProductForm.$invalid" ng-click="productCtrl.saveProduct()" data-dismiss="modal">{{ 'COMMON_SAVE' | translate }}</button>
+                <button type="button" class="btn btn-white" ng-click="productCtrl.showImageCropper=false" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}</button>
+                <button type="button" class="btn btn-success" ng-disabled="productCtrl.createProductForm.$invalid" ng-click="productCtrl.savePicture()" data-dismiss="modal">{{ 'COMMON_SAVE' | translate }}</button>
             </div>
         </div>
     </div>
