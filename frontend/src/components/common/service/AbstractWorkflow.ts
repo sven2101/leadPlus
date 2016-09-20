@@ -29,4 +29,8 @@ class AbstractWorkflow {
     sumOrderPositions(array: Array<OrderPosition>): number {
         return this.workflowService.sumOrderPositions(array);
     }
+
+    sumBasicPriceOrderPositions(array: Array<OrderPosition>): number {
+        return this.workflowService.sumBasicPriceOrderPositions(array);
+    }
 }
