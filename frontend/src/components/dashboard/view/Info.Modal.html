@@ -74,7 +74,7 @@
                                 <div class="chat-discussion" ng-model="dashboardCtrl.workflowModalProcess.comments">
                                     <div ng-repeat="comment in dashboardCtrl.workflowModalProcess.comments | orderBy: '-timestamp'">
                                         <div ng-if="$index%2==0" class="chat-message left">
-                                            <img class="message-avatar" src="assets/img/guest.png" alt="">
+                                            <img class="message-avatar" ng-src="data:image/png;base64,{{comment.creator.picture.content}}" alt="">
                                             <div class="message">
                                                 <a class="message-author" href="#"> {{comment.creator.username}} </a>
                                                 <span class="message-date"> {{comment.timestamp|  date:'dd.MM.yyyy HH:mm'}} </span>
@@ -84,7 +84,7 @@
                                             </div>
                                         </div>
                                         <div ng-if="$index%2!=0" class="chat-message right">
-                                            <img class="message-avatar" src="assets/img/guest.png" alt="">
+                                             <img class="message-avatar" ng-src="data:image/png;base64,{{comment.creator.picture.content}}" alt="">
                                             <div class="message">
                                                 <a class="message-author"> {{comment.creator.username}} </a>
                                                 <span class="message-date"> {{comment.timestamp |  date:'dd.MM.yyyy HH:mm'}} </span>
