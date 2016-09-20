@@ -15,20 +15,16 @@
 "use strict";
 
 angular.module(moduleApp)
-    .directive("sendworkflow", function () {
+    .directive("order", function () {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
         directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
-        directive.scope = {
-            type: "@",
-            parent: "=",
-            modaltitle: "@"
-        };
+        directive.scope = false;
         directive.restrict = "A";
         directive.templateUrl = function (elem, attr) {
-            return "components/common/view/Workflow.Send.Modal.html";
+            return "components/common/view/Workflow.Edit.Order.html";
         };
         directive.transclude = true;
-        directive.link = function (scope, element, attrs) {
+        directive.link = function (scope, element, attrs, controller) {
             if (scope.type === "lead") {
                 scope.service = scope.parent.leadService;
             }
@@ -38,8 +34,8 @@ angular.module(moduleApp)
             else if (scope.type === "sale") {
                 scope.service = scope.parent.saleService;
             }
-
         };
         return directive;
     });
+
 

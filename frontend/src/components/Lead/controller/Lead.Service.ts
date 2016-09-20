@@ -77,8 +77,7 @@ class LeadService {
             this.customerResource.createCustomer(tempLead.customer).$promise.then(function (customer) {
                 tempLead.customer = customer;
                 self.processResource.save(process).$promise.then(function (result) {
-                    self.toaster.pop("success", "", self.translate
-                        .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
+                    self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
                     self.rootScope.leadsCount += 1;
                     addForm.$setPristine();
                     dtInstance.DataTable.row.add(result).draw();
@@ -89,8 +88,7 @@ class LeadService {
         }
 
         this.processResource.save(process).$promise.then(function (result) {
-            self.toaster.pop("success", "", self.translate
-                .instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
+            self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
             self.rootScope.leadsCount += 1;
             addForm.$setPristine();
             dtInstance.DataTable.row.add(result).draw();

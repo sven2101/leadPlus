@@ -67,6 +67,18 @@ class ProfileService {
         });
     }
 
+    updateProfileImage(user: User) {
+        let self = this;
+        this.userResource.update(user).$promise.then(function (data) {
+            self.rootScope.globals.user.picture = null;
+            self.cookieStore.put("globals", self.rootScope.globals);
+            self.rootScope.globals.user.picture = data.picture;
+            self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
+        });
+    }
+
     submitPasswordForm() {
         let self = this;
         this.userResource.changePassword({ id: this.rootScope.globals.user.id }, { newPassword: this.newPassword1, oldPassword: this.oldPassword }).$promise.then(function () {

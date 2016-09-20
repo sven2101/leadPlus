@@ -15,6 +15,11 @@ class AbstractWorkflow {
 
     workflowService: WorkflowService;
 
+    currentTab: number = 1;
+    currentTab1Class: any = "current";
+    currentTab2Class: any = "done";
+    currentTab3Class: any = "done";
+
     constructor(WorkflowService) {
         this.workflowService = WorkflowService;
     }
@@ -33,5 +38,22 @@ class AbstractWorkflow {
 
     sumBasicPriceOrderPositions(array: Array<OrderPosition>): number {
         return this.workflowService.sumBasicPriceOrderPositions(array);
+    }
+
+    tabOnClick(tab: number) {
+        this.currentTab = tab;
+        if (this.currentTab === 1) {
+            this.currentTab1Class = "current";
+            this.currentTab2Class = "done";
+            this.currentTab3Class = "done";
+        } else if (this.currentTab === 2) {
+            this.currentTab1Class = "done";
+            this.currentTab2Class = "current";
+            this.currentTab3Class = "done";
+        } else if (this.currentTab === 3) {
+            this.currentTab1Class = "done";
+            this.currentTab2Class = "done";
+            this.currentTab3Class = "current";
+        }
     }
 }

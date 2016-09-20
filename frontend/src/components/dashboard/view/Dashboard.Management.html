@@ -29,8 +29,9 @@
                                     <li class="danger-element draggable" ng-repeat="process in dashboardCtrl.getOpenLeads() | limitTo:10">
                                         {{process.lead.customer.company}}
 
-                                        <span style=" width: 40px;height: 40px;position: relative;overflow: hidden;border-radius: 50%;" class="pull-right"><img alt="image" style=" display: inline;margin: 0 auto;height: 100%;width: auto;"
-                                        ng-src="data:image/jpeg;base64,{{process.processor.picture.content}}" /></span>
+                                       <span class="pull-right">
+                                            <img style="width: 40px; height:40px;border-radius: 10%;" ng-src="data:image/jpeg;base64,{{process.processor.picture.content}}" alt="">
+                                        </span>
                                         <span style="margin-top:10px" class="pull-right" ng-if="process.processor != null">{{process.processor.firstname[0]+"."}} {{process.processor.lastname[0]+"."}} &nbsp;&nbsp;&nbsp;</span>
                                         <a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.lead,'lead',process)" class="pull-right btn btn-xs btn-white"
                                             data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |
@@ -56,8 +57,9 @@
                                 <ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="offer" ng-model="dashboardCtrl.dashboardService.openOffers">
                                     <li class="warning-element draggable" ng-repeat="process in dashboardCtrl.getOpenOffers() | limitTo:10">
                                         {{process.offer.customer.company}}
-                                        <span style=" width: 40px;height: 40px;position: relative;overflow: hidden;border-radius: 50%;" class="pull-right"><img alt="image" style=" display: inline;margin: 0 auto;height: 100%;width: auto;"
-                                        ng-src="data:image/jpeg;base64,{{process.processor.picture.content}}" /></span>
+                                       <span class="pull-right">
+                                            <img style="width: 40px; height:40px;border-radius: 10%;" ng-src="data:image/jpeg;base64,{{process.processor.picture.content}}" alt="">
+                                        </span>
                                         <span style="margin-top:10px" class="pull-right" ng-if="process.processor != null">{{process.processor.firstname[0]+"."}} {{process.processor.lastname[0]+"."}} &nbsp;&nbsp;&nbsp;</span>
                                         <a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.offer,'offer',process)" class="pull-right btn btn-xs btn-white"
                                             data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |
@@ -82,10 +84,13 @@
                                     currency:'\u20AC'}}
                                 </h3>
                                 <ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="sale" ng-model="dashboardCtrl.dashboardService.closedSales">
-                                    <li class="info-element not-sortable draggable" ng-repeat="process in dashboardCtrl.getClosedSales()">   
+                                    <li class="info-element not-sortable draggable" ng-repeat="process in dashboardCtrl.getClosedSales()">
                                         {{process.sale.customer.company}}
-                                        <span style=" width: 40px;height: 40px;position: relative;overflow: hidden;border-radius: 50%;" class="pull-right"><img alt="image" style=" display: inline;margin: 0 auto;height: 100%;width: auto;"
-                                        ng-src="data:image/jpeg;base64,{{process.processor.picture.content}}" /></span>
+                                        <span class="pull-right">
+                                            <img style="width: 40px; height:40px;border-radius: 10%;" ng-src="data:image/jpeg;base64,{{process.processor.picture.content}}" alt="">
+                                        </span>
+
+
                                         <span style="margin-top:10px" class="pull-right" ng-if="process.processor != null">{{process.processor.firstname[0]+"."}} {{process.processor.lastname[0]+"."}} &nbsp;&nbsp;&nbsp;</span>
                                         <a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.sale,'sale',process)" class="pull-right btn btn-xs btn-white"
                                             data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |

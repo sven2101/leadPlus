@@ -29,8 +29,6 @@ angular.module(moduleApp)
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {
-
-
             if (scope.type === "lead") {
                 scope.service = scope.parent.leadService;
             }
