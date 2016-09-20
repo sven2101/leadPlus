@@ -19,22 +19,25 @@ const ProductControllerId: string = "ProductController";
 
 class ProductController {
 
-    $inject = [ProductServiceId, $rootScopeId];
+    $inject = [ProductServiceId, $rootScopeId, $translateId, toasterId];
 
     createProductForm;
     currentProduct: Product;
     currentEditProduct: Product;
+    translate;
+    toaster;
     isCurrentProductNew: boolean;
     productService: ProductService;
     rootScope;
     showImageCropper: boolean = true;
 
-    constructor(ProductService: ProductService, $rootScope) {
+    constructor(ProductService: ProductService, $rootScope, $translate, toaster) {
         this.productService = ProductService;
         this.rootScope = $rootScope;
+        this.translate = $translate;
+        this.toaster = toaster;
         let self = this;
         $rootScope.$on("productImageSaved", function (evt, data: FileUpload) {
-            console.log(data);
             self.currentProduct.picture = isNullOrUndefined(data) ? self.currentProduct.picture : data;
             self.saveProduct();
         });

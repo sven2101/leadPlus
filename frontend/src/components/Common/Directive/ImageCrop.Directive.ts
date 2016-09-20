@@ -1,14 +1,17 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../FileUpload/model/FileUpload.Model.ts" />
 
+declare var jic;
+
 angular.module(moduleApp)
     .directive("imagecrop", function ($rootScope) {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
         directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
         directive.scope = {
             event: "@",
-            parent: "=",
-            defaultpicture: "="
+            defaultpicture: "=",
+            quality: "@",
+            savebutton: "@"
         };
         directive.restrict = "A";
         directive.templateUrl = function (elem, attr) {
@@ -16,6 +19,10 @@ angular.module(moduleApp)
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {
+            $("#errorMessage").hide();
+            scope.hideErrorMessage = function () {
+                $("#errorMessage").hide();
+            };
             scope.buildImageCropper = function () {
                 let $image = $(".image-crop > img") as any;
                 $image.cropper({
@@ -35,8 +42,14 @@ angular.module(moduleApp)
                         }
 
                         file = files[0];
-
+                        if (file.size > 1024 * 1024 * 4) {
+                            $("#errorMessage").show();
+                            return;
+                        } else {
+                            $("#errorMessage").hide();
+                        }
                         if (/^image\/\w+$/.test(file.type)) {
+
                             fileReader.readAsDataURL(file);
                             fileReader.onload = function () {
                                 $inputImage.val("");
@@ -48,16 +61,30 @@ angular.module(moduleApp)
                     $inputImage.addClass("hide");
                 }
             };
-            scope.buildImageCropper();           
-
-            scope.$on("saveCroppedImage", function (evt, data) {
+            scope.save = function () {
                 let $image = $(".image-crop > img") as any;
                 let canvas = $image.cropper("getCroppedCanvas");
+                if (isNullOrUndefined(canvas.toDataURL)) {
+                    $rootScope.$broadcast(scope.event, undefined);
+                    return;
+                }
+
                 let picture = new FileUpload();
-                picture.mimeType = "image/png";
-                picture.content = isNullOrUndefined(canvas.toDataURL) ? undefined : canvas.toDataURL().split(",")[1];
-                picture = isNullOrUndefined(picture.content) ? undefined : picture;
+                picture.mimeType = "image/jpeg";
+
+                if (!isNullOrUndefined(scope.quality) && !isNaN(scope.quality) && scope.quality > 0 && scope.quality < 100) {
+                    picture.content = canvas.toDataURL("image/jpeg", scope.quality / 100).split(",")[1];
+                } else {
+                    picture.content = canvas.toDataURL().split(",")[1];
+                }
                 $rootScope.$broadcast(scope.event, picture);
+            };
+
+            scope.buildImageCropper();
+
+
+            scope.$on("saveCroppedImage", function (evt, data) {
+                scope.save();
             });
 
         };

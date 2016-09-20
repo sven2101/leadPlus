@@ -1,40 +1,19 @@
-
-
-    
-        <div class="row">
-            <div>
-                <div style="min-height:100px" class="image-crop">
-                    <img style=" max-width: 100%;" id="imageCroper" alt="image" ng-src="data:image/png;base64,{{defaultpicture.content}}" />
-                </div>
-            </div>
+<h5>max 4MB</h5>
+<div class="row">
+    <div>
+        <div class="image-crop">
+            <img style="max-width: 100%;" id="imageCroper" ng-src="data:image/png;base64,{{defaultpicture.content}}" />
         </div>
-        <!--
-        <div style="min-height:100px" lass="row">
-            <div>
-                <div class="col-md-6">
-                    <h4>Preview image</h4>
-                    <div class="img-preview img-preview-sm"></div>
-                </div>
-                <div class="col-md-6">
-                    <div class="btn-group">
-                        <label title="Upload image file" for="inputImage" class="btn btn-primary">
-                            <input type="file" accept="image/*" name="file" id="inputImage" class="hide">Upload Image
-                        </label>
-                        <button class="btn btn-white" id="rotateLeft" type="button">Rotate Left</button>
-                        <button class="btn btn-white" id="rotateRight" type="button">Rotate Right</button>
-                        <label ng-click="saveImage();" class="btn btn-primary">Save Image</label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        -->
-        <br>
-        <div class=row">
-                    <div class="btn-group">
-                        <label title="Upload image file" for="inputImage" class="btn btn-white">
-                            <input type="file" accept="image/*" name="file" id="inputImage" class="hide">Upload Image
-                        </label>  
-                    </div>
-                </div>
-
-
+    </div>
+</div>
+<br>
+<p id="errorMessage" class="error-block">{{ 'COMMON_VALIDATE_MAX_FILE_SIZE' | translate }}</p>
+<div class="btn-group" role="group">
+    <label ng-click="hideErrorMessage();" style="margin-left:-15px" title="Upload image file" for="inputImage" class="btn btn-white">
+        <input type="file" accept="image/*" name="file" id="inputImage" class="hide">{{ 'COMMON_UPLOAD_NEW_IMAGE' | translate }}
+    </label>
+    <label ng-if="savebutton" ng-click="hideErrorMessage();save();" title="Save upload image file"
+        class="btn btn-white">
+    {{ 'COMMON_SAVE' | translate }}
+    </label>
+</div>

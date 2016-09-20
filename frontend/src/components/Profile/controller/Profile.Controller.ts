@@ -36,10 +36,27 @@ class ProfileController {
         this.rootscope = $rootScope;
         this.currentUser = deepCopy(this.rootscope.globals.user);
         this.getById();
+        let self = this;
+        $rootScope.$on("profileImageSaved", function (evt, data: FileUpload) {
+            if (!isNullOrUndefined(data)) {
+                let user = deepCopy(self.rootscope.globals.user);
+                user.picture = data;
+                self.updateProfileImage(user);
+            }
+
+        });
+    }
+
+    saveProfileImage() {
+        this.rootscope.$broadcast("saveCroppedImage");
     }
 
     submitProfilInfoForm() {
         this.profileService.submitProfilInfoForm(this.currentUser);
+    }
+
+    updateProfileImage(user: User) {
+        this.profileService.updateProfileImage(user);
     }
 
     submitPasswordForm() {
