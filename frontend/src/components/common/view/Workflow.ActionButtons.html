@@ -1,41 +1,3 @@
-<!--
-<div style="white-space: nowrap;">
-    <button ng-if="type=='lead' || type =='offer'" class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.createNextWorkflowUnit(parent.processes[directiveData.process.id]) "
-        title="{{directiveData.translation.nextWorkflowUnit}}">
-        <i class="fa fa-check"></i>
-    </button>
-    <button ng-if="(type=='lead'|| type =='offer')&&directiveData.config.disablePinDropdown" class="btn btn-white" ng-disabled="directiveData.config.disablePin"
-        ng-click="parent.pin(parent.processes[directiveData.process.id])" title="{{'LEAD_PIN'| translate }}">
-         <i class="fa fa-thumb-tack"></i>
-        </button>
-    <button ng-if="type=='offer'" class="btn btn-white" ng-disabled="directiveData.config.disablePin" ng-click="parent.followUp(parent.processes[directiveData.process.id])"
-        title="{{'OFFER_FOLLOW_UP'| translate }}">
-         <i class="fa fa-eye"></i>
-        </button>
-    <button ng-if="type=='lead' || type =='offer'" class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenDisable"
-        ng-click="parent.closeOrOpen(parent.processes[directiveData.process.id],parent.workflowService.user)" title="{{directiveData.config.openOrLock}}">
-         <i class="{{directiveData.config.faOpenOrLock}}"></i>
-    </button>
-    <button class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenDisable" ng-click="parent.loadDataToModal(parent.processes[directiveData.process.id])"
-        data-toggle="modal" data-target="#editModal" title="{{directiveData.translation.editWorkflowUnit}}">
-    <i class="fa fa-edit"></i>
-    </button>
-    <button class="btn btn-white" ng-disabled="directiveData.config.hasRightToDelete" ng-click="parent.deleteRow(parent.processes[directiveData.process.id])"
-        title="{{directiveData.translation.deleteWorkflowUnit}}">
-    <i class="fa fa-trash-o"></i>
-   </button>
-    <div ng-if="!directiveData.config.disablePinDropdown&&(type=='lead'|| type =='offer')" class="dropdown">
-        <button class="btn btn-white dropdown-toggle" type="button" data-toggle="dropdown"><i class="fa fa-thumb-tack"</i>&nbsp; {{directiveData.process.processor.username}}
-        <span class="caret"></span> </button>
-        <ul class="dropdown-menu">
-            <li ng-click="parent.pin(parent.processes[directiveData.process.id],null)"><a>{{ 'COMMON_EMPTY_PROCESSOR' | translate }}</a></li>
-            <li role="separator" class="divider"></li>
-            <li ng-click="parent.pin(parent.processes[directiveData.process.id],user)" ng-repeat="user in parent.workflowService.users"><a>{{user.username}}</a></li>
-        </ul>
-    </div>
-</div>
--->
-
 <div ng-style="{'min-width':directiveData.config.minwidth+'px'}" class="text-center btn-group" role="group" aria-label="...">
     <button style="min-height:34px" ng-if="type=='lead' || type =='offer'" class="btn btn-white" ng-disabled="directiveData.config.disabled"
         ng-click="parent.createNextWorkflowUnit(parent.processes[directiveData.process.id])" title="{{directiveData.translation.nextWorkflowUnit}}">
@@ -60,8 +22,8 @@
         title="{{'LEAD_PIN'| translate }}">
          <i class="fa fa-thumb-tack"></i>
     </button>
-    <button style="min-height:34px" ng-if="type=='offer'" class="btn btn-white" ng-disabled="directiveData.config.disablePin"
-        ng-click="parent.followUp(parent.processes[directiveData.process.id])" title="{{'OFFER_FOLLOW_UP'| translate }}">
+    <button style="min-height:34px" ng-if="type=='offer'" class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.followUp(parent.processes[directiveData.process.id])"
+        title="{{'OFFER_FOLLOW_UP'| translate }}">
          <i class="fa fa-eye"></i>
     </button>
     <div class="btn-group" role="group">
@@ -77,8 +39,8 @@
                 data-toggle="{{!directiveData.config.disabled ? 'modal' : ''}}" data-target="#editModal">
                 <a><i class="fa fa-edit"></i>&nbsp;{{directiveData.translation.editWorkflowUnit}}</a></li>
             <li role="separator" class="divider"></li>
-            <li ng-if="type!='lead'" ng-class="{ 'disabled': directiveData.config.rollBackDisabled }" ng-click="openModal(parent.processes[directiveData.process.id],'rollBack')"
-                data-toggle="{{!directiveData.config.rollBackDisabled ? 'modal' : ''}}" data-target="#rollbackConfirmationModal">
+            <li ng-if="type!='lead'" ng-class="{ 'disabled': directiveData.config.closeOrOpenDisable }" ng-click="openModal(parent.processes[directiveData.process.id],'rollBack')"
+                data-toggle="{{!directiveData.config.closeOrOpenDisable ? 'modal' : ''}}" data-target="#rollbackConfirmationModal">
                 <a><i class="fa fa-reply"></i>&nbsp;{{directiveData.translation.rollBackWorkflowUnit}}</a></li>
             </li>
             <li ng-if="type!='lead'" role="separator" class="divider"></li>
@@ -88,26 +50,4 @@
             </li>
         </ul>
     </div>
-    <!--
-    <button style="min-height:34px" ng-if="type=='lead' || type =='offer'" class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenDisable"
-        ng-click="parent.closeOrOpen(parent.processes[directiveData.process.id])" title="{{directiveData.config.openOrLock}}">
-         <i class="{{directiveData.config.faOpenOrLock}}"></i>
-    </button>
-    <button style="min-height:34px" class="btn btn-white" ng-disabled="directiveData.config.closeOrOpenDisable" ng-click="parent.loadDataToModal(parent.processes[directiveData.process.id])"
-        data-toggle="modal" data-target="#editModal" title="{{directiveData.translation.editWorkflowUnit}}">
-    <i class="fa fa-edit"></i>
-    </button>
-   
-    <button style="min-height:34px" class="btn btn-white" ng-disabled="directiveData.config.hasRightToDelete" ng-click="openModal(parent.processes[directiveData.process.id],'deleteRow')"
-        title="{{directiveData.translation.deleteWorkflowUnit}}" data-toggle="modal" data-target="#deleteConfirmationModal">
-    <i class="fa fa-trash-o"></i>
-   </button>
-
-    <button ng-if="type!='lead'" style="min-height:34px" class="btn btn-white" ng-disabled="directiveData.config.rollBackDisabled"
-        ng-click="openModal(parent.processes[directiveData.process.id],'rollBack')" title="{{directiveData.translation.rollBackWorkflowUnit}}"
-        data-toggle="modal" data-target="#rollbackConfirmationModal">
- <i class="fa fa-reply" aria-hidden="true"></i>
-   </button>
- -->
-    <!-- ng-style="type=='lead'?{'margin-left':'-62px','position': 'fixed','z-index': '10'}:{'margin-left':'-23px','position': 'fixed','z-index': '10'}" -->
 </div>

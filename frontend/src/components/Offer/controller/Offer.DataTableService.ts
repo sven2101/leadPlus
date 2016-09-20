@@ -57,7 +57,7 @@ class OfferDataTableService {
             .withOption("stateSave", true)
             .withDOM(this.workflowService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowService.getButtons(this.translate("OFFER_OFFERS"), [6, 1, 2, 3, 5, 7, 10, 11, 12, 8, 9, 13, 14, 15]))
+            .withButtons(this.workflowService.getButtons(this.translate("OFFER_OFFERS"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("order", [4, "desc"])
@@ -102,11 +102,31 @@ class OfferDataTableService {
             this.DTColumnBuilder.newColumn("offer.customer.firstname").withTitle(
                 this.translate("COMMON_FIRSTNAME")).notVisible(),
             this.DTColumnBuilder.newColumn("offer.deliveryAddress").withTitle(
-                this.translate("COMMON_CONTAINER_DESTINATION")).notVisible(),
+                this.translate("COMMON_PRODUCT_DESTINATION")).notVisible(),
             this.DTColumnBuilder.newColumn("offer.deliveryDate").withTitle(
                 this.translate("COMMON_DELIVERY_TIME")).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
-                this.translate("COMMON_CONTAINER_ENTIRE_PRICE"))
+                this.translate("COMMON_PRODUCT_DELIVERYCOSTS"))
+                .renderWith(
+                function (data, type, full) {
+                    if (isNullOrUndefined(data.offer.deliveryCosts)) {
+                        return self.filter("currency")(0, "€", 2);
+                    }
+                    return self.filter("currency")(data.lead.deliveryCosts,
+                        "€", 2);
+                }).notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(
+                this.translate("COMMON_PRODUCT_ENTIRE_PRICE"))
+                .renderWith(
+                function (data, type, full) {
+                    if (isNullOrUndefined(data.offer.price)) {
+                        return self.filter("currency")(0, "€", 2);
+                    }
+                    return self.filter("currency")(data.offer.price,
+                        "€", 2);
+                }).notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(
+                this.translate("COMMON_PRODUCT_OFFER_PRICE"))
                 .renderWith(
                 function (data, type, full) {
                     if (isNullOrUndefined(data.offer.offerPrice)) {
@@ -128,31 +148,36 @@ class OfferDataTableService {
     setActionButtonsConfig(user: User, templateData: any) {
         let config = {
             "disabled": false,
-            "disableFollowUp": false,
             "disablePin": false,
             "disablePinDropdown": false,
             "hasRightToDelete": false,
             "closeOrOpenDisable": false,
-            "rollBackDisabled": false,
             "openOrLock": this.translate.instant("OFFER_CLOSE_OFFER"),
             "faOpenOrLock": "fa fa-lock",
             "minwidth": 180
         };
         if (templateData.process.status !== "OFFER" && templateData.process.status !== "FOLLOWUP") {
             config.disabled = true;
-            config.disableFollowUp = true;
             config.openOrLock = this.translate.instant("OFFER_OPEN_OFFER");
             config.faOpenOrLock = "fa fa-unlock";
         }
-        if (templateData.process.status === "FOLLOWUP") {
-            config.disableFollowUp = true;
-        }
+
         if (templateData.process.sale !== null) {
             config.closeOrOpenDisable = true;
         }
-        if (user.role === Role.USER) {
+
+        if (isNullOrUndefined(templateData.process.sale) && (isNullOrUndefined(templateData.process.processor) || (templateData.process.processor !== null
+            && user.username === templateData.process.processor.username))) {
             config.hasRightToDelete = true;
+        }
+
+        if (user.role === Role.USER) {
             config.disablePinDropdown = true;
+        }
+
+        if (templateData.process.processor !== null
+            && user.username !== templateData.process.processor.username) {
+            config.disablePin = true;
         }
         templateData.config = config;
         let translation = {

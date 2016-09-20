@@ -82,6 +82,9 @@ public class ProcessService implements IProcessService {
 			processes = processRepository.findByStatusAndLeadIsNotNull(status);
 		} else if (workflow.equals(Workflow.OFFER)) {
 			processes = processRepository.findByStatusAndOfferIsNotNull(status);
+			// TODO Workaround to get followups - function should accept an
+			// array
+			processes.addAll(processRepository.findByStatusAndOfferIsNotNull(Status.FOLLOWUP));
 		} else if (workflow.equals(Workflow.SALE)) {
 			processes = processRepository.findByStatusAndSaleIsNotNull(status);
 		}

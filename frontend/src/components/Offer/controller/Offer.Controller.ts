@@ -54,7 +54,7 @@ class OfferController extends AbstractWorkflow {
     currentCustomerId = "-1";
     customerSelected: boolean = false;
 
-    currentTab: number = 1;
+    otherCurrentTab: number = 1;
 
     constructor($compile, $scope, WorkflowService, OfferDataTableService, OfferService) {
         super(WorkflowService);
@@ -95,8 +95,8 @@ class OfferController extends AbstractWorkflow {
         this.workflowService.changeDataInput(this.loadAllData, this.dtOptions, allDataOfferRoute, openDataOfferRoute);
     }
 
-    tabOnClick(tab: number) {
-        this.currentTab = tab;
+    otherTabOnClick(tab: number) {
+        this.otherCurrentTab = tab;
     }
 
     appendChildRow(process: Process, event: any) {
@@ -142,7 +142,7 @@ class OfferController extends AbstractWorkflow {
     }
 
     closeOrOpen(process: Process) {
-        this.offerService.closeOrOpenOffer(process, this.dtInstance, this.scope);
+        this.offerService.closeOrOpenOffer(process, this.dtInstance, this.scope, this.loadAllData);
     }
 
     deleteRow(process: Process) {
@@ -160,7 +160,7 @@ class OfferController extends AbstractWorkflow {
     }
 
     followUp(process: Process) {
-        this.offerService.followUp(process, this.loadAllData, this.scope);
+        this.offerService.followUp(process, this.dtInstance, this.scope);
     }
 
     pin(process: Process, user: User) {

@@ -69,7 +69,7 @@ class OfferService {
     }
 
 
-    followUp(process: Process, loadAllData: boolean, scope: any) {
+    followUp(process: Process, dtInstance: any, scope: any) {
         let self = this;
         this.processResource.setStatus({
             id: process.id
@@ -77,14 +77,14 @@ class OfferService {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_FOLLOW_UP"));
             process.status = "FOLLOWUP";
-            self.updateRow(process, loadAllData, scope);
+            self.updateRow(process, dtInstance, scope);
             self.rootScope.$broadcast("onTodosChange");
         });
 
     }
 
 
-    closeOrOpenOffer(process: Process, dtInstance: any, scope: any) {
+    closeOrOpenOffer(process: Process, dtInstance: any, scope: any, loadAllData: boolean) {
         let self = this;
         if (process.status === "OFFER" || process.status === "FOLLOWUP") {
             this.processResource.setStatus({
@@ -94,7 +94,7 @@ class OfferService {
                     .instant("COMMON_TOAST_SUCCESS_CLOSE_OFFER"));
                 self.rootScope.offersCount -= 1;
                 process.status = "CLOSED";
-                self.updateRow(process, dtInstance, scope);
+                self.removeOrUpdateRow(process, loadAllData, dtInstance, scope);
             });
         } else if (process.status === "CLOSED") {
             this.processResource.setStatus({
@@ -119,7 +119,6 @@ class OfferService {
             temp.customer.timestamp = newTimestamp();
             this.customerResource.createCustomer(temp.customer).$promise.then(function (customer) {
                 temp.customer = customer;
-
                 self.processResource.save(editProcess).$promise.then(function (result) {
                     editForm.$setPristine();
                     self.updateRow(editProcess, dtInstance, scope);
@@ -143,33 +142,6 @@ class OfferService {
             }
         });
     }
-    // deprecated
-    deleteRowOld(process: Process, dtInstance: any) {
-        let self = this;
-        let offerId = process.offer.id;
-        if (process.sale !== null) {
-            self.toaster.pop("error", "", self.translate
-                .instant("COMMON_TOAST_FAILURE_DELETE_OFFER"));
-            return;
-        }
-        process.offer = null;
-        this.processResource.update(process).$promise.then(function () {
-            if (process.lead === null && process.sale === null) {
-                self.processResource.drop({
-                    id: process.id
-                });
-            }
-            self.offerResource.drop({
-                id: offerId
-            }).$promise.then(function () {
-                self.toaster.pop("success", "", self.translate
-                    .instant("COMMON_TOAST_SUCCESS_DELETE_OFFER"));
-                self.rootScope.offersCount -= 1;
-                dtInstance.DataTable.row(self.rows[process.id]).remove().draw();
-                self.rootScope.$broadcast("onTodosChange");
-            });
-        });
-    }
 
     setRow(id: number, row: any) {
         this.rows[id] = row;
@@ -179,7 +151,15 @@ class OfferService {
         dtInstance.DataTable.row(this.rows[process.id]).data(process).draw(
             false);
         this.compile(angular.element(this.rows[process.id]).contents())(scope);
+    }
 
+    removeOrUpdateRow(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {
+        if (loadAllData === true) {
+            this.updateRow(process, dtInstance, scope);
+        } else if (loadAllData === false) {
+            dtInstance.DataTable.row(this.rows[process.id]).remove()
+                .draw();
+        }
     }
 
     pin(process: Process, dtInstance: any, scope: any, user: User) {

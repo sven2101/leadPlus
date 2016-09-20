@@ -184,33 +184,6 @@ class LeadService {
             }
         });
     }
-    // deprecated
-    deleteRowOld(process: Process, dtInstance: any) {
-        let self = this;
-        let leadId = process.lead.id;
-        if (process.sale !== null || process.offer !== null) {
-            self.toaster.pop("error", "", self.translate
-                .instant("COMMON_TOAST_FAILURE_DELETE_LEAD"));
-            return;
-        }
-        process.lead = null;
-        this.processResource.update(process).$promise.then(function () {
-            if (process.offer === null && process.sale === null) {
-                self.processResource.drop({
-                    id: process.id
-                });
-            }
-            self.leadResource.drop({
-                id: leadId
-            }).$promise.then(function () {
-                self.toaster.pop("success", "", self.translate
-                    .instant("COMMON_TOAST_SUCCESS_DELETE_LEAD"));
-                self.rootScope.leadsCount -= 1;
-                dtInstance.DataTable.row(self.rows[process.id]).remove().draw();
-                self.rootScope.$broadcast("onTodosChange");
-            });
-        });
-    }
 
     setRow(id: number, row: any) {
         this.rows[id] = row;

@@ -140,9 +140,13 @@ class SaleController extends AbstractWorkflow {
     }
 
     getOrderPositions(process: Process): Array<OrderPosition> {
-        if (isNullOrUndefined(process.sale)) {
+        if (!isNullOrUndefined(process.sale)) {
             return process.sale.orderPositions;
         }
+    }
+
+    pin(process: Process, user: User) {
+        this.saleService.pin(process, this.dtInstance, this.scope, user);
     }
 
     selectCustomer(workflow: any) {

@@ -83,26 +83,26 @@ class SaleService {
             self.updateRow(editProcess, dtInstance, scope);
         });
     }
-    // deprecated
-    deleteRowOld(process: Process, dtInstance: any) {
-        let self = this;
-        let saleId = process.sale.id;
 
-        process.sale = null;
-        this.processResource.update(process).$promise.then(function () {
-            if (process.lead === null && process.offer === null) {
-                self.processResource.drop({
-                    id: process.id
-                });
-            }
-            self.saleResource.drop({
-                id: saleId
-            }).$promise.then(function () {
-                self.toaster.pop("success", "", self.translate
-                    .instant("COMMON_TOAST_SUCCESS_DELETE_SALE"));
-                dtInstance.DataTable.row(self.rows[process.id]).remove().draw();
+    pin(process: Process, dtInstance: any, scope: any, user: User) {
+        let self = this;
+        if (user !== null) {
+            this.processResource.setProcessor({
+                id: process.id
+            }, user.id).$promise.then(function () {
+                process.processor = user;
+                self.updateRow(process, dtInstance, scope);
+                self.rootScope.$broadcast("onTodosChange");
             });
-        });
+        } else if (process.processor !== null) {
+            this.processResource.removeProcessor({
+                id: process.id
+            }).$promise.then(function () {
+                process.processor = null;
+                self.updateRow(process, dtInstance, scope);
+                self.rootScope.$broadcast("onTodosChange");
+            });
+        }
     }
 
     setRow(id: number, row: any) {
@@ -134,7 +134,7 @@ class SaleService {
         this.workflowService.deletProcess(process).then((data) => {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_DELETE_SALE"));
-                dtInstance.DataTable.row(self.rows[process.id]).remove().draw();
+            dtInstance.DataTable.row(self.rows[process.id]).remove().draw();
             self.rootScope.$broadcast("onTodosChange");
         }, (error) => {
             self.toaster.pop("error", "", self.translate

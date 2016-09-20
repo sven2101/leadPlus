@@ -57,7 +57,7 @@ class SaleDataTableService {
             .withOption("stateSave", true)
             .withDOM(this.workflowService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowService.getButtons(this.translate("SALE_SALES"), [6, 1, 2, 3, 5, 7, 10, 11, 12, 8, 9, 13, 14, 15]))
+            .withButtons(this.workflowService.getButtons(this.translate("SALE_SALES"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("order", [4, "desc"])
@@ -93,18 +93,18 @@ class SaleDataTableService {
             this.DTColumnBuilder.newColumn("sale.customer.firstname").withTitle(
                 this.translate("COMMON_FIRSTNAME")).notVisible(),
             this.DTColumnBuilder.newColumn("sale.deliveryAddress").withTitle(
-                this.translate("COMMON_CONTAINER_DESTINATION")).notVisible(),
+                this.translate("COMMON_PRODUCT_DESTINATION")).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
-                this.translate("COMMON_CONTAINER_SALE_TURNOVER")).renderWith(
+                this.translate("COMMON_PRODUCT_SALE_TURNOVER")).renderWith(
                 function (data, type, full) {
-                    if (isNullOrUndefined(data.sale.saleReturn)) {
+                    if (isNullOrUndefined(data.sale.saleTurnover)) {
                         return self.filter("currency")(0, "€", 2);
                     }
                     return self.filter("currency")
-                        (data.sale.saleReturn, "€", 2);
+                        (data.sale.saleTurnover, "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
-                this.translate("COMMON_CONTAINER_SALE_PROFIT")).renderWith(
+                this.translate("COMMON_PRODUCT_SALE_PROFIT")).renderWith(
                 function (data, type, full) {
                     if (isNullOrUndefined(data.sale.saleProfit)) {
                         return self.filter("currency")(0, "€", 2);
@@ -125,11 +125,22 @@ class SaleDataTableService {
     setActionButtonsConfig(user: User, templateData: any) {
         let config = {
             "hasRightToDelete": false,
-            "rollBackDisabled": false,
+            "disablePinDropdown": false,
+            "disablePin": false,
             "minwidth": 100
         };
-        if (user.role === Role.USER) {
+        if (isNullOrUndefined(templateData.process.processor) || (templateData.process.processor !== null
+            && user.username === templateData.process.processor.username)) {
             config.hasRightToDelete = true;
+        }
+
+        if (user.role === Role.USER) {
+            config.disablePinDropdown = true;
+        }
+
+        if (templateData.process.processor !== null
+            && user.username !== templateData.process.processor.username) {
+            config.disablePin = true;
         }
         templateData.config = config;
         let translation = {
