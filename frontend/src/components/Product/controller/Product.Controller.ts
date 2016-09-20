@@ -1,6 +1,7 @@
 /// <reference path="../../Product/model/Product.Model.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../app/App.Common.ts" />
+/// <reference path="../../FileUpload/model/FileUpload.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -18,16 +19,26 @@ const ProductControllerId: string = "ProductController";
 
 class ProductController {
 
-    $inject = [ProductServiceId];
+    $inject = [ProductServiceId, $rootScopeId];
 
     createProductForm;
     currentProduct: Product;
     currentEditProduct: Product;
     isCurrentProductNew: boolean;
     productService: ProductService;
+    rootScope;
+    showImageCropper: boolean = true;
 
-    constructor(ProductService: ProductService) {
+    constructor(ProductService: ProductService, $rootScope) {
         this.productService = ProductService;
+        this.rootScope = $rootScope;
+        let self = this;
+        $rootScope.$on("productImageSaved", function (evt, data: FileUpload) {
+            console.log(data);
+            self.currentProduct.picture = isNullOrUndefined(data) ? self.currentProduct.picture : data;
+            self.saveProduct();
+        });
+
     }
 
     refreshData(): void {
@@ -35,16 +46,24 @@ class ProductController {
     }
 
     clearProduct(): void {
+        this.showImageCropper = false;
         this.createProductForm.$setPristine();
         this.currentProduct = new Product();
         this.isCurrentProductNew = true;
+        this.showImageCropper = true;
     }
 
     editProduct(product: Product): void {
+
         this.currentEditProduct = product;
         this.currentProduct = new Product();
         shallowCopy(this.currentEditProduct, this.currentProduct);
         this.isCurrentProductNew = false;
+        this.showImageCropper = true;
+    }
+
+    savePicture() {
+        this.rootScope.$broadcast("saveCroppedImage");
     }
 
     saveProduct() {
@@ -52,6 +71,7 @@ class ProductController {
             shallowCopy(this.currentProduct, this.currentEditProduct);
         }
         this.productService.saveProduct(this.currentProduct, this.isCurrentProductNew);
+        this.showImageCropper = false;
     }
 
     getTheFiles($files) {

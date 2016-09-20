@@ -35,8 +35,8 @@
                         <div class="form-group">
 
                             <input type="text" id="firstname" name="firstname" class="form-control" placeholder="{{ 'COMMON_FIRSTNAME' | translate }}"
-                                required ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/" ng-model="profileCtrl.currentUser.firstname" ng-minlength="2"
-                                ng-maxlength="50">
+                                required ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/" ng-model="profileCtrl.currentUser.firstname"
+                                ng-minlength="2" ng-maxlength="50">
 
                             <span ng-show="profilInfoForm.firstname.$error.required&&!profilInfoForm.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
                             <span ng-show="profilInfoForm.firstname.$error.minlength&&!profilInfoForm.firstname.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_FIRSTNAME_TO_SHORT' | translate }}</span>
@@ -149,8 +149,10 @@
                     <button class="btn btn-success" type="button" ng-click="profileCtrl.uploadFiles()" value="Upload">
                         <i class="fa fa-save"></i>Upload
                     </button>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div imagecrop picture="profileCtrl.rootscope.globals.user.picture"></div>
