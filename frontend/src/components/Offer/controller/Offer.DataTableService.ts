@@ -135,7 +135,8 @@ class OfferDataTableService {
             "closeOrOpenDisable": false,
             "rollBackDisabled": false,
             "openOrLock": this.translate.instant("OFFER_CLOSE_OFFER"),
-            "faOpenOrLock": "fa fa-lock"
+            "faOpenOrLock": "fa fa-lock",
+            "minwidth": 180
         };
         if (templateData.process.status !== "OFFER" && templateData.process.status !== "FOLLOWUP") {
             config.disabled = true;

@@ -125,7 +125,8 @@ class SaleDataTableService {
     setActionButtonsConfig(user: User, templateData: any) {
         let config = {
             "hasRightToDelete": false,
-            "rollBackDisabled": false
+            "rollBackDisabled": false,
+            "minwidth": 100
         };
         if (user.role === Role.USER) {
             config.hasRightToDelete = true;

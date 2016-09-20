@@ -109,7 +109,6 @@ class LeadService {
     pin(process: Process, dtInstance: any, scope: any, user: User) {
         let self = this;
         if (user !== null) {
-            console.log(user);
             this.processResource.setProcessor({
                 id: process.id
             }, user.id).$promise.then(function () {
