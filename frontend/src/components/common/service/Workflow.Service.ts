@@ -174,8 +174,7 @@ class WorkflowService {
         orderPosition.price = this.calculatePrice(orderPosition.product.priceNetto, orderPosition.discount);
     }
 
-    addLeadToOffer(process: Process): IPromise<Process> {        
-
+    addLeadToOffer(process: Process): IPromise<Process> {
         let defer = this.$q.defer();
         let self = this;
         let offer: Offer = {
@@ -200,7 +199,10 @@ class WorkflowService {
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
                 if (resultProcess.processor === null) {
+                    process.processor = self.rootScope.globals.user;
                     self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function (resultUser: User) {
+                        // process.processor = resultUser;
+                    }, function (resultUser: User) {
                         process.processor = resultUser;
                     });
                 }
