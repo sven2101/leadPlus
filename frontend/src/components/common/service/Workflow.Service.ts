@@ -199,11 +199,10 @@ class WorkflowService {
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
                 if (resultProcess.processor === null) {
-                    process.processor = self.rootScope.globals.user;
                     self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function (resultUser: User) {
-                        // process.processor = resultUser;
-                    }, function (resultUser: User) {
                         process.processor = resultUser;
+                    }, function (resultUser: User) {
+
                     });
                 }
 

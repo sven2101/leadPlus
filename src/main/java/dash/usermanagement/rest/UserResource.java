@@ -14,6 +14,8 @@
 
 package dash.usermanagement.rest;
 
+import static dash.Constants.USER_NOT_FOUND;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -39,6 +41,7 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
+import dash.fileuploadmanagement.domain.FileUpload;
 import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.Role;
@@ -122,6 +125,21 @@ public class UserResource {
 			return new ResponseEntity<byte[]>(body, header, HttpStatus.OK);
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+	}
+
+	@RequestMapping(value = "/{id}/profile/picture/object", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get user Profile Picture.")
+	public FileUpload getProfilePictureObjectById(@PathVariable final long id) throws NotFoundException {
+		User user = userService.getById(id);
+		if (user != null) {
+			FileUpload picture = null;
+			if (user.getPicture() != null && user.getPicture().getContent() != null) {
+				picture = user.getPicture();
+			}
+			return picture;
+		}
+		throw new NotFoundException(USER_NOT_FOUND);
 	}
 
 	@RequestMapping(value = "/{id}/profile/picture", method = RequestMethod.POST)
