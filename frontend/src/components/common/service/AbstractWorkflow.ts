@@ -15,10 +15,12 @@ class AbstractWorkflow {
 
     workflowService: WorkflowService;
 
-    currentTab: number = 1;
-    currentTab1Class: any = "current";
-    currentTab2Class: any = "done";
-    currentTab3Class: any = "done";
+    currentWizard: number = 1;
+    currentWizard1Class: any = "current";
+    currentWizard2Class: any = "done";
+    currentWizard3Class: any = "done";
+    currentWizard4Class: any = "done";
+    currentWizard5Class: any = "done";
 
     constructor(WorkflowService) {
         this.workflowService = WorkflowService;
@@ -40,20 +42,38 @@ class AbstractWorkflow {
         return this.workflowService.sumBasicPriceOrderPositions(array);
     }
 
-    tabOnClick(tab: number) {
-        this.currentTab = tab;
-        if (this.currentTab === 1) {
-            this.currentTab1Class = "current";
-            this.currentTab2Class = "done";
-            this.currentTab3Class = "done";
-        } else if (this.currentTab === 2) {
-            this.currentTab1Class = "done";
-            this.currentTab2Class = "current";
-            this.currentTab3Class = "done";
-        } else if (this.currentTab === 3) {
-            this.currentTab1Class = "done";
-            this.currentTab2Class = "done";
-            this.currentTab3Class = "current";
+    tabOnClick(wizard: number) {
+        this.currentWizard = wizard;
+        if (this.currentWizard === 1) {
+            this.currentWizard1Class = "current";
+            this.currentWizard2Class = "done";
+            this.currentWizard3Class = "done";
+            this.currentWizard4Class = "done";
+            this.currentWizard5Class = "done";
+        } else if (this.currentWizard === 2) {
+            this.currentWizard1Class = "done";
+            this.currentWizard2Class = "current";
+            this.currentWizard3Class = "done";
+            this.currentWizard4Class = "done";
+            this.currentWizard5Class = "done";
+        } else if (this.currentWizard === 3) {
+            this.currentWizard1Class = "done";
+            this.currentWizard2Class = "done";
+            this.currentWizard3Class = "current";
+            this.currentWizard4Class = "done";
+            this.currentWizard5Class = "done";
+        } else if (this.currentWizard === 4) {
+            this.currentWizard1Class = "done";
+            this.currentWizard2Class = "done";
+            this.currentWizard3Class = "done";
+            this.currentWizard4Class = "current";
+            this.currentWizard5Class = "done";
+        } else if (this.currentWizard === 5) {
+            this.currentWizard1Class = "done";
+            this.currentWizard2Class = "done";
+            this.currentWizard3Class = "done";
+            this.currentWizard4Class = "done";
+            this.currentWizard5Class = "current";
         }
     }
 }
