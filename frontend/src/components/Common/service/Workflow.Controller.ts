@@ -49,6 +49,8 @@ class WorkflowController extends AbstractWorkflow {
     customerSelected: boolean = false;
 
     editForm: any;
+    editCustomerForm: any;
+    editEmailForm: any;
     editOrderForm: any;
 
     editProcess: Process;
@@ -94,6 +96,9 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     close() {
+        this.editCustomerForm.$setPristine();
+        this.editOrderForm.$setPristine();
+        this.editEmailForm.$setPristine();
         this.uibModalInstance.close();
     }
 

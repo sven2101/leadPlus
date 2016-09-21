@@ -4,16 +4,16 @@
             <div class="form-group">
                 <label>{{ 'CUSTOMER_MENU' | translate }}</label>
                 <select class="form-control" ng-model="parent.currentCustomerId" ng-change="parent.selectCustomer(parent.editWorkflowUnit)">
-                                    <option value="-1" selected > - {{ 'CUSTOMER_CREATE' | translate }} - </option>                                                                     
-                                    <option value="{{customer.id}}" ng-repeat="customer in service.customerService.getActiveCustomers()">{{customer.firstname}} {{customer.lastname}}</option>                                          
-                                </select>
+                    <option value="-1" selected > - {{ 'CUSTOMER_CREATE' | translate }} - </option>                                                                     
+                    <option value="{{customer.id}}" ng-repeat="customer in service.customerService.getActiveCustomers()">{{customer.firstname}} {{customer.lastname}}</option>                                          
+                </select>
             </div>
             <div class="form-group">
                 <label>{{ 'COMMON_TITLE' | translate }}</label>
                 <select name="title" class="form-control" ng-model="parent.editWorkflowUnit.customer.title" ng-disabled="parent.customerSelected">
-                                    <option value="MR">{{ 'COMMON_TITLE_MR' | translate }}</option>
-                                    <option value="MS">{{ 'COMMON_TITLE_MS' | translate }}</option>
-                                </select>
+                    <option value="MR">{{ 'COMMON_TITLE_MR' | translate }}</option>
+                    <option value="MS">{{ 'COMMON_TITLE_MS' | translate }}</option>
+                </select>
             </div>
             <!-- FIRSTNAME -->
             <div class="form-group" ng-class="{ 'has-error' : parent.editForm.firstname.$invalid && !parent.editForm.firstname.$pristine }">
@@ -123,6 +123,15 @@
                 <p ng-show="parent.editForm.saleProfit.$invalid && !parent.editForm.saleProfit.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
             </div>
         </div>
+    </div>
+
+    <div class="actions clearfix">
+        <ul role="menu">
+            <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL'| translate }}</button>
+            <button type="submit" class="btn btn-success" ng-disabled="parent.editForm.$invalid || parent.editOrderForm.$invalid " ng-click="parent.save(parent.edit)"
+                data-dismiss="modal">{{ 'COMMON_SAVE'| translate }}
+                            </button>
+        </ul>
     </div>
 </form>
 <script>

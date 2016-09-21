@@ -19,24 +19,25 @@
         </div>
         <div class="actions clearfix">
             <ul role="menu" aria-label="Pagination">
-                <li ng-if="parent.currentTab==3" aria-hidden="false" style="background:red;"><a role="menuitem">Angebot versenden</a></li>
-                <li><a ng-click="parent.close()" role="menuitem">Cancel</a></li>
+                <li ng-if="parent.currentTab==3" ng-disabled="!parent.editEmailForm.$invalid" aria-hidden="false "><a role="menuitem
+                    " style="background:red; ">Angebot versenden</a></li>
+                <li><a ng-click="parent.close() " role="menuitem ">Cancel</a></li>
             </ul>
         </div>
     </div>
 
 </div>
 <!--
-<div class="modal-footer">
-    <button type="button" class="btn btn-white" ng-click="parent.close()">{{ 'COMMON_CANCEL'| translate }}</button>
-    <button type="submit" class="btn btn-success" ng-disabled="offer.editForm.$invalid" ng-click="parent.send()">{{ 'COMMON_SEND'| translate }}</button>
+<div class="modal-footer ">
+    <button type="button " class="btn btn-white " ng-click="parent.close() ">{{ 'COMMON_CANCEL'| translate }}</button>
+    <button type="submit " class="btn btn-success " ng-disabled="offer.editForm.$invalid " ng-click="parent.send() ">{{ 'COMMON_SEND'| translate }}</button>
 </div>
 -->
 
-<script language="javascript" type="text/javascript">
+<script language="javascript " type="text/javascript ">
     $(document).ready(function () {
         $('#editOfferDatepicker .input-group.date').datepicker({
-            todayBtn: "linked",
+            todayBtn: "linked ",
             keyboardNavigation: false,
             forceParse: false,
             calendarWeeks: true,
