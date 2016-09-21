@@ -9,7 +9,7 @@
 <br>
 <p id="errorMessage" class="error-block">{{ 'COMMON_VALIDATE_MAX_FILE_SIZE' | translate }}</p>
 <div class="btn-group" role="group">
-    <label ng-click="hideErrorMessage();" style="margin-left:-15px" title="Upload image file" for="inputImage" class="btn btn-white">
+    <label ng-click="hideErrorMessage();" style="margin-left:-15px;min-width:165px" title="Upload image file" for="inputImage" class="btn btn-white">
         <input type="file" accept="image/*" name="file" id="inputImage" class="hide">{{ 'COMMON_UPLOAD_NEW_IMAGE' | translate }}
     </label>
     <label ng-if="savebutton" ng-click="hideErrorMessage();save();" title="Save upload image file"

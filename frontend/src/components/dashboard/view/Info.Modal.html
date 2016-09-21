@@ -74,9 +74,10 @@
                                 <div class="chat-discussion" ng-model="dashboardCtrl.workflowModalProcess.comments">
                                     <div ng-repeat="comment in dashboardCtrl.workflowModalProcess.comments | orderBy: '-timestamp'">
                                         <div ng-if="$index%2==0" class="chat-message left">
-                                            <img class="message-avatar" ng-src="data:image/png;base64,{{comment.creator.picture.content}}" alt="">
+                                              <img class="message-avatar" ng-src="users/{{comment.creator.id}}/profile/picture" alt="">
                                             <div class="message">
-                                                <a class="message-author" href="#"> {{comment.creator.username}} </a>
+                                                <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
+                                    <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
                                                 <span class="message-date"> {{comment.timestamp|  date:'dd.MM.yyyy HH:mm'}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}
@@ -84,9 +85,10 @@
                                             </div>
                                         </div>
                                         <div ng-if="$index%2!=0" class="chat-message right">
-                                             <img class="message-avatar" ng-src="data:image/png;base64,{{comment.creator.picture.content}}" alt="">
+                                               <img class="message-avatar" ng-src="users/{{comment.creator.id}}/profile/picture" alt="">
                                             <div class="message">
-                                                <a class="message-author"> {{comment.creator.username}} </a>
+                                                <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
+                                    <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
                                                 <span class="message-date"> {{comment.timestamp |  date:'dd.MM.yyyy HH:mm'}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}

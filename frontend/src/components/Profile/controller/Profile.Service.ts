@@ -72,10 +72,12 @@ class ProfileService {
         this.userResource.update(user).$promise.then(function (data) {
             self.rootScope.globals.user.picture = null;
             self.cookieStore.put("globals", self.rootScope.globals);
-            self.rootScope.globals.user.picture = data.picture;
+            self.rootScope.globals.user.picture = user.picture;
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
+            self.rootScope.globals.user.picture = null;
+            self.cookieStore.put("globals", self.rootScope.globals);
         });
     }
 

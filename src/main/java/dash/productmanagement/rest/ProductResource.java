@@ -45,7 +45,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Product Resource")
-@RequestMapping(value = "/api/rest/products", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/products", consumes = { MediaType.ALL_VALUE }, produces = {
+		MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "product")
 public class ProductResource {
 
@@ -69,7 +70,8 @@ public class ProductResource {
 	@ApiOperation(value = "Add a single product.", notes = "You have to provide a valid product Object")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Product save(@ApiParam(required = true) @RequestBody @Valid final Product product) throws SaveFailedException {
+	public Product save(@ApiParam(required = true) @RequestBody @Valid final Product product)
+			throws SaveFailedException {
 		return productService.save(product);
 	}
 
@@ -77,7 +79,8 @@ public class ProductResource {
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Post a file. ", notes = "")
 	public Product setImage(@PathVariable final long id, @RequestParam("file") MultipartFile file)
-			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException,
+			EmailAlreadyExistsException {
 		return productService.setImage(id, file);
 	}
 
@@ -86,8 +89,11 @@ public class ProductResource {
 	@ApiOperation(value = "Get user Product Picture.")
 	public ResponseEntity<?> getProductPictureById(@PathVariable final long id) throws NotFoundException {
 		Product product = productService.getById(id);
-		if (product != null && product.getPicture() != null) {
-			byte[] body = product.getPicture().getContent();
+		if (product != null) {
+			byte[] body = new byte[0];
+			if (product.getPicture() != null && product.getPicture().getContent() != null) {
+				body = product.getPicture().getContent();
+			}
 			HttpHeaders header = new HttpHeaders();
 			header.setContentType(MediaType.MULTIPART_FORM_DATA);
 			header.setContentLength(body.length);
@@ -99,7 +105,8 @@ public class ProductResource {
 	@ApiOperation(value = "Update a single product.", notes = "")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Product update(@ApiParam(required = true) @RequestBody @Valid final Product product) throws UpdateFailedException {
+	public Product update(@ApiParam(required = true) @RequestBody @Valid final Product product)
+			throws UpdateFailedException {
 		return productService.update(product);
 	}
 

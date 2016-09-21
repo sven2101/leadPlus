@@ -134,8 +134,8 @@ class AppController {
     setCurrentUserPicture() {
         let self = this;
         if (!isNullOrUndefined(self.rootScope.globals.user)) {
-            self.userResource.get({ id: self.rootScope.globals.user.id }).$promise.then(function (result) {
-                self.rootScope.globals.user.picture = result.picture;
+            self.userResource.getProfilePicture({ id: self.rootScope.globals.user.id }).$promise.then(function (result) {
+                self.rootScope.globals.user.picture = result;
             });
         }
 

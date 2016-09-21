@@ -173,8 +173,7 @@ class UserResource {
                 headers: { "Content-Type": undefined }
             },
             getProfilePicture: {
-                url: "/users/:id/profile/picture", params: { file: "@file" }, method: "GET", transformRequest: angular.identity,
-                headers: { "Content-Type": undefined }
+                url: "/users/:id/profile/picture/object", method: "GET"
             },
             getAll: { url: "/users/all", method: "GET", isArray: true },
             setSmtpConnection: { url: "/users/:id/smtps", method: "POST" }
