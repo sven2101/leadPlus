@@ -23,7 +23,7 @@
                     </th>
                     <th class="col-md-1">
                         <button ng-disabled="parent.editForm.addOrderPosition.$invalid||parent.currentProductId==-1" type="button" class="btn btn-white btn-sm"
-                            ng-click="parent.addProduct(parent.currentOrderPositions, parent.currentProductId, parent.currentProductAmount)">
+                            ng-click="[parent.addProduct(parent.currentOrderPositions, parent.currentProductId, parent.currentProductAmount),parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.currentOrderPositions)]">
                                      <i class="fa fa-plus"></i>&nbsp;</button>
                     </th>
                 </tr>
@@ -45,7 +45,7 @@
                             <input type="number " name="{{ 'orderPositionDiscount'+$index}} " class="form-control
                                     " ng-model="orderPosition.discount " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " min="0 "
                                 max="100 " step="0.1 " data-number-to-fixed="2 " data-number-stepfactor="100
-                                    " class="form-control currency " ng-keyup="parent.workflowService.setPrice(orderPosition) "
+                                    " class="form-control currency " ng-keyup="[parent.workflowService.setPrice(orderPosition),parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.currentOrderPositions)]"
                                 id="c3 " required>
                         </div>
                     </td>
@@ -54,7 +54,7 @@
                             <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
                             <input type="number" name="{{'orderPosition'+$index}}" class="form-control" ng-model="orderPosition.price" " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ "
                                     min="0 " step="0.01 " data-number-to-fixed="2 " data-number-stepfactor="100
-                                " class="form-control currency " ng-keyup="parent.workflowService.setDiscount(orderPosition) "
+                                " class="form-control currency " ng-keyup="[parent.workflowService.setDiscount(orderPosition),parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.currentOrderPositions)] "
                                     id="c2 " required>
                             </div>
                         </td>
@@ -63,7 +63,7 @@
                         currency:'\u20AC'}}
                         </td>
                         <td class=" col-md-1 ">
-                            <button type="button " class="btn btn-white btn-sm " ng-click="parent.deleteProduct(parent.currentOrderPositions,$index) ">
+                            <button type="button " class="btn btn-white btn-sm " ng-click="[parent.deleteProduct(parent.currentOrderPositions,$index),parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.currentOrderPositions)]">
                                         <i class="fa fa-trash "></i>&nbsp;
                                      </button>
                         </td>
@@ -73,10 +73,40 @@
         </div>
     </div>
 
-    <!-- ENTIRE PRICE -->
+    <!-- Calculation -->
+    <h1 class="text-left">{{ 'COMMON_PRODUCT_CALCULATION'| translate }}</h1>
     </br>
     <div class="row ">
-        <div class="col-sm-6 pull-right">
+          <div class="col-sm-5 b-r text-left ">
+             <!-- DeliveryCosts -->
+        <div class="form-group " ng-class="{ 'has-error' : parent.editForm.deliveryCosts.$invalid && !parent.editForm.deliveryCosts.$pristine} ">
+            <label>{{ 'COMMON_PRODUCT_DELIVERYCOSTS'| translate }}</label>
+            <div class="input-group ">
+                <span class="input-group-addon ">{{ 'COMMON_CURRENCY'| translate }}</span>
+                <input name="deliveryCosts " type="number " ng-model="parent.editWorkflowUnit.deliveryCosts
+                                " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " ng-keyup="parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.currentOrderPositions)"
+                    min="0 " step="0.01 " data-number-to-fixed="2 " data-number-stepfactor="100 " class="form-control currency
+                                " id="c2 "
+                />
+            </div>
+            <p ng-show="parent.editForm.deliveryCosts.$invalid && !parent.editForm.deliveryCosts.$pristine " class="help-block ">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
+        </div>
+        <!-- OFFER PRICE -->
+            <div ng-if="type=='offer' " class="form-group pull-left " ng-class="{ 'has-error' : parent.editForm.offerPrice.$invalid
+                                && !parent.editForm.offerPrice.$pristine } ">
+                <label>{{ 'COMMON_PRODUCT_OFFER_PRICE'| translate }}<span style="color:red ">*</span></label>
+                <div class="input-group ">
+                    <span class="input-group-addon ">{{ 'COMMON_CURRENCY'| translate }}</span>
+                    <input type="number " name="offerPrice " class="form-control " ng-model="parent.editWorkflowUnit.offerPrice
+                                " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ "
+                        step="0.01 " min="0 " data-number-to-fixed="2 " data-number-stepfactor="100 " class="form-control
+                                currency " id="c2 "
+                        required>
+                </div>
+                <p ng-show="parent.editForm.offerPrice.$invalid && !parent.editForm.offerPrice.$pristine " class="help-block ">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
+            </div>
+        </div>
+        <div class="col-sm-7 ">
             <div>
                 <div class="form-group ">
                     <table class="table ">
@@ -101,6 +131,18 @@
                             <td><b>=</b></td>
                             <td><h3>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</h3></td>
                             <td><h3>{{parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</h3></td>
+                        </tr>
+                         <tr>
+                            <td><b>-</b></td>
+                            <td>{{ 'PRODUCT_DISCOUNT' | translate }}</td>
+                             <td>{{(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts)-parent.editWorkflowUnit.offerPrice|
+                             currency:'\u20AC'}} ({{parent.workflowService.calculateDiscount(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts,parent.editWorkflowUnit.offerPrice)}}%)
+                          </td>
+                        </tr>
+                         <tr>
+                            <td><b>=</b></td>
+                            <td><h3>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</h3></td>
+                            <td><h3>{{parent.editWorkflowUnit.offerPrice|currency:'\u20AC'}}</h3></td>
                         </tr>
                     </table>
                 </div>

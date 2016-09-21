@@ -23,5 +23,6 @@ class Notification extends AbstractModel {
 
     constructor() {
         super();
+        this.attachment = new FileUpload();
     }
 }

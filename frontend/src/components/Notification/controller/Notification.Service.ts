@@ -27,6 +27,8 @@ class NotificationService {
     rootScope;
     notificationResource;
     formdata;
+    fileReader;
+    notification: Notification;
 
     constructor(toaster, $translate, $rootScope, NotificationResource) {
         this.notificationResource = NotificationResource.resource;
@@ -34,11 +36,15 @@ class NotificationService {
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.formdata = new FormData();
+        this.fileReader = new FileReader();
+        this.notification = new Notification();
     }
 
     send(notification: Notification) {
         let self = this;
-        this.notificationResource.send({ id: this.rootScope.globals.user.id }, notification).$promise.then(function () {
+        this.notification = notification;
+        console.log(this.notification);
+        this.notificationResource.send({ id: this.rootScope.globals.user.id }, this.notification).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));
@@ -46,7 +52,13 @@ class NotificationService {
     }
 
     getTheFiles($files) {
+        let self = this;
         this.formdata.append("file", $files[0]);
+        this.fileReader.readAsDataURL($files[0]);
+        this.fileReader.onload = function () {
+            self.notification.attachment.content = this.result;
+            console.log("Notification: ", self.notification.attachment);
+        };
     }
 
 }

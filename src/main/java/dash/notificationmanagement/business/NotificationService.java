@@ -16,18 +16,22 @@ package dash.notificationmanagement.business;
 
 import java.util.Properties;
 
+import javax.activation.DataHandler;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.sun.mail.smtp.SMTPMessage;
 
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.notificationmanagement.domain.Notification;
@@ -56,18 +60,46 @@ public class NotificationService implements INotificationService {
 				final Session emailSession = newSession(principle.getSmtp());
 				Transport transport = emailSession.getTransport("smtp");
 				transport.connect();
+				//
+				//				SMTPMessage smtpMessage = new SMTPMessage(emailSession);
+				//
+				//				smtpMessage.setFrom(new InternetAddress(principle.getSmtp().getEmail()));
+				//				smtpMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(notification.getRecipient()));
+				//				smtpMessage.setHeader("Content-Type", "text/html");
+				//				smtpMessage.setSubject(notification.getSubject());
+				//				smtpMessage.setContent(notification.getContent(), "text/html");
+				//				smtpMessage.setNotifyOptions(SMTPMessage.NOTIFY_SUCCESS);
+				//				smtpMessage.setReturnOption(1);
+				//				transport.sendMessage(smtpMessage, InternetAddress.parse(notification.getRecipient()));
+				//				transport.close();
 
-				SMTPMessage smtpMessage = new SMTPMessage(emailSession);
+				Message msg = new MimeMessage(emailSession);
+				try {
+					msg.setFrom(new InternetAddress(principle.getSmtp().getEmail()));
+					msg.setRecipient(Message.RecipientType.TO, new InternetAddress(notification.getRecipient()));
+					msg.setSubject("your subject");
 
-				smtpMessage.setFrom(new InternetAddress(principle.getSmtp().getEmail()));
-				smtpMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(notification.getRecipient()));
-				smtpMessage.setHeader("Content-Type", "text/html");
-				smtpMessage.setSubject(notification.getSubject());
-				smtpMessage.setContent(notification.getContent(), "text/html");
-				smtpMessage.setNotifyOptions(SMTPMessage.NOTIFY_SUCCESS);
-				smtpMessage.setReturnOption(1);
-				transport.sendMessage(smtpMessage, InternetAddress.parse(notification.getRecipient()));
-				transport.close();
+					Multipart multipart = new MimeMultipart();
+
+					MimeBodyPart textBodyPart = new MimeBodyPart();
+					textBodyPart.setText("your text");
+
+					MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+					System.out.println("Byte Array: " + notification.getAttachement().getContent());
+					ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachement().getContent(), "application/octet-stream");
+					attachmentBodyPart.setDataHandler(new DataHandler(ds));
+					attachmentBodyPart.setFileName("abc.pdf"); // ex : "test.pdf"
+
+					multipart.addBodyPart(textBodyPart); // add the text part
+					multipart.addBodyPart(attachmentBodyPart); // add the attachement part
+
+					msg.setContent(multipart);
+
+					Transport.send(msg);
+				} catch (MessagingException mex) {
+					logger.error(NotificationService.class.getSimpleName(), mex);
+				}
+
 			} else {
 				throw new SMTPdoesntExistsException("No valid SMTP Data for this User");
 			}
