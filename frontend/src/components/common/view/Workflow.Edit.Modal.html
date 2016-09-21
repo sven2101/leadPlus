@@ -5,19 +5,30 @@
                 <button type="button" class="close" data-dismiss="modal">
                 <span aria-hidden="true">&times;</span>
                 <span class="sr-only">Close</span></button>
-                <div id="wizard" role="application" class="wizard clearfix">
-                    <div class="steps clearfix">
-                        <ul role="tablist">
-                            <li ng-click="parent.tabOnClick(1)" role="tab" class="{{parent.currentTab1Class}}" aria-disabled="false" aria-selected="true"><a aria-controls="wizard-p-0"><span class="current-info audible">current step: </span><span class="number">1.</span> Kunde</a></li>
-                            <li ng-click="parent.tabOnClick(2)" ng-disabled="parent.editForm.$invalid" role="tab" class="{{parent.currentTab2Class}}"
-                                aria-disabled="false" aria-selected="false"><a ng-disabled="parent.editForm.$invalid" aria-controls="wizard-p-1"><span class="number">2.</span> Bestellung</a></li>
-                        </ul>
+                <form name="parent.editForm" novalidate>
+                    <div id="wizard" role="application" class="wizard clearfix">
+                        <div class="steps clearfix">
+                            <ul role="tablist">
+                                <li ng-click="parent.tabOnClick(1)" role="tab" class="{{parent.currentTab1Class}}" aria-disabled="false" aria-selected="true"><a aria-controls="wizard-p-0"><span class="current-info audible">current step: </span><span class="number">1.</span> Kunde</a></li>
+                                <li ng-click="parent.tabOnClick(2)" ng-disabled="parent.editForm.$invalid" role="tab" class="{{parent.currentTab2Class}}"
+                                    aria-disabled="false" aria-selected="false"><a ng-disabled="parent.editForm.$invalid" aria-controls="wizard-p-1"><span class="number">2.</span> Bestellung</a></li>
+                            </ul>
+                        </div>
+                        <div class="clearfix">
+                            <div ng-include="'components/Common/view/Workflow.Edit.Step1.html'"></div>
+                            <div ng-include="'components/Common/view/Workflow.Edit.Step2.html'"></div>
+
+                            <div class="actions clearfix">
+                                <ul role="menu">
+                                    <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL'| translate }}</button>
+                                    <button type="submit" class="btn btn-success" ng-disabled="parent.editForm.$invalid" ng-click="parent.save(parent.edit)"
+                                        data-dismiss="modal">{{ 'COMMON_SAVE'| translate }}
+                                     </button>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="clearfix">
-                        <div ng-include="'components/Common/view/Workflow.Edit.Step1.html'"></div>
-                        <div ng-include="'components/Common/view/Workflow.Edit.Step2.html'"></div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>

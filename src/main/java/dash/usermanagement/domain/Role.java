@@ -15,5 +15,5 @@
 package dash.usermanagement.domain;
 
 public enum Role {
-	USER, ADMIN, SUPERADMIN;
+	API, USER, ADMIN, SUPERADMIN;
 }

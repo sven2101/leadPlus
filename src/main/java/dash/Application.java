@@ -182,7 +182,7 @@ public class Application {
 			apiuser.setFirstname("firstApi");
 			apiuser.setLastname("lastApi");
 			apiuser.setEmail("api@eviarc.com");
-			apiuser.setRole(Role.USER);
+			apiuser.setRole(Role.API);
 			apiuser.setEnabled(true);
 			apiuser.setLanguage(Language.DE);
 
