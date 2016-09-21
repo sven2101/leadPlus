@@ -14,6 +14,10 @@
 
 package dash.publicapi.business;
 
+import static dash.Constants.INVALID_LEAD;
+
+import java.util.ArrayList;
+
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
@@ -24,6 +28,7 @@ import dash.exceptions.SaveFailedException;
 import dash.leadmanagement.business.ILeadService;
 import dash.leadmanagement.domain.Lead;
 import dash.productmanagement.business.ProductService;
+import dash.productmanagement.domain.OrderPosition;
 
 @Service
 @Transactional
@@ -36,8 +41,19 @@ public class PublicApiService implements IPublicApiService {
 
 	@Override
 	public void saveLead(Lead lead) throws SaveFailedException {
+		if (lead != null) {
+			throw new SaveFailedException(INVALID_LEAD);
+		}
+		if (lead.getOrderPositions() == null) {
+			lead.setOrderPositions(new ArrayList<OrderPosition>());
+		}
+		for (OrderPosition orderPosition : lead.getOrderPositions()) {
+			if (orderPosition.getProduct() == null) {
+				throw new SaveFailedException(INVALID_LEAD);
+			}
+			orderPosition.setPrice(orderPosition.getProduct().getPriceNetto());
+		}
 		leadservice.save(lead);
-
 	}
 
 }

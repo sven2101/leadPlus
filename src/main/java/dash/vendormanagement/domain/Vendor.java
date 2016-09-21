@@ -22,6 +22,8 @@ import javax.persistence.Id;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @SQLDelete(sql = "UPDATE vendor SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
@@ -29,10 +31,12 @@ public class Vendor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(hidden = true)
 	private Long id;
 
 	private String name;
 
+	@ApiModelProperty(hidden = true)
 	private boolean deleted;
 
 	private String phone;

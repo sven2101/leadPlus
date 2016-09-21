@@ -27,6 +27,7 @@ public final class Constants {
 	public static final String SALE_NOT_FOUND = "Sale not found. ";
 	public static final String OFFER_NOT_FOUND = "Offer not found. ";
 	public static final String LEAD_NOT_FOUND = "Lead not found. ";
+	public static final String INVALID_LEAD = "INVALID LEAD. ";
 	public static final String INQUIRER_NOT_FOUND = "Inquirer not found. ";
 	public static final String CUSTOMER_NOT_FOUND = "Customer not found. ";
 	public static final String PROSPECT_NOT_FOUND = "Prospect not found. ";

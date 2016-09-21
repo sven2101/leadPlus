@@ -31,6 +31,8 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 @SQLDelete(sql = "UPDATE customer SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
@@ -38,11 +40,13 @@ public class Customer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(hidden = true)
 	private long id;
 
 	@Enumerated(EnumType.STRING)
 	private Title title;
 
+	@ApiModelProperty(hidden = true)
 	private boolean deleted;
 	private String firstname;
 	private String lastname;
@@ -50,11 +54,13 @@ public class Customer {
 	private String email;
 	private String phone;
 	private String address;
+	@ApiModelProperty(hidden = true)
 	private boolean deactivated;
 
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
+	@ApiModelProperty(hidden = true)
 	private Calendar timestamp;
 
 	public Customer() {

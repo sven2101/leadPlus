@@ -25,6 +25,7 @@ import dash.customermanagement.domain.Customer;
 import dash.processmanagement.request.Request;
 import dash.productmanagement.domain.OrderPosition;
 import dash.vendormanagement.domain.Vendor;
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
@@ -32,6 +33,7 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
+	@ApiModelProperty(hidden = true)
 	private long id;
 
 	@ManyToOne
@@ -40,6 +42,7 @@ public abstract class AbstractWorkflow implements Request {
 
 	private String deliveryAddress;
 
+	@ApiModelProperty(hidden = true)
 	private boolean deleted;
 
 	private double deliveryCosts;
@@ -50,6 +53,7 @@ public abstract class AbstractWorkflow implements Request {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(nullable = true, columnDefinition = "timestamp")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
+	@ApiModelProperty(hidden = true)
 	private Calendar timestamp;
 
 	@OneToOne(cascade = { CascadeType.PERSIST })
