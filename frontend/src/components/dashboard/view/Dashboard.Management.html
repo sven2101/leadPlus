@@ -54,7 +54,7 @@
                                         currency:'\u20AC'}}
                                     </h3>
                                     <ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="offer" ng-model="dashboardCtrl.dashboardService.openOffers">
-                                          <li style="min-width:290px" class="danger-element draggable" ng-repeat="process in dashboardCtrl.getOpenOffers() | limitTo:10">
+                                          <li style="min-width:290px" class="warning-element draggable" ng-repeat="process in dashboardCtrl.getOpenOffers() | limitTo:10">
                                         <div style="max-width:50%;max-height:22px;min-height:22px">
                                             {{process.offer.customer.company}}
 
@@ -82,7 +82,7 @@
                                         currency:'\u20AC'}}
                                     </h3>
                                     <ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="sale" ng-model="dashboardCtrl.dashboardService.closedSales">
-                                       <li style="min-width:290px" class="danger-element draggable" ng-repeat="process in dashboardCtrl.getClosedSales() | limitTo:10">
+                                       <li style="min-width:290px" class="info-element not-sortable draggable" ng-repeat="process in dashboardCtrl.getClosedSales() | limitTo:10">
                                         <div style="max-width:50%;max-height:22px;min-height:22px">
                                             {{process.sale.customer.company}}
 
