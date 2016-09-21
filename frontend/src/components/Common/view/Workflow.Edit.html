@@ -59,24 +59,6 @@
                 <textarea class="form-control" rows="5" name="message" style="resize:vertical;" ng-model="parent.editWorkflowUnit.message"></textarea>
             </div>
         </div>
-        <!-- Delivery Address -->
-        <div class="form-group" ng-class="{ 'has-error' : parent.editForm.deliveryAddress.$invalid && !parent.editForm.deliveryAddress.$pristine }">
-            <label>{{ 'COMMON_PRODUCT_DESTINATION' | translate }}</label>
-            <input type="text" name="deliveryAddress" class="form-control" ng-model="parent.editWorkflowUnit.deliveryAddress" ng-maxlength="50">
-            <p ng-show="parent.editForm.deliveryAddress.$invalid && !parent.editForm.deliveryAddress.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-        </div>
-        <!-- DELIVERY DATE -->
-        <div ng-show="type=='offer'" class="form-group" id="editOfferDatepicker">
-            <label>{{ 'COMMON_DELIVERY_TIME' | translate }}</label>
-            <div ng-show="$root.language == 'DE'" class="input-group date" data-date-language="de" data-date-format="dd.mm.yyyy">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" class="form-control" name="deliveryDate" ng-model="parent.editWorkflowUnit.deliveryDate">
-            </div>
-            <div ng-show="$root.language == 'EN'" class="input-group date" data-date-language="en" data-date-format="dd.mm.yyyy">
-                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                <input type="text" class="form-control" name="deliveryDate" ng-model="parent.editWorkflowUnit.deliveryDate">
-            </div>
-        </div>
         <!-- SALE TURNOVER -->
         <div ng-if="type=='sale'" class="form-group" ng-class="{ 'has-error' : parent.editForm.saleTurnover.$invalid && !parent.editForm.saleTurnover.$pristine }">
             <label>{{ 'COMMON_PRODUCT_SALE_TURNOVER'| translate }}<span style="color:red">*</span></label>
