@@ -14,7 +14,7 @@ import dash.usermanagement.domain.User_;
 
 public class ProcessSpecs {
 
-	public static Specification<Process> isProcessor(long id) {
+	public static Specification<Process> isProcessor(final long id) {
 		return new Specification<Process>() {
 			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 				return builder.equal(root.join(Process_.processor).get(User_.id), id);
