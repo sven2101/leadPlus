@@ -23,6 +23,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,8 +46,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Product Resource")
-@RequestMapping(value = "/api/rest/products", consumes = { MediaType.ALL_VALUE }, produces = {
-		MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/products", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@Secured({ "API" })
 @Api(value = "product")
 public class ProductResource {
 
@@ -70,8 +71,7 @@ public class ProductResource {
 	@ApiOperation(value = "Add a single product.", notes = "You have to provide a valid product Object")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Product save(@ApiParam(required = true) @RequestBody @Valid final Product product)
-			throws SaveFailedException {
+	public Product save(@ApiParam(required = true) @RequestBody @Valid final Product product) throws SaveFailedException {
 		return productService.save(product);
 	}
 
@@ -79,8 +79,7 @@ public class ProductResource {
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Post a file. ", notes = "")
 	public Product setImage(@PathVariable final long id, @RequestParam("file") MultipartFile file)
-			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException,
-			EmailAlreadyExistsException {
+			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		return productService.setImage(id, file);
 	}
 
@@ -105,8 +104,7 @@ public class ProductResource {
 	@ApiOperation(value = "Update a single product.", notes = "")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Product update(@ApiParam(required = true) @RequestBody @Valid final Product product)
-			throws UpdateFailedException {
+	public Product update(@ApiParam(required = true) @RequestBody @Valid final Product product) throws UpdateFailedException {
 		return productService.update(product);
 	}
 
