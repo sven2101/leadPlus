@@ -166,6 +166,10 @@ class WorkflowService {
         return isNaN(temp) ? 0 : temp;
     }
 
+    reCalculateOffer(offer: Offer, array: Array<OrderPosition>) {
+        offer.offerPrice = offer.deliveryCosts + this.sumOrderPositions(array);
+    }
+
     setDiscount(orderPosition: OrderPosition) {
         orderPosition.discount = this.calculateDiscount(orderPosition.product.priceNetto, orderPosition.price);
     }
