@@ -49,11 +49,4 @@ public class PublicApiResource {
 		publicApiService.saveLead(lead);
 	}
 
-	@ApiOperation(value = "Add a single lead.", notes = "")
-	@RequestMapping(method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
-	public void save() {
-
-	}
-
 }

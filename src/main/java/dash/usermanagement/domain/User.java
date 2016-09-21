@@ -286,9 +286,8 @@ public class User implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
-				+ ", email=" + email + ", password=" + password + ", role=" + role + ", profilPicture=" + picture
-				+ ", language=" + language + ", smtp=" + smtp + ", enabled=" + enabled + "]";
+		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password="
+				+ password + ", role=" + role + ", profilPicture=" + picture + ", language=" + language + ", smtp=" + smtp + ", enabled=" + enabled + "]";
 	}
 
 }
