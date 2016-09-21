@@ -107,6 +107,16 @@
             </div>
         </div>
     </div>
+
+    <div class="actions clearfix ">
+        <ul role="menu ">
+            <button type="button " class="btn btn-white " data-dismiss="modal ">{{ 'COMMON_CANCEL'| translate }}</button>
+            <button type="submit " class="btn btn-success " ng-disabled="parent.editOrderForm.$invalid || parent.editForm.$invalid" ng-click="parent.save(parent.edit) "
+                data-dismiss="modal ">{{ 'COMMON_SAVE'| translate }}
+            </button>
+        </ul>
+    </div>
+    
 </form>
 
 <script>
