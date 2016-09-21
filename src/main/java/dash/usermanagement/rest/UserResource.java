@@ -71,7 +71,8 @@ public class UserResource {
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update a single user.", notes = "Provide a valid user ID.")
-	public User update(@RequestBody @Valid final User user) throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+	public User update(@RequestBody @Valid final User user)
+			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		return userService.update(user);
 	}
 
@@ -93,7 +94,8 @@ public class UserResource {
 	@RequestMapping(value = "/{id}/role/{role}/update", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Set a User Role .", notes = "Provide a valid user ID.")
-	public User setRoleForUser(@PathVariable final long id, @PathVariable @Valid final Role role) throws UpdateFailedException {
+	public User setRoleForUser(@PathVariable final long id, @PathVariable @Valid final Role role)
+			throws UpdateFailedException {
 		return userService.setRoleForUser(id, role);
 	}
 
@@ -109,8 +111,11 @@ public class UserResource {
 	@ApiOperation(value = "Get user Profile Picture.")
 	public ResponseEntity<?> getProfilePictureById(@PathVariable final long id) throws NotFoundException {
 		User user = userService.getById(id);
-		if (user != null && user.getPicture() != null) {
-			byte[] body = user.getPicture().getContent();
+		if (user != null) {
+			byte[] body = new byte[0];
+			if (user.getPicture() != null && user.getPicture().getContent() != null) {
+				body = user.getPicture().getContent();
+			}
 			HttpHeaders header = new HttpHeaders();
 			header.setContentType(MediaType.MULTIPART_FORM_DATA);
 			header.setContentLength(body.length);
@@ -123,15 +128,17 @@ public class UserResource {
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Post a file. ", notes = "")
 	public User setProfilePicture(@PathVariable final long id, @RequestParam("file") MultipartFile file)
-			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException,
+			EmailAlreadyExistsException {
 		return userService.setProfilePicture(id, file);
 	}
 
 	@RequestMapping(value = "/{id}/smtps", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Post a smtp connection. ", notes = "")
-	public User setSmtpConnection(@PathVariable final long id, @ApiParam(required = true) @RequestBody @Valid final Smtp smtp)
-			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+	public User setSmtpConnection(@PathVariable final long id,
+			@ApiParam(required = true) @RequestBody @Valid final Smtp smtp) throws SaveFailedException,
+			NotFoundException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		return userService.setSmtpConnection(id, smtp);
 	}
 }

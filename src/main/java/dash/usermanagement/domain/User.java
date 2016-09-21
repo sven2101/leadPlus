@@ -31,6 +31,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import dash.fileuploadmanagement.domain.FileUpload;
 import dash.smtpmanagement.domain.Smtp;
@@ -67,6 +69,7 @@ public class User implements UserDetails {
 	private Role role;
 
 	@OneToOne(cascade = CascadeType.ALL)
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private FileUpload picture;
 
 	@Enumerated(EnumType.STRING)
@@ -278,8 +281,9 @@ public class User implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password="
-				+ password + ", role=" + role + ", profilPicture=" + picture + ", language=" + language + ", smtp=" + smtp + ", enabled=" + enabled + "]";
+		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
+				+ ", email=" + email + ", password=" + password + ", role=" + role + ", profilPicture=" + picture
+				+ ", language=" + language + ", smtp=" + smtp + ", enabled=" + enabled + "]";
 	}
 
 }

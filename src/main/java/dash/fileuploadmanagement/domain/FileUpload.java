@@ -30,7 +30,6 @@ public class FileUpload {
 	private long size;
 
 	private byte[] content;
-	private byte[] croppedContent;
 
 	public FileUpload() {
 
@@ -71,13 +70,4 @@ public class FileUpload {
 	public void setContent(byte[] content) {
 		this.content = content;
 	}
-
-	public byte[] getCroppedContent() {
-		return croppedContent;
-	}
-
-	public void setCroppedContent(byte[] croppedContent) {
-		this.croppedContent = croppedContent;
-	}
-
 }

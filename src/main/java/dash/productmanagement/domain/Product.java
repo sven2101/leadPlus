@@ -32,6 +32,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import dash.fileuploadmanagement.domain.FileUpload;
 
@@ -62,6 +64,7 @@ public class Product {
 	private double priceNetto;
 
 	@OneToOne(cascade = CascadeType.ALL)
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private FileUpload picture;
 
 	public boolean isDeleted() {
@@ -202,8 +205,9 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description + ", productState=" + productState
-				+ ", timestamp=" + timestamp + ", deactivated=" + deactivated + ", priceNetto=" + priceNetto + ", fileUpload=" + picture + "]";
+		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description
+				+ ", productState=" + productState + ", timestamp=" + timestamp + ", deactivated=" + deactivated
+				+ ", priceNetto=" + priceNetto + ", fileUpload=" + picture + "]";
 	}
 
 }
