@@ -132,6 +132,10 @@ class WorkflowController extends AbstractWorkflow {
         this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
 
+    getTheFiles($files) {
+        this.notificationService.getTheFiles($files);
+    }
+
 }
 
 angular.module(moduleWorkflow, ["summernote"]).service(WorkflowControllerId, WorkflowController);

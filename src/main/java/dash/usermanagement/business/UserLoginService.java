@@ -14,8 +14,8 @@
 
 package dash.usermanagement.business;
 
-import static dash.Constants.USER_NOT_FOUND;
 import static dash.Constants.USER_NOT_ACTIVATED;
+import static dash.Constants.USER_NOT_FOUND;
 
 import java.util.Optional;
 
@@ -57,7 +57,10 @@ public class UserLoginService implements UserDetailsService {
 			throw new UsernameNotFoundException(USER_NOT_FOUND + username);
 		}
 
+		System.out.println("USER: " + new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+				AuthorityUtils.createAuthorityList(user.getRole().toString())));
+
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-				AuthorityUtils.createAuthorityList(user.getRole().toString()));
+				AuthorityUtils.createAuthorityList(String.valueOf(user.getRole())));
 	}
 }
