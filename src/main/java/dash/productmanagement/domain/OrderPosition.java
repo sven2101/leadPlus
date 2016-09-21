@@ -27,6 +27,7 @@ import org.hibernate.annotations.Where;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.common.AbstractWorkflow;
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @SQLDelete(sql = "UPDATE order_position SET deleted = '1' WHERE id = ?")
@@ -35,8 +36,10 @@ public class OrderPosition {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(hidden = true)
 	private long id;
 
+	@ApiModelProperty(hidden = true)
 	private boolean deleted;
 
 	@ManyToOne
@@ -49,6 +52,7 @@ public class OrderPosition {
 
 	private int amount;
 
+	@ApiModelProperty(hidden = true)
 	private double price;
 
 	private double discount;

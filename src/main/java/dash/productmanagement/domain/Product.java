@@ -36,6 +36,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import dash.fileuploadmanagement.domain.FileUpload;
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @SQLDelete(sql = "UPDATE product SET deleted = '1' WHERE id = ?")
@@ -44,8 +45,10 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(hidden = true)
 	private long id;
 
+	@ApiModelProperty(hidden = true)
 	private boolean deleted;
 
 	private String name;
@@ -57,14 +60,17 @@ public class Product {
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
+	@ApiModelProperty(hidden = true)
 	private Calendar timestamp;
 
+	@ApiModelProperty(hidden = true)
 	private boolean deactivated;
 
 	private double priceNetto;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JsonProperty(access = Access.WRITE_ONLY)
+	@ApiModelProperty(hidden = true)
 	private FileUpload picture;
 
 	public boolean isDeleted() {

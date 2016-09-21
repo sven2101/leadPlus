@@ -25,7 +25,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.cloud.aws.context.config.annotation.EnableContextRegion;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +42,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.util.StopWatch;
 
 import com.google.common.base.Predicate;
 
@@ -57,13 +55,14 @@ import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Validation;
 import dash.usermanagement.settings.language.Language;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@EnableSwagger2
 @EnableJpaRepositories
 @EnableContextRegion(region = "eu-central-1")
 public class Application {
@@ -73,21 +72,15 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 
-	@Bean
-	@ConditionalOnMissingBean
-	public Docket multipartApi() {
-		return new Docket(DocumentationType.SWAGGER_2).groupName("Lead-Management-REST-API").apiInfo(apiInfo()).select()
-				.paths(paths()).build();
-	}
-
-	@Bean
-	public Docket leadApi() {
-		StopWatch watch = new StopWatch();
-		watch.start();
-		Docket docket = new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).useDefaultResponseMessages(false)
-				.select().paths(paths()).build();
-		watch.stop();
-		return docket;
+	@Configuration
+	@EnableSwagger2
+	public static class SwaggerConfig {
+		@Bean
+		public Docket api() {
+			return new Docket(DocumentationType.SWAGGER_2).select()
+					.apis(RequestHandlerSelectors.basePackage("dash.publicapi")).paths(PathSelectors.any()).build()
+					.pathMapping("/apidoc");
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -231,7 +224,8 @@ public class Application {
 
 			http.httpBasic().and().authorizeRequests()
 					.antMatchers("/", "/assets/**", "/fonts/**", "/app/**", "/components/**",
-							"/api/rest/registrations/**")
+							"/api/rest/registrations/**", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
+							"/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")
 					.permitAll().antMatchers("/api/rest/public**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")
 					.anyRequest().authenticated().antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER")
 					.anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
