@@ -42,7 +42,7 @@ class AbstractWorkflow {
         return this.workflowService.sumBasicPriceOrderPositions(array);
     }
 
-    tabOnClick(wizard: number) {
+    wizardOnClick(wizard: number) {
         this.currentWizard = wizard;
         if (this.currentWizard === 1) {
             this.currentWizard1Class = "current";
