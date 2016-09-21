@@ -34,7 +34,7 @@
                     <div class="fileinput fileinput-new" data-provides="fileinput">
                         <span class="btn btn-default btn-file"><span class="fileinput-new">Select file</span>
                         <span class="fileinput-exists">Change </span>
-                        <input name="attachement" required type="file" name="..." multiple ng-files="productCtrl.getTheFiles($files)">
+                        <input name="attachement" required type="file" name="..." multiple ng-files="parent.getTheFiles($files)">
                         <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                         </input>
                         </span>
@@ -42,7 +42,6 @@
                         <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
                     </div>
                     <br/>
-                    <span ng-model="productCtrl.currentProduct.picture.filename"></span>
                 </div>
                 <div class="form-group" ng-class="{ 'has-error' : parent.editForm.message.$invalid}">
                     <label>Nachricht</label>
