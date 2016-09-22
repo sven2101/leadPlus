@@ -14,6 +14,8 @@
 
 package dash.publicapi.rest;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.SaveFailedException;
 import dash.leadmanagement.domain.Lead;
+import dash.productmanagement.domain.Product;
 import dash.publicapi.business.IPublicApiService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -43,10 +46,17 @@ public class PublicApiResource {
 	private IPublicApiService publicApiService;
 
 	@ApiOperation(value = "Add a single lead.", notes = "")
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/lead", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public void save(@ApiParam(required = true) @RequestBody @Valid final Lead lead) throws SaveFailedException {
 		publicApiService.saveLead(lead);
+	}
+
+	@ApiOperation(value = "Get all products.", notes = "")
+	@RequestMapping(value = "/products", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public List<Product> getAllProducts() {
+		return publicApiService.getAllProducts();
 	}
 
 }

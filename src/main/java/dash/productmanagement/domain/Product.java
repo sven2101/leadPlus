@@ -45,7 +45,6 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@ApiModelProperty(hidden = true)
 	private long id;
 
 	@ApiModelProperty(hidden = true)
