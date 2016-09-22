@@ -81,7 +81,7 @@ public class NotificationService implements INotificationService {
 				Message msg = new MimeMessage(emailSession);
 				try {
 
-					msg.setFrom(new InternetAddress(smtp.getEmail()));
+					msg.setFrom(new InternetAddress(smtp.getEmail(), smtp.getSender()));
 					msg.setRecipient(Message.RecipientType.TO, new InternetAddress(notification.getRecipient()));
 					msg.setSubject(notification.getSubject());
 
