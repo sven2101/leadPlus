@@ -138,7 +138,7 @@ public class Application {
 			testSmtp.setEmail("andreas.foitzik@get-net.eu");
 			testSmtp.setEncryption(Encryption.TLS);
 			testSmtp.setHost("alfa3017.alfahosting-server.de");
-			testSmtp.setPassword("***REMOVED***");
+			testSmtp.setPassword("***REMOVED***".getBytes("UTF-8"));
 			testSmtp.setPort(25);
 			testSmtp.setResponseAdress("");
 			testSmtp.setSender("Andreas Foitzik");

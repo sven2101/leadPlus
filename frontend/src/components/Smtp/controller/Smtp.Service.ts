@@ -60,6 +60,7 @@ class SmtpService {
     save() {
         let defer = this.q.defer();
         this.currentSmtp.user = this.rootScope.globals.user;
+        this.currentSmtp.password = btoa(this.currentSmtp.password);
         let self = this;
         this.smtpResource.save(this.currentSmtp).$promise.then(function (data) {
             self.currentSmtp = data;

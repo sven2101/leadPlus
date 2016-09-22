@@ -20,6 +20,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -38,11 +39,15 @@ public class Smtp {
 	private String host;
 	private String username;
 	@JsonProperty(access = Access.WRITE_ONLY)
-	private String password;
+	private byte[] password;
 	private String email;
 	private Encryption encryption;
 	private int port;
 	private boolean connection;
+	@JsonIgnore
+	private byte[] salt;
+	@JsonIgnore
+	private byte[] iv;
 
 	@OneToOne
 	private User user;
@@ -94,11 +99,11 @@ public class Smtp {
 		this.username = username;
 	}
 
-	public String getPassword() {
+	public byte[] getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(byte[] password) {
 		this.password = password;
 	}
 
@@ -136,6 +141,22 @@ public class Smtp {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public byte[] getSalt() {
+		return salt;
+	}
+
+	public void setSalt(byte[] salt) {
+		this.salt = salt;
+	}
+
+	public byte[] getIv() {
+		return iv;
+	}
+
+	public void setIv(byte[] iv) {
+		this.iv = iv;
 	}
 
 	@Override
