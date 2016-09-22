@@ -20,20 +20,22 @@ const SmtpServiceId: string = "SmtpService";
 
 class SmtpService {
 
-    private $inject = [toasterId, $translateId, $rootScopeId, SmtpResourceId, UserResourceId];
+    private $inject = [toasterId, $translateId, $rootScopeId, SmtpResourceId, UserResourceId, $qId];
 
     smtpResource;
     userResource;
+    q;
     currentSmtp: Smtp;
 
     rootScope;
     translate;
     toaster;
 
-    constructor(toaster, $translate, $rootScope, SmtpResource, UserResource) {
+    constructor(toaster, $translate, $rootScope, SmtpResource, UserResource, $q) {
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
+        this.q = $q;
         this.smtpResource = SmtpResource.resource;
         this.userResource = UserResource.resource;
         this.getSMtp();
@@ -41,11 +43,14 @@ class SmtpService {
 
     test() {
         let self = this;
-        this.smtpResource.test(this.currentSmtp).$promise.then(function () {
-            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST"));
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST_ERROR"));
+        this.save().then(function () {
+            self.smtpResource.testSmtp({ id: self.currentSmtp.id }).$promise.then(function () {
+                self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST"));
+            }, function () {
+                self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST_ERROR"));
+            });
         });
+
     }
 
     getSMtp() {
@@ -53,13 +58,18 @@ class SmtpService {
         this.smtpResource.getByUserId({ id: this.rootScope.globals.user.id }).$promise.then((data) => self.currentSmtp = data);
     }
     save() {
+        let defer = this.q.defer();
+        this.currentSmtp.user = this.rootScope.globals.user;
         let self = this;
         this.smtpResource.save(this.currentSmtp).$promise.then(function (data) {
             self.currentSmtp = data;
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE"));
+            defer.resolve(self.currentSmtp);
         }, function (error) {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE_ERROR"));
+            defer.reject(error);
         });
+        return defer.promise;
     }
 }
 

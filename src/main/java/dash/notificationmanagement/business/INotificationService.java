@@ -17,9 +17,10 @@ package dash.notificationmanagement.business;
 import javax.mail.MessagingException;
 
 import dash.exceptions.SMTPdoesntExistsException;
+import dash.exceptions.SaveFailedException;
 import dash.notificationmanagement.domain.Notification;
 
 public interface INotificationService {
 
-	void sendNotification(final long userId, Notification notification) throws SMTPdoesntExistsException, MessagingException;
+	void sendNotification(final long userId, Notification notification) throws SMTPdoesntExistsException, MessagingException, SaveFailedException;
 }

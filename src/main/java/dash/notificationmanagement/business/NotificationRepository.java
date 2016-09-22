@@ -11,23 +11,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash.notificationmanagement.business;
 
-package dash.smtpmanagement.business;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.mail.MessagingException;
+import dash.notificationmanagement.domain.Notification;
 
-import org.springframework.stereotype.Service;
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-import dash.exceptions.NotFoundException;
-import dash.exceptions.SaveFailedException;
-import dash.smtpmanagement.domain.Smtp;
-
-@Service
-public interface ISmtpService {
-
-	public void testSmtp(final long id) throws NotFoundException, MessagingException;
-
-	Smtp save(Smtp smpt) throws SaveFailedException;
-
-	Smtp findByUser(long id) throws NotFoundException;
 }

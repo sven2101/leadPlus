@@ -42,9 +42,10 @@ class NotificationService {
 
     send(notification: Notification) {
         let self = this;
-        this.notification = notification;
-        console.log(this.notification);
-        this.notificationResource.send({ id: this.rootScope.globals.user.id }, this.notification).$promise.then(function () {
+        notification.attachment = this.notification.attachment;
+
+        console.log("Notification: ", notification);
+        this.notificationResource.send({ id: this.rootScope.globals.user.id }, notification).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));
@@ -54,10 +55,15 @@ class NotificationService {
     getTheFiles($files) {
         let self = this;
         this.formdata.append("file", $files[0]);
+        self.notification.attachment = new FileUpload();
+        self.notification.attachment.filename = $files[0].name;
+        self.notification.attachment.mimeType = $files[0].type;
+        self.notification.attachment.size = $files[0].size;
         this.fileReader.readAsDataURL($files[0]);
         this.fileReader.onload = function () {
-            self.notification.attachment.content = this.result;
-            console.log("Notification: ", self.notification.attachment);
+            let arrayBuffer = this.result.split(",")[1];
+            console.log("arrayBuffer: ", arrayBuffer);
+            self.notification.attachment.content = this.result.split(",")[1];
         };
     }
 

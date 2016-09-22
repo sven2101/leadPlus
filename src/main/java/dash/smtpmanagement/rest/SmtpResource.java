@@ -14,6 +14,7 @@
 
 package dash.smtpmanagement.rest;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +45,10 @@ public class SmtpResource {
 	private ISmtpService smtpService;
 
 	@ApiOperation(value = "Testing Connection.")
-	@RequestMapping(value = "/connections/test", method = RequestMethod.POST)
+	@RequestMapping(value = "/test/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Boolean testConnection(@ApiParam(required = true) @RequestBody @Valid final Smtp smtp) {
-		// System.out.println("SMTP: " + smtp.toString());
-		return smtpService.test(smtp);
+	public void testConnection(@PathVariable final long id) throws NotFoundException, MessagingException {
+		smtpService.testSmtp(id);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

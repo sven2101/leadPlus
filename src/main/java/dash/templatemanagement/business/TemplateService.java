@@ -33,7 +33,7 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
-import dash.notificationmanagement.domain.OfferMessage;
+import dash.messagemanagement.domain.OfferMessage;
 import dash.offermanagement.business.IOfferService;
 import dash.offermanagement.domain.Offer;
 import dash.templatemanagement.domain.Template;
@@ -114,15 +114,13 @@ public class TemplateService implements ITemplateService {
 			}
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			logger.error(UPDATE_FAILED_EXCEPTION + TemplateService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					ufex);
+			logger.error(UPDATE_FAILED_EXCEPTION + TemplateService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
 			throw ufex;
 		}
 	}
 
 	@Override
-	public OfferMessage generate(final long templateId, final long offerId, final Offer offer)
-			throws NotFoundException {
+	public OfferMessage generate(final long templateId, final long offerId, final Offer offer) throws NotFoundException {
 		if (offer != null && offerId == offer.getId()) {
 			try {
 				return new OfferMessage(offerService.save(offer), getById(templateId).getContent());

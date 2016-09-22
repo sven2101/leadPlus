@@ -50,29 +50,26 @@ public class SmtpService implements ISmtpService {
 	private UserService userService;
 
 	@Override
-	public boolean test(final Smtp smtp) {
-
-		try {
-			final Session emailSession = newSession(smtp);
-			Transport transport = emailSession.getTransport("smtp");
-			transport.connect();
-			SMTPMessage smtpMessage = new SMTPMessage(emailSession);
-			smtpMessage.setFrom(new InternetAddress(smtp.getEmail()));
-			smtpMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse("andreas.foitzik@live.com"));
-			smtpMessage.setHeader("Content-Type", "text/html");
-			smtpMessage.setSubject("Test");
-			smtpMessage.setContent("test test test", "text/html");
-			smtpMessage.setNotifyOptions(SMTPMessage.NOTIFY_SUCCESS);
-			smtpMessage.setReturnOption(1);
-			transport.sendMessage(smtpMessage, InternetAddress.parse("andreas.foitzik@live.com"));
-			transport.close();
-			System.out.println("SMTP successfully tested.");
-		} catch (MessagingException me) {
-			logger.error("Problem sending email", me);
-			return false;
+	public void testSmtp(final long id) throws NotFoundException, MessagingException {
+		Smtp smtp = smptRepository.findOne(id);
+		if (smtp == null) {
+			throw new NotFoundException(BECAUSE_OF_OBJECT_IS_NULL);
 		}
 
-		return true;
+		final Session emailSession = newSession(smtp);
+		Transport transport = emailSession.getTransport("smtp");
+		transport.connect();
+		SMTPMessage smtpMessage = new SMTPMessage(emailSession);
+		smtpMessage.setFrom(new InternetAddress(smtp.getEmail()));
+		smtpMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse("andreas.foitzik@live.com"));
+		smtpMessage.setHeader("Content-Type", "text/html");
+		smtpMessage.setSubject("Test");
+		smtpMessage.setContent("test test test", "text/html");
+		smtpMessage.setNotifyOptions(SMTPMessage.NOTIFY_SUCCESS);
+		smtpMessage.setReturnOption(1);
+		transport.sendMessage(smtpMessage, InternetAddress.parse("andreas.foitzik@live.com"));
+		transport.close();
+
 	}
 
 	private Session newSession(Smtp smtp) {
@@ -95,7 +92,10 @@ public class SmtpService implements ISmtpService {
 	@Override
 	public Smtp save(final Smtp smpt) throws SaveFailedException {
 		if (smpt != null) {
-
+			if (smpt.getPassword() == null || smpt.getPassword().trim() == "") {
+				Smtp tempSmpt = smptRepository.findOne(smpt.getId());
+				smpt.setPassword(tempSmpt.getPassword());
+			}
 			return smptRepository.save(smpt);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);

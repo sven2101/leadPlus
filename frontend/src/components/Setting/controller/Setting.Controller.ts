@@ -53,7 +53,7 @@ class SettingController {
 
         this.rootScope = $rootScope;
 
-        this.settingService.loadUsers();
+        // this.settingService.loadUsers();
     }
 
     tabOnClick(tab: number) {

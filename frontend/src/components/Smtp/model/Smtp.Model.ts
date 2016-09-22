@@ -1,9 +1,11 @@
 /// <reference path="../../Setting/model/Encryption.Model.ts" />
+/// <reference path="../../User/model/User.Model.ts" />
 
 "use strict";
 
 class Smtp {
 
+    id: number;
     sender: string;
     email: string;
     host: string;

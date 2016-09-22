@@ -38,7 +38,7 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.fileuploadmanagement.business.IFileUploadService;
-import dash.notificationmanagement.domain.OfferMessage;
+import dash.messagemanagement.domain.OfferMessage;
 import dash.offermanagement.domain.Offer;
 import dash.templatemanagement.business.ITemplateService;
 import dash.templatemanagement.domain.Template;
