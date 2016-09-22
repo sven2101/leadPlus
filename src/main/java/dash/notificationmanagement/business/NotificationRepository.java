@@ -11,16 +11,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-
 package dash.notificationmanagement.business;
 
-import javax.mail.MessagingException;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import dash.exceptions.SMTPdoesntExistsException;
-import dash.exceptions.SaveFailedException;
 import dash.notificationmanagement.domain.Notification;
 
-public interface INotificationService {
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-	void sendNotification(final long userId, Notification notification) throws SMTPdoesntExistsException, MessagingException, SaveFailedException;
 }

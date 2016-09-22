@@ -13,16 +13,41 @@
  *******************************************************************************/
 package dash.notificationmanagement.domain;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import dash.fileuploadmanagement.domain.FileUpload;
 
+@Entity
 public class Notification {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 
 	private String recipient;
 	private String subject;
+
+	@Column(length = 4096)
 	private String content;
-	private FileUpload attachement;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private FileUpload attachment;
 
 	public Notification() {
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 	public String getRecipient() {
@@ -49,17 +74,17 @@ public class Notification {
 		this.content = content;
 	}
 
-	public FileUpload getAttachement() {
-		return attachement;
+	public FileUpload getAttachment() {
+		return attachment;
 	}
 
-	public void setAttachement(FileUpload attachement) {
-		this.attachement = attachement;
+	public void setAttachment(FileUpload attachment) {
+		this.attachment = attachment;
 	}
 
 	@Override
 	public String toString() {
-		return "Notification [recipient=" + recipient + ", subject=" + subject + ", content=" + content + ", attachement=" + attachement + "]";
+		return "Notification [recipient=" + recipient + ", subject=" + subject + ", content=" + content + ", attachment=" + attachment + "]";
 	}
 
 }

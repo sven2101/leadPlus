@@ -11,19 +11,14 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.notificationmanagement.domain;
 
-public abstract class AbstractMessage implements IMessage {
+package dash.messagemanagement.domain;
 
-	protected String recipient;
+public interface IMessage {
 
-	public AbstractMessage(String recipient) {
-		this.recipient = recipient;
-	}
+	String getRecipient();
 
-	@Override
-	public String getRecipient() {
-		return recipient;
-	}
+	String getSubject();
 
+	String getContent();
 }

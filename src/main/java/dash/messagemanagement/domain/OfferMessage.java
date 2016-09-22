@@ -11,7 +11,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.notificationmanagement.domain;
+package dash.messagemanagement.domain;
 
 import java.io.StringWriter;
 import java.io.Writer;

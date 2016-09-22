@@ -26,6 +26,8 @@ public interface IFileUploadService {
 
 	public FileUpload save(final MultipartFile multipartFile) throws SaveFailedException;
 
+	public FileUpload save(final FileUpload fileUpload) throws SaveFailedException;
+
 	public void delete(final long id) throws DeleteFailedException;
 
 	public FileUpload getById(final long id) throws NotFoundException;
