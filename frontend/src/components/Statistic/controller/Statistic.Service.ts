@@ -313,6 +313,15 @@ class StatisticService {
     getSaleAmount(): number {
         return this.saleAmount;
     }
+    getLeadsArray(): Array<number> {
+        return this.leadResultArr;
+    }
+    getOffersArray(): Array<number> {
+        return this.offerResultArr;
+    }
+    getSalesArray(): Array<number> {
+        return this.saleResultArr;
+    }
     getProfitTotal(): number {
         return this.profitTotal;
     }
