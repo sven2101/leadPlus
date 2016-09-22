@@ -39,9 +39,9 @@ import dash.exceptions.SaveFailedException;
 import dash.notificationmanagement.domain.Notification;
 import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
+import dash.smtpmanagement.business.ISmtpService;
 import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.business.IUserService;
-import dash.usermanagement.domain.User;
 
 @Service
 public class NotificationService implements INotificationService {
@@ -57,25 +57,29 @@ public class NotificationService implements INotificationService {
 	@Autowired
 	private NotificationRepository notificationRepository;
 
+	@Autowired
+	private ISmtpService smtpService;
+
 	@Override
 	public void sendNotification(final long userId, final long offerId, final Notification notification)
 			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException {
 		doSendEmail(userId, offerService.getOfferById(offerId), notification);
 	}
 
-	public void doSendEmail(final long userId, final Offer offer, final Notification notification) throws SMTPdoesntExistsException, MessagingException {
+	public void doSendEmail(final long userId, final Offer offer, final Notification notification)
+			throws SMTPdoesntExistsException, MessagingException {
 		try {
-			User principle = userService.getById(userId);
-			if (principle.getSmtp() != null) {
+			Smtp smtp = smtpService.findByUser(userId);
+			if (smtp != null) {
 
-				final Session emailSession = newSession(principle.getSmtp());
+				final Session emailSession = newSession(smtp);
 				Transport transport = emailSession.getTransport("smtp");
 				transport.connect();
 
 				Message msg = new MimeMessage(emailSession);
 				try {
 
-					msg.setFrom(new InternetAddress(principle.getSmtp().getEmail()));
+					msg.setFrom(new InternetAddress(smtp.getEmail()));
 					msg.setRecipient(Message.RecipientType.TO, new InternetAddress(notification.getRecipient()));
 					msg.setSubject(notification.getSubject());
 
@@ -87,7 +91,8 @@ public class NotificationService implements INotificationService {
 
 					if (notification.getAttachment() != null) {
 						MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(), "application/octet-stream");
+						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(),
+								"application/octet-stream");
 						attachmentBodyPart.setDataHandler(new DataHandler(ds));
 						attachmentBodyPart.setFileName(notification.getAttachment().getFilename());
 						multipart.addBodyPart(attachmentBodyPart);
@@ -101,6 +106,7 @@ public class NotificationService implements INotificationService {
 					// notificationRepository.save(notification);
 				} catch (MessagingException mex) {
 					logger.error(NotificationService.class.getSimpleName(), mex);
+					throw mex;
 				}
 
 			} else {
