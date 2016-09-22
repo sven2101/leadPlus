@@ -86,10 +86,6 @@ class LeadController extends AbstractWorkflow {
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
     }
 
-    create() {
-        this.workflowService.openCreationLeadModal();
-    }
-
     close() {
         this.clearNewLead();
         this.uibModalInstance.close();

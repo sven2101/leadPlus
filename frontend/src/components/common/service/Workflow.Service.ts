@@ -227,23 +227,9 @@ class WorkflowService {
         return defer.promise;
     }
 
-    openCreationLeadModal() {
-        this.uibModal.open({
-            template: "<div editworkflow parent='leadCtrl' type='lead' modaltitle='{{'LEAD_EDIT_LEAD_MODAL'| translate}}'></div>",
-            controller: LeadController,
-            controllerAs: "leadCtrl",
-            size: "lg",
-            resolve: {
-                process: function () {
-                    return null;
-                }
-            }
-        });
-    }
-
     openOfferModal(process: Process) {
         this.uibModal.open({
-            template: " <div editworkflow parent='workflowCtrl' type='offer'></div>",
+            template: " <div sendworkflow parent='workflowCtrl' type='offer'></div>",
             controller: WorkflowController,
             controllerAs: "workflowCtrl",
             size: "lg",
