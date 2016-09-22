@@ -1,0 +1,57 @@
+<div>
+    <div class="form-group">
+        <label>Email - Template</label>
+        <select ng-disabled="parent.editEmail" class="form-control" ng-model="templateId" ng-change="parent.generate(templateId, parent.editWorkflowUnit)">
+                            <option value="-1" selected> - Select Template - </option>                                                                     
+                            <option value="{{template.id}}" ng-repeat="template in parent.templates">{{template.name}}</option>                                          
+                        </select>
+    </div>
+</div>
+<div>
+    <div class="form-group" ng-class="{ 'has-error' : parent.editForm.recipient.$invalid}">
+        <label>Empfänger</label>
+        <input ng-disabled="parent.editEmail" name="recipient" required type="email" class="form-control" ng-model="parent.editWorkflowUnit.notification.recipient"
+            ng-minlength="5">
+        <p ng-show="parent.editForm.recipient.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}5{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+        <p ng-show="parent.editForm.recipient.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+        <p ng-show="parent.editForm.recipient.$error.email" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
+    </div>
+    <div class="form-group" ng-class="{ 'has-error' : parent.editForm.subject.$invalid}">
+        <label>Betreff</label>
+        <input ng-disabled="parent.editEmail" name="subject" required type="text" class="form-control" ng-model="parent.editWorkflowUnit.notification.subject"
+            ng-minlength="3">
+        <p ng-show="parent.editForm.subject.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_MIN' | translate }}3{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+        <p ng-show="parent.editForm.subject.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+    </div>
+
+    <div class="form-group" ng-class="{ 'has-error' : parent.editForm.attachement.$invalid}">
+        <label>Anhang</label>
+        <br/>
+        <div class="fileinput fileinput-new" data-provides="fileinput">
+            <span class="btn btn-default btn-file"><span class="fileinput-new">Select file</span>
+            <span class="fileinput-exists">Change </span>
+            <input ng-disabled="parent.editEmail" name="attachement" required type="file" name="..." multiple ng-files="parent.getTheFiles($files)">
+            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+            </input>
+            </span>
+            <span class="fileinput-filename"></span>
+            <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
+        </div>
+        <a ng-click="parent.openOfferAttachment()">{{parent.editWorkflowUnit.notification.attachment.filename}}</a>
+        <br/>
+    </div>
+    <div class="form-group" ng-class="{ 'has-error' : parent.editForm.editWorkflowUnit.message.$invalid}">
+        <label>Nachricht</label>
+        <br/>
+        <div class="summernote">
+            <summernote ng-disabled="parent.editEmail" name="message" required ng-model="parent.editWorkflowUnit.notification.content">{{parent.editWorkflowUnit.notification.content}}</summernote>
+        </div>
+        <p ng-show="parent.editForm.message.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+    </div>
+</div>
+
+<script language="javascript" type="text/javascript">
+$(".btn-toolbar").css("margin-left","0");
+$(".note-toolbar").css("margin-left","4");
+$(".summernote").siblings(".note-editor").find(".note-editable").attr("contenteditable","false");
+</script>

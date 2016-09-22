@@ -21,9 +21,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
-
 import dash.fileuploadmanagement.domain.FileUpload;
 
 @Entity
@@ -40,7 +37,7 @@ public class Notification {
 	private String content;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JsonProperty(access = Access.WRITE_ONLY)
+	//@JsonProperty(access = Access.WRITE_ONLY)
 	private FileUpload attachment;
 
 	public Notification() {

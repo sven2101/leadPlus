@@ -21,72 +21,37 @@
  ******************************************************************************/
 "use strict";
 
-const WorkflowControllerId: string = "WorkflowController";
+const FollowUpControllerId: string = "FollowUpController";
 
-class WorkflowController extends AbstractWorkflow {
+class FollowUpController {
 
-    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId];
 
     uibModalInstance;
 
     editWorkflowUnit: Offer;
     template: Template = new Template();
-
     templates: Array<Template> = [];
-    products: Array<Product> = [];
 
-    customerService: CustomerService;
-    productService: ProductService;
     notificationService: NotificationService;
     templateService: TemplateService;
-    workflowService: WorkflowService;
-
-    currentOrderPositions: Array<OrderPosition>;
-    currentProductId = "-1";
-    currentProductAmount = 1;
-    currentCustomerId = "-1";
-    customerSelected: boolean = false;
 
     editForm: any;
+
     editProcess: Process;
     edit: boolean;
 
-    leadService: LeadService;
-    offerService: OfferService;
-    saleService: SaleService;
-
-    constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService) {
-        super(WorkflowService);
+    constructor(process, $uibModalInstance, NotificationService, TemplateService) {
         this.editWorkflowUnit = process.offer;
         this.editWorkflowUnit.notification = new Notification();
         this.editWorkflowUnit.notification.recipient = this.editWorkflowUnit.customer.email;
         this.uibModalInstance = $uibModalInstance;
         this.notificationService = NotificationService;
         this.templateService = TemplateService;
-        this.customerService = CustomerService;
-        this.productService = ProductService;
-        this.workflowService = WorkflowService;
 
         this.getAllActiveTemplates();
-        this.getAllActiveProducts();
-
-        this.leadService = LeadService;
-        this.offerService = OfferService;
-        this.saleService = SaleService;
-
-        this.loadDataToModal(process);
     }
 
-    loadDataToModal(process: Process) {
-        this.edit = true;
-        this.currentProductId = "-1";
-        this.currentProductAmount = 1;
-        this.editProcess = process;
-        this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
-        this.customerSelected = this.editProcess.offer.customer.id > 0;
-        this.currentCustomerId = this.editProcess.offer.customer.id + "";
-        this.editWorkflowUnit = deepCopy(this.editProcess.offer);
-    }
 
     ok() {
         this.uibModalInstance.close();
@@ -101,30 +66,13 @@ class WorkflowController extends AbstractWorkflow {
         this.templateService.generate(templateId, offer).then((result) => this.editWorkflowUnit.notification = result, (error) => console.log(error));
     }
 
-    generatePDF(templateId: string, offer: Offer) {
-        this.templateService.generatePDF(templateId, offer).then((result) => console.log(result), (error) => console.log(error));
-    }
-
     getAllActiveTemplates() {
         this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
     }
 
-    getAllActiveProducts() {
-        this.productService.getAllProducts().then((result) => this.products = result, (error) => console.log(error));
-    }
-
-    getOrderPositions(process: Process): Array<OrderPosition> {
-        if (!isNullOrUndefined(process.offer)) {
-            return process.offer.orderPositions;
-        }
-    }
-
     send() {
-        this.notificationService.sendOffer(this.editWorkflowUnit.notification, this.editWorkflowUnit);
-    }
-
-    selectCustomer(workflow: any) {
-        this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
+        this.notificationService.sendSimple(this.editWorkflowUnit.notification);
+        this.close();
     }
 
     getTheFiles($files) {
@@ -133,4 +81,4 @@ class WorkflowController extends AbstractWorkflow {
 
 }
 
-angular.module(moduleWorkflow, ["summernote"]).service(WorkflowControllerId, WorkflowController);
+angular.module(moduleFollowUp, ["summernote"]).service(FollowUpControllerId, FollowUpController);

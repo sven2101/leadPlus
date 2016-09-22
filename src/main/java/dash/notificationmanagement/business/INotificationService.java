@@ -25,4 +25,7 @@ public interface INotificationService {
 
 	void sendNotification(final long userId, final long offerId, final Notification notification)
 			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException;
+
+	void sendNotification(final long userId, final Notification notification)
+			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException;
 }

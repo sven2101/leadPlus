@@ -28,13 +28,16 @@ const OfferControllerId: string = "OfferController";
 
 class OfferController extends AbstractWorkflow {
 
-    $inject = [$compileId, $scopeId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId];
+    $inject = [$compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId];
 
     workflowService: WorkflowService;
     offerDataTableService: OfferDataTableService;
     offerService: OfferService;
+
     scope;
     compile;
+    window;
+
     dtOptions;
     dtColumns;
     dtInstance: any = { DataTable: null };
@@ -47,6 +50,7 @@ class OfferController extends AbstractWorkflow {
     editProcess: Process;
     editWorkflowUnit: Offer = new Offer();
     edit: boolean;
+    editEmail: boolean = true;
 
     currentOrderPositions: Array<OrderPosition>;
     currentProductId = "-1";
@@ -56,13 +60,14 @@ class OfferController extends AbstractWorkflow {
 
     otherCurrentTab: number = 1;
 
-    constructor($compile, $scope, WorkflowService, OfferDataTableService, OfferService) {
+    constructor($compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.offerDataTableService = OfferDataTableService;
         this.offerService = OfferService;
         this.scope = $scope;
         this.compile = $compile;
+        this.window = $window;
 
         let self = this;
         function createdRow(row, data: Process, dataIndex) {
@@ -170,7 +175,29 @@ class OfferController extends AbstractWorkflow {
     rollBack(process: Process): void {
         this.offerService.rollBack(process, this.dtInstance, this.scope);
     }
+
+    openOfferAttachment() {
+        let self = this;
+        let part1 = "data:application/pdf;base64,";
+        let part2 = this.editWorkflowUnit.notification.attachment.content;
+        let blob1 = part1.concat(part2);
+        /*
+        console.log("Im in !", blob1);
+        let file = new Blob([blob1], { type: "application/pdf" });
+        let fileURL = URL.createObjectURL(file);
+        this.window.open(fileURL);
+*/
+        let blob = new Blob([this.editWorkflowUnit.notification.attachment.content], { type: "application/pdf" });
+
+        let reader = new FileReader();
+        reader.readAsDataURL(blob);
+
+        reader.onloadend = function () {
+            self.window.open(this.result);
+        };
+    }
 }
+
 angular.module(moduleOffer, [ngResourceId]).controller(OfferControllerId, OfferController);
 
 

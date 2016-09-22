@@ -9,6 +9,9 @@
 /// <reference path="../../Lead/controller/Lead.Service.ts" />
 /// <reference path="../../Offer/controller/Offer.Service.ts" />
 /// <reference path="../../Sale/controller/Sale.Service.ts" />
+/// <reference path="../../Template/model/Template.Model.ts" />
+/// <reference path="../../Template/controller/Template.Service.ts" />
+/// <reference path="../../Notification/controller/Notification.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -29,33 +32,47 @@ const DashboardControllerId: string = "DashboardController";
 
 class DashboardController {
 
-    $inject = [WorkflowServiceId, StatisticServiceId, DashboardServiceId, $rootScopeId];
+    $inject = [WorkflowServiceId, StatisticServiceId, DashboardServiceId, $rootScopeId, TemplateServiceId, NotificationServiceId];
 
     workflowService: WorkflowService;
     statisticService: StatisticService;
     dashboardService: DashboardService;
+    templateService: TemplateService;
+    notificationService: NotificationService;
+
     commentModalInput: string;
     workflowModalData: IWorkflow;
     workflowModalType: string;
+    editWorkflowUnit: Offer;
     workflowModalProcess: Process;
     sortableOptions: any;
+
     rootScope;
 
-    constructor(WorkflowService, StatisticService, DashboardService, $rootScope) {
+    template: Template = new Template();
+    templates: Array<Template> = [];
+
+    constructor(WorkflowService, StatisticService, DashboardService, $rootScope, TemplateService, NotificationService) {
         this.workflowService = WorkflowService;
         this.statisticService = StatisticService;
         this.dashboardService = DashboardService;
+        this.templateService = TemplateService;
+        this.getAllActiveTemplates();
+
         this.rootScope = $rootScope;
         this.statisticService.loadAllResourcesByDateRange("MONTHLY");
         this.sortableOptions = this.dashboardService.setSortableOptions();
 
         this.refreshData();
         this.refreshTodos();
-
     }
 
     refreshTodos(): void {
         this.dashboardService.refreshTodos();
+    }
+
+    getAllActiveTemplates() {
+        this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
     }
 
     createOffer(process: Process) {
@@ -70,6 +87,7 @@ class DashboardController {
         this.workflowModalData = info;
         this.workflowModalType = type;
         this.workflowModalProcess = process;
+        console.log("Edit Workflow Unit: ", this.workflowModalProcess);
     }
 
     refreshData() {
@@ -126,7 +144,11 @@ class DashboardController {
         return this.workflowService.sumOrderPositions(array);
     }
 
+    openFollowUpModal(process: Process) {
+        console.log("process: ", process);
+        this.dashboardService.openFollowUpModal(process);
+    }
 
 }
 
-angular.module(moduleDashboard, [ngResourceId]).controller(DashboardControllerId, DashboardController);
+angular.module(moduleDashboard, [ngResourceId, "summernote"]).controller(DashboardControllerId, DashboardController);

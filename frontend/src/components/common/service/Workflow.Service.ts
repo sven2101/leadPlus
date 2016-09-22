@@ -15,7 +15,6 @@
 /// <reference path="../../Lead/controller/Lead.Controller.ts" />
 /// <reference path="../../Offer/controller/Offer.Controller.ts" />
 /// <reference path="../../Sale/controller/Sale.Controller.ts" />
-
 /// <reference path="../../Dashboard/controller/Dashboard.Controller.ts" />
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 

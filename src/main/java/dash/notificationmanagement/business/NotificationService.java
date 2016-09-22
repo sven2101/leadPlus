@@ -67,8 +67,13 @@ public class NotificationService implements INotificationService {
 		doSendEmail(userId, offerService.getOfferById(offerId), notification);
 	}
 
-	public void doSendEmail(final long userId, final Offer offer, final Notification notification)
-			throws SMTPdoesntExistsException, MessagingException {
+	@Override
+	public void sendNotification(long userId, Notification notification)
+			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException {
+		doSendEmail(userId, null, notification);
+	}
+
+	public void doSendEmail(final long userId, final Offer offer, final Notification notification) throws SMTPdoesntExistsException, MessagingException {
 		try {
 			Smtp smtp = smtpService.findByUser(userId);
 			smtp = smtpService.decrypt(smtp);
@@ -84,17 +89,15 @@ public class NotificationService implements INotificationService {
 					msg.setFrom(new InternetAddress(smtp.getEmail(), smtp.getSender()));
 					msg.setRecipient(Message.RecipientType.TO, new InternetAddress(notification.getRecipient()));
 					msg.setSubject(notification.getSubject());
-
 					Multipart multipart = new MimeMultipart();
 
 					MimeBodyPart textBodyPart = new MimeBodyPart();
-					textBodyPart.setText(notification.getContent());
+					textBodyPart.setContent(notification.getContent(), "text/html; charset=utf-8");
 					multipart.addBodyPart(textBodyPart);
 
 					if (notification.getAttachment() != null) {
 						MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(),
-								"application/octet-stream");
+						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(), "application/octet-stream");
 						attachmentBodyPart.setDataHandler(new DataHandler(ds));
 						attachmentBodyPart.setFileName(notification.getAttachment().getFilename());
 						multipart.addBodyPart(attachmentBodyPart);
@@ -103,8 +106,11 @@ public class NotificationService implements INotificationService {
 					msg.setContent(multipart);
 
 					Transport.send(msg);
-					offer.setNotification(notification);
-					offerService.save(offer);
+
+					if (offer != null) {
+						offer.setNotification(notification);
+						offerService.save(offer);
+					}
 				} catch (MessagingException mex) {
 					logger.error(NotificationService.class.getSimpleName(), mex);
 					throw mex;

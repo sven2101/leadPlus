@@ -48,4 +48,12 @@ public class NotificationResource {
 		notificationService.sendNotification(userId, offerId, notification);
 	}
 
+	@ApiOperation(value = "Send a single Notification.", notes = "")
+	@RequestMapping(value = "/users/{userId}/send", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public void sendOffer(@ApiParam(required = true) @PathVariable final Long userId,
+			@ApiParam(required = true) @RequestBody @Valid final Notification notification) throws Exception {
+		notificationService.sendNotification(userId, notification);
+	}
+
 }

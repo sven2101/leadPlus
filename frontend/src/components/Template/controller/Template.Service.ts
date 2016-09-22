@@ -138,7 +138,7 @@ class TemplateService {
         let self = this;
         this.templateResource.getAll().$promise.then(function (result: Array<Template>) {
             self.templates = result;
-            defer.resolve(result);
+            defer.resolve(self.templates);
         }, function (error: any) {
             defer.reject(error);
         });

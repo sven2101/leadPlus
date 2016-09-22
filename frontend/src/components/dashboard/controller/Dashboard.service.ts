@@ -7,6 +7,7 @@
 /// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../common/model/Promise.interface.ts" />
 /// <reference path="../../common/service/Workflow.Controller.ts" />
+/// <reference path="../../dashboard/controller/FollowUp.Controller.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -103,6 +104,19 @@ class DashboardService {
         }
     }
 
+    openFollowUpModal(process: Process) {
+        this.uibModal.open({
+            template: " <div sendfollowup parent='followUpCtrl' type='offer'></div>",
+            controller: FollowUpController,
+            controllerAs: "followUpCtrl",
+            size: "lg",
+            resolve: {
+                process: function () {
+                    return process;
+                }
+            }
+        });
+    }
 
     setSortableOptions(): any {
         let self: DashboardService = this;
