@@ -29,7 +29,12 @@ public interface ISmtpService {
 
 	public void testSmtp(final long id) throws NotFoundException, MessagingException, UnsupportedEncodingException;
 
-	Smtp save(Smtp smpt) throws SaveFailedException;
+	Smtp save(Smtp smpt) throws SaveFailedException, UnsupportedEncodingException;
 
 	Smtp findByUser(long id) throws NotFoundException;
+
+	Smtp decrypt(Smtp smtp);
+
+	Smtp encrypt(Smtp smtp);
+
 }
