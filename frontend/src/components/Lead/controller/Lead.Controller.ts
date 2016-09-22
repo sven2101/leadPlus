@@ -30,6 +30,8 @@ class LeadController extends AbstractWorkflow {
 
     $inject = [$compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId];
 
+    uibModalInstance;
+
     workflowService: WorkflowService;
     leadDataTableService: LeadDataTableService;
     leadService: LeadService;
@@ -82,8 +84,15 @@ class LeadController extends AbstractWorkflow {
         }
         this.dtOptions = this.leadDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
+    }
 
+    create() {
+        this.workflowService.openCreationLeadModal();
+    }
 
+    close() {
+        this.clearNewLead();
+        this.uibModalInstance.close();
     }
 
     changeDataInput() {
