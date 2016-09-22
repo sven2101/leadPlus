@@ -354,7 +354,12 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_TIMELINE: "Kunden Timeline",
             CUSTOMER_DETAIL_CREATED: "wurde erstellt",
 
-            TODO_NO_TODOS: "keine Todos vorhanden"
+            TODO_NO_TODOS: "keine Todos vorhanden",
+
+            // Define calculation elements 
+            CALCULATION_NET: "Netto",
+            CALCULATION_GROSS: "Brutto",
+            CALCULATION_VAT: "Mehrwertsteuer"
 
         })
         .translations(Language[Language.EN], {
@@ -691,7 +696,12 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_TIMELINE: "Customer Timeline",
             CUSTOMER_DETAIL_CREATED: "has been created",
 
-            TODO_NO_TODOS: "no todos existing"
+            TODO_NO_TODOS: "no todos existing",
+
+            // Define calculation elements 
+            CALCULATION_NET: "Net",
+            CALCULATION_GROSS: "Gross",
+            CALCULATION_VAT: "Value-added tax"
 
         });
 
