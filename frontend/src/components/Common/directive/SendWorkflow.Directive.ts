@@ -38,7 +38,6 @@ angular.module(moduleApp)
             else if (scope.type === "sale") {
                 scope.service = scope.parent.saleService;
             }
-
         };
         return directive;
     });

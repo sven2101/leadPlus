@@ -12,6 +12,10 @@
 /// <reference path="../../Common/model/Workflow.Model.ts" />
 /// <reference path="../../Common/service/AbstractWorkflow.ts" />
 /// <reference path="../../Common/service/Workflow.Controller.ts" />
+/// <reference path="../../Lead/controller/Lead.Controller.ts" />
+/// <reference path="../../Offer/controller/Offer.Controller.ts" />
+/// <reference path="../../Sale/controller/Sale.Controller.ts" />
+
 /// <reference path="../../Dashboard/controller/Dashboard.Controller.ts" />
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 
@@ -221,6 +225,20 @@ class WorkflowService {
             defer.reject(false);
         });
         return defer.promise;
+    }
+
+    openOfferModal(process: Process) {
+        this.uibModal.open({
+            template: " <div sendworkflow parent='workflowCtrl' type='offer'></div>",
+            controller: WorkflowController,
+            controllerAs: "workflowCtrl",
+            size: "lg",
+            resolve: {
+                process: function () {
+                    return process;
+                }
+            }
+        });
     }
 
     addOfferToSale(process: Process): IPromise<boolean> {

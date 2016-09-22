@@ -112,9 +112,9 @@ public class CustomerService implements ICustomerService {
 	}
 
 	@Override
-	public Customer getByEmailAndDeactivated(String email, boolean deactivated) {
+	public Customer getByEmail(String email) {
 
-		return customerRepository.getByEmailAndDeactivated(email, deactivated);
+		return customerRepository.getByEmail(email);
 	}
 
 }

@@ -1,9 +1,10 @@
 <div class="modal" id="editModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content animated fadeIn">
+
             <form name="parent.editForm" novalidate>
                 <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal">
+                    <button type="button" class="close" ng-click="parent.close()">
                 <span aria-hidden="true">&times;</span>
                 <span class="sr-only">Close</span></button>
                     <div id="wizard" role="application" class="wizard clearfix">
@@ -19,6 +20,8 @@
                                 <li ng-click="parent.wizardOnClick(2)" role="tab" class="{{parent.currentWizard2Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-1"><span class="number">2.</span> Bestellung</a></li>
                                 <li ng-click="parent.wizardOnClick(3)" role="tab" class="{{parent.currentWizard3Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-2"><span class="number">3.</span> Lieferung</a></li>
                                 <li ng-click="parent.wizardOnClick(4)" role="tab" class="{{parent.currentWizard4Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-3"><span class="number">4.</span> {{ 'COMMON_PRODUCT_CALCULATION'| translate }}</a></li>
+                                <li ng-if="type=='offer'" ng-click="parent.wizardOnClick(5)" role="tab" class="{{parent.currentWizard5Class}}" aria-disabled="false"
+                                    aria-selected="false"><a aria-controls="wizard-p-4"><span class="number">5.</span> Email</a></li>
                             </ul>
                         </div>
                         <div class="clearfix">
@@ -36,6 +39,7 @@
                                      </button>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
