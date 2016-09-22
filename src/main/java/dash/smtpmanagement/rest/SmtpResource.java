@@ -14,6 +14,8 @@
 
 package dash.smtpmanagement.rest;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 
@@ -36,8 +38,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping(value = "/api/rest/smtp", consumes = { MediaType.ALL_VALUE }, produces = {
-		MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/smtp", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Smtp API")
 public class SmtpResource {
 
@@ -47,7 +48,7 @@ public class SmtpResource {
 	@ApiOperation(value = "Testing Connection.")
 	@RequestMapping(value = "/test/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public void testConnection(@PathVariable final long id) throws NotFoundException, MessagingException {
+	public void testConnection(@PathVariable final long id) throws NotFoundException, MessagingException, UnsupportedEncodingException {
 		smtpService.testSmtp(id);
 	}
 

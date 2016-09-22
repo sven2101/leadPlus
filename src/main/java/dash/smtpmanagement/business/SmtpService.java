@@ -17,6 +17,7 @@ package dash.smtpmanagement.business;
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -50,7 +51,7 @@ public class SmtpService implements ISmtpService {
 	private UserService userService;
 
 	@Override
-	public void testSmtp(final long id) throws NotFoundException, MessagingException {
+	public void testSmtp(final long id) throws NotFoundException, MessagingException, UnsupportedEncodingException {
 		Smtp smtp = smptRepository.findOne(id);
 		if (smtp == null) {
 			throw new NotFoundException(BECAUSE_OF_OBJECT_IS_NULL);
@@ -60,16 +61,18 @@ public class SmtpService implements ISmtpService {
 		Transport transport = emailSession.getTransport("smtp");
 		transport.connect();
 		SMTPMessage smtpMessage = new SMTPMessage(emailSession);
-		smtpMessage.setFrom(new InternetAddress(smtp.getEmail()));
-		smtpMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse("andreas.foitzik@live.com"));
+		smtpMessage.setFrom(new InternetAddress(smtp.getEmail(), "lead+ Test-Mail"));
+		smtpMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtp.getEmail()));
 		smtpMessage.setHeader("Content-Type", "text/html");
 		smtpMessage.setSubject("Test");
-		smtpMessage.setContent("test test test", "text/html");
+		smtpMessage.setContent(
+				"<html><h3>Dear " + smtp.getSender() + ", </h3>"
+						+ "<br/>this is an auto generated Email to verify your SMTP-Connection for lead+. <br/> <br/> Best regards, <br/><br/> Your lead+ Team</html>",
+				"text/html");
 		smtpMessage.setNotifyOptions(SMTPMessage.NOTIFY_SUCCESS);
 		smtpMessage.setReturnOption(1);
-		transport.sendMessage(smtpMessage, InternetAddress.parse("andreas.foitzik@live.com"));
+		transport.sendMessage(smtpMessage, InternetAddress.parse(smtp.getEmail()));
 		transport.close();
-
 	}
 
 	private Session newSession(Smtp smtp) {

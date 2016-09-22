@@ -66,8 +66,7 @@ public class NotificationService implements INotificationService {
 		doSendEmail(userId, offerService.getOfferById(offerId), notification);
 	}
 
-	public void doSendEmail(final long userId, final Offer offer, final Notification notification)
-			throws SMTPdoesntExistsException, MessagingException {
+	public void doSendEmail(final long userId, final Offer offer, final Notification notification) throws SMTPdoesntExistsException, MessagingException {
 		try {
 			Smtp smtp = smtpService.findByUser(userId);
 			if (smtp != null) {
@@ -91,8 +90,7 @@ public class NotificationService implements INotificationService {
 
 					if (notification.getAttachment() != null) {
 						MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(),
-								"application/octet-stream");
+						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(), "application/octet-stream");
 						attachmentBodyPart.setDataHandler(new DataHandler(ds));
 						attachmentBodyPart.setFileName(notification.getAttachment().getFilename());
 						multipart.addBodyPart(attachmentBodyPart);
@@ -103,7 +101,6 @@ public class NotificationService implements INotificationService {
 					Transport.send(msg);
 					offer.setNotification(notification);
 					offerService.save(offer);
-					// notificationRepository.save(notification);
 				} catch (MessagingException mex) {
 					logger.error(NotificationService.class.getSimpleName(), mex);
 					throw mex;
