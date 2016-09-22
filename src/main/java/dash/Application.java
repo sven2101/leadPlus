@@ -42,6 +42,7 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import dash.security.AngularCsrfHeaderFilter;
 import dash.security.listener.RESTAuthenticationEntryPoint;
+import dash.smtpmanagement.business.SmtpService;
 import dash.smtpmanagement.domain.Encryption;
 import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.business.UserService;
@@ -87,6 +88,9 @@ public class Application {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private SmtpService smtpService;
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -127,6 +131,8 @@ public class Application {
 			test.setEnabled(true);
 			test.setLanguage(Language.DE);
 
+			userService.save(test);
+
 			Smtp testSmtp = new Smtp();
 			testSmtp.setConnection(false);
 			testSmtp.setEmail("andreas.foitzik@get-net.eu");
@@ -137,10 +143,9 @@ public class Application {
 			testSmtp.setResponseAdress("");
 			testSmtp.setSender("Andreas Foitzik");
 			testSmtp.setUsername("web26262457p2");
-
 			testSmtp.setUser(test);
 
-			userService.save(test);
+			smtpService.save(testSmtp);
 		}
 
 		if (!Optional.ofNullable(userService.getUserByName("testUser")).isPresent()) {

@@ -24,6 +24,7 @@ class SmtpService {
 
     smtpResource;
     userResource;
+    currentSmtp: Smtp;
 
     rootScope;
     translate;
@@ -35,23 +36,28 @@ class SmtpService {
         this.translate = $translate;
         this.smtpResource = SmtpResource.resource;
         this.userResource = UserResource.resource;
+        this.getSMtp();
     }
 
-    test(smtp: Smtp) {
+    test() {
         let self = this;
-        console.log("SMTP: ", smtp);
-        this.smtpResource.test(smtp).$promise.then(function () {
+        this.smtpResource.test(this.currentSmtp).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST_ERROR"));
         });
     }
 
-    save(smtp: Smtp) {
+    getSMtp() {
         let self = this;
-        this.userResource.setSmtpConnection({ id: this.rootScope.globals.user.id }, smtp).$promise.then(function () {
+        this.smtpResource.getByUserId({ id: this.rootScope.globals.user.id }).$promise.then((data) => self.currentSmtp = data);
+    }
+    save() {
+        let self = this;
+        this.smtpResource.save(this.currentSmtp).$promise.then(function (data) {
+            self.currentSmtp = data;
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE"));
-        }, function () {
+        }, function (error) {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE_ERROR"));
         });
     }

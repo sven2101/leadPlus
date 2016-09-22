@@ -45,6 +45,8 @@ class SettingService {
     users: Array<User>;
     templates: Array<Template>;
 
+
+
     constructor($filter, toaster, $translate, $rootScope, SettingResource, SmtpResource, UserResource, FileResource, TemplateService) {
         this.filter = $filter;
         this.toaster = toaster;
@@ -111,6 +113,7 @@ class SettingService {
             return false;
         }
     }
+
 }
 
 angular.module(moduleSettingService, [ngResourceId]).service(SettingServiceId, SettingService);

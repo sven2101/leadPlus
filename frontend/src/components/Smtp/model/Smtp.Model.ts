@@ -12,6 +12,7 @@ class Smtp {
     encryption: Encryption;
     port: number;
     connection: boolean;
+    user: User;
 
     constructor() {
     }

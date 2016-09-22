@@ -27,19 +27,27 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sun.mail.smtp.SMTPMessage;
 
+import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.smtpmanagement.domain.Smtp;
+import dash.usermanagement.business.UserService;
+import dash.usermanagement.domain.User;
 
 @Service
 public class SmtpService implements ISmtpService {
 
 	private static final Logger logger = Logger.getLogger(SmtpService.class);
 
+	@Autowired
 	private SmtpRepository smptRepository;
+
+	@Autowired
+	private UserService userService;
 
 	@Override
 	public boolean test(final Smtp smtp) {
@@ -97,7 +105,12 @@ public class SmtpService implements ISmtpService {
 	}
 
 	@Override
-	public Smtp findByUser(long id) {
-		return smptRepository.findByUser(id);
+	public Smtp findByUser(long id) throws NotFoundException {
+		User user = userService.getById(id);
+		Smtp smpt = smptRepository.findByUser(user);
+		if (smpt == null) {
+			throw new NotFoundException(BECAUSE_OF_OBJECT_IS_NULL);
+		}
+		return smpt;
 	}
 }

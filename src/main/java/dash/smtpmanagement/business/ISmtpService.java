@@ -16,6 +16,7 @@ package dash.smtpmanagement.business;
 
 import org.springframework.stereotype.Service;
 
+import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.smtpmanagement.domain.Smtp;
 
@@ -26,5 +27,5 @@ public interface ISmtpService {
 
 	Smtp save(Smtp smpt) throws SaveFailedException;
 
-	Smtp findByUser(long id);
+	Smtp findByUser(long id) throws NotFoundException;
 }

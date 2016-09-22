@@ -89,11 +89,11 @@ class SettingController {
     }
 
     testSmtpConnection() {
-        this.smtpService.test(this.rootScope.globals.user.smtp);
+        this.smtpService.test();
     }
 
     saveSmtpConnection() {
-        this.smtpService.save(this.rootScope.globals.user.smtp);
+        this.smtpService.save();
     }
 }
 angular.module(moduleSetting, [ngResourceId]).controller(SettingControllerId, SettingController);
