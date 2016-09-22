@@ -28,7 +28,7 @@ const LeadControllerId: string = "LeadController";
 
 class LeadController extends AbstractWorkflow {
 
-    $inject = [$compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId, "$uibModalInstance"];
+    $inject = [$compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId];
 
     uibModalInstance;
 
@@ -56,14 +56,13 @@ class LeadController extends AbstractWorkflow {
     currentCustomerId = "-1";
     customerSelected: boolean = false;
 
-    constructor($compile, $scope, WorkflowService, LeadDataTableService, LeadService, $uibModalInstance) {
+    constructor($compile, $scope, WorkflowService, LeadDataTableService, LeadService) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.leadDataTableService = LeadDataTableService;
         this.leadService = LeadService;
         this.scope = $scope;
         this.compile = $compile;
-        this.uibModalInstance = $uibModalInstance;
 
         let self = this;
         function createdRow(row, data: Process, dataIndex) {
