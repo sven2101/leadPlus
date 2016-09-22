@@ -46,7 +46,7 @@ class DashboardController {
         this.statisticService = StatisticService;
         this.dashboardService = DashboardService;
         this.rootScope = $rootScope;
-        this.statisticService.loadAllResourcesByDateRange("WEEKLY");
+        this.statisticService.loadAllResourcesByDateRange("MONTHLY");
         this.sortableOptions = this.dashboardService.setSortableOptions();
 
         this.refreshData();
@@ -106,6 +106,15 @@ class DashboardController {
     }
     getSaleAmount(): number {
         return this.statisticService.getSaleAmount();
+    }
+    getLeadsArray(): Array<number> {
+        return this.statisticService.getLeadsArray();
+    }
+    getOffersArray(): Array<number> {
+        return this.statisticService.getOffersArray();
+    }
+    getSalesArray(): Array<number> {
+        return this.statisticService.getSalesArray();
     }
     getConversionrate(): number {
         return this.statisticService.getLeadConversionRate();
