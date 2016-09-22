@@ -24,5 +24,5 @@ import dash.smtpmanagement.domain.Smtp;
 @Repository
 @Transactional
 public interface SmtpRepository extends JpaRepository<Smtp, Long> {
-
+	Smtp findByUser(long id);
 }

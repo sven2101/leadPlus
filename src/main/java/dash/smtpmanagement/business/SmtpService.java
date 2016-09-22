@@ -14,6 +14,9 @@
 
 package dash.smtpmanagement.business;
 
+import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
+import static dash.Constants.SAVE_FAILED_EXCEPTION;
+
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -28,12 +31,15 @@ import org.springframework.stereotype.Service;
 
 import com.sun.mail.smtp.SMTPMessage;
 
+import dash.exceptions.SaveFailedException;
 import dash.smtpmanagement.domain.Smtp;
 
 @Service
 public class SmtpService implements ISmtpService {
 
 	private static final Logger logger = Logger.getLogger(SmtpService.class);
+
+	private SmtpRepository smptRepository;
 
 	@Override
 	public boolean test(final Smtp smtp) {
@@ -76,5 +82,22 @@ public class SmtpService implements ISmtpService {
 				return new PasswordAuthentication(mailUser, mailPassword);
 			}
 		});
+	}
+
+	@Override
+	public Smtp save(final Smtp smpt) throws SaveFailedException {
+		if (smpt != null) {
+
+			return smptRepository.save(smpt);
+		} else {
+			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
+			logger.error(SAVE_FAILED_EXCEPTION + SmtpService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
+			throw sfex;
+		}
+	}
+
+	@Override
+	public Smtp findByUser(long id) {
+		return smptRepository.findByUser(id);
 	}
 }

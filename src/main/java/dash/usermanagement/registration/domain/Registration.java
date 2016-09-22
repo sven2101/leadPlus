@@ -18,6 +18,9 @@ import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 public class Registration {
 
 	@NotNull
@@ -36,10 +39,12 @@ public class Registration {
 
 	@NotNull
 	@Size(min = 2, max = 30)
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 
 	@NotNull
 	@Size(min = 2, max = 30)
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password2;
 
 	public Registration() {

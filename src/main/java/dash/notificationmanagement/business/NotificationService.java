@@ -35,9 +35,9 @@ import org.springframework.stereotype.Service;
 
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.notificationmanagement.domain.Notification;
+import dash.smtpmanagement.business.ISmtpService;
 import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.business.IUserService;
-import dash.usermanagement.domain.User;
 
 @Service
 public class NotificationService implements INotificationService {
@@ -47,35 +47,44 @@ public class NotificationService implements INotificationService {
 	@Autowired
 	private IUserService userService;
 
+	@Autowired
+	private ISmtpService smtpService;
+
 	@Override
-	public void sendNotification(final long userId, final Notification notification) throws SMTPdoesntExistsException, MessagingException {
+	public void sendNotification(final long userId, final Notification notification)
+			throws SMTPdoesntExistsException, MessagingException {
 		doSendEmail(userId, notification);
 	}
 
-	public void doSendEmail(final long userId, Notification notification) throws SMTPdoesntExistsException, MessagingException {
+	public void doSendEmail(final long userId, Notification notification)
+			throws SMTPdoesntExistsException, MessagingException {
 		try {
-			User principle = userService.getById(userId);
-			if (principle.getSmtp() != null) {
+			Smtp smtp = smtpService.findByUser(userId);
+			if (smtp != null) {
 
-				final Session emailSession = newSession(principle.getSmtp());
+				final Session emailSession = newSession(smtp);
 				Transport transport = emailSession.getTransport("smtp");
 				transport.connect();
 				//
-				//				SMTPMessage smtpMessage = new SMTPMessage(emailSession);
+				// SMTPMessage smtpMessage = new SMTPMessage(emailSession);
 				//
-				//				smtpMessage.setFrom(new InternetAddress(principle.getSmtp().getEmail()));
-				//				smtpMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(notification.getRecipient()));
-				//				smtpMessage.setHeader("Content-Type", "text/html");
-				//				smtpMessage.setSubject(notification.getSubject());
-				//				smtpMessage.setContent(notification.getContent(), "text/html");
-				//				smtpMessage.setNotifyOptions(SMTPMessage.NOTIFY_SUCCESS);
-				//				smtpMessage.setReturnOption(1);
-				//				transport.sendMessage(smtpMessage, InternetAddress.parse(notification.getRecipient()));
-				//				transport.close();
+				// smtpMessage.setFrom(new
+				// InternetAddress(principle.getSmtp().getEmail()));
+				// smtpMessage.setRecipients(Message.RecipientType.TO,
+				// InternetAddress.parse(notification.getRecipient()));
+				// smtpMessage.setHeader("Content-Type", "text/html");
+				// smtpMessage.setSubject(notification.getSubject());
+				// smtpMessage.setContent(notification.getContent(),
+				// "text/html");
+				// smtpMessage.setNotifyOptions(SMTPMessage.NOTIFY_SUCCESS);
+				// smtpMessage.setReturnOption(1);
+				// transport.sendMessage(smtpMessage,
+				// InternetAddress.parse(notification.getRecipient()));
+				// transport.close();
 
 				Message msg = new MimeMessage(emailSession);
 				try {
-					msg.setFrom(new InternetAddress(principle.getSmtp().getEmail()));
+					msg.setFrom(new InternetAddress(smtp.getEmail()));
 					msg.setRecipient(Message.RecipientType.TO, new InternetAddress(notification.getRecipient()));
 					msg.setSubject("your subject");
 
@@ -86,12 +95,16 @@ public class NotificationService implements INotificationService {
 
 					MimeBodyPart attachmentBodyPart = new MimeBodyPart();
 					System.out.println("Byte Array: " + notification.getAttachement().getContent());
-					ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachement().getContent(), "application/octet-stream");
+					ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachement().getContent(),
+							"application/octet-stream");
 					attachmentBodyPart.setDataHandler(new DataHandler(ds));
-					attachmentBodyPart.setFileName("abc.pdf"); // ex : "test.pdf"
+					attachmentBodyPart.setFileName("abc.pdf"); // ex :
+																// "test.pdf"
 
 					multipart.addBodyPart(textBodyPart); // add the text part
-					multipart.addBodyPart(attachmentBodyPart); // add the attachement part
+					multipart.addBodyPart(attachmentBodyPart); // add the
+																// attachement
+																// part
 
 					msg.setContent(multipart);
 

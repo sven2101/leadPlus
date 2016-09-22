@@ -16,10 +16,15 @@ package dash.smtpmanagement.business;
 
 import org.springframework.stereotype.Service;
 
+import dash.exceptions.SaveFailedException;
 import dash.smtpmanagement.domain.Smtp;
 
 @Service
 public interface ISmtpService {
 
 	public boolean test(final Smtp smtp);
+
+	Smtp save(Smtp smpt) throws SaveFailedException;
+
+	Smtp findByUser(long id);
 }

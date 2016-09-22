@@ -19,6 +19,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
+import dash.usermanagement.domain.User;
+
 @Entity
 public class Smtp {
 
@@ -31,11 +36,14 @@ public class Smtp {
 	private String responseAdress;
 	private String host;
 	private String username;
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	private String email;
 	private Encryption encryption;
 	private int port;
 	private boolean connection;
+
+	private User user;
 
 	public Smtp() {
 	}
@@ -116,18 +124,32 @@ public class Smtp {
 		this.connection = connection;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (connection ? 1231 : 1237);
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((encryption == null) ? 0 : encryption.hashCode());
+		result = prime * result + ((host == null) ? 0 : host.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + port;
 		result = prime * result + ((responseAdress == null) ? 0 : responseAdress.hashCode());
 		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
-		result = prime * result + ((host == null) ? 0 : host.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -143,7 +165,17 @@ public class Smtp {
 		Smtp other = (Smtp) obj;
 		if (connection != other.connection)
 			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
 		if (encryption != other.encryption)
+			return false;
+		if (host == null) {
+			if (other.host != null)
+				return false;
+		} else if (!host.equals(other.host))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -167,10 +199,10 @@ public class Smtp {
 				return false;
 		} else if (!sender.equals(other.sender))
 			return false;
-		if (host == null) {
-			if (other.host != null)
+		if (user == null) {
+			if (other.user != null)
 				return false;
-		} else if (!host.equals(other.host))
+		} else if (!user.equals(other.user))
 			return false;
 		if (username == null) {
 			if (other.username != null)
@@ -182,8 +214,9 @@ public class Smtp {
 
 	@Override
 	public String toString() {
-		return "Smtp [id=" + id + ", sender=" + sender + ", responseAdress=" + responseAdress + ", server=" + host + ", username=" + username + ", password="
-				+ password + ", encryption=" + encryption + ", port=" + port + ", connection=" + connection + "]";
+		return "Smtp [id=" + id + ", sender=" + sender + ", responseAdress=" + responseAdress + ", host=" + host
+				+ ", username=" + username + ", password=" + password + ", email=" + email + ", encryption="
+				+ encryption + ", port=" + port + ", connection=" + connection + ", user=" + user + "]";
 	}
 
 }

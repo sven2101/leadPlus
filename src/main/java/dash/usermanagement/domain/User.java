@@ -38,7 +38,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import dash.fileuploadmanagement.domain.FileUpload;
-import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.settings.language.Language;
 
 @Entity
@@ -77,9 +76,6 @@ public class User implements UserDetails {
 
 	@Enumerated(EnumType.STRING)
 	private Language language;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	private Smtp smtp;
 
 	private boolean enabled;
 
@@ -157,14 +153,6 @@ public class User implements UserDetails {
 		this.picture = picture;
 	}
 
-	public Smtp getSmtp() {
-		return smtp;
-	}
-
-	public void setSmtp(Smtp smtp) {
-		this.smtp = smtp;
-	}
-
 	public Language getLanguage() {
 		return language;
 	}
@@ -221,7 +209,6 @@ public class User implements UserDetails {
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
-		result = prime * result + ((smtp == null) ? 0 : smtp.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -271,11 +258,6 @@ public class User implements UserDetails {
 			return false;
 		if (role != other.role)
 			return false;
-		if (smtp == null) {
-			if (other.smtp != null)
-				return false;
-		} else if (!smtp.equals(other.smtp))
-			return false;
 		if (username == null) {
 			if (other.username != null)
 				return false;
@@ -286,8 +268,9 @@ public class User implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password="
-				+ password + ", role=" + role + ", profilPicture=" + picture + ", language=" + language + ", smtp=" + smtp + ", enabled=" + enabled + "]";
+		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
+				+ ", email=" + email + ", password=" + password + ", role=" + role + ", profilPicture=" + picture
+				+ ", language=" + language + ", enabled=" + enabled + "]";
 	}
 
 }

@@ -138,7 +138,7 @@ public class Application {
 			testSmtp.setSender("Andreas Foitzik");
 			testSmtp.setUsername("web26262457p2");
 
-			test.setSmtp(testSmtp);
+			testSmtp.setUser(test);
 
 			userService.save(test);
 		}
