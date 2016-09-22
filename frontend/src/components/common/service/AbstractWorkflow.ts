@@ -21,6 +21,7 @@ class AbstractWorkflow {
     currentWizard3Class: any = "done";
     currentWizard4Class: any = "done";
     currentWizard5Class: any = "done";
+    currentWizard6Class: any = "done";
 
     constructor(WorkflowService) {
         this.workflowService = WorkflowService;
@@ -50,30 +51,42 @@ class AbstractWorkflow {
             this.currentWizard3Class = "done";
             this.currentWizard4Class = "done";
             this.currentWizard5Class = "done";
+            this.currentWizard6Class = "done";
         } else if (this.currentWizard === 2) {
             this.currentWizard1Class = "done";
             this.currentWizard2Class = "current";
             this.currentWizard3Class = "done";
             this.currentWizard4Class = "done";
             this.currentWizard5Class = "done";
+            this.currentWizard6Class = "done";
         } else if (this.currentWizard === 3) {
             this.currentWizard1Class = "done";
             this.currentWizard2Class = "done";
             this.currentWizard3Class = "current";
             this.currentWizard4Class = "done";
             this.currentWizard5Class = "done";
+            this.currentWizard6Class = "done";
         } else if (this.currentWizard === 4) {
             this.currentWizard1Class = "done";
             this.currentWizard2Class = "done";
             this.currentWizard3Class = "done";
             this.currentWizard4Class = "current";
             this.currentWizard5Class = "done";
+            this.currentWizard6Class = "done";
         } else if (this.currentWizard === 5) {
             this.currentWizard1Class = "done";
             this.currentWizard2Class = "done";
             this.currentWizard3Class = "done";
             this.currentWizard4Class = "done";
             this.currentWizard5Class = "current";
+            this.currentWizard6Class = "done";
+        } else if (this.currentWizard === 6) {
+            this.currentWizard1Class = "done";
+            this.currentWizard2Class = "done";
+            this.currentWizard3Class = "done";
+            this.currentWizard4Class = "done";
+            this.currentWizard5Class = "done";
+            this.currentWizard6Class = "current";
         }
     }
 }
