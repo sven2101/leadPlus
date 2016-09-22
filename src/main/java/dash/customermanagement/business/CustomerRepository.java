@@ -20,4 +20,6 @@ import dash.customermanagement.domain.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
+	public Customer getByEmailAndDeactivated(String email, boolean deactivated);
+
 }

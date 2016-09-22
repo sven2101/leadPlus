@@ -13,7 +13,10 @@
             <li ng-if="type=='lead'" ng-click="parent.pin(parent.processes[directiveData.process.id],null)"><a>{{ 'COMMON_EMPTY_PROCESSOR' | translate }}</a></li>
             <li ng-if="type=='lead'" role="separator" class="divider"></li>
             <li ng-click="parent.pin(parent.processes[directiveData.process.id],user)" ng-repeat="user in parent.workflowService.users">
-                <a ng-style="user.id==directiveData.process.processor.id?{'font-weight': 'bold','font-style':'italic'}:{'font-weight': 'normal','font-style':'normal'}">{{user.username}}</a>
+                <a ng-if="((user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname==''))" ng-style="user.id==directiveData.process.processor.id?{ 'font-weight': 'bold', 'font-style': 'italic'}:{
+                    'font-weight': 'normal', 'font-style': 'normal'} ">{{user.username}}</a>
+                <a ng-if="!((user.firstname==null||user.firstname=='' )&&(user.lastname==null||user.lastname==''
+                    ))" ng-style="user.id==directiveData.process.processor.id?{'font-weight': 'bold','font-style':'italic'}:{'font-weight': 'normal','font-style':'normal'}">  {{user.firstname}} {{user.lastname}}</a>
             </li>
         </ul>
     </div>

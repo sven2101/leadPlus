@@ -79,10 +79,6 @@ public class Customer {
 		return id;
 	}
 
-	public long setId() {
-		return id;
-	}
-
 	public Title getTitle() {
 		return title;
 	}

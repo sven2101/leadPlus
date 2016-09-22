@@ -115,7 +115,7 @@
                         <span ng-if="appCtrl.todos.length>0" class="label label-danger">{{ appCtrl.todos.length}}</span>
 
                     </a>
-                    <ul style="min-width:400px;max-height: 235px; overflow-x: hidden;" class="dropdown-menu dropdown-messages">
+                    <ul style="min-width:400px" class="dropdown-menu dropdown-messages">
                         <li>
                             <div class="dropdown-messages-box">
                                 
@@ -135,7 +135,7 @@
                         <li>
                             <table class="table table-hover">
                                 <tbody>
-                                    <tr style="cursor:pointer" ng-repeat="todo in appCtrl.todos">
+                                    <tr style="cursor:pointer" ng-repeat="todo in appCtrl.todos | limitTo:5 | orderBy:'timestamp'">
                                         <td class="project-status">
                                             <span ng-if="todo.status=='OPEN'" class="label label-danger">Lead</span>
                                             <span ng-if="todo.status=='OFFER'" class="label label-warning">Offer</span>
@@ -151,9 +151,10 @@
                                             <small ng-if="todo.status=='OFFER'">{{appCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</small>
                                             <small ng-if="todo.status=='FOLLOWUP'">{{appCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</small>
                                         </td>
-                                    </tr>
+                                    </tr>                                  
                                 </tbody>
                             </table>
+                            <p ng-if="appCtrl.todos.length>5" style="margin-left:160px">...</p>
                             <div ng-if="appCtrl.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius: 5px;">{{ 'TODO_NO_TODOS' | translate }}</div>
                         </li>
                     </ul>

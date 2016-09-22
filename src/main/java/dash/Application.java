@@ -14,9 +14,6 @@
 
 package dash;
 
-import static com.google.common.base.Predicates.or;
-import static springfox.documentation.builders.PathSelectors.regex;
-
 import java.util.Optional;
 import java.util.TimeZone;
 
@@ -42,8 +39,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-
-import com.google.common.base.Predicate;
 
 import dash.security.AngularCsrfHeaderFilter;
 import dash.security.listener.RESTAuthenticationEntryPoint;
@@ -79,24 +74,14 @@ public class Application {
 		public Docket api() {
 			return new Docket(DocumentationType.SWAGGER_2).select()
 					.apis(RequestHandlerSelectors.basePackage("dash.publicapi")).paths(PathSelectors.any()).build()
-					.pathMapping("/apidoc");
+					.apiInfo(apiInfo());
+
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private Predicate<String> paths() {
-
-		return or(regex("/api/rest/processes.*"), regex("/api/rest/processes/leads.*"),
-				regex("/api/rest/processes/leads/containers.*"), regex("/api/rest/processes/leads/inquirers.*"),
-				regex("/api/rest/processes/leads/vendors.*"), regex("/api/rest/processes/offers.*"),
-				regex("/api/rest/processes/offers/prospects.*"), regex("/api/rest/processes/sales.*"),
-				regex("/api/rest/processes/sales/customers.*"));
-
-	}
-
-	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("Applica").description("Applica - Lead Management Tool").license("")
-				.licenseUrl("").version("1.0").build();
+	private static ApiInfo apiInfo() {
+		return new ApiInfoBuilder().title("Lead+").description("Lead+ - Lead Management Tool").license("")
+				.licenseUrl("").version("2.0").build();
 	}
 
 	@Autowired
@@ -223,7 +208,7 @@ public class Application {
 		protected void configure(HttpSecurity http) throws Exception {
 
 			http.httpBasic().and().authorizeRequests()
-					.antMatchers("/", "/assets/**", "/fonts/**", "/app/**", "/components/**",
+					.antMatchers("/", "/images/favicon**", "/assets/**", "/fonts/**", "/app/**", "/components/**",
 							"/api/rest/registrations/**", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
 							"/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")
 					.permitAll().antMatchers("/api/rest/public**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")

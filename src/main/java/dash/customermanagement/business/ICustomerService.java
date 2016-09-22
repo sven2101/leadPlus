@@ -30,6 +30,8 @@ public interface ICustomerService {
 
 	public Customer getById(final Long id) throws NotFoundException;
 
+	public Customer getByEmailAndDeactivated(String email, boolean deactivated);
+
 	public Customer save(final Customer inquirer) throws SaveFailedException;
 
 	public Customer update(final Customer inquirer) throws UpdateFailedException;
