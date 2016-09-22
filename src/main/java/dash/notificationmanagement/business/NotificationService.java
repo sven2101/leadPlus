@@ -33,11 +33,12 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dash.exceptions.NotFoundException;
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.exceptions.SaveFailedException;
-import dash.fileuploadmanagement.business.IFileUploadService;
-import dash.fileuploadmanagement.domain.FileUpload;
 import dash.notificationmanagement.domain.Notification;
+import dash.offermanagement.business.OfferService;
+import dash.offermanagement.domain.Offer;
 import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.business.IUserService;
 import dash.usermanagement.domain.User;
@@ -51,19 +52,19 @@ public class NotificationService implements INotificationService {
 	private IUserService userService;
 
 	@Autowired
-	private IFileUploadService fileUploadService;
+	private OfferService offerService;
 
 	@Autowired
 	private NotificationRepository notificationRepository;
 
 	@Override
-	public void sendNotification(final long userId, final Notification notification) throws SMTPdoesntExistsException, MessagingException, SaveFailedException {
-		doSendEmail(userId, notification);
+	public void sendNotification(final long userId, final long offerId, final Notification notification)
+			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException {
+		doSendEmail(userId, offerService.getOfferById(offerId), notification);
 	}
 
-	public void doSendEmail(final long userId, Notification notification) throws SMTPdoesntExistsException, MessagingException {
+	public void doSendEmail(final long userId, final Offer offer, final Notification notification) throws SMTPdoesntExistsException, MessagingException {
 		try {
-			notificationRepository.save(notification);
 			User principle = userService.getById(userId);
 			if (principle.getSmtp() != null) {
 
@@ -73,27 +74,31 @@ public class NotificationService implements INotificationService {
 
 				Message msg = new MimeMessage(emailSession);
 				try {
+
 					msg.setFrom(new InternetAddress(principle.getSmtp().getEmail()));
 					msg.setRecipient(Message.RecipientType.TO, new InternetAddress(notification.getRecipient()));
-					msg.setSubject("your subject");
+					msg.setSubject(notification.getSubject());
 
 					Multipart multipart = new MimeMultipart();
 
 					MimeBodyPart textBodyPart = new MimeBodyPart();
-					textBodyPart.setText("your text");
+					textBodyPart.setText(notification.getContent());
+					multipart.addBodyPart(textBodyPart);
 
-					MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-					System.out.println("Byte Array: " + notification.getAttachment().getContent());
-					ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(), "application/octet-stream");
-					attachmentBodyPart.setDataHandler(new DataHandler(ds));
-					attachmentBodyPart.setFileName("abc.pdf"); // ex : "test.pdf"
-
-					multipart.addBodyPart(textBodyPart); // add the text part
-					multipart.addBodyPart(attachmentBodyPart); // add the attachement part
+					if (notification.getAttachment() != null) {
+						MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(), "application/octet-stream");
+						attachmentBodyPart.setDataHandler(new DataHandler(ds));
+						attachmentBodyPart.setFileName(notification.getAttachment().getFilename());
+						multipart.addBodyPart(attachmentBodyPart);
+					}
 
 					msg.setContent(multipart);
 
 					Transport.send(msg);
+					offer.setNotification(notification);
+					offerService.save(offer);
+					// notificationRepository.save(notification);
 				} catch (MessagingException mex) {
 					logger.error(NotificationService.class.getSimpleName(), mex);
 				}
@@ -123,15 +128,6 @@ public class NotificationService implements INotificationService {
 				return new PasswordAuthentication(mailUser, mailPassword);
 			}
 		});
-	}
-
-	private FileUpload storeFile(Notification notification) throws SaveFailedException {
-		System.out.println("Notification: " + notification.toString());
-		if (notification.getAttachment() != null) {
-			System.out.println(notification.getAttachment().toString());
-			return fileUploadService.save(notification.getAttachment());
-		}
-		return null;
 	}
 
 }
