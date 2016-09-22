@@ -28,7 +28,9 @@ const LeadControllerId: string = "LeadController";
 
 class LeadController extends AbstractWorkflow {
 
-    $inject = [$compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId];
+    $inject = [$compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId, "$uibModalInstance"];
+
+    uibModalInstance;
 
     workflowService: WorkflowService;
     leadDataTableService: LeadDataTableService;
@@ -54,13 +56,14 @@ class LeadController extends AbstractWorkflow {
     currentCustomerId = "-1";
     customerSelected: boolean = false;
 
-    constructor($compile, $scope, WorkflowService, LeadDataTableService, LeadService) {
+    constructor($compile, $scope, WorkflowService, LeadDataTableService, LeadService, $uibModalInstance) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.leadDataTableService = LeadDataTableService;
         this.leadService = LeadService;
         this.scope = $scope;
         this.compile = $compile;
+        this.uibModalInstance = $uibModalInstance;
 
         let self = this;
         function createdRow(row, data: Process, dataIndex) {
@@ -82,8 +85,15 @@ class LeadController extends AbstractWorkflow {
         }
         this.dtOptions = this.leadDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
+    }
 
+    create() {
+        this.workflowService.openCreationLeadModal();
+    }
 
+    close() {
+        this.clearNewLead();
+        this.uibModalInstance.close();
     }
 
     changeDataInput() {
