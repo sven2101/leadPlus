@@ -45,16 +45,18 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@ApiModelProperty(hidden = true)
 	private long id;
 
 	@ApiModelProperty(hidden = true)
 	private boolean deleted;
 
+	@ApiModelProperty(hidden = true)
 	private String name;
+	@ApiModelProperty(hidden = true)
 	private String description;
 
 	@Enumerated(EnumType.STRING)
+	@ApiModelProperty(hidden = true)
 	private ProductState productState;
 
 	@Column
@@ -66,6 +68,7 @@ public class Product {
 	@ApiModelProperty(hidden = true)
 	private boolean deactivated;
 
+	@ApiModelProperty(hidden = true)
 	private double priceNetto;
 
 	@OneToOne(cascade = CascadeType.ALL)

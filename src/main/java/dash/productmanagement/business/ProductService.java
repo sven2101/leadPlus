@@ -121,4 +121,9 @@ public class ProductService implements IProductService {
 		product.setPicture(fileUploadService.save(multipartFile));
 		return save(product);
 	}
+
+	@Override
+	public List<Product> findByDeactivated(boolean deactivated) {
+		return productRepository.findByDeactivated(deactivated);
+	}
 }

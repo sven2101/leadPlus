@@ -32,7 +32,7 @@ public class Vendor {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@ApiModelProperty(hidden = true)
-	private Long id;
+	private long id;
 
 	private String name;
 
@@ -43,10 +43,6 @@ public class Vendor {
 
 	public Vendor() {
 
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public String getPhone() {
@@ -73,7 +69,11 @@ public class Vendor {
 		this.deleted = deleted;
 	}
 
-	public void setId(Long id) {
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -82,7 +82,7 @@ public class Vendor {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (deleted ? 1231 : 1237);
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		return result;
@@ -99,10 +99,7 @@ public class Vendor {
 		Vendor other = (Vendor) obj;
 		if (deleted != other.deleted)
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
+		if (id != other.id)
 			return false;
 		if (name == null) {
 			if (other.name != null)

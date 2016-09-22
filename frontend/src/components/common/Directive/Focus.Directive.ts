@@ -1,3 +1,4 @@
+/// <reference path="../../app/App.Constants.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -11,15 +12,20 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+"use strict";
 
-package dash.customermanagement.business;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import dash.customermanagement.domain.Customer;
-
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
-
-	public Customer getByEmailAndDeactivated(String email, boolean deactivated);
-
-}
+angular.module(moduleApp)
+    .directive("focusMe", function ($timeout, $parse) {
+        return {
+            link: function (scope, element, attrs) {
+                let model = $parse(attrs["focusMe"]);
+                scope.$watch(model, function (value) {
+                    if (value === true) {
+                        $timeout(function () {
+                            element[0].focus();
+                        });
+                    }
+                });
+            }
+        };
+    });

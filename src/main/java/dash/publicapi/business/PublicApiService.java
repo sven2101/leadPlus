@@ -14,9 +14,14 @@
 
 package dash.publicapi.business;
 
+import static dash.Constants.CUSTOMER_NOT_FOUND;
 import static dash.Constants.INVALID_LEAD;
+import static dash.Constants.INVALID_ORDERPOSITIONS;
+import static dash.Constants.Product_NOT_FOUND;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -24,11 +29,16 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dash.customermanagement.business.ICustomerService;
+import dash.customermanagement.domain.Customer;
+import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.leadmanagement.business.ILeadService;
 import dash.leadmanagement.domain.Lead;
+import dash.productmanagement.business.IProductService;
 import dash.productmanagement.business.ProductService;
 import dash.productmanagement.domain.OrderPosition;
+import dash.productmanagement.domain.Product;
 
 @Service
 @Transactional
@@ -39,21 +49,70 @@ public class PublicApiService implements IPublicApiService {
 	@Autowired
 	private ILeadService leadservice;
 
+	@Autowired
+	private IProductService productService;
+
+	@Autowired
+	private ICustomerService customerService;
+
 	@Override
-	public void saveLead(Lead lead) throws SaveFailedException {
-		if (lead != null) {
+	public Lead saveLead(Lead lead) throws SaveFailedException, NotFoundException {
+		if (lead == null) {
 			throw new SaveFailedException(INVALID_LEAD);
 		}
+
+		// set OrderPositions and Products
 		if (lead.getOrderPositions() == null) {
 			lead.setOrderPositions(new ArrayList<OrderPosition>());
-		}
-		for (OrderPosition orderPosition : lead.getOrderPositions()) {
-			if (orderPosition.getProduct() == null) {
-				throw new SaveFailedException(INVALID_LEAD);
+		} else {
+			for (OrderPosition orderPosition : lead.getOrderPositions()) {
+				if (orderPosition.getProduct() == null) {
+					throw new SaveFailedException(INVALID_ORDERPOSITIONS);
+				} else if (orderPosition.getProduct().getId() <= 0) {
+					throw new NotFoundException(Product_NOT_FOUND);
+				}
+				orderPosition.setProduct(productService.getById(orderPosition.getProduct().getId()));
+				orderPosition.setPrice(orderPosition.getProduct().getPriceNetto());
+				orderPosition.setDeleted(false);
+				orderPosition.setId(0);
+				orderPosition.setWorkflow(lead);
 			}
-			orderPosition.setPrice(orderPosition.getProduct().getPriceNetto());
 		}
-		leadservice.save(lead);
+
+		// set Customer
+		if (lead.getCustomer() == null) {
+			throw new SaveFailedException(CUSTOMER_NOT_FOUND);
+		}
+		Customer tempCustomer = lead.getCustomer().getEmail() != null
+				? customerService.getByEmailAndDeactivated(lead.getCustomer().getEmail(), false) : null;
+		lead.getCustomer().setTimestamp(Calendar.getInstance());
+		if (tempCustomer == null) {
+			lead.getCustomer().setId(0);
+		} else {
+			lead.getCustomer().setId(tempCustomer.getId());
+		}
+		lead.getCustomer().setDeactivated(false);
+		lead.getCustomer().setDeleted(false);
+		lead.getCustomer().setTimestamp(Calendar.getInstance());
+		lead.setCustomer(customerService.save(lead.getCustomer()));
+
+		// set Vendor
+		if (lead.getVendor() != null) {
+			lead.getVendor().setDeleted(false);
+			lead.getVendor().setId(0);
+		}
+
+		// set Lead
+		lead.setTimestamp(Calendar.getInstance());
+		lead.setDeleted(false);
+		lead.setId(0);
+
+		return leadservice.save(lead);
+	}
+
+	@Override
+	public List<Product> findByDeactivated(boolean deactivated) {
+		return productService.findByDeactivated(deactivated);
 	}
 
 }
