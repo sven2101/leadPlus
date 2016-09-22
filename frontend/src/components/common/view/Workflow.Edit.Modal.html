@@ -1,37 +1,43 @@
-<form name="parent.editForm" novalidate>
-    <div class="modal-body">
-        <button type="button" class="close" ng-click="parent.close()">
+<div class="modal" id="editModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+
+            <form name="parent.editForm" novalidate>
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal">
                 <span aria-hidden="true">&times;</span>
                 <span class="sr-only">Close</span></button>
-        <div id="wizard" role="application" class="wizard clearfix">
-            <div class="steps clearfix">
-                <ul role="tablist">
-                    <!--
-                                <li ng-click="parent.wizardOnClick(1)" role="tab" class="{{parent.currentWizard1Class}}" aria-disabled="false" aria-selected="true"><a style="background:#1a7bb9;" aria-controls="wizard-p-0"><span class="current-info audible">current step: </span><span class="number">1.</span> Kunde</a></li>
-                                <li ng-click="parent.wizardOnClick(2)" role="tab" class="{{parent.currentWizard2Class}}" aria-disabled="false" aria-selected="false"><a style="background:#1a7bb9;" aria-controls="wizard-p-1"><span class="number">2.</span> Bestellung</a></li>
-                                <li ng-click="parent.wizardOnClick(3)" role="tab" class="{{parent.currentWizard3Class}}" aria-disabled="false" aria-selected="false"><a style="background:#1a7bb9;" aria-controls="wizard-p-2"><span class="number">3.</span> Lieferung</a></li>
-                                <li ng-click="parent.wizardOnClick(4)" role="tab" class="{{parent.currentWizard4Class}}" aria-disabled="false" aria-selected="false"><a style="background:#1a7bb9;" aria-controls="wizard-p-3"><span class="number">4.</span> {{ 'COMMON_PRODUCT_CALCULATION'| translate }}</a></li>
-                                -->
-                    <li ng-click="parent.wizardOnClick(1)" role="tab" class="{{parent.currentWizard1Class}}" aria-disabled="false" aria-selected="true"><a aria-controls="wizard-p-0"><span class="current-info audible">current step: </span><span class="number">1.</span> Kunde</a></li>
-                    <li ng-click="parent.wizardOnClick(2)" role="tab" class="{{parent.currentWizard2Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-1"><span class="number">2.</span> Bestellung</a></li>
-                    <li ng-click="parent.wizardOnClick(3)" role="tab" class="{{parent.currentWizard3Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-2"><span class="number">3.</span> Lieferung</a></li>
-                    <li ng-click="parent.wizardOnClick(4)" role="tab" class="{{parent.currentWizard4Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-3"><span class="number">4.</span> {{ 'COMMON_PRODUCT_CALCULATION'| translate }}</a></li>
-                    <li ng-if="type=='offer'" ng-click="parent.wizardOnClick(5)" role="tab" class="{{parent.currentWizard5Class}}" aria-disabled="false"
-                        aria-selected="false"><a aria-controls="wizard-p-4"><span class="number">5.</span> Email</a></li>
-                </ul>
-            </div>
-            <div class="clearfix">
-                <div ng-include="'components/Common/view/Workflow.Edit.Step1.html'"></div>
-                <div ng-include="'components/Common/view/Workflow.Edit.Step2.html'"></div>
-                <div ng-include="'components/Common/view/Workflow.Edit.Step3.html'"></div>
-                <div ng-include="'components/Common/view/Workflow.Edit.Step4.html'"></div>
-            </div>
+                    <div id="wizard" role="application" class="wizard clearfix">
+                        <div class="steps clearfix">
+                            <ul role="tablist">
+                                <li ng-click="parent.wizardOnClick(1)" role="tab" class="{{parent.currentWizard1Class}}" aria-disabled="false" aria-selected="true"><a aria-controls="wizard-p-0"><span class="current-info audible">current step: </span><span class="number">1.</span> Kunde</a></li>
+                                <li ng-click="parent.wizardOnClick(2)" role="tab" class="{{parent.currentWizard2Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-1"><span class="number">2.</span> Bestellung</a></li>
+                                <li ng-click="parent.wizardOnClick(3)" role="tab" class="{{parent.currentWizard3Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-2"><span class="number">3.</span> Lieferung</a></li>
+                                <li ng-click="parent.wizardOnClick(4)" role="tab" class="{{parent.currentWizard4Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-3"><span class="number">4.</span> {{ 'COMMON_PRODUCT_CALCULATION'| translate }}</a></li>
+                                <li ng-if="type=='offer' || type=='sale'" ng-click="parent.wizardOnClick(5)" role="tab" class="{{parent.currentWizard5Class}}"
+                                    aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-4"><span class="number">5.</span> Email</a></li>
+                                <li ng-if="type=='sale'" ng-click="parent.wizardOnClick(6)" role="tab" class="{{parent.currentWizard6Class}}" aria-disabled="false"
+                                    aria-selected="false"><a aria-controls="wizard-p-4"><span class="number">6.</span> Verkauf</a></li>
+                            </ul>
+                        </div>
+                        <div class="clearfix">
+                            <div ng-include="'components/Common/view/Workflow.Edit.Step1.html'"></div>
+                            <div ng-include="'components/Common/view/Workflow.Edit.Step2.html'"></div>
+                            <div ng-include="'components/Common/view/Workflow.Edit.Step3.html'"></div>
+                            <div ng-include="'components/Common/view/Workflow.Edit.Step4.html'"></div>
+                            <div ng-include="'components/Common/view/Workflow.Edit.Step5.html'"></div>
+                            <div ng-include="'components/Common/view/Workflow.Edit.Step6.html'"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer ">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL'| translate }}</button>
+                    <button type="submit" class="btn btn-primary" ng-disabled="parent.editForm.$invalid" ng-click="parent.save(parent.edit)"
+                        data-dismiss="modal">{{ 'COMMON_SAVE'| translate }}
+                                     </button>
+                </div>
+            </form>
+
         </div>
     </div>
-    <div class="modal-footer ">
-        <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL'| translate }}</button>
-        <button type="submit" class="btn btn-primary" ng-disabled="parent.editForm.$invalid" ng-click="parent.save(parent.edit)"
-            data-dismiss="modal">{{ 'COMMON_SAVE'| translate }}
-                                     </button>
-    </div>
-</form>
+</div>
