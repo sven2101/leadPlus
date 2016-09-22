@@ -110,8 +110,8 @@ public class SmtpService implements ISmtpService {
 				Smtp tempSmpt = smptRepository.findOne(smtp.getId());
 				smtp.setPassword(tempSmpt.getPassword());
 			} else {
-				encrypt(smtp);
-				decrypt(smtp);
+				smtp.setPassword(encrypt(smtp).getPassword());
+
 			}
 			return smptRepository.save(smtp);
 		} else {
