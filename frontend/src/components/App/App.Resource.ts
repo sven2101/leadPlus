@@ -395,7 +395,7 @@ class NotificationResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/notifications", {}, {
-            send: { url: "/api/rest/notifications/users/:id/offers/send", method: "POST" }
+            send: { url: "/api/rest/notifications/users/:userId/offers/:offerId/send", method: "POST" }
         });
     }
 }

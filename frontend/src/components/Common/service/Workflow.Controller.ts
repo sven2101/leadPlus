@@ -123,7 +123,7 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     send() {
-        this.notificationService.send(this.notification);
+        this.notificationService.send(this.notification, this.editWorkflowUnit);
     }
 
     selectCustomer(workflow: any) {

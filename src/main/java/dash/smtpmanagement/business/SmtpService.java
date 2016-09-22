@@ -66,7 +66,7 @@ public class SmtpService implements ISmtpService {
 		smtpMessage.setHeader("Content-Type", "text/html");
 		smtpMessage.setSubject("Test");
 		smtpMessage.setContent(
-				"<html><h3>Dear " + smtp.getSender() + ", </h3>"
+				"<html style='font-family:Arial;'><h3>Dear " + smtp.getSender() + ", </h3>"
 						+ "<br/>this is an auto generated Email to verify your SMTP-Connection for lead+. <br/> <br/> Best regards, <br/><br/> Your lead+ Team</html>",
 				"text/html");
 		smtpMessage.setNotifyOptions(SMTPMessage.NOTIFY_SUCCESS);
