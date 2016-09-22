@@ -96,9 +96,7 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     close() {
-        this.editCustomerForm.$setPristine();
-        this.editOrderForm.$setPristine();
-        this.editEmailForm.$setPristine();
+        this.editForm.$setPristine();
         this.uibModalInstance.close();
     }
 
