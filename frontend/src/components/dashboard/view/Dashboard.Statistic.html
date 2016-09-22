@@ -12,9 +12,78 @@
     }
     
     .statisticDiv {
-        height: 80px;
+        height: 150px;
     }
 </style>
+<div class="row">
+    <div class="col-lg-3 ">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-danger pull-right">Heute</span>
+                <h5>Anfragen</h5>
+                <div class="ibox-content statisticDiv">
+                    <h1 class="no-margins">1200</h1>
+                    <sparklinechart data="0,1,5,7,2,1,12,15" color="#ed5565"></sparklinechart>
+                    <small>Letzte 30 Tage</small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+     <div class="col-lg-3 ">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right">Monat</span>
+                <h5>Verkäufe</h5>
+                <div class="ibox-content statisticDiv">
+                    <h1 class="no-margins">34</h1>
+                    <sparklinechart data="0,1,5,7,2,1,12,15" color="#1c84c6"></sparklinechart>
+                    <small>Letzte 30 Tage</small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right">Monat</span>
+                <h5>Gewinn und Umsatz</h5>
+            </div>
+            <div class="ibox-content statisticDiv">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="no-margins">€ 105.230,54</h1>
+                        <small>Umsatz</small>
+                    </div>
+                </div>
+                </br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="no-margins">€ 25.230,54</h1>
+                        <small>Gewinn</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="ibox">
+             <div class="ibox-title">
+                <span class="label label-success pull-right">Monat</span>
+                <h5>Conversionrate</h5>
+            </div>
+            <div class="ibox-content statisticDiv">
+                <h1>20%</h1>
+                <div class="progress progress-mini">
+                    <div style="width: 20%;" class="progress-bar progress-bar-success"></div>
+                </div>
+                <div class="m-t-sm small">Verkauf pro Anfrage</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--
 <div class="row">
     <div class="col-lg-4">
         <div class="panel panel-success">
