@@ -16,6 +16,7 @@ package dash.offermanagement.domain;
 
 import java.util.Calendar;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -28,7 +29,7 @@ import org.hibernate.annotations.Where;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.common.AbstractWorkflow;
-import dash.fileuploadmanagement.domain.FileUpload;
+import dash.notificationmanagement.domain.Notification;
 
 @Entity
 @SQLDelete(sql = "UPDATE offer SET deleted = '1' WHERE id = ?")
@@ -42,8 +43,8 @@ public class Offer extends AbstractWorkflow {
 
 	private double offerPrice;
 
-	@OneToOne
-	private FileUpload offer;
+	@OneToOne(cascade = CascadeType.ALL)
+	private Notification notification;
 
 	public Offer() {
 
@@ -65,12 +66,12 @@ public class Offer extends AbstractWorkflow {
 		this.deliveryDate = deliveryDate;
 	}
 
-	public FileUpload getOffer() {
-		return offer;
+	public Notification getNotification() {
+		return notification;
 	}
 
-	public void setOffer(FileUpload offer) {
-		this.offer = offer;
+	public void setNotification(Notification notification) {
+		this.notification = notification;
 	}
 
 	@Override

@@ -194,7 +194,8 @@ class WorkflowService {
             customer: process.lead.customer,
             timestamp: newTimestamp(),
             vendor: process.lead.vendor,
-            deliveryCosts: process.lead.deliveryCosts
+            deliveryCosts: process.lead.deliveryCosts,
+            notification: null
         };
         for (let i = 0; i < offer.orderPositions.length; i++) {
             offer.orderPositions[i].id = 0;

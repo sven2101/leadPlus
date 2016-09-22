@@ -16,11 +16,13 @@ package dash.notificationmanagement.business;
 
 import javax.mail.MessagingException;
 
+import dash.exceptions.NotFoundException;
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.exceptions.SaveFailedException;
 import dash.notificationmanagement.domain.Notification;
 
 public interface INotificationService {
 
-	void sendNotification(final long userId, Notification notification) throws SMTPdoesntExistsException, MessagingException, SaveFailedException;
+	void sendNotification(final long userId, final long offerId, final Notification notification)
+			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException;
 }

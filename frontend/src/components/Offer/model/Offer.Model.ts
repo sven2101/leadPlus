@@ -1,6 +1,8 @@
 /// <reference path="../../common/model/AbstractModel.Model.ts" />
 /// <reference path="../../common/model/OrderPosition.Model.ts" />
 /// <reference path="../../common/model/IWorkflow.Interface.ts" />
+/// <reference path="../../Notification/model/Notification.Model.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -23,6 +25,8 @@ class Offer extends AbstractModel implements IWorkflow {
     deliveryDate: any;
     offerPrice: number;
     deliveryCosts: number;
+    notification: Notification;
+
     constructor() {
         super();
         this.deliveryCosts = 0;
