@@ -20,6 +20,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.productmanagement.domain.Product;
@@ -28,8 +29,8 @@ import dash.productmanagement.domain.Product;
 @Transactional
 public interface IPublicApiService {
 
-	void saveLead(Lead lead) throws SaveFailedException;
+	Lead saveLead(Lead lead) throws SaveFailedException, NotFoundException;
 
-	List<Product> getAllProducts();
+	List<Product> findByDeactivated(boolean deactivated);
 
 }

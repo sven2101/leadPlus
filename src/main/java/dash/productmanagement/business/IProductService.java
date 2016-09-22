@@ -39,7 +39,10 @@ public interface IProductService {
 
 	public Product update(final Product product) throws UpdateFailedException;
 
-	public Product setImage(final long id, final MultipartFile multipartFile) throws NotFoundException, SaveFailedException, UpdateFailedException;
+	public Product setImage(final long id, final MultipartFile multipartFile)
+			throws NotFoundException, SaveFailedException, UpdateFailedException;
+
+	public List<Product> findByDeactivated(boolean deactivated);
 
 	public void delete(final Long id) throws DeleteFailedException;
 
