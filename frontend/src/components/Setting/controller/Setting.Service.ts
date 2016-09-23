@@ -68,7 +68,6 @@ class SettingService {
         let self = this;
         this.settingsResource.getAll().$promise.then(function (result) {
             self.users = result;
-            console.log(self.users);
         });
     }
 

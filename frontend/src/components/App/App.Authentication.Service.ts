@@ -46,8 +46,6 @@ class AuthService {
             let authorization = btoa(credentials.username + ":" + credentials.password);
             let headers = credentials ? { authorization: "Basic " + authorization } : {};
             this.http.get("user", { headers: headers }).success(function (data) {
-                console.log("data", data);
-                console.log(data);
                 if (data.username) {
                     self.rootScope.globals = {
                         user: {

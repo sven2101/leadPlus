@@ -6,10 +6,11 @@
                     <div style="margin-top:-20px" class="row">
                         <div class="col-md-2"></div>
                         <div class="col-md-6">
-                 
-                            <img style="margin-left:-40px; width: 100px; height:100px;border-radius: 10%;"   ng-src="data:image/png;base64,{{globals.user.picture.content}}" alt="">
-                            
-                            
+
+                            <img style="margin-left:-40px; width: 100px; height:100px;border-radius: 10%;" ng-src="data:image/png;base64,{{globals.user.picture.content}}"
+                                alt="">
+
+
                             </span>
                         </div>
                         <div class="col-md-4"></div>
@@ -79,14 +80,6 @@
         <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
                 <a class="navbar-minimalize minimalize-styl-2 btn btn-success "><i class="fa fa-bars"></i> </a>
-                <!--
-                TODO
-                <form role="search" class="navbar-form-custom" action="search_results.html">
-                    <div class="form-group">
-                        <input type="text" placeholder="Search for something..." class="form-control" name="top-search"
-                               id="top-search">
-                    </div>
-                </form>-->
             </div>
             <ul class="nav navbar-top-links navbar-right">
                 <li class="dropdown">
@@ -118,16 +111,9 @@
                     <ul style="min-width:400px" class="dropdown-menu dropdown-messages">
                         <li>
                             <div class="dropdown-messages-box">
-                                
-                                <!--
+
                                 <div class="media-body">
-                                    <small class="pull-right">Coming soon</small>
-                                    <strong>Coming soon</strong> <br>
-                                    <small class="text-muted">Coming soon</small>
-                                </div>
-                                -->
-                                <div class="media-body">
-                                    <strong>Todos</strong> <br>
+                                    <strong>  {{ 'TODO_TODOS' | translate }}</strong> <br>
 
                                 </div>
                             </div>
@@ -151,21 +137,19 @@
                                             <small ng-if="todo.status=='OFFER'">{{appCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</small>
                                             <small ng-if="todo.status=='FOLLOWUP'">{{appCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</small>
                                         </td>
-                                    </tr>                                  
+                                    </tr>
                                 </tbody>
                             </table>
                             <p ng-if="appCtrl.todos.length>5" style="margin-left:160px">...</p>
-                            <div ng-if="appCtrl.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius: 5px;">{{ 'TODO_NO_TODOS' | translate }}</div>
+                            <div ng-if="appCtrl.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
+                                <p style="margin-top:7px">{{ 'TODO_NO_TODOS' | translate }}</p>
+                            </div>
                         </li>
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle count-info" data-toggle="dropdown">
                         <i class="fa fa-bell"></i>
-                        <!--
-                      TODO
-                      <span class="label label-danger">5</span>
-                      -->
                     </a>
                     <ul class="dropdown-menu dropdown-alerts">
                         <li>

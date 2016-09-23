@@ -50,7 +50,9 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div ng-if="dashboardCtrl.dashboardService.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius: 5px;">{{ 'TODO_NO_TODOS' | translate }}</div>
+                    <div ng-if="dashboardCtrl.dashboardService.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
+                        <p style="margin-top:7px">{{ 'TODO_NO_TODOS' | translate }}</p>
+                    </div>
                 </div>
             </div>
         </div>

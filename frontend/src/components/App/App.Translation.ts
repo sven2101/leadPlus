@@ -74,6 +74,7 @@ function config($translateProvider) {
             YEARLY: "Jahr",
             ALL: "Alle",
 
+
             COMMON_LOAD_MORE: "weitere laden",
             COMMON_CURRENCY: "€",
             COMMON_UPLOAD_NEW_IMAGE: "Neues Bild hochladen",
@@ -364,7 +365,8 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_TIMELINE: "Kunden Timeline",
             CUSTOMER_DETAIL_CREATED: "wurde erstellt",
 
-            TODO_NO_TODOS: "keine Todos vorhanden",
+            TODO_TODOS: "ToDos",
+            TODO_NO_TODOS: "Keine Todos vorhanden",
 
             // Define calculation elements 
             CALCULATION_NET: "Netto",
@@ -716,7 +718,8 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_TIMELINE: "Customer Timeline",
             CUSTOMER_DETAIL_CREATED: "has been created",
 
-            TODO_NO_TODOS: "no todos existing",
+            TODO_TODOS: "ToDos",
+            TODO_NO_TODOS: "No todos existing",
 
             // Define calculation elements 
             CALCULATION_NET: "Net",
