@@ -170,6 +170,7 @@ public class User implements UserDetails {
 	}
 
 	@Override
+	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		final List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 		grantedAuthorities.add(new SimpleGrantedAuthority(String.valueOf(getRole())));
