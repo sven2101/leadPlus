@@ -75,8 +75,7 @@ class SmtpService {
             self.currentSmtp.stringPassword = "";
             for (let i = 0; i < self.currentPasswordLength; i++) {
                 self.currentSmtp.stringPassword += "x";
-            }
-            console.log(self.currentSmtp.stringPassword);
+            }          
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE"));
             defer.resolve(self.currentSmtp);
         }, function (error) {
