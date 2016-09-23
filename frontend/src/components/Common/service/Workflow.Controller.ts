@@ -25,7 +25,7 @@ const WorkflowControllerId: string = "WorkflowController";
 
 class WorkflowController extends AbstractWorkflow {
 
-    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId];
 
     uibModalInstance;
 
@@ -41,6 +41,7 @@ class WorkflowController extends AbstractWorkflow {
     notificationService: NotificationService;
     templateService: TemplateService;
     workflowService: WorkflowService;
+    dashboardService: DashboardService;
 
     currentOrderPositions: Array<OrderPosition>;
     currentProductId = "-1";
@@ -56,18 +57,22 @@ class WorkflowController extends AbstractWorkflow {
     offerService: OfferService;
     saleService: SaleService;
 
-    constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService) {
+    constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService) {
         super(WorkflowService);
         this.editWorkflowProcess = process;
+        console.log("editWorkflowProcess: ", this.editWorkflowProcess);
+        console.log("process: ", process);
         this.editWorkflowUnit = process.offer;
         this.editWorkflowUnit.notification = new Notification();
         this.editWorkflowUnit.notification.recipient = this.editWorkflowUnit.customer.email;
         this.uibModalInstance = $uibModalInstance;
+
         this.notificationService = NotificationService;
         this.templateService = TemplateService;
         this.customerService = CustomerService;
         this.productService = ProductService;
         this.workflowService = WorkflowService;
+        this.dashboardService = DashboardService;
 
         this.getAllActiveTemplates();
         this.getAllActiveProducts();
@@ -137,6 +142,14 @@ class WorkflowController extends AbstractWorkflow {
 
     getTheFiles($files) {
         this.notificationService.getTheFiles($files);
+    }
+
+    rollBack() {
+        this.editWorkflowProcess.offer = this.editWorkflowUnit;
+        console.log("Process: ", this.editWorkflowProcess);
+        this.offerService.rollBackModal(this.editWorkflowProcess);
+        this.dashboardService.initDashboard();
+        this.close();
     }
 
 }

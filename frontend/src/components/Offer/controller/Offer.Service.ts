@@ -227,6 +227,21 @@ class OfferService {
         });
     }
 
+    rollBackModal(process: Process): void {
+        if (isNullOrUndefined(process)) {
+            return;
+        }
+        let offer = process.offer;
+        process.offer = null;
+        process.status = Status.OPEN;
+        let self = this;
+        this.processResource.save(process).$promise.then((data) => {
+                self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD"));
+        }, (error) => {
+            self.toaster.pop("error", "", self.translate.instant("COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD_ERROR"));
+        });
+    }
+
     deleteRow(process: Process, dtInstance: any): void {
         let self = this;
         this.workflowService.deletProcess(process).then((data) => {
