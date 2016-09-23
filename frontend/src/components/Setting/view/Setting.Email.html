@@ -12,7 +12,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <form method="get" class="form-horizontal">
+                        <form name="settingCtrl.smtpForm" method="get" class="form-horizontal">
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_SENDER' | translate }}* </label>
                                 <div class="col-sm-10">
@@ -38,7 +38,9 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_PASSWORD' | translate }}* </label>
                                 <div class="col-sm-10">
-                                    <input type="password" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.password"></div>
+                                    <input name="smtpPassword" type="password" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.stringPassword">
+                                    <p ng-if="settingCtrl.smtpForm.smtpPassword.$pristine">ehler</p>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_ENCRYPTION' | translate }}* </label>

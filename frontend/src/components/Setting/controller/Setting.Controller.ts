@@ -40,6 +40,7 @@ class SettingController {
     smtp: Smtp;
     setting: Setting;
     template: Template;
+    smtpForm;
 
     rootScope;
 
@@ -93,6 +94,9 @@ class SettingController {
     }
 
     saveSmtpConnection() {
+        if (this.smtpForm.smtpPassword.$pristine) {
+            this.smtpService.currentSmtp.stringPassword = null;
+        }
         this.smtpService.save();
     }
 }
