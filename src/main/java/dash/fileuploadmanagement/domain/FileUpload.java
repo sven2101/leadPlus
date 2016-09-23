@@ -13,12 +13,21 @@
  *******************************************************************************/
 package dash.fileuploadmanagement.domain;
 
+import java.util.Arrays;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
+@SQLDelete(sql = "UPDATE notification SET deleted = '1' WHERE id = ?")
+@Where(clause = "deleted <> '1'")
 public class FileUpload {
 
 	@Id
@@ -30,6 +39,9 @@ public class FileUpload {
 	private long size;
 
 	private byte[] content;
+
+	@ApiModelProperty(hidden = true)
+	private boolean deleted;
 
 	public FileUpload() {
 
@@ -70,4 +82,66 @@ public class FileUpload {
 	public void setContent(byte[] content) {
 		this.content = content;
 	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(content);
+		result = prime * result + (deleted ? 1231 : 1237);
+		result = prime * result + ((filename == null) ? 0 : filename.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((mimeType == null) ? 0 : mimeType.hashCode());
+		result = prime * result + (int) (size ^ (size >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FileUpload other = (FileUpload) obj;
+		if (!Arrays.equals(content, other.content))
+			return false;
+		if (deleted != other.deleted)
+			return false;
+		if (filename == null) {
+			if (other.filename != null)
+				return false;
+		} else if (!filename.equals(other.filename))
+			return false;
+		if (id != other.id)
+			return false;
+		if (mimeType == null) {
+			if (other.mimeType != null)
+				return false;
+		} else if (!mimeType.equals(other.mimeType))
+			return false;
+		if (size != other.size)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "FileUpload [id=" + id + ", filename=" + filename + ", mimeType=" + mimeType + ", size=" + size
+				+ ", content=" + Arrays.toString(content) + ", deleted=" + deleted + "]";
+	}
+
 }

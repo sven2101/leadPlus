@@ -58,17 +58,17 @@ class SettingService {
         this.fileResource = FileResource.resource;
 
         this.loadUsers();
+
         this.templateService = TemplateService;
         this.templateService.getAll();
+
     }
 
     loadUsers() {
         let self = this;
         this.settingsResource.getAll().$promise.then(function (result) {
             self.users = result;
-            for (let user of result) {
-                self.roleSelection[result[user].id] = result[user].role;
-            }
+            console.log(self.users);
         });
     }
 
@@ -94,9 +94,8 @@ class SettingService {
 
     changeRole(user: User) {
         let self = this;
-        this.settingsResource.changeRole({ id: 4, role: this.roleSelection[user.id] }, {}).$promise.then(function () {
-            // set rootScope role
-            self.filter("filter")(self.users, { id: user.id })[0].role = user.role;
+        this.settingsResource.changeRole({ id: user.id, role: user.role }).$promise.then(function (data) {
+            user = data;
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_SET_ROLE"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_SET_ROLE_ERROR"));

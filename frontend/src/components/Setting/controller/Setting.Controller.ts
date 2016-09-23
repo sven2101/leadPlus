@@ -40,10 +40,12 @@ class SettingController {
     smtp: Smtp;
     setting: Setting;
     template: Template;
+    smtpForm;
 
     rootScope;
 
     constructor(SettingService, SmtpService, TemplateService, $rootScope) {
+
         this.smtp = new Smtp();
         this.template = new Template();
 
@@ -53,7 +55,7 @@ class SettingController {
 
         this.rootScope = $rootScope;
 
-        // this.settingService.loadUsers();
+        this.settingService.loadUsers();
     }
 
     tabOnClick(tab: number) {
@@ -93,6 +95,9 @@ class SettingController {
     }
 
     saveSmtpConnection() {
+        if (this.smtpForm.smtpPassword.$pristine) {
+            this.smtpService.currentSmtp.stringPassword = null;
+        }
         this.smtpService.save();
     }
 }

@@ -92,7 +92,7 @@ public class UserResource {
 		return userService.activate(id, enabled);
 	}
 
-	@RequestMapping(value = "/{id}/role/{role}/update", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{id}/role/{role}/update", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Set a User Role .", notes = "Provide a valid user ID.")
 	public User setRoleForUser(@PathVariable final long id, @PathVariable @Valid final Role role)

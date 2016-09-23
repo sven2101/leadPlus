@@ -11,6 +11,7 @@ class Smtp {
     host: string;
     username: string;
     password: string;
+    stringPassword: string;
     encryption: Encryption;
     port: number;
     connection: boolean;

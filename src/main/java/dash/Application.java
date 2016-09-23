@@ -108,11 +108,11 @@ public class Application {
 			User admin = new User();
 
 			admin.setUsername("admin".toLowerCase());
-			admin.setPassword(passwordEncoder().encode("6HzRSZjmj89sQaN5!"));
+			admin.setPassword(passwordEncoder().encode("admin"));
 			admin.setFirstname("firstAdmin");
 			admin.setLastname("lastAdmin");
 			admin.setEmail("admin@eviarc.com");
-			admin.setRole(Role.SUPERADMIN);
+			admin.setRole(Role.ADMIN);
 			admin.setEnabled(true);
 			admin.setLanguage(Language.DE);
 
