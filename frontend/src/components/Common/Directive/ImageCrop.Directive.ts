@@ -1,8 +1,6 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../FileUpload/model/FileUpload.Model.ts" />
 
-declare var jic;
-
 angular.module(moduleApp)
     .directive("imagecrop", function ($rootScope) {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };

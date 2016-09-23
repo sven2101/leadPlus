@@ -48,9 +48,14 @@ public class OfferMessage extends AbstractMessage {
 		return "Angebot";
 	}
 
+	private String unescapeString(String escapedString) {
+		return escapedString.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+	}
+
 	@Override
 	public String getContent() {
-		stringLoader.putTemplate("greetTemplate", this.template);
+		String unescapedString = unescapeString(this.template);
+		stringLoader.putTemplate("greetTemplate", unescapedString);
 
 		Configuration cfg = new Configuration();
 		cfg.setTemplateLoader(stringLoader);
