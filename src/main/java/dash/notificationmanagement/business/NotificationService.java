@@ -60,8 +60,7 @@ public class NotificationService implements INotificationService {
 	private ISmtpService smtpService;
 
 	@Override
-	public void sendNotification(final long userId, final long offerId, final Notification notification)
-			throws Exception {
+	public void sendNotification(final long userId, final long offerId, final Notification notification) throws Exception {
 		doSendEmail(userId, offerService.getOfferById(offerId), notification);
 	}
 
@@ -92,10 +91,9 @@ public class NotificationService implements INotificationService {
 					textBodyPart.setContent(notification.getContent(), "text/html; charset=utf-8");
 					multipart.addBodyPart(textBodyPart);
 
-					if (notification.getAttachment() != null) {
+					if (notification.getAttachment().getContent() != null) {
 						MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(),
-								"application/octet-stream");
+						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(), "application/octet-stream");
 						attachmentBodyPart.setDataHandler(new DataHandler(ds));
 						attachmentBodyPart.setFileName(notification.getAttachment().getFilename());
 						multipart.addBodyPart(attachmentBodyPart);
