@@ -143,6 +143,35 @@ class OfferService {
         });
     }
 
+    save(editOffer: Offer, editProcess: Process, currentOrderPositions: Array<OrderPosition>) {
+        let self = this;
+        shallowCopy(editOffer, editProcess.offer);
+        editProcess.offer.orderPositions = currentOrderPositions;
+
+        let temp: Offer = editProcess.offer;
+        if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
+            temp.customer.timestamp = newTimestamp();
+            this.customerResource.createCustomer(temp.customer).$promise.then(function (customer) {
+                temp.customer = customer;
+                self.processResource.save(editProcess).$promise.then(function (result) {
+                    self.customerService.getAllCustomer();
+                    if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
+                        self.rootScope.$broadcast("onTodosChange");
+                    }
+                });
+            });
+            return;
+        }
+
+        this.offerResource.update(editProcess.offer).$promise.then(function (result) {
+            self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_UPDATE_OFFER"));
+            editProcess.offer = result;
+            if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
+                self.rootScope.$broadcast("onTodosChange");
+            }
+        });
+    }
+
     setRow(id: number, row: any) {
         this.rows[id] = row;
     }

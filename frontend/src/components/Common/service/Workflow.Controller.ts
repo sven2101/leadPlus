@@ -30,6 +30,7 @@ class WorkflowController extends AbstractWorkflow {
     uibModalInstance;
 
     editWorkflowUnit: Offer;
+    editWorkflowProcess: Process;
     template: Template = new Template();
 
     templates: Array<Template> = [];
@@ -57,6 +58,7 @@ class WorkflowController extends AbstractWorkflow {
 
     constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService) {
         super(WorkflowService);
+        this.editWorkflowProcess = process;
         this.editWorkflowUnit = process.offer;
         this.editWorkflowUnit.notification = new Notification();
         this.editWorkflowUnit.notification.recipient = this.editWorkflowUnit.customer.email;
@@ -121,6 +123,12 @@ class WorkflowController extends AbstractWorkflow {
 
     send() {
         this.notificationService.sendOffer(this.editWorkflowUnit.notification, this.editWorkflowUnit);
+        this.close();
+    }
+
+    save() {
+        this.offerService.save(this.editWorkflowUnit, this.editWorkflowProcess, this.currentOrderPositions);
+        this.close();
     }
 
     selectCustomer(workflow: any) {
