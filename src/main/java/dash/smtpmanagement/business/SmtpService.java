@@ -29,7 +29,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -61,7 +60,7 @@ public class SmtpService implements ISmtpService {
 	private UserService userService;
 
 	@Override
-	public void testSmtp(final long id) throws NotFoundException, MessagingException, UnsupportedEncodingException {
+	public void testSmtp(final long id) throws Exception {
 		Smtp smtp = smptRepository.findOne(id);
 		smtp = decrypt(smtp);
 		if (smtp == null) {
@@ -104,7 +103,7 @@ public class SmtpService implements ISmtpService {
 	}
 
 	@Override
-	public Smtp save(final Smtp smtp) throws SaveFailedException, UnsupportedEncodingException {
+	public Smtp save(final Smtp smtp) throws Exception {
 		if (smtp != null) {
 			if (smtp.getPassword() == null || new String(smtp.getPassword(), "UTF-8") == "") {
 				Smtp tempSmpt = smptRepository.findOne(smtp.getId());
@@ -132,7 +131,7 @@ public class SmtpService implements ISmtpService {
 	}
 
 	@Override
-	public Smtp encrypt(Smtp smtp) {
+	public Smtp encrypt(Smtp smtp) throws Exception {
 		try {
 
 			BytesKeyGenerator generator = KeyGenerators.secureRandom();
@@ -154,13 +153,13 @@ public class SmtpService implements ISmtpService {
 
 			return smtp;
 		} catch (Exception ex) {
-			return null;
+			throw ex;
 		}
 
 	}
 
 	@Override
-	public Smtp decrypt(Smtp smtp) {
+	public Smtp decrypt(Smtp smtp) throws Exception {
 		try {
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 			KeySpec spec = new PBEKeySpec(smtp.getUser().getUsername().toCharArray(), smtp.getSalt(), 65536, 128);
@@ -173,7 +172,7 @@ public class SmtpService implements ISmtpService {
 
 			return smtp;
 		} catch (Exception ex) {
-			return null;
+			throw ex;
 		}
 
 	}

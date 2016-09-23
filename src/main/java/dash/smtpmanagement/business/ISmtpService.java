@@ -27,14 +27,15 @@ import dash.smtpmanagement.domain.Smtp;
 @Service
 public interface ISmtpService {
 
-	public void testSmtp(final long id) throws NotFoundException, MessagingException, UnsupportedEncodingException;
+	public void testSmtp(final long id)
+			throws NotFoundException, MessagingException, UnsupportedEncodingException, Exception;
 
-	Smtp save(Smtp smpt) throws SaveFailedException, UnsupportedEncodingException;
+	Smtp save(Smtp smpt) throws SaveFailedException, UnsupportedEncodingException, Exception;
 
 	Smtp findByUser(long id) throws NotFoundException;
 
-	Smtp decrypt(Smtp smtp);
+	Smtp decrypt(Smtp smtp) throws Exception;
 
-	Smtp encrypt(Smtp smtp);
+	Smtp encrypt(Smtp smtp) throws Exception;
 
 }

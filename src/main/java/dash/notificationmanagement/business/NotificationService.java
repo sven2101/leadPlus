@@ -34,9 +34,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dash.exceptions.NotFoundException;
 import dash.exceptions.SMTPdoesntExistsException;
-import dash.exceptions.SaveFailedException;
 import dash.notificationmanagement.domain.Notification;
 import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
@@ -63,17 +61,16 @@ public class NotificationService implements INotificationService {
 
 	@Override
 	public void sendNotification(final long userId, final long offerId, final Notification notification)
-			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException {
+			throws Exception {
 		doSendEmail(userId, offerService.getOfferById(offerId), notification);
 	}
 
 	@Override
-	public void sendNotification(long userId, Notification notification)
-			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException {
+	public void sendNotification(long userId, Notification notification) throws Exception {
 		doSendEmail(userId, null, notification);
 	}
 
-	public void doSendEmail(final long userId, final Offer offer, final Notification notification) throws SMTPdoesntExistsException, MessagingException {
+	public void doSendEmail(final long userId, final Offer offer, final Notification notification) throws Exception {
 		try {
 			Smtp smtp = smtpService.findByUser(userId);
 			smtp = smtpService.decrypt(smtp);
@@ -97,7 +94,8 @@ public class NotificationService implements INotificationService {
 
 					if (notification.getAttachment() != null) {
 						MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(), "application/octet-stream");
+						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(),
+								"application/octet-stream");
 						attachmentBodyPart.setDataHandler(new DataHandler(ds));
 						attachmentBodyPart.setFileName(notification.getAttachment().getFilename());
 						multipart.addBodyPart(attachmentBodyPart);
@@ -120,9 +118,7 @@ public class NotificationService implements INotificationService {
 				throw new SMTPdoesntExistsException("No valid SMTP Data for this User");
 			}
 		} catch (Exception ex) {
-			MessagingException mex = new MessagingException("Messaging Failed");
-			logger.error(NotificationService.class.getSimpleName(), mex);
-			throw mex;
+			throw ex;
 		}
 	}
 

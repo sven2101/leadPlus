@@ -14,9 +14,6 @@
 
 package dash.smtpmanagement.rest;
 
-import java.io.UnsupportedEncodingException;
-
-import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +27,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
-import dash.exceptions.SaveFailedException;
 import dash.smtpmanagement.business.ISmtpService;
 import dash.smtpmanagement.domain.Smtp;
 import io.swagger.annotations.Api;
@@ -49,16 +45,14 @@ public class SmtpResource {
 	@ApiOperation(value = "Testing Connection.")
 	@RequestMapping(value = "/test/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public void testConnection(@PathVariable final long id)
-			throws NotFoundException, MessagingException, UnsupportedEncodingException {
+	public void testConnection(@PathVariable final long id) throws Exception {
 		smtpService.testSmtp(id);
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Create a single Smtp.", notes = "You have to provide a valid Smtp entity.")
-	public Smtp save(@ApiParam(required = true) @RequestBody @Valid final Smtp smpt)
-			throws SaveFailedException, UnsupportedEncodingException {
+	public Smtp save(@ApiParam(required = true) @RequestBody @Valid final Smtp smpt) throws Exception {
 		return smtpService.save(smpt);
 	}
 
