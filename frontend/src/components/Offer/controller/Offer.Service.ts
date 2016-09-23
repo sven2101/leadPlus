@@ -24,13 +24,16 @@ const OfferServiceId: string = "OfferService";
 
 class OfferService {
 
-    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, OfferResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId];
+    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, OfferResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, DashboardServiceId];
     processResource;
     customerResource;
     offerResource;
+
     workflowService: WorkflowService;
     customerService: CustomerService;
     productService: ProductService;
+    dashboardService: DashboardService;
+
     translate;
     rootScope;
     filter;
@@ -40,7 +43,7 @@ class OfferService {
     rows: { [key: number]: any } = {};
     user: User;
 
-    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, OfferResource, WorkflowService, CustomerService, ProductService) {
+    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, OfferResource, WorkflowService, CustomerService, ProductService, DashboardService) {
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.filter = $filter;
@@ -52,6 +55,7 @@ class OfferService {
         this.workflowService = WorkflowService;
         this.customerService = CustomerService;
         this.productService = ProductService;
+        this.dashboardService = DashboardService;
         this.user = $rootScope.globals.user;
     }
 
@@ -216,6 +220,7 @@ class OfferService {
         if (isNullOrUndefined(process)) {
             return;
         }
+        console.log("Process: ", process);
         let offer = process.offer;
         process.offer = null;
         process.status = Status.OPEN;
@@ -231,12 +236,19 @@ class OfferService {
         if (isNullOrUndefined(process)) {
             return;
         }
+        console.log("Process: ", process);
         let offer = process.offer;
         process.offer = null;
         process.status = Status.OPEN;
+        console.log("Process: ", process);
         let self = this;
         this.processResource.save(process).$promise.then((data) => {
+            self.offerResource.drop({
+                id: offer.id
+            }).$promise.then(() => {
+                self.rootScope.leadsCount += 1; self.rootScope.offersCount -= 1; self.dashboardService.initDashboard();
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD"));
+            });
         }, (error) => {
             self.toaster.pop("error", "", self.translate.instant("COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD_ERROR"));
         });

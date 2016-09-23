@@ -232,6 +232,8 @@ class WorkflowService {
             template: " <div sendworkflow parent='workflowCtrl' type='offer'></div>",
             controller: WorkflowController,
             controllerAs: "workflowCtrl",
+            backdrop: "static",
+            keyboard: false,
             size: "lg",
             resolve: {
                 process: function () {
@@ -426,6 +428,7 @@ class WorkflowService {
         }, (error) => console.log(error));
 
     }
+
     deletProcess(process): IPromise<any> {
         let defer = this.$q.defer();
         if (isNullOrUndefined(process)) {
@@ -442,6 +445,7 @@ class WorkflowService {
         });
         return defer.promise;
     }
+
     saveProcess(process): IPromise<Process> {
         let defer = this.$q.defer();
         if (isNullOrUndefined(process)) {

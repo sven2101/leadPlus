@@ -8,6 +8,7 @@
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../Template/controller/Template.Service.ts" />
 /// <reference path="../../Common/service/Workflow.Service.ts" />
+/// <reference path="../../Common/model/Process.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -29,8 +30,8 @@ class WorkflowController extends AbstractWorkflow {
 
     uibModalInstance;
 
-    editWorkflowUnit: Offer;
-    editWorkflowProcess: Process;
+    editWorkflowUnit: Offer = new Offer();
+    process: Process;
     template: Template = new Template();
 
     templates: Array<Template> = [];
@@ -59,10 +60,10 @@ class WorkflowController extends AbstractWorkflow {
 
     constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService) {
         super(WorkflowService);
-        this.editWorkflowProcess = process;
-        console.log("editWorkflowProcess: ", this.editWorkflowProcess);
-        console.log("process: ", process);
-        this.editWorkflowUnit = process.offer;
+        this.process = process;
+        console.log("Process 0:", process);
+        console.log("THIS Process 1:", this.process);
+        this.editWorkflowUnit = this.process.offer;
         this.editWorkflowUnit.notification = new Notification();
         this.editWorkflowUnit.notification.recipient = this.editWorkflowUnit.customer.email;
         this.uibModalInstance = $uibModalInstance;
@@ -92,7 +93,7 @@ class WorkflowController extends AbstractWorkflow {
         this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
         this.customerSelected = this.editProcess.offer.customer.id > 0;
         this.currentCustomerId = this.editProcess.offer.customer.id + "";
-        this.editWorkflowUnit = deepCopy(this.editProcess.offer);
+        // this.editWorkflowUnit = deepCopy(this.editProcess.offer);
     }
 
     ok() {
@@ -132,7 +133,7 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     save() {
-        this.offerService.save(this.editWorkflowUnit, this.editWorkflowProcess, this.currentOrderPositions);
+        this.offerService.save(this.editWorkflowUnit, this.process, this.currentOrderPositions);
         this.close();
     }
 
@@ -144,10 +145,9 @@ class WorkflowController extends AbstractWorkflow {
         this.notificationService.getTheFiles($files);
     }
 
-    rollBack() {
-        this.editWorkflowProcess.offer = this.editWorkflowUnit;
-        console.log("Process: ", this.editWorkflowProcess);
-        this.offerService.rollBackModal(this.editWorkflowProcess);
+    rollback() {
+        console.log("This. Process: ", this.process);
+        this.offerService.rollBackModal(this.process);
         this.dashboardService.initDashboard();
         this.close();
     }

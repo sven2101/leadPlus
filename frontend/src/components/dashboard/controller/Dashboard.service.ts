@@ -150,7 +150,6 @@ class DashboardService {
         let self = this;
         this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
             self.openOffers = self.orderBy(self.openOffers, "offer.timestamp", false);
-            console.log("Tmp Process", tmpprocess);
             self.workflowService.openOfferModal(tmpprocess);
             self.sumLeads();
             self.sumOffers();
