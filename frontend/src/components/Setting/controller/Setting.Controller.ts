@@ -45,6 +45,7 @@ class SettingController {
     rootScope;
 
     constructor(SettingService, SmtpService, TemplateService, $rootScope) {
+
         this.smtp = new Smtp();
         this.template = new Template();
 
@@ -54,7 +55,7 @@ class SettingController {
 
         this.rootScope = $rootScope;
 
-        // this.settingService.loadUsers();
+        this.settingService.loadUsers();
     }
 
     tabOnClick(tab: number) {

@@ -197,7 +197,7 @@ class SettingResource {
         this.resource = $resource("/users/:id", {}, {
             getAll: { url: "/users/all", method: "GET", isArray: true },
             activate: { url: "/users/:id/activate", method: "PUT" },
-            changeRole: { url: "/users/:id/role/:role/update", method: "PUT" }
+            changeRole: { url: "/users/:id/role/:role/update", method: "GET" }
         });
     }
 }
