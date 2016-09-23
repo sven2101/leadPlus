@@ -28,7 +28,7 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>{{ 'PRODUCT_MANAGE_PRODUCTS' | translate }}</h5>
+                    <h5>{{ 'PRODUCT_MANAGE_PRODUCTS' | translate }} - <strong>{{productCtrl.productService.products.length}}</strong> {{ 'PRODUCT_PRODUCTS' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
                     <form role="form" class="form-inline">
@@ -37,6 +37,7 @@
                                 <i class="fa fa-plus"></i>
                                 &nbsp;{{ 'PRODUCT_CREATE' | translate }}
                         </button>
+                      
                         <!--
                         <button type="button" ng-click="productCtrl.refreshData()" type="button" class="btn btn-success btn-sm btn-primary">
                             <i class="fa fa-refresh"></i>
@@ -51,7 +52,7 @@
                     <div class="project-list">
                         <table class="table table-hover">
                             <tbody>
-                                <tr ng-repeat="product in productCtrl.productService.products| filter:searchText |orderBy:'name'">
+                                <tr ng-repeat="product in productCtrl.productService.products| filter:searchText |orderBy:'name' | limitTo:productCtrl.productAmountLimit ">
                                     <td class="project-status col-md-1">
                                         <span ng-show="!product.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
                                         <span ng-show="product.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
@@ -64,7 +65,7 @@
                                     <td class="project-completion col-md-7" max>
                                         <small style="word-wrap: break-word; word-break: break-all;">{{product.description}}</small>
                                     </td>
-                                    <td>                   
+                                    <td>
                                         <img style="width: 60px; height:60px;border-radius: 10%;" ng-src="/api/rest/products/{{product.id}}/image" alt="">
                                     </td>
                                     <td class="project-actions col-md-1">
@@ -74,6 +75,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div ng-if="productCtrl.productAmountLimit<=productCtrl.productService.products.length" class="row" style="text-align: center;">
+                            <a href="" ng-click="productCtrl.productAmountLimit=productCtrl.productAmountLimit+20">20 {{ 'COMMON_LOAD_MORE' | translate }}</a>
+                        </div>
                     </div>
                 </div>
             </div>

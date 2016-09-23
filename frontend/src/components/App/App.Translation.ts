@@ -74,6 +74,7 @@ function config($translateProvider) {
             YEARLY: "Jahr",
             ALL: "Alle",
 
+            COMMON_LOAD_MORE: "weitere laden",
             COMMON_CURRENCY: "€",
             COMMON_UPLOAD_NEW_IMAGE: "Neues Bild hochladen",
             COMMON_RESET: "Zurücksetzen",
@@ -425,6 +426,7 @@ function config($translateProvider) {
             YEARLY: "Year",
             ALL: "All",
 
+            COMMON_LOAD_MORE: "more",
             COMMON_UPLOAD_NEW1_IMAGE: "Upload new image",
             COMMON_CURRENCY: "€",
             COMMON_RESET: "Reset",

@@ -30,6 +30,7 @@ class CustomerController {
     location;
 
     customers: Array<Customer>;
+    customerAmountLimit: number = 20;
 
     constructor(CustomerService: CustomerService, $location) {
         this.customerService = CustomerService;

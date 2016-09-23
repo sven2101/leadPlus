@@ -30,6 +30,7 @@ class ProductController {
     productService: ProductService;
     rootScope;
     showImageCropper: boolean = true;
+    productAmountLimit: number = 20;
 
     constructor(ProductService: ProductService, $rootScope, $translate, toaster) {
         this.productService = ProductService;
