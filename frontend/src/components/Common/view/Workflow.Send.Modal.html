@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="modal-footer ">
-        <button type="button " class="btn btn-white " ng-click="parent.close() ">{{ 'COMMON_CANCEL'| translate }}</button>
+        <button type="button " class="btn btn-white " ng-click="parent.rollBack()">{{ 'COMMON_CANCEL'| translate }}</button>
         <button ng-if="parent.currentWizard==5" type="button " class="btn btn-primary " ng-disabled="parent.editForm.$invalid " ng-click="parent.send() ">{{ 'COMMON_CONTINUE_AND_SENDING'| translate }}</button>
         <button ng-if="parent.currentWizard==5" type="button " class="btn btn-warning " ng-click="parent.save() ">{{ 'COMMON_CONTINUE_WITHOUT_SENDING'| translate }}</button>
     </div>

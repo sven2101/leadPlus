@@ -87,7 +87,6 @@ class DashboardController {
         this.workflowModalData = info;
         this.workflowModalType = type;
         this.workflowModalProcess = process;
-        console.log("Edit Workflow Unit: ", this.workflowModalProcess);
     }
 
     refreshData() {
