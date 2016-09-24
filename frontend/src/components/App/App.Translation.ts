@@ -311,6 +311,7 @@ function config($translateProvider) {
             STATISTIC_LEADS_OFFERS_SALES_Y_AXIS: "Anzahl",
             STATISTIC_ENTIRE_STATISTICS_NOT_AVAILABLE: "Nicht verfügbar",
             STATISTIC_ENTIRE_STATISTICS_NOT_AVAILABLE_MESSAGE: "Die Gesamtstatistiken sind nur für Woche, Monat, Jahr und Alle verfügbar",
+            STATISTIC_TOP_SELL: "Top Verkäufe",
 
             // Define all week and month names
             SUNDAY: "Sonntag",
@@ -336,6 +337,7 @@ function config($translateProvider) {
 
             // Define product elements
             PRODUCT_PRODUCTS: "Produkte",
+            PRODUCT_PRODUCT: "Produkt",
             PRODUCT_MANAGE_PRODUCTS: "Produkte verwalten",
             PRODUCT_CREATE: "Neues Produkt",
             PRODUCT_PRODUCTNAME: "Produktname",
@@ -664,7 +666,7 @@ function config($translateProvider) {
             STATISTIC_LEADS_OFFERS_SALES_Y_AXIS: "Amount",
             STATISTIC_ENTIRE_STATISTICS_NOT_AVAILABLE: "Not available",
             STATISTIC_ENTIRE_STATISTICS_NOT_AVAILABLE_MESSAGE: "The entire statistics only available for week, month, year and all",
-
+            STATISTIC_TOP_SELL: "Top sells",
             // Define all week and month names
             SUNDAY: "Sunday",
             MONDAY: "Monday",
@@ -689,6 +691,7 @@ function config($translateProvider) {
 
             // Define product elements
             PRODUCT_PRODUCTS: "Products",
+            PRODUCT_PRODUCT: "Product",
             PRODUCT_MANAGE_PRODUCTS: "Manage Products",
             PRODUCT_CREATE: "New product",
             PRODUCT_PRODUCTNAME: "Product Name",

@@ -38,6 +38,7 @@ class StatisticService {
     saleResultArr: Array<number> = new Array<number>();
     profitResultArr: Array<number> = new Array<number>();
     turnoverResultArr: Array<number> = new Array<number>();
+    productStatisticArr: Array<any>;
 
     profitTotal: number = 0;
     turnoverTotal: number = 0;
@@ -150,6 +151,7 @@ class StatisticService {
         this.loadWorkflowResourcesByDateRange(dateRange);
         this.loadProfitResourcesByDateRange(dateRange);
         this.loadTurnoverResourcesByDateRange(dateRange);
+        this.loadProductResourcesByDateRange(dateRange);
     }
 
     loadWorkflowResourcesByDateRange(dateRange: string) {
@@ -191,6 +193,13 @@ class StatisticService {
             self.turnoverTotal = self.getTotalSumOf(self.turnoverResultArr);
             self.isTurnoverPromise = true;
             self.checkPromises();
+        });
+    }
+
+    loadProductResourcesByDateRange(dateRange: string) {
+        let self: StatisticService = this;
+        this.statisticResource.getProductStatistic({ workflow: workflowSale, dateRange: dateRange }).$promise.then(function (result) {
+            self.productStatisticArr = result;
         });
     }
 
@@ -304,6 +313,12 @@ class StatisticService {
             return 0;
         }
     }
+
+
+    getProductStatistic(): Array<any> {
+        return this.productStatisticArr;
+    }
+
     getLeadAmount(): number {
         return this.leadAmount;
     }

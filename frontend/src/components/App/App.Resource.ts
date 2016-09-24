@@ -224,6 +224,9 @@ class StatisticResource {
             },
             getTurnoverStatistic: {
                 url: "/api/rest/processes/statistics/turnover/:workflow/daterange/:dateRange", method: "GET"
+            },
+            getProductStatistic: {
+                url: "/api/rest/processes/statistics/product/:workflow/daterange/:dateRange", method: "GET", isArray: true
             }
         });
     }

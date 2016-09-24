@@ -37,7 +37,8 @@ public abstract class AbstractStatisticService implements IStatisticService {
 	protected StatisticHelper statisticHelper;
 
 	@Override
-	public Result getStatisticByDateRange(Workflow workflow, DateRange dateRange) throws NotFoundException {
+	public Result getStatisticByDateRange(Workflow workflow, DateRange dateRange, Long elementId)
+			throws NotFoundException {
 		if (workflow == null || dateRange == null) {
 			NotFoundException pnfex = new NotFoundException(STATISTIC_NOT_FOUND);
 			logger.error(STATISTIC_NOT_FOUND + this.getClass().getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
@@ -47,10 +48,11 @@ public abstract class AbstractStatisticService implements IStatisticService {
 		final Map<String, Double> calendarMap = statisticHelper.getCalendarMap();
 		final List<Request> requests = getStatisticBetween(getRepositoryByWorkflow(workflow), statisticHelper.getFrom(),
 				statisticHelper.getUntil());
-		return new Result(buildStatistic(calendarMap, requests));
+		return new Result(buildStatistic(calendarMap, requests, elementId));
 	}
 
-	public abstract List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests);
+	public abstract List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests,
+			Long elementId);
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -67,7 +69,7 @@ public abstract class AbstractStatisticService implements IStatisticService {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> RequestRepository<T, Long> getRepositoryByWorkflow(Workflow workflow) {
+	protected <T> RequestRepository<T, Long> getRepositoryByWorkflow(Workflow workflow) {
 		if (workflow.equals(Workflow.LEAD)) {
 			return (RequestRepository<T, Long>) leadRepository;
 		} else if (workflow.equals(Workflow.OFFER)) {

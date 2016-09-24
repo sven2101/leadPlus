@@ -28,7 +28,7 @@ import dash.statisticmanagement.common.AbstractStatisticService;
 public class WorkflowStatisticService extends AbstractStatisticService {
 
 	@Override
-	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests) {
+	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId) {
 		for (Request request : requests) {
 			Calendar timeStamp = request.getTimestamp();
 			String key = statisticHelper.getKeyByDateRange(timeStamp, statisticHelper.getDateRange());

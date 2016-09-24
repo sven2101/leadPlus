@@ -47,6 +47,6 @@ public class ProfitResource {
 	public Result getConversionStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
-		return profitStatisticService.getStatisticByDateRange(workflow, dateRange);
+		return profitStatisticService.getStatisticByDateRange(workflow, dateRange, null);
 	}
 }

@@ -47,6 +47,6 @@ public class TurnoverResource {
 	public Result getConversionStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
-		return turnoverStatisticService.getStatisticByDateRange(workflow, dateRange);
+		return turnoverStatisticService.getStatisticByDateRange(workflow, dateRange, null);
 	}
 }

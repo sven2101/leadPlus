@@ -46,6 +46,10 @@ class StatisticController {
         this.statisticService.loadAllResourcesByDateRange(dateRange);
     }
 
+    getProductStatistic(): Array<any> {
+        return this.statisticService.getProductStatistic();
+    }
+
     getProfitTotal(): number {
         return this.statisticService.getProfitTotal();
     }

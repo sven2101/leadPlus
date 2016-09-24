@@ -29,7 +29,7 @@ import dash.statisticmanagement.common.AbstractStatisticService;
 public class TurnoverStatisticService extends AbstractStatisticService {
 
 	@Override
-	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests) {
+	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId) {
 		for (Request request : requests) {
 			if (request instanceof Sale) {
 				Sale sale = (Sale) request;

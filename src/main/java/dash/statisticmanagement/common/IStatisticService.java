@@ -30,10 +30,10 @@ import dash.workflowmanagement.domain.Workflow;
 @Service
 public interface IStatisticService {
 
-	Result getStatisticByDateRange(Workflow workflow, DateRange dateRange) throws NotFoundException;
+	Result getStatisticByDateRange(Workflow workflow, DateRange dateRange, Long elementId) throws NotFoundException;
 
 	<T> List<Request> getStatisticBetween(RequestRepository<T, Long> repository, Calendar from, Calendar until)
 			throws NotFoundException;
 
-	List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests);
+	List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId);
 }
