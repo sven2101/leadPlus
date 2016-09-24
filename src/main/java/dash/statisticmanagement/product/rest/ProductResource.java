@@ -60,6 +60,9 @@ public class ProductResource {
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
 			@ApiParam(required = true) @PathVariable @Valid final Long id) throws NotFoundException {
-		return productStatisticService.getTopProductStatstic(workflow, dateRange, id).get(0);
+		ProductStatistic productStatistic = null;
+		if (productStatisticService.getTopProductStatstic(workflow, dateRange, id).size() > 0)
+			productStatistic = productStatisticService.getTopProductStatstic(workflow, dateRange, id).get(0);
+		return productStatistic;
 	}
 }

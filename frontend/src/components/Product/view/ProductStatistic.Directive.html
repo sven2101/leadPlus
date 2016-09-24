@@ -1,3 +1,57 @@
-<div>{{leads}} {{offers}} {{sales}}
-<highchart id="SingleProductColumnChart" config="singleStatisticWorkflowPieChart.chartConfig"></highchart>
+<div class="row animated fadeInRight">
+        <div class="col-lg-6">
+                <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                                <h1>Produktstatistik</h1>
+                        </div>
+                        <div class="ibox-content" id="ibox-content">
+                                <highchart id="SingleProductColumnChart" config="chart.chartConfig"></highchart>
+                        </div>
+                </div>
+        </div>
+        <div class="col-lg-6">
+                <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                                <span class="label label-success pull-right">Heute</span>
+                                <h5>Erzielter Umsatz</h5>
+                        </div>
+                        <div class="ibox-content">
+                                <h1 class="no-margins">{{productSales.turnover| currency:'\u20AC'}}</h1>
+                        </div>
+                </div>
+        </div>
+        <div class="col-lg-6">
+                <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                                <span class="label label-success pull-right">Heute</span>
+                                <h5>Durschnittlich Gewährter Rabatt</h5>
+                        </div>
+                        <div class="ibox-content">
+                                <h1 class="no-margins">{{productSales.discount/productSales.count}}% ({{productSales.product.priceNetto-(productSales.turnover/productSales.count)
+                                        | currency:'\u20AC'}})</h1>
+                        </div>
+                </div>
+        </div>
+        <div class="col-lg-6">
+                <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                                <span class="label label-success pull-right">Heute</span>
+                                <h5>Durschnittlich Verkaufspreis</h5>
+                        </div>
+                        <div class="ibox-content">
+                                <h1 class="no-margins">{{productSales.product.priceNetto*(1-(productSales.discount/productSales.count/100)) | currency:'\u20AC'}}</h1>
+                        </div>
+                </div>
+        </div>
+        <div class="col-lg-6">
+                <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                                <span class="label label-success pull-right">Heute</span>
+                                <h5>Angezeigter Preis</h5>
+                        </div>
+                        <div class="ibox-content">
+                                <h1 class="no-margins">{{productSales.product.priceNetto | currency:'\u20AC'}}</h1>
+                        </div>
+                </div>
+        </div>
 </div>

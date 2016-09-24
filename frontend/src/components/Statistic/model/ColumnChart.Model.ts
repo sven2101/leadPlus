@@ -18,35 +18,22 @@ class ColumnChart extends AbstractStatisticModel {
             options: {
                 chart: {
                     type: "column"
-                },
+                }
+                ,
                 title: {
                     text: ""
-                },
-                tooltip: {
-                    shared: true,
-                    valueSuffix: valueSuffix,
-                    valueDecimals: 2
                 },
                 xAxis: {
                     type: "category"
                 },
-                loading: false,
-                yAxis: {
-                    title: {
-                        text: this.translate.instant(yname),
-                    },
-                    labels: {
-                        formatter: function () {
-                            return this.value;
-                        }
-                    }
-                }
+                tooltip: {},
             },
             series: [{
                 name: this.translate.instant(yname),
                 colorByPoint: true,
                 data: []
             }],
+            loading: false
         };
     }
     pushData(name: string, data: Array<number>, color: string) {

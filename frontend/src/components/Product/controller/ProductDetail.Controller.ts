@@ -5,6 +5,7 @@
 /// <reference path="../../Product/model/Product.Model.ts" />
 /// <reference path="../../App/App.Resource.ts" />
 /// <reference path="../../App/App.Constants.ts" />
+/// <reference path="../../Statistic/model/ColumnChart.Model.ts" />" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -22,7 +23,7 @@ const ProductDetailControllerId: string = "ProductDetailController";
 
 class ProductDetailController {
 
-    $inject = [ProductServiceId, $routeParamsId, ProductResourceId, StatisticServiceId];
+    $inject = [ProductServiceId, $routeParamsId, ProductResourceId, StatisticServiceId, $scopeId, $translateId];
 
     productService: ProductService;
     statisticService: StatisticService;
@@ -31,16 +32,17 @@ class ProductDetailController {
     currentProduct: Product;
     currentProductId: number;
     productFound: boolean = false;
+    productStatisticColumnChart: ColumnChart;
 
 
-    constructor(ProductService, $routeParams, ProductResource, StatisticService) {
+    constructor(ProductService, $routeParams, ProductResource, StatisticService, $scope, $translate) {
         this.productService = ProductService;
         this.statisticService = StatisticService;
         this.productResource = ProductResource.resource;
         this.routeParams = $routeParams;
         this.currentProductId = this.routeParams.productId;
         this.getProductById();
-        let self = this;
+        this.productStatisticColumnChart = new ColumnChart($translate, "SPCLOS", "STATISTIC_PARTS", "");
     }
 
     getProductById() {
