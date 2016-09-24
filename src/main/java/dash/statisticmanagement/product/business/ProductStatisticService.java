@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 import dash.exceptions.NotFoundException;
 import dash.processmanagement.request.Request;
 import dash.productmanagement.domain.OrderPosition;
-import dash.salemanagement.domain.Sale;
 import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.domain.StatisticHelper;
@@ -45,7 +44,7 @@ public class ProductStatisticService extends AbstractStatisticService {
 		return null;
 	}
 
-	public List<ProductStatistic> getTopProductStatstic(Workflow workflow, DateRange dateRange)
+	public List<ProductStatistic> getTopProductStatstic(Workflow workflow, DateRange dateRange, Long elementId)
 			throws NotFoundException {
 		Map<Long, ProductStatistic> productMap = new HashMap<>();
 		if (workflow == null || dateRange == null) {
@@ -58,23 +57,23 @@ public class ProductStatisticService extends AbstractStatisticService {
 				statisticHelper.getFrom(), statisticHelper.getUntil());
 
 		for (Request request : requests) {
-			if (request instanceof Sale) {
-				Sale sale = (Sale) request;
-				for (OrderPosition orderPosition : sale.getOrderPositions()) {
-					if (!productMap.containsKey(orderPosition.getProduct().getId())) {
-						ProductStatistic productStatistic = new ProductStatistic();
-						productStatistic.setProduct(orderPosition.getProduct());
-						productMap.put(orderPosition.getProduct().getId(), productStatistic);
-					}
-					productMap.get(orderPosition.getProduct().getId()).addCount(orderPosition.getAmount());
-					productMap.get(orderPosition.getProduct().getId())
-							.addTurnover(orderPosition.getPrice() * orderPosition.getAmount());
-					productMap.get(orderPosition.getProduct().getId())
-							.addDiscount(orderPosition.getDiscount() * orderPosition.getAmount());
-					productMap.get(orderPosition.getProduct().getId()).addOrderPosition();
+			for (OrderPosition orderPosition : request.getOrderPositions()) {
+				if (elementId != null && !orderPosition.getProduct().getId().equals(elementId))
+					continue;
+				if (!productMap.containsKey(orderPosition.getProduct().getId())) {
+					ProductStatistic productStatistic = new ProductStatistic();
+					productStatistic.setProduct(orderPosition.getProduct());
+					productMap.put(orderPosition.getProduct().getId(), productStatistic);
 				}
+				productMap.get(orderPosition.getProduct().getId()).addCount(orderPosition.getAmount());
+				productMap.get(orderPosition.getProduct().getId())
+						.addTurnover(orderPosition.getPrice() * orderPosition.getAmount());
+				productMap.get(orderPosition.getProduct().getId())
+						.addDiscount(orderPosition.getDiscount() * orderPosition.getAmount());
+				productMap.get(orderPosition.getProduct().getId()).addOrderPosition();
 			}
 		}
 		return new ArrayList<>(productMap.values());
 	}
+
 }

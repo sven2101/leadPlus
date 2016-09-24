@@ -46,9 +46,20 @@ public class ProductResource {
 	@RequestMapping(value = "/{workflow}/daterange/{dateRange}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get Statistic by dateRange and workflow", notes = "")
-	public List<ProductStatistic> getConversionStatisticByDateRange(
+	public List<ProductStatistic> getProductStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
-		return productStatisticService.getTopProductStatstic(workflow, dateRange);
+		return productStatisticService.getTopProductStatstic(workflow, dateRange, null);
+	}
+
+	@RequestMapping(value = "/{workflow}/daterange/{dateRange}/id/{id}", method = { RequestMethod.GET,
+			RequestMethod.POST })
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get Statistic by dateRange and workflow", notes = "")
+	public ProductStatistic getSingleProductStatistic(
+			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
+			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
+			@ApiParam(required = true) @PathVariable @Valid final Long id) throws NotFoundException {
+		return productStatisticService.getTopProductStatstic(workflow, dateRange, id).get(0);
 	}
 }

@@ -90,6 +90,12 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controller: "ProductController",
                 controllerAs: "productCtrl",
                 authenticated: true
+            }).when("/product/detail/:productId",
+            {
+                templateUrl: "components/Product/view/ProductDetail.html",
+                controller: "ProductDetailController",
+                controllerAs: "ProductDetailCtrl",
+                authenticated: true
             }).when("/customer",
             {
                 templateUrl: "components/Customer/view/Customer.html",

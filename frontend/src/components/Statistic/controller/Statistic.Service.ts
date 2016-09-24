@@ -20,11 +20,12 @@ const StatisticServiceId: string = "StatisticService";
 
 class StatisticService {
 
-    private $inject = [toasterId, $translateId, StatisticResourceId];
+    private $inject = [toasterId, $translateId, StatisticResourceId, $qId];
 
     toaster: any;
     translate: any;
     statisticResource: any;
+    q;
 
     SingleStatisticWorkflowPieChart: PieChart;
     EntireStatisticProfitTurnoverAreaChart: AreaChart;
@@ -60,13 +61,14 @@ class StatisticService {
     weekday: Array<string> = new Array<string>(7);
     month: Array<string> = new Array<string>(12);
 
-    constructor(toaster, $translate, StatisticResource) {
+    constructor(toaster, $translate, StatisticResource, $q) {
         this.toaster = toaster;
         this.translate = $translate;
         this.statisticResource = StatisticResource.resource;
         this.setAllModels();
         this.setWeekDayTranslationsArray();
         this.setMonthTranslationsArray();
+        this.q = $q;
     }
 
     setAllModels() {
@@ -314,11 +316,17 @@ class StatisticService {
         }
     }
 
+    getProductStatisticById(workflow: string, dateRange: string, id: number): any {
+        let deferred = this.q.defer();
+        this.statisticResource.getSingleProductStatistic({ workflow: workflow, dateRange: dateRange, id: id }).$promise.then(function (result) {
+            deferred.resolve(result);
+        });
+        return deferred.promise;
+    }
 
     getProductStatistic(): Array<any> {
         return this.productStatisticArr;
     }
-
     getLeadAmount(): number {
         return this.leadAmount;
     }

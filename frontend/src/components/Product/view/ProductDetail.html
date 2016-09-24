@@ -1,0 +1,43 @@
+<style>
+    .important {
+        background: #FFEBEB;
+    }
+</style>
+<meta charset="utf-8">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-10">
+                <h2>{{ 'PRODUCT_MENU' | translate }}</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#/dashboard">Home</a>
+                    </li>
+                    <li>
+                        <a href="#/product">{{ 'PRODUCT_MENU' | translate }}</a>
+                    </li>
+                    <li class="active">
+                        <strong>{{ProductDetailCtrl.currentProduct.name}}</strong>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div ng-if="ProductDetailCtrl.productFound" class="wrapper wrapper-content">
+    <div class="row animated fadeInRight">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h1>Produktstatistik</h1>
+                </div>
+                <div class="ibox-content" id="ibox-content">
+                    <div product leads="ProductDetailCtrl.productLead" offers="ProductDetailCtrl.productOffer" sales="ProductDetailCtrl.productSale"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

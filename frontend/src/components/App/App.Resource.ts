@@ -227,6 +227,9 @@ class StatisticResource {
             },
             getProductStatistic: {
                 url: "/api/rest/processes/statistics/product/:workflow/daterange/:dateRange", method: "GET", isArray: true
+            },
+            getSingleProductStatistic: {
+                url: "/api/rest/processes/statistics/product/:workflow/daterange/:dateRange/id/:id", method: "GET"
             }
         });
     }
