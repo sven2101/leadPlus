@@ -1,4 +1,8 @@
+/// <reference path="../../Statistic/model/ColumnChart.Model.ts" />" />
+/// <reference path="../../Statistic/controller/Statistic.Service.ts" />
+/// <reference path="../../Common/Model/Workflow.Model.ts" />
 /// <reference path="../../app/App.Constants.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -15,13 +19,11 @@
 "use strict";
 
 angular.module(moduleApp)
-    .directive("product", function () {
+    .directive("product", [$translateId, StatisticServiceId, function ($translate, StatisticService) {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
         directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
         directive.scope = {
-            leads: "=",
-            offers: "=",
-            sales: "="
+            productid: "@",
         };
         directive.restrict = "A";
         directive.templateUrl = function (elem, attr) {
@@ -29,7 +31,20 @@ angular.module(moduleApp)
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {
+            console.log(attrs);
+            let singleStatisticWorkflowPieChart = new ColumnChart($translate, "SPCLOS", "STATISTIC_PARTS", "");
+            console.log(scope);
+            StatisticService.getProductStatisticById(Workflow[Workflow.LEAD], "ALL", scope.productid).then(function (result) {
+                singleStatisticWorkflowPieChart.pushData("Anfragen", [result.count], "#ed5565");
+            });
+            StatisticService.getProductStatisticById(Workflow[Workflow.OFFER], "ALL", scope.productid).then(function (result) {
+                singleStatisticWorkflowPieChart.pushData("Angebote", [result.count], "#f8ac59");
+            });
+            StatisticService.getProductStatisticById(Workflow[Workflow.SALE], "ALL", scope.productid).then(function (result) {
+                singleStatisticWorkflowPieChart.pushData("Verkäufe", [result.count], "#1a7bb9");
+            });
+            scope.singleStatisticWorkflowPieChart = singleStatisticWorkflowPieChart;
         };
         return directive;
-    });
+    }]);
 

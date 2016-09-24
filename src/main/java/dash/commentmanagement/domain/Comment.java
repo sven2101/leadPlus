@@ -33,13 +33,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.request.Request;
 import dash.usermanagement.domain.User;
 
 @Entity
 @SQLDelete(sql = "UPDATE comment SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
-public class Comment implements Request {
+public class Comment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -104,7 +103,6 @@ public class Comment implements Request {
 		this.commentText = commentText;
 	}
 
-	@Override
 	public Calendar getTimestamp() {
 		return this.timestamp;
 	}
@@ -167,7 +165,8 @@ public class Comment implements Request {
 
 	@Override
 	public String toString() {
-		return "Comment [id=" + id + ", deleted=" + deleted + ", creator=" + creator + ", commentText=" + commentText + ", timestamp=" + timestamp + "]";
+		return "Comment [id=" + id + ", deleted=" + deleted + ", creator=" + creator + ", commentText=" + commentText
+				+ ", timestamp=" + timestamp + "]";
 	}
 
 }

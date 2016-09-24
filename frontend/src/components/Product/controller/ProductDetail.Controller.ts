@@ -31,9 +31,6 @@ class ProductDetailController {
     currentProduct: Product;
     currentProductId: number;
     productFound: boolean = false;
-    productLead: any;
-    productOffer: any;
-    productSale: any;
 
 
     constructor(ProductService, $routeParams, ProductResource, StatisticService) {
@@ -52,15 +49,6 @@ class ProductDetailController {
             self.currentProduct = result;
             if (!isNullOrUndefined(self.currentProduct.id)) {
                 self.productFound = true;
-                self.statisticService.getProductStatisticById(Workflow[Workflow.LEAD], "ALL", self.currentProduct.id).then(function(result){
-                    self.productLead = result;
-                });
-                 self.statisticService.getProductStatisticById(Workflow[Workflow.OFFER], "ALL", self.currentProduct.id).then(function(result){
-                    self.productOffer = result;
-                });
-                 self.statisticService.getProductStatisticById(Workflow[Workflow.SALE], "ALL", self.currentProduct.id).then(function(result){
-                    self.productSale = result;
-                });
             }
         });
     }

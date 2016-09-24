@@ -35,7 +35,8 @@
                     <h1>Produktstatistik</h1>
                 </div>
                 <div class="ibox-content" id="ibox-content">
-                    <div product leads="ProductDetailCtrl.productLead" offers="ProductDetailCtrl.productOffer" sales="ProductDetailCtrl.productSale"></div>
+                    {{ProductDetailCtrl.currentProductId}}
+                    <div product productid="{{ProductDetailCtrl.currentProductId}}"></div>
                 </div>
             </div>
         </div>
