@@ -321,12 +321,16 @@ function config($translateProvider) {
 
             // Define detail statistic
             DETAIL_STATISTIC_PRODUCTSTATISTIC: "Produktstatistik",
+            DETAIL_STATISTIC_USERSTATISTIC: "Benutzerstatistik",
             DETAIL_STATISTIC_REALISED_TURNOVER: "Erzielter Umsatz",
             DETAIL_STATISTIC_REALISED_PROFIT: "Erzielter Gewinn",
+            DETAIL_STATISTIC_TURNOVER_PER_LEAD: "Umsatz pro Anfrage",
+            DETAIL_STATISTIC_PROFIT_PER_LEAD: "Gewinn pro Anfrage",
             DETAIL_STATISTIC_GUARANTEED_DISCOUNT: "Gewährter Rabatt",
             DETAIL_STATISTIC_SALES_PRICE: "Verkaufspreis",
             DETAIL_STATISTIC_ADVERTISED_PRICE: "Angezeigter Preis",
             DETAIL_STATISTIC_TOOLTIP: "<span>Das Produkt {{productname}} wurde <b>{{count}}x</b> in {{workflow}} verwendet.</span>",
+            DETAIL_STATISTIC_USER_TOOLTIP: "<span>Der Benutzer {{username}} hat <b>{{count}}</b> {{workflow}} bearbeitet.</span>",
 
             // Define all week and month names
             SUNDAY: "Sonntag",
@@ -691,12 +695,17 @@ function config($translateProvider) {
 
             // Define detail statistic
             DETAIL_STATISTIC_PRODUCTSTATISTIC: "Productstatistic",
+            DETAIL_STATISTIC_USERSTATISTIC: "Userstatistic",
             DETAIL_STATISTIC_REALISED_TURNOVER: "Realised turnover",
+            DETAIL_STATISTIC_TURNOVER_PER_LEAD: "Turnover per lead",
             DETAIL_STATISTIC_REALISED_PROFIT: "Realised profit",
+            DETAIL_STATISTIC_PROFIT_PER_LEAD: "Profit per lead",
             DETAIL_STATISTIC_GUARANTEED_DISCOUNT: "Guaranteed discount",
             DETAIL_STATISTIC_SALES_PRICE: "Sales price",
             DETAIL_STATISTIC_ADVERTISED_PRICE: "Advertised Price",
             DETAIL_STATISTIC_TOOLTIP: "<span>The product {{productname}} is used <b>{{count}}x</b> in {{workflow}}.</span>",
+            DETAIL_STATISTIC_USER_TOOLTIP: "<span>The user {{username}} worked on <b>{{count}}</b> {{workflow}}.</span>",
+
 
             // Define all week and month names
             SUNDAY: "Sunday",

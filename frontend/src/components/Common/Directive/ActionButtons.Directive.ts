@@ -30,7 +30,8 @@ angular.module(moduleApp)
                 return "components/common/view/Workflow.ActionButtons.html";
             }
             else if (attr.template === "dropdown") {
-                return "components/common/view/Workflow.ActionButtons.Dropdown.html";
+                // TODO build new template
+                return "components/common/view/Workflow.ActionButtons.html";
             }
         };
         directive.transclude = true;

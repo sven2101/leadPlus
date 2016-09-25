@@ -19,6 +19,9 @@
                         </thead>
                         <tbody>
                             <tr ng-if="user.role!='API'" ng-repeat="user in settingCtrl.settingService.users">
+                                <td><a ng-href="#/settings/detail/{{user.id}} " class="btn btn-xs btn-success btn-circle
+                                            " type="button "><i style="color:white; " class="fa fa-line-chart"></i></a></td>
+                                </td>
                                 <td>{{user.username}}</td>
                                 <td>{{user.firstname}}</td>
                                 <td>{{user.lastname}}</td>
@@ -51,5 +54,5 @@
                 </div>
             </div>
         </div>
-    </div>   
+    </div>
 </div>

@@ -333,6 +333,13 @@ class StatisticService {
         });
         return deferred.promise;
     }
+    getUserStatisticById(dateRange: string, id: number): any {
+        let deferred = this.q.defer();
+        this.statisticResource.getSingleUserStatistic({ dateRange: dateRange, id: id }).$promise.then(function (result) {
+            deferred.resolve(result);
+        });
+        return deferred.promise;
+    }
 
     getProductStatistic(): Array<any> {
         return this.productStatisticArr;

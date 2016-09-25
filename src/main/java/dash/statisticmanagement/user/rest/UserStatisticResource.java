@@ -50,7 +50,7 @@ public class UserStatisticResource {
 		return userStatisticService.getTopSalesMen(dateRange);
 	}
 	
-	@RequestMapping(value = "/{daterange/{dateRange}/id/{id}", method = { RequestMethod.GET,
+	@RequestMapping(value = "/daterange/{dateRange}/id/{id}", method = { RequestMethod.GET,
 			RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get Statistic by dateRange and processor", notes = "")
