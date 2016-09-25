@@ -97,6 +97,9 @@ class WorkflowController extends AbstractWorkflow {
     close() {
         this.editForm.$setPristine();
         this.uibModalInstance.close();
+        this.dashboardService.openOffers = this.dashboardService.orderBy(this.dashboardService.openOffers, "offer.timestamp", false);
+        this.dashboardService.sumLeads();
+        this.dashboardService.sumOffers();
         this.dashboardService.initDashboard();
     }
 

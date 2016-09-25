@@ -402,7 +402,7 @@ class NotificationResource {
     constructor($resource) {
         this.resource = $resource("/api/rest/notifications", {}, {
             sendOffer: { url: "/api/rest/notifications/users/:userId/offers/send", method: "POST" },
-            sendSimple: { url: "/api/rest/notifications/users/:userId/send", method: "POST" }
+            sendSimple: { url: "/api/rest/notifications/users/:userId/notifications/send", method: "POST" }
         });
     }
 }

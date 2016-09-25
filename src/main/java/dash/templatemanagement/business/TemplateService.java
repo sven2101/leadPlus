@@ -34,7 +34,6 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.messagemanagement.domain.OfferMessage;
-import dash.processmanagement.business.IProcessService;
 import dash.processmanagement.domain.Process;
 import dash.templatemanagement.domain.Template;
 
@@ -45,9 +44,6 @@ public class TemplateService implements ITemplateService {
 
 	@Autowired
 	private TemplateRepository templateRepository;
-
-	@Autowired
-	private IProcessService processService;
 
 	@Override
 	public List<Template> getAll() {

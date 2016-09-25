@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.SMTPdoesntExistsException;
+import dash.notificationmanagement.domain.Notification;
 import dash.processmanagement.business.IProcessService;
 import dash.processmanagement.domain.Process;
 import dash.smtpmanagement.business.ISmtpService;
@@ -54,6 +55,11 @@ public class NotificationService implements INotificationService {
 	@Override
 	public void sendNotification(final long userId, final Process process) throws Exception {
 		doSendEmail(userId, process);
+	}
+
+	@Override
+	public void sendNotification(final long userId, final Notification notification) throws Exception {
+		doSendEmail(userId, notification);
 	}
 
 	public void doSendEmail(final long userId, final Process process) throws Exception {
@@ -92,6 +98,53 @@ public class NotificationService implements INotificationService {
 					Transport.send(msg);
 
 					processService.save(process);
+
+				} catch (MessagingException mex) {
+					logger.error(NotificationService.class.getSimpleName(), mex);
+					throw mex;
+				}
+
+			} else {
+				throw new SMTPdoesntExistsException("No valid SMTP Data for this User");
+			}
+		} catch (Exception ex) {
+			throw ex;
+		}
+	}
+
+	public void doSendEmail(final long userId, final Notification notification) throws Exception {
+		try {
+			Smtp smtp = smtpService.findByUser(userId);
+			smtp = smtpService.decrypt(smtp);
+			if (smtp != null) {
+
+				final Session emailSession = newSession(smtp);
+				Transport transport = emailSession.getTransport("smtp");
+				transport.connect();
+
+				Message msg = new MimeMessage(emailSession);
+				try {
+
+					msg.setFrom(new InternetAddress(smtp.getEmail(), smtp.getSender()));
+					msg.setRecipient(Message.RecipientType.TO, new InternetAddress(notification.getRecipient()));
+					msg.setSubject(notification.getSubject());
+					Multipart multipart = new MimeMultipart();
+
+					MimeBodyPart textBodyPart = new MimeBodyPart();
+					textBodyPart.setContent(notification.getContent(), "text/html; charset=utf-8");
+					multipart.addBodyPart(textBodyPart);
+
+					if (notification.getAttachment().getContent() != null) {
+						MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getContent(), "application/octet-stream");
+						attachmentBodyPart.setDataHandler(new DataHandler(ds));
+						attachmentBodyPart.setFileName(notification.getAttachment().getFilename());
+						multipart.addBodyPart(attachmentBodyPart);
+					}
+
+					msg.setContent(multipart);
+
+					Transport.send(msg);
 
 				} catch (MessagingException mex) {
 					logger.error(NotificationService.class.getSimpleName(), mex);

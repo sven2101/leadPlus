@@ -19,11 +19,15 @@ import javax.mail.MessagingException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.exceptions.SaveFailedException;
+import dash.notificationmanagement.domain.Notification;
 import dash.processmanagement.domain.Process;
 
 public interface INotificationService {
 
 	void sendNotification(final long userId, final Process process)
+			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException, Exception;
+
+	void sendNotification(final long userId, final Notification notification)
 			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException, Exception;
 
 }

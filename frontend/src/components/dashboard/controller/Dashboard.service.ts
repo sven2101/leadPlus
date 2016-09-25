@@ -85,6 +85,7 @@ class DashboardService {
             self.sumSales();
         });
     }
+
     sumLeads(): void {
         this.openLeadsValue = 0;
         for (let i = 0; i < this.openLeads.length; i++) {
@@ -150,16 +151,6 @@ class DashboardService {
         this.workflowService.startOfferTransformation(process);
     }
 
-    /*
-    createOffer(process: Process) {
-        let self = this;
-        this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
-            self.openOffers = self.orderBy(self.openOffers, "offer.timestamp", false);
-            self.sumLeads();
-            self.sumOffers();
-        });
-    }
-    */
     createSale(process: Process) {
         let self = this;
         this.workflowService.addOfferToSale(process).then(function (isResolved: boolean) {
@@ -167,7 +158,6 @@ class DashboardService {
             self.sumOffers();
             self.sumSales();
         });
-
     }
 
     getOpenLeads(): Array<Process> {

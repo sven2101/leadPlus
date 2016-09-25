@@ -38,10 +38,12 @@ class FollowUpController {
 
     editForm: any;
 
+    process: Process;
     editProcess: Process;
     edit: boolean;
 
     constructor(process, $uibModalInstance, NotificationService, TemplateService) {
+        this.process = process;
         this.editWorkflowUnit = process.offer;
         this.editWorkflowUnit.notification = new Notification();
         this.editWorkflowUnit.notification.recipient = this.editWorkflowUnit.customer.email;

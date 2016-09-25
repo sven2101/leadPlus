@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import dash.notificationmanagement.business.INotificationService;
+import dash.notificationmanagement.domain.Notification;
 import dash.processmanagement.domain.Process;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,12 +49,12 @@ public class NotificationResource {
 		notificationService.sendNotification(userId, process);
 	}
 
-	//	@ApiOperation(value = "Send a single Notification.", notes = "")
-	//	@RequestMapping(value = "/users/{userId}/send", method = RequestMethod.POST)
-	//	@ResponseStatus(HttpStatus.OK)
-	//	public void sendOffer(@ApiParam(required = true) @PathVariable final Long userId,
-	//			@ApiParam(required = true) @RequestBody @Valid final Notification notification) throws Exception {
-	//		notificationService.sendNotification(userId, notification);
-	//	}
+	@ApiOperation(value = "Send a single Notification.", notes = "")
+	@RequestMapping(value = "/users/{userId}/notifications/send", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public void sendOffer(@ApiParam(required = true) @PathVariable final Long userId,
+			@ApiParam(required = true) @RequestBody @Valid final Notification notification) throws Exception {
+		notificationService.sendNotification(userId, notification);
+	}
 
 }
