@@ -71,11 +71,11 @@ public class UserStatisticService extends AbstractStatisticService {
 				userMap.put(key, userStatistic);
 			}
 			userMap.get(key).addCountProcess();
-			if (process.getLead() != null)
+			if (process.getLead() != null && !process.getLead().isDeleted())
 				userMap.get(key).addCountLead();
-			if (process.getOffer() != null)
+			if (process.getOffer() != null  && !process.getOffer().isDeleted())
 				userMap.get(key).addCountOffer();
-			if (process.getSale() != null) {
+			if (process.getSale() != null  && !process.getSale().isDeleted()) {
 				userMap.get(key).addCountSale();
 				userMap.get(key).addCountTurnover(process.getSale().getSaleTurnover());
 				userMap.get(key).addCountProfit(process.getSale().getSaleProfit());

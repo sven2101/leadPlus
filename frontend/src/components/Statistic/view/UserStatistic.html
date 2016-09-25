@@ -18,7 +18,7 @@
                                 <th class="text-center">{{ 'COMMON_CONVERSIONRATE' | translate }}</th>
                                 <th class="text-center">{{ 'DETAIL_STATISTIC_REALISED_TURNOVER' | translate }}</th>
                                 <th class="text-center">{{ 'DETAIL_STATISTIC_REALISED_PROFIT' | translate }}</th>
-                            </tr>{{ 'STATISTIC_PRODUCT_SALES' | translate }}
+                            </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="userStatistic in  statisticCtrl.getUserStatistic() | orderBy:'-turnover' | limitTo:10" foo-repeat-done>

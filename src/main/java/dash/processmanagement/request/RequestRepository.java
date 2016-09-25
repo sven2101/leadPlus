@@ -24,7 +24,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 @NoRepositoryBean
 public interface RequestRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
 
-	List<T> findByTimestampBetween(Calendar from, Calendar until);
+	List<T> findByTimestampBetweenAndDeleted(Calendar from, Calendar until,boolean isDeleted);
 
 	List<T> findByTimestamp(Calendar until);
 }
