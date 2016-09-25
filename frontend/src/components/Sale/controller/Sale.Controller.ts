@@ -75,7 +75,7 @@ class SaleController extends AbstractWorkflow {
         this.saleService = SaleService;
         this.scope = $scope;
         this.compile = $compile;
-
+        this.templateService = TemplateService;
         let self = this;
         function createdRow(row, data: Process, dataIndex) {
             self.saleService.setRow(data.id, row);
