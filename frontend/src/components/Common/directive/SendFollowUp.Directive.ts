@@ -21,7 +21,7 @@ angular.module(moduleApp)
         directive.scope = {
             type: "@",
             parent: "=",
-            modaltitle: "@"
+            form: "="
         };
         directive.restrict = "A";
         directive.templateUrl = function (elem, attr) {

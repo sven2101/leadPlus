@@ -20,5 +20,5 @@ public interface IMessage {
 
 	String getSubject();
 
-	String getContent();
+	String getContent() throws Exception;
 }

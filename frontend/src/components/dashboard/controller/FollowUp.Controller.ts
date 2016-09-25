@@ -64,6 +64,7 @@ class FollowUpController {
     }
 
     generate(templateId: string, offer: Offer) {
+        console.log(offer);
         this.templateService.generate(templateId, offer).then((result) => this.editWorkflowUnit.notification = result, (error) => console.log(error));
     }
 

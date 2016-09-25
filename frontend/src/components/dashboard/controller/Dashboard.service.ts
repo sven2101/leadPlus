@@ -107,7 +107,7 @@ class DashboardService {
 
     openFollowUpModal(process: Process) {
         this.uibModal.open({
-            template: " <div sendfollowup parent='followUpCtrl' type='offer'></div>",
+            template: " <div sendfollowup parent='followUpCtrl' form='parent.emailEditForm' type='offer'></div>",
             controller: FollowUpController,
             controllerAs: "followUpCtrl",
             backdrop: "static",

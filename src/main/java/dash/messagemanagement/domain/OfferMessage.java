@@ -51,7 +51,7 @@ public class OfferMessage extends AbstractMessage {
 	}
 
 	@Override
-	public String getContent() {
+	public String getContent() throws Exception {
 		String unescapedString = unescapeString(this.template);
 		stringLoader.putTemplate("greetTemplate", unescapedString);
 
@@ -65,8 +65,12 @@ public class OfferMessage extends AbstractMessage {
 			template = cfg.getTemplate("greetTemplate");
 			writer = new StringWriter();
 
-			SimpleDateFormat format1 = new SimpleDateFormat("dd.MM.yyyy");
-			String deliveryDate = format1.format(this.offer.getDeliveryDate().getTime());
+			String deliveryDate = "";
+
+			if (this.offer.getDeliveryDate() != null) {
+				SimpleDateFormat format1 = new SimpleDateFormat("dd.MM.yyyy");
+				deliveryDate = format1.format(this.offer.getDeliveryDate().getTime());
+			}
 
 			Map<String, Object> mapping = new HashMap<String, Object>();
 			mapping.put("titel", String.valueOf(this.offer.getCustomer().getTitle()));
@@ -78,7 +82,8 @@ public class OfferMessage extends AbstractMessage {
 			template.process(mapping, writer);
 
 		} catch (Exception ex) {
-			throw new RuntimeException("Problem rendering email content", ex);
+			ex.printStackTrace();
+			throw ex;
 		}
 
 		System.out.println("Template Renderer: " + writer.toString());

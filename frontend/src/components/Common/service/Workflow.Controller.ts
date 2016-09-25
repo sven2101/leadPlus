@@ -134,7 +134,7 @@ class WorkflowController extends AbstractWorkflow {
         this.dashboardService.sumLeads();
         this.dashboardService.sumOffers();
         this.dashboardService.initDashboard();
-        this.rootScope.$broadcast("deleteRow", this.process);
+
     }
 
     generate(templateId: string, offer: Offer) {
@@ -162,6 +162,7 @@ class WorkflowController extends AbstractWorkflow {
     send() {
         this.process.offer = this.editWorkflowUnit;
         this.notificationService.sendOffer(this.process);
+        this.rootScope.$broadcast("deleteRow", this.process);
         this.close();
     }
 
@@ -169,6 +170,7 @@ class WorkflowController extends AbstractWorkflow {
         this.process.offer = this.editWorkflowUnit;
         let self = this;
         this.workflowService.addLeadToOffer(this.process).then(function (tmpprocess: Process) {
+            self.rootScope.$broadcast("deleteRow", self.process);
             self.close();
         });
 
