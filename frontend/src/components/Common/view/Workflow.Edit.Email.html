@@ -4,8 +4,8 @@
             <label>Email - Template</label>
             <select ng-disabled="parent.emailEditForm" class="form-control" ng-model="templateId" ng-change="parent.generate(templateId, parent.process)">
                             <option value="-1" selected> - Select Template - </option>                                                                     
-                            <option value="{{template.id}}" ng-repeat="template in service.templateService.getAllActiveTemplates()">{{template.name}}</option>                                          
-                        </select>asd{{service.templateService.getAllActiveTemplates()}}
+                            <option value="{{template.id}}" ng-repeat="template in parent.templateService.getAllActiveTemplates()">{{template.name}}</option>                                          
+                        </select>asd{{parent.templateService.getAllActiveTemplates()}}
         </div>
     </div>
     <div>

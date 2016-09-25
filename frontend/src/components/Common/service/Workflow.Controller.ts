@@ -92,13 +92,24 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     loadDataToModal(process: Process) {
-        this.customerEditForm.$setPristine();
-        this.customerEditForm.$setPristine();
-        this.orderEditForm.$setPristine();
-        this.supplyEditForm.$setPristine();
-        this.priceEditForm.$setPristine();
-        this.emailEditForm.$setPristine();
-        this.saleEditForm.$setPristine();
+        if (!isNullOrUndefined(this.customerEditForm)) {
+            this.customerEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.orderEditForm)) {
+            this.orderEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.supplyEditForm)) {
+            this.supplyEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.priceEditForm)) {
+            this.priceEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.emailEditForm)) {
+            this.emailEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.saleEditForm)) {
+            this.saleEditForm.$setPristine();
+        }
 
         this.edit = true;
         this.currentProductId = "-1";
