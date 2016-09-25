@@ -35,11 +35,8 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
-import dash.notificationmanagement.business.INotificationService;
 import dash.offermanagement.domain.Offer;
 import dash.productmanagement.domain.OrderPosition;
-import dash.usermanagement.business.IUserService;
-import dash.usermanagement.domain.User;
 
 @Service
 public class OfferService implements IOfferService {
@@ -48,12 +45,6 @@ public class OfferService implements IOfferService {
 
 	@Autowired
 	private OfferRepository offerRepository;
-
-	@Autowired
-	private INotificationService notificationService;
-
-	@Autowired
-	private IUserService userService;
 
 	@Override
 	public List<Offer> getAll() {
@@ -132,32 +123,6 @@ public class OfferService implements IOfferService {
 	@Override
 	public List<Offer> getByCustomer(final long id) {
 		return offerRepository.findByCustomerIdAndDeleted(id, false);
-	}
-
-	@Override
-	public Offer generateOfferFile(final long offerId, final long templateId) {
-		// reading word Template
-
-		// generating PDF File
-
-		// save PDF File in Database
-		return null;
-	}
-
-	@Override
-	public Offer sendOffer(final long offerId, final String username) throws NotFoundException {
-		Offer offer = getOfferById(offerId);
-		User user = userService.getById(offerId);
-
-		// NotificationService
-
-		// IMessage message = new OfferMessage(offer.getCustomer());
-		// notificationService.sendNotification(message, user);
-		// get User SMTP Service
-
-		// get Template Renderer and pass in Customer and Offer
-
-		return null;
 	}
 
 }

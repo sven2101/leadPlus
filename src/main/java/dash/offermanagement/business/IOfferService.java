@@ -43,8 +43,4 @@ public interface IOfferService {
 
 	public List<Offer> getByCustomer(final long id);
 
-	public Offer generateOfferFile(final long offerId, final long templateId);
-
-	public Offer sendOffer(final long offerId, final String username) throws NotFoundException;
-
 }

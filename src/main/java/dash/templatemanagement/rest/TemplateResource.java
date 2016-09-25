@@ -37,9 +37,8 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
-import dash.fileuploadmanagement.business.IFileUploadService;
 import dash.messagemanagement.domain.OfferMessage;
-import dash.offermanagement.domain.Offer;
+import dash.processmanagement.domain.Process;
 import dash.templatemanagement.business.ITemplateService;
 import dash.templatemanagement.domain.Template;
 import io.swagger.annotations.Api;
@@ -53,9 +52,6 @@ public class TemplateResource {
 
 	@Autowired
 	private ITemplateService templateService;
-
-	@Autowired
-	private IFileUploadService fileUploadService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -92,19 +88,19 @@ public class TemplateResource {
 		templateService.delete(id);
 	}
 
-	@RequestMapping(value = "/{templateId}/offers/{offerId}/generate", method = RequestMethod.POST)
+	@RequestMapping(value = "/{templateId}/offers/generate", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Generate a email content based on a template and an offer.", notes = "")
-	public OfferMessage generate(@ApiParam(required = true) @PathVariable final long templateId, @ApiParam(required = true) @PathVariable final long offerId,
-			@ApiParam(required = true) @RequestBody @Valid final Offer offer) throws NotFoundException {
-		return templateService.generate(templateId, offerId, offer);
+	public OfferMessage generate(@ApiParam(required = true) @PathVariable final long templateId,
+			@ApiParam(required = true) @RequestBody @Valid final Process process) throws NotFoundException {
+		return templateService.generate(templateId, process);
 	}
 
-	@RequestMapping(value = "/{templateId}/offers/{offerId}/pdf/generate", method = RequestMethod.POST, produces = "application/pdf")
+	@RequestMapping(value = "/{templateId}/offers/pdf/generate", method = RequestMethod.POST, produces = "application/pdf")
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Generate a pdf based on a template and an offer.", notes = "")
 	public ResponseEntity<byte[]> generatePdf(@ApiParam(required = true) @PathVariable final long templateId,
-			@ApiParam(required = true) @PathVariable final long offerId, @ApiParam(required = true) @RequestBody @Valid final Offer offer)
+			@ApiParam(required = true) @PathVariable final long offerId, @ApiParam(required = true) @RequestBody @Valid final Process process)
 			throws NotFoundException, IOException {
 
 		FileInputStream fileStream;

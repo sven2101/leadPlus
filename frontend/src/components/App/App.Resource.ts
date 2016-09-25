@@ -351,13 +351,13 @@ class TemplateResource {
             update: { url: "/api/rest/templates", method: "PUT" },
             remove: { url: "/api/rest/templates/:id", method: "DELETE" },
             generate: {
-                url: "/api/rest/templates/:templateId/offers/:offerId/generate", method: "POST", params: {
+                url: "/api/rest/templates/:templateId/offers/generate", method: "POST", params: {
                     templateId: "@templateId",
                     offerId: "@offerId"
                 }
             },
             generatePDF: {
-                url: "/api/rest/templates/:templateId/offers/:offerId/pdf/generate", method: "POST", params: {
+                url: "/api/rest/templates/:templateId/offers/pdf/generate", method: "POST", params: {
                     templateId: "@templateId",
                     offerId: "@offerId"
                 }, responseType: "arraybuffer"
@@ -401,7 +401,7 @@ class NotificationResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/notifications", {}, {
-            sendOffer: { url: "/api/rest/notifications/users/:userId/offers/:offerId/send", method: "POST" },
+            sendOffer: { url: "/api/rest/notifications/users/:userId/offers/send", method: "POST" },
             sendSimple: { url: "/api/rest/notifications/users/:userId/send", method: "POST" }
         });
     }

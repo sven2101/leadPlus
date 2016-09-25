@@ -138,7 +138,7 @@ class DashboardService {
                     self.createSale(item);
                 }
                 else if (self.openOffers === target && self.openLeads === source) {
-                    self.createOffer(item);
+                    self.startOfferTransformation(item);
                 }
             },
             connectWith: ".connectList",
@@ -146,16 +146,20 @@ class DashboardService {
         };
     }
 
+    startOfferTransformation(process: Process) {
+        this.workflowService.startOfferTransformation(process);
+    }
+
+    /*
     createOffer(process: Process) {
         let self = this;
         this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
             self.openOffers = self.orderBy(self.openOffers, "offer.timestamp", false);
-            self.workflowService.openOfferModal(tmpprocess);
             self.sumLeads();
             self.sumOffers();
         });
     }
-
+    */
     createSale(process: Process) {
         let self = this;
         this.workflowService.addOfferToSale(process).then(function (isResolved: boolean) {

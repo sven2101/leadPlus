@@ -34,8 +34,8 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.messagemanagement.domain.OfferMessage;
-import dash.offermanagement.business.IOfferService;
-import dash.offermanagement.domain.Offer;
+import dash.processmanagement.business.IProcessService;
+import dash.processmanagement.domain.Process;
 import dash.templatemanagement.domain.Template;
 
 @Service
@@ -47,7 +47,7 @@ public class TemplateService implements ITemplateService {
 	private TemplateRepository templateRepository;
 
 	@Autowired
-	private IOfferService offerService;
+	private IProcessService processService;
 
 	@Override
 	public List<Template> getAll() {
@@ -120,10 +120,10 @@ public class TemplateService implements ITemplateService {
 	}
 
 	@Override
-	public OfferMessage generate(final long templateId, final long offerId, final Offer offer) throws NotFoundException {
-		if (offer != null && offerId == offer.getId()) {
+	public OfferMessage generate(final long templateId, final Process process) throws NotFoundException {
+		if (process != null) {
 			try {
-				return new OfferMessage(offerService.save(offer), getById(templateId).getContent());
+				return new OfferMessage(process.getOffer(), getById(templateId).getContent());
 			} catch (Exception ex) {
 				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw new NotFoundException(OFFER_NOT_FOUND);
@@ -136,8 +136,8 @@ public class TemplateService implements ITemplateService {
 	}
 
 	@Override
-	public byte[] generatePdf(final long templateId, final long offerId, final Offer offer) throws NotFoundException {
-		if (offer != null && offerId == offer.getId()) {
+	public byte[] generatePdf(final long templateId, final Process process) throws NotFoundException {
+		if (process != null) {
 			try {
 				return doIt("test", "test");
 			} catch (Exception ex) {
