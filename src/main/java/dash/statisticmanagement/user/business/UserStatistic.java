@@ -1,5 +1,7 @@
 package dash.statisticmanagement.user.business;
 
+import dash.usermanagement.domain.User;
+
 public class UserStatistic {
 
 	private int countLead;
@@ -10,6 +12,7 @@ public class UserStatistic {
 	private double profit;
 	private double discount;
 	private int countProduct;
+	private User user;
 
 
 	public UserStatistic() {
@@ -51,6 +54,16 @@ public class UserStatistic {
 	}
 	
 	
+	public User getUser() {
+		return user;
+	}
+
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+
 	public double getProfit() {
 		return profit;
 	}

@@ -40,6 +40,7 @@ class StatisticService {
     profitResultArr: Array<number> = new Array<number>();
     turnoverResultArr: Array<number> = new Array<number>();
     productStatisticArr: Array<any>;
+    userStatisticArr: Array<any>;
 
     profitTotal: number = 0;
     turnoverTotal: number = 0;
@@ -154,6 +155,7 @@ class StatisticService {
         this.loadProfitResourcesByDateRange(dateRange);
         this.loadTurnoverResourcesByDateRange(dateRange);
         this.loadProductResourcesByDateRange(dateRange);
+        this.loadUserStatisticResourcesByDateRange(dateRange);
     }
 
     loadWorkflowResourcesByDateRange(dateRange: string) {
@@ -204,6 +206,14 @@ class StatisticService {
             self.productStatisticArr = result;
         });
     }
+
+    loadUserStatisticResourcesByDateRange(dateRange: string) {
+        let self: StatisticService = this;
+        this.statisticResource.getUserStatistic({ dateRange: dateRange }).$promise.then(function (result) {
+            self.userStatisticArr = result;
+        });
+    }
+
 
     setTimeSegmentByDateRange(dateRange: string): Array<string> {
         let currentDate: Date = new Date();
@@ -326,6 +336,9 @@ class StatisticService {
 
     getProductStatistic(): Array<any> {
         return this.productStatisticArr;
+    }
+    getUserStatistic(): Array<any> {
+        return this.userStatisticArr;
     }
     getLeadAmount(): number {
         return this.leadAmount;

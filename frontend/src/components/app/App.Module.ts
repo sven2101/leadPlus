@@ -82,4 +82,5 @@ angular.module(moduleApp,
         moduleNgImgCrop,
         moduleUIBootstrap,
         moduleSummernote,
+        moduleFootable
     ]);

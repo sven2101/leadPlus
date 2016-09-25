@@ -1,4 +1,6 @@
 /// <reference path="../common/model/AbstractModel.Model.ts" />
+/// <reference path="../User/model/User.Model.ts" />
+
 /// <reference path="../../typeDefinitions/Moment.d.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -23,6 +25,16 @@ let findElementById = function (array: Array<AbstractModel>, id: Number): Abstra
 
 let isNullOrUndefined = function (object: any): boolean {
     return object === null || typeof object === "undefined";
+};
+
+let getNameOfUser = function (user: User): string {
+    if (!isNullOrUndefined(user.firstname) && user.firstname !== "" && !isNullOrUndefined(user.lastname) && user.lastname !== "") {
+        return user.firstname + " " + user.lastname;
+    }
+    else {
+        return user.username;
+    }
+
 };
 
 let deepCopy = function (old: Object): any {
