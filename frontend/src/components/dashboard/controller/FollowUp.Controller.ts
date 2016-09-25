@@ -38,10 +38,12 @@ class FollowUpController {
 
     editForm: any;
 
+    process: Process;
     editProcess: Process;
     edit: boolean;
 
     constructor(process, $uibModalInstance, NotificationService, TemplateService) {
+        this.process = process;
         this.editWorkflowUnit = process.offer;
         this.editWorkflowUnit.notification = new Notification();
         this.editWorkflowUnit.notification.recipient = this.editWorkflowUnit.customer.email;
@@ -52,7 +54,6 @@ class FollowUpController {
         this.getAllActiveTemplates();
     }
 
-
     ok() {
         this.uibModalInstance.close();
     }
@@ -62,8 +63,8 @@ class FollowUpController {
         this.uibModalInstance.close();
     }
 
-    generate(templateId: string, offer: Offer) {
-        this.templateService.generate(templateId, offer).then((result) => this.editWorkflowUnit.notification = result, (error) => console.log(error));
+    generate(templateId: string, process: Process) {
+        this.templateService.generate(templateId, process).then((result) => this.editWorkflowUnit.notification = result, (error) => console.log(error));
     }
 
     getAllActiveTemplates() {

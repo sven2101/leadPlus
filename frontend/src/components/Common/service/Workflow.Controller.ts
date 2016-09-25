@@ -61,8 +61,6 @@ class WorkflowController extends AbstractWorkflow {
     constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService) {
         super(WorkflowService);
         this.process = process;
-        console.log("Process 0:", process);
-        console.log("THIS Process 1:", this.process);
         this.editWorkflowUnit = this.process.offer;
         this.editWorkflowUnit.notification = new Notification();
         this.editWorkflowUnit.notification.recipient = this.editWorkflowUnit.customer.email;
@@ -93,20 +91,20 @@ class WorkflowController extends AbstractWorkflow {
         this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
         this.customerSelected = this.editProcess.offer.customer.id > 0;
         this.currentCustomerId = this.editProcess.offer.customer.id + "";
-        // this.editWorkflowUnit = deepCopy(this.editProcess.offer);
-    }
-
-    ok() {
-        this.uibModalInstance.close();
+        this.editWorkflowUnit = deepCopy(this.editProcess.offer);
     }
 
     close() {
         this.editForm.$setPristine();
         this.uibModalInstance.close();
+        this.dashboardService.openOffers = this.dashboardService.orderBy(this.dashboardService.openOffers, "offer.timestamp", false);
+        this.dashboardService.sumLeads();
+        this.dashboardService.sumOffers();
+        this.dashboardService.initDashboard();
     }
 
-    generate(templateId: string, offer: Offer) {
-        this.templateService.generate(templateId, offer).then((result) => this.editWorkflowUnit.notification = result, (error) => console.log(error));
+    generate(templateId: string, process: Process) {
+        this.templateService.generate(templateId, process).then((result) => this.editWorkflowUnit.notification = result, (error) => console.log(error));
     }
 
     generatePDF(templateId: string, offer: Offer) {
@@ -128,12 +126,21 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     send() {
-        this.notificationService.sendOffer(this.editWorkflowUnit.notification, this.editWorkflowUnit);
+        this.process.offer = this.editWorkflowUnit;
+        console.log("Process2", this.process);
+        this.notificationService.sendOffer(this.process);
         this.close();
     }
 
     save() {
-        this.offerService.save(this.editWorkflowUnit, this.process, this.currentOrderPositions);
+        console.log("Process1", this.process);
+        console.log("editWorkflowUnit", this.editWorkflowUnit);
+        this.process.offer = this.editWorkflowUnit;
+        console.log("Process2", this.process);
+        // this.offerService.save(this.editWorkflowUnit, this.process, this.currentOrderPositions);
+        this.workflowService.addLeadToOffer(this.process).then(function (tmpprocess: Process) {
+
+        });
         this.close();
     }
 
@@ -143,13 +150,6 @@ class WorkflowController extends AbstractWorkflow {
 
     getTheFiles($files) {
         this.notificationService.getTheFiles($files);
-    }
-
-    rollback() {
-        console.log("This. Process: ", this.process);
-        this.offerService.rollBackModal(this.process);
-        this.dashboardService.initDashboard();
-        this.close();
     }
 
 }

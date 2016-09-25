@@ -74,11 +74,11 @@ class DashboardController {
     getAllActiveTemplates() {
         this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
     }
-
-    createOffer(process: Process) {
-        this.dashboardService.createOffer(process);
-    }
-
+    /*
+        createOffer(process: Process) {
+            this.dashboardService.createOffer(process);
+        }
+    */
     createSale(process: Process) {
         this.dashboardService.createSale(process);
     }
@@ -144,7 +144,6 @@ class DashboardController {
     }
 
     openFollowUpModal(process: Process) {
-        console.log("process: ", process);
         this.dashboardService.openFollowUpModal(process);
     }
 

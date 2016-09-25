@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.notificationmanagement.business.INotificationService;
 import dash.notificationmanagement.domain.Notification;
+import dash.processmanagement.domain.Process;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -41,15 +42,15 @@ public class NotificationResource {
 	private INotificationService notificationService;
 
 	@ApiOperation(value = "Send a single Notification.", notes = "")
-	@RequestMapping(value = "/users/{userId}/offers/{offerId}/send", method = RequestMethod.POST)
+	@RequestMapping(value = "/users/{userId}/offers/send", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public void sendOffer(@ApiParam(required = true) @PathVariable final Long userId, @ApiParam(required = true) @PathVariable final Long offerId,
-			@ApiParam(required = true) @RequestBody @Valid final Notification notification) throws Exception {
-		notificationService.sendNotification(userId, offerId, notification);
+	public void sendOffer(@ApiParam(required = true) @PathVariable final Long userId, @ApiParam(required = true) @RequestBody @Valid final Process process)
+			throws Exception {
+		notificationService.sendNotification(userId, process);
 	}
 
 	@ApiOperation(value = "Send a single Notification.", notes = "")
-	@RequestMapping(value = "/users/{userId}/send", method = RequestMethod.POST)
+	@RequestMapping(value = "/users/{userId}/notifications/send", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	public void sendOffer(@ApiParam(required = true) @PathVariable final Long userId,
 			@ApiParam(required = true) @RequestBody @Valid final Notification notification) throws Exception {

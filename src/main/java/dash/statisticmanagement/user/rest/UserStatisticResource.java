@@ -12,7 +12,7 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.statisticmanagement.product.rest;
+package dash.statisticmanagement.user.rest;
 
 import java.util.List;
 
@@ -28,42 +28,36 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;
-import dash.statisticmanagement.product.business.ProductStatistic;
-import dash.statisticmanagement.product.business.ProductStatisticService;
-import dash.workflowmanagement.domain.Workflow;
+import dash.statisticmanagement.user.business.UserStatistic;
+import dash.statisticmanagement.user.business.UserStatisticService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping("/api/rest/processes/statistics/product")
+@RequestMapping("/api/rest/processes/statistics/user")
 @Api(value = "Statistic Profit API")
-public class ProductResource {
+public class UserStatisticResource {
 
 	@Autowired
-	private ProductStatisticService productStatisticService;
+	private UserStatisticService userStatisticService;
 
-	@RequestMapping(value = "/{workflow}/daterange/{dateRange}", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/daterange/{dateRange}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Get Statistic by dateRange and workflow", notes = "")
-	public List<ProductStatistic> getProductStatisticByDateRange(
-			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
+	@ApiOperation(value = "Get Statistic by dateRange", notes = "")
+	public List<UserStatistic> getProductStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
-		return productStatisticService.getTopProductStatstic(workflow, dateRange, null);
+		return userStatisticService.getTopSalesMen(dateRange);
 	}
-
-	@RequestMapping(value = "/{workflow}/daterange/{dateRange}/id/{id}", method = { RequestMethod.GET,
+	
+	@RequestMapping(value = "/{daterange/{dateRange}/id/{id}", method = { RequestMethod.GET,
 			RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Get Statistic by dateRange and workflow", notes = "")
-	public ProductStatistic getSingleProductStatistic(
-			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
+	@ApiOperation(value = "Get Statistic by dateRange and processor", notes = "")
+	public UserStatistic getSingleProductStatistic(
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
 			@ApiParam(required = true) @PathVariable @Valid final Long id) throws NotFoundException {
-		ProductStatistic productStatistic = null;
-		List<ProductStatistic> productStatisticList = productStatisticService.getTopProductStatstic(workflow, dateRange, id);
-		if (productStatisticList.size() > 0)
-			productStatistic = productStatisticList.get(0);
-		return productStatistic;
+		return userStatisticService.getUserStatisticByIdAndDateRange(dateRange,id);
 	}
+
 }

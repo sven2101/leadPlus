@@ -33,7 +33,7 @@ public abstract class AbstractStatisticService implements IStatisticService {
 
 	@Autowired
 	private RequestRepository<Sale, Long> saleRepository;
-
+	
 	protected StatisticHelper statisticHelper;
 
 	@Override

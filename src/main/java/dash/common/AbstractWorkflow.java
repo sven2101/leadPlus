@@ -58,6 +58,8 @@ public abstract class AbstractWorkflow implements Request {
 
 	@OneToOne(cascade = { CascadeType.PERSIST })
 	@JoinColumn(name = "vendor_fk", nullable = true)
+	//	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+	//	@JoinColumn(name = "vendor_fk", nullable = true)
 	private Vendor vendor;
 
 	@Column(length = 4096)
@@ -95,6 +97,7 @@ public abstract class AbstractWorkflow implements Request {
 		this.id = id;
 	}
 
+	@Override
 	public List<OrderPosition> getOrderPositions() {
 		return orderPositions;
 	}
