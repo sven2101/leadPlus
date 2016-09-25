@@ -24,5 +24,8 @@ class Lead extends AbstractModel implements IWorkflow {
     constructor() {
         super();
         this.deliveryCosts = 0;
+        this.customer = new Customer();
+        this.customer.firstname = "";
+        this.customer.lastname = "";
     }
 }

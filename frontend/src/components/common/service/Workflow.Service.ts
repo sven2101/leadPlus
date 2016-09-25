@@ -257,6 +257,7 @@ class WorkflowService {
             transport: process.offer.deliveryAddress,
             customer: process.offer.customer,
             saleProfit: 0,
+            saleCost: 0,
             saleTurnover: process.offer.offerPrice,
             timestamp: newTimestamp(),
             vendor: process.offer.vendor,

@@ -14,6 +14,7 @@ public class Sale extends AbstractWorkflow {
 
 	private double saleTurnover;
 	private double saleProfit;
+	private double saleCost;
 
 	public Sale() {
 
@@ -33,6 +34,14 @@ public class Sale extends AbstractWorkflow {
 
 	public void setSaleProfit(double saleProfit) {
 		this.saleProfit = saleProfit;
+	}
+
+	public double getSaleCost() {
+		return saleCost;
+	}
+
+	public void setSaleCost(double saleCost) {
+		this.saleCost = saleCost;
 	}
 
 	@Override

@@ -28,11 +28,14 @@ const OfferControllerId: string = "OfferController";
 
 class OfferController extends AbstractWorkflow {
 
-    $inject = [$compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId];
+    $inject = [$compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, TemplateServiceId];
+
+    type: string = "offer";
 
     workflowService: WorkflowService;
     offerDataTableService: OfferDataTableService;
     offerService: OfferService;
+    templateService: TemplateService;
 
     scope;
     compile;
@@ -46,13 +49,14 @@ class OfferController extends AbstractWorkflow {
     commentModalInput: string;
     loadAllData: boolean = false;
     processes: { [key: number]: Process } = {};
-    editForm: any;
     editProcess: Process;
     editWorkflowUnit: Offer = new Offer();
     edit: boolean;
     editEmail: boolean = true;
 
     currentOrderPositions: Array<OrderPosition>;
+    templates: Array<Template> = [];
+
     currentProductId = "-1";
     currentProductAmount = 1;
     currentCustomerId = "-1";
@@ -60,7 +64,14 @@ class OfferController extends AbstractWorkflow {
 
     otherCurrentTab: number = 1;
 
-    constructor($compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService) {
+    customerEditForm: any;
+    orderEditForm: any;
+    supplyEditForm: any;
+    priceEditForm: any;
+    emailEditForm: any;
+    saleEditForm: any;
+
+    constructor($compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.offerDataTableService = OfferDataTableService;
@@ -89,6 +100,8 @@ class OfferController extends AbstractWorkflow {
         }
         this.dtOptions = this.offerDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.offerDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
+        this.getAllActiveTemplates();
+
     }
 
     refreshData() {
@@ -110,6 +123,25 @@ class OfferController extends AbstractWorkflow {
     }
 
     loadDataToModal(process: Process) {
+        if (!isNullOrUndefined(this.customerEditForm)) {
+            this.customerEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.orderEditForm)) {
+            this.orderEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.supplyEditForm)) {
+            this.supplyEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.priceEditForm)) {
+            this.priceEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.emailEditForm)) {
+            this.emailEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.saleEditForm)) {
+            this.saleEditForm.$setPristine();
+        }
+
         this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
@@ -127,7 +159,7 @@ class OfferController extends AbstractWorkflow {
     }
 
     save(edit: boolean) {
-        this.offerService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope, this.editForm);
+        this.offerService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope);
     }
 
     clearNewOffer() {
@@ -195,6 +227,10 @@ class OfferController extends AbstractWorkflow {
         reader.onloadend = function () {
             self.window.open(this.result);
         };
+    }
+
+    getAllActiveTemplates() {
+        this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
     }
 }
 

@@ -75,11 +75,11 @@ public class UserStatisticService extends AbstractStatisticService {
 				userMap.get(key).addCountLead();
 			if (process.getOffer() != null)
 				userMap.get(key).addCountOffer();
-			if (process.getSale() != null){
+			if (process.getSale() != null) {
 				userMap.get(key).addCountSale();
 				userMap.get(key).addCountTurnover(process.getSale().getSaleTurnover());
 				userMap.get(key).addCountProfit(process.getSale().getSaleProfit());
-				for(OrderPosition orderPosition: process.getSale().getOrderPositions()){
+				for (OrderPosition orderPosition : process.getSale().getOrderPositions()) {
 					userMap.get(key).addCountProduct(orderPosition.getAmount());
 				}
 			}
@@ -98,7 +98,7 @@ public class UserStatisticService extends AbstractStatisticService {
 				statisticHelper.getUntil());
 
 		UserStatistic userStatistic = new UserStatistic();
-		if(processes.size()>0)
+		if (processes.size() > 0)
 			userStatistic.setUser(processes.get(0).getProcessor());
 		for (Process process : processes) {
 			userStatistic.addCountProcess();
@@ -106,11 +106,11 @@ public class UserStatisticService extends AbstractStatisticService {
 				userStatistic.addCountLead();
 			if (process.getOffer() != null)
 				userStatistic.addCountOffer();
-			if (process.getSale() != null){
+			if (process.getSale() != null) {
 				userStatistic.addCountSale();
 				userStatistic.addCountTurnover(process.getSale().getSaleTurnover());
 				userStatistic.addCountProfit(process.getSale().getSaleProfit());
-				for(OrderPosition orderPosition: process.getSale().getOrderPositions()){
+				for (OrderPosition orderPosition : process.getSale().getOrderPositions()) {
 					userStatistic.addCountProduct(orderPosition.getAmount());
 				}
 			}

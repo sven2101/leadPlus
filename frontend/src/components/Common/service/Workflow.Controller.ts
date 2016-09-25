@@ -28,6 +28,8 @@ class WorkflowController extends AbstractWorkflow {
 
     $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId];
 
+    type: string = "offer";
+
     uibModalInstance;
 
     editWorkflowUnit: Offer = new Offer();
@@ -50,13 +52,19 @@ class WorkflowController extends AbstractWorkflow {
     currentCustomerId = "-1";
     customerSelected: boolean = false;
 
-    editForm: any;
     editProcess: Process;
     edit: boolean;
 
     leadService: LeadService;
     offerService: OfferService;
     saleService: SaleService;
+
+    customerEditForm: any;
+    orderEditForm: any;
+    supplyEditForm: any;
+    priceEditForm: any;
+    emailEditForm: any;
+    saleEditForm: any;
 
     constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService) {
         super(WorkflowService);
@@ -84,6 +92,25 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     loadDataToModal(process: Process) {
+        if (!isNullOrUndefined(this.customerEditForm)) {
+            this.customerEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.orderEditForm)) {
+            this.orderEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.supplyEditForm)) {
+            this.supplyEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.priceEditForm)) {
+            this.priceEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.emailEditForm)) {
+            this.emailEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.saleEditForm)) {
+            this.saleEditForm.$setPristine();
+        }
+
         this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
@@ -95,7 +122,6 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     close() {
-        this.editForm.$setPristine();
         this.uibModalInstance.close();
         this.dashboardService.openOffers = this.dashboardService.orderBy(this.dashboardService.openOffers, "offer.timestamp", false);
         this.dashboardService.sumLeads();
@@ -127,19 +153,13 @@ class WorkflowController extends AbstractWorkflow {
 
     send() {
         this.process.offer = this.editWorkflowUnit;
-        console.log("Process2", this.process);
         this.notificationService.sendOffer(this.process);
         this.close();
     }
 
     save() {
-        console.log("Process1", this.process);
-        console.log("editWorkflowUnit", this.editWorkflowUnit);
         this.process.offer = this.editWorkflowUnit;
-        console.log("Process2", this.process);
-        // this.offerService.save(this.editWorkflowUnit, this.process, this.currentOrderPositions);
         this.workflowService.addLeadToOffer(this.process).then(function (tmpprocess: Process) {
-
         });
         this.close();
     }

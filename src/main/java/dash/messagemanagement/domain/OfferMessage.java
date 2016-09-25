@@ -63,7 +63,7 @@ public class OfferMessage extends AbstractMessage {
 		try {
 			template = cfg.getTemplate("greetTemplate");
 			writer = new StringWriter();
-			Map mapping = new HashMap();
+			Map<String, Object> mapping = new HashMap<String, Object>();
 			mapping.put("titel", String.valueOf(this.offer.getCustomer().getTitle()));
 			mapping.put("firstname", String.valueOf(this.offer.getCustomer().getFirstname()));
 			mapping.put("lastname", String.valueOf(this.offer.getCustomer().getLastname()));

@@ -1,8 +1,8 @@
-<div ng-if="parent.currentWizard==2">
+<div ng-show="parent.currentWizard==2">
     <h1 id="wizard-h-2" tabindex="-1" class="title current">Bestellung</h1>
     <div class="current" id="wizard-p-2" role="tabpanel" aria-labelledby="wizard-h-2" aria-hidden="true" style="display: block;">
         <div class="text-center m-t-md">
-            <div order></div>
+            <div order form="parent.orderEditForm" parent="parent" type="parent.type"></div>
         </div>
     </div>
 </div>

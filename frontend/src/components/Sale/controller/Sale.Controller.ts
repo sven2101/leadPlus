@@ -28,11 +28,15 @@ const SaleControllerId: string = "SaleController";
 
 class SaleController extends AbstractWorkflow {
 
-    $inject = [$compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId];
+    $inject = [$compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId, TemplateServiceId];
+
+    type: string = "sale";
 
     workflowService: WorkflowService;
     saleDataTableService: SaleDataTableService;
     saleService: SaleService;
+    templateService: TemplateService;
+
     scope;
     compile;
     dtOptions;
@@ -43,12 +47,13 @@ class SaleController extends AbstractWorkflow {
     commentModalInput: string;
     loadAllData: boolean = false;
     processes: { [key: number]: Process } = {};
-    editForm: any;
     editProcess: Process;
     editWorkflowUnit: Sale = new Sale();
     edit: boolean;
 
     currentOrderPositions: Array<OrderPosition>;
+    templates: Array<Template> = [];
+
     currentProductId = "-1";
     currentProductAmount = 1;
     currentCustomerId = "-1";
@@ -56,7 +61,14 @@ class SaleController extends AbstractWorkflow {
 
     currentTab: number = 1;
 
-    constructor($compile, $scope, WorkflowService, SaleDataTableService, SaleService) {
+    customerEditForm: any;
+    orderEditForm: any;
+    supplyEditForm: any;
+    priceEditForm: any;
+    emailEditForm: any;
+    saleEditForm: any;
+
+    constructor($compile, $scope, WorkflowService, SaleDataTableService, SaleService, TemplateService) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.saleDataTableService = SaleDataTableService;
@@ -83,6 +95,8 @@ class SaleController extends AbstractWorkflow {
         }
         this.dtOptions = this.saleDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.saleDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
+
+        this.getAllActiveTemplates();
     }
 
     refreshData() {
@@ -103,6 +117,25 @@ class SaleController extends AbstractWorkflow {
     }
 
     loadDataToModal(process: Process) {
+        if (!isNullOrUndefined(this.customerEditForm)) {
+            this.customerEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.orderEditForm)) {
+            this.orderEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.supplyEditForm)) {
+            this.supplyEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.priceEditForm)) {
+            this.priceEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.emailEditForm)) {
+            this.emailEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.saleEditForm)) {
+            this.saleEditForm.$setPristine();
+        }
+
         this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
@@ -120,7 +153,7 @@ class SaleController extends AbstractWorkflow {
     }
 
     save(edit: boolean) {
-        this.saleService.save(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope, this.editForm);
+        this.saleService.save(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope);
     }
 
     clearNewSale() {
@@ -155,6 +188,10 @@ class SaleController extends AbstractWorkflow {
 
     rollBack(process: Process): void {
         this.saleService.rollBack(process, this.dtInstance, this.scope);
+    }
+
+    getAllActiveTemplates() {
+        this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
     }
 }
 angular.module(moduleSale, [ngResourceId]).controller(SaleControllerId, SaleController);

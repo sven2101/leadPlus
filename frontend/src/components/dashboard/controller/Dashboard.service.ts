@@ -110,6 +110,8 @@ class DashboardService {
             template: " <div sendfollowup parent='followUpCtrl' type='offer'></div>",
             controller: FollowUpController,
             controllerAs: "followUpCtrl",
+            backdrop: "static",
+            keyboard: false,
             size: "lg",
             resolve: {
                 process: function () {

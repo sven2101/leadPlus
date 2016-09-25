@@ -30,6 +30,8 @@ class LeadController extends AbstractWorkflow {
 
     $inject = [$compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId];
 
+    type: string = "lead";
+
     uibModalInstance;
 
     workflowService: WorkflowService;
@@ -45,7 +47,6 @@ class LeadController extends AbstractWorkflow {
     commentModalInput: string;
     loadAllData: boolean = false;
     processes: { [key: number]: Process } = {};
-    editForm: any;
     editProcess: Process;
     editWorkflowUnit: Lead = new Lead();
     edit: boolean;
@@ -55,6 +56,13 @@ class LeadController extends AbstractWorkflow {
     currentProductAmount = 1;
     currentCustomerId = "-1";
     customerSelected: boolean = false;
+
+    customerEditForm: any;
+    orderEditForm: any;
+    supplyEditForm: any;
+    priceEditForm: any;
+    emailEditForm: any;
+    saleEditForm: any;
 
     constructor($compile, $scope, WorkflowService, LeadDataTableService, LeadService) {
         super(WorkflowService);
@@ -84,6 +92,7 @@ class LeadController extends AbstractWorkflow {
         }
         this.dtOptions = this.leadDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
+
     }
 
     close() {
@@ -106,6 +115,25 @@ class LeadController extends AbstractWorkflow {
     }
 
     loadDataToModal(process: Process) {
+        if (!isNullOrUndefined(this.customerEditForm)) {
+            this.customerEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.orderEditForm)) {
+            this.orderEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.supplyEditForm)) {
+            this.supplyEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.priceEditForm)) {
+            this.priceEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.emailEditForm)) {
+            this.emailEditForm.$setPristine();
+        }
+        if (!isNullOrUndefined(this.saleEditForm)) {
+            this.saleEditForm.$setPristine();
+        }
+
         this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
@@ -124,15 +152,15 @@ class LeadController extends AbstractWorkflow {
 
     save(edit: boolean) {
         if (edit === true) {
-            this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope, this.editForm);
+            this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope);
         }
         else {
-            this.leadService.saveLead(this.editForm, this.dtInstance, this.editWorkflowUnit, this.currentOrderPositions);
+            this.leadService.saveLead(this.dtInstance, this.editWorkflowUnit, this.currentOrderPositions);
         }
     }
 
     clearNewLead() {
-        this.editForm.$setPristine();
+        // this.editForm.$setPristine();
         this.edit = false;
         this.editWorkflowUnit = new Lead();
         this.editProcess = new Process();

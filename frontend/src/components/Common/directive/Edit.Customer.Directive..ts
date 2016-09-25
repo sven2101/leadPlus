@@ -18,13 +18,17 @@ angular.module(moduleApp)
     .directive("edit", function () {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
         directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
-        directive.scope = false;
         directive.restrict = "A";
+        directive.scope = {
+            form: "=",
+            parent: "=",
+            type: "=",
+        };
         directive.templateUrl = function (elem, attr) {
             return "components/common/view/Workflow.Edit.Customer.html";
         };
         directive.transclude = true;
-        directive.link = function (scope, element, attrs, controller) {
+        directive.link = function (scope, element, attrs) {
             if (scope.type === "lead") {
                 scope.service = scope.parent.leadService;
             }
