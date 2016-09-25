@@ -159,6 +159,7 @@ class DashboardService {
             self.closedSales = self.orderBy(self.closedSales, "sale.timestamp", true);
             self.sumOffers();
             self.sumSales();
+            self.rootScope.$broadcast("onTodosChange");
         });
     }
 

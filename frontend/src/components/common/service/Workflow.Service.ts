@@ -227,18 +227,24 @@ class WorkflowService {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
+                process.offer = resultOffer;
+                process.status = resultProcess.status;
                 if (resultProcess.processor === null) {
                     self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function (resultUser: User) {
                         process.processor = resultUser;
+                        defer.resolve(process);
+                        self.rootScope.$broadcast("onTodosChange");
                     }, function (resultUser: User) {
 
                     });
                 }
+                else {
+                    self.rootScope.$broadcast("onTodosChange");
+                    defer.resolve(process);
+                }
 
-                process.offer = resultOffer;
-                process.status = resultProcess.status;
 
-                defer.resolve(process);
+
             }, function () {
                 defer.reject(false);
             });
@@ -273,12 +279,15 @@ class WorkflowService {
             self.processResource.setStatus({ id: process.id }, Status.SALE).$promise.then(function () {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
                 self.rootScope.offersCount -= 1;
-                self.processResource.setProcessor({ id: process.id }, self.user.id).$promise.then(function () {
-                    process.processor = self.user;
-                });
                 process.sale = sale;
                 process.status = Status.SALE;
-                defer.resolve(true);
+                self.processResource.setProcessor({ id: process.id }, self.user.id).$promise.then(function () {
+                    process.processor = self.user;
+                    self.rootScope.$broadcast("onTodosChange");
+                    defer.resolve(true);
+                });
+
+
             }, function () {
                 defer.reject(false);
             });
