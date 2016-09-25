@@ -66,6 +66,13 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controllerAs: "settingCtrl",
                 authenticated: true
             })
+            .when("/settings/detail/:userId",
+            {
+                templateUrl: "components/Setting/view/UserDetail.html",
+                controller: "UserDetailController",
+                controllerAs: "UserDetailCtrl",
+                authenticated: true
+            })
             .when("/profile",
             {
                 templateUrl: "components/Profile/view/Profile.html",

@@ -61,6 +61,7 @@ const moduleSaleDataTableService: string = moduleSale + ".dataTableService";
 const moduleProcess: string = moduleApp + ".process";
 const moduleProcessResource: string = moduleProcess + ".resource";
 const moduleUser: string = moduleApp + ".user";
+const moduleUserDetail: string = moduleUser + ".detail";
 const moduleUserResource: string = moduleUser + ".resource";
 const moduleComment: string = moduleApp + ".comment";
 const moduleCommentResource: string = moduleComment + ".resource";

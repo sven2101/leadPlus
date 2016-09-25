@@ -121,7 +121,7 @@
                                 <td>{{productStatistic.product.name}}</td>
                                 <td>{{productStatistic.count}}</td>
                                 <td>{{productStatistic.turnover | currency:'\u20AC'}}</td>
-                                <td>{{statisticCtrl.getRatePercentage(productStatistic.discount/productStatistic.count)/100 |
+                                <td>{{statisticCtrl.getRatePercentage(productStatistic.discount,productStatistic.count)/100 |
                                     number:2}} %</td>
                             </tr>
                         </tbody>
