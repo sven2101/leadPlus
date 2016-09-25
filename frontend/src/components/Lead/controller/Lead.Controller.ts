@@ -30,6 +30,8 @@ class LeadController extends AbstractWorkflow {
 
     $inject = [$compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId];
 
+    type: string = "lead";
+
     uibModalInstance;
 
     workflowService: WorkflowService;
@@ -84,6 +86,7 @@ class LeadController extends AbstractWorkflow {
         }
         this.dtOptions = this.leadDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
+
     }
 
     close() {
@@ -132,7 +135,7 @@ class LeadController extends AbstractWorkflow {
     }
 
     clearNewLead() {
-        this.editForm.$setPristine();
+        // this.editForm.$setPristine();
         this.edit = false;
         this.editWorkflowUnit = new Lead();
         this.editProcess = new Process();

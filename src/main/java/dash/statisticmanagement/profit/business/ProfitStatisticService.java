@@ -36,7 +36,7 @@ public class ProfitStatisticService extends AbstractStatisticService {
 				Calendar timeStamp = request.getTimestamp();
 				String key = statisticHelper.getKeyByDateRange(timeStamp, statisticHelper.getDateRange());
 				if (calendarMap.containsKey(key)) {
-					double value = calendarMap.get(key) + sale.getSaleProfit();
+					double value = calendarMap.get(key) + sale.getProfit();
 					calendarMap.put(key, value);
 				}
 			}

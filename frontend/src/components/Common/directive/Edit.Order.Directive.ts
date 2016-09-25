@@ -18,7 +18,11 @@ angular.module(moduleApp)
     .directive("order", function () {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
         directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
-        directive.scope = false;
+        directive.scope = {
+            form: "=",
+            parent: "=",
+            type: "=",
+        };
         directive.restrict = "A";
         directive.templateUrl = function (elem, attr) {
             return "components/common/view/Workflow.Edit.Order.html";

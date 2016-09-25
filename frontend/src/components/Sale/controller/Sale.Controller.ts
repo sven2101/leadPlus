@@ -28,11 +28,15 @@ const SaleControllerId: string = "SaleController";
 
 class SaleController extends AbstractWorkflow {
 
-    $inject = [$compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId];
+    $inject = [$compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId, TemplateServiceId];
+
+    type: string = "sale";
 
     workflowService: WorkflowService;
     saleDataTableService: SaleDataTableService;
     saleService: SaleService;
+    templateService: TemplateService;
+
     scope;
     compile;
     dtOptions;
@@ -49,6 +53,8 @@ class SaleController extends AbstractWorkflow {
     edit: boolean;
 
     currentOrderPositions: Array<OrderPosition>;
+    templates: Array<Template> = [];
+
     currentProductId = "-1";
     currentProductAmount = 1;
     currentCustomerId = "-1";
@@ -56,7 +62,7 @@ class SaleController extends AbstractWorkflow {
 
     currentTab: number = 1;
 
-    constructor($compile, $scope, WorkflowService, SaleDataTableService, SaleService) {
+    constructor($compile, $scope, WorkflowService, SaleDataTableService, SaleService, TemplateService) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.saleDataTableService = SaleDataTableService;
@@ -83,6 +89,8 @@ class SaleController extends AbstractWorkflow {
         }
         this.dtOptions = this.saleDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.saleDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
+
+        this.getAllActiveTemplates();
     }
 
     refreshData() {
@@ -155,6 +163,10 @@ class SaleController extends AbstractWorkflow {
 
     rollBack(process: Process): void {
         this.saleService.rollBack(process, this.dtInstance, this.scope);
+    }
+
+    getAllActiveTemplates() {
+        this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
     }
 }
 angular.module(moduleSale, [ngResourceId]).controller(SaleControllerId, SaleController);

@@ -1,6 +1,6 @@
-<div ng-if="parent.currentWizard==1">
+<div ng-show="parent.currentWizard==1">
     <h1 id="wizard-h-0" tabindex="-1" class="title current">Kunde</h1>
     <div class="current" id="wizard-p-0" role="tabpanel" aria-labelledby="wizard-h-0" aria-hidden="true" style="display: block;">
-        <div edit></div>
+        <div edit form="parent.customerEditForm" parent="parent" type="parent.type"></div>
     </div>
 </div>

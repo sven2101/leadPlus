@@ -28,11 +28,14 @@ const OfferControllerId: string = "OfferController";
 
 class OfferController extends AbstractWorkflow {
 
-    $inject = [$compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId];
+    $inject = [$compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, TemplateServiceId];
+
+    type: string = "offer";
 
     workflowService: WorkflowService;
     offerDataTableService: OfferDataTableService;
     offerService: OfferService;
+    templateService: TemplateService;
 
     scope;
     compile;
@@ -53,6 +56,8 @@ class OfferController extends AbstractWorkflow {
     editEmail: boolean = true;
 
     currentOrderPositions: Array<OrderPosition>;
+    templates: Array<Template> = [];
+
     currentProductId = "-1";
     currentProductAmount = 1;
     currentCustomerId = "-1";
@@ -60,7 +65,7 @@ class OfferController extends AbstractWorkflow {
 
     otherCurrentTab: number = 1;
 
-    constructor($compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService) {
+    constructor($compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.offerDataTableService = OfferDataTableService;
@@ -89,6 +94,8 @@ class OfferController extends AbstractWorkflow {
         }
         this.dtOptions = this.offerDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.offerDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
+        this.getAllActiveTemplates();
+
     }
 
     refreshData() {
@@ -195,6 +202,10 @@ class OfferController extends AbstractWorkflow {
         reader.onloadend = function () {
             self.window.open(this.result);
         };
+    }
+
+    getAllActiveTemplates() {
+        this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
     }
 }
 

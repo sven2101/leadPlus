@@ -1,0 +1,54 @@
+<form name="form">
+    <div class="row">
+        <div class="col-sm-6 text-left">
+            <!-- Return -->
+            <div ng-if="type=='sale' " class="form-group" ng-class="{ 'has-error' : parent.priceEditForm.offerPrice.$invalid
+                                && !parent.priceEditForm.offerPrice.$pristine } ">
+                <label>{{ 'COMMON_PRODUCT_OFFER_PRICE'| translate }}<span style="color:red ">*</span></label>
+                <div class="input-group ">
+                    <span class="input-group-addon ">{{ 'COMMON_CURRENCY'| translate }}</span>
+                    <input type="number " name="offerPrice " class="form-control currency" ng-model="parent.editWorkflowUnit.offerPrice
+                                " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " data-number-to-fixed="2 "
+                        data-number-stepfactor="100 " id="c2 " required>
+                </div>
+                <p ng-show="parent.priceEditForm.offerPrice.$invalid && !parent.priceEditForm.offerPrice.$pristine " class="help-block ">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
+            </div>
+            <!-- Cost -->
+            <div ng-if="type=='sale' " class="form-group" ng-class="{ 'has-error' : parent.priceEditForm.offerPrice.$invalid
+                                && !parent.priceEditForm.offerPrice.$pristine } ">
+                <label>{{ 'COMMON_PRODUCT_OFFER_PRICE'| translate }}<span style="color:red ">*</span></label>
+                <div class="input-group ">
+                    <span class="input-group-addon ">{{ 'COMMON_CURRENCY'| translate }}</span>
+                    <input type="number " name="offerPrice " class="form-control currency" ng-model="parent.editWorkflowUnit.offerPrice
+                                " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " data-number-to-fixed="2 "
+                        data-number-stepfactor="100 " id="c2 " required>
+                </div>
+                <p ng-show="parent.priceEditForm.offerPrice.$invalid && !parent.priceEditForm.offerPrice.$pristine " class="help-block ">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
+            </div>
+            <!-- Profit -->
+            <div ng-if="type=='sale' " class="form-group" ng-class="{ 'has-error' : parent.priceEditForm.offerPrice.$invalid
+                                && !parent.priceEditForm.offerPrice.$pristine } ">
+                <label>{{ 'COMMON_PRODUCT_OFFER_PRICE'| translate }}<span style="color:red ">*</span></label>
+                <div class="input-group ">
+                    <span class="input-group-addon ">{{ 'COMMON_CURRENCY'| translate }}</span>
+                    <input type="number " name="offerPrice " class="form-control currency" ng-model="parent.editWorkflowUnit.offerPrice
+                                " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " data-number-to-fixed="2 "
+                        data-number-stepfactor="100 " id="c2 " required>
+                </div>
+                <p ng-show="parent.priceEditForm.offerPrice.$invalid && !parent.priceEditForm.offerPrice.$pristine " class="help-block ">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $('#editOfferDatepicker .input-group.date').datepicker({
+            todayBtn: "linked ",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true
+        });
+    });
+</script>

@@ -4,11 +4,11 @@ $(".note-toolbar").css("margin-left","4");
 $(".summernote").siblings(".note-editor").find(".note-editable").attr("contenteditable","false");
 </script>
 
-<div ng-if="parent.currentWizard==5">
+<div ng-show="parent.currentWizard==5">
     <h1 id="wizard-h-4" tabindex="-1" class="title current">Email</h1>
     <div class="current" id="wizard-p-4" role="tabpanel" aria-labelledby="wizard-h-4" aria-hidden="false" style="display: block;">
         <div class="m-t-md">
-            <div email></div>
+            <div email form="parent.emailEditForm" parent="parent" type="parent.type"></div>
         </div>
     </div>
 </div>

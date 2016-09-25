@@ -28,6 +28,8 @@ class WorkflowController extends AbstractWorkflow {
 
     $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId];
 
+    type: string = "offer";
+
     uibModalInstance;
 
     editWorkflowUnit: Offer = new Offer();
@@ -50,7 +52,6 @@ class WorkflowController extends AbstractWorkflow {
     currentCustomerId = "-1";
     customerSelected: boolean = false;
 
-    editForm: any;
     editProcess: Process;
     edit: boolean;
 
@@ -95,7 +96,6 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     close() {
-        this.editForm.$setPristine();
         this.uibModalInstance.close();
         this.dashboardService.openOffers = this.dashboardService.orderBy(this.dashboardService.openOffers, "offer.timestamp", false);
         this.dashboardService.sumLeads();
@@ -127,19 +127,13 @@ class WorkflowController extends AbstractWorkflow {
 
     send() {
         this.process.offer = this.editWorkflowUnit;
-        console.log("Process2", this.process);
         this.notificationService.sendOffer(this.process);
         this.close();
     }
 
     save() {
-        console.log("Process1", this.process);
-        console.log("editWorkflowUnit", this.editWorkflowUnit);
         this.process.offer = this.editWorkflowUnit;
-        console.log("Process2", this.process);
-        // this.offerService.save(this.editWorkflowUnit, this.process, this.currentOrderPositions);
         this.workflowService.addLeadToOffer(this.process).then(function (tmpprocess: Process) {
-
         });
         this.close();
     }
