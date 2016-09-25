@@ -194,7 +194,8 @@ class WorkflowService {
             timestamp: newTimestamp(),
             vendor: process.lead.vendor,
             deliveryCosts: process.lead.deliveryCosts,
-            notification: null
+            notification: null,
+            message: process.lead.message
         };
         for (let i = 0; i < offer.orderPositions.length; i++) {
             offer.orderPositions[i].id = 0;
@@ -254,10 +255,11 @@ class WorkflowService {
             transport: process.offer.deliveryAddress,
             customer: process.offer.customer,
             saleProfit: 0,
-            saleReturn: process.offer.offerPrice,
+            saleTurnover: process.offer.offerPrice,
             timestamp: newTimestamp(),
             vendor: process.offer.vendor,
-            deliveryCosts: process.offer.deliveryCosts
+            deliveryCosts: process.offer.deliveryCosts,
+            message: process.offer.message
         };
         for (let i = 0; i < sale.orderPositions.length; i++) {
             sale.orderPositions[i].id = 0;
