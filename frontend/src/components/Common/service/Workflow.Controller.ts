@@ -99,7 +99,7 @@ class WorkflowController extends AbstractWorkflow {
         this.priceEditForm.$setPristine();
         this.emailEditForm.$setPristine();
         this.saleEditForm.$setPristine();
-        
+
         this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
