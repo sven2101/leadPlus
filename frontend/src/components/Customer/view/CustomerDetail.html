@@ -57,26 +57,26 @@
                                 <a ng-if="workflow.orderPositions.length>0" class="btn btn-sm btn-primary" ng-click="workflow.showChildRow=!workflow.showChildRow">{{ 'PRODUCT_MENU' | translate }}</a>
                                 <a ng-if="workflow.orderPositions.length==0" ng-disabled="workflow.orderPositions.length==0" class="btn btn-sm btn-primary disabled">{{ 'PRODUCT_MENU' | translate }}</a>
                                 <div ng-show="workflow.showChildRow" class="ibox">
-
-                                    <div class="ibox-title">
-                                        <h3>{{ 'PRODUCT_MENU' | translate }}</h3>
-                                    </div>
                                     <div class="ibox-content">
                                         <table class="table table-bordered text-left">
                                             <thead>
                                                 <tr>
                                                     <th>{{ 'PRODUCT_PRODUCTNAME' | translate }}</th>
-                                                    <th>{{ 'PRODUCT_PRICE' | translate }}</th>
+                                                    <th>{{ 'PRODUCT_DISCOUNT' | translate }}</th>
+                                                    <th>{{ 'COMMON_PRODUCT_SINGLE_PRICE' | translate }}</th>
                                                     <th>{{ 'COMMON_PRODUCT_AMOUNT' | translate }}</th>
                                                     <th>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr ng-repeat="orderPosition in workflow.orderPositions">
-                                                    <td>{{orderPosition.product.name}}</td>
-                                                    <td>{{orderPosition.product.priceNetto| currency:'\u20AC'}}</td>
+                                                    <td>{{orderPosition.product.name}} ({{orderPosition.product.priceNetto| currency:'\u20AC'}})</td>
+                                                    <td>{{orderPosition.product.priceNetto-parent.workflowService.calculatePrice(orderPosition.product.priceNetto,orderPosition.discount)|
+                                                        currency:'\u20AC'}} ({{orderPosition.discount}}%)
+                                                    </td>
+                                                    <td>{{orderPosition.price| currency:'\u20AC'}}</td>
                                                     <td>{{orderPosition.amount}}</td>
-                                                    <td>{{orderPosition.product.priceNetto*orderPosition.amount| currency:'\u20AC'}}</td>
+                                                    <td>{{orderPosition.price*orderPosition.amount| currency:'\u20AC'}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
