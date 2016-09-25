@@ -64,6 +64,13 @@ class OfferController extends AbstractWorkflow {
 
     otherCurrentTab: number = 1;
 
+    customerEditForm: any;
+    orderEditForm: any;
+    supplyEditForm: any;
+    priceEditForm: any;
+    emailEditForm: any;
+    saleEditForm: any;
+
     constructor($compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
@@ -116,6 +123,14 @@ class OfferController extends AbstractWorkflow {
     }
 
     loadDataToModal(process: Process) {
+        this.customerEditForm.$setPristine();
+        this.customerEditForm.$setPristine();
+        this.orderEditForm.$setPristine();
+        this.supplyEditForm.$setPristine();
+        this.priceEditForm.$setPristine();
+        this.emailEditForm.$setPristine();
+        this.saleEditForm.$setPristine();
+
         this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
