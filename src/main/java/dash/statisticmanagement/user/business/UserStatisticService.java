@@ -67,6 +67,7 @@ public class UserStatisticService extends AbstractStatisticService {
 			key = process.getProcessor().getId();
 			if (!userMap.containsKey(key)) {
 				UserStatistic userStatistic = new UserStatistic();
+				userStatistic.setUser(process.getProcessor());
 				userMap.put(key, userStatistic);
 			}
 			userMap.get(key).addCountProcess();
@@ -97,6 +98,8 @@ public class UserStatisticService extends AbstractStatisticService {
 				statisticHelper.getUntil());
 
 		UserStatistic userStatistic = new UserStatistic();
+		if(processes.size()>0)
+			userStatistic.setUser(processes.get(0).getProcessor());
 		for (Process process : processes) {
 			userStatistic.addCountProcess();
 			if (process.getLead() != null)

@@ -13,7 +13,7 @@ angular.module(moduleApp)
                     // after this error function has been called
                     if (w <= 20) { w = 100; }
                     if (h <= 20) { h = 100; }
-                    let url = "http://google.com/favicon.ico";
+                    let url = "assets/img/guest.png";
                     element.prop("src", url);
                     element.css("border", "double 3px #cccccc");
                 });

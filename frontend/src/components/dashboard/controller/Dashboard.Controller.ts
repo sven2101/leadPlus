@@ -147,6 +147,20 @@ class DashboardController {
         this.dashboardService.openFollowUpModal(process);
     }
 
+    getOrderPositionList(workflow: any): string {
+        if (isNullOrUndefined(workflow)) {
+            return;
+        }
+        let text = "";
+        for (let i = 0; i < workflow.orderPositions.length; i++) {
+            text += workflow.orderPositions[i].amount + " " + workflow.orderPositions[i].product.name;
+            if (i + 1 < workflow.orderPositions.length) {
+                text += ", ";
+            }
+        }
+        return text;
+    }
+
 }
 
 angular.module(moduleDashboard, [ngResourceId, "summernote"]).controller(DashboardControllerId, DashboardController);

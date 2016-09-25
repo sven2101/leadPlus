@@ -1,5 +1,6 @@
 /// <reference path="../../Statistic/controller/Statistic.Service.ts" />
 /// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../app/App.Common.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -50,6 +51,17 @@ class StatisticController {
         return this.statisticService.getProductStatistic();
     }
 
+    getUserStatistic(): Array<any> {
+        return this.statisticService.getUserStatistic();
+    }
+
+    getUserString(user: User): string {
+        return getNameOfUser(user);
+    }
+
+    getRatePercentage(firstAmount: number, secondAmount: number): number {
+        return this.statisticService.getRatePercentage(firstAmount, secondAmount);
+    }
     getProfitTotal(): number {
         return this.statisticService.getProfitTotal();
     }

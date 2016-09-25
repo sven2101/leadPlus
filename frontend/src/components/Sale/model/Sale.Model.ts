@@ -21,7 +21,9 @@ class Sale extends AbstractModel implements IWorkflow {
     deliveryAddress: any;
     deliveryDate: any;
     transport: any;
-    saleReturn: number;
+    saleTurnover: number;
+    saleProfit: number;
+    saleCost: number;
     deliveryCosts: number;
     profit: number;
     cost: number;
@@ -29,7 +31,8 @@ class Sale extends AbstractModel implements IWorkflow {
     constructor() {
         super();
         this.deliveryCosts = 0;
-        this.saleReturn = 0;
-        this.profit = 0;
+        this.saleCost = 0;
+        this.saleTurnover = 0;
+        this.saleProfit = 0;
     }
 }

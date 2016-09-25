@@ -13,8 +13,8 @@ import dash.common.AbstractWorkflow;
 public class Sale extends AbstractWorkflow {
 
 	private double saleTurnover;
-	private double profit;
-	private double cost;
+	private double saleProfit;
+	private double saleCost;
 
 	public Sale() {
 
@@ -28,20 +28,20 @@ public class Sale extends AbstractWorkflow {
 		this.saleTurnover = saleTurnover;
 	}
 
-	public double getProfit() {
-		return profit;
+	public double getSaleProfit() {
+		return saleProfit;
 	}
 
-	public void setProfit(double profit) {
-		this.profit = profit;
+	public void setSaleProfit(double saleProfit) {
+		this.saleProfit = saleProfit;
 	}
 
-	public double getCost() {
-		return cost;
+	public double getSaleCost() {
+		return saleCost;
 	}
 
-	public void setCost(double cost) {
-		this.cost = cost;
+	public void setSaleCost(double saleCost) {
+		this.saleCost = saleCost;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class Sale extends AbstractWorkflow {
 		final int prime = 31;
 		int result = super.hashCode();
 		long temp;
-		temp = Double.doubleToLongBits(profit);
+		temp = Double.doubleToLongBits(saleProfit);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(saleTurnover);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -65,7 +65,7 @@ public class Sale extends AbstractWorkflow {
 		if (getClass() != obj.getClass())
 			return false;
 		Sale other = (Sale) obj;
-		if (Double.doubleToLongBits(profit) != Double.doubleToLongBits(other.profit))
+		if (Double.doubleToLongBits(saleProfit) != Double.doubleToLongBits(other.saleProfit))
 			return false;
 		if (Double.doubleToLongBits(saleTurnover) != Double.doubleToLongBits(other.saleTurnover))
 			return false;
@@ -74,7 +74,7 @@ public class Sale extends AbstractWorkflow {
 
 	@Override
 	public String toString() {
-		return "Sale [saleTurnover=" + saleTurnover + ", saleProfit=" + profit + "]";
+		return "Sale [saleTurnover=" + saleTurnover + ", saleProfit=" + saleProfit + "]";
 	}
 
 }

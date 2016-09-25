@@ -71,8 +71,9 @@
                                     </div>
                                     <div style="white-space: nowrap;max-width:55%;overflow:hidden;text-overflow: ellipsis;">
                                         <i style="margin-top:12px;" class="fa fa-clock-o"></i> {{process.offer.timestamp}}
+                                        <i ng-if="process.status== 'FOLLOWUP'" title="{{'OFFER_FOLLOW_UP'| translate }}" class="fa fa-rss" aria-hidden="true" ng-click="dashboardCtrl.openFollowUpModal(process)"></i>
                                     </div>
-                                    <i ng-if="process.status== 'FOLLOWUP'" class="fa fa-envelope" aria-hidden="true" ng-click="dashboardCtrl.openFollowUpModal(process)"></i>
+                                    
                                 </div>
                             </li>
                         </ul>

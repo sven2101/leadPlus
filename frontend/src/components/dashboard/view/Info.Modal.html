@@ -4,7 +4,7 @@
     }
 </style>
 <div class="modal inmodal" id="infoModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-lg modal-dialog">
         <div class="modal-content animated fadeIn">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span
@@ -13,113 +13,163 @@
                 <h2>{{dashboardCtrl.workflowModalData.container.name}}</h2>
             </div>
             <div class="modal-body">
-                <table class="table table-bordered text-left">
-                    <tr>
-                        <td>{{ 'COMMON_NAME' | translate }}</td>
-                        <td>{{ dashboardCtrl.workflowModalData.customer.title | translate }}
-                            {{dashboardCtrl.workflowModalData.customer.firstname}}
-                            {{dashboardCtrl.workflowModalData.customer.lastname}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'COMMON_EMAIL' | translate }}</td>
-                        <td>{{dashboardCtrl.workflowModalData.customer.email}}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'COMMON_PHONE' | translate }}</td>
-                        <td>{{dashboardCtrl.workflowModalData.customer.phone}}</td>
-                    </tr>
-                    <tr>
-                        <td>{{ 'COMMON_PRODUCT_DESTINATION' | translate }}</td>
-                        <td>{{dashboardCtrl.workflowModalData.deliveryAddress}}</td>
-                    </tr>
-                    <tr ng-if="dashboardCtrl.infoType == 'offer'">
-                        <td>{{ 'COMMON_DELIVERY_TIME' | translate }}</td>
-                        <td>{{dashboardCtrl.workflowModalData.deliveryDate |
-                            date:'dd-MM-yyyy'}}
-                        </td>
-                    </tr>
-                    <tr ng-if="dashboardCtrl.infoType == 'offer'">
-                        <td>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</td>
-                        <td>{{dashboardCtrl.workflowModalData.offerPrice |
-                            currency:'\u20AC'}}
-                        </td>
-                    </tr>
-                    <tr ng-if="dashboardCtrl.infoType == 'sale'">
-                        <td>{{ 'COMMON_SALE_RETURN' | translate }}</td>
-                        <td>{{dashboardCtrl.workflowModalData.saleTurnover|
-                            currency:'\u20AC'}}
-                        </td>
-                    </tr>
-                    <tr ng-if="dashboardCtrl.infoType == 'sale'">
-                        <td>{{ 'COMMON_SALE_PROFIT' | translate }}</td>
-                        <td>{{dashboardCtrl.workflowModalData.saleProfit|
-                            currency:'\u20AC'}}
-                        </td>
-                    </tr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-bordered text-left">
+                            <tr>
+                                <td>{{ 'COMMON_NAME' | translate }}</td>
+                                <td>{{ dashboardCtrl.workflowModalData.customer.title | translate }} {{dashboardCtrl.workflowModalData.customer.firstname}}
+                                    {{dashboardCtrl.workflowModalData.customer.lastname}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ 'COMMON_EMAIL' | translate }}</td>
+                                <td>{{dashboardCtrl.workflowModalData.customer.email}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ 'COMMON_PHONE' | translate }}</td>
+                                <td>{{dashboardCtrl.workflowModalData.customer.phone}}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ 'COMMON_PRODUCT_DESTINATION' | translate }}</td>
+                                <td>{{dashboardCtrl.workflowModalData.deliveryAddress}}</td>
+                            </tr>
+                            <tr ng-if="dashboardCtrl.workflowModalType == 'offer'">
+                                <td>{{ 'COMMON_DELIVERY_TIME' | translate }}</td>
+                                <td>{{dashboardCtrl.workflowModalData.deliveryDate | date:'dd-MM-yyyy'}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-bordered text-left">
+                            <tr>
+                                <td>{{ 'COMMON_PROCESSOR' | translate }}</td>
+                                <td ng-if="(dashboardCtrl.workflowModalProcess.processor.firstname==null|| dashboardCtrl.workflowModalProcess.processor.firstname=='')&&( dashboardCtrl.workflowModalProcess.processor.lastname==null|| dashboardCtrl.workflowModalProcess.processor.lastname=='')">
+                                    {{ dashboardCtrl.workflowModalProcess.processor.username}}
+                                </td>
+                                <td ng-if="!(( dashboardCtrl.workflowModalProcess.processor.firstname==null|| dashboardCtrl.workflowModalProcess.processor.firstname=='')&&( dashboardCtrl.workflowModalProcess.processor.lastname==null|| dashboardCtrl.workflowModalProcess.processor.lastname==''))">
+                                    {{ dashboardCtrl.workflowModalProcess.processor.firstname}} {{ dashboardCtrl.workflowModalProcess.processor.lastname}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ 'PRODUCT_MENU' | translate }}</td>
+                                <td>
+                                    {{ dashboardCtrl.getOrderPositionList(dashboardCtrl.workflowModalData)}}
+                                </td>
+                            </tr>
+                            <tr ng-if="dashboardCtrl.workflowModalType == 'lead'">
+                                <td>
+                                    {{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}
+                                </td>
+                                <td>
+                                    {{dashboardCtrl.workflowService.sumOrderPositions(dashboardCtrl.workflowModalData.orderPositions)| currency:'\u20AC'}}
+                                </td>
+                            </tr>
+                            <tr ng-if="dashboardCtrl.workflowModalType == 'offer'">
+                                <td>
+                                    {{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}
+                                </td>
+                                <td>
+                                    {{dashboardCtrl.workflowModalData.offerPrice| currency:'\u20AC'}}
+                                </td>
+                            </tr>
+                            <tr ng-if="dashboardCtrl.workflowModalType == 'sale'">
+                                <td>
+                                    {{ 'COMMON_PRODUCT_SALE_TURNOVER' | translate }}
+                                </td>
+                                <td>
+                                    {{dashboardCtrl.workflowModalData.saleTurnover| currency:'\u20AC'}}
+                                </td>
+                            </tr>
+                            <tr ng-if="dashboardCtrl.workflowModalType == 'sale'">
+                                <td>
+                                    {{ 'COMMON_PRODUCT_SALE_PROFIT' | translate }}
+                                </td>
+                                <td>
+                                    {{dashboardCtrl.workflowModalData.saleProfit| currency:'\u20AC'}}
+                                </td>
+                            </tr>
 
-                </table>
-                <div class="chat-view">
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <label>{{ 'COMMON_NOTE' | translate }}</label>
+                    <div style="margin-left:20px" style="word-wrap:break-word;">{{dashboardCtrl.workflowModalData.message}}</div>
+                </div>
+                <br>
+                <div class="row">
+
                     <div class="text-left">
-                        <span class="pull-left" style="font-size: 1.5em;">{{ 'COMMON_COMMENTS' | translate }}</span>
+                        <span style="cursor:pointer" ng-click="showComments=showComments!==true?true:false" class="pull-left" style="font-size: 1.5em;">
+                        <h4>{{ 'COMMON_COMMENTS' | translate }}
+                            <i ng-if="showComments===true" class="fa fa-caret-up" aria-hidden="true"></i>
+                            <i ng-if="showComments!==true" class="fa fa-caret-down" aria-hidden="true"></i>
+                        </h4>      
+                           </span>
                         <small ng-if="dashboardCtrl.workflowModalProcess.comments.length>0" class="pull-right text-muted">
                             {{ 'COMMON_COMMENTS_LAST' | translate }}:
                             {{dashboardCtrl.workflowModalProcess.comments[dashboardCtrl.workflowModalProcess.comments.length-1].timestamp|
                             date:'dd.MM.yyyy HH:mm'}}
                         </small>
                     </div>
-                    <div class=" text-left">
-                        <div ng-if="dashboardCtrl.workflowModalProcess.comments.length>0" class="row">
-                            <div class="col-md-12 ">
-                                <div class="chat-discussion" ng-model="dashboardCtrl.workflowModalProcess.comments">
-                                    <div ng-repeat="comment in dashboardCtrl.workflowModalProcess.comments | orderBy: '-timestamp'">
-                                        <div ng-if="$index%2==0" class="chat-message left">
-                                              <img class="message-avatar" ng-src="users/{{comment.creator.id}}/profile/picture" alt="">
-                                            <div class="message">
-                                                <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-                                    <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
-                                                <span class="message-date"> {{comment.timestamp|  date:'dd.MM.yyyy HH:mm'}} </span>
-                                            <span class="message-content">
+
+
+                    <div ng-if="showComments===true">
+                        <div class="chat-view">
+
+                            <div class=" text-left">
+                                <div ng-if="dashboardCtrl.workflowModalProcess.comments.length>0" class="row">
+                                    <div class="col-md-12 ">
+                                        <div style="max-height:250px" class="chat-discussion" ng-model="dashboardCtrl.workflowModalProcess.comments">
+                                            <div ng-repeat="comment in dashboardCtrl.workflowModalProcess.comments | orderBy: '-timestamp'">
+                                                <div ng-if="$index%2==0" class="chat-message left">
+                                                    <img class="message-avatar" ng-src="users/{{comment.creator.id}}/profile/picture" alt="">
+                                                    <div class="message">
+                                                        <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
+                                                        <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+                                                        <span class="message-date"> {{comment.timestamp|  date:'dd.MM.yyyy HH:mm'}} </span>
+                                                        <span class="message-content">
                                                 {{comment.commentText}}
                                             </span>
-                                            </div>
-                                        </div>
-                                        <div ng-if="$index%2!=0" class="chat-message right">
-                                               <img class="message-avatar" ng-src="users/{{comment.creator.id}}/profile/picture" alt="">
-                                            <div class="message">
-                                                <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-                                    <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
-                                                <span class="message-date"> {{comment.timestamp |  date:'dd.MM.yyyy HH:mm'}} </span>
-                                            <span class="message-content">
+                                                    </div>
+                                                </div>
+                                                <div ng-if="$index%2!=0" class="chat-message right">
+                                                    <img class="message-avatar" ng-src="users/{{comment.creator.id}}/profile/picture" alt="">
+                                                    <div class="message">
+                                                        <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
+                                                        <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+                                                        <span class="message-date"> {{comment.timestamp |  date:'dd.MM.yyyy HH:mm'}} </span>
+                                                        <span class="message-content">
                                                 {{comment.commentText}}
                                             </span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="chat-message-form" style="width:100%">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="chat-message-form" style="width:100%">
 
-                                    <div class="form-group" style="width:100%">
-                                <textarea class="form-control message-input"
-                                          ng-model="dashboardCtrl.commentModalInput"
-                                          style="resize: none; width:100%;box-sizing: border-box;"
-                                          name="message"
-                                          placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}"/>
-                                    </div>
-                                    <button style="width:35%; margin-top: 10px;"
-                                            class="btn btn-success"
-                                            ng-click="dashboardCtrl.addComment(dashboardCtrl.workflowModalProcess)">
+                                            <div class="form-group" style="width:100%">
+                                                <textarea class="form-control message-input" ng-model="dashboardCtrl.commentModalInput" style="resize: none; width:100%;box-sizing: border-box;"
+                                                    name="message" placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}" />
+                                            </div>
+                                            <button style="width:35%; margin-top: 10px;" class="btn btn-success" ng-click="dashboardCtrl.addComment(dashboardCtrl.workflowModalProcess)">
                                         <i class="fa fa-comment-o"></i>&nbsp;{{ 'COMMON_COMMENTS_ADD' | translate }}
                                     </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}

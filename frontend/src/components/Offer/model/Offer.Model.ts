@@ -26,6 +26,7 @@ class Offer extends AbstractModel implements IWorkflow {
     offerPrice: number;
     deliveryCosts: number;
     notification: Notification;
+    message: string;
 
     constructor() {
         super();
