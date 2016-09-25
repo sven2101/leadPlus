@@ -14,6 +14,7 @@
 
 package dash.processmanagement.business;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -63,5 +64,9 @@ public interface IProcessService {
 	public void removeProcessorByProcessId(final long processId) throws UpdateFailedException;
 
 	public List<Process> getProcessesByProcessor(final long processorId);
+
+	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId, Calendar from, Calendar until);
+
+	public List<Process> getProcessesBetweenTimestamp(Calendar from, Calendar until);
 
 }

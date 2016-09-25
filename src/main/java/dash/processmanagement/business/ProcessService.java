@@ -23,11 +23,12 @@ import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_NOT_FOUND;
 import static dash.processmanagement.business.ProcessSpecs.isClosed;
 import static dash.processmanagement.business.ProcessSpecs.isProcessor;
-import static dash.processmanagement.business.ProcessSpecs.isSale;
+import static dash.processmanagement.business.ProcessSpecs.*;
 import static org.springframework.data.jpa.domain.Specifications.not;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -306,5 +307,16 @@ public class ProcessService implements IProcessService {
 	@Override
 	public List<Process> getProcessesByProcessor(long processorId) {
 		return processRepository.findAll(where(isProcessor(processorId)).and(not(isClosed())).and(not(isSale())));
+	}
+	
+	@Override
+	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId,Calendar from, Calendar until) {
+		return processRepository.findAll(where(isProcessor(processorId)).and(isBetweenTimestamp(from, until)));
+	}
+	@Override
+	public List<Process> getProcessesBetweenTimestamp(Calendar from, Calendar until) {
+		System.out.println(from);
+		System.out.println(until);
+		return processRepository.findAll(where(isBetweenTimestamp(from, until)));
 	}
 }
