@@ -313,6 +313,14 @@ function config($translateProvider) {
             STATISTIC_ENTIRE_STATISTICS_NOT_AVAILABLE_MESSAGE: "Die Gesamtstatistiken sind nur für Woche, Monat, Jahr und Alle verfügbar",
             STATISTIC_TOP_SELL: "Top Verkäufe",
 
+            // Define detail statistic
+            DETAIL_STATISTIC_PRODUCTSTATISTIC: "Produktstatistik",
+            DETAIL_STATISTIC_REALISED_TURNOVER: "Erzielter Umsatz",
+            DETAIL_STATISTIC_GUARANTEED_DISCOUNT: "Gewährter Rabatt",
+            DETAIL_STATISTIC_SALES_PRICE: "Verkaufspreis",
+            DETAIL_STATISTIC_ADVERTISED_PRICE: "Angezeigter Preis",
+            DETAIL_STATISTIC_TOOLTIP: "<span>Das Produkt {{productname}} wurde <b>{{count}}x</b> in {{workflow}} verwendet.</span>",
+
             // Define all week and month names
             SUNDAY: "Sonntag",
             MONDAY: "Montag",
@@ -667,6 +675,15 @@ function config($translateProvider) {
             STATISTIC_ENTIRE_STATISTICS_NOT_AVAILABLE: "Not available",
             STATISTIC_ENTIRE_STATISTICS_NOT_AVAILABLE_MESSAGE: "The entire statistics only available for week, month, year and all",
             STATISTIC_TOP_SELL: "Top sells",
+
+            // Define detail statistic
+            DETAIL_STATISTIC_PRODUCTSTATISTIC: "Productstatistic",
+            DETAIL_STATISTIC_REALISED_TURNOVER: "Realised turnover",
+            DETAIL_STATISTIC_GUARANTEED_DISCOUNT: "Guaranteed discount",
+            DETAIL_STATISTIC_SALES_PRICE: "Sales price",
+            DETAIL_STATISTIC_ADVERTISED_PRICE: "Advertised Price",
+            DETAIL_STATISTIC_TOOLTIP: "<span>The product {{productname}} is used <b>{{count}}x</b> in {{workflow}}.</span>",
+
             // Define all week and month names
             SUNDAY: "Sunday",
             MONDAY: "Monday",

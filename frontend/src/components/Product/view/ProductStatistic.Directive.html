@@ -2,7 +2,8 @@
         <div class="col-lg-6">
                 <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                                <h1>Produktstatistik</h1>
+                                <span class="label label-success pull-right">{{ daterange | translate }}</span>
+                                <h1>{{ 'DETAIL_STATISTIC_PRODUCTSTATISTIC' | translate }} {{productobj.name}}</h1>
                         </div>
                         <div class="ibox-content" id="ibox-content">
                                 <highchart id="SingleProductColumnChart" config="chart.chartConfig"></highchart>
@@ -12,8 +13,8 @@
         <div class="col-lg-6">
                 <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                                <span class="label label-success pull-right">Heute</span>
-                                <h5>Erzielter Umsatz</h5>
+                                <span class="label label-success pull-right">{{ daterange | translate }}</span>
+                                <h5>{{ 'DETAIL_STATISTIC_REALISED_TURNOVER' | translate }}</h5>
                         </div>
                         <div class="ibox-content">
                                 <h1 class="no-margins">{{productSales.turnover| currency:'\u20AC'}}</h1>
@@ -23,34 +24,36 @@
         <div class="col-lg-6">
                 <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                                <span class="label label-success pull-right">Heute</span>
-                                <h5>Durschnittlich Gewährter Rabatt</h5>
+                                <span class="label label-success pull-right">{{ daterange | translate }}</span>
+                                <h5>&#216; {{ 'DETAIL_STATISTIC_GUARANTEED_DISCOUNT' | translate }}</h5>
                         </div>
                         <div class="ibox-content">
-                                <h1 class="no-margins">{{productSales.discount/productSales.count}}% ({{productSales.product.priceNetto-(productSales.turnover/productSales.count)
+                                <h1 class="no-margins" ng-if="productSales.count>0">{{productSales.discount/productSales.count}}% ({{productSales.product.priceNetto-(productSales.turnover/productSales.count)
                                         | currency:'\u20AC'}})</h1>
+                                <h1 class="no-margins" ng-if="productSales.count<=0">0% ({{0 | currency:'\u20AC'}})</h1>
                         </div>
                 </div>
         </div>
         <div class="col-lg-6">
                 <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                                <span class="label label-success pull-right">Heute</span>
-                                <h5>Durschnittlich Verkaufspreis</h5>
+                                <span class="label label-success pull-right">{{ daterange | translate }}</span>
+                                <h5>&#216; {{ 'DETAIL_STATISTIC_SALES_PRICE' | translate }}</h5>
                         </div>
                         <div class="ibox-content">
-                                <h1 class="no-margins">{{productSales.product.priceNetto*(1-(productSales.discount/productSales.count/100)) | currency:'\u20AC'}}</h1>
+                                <h1 class="no-margins" ng-if="productSales.count>0">{{productSales.product.priceNetto*(1-(productSales.discount/productSales.count/100)) | currency:'\u20AC'}}</h1>
+                                <h1 class="no-margins" ng-if="productSales.count<=0">{{0 | currency:'\u20AC'}}</h1>
                         </div>
                 </div>
         </div>
         <div class="col-lg-6">
                 <div class="ibox float-e-margins">
                         <div class="ibox-title">
-                                <span class="label label-success pull-right">Heute</span>
-                                <h5>Angezeigter Preis</h5>
+                                <span class="label label-success pull-right">{{ daterange | translate }}</span>
+                                <h5>{{ 'DETAIL_STATISTIC_ADVERTISED_PRICE' | translate }}</h5>
                         </div>
                         <div class="ibox-content">
-                                <h1 class="no-margins">{{productSales.product.priceNetto | currency:'\u20AC'}}</h1>
+                                <h1 class="no-margins">{{productobj.priceNetto | currency:'\u20AC'}}</h1>
                         </div>
                 </div>
         </div>

@@ -21,12 +21,28 @@
                     </li>
                 </ol>
             </div>
+            <div class="col-lg-2">
+                <div class="row">
+                    </br>
+                    </br>
+                    <select class="form-control" style="width: 140px;" ng-model="ProductDetailCtrl.dateRange">
+						<option value="DAILY">{{ 'STATISTIC_PERIOD_TODAY' |
+							translate }}</option>
+						<option value="WEEKLY">{{ 'STATISTIC_PERIOD_WEEK' |
+							translate }}</option>
+						<option value="MONTHLY">{{ 'STATISTIC_PERIOD_MONTH' |
+							translate }}</option>
+						<option value="YEARLY">{{ 'STATISTIC_PERIOD_YEAR' |
+							translate }}</option>
+						<option value="ALL">{{ 'STATISTIC_PERIOD_ALL' | translate
+							}}</option>
+					</select>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-
-
 <div ng-if="ProductDetailCtrl.productFound" class="wrapper wrapper-content animated fadeInRight">
-    <div product productid="{{ProductDetailCtrl.currentProductId}}" chart="ProductDetailCtrl.productStatisticColumnChart"></div>
+    <div product chart="ProductDetailCtrl.productStatisticColumnChart" daterange="ProductDetailCtrl.dateRange"
+        productobj="ProductDetailCtrl.currentProduct"></div>
 </div>

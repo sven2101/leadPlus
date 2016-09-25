@@ -33,16 +33,19 @@ class ProductDetailController {
     currentProductId: number;
     productFound: boolean = false;
     productStatisticColumnChart: ColumnChart;
+    translate;
+    dateRange: string;
 
 
     constructor(ProductService, $routeParams, ProductResource, StatisticService, $scope, $translate) {
         this.productService = ProductService;
         this.statisticService = StatisticService;
         this.productResource = ProductResource.resource;
+        this.dateRange = "ALL";
         this.routeParams = $routeParams;
         this.currentProductId = this.routeParams.productId;
+        this.translate = $translate;
         this.getProductById();
-        this.productStatisticColumnChart = new ColumnChart($translate, "SPCLOS", "STATISTIC_PARTS", "");
     }
 
     getProductById() {
@@ -50,11 +53,13 @@ class ProductDetailController {
         this.productResource.getProductById({ id: this.currentProductId }).$promise.then(function (result: Product) {
             self.currentProduct = result;
             if (!isNullOrUndefined(self.currentProduct.id)) {
+                self.productStatisticColumnChart = new ColumnChart(self.translate, "SPCLOS", self.currentProduct.name, ""
+                    , self.translate.instant("DETAIL_STATISTIC_TOOLTIP", { productname: "{series.name}", count: "{point.y}", workflow: "{point.name}"})
+                    , [self.translate.instant("LEAD_LEADS"), self.translate.instant("OFFER_OFFERS"), self.translate.instant("SALE_SALES")]);
                 self.productFound = true;
             }
         });
     }
 }
-
 angular.module(moduleProductDetail, [ngResourceId]).controller(ProductDetailControllerId, ProductDetailController);
 

@@ -17,8 +17,8 @@
 
 class Product extends AbstractModel {
 
-    name: String;
-    description: String;
+    name: string;
+    description: string;
     priceNetto: number;
     image: any;
     timestamp: any;

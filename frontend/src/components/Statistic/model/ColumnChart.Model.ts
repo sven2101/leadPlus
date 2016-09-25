@@ -12,7 +12,7 @@
 "use strict";
 
 class ColumnChart extends AbstractStatisticModel {
-    constructor(translate, id: string, yname: string, valueSuffix: string) {
+    constructor(translate, id: string, yname: string, valueSuffix: string, tooltip: string, categories: Array<string>) {
         super(translate, id);
         this.chartConfig = {
             options: {
@@ -24,9 +24,20 @@ class ColumnChart extends AbstractStatisticModel {
                     text: ""
                 },
                 xAxis: {
-                    type: "category"
+                    categories: categories,
                 },
-                tooltip: {},
+                yAxis: {
+                    title: {
+                        text: ""
+                    }
+
+                },
+                legend: {
+                    enabled: false
+                },
+                tooltip: {
+                    pointFormat: tooltip
+                }
             },
             series: [{
                 name: this.translate.instant(yname),
@@ -42,5 +53,8 @@ class ColumnChart extends AbstractStatisticModel {
             y: data[0],
             color: color
         });
+    }
+    clearData() {
+        this.chartConfig.series[0].data = [];
     }
 }
