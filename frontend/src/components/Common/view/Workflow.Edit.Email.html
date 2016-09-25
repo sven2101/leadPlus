@@ -2,10 +2,10 @@
     <div>
         <div class="form-group">
             <label>Email - Template</label>
-            <select ng-disabled="parent.emailEditForm" class="form-control" ng-model="templateId" ng-change="parent.generate(templateId, parent.process)">
+            <select ng-disabled="parent.editEmail" class="form-control" ng-model="templateId" ng-change="parent.generate(templateId, parent.editWorkflowUnit)">
                             <option value="-1" selected> - Select Template - </option>                                                                     
-                            <option value="{{template.id}}" ng-repeat="template in parent.templateService.getAllActiveTemplates()">{{template.name}}</option>                                          
-                        </select>asd{{parent.templateService.getAllActiveTemplates()}}
+                            <option value="{{template.id}}" ng-repeat="template in parent.templates">{{template.name}}</option>                                          
+                        </select>
         </div>
     </div>
     <div>
@@ -60,5 +60,5 @@
 <script language="javascript " type="text/javascript ">
 $(".btn-toolbar ").css("margin-left ","0 ");
 $(".note-toolbar ").css("margin-left ","4 ");
-$(".summernote ").siblings(".note-editor ").find(".note-editable ").attr("contenteditable ","false ");
+// $(".summernote ").siblings(".note-editor ").find(".note-editable ").attr("contenteditable ","false ");
 </script>

@@ -34,6 +34,7 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.messagemanagement.domain.OfferMessage;
+import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.templatemanagement.domain.Template;
 
@@ -110,16 +111,17 @@ public class TemplateService implements ITemplateService {
 			}
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			logger.error(UPDATE_FAILED_EXCEPTION + TemplateService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			logger.error(UPDATE_FAILED_EXCEPTION + TemplateService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+					ufex);
 			throw ufex;
 		}
 	}
 
 	@Override
-	public OfferMessage generate(final long templateId, final Process process) throws NotFoundException {
-		if (process != null) {
+	public OfferMessage generate(final long templateId, final Offer offer) throws NotFoundException {
+		if (offer != null) {
 			try {
-				return new OfferMessage(process.getOffer(), getById(templateId).getContent());
+				return new OfferMessage(offer, getById(templateId).getContent());
 			} catch (Exception ex) {
 				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw new NotFoundException(OFFER_NOT_FOUND);

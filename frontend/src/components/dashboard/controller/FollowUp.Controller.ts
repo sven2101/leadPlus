@@ -63,8 +63,8 @@ class FollowUpController {
         this.uibModalInstance.close();
     }
 
-    generate(templateId: string, process: Process) {
-        this.templateService.generate(templateId, process).then((result) => this.editWorkflowUnit.notification = result, (error) => console.log(error));
+    generate(templateId: string, offer: Offer) {
+        this.templateService.generate(templateId, offer).then((result) => this.editWorkflowUnit.notification = result, (error) => console.log(error));
     }
 
     getAllActiveTemplates() {

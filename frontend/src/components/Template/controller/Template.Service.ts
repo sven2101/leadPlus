@@ -106,10 +106,10 @@ class TemplateService {
         });
     }
 
-    generate(templateId: string, process: Process): IPromise<Notification> {
+    generate(templateId: string, offer: Offer): IPromise<Notification> {
         let defer = this.q.defer();
         let self = this;
-        this.templateResource.generate({ templateId: templateId }, process).$promise.then(function (resultMessage: Notification) {
+        this.templateResource.generate({ templateId: templateId }, offer).$promise.then(function (resultMessage: Notification) {
             console.log(resultMessage);
             defer.resolve(resultMessage);
         }, function (error: any) {

@@ -34,11 +34,12 @@ const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId, UserResourceId];
+    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId, UserResourceId, TemplateServiceId];
 
     commentResource;
     processResource;
     userResource;
+    templateService;
 
     filter;
     toaster;
@@ -53,10 +54,11 @@ class WorkflowService {
 
     user: User;
 
-    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource) {
+    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService) {
         this.commentResource = CommentResource.resource;
         this.processResource = ProcessResource.resource;
         this.userResource = UserResource.resource;
+        this.templateService = TemplateService;
         this.filter = $filter;
         this.toaster = toaster;
         this.rootScope = $rootScope;

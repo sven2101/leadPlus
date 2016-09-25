@@ -79,6 +79,7 @@ class OfferController extends AbstractWorkflow {
         this.scope = $scope;
         this.compile = $compile;
         this.window = $window;
+        this.templateService = TemplateService;
 
         let self = this;
         function createdRow(row, data: Process, dataIndex) {
@@ -230,7 +231,8 @@ class OfferController extends AbstractWorkflow {
     }
 
     getAllActiveTemplates() {
-        this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
+        let self = this;
+        this.templateService.getAll().then((result) => self.templates = result, (error) => console.log(error));
     }
 }
 

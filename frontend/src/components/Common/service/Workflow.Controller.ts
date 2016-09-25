@@ -67,7 +67,9 @@ class WorkflowController extends AbstractWorkflow {
     saleEditForm: any;
 
     constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService) {
+
         super(WorkflowService);
+
         this.process = process;
         this.editWorkflowUnit = this.process.offer;
         this.editWorkflowUnit.notification = new Notification();
@@ -75,7 +77,9 @@ class WorkflowController extends AbstractWorkflow {
         this.uibModalInstance = $uibModalInstance;
 
         this.notificationService = NotificationService;
+
         this.templateService = TemplateService;
+
         this.customerService = CustomerService;
         this.productService = ProductService;
         this.workflowService = WorkflowService;
@@ -89,6 +93,7 @@ class WorkflowController extends AbstractWorkflow {
         this.saleService = SaleService;
 
         this.loadDataToModal(process);
+
     }
 
     loadDataToModal(process: Process) {
@@ -129,8 +134,8 @@ class WorkflowController extends AbstractWorkflow {
         this.dashboardService.initDashboard();
     }
 
-    generate(templateId: string, process: Process) {
-        this.templateService.generate(templateId, process).then((result) => this.editWorkflowUnit.notification = result, (error) => console.log(error));
+    generate(templateId: string, offer: Offer) {
+        this.templateService.generate(templateId, offer).then((result) => this.editWorkflowUnit.notification = result, (error) => console.log(error));
     }
 
     generatePDF(templateId: string, offer: Offer) {
@@ -159,9 +164,11 @@ class WorkflowController extends AbstractWorkflow {
 
     save() {
         this.process.offer = this.editWorkflowUnit;
+        let self = this;
         this.workflowService.addLeadToOffer(this.process).then(function (tmpprocess: Process) {
+            self.close();
         });
-        this.close();
+
     }
 
     selectCustomer(workflow: any) {

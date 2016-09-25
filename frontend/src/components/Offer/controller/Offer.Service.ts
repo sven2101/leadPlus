@@ -24,7 +24,7 @@ const OfferServiceId: string = "OfferService";
 
 class OfferService {
 
-    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, OfferResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, DashboardServiceId];
+    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, OfferResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, DashboardServiceId, TemplateServiceId];
     processResource;
     customerResource;
     offerResource;
@@ -33,6 +33,7 @@ class OfferService {
     customerService: CustomerService;
     productService: ProductService;
     dashboardService: DashboardService;
+    templateService;
 
     translate;
     rootScope;
@@ -43,7 +44,8 @@ class OfferService {
     rows: { [key: number]: any } = {};
     user: User;
 
-    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, OfferResource, WorkflowService, CustomerService, ProductService, DashboardService) {
+    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, OfferResource, WorkflowService, CustomerService, ProductService, DashboardService, TemplateService) {
+        this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.filter = $filter;

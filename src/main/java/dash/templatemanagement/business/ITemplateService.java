@@ -22,6 +22,7 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.messagemanagement.domain.OfferMessage;
+import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.templatemanagement.domain.Template;
 
@@ -38,8 +39,8 @@ public interface ITemplateService {
 
 	public Template update(final Template template) throws UpdateFailedException;
 
-	public OfferMessage generate(final long templateId, final Process process) throws NotFoundException;
-
 	public byte[] generatePdf(final long templateId, final Process process) throws NotFoundException;
+
+	OfferMessage generate(long templateId, Offer offer) throws NotFoundException;
 
 }

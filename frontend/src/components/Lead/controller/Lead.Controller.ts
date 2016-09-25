@@ -173,7 +173,8 @@ class LeadController extends AbstractWorkflow {
     }
 
     createNextWorkflowUnit(process: Process) {
-        this.leadService.createOffer(process, this.loadAllData, this.dtInstance, this.scope);
+        // this.leadService.createOffer(process, this.loadAllData, this.dtInstance, this.scope);
+        this.workflowService.startOfferTransformation(process);
     }
 
     pin(process: Process, user: User) {
@@ -201,6 +202,7 @@ class LeadController extends AbstractWorkflow {
             return process.lead.orderPositions;
         }
     }
+
 }
 angular.module(moduleLead, [ngResourceId]).controller(LeadControllerId, LeadController);
 

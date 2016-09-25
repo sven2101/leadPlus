@@ -15,6 +15,7 @@ package dash.messagemanagement.domain;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,13 +64,17 @@ public class OfferMessage extends AbstractMessage {
 		try {
 			template = cfg.getTemplate("greetTemplate");
 			writer = new StringWriter();
+
+			SimpleDateFormat format1 = new SimpleDateFormat("dd.MM.yyyy");
+			String deliveryDate = format1.format(this.offer.getDeliveryDate().getTime());
+
 			Map<String, Object> mapping = new HashMap<String, Object>();
 			mapping.put("titel", String.valueOf(this.offer.getCustomer().getTitle()));
 			mapping.put("firstname", String.valueOf(this.offer.getCustomer().getFirstname()));
 			mapping.put("lastname", String.valueOf(this.offer.getCustomer().getLastname()));
 			mapping.put("deliveryAddress", String.valueOf(this.offer.getDeliveryAddress()));
 			mapping.put("offerPrice", String.valueOf(this.offer.getOfferPrice()));
-			mapping.put("deliveryDate", String.valueOf(this.offer.getDeliveryDate()));
+			mapping.put("deliveryDate", deliveryDate);
 			template.process(mapping, writer);
 
 		} catch (Exception ex) {

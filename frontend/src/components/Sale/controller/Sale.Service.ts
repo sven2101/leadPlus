@@ -24,13 +24,14 @@ const SaleServiceId: string = "SaleService";
 
 class SaleService {
 
-    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, SaleResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId];
+    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, SaleResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId];
     processResource;
     customerResource;
     saleResource;
     workflowService: WorkflowService;
     customerService: CustomerService;
     productService: ProductService;
+    templateService: TemplateService;
     translate;
     rootScope;
     filter;
@@ -40,7 +41,8 @@ class SaleService {
     rows: { [key: number]: any } = {};
     user: User;
 
-    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, SaleResource, WorkflowService, CustomerService, ProductService) {
+    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, SaleResource, WorkflowService, CustomerService, ProductService, TemplateService) {
+        this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.filter = $filter;
@@ -139,6 +141,8 @@ class SaleService {
                 .instant("COMMON_TOAST_FAILURE_DELETE_SALE"));
         });
     }
+
+
 }
 
 angular.module(moduleSaleService, [ngResourceId]).service(SaleServiceId, SaleService);
