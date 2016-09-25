@@ -28,7 +28,7 @@ const LeadControllerId: string = "LeadController";
 
 class LeadController extends AbstractWorkflow {
 
-    $inject = [$compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId];
+    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId];
 
     type: string = "lead";
 
@@ -64,7 +64,7 @@ class LeadController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($compile, $scope, WorkflowService, LeadDataTableService, LeadService) {
+    constructor($rootScope, $compile, $scope, WorkflowService, LeadDataTableService, LeadService) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.leadDataTableService = LeadDataTableService;
@@ -73,6 +73,10 @@ class LeadController extends AbstractWorkflow {
         this.compile = $compile;
 
         let self = this;
+        $rootScope.$on("deleteRow", (event, data) => {
+            self.leadService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
+        });
+
         function createdRow(row, data: Process, dataIndex) {
             self.leadService.setRow(data.id, row);
             self.leadDataTableService.configRow(row, data);

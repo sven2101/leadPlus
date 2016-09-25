@@ -28,7 +28,7 @@ const OfferControllerId: string = "OfferController";
 
 class OfferController extends AbstractWorkflow {
 
-    $inject = [$compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, TemplateServiceId];
+    $inject = [$rootScopeId, $compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, TemplateServiceId];
 
     type: string = "offer";
 
@@ -71,7 +71,7 @@ class OfferController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService) {
+    constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.offerDataTableService = OfferDataTableService;
@@ -80,6 +80,8 @@ class OfferController extends AbstractWorkflow {
         this.compile = $compile;
         this.window = $window;
         this.templateService = TemplateService;
+
+
 
         let self = this;
         function createdRow(row, data: Process, dataIndex) {

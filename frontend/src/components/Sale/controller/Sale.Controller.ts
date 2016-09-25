@@ -28,7 +28,7 @@ const SaleControllerId: string = "SaleController";
 
 class SaleController extends AbstractWorkflow {
 
-    $inject = [$compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId, TemplateServiceId];
+    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId, TemplateServiceId];
 
     type: string = "sale";
 
@@ -68,7 +68,7 @@ class SaleController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($compile, $scope, WorkflowService, SaleDataTableService, SaleService, TemplateService) {
+    constructor($rootScope, $compile, $scope, WorkflowService, SaleDataTableService, SaleService, TemplateService) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.saleDataTableService = SaleDataTableService;
@@ -77,6 +77,7 @@ class SaleController extends AbstractWorkflow {
         this.compile = $compile;
         this.templateService = TemplateService;
         let self = this;
+
         function createdRow(row, data: Process, dataIndex) {
             self.saleService.setRow(data.id, row);
             self.compile(angular.element(row).contents())(self.scope);

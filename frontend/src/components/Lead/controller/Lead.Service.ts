@@ -55,6 +55,8 @@ class LeadService {
         this.customerService = CustomerService;
         this.productService = ProductService;
         this.user = $rootScope.globals.user;
+
+
     }
 
     saveLead(dtInstance: any, newLead: Lead, currentOrderPositions: Array<OrderPosition>) {

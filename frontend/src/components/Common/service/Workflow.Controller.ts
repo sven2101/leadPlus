@@ -26,7 +26,7 @@ const WorkflowControllerId: string = "WorkflowController";
 
 class WorkflowController extends AbstractWorkflow {
 
-    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId, $rootScopeId];
 
     type: string = "offer";
 
@@ -65,11 +65,13 @@ class WorkflowController extends AbstractWorkflow {
     priceEditForm: any;
     emailEditForm: any;
     saleEditForm: any;
+    rootScope;
 
-    constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService) {
+    constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, $rootScope) {
 
         super(WorkflowService);
 
+        this.rootScope = $rootScope;
         this.process = process;
         this.editWorkflowUnit = this.process.offer;
         this.editWorkflowUnit.notification = new Notification();
@@ -132,6 +134,7 @@ class WorkflowController extends AbstractWorkflow {
         this.dashboardService.sumLeads();
         this.dashboardService.sumOffers();
         this.dashboardService.initDashboard();
+        this.rootScope.$broadcast("deleteRow", this.process);
     }
 
     generate(templateId: string, offer: Offer) {
