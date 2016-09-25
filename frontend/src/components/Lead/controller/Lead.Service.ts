@@ -55,7 +55,7 @@ class LeadService {
         this.user = $rootScope.globals.user;
     }
 
-    saveLead(addForm: any, dtInstance: any, newLead: Lead, currentOrderPositions: Array<OrderPosition>) {
+    saveLead(dtInstance: any, newLead: Lead, currentOrderPositions: Array<OrderPosition>) {
         let self = this;
         if (angular.isUndefined(newLead.customer)) {
             newLead.customer = new Customer();
@@ -79,7 +79,6 @@ class LeadService {
                 self.processResource.save(process).$promise.then(function (result) {
                     self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
                     self.rootScope.leadsCount += 1;
-                    addForm.$setPristine();
                     dtInstance.DataTable.row.add(result).draw();
                     self.customerService.getAllCustomer();
                 });
@@ -90,7 +89,6 @@ class LeadService {
         this.processResource.save(process).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
             self.rootScope.leadsCount += 1;
-            addForm.$setPristine();
             dtInstance.DataTable.row.add(result).draw();
         });
 
@@ -150,7 +148,7 @@ class LeadService {
         }
     }
 
-    saveEditedRow(editLead: Lead, editProcess: Process, currentOrderPositions: Array<OrderPosition>, dtInstance: any, scope: any, editForm: any) {
+    saveEditedRow(editLead: Lead, editProcess: Process, currentOrderPositions: Array<OrderPosition>, dtInstance: any, scope: any) {
         let self = this;
         shallowCopy(editLead, editProcess.lead);
         editProcess.lead.orderPositions = currentOrderPositions;
@@ -163,7 +161,6 @@ class LeadService {
                 self.processResource.save(editProcess).$promise.then(function (result) {
                     self.toaster.pop("success", "", self.translate
                         .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
-                    editForm.$setPristine();
                     self.updateRow(result, dtInstance, scope);
                     self.customerService.getAllCustomer();
                     if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
@@ -177,7 +174,6 @@ class LeadService {
         this.leadResource.update(editProcess.lead).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
-            editForm.$setPristine();
             self.updateRow(editProcess, dtInstance, scope);
             if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
                 self.rootScope.$broadcast("onTodosChange");
