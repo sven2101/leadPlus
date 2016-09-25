@@ -255,9 +255,9 @@ class WorkflowService {
             orderPositions: deepCopy(process.lead.orderPositions),
             transport: process.offer.deliveryAddress,
             customer: process.offer.customer,
-            profit: 0,
-            cost: 0,
-            saleReturn: process.offer.offerPrice,
+            saleProfit: 0,
+            saleCost: 0,
+            saleTurnover: process.offer.offerPrice,
             timestamp: newTimestamp(),
             vendor: process.offer.vendor,
             deliveryCosts: process.offer.deliveryCosts

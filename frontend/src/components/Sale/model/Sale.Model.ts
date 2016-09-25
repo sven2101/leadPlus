@@ -25,8 +25,6 @@ class Sale extends AbstractModel implements IWorkflow {
     saleProfit: number;
     saleCost: number;
     deliveryCosts: number;
-    profit: number;
-    cost: number;
 
     constructor() {
         super();
