@@ -58,6 +58,13 @@ class LeadController extends AbstractWorkflow {
     currentCustomerId = "-1";
     customerSelected: boolean = false;
 
+    customerEditForm: any;
+    orderEditForm: any;
+    supplyEditForm: any;
+    priceEditForm: any;
+    emailEditForm: any;
+    saleEditForm: any;
+
     constructor($compile, $scope, WorkflowService, LeadDataTableService, LeadService) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
@@ -109,6 +116,14 @@ class LeadController extends AbstractWorkflow {
     }
 
     loadDataToModal(process: Process) {
+        this.customerEditForm.$setPristine();
+        this.customerEditForm.$setPristine();
+        this.orderEditForm.$setPristine();
+        this.supplyEditForm.$setPristine();
+        this.priceEditForm.$setPristine();
+        this.emailEditForm.$setPristine();
+        this.saleEditForm.$setPristine();
+
         this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;

@@ -99,7 +99,6 @@ class LeadService {
     createOffer(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {
         let self = this;
         this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
-            // self.workflowService.openOfferModal(tmpprocess);
             self.removeOrUpdateRow(process, loadAllData, dtInstance, scope);
             self.rootScope.$broadcast("onTodosChange");
         });

@@ -59,6 +59,13 @@ class WorkflowController extends AbstractWorkflow {
     offerService: OfferService;
     saleService: SaleService;
 
+    customerEditForm: any;
+    orderEditForm: any;
+    supplyEditForm: any;
+    priceEditForm: any;
+    emailEditForm: any;
+    saleEditForm: any;
+
     constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService) {
         super(WorkflowService);
         this.process = process;
@@ -85,6 +92,14 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     loadDataToModal(process: Process) {
+        this.customerEditForm.$setPristine();
+        this.customerEditForm.$setPristine();
+        this.orderEditForm.$setPristine();
+        this.supplyEditForm.$setPristine();
+        this.priceEditForm.$setPristine();
+        this.emailEditForm.$setPristine();
+        this.saleEditForm.$setPristine();
+        
         this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
