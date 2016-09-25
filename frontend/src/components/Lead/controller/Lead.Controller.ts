@@ -47,7 +47,6 @@ class LeadController extends AbstractWorkflow {
     commentModalInput: string;
     loadAllData: boolean = false;
     processes: { [key: number]: Process } = {};
-    editForm: any;
     editProcess: Process;
     editWorkflowUnit: Lead = new Lead();
     edit: boolean;
@@ -127,10 +126,10 @@ class LeadController extends AbstractWorkflow {
 
     save(edit: boolean) {
         if (edit === true) {
-            this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope, this.editForm);
+            this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope);
         }
         else {
-            this.leadService.saveLead(this.editForm, this.dtInstance, this.editWorkflowUnit, this.currentOrderPositions);
+            this.leadService.saveLead(this.dtInstance, this.editWorkflowUnit, this.currentOrderPositions);
         }
     }
 

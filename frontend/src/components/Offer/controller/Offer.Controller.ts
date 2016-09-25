@@ -49,7 +49,6 @@ class OfferController extends AbstractWorkflow {
     commentModalInput: string;
     loadAllData: boolean = false;
     processes: { [key: number]: Process } = {};
-    editForm: any;
     editProcess: Process;
     editWorkflowUnit: Offer = new Offer();
     edit: boolean;
@@ -134,7 +133,7 @@ class OfferController extends AbstractWorkflow {
     }
 
     save(edit: boolean) {
-        this.offerService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope, this.editForm);
+        this.offerService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope);
     }
 
     clearNewOffer() {

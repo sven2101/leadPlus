@@ -55,7 +55,7 @@ class SaleService {
         this.user = $rootScope.globals.user;
     }
 
-    save(editSale: Sale, editProcess: Process, currentOrderPositions: Array<OrderPosition>, dtInstance: any, scope: any, editForm: any) {
+    save(editSale: Sale, editProcess: Process, currentOrderPositions: Array<OrderPosition>, dtInstance: any, scope: any) {
         let self = this;
         shallowCopy(editSale, editProcess.sale);
         editProcess.sale.orderPositions = currentOrderPositions;
@@ -67,7 +67,6 @@ class SaleService {
                 temp.customer = customer;
 
                 self.processResource.save(editProcess).$promise.then(function (result) {
-                    editForm.$setPristine();
                     self.updateRow(editProcess, dtInstance, scope);
                     self.customerService.getAllCustomer();
                 });
@@ -78,7 +77,6 @@ class SaleService {
         this.saleResource.update(editProcess.sale).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_SALE"));
-            editForm.$setPristine();
             editProcess.sale = result;
             self.updateRow(editProcess, dtInstance, scope);
         });

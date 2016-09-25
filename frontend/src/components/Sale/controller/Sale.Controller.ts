@@ -47,7 +47,6 @@ class SaleController extends AbstractWorkflow {
     commentModalInput: string;
     loadAllData: boolean = false;
     processes: { [key: number]: Process } = {};
-    editForm: any;
     editProcess: Process;
     editWorkflowUnit: Sale = new Sale();
     edit: boolean;
@@ -128,7 +127,7 @@ class SaleController extends AbstractWorkflow {
     }
 
     save(edit: boolean) {
-        this.saleService.save(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope, this.editForm);
+        this.saleService.save(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope);
     }
 
     clearNewSale() {
