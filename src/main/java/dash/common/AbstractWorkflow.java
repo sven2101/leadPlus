@@ -58,7 +58,20 @@ public abstract class AbstractWorkflow implements Request {
 
 	@OneToOne(cascade = { CascadeType.PERSIST })
 	@JoinColumn(name = "vendor_fk", nullable = true)
+	//	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+	//	@JoinColumn(name = "vendor_fk", nullable = true)
 	private Vendor vendor;
+
+	@Column(length = 4096)
+	private String message;
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 	public boolean isDeleted() {
 		return deleted;
@@ -84,6 +97,7 @@ public abstract class AbstractWorkflow implements Request {
 		this.id = id;
 	}
 
+	@Override
 	public List<OrderPosition> getOrderPositions() {
 		return orderPositions;
 	}
@@ -147,6 +161,7 @@ public abstract class AbstractWorkflow implements Request {
 		temp = Double.doubleToLongBits(deliveryCosts);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((message == null) ? 0 : message.hashCode());
 		result = prime * result + ((orderPositions == null) ? 0 : orderPositions.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		result = prime * result + ((vendor == null) ? 0 : vendor.hashCode());
@@ -178,6 +193,11 @@ public abstract class AbstractWorkflow implements Request {
 			return false;
 		if (id != other.id)
 			return false;
+		if (message == null) {
+			if (other.message != null)
+				return false;
+		} else if (!message.equals(other.message))
+			return false;
 		if (orderPositions == null) {
 			if (other.orderPositions != null)
 				return false;
@@ -198,8 +218,9 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Override
 	public String toString() {
-		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress + ", deleted=" + deleted + ", deliveryCosts="
-				+ deliveryCosts + ", orderPositions=" + orderPositions + ", timestamp=" + timestamp + ", vendor=" + vendor + "]";
+		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress
+				+ ", deleted=" + deleted + ", deliveryCosts=" + deliveryCosts + ", orderPositions=" + orderPositions
+				+ ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + "]";
 	}
 
 }

@@ -21,7 +21,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -89,17 +88,4 @@ public class OfferResource {
 		return offerService.getByCustomer(id);
 	}
 
-	@ApiOperation(value = "Generate a single offer file.", notes = "")
-	@RequestMapping(value = "/{offerId}/files/templates/{templateId}/generate", method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
-	public Offer generateOfferFile(@PathVariable final long offerId, @PathVariable final long templateId) throws NotFoundException {
-		return offerService.generateOfferFile(offerId, templateId);
-	}
-
-	@ApiOperation(value = "Send an offer to a customer.", notes = "")
-	@RequestMapping(value = "/{id}/send", method = RequestMethod.GET)
-	@ResponseStatus(HttpStatus.OK)
-	public Offer sendOffer(@PathVariable final long id) throws NotFoundException {
-		return offerService.sendOffer(id, SecurityContextHolder.getContext().getAuthentication().getName());
-	}
 }

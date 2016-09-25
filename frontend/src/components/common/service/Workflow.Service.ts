@@ -181,10 +181,10 @@ class WorkflowService {
         orderPosition.price = this.calculatePrice(orderPosition.product.priceNetto, orderPosition.discount);
     }
 
-    addLeadToOffer(process: Process): IPromise<Process> {
-        let defer = this.$q.defer();
+
+    startOfferTransformation(process: Process) {
         let self = this;
-        let offer: Offer = {
+        process.offer = {
             id: 0,
             orderPositions: deepCopy(process.lead.orderPositions),
             deliveryAddress: process.lead.deliveryAddress,
@@ -194,13 +194,32 @@ class WorkflowService {
             timestamp: newTimestamp(),
             vendor: process.lead.vendor,
             deliveryCosts: process.lead.deliveryCosts,
-            notification: null
+            notification: null,
+            message: process.lead.message
         };
-        for (let i = 0; i < offer.orderPositions.length; i++) {
-            offer.orderPositions[i].id = 0;
+        for (let i = 0; i < process.offer.orderPositions.length; i++) {
+            process.offer.orderPositions[i].id = 0;
         }
 
-        this.processResource.createOffer({ id: process.id }, offer).$promise.then(function (resultOffer: Offer) {
+        this.uibModal.open({
+            template: " <div sendworkflow parent='workflowCtrl' type='offer'></div>",
+            controller: WorkflowController,
+            controllerAs: "workflowCtrl",
+            backdrop: "static",
+            keyboard: false,
+            size: "lg",
+            resolve: {
+                process: function () {
+                    return process;
+                }
+            }
+        });
+    }
+
+    addLeadToOffer(process: Process): IPromise<Process> {
+        let defer = this.$q.defer();
+        let self = this;
+        this.processResource.createOffer({ id: process.id }, process.offer).$promise.then(function (resultOffer: Offer) {
 
             self.processResource.setStatus({ id: process.id }, Status.OFFER).$promise.then(function (resultProcess: Process) {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
@@ -227,22 +246,6 @@ class WorkflowService {
         return defer.promise;
     }
 
-    openOfferModal(process: Process) {
-        this.uibModal.open({
-            template: " <div sendworkflow parent='workflowCtrl' type='offer'></div>",
-            controller: WorkflowController,
-            controllerAs: "workflowCtrl",
-            backdrop: "static",
-            keyboard: false,
-            size: "lg",
-            resolve: {
-                process: function () {
-                    return process;
-                }
-            }
-        });
-    }
-
     addOfferToSale(process: Process): IPromise<boolean> {
         let defer = this.$q.defer();
         let self = this;
@@ -254,10 +257,11 @@ class WorkflowService {
             transport: process.offer.deliveryAddress,
             customer: process.offer.customer,
             saleProfit: 0,
-            saleReturn: process.offer.offerPrice,
+            saleTurnover: process.offer.offerPrice,
             timestamp: newTimestamp(),
             vendor: process.offer.vendor,
-            deliveryCosts: process.offer.deliveryCosts
+            deliveryCosts: process.offer.deliveryCosts,
+            message: process.offer.message
         };
         for (let i = 0; i < sale.orderPositions.length; i++) {
             sale.orderPositions[i].id = 0;

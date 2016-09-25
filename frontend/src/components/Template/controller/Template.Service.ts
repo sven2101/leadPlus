@@ -104,10 +104,10 @@ class TemplateService {
         });
     }
 
-    generate(templateId: string, offer: Offer): IPromise<Notification> {
+    generate(templateId: string, process: Process): IPromise<Notification> {
         let defer = this.q.defer();
         let self = this;
-        this.templateResource.generate({ templateId: templateId, offerId: offer.id }, offer).$promise.then(function (resultMessage: Notification) {
+        this.templateResource.generate({ templateId: templateId }, process).$promise.then(function (resultMessage: Notification) {
             console.log(resultMessage);
             defer.resolve(resultMessage);
         }, function (error: any) {
@@ -119,7 +119,7 @@ class TemplateService {
     generatePDF(templateId: string, offer: Offer) {
         let defer = this.q.defer();
         let self = this;
-        this.templateResource.generatePDF({ templateId: templateId, offerId: offer.id }, offer).$promise.then(function (result) {
+        this.templateResource.generatePDF({ templateId: templateId }, offer).$promise.then(function (result) {
             console.log("PDf result: ", result);
             console.log(result);
             let file = new Blob([result], { type: "application/pdf" });

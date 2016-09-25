@@ -20,7 +20,6 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import dash.fileuploadmanagement.domain.FileUpload;
 import dash.offermanagement.domain.Offer;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
@@ -33,14 +32,12 @@ public class OfferMessage extends AbstractMessage {
 	private Offer offer;
 
 	private String template;
-	private FileUpload attachement;
 
 	public OfferMessage(Offer offer, String template) {
 		super(offer.getCustomer().getEmail());
 		this.stringLoader = new StringTemplateLoader();
 		this.offer = offer;
 		this.template = template;
-		this.attachement = null;
 	}
 
 	@Override

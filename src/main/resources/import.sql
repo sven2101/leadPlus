@@ -6,7 +6,79 @@ INSERT INTO public.customer(address, company, deactivated, email, firstname, las
     VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@get-net.eu', 'Moritz', 'Gebhardt', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
 
 INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@eviarc.com', 'Timo', 'Neumann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);   
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@live.com', 'Max', 'Mustermann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@get-net.eu', 'Moritz', 'Gebhardt', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
     VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@eviarc.com', 'Timo', 'Neumann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@live.com', 'Max', 'Mustermann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@get-net.eu', 'Moritz', 'Gebhardt', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@eviarc.com', 'Timo', 'Neumann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@live.com', 'Max', 'Mustermann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@get-net.eu', 'Moritz', 'Gebhardt', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@eviarc.com', 'Timo', 'Neumann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@live.com', 'Max', 'Mustermann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@get-net.eu', 'Moritz', 'Gebhardt', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@eviarc.com', 'Timo', 'Neumann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@live.com', 'Max', 'Mustermann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@get-net.eu', 'Moritz', 'Gebhardt', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@eviarc.com', 'Timo', 'Neumann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@live.com', 'Max', 'Mustermann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@get-net.eu', 'Moritz', 'Gebhardt', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@eviarc.com', 'Timo', 'Neumann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@live.com', 'Max', 'Mustermann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@get-net.eu', 'Moritz', 'Gebhardt', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@eviarc.com', 'Timo', 'Neumann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@live.com', 'Max', 'Mustermann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@get-net.eu', 'Moritz', 'Gebhardt', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@eviarc.com', 'Timo', 'Neumann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@live.com', 'Max', 'Mustermann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+    
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@get-net.eu', 'Moritz', 'Gebhardt', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+
+INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title,deleted)
+    VALUES ('Dorf 123', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@eviarc.com', 'Timo', 'Neumann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);    	
 
 -- Templates
 INSERT INTO public.template(content, deactivated, description, name)

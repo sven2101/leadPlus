@@ -1,6 +1,6 @@
 <form name="parent.editForm" novalidate>
     <div class="modal-body">
-        <button type="button" class="close" ng-click="parent.rollback()">
+        <button type="button" class="close" ng-click="parent.close()">
         <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <div id="wizard" role="application" class="wizard clearfix">
             <div class="steps clearfix">
@@ -22,9 +22,9 @@
         </div>
     </div>
     <div class="modal-footer ">
-        <button type="button " class="btn btn-white " ng-click="parent.rollback()">{{ 'COMMON_CANCEL'| translate }}</button>
+        <button type="button " class="btn btn-white " ng-click="parent.close()">{{ 'COMMON_CANCEL'| translate }}</button>
         <button ng-if="parent.currentWizard==5" type="button " class="btn btn-primary " ng-disabled="parent.editForm.$invalid " ng-click="parent.send() ">{{ 'COMMON_CONTINUE_AND_SENDING'| translate }}</button>
-        <button ng-if="parent.currentWizard==5" type="button " class="btn btn-warning " ng-click="parent.save() ">{{ 'COMMON_CONTINUE_WITHOUT_SENDING'| translate }}</button>
+        <button type="button " class="btn btn-warning " ng-click="parent.save() ">{{ 'COMMON_CONTINUE_WITHOUT_SENDING'| translate }}</button>
     </div>
 </form>
 

@@ -36,11 +36,10 @@ import org.springframework.stereotype.Service;
 
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.notificationmanagement.domain.Notification;
-import dash.offermanagement.business.OfferService;
-import dash.offermanagement.domain.Offer;
+import dash.processmanagement.business.IProcessService;
+import dash.processmanagement.domain.Process;
 import dash.smtpmanagement.business.ISmtpService;
 import dash.smtpmanagement.domain.Smtp;
-import dash.usermanagement.business.IUserService;
 
 @Service
 public class NotificationService implements INotificationService {
@@ -48,28 +47,72 @@ public class NotificationService implements INotificationService {
 	private static final Logger logger = Logger.getLogger(NotificationService.class);
 
 	@Autowired
-	private IUserService userService;
-
-	@Autowired
-	private OfferService offerService;
-
-	@Autowired
-	private NotificationRepository notificationRepository;
+	private IProcessService processService;
 
 	@Autowired
 	private ISmtpService smtpService;
 
 	@Override
-	public void sendNotification(final long userId, final long offerId, final Notification notification) throws Exception {
-		doSendEmail(userId, offerService.getOfferById(offerId), notification);
+	public void sendNotification(final long userId, final Process process) throws Exception {
+		doSendEmail(userId, process);
 	}
 
 	@Override
-	public void sendNotification(long userId, Notification notification) throws Exception {
-		doSendEmail(userId, null, notification);
+	public void sendNotification(final long userId, final Notification notification) throws Exception {
+		doSendEmail(userId, notification);
 	}
 
-	public void doSendEmail(final long userId, final Offer offer, final Notification notification) throws Exception {
+	public void doSendEmail(final long userId, final Process process) throws Exception {
+		try {
+			Smtp smtp = smtpService.findByUser(userId);
+			smtp = smtpService.decrypt(smtp);
+			if (smtp != null) {
+
+				final Session emailSession = newSession(smtp);
+				Transport transport = emailSession.getTransport("smtp");
+				transport.connect();
+
+				Message msg = new MimeMessage(emailSession);
+				try {
+
+					msg.setFrom(new InternetAddress(smtp.getEmail(), smtp.getSender()));
+					msg.setRecipient(Message.RecipientType.TO, new InternetAddress(process.getOffer().getNotification().getRecipient()));
+					msg.setSubject(process.getOffer().getNotification().getSubject());
+					Multipart multipart = new MimeMultipart();
+
+					MimeBodyPart textBodyPart = new MimeBodyPart();
+					textBodyPart.setContent(process.getOffer().getNotification().getContent(), "text/html; charset=utf-8");
+					multipart.addBodyPart(textBodyPart);
+
+					if (process.getOffer().getNotification().getAttachment().getContent() != null) {
+						MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+						ByteArrayDataSource ds = new ByteArrayDataSource(process.getOffer().getNotification().getAttachment().getContent(),
+								"application/octet-stream");
+						attachmentBodyPart.setDataHandler(new DataHandler(ds));
+						attachmentBodyPart.setFileName(process.getOffer().getNotification().getAttachment().getFilename());
+						multipart.addBodyPart(attachmentBodyPart);
+					}
+
+					msg.setContent(multipart);
+
+					Transport.send(msg);
+
+					processService.save(process);
+
+				} catch (MessagingException mex) {
+					logger.error(NotificationService.class.getSimpleName(), mex);
+					throw mex;
+				}
+
+			} else {
+				throw new SMTPdoesntExistsException("No valid SMTP Data for this User");
+			}
+		} catch (Exception ex) {
+			throw ex;
+		}
+	}
+
+	public void doSendEmail(final long userId, final Notification notification) throws Exception {
 		try {
 			Smtp smtp = smtpService.findByUser(userId);
 			smtp = smtpService.decrypt(smtp);
@@ -93,7 +136,7 @@ public class NotificationService implements INotificationService {
 
 					if (notification.getAttachment().getContent() != null) {
 						MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(), "application/octet-stream");
+						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getContent(), "application/octet-stream");
 						attachmentBodyPart.setDataHandler(new DataHandler(ds));
 						attachmentBodyPart.setFileName(notification.getAttachment().getFilename());
 						multipart.addBodyPart(attachmentBodyPart);
@@ -103,10 +146,6 @@ public class NotificationService implements INotificationService {
 
 					Transport.send(msg);
 
-					if (offer != null) {
-						offer.setNotification(notification);
-						offerService.save(offer);
-					}
 				} catch (MessagingException mex) {
 					logger.error(NotificationService.class.getSimpleName(), mex);
 					throw mex;

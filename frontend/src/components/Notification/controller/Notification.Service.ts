@@ -40,10 +40,10 @@ class NotificationService {
         this.notification = new Notification();
     }
 
-    sendOffer(notification: Notification, offer: Offer) {
+    sendOffer(process: Process) {
         let self = this;
-        notification.attachment = this.notification.attachment;
-        this.notificationResource.sendOffer({ userId: this.rootScope.globals.user.id, offerId: offer.id }, notification).$promise.then(function () {
+        process.offer.notification.attachment = this.notification.attachment;
+        this.notificationResource.sendOffer({ userId: this.rootScope.globals.user.id}, process).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));

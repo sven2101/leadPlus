@@ -220,7 +220,6 @@ class OfferService {
         if (isNullOrUndefined(process)) {
             return;
         }
-        console.log("Process: ", process);
         let offer = process.offer;
         process.offer = null;
         process.status = Status.OPEN;
@@ -229,28 +228,6 @@ class OfferService {
             self.offerResource.drop({
                 id: offer.id
             }).$promise.then(() => { dtInstance.DataTable.row(self.rows[process.id]).remove().draw(); self.rootScope.leadsCount += 1; self.rootScope.offersCount -= 1; });
-        });
-    }
-
-    rollBackModal(process: Process): void {
-        if (isNullOrUndefined(process)) {
-            return;
-        }
-        console.log("Process: ", process);
-        let offer = process.offer;
-        process.offer = null;
-        process.status = Status.OPEN;
-        console.log("Process: ", process);
-        let self = this;
-        this.processResource.save(process).$promise.then((data) => {
-            self.offerResource.drop({
-                id: offer.id
-            }).$promise.then(() => {
-                self.rootScope.leadsCount += 1; self.rootScope.offersCount -= 1; self.dashboardService.initDashboard();
-                self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD"));
-            });
-        }, (error) => {
-            self.toaster.pop("error", "", self.translate.instant("COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD_ERROR"));
         });
     }
 
