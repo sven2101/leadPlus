@@ -28,7 +28,7 @@
                                 <h5>&#216; {{ 'DETAIL_STATISTIC_GUARANTEED_DISCOUNT' | translate }}</h5>
                         </div>
                         <div class="ibox-content">
-                                <h1 class="no-margins" ng-if="productSales.count>0">{{productSales.discount/productSales.count}}% ({{productSales.product.priceNetto-(productSales.turnover/productSales.count)
+                                <h1 class="no-margins" ng-if="productSales.count>0">{{productSales.discount/productSales.count | number:2}}% ({{productSales.product.priceNetto-(productSales.turnover/productSales.count)
                                         | currency:'\u20AC'}})</h1>
                                 <h1 class="no-margins" ng-if="productSales.count<=0">0% ({{0 | currency:'\u20AC'}})</h1>
                         </div>
