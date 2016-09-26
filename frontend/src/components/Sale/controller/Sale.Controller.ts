@@ -145,6 +145,7 @@ class SaleController extends AbstractWorkflow {
         this.customerSelected = this.editProcess.sale.customer.id > 0;
         this.currentCustomerId = this.editProcess.sale.customer.id + "";
         this.editWorkflowUnit = deepCopy(this.editProcess.sale);
+        // this.editWorkflowUnit.saleTurnover = this.editProcess.offer.offerPrice;
     }
 
     addComment(id: number, input: string) {

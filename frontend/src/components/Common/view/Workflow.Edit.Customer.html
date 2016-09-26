@@ -60,28 +60,6 @@
                     <textarea class="form-control" rows="5" name="message" style="resize:vertical;" ng-model="parent.editWorkflowUnit.message"></textarea>
                 </div>
             </div>
-            <!-- SALE TURNOVER -->
-            <div ng-if="type=='sale'" class="form-group" ng-class="{ 'has-error' : parent.customerEditForm.saleTurnover.$invalid && !parent.customerEditForm.saleTurnover.$pristine }">
-                <label>{{ 'COMMON_PRODUCT_SALE_TURNOVER'| translate }}<span style="color:red">*</span></label>
-                <div class="input-group">
-                    <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
-                    <input type="number" name="saleTurnover" class="form-control" ng-model="parent.editWorkflowUnit.saleTurnover" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
-                        step="0.01" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency"
-                        id="c2" required>
-                </div>
-                <p ng-show="parent.customerEditForm.saleTurnover.$invalid && !parent.customerEditForm.saleTurnover.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
-            </div>
-            <!-- SALE PROFIT -->
-            <div ng-if="type=='sale'" class="form-group" ng-class="{ 'has-error' : parent.customerEditForm.saleProfit.$invalid && !parent.customerEditForm.saleProfit.$pristine }">
-                <label>{{ 'COMMON_PRODUCT_SALE_PROFIT'| translate }}<span style="color:red">*</span></label>
-                <div class="input-group">
-                    <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
-                    <input type="number" name="saleProfit" class="form-control" ng-model="parent.editWorkflowUnit.saleProfit" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
-                        min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency"
-                        id="c2" required>
-                </div>
-                <p ng-show="parent.customerEditForm.saleProfit.$invalid && !parent.customerEditForm.saleProfit.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
-            </div>
         </div>
     </div>
 </form>

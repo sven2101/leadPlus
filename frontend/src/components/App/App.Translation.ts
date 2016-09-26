@@ -15,7 +15,7 @@
 "use strict";
 
 function config($translateProvider) {
-    let pageTitle = "test";
+    let pageTitle = "lead";
     let pageLogo = pageTitle + "+";
 
     $translateProvider
@@ -41,8 +41,8 @@ function config($translateProvider) {
             LANGUAGE: "Sprache",
 
             // Define login elements
-            LOGIN_WELCOME: "Willkommen bei " + pageTitle,
-            LOGIN_WELCOME_DESCRIPTION: pageTitle + " Lead Management System",
+            LOGIN_WELCOME: "Willkommen bei " + pageLogo,
+            LOGIN_WELCOME_DESCRIPTION: pageLogo + " Lead Management System",
             LOGIN_NO_ACCOUNT: "Noch keinen Account?",
             LOGIN_CREATE_ACCOUNT: "Registrieren",
             LOGIN_ERROR: "Anmeldung fehlgeschlagen",
@@ -63,7 +63,6 @@ function config($translateProvider) {
             SIGNUP_VALIDATE_USER_TO_LONG: "Benutzername darf höchstens 20 Zeichen enthalten",
             SIGNUP_VALIDATE_EMAIL_IN_USE: "E-Mail schon vergeben",
             SIGNUP_VALIDATE_PASSWORD_TO_LONG: "Passwort darf höchstens 20 Zeichen enthalten",
-
 
             // Define common elements
             MR: "Herr",
@@ -136,6 +135,7 @@ function config($translateProvider) {
             COMMON_PRODUCT_DELIVERYCOSTS: "Lieferkosten",
             COMMON_PRODUCT_SALE_TURNOVER: "Umsatz",
             COMMON_PRODUCT_SALE_PROFIT: "Gewinn",
+            COMMON_PRODUCT_SALE_COST: "Kosten",
             COMMON_PRODUCT_CALCULATION: "Preiskalkulation",
             COMMON_DELIVERY_TIME: "Lieferdatum",
             COMMON_SALE_RETURN: "Umsatz",
@@ -431,7 +431,7 @@ function config($translateProvider) {
 
             // Define login elements
             LOGIN_WELCOME: "Welcome to " + pageLogo,
-            LOGIN_WELCOME_DESCRIPTION: pageTitle + " Lead Management System",
+            LOGIN_WELCOME_DESCRIPTION: "Lead Management System",
             LOGIN_NO_ACCOUNT: "Do not have an account?",
             LOGIN_CREATE_ACCOUNT: "Register",
             LOGIN_ERROR: "Login failed",
@@ -524,6 +524,7 @@ function config($translateProvider) {
             COMMON_PRODUCT_DELIVERYCOSTS: "Delivery costs",
             COMMON_PRODUCT_SALE_TURNOVER: "Turnover",
             COMMON_PRODUCT_SALE_PROFIT: "Profit",
+            COMMON_PRODUCT_SALE_COST: "Costs",
             COMMON_PRODUCT_CALCULATION: "Price calculation",
             COMMON_DELIVERY_TIME: "Delivery date",
             COMMON_SALE_RETURN: "Turnover",

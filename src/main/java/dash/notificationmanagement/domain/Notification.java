@@ -42,7 +42,7 @@ public class Notification {
 	@ApiModelProperty(hidden = true)
 	private boolean deleted;
 
-	@Column(length = 4096)
+	@Column(length = 30000)
 	private String content;
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -151,8 +151,8 @@ public class Notification {
 
 	@Override
 	public String toString() {
-		return "Notification [id=" + id + ", recipient=" + recipient + ", subject=" + subject + ", deleted=" + deleted
-				+ ", content=" + content + ", attachment=" + attachment + "]";
+		return "Notification [id=" + id + ", recipient=" + recipient + ", subject=" + subject + ", deleted=" + deleted + ", content=" + content
+				+ ", attachment=" + attachment + "]";
 	}
 
 }

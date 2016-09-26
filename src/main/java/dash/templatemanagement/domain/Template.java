@@ -30,7 +30,7 @@ public class Template {
 	private String name;
 	private String description;
 
-	@Column(length = 10000)
+	@Column(length = 30000)
 	private String content;
 	private boolean deactivated;
 
@@ -76,8 +76,7 @@ public class Template {
 
 	@Override
 	public String toString() {
-		return "Template [id=" + id + ", name=" + name + ", description=" + description + ", content=" + content
-				+ ", deactivated=" + deactivated + "]";
+		return "Template [id=" + id + ", name=" + name + ", description=" + description + ", content=" + content + ", deactivated=" + deactivated + "]";
 	}
 
 }
