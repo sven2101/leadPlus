@@ -31,21 +31,21 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controllerAs: "dashboardCtrl",
                 authenticated: true
             })
-            .when("/leads",
+            .when("/leads/:processId?",
             {
                 templateUrl: "components/Lead/view/Lead.html",
                 controller: "LeadController",
                 controllerAs: "leadCtrl",
                 authenticated: true
             })
-            .when("/offers",
+            .when("/offers/:processId?",
             {
                 templateUrl: "components/Offer/view/Offer.html",
                 controller: "OfferController",
                 controllerAs: "offerCtrl",
                 authenticated: true
             })
-            .when("/sales",
+            .when("/sales/:processId?",
             {
                 templateUrl: "components/Sale/view/Sale.html",
                 controller: "SaleController",

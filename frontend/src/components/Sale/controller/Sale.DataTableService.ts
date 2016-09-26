@@ -45,7 +45,7 @@ class SaleDataTableService {
         this.user = $rootScope.globals.user;
     }
 
-    getDTOptionsConfiguration(createdRow: Function) {
+    getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         return this.DTOptionsBuilder.newOptions()
             .withOption("ajax", {
                 url: openDataSaleRoute,
@@ -61,13 +61,14 @@ class SaleDataTableService {
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("order", [4, "desc"])
+            .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowService.getLanguageSource(this.rootScope.language));
     }
 
     getDetailHTML(id: number): string {
-        return "<a class='green shortinfo' href='javascript:;'"
+        return "<a id='id_" + id + "' class='green shortinfo' href='javascript:;'"
             + "ng-click='saleCtrl.appendChildRow(saleCtrl.processes[" + id
-            + "], $event)' title='Details'>"
+            + "])' title='Details'>"
             + "<i class='glyphicon glyphicon-plus-sign'/></a>";
     }
 
@@ -119,7 +120,12 @@ class SaleDataTableService {
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").notSortable().renderWith(addActionsButtons)];
+                "text-center").notSortable().renderWith(addActionsButtons),
+            this.DTColumnBuilder.newColumn(null)
+                .renderWith(
+                function (data, type, full) {
+                    return "#id:" + data.id + "#";
+                }).notVisible()];
     }
 
     setActionButtonsConfig(user: User, templateData: any) {

@@ -45,7 +45,8 @@
                                     <strong ng-if="todo.status=='FOLLOWUP'">{{dashboardCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</strong>
                                 </td>
                                 <td class="project-actions">
-                                    <a class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> Go to </a>
+                                    <a class="btn btn-white btn-sm" ng-if="todo.status=='OPEN'" ng-href="#/leads/{{todo.id}}"><i class="fa fa-pencil"></i> Go to </a>
+                                    <a class="btn btn-white btn-sm" ng-if="todo.status=='OFFER' || todo.status=='FOLLOWUP'" ng-href="#/offers/{{todo.id}}"><i class="fa fa-pencil"></i> Go to </a>
                                 </td>
                             </tr>
                         </tbody>

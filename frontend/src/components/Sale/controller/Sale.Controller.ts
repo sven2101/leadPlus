@@ -28,7 +28,7 @@ const SaleControllerId: string = "SaleController";
 
 class SaleController extends AbstractWorkflow {
 
-    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId, TemplateServiceId];
+    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId, TemplateServiceId, , $routeParamsId];
 
     type: string = "sale";
 
@@ -68,7 +68,7 @@ class SaleController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($rootScope, $compile, $scope, WorkflowService, SaleDataTableService, SaleService, TemplateService) {
+    constructor($rootScope, $compile, $scope, WorkflowService, SaleDataTableService, SaleService, TemplateService, $routeParams) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.saleDataTableService = SaleDataTableService;
@@ -94,7 +94,24 @@ class SaleController extends AbstractWorkflow {
             self.processes[data.id] = data;
             return self.saleDataTableService.getDetailHTML(data.id);
         }
-        this.dtOptions = this.saleDataTableService.getDTOptionsConfiguration(createdRow);
+
+        let searchLink = "";
+        let processId = $routeParams.processId;
+        if (!isNullOrUndefined(processId) && processId !== "") {
+            searchLink = "#id:" + processId + "#";
+            let intervall = setInterval(function () {
+                if (!isNullOrUndefined(angular.element("#id_" + processId)) && !isNullOrUndefined(self.processes[processId])) {
+                    self.appendChildRow(self.processes[processId]);
+                    clearInterval(intervall);
+                }
+            }, 100);
+
+            setTimeout(function () {
+                clearInterval(intervall);
+            }, 10000);
+        }
+
+        this.dtOptions = this.saleDataTableService.getDTOptionsConfiguration(createdRow, searchLink);
         this.dtColumns = this.saleDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
 
         this.getAllActiveTemplates();
@@ -112,7 +129,7 @@ class SaleController extends AbstractWorkflow {
         this.currentTab = tab;
     }
 
-    appendChildRow(process: Process, event: any) {
+    appendChildRow(process: Process) {
         let childScope = this.scope.$new(true);
         this.workflowService.appendChildRow(childScope, process, process.sale, this.dtInstance, this, "sale");
     }

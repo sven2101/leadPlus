@@ -403,7 +403,7 @@ class WorkflowService {
         childScope.parent = parent;
         childScope.type = type;
 
-        let link = angular.element(event.currentTarget), icon = link
+        let link = angular.element("#id_" + process.id), icon = link
             .find(".glyphicon"), tr = link.parent().parent(), table = dtInstance.DataTable, row = table
                 .row(tr);
 
