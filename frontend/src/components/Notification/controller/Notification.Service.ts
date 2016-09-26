@@ -69,7 +69,6 @@ class NotificationService {
         self.notification.attachment.size = $files[0].size;
         this.fileReader.readAsDataURL($files[0]);
         this.fileReader.onload = function () {
-            console.log("Split:", this.result.split(",")[0]);
             self.notification.attachment.content = this.result.split(",")[1];
         };
     }
