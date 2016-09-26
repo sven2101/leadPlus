@@ -36,7 +36,7 @@
                                     <a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.lead,'lead',process)" class="pull-right btn btn-xs btn-white"
                                         data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
                                     <div class="agile-detail">
-                                        <a style="min-width:50px;margin-right:-50px" href="#/leads" class="pull-right btn btn-xs btn-white">{{
+                                        <a style="min-width:50px;margin-right:-50px" ng-href="#/leads/{{process.id}}" class="pull-right btn btn-xs btn-white">{{
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
                                     </div>
                                     <div style="white-space: nowrap;max-width:55%;overflow:hidden;text-overflow: ellipsis;">
@@ -66,7 +66,7 @@
                                     <a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.offer,'offer',process)" class="pull-right btn btn-xs btn-white"
                                         data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
                                     <div class="agile-detail">
-                                        <a style="min-width:50px;margin-right:-50px" href="#/offers" class="pull-right btn btn-xs btn-white">{{
+                                        <a style="min-width:50px;margin-right:-50px" ng-href="#/offers/{{process.id}}" class="pull-right btn btn-xs btn-white">{{
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
                                     </div>
                                     <div style="white-space: nowrap;max-width:55%;overflow:hidden;text-overflow: ellipsis;">
@@ -99,7 +99,7 @@
                                     <a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.sale,'sale',process)" class="pull-right btn btn-xs btn-white"
                                         data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
                                     <div class="agile-detail">
-                                        <a style="min-width:50px;margin-right:-50px" href="#/sales" class="pull-right btn btn-xs btn-white">{{
+                                        <a style="min-width:50px;margin-right:-50px" ng-href="#/sales/{{process.id}}" class="pull-right btn btn-xs btn-white">{{
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
                                     </div>
                                     <div style="white-space: nowrap;max-width:55%;overflow:hidden;text-overflow: ellipsis;">

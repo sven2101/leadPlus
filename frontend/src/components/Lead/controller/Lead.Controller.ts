@@ -64,7 +64,7 @@ class LeadController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($rootScope, $compile, $scope, WorkflowService, LeadDataTableService, LeadService) {
+    constructor($rootScope, $compile, $scope, WorkflowService, LeadDataTableService, LeadService, $routeParams) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.leadDataTableService = LeadDataTableService;
@@ -94,9 +94,24 @@ class LeadController extends AbstractWorkflow {
             self.processes[data.id] = data;
             return self.leadDataTableService.getDetailHTML(data.id);
         }
-        this.dtOptions = this.leadDataTableService.getDTOptionsConfiguration(createdRow);
-        this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
 
+        let searchLink = "";
+        let processId = $routeParams.processId;
+        if (!isNullOrUndefined(processId) && processId !== "") {
+            searchLink = "#id:" + processId + "#";
+            let intervall = setInterval(function () {
+                if (!isNullOrUndefined(angular.element("#id_" + processId)) && !isNullOrUndefined(self.processes[processId])) {
+                    self.appendChildRow(self.processes[processId]);
+                    clearInterval(intervall);
+                }
+            }, 100);
+
+            setTimeout(function () {
+                clearInterval(intervall);
+            }, 10000);
+        }
+        this.dtOptions = this.leadDataTableService.getDTOptionsConfiguration(createdRow, searchLink);
+        this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
     }
 
     close() {
@@ -113,7 +128,7 @@ class LeadController extends AbstractWorkflow {
         this.dtInstance.reloadData(resetPaging);
     }
 
-    appendChildRow(process: Process, event: any) {
+    appendChildRow(process: Process) {
         let childScope = this.scope.$new(true);
         this.workflowService.appendChildRow(childScope, process, process.lead, this.dtInstance, this, "lead");
     }

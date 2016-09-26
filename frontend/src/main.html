@@ -121,7 +121,7 @@
                         <li>
                             <table class="table table-hover">
                                 <tbody>
-                                    <tr style="cursor:pointer" ng-repeat="todo in appCtrl.todos | limitTo:5 | orderBy:'timestamp'">
+                                    <tr style="cursor:pointer" ng-click="appCtrl.navigateTo(todo)" ng-repeat="todo in appCtrl.todos | limitTo:5 | orderBy:'timestamp'">
                                         <td class="project-status">
                                             <span ng-if="todo.status=='OPEN'" class="label label-danger">Lead</span>
                                             <span ng-if="todo.status=='OFFER'" class="label label-warning">Offer</span>

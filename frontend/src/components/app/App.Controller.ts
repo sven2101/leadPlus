@@ -19,11 +19,12 @@ const AppControllerId: string = "AppController";
 
 class AppController {
 
-    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId];
+    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId];
 
     translate;
     rootScope;
     interval;
+    location;
     processResource;
     userResource;
     stop;
@@ -31,7 +32,7 @@ class AppController {
 
     profileService: ProfileService;
 
-    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService) {
+    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location) {
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.interval = $interval;
@@ -40,6 +41,7 @@ class AppController {
         this.profileService = ProfileService;
         this.rootScope.leadsCount = 0;
         this.rootScope.todos = "test";
+        this.location = $location;
 
         this.rootScope.offersCount = 0;
         this.stop = undefined;
@@ -59,6 +61,14 @@ class AppController {
         });
     }
 
+    navigateTo(todo: Process) {
+        if (todo.status === "OPEN") {
+            this.location.path("/leads/" + todo.id);
+        }
+        else if (todo.status === "OFFER" || "FOLLOWUP") {
+            this.location.path("/offers/" + todo.id);
+        }
+    }
 
     registerLoadLabels() {
         let self = this;

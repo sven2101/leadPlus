@@ -28,7 +28,7 @@ const OfferControllerId: string = "OfferController";
 
 class OfferController extends AbstractWorkflow {
 
-    $inject = [$rootScopeId, $compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, TemplateServiceId];
+    $inject = [$rootScopeId, $compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, TemplateServiceId, $routeParamsId];
 
     type: string = "offer";
 
@@ -71,7 +71,7 @@ class OfferController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService) {
+    constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService, $routeParams) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.offerDataTableService = OfferDataTableService;
@@ -80,8 +80,6 @@ class OfferController extends AbstractWorkflow {
         this.compile = $compile;
         this.window = $window;
         this.templateService = TemplateService;
-
-
 
         let self = this;
         function createdRow(row, data: Process, dataIndex) {
@@ -101,7 +99,24 @@ class OfferController extends AbstractWorkflow {
             self.processes[data.id] = data;
             return self.offerDataTableService.getDetailHTML(data.id);
         }
-        this.dtOptions = this.offerDataTableService.getDTOptionsConfiguration(createdRow);
+
+        let searchLink = "";
+        let processId = $routeParams.processId;
+        if (!isNullOrUndefined(processId) && processId !== "") {
+            searchLink = "#id:" + processId + "#";
+            let intervall = setInterval(function () {
+                if (!isNullOrUndefined(angular.element("#id_" + processId)) && !isNullOrUndefined(self.processes[processId])) {
+                    self.appendChildRow(self.processes[processId]);
+                    clearInterval(intervall);
+                }
+            }, 100);
+
+            setTimeout(function () {
+                clearInterval(intervall);
+            }, 10000);
+        }
+
+        this.dtOptions = this.offerDataTableService.getDTOptionsConfiguration(createdRow, searchLink);
         this.dtColumns = this.offerDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
         this.getAllActiveTemplates();
 
@@ -120,7 +135,7 @@ class OfferController extends AbstractWorkflow {
         this.otherCurrentTab = tab;
     }
 
-    appendChildRow(process: Process, event: any) {
+    appendChildRow(process: Process) {
         let childScope = this.scope.$new(true);
         this.workflowService.appendChildRow(childScope, process, process.offer, this.dtInstance, this, "offer");
     }
