@@ -102,29 +102,29 @@ public class Application {
 	@PostConstruct
 	public void createAdminIfNotExists() throws Exception {
 
-		if (!Optional.ofNullable(userService.getUserByName("admin")).isPresent()) {
-			User admin = new User();
+		//		if (!Optional.ofNullable(userService.getUserByName("admin")).isPresent()) {
+		//			User admin = new User();
+		//
+		//			admin.setUsername("admin".toLowerCase());
+		//			admin.setPassword(passwordEncoder().encode("admin"));
+		//			admin.setFirstname("firstAdmin");
+		//			admin.setLastname("lastAdmin");
+		//			admin.setEmail("admin@eviarc.com");
+		//			admin.setRole(Role.ADMIN);
+		//			admin.setEnabled(true);
+		//			admin.setLanguage(Language.DE);
+		//
+		//			userService.save(admin);
+		//		}
 
-			admin.setUsername("admin".toLowerCase());
-			admin.setPassword(passwordEncoder().encode("admin"));
-			admin.setFirstname("firstAdmin");
-			admin.setLastname("lastAdmin");
-			admin.setEmail("admin@eviarc.com");
-			admin.setRole(Role.ADMIN);
-			admin.setEnabled(true);
-			admin.setLanguage(Language.DE);
-
-			userService.save(admin);
-		}
-
-		if (!Optional.ofNullable(userService.getUserByName("test")).isPresent()) {
+		if (!Optional.ofNullable(userService.getUserByName("andreas.foitzik")).isPresent()) {
 			User test = new User();
 
-			test.setUsername("test".toLowerCase());
+			test.setUsername("andreas.foitzik".toLowerCase());
 			test.setPassword(passwordEncoder().encode("test"));
-			test.setEmail("test@eviarc.com");
-			test.setFirstname("firstTest");
-			test.setLastname("lastTest");
+			test.setEmail("andreas.foitzik@get-net.eu");
+			test.setFirstname("Andreas");
+			test.setLastname("Foitzik");
 			test.setRole(Role.SUPERADMIN);
 			test.setEnabled(true);
 			test.setLanguage(Language.DE);
@@ -146,20 +146,20 @@ public class Application {
 			smtpService.save(testSmtp);
 		}
 
-		if (!Optional.ofNullable(userService.getUserByName("testUser")).isPresent()) {
-			User test = new User();
-
-			test.setUsername("testUser".toLowerCase());
-			test.setPassword(passwordEncoder().encode("testUser"));
-			test.setFirstname("firstTestUser");
-			test.setLastname("lastTestUser");
-			test.setEmail("testUser@eviarc.com");
-			test.setRole(Role.USER);
-			test.setEnabled(true);
-			test.setLanguage(Language.DE);
-
-			userService.save(test);
-		}
+		//		if (!Optional.ofNullable(userService.getUserByName("testUser")).isPresent()) {
+		//			User test = new User();
+		//
+		//			test.setUsername("testUser".toLowerCase());
+		//			test.setPassword(passwordEncoder().encode("testUser"));
+		//			test.setFirstname("firstTestUser");
+		//			test.setLastname("lastTestUser");
+		//			test.setEmail("testUser@eviarc.com");
+		//			test.setRole(Role.USER);
+		//			test.setEnabled(true);
+		//			test.setLanguage(Language.DE);
+		//
+		//			userService.save(test);
+		//		}
 
 		if (!Optional.ofNullable(userService.getUserByName("api")).isPresent()) {
 			User apiuser = new User();
@@ -176,20 +176,20 @@ public class Application {
 			userService.save(apiuser);
 		}
 
-		if (!Optional.ofNullable(userService.getUserByName("test")).isPresent()) {
-			User test = new User();
-
-			test.setUsername("test".toLowerCase());
-			test.setPassword(passwordEncoder().encode("test"));
-			test.setFirstname("firstTest");
-			test.setLastname("lastTest");
-			test.setEmail("test@eviarc.com");
-			test.setRole(Role.SUPERADMIN);
-			test.setEnabled(true);
-			test.setLanguage(Language.DE);
-
-			userService.save(test);
-		}
+		//		if (!Optional.ofNullable(userService.getUserByName("test")).isPresent()) {
+		//			User test = new User();
+		//
+		//			test.setUsername("test".toLowerCase());
+		//			test.setPassword(passwordEncoder().encode("test"));
+		//			test.setFirstname("firstTest");
+		//			test.setLastname("lastTest");
+		//			test.setEmail("test@eviarc.com");
+		//			test.setRole(Role.SUPERADMIN);
+		//			test.setEnabled(true);
+		//			test.setLanguage(Language.DE);
+		//
+		//			userService.save(test);
+		//		}
 	}
 
 	@Configuration

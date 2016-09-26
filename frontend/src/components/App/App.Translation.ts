@@ -74,6 +74,18 @@ function config($translateProvider) {
             YEARLY: "Jahr",
             ALL: "Alle",
 
+            ORDER: "Bestellung",
+            SUPPLY: "Lieferung",
+            EMAIL: "Email",
+            SALE: "Verkauf",
+
+            // Template
+            EMAIL_TEMPLATE: "Email - Template",
+            EMAIL_TEMPLATE_SELECT: "Select - Template",
+            EMAIL_RECIPIENT: "Empfänger",
+            EMAIL_SUBJECT: "Betreff",
+            EMAIL_ATTACHMENT: "Anhang",
+            EMAIL_MESSAGE: "Nachricht",
 
             COMMON_LOAD_MORE: "weitere laden",
             COMMON_CURRENCY: "€",
@@ -375,6 +387,7 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE_ERROR: "Produkt konnte nicht aktuallisiert werden",
 
             // Define customer elements
+            CUSTOMER: "Kunde",
             CUSTOMER_MANAGE_CUSTOMER: "Kunden verwalten",
             CUSTOMER_CREATE: "Neuer Kunde",
             CUSTOMER_EDIT: "Kunde bearbeiten",
@@ -448,6 +461,19 @@ function config($translateProvider) {
             MONTHLY: "Month",
             YEARLY: "Year",
             ALL: "All",
+
+            ORDER: "Order",
+            SUPPLY: "Supply",
+            EMAIL: "Email",
+            SALE: "Sale",
+
+            // Template
+            EMAIL_TEMPLATE: "Email - Template",
+            EMAIL_TEMPLATE_SELECT: "Select - Template",
+            EMAIL_RECIPIENT: "Recipient",
+            EMAIL_SUBJECT: "Subject",
+            EMAIL_ATTACHMENT: "Attachment",
+            EMAIL_MESSAGE: "Message",
 
             COMMON_LOAD_MORE: "more",
             COMMON_UPLOAD_NEW1_IMAGE: "Upload new image",
@@ -750,6 +776,7 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE_ERROR: "Updating product was unsuccessful",
 
             // Define customer elements
+            CUSTOMER: "Customer",
             CUSTOMER_MANAGE_CUSTOMER: "Manage Customer",
             CUSTOMER_CREATE: "New Customer",
             CUSTOMER_EDIT: "Edit cCstomer",
