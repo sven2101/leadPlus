@@ -73,7 +73,7 @@ function config($translateProvider) {
             YEARLY: "Jahr",
             ALL: "Alle",
 
-            ORDER: "Bestellung",
+            LEAD: "Anfrage",
             SUPPLY: "Lieferung",
             EMAIL: "Email",
             SALE: "Verkauf",
@@ -462,7 +462,7 @@ function config($translateProvider) {
             YEARLY: "Year",
             ALL: "All",
 
-            ORDER: "Order",
+            LEAD: "Lead",
             SUPPLY: "Supply",
             EMAIL: "Email",
             SALE: "Sale",

@@ -23,7 +23,7 @@
                                 ng-model="parent.currentProductAmount" required>
                         </th>
                         <th class="col-md-1">
-                            <button ng-disabled="parent.orderEditForm.addOrderPosition.$invalid||parent.currentProductId==-1" type="button" class="btn btn-white btn-sm"
+                            <button ng-disabled="parent.leadEditForm.addOrderPosition.$invalid||parent.currentProductId==-1" type="button" class="btn btn-white btn-sm"
                                 ng-click="[parent.addProduct(parent.currentOrderPositions, parent.currentProductId, parent.currentProductAmount),parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.currentOrderPositions)]">
                                      <i class="fa fa-plus"></i>&nbsp;</button>
                         </th>
@@ -40,8 +40,8 @@
                             {{orderPosition.product.name}} ({{orderPosition.product.priceNetto| currency:'\u20AC'}})
                         </td>
                         <td class="col-md-2 text-center ">
-                            <div class="input-group " ng-class="{ 'has-error' : parent.orderEditForm[
-                                    'orderPositionDiscount'+$index].$invalid && !parent.orderEditForm[ 'orderPositionDiscount'+$index].$pristine } ">
+                            <div class="input-group " ng-class="{ 'has-error' : parent.leadEditForm[
+                                    'orderPositionDiscount'+$index].$invalid && !parent.leadEditForm[ 'orderPositionDiscount'+$index].$pristine } ">
                                 <span class="input-group-addon ">%</span>
                                 <input type="number " name="{{ 'orderPositionDiscount'+$index}} " class="form-control
                                     " ng-model="orderPosition.discount " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " min="0 "
@@ -51,7 +51,7 @@
                             </div>
                         </td>
                         <td class="col-md-2 text-center">
-                            <div class="input-group" ng-class="{ 'has-error' : parent.orderEditForm['orderPosition'+$index].$invalid && !parent.orderEditForm['orderPosition'+$index].$pristine  }">
+                            <div class="input-group" ng-class="{ 'has-error' : parent.leadEditForm['orderPosition'+$index].$invalid && !parent.leadEditForm['orderPosition'+$index].$pristine  }">
                                 <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
                                 <input type="number" name="{{'orderPosition'+$index}}" class="form-control" ng-model="orderPosition.price" " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ "
                                     min="0 " step="0.01 " data-number-to-fixed="2 " data-number-stepfactor="100

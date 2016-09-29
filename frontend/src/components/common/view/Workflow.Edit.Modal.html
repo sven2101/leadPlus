@@ -10,7 +10,7 @@
                     <div class="steps clearfix">
                         <ul role="tablist">
                             <li ng-click="parent.wizardOnClick(1)" role="tab" class="{{parent.currentWizard1Class}}" aria-disabled="false" aria-selected="true"><a aria-controls="wizard-p-0"><span class="current-info audible">current step: </span><span class="number">1.</span> {{ 'CUSTOMER'| translate }}</a></li>
-                            <li ng-click="parent.wizardOnClick(2)" role="tab" class="{{parent.currentWizard2Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-1"><span class="number">2.</span> {{ 'ORDER'| translate }}</a></li>
+                            <li ng-click="parent.wizardOnClick(2)" role="tab" class="{{parent.currentWizard2Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-1"><span class="number">2.</span> {{ 'LEAD'| translate }}</a></li>
                             <li ng-click="parent.wizardOnClick(3)" role="tab" class="{{parent.currentWizard3Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-2"><span class="number">3.</span> {{ 'SUPPLY'| translate }}</a></li>
                             <li ng-click="parent.wizardOnClick(4)" role="tab" class="{{parent.currentWizard4Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-3"><span class="number">4.</span> {{ 'COMMON_PRODUCT_CALCULATION'| translate }}</a></li>
                             <li ng-if="type=='offer' || type=='sale'" ng-click="parent.wizardOnClick(5)" role="tab" class="{{parent.currentWizard5Class}}"

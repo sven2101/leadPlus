@@ -15,7 +15,7 @@
 "use strict";
 
 angular.module(moduleApp)
-    .directive("order", function () {
+    .directive("lead", function () {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
         directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
         directive.scope = {
@@ -25,7 +25,7 @@ angular.module(moduleApp)
         };
         directive.restrict = "A";
         directive.templateUrl = function (elem, attr) {
-            return "components/common/view/Workflow.Edit.Order.html";
+            return "components/common/view/Workflow.Edit.Lead.html";
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs, controller) {

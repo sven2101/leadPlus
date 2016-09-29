@@ -62,7 +62,7 @@ class SaleController extends AbstractWorkflow {
     currentTab: number = 1;
 
     customerEditForm: any;
-    orderEditForm: any;
+    leadEditForm: any;
     supplyEditForm: any;
     priceEditForm: any;
     emailEditForm: any;
@@ -138,8 +138,8 @@ class SaleController extends AbstractWorkflow {
         if (!isNullOrUndefined(this.customerEditForm)) {
             this.customerEditForm.$setPristine();
         }
-        if (!isNullOrUndefined(this.orderEditForm)) {
-            this.orderEditForm.$setPristine();
+        if (!isNullOrUndefined(this.leadEditForm)) {
+            this.leadEditForm.$setPristine();
         }
         if (!isNullOrUndefined(this.supplyEditForm)) {
             this.supplyEditForm.$setPristine();

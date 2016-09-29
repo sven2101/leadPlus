@@ -60,7 +60,7 @@ class WorkflowController extends AbstractWorkflow {
     saleService: SaleService;
 
     customerEditForm: any;
-    orderEditForm: any;
+    leadEditForm: any;
     supplyEditForm: any;
     priceEditForm: any;
     emailEditForm: any;
@@ -102,8 +102,8 @@ class WorkflowController extends AbstractWorkflow {
         if (!isNullOrUndefined(this.customerEditForm)) {
             this.customerEditForm.$setPristine();
         }
-        if (!isNullOrUndefined(this.orderEditForm)) {
-            this.orderEditForm.$setPristine();
+        if (!isNullOrUndefined(this.leadEditForm)) {
+            this.leadEditForm.$setPristine();
         }
         if (!isNullOrUndefined(this.supplyEditForm)) {
             this.supplyEditForm.$setPristine();
