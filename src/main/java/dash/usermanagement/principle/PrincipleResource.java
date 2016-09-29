@@ -52,15 +52,12 @@ public class PrincipleResource {
 		for (GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
 			map.put("role", authority.getAuthority());
 		}
-		// UsernamePasswordAuthenticationToken token = new
-		// UsernamePasswordAuthenticationToken(username, password);
-
-		// SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		map.put("username", user.getName());
 		map.put("email", internalUser.getEmail());
 		map.put("firstname", internalUser.getFirstname());
 		map.put("lastname", internalUser.getLastname());
+		map.put("phone", internalUser.getPhone());
 		map.put("email", internalUser.getEmail());
 		map.put("id", String.valueOf(internalUser.getId()));
 		map.put("language", String.valueOf(internalUser.getLanguage()));

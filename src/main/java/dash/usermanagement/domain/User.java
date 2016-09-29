@@ -57,6 +57,9 @@ public class User implements UserDetails {
 	@Column(length = 50)
 	private String firstname;
 
+	@Column(length = 50)
+	private String phone;
+
 	@Column(unique = true, length = 50, nullable = false)
 	private String lastname;
 
@@ -89,6 +92,14 @@ public class User implements UserDetails {
 
 	public void setFirstname(String firstname) {
 		this.firstname = firstname;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public String getLastname() {
@@ -269,9 +280,8 @@ public class User implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
-				+ ", email=" + email + ", password=" + password + ", role=" + role + ", profilPicture=" + picture
-				+ ", language=" + language + ", enabled=" + enabled + "]";
+		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password="
+				+ password + ", role=" + role + ", profilPicture=" + picture + ", language=" + language + ", enabled=" + enabled + "]";
 	}
 
 }

@@ -168,6 +168,8 @@ class WorkflowController extends AbstractWorkflow {
 
     save() {
         this.process.offer = this.editWorkflowUnit;
+        console.log("this.editWorkflowUnit ", this.editWorkflowUnit);
+        console.log("this.process.offer ", this.process.offer);
         let self = this;
         this.workflowService.addLeadToOffer(this.process).then(function (tmpprocess: Process) {
             self.rootScope.$broadcast("deleteRow", self.process);

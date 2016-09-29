@@ -29,6 +29,7 @@ class User extends AbstractModel {
     enabled: boolean;
     firstname: string;
     lastname: string;
+    phone: string;
 
     constructor() {
         super();
