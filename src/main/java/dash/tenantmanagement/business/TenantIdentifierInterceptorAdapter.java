@@ -11,19 +11,26 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash.tenantmanagement.business;
 
-package dash.commentmanagement.business;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import java.util.List;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import org.springframework.data.repository.CrudRepository;
+@Component
+public class TenantIdentifierInterceptorAdapter extends HandlerInterceptorAdapter {
 
-import dash.commentmanagement.domain.Comment;
-import dash.processmanagement.domain.Process;
+	@Override
+	public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception {
+		String tenant = req.getHeader("X-TenantID");
 
-//@Transactional
-//@Repository
-public interface CommentRepository extends CrudRepository<Comment, Long> {
-
-	List<Comment> findByProcess(Process process);
+		if (tenant == null) {
+			TenantContext.setTenant(tenant);
+		} else {
+			TenantContext.setTenant("public");
+		}
+		return true;
+	}
 }

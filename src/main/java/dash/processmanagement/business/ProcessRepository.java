@@ -16,13 +16,10 @@ package dash.processmanagement.business;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.stereotype.Repository;
 
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
@@ -30,8 +27,8 @@ import dash.processmanagement.domain.Process;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
 
-@Transactional
-@Repository
+//@Transactional
+//@Repository
 public interface ProcessRepository extends PagingAndSortingRepository<Process, Long> {
 
 	List<Process> findProcessesByStatus(Status status);

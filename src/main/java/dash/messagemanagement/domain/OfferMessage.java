@@ -50,6 +50,7 @@ public class OfferMessage extends AbstractMessage {
 		return escapedString.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public String getContent() throws Exception {
 		String unescapedString = unescapeString(this.template);

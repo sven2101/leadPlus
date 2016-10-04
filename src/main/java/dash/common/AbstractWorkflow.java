@@ -43,6 +43,7 @@ public abstract class AbstractWorkflow implements Request {
 	@Where(clause = "deleted <> '1'")
 	private Customer customer;
 
+	@Column(name = "deliveryAddress")
 	private String deliveryAddress;
 
 	@ApiModelProperty(hidden = true)

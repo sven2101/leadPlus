@@ -49,4 +49,7 @@ public final class Constants {
 	public static final String BECAUSE_OF_ILLEGAL_ID = " BECAUSE OF ILLEGAL ID ";
 	public static final String BECAUSE_OF_USER_NOT_FOUND = " BECAUSE OF USER NOT FOUND ";
 
+	public static final String CURRENT_TENANT_IDENTIFIER = "CURRENT_TENANT_IDENTIFIER";
+	public static final String UNKNOWN_TENANT = "unknown";
+
 }
