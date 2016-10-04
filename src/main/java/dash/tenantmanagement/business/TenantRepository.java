@@ -11,19 +11,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash.tenantmanagement.business;
 
-package dash.commentmanagement.business;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import dash.tenantmanagement.domain.Tenant;
 
-import org.springframework.data.repository.CrudRepository;
+public interface TenantRepository extends JpaRepository<Tenant, Long> {
 
-import dash.commentmanagement.domain.Comment;
-import dash.processmanagement.domain.Process;
-
-//@Transactional
-//@Repository
-public interface CommentRepository extends CrudRepository<Comment, Long> {
-
-	List<Comment> findByProcess(Process process);
 }

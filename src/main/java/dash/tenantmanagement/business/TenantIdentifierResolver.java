@@ -11,19 +11,21 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash.tenantmanagement.business;
 
-package dash.commentmanagement.business;
+import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
+@Component
+public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver {
 
-import org.springframework.data.repository.CrudRepository;
+	@Override
+	public String resolveCurrentTenantIdentifier() {
+		return TenantContext.getTenant();
+	}
 
-import dash.commentmanagement.domain.Comment;
-import dash.processmanagement.domain.Process;
-
-//@Transactional
-//@Repository
-public interface CommentRepository extends CrudRepository<Comment, Long> {
-
-	List<Comment> findByProcess(Process process);
+	@Override
+	public boolean validateExistingCurrentSessions() {
+		return false;
+	}
 }

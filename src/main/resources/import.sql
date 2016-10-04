@@ -1,3 +1,4 @@
+
 -- Customers
 INSERT INTO public.customer(address, company, deactivated, email, firstname, lastname, phone, timestamp, title, deleted)
     VALUES ('76133 Karlsruhe, Hauptstrasse 55 ', 'Eviarc GmbH', false, 'andreas.foitzik@eviarc.com', 'Max', 'Mustermann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
@@ -18,23 +19,24 @@ INSERT INTO public.customer(address, company, deactivated, email, firstname, las
     VALUES ('20457 Hamburg, Landebrücke 2', 'Ikea AG', false, 'fritz.walter@ikea.com', 'Fritz', 'Walter', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);   
    
 -- User
-INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username, picture)
-    VALUES ('andreas.atrott@***REMOVED***.com', true, 'Andreas', 'DE', 'Atrott', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'SUPERADMIN', 'andreas.atrott', null);
 
-INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username, picture)
-    VALUES ('lars.graulo@***REMOVED***.com', true, 'Lars', 'DE', 'Graulo', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'USER', 'lars.graulo', null);
+INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username, tenant_id)
+    VALUES ('andreas.atrott@***REMOVED***.com', true, 'Andreas', 'DE', 'Atrott', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'SUPERADMIN', 'andreas.atrott', 1);
 
-INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username, picture)
-    VALUES ('philipp.manzow@***REMOVED***.com', true, 'Philipp', 'DE', 'Manzow', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'USER', 'philipp.manzow', null);
+INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username, tenant_id)
+    VALUES ('lars.graulo@***REMOVED***.com', true, 'Lars', 'DE', 'Graulo', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'USER', 'lars.graulo', 1);
 
-INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username, picture)
-    VALUES ('kristina.evtuhova@***REMOVED***.com', true, 'Kristina', 'DE', 'Evtuhova', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'USER', 'kristina.evtuhova', null);
+INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username, tenant_id)
+    VALUES ('philipp.manzow@***REMOVED***.com', true, 'Philipp', 'DE', 'Manzow', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'USER', 'philipp.manzow', 1);
 
-INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username, picture)
-    VALUES ('samuel.ilg@***REMOVED***.com', true, 'Samuel', 'DE', 'Ilg', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'USER', 'samuel.ilg', null);
+INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username, tenant_id)
+    VALUES ('kristina.evtuhova@***REMOVED***.com', true, 'Kristina', 'DE', 'Evtuhova', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'USER', 'kristina.evtuhova', 1);
 
-INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username, picture)
-    VALUES ('jana.reusch@***REMOVED***.com', true, 'Jana', 'DE', 'Reusch', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'USER', 'jana.reusch', null);
+INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username, tenant_id)
+    VALUES ('samuel.ilg@***REMOVED***.com', true, 'Samuel', 'DE', 'Ilg', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'USER', 'samuel.ilg', 1);
+
+INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username, tenant_id)
+    VALUES ('jana.reusch@***REMOVED***.com', true, 'Jana', 'DE', 'Reusch', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'USER', 'jana.reusch', 1);
 
 -- SMTP	
 -- INSERT INTO public.smtp(connection, email, encryption, host, password, port, response_adress, sender, username, user)

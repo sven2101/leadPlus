@@ -11,19 +11,17 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash.tenantmanagement.business;
 
-package dash.commentmanagement.business;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.util.List;
+@Configuration
+public class TenantInterceptor extends WebMvcConfigurerAdapter {
 
-import org.springframework.data.repository.CrudRepository;
-
-import dash.commentmanagement.domain.Comment;
-import dash.processmanagement.domain.Process;
-
-//@Transactional
-//@Repository
-public interface CommentRepository extends CrudRepository<Comment, Long> {
-
-	List<Comment> findByProcess(Process process);
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(new TenantIdentifierInterceptorAdapter());
+	}
 }

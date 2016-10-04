@@ -21,7 +21,6 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -56,9 +55,6 @@ public class UserLoginService implements UserDetailsService {
 			logger.error(ex.getMessage() + username + UserLoginService.class.getSimpleName(), ex);
 			throw new UsernameNotFoundException(USER_NOT_FOUND + username);
 		}
-
-		System.out.println("USER: " + new org.springframework.security.core.userdetails.User(user.getUsername(),
-				user.getPassword(), AuthorityUtils.createAuthorityList(user.getRole().toString())));
 
 		return user;
 	}

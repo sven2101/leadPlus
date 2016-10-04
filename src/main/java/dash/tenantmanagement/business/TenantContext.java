@@ -11,19 +11,19 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash.tenantmanagement.business;
 
-package dash.commentmanagement.business;
+public class TenantContext {
 
-import java.util.List;
+	private static final ThreadLocal<String> tenantThreadLocal = new ThreadLocal<String>();
+	private static final String DEFAULT_TENANT = "public";
 
-import org.springframework.data.repository.CrudRepository;
+	public static String getTenant() {
+		String tenant = tenantThreadLocal.get();
+		return tenant != null ? tenant : DEFAULT_TENANT;
+	}
 
-import dash.commentmanagement.domain.Comment;
-import dash.processmanagement.domain.Process;
-
-//@Transactional
-//@Repository
-public interface CommentRepository extends CrudRepository<Comment, Long> {
-
-	List<Comment> findByProcess(Process process);
+	public static void setTenant(String tenantCode) {
+		tenantThreadLocal.set(tenantCode);
+	}
 }
