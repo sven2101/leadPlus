@@ -21,30 +21,48 @@ import javax.sql.DataSource;
 import org.hibernate.MultiTenancyStrategy;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-public class HibernateConfig {
+@EnableTransactionManagement
+public class TenantHibernateConfig {
 
-	@Bean
+	@Autowired
+	private DataSource dataSource;
+
+	@Autowired
+	private MultiTenantConnectionProvider tenantConnectionProvider;
+
+	@Autowired
+	private CurrentTenantIdentifierResolver tenantIdentifierResolver;
+
+	@Bean(name = "entityTransactionManager")
+	@Primary
 	public PlatformTransactionManager transactionManager() {
-		return new JpaTransactionManager();
+		JpaTransactionManager tm = new JpaTransactionManager();
+		tm.setEntityManagerFactory(entityManagerFactory().getObject());
+		tm.setDataSource(dataSource);
+		return tm;
 	}
 
 	@Bean
+	@Primary
 	public JpaVendorAdapter jpaVendorAdapter() {
 		return new HibernateJpaVendorAdapter();
 	}
 
-	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource, MultiTenantConnectionProvider multiTenantConnectionProvider,
-			CurrentTenantIdentifierResolver tenantIdentifierResolver) {
+	@Bean(name = "entityManagerFactory")
+	@Primary
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean emfBean = new LocalContainerEntityManagerFactoryBean();
 		emfBean.setDataSource(dataSource);
 		emfBean.setPackagesToScan("dash");
@@ -52,11 +70,13 @@ public class HibernateConfig {
 
 		Map<String, Object> jpaProperties = new HashMap<>();
 		jpaProperties.put(org.hibernate.cfg.Environment.MULTI_TENANT, MultiTenancyStrategy.SCHEMA);
-		jpaProperties.put(org.hibernate.cfg.Environment.MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProvider);
+		jpaProperties.put(org.hibernate.cfg.Environment.MULTI_TENANT_CONNECTION_PROVIDER, tenantConnectionProvider);
 		jpaProperties.put(org.hibernate.cfg.Environment.MULTI_TENANT_IDENTIFIER_RESOLVER, tenantIdentifierResolver);
-		jpaProperties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, "create-drop");
+		jpaProperties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, "validate");
 
 		emfBean.setJpaPropertyMap(jpaProperties);
+		emfBean.setPersistenceUnitName("default");
+
 		return emfBean;
 	}
 

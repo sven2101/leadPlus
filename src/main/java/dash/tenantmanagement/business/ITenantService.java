@@ -11,17 +11,11 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash.tenantmanagement.business;
 
-package dash.usermanagement.business;
+import dash.tenantmanagement.domain.Tenant;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+public interface ITenantService {
 
-import dash.usermanagement.domain.User;
-
-@Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-	User findByUsernameIgnoreCase(String username);
-
-	User findByEmailIgnoreCase(String email);
+	public Tenant createNewTenant(final Tenant tenant);
 }
