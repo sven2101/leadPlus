@@ -13,18 +13,11 @@
  *******************************************************************************/
 package dash.tenantmanagement.domain;
 
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
-import dash.usermanagement.domain.User;
 
 @Entity
 public class Tenant {
@@ -42,9 +35,6 @@ public class Tenant {
 	private String address;
 
 	private boolean enabled;
-
-	@OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<User> users;
 
 	public Tenant() {
 
@@ -88,6 +78,11 @@ public class Tenant {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	@Override
+	public String toString() {
+		return "Tenant [id=" + id + ", tenantKey=" + tenantKey + ", description=" + description + ", address=" + address + ", enabled=" + enabled + "]";
 	}
 
 }

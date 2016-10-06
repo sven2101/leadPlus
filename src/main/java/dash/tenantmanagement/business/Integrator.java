@@ -13,12 +13,20 @@
  *******************************************************************************/
 package dash.tenantmanagement.business;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.hibernate.boot.Metadata;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.service.spi.SessionFactoryServiceRegistry;
 
-import dash.tenantmanagement.domain.Tenant;
+public class Integrator implements org.hibernate.integrator.spi.Integrator {
 
-@Repository
-public interface TenantRepository extends JpaRepository<Tenant, Long> {
+	@Override
+	public void integrate(Metadata metadata, SessionFactoryImplementor sessionFactory, SessionFactoryServiceRegistry serviceRegistry) {
+		HibernateInfoHolder.setMetadata(metadata);
+		HibernateInfoHolder.setSessionFactory(sessionFactory);
+		HibernateInfoHolder.setServiceRegistry(serviceRegistry);
+	}
 
+	@Override
+	public void disintegrate(SessionFactoryImplementor sessionFactory, SessionFactoryServiceRegistry serviceRegistry) {
+	}
 }
