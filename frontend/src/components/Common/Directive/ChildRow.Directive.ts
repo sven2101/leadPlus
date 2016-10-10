@@ -20,7 +20,7 @@ angular.module(moduleApp)
         directive = { restrict: null, templateUrl: null, transclude: null, link: null };
         directive.restrict = "A";
         directive.templateUrl = function (elem, attr) {
-            return "components/common/view/Workflow.ChildRow.html";
+            return "components/Common/view/Workflow.ChildRow.html";
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {

@@ -50,7 +50,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/users")
-public class UserResource {
+public class UserManagmentResource {
 
 	@Autowired
 	private UserService userService;

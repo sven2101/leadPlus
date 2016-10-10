@@ -27,11 +27,11 @@ angular.module(moduleApp)
         };
         directive.templateUrl = function (elem, attr) {
             if (attr.template === "standard") {
-                return "components/common/view/Workflow.ActionButtons.html";
+                return "components/Common/view/Workflow.ActionButtons.html";
             }
             else if (attr.template === "dropdown") {
                 // TODO build new template
-                return "components/common/view/Workflow.ActionButtons.html";
+                return "components/Common/view/Workflow.ActionButtons.html";
             }
         };
         directive.transclude = true;

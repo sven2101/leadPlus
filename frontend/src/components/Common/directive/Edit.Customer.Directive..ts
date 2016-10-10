@@ -25,7 +25,7 @@ angular.module(moduleApp)
             type: "=",
         };
         directive.templateUrl = function (elem, attr) {
-            return "components/common/view/Workflow.Edit.Customer.html";
+            return "components/Common/view/Workflow.Edit.Customer.html";
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {

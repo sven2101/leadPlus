@@ -25,7 +25,7 @@ angular.module(moduleApp)
         };
         directive.restrict = "A";
         directive.templateUrl = function (elem, attr) {
-            return "components/common/view/Workflow.Edit.Sale.html";
+            return "components/Common/view/Workflow.Edit.Sale.html";
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs, controller) {

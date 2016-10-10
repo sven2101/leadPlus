@@ -13,7 +13,7 @@ angular.module(moduleApp)
         };
         directive.restrict = "A";
         directive.templateUrl = function (elem, attr) {
-            return "components/common/view/ImageCrop.html";
+            return "components/Common/view/ImageCrop.html";
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {

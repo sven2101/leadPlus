@@ -73,14 +73,16 @@ public class Application {
 	public static class SwaggerConfig {
 		@Bean
 		public Docket api() {
-			return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("dash.publicapi")).paths(PathSelectors.any())
-					.build().apiInfo(apiInfo());
+			return new Docket(DocumentationType.SWAGGER_2).select()
+					.apis(RequestHandlerSelectors.basePackage("dash.publicapi")).paths(PathSelectors.any()).build()
+					.apiInfo(apiInfo());
 
 		}
 	}
 
 	private static ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("Lead+").description("Lead+ - Lead Management Tool").license("").licenseUrl("").version("2.0").build();
+		return new ApiInfoBuilder().title("Lead+").description("Lead+ - Lead Management Tool").license("")
+				.licenseUrl("").version("2.0").build();
 	}
 
 	@Autowired
@@ -102,20 +104,22 @@ public class Application {
 	@PostConstruct
 	public void createAdminIfNotExists() throws Exception {
 
-		//		if (!Optional.ofNullable(userService.getUserByName("admin")).isPresent()) {
-		//			User admin = new User();
+		// if
+		// (!Optional.ofNullable(userService.getUserByName("admin")).isPresent())
+		// {
+		// User admin = new User();
 		//
-		//			admin.setUsername("admin".toLowerCase());
-		//			admin.setPassword(passwordEncoder().encode("admin"));
-		//			admin.setFirstname("firstAdmin");
-		//			admin.setLastname("lastAdmin");
-		//			admin.setEmail("admin@eviarc.com");
-		//			admin.setRole(Role.ADMIN);
-		//			admin.setEnabled(true);
-		//			admin.setLanguage(Language.DE);
+		// admin.setUsername("admin".toLowerCase());
+		// admin.setPassword(passwordEncoder().encode("admin"));
+		// admin.setFirstname("firstAdmin");
+		// admin.setLastname("lastAdmin");
+		// admin.setEmail("admin@eviarc.com");
+		// admin.setRole(Role.ADMIN);
+		// admin.setEnabled(true);
+		// admin.setLanguage(Language.DE);
 		//
-		//			userService.save(admin);
-		//		}
+		// userService.save(admin);
+		// }
 
 		if (!Optional.ofNullable(userService.getUserByName("andreas.foitzik")).isPresent()) {
 			User test = new User();
@@ -146,20 +150,22 @@ public class Application {
 			smtpService.save(testSmtp);
 		}
 
-		//		if (!Optional.ofNullable(userService.getUserByName("testUser")).isPresent()) {
-		//			User test = new User();
+		// if
+		// (!Optional.ofNullable(userService.getUserByName("testUser")).isPresent())
+		// {
+		// User test = new User();
 		//
-		//			test.setUsername("testUser".toLowerCase());
-		//			test.setPassword(passwordEncoder().encode("testUser"));
-		//			test.setFirstname("firstTestUser");
-		//			test.setLastname("lastTestUser");
-		//			test.setEmail("testUser@eviarc.com");
-		//			test.setRole(Role.USER);
-		//			test.setEnabled(true);
-		//			test.setLanguage(Language.DE);
+		// test.setUsername("testUser".toLowerCase());
+		// test.setPassword(passwordEncoder().encode("testUser"));
+		// test.setFirstname("firstTestUser");
+		// test.setLastname("lastTestUser");
+		// test.setEmail("testUser@eviarc.com");
+		// test.setRole(Role.USER);
+		// test.setEnabled(true);
+		// test.setLanguage(Language.DE);
 		//
-		//			userService.save(test);
-		//		}
+		// userService.save(test);
+		// }
 
 		if (!Optional.ofNullable(userService.getUserByName("api")).isPresent()) {
 			User apiuser = new User();
@@ -176,20 +182,22 @@ public class Application {
 			userService.save(apiuser);
 		}
 
-		//		if (!Optional.ofNullable(userService.getUserByName("test")).isPresent()) {
-		//			User test = new User();
+		// if
+		// (!Optional.ofNullable(userService.getUserByName("test")).isPresent())
+		// {
+		// User test = new User();
 		//
-		//			test.setUsername("test".toLowerCase());
-		//			test.setPassword(passwordEncoder().encode("test"));
-		//			test.setFirstname("firstTest");
-		//			test.setLastname("lastTest");
-		//			test.setEmail("test@eviarc.com");
-		//			test.setRole(Role.SUPERADMIN);
-		//			test.setEnabled(true);
-		//			test.setLanguage(Language.DE);
+		// test.setUsername("test".toLowerCase());
+		// test.setPassword(passwordEncoder().encode("test"));
+		// test.setFirstname("firstTest");
+		// test.setLastname("lastTest");
+		// test.setEmail("test@eviarc.com");
+		// test.setRole(Role.SUPERADMIN);
+		// test.setEnabled(true);
+		// test.setLanguage(Language.DE);
 		//
-		//			userService.save(test);
-		//		}
+		// userService.save(test);
+		// }
 	}
 
 	@Configuration
@@ -211,13 +219,16 @@ public class Application {
 		protected void configure(HttpSecurity http) throws Exception {
 
 			http.httpBasic().and().authorizeRequests()
-					.antMatchers("/", "/images/favicon**", "/assets/**", "/fonts/**", "/app/**", "/components/**", "/api/rest/registrations/**",
-							"/swagger-ui.html", "/webjars/springfox-swagger-ui/**", "/configuration/ui", "/swagger-resources", "/v2/api-docs/**",
-							"/configuration/security")
-					.permitAll().antMatchers("/api/rest/public**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API").anyRequest().authenticated().antMatchers("/**")
-					.hasAnyAuthority("SUPERADMIN,ADMIN,USER").anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
-					.csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout().logoutUrl("/logout").logoutSuccessUrl("/").and()
-					.headers().frameOptions().sameOrigin().httpStrictTransportSecurity().disable();
+					.antMatchers("/", "/images/favicon**", "/assets/**", "/fonts/**", "/app/**",
+							"/components/Login/view/Login.html", "/components/Signup/view/Signup.html",
+							"/api/rest/registrations/**", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
+							"/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")
+					.permitAll().antMatchers("/api/rest/public**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")
+					.anyRequest().authenticated().antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER")
+					.anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
+					.csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout()
+					.logoutUrl("/logout").logoutSuccessUrl("/").and().headers().frameOptions().sameOrigin()
+					.httpStrictTransportSecurity().disable();
 
 			http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
 		}
