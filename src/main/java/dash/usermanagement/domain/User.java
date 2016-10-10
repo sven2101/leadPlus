@@ -44,7 +44,7 @@ import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.settings.language.Language;
 
 @Entity
-@Table(name = "\"User\"")
+@Table(name = "\"user\"")
 public class User implements UserDetails {
 
 	private static final long serialVersionUID = 3125258392087209376L;
@@ -84,7 +84,7 @@ public class User implements UserDetails {
 	private Language language;
 
 	@ManyToOne
-	@JoinColumn(nullable = false)
+	@JoinColumn(name = "tenant_id", nullable = true)
 	private Tenant tenant;
 
 	private boolean enabled;

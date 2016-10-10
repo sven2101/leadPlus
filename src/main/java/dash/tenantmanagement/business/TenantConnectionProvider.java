@@ -43,6 +43,7 @@ public class TenantConnectionProvider implements MultiTenantConnectionProvider {
 
 	@Override
 	public Connection getConnection(String tenantIdentifier) throws SQLException {
+		System.out.println("tenantIdentifier" + tenantIdentifier);
 		final Connection connection = getAnyConnection();
 		try {
 			connection.createStatement().execute("SET search_path = " + tenantIdentifier);
@@ -55,7 +56,7 @@ public class TenantConnectionProvider implements MultiTenantConnectionProvider {
 	@Override
 	public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
 		try {
-			connection.createStatement().execute("SET search_path = public");
+			connection.createStatement().execute("SET search_path = " + tenantIdentifier);
 		} catch (SQLException e) {
 			// on error, throw an exception to make sure the connection is not returned to the pool.
 			// your requirements may differ

@@ -102,8 +102,8 @@ public class Application {
 
 			http.httpBasic().and().authorizeRequests()
 					.antMatchers("/", "/images/favicon**", "/assets/**", "/fonts/**", "/app/**", "/components/Login/view/Login.html",
-							"/components/Signup/view/Signup.html", "/api/rest/registrations/**", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
-							"/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")
+							"/components/Signup/view/Signup.html", "/api/rest/registrations/**", "/api/rest/tenants/**", "/swagger-ui.html",
+							"/webjars/springfox-swagger-ui/**", "/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")
 					.permitAll().antMatchers("/api/rest/public**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API").anyRequest().authenticated().antMatchers("/**")
 					.hasAnyAuthority("SUPERADMIN,ADMIN,USER").anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
 					.csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout().logoutUrl("/logout").logoutSuccessUrl("/").and()

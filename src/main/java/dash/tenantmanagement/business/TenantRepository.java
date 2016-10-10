@@ -15,10 +15,12 @@ package dash.tenantmanagement.business;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import dash.tenantmanagement.domain.Tenant;
 
 @Repository
+@Transactional("publicSchemaEntityManagerFactory")
 public interface TenantRepository extends JpaRepository<Tenant, Long> {
 
 }

@@ -29,7 +29,7 @@ public class TenantIdentifierInterceptorAdapter extends HandlerInterceptorAdapte
 		if (tenant == null) {
 			TenantContext.setTenant(tenant);
 		} else {
-			TenantContext.setTenant("public");
+			TenantContext.setTenant("tenant");
 		}
 		return true;
 	}
