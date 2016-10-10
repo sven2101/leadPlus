@@ -14,11 +14,12 @@ ALTER TABLE tenant_id_seq
 
 CREATE TABLE IF NOT EXISTS public.tenant
 (
-  id bigint NOT NULL DEFAULT nextval('tenant_id_seq'::regclass),
+  id bigint NOT NULL DEFAULT nextval('public.tenant_id_seq'::regclass),
   address character varying(255),
   description character varying(255),
   enabled boolean NOT NULL,
   tenant_key character varying(255),
+  CONSTRAINT tenant_unique UNIQUE (tenant_key),
   CONSTRAINT tenant_pkey PRIMARY KEY (id)
 )
 WITH (

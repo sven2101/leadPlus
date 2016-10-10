@@ -43,7 +43,6 @@ public class TenantConnectionProvider implements MultiTenantConnectionProvider {
 
 	@Override
 	public Connection getConnection(String tenantIdentifier) throws SQLException {
-		System.out.println("tenantIdentifier" + tenantIdentifier);
 		final Connection connection = getAnyConnection();
 		try {
 			connection.createStatement().execute("SET search_path = " + tenantIdentifier);

@@ -1,4 +1,4 @@
-
+/*
 -- Data Setup
 
 INSERT INTO public.tenant(address, description, enabled, tenant_key)
@@ -24,3 +24,5 @@ INSERT INTO tenant."user"(email, enabled, firstname, language, lastname, passwor
 
 INSERT INTO tenant."user"(email, enabled, firstname, language, lastname, password, role, username, tenant_id)
     VALUES ('jana.reusch@***REMOVED***.com', true, 'Jana', 'DE', 'Reusch', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'USER', 'jana.reusch', 1); 
+
+*/

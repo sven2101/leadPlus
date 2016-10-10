@@ -9,8 +9,7 @@ CREATE SEQUENCE "user_id_seq"
   CACHE 1;
 ALTER TABLE "user_id_seq"
   OWNER TO postgres;
-  
-  
+   
 -- Sequence: comment_id_seq
 
 CREATE SEQUENCE comment_id_seq
@@ -201,11 +200,7 @@ CREATE TABLE "user"
   role character varying(255),
   username character varying(30),
   picture_id bigint,
-  tenant_id bigint NOT NULL,
   CONSTRAINT "user_pkey" PRIMARY KEY (id),
-  CONSTRAINT fkeqijh91gaowhfcsuhdpon1b1 FOREIGN KEY (tenant_id)
-      REFERENCES public.tenant (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT fkoxacr7c2iwurvyel2h0jwblu3 FOREIGN KEY (picture_id)
       REFERENCES fileupload (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
@@ -295,7 +290,7 @@ WITH (
 ALTER TABLE sale
   OWNER TO postgres;
 
--- Table: public.lead
+-- Table: lead
 
 CREATE TABLE lead
 (
@@ -396,7 +391,7 @@ WITH (
 ALTER TABLE orderposition
   OWNER TO postgres;
 
--- Table: public.process
+-- Table: process
 
 CREATE TABLE process
 (
@@ -452,7 +447,7 @@ WITH (
 ALTER TABLE comment
   OWNER TO postgres;
 
--- Table: public.smtp
+-- Table: smtp
 
 CREATE TABLE smtp
 (
