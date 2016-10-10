@@ -25,14 +25,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import dash.exceptions.NotFoundException;
 import dash.exceptions.UserIsNotActivatedException;
 import dash.usermanagement.domain.User;
 
 @Service
-@Transactional
 public class UserLoginService implements UserDetailsService {
 
 	private static final Logger logger = Logger.getLogger(UserLoginService.class);
