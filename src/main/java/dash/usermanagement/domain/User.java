@@ -26,8 +26,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -40,7 +38,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import dash.fileuploadmanagement.domain.FileUpload;
-import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.settings.language.Language;
 
 @Entity
@@ -82,10 +79,6 @@ public class User implements UserDetails {
 
 	@Enumerated(EnumType.STRING)
 	private Language language;
-
-	@ManyToOne
-	@JoinColumn(name = "tenant_id", nullable = true)
-	private Tenant tenant;
 
 	private boolean enabled;
 
@@ -144,14 +137,6 @@ public class User implements UserDetails {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public Tenant getTenant() {
-		return this.tenant;
-	}
-
-	public void setTenant(Tenant tenant) {
-		this.tenant = tenant;
 	}
 
 	public Role getRole() {

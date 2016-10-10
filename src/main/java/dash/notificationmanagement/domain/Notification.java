@@ -24,6 +24,9 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import dash.fileuploadmanagement.domain.FileUpload;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -46,8 +49,10 @@ public class Notification {
 	private String content;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	// @JsonProperty(access = Access.WRITE_ONLY)
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private FileUpload attachment;
+
+	private NotificationType notificationType;
 
 	public Notification() {
 	}

@@ -11,14 +11,8 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.tenantmanagement.business;
+package dash.notificationmanagement.domain;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import dash.tenantmanagement.domain.Tenant;
-
-@Repository
-public interface TenantRepository extends JpaRepository<Tenant, Long> {
-
+public enum NotificationType {
+	INFO, NEWSLETTER, FOLLOWUP, OFFER
 }

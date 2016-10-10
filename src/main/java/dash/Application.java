@@ -37,6 +37,11 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.route53.AmazonRoute53;
+import com.amazonaws.services.route53.AmazonRoute53Client;
+
 import dash.security.AngularCsrfHeaderFilter;
 import dash.security.listener.RESTAuthenticationEntryPoint;
 import dash.usermanagement.registration.domain.Validation;
@@ -75,6 +80,12 @@ public class Application {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public AmazonRoute53 getAmazonRoute53() {
+		AWSCredentials awsCredentials = new BasicAWSCredentials("***REMOVED***", "***REMOVED***");
+		return new AmazonRoute53Client(awsCredentials);
 	}
 
 	@Bean

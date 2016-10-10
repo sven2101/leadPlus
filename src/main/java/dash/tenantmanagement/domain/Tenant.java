@@ -18,8 +18,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "tenant", schema = "public")
 public class Tenant {
 
 	@Id
@@ -27,7 +29,7 @@ public class Tenant {
 	@Column(name = "id")
 	private long id;
 
-	@Column(name = "tenant_key")
+	@Column(name = "tenant_key", unique = true)
 	private String tenantKey;
 
 	private String description;
