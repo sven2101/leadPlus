@@ -2,6 +2,7 @@
 /// <reference path="../User/model/User.Model.ts" />
 /// <reference path="../app/App.Resource.ts" />
 /// <reference path="../app/App.Common.ts" />
+/// <reference path="../Common/model/Promise.Interface.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -21,7 +22,7 @@ const AuthServiceId: string = "AuthService";
 
 class AuthService {
 
-    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, UserResourceId, $injectorId];
+    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, UserResourceId, $injectorId, $qId];
 
     http;
     rootScope;
@@ -29,9 +30,11 @@ class AuthService {
     location;
     userResource;
     injector;
+    $q;
 
-    constructor($http, $rootScope, $cookieStore, $location, UserResource, $injector) {
+    constructor($http, $rootScope, $cookieStore, $location, UserResource, $injector, $q) {
         this.http = $http;
+        this.$q = $q;
         this.rootScope = $rootScope;
         this.cookieStore = $cookieStore;
         this.location = $location;
@@ -39,13 +42,15 @@ class AuthService {
         this.injector = $injector;
     }
 
-    login(credentials, success, error) {
+    login(credentials): IPromise<boolean> {
         let self = this;
+        let defer = this.$q.defer();
         if (credentials) {
 
             let authorization = btoa(credentials.username + ":" + credentials.password);
             let headers = credentials ? { authorization: "Basic " + authorization } : {};
-            this.http.get("user", { headers: headers }).success(function (data) {
+            this.http.get("user", { headers: headers }).then(function (response) {
+                let data = response.data;
                 if (data.username) {
                     self.rootScope.globals = {
                         user: {
@@ -60,20 +65,39 @@ class AuthService {
                             pictureLink: "http://localhost:8080/users/" + data.id + "/profile/picture",
                             smtp: data.smtp,
                             authorization: authorization
+                        },
+                        tenant: {
+                            license: {
+                                package: ["basic"],
+                                term: "09.12.2017",
+                                trial: false
+                            }
                         }
                     };
-                    self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
-                    self.cookieStore.put("globals", self.rootScope.globals);
-                    self.rootScope.globals.user.picture = data.profilePicture;
-                    success(data);
-                    self.injector.get("DashboardService");
-                    self.rootScope.$broadcast("onTodosChange");
+                    if (!hasLicense(self.rootScope.globals.tenant.license, "basic")) {
+                        alert("Lizenz abgelaufen am: " + self.rootScope.globals.tenant.license.term);
+                        self.rootScope.globals.user = null;
+                        self.rootScope.globals = {};
+                        defer.reject(false);
+                    } else {
+                        self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
+                        self.cookieStore.put("globals", self.rootScope.globals);
+                        self.rootScope.globals.user.picture = data.profilePicture;
+                        self.injector.get("DashboardService");
+                        self.rootScope.$broadcast("onTodosChange");
+                        defer.resolve(true);
+                    }
                 } else {
                     console.log("username is null");
+                    defer.reject(false);
                 }
-            }).error(error);
-
+            }, (function (error) {
+                defer.reject(false);
+            }));
+        } else {
+            defer.reject(false);
         }
+        return defer.promise;
     }
 
     logout() {

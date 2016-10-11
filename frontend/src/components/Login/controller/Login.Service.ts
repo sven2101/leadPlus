@@ -45,14 +45,13 @@ class LoginService {
             self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
         }
         else {
-            self.authService.login(credentials,
+            self.authService.login(credentials).then(
                 function (res) {
                     self.location.path("/dashoard");
                     self.rootScope.setUserDefaultLanguage();
                     self.rootScope.loadLabels();
                 },
                 function (err) {
-                    // self.scope.credentials.password = "";
                     self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
                 }
             );

@@ -22,63 +22,72 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 templateUrl: "components/Dashboard/view/Dashboard.html",
                 controller: "DashboardController",
                 controllerAs: "dashboardCtrl",
-                authenticated: true
+                authenticated: true,
+                package: "basic"
             })
             .when("/dashboard",
             {
                 templateUrl: "components/Dashboard/view/Dashboard.html",
                 controller: "DashboardController",
                 controllerAs: "dashboardCtrl",
-                authenticated: true
+                authenticated: true,
+                package: "basic"
             })
             .when("/leads/:processId?",
             {
                 templateUrl: "components/Lead/view/Lead.html",
                 controller: "LeadController",
                 controllerAs: "leadCtrl",
-                authenticated: true
+                authenticated: true,
+                package: "basic"
             })
             .when("/offers/:processId?",
             {
                 templateUrl: "components/Offer/view/Offer.html",
                 controller: "OfferController",
                 controllerAs: "offerCtrl",
-                authenticated: true
+                authenticated: true,
+                package: "basic"
             })
             .when("/sales/:processId?",
             {
                 templateUrl: "components/Sale/view/Sale.html",
                 controller: "SaleController",
                 controllerAs: "saleCtrl",
-                authenticated: true
+                authenticated: true,
+                package: "basic"
             })
             .when("/statistic",
             {
                 templateUrl: "components/Statistic/view/Statistic.html",
                 controller: "StatisticController",
                 controllerAs: "statisticCtrl",
-                authenticated: true
+                authenticated: true,
+                package: "pro"
             })
             .when("/settings",
             {
                 templateUrl: "components/Setting/view/Setting.html",
                 controller: "SettingController",
                 controllerAs: "settingCtrl",
-                authenticated: true
+                authenticated: true,
+                package: "basic"
             })
             .when("/settings/detail/:userId",
             {
                 templateUrl: "components/Setting/view/UserDetail.html",
                 controller: "UserDetailController",
                 controllerAs: "UserDetailCtrl",
-                authenticated: true
+                authenticated: true,
+                package: "basic"
             })
             .when("/profile",
             {
                 templateUrl: "components/Profile/view/Profile.html",
                 controller: "ProfileController",
                 controllerAs: "profileCtrl",
-                authenticated: true
+                authenticated: true,
+                package: "basic"
             })
             .when("/signup",
             {
@@ -96,25 +105,29 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 templateUrl: "components/Product/view/Product.html",
                 controller: "ProductController",
                 controllerAs: "productCtrl",
-                authenticated: true
+                authenticated: true,
+                package: "basic"
             }).when("/product/detail/:productId",
             {
                 templateUrl: "components/Product/view/ProductDetail.html",
                 controller: "ProductDetailController",
                 controllerAs: "ProductDetailCtrl",
-                authenticated: true
+                authenticated: true,
+                package: "basic"
             }).when("/customer",
             {
                 templateUrl: "components/Customer/view/Customer.html",
                 controller: "CustomerController",
                 controllerAs: "customerCtrl",
-                authenticated: true
+                authenticated: true,
+                package: "basic"
             }).when("/customer/detail/:customerId",
             {
                 templateUrl: "components/Customer/view/CustomerDetail.html",
                 controller: "CustomerDetailController",
                 controllerAs: "customerDetailCtrl",
-                authenticated: true
+                authenticated: true,
+                package: "basic"
             }).otherwise({
                 redirectTo: "/"
             });
@@ -135,12 +148,15 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
 
                 if (next.authenticated === true) {
                     if (initialLoaded) {
-
                         initialLoaded = false;
                     }
-                    if (!$rootScope.globals.user) {
+                    if (!$rootScope.globals.user || !$rootScope.globals.tenant) {
                         $location.path("/login");
-                    } else {
+                    }
+                    else if (!hasLicense($rootScope.globals.tenant.license, next.package)) {
+                        $location.path("/");
+                    }
+                    else {
                         $injector.get("DashboardService");
                     }
                 }

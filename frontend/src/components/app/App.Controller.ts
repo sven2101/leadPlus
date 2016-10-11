@@ -70,6 +70,10 @@ class AppController {
         }
     }
 
+    hasLicense(userLicense: any, routeLicense: string): boolean {
+        return hasLicense(userLicense, routeLicense);
+    }
+
     registerLoadLabels() {
         let self = this;
         self.rootScope.loadLabels = function () {

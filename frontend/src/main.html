@@ -53,7 +53,7 @@
                 <a href="#/sales"><i class="fa fa-usd"></i> <span
                         class="nav-label">{{ 'SALES_MENU' | translate }}</span></a>
             </li>
-            <li>
+            <li ng-if="appCtrl.hasLicense(globals.tenant.license,'pro')">
                 <a href="#/statistic"><i class="fa fa-line-chart"></i> <span class="nav-label">{{ 'STATISTIC_MENU' | translate }}</span></a>
             </li>
             <li>
