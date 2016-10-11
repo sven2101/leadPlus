@@ -40,11 +40,6 @@ class LoginService {
 
     login(credentials) {
         let self = this;
-        if (credentials.username === "apiuser") {
-            self.scope.credentials.password = "";
-            self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
-        }
-        else {
             self.authService.login(credentials,
                 function (res) {
                     self.location.path("/dashoard");
@@ -56,7 +51,6 @@ class LoginService {
                     self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
                 }
             );
-        }
     };
 }
 
