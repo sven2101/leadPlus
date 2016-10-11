@@ -18,9 +18,6 @@ public class Validation {
 
 	private boolean validation;
 
-	public Validation() {
-	}
-
 	public boolean isValidation() {
 		return validation;
 	}

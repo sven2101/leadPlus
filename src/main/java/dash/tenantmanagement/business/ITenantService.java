@@ -18,4 +18,6 @@ import dash.tenantmanagement.domain.Tenant;
 public interface ITenantService {
 
 	public Tenant createNewTenant(final Tenant tenant);
+
+	public boolean uniqueTenantKey(final Tenant tenant);
 }

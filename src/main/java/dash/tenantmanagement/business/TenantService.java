@@ -53,7 +53,10 @@ public class TenantService implements ITenantService {
 		try {
 			tenantRepository.save(tenant);
 			createSchema(tenant);
-			validateUniquenessOfSubdomain(tenant);
+			if (validateUniquenessOfSubdomain(tenant)) {
+				System.out.println("CREATING SUBDOMAIN ON AWS.");
+				// createTenantSubdomain(tenant);
+			}
 		} catch (Exception ex) {
 			System.out.println("TENANT KEY already exists: " + ex.getMessage());
 		}
@@ -67,7 +70,7 @@ public class TenantService implements ITenantService {
 		flyway.migrate();
 	}
 
-	private void validateUniquenessOfSubdomain(final Tenant tenant) {
+	private boolean validateUniquenessOfSubdomain(final Tenant tenant) {
 		ListResourceRecordSetsRequest request = new ListResourceRecordSetsRequest();
 		request.setHostedZoneId("***REMOVED***");
 
@@ -75,15 +78,12 @@ public class TenantService implements ITenantService {
 		List<ResourceRecordSet> recordSets = result.getResourceRecordSets();
 		boolean subdomainAlreadyExists = false;
 		for (ResourceRecordSet recordSet : recordSets) {
+			System.out.println("RECORD SET: " + recordSet.toString());
 			if (recordSet.getName().contains(tenant.getTenantKey() + ".")) {
 				subdomainAlreadyExists = true;
 			}
 		}
-
-		if (!subdomainAlreadyExists) {
-			System.out.println("CREATING SUBDOMAIN ON AWS.");
-			// createTenantSubdomain(tenant);
-		}
+		return subdomainAlreadyExists;
 	}
 
 	public void createTenantSubdomain(final Tenant tenant) {
@@ -122,6 +122,11 @@ public class TenantService implements ITenantService {
 		System.out.println(result.toString());
 
 		System.out.println("DONE---------------------------------");
+	}
+
+	@Override
+	public boolean uniqueTenantKey(Tenant tenant) {
+		return validateUniquenessOfSubdomain(tenant);
 	}
 
 }

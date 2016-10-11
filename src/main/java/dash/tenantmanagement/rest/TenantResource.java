@@ -45,4 +45,11 @@ public class TenantResource {
 	public Tenant save(@ApiParam(required = true) @RequestBody @Valid final Tenant tenant) throws SaveFailedException {
 		return tenantService.createNewTenant(tenant);
 	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/unique/key")
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Check uniqueness of Tenant Key. ", notes = "")
+	public boolean uniqueTenantKey(@ApiParam(required = true) @RequestBody final Tenant tenant) {
+		return tenantService.uniqueTenantKey(tenant);
+	}
 }

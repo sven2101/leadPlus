@@ -96,6 +96,10 @@ const moduleTemplateService: string = moduleTemplate + ".service";
 const moduleNotification: string = moduleApp + ".notification";
 const moduleNotificationResource: string = moduleNotification + ".resource";
 const moduleNotificationService: string = moduleNotification + ".service";
+const moduleTenant: string = moduleApp + ".tenant";
+const moduleTenantResource: string = moduleTenant + ".resource";
+const moduleRegistration: string = moduleApp + ".registration";
+const moduleRegistrationService: string = moduleRegistration + ".service";
 
 const moduleTranslate: string = "pascalprecht.translate";
 const moduleNgResource: string = "ngResource";
