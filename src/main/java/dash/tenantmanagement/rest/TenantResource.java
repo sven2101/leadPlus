@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dash.exceptions.SaveFailedException;
 import dash.tenantmanagement.business.ITenantService;
 import dash.tenantmanagement.domain.Tenant;
+import dash.usermanagement.registration.domain.Validation;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -46,10 +47,10 @@ public class TenantResource {
 		return tenantService.createNewTenant(tenant);
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/unique/key")
+	@RequestMapping(method = RequestMethod.POST, value = "/unique/key")
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Check uniqueness of Tenant Key. ", notes = "")
-	public boolean uniqueTenantKey(@ApiParam(required = true) @RequestBody final Tenant tenant) {
+	public Validation uniqueTenantKey(@ApiParam(required = true) @RequestBody final Tenant tenant) {
 		return tenantService.uniqueTenantKey(tenant);
 	}
 }

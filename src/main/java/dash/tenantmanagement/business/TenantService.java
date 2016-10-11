@@ -35,6 +35,7 @@ import com.amazonaws.services.route53.model.ResourceRecord;
 import com.amazonaws.services.route53.model.ResourceRecordSet;
 
 import dash.tenantmanagement.domain.Tenant;
+import dash.usermanagement.registration.domain.Validation;
 
 @Service
 public class TenantService implements ITenantService {
@@ -125,8 +126,10 @@ public class TenantService implements ITenantService {
 	}
 
 	@Override
-	public boolean uniqueTenantKey(Tenant tenant) {
-		return validateUniquenessOfSubdomain(tenant);
+	public Validation uniqueTenantKey(Tenant tenant) {
+		Validation validation = new Validation();
+		validation.setValidation(validateUniquenessOfSubdomain(tenant));
+		return validation;
 	}
 
 }

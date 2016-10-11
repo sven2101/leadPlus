@@ -32,9 +32,9 @@ public class Tenant {
 	@Column(name = "tenant_key", unique = true)
 	private String tenantKey;
 
-	private String description;
+	private String email;
 
-	private String address;
+	private String password;
 
 	private boolean enabled;
 
@@ -58,20 +58,20 @@ public class Tenant {
 		this.tenantKey = tenantKey;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setEmailF(String email) {
+		this.email = email;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public boolean isEnabled() {
@@ -84,7 +84,7 @@ public class Tenant {
 
 	@Override
 	public String toString() {
-		return "Tenant [id=" + id + ", tenantKey=" + tenantKey + ", description=" + description + ", address=" + address + ", enabled=" + enabled + "]";
+		return "Tenant [id=" + id + ", tenantKey=" + tenantKey + ", email=" + email + ", password=" + password + ", enabled=" + enabled + "]";
 	}
 
 }

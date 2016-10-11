@@ -14,10 +14,11 @@
 package dash.tenantmanagement.business;
 
 import dash.tenantmanagement.domain.Tenant;
+import dash.usermanagement.registration.domain.Validation;
 
 public interface ITenantService {
 
 	public Tenant createNewTenant(final Tenant tenant);
 
-	public boolean uniqueTenantKey(final Tenant tenant);
+	public Validation uniqueTenantKey(final Tenant tenant);
 }

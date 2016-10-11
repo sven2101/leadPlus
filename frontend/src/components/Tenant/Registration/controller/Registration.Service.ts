@@ -42,6 +42,7 @@ class RegistrationService {
         let self = this;
         this.tenantResource.uniqueTenantKey(tenant).$promise.then(function (data, headersGetter, status) {
             self.tenantKeyExist = data.validation;
+            console.log("Tenant Key: ", data);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });
@@ -55,19 +56,18 @@ class RegistrationService {
                 self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
             });
         }
-    
-        signup(user: Signup): void {
-            let self = this;
-            this.signupResource.signup({ username: user.username, email: user.email, password: user.password, password2: user.password2, firstname: user.firstname, lastname: user.lastname }).$promise.then(function () {
-                user = null;
-                self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
-                self.location.path("/login");
-            }, function () {
-                user = null;
-                self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
-            });
-        }
-    */
+        */
+
+    register(tenant: Tenant): void {
+        let self = this;
+        this.tenantResource.save(tenant).$promise.then(function () {
+            self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
+            self.location.path(tenant.tenantKey + ".leadplus.io");
+        }, function () {
+            self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
+        });
+    }
+
 }
 
 angular.module(moduleRegistrationService, [ngResourceId]).service(RegistrationServiceId, RegistrationService);

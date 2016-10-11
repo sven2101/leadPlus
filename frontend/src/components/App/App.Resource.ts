@@ -428,7 +428,7 @@ class TenantResource {
     constructor($resource) {
         this.resource = $resource("/api/rest/tenants", {}, {
             save: { url: "/api/rest/tenants", method: "POST" },
-            uniqueTenantKey: { url: "/api/rest/tenants/unique/key", method: "GET" }
+            uniqueTenantKey: { url: "/api/rest/tenants/unique/key", method: "POST" }
         });
     }
 }
