@@ -95,6 +95,12 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controller: "SignupController",
                 controllerAs: "signupCtrl"
             })
+            .when("/tenants/registration",
+            {
+                templateUrl: "components/Tenant/Registration/view/registration.html",
+                controller: "RegistrationController",
+                controllerAs: "registrationCtrl"
+            })
             .when("/login",
             {
                 templateUrl: "components/Login/view/Login.html",
