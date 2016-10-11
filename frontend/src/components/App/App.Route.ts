@@ -89,15 +89,21 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 authenticated: true,
                 package: "basic"
             })
+            .when("/licence",
+            {
+                templateUrl: "components/Licence/view/Licence.html",
+                controller: "RegistrationController",
+                controllerAs: "registrationCtrl"
+            })
             .when("/signup",
             {
-                templateUrl: "components/Signup/view/signup.html",
+                templateUrl: "components/Signup/view/Signup.html",
                 controller: "SignupController",
                 controllerAs: "signupCtrl"
             })
             .when("/tenants/registration",
             {
-                templateUrl: "components/Tenant/Registration/view/registration.html",
+                templateUrl: "components/Tenant/Registration/view/Registration.html",
                 controller: "RegistrationController",
                 controllerAs: "registrationCtrl"
             })
@@ -181,8 +187,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                     + $rootScope.globals.user.authorization;
             }
             let initialLoaded = true;
-            $rootScope.$on("$routeChangeStart", function (event,
-                next, current) {
+            $rootScope.$on("$routeChangeStart", function (event, next, current) {
 
                 if (next.authenticated === true) {
                     if (initialLoaded) {

@@ -38,11 +38,12 @@ class RegistrationController {
         uniqueEmail(): void {
             this.signupService.uniqueEmail(this.user);
         }
-    
-        signup(): void {
-            this.signupService.signup(this.user);
-        }
     */
+
+    register(): void {
+        this.registrationService.register(this.tenant);
+    }
+
 }
 
 angular.module(moduleRegistration, [ngResourceId]).controller(RegistrationControllerId, RegistrationController);

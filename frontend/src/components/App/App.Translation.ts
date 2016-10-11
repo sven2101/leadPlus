@@ -65,6 +65,13 @@ function config($translateProvider) {
             SIGNUP_VALIDATE_EMAIL_IN_USE: "E-Mail schon vergeben",
             SIGNUP_VALIDATE_PASSWORD_TO_LONG: "Passwort darf höchstens 20 Zeichen enthalten",
 
+            // Tenant Registration
+            REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE: "Subdomain wird bereits verwendet",
+            REGISTRATION_VALIDATE_TENANT_COMPANY_NAME: "Firmenname",
+            REGISTRATION_VALIDATE_TENANT_ADDRESS: "Adresse",
+            REGISTRATION_VALIDATE_TENANT_PHONE: "Telefonnummer",
+            REGISTRATION_VALIDATE_TENANT_EMAIL: "Email",
+
             // Define common elements
             MR: "Herr",
             MS: "Frau",
@@ -455,6 +462,13 @@ function config($translateProvider) {
             SIGNUP_VALIDATE_USER_TO_LONG: "Username has to contain 20 or less characters",
             SIGNUP_VALIDATE_EMAIL_IN_USE: "E-Mail already in use",
             SIGNUP_VALIDATE_PASSWORD_TO_LONG: "Password have to contain 20 or less characters",
+
+            // Tenant Registration
+            REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE: "Subdomain is already in use",
+            REGISTRATION_VALIDATE_TENANT_COMPANY_NAME: "Company Name",
+            REGISTRATION_VALIDATE_TENANT_ADDRESS: "Address",
+            REGISTRATION_VALIDATE_TENANT_PHONE: "Phone",
+            REGISTRATION_VALIDATE_TENANT_EMAIL: "Email",
 
             // Define common elements
             MR: "Mr.",
