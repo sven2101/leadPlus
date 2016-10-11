@@ -63,7 +63,7 @@ class SignupService {
         this.signupResource.signup({ username: user.username, email: user.email, password: user.password, password2: user.password2, firstname: user.firstname, lastname: user.lastname }).$promise.then(function () {
             user = null;
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
-            self.location.path("/login");
+            // self.location.path("/login");
         }, function () {
             user = null;
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));

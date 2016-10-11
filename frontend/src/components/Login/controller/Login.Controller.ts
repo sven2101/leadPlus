@@ -1,4 +1,5 @@
 /// <reference path="../../Login/controller/Login.Service.ts" />
+/// <reference path="../../Login/model/Credentials.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -22,13 +23,16 @@ class LoginController {
     private $inject = [LoginServiceId];
 
     loginService: LoginService;
+    credentials: Credentials;
 
     constructor(LoginService: LoginService) {
         this.loginService = LoginService;
+        this.credentials = new Credentials();
     }
 
-    login(credentials) {
-        this.loginService.login(credentials);
+    login() {
+        console.log("credentials: ", this.credentials);
+        this.loginService.login(this.credentials);
     }
 }
 

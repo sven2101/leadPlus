@@ -1,89 +1,144 @@
-<div class="text-center loginscreen animated fadeInDown">
-	<form name="registration" class="m-t middle-box" role="form">
+<div class="loginscreen animated fadeInDown">
+	<form name="validation" class="m-t middle-box" role="form">
 		<div class="text-center" stlye="margin-bottom: 30px;">
 			<h2 stlye="color: #e6e6e6; font-size: 30px; font-weight: 800; letter-spacing: -10px;">leadplus</h2>
 		</div>
 
-		<h3>{{ 'SIGNUP_REGISTER_WELCOME' | translate }}</h3>
-		<label>{{ 'SIGNUP_CREATE_ACCOUNT' | translate }}</label>
-
-
-		<h2><i class="fa fa-question-circle" data-toggle="tooltip" title="You can access this application afterwards via your choosen sitename 'yourcompany.leadplus.io' for example. You can only use letters. '"></i></h2>
-		<label stlye="color: #ffffff;">Reserve your Company name as subdomain</label>
+		<div class="text-center">
+			<h3>{{ 'SIGNUP_REGISTER_WELCOME' | translate }}</h3>
+			<label>{{ 'SIGNUP_CREATE_ACCOUNT' | translate }}</label>
+			<h2><i class="fa fa-question-circle" data-toggle="tooltip" title="You can access this application afterwards via your choosen sitename 'yourcompany.leadplus.io' for example. You can only use letters. '"></i></h2>
+			<label stlye="color: #ffffff;">Reserve your Company name as subdomain</label>
+		</div>
 
 		<!-- Sitename -->
-		<div class="form-group" ng-class="{ 'has-success': 		!registration.tenantKey.$error.required &&
-																!registration.tenantKey.$error.minlength &&
-																!registration.tenantKey.$error.maxlength &&
-																!registrationCtrl.registrationService.tenantKeyExist,														
-											'has-error ': 		registration.tenantKey.$error.required ||
-																registration.tenantKey.$error.minlength ||
-																registration.tenantKey.$error.maxlength ||
-																registration.tenantKey.$pristine ||
-																registrationCtrl.registrationService.tenantKeyExist		 }">
+		<div class="form-group">
 			<label class="sr-only" for="tenantKey">yoursitename</label>
 			<div class="input-group">
-				<input autofocus type="text" class="form-control" id="tenantKey" placeholder="yoursitename" required ng-pattern="/^[a-zA-Z]*$/"
-					ng-minlength="2" ng-maxlength="20" ng-model="registrationCtrl.tenant.tenantKey" ng-blur="registrationCtrl.uniqueTenantKey()">
+				<input autofocus type="text" class="form-control" id="tenantKey" name="tenantKey" placeholder="yoursitename" required ng-pattern="/^[a-zA-Z]*$/"
+					ng-minlength="2" ng-maxlength="20" ng-model="registrationCtrl.tenant.tenantKey" ng-blur="registrationCtrl.uniqueTenantKey()"
+					ng-class="{ 'has-success has-feedback': 	!validation.tenantKey.$error.required &&
+																!validation.tenantKey.$error.minlength &&
+																!validation.tenantKey.$error.maxlength &&
+																!registrationCtrl.registrationService.tenantKeyExist&&  
+																!validation.tenantKey.$pristine,														
+								'has-error has-feedback': 		validation.tenantKey.$error.required ||
+																validation.tenantKey.$error.minlength ||
+																validation.tenantKey.$error.maxlength ||
+																registrationCtrl.registrationService.tenantKeyExist  &&  
+																!validation.tenantKey.$pristine		 }">
 				<div class="input-group-addon">.leadplus.io</div>
 			</div>
 
-			<span ng-show="registration.tenantKey.$dirty" class="help-block">Password is required</span>
-			<span ng-show="registrationCtrl.registrationService.tenantKeyExist" class="help-block">{{ 'REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE' | translate }}</span>
-			<span ng-show="registration.tenantKey.$error.tenantKeyExist" class="help-block">{{ 'REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE' | translate }}</span>
-			<span ng-show="registration.tenantKey.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
-			<span ng-show="registration.tenantKey.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
-			<span ng-show="registration.tenantKey.$error.maxlength" class="help-block">{{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
+			<span ng-show="validation.tenantKey.$dirty&&!validation.tenantKey.$pristine" class="help-block">Password is required</span>
+			<span ng-show="registrationCtrl.registrationService.tenantKeyExist&&!validation.tenantKey.$pristine" class="help-block">{{ 'REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE' | translate }}</span>
+			<span ng-show="validation.tenantKey.$error.tenantKeyExist&&!validation.tenantKey.$pristine" class="help-block">{{ 'REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE' | translate }}</span>
+			<span ng-show="validation.tenantKey.$error.required&&!validation.tenantKey.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+			<span ng-show="validation.tenantKey.$error.minlength&&!validation.tenantKey.$pristine" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
+			<span ng-show="validation.tenantKey.$error.maxlength&&!validation.tenantKey.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
+		</div>
+
+		<div class="text-center">
+			<h2><i class="fa fa-user" data-toggle="tooltip" title="You can access this application afterwards via your choosen sitename 'yourcompany.leadplus.io' for example. You can only use letters. '"></i></h2>
+			<label stlye="color: #ffffff;">Create your initial User</label>
+		</div>
+
+		<!-- fullname -->
+		<label style="text-align: left;">Fullname</label>
+		<div class="row">
+			<div class="col-xs-6 col-sm-6 col-md-6">
+				<div class="form-group" ng-class="{  	'has-success has-feedback': 	!validation.firstname.$error.required&&
+																						!validation.firstname.$error.minlength&&
+																						!validation.firstname.$error.maxlength  &&  
+																						!validation.firstname.$pristine,														
+														'has-error has-feedback': 		validation.firstname.$error.required ||
+																						validation.firstname.$error.minlength ||
+																						validation.firstname.$error.maxlength  &&  
+																						!validation.firstname.$pristine	 }">
+					<input required ng-minlength="2" ng-maxlength="20" type="text" name="firstname" id="firstname" class="form-control" placeholder="First Name"
+						ng-model="registrationCtrl.user.firstname">
+				</div>
+				<span ng-show="validation.firstname.$error.required &&!validation.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+				<span ng-show="validation.firstname.$error.minlength &&!validation.firstname.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_LASTNAME_TO_SHORT' | translate }}</span>
+				<span ng-show="validation.firstname.$error.maxlength &&!validation.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+			</div>
+			<div class="col-xs-6 col-sm-6 col-md-6">
+				<div class="form-group" ng-class="{  	'has-success has-feedback': 	!validation.lastname.$error.required&&
+																						!validation.lastname.$error.minlength&&
+																						!validation.lastname.$error.maxlength&&  
+																						!validation.lastname.$pristine,														
+														'has-error has-feedback': 		validation.lastname.$error.required ||
+																						validation.lastname.$error.minlength ||
+																						validation.lastname.$error.maxlength  &&  
+																						!validation.lastname.$pristine	 }">
+					<input required ng-minlength="2" ng-maxlength="20" type="text" name="lastname" id="lastname" class="form-control" placeholder="Last Name"
+						ng-model="registrationCtrl.user.lastname">
+				</div>
+				<span ng-show="validation.lastname.$error.required&&!validation.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+				<span ng-show="validation.lastname.$error.minlength&&!validation.lastname.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_LASTNAME_TO_SHORT' | translate }}</span>
+				<span ng-show="validation.lastname.$error.maxlength&&!validation.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+			</div>
 		</div>
 
 		<!-- Email -->
-		<div class="form-group" ng-class="{  	'has-success': 	!registration.email.$error.required,														
-												'has-error': 	registration.email ||
-												 				registration.email.$error.email ||	
-																registration.email.$error.required }">
-			<input type="email" id="email" class="form-control" placeholder="{{ 'REGISTRATION_VALIDATE_TENANT_EMAIL' | translate }}"
-				required ng-model="registrationCtrl.tenant.email">
+		<label style="text-align: left;">Email</label>
+		<div class="form-group" ng-class="{  	'has-success has-feedback': 	!validation.email.$error.required&&
+																				!validation.email.$error.email   &&  
+																				!validation.email.$pristine ,														
+												'has-error has-feedback': 		validation.email.$error.email ||	
+																				validation.email.$error.required  &&  
+																				!validation.email.$pristine 	}">
+			<input type="email" id="email" name="email" class="form-control" placeholder="{{ 'REGISTRATION_VALIDATE_TENANT_EMAIL' | translate }}"
+				required ng-model="registrationCtrl.user.email">
 
-			<span ng-show="registration.email.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
-			<span ng-show="registration.email.$error.email" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
+			<span ng-show="validation.email.$error.required&&!validation.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+			<span ng-show="validation.email.$error.email&&!validation.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
 		</div>
 
 		<!-- Password -->
-		<div class="form-group" ng-class="{ 'has-success has-feedback': 	!registration.password.$error.required &&
-																			!registration.password.$error.minlength &&
-																			!registration.password.$error.maxlength  ,
-												'has-error has-feedback': 	registration.password.$error.minlength ||
-																			registration.password.$error.maxlength	 }">
+		<label style="text-align: left;">Password</label>
+		<div class="form-group" ng-class="{ 'has-success has-feedback': 	!validation.password.$error.required &&
+																			!validation.password.$error.minlength &&
+																			!validation.password.$error.maxlength  ,
+											'has-error has-feedback': 		validation.password.$error.minlength ||
+																			validation.password.$error.maxlength	 }">
 			<input type="password" id="password" name="password" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-				required ng-model="registrationCtrl.tenant.password" ng-minlength="6" ng-maxlength="20">
+				required ng-model="registrationCtrl.user.password" ng-minlength="6" ng-maxlength="20">
 
-			<span ng-show="registration.password.$dirty && registration.password.$error.required" class="help-block">Password is required</span>
-			<span ng-show="registration.password.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
-			<span ng-show="registration.password.$error.maxlength" class="help-block">{{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
+			<span ng-show="validation.password.$dirty && validation.password.$error.required" class="help-block">Password is required</span>
+			<span ng-show="validation.password.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
+			<span ng-show="validation.password.$error.maxlength" class="help-block">{{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
 		</div>
 
-		<div class="form-group" ng-class="{ 'has-success has-feedback': 	!registration.password2.$error.required &&
-																			!registration.password2.$error.minlength &&
-																			!registration.password2.$error.maxlength &&
-																			!registration.password2.$error.pwmatch,
-											'has-error has-feedback': 		registration.password2.$error.minlength ||
-																			registration.password2.$error.maxlength	 ||
-																			registration.password2.$error.pwmatch 	}">
+		<label style="text-align: left;">Confirm Password</label>
+		<div class="form-group" ng-class="{ 'has-success has-feedback': 	!validation.password2.$error.required &&
+																			!validation.password2.$error.minlength &&
+																			!validation.password2.$error.maxlength &&
+																			!validation.password2.$error.pwmatch,
+											'has-error has-feedback': 		validation.password2.$error.minlength ||
+																			validation.password2.$error.maxlength	 ||
+																			validation.password2.$error.pwmatch 	}">
 			<input type="password" id="password2" name="password2" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-				required ng-model="registrationCtrl.tenant.password2" ng-minlength="6" ng-maxlength="20" pw-check="password">
+				required ng-model="registrationCtrl.user.password2" ng-minlength="6" ng-maxlength="20" pw-check="password">
 
-			<span ng-show="registration.password2.$dirty && registration.password2.$error.required" class="help-block">Password is required</span>
-			<span ng-show="registration.password2.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
-			<span ng-show="registration.password2.$error.maxlength" class="help-block">{{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
-			<span ng-show="registration.password2.$error.pwmatch" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</span>
+			<span ng-show="validation.password2.$dirty && validation.password2.$error.required" class="help-block">Password is required</span>
+			<span ng-show="validation.password2.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
+			<span ng-show="validation.password2.$error.maxlength" class="help-block">{{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
+			<span ng-show="validation.password2.$error.pwmatch" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</span>
 		</div>
 
-		<div class="form-group">
-			<label><input type="checkbox" value=""> Ich habe die <a href="components/Licence/view/AGB.html" target="_blank">AGB</a> und die <a href="components/Licence/view/Data.Protection.Statement.html" target="_blank">Datenschutzerklärung</a> gelesen und akzeptiere diese.
+		<div class="form-group text-center" ng-class="{ 'has-success has-feedback': 	!validation.contract.$error.required&&
+																						!validation.contract.$pristine,					
+														'has-error has-feedback': 		validation.contract.$error.required &&  
+																						!validation.contract.$pristine	}">
+			<label>
+				<input required type="checkbox" value="true" name="contract" ng-model="registrationCtrl.terms"/> Ich habe die <a href="components/Licence/view/AGB.html" target="_blank">AGBs</a> und die <a href="components/Licence/view/Data.Protection.Statement.html" target="_blank">Datenschutzerklärung</a> gelesen und akzeptiere diese.
+			</label>
+			<span ng-show="validation.contract.$error.required&&!validation.contract.$pristine" class="help-block">You need to accept our Terms and Conditions.</span>
 			<br/>
 			<br/>
-			<button type="button"
-				ng-click="registrationCtrl.register();" class="btn btn-primary block full-width m-b"><strong>START NOW</strong>
+			<button type="button" ng-click="registrationCtrl.register();" class="btn btn-primary block full-width m-b" ng-disabled="validation.$invalid || vm.dataLoading || tenantKeyExist">
+				<strong>START NOW</strong>
 			</button>
 		</div>
 	</form>

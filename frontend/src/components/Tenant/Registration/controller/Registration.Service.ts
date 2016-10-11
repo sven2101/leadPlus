@@ -1,5 +1,7 @@
 /// <reference path="../../../app/App.Resource.ts" />
 /// <reference path="../../../Tenant/model/Tenant.Model.ts" />
+/// <reference path="../../../Login/controller/Login.Service.ts" />
+/// <reference path="../../../Login/model/Credentials.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -20,8 +22,9 @@ const RegistrationServiceId: string = "RegistrationService";
 
 class RegistrationService {
 
-    private $inject = [$locationId, toasterId, $translateId, TenantResourceId];
+    private $inject = [$locationId, toasterId, $translateId, TenantResourceId, LoginServiceId];
 
+    loginService;
     tenantResource;
     location;
     toaster;
@@ -29,11 +32,13 @@ class RegistrationService {
 
     tenantKeyExist: boolean;
 
-    constructor($location, toaster, $translate, TenantResource) {
+    constructor($location, toaster, $translate, TenantResource, LoginService) {
         this.location = $location;
         this.toaster = toaster;
         this.translate = $translate;
         this.tenantResource = TenantResource.resource;
+
+        this.loginService = LoginService;
 
         this.tenantKeyExist = false;
     }
@@ -42,27 +47,19 @@ class RegistrationService {
         let self = this;
         this.tenantResource.uniqueTenantKey(tenant).$promise.then(function (data, headersGetter, status) {
             self.tenantKeyExist = data.validation;
-            console.log("Tenant Key: ", data);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });
     }
-    /*
-        uniqueEmail(user: Signup): void {
-            let self = this;
-            this.signupResource.uniqueEmail({ username: user.username, email: user.email, password: user.password, password2: user.password2 }).$promise.then(function (data, headersGetter, status) {
-                self.emailExist = data.validation;
-            }, function () {
-                self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
-            });
-        }
-        */
 
     register(tenant: Tenant): void {
         let self = this;
         this.tenantResource.save(tenant).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
-            self.location.path(tenant.tenantKey + ".leadplus.io");
+            let credentials: Credentials = new Credentials();
+            credentials.username = "";
+            credentials.password = "";
+            this.loginService.login(credentials);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });

@@ -97,7 +97,7 @@ public class TenantService implements ITenantService {
 		records.add(record);
 
 		ResourceRecordSet recordSet = new ResourceRecordSet();
-		recordSet.setName(tenant.getTenantKey() + ".***REMOVED***");
+		recordSet.setName(tenant.getTenantKey() + ".leadplus.io");
 		recordSet.setType(RRType.CNAME);
 		recordSet.setTTL(new Long(60));
 		recordSet.setResourceRecords(records);

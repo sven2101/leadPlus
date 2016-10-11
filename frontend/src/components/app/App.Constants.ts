@@ -98,6 +98,7 @@ const moduleNotificationResource: string = moduleNotification + ".resource";
 const moduleNotificationService: string = moduleNotification + ".service";
 const moduleTenant: string = moduleApp + ".tenant";
 const moduleTenantResource: string = moduleTenant + ".resource";
+const moduleTenantService: string = moduleTenant + ".service";
 const moduleRegistration: string = moduleApp + ".registration";
 const moduleRegistrationService: string = moduleRegistration + ".service";
 

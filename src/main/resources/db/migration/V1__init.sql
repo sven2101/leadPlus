@@ -15,8 +15,8 @@ ALTER TABLE tenant_id_seq
 CREATE TABLE IF NOT EXISTS public.tenant
 (
   id bigint NOT NULL DEFAULT nextval('public.tenant_id_seq'::regclass),
-  email character varying(255),
-  password character varying(255),
+  address character varying(255),
+  description character varying(255),
   enabled boolean NOT NULL,
   tenant_key character varying(255),
   CONSTRAINT tenant_unique UNIQUE (tenant_key),
