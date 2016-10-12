@@ -68,7 +68,7 @@ class AuthService {
                         },
                         tenant: {
                             license: {
-                                package: ["basic"],
+                                package: ["basic", "pro"],
                                 term: "09.12.2017",
                                 trial: false
                             }
