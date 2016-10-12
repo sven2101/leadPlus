@@ -36,6 +36,7 @@ import javax.mail.internet.InternetAddress;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.keygen.BytesKeyGenerator;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
@@ -133,11 +134,19 @@ public class SmtpService implements ISmtpService {
 	@Override
 	public Smtp encrypt(Smtp smtp) throws Exception {
 		try {
+			if (SecurityContextHolder.getContext().getAuthentication() == null
+					|| SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null) {
+				throw new Exception("no Authentication");
+			}
+			User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if (currentUser == null || currentUser.getPassword() == null || currentUser.getPassword().equals("")) {
+				throw new Exception("no password available");
+			}
 
 			BytesKeyGenerator generator = KeyGenerators.secureRandom();
 			byte[] salt = generator.generateKey();
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-			KeySpec spec = new PBEKeySpec(smtp.getUser().getUsername().toCharArray(), salt, 65536, 128);
+			KeySpec spec = new PBEKeySpec(currentUser.getPassword().toCharArray(), salt, 65536, 128);
 			SecretKey tmp = factory.generateSecret(spec);
 			SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
 
@@ -161,8 +170,17 @@ public class SmtpService implements ISmtpService {
 	@Override
 	public Smtp decrypt(Smtp smtp) throws Exception {
 		try {
+			if (SecurityContextHolder.getContext().getAuthentication() == null
+					|| SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null) {
+				throw new Exception("no Authentication");
+			}
+			User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if (currentUser == null || currentUser.getPassword() == null || currentUser.getPassword().equals("")) {
+				throw new Exception("no password available");
+			}
+
 			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-			KeySpec spec = new PBEKeySpec(smtp.getUser().getUsername().toCharArray(), smtp.getSalt(), 65536, 128);
+			KeySpec spec = new PBEKeySpec(currentUser.getPassword().toCharArray(), smtp.getSalt(), 65536, 128);
 			SecretKey tmp = factory.generateSecret(spec);
 			SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
 

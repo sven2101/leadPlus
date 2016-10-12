@@ -57,10 +57,9 @@ public class UserLoginService implements UserDetailsService {
 			throw new UsernameNotFoundException(USER_NOT_FOUND + username);
 		}
 
-		System.out.println("USER: " + new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-				AuthorityUtils.createAuthorityList(user.getRole().toString())));
+		System.out.println("USER: " + new org.springframework.security.core.userdetails.User(user.getUsername(),
+				user.getPassword(), AuthorityUtils.createAuthorityList(user.getRole().toString())));
 
-		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-				AuthorityUtils.createAuthorityList(String.valueOf(user.getRole())));
+		return user;
 	}
 }

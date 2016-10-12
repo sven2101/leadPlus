@@ -147,7 +147,7 @@ public class Application {
 			testSmtp.setUsername("web26262457p2");
 			testSmtp.setUser(test);
 
-			smtpService.save(testSmtp);
+			// smtpService.save(testSmtp);
 		}
 
 		// if
@@ -182,22 +182,20 @@ public class Application {
 			userService.save(apiuser);
 		}
 
-		// if
-		// (!Optional.ofNullable(userService.getUserByName("test")).isPresent())
-		// {
-		// User test = new User();
-		//
-		// test.setUsername("test".toLowerCase());
-		// test.setPassword(passwordEncoder().encode("test"));
-		// test.setFirstname("firstTest");
-		// test.setLastname("lastTest");
-		// test.setEmail("test@eviarc.com");
-		// test.setRole(Role.SUPERADMIN);
-		// test.setEnabled(true);
-		// test.setLanguage(Language.DE);
-		//
-		// userService.save(test);
-		// }
+		if (!Optional.ofNullable(userService.getUserByName("test")).isPresent()) {
+			User test = new User();
+
+			test.setUsername("test".toLowerCase());
+			test.setPassword(passwordEncoder().encode("test"));
+			test.setFirstname("firstTest");
+			test.setLastname("lastTest");
+			test.setEmail("test@eviarc.com");
+			test.setRole(Role.SUPERADMIN);
+			test.setEnabled(true);
+			test.setLanguage(Language.DE);
+
+			userService.save(test);
+		}
 	}
 
 	@Configuration
