@@ -36,11 +36,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 import dash.security.AngularCsrfHeaderFilter;
+import dash.security.License;
+import dash.security.LicenseFilter;
 import dash.security.listener.RESTAuthenticationEntryPoint;
 import dash.smtpmanagement.business.SmtpService;
 import dash.smtpmanagement.domain.Encryption;
@@ -217,7 +220,6 @@ public class Application {
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
-
 			http.httpBasic().and().authorizeRequests()
 					.antMatchers("/", "/images/favicon**", "/assets/**", "/fonts/**", "/app/**",
 							"/components/Login/view/Login.html", "/components/Signup/view/Signup.html",
@@ -225,10 +227,14 @@ public class Application {
 							"/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")
 					.permitAll().antMatchers("/api/rest/public**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")
 					.anyRequest().authenticated().antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER")
-					.anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
-					.csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout()
-					.logoutUrl("/logout").logoutSuccessUrl("/").and().headers().frameOptions().sameOrigin()
-					.httpStrictTransportSecurity().disable();
+					.antMatchers(License.BASIC.getBlockedRoutes()
+							.toArray(new String[License.BASIC.getBlockedRoutes().size()]))
+					.authenticated().and().addFilterBefore(new LicenseFilter(), FilterSecurityInterceptor.class)
+					.authorizeRequests().anyRequest().authenticated().and()
+					.addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class).csrf()
+					.csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout().logoutUrl("/logout")
+					.logoutSuccessUrl("/").and().headers().frameOptions().sameOrigin().httpStrictTransportSecurity()
+					.disable();
 
 			http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
 		}
