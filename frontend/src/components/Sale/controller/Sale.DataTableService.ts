@@ -136,7 +136,7 @@ class SaleDataTableService {
             "minwidth": 100
         };
         if (isNullOrUndefined(templateData.process.processor) || (templateData.process.processor !== null
-            && user.username === templateData.process.processor.username)) {
+            && user.id === templateData.process.processor.id)) {
             config.hasRightToDelete = true;
         }
 
@@ -145,7 +145,7 @@ class SaleDataTableService {
         }
 
         if (templateData.process.processor !== null
-            && user.username !== templateData.process.processor.username) {
+            && user.id !== templateData.process.processor.id) {
             config.disablePin = true;
         }
         templateData.config = config;

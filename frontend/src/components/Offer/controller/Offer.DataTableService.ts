@@ -173,7 +173,7 @@ class OfferDataTableService {
         }
 
         if (isNullOrUndefined(templateData.process.sale) && (isNullOrUndefined(templateData.process.processor) || (templateData.process.processor !== null
-            && user.username === templateData.process.processor.username))) {
+            && user.id === templateData.process.processor.id))) {
             config.hasRightToDelete = true;
         }
 
@@ -182,7 +182,7 @@ class OfferDataTableService {
         }
 
         if (templateData.process.processor !== null
-            && user.username !== templateData.process.processor.username) {
+            && user.id !== templateData.process.processor.id) {
             config.disablePin = true;
         }
         templateData.config = config;
