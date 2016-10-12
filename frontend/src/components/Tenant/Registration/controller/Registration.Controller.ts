@@ -3,6 +3,8 @@
 /// <reference path="../../../Tenant/controller/Tenant.Service.ts" />
 /// <reference path="../../../Signup/model/Signup.Model.ts" />
 /// <reference path="../../../Signup/controller/SignUp.Service.ts" />
+/// <reference path="../../../Login/controller/Login.Service.ts" />
+/// <reference path="../../../Login/Model/Credentials.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -23,20 +25,25 @@ const RegistrationControllerId: string = "RegistrationController";
 
 class RegistrationController {
 
-    private $inject = [RegistrationServiceId, SignupServiceId, TenantServiceId];
+    private $inject = [RegistrationServiceId, SignupServiceId, TenantServiceId, LoginServiceId];
 
     signupService;
     registrationService;
     tenantService;
+    loginService;
+
+    credentials: Credentials;
     tenant: Tenant;
     user: Signup;
 
-    constructor(RegistrationService, SignupService) {
+    constructor(RegistrationService, SignupService, TenantService, LoginService) {
         this.registrationService = RegistrationService;
         this.signupService = SignupService;
         this.tenantService = TenantService;
+        this.loginService = LoginService;
         this.tenant = new Tenant();
         this.user = new Signup();
+        this.credentials = new Credentials();
     }
 
     uniqueTenantKey(): void {
@@ -48,12 +55,18 @@ class RegistrationController {
     }
 
     register(): void {
-        this.tenantService.save(this.tenant);
-        this.signupService.signup(this.user);
-        // login user
-        // location dashboard
+        let self = this;
+        console.log("Register: ");
+        this.credentials.username = this.user.username;
+        this.credentials.password = this.user.password;
+        this.tenantService.save(this.tenant).then(function (createdTenant: Tenant) {
+            self.signupService.signup(self.user).then(function (createdUser: User) {
+                console.log("Username: ", self.credentials.username);
+                console.log("Password: ", self.credentials.password);
+                self.loginService.login(self.credentials);
+            });
+        });
     }
-
 }
 
 angular.module(moduleRegistration, [ngResourceId]).controller(RegistrationControllerId, RegistrationController);

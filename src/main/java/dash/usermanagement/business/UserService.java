@@ -135,11 +135,7 @@ public class UserService implements IUserService {
 			try {
 				User updateUser = getById(user.getId());
 				if (Optional.ofNullable(updateUser).isPresent()) {
-					if (!Optional.ofNullable(getUserByName(user.getUsername())).isPresent()) {
-						updateUser.setUsername(user.getUsername());
-					} else if (!user.getUsername().equals(updateUser.getUsername())) {
-						throw new UsernameAlreadyExistsException(USER_EXISTS);
-					}
+
 					if (!Optional.ofNullable(getUserByEmail(user.getEmail())).isPresent()) {
 						updateUser.setEmail(user.getEmail());
 					} else if (!user.getUsername().equals(updateUser.getUsername())) {
@@ -157,9 +153,6 @@ public class UserService implements IUserService {
 			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			} catch (UsernameAlreadyExistsException uaeex) {
-				logger.error(USER_EXISTS + UserService.class.getSimpleName(), uaeex);
-				throw uaeex;
 			} catch (EmailAlreadyExistsException eaeex) {
 				logger.error(EMAIL_EXISTS + UserService.class.getSimpleName(), eaeex);
 				throw eaeex;
@@ -272,7 +265,6 @@ public class UserService implements IUserService {
 				}
 
 				final User user = new User();
-				user.setUsername(registration.getUsername());
 				user.setEmail(registration.getEmail());
 				user.setFirstname(registration.getFirstname());
 				user.setLastname(registration.getLastname());

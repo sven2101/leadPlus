@@ -20,20 +20,21 @@ const SignupServiceId: string = "SignupService";
 
 class SignupService {
 
-    private $inject = [$locationId, toasterId, $translateId, SignupResourceId];
+    private $inject = [$locationId, toasterId, $translateId, $qId, SignupResourceId];
 
     signupResource;
     location;
     toaster;
     translate;
-
+    q;
     usernameExist: boolean;
     emailExist: boolean;
 
-    constructor($location, toaster, $translate, SignupResource) {
+    constructor($location, toaster, $translate, $q, SignupResource) {
         this.location = $location;
         this.toaster = toaster;
         this.translate = $translate;
+        this.q = $q;
         this.signupResource = SignupResource.resource;
 
         this.usernameExist = false;
@@ -58,16 +59,18 @@ class SignupService {
         });
     }
 
-    signup(user: Signup): void {
+    signup(user: Signup): IPromise<User> {
+        let defer = this.q.defer();
         let self = this;
-        this.signupResource.signup({ username: user.username, email: user.email, password: user.password, password2: user.password2, firstname: user.firstname, lastname: user.lastname }).$promise.then(function () {
-            user = null;
+        console.log("Inside");
+        this.signupResource.signup(user).$promise.then(function (createdUser: User) {
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
-            // self.location.path("/login");
+            defer.reject(createdUser);
         }, function () {
-            user = null;
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
+            defer.reject(null);
         });
+        return defer.promise;
     }
 }
 

@@ -39,10 +39,10 @@ public class UserLoginService implements UserDetailsService {
 	private UserService userService;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		User user;
 		try {
-			user = userService.getUserByName(username);
+			user = userService.getUserByEmail(email);
 			if (!Optional.ofNullable(user).isPresent()) {
 				throw new NotFoundException(USER_NOT_FOUND);
 			}
@@ -50,8 +50,8 @@ public class UserLoginService implements UserDetailsService {
 				throw new UserIsNotActivatedException(USER_NOT_ACTIVATED);
 			}
 		} catch (NotFoundException | UserIsNotActivatedException ex) {
-			logger.error(ex.getMessage() + username + UserLoginService.class.getSimpleName(), ex);
-			throw new UsernameNotFoundException(USER_NOT_FOUND + username);
+			logger.error(ex.getMessage() + email + UserLoginService.class.getSimpleName(), ex);
+			throw new UsernameNotFoundException(USER_NOT_FOUND + email);
 		}
 
 		return user;

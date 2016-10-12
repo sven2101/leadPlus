@@ -68,6 +68,7 @@ angular.module(moduleApp,
         moduleNotificationResource,
         moduleNotificationService,
         moduleTenantResource,
+        moduleTenantService,
         moduleRegistration,
         moduleRegistrationService,
 

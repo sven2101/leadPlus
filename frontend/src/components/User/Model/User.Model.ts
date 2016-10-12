@@ -21,7 +21,6 @@
 
 class User extends AbstractModel {
 
-    username: string;
     email: string;
     role: Role;
     picture: FileUpload;
