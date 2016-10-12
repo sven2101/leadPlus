@@ -399,6 +399,7 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_SALE: "Verkauf",
             CUSTOMER_DETAIL_TIMELINE: "Kunden Timeline",
             CUSTOMER_DETAIL_CREATED: "wurde erstellt",
+            CUSTOMER_NUMBER: "Kundennummer",
 
             TODO_TODOS: "ToDos",
             TODO_NO_TODOS: "Keine Todos vorhanden",
@@ -790,6 +791,7 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_SALE: "Sale",
             CUSTOMER_DETAIL_TIMELINE: "Customer Timeline",
             CUSTOMER_DETAIL_CREATED: "has been created",
+            CUSTOMER_NUMBER: "Customer number",
 
             TODO_TODOS: "ToDos",
             TODO_NO_TODOS: "No todos existing",

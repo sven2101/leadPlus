@@ -57,6 +57,12 @@
                                 <input type="text" name="phone" class="form-control" ng-model="customerCtrl.currentCustomer.phone" ng-maxlength="50">
                                 <p ng-show="customerCtrl.createCustomerForm.phone.$invalid && !customerCtrl.createCustomerForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
+                            <!-- CUSTOMERNUMBER -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.customerNumber.$invalid && !customerCtrl.createCustomerForm.customerNumber.$pristine }">
+                                <label>{{ 'CUSTOMER_NUMBER' | translate }}</label>
+                                <input type="number" name="customerNumber" class="form-control" ng-model="customerCtrl.currentCustomer.customerNumber" min="0" ng-maxlength="50">
+                                <p ng-show="customerCtrl.createCustomerForm.customerNumber.$invalid && !customerCtrl.createCustomerForm.customerNumber.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            </div>
                         </div>
 
                     </div>

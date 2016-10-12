@@ -23,6 +23,7 @@ class Customer extends AbstractModel {
     address: string;
     timestamp: any;
     deactivated: boolean;
+    customerNumber: number;
     constructor() {
         super();
     }

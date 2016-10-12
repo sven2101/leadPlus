@@ -64,6 +64,8 @@ public class Customer {
 	@ApiModelProperty(hidden = true)
 	private Calendar timestamp;
 
+	private Long customerNumber;
+
 	public Customer() {
 
 	}
@@ -156,12 +158,21 @@ public class Customer {
 		this.id = id;
 	}
 
+	public Long getCustomerNumber() {
+		return customerNumber;
+	}
+
+	public void setCustomerNumber(Long customerNumber) {
+		this.customerNumber = customerNumber;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((company == null) ? 0 : company.hashCode());
+		result = prime * result + ((customerNumber == null) ? 0 : customerNumber.hashCode());
 		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
@@ -192,6 +203,11 @@ public class Customer {
 			if (other.company != null)
 				return false;
 		} else if (!company.equals(other.company))
+			return false;
+		if (customerNumber == null) {
+			if (other.customerNumber != null)
+				return false;
+		} else if (!customerNumber.equals(other.customerNumber))
 			return false;
 		if (deactivated != other.deactivated)
 			return false;
@@ -231,9 +247,9 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname + ", lastname=" + lastname + ", company="
-				+ company + ", email=" + email + ", phone=" + phone + ", address=" + address + ", deactivated=" + deactivated + ", timestamp=" + timestamp
-				+ "]";
+		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname
+				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone
+				+ ", address=" + address + ", deactivated=" + deactivated + ", timestamp=" + timestamp + "]";
 	}
 
 }
