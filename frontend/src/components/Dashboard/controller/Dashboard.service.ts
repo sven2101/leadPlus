@@ -95,13 +95,13 @@ class DashboardService {
     sumOffers(): void {
         this.openOffersValue = 0;
         for (let i = 0; i < this.openOffers.length; i++) {
-            this.openOffersValue += this.workflowService.sumOrderPositions(this.openOffers[i].offer.orderPositions);
+            this.openOffersValue += this.openOffers[i].offer.offerPrice;
         }
     }
     sumSales(): void {
         this.closedSalesValue = 0;
         for (let i = 0; i < this.closedSales.length; i++) {
-            this.closedSalesValue += this.workflowService.sumOrderPositions(this.closedSales[i].sale.orderPositions);
+            this.closedSalesValue += this.closedSales[i].sale.saleTurnover;
         }
     }
 
