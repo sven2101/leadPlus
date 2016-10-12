@@ -76,6 +76,14 @@ let size = function (obj) {
     return size;
 };
 
+let escapeHtmlBrackets = function (html: string): string {
+    return html.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+};
+
+let unescapeHtmlBrackets = function (html: string): string {
+    return html.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+};
+
 
 
 

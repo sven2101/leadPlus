@@ -37,6 +37,7 @@ angular.module(moduleApp)
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {
             let templateData = JSON.parse(scope.templatedata);
+            templateData.process.offer.notification.content = decodeURIComponent(atob(templateData.process.offer.notification.content));
             scope.directiveData = templateData;
             scope.partial = null;
             scope.openModal = function (payload: any, method: any) {

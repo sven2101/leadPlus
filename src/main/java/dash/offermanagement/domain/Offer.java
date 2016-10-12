@@ -32,7 +32,7 @@ import dash.common.AbstractWorkflow;
 import dash.notificationmanagement.domain.Notification;
 
 @Entity
-@SQLDelete(sql = "UPDATE offer SET deleted = '1',notification=null WHERE id = ?")
+@SQLDelete(sql = "UPDATE offer SET deleted = '1'WHERE id = ?")
 @Where(clause = "deleted <> '1'")
 public class Offer extends AbstractWorkflow {
 
@@ -44,6 +44,7 @@ public class Offer extends AbstractWorkflow {
 	private double offerPrice;
 
 	@OneToOne(cascade = CascadeType.ALL)
+	@Where(clause = "deleted <> '1'")
 	private Notification notification;
 
 	public Offer() {

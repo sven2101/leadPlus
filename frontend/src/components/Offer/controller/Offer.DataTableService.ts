@@ -197,6 +197,7 @@ class OfferDataTableService {
 
     getActionButtonsHTML(templateData: any): string {
         this.setActionButtonsConfig(this.user, templateData);
+        templateData.process.offer.notification.content = btoa(encodeURIComponent(templateData.process.offer.notification.content));
         if ($(window).width() > 1300) {
             return "<div actionbuttons template='standard' parent='offerCtrl' type='offer' templatedata='" + JSON.stringify(templateData) + "'></div>";
         } else {

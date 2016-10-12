@@ -160,6 +160,7 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     send() {
+
         this.process.offer = this.editWorkflowUnit;
         this.notificationService.sendOffer(this.process);
         this.rootScope.$broadcast("deleteRow", this.process);
@@ -167,7 +168,9 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     save() {
+
         this.process.offer = this.editWorkflowUnit;
+
         console.log("this.editWorkflowUnit ", this.editWorkflowUnit);
         console.log("this.process.offer ", this.process.offer);
         let self = this;
