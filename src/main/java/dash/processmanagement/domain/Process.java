@@ -53,17 +53,21 @@ public class Process {
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "lead_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
 	private Lead lead;
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "offer_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
 	private Offer offer;
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "sale_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
 	private Sale sale;
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
+	@Where(clause = "deleted <> '1'")
 	private List<Comment> comments;
 
 	@Enumerated(EnumType.STRING)
@@ -71,6 +75,7 @@ public class Process {
 
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "processor_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
 	private User processor;
 
 	public Process() {

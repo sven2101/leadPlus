@@ -19,6 +19,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Where;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.customermanagement.domain.Customer;
@@ -38,6 +40,7 @@ public abstract class AbstractWorkflow implements Request {
 
 	@ManyToOne
 	@JoinColumn(name = "customer_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
 	private Customer customer;
 
 	private String deliveryAddress;
@@ -48,6 +51,7 @@ public abstract class AbstractWorkflow implements Request {
 	private double deliveryCosts;
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "workflow", fetch = FetchType.LAZY)
+	@Where(clause = "deleted <> '1'")
 	private List<OrderPosition> orderPositions;
 
 	@Temporal(TemporalType.TIMESTAMP)
@@ -58,8 +62,9 @@ public abstract class AbstractWorkflow implements Request {
 
 	@OneToOne(cascade = { CascadeType.PERSIST })
 	@JoinColumn(name = "vendor_fk", nullable = true)
-	//	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
-	//	@JoinColumn(name = "vendor_fk", nullable = true)
+	// @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+	// @JoinColumn(name = "vendor_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
 	private Vendor vendor;
 
 	@Column(length = 4096)
@@ -218,8 +223,9 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Override
 	public String toString() {
-		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress + ", deleted=" + deleted + ", deliveryCosts="
-				+ deliveryCosts + ", orderPositions=" + orderPositions + ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + "]";
+		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress
+				+ ", deleted=" + deleted + ", deliveryCosts=" + deliveryCosts + ", orderPositions=" + orderPositions
+				+ ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + "]";
 	}
 
 }

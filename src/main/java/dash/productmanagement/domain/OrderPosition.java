@@ -43,11 +43,13 @@ public class OrderPosition {
 	private boolean deleted;
 
 	@ManyToOne
+	@Where(clause = "deleted <> '1'")
 	private Product product;
 
 	@ManyToOne
 	@JsonIgnore
 	@JoinColumn(nullable = false)
+	@Where(clause = "deleted <> '1'")
 	private AbstractWorkflow workflow;
 
 	private int amount;
