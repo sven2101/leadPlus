@@ -158,14 +158,14 @@ class LeadDataTableService {
             config.closeOrOpenDisable = true;
         }
         if (isNullOrUndefined(templateData.process.offer) && (isNullOrUndefined(templateData.process.processor) || (templateData.process.processor !== null
-            && user.username === templateData.process.processor.username))) {
+            && user.id === templateData.process.processor.id))) {
             config.hasRightToDelete = true;
         }
         if (user.role === Role.USER) {
             config.disablePinDropdown = true;
         }
         if (templateData.process.processor !== null
-            && user.username !== templateData.process.processor.username) {
+            && user.id !== templateData.process.processor.id) {
             config.disablePin = true;
         }
         templateData.config = config;
