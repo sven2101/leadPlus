@@ -51,20 +51,6 @@ class RegistrationService {
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });
     }
-
-    register(tenant: Tenant): void {
-        let self = this;
-        this.tenantResource.save(tenant).$promise.then(function () {
-            self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
-            let credentials: Credentials = new Credentials();
-            credentials.username = "";
-            credentials.password = "";
-            this.loginService.login(credentials);
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
-        });
-    }
-
 }
 
 angular.module(moduleRegistrationService, [ngResourceId]).service(RegistrationServiceId, RegistrationService);

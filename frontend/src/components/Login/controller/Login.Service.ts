@@ -1,6 +1,6 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Authentication.Service.ts" />
-
+/// <reference path="../../Login/model/Credentials.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -38,19 +38,20 @@ class LoginService {
         this.translate = $translate;
     }
 
-    login(credentials) {
+    login(credentials: Credentials) {
         let self = this;
-            self.authService.login(credentials,
-                function (res) {
-                    self.location.path("/dashoard");
-                    self.rootScope.setUserDefaultLanguage();
-                    self.rootScope.loadLabels();
-                },
-                function (err) {
-                    // self.scope.credentials.password = "";
-                    self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
-                }
-            );
+        self.authService.login(credentials,
+            function (res) {
+                console.log("Inside!");
+                self.location.path("/dashoard");
+                self.rootScope.setUserDefaultLanguage();
+                self.rootScope.loadLabels();
+            },
+            function (err) {
+                self.scope.credentials.password = "";
+                self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
+            }
+        );
     };
 }
 

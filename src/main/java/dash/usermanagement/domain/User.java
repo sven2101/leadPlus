@@ -51,9 +51,6 @@ public class User implements UserDetails {
 	@Column(name = "id")
 	private Long id;
 
-	@Column(length = 30)
-	private String username;
-
 	@Column(length = 50)
 	private String firstname;
 
@@ -124,11 +121,7 @@ public class User implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return this.username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
+		return this.email;
 	}
 
 	public String getEmail() {
@@ -221,7 +214,6 @@ public class User implements UserDetails {
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -270,18 +262,13 @@ public class User implements UserDetails {
 			return false;
 		if (role != other.role)
 			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password="
-				+ password + ", role=" + role + ", profilPicture=" + picture + ", language=" + language + ", enabled=" + enabled + "]";
+		return "User [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password=" + password + ", role=" + role
+				+ ", profilPicture=" + picture + ", language=" + language + ", enabled=" + enabled + "]";
 	}
 
 }

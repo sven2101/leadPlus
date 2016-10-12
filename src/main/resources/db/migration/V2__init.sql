@@ -198,7 +198,6 @@ CREATE TABLE "user"
   password character varying(60) NOT NULL,
   phone character varying(50),
   role character varying(255),
-  username character varying(30),
   picture_id bigint,
   CONSTRAINT "user_pkey" PRIMARY KEY (id),
   CONSTRAINT fkoxacr7c2iwurvyel2h0jwblu3 FOREIGN KEY (picture_id)
