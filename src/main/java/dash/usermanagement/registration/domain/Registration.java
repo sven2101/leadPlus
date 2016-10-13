@@ -24,10 +24,6 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 public class Registration {
 
 	@NotNull
-	@Size(min = 2, max = 30)
-	private String username;
-
-	@NotNull
 	@Size(min = 2, max = 50)
 	private String email;
 
@@ -49,14 +45,6 @@ public class Registration {
 
 	public Registration() {
 
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
 	}
 
 	public String getEmail() {
@@ -108,7 +96,6 @@ public class Registration {
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((password2 == null) ? 0 : password2.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -146,18 +133,13 @@ public class Registration {
 				return false;
 		} else if (!password2.equals(other.password2))
 			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Registration [username=" + username + ", email=" + email + ", firstname=" + firstname + ", lastname="
-				+ lastname + ", password=" + password + ", password2=" + password2 + "]";
+		return "Registration [email=" + email + ", firstname=" + firstname + ", lastname=" + lastname + ", password=" + password + ", password2=" + password2
+				+ "]";
 	}
 
 }

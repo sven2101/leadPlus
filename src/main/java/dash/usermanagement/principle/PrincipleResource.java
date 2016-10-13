@@ -42,7 +42,7 @@ public class PrincipleResource {
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> getUser(Principal user) throws NotFoundException {
 
-		User internalUser = userService.getUserByName(user.getName());
+		User internalUser = userService.getUserByEmail(user.getName());
 
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 
@@ -53,7 +53,6 @@ public class PrincipleResource {
 			map.put("role", authority.getAuthority());
 		}
 
-		map.put("username", user.getName());
 		map.put("email", internalUser.getEmail());
 		map.put("firstname", internalUser.getFirstname());
 		map.put("lastname", internalUser.getLastname());

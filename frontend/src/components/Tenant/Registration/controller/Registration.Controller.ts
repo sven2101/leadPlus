@@ -56,15 +56,19 @@ class RegistrationController {
 
     register(): void {
         let self = this;
-        console.log("Register: ");
-        this.credentials.username = this.user.username;
+
+        this.credentials.email = this.user.email;
         this.credentials.password = this.user.password;
+        this.credentials.tenant = this.tenant.tenantKey;
+
         this.tenantService.save(this.tenant).then(function (createdTenant: Tenant) {
             self.signupService.signup(self.user).then(function (createdUser: User) {
-                console.log("Username: ", self.credentials.username);
-                console.log("Password: ", self.credentials.password);
                 self.loginService.login(self.credentials);
+            }, function () {
+                console.log("ERRRROR - Signup - Save");
             });
+        }, function () {
+            console.log("ERRRROR - Tenant - Save");
         });
     }
 }

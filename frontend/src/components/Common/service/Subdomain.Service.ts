@@ -1,4 +1,5 @@
-/// <reference path="../../Login/controller/Login.Service.ts" />
+/// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../app/App.Authentication.Service.ts" />
 /// <reference path="../../Login/model/Credentials.Model.ts" />
 
 /*******************************************************************************
@@ -16,23 +17,27 @@
  *******************************************************************************/
 "use strict";
 
-const LoginControllerId: string = "LoginController";
+const SubdomainServiceId: string = "SubdomainService";
 
-class LoginController {
+class SubdomainService {
 
-    private $inject = [LoginServiceId];
+    private $inject = [$locationId];
 
-    loginService: LoginService;
-    credentials: Credentials;
+    location;
 
-    constructor(LoginService: LoginService) {
-        this.loginService = LoginService;
-        this.credentials = new Credentials();
+    constructor($location) {
+        this.location = $location;
     }
 
-    login() {
-        this.loginService.login(this.credentials);
+    getSubdomain(): string {
+        let host = this.location.host();
+        console.log("Host: ", host);
+        if (host.indexOf(".") < 0) {
+            return null;
+        } else {
+            return host.split(".")[0];
+        }
     }
 }
 
-angular.module(moduleLogin, [ngResourceId]).controller(LoginControllerId, LoginController);
+angular.module(moduleSubdomainService, [ngResourceId]).service(SubdomainServiceId, SubdomainService);

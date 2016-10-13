@@ -22,7 +22,7 @@ const $rootScopeId: string = "$rootScope";
 const ngResourceId: string = "ngResource";
 const $locationId: string = "$location";
 const $httpId: string = "$http";
-const $cookieStoreId: string = "$cookieStore";
+const $cookiesId: string = "$cookies";
 const $windowId: string = "$window";
 const $intervalId: string = "$interval";
 const $qId: string = "$q";
@@ -101,6 +101,8 @@ const moduleTenantResource: string = moduleTenant + ".resource";
 const moduleTenantService: string = moduleTenant + ".service";
 const moduleRegistration: string = moduleApp + ".registration";
 const moduleRegistrationService: string = moduleRegistration + ".service";
+const moduleSubdomain: string = moduleApp + ".subdomain";
+const moduleSubdomainService: string = moduleSubdomain + ".service";
 
 const moduleTranslate: string = "pascalprecht.translate";
 const moduleNgResource: string = "ngResource";

@@ -14,6 +14,7 @@
 
 package dash.usermanagement.domain;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,7 +43,7 @@ import dash.usermanagement.settings.language.Language;
 
 @Entity
 @Table(name = "\"user\"")
-public class User implements UserDetails {
+public class User implements UserDetails, Principal {
 
 	private static final long serialVersionUID = 3125258392087209376L;
 
@@ -51,13 +52,15 @@ public class User implements UserDetails {
 	@Column(name = "id")
 	private Long id;
 
+	private String username;
+
 	@Column(length = 50)
 	private String firstname;
 
 	@Column(length = 50)
 	private String phone;
 
-	@Column(unique = true, length = 50, nullable = false)
+	@Column(length = 50)
 	private String lastname;
 
 	@Column(unique = true, length = 50, nullable = false)
@@ -122,6 +125,10 @@ public class User implements UserDetails {
 	@Override
 	public String getUsername() {
 		return this.email;
+	}
+
+	public void setUsername(String username) {
+		this.email = username;
 	}
 
 	public String getEmail() {
@@ -267,8 +274,13 @@ public class User implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password=" + password + ", role=" + role
-				+ ", profilPicture=" + picture + ", language=" + language + ", enabled=" + enabled + "]";
+		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password="
+				+ password + ", role=" + role + ", profilPicture=" + picture + ", language=" + language + ", enabled=" + enabled + "]";
+	}
+
+	@Override
+	public String getName() {
+		return this.email;
 	}
 
 }

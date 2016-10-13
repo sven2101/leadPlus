@@ -32,7 +32,7 @@ let getNameOfUser = function (user: User): string {
         return user.firstname + " " + user.lastname;
     }
     else {
-        return user.username;
+        return user.email;
     }
 
 };

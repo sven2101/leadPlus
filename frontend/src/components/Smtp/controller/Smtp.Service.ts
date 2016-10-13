@@ -56,7 +56,7 @@ class SmtpService {
 
     getSMtp() {
         let self = this;
-        this.smtpResource.getByUserId({ id: this.rootScope.globals.user.id }).$promise.then((data) => {
+        this.smtpResource.getByUserId({ id: this.rootScope.user.id }).$promise.then((data) => {
             self.currentSmtp = data;
             self.currentSmtp.stringPassword = "";
             for (let i = 0; i < self.currentPasswordLength; i++) {
@@ -66,7 +66,7 @@ class SmtpService {
     }
     save() {
         let defer = this.q.defer();
-        this.currentSmtp.user = this.rootScope.globals.user;
+        this.currentSmtp.user = this.rootScope.user;
         this.currentPasswordLength = this.currentSmtp.stringPassword !== null ? this.currentSmtp.stringPassword.length : this.currentPasswordLength;
         this.currentSmtp.password = this.currentSmtp.stringPassword !== null ? btoa(this.currentSmtp.stringPassword) : null;
         let self = this;

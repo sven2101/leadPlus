@@ -192,18 +192,18 @@ CREATE TABLE "user"
   id bigint NOT NULL DEFAULT nextval('"user_id_seq"'::regclass),
   email character varying(50) NOT NULL,
   enabled boolean NOT NULL,
-  firstname character varying(50),
+  firstname character varying(50) NOT NULL,
   language character varying(255),
   lastname character varying(50) NOT NULL,
   password character varying(60) NOT NULL,
   phone character varying(50),
   role character varying(255),
+  username character varying(30),	
   picture_id bigint,
   CONSTRAINT "user_pkey" PRIMARY KEY (id),
   CONSTRAINT fkoxacr7c2iwurvyel2h0jwblu3 FOREIGN KEY (picture_id)
       REFERENCES fileupload (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT uk_9r74k4ovnhejhjl7pey9dw2e5 UNIQUE (lastname),
   CONSTRAINT uk_e6gkqunxajvyxl5uctpl2vl2p UNIQUE (email)
 )
 WITH (
