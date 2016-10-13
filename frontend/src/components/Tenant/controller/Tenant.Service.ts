@@ -43,9 +43,9 @@ class TenantService {
         let self = this;
         this.tenantResource.save(tenant).$promise.then(function (tenant: Tenant) {
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
-            console.log("Tenant: ", tenant);
             defer.resolve(tenant);
         }, function () {
+            self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
             defer.reject(null);
         });
 

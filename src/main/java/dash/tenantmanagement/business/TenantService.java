@@ -52,6 +52,7 @@ public class TenantService implements ITenantService {
 	@Override
 	public Tenant createNewTenant(final Tenant tenant) {
 		try {
+			tenant.setEnabled(true);
 			tenantRepository.save(tenant);
 			createSchema(tenant);
 			if (validateUniquenessOfSubdomain(tenant)) {

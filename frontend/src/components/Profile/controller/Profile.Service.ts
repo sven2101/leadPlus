@@ -23,7 +23,7 @@ const ProfileServiceId: string = "ProfileService";
 
 class ProfileService {
 
-    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId, $cookieStoreId];
+    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId, $cookiesId];
 
     userResource;
     translate;
@@ -34,14 +34,14 @@ class ProfileService {
     fileResource;
     formdata;
     q;
-    cookieStore;
+    cookies;
     user: User;
 
     oldPassword: string;
     newPassword1: string;
     newPassword2: string;
 
-    constructor($rootScope, toaster, $translate, UserResource, FileResource, $q, $cookieStore) {
+    constructor($rootScope, toaster, $translate, UserResource, FileResource, $q, $cookies) {
         this.userResource = UserResource.resource;
         this.translate = $translate;
         this.toaster = toaster;
@@ -51,7 +51,7 @@ class ProfileService {
         this.user = new User();
         this.user.picture = new FileUpload();
         this.q = $q;
-        this.cookieStore = $cookieStore;
+        this.cookies = $cookies;
     }
 
     submitProfilInfoForm(user: User) {
@@ -59,7 +59,7 @@ class ProfileService {
         this.userResource.update(user).$promise.then(function (data) {
             self.rootScope.globals.user.firstname = data.firstname;
             self.rootScope.globals.user.lastname = data.lastname;
-            self.cookieStore.put("globals", self.rootScope.globals);
+            self.cookies.put("globals", self.rootScope.globals);
             self.rootScope.changeLanguage(self.rootScope.globals.user.language);
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
         }, function () {
@@ -71,13 +71,13 @@ class ProfileService {
         let self = this;
         this.userResource.update(user).$promise.then(function (data) {
             self.rootScope.globals.user.picture = null;
-            self.cookieStore.put("globals", self.rootScope.globals);
+            self.cookies.put("globals", self.rootScope.globals);
             self.rootScope.globals.user.picture = user.picture;
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
             self.rootScope.globals.user.picture = null;
-            self.cookieStore.put("globals", self.rootScope.globals);
+            self.cookies.put("globals", self.rootScope.globals);
         });
     }
 

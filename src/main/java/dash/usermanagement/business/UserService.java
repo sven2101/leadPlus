@@ -21,7 +21,6 @@ import static dash.Constants.EMAIL_EXISTS;
 import static dash.Constants.REGISTER_FAILED_EXCEPTION;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
-import static dash.Constants.USER_EXISTS;
 import static dash.Constants.USER_NOT_FOUND;
 
 import java.util.List;
@@ -83,17 +82,6 @@ public class UserService implements IUserService {
 		}
 	}
 
-	@Override
-	public User getUserByName(final String username) throws NotFoundException {
-		if (Optional.ofNullable(username).isPresent()) {
-			return userRepository.findByUsernameIgnoreCase(username);
-		} else {
-			NotFoundException cnfex = new NotFoundException(USER_NOT_FOUND);
-			logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
-			throw cnfex;
-		}
-	}
-
 	public User getUserByEmail(final String email) throws NotFoundException {
 		if (Optional.ofNullable(email).isPresent()) {
 			return userRepository.findByEmailIgnoreCase(email);
@@ -102,13 +90,6 @@ public class UserService implements IUserService {
 			logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
 			throw cnfex;
 		}
-	}
-
-	public User checkUserNameExists(final String username) {
-		if (Optional.ofNullable(username).isPresent()) {
-			return userRepository.findByUsernameIgnoreCase(username);
-		} else
-			return null;
 	}
 
 	public User checkEmailExists(final String email) {
@@ -253,13 +234,10 @@ public class UserService implements IUserService {
 		}
 	}
 
-	public User register(final Registration registration) throws UsernameAlreadyExistsException, EmailAlreadyExistsException, RegisterFailedException {
-		if (Optional.ofNullable(registration).isPresent() && Optional.ofNullable(registration.getUsername()).isPresent()
-				&& Optional.ofNullable(registration.getEmail()).isPresent() && Optional.ofNullable(registration.getPassword()).isPresent()) {
+	public User register(final Registration registration) throws EmailAlreadyExistsException, RegisterFailedException {
+		if (Optional.ofNullable(registration).isPresent() && Optional.ofNullable(registration.getEmail()).isPresent()
+				&& Optional.ofNullable(registration.getPassword()).isPresent()) {
 			try {
-				if (usernameAlreadyExists(registration.getUsername()).isValidation()) {
-					throw new UsernameAlreadyExistsException(USER_EXISTS);
-				}
 				if (emailAlreadyExists(registration.getEmail()).isValidation()) {
 					throw new EmailAlreadyExistsException(EMAIL_EXISTS);
 				}
@@ -270,7 +248,7 @@ public class UserService implements IUserService {
 				user.setLastname(registration.getLastname());
 				user.setPassword(passwordEncoder.encode(registration.getPassword()));
 				user.setRole(Role.USER);
-				user.setEnabled(false);
+				user.setEnabled(true);
 				user.setLanguage(Language.DE);
 
 				return save(user);
@@ -288,13 +266,6 @@ public class UserService implements IUserService {
 	public Validation emailAlreadyExists(String email) {
 		this.validation.setValidation(false);
 		if (checkEmailExists(email) != null)
-			this.validation.setValidation(true);
-		return this.validation;
-	}
-
-	public Validation usernameAlreadyExists(String username) {
-		this.validation.setValidation(false);
-		if (checkUserNameExists(username) != null)
 			this.validation.setValidation(true);
 		return this.validation;
 	}

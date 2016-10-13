@@ -36,21 +36,17 @@ public interface IUserService {
 
 	public User getById(final long id) throws NotFoundException;
 
-	public User getUserByName(String username) throws NotFoundException;
-
 	public User save(final User user) throws SaveFailedException;
 
-	public User update(final User user)
-			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
+	public User update(final User user) throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
 	public void delete(final long id) throws DeleteFailedException;
 
-	public void updatePassword(final long id, final PasswordChange passwordChange)
-			throws UpdateFailedException, DontMatchException;
+	public void updatePassword(final long id, final PasswordChange passwordChange) throws UpdateFailedException, DontMatchException;
 
 	public User activate(final long id, final boolean enabled) throws UpdateFailedException;
 
-	public User setProfilePicture(final long id, final MultipartFile file) throws NotFoundException,
-			SaveFailedException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
+	public User setProfilePicture(final long id, final MultipartFile file)
+			throws NotFoundException, SaveFailedException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
 }

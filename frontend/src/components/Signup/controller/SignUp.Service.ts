@@ -62,10 +62,9 @@ class SignupService {
     signup(user: Signup): IPromise<User> {
         let defer = this.q.defer();
         let self = this;
-        console.log("Inside");
         this.signupResource.signup(user).$promise.then(function (createdUser: User) {
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
-            defer.reject(createdUser);
+            defer.resolve(createdUser);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
             defer.reject(null);

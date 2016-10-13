@@ -43,7 +43,7 @@ class NotificationService {
     sendOffer(process: Process) {
         let self = this;
         process.offer.notification.attachment = this.notification.attachment;
-        this.notificationResource.sendOffer({ userId: this.rootScope.globals.user.id}, process).$promise.then(function () {
+        this.notificationResource.sendOffer({ userId: this.rootScope.user.id }, process).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));
@@ -53,7 +53,7 @@ class NotificationService {
     sendSimple(notification: Notification) {
         let self = this;
         notification.attachment = this.notification.attachment;
-        this.notificationResource.sendSimple({ userId: this.rootScope.globals.user.id }, notification).$promise.then(function () {
+        this.notificationResource.sendSimple({ userId: this.rootScope.user.id }, notification).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));

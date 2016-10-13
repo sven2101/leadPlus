@@ -22,72 +22,63 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 templateUrl: "components/Dashboard/view/Dashboard.html",
                 controller: "DashboardController",
                 controllerAs: "dashboardCtrl",
-                authenticated: true,
-                package: "basic"
+                authenticated: true
             })
             .when("/dashboard",
             {
                 templateUrl: "components/Dashboard/view/Dashboard.html",
                 controller: "DashboardController",
                 controllerAs: "dashboardCtrl",
-                authenticated: true,
-                package: "basic"
+                authenticated: true
             })
             .when("/leads/:processId?",
             {
                 templateUrl: "components/Lead/view/Lead.html",
                 controller: "LeadController",
                 controllerAs: "leadCtrl",
-                authenticated: true,
-                package: "basic"
+                authenticated: true
             })
             .when("/offers/:processId?",
             {
                 templateUrl: "components/Offer/view/Offer.html",
                 controller: "OfferController",
                 controllerAs: "offerCtrl",
-                authenticated: true,
-                package: "basic"
+                authenticated: true
             })
             .when("/sales/:processId?",
             {
                 templateUrl: "components/Sale/view/Sale.html",
                 controller: "SaleController",
                 controllerAs: "saleCtrl",
-                authenticated: true,
-                package: "basic"
+                authenticated: true
             })
             .when("/statistic",
             {
                 templateUrl: "components/Statistic/view/Statistic.html",
                 controller: "StatisticController",
                 controllerAs: "statisticCtrl",
-                authenticated: true,
-                package: "pro"
+                authenticated: true
             })
             .when("/settings",
             {
                 templateUrl: "components/Setting/view/Setting.html",
                 controller: "SettingController",
                 controllerAs: "settingCtrl",
-                authenticated: true,
-                package: "basic"
+                authenticated: true
             })
             .when("/settings/detail/:userId",
             {
                 templateUrl: "components/Setting/view/UserDetail.html",
                 controller: "UserDetailController",
                 controllerAs: "UserDetailCtrl",
-                authenticated: true,
-                package: "basic"
+                authenticated: true
             })
             .when("/profile",
             {
                 templateUrl: "components/Profile/view/Profile.html",
                 controller: "ProfileController",
                 controllerAs: "profileCtrl",
-                authenticated: true,
-                package: "basic"
+                authenticated: true
             })
             .when("/licence",
             {
@@ -117,95 +108,67 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 templateUrl: "components/Product/view/Product.html",
                 controller: "ProductController",
                 controllerAs: "productCtrl",
-                authenticated: true,
-                package: "basic"
+                authenticated: true
             }).when("/product/detail/:productId",
             {
                 templateUrl: "components/Product/view/ProductDetail.html",
                 controller: "ProductDetailController",
                 controllerAs: "ProductDetailCtrl",
-                authenticated: true,
-                package: "basic"
+                authenticated: true
             }).when("/customer",
             {
                 templateUrl: "components/Customer/view/Customer.html",
                 controller: "CustomerController",
                 controllerAs: "customerCtrl",
-                authenticated: true,
-                package: "basic"
+                authenticated: true
             }).when("/customer/detail/:customerId",
             {
                 templateUrl: "components/Customer/view/CustomerDetail.html",
                 controller: "CustomerDetailController",
                 controllerAs: "customerDetailCtrl",
-                authenticated: true,
-                package: "basic"
-            }).when("/401",
-            {
-                templateUrl: "components/Common/view/Unauthorized.html",
-                package: "basic"
-            }).when("/403",
-            {
-                templateUrl: "components/Common/view/Forbidden.html",
-                package: "basic"
-            }).when("/404",
-            {
-                templateUrl: "components/Common/view/NotFound.html",
-                package: "basic"
+                authenticated: true
             }).otherwise({
-                redirectTo: "/404"
+                redirectTo: "/"
             });
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
-        $httpProvider.interceptors.push(function ($q, $location) {
-            return {
-                "responseError": function (rejection) {
-                    let defer = $q.defer();
-                    if (rejection.status === 401 && rejection.config.url !== "user") {
-                        $location.path("/401");
-                    }
-                    else if (rejection.status === 403) {
-                        $location.path("/403");
-                    }
-                    else if (rejection.status === 404) {
-                        $location.path("/404");
-                    }
-                    defer.reject(rejection);
-
-                    return defer.promise;
-                }
-            };
-        });
-
     }])
-    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookieStoreId, $injectorId, ProfileServiceId,
-        function ($location, $http, $rootScope, Auth, $cookieStore, $injector, ProfileService) {
-            $rootScope.globals = $cookieStore.get("globals") || {};
-            if ($rootScope.globals.user) {
-                $http.defaults.headers.common["Authorization"] = "Basic "
-                    + $rootScope.globals.user.authorization;
+    .run([$locationId, $windowId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId, ProfileServiceId,
+        function ($location, $window, $http, $rootScope, Auth, $cookies, $injector, ProfileService) {
+            $rootScope.user = $cookies.getObject("global");
+            console.log("Authorization: ", $cookies.getAll());
+            console.log("Authorization: ", $rootScope.user);
+
+            if (!angular.isUndefined($rootScope.user)) {
+                console.log("Authorization: ", $rootScope.user.authorization);
+                $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
             }
             let initialLoaded = true;
+
             $rootScope.$on("$routeChangeStart", function (event, next, current) {
+                $rootScope.user = $cookies.getObject("global");
+                console.log("Globals - route: ", $rootScope.user);
+
+                if (!angular.isUndefined($rootScope.user)) {
+                    $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
+                    $http.defaults.headers.common["X-TenantID"] = $window.location.hostname;
+                }
 
                 if (next.authenticated === true) {
                     if (initialLoaded) {
                         initialLoaded = false;
                     }
-                    if (!$rootScope.globals.user || !$rootScope.globals.tenant) {
+
+                    if (angular.isUndefined($rootScope.user)) {
                         $location.path("/login");
-                    }
-                    else if (!hasLicense($rootScope.globals.tenant.license, next.package)) {
-                        $location.path("/");
-                    }
-                    else {
+                    } else {
                         $injector.get("DashboardService");
                     }
                 }
             });
             $rootScope.logout = function () {
-                $location.path("/login");
+                self.window.open("http://leadplus.localhost:8080/", "_self");
                 Auth.logout();
             };
 

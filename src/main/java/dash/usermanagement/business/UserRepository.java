@@ -21,7 +21,5 @@ import dash.usermanagement.domain.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-	User findByUsernameIgnoreCase(String username);
-
 	User findByEmailIgnoreCase(String email);
 }

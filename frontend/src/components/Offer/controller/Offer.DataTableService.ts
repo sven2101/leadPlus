@@ -42,7 +42,7 @@ class OfferDataTableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
-        this.user = $rootScope.globals.user;
+        this.user = $rootScope.user;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {

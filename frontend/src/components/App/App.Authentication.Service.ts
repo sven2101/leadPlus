@@ -3,6 +3,7 @@
 /// <reference path="../app/App.Resource.ts" />
 /// <reference path="../app/App.Common.ts" />
 /// <reference path="../Common/model/Promise.Interface.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -22,22 +23,26 @@ const AuthServiceId: string = "AuthService";
 
 class AuthService {
 
-    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, UserResourceId, $injectorId, $qId];
+    $inject = [$httpId, $rootScopeId, $cookiesId, $locationId, $windowId, UserResourceId, $injectorId, $qId];
+
 
     http;
     rootScope;
-    cookieStore;
+    cookies;
     location;
+    window;
     userResource;
     injector;
     $q;
 
-    constructor($http, $rootScope, $cookieStore, $location, UserResource, $injector, $q) {
+
+    constructor($http, $rootScope, $cookies, $location, $window, UserResource, $injector, $q) {
         this.http = $http;
         this.$q = $q;
         this.rootScope = $rootScope;
-        this.cookieStore = $cookieStore;
+        this.cookies = $cookies;
         this.location = $location;
+        this.window = $window;
         this.userResource = UserResource.resource;
         this.injector = $injector;
     }
@@ -46,49 +51,55 @@ class AuthService {
         let self = this;
         let defer = this.$q.defer();
         if (credentials) {
-
-            let authorization = btoa(credentials.username + ":" + credentials.password);
-            let headers = credentials ? { authorization: "Basic " + authorization } : {};
+            let authorization = btoa(credentials.email + ":" + credentials.password);
+            let headers = credentials ? { Authorization: "Basic " + authorization } : {};
             this.http.get("user", { headers: headers }).then(function (response) {
                 let data = response.data;
-                if (data.username) {
-                    self.rootScope.globals = {
-                        user: {
-                            id: data.id,
-                            username: data.username,
-                            role: data.role,
-                            email: data.email,
-                            firstname: data.firstname,
-                            lastname: data.lastname,
-                            phone: data.phone,
-                            language: data.language,
-                            pictureLink: "http://localhost:8080/users/" + data.id + "/profile/picture",
-                            smtp: data.smtp,
-                            authorization: authorization
-                        },
-                        tenant: {
-                            license: {
-                                package: ["basic", "pro"],
-                                term: "09.12.2017",
-                                trial: false
-                            }
+                if (data) {
+                    self.rootScope.user = {
+                        id: data.id,
+                        role: data.role,
+                        email: data.email,
+                        firstname: data.firstname,
+                        lastname: data.lastname,
+                        phone: data.phone,
+                        language: data.language,
+                        pictureLink: "http://localhost:8080/users/" + data.id + "/profile/picture",
+                        smtp: data.smtp,
+                        authorization: authorization
+                    };
+
+                    self.rootScope.tenant = {
+                        license: {
+                            package: ["basic", "pro"],
+                            term: "09.12.2017",
+                            trial: false
                         }
                     };
-                    if (!hasLicense(self.rootScope.globals.tenant.license, "basic")) {
-                        alert("Lizenz abgelaufen am: " + self.rootScope.globals.tenant.license.term);
-                        self.rootScope.globals.user = null;
-                        self.rootScope.globals = {};
+
+                    if (!hasLicense(self.rootScope.tenant.license, "basic")) {
+                        alert("Lizenz abgelaufen am: " + self.rootScope.tenant.license.term);
+                        self.rootScope.user = null;
+                        self.rootScope.tenant = null;
                         defer.reject(false);
                     } else {
+
                         self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
-                        self.cookieStore.put("globals", self.rootScope.globals);
-                        self.rootScope.globals.user.picture = data.profilePicture;
+
+                        let context = "leadplus." + self.window.location.hostname;
+
+                        let date = new Date();
+                        date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
+                        self.cookies.putObject("global", self.rootScope.user, { domain: "leadplus.localhost", path: "/" });
+                        let test = self.cookies.getObject("global");
+                        console.log("test: ", test);
+
+                        self.rootScope.user.picture = data.profilePicture;
                         self.injector.get("DashboardService");
                         self.rootScope.$broadcast("onTodosChange");
                         defer.resolve(true);
                     }
                 } else {
-                    console.log("username is null");
                     defer.reject(false);
                 }
             }, (function (error) {
@@ -101,11 +112,10 @@ class AuthService {
     }
 
     logout() {
-        this.rootScope.globals.user = null;
-        this.rootScope.globals = {};
-        this.cookieStore.remove("globals");
+        this.rootScope.user = null;
+        this.cookies.remove("global", { domain: "leadplus.localhost", path: "/" });
         this.http.defaults.headers.common.Authorization = "Basic";
-        location.reload(true);
+        // location.reload(true);
         /*
         let self = this;
         this.http.post("logout", {})

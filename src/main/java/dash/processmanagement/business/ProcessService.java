@@ -21,9 +21,10 @@ import static dash.Constants.PROCESS_NOT_FOUND;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_NOT_FOUND;
+import static dash.processmanagement.business.ProcessSpecs.isBetweenTimestamp;
 import static dash.processmanagement.business.ProcessSpecs.isClosed;
 import static dash.processmanagement.business.ProcessSpecs.isProcessor;
-import static dash.processmanagement.business.ProcessSpecs.*;
+import static dash.processmanagement.business.ProcessSpecs.isSale;
 import static org.springframework.data.jpa.domain.Specifications.not;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
@@ -101,12 +102,12 @@ public class ProcessService implements IProcessService {
 			if (Optional.ofNullable(process.getOffer()).isPresent())
 				offerService.save(process.getOffer());
 			if (Optional.ofNullable(process.getSale()).isPresent()) {
-				try {
-					process.setProcessor(userService.getUserByName("admin"));
-				} catch (NotFoundException nfex) {
-					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-							nfex);
-				}
+				//				try {
+				//					process.setProcessor(userService.getUserByName("admin"));
+				//				} catch (NotFoundException nfex) {
+				//					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+				//							nfex);
+				//				}
 				saleService.save(process.getSale());
 			}
 			save(process);
@@ -268,8 +269,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process setStatus(long id, String status)
-			throws SaveFailedException, NotFoundException, UpdateFailedException {
+	public Process setStatus(long id, String status) throws SaveFailedException, NotFoundException, UpdateFailedException {
 		if (Optional.ofNullable(status).isPresent()) {
 			Process process = getById(id);
 			process.setStatus(Status.valueOf(status));
@@ -308,11 +308,12 @@ public class ProcessService implements IProcessService {
 	public List<Process> getProcessesByProcessor(long processorId) {
 		return processRepository.findAll(where(isProcessor(processorId)).and(not(isClosed())).and(not(isSale())));
 	}
-	
+
 	@Override
-	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId,Calendar from, Calendar until) {
+	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId, Calendar from, Calendar until) {
 		return processRepository.findAll(where(isProcessor(processorId)).and(isBetweenTimestamp(from, until)));
 	}
+
 	@Override
 	public List<Process> getProcessesBetweenTimestamp(Calendar from, Calendar until) {
 		System.out.println(from);

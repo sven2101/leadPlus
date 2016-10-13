@@ -2,8 +2,9 @@
 
 class Credentials {
 
-    username: string;
+    email: string;
     password: string;
+    tenant: string;
 
     constructor() {
     }

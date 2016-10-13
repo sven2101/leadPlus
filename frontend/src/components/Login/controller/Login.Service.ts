@@ -1,6 +1,7 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Authentication.Service.ts" />
-
+/// <reference path="../../Login/model/Credentials.Model.ts" />
+/// <reference path="../../Common/service/Subdomain.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -21,33 +22,35 @@ const LoginServiceId: string = "LoginService";
 
 class LoginService {
 
-    private $inject = [$locationId, AuthServiceId, toasterId, $rootScopeId, $translateId];
+    private $inject = [$locationId, $windowId, AuthServiceId, toasterId, $rootScopeId, $translateId, SubdomainServiceId];
 
     location;
-    authService: AuthService;
     scope;
     toaster;
     rootScope;
     translate;
+    window;
 
-    constructor($location, AuthService: AuthService, toaster, $rootScope, $translate) {
+    authService: AuthService;
+    subdomainService: SubdomainService;
+
+    constructor($location, $window, AuthService: AuthService, toaster, $rootScope, $translate, SubdomainService) {
         this.location = $location;
-        this.authService = AuthService;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
+        this.window = $window;
+
+        this.authService = AuthService;
+        this.subdomainService = SubdomainService;
     }
 
-    login(credentials) {
+    login(credentials:Credentials) {
         let self = this;
-        if (credentials.username === "apiuser") {
-            self.scope.credentials.password = "";
-            self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
-        }
-        else {
             self.authService.login(credentials).then(
                 function (res) {
-                    self.location.path("/dashboard");
+                    let domain = "http://" + credentials.tenant + ".leadplus.localhost:8080/#/dashboard";
+                    self.window.open(domain, "_self");
                     self.rootScope.setUserDefaultLanguage();
                     self.rootScope.loadLabels();
                 },
@@ -55,7 +58,6 @@ class LoginService {
                     self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
                 }
             );
-        }
     };
 }
 

@@ -78,7 +78,7 @@ class AppController {
         let self = this;
         self.rootScope.loadLabels = function () {
             if (!angular
-                .isUndefined(self.rootScope.globals.user)) {
+                .isUndefined(self.rootScope.user)) {
                 self.processResource.getLeadsByStatus({
                     workflow: "LEAD",
                     status: "OPEN"
@@ -107,10 +107,10 @@ class AppController {
         let self = this;
         self.rootScope.setUserDefaultLanguage = function () {
             if (!angular
-                .isUndefined(self.rootScope.globals.user)) {
+                .isUndefined(self.rootScope.user)) {
                 self.userResource
                     .get({
-                        id: self.rootScope.globals.user.id
+                        id: self.rootScope.user.id
                     }).$promise.then(function (result) {
                         self.rootScope.changeLanguage(result.language);
                     });
@@ -128,7 +128,7 @@ class AppController {
         });
         self.stop = self.interval(function () {
             if (!angular
-                .isUndefined(self.rootScope.globals.user)) {
+                .isUndefined(self.rootScope.user)) {
                 self.processResource.getLeadsByStatus({
                     workflow: "LEAD",
                     status: "OPEN"
@@ -147,9 +147,9 @@ class AppController {
 
     setCurrentUserPicture() {
         let self = this;
-        if (!isNullOrUndefined(self.rootScope.globals.user)) {
-            self.userResource.getProfilePicture({ id: self.rootScope.globals.user.id }).$promise.then(function (result) {
-                self.rootScope.globals.user.picture = result;
+        if (!isNullOrUndefined(self.rootScope.user)) {
+            self.userResource.getProfilePicture({ id: self.rootScope.user.id }).$promise.then(function (result) {
+                self.rootScope.user.picture = result;
             });
         }
 

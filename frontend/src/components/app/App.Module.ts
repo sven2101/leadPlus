@@ -71,6 +71,7 @@ angular.module(moduleApp,
         moduleTenantService,
         moduleRegistration,
         moduleRegistrationService,
+        moduleSubdomainService,
 
         moduleTranslate,
         moduleNgResource,

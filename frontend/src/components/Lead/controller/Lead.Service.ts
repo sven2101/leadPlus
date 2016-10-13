@@ -54,7 +54,7 @@ class LeadService {
         this.workflowService = WorkflowService;
         this.customerService = CustomerService;
         this.productService = ProductService;
-        this.user = $rootScope.globals.user;
+        this.user = $rootScope.user;
 
 
     }
@@ -167,7 +167,7 @@ class LeadService {
                         .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
                     self.updateRow(result, dtInstance, scope);
                     self.customerService.getAllCustomer();
-                    if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
+                    if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                         self.rootScope.$broadcast("onTodosChange");
                     }
                 });
@@ -179,7 +179,7 @@ class LeadService {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
             self.updateRow(editProcess, dtInstance, scope);
-            if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
+            if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                 self.rootScope.$broadcast("onTodosChange");
             }
         });
