@@ -35,7 +35,7 @@ public class LicenseFilter extends OncePerRequestFilter {
 			System.out.println(request.getRequestURI());
 			if (!License.valueOf("BASIC").hasLicenseForURL(request.getRequestURI())) {
 				System.out.println("Keine Lizenz");
-				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			}
 		}
 		filterChain.doFilter(request, response);

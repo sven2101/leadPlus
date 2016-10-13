@@ -47,7 +47,7 @@ class LoginService {
         else {
             self.authService.login(credentials).then(
                 function (res) {
-                    self.location.path("/dashoard");
+                    self.location.path("/dashboard");
                     self.rootScope.setUserDefaultLanguage();
                     self.rootScope.loadLabels();
                 },

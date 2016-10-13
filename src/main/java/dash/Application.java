@@ -219,20 +219,15 @@ public class Application {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.httpBasic().and().authorizeRequests()
-					.antMatchers("/", "/images/favicon**", "/assets/**", "/fonts/**", "/app/**",
-							"/components/Login/view/Login.html", "/components/Signup/view/Signup.html",
-							"/api/rest/registrations/**", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
-							"/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")
-					.permitAll().antMatchers("/api/rest/public**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")
-					.anyRequest().authenticated().antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER")
-					.antMatchers(License.BASIC.getBlockedRoutes()
-							.toArray(new String[License.BASIC.getBlockedRoutes().size()]))
-					.authenticated().and().addFilterBefore(new LicenseFilter(), FilterSecurityInterceptor.class)
-					.authorizeRequests().anyRequest().authenticated().and()
-					.addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class).csrf()
-					.csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout().logoutUrl("/logout")
-					.logoutSuccessUrl("/").and().headers().frameOptions().sameOrigin().httpStrictTransportSecurity()
-					.disable();
+					.antMatchers(
+							License.FREE.getAllowedRoutes().toArray(new String[License.FREE.getAllowedRoutes().size()]))
+					.permitAll().antMatchers("/api/rest/public/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")
+					.antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER").anyRequest().authenticated().and()
+					.addFilterAfter(new LicenseFilter(), FilterSecurityInterceptor.class).authorizeRequests()
+					.anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
+					.csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout()
+					.logoutUrl("/logout").logoutSuccessUrl("/").and().headers().frameOptions().sameOrigin()
+					.httpStrictTransportSecurity().disable();
 
 			http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
 		}

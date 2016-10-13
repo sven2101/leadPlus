@@ -128,11 +128,43 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controllerAs: "customerDetailCtrl",
                 authenticated: true,
                 package: "basic"
+            }).when("/401",
+            {
+                templateUrl: "components/Common/view/Unauthorized.html",
+                package: "basic"
+            }).when("/403",
+            {
+                templateUrl: "components/Common/view/Forbidden.html",
+                package: "basic"
+            }).when("/404",
+            {
+                templateUrl: "components/Common/view/NotFound.html",
+                package: "basic"
             }).otherwise({
-                redirectTo: "/"
+                redirectTo: "/404"
             });
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+
+        $httpProvider.interceptors.push(function ($q, $location) {
+            return {
+                "responseError": function (rejection) {
+                    let defer = $q.defer();
+                    if (rejection.status === 401 && rejection.config.url !== "user") {
+                        $location.path("/401");
+                    }
+                    else if (rejection.status === 403) {
+                        $location.path("/403");
+                    }
+                    else if (rejection.status === 404) {
+                        $location.path("/404");
+                    }
+                    defer.reject(rejection);
+
+                    return defer.promise;
+                }
+            };
+        });
 
     }])
     .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookieStoreId, $injectorId, ProfileServiceId,
