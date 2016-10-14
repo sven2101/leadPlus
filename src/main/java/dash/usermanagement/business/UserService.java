@@ -235,8 +235,7 @@ public class UserService implements IUserService {
 	}
 
 	public User register(final Registration registration) throws EmailAlreadyExistsException, RegisterFailedException {
-		if (Optional.ofNullable(registration).isPresent() && Optional.ofNullable(registration.getEmail()).isPresent()
-				&& Optional.ofNullable(registration.getPassword()).isPresent()) {
+		if (registration != null && registration.getEmail() != null && registration.getPassword() != null) {
 			try {
 				if (emailAlreadyExists(registration.getEmail()).isValidation()) {
 					throw new EmailAlreadyExistsException(EMAIL_EXISTS);

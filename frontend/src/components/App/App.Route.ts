@@ -137,8 +137,6 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
     .run([$locationId, $windowId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId, ProfileServiceId,
         function ($location, $window, $http, $rootScope, Auth, $cookies, $injector, ProfileService) {
             $rootScope.user = $cookies.getObject("global");
-            console.log("Authorization: ", $cookies.getAll());
-            console.log("Authorization: ", $rootScope.user);
 
             if (!angular.isUndefined($rootScope.user)) {
                 console.log("Authorization: ", $rootScope.user.authorization);
@@ -148,11 +146,10 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
 
             $rootScope.$on("$routeChangeStart", function (event, next, current) {
                 $rootScope.user = $cookies.getObject("global");
-                console.log("Globals - route: ", $rootScope.user);
 
                 if (!angular.isUndefined($rootScope.user)) {
                     $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
-                    $http.defaults.headers.common["X-TenantID"] = $window.location.hostname;
+                    $http.defaults.headers.common["X-TenantID"] = $window.location.hostname.split(".")[0];
                 }
 
                 if (next.authenticated === true) {

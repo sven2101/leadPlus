@@ -3,6 +3,7 @@
 /// <reference path="../app/App.Resource.ts" />
 /// <reference path="../app/App.Common.ts" />
 /// <reference path="../Common/model/Promise.Interface.ts" />
+/// <reference path="../Login/model/Credentials.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -48,12 +49,19 @@ class AuthService {
     }
 
     login(credentials): IPromise<boolean> {
+
         let self = this;
         let defer = this.$q.defer();
         if (credentials) {
-            let authorization = btoa(credentials.email + ":" + credentials.password);
-            let headers = credentials ? { Authorization: "Basic " + authorization } : {};
-            this.http.get("user", { headers: headers }).then(function (response) {
+
+            let authorization = btoa(credentials.tenant + "/" + credentials.email + ":" + credentials.password);
+            let header = credentials ? { Authorization: "Basic " + authorization } : {};
+
+            this.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
+            console.log("credentials.tenantKey: ", credentials.tenant);
+            this.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
+
+            this.http.get("user").then(function (response) {
                 let data = response.data;
                 if (data) {
                     self.rootScope.user = {
@@ -68,7 +76,6 @@ class AuthService {
                         smtp: data.smtp,
                         authorization: authorization
                     };
-
                     self.rootScope.tenant = {
                         license: {
                             package: ["basic", "pro"],
@@ -83,16 +90,15 @@ class AuthService {
                         self.rootScope.tenant = null;
                         defer.reject(false);
                     } else {
-
                         self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
+                        self.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
+                        console.log("X-TenantID", credentials.tenant);
 
-                        let context = "leadplus." + self.window.location.hostname;
 
                         let date = new Date();
                         date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
                         self.cookies.putObject("global", self.rootScope.user, { domain: "leadplus.localhost", path: "/" });
                         let test = self.cookies.getObject("global");
-                        console.log("test: ", test);
 
                         self.rootScope.user.picture = data.profilePicture;
                         self.injector.get("DashboardService");

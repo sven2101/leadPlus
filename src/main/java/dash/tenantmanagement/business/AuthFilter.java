@@ -14,22 +14,21 @@
 package dash.tenantmanagement.business;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 
-@Component
-public class TenantIdentifierInterceptorAdapter extends HandlerInterceptorAdapter {
+public class AuthFilter extends AbstractPreAuthenticatedProcessingFilter {
 
 	@Override
-	public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception {
-		String tenant = req.getHeader("X-TenantID");
-		if (tenant != null) {
-			TenantContext.setTenant(tenant);
-		} else {
-			TenantContext.setTenant("tenant");
-		}
-		return true;
+	protected Object getPreAuthenticatedPrincipal(HttpServletRequest request) {
+		System.out.println(request.getHeaderNames());
+		return null;
 	}
+
+	@Override
+	protected Object getPreAuthenticatedCredentials(HttpServletRequest request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
