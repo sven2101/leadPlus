@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public enum License {
-	FREE("free", new HashSet<String>(Arrays.asList("/", "/images/favicon**", "/assets/**", "/fonts/**", "/app/**",
+	FREE("free", new HashSet<String>(Arrays.asList("/", "/images/favicon/**", "/assets/**", "/fonts/**", "/app/**",
 			"/components/Login/view/Login.html", "/components/Signup/view/Signup.html", "/api/rest/registrations/**",
 			"/components/Common/view/NotFound.html", "/components/Common/view/Unauthorized.html",
 			"/components/Common/view/Forbidden.html", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
