@@ -33,6 +33,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
@@ -43,6 +44,8 @@ import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.route53.AmazonRoute53Client;
 
 import dash.security.AngularCsrfHeaderFilter;
+import dash.security.License;
+import dash.security.LicenseFilter;
 import dash.security.listener.RESTAuthenticationEntryPoint;
 import dash.usermanagement.registration.domain.Validation;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -54,7 +57,8 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = { "dash" }, entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "entityTransactionManager")
+@EnableJpaRepositories(basePackages = {
+		"dash" }, entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "entityTransactionManager")
 @EnableContextRegion(region = "eu-central-1")
 public class Application {
 
@@ -68,13 +72,15 @@ public class Application {
 	public static class SwaggerConfig {
 		@Bean
 		public Docket api() {
-			return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("dash.publicapi")).paths(PathSelectors.any())
-					.build().apiInfo(apiInfo());
+			return new Docket(DocumentationType.SWAGGER_2).select()
+					.apis(RequestHandlerSelectors.basePackage("dash.publicapi")).paths(PathSelectors.any()).build()
+					.apiInfo(apiInfo());
 		}
 	}
 
 	private static ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("Lead+").description("Lead+ - Lead Management Tool").license("").licenseUrl("").version("2.0").build();
+		return new ApiInfoBuilder().title("Lead+").description("Lead+ - Lead Management Tool").license("")
+				.licenseUrl("").version("2.0").build();
 	}
 
 	@Bean
@@ -84,7 +90,8 @@ public class Application {
 
 	@Bean
 	public AmazonRoute53 getAmazonRoute53() {
-		AWSCredentials awsCredentials = new BasicAWSCredentials("***REMOVED***", "***REMOVED***");
+		AWSCredentials awsCredentials = new BasicAWSCredentials("***REMOVED***",
+				"***REMOVED***");
 		return new AmazonRoute53Client(awsCredentials);
 	}
 
@@ -112,13 +119,15 @@ public class Application {
 		protected void configure(HttpSecurity http) throws Exception {
 
 			http.httpBasic().and().authorizeRequests()
-					.antMatchers("/", "/images/favicon**", "/assets/**", "/fonts/**", "/app/**", "/components/Login/view/Login.html",
-							"/components/Signup/view/Signup.html", "/api/rest/registrations/**", "/api/rest/tenants/**", "/swagger-ui.html",
-							"/webjars/springfox-swagger-ui/**", "/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")
-					.permitAll().antMatchers("/api/rest/public**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API").anyRequest().authenticated().antMatchers("/**")
-					.hasAnyAuthority("SUPERADMIN,ADMIN,USER").anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
-					.csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout().logoutUrl("/logout").logoutSuccessUrl("/").and()
-					.headers().frameOptions().sameOrigin().httpStrictTransportSecurity().disable();
+					.antMatchers(
+							License.FREE.getAllowedRoutes().toArray(new String[License.FREE.getAllowedRoutes().size()]))
+					.permitAll().antMatchers("/api/rest/public/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")
+					.antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER").anyRequest().authenticated().and()
+					.addFilterAfter(new LicenseFilter(), FilterSecurityInterceptor.class).authorizeRequests()
+					.anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
+					.csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout()
+					.logoutUrl("/logout").logoutSuccessUrl("/").and().headers().frameOptions().sameOrigin()
+					.httpStrictTransportSecurity().disable();
 
 			http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
 		}

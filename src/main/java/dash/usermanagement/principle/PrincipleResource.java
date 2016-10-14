@@ -19,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.hibernate.context.TenantIdentifierMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
+import dash.tenantmanagement.business.TenantContext;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 
@@ -43,7 +45,7 @@ public class PrincipleResource {
 	public ResponseEntity<Map<String, Object>> getUser(Principal user) throws NotFoundException {
 
 		User internalUser = userService.getUserByEmail(user.getName());
-
+		
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 
 		if (!Optional.ofNullable(user).isPresent())
@@ -55,6 +57,7 @@ public class PrincipleResource {
 
 		map.put("email", internalUser.getEmail());
 		map.put("firstname", internalUser.getFirstname());
+		map.put("tenant", TenantContext.getTenant());
 		map.put("lastname", internalUser.getLastname());
 		map.put("phone", internalUser.getPhone());
 		map.put("email", internalUser.getEmail());

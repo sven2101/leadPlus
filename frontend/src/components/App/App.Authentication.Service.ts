@@ -68,6 +68,7 @@ class AuthService {
                         id: data.id,
                         role: data.role,
                         email: data.email,
+                        tenant: data.tenant,
                         firstname: data.firstname,
                         lastname: data.lastname,
                         phone: data.phone,
@@ -97,8 +98,8 @@ class AuthService {
 
                         let date = new Date();
                         date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
-                        self.cookies.putObject("global", self.rootScope.user, { domain: "leadplus.localhost", path: "/" });
-                        let test = self.cookies.getObject("global");
+                        self.cookies.putObject("user", self.rootScope.user, { domain: "leadplus.localhost", path: "/", expires: date });
+                        self.cookies.putObject("tenant", self.rootScope.tenant, { domain: "leadplus.localhost", path: "/", expires: date });
 
                         self.rootScope.user.picture = data.profilePicture;
                         self.injector.get("DashboardService");
@@ -119,7 +120,8 @@ class AuthService {
 
     logout() {
         this.rootScope.user = null;
-        this.cookies.remove("global", { domain: "leadplus.localhost", path: "/" });
+        this.cookies.remove("user", { domain: "leadplus.localhost", path: "/" });
+        this.cookies.remove("tenant", { domain: "leadplus.localhost", path: "/" });
         this.http.defaults.headers.common.Authorization = "Basic";
         // location.reload(true);
         /*

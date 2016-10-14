@@ -39,7 +39,7 @@ class LoginController {
             this.credentials.tenant = tenant[0];
             this.loginService.login(this.credentials);
         } else {
-            console.log("Error - you need to login via your tenant subdomain dude. ");
+            console.log("Error - you need to login via your tenant subdomain dude.");
         }
     }
 }

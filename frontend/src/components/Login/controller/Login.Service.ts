@@ -45,19 +45,23 @@ class LoginService {
         this.subdomainService = SubdomainService;
     }
 
-    login(credentials:Credentials) {
+    login(credentials: Credentials) {
         let self = this;
-            self.authService.login(credentials).then(
-                function (res) {
+        self.authService.login(credentials).then(
+            function (res) {
+                if (self.location.host() === credentials.tenant + ".leadplus.localhost") {
+                    self.location.path("/dashboard");
+                } else {
                     let domain = "http://" + credentials.tenant + ".leadplus.localhost:8080/#/dashboard";
                     self.window.open(domain, "_self");
-                    self.rootScope.setUserDefaultLanguage();
-                    self.rootScope.loadLabels();
-                },
-                function (err) {
-                    self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
                 }
-            );
+                self.rootScope.setUserDefaultLanguage();
+                self.rootScope.loadLabels();
+            },
+            function (err) {
+                self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
+            }
+        );
     };
 }
 

@@ -143,7 +143,7 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 
 		try {
 			comment.setCommentText("Test");
-			comment.setCreator(userService.getUserByName("test"));
+			//comment.setCreator(userService.getUserByName("test"));
 			comment.setTimestamp(Calendar.getInstance());
 
 			Process process = new Process();
@@ -180,14 +180,14 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 			process.setLead(lead);
 			process.setOffer(offer);
 			process.setSale(sale);
-			process.setProcessor(userService.getUserByName("test"));
+			//process.setProcessor(userService.getUserByName("test"));
 			process.setStatus(Status.OPEN);
 
 			Process process2 = processService.save(process);
 
 			comment.setProcess(process2);
 
-		} catch (SaveFailedException | NotFoundException ex) {
+		} catch (SaveFailedException ex) {
 			ex.printStackTrace();
 		}
 
