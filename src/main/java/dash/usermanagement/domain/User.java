@@ -41,7 +41,7 @@ import dash.fileuploadmanagement.domain.FileUpload;
 import dash.usermanagement.settings.language.Language;
 
 @Entity
-@Table(name = "\"User\"")
+@Table(name = "\"user\"")
 public class User implements UserDetails {
 
 	private static final long serialVersionUID = 3125258392087209376L;
