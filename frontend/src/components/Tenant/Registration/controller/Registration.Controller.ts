@@ -25,7 +25,7 @@ const RegistrationControllerId: string = "RegistrationController";
 
 class RegistrationController {
 
-    private $inject = [RegistrationServiceId, SignupServiceId, TenantServiceId, LoginServiceId];
+    private $inject = [RegistrationServiceId, SignupServiceId, TenantServiceId, LoginServiceId, $httpId];
 
     signupService;
     registrationService;
@@ -36,7 +36,9 @@ class RegistrationController {
     tenant: Tenant;
     user: Signup;
 
-    constructor(RegistrationService, SignupService, TenantService, LoginService) {
+    http;
+
+    constructor(RegistrationService, SignupService, TenantService, LoginService, $http) {
         this.registrationService = RegistrationService;
         this.signupService = SignupService;
         this.tenantService = TenantService;
@@ -44,6 +46,7 @@ class RegistrationController {
         this.tenant = new Tenant();
         this.user = new Signup();
         this.credentials = new Credentials();
+        this.http = $http;
     }
 
     uniqueTenantKey(): void {
@@ -62,6 +65,7 @@ class RegistrationController {
         this.credentials.tenant = this.tenant.tenantKey;
 
         this.tenantService.save(this.tenant).then(function (createdTenant: Tenant) {
+            self.http.defaults.headers.common["X-TenantID"] = createdTenant.tenantKey;
             self.signupService.signup(self.user).then(function (createdUser: User) {
                 self.loginService.login(self.credentials);
             }, function () {

@@ -20,18 +20,27 @@ const LoginControllerId: string = "LoginController";
 
 class LoginController {
 
-    private $inject = [LoginServiceId];
+    private $inject = [LoginServiceId, $locationId];
 
     loginService: LoginService;
     credentials: Credentials;
+    location;
 
-    constructor(LoginService: LoginService) {
+    constructor(LoginService: LoginService, $location) {
         this.loginService = LoginService;
+        this.location = $location;
         this.credentials = new Credentials();
     }
 
     login() {
-        this.loginService.login(this.credentials);
+        let host = this.location.host();
+        let tenant = host.split(".");
+        if (tenant.length > 1) {
+            this.credentials.tenant = tenant[0];
+            this.loginService.login(this.credentials);
+        } else {
+            console.log("Error - you need to login via your tenant subdomain dude. ");
+        }
     }
 }
 

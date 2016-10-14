@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import dash.exceptions.NotFoundException;
 import dash.exceptions.UserIsNotActivatedException;
+import dash.tenantmanagement.business.TenantContext;
 import dash.usermanagement.domain.User;
 
 @Service
@@ -42,7 +43,8 @@ public class UserLoginService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		User user;
 		try {
-			user = userService.getUserByEmail(email);
+			TenantContext.setTenant(email.split("/")[0]);
+			user = userService.getUserByEmail(email.split("/")[1]);
 			if (!Optional.ofNullable(user).isPresent()) {
 				throw new NotFoundException(USER_NOT_FOUND);
 			}

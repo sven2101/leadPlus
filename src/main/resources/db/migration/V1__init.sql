@@ -1,3 +1,4 @@
+CREATE SCHEMA IF NOT EXISTS public;
 
 -- Sequence: tenant_id_seq
 
@@ -7,7 +8,7 @@ CREATE SEQUENCE IF NOT EXISTS public.tenant_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE tenant_id_seq
+ALTER TABLE public.tenant_id_seq
   OWNER TO postgres;
 
 -- Table: tenant

@@ -2,6 +2,7 @@
 /// <reference path="../User/model/User.Model.ts" />
 /// <reference path="../app/App.Resource.ts" />
 /// <reference path="../app/App.Common.ts" />
+/// <reference path="../Login/model/Credentials.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -42,13 +43,18 @@ class AuthService {
         this.injector = $injector;
     }
 
-    login(credentials, success, error) {
+    login(credentials: Credentials, success, error) {
         let self = this;
         if (credentials) {
 
-            let authorization = btoa(credentials.email + ":" + credentials.password);
-            let headers = credentials ? { Authorization: "Basic " + authorization } : {};
-            this.http.get("user", { headers: headers }).success(function (data) {
+            let authorization = btoa(credentials.tenant + "/" + credentials.email + ":" + credentials.password);
+            let header = credentials ? { Authorization: "Basic " + authorization } : {};
+
+            this.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
+            console.log("credentials.tenantKey: ", credentials.tenant);
+            this.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
+
+            this.http.get("user").success(function (data) {
                 if (data) {
                     self.rootScope.user = {
                         id: data.id,
@@ -64,6 +70,8 @@ class AuthService {
                     };
 
                     self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
+                    self.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
+                    console.log("X-TenantID", credentials.tenant);
 
                     let context = "leadplus." + self.window.location.hostname;
 
@@ -71,7 +79,6 @@ class AuthService {
                     date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
                     self.cookies.putObject("global", self.rootScope.user, { domain: "leadplus.localhost", path: "/" });
                     let test = self.cookies.getObject("global");
-                    console.log("test: ", test);
 
                     self.rootScope.user.picture = data.profilePicture;
                     success(data);
