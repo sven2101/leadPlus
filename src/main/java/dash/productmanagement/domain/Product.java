@@ -24,7 +24,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -41,39 +44,50 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 @SQLDelete(sql = "UPDATE product SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
+@Table(name = "product")
 public class Product {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_auto_gen")
+	@SequenceGenerator(name = "product_auto_gen", sequenceName = "product_id_seq")
+	@Column(name = "id")
 	private long id;
 
 	@ApiModelProperty(hidden = true)
+	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
 	@ApiModelProperty(hidden = true)
+	@Column(name = "name", nullable = false)
 	private String name;
+
 	@ApiModelProperty(hidden = true)
+	@Column(name = "description")
 	private String description;
 
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(hidden = true)
+	@Column(name = "productstate")
 	private ProductState productState;
 
-	@Column
-	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
 	@ApiModelProperty(hidden = true)
+	@Column(name = "timestamp", nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar timestamp;
 
 	@ApiModelProperty(hidden = true)
+	@Column(name = "deactivated", nullable = false)
 	private boolean deactivated;
 
 	@ApiModelProperty(hidden = true)
+	@Column(name = "pricenetto", nullable = false)
 	private double priceNetto;
 
-	@OneToOne(cascade = CascadeType.ALL)
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@ApiModelProperty(hidden = true)
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "picture_id")
 	private FileUpload picture;
 
 	public boolean isDeleted() {
@@ -214,9 +228,8 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description
-				+ ", productState=" + productState + ", timestamp=" + timestamp + ", deactivated=" + deactivated
-				+ ", priceNetto=" + priceNetto + ", fileUpload=" + picture + "]";
+		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description + ", productState=" + productState
+				+ ", timestamp=" + timestamp + ", deactivated=" + deactivated + ", priceNetto=" + priceNetto + ", fileUpload=" + picture + "]";
 	}
 
 }

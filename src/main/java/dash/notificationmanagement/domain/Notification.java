@@ -19,7 +19,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -30,23 +33,31 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 @SQLDelete(sql = "UPDATE notification SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
+@Table(name = "notification")
 public class Notification {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "notification_auto_gen")
+	@SequenceGenerator(name = "notification_auto_gen", sequenceName = "notification_id_seq")
+	@Column(name = "id")
 	private long id;
 
+	@Column(name = "recipient", length = 255, nullable = false)
 	private String recipient;
+
+	@Column(name = "subject", length = 255, nullable = false)
 	private String subject;
 
 	@ApiModelProperty(hidden = true)
+	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
-	@Column(length = 30000)
+	@Column(name = "content", length = 30000, nullable = false)
 	private String content;
 
-	@OneToOne(cascade = CascadeType.ALL)
 	// @JsonProperty(access = Access.WRITE_ONLY)
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "attachment_id")
 	private FileUpload attachment;
 
 	public Notification() {

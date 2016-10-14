@@ -37,10 +37,11 @@ import dash.notificationmanagement.domain.Notification;
 public class Offer extends AbstractWorkflow {
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = true, columnDefinition = "timestamptz")
+	@Column(nullable = true, columnDefinition = "timestamptz", name = "deliverydate")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
 	private Calendar deliveryDate;
 
+	@Column(name = "offerprice")
 	private double offerPrice;
 
 	@OneToOne(cascade = CascadeType.ALL)

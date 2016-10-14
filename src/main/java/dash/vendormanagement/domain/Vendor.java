@@ -14,10 +14,13 @@
 
 package dash.vendormanagement.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -27,18 +30,23 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 @SQLDelete(sql = "UPDATE vendor SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
+@Table(name = "vendor")
 public class Vendor {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@ApiModelProperty(hidden = true)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vendor_auto_gen")
+	@SequenceGenerator(name = "vendor_auto_gen", sequenceName = "vendor_id_seq")
+	@Column(name = "id")
 	private long id;
 
+	@Column(name = "name")
 	private String name;
 
 	@ApiModelProperty(hidden = true)
+	@Column(name = "deleted")
 	private boolean deleted;
 
+	@Column(name = "phone")
 	private String phone;
 
 	public Vendor() {

@@ -1,114 +1,125 @@
 
+
 -- Sequence: "User_id_seq"
 
-CREATE SEQUENCE public."user_id_seq"
+CREATE SEQUENCE IF NOT EXISTS "user_id_seq"
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE public."user_id_seq"
+ALTER TABLE "user_id_seq"
   OWNER TO postgres;
    
 -- Sequence: comment_id_seq
 
-CREATE SEQUENCE public.comment_id_seq
+CREATE SEQUENCE IF NOT EXISTS comment_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE public.comment_id_seq
+ALTER TABLE comment_id_seq
   OWNER TO postgres;
 
 -- Sequence: customer_id_seq
 
-CREATE SEQUENCE public.customer_id_seq
+CREATE SEQUENCE IF NOT EXISTS customer_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE public.customer_id_seq
+ALTER TABLE customer_id_seq
   OWNER TO postgres;
 
 -- Sequence: notification_id_seq
 
-CREATE SEQUENCE public.notification_id_seq
+CREATE SEQUENCE IF NOT EXISTS notification_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE public.notification_id_seq
+ALTER TABLE notification_id_seq
   OWNER TO postgres;
 
 -- Sequence: orderposition_id_seq
 
-CREATE SEQUENCE public.orderposition_id_seq
+CREATE SEQUENCE IF NOT EXISTS orderposition_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE public.orderposition_id_seq
+ALTER TABLE orderposition_id_seq
   OWNER TO postgres;
 
 -- Sequence: process_id_seq
 
-CREATE SEQUENCE public.process_id_seq
+CREATE SEQUENCE IF NOT EXISTS process_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE public.process_id_seq
+ALTER TABLE process_id_seq
   OWNER TO postgres;
 
 -- Sequence: product_id_seq
 
-CREATE SEQUENCE public.product_id_seq
+CREATE SEQUENCE IF NOT EXISTS product_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE public.product_id_seq
+ALTER TABLE product_id_seq
   OWNER TO postgres;
 
 -- Sequence: smtp_id_seq
 
-CREATE SEQUENCE public.smtp_id_seq
+CREATE SEQUENCE IF NOT EXISTS smtp_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE public.smtp_id_seq
+ALTER TABLE smtp_id_seq
   OWNER TO postgres;
 
 -- Sequence: template_id_seq
 
-CREATE SEQUENCE public.template_id_seq
+CREATE SEQUENCE IF NOT EXISTS template_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE public.template_id_seq
+ALTER TABLE template_id_seq
   OWNER TO postgres;
 
 -- Sequence: vendor_id_seq
 
-CREATE SEQUENCE public.vendor_id_seq
+CREATE SEQUENCE IF NOT EXISTS vendor_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE public.vendor_id_seq
+ALTER TABLE vendor_id_seq
   OWNER TO postgres;
 
+  -- Sequence: vendor_id_seq
+
+CREATE SEQUENCE IF NOT EXISTS fileupload_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE fileupload_id_seq
+  OWNER TO postgres;
 
 
 
@@ -121,7 +132,7 @@ ALTER TABLE public.vendor_id_seq
 
 -- Table: hibernate_sequences
 
-CREATE TABLE public.hibernate_sequences
+CREATE TABLE IF NOT EXISTS hibernate_sequences
 (
   sequence_name character varying(255) NOT NULL,
   next_val bigint,
@@ -130,13 +141,13 @@ CREATE TABLE public.hibernate_sequences
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.hibernate_sequences
+ALTER TABLE hibernate_sequences
   OWNER TO postgres;
 
   
 -- Table: template
 
-CREATE TABLE public.template
+CREATE TABLE IF NOT EXISTS template
 (
   id bigint NOT NULL DEFAULT nextval('template_id_seq'::regclass),
   content character varying(30000),
@@ -148,12 +159,12 @@ CREATE TABLE public.template
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.template
+ALTER TABLE template
   OWNER TO postgres;
   
 -- Table: vendor
 
-CREATE TABLE public.vendor
+CREATE TABLE IF NOT EXISTS vendor
 (
   id bigint NOT NULL DEFAULT nextval('vendor_id_seq'::regclass),
   deleted boolean NOT NULL,
@@ -164,14 +175,14 @@ CREATE TABLE public.vendor
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.vendor
+ALTER TABLE vendor
   OWNER TO postgres;
   
 -- Table: fileupload
 
-CREATE TABLE public.fileupload
+CREATE TABLE IF NOT EXISTS fileupload
 (
-  id bigint NOT NULL,
+  id bigint NOT NULL DEFAULT nextval('fileupload_id_seq'::regclass),
   content bytea,
   deleted boolean NOT NULL,
   filename character varying(255),
@@ -182,12 +193,12 @@ CREATE TABLE public.fileupload
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.fileupload
+ALTER TABLE fileupload
   OWNER TO postgres;
   
 -- Table: "User"
 
-CREATE TABLE public."user"
+CREATE TABLE IF NOT EXISTS "user"
 (
   id bigint NOT NULL DEFAULT nextval('"user_id_seq"'::regclass),
   email character varying(50) NOT NULL,
@@ -209,12 +220,12 @@ CREATE TABLE public."user"
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public."user"
+ALTER TABLE "user"
   OWNER TO postgres;
   
 -- Table: customer
 
-CREATE TABLE public.customer
+CREATE TABLE IF NOT EXISTS customer
 (
   id bigint NOT NULL DEFAULT nextval('customer_id_seq'::regclass),
   address character varying(255),
@@ -225,6 +236,7 @@ CREATE TABLE public.customer
   firstname character varying(255),
   lastname character varying(255),
   phone character varying(255),
+  customerNumber bigint,
   "timestamp" timestamp without time zone,
   title character varying(255),
   CONSTRAINT customer_pkey PRIMARY KEY (id)
@@ -232,13 +244,13 @@ CREATE TABLE public.customer
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.customer
+ALTER TABLE customer
   OWNER TO postgres;
 
     
 -- Table: product
 
-CREATE TABLE public.product
+CREATE TABLE IF NOT EXISTS product
 (
   id bigint NOT NULL DEFAULT nextval('product_id_seq'::regclass),
   deactivated boolean NOT NULL,
@@ -257,12 +269,12 @@ CREATE TABLE public.product
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.product
+ALTER TABLE product
   OWNER TO postgres;
 
 -- Table: sale
 
-CREATE TABLE public.sale
+CREATE TABLE IF NOT EXISTS sale
 (
   id bigint NOT NULL,
   deleted boolean NOT NULL,
@@ -286,12 +298,12 @@ CREATE TABLE public.sale
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.sale
+ALTER TABLE sale
   OWNER TO postgres;
 
 -- Table: lead
 
-CREATE TABLE public.lead
+CREATE TABLE IF NOT EXISTS lead
 (
   id bigint NOT NULL,
   deleted boolean NOT NULL,
@@ -312,12 +324,12 @@ CREATE TABLE public.lead
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.lead
+ALTER TABLE lead
   OWNER TO postgres;
 
 -- Table: notification
 
-CREATE TABLE public.notification
+CREATE TABLE IF NOT EXISTS notification
 (
   id bigint NOT NULL DEFAULT nextval('notification_id_seq'::regclass),
   content character varying(30000),
@@ -333,12 +345,12 @@ CREATE TABLE public.notification
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.notification
+ALTER TABLE notification
   OWNER TO postgres;
 
 -- Table: offer
 
-CREATE TABLE public.offer
+CREATE TABLE IF NOT EXISTS offer
 (
   id bigint NOT NULL,
   deleted boolean NOT NULL,
@@ -365,12 +377,12 @@ CREATE TABLE public.offer
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.offer
+ALTER TABLE offer
   OWNER TO postgres;
 
 -- Table: orderposition
 
-CREATE TABLE public.orderposition
+CREATE TABLE IF NOT EXISTS orderposition
 (
   id bigint NOT NULL DEFAULT nextval('orderposition_id_seq'::regclass),
   amount integer NOT NULL,
@@ -387,12 +399,12 @@ CREATE TABLE public.orderposition
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.orderposition
+ALTER TABLE orderposition
   OWNER TO postgres;
 
 -- Table: process
 
-CREATE TABLE public.process
+CREATE TABLE IF NOT EXISTS process
 (
   id bigint NOT NULL DEFAULT nextval('process_id_seq'::regclass),
   deleted boolean NOT NULL,
@@ -403,28 +415,28 @@ CREATE TABLE public.process
   sale_fk bigint,
   CONSTRAINT process_pkey PRIMARY KEY (id),
   CONSTRAINT fk6v5v8xuq66hbyo1ueqvgw0vpv FOREIGN KEY (sale_fk)
-      REFERENCES public.sale (id) MATCH SIMPLE
+      REFERENCES sale (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT fkaqx9t3438r0uimn8usf67g3o FOREIGN KEY (processor_fk)
-      REFERENCES public."user" (id) MATCH SIMPLE
+      REFERENCES "user" (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT fkgkqv2uyptgvaaed0g66wj5tws FOREIGN KEY (lead_fk)
-      REFERENCES public.lead (id) MATCH SIMPLE
+      REFERENCES lead (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT fknl7jxrsktrmjdjwbhqb1qcq9m FOREIGN KEY (offer_fk)
-      REFERENCES public.offer (id) MATCH SIMPLE
+      REFERENCES offer (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.process
+ALTER TABLE process
   OWNER TO postgres;
 
     
 -- Table: comment
 
-CREATE TABLE public.comment
+CREATE TABLE IF NOT EXISTS comment
 (
   id bigint NOT NULL DEFAULT nextval('comment_id_seq'::regclass),
   commenttext character varying(5000),
@@ -434,21 +446,21 @@ CREATE TABLE public.comment
   process_id bigint NOT NULL,
   CONSTRAINT comment_pkey PRIMARY KEY (id),
   CONSTRAINT fk1wni9g8xoxv69t0p8gqf1l9u4 FOREIGN KEY (creator_fk)
-      REFERENCES public."user" (id) MATCH SIMPLE
+      REFERENCES "user" (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT fk260uoiig31xoni9ap126hrbjq FOREIGN KEY (process_id)
-      REFERENCES public.process (id) MATCH SIMPLE
+      REFERENCES process (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.comment
+ALTER TABLE comment
   OWNER TO postgres;
 
 -- Table: smtp
 
-CREATE TABLE public.smtp
+CREATE TABLE IF NOT EXISTS smtp
 (
   id bigint NOT NULL DEFAULT nextval('smtp_id_seq'::regclass),
   connection boolean NOT NULL,
@@ -465,11 +477,11 @@ CREATE TABLE public.smtp
   user_id bigint,
   CONSTRAINT smtp_pkey PRIMARY KEY (id),
   CONSTRAINT fkgmivoqfpw4ssva180dtvkcln0 FOREIGN KEY (user_id)
-      REFERENCES public."user" (id) MATCH SIMPLE
+      REFERENCES "user" (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.smtp
+ALTER TABLE smtp
   OWNER TO postgres; 

@@ -18,20 +18,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "template")
 public class Template {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "template_auto_gen")
+	@SequenceGenerator(name = "template_auto_gen", sequenceName = "template_id_seq")
 	@Column(name = "id")
 	private Long id;
 
+	@Column(name = "name")
 	private String name;
+
+	@Column(name = "description")
 	private String description;
 
-	@Column(length = 30000)
+	@Column(name = "content", length = 30000)
 	private String content;
+
+	@Column(name = "deactivated", nullable = false)
 	private boolean deactivated;
 
 	public Template() {

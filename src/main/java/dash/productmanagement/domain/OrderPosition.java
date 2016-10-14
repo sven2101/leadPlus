@@ -14,12 +14,15 @@
 
 package dash.productmanagement.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -32,31 +35,38 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 @SQLDelete(sql = "UPDATE order_position SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
+@Table(name = "orderposition")
 public class OrderPosition {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "orderposition_auto_gen")
+	@SequenceGenerator(name = "orderposition_auto_gen", sequenceName = "orderposition_id_seq")
 	@ApiModelProperty(hidden = true)
+	@Column(name = "id")
 	private long id;
 
 	@ApiModelProperty(hidden = true)
+	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
 	@ManyToOne
 	@Where(clause = "deleted <> '1'")
 	private Product product;
 
-	@ManyToOne
 	@JsonIgnore
+	@ManyToOne
 	@JoinColumn(nullable = false)
 	@Where(clause = "deleted <> '1'")
 	private AbstractWorkflow workflow;
 
+	@Column(name = "amount", nullable = false)
 	private int amount;
 
 	@ApiModelProperty(hidden = true)
+	@Column(name = "price", nullable = false)
 	private double price;
 
+	@Column(name = "discount", nullable = false)
 	private double discount;
 
 	public OrderPosition() {
@@ -164,8 +174,8 @@ public class OrderPosition {
 
 	@Override
 	public String toString() {
-		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", product=" + product + ", amount=" + amount
-				+ ", price=" + price + ", discount=" + discount + "]";
+		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", product=" + product + ", amount=" + amount + ", price=" + price + ", discount="
+				+ discount + "]";
 	}
 
 }

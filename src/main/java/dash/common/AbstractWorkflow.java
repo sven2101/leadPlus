@@ -43,11 +43,13 @@ public abstract class AbstractWorkflow implements Request {
 	@Where(clause = "deleted <> '1'")
 	private Customer customer;
 
+	@Column(name = "deliveryaddress")
 	private String deliveryAddress;
 
 	@ApiModelProperty(hidden = true)
 	private boolean deleted;
 
+	@Column(name = "deliverycosts")
 	private double deliveryCosts;
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "workflow", fetch = FetchType.LAZY)
@@ -223,9 +225,8 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Override
 	public String toString() {
-		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress
-				+ ", deleted=" + deleted + ", deliveryCosts=" + deliveryCosts + ", orderPositions=" + orderPositions
-				+ ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + "]";
+		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress + ", deleted=" + deleted + ", deliveryCosts="
+				+ deliveryCosts + ", orderPositions=" + orderPositions + ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + "]";
 	}
 
 }

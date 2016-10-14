@@ -1,5 +1,6 @@
 package dash.salemanagement.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import org.hibernate.annotations.SQLDelete;
@@ -12,8 +13,13 @@ import dash.common.AbstractWorkflow;
 @Where(clause = "deleted <> '1'")
 public class Sale extends AbstractWorkflow {
 
+	@Column(name = "saleturnover")
 	private double saleTurnover;
+
+	@Column(name = "saleprofit")
 	private double saleProfit;
+
+	@Column(name = "salecost")
 	private double saleCost;
 
 	public Sale() {

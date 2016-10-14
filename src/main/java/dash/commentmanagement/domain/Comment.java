@@ -23,6 +23,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -38,29 +40,33 @@ import dash.usermanagement.domain.User;
 @Entity
 @SQLDelete(sql = "UPDATE comment SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
+@Table(name = "comment")
 public class Comment {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comment_auto_gen")
+	@SequenceGenerator(name = "comment_auto_gen", sequenceName = "comment_id_seq")
+	@Column(name = "id")
+	private long id;
 
+	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
 	@ManyToOne
 	@JoinColumn(name = "creator_fk", nullable = false)
 	private User creator;
 
-	@ManyToOne
 	@JsonIgnore
+	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Process process;
 
-	@Column(length = 5000)
+	@Column(name = "commenttext", length = 5000, nullable = false)
 	private String commentText;
 
-	@Column(nullable = true, columnDefinition = "timestamptz")
-	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
+	@Column(name = "timestamp", columnDefinition = "timestamptz", nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar timestamp;
 
 	public Comment() {
@@ -75,7 +81,7 @@ public class Comment {
 		this.deleted = deleted;
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -118,7 +124,7 @@ public class Comment {
 		result = prime * result + ((commentText == null) ? 0 : commentText.hashCode());
 		result = prime * result + ((creator == null) ? 0 : creator.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((process == null) ? 0 : process.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		return result;
@@ -145,10 +151,7 @@ public class Comment {
 			return false;
 		if (deleted != other.deleted)
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
+		if (id != other.id)
 			return false;
 		if (process == null) {
 			if (other.process != null)
@@ -165,8 +168,7 @@ public class Comment {
 
 	@Override
 	public String toString() {
-		return "Comment [id=" + id + ", deleted=" + deleted + ", creator=" + creator + ", commentText=" + commentText
-				+ ", timestamp=" + timestamp + "]";
+		return "Comment [id=" + id + ", deleted=" + deleted + ", creator=" + creator + ", commentText=" + commentText + ", timestamp=" + timestamp + "]";
 	}
 
 }

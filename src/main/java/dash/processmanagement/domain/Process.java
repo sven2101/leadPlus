@@ -46,7 +46,7 @@ import dash.usermanagement.domain.User;
 public class Process {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 
 	private boolean deleted;
@@ -217,8 +217,8 @@ public class Process {
 
 	@Override
 	public String toString() {
-		return "Process [id=" + id + ", deleted=" + deleted + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale
-				+ ", comments=" + comments + ", status=" + status + ", processor=" + processor + "]";
+		return "Process [id=" + id + ", deleted=" + deleted + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale + ", comments=" + comments + ", status="
+				+ status + ", processor=" + processor + "]";
 	}
 
 }

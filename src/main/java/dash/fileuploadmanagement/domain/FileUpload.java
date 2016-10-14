@@ -15,10 +15,13 @@ package dash.fileuploadmanagement.domain;
 
 import java.util.Arrays;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -28,19 +31,29 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 @SQLDelete(sql = "UPDATE notification SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
+@Table(name = "fileupload")
 public class FileUpload {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fileupload_auto_gen")
+	@SequenceGenerator(name = "fileupload_auto_gen", sequenceName = "fileupload_id_seq")
+	@Column(name = "id")
 	private long id;
 
+	@Column(name = "filename", length = 255, nullable = false)
 	private String filename;
+
+	@Column(name = "mimetype", length = 255, nullable = false)
 	private String mimeType;
+
+	@Column(name = "size", nullable = false)
 	private long size;
 
+	@Column(name = "content", nullable = false)
 	private byte[] content;
 
 	@ApiModelProperty(hidden = true)
+	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
 	public FileUpload() {
@@ -140,8 +153,8 @@ public class FileUpload {
 
 	@Override
 	public String toString() {
-		return "FileUpload [id=" + id + ", filename=" + filename + ", mimeType=" + mimeType + ", size=" + size
-				+ ", content=" + Arrays.toString(content) + ", deleted=" + deleted + "]";
+		return "FileUpload [id=" + id + ", filename=" + filename + ", mimeType=" + mimeType + ", size=" + size + ", content=" + Arrays.toString(content)
+				+ ", deleted=" + deleted + "]";
 	}
 
 }

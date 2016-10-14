@@ -13,12 +13,17 @@
  *******************************************************************************/
 package dash.smtpmanagement.domain;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,29 +32,53 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import dash.usermanagement.domain.User;
 
 @Entity
+@Table(name = "smtp")
 public class Smtp {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "smtp_auto_gen")
+	@SequenceGenerator(name = "smtp_auto_gen", sequenceName = "smtp_id_seq")
 	@Column(name = "id")
-	private Long id;
+	private long id;
 
+	@Column(name = "sender", nullable = false, length = 255)
 	private String sender;
+
+	@Column(name = "responseAdress", nullable = false, length = 255)
 	private String responseAdress;
+
+	@Column(name = "host", nullable = false, length = 255)
 	private String host;
+
+	@Column(name = "username", nullable = false, length = 255)
 	private String username;
+
 	@JsonProperty(access = Access.WRITE_ONLY)
+	@Column(name = "password", nullable = false)
 	private byte[] password;
+
+	@Column(name = "email", nullable = false, length = 255)
 	private String email;
+
+	@Column(name = "encryption", nullable = false)
 	private Encryption encryption;
+
+	@Column(name = "port", nullable = false)
 	private int port;
+
+	@Column(name = "connection", nullable = false)
 	private boolean connection;
+
 	@JsonIgnore
+	@Column(name = "salt", nullable = false)
 	private byte[] salt;
+
 	@JsonIgnore
+	@Column(name = "iv", nullable = false)
 	private byte[] iv;
 
 	@OneToOne
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
 	public Smtp() {
@@ -167,10 +196,12 @@ public class Smtp {
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((encryption == null) ? 0 : encryption.hashCode());
 		result = prime * result + ((host == null) ? 0 : host.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + Arrays.hashCode(iv);
+		result = prime * result + Arrays.hashCode(password);
 		result = prime * result + port;
 		result = prime * result + ((responseAdress == null) ? 0 : responseAdress.hashCode());
+		result = prime * result + Arrays.hashCode(salt);
 		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
@@ -200,15 +231,11 @@ public class Smtp {
 				return false;
 		} else if (!host.equals(other.host))
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
+		if (id != other.id)
 			return false;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
+		if (!Arrays.equals(iv, other.iv))
+			return false;
+		if (!Arrays.equals(password, other.password))
 			return false;
 		if (port != other.port)
 			return false;
@@ -216,6 +243,8 @@ public class Smtp {
 			if (other.responseAdress != null)
 				return false;
 		} else if (!responseAdress.equals(other.responseAdress))
+			return false;
+		if (!Arrays.equals(salt, other.salt))
 			return false;
 		if (sender == null) {
 			if (other.sender != null)
@@ -237,9 +266,8 @@ public class Smtp {
 
 	@Override
 	public String toString() {
-		return "Smtp [id=" + id + ", sender=" + sender + ", responseAdress=" + responseAdress + ", host=" + host
-				+ ", username=" + username + ", password=" + password + ", email=" + email + ", encryption="
-				+ encryption + ", port=" + port + ", connection=" + connection + ", user=" + user + "]";
+		return "Smtp [id=" + id + ", sender=" + sender + ", responseAdress=" + responseAdress + ", host=" + host + ", username=" + username + ", password="
+				+ password + ", email=" + email + ", encryption=" + encryption + ", port=" + port + ", connection=" + connection + ", user=" + user + "]";
 	}
 
 }

@@ -26,7 +26,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -47,39 +49,44 @@ public class User implements UserDetails {
 	private static final long serialVersionUID = 3125258392087209376L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_auto_gen")
+	@SequenceGenerator(name = "user_auto_gen", sequenceName = "user_id_seq")
 	@Column(name = "id")
 	private Long id;
 
-	@Column(length = 30)
+	@Column(name = "username", length = 30)
 	private String username;
 
-	@Column(length = 50)
+	@Column(name = "firstname", length = 50)
 	private String firstname;
 
-	@Column(length = 50)
+	@Column(name = "phone", length = 50)
 	private String phone;
 
-	@Column(unique = true, length = 50, nullable = false)
+	@Column(name = "lastname", unique = true, length = 50, nullable = false)
 	private String lastname;
 
-	@Column(unique = true, length = 50, nullable = false)
+	@Column(name = "email", unique = true, length = 50, nullable = false)
 	private String email;
 
-	@Column(length = 60, nullable = false)
 	@JsonIgnore
+	@Column(name = "password", length = 60, nullable = false)
 	private String password;
 
 	@Enumerated(EnumType.STRING)
+	@Column(name = "role")
 	private Role role;
 
-	@OneToOne(cascade = CascadeType.ALL)
 	@JsonProperty(access = Access.WRITE_ONLY)
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "picture_id")
 	private FileUpload picture;
 
 	@Enumerated(EnumType.STRING)
+	@Column(name = "language")
 	private Language language;
 
+	@Column(name = "enabled")
 	private boolean enabled;
 
 	public User() {
@@ -283,5 +290,4 @@ public class User implements UserDetails {
 		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password="
 				+ password + ", role=" + role + ", profilPicture=" + picture + ", language=" + language + ", enabled=" + enabled + "]";
 	}
-
 }

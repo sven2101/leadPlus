@@ -23,6 +23,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -36,35 +38,53 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 @SQLDelete(sql = "UPDATE customer SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
+@Table(name = "customer")
 public class Customer {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@ApiModelProperty(hidden = true)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_auto_gen")
+	@SequenceGenerator(name = "customer_auto_gen", sequenceName = "customer_id_seq")
+	@Column(name = "id")
 	private long id;
 
 	@Enumerated(EnumType.STRING)
+	@Column(name = "title", length = 255)
 	private Title title;
 
 	@ApiModelProperty(hidden = true)
+	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
+
+	@Column(name = "firstname", length = 255, nullable = false)
 	private String firstname;
+
+	@Column(name = "lastname", length = 255, nullable = false)
 	private String lastname;
+
+	@Column(name = "company", length = 255)
 	private String company;
+
+	@Column(name = "email", length = 255)
 	private String email;
+
+	@Column(name = "phone", length = 255)
 	private String phone;
+
+	@Column(name = "address", length = 255)
 	private String address;
 
 	@ApiModelProperty(hidden = true)
+	@Column(name = "deactivated", nullable = false)
 	private boolean deactivated;
 
-	@Column
-	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
 	@ApiModelProperty(hidden = true)
+	@Column(name = "timestamp")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar timestamp;
 
-	private Long customerNumber;
+	@Column(name = "customernumber")
+	private long customerNumber;
 
 	public Customer() {
 
@@ -158,11 +178,11 @@ public class Customer {
 		this.id = id;
 	}
 
-	public Long getCustomerNumber() {
+	public long getCustomerNumber() {
 		return customerNumber;
 	}
 
-	public void setCustomerNumber(Long customerNumber) {
+	public void setCustomerNumber(long customerNumber) {
 		this.customerNumber = customerNumber;
 	}
 
@@ -172,7 +192,7 @@ public class Customer {
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((company == null) ? 0 : company.hashCode());
-		result = prime * result + ((customerNumber == null) ? 0 : customerNumber.hashCode());
+		result = prime * result + (int) (customerNumber ^ (customerNumber >>> 32));
 		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
@@ -204,10 +224,7 @@ public class Customer {
 				return false;
 		} else if (!company.equals(other.company))
 			return false;
-		if (customerNumber == null) {
-			if (other.customerNumber != null)
-				return false;
-		} else if (!customerNumber.equals(other.customerNumber))
+		if (customerNumber != other.customerNumber)
 			return false;
 		if (deactivated != other.deactivated)
 			return false;
@@ -247,9 +264,9 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname
-				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone
-				+ ", address=" + address + ", deactivated=" + deactivated + ", timestamp=" + timestamp + "]";
+		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname + ", lastname=" + lastname + ", company="
+				+ company + ", email=" + email + ", phone=" + phone + ", address=" + address + ", deactivated=" + deactivated + ", timestamp=" + timestamp
+				+ "]";
 	}
 
 }
