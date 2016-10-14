@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS public.tenant
   address character varying(255),
   description character varying(255),
   enabled boolean NOT NULL,
-  tenant_key character varying(255),
-  CONSTRAINT tenant_unique UNIQUE (tenant_key),
+  tenantkey character varying(255),
+  CONSTRAINT tenant_unique UNIQUE (tenantkey),
   CONSTRAINT tenant_pkey PRIMARY KEY (id)
 )
 WITH (

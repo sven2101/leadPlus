@@ -13,11 +13,14 @@
  *******************************************************************************/
 package dash.tenantmanagement.business;
 
+import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +37,9 @@ import com.amazonaws.services.route53.model.RRType;
 import com.amazonaws.services.route53.model.ResourceRecord;
 import com.amazonaws.services.route53.model.ResourceRecordSet;
 
+import dash.exceptions.NotFoundException;
 import dash.tenantmanagement.domain.Tenant;
+import dash.usermanagement.business.UserService;
 import dash.usermanagement.registration.domain.Validation;
 
 @Service
@@ -49,6 +54,19 @@ public class TenantService implements ITenantService {
 	@Autowired
 	private AmazonRoute53 r53;
 
+	private static final Logger logger = Logger.getLogger(TenantService.class);
+	
+	@Override
+	public Tenant getTenantByName(final String name) throws NotFoundException{
+		if (name!= null) {
+			return tenantRepository.findByTenantKey(name);
+		} else {
+			NotFoundException cnfex = new NotFoundException("Tenant name is null");
+			logger.error("tenant parameter is null" + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
+			throw cnfex;
+		}
+	}
+	
 	@Override
 	public Tenant createNewTenant(final Tenant tenant) {
 		try {
@@ -132,5 +150,7 @@ public class TenantService implements ITenantService {
 		validation.setValidation(validateUniquenessOfSubdomain(tenant));
 		return validation;
 	}
+	
+	
 
 }

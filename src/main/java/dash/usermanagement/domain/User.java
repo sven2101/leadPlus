@@ -29,6 +29,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,6 +40,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import dash.fileuploadmanagement.domain.FileUpload;
+import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.settings.language.Language;
 
 @Entity
@@ -72,7 +74,7 @@ public class User implements UserDetails, Principal {
 
 	@Enumerated(EnumType.STRING)
 	private Role role;
-
+	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private FileUpload picture;
@@ -81,6 +83,17 @@ public class User implements UserDetails, Principal {
 	private Language language;
 
 	private boolean enabled;
+
+	@Transient
+	private Tenant tenant;
+	
+	public Tenant getTenant() {
+		return tenant;
+	}
+
+	public void setTenant(Tenant tenant) {
+		this.tenant = tenant;
+	}
 
 	public User() {
 

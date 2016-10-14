@@ -25,6 +25,7 @@ public class TenantIdentifierInterceptorAdapter extends HandlerInterceptorAdapte
 	@Override
 	public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) throws Exception {
 		String tenant = req.getHeader("X-TenantID");
+		System.out.println("setze Tenant");
 		if (tenant != null) {
 			TenantContext.setTenant(tenant);
 		} else {

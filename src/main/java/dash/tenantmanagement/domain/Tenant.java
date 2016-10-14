@@ -13,12 +13,19 @@
  *******************************************************************************/
 package dash.tenantmanagement.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Where;
+
+import dash.licensemanangement.domain.License;
 
 @Entity
 @Table(name = "tenant", schema = "public")
@@ -29,7 +36,7 @@ public class Tenant {
 	@Column(name = "id")
 	private long id;
 
-	@Column(name = "tenant_key", unique = true)
+	@Column(name = "tenantkey", unique = true)
 	private String tenantKey;
 
 	private String description;
@@ -37,7 +44,12 @@ public class Tenant {
 	private String address;
 
 	private boolean enabled;
-
+	
+	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
+	@JoinColumn(name = "license_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
+	private License license;
+	
 	public Tenant() {
 
 	}
@@ -80,6 +92,14 @@ public class Tenant {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	
+	public License getLicense() {
+		return license;
+	}
+
+	public void setLicense(License license) {
+		this.license = license;
 	}
 
 	@Override

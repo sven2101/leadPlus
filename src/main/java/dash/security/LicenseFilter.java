@@ -24,19 +24,29 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import dash.licensemanangement.domain.LicenseEnum;
+import dash.usermanagement.domain.User;
+
 public class LicenseFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		if (SecurityContextHolder.getContext().getAuthentication() != null) {
-			// User user = (User)
-			// SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (SecurityContextHolder.getContext().getAuthentication() != null
+				&& SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+				&& !SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
+
 			System.out.println(request.getRequestURI());
-			if (!License.valueOf("BASIC").hasLicenseForURL(request.getRequestURI())) {
+
+			System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+			User u = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			System.out.println("the tenant is: " + u.getTenant());
+
+			if (!LicenseEnum.valueOf("BASIC").hasLicenseForURL(request.getRequestURI())) {
 				System.out.println("Keine Lizenz");
 				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			}
+
 		}
 		filterChain.doFilter(request, response);
 	}

@@ -1,11 +1,11 @@
-package dash.security;
+package dash.licensemanangement.domain;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public enum License {
+public enum LicenseEnum {
 	FREE("free",
 			new HashSet<String>(Arrays.asList("/", "/images/favicon/**", "/assets/**", "/fonts/**", "/app/**",
 					"/components/Login/view/Login.html", "/components/Signup/view/Signup.html",
@@ -27,7 +27,7 @@ public enum License {
 	private String license;
 	private int order;
 
-	private License(String license, HashSet<String> allowedRoutes, int order) {
+	private LicenseEnum(String license, HashSet<String> allowedRoutes, int order) {
 		this.license = license;
 		this.allowedRoutes = allowedRoutes;
 		this.order = order;
@@ -41,16 +41,16 @@ public enum License {
 		return this.order;
 	}
 
-	private License getLicenseByOrder(int order) {
+	private LicenseEnum getLicenseByOrder(int order) {
 		switch (order) {
 		case 0:
-			return License.FREE;
+			return LicenseEnum.FREE;
 		case 1:
-			return License.BASIC;
+			return LicenseEnum.BASIC;
 		case 2:
-			return License.PRO;
+			return LicenseEnum.PRO;
 		case 3:
-			return License.ULTIMATE;
+			return LicenseEnum.ULTIMATE;
 		default:
 			throw new IllegalArgumentException(String.valueOf(order));
 		}

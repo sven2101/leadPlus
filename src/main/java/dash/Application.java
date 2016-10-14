@@ -43,8 +43,8 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.route53.AmazonRoute53Client;
 
+import dash.licensemanangement.domain.LicenseEnum;
 import dash.security.AngularCsrfHeaderFilter;
-import dash.security.License;
 import dash.security.LicenseFilter;
 import dash.security.listener.RESTAuthenticationEntryPoint;
 import dash.usermanagement.registration.domain.Validation;
@@ -120,7 +120,7 @@ public class Application {
 
 			http.httpBasic().and().authorizeRequests()
 					.antMatchers(
-							License.FREE.getAllowedRoutes().toArray(new String[License.FREE.getAllowedRoutes().size()]))
+							LicenseEnum.FREE.getAllowedRoutes().toArray(new String[LicenseEnum.FREE.getAllowedRoutes().size()]))
 					.permitAll().antMatchers("/api/rest/public/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")
 					.antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER").anyRequest().authenticated().and()
 					.addFilterAfter(new LicenseFilter(), FilterSecurityInterceptor.class).authorizeRequests()

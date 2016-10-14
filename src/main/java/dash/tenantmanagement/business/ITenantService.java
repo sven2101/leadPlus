@@ -13,12 +13,15 @@
  *******************************************************************************/
 package dash.tenantmanagement.business;
 
+import dash.exceptions.NotFoundException;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.registration.domain.Validation;
 
 public interface ITenantService {
 
 	public Tenant createNewTenant(final Tenant tenant);
+	
+	public Tenant getTenantByName(final String name) throws NotFoundException;
 
 	public Validation uniqueTenantKey(final Tenant tenant);
 }
