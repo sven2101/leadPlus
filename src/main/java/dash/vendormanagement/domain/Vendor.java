@@ -51,7 +51,6 @@ public class Vendor {
 	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
-	@NotNull
 	@Size(max = 255)
 	@Column(name = "phone", length = 255, nullable = true)
 	private String phone;

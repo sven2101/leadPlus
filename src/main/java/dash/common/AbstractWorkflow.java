@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -55,6 +56,7 @@ public abstract class AbstractWorkflow implements Request {
 	private boolean deleted;
 
 	@NotNull
+	@Digits(integer = 10, fraction = 4)
 	@Column(name = "deliverycosts", nullable = false)
 	private double deliveryCosts;
 

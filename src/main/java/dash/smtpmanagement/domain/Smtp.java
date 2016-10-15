@@ -74,7 +74,6 @@ public class Smtp {
 	private String email;
 
 	@NotNull
-	@Size(max = 255)
 	@Column(name = "encryption", length = 255, nullable = false)
 	private Encryption encryption;
 
@@ -86,13 +85,13 @@ public class Smtp {
 	@Column(name = "connection", nullable = false)
 	private boolean connection;
 
-	@NotNull
 	@JsonIgnore
+	@NotNull
 	@Column(name = "salt", nullable = false)
 	private byte[] salt;
 
-	@NotNull
 	@JsonIgnore
+	@NotNull
 	@Column(name = "iv", nullable = false)
 	private byte[] iv;
 

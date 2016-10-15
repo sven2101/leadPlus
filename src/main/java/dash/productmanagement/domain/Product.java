@@ -30,6 +30,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -72,7 +73,6 @@ public class Product {
 
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(hidden = true)
-	@Size(max = 255)
 	@Column(name = "productstate", length = 255, nullable = true)
 	private ProductState productState;
 
@@ -90,6 +90,7 @@ public class Product {
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
+	@Digits(integer = 10, fraction = 4)
 	@Column(name = "pricenetto", nullable = false)
 	private double priceNetto;
 

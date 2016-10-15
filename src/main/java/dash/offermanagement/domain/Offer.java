@@ -23,6 +23,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.SQLDelete;
@@ -44,6 +45,7 @@ public class Offer extends AbstractWorkflow {
 	private Calendar deliveryDate;
 
 	@NotNull
+	@Digits(integer = 10, fraction = 4)
 	@Column(name = "offerprice", nullable = false)
 	private double offerPrice;
 

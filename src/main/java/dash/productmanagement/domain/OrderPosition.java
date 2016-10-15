@@ -23,6 +23,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.SQLDelete;
@@ -68,6 +69,7 @@ public class OrderPosition {
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
+	@Digits(integer = 10, fraction = 4)
 	@Column(name = "price", nullable = false)
 	private double price;
 

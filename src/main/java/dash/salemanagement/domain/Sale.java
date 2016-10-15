@@ -2,6 +2,8 @@ package dash.salemanagement.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.SQLDelete;
@@ -12,17 +14,21 @@ import dash.common.AbstractWorkflow;
 @Entity
 @SQLDelete(sql = "UPDATE sale SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
+@Table(name = "sale")
 public class Sale extends AbstractWorkflow {
 
 	@NotNull
+	@Digits(integer = 10, fraction = 4)
 	@Column(name = "saleturnover", nullable = false)
 	private double saleTurnover;
 
 	@NotNull
+	@Digits(integer = 10, fraction = 4)
 	@Column(name = "saleprofit", nullable = false)
 	private double saleProfit;
 
 	@NotNull
+	@Digits(integer = 10, fraction = 4)
 	@Column(name = "salecost", nullable = false)
 	private double saleCost;
 

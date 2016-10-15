@@ -89,7 +89,6 @@ public class User implements UserDetails {
 
 	@Enumerated(EnumType.STRING)
 	@NotNull
-	@Size(max = 255)
 	@Column(name = "role", length = 255, nullable = false)
 	private Role role;
 
@@ -100,7 +99,6 @@ public class User implements UserDetails {
 
 	@Enumerated(EnumType.STRING)
 	@NotNull
-	@Size(max = 255)
 	@Column(name = "language", length = 255, nullable = false)
 	private Language language;
 

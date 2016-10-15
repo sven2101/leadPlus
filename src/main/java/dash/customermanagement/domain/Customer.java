@@ -50,7 +50,6 @@ public class Customer {
 	private long id;
 
 	@Enumerated(EnumType.STRING)
-	@Size(max = 255)
 	@Column(name = "title", length = 255, nullable = true)
 	private Title title;
 
