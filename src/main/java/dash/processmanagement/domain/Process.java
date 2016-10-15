@@ -28,6 +28,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -48,7 +49,8 @@ import dash.usermanagement.domain.User;
 public class Process {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "process_auto_gen")
+	@SequenceGenerator(name = "process_auto_gen", sequenceName = "process_id_seq")
 	private long id;
 
 	@NotNull

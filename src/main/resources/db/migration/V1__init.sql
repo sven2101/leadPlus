@@ -30,7 +30,7 @@ CREATE SEQUENCE IF NOT EXISTS comment_id_seq
   CACHE 1;
 ALTER TABLE comment_id_seq
   OWNER TO postgres;
-
+  
 -- Sequence: customer_id_seq
 
 CREATE SEQUENCE IF NOT EXISTS customer_id_seq

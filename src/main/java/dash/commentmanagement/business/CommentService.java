@@ -58,8 +58,7 @@ public class CommentService implements ICommentService {
 
 	@Override
 	public Comment save(final Comment comment, final Long processId) throws SaveFailedException {
-		if (processId > 0 && Optional.ofNullable(comment).isPresent()
-				&& Optional.ofNullable(comment.getCreator()).isPresent()
+		if (processId > 0 && Optional.ofNullable(comment).isPresent() && Optional.ofNullable(comment.getCreator()).isPresent()
 				&& Optional.ofNullable(comment.getCreator().getId()).isPresent()) {
 			try {
 				final User user = userService.getById(comment.getCreator().getId());
@@ -69,8 +68,7 @@ public class CommentService implements ICommentService {
 					return commentRepository.save(comment);
 				} else {
 					SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-					logger.error(
-							SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_USER_NOT_FOUND,
+					logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_USER_NOT_FOUND,
 							new UsernameNotFoundException(USER_NOT_FOUND));
 					throw sfex;
 				}
@@ -80,8 +78,7 @@ public class CommentService implements ICommentService {
 			}
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					sfex);
+			logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
 			throw sfex;
 		}
 	}
@@ -94,8 +91,7 @@ public class CommentService implements ICommentService {
 				return commentRepository.findByProcess(process);
 			} else {
 				NotFoundException pnfex = new NotFoundException(PROCESS_NOT_FOUND);
-				logger.error(PROCESS_NOT_FOUND + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-						pnfex);
+				logger.error(PROCESS_NOT_FOUND + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
 				throw pnfex;
 			}
 		} else {
