@@ -479,7 +479,7 @@ CREATE TABLE IF NOT EXISTS smtp
   iv bytea,
   password bytea,
   port integer NOT NULL,
-  responseadress character varying(255),
+  responseaddress character varying(255),
   salt bytea,
   sender character varying(255),
   username character varying(255),

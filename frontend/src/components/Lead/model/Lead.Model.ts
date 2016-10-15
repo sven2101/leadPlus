@@ -21,6 +21,7 @@ class Lead extends AbstractModel implements IWorkflow {
     deliveryAddress: any;
     message: string;
     deliveryCosts: number;
+
     constructor() {
         super();
         this.deliveryCosts = 0;

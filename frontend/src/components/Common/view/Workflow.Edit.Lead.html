@@ -53,7 +53,7 @@
                         <td class="col-md-2 text-center">
                             <div class="input-group" ng-class="{ 'has-error' : parent.leadEditForm['orderPosition'+$index].$invalid && !parent.leadEditForm['orderPosition'+$index].$pristine  }">
                                 <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
-                                <input type="number" name="{{'orderPosition'+$index}}" class="form-control" ng-model="orderPosition.price" " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ "
+                                <input type="number" name="{{'orderPosition'+$index}}" class="form-control" ng-model="orderPosition.price" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ "
                                     min="0 " step="0.01 " data-number-to-fixed="2 " data-number-stepfactor="100
                                     " class="form-control currency " ng-keyup="[parent.workflowService.setDiscount(orderPosition),parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.currentOrderPositions)] "
                                     id="c2 " required>

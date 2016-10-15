@@ -50,8 +50,8 @@ public class Smtp {
 
 	@NotNull
 	@Size(max = 255)
-	@Column(name = "responseAdress", nullable = false, length = 255)
-	private String responseAdress;
+	@Column(name = "responseaddress", nullable = false, length = 255)
+	private String responseAddress;
 
 	@NotNull
 	@Size(max = 255)
@@ -124,11 +124,11 @@ public class Smtp {
 	}
 
 	public String getResponseAdress() {
-		return responseAdress;
+		return responseAddress;
 	}
 
 	public void setResponseAdress(String responseAdress) {
-		this.responseAdress = responseAdress;
+		this.responseAddress = responseAdress;
 	}
 
 	public String getHost() {
@@ -215,7 +215,7 @@ public class Smtp {
 		result = prime * result + Arrays.hashCode(iv);
 		result = prime * result + Arrays.hashCode(password);
 		result = prime * result + ((port == null) ? 0 : port.hashCode());
-		result = prime * result + ((responseAdress == null) ? 0 : responseAdress.hashCode());
+		result = prime * result + ((responseAddress == null) ? 0 : responseAddress.hashCode());
 		result = prime * result + Arrays.hashCode(salt);
 		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
@@ -260,10 +260,10 @@ public class Smtp {
 				return false;
 		} else if (!port.equals(other.port))
 			return false;
-		if (responseAdress == null) {
-			if (other.responseAdress != null)
+		if (responseAddress == null) {
+			if (other.responseAddress != null)
 				return false;
-		} else if (!responseAdress.equals(other.responseAdress))
+		} else if (!responseAddress.equals(other.responseAddress))
 			return false;
 		if (!Arrays.equals(salt, other.salt))
 			return false;
@@ -287,7 +287,7 @@ public class Smtp {
 
 	@Override
 	public String toString() {
-		return "Smtp [id=" + id + ", sender=" + sender + ", responseAdress=" + responseAdress + ", host=" + host + ", username=" + username + ", password="
+		return "Smtp [id=" + id + ", sender=" + sender + ", responseAdress=" + responseAddress + ", host=" + host + ", username=" + username + ", password="
 				+ Arrays.toString(password) + ", email=" + email + ", encryption=" + encryption + ", port=" + port + ", connection=" + connection + ", salt="
 				+ Arrays.toString(salt) + ", iv=" + Arrays.toString(iv) + ", user=" + user + "]";
 	}

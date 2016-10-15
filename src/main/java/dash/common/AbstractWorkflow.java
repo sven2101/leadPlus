@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Digits;
@@ -37,7 +38,8 @@ import io.swagger.annotations.ApiModelProperty;
 public abstract class AbstractWorkflow implements Request {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "workflow_auto_gen")
+	@SequenceGenerator(name = "workflow_auto_gen", sequenceName = "hibernate_sequence")
 	@ApiModelProperty(hidden = true)
 	@Column(name = "id", nullable = false)
 	private Long id;

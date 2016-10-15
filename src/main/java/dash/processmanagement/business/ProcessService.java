@@ -21,9 +21,10 @@ import static dash.Constants.PROCESS_NOT_FOUND;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_NOT_FOUND;
+import static dash.processmanagement.business.ProcessSpecs.isBetweenTimestamp;
 import static dash.processmanagement.business.ProcessSpecs.isClosed;
 import static dash.processmanagement.business.ProcessSpecs.isProcessor;
-import static dash.processmanagement.business.ProcessSpecs.*;
+import static dash.processmanagement.business.ProcessSpecs.isSale;
 import static org.springframework.data.jpa.domain.Specifications.not;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
@@ -104,8 +105,7 @@ public class ProcessService implements IProcessService {
 				try {
 					process.setProcessor(userService.getUserByName("admin"));
 				} catch (NotFoundException nfex) {
-					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-							nfex);
+					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, nfex);
 				}
 				saleService.save(process.getSale());
 			}
@@ -117,10 +117,11 @@ public class ProcessService implements IProcessService {
 	public Process save(final Process process) throws SaveFailedException {
 		if (Optional.ofNullable(process).isPresent()) {
 			setOrderPositions(process);
-			if (process.getComments() != null)
+			if (process.getComments() != null) {
 				for (Comment comment : process.getComments()) {
 					comment.setProcess(process);
 				}
+			}
 			return processRepository.save(process);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
@@ -162,15 +163,13 @@ public class ProcessService implements IProcessService {
 	@Override
 	public Sale createSale(final long processId, final Sale sale) throws SaveFailedException {
 		Process process = processRepository.findOne(processId);
-		Sale createdSale = null;
 		if (Optional.ofNullable(process).isPresent()) {
 			process.setSale(sale);
 			setOrderPositions(process);
-			processRepository.save(process);
+			return processRepository.save(process).getSale();
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
 		}
-		return createdSale;
 	}
 
 	@Override
@@ -268,8 +267,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process setStatus(long id, String status)
-			throws SaveFailedException, NotFoundException, UpdateFailedException {
+	public Process setStatus(long id, String status) throws SaveFailedException, NotFoundException, UpdateFailedException {
 		if (Optional.ofNullable(status).isPresent()) {
 			Process process = getById(id);
 			process.setStatus(Status.valueOf(status));
@@ -308,15 +306,14 @@ public class ProcessService implements IProcessService {
 	public List<Process> getProcessesByProcessor(long processorId) {
 		return processRepository.findAll(where(isProcessor(processorId)).and(not(isClosed())).and(not(isSale())));
 	}
-	
+
 	@Override
-	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId,Calendar from, Calendar until) {
+	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId, Calendar from, Calendar until) {
 		return processRepository.findAll(where(isProcessor(processorId)).and(isBetweenTimestamp(from, until)));
 	}
+
 	@Override
 	public List<Process> getProcessesBetweenTimestamp(Calendar from, Calendar until) {
-		System.out.println(from);
-		System.out.println(until);
 		return processRepository.findAll(where(isBetweenTimestamp(from, until)));
 	}
 }
