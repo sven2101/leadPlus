@@ -18,25 +18,26 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 @Table(name = "license", schema = "public")
 public class License {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
 	@Enumerated(EnumType.STRING)
-	private LicenseEnum license;
+	@Column(nullable = false)
+	private LicenseEnum licenseType;
 
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
 	private Calendar term;
-	
+
 	private boolean trial;
-	
-	public License(){
-		
+
+	public License() {
+
 	}
-	
+
 	public long getId() {
 		return id;
 	}
@@ -45,12 +46,12 @@ public class License {
 		this.id = id;
 	}
 
-	public LicenseEnum getLicense() {
-		return license;
+	public LicenseEnum getLicenseType() {
+		return licenseType;
 	}
 
-	public void setLicense(LicenseEnum license) {
-		this.license = license;
+	public void setLicenseType(LicenseEnum license) {
+		this.licenseType = license;
 	}
 
 	public Calendar getTerm() {
@@ -75,7 +76,7 @@ public class License {
 		int result = 1;
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + (trial ? 1231 : 1237);
-		result = prime * result + ((license == null) ? 0 : license.hashCode());
+		result = prime * result + ((licenseType == null) ? 0 : licenseType.hashCode());
 		result = prime * result + ((term == null) ? 0 : term.hashCode());
 		return result;
 	}
@@ -93,7 +94,7 @@ public class License {
 			return false;
 		if (trial != other.trial)
 			return false;
-		if (license != other.license)
+		if (licenseType != other.licenseType)
 			return false;
 		if (term == null) {
 			if (other.term != null)
@@ -102,4 +103,11 @@ public class License {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "License [id=" + id + ", licenseType=" + licenseType + ", term=" + term + ", trial=" + trial + "]";
+	}
+	
+	
 }

@@ -1,6 +1,3 @@
-ALTER TABLE customer ADD customernumber bigint;
-
-
 -- Sequence: license_id_seq
 
 CREATE SEQUENCE license_id_seq
@@ -17,7 +14,7 @@ ALTER TABLE license_id_seq
 CREATE TABLE IF NOT EXISTS public.license
 (
   id bigint NOT NULL DEFAULT nextval('license_id_seq'::regclass),
-  license character varying(255),
+  licenseType NOT NULL character varying(255),
   trial boolean NOT NULL,
   "term" timestamp without time zone,
   CONSTRAINT license_pkey PRIMARY KEY (id)
@@ -28,5 +25,5 @@ WITH (
 ALTER TABLE license
   OWNER TO postgres;
 
-ALTER TABLE public.tenant ADD license_fk bigint;
+ALTER TABLE public.tenant ADD license_fk bigint NOT NULL;
 ALTER TABLE public.tenant ADD FOREIGN KEY (license_fk) REFERENCES public.license(id);

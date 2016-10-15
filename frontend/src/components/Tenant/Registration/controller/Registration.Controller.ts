@@ -59,6 +59,8 @@ class RegistrationController {
 
     register(): void {
         let self = this;
+        this.tenant.license.term = newTimestamp();
+        this.tenant.license.trial = false;
 
         this.credentials.email = this.user.email;
         this.credentials.password = this.user.password;

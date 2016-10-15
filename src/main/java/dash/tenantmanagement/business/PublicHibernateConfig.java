@@ -53,7 +53,7 @@ public class PublicHibernateConfig {
 	public LocalContainerEntityManagerFactoryBean publicSchemaEntityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean emfBean = new LocalContainerEntityManagerFactoryBean();
 		emfBean.setDataSource(dataSource);
-		emfBean.setPackagesToScan("dash.tenantmanagement.domain");
+		emfBean.setPackagesToScan("dash.tenantmanagement.domain","dash.licensemanangement.domain");
 		emfBean.setJpaVendorAdapter(jpaVendorAdapter());
 
 		Map<String, Object> jpaProperties = new HashMap<>();

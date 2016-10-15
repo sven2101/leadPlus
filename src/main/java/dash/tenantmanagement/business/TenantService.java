@@ -16,6 +16,7 @@ package dash.tenantmanagement.business;
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -71,6 +72,7 @@ public class TenantService implements ITenantService {
 	public Tenant createNewTenant(final Tenant tenant) {
 		try {
 			tenant.setEnabled(true);
+			tenant.getLicense().getTerm().add(Calendar.YEAR, 1);
 			tenantRepository.save(tenant);
 			createSchema(tenant);
 			if (validateUniquenessOfSubdomain(tenant)) {

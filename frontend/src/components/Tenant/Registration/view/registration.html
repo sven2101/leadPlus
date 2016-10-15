@@ -38,6 +38,32 @@
 			<span ng-show="validation.tenantKey.$error.maxlength&&!validation.tenantKey.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
 		</div>
 
+		<!-- Package -->
+		<div class="text-center">
+			<h2><i class="fa fa-suitcase" data-toggle="tooltip" title="Basic: Basic functionallity!; Pro: See Statistics!; Ultimate: Get special support!'"></i></h2>
+			<label stlye="color: #ffffff;">Choose your package</label>
+		</div>
+		</br>
+		<div class="row">
+			<div class="form-group" ng-class="{ 'has-success has-feedback': !validation.license.$error.required&&
+																						!validation.license.$pristine,														
+														'has-error has-feedback': 		validation.license.$error.required &&  
+																						!validation.license.$pristine	 }">
+				<div class="col-xs-4 col-sm-4 col-md-4">
+					<label> <input class="i-checks form-control" iCheck type="radio" ng-model="registrationCtrl.tenant.license.licenseType" value="BASIC" name="license" ng-required="!registrationCtrl.tenant.license.licenseType"> <i></i> Basic </label>
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4">
+					<label> <input class="i-checks form-control" iCheck type="radio" ng-model="registrationCtrl.tenant.license.licenseType" value="PRO" name="license" ng-required="!registrationCtrl.tenant.license.licenseType"> <i></i> Pro</label>
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4">
+					<label> <input class="i-checks form-control" iCheck type="radio" ng-model="registrationCtrl.tenant.license.licenseType" value="ULTIMATE" name="license" ng-required="!registrationCtrl.tenant.license.licenseType"> <i></i> Ultimate</label>
+				</div>
+			</div>
+			<span ng-show="validation.license.$error.required &&!validation.license.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+		</div>
+
+
+
 		<div class="text-center">
 			<h2><i class="fa fa-user" data-toggle="tooltip" title="You can access this application afterwards via your choosen sitename 'yourcompany.leadplus.io' for example. You can only use letters. '"></i></h2>
 			<label stlye="color: #ffffff;">Create your initial User</label>

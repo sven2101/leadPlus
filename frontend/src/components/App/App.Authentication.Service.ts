@@ -77,6 +77,7 @@ class AuthService {
                         smtp: data.smtp,
                         authorization: authorization
                     };
+                    console.log(data);
                     self.rootScope.tenant = {
                         license: {
                             package: ["basic", "pro"],

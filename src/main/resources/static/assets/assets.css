@@ -12059,7 +12059,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>td.child,table.dataTable.dtr-inlin
     padding: 0;
     width: 22px;
     height: 22px;
-    background: url(green.png) no-repeat;
+    background: url(img/iCheck/green.png) no-repeat;
     border: none;
     cursor: pointer;
 }
@@ -12102,7 +12102,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>td.child,table.dataTable.dtr-inlin
 @media (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
     .icheckbox_square-green,
     .iradio_square-green {
-        background-image: url(green@2x.png);
+        background-image: url(img/iCheck/green@2x.png);
         -webkit-background-size: 240px 24px;
         background-size: 240px 24px;
     }

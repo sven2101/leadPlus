@@ -42,9 +42,11 @@ public class PrincipleResource {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> getUser(Principal user) throws NotFoundException {
-
-		User internalUser = userService.getUserByEmail(user.getName());
 		
+		User internalUser = userService.getUserByEmail(user.getName());
+		// TODO override authentification object and set tenant here.
+		
+	
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 
 		if (!Optional.ofNullable(user).isPresent())

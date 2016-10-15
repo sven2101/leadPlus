@@ -40,7 +40,7 @@ public class TenantResource {
 	@Autowired
 	private ITenantService tenantService;
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Post a tenant. ", notes = "")
 	public Tenant save(@ApiParam(required = true) @RequestBody @Valid final Tenant tenant) throws SaveFailedException {

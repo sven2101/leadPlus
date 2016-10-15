@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum LicenseEnum {
-	FREE("free",
+	FREE("free", 
 			new HashSet<String>(Arrays.asList("/", "/images/favicon/**", "/assets/**", "/fonts/**", "/app/**",
 					"/components/Login/view/Login.html", "/components/Signup/view/Signup.html",
 					"/components/Tenant/Registration/view/**", "/components/Licence/view/**",
@@ -26,13 +28,18 @@ public enum LicenseEnum {
 	private Set<String> allowedRoutes;
 	private String license;
 	private int order;
+	private HashSet<String> combinedRoutes;
 
 	private LicenseEnum(String license, HashSet<String> allowedRoutes, int order) {
 		this.license = license;
 		this.allowedRoutes = allowedRoutes;
 		this.order = order;
+		combinedRoutes = new HashSet<>(allowedRoutes);
+		for (int i = this.order-1; i >= 0; i--) {
+			combinedRoutes.addAll(this.getLicenseByOrder(i).getAllowedRoutes());
+		}	
 	}
-
+	
 	public String getLicense() {
 		return this.license;
 	}
@@ -62,11 +69,7 @@ public enum LicenseEnum {
 
 	public boolean hasLicenseForURL(String URL) {
 		boolean hasLicense = false;
-		HashSet<String> routesToCheck = new HashSet<>();
-		for (int i = this.order; i >= 0; i--) {
-			routesToCheck.addAll(this.getLicenseByOrder(i).getAllowedRoutes());
-		}
-		if (URLMatchAnyPattern(routesToCheck, URL)) {
+		if (URLMatchAnyPattern(this.combinedRoutes, URL)) {
 			hasLicense = true;
 		}
 		return hasLicense;
@@ -78,7 +81,7 @@ public enum LicenseEnum {
 		} else {
 			if (URL != null) {
 				String[] urlPart = URL.split("/");
-				for (int i = 1; i <= urlPart.length - 1; i++) {
+				for (int i = 1; i <= urlPart.length - 2; i++) {
 					String urlPatternBuilder = "";
 					for (int k = 1; k <= i; k++) {
 						urlPatternBuilder += "/" + urlPart[k];
@@ -91,4 +94,10 @@ public enum LicenseEnum {
 		}
 		return false;
 	}
+	
+	@JsonCreator
+	public static LicenseEnum fromValue(String value){
+		return LicenseEnum.valueOf(value);
+	}
+	
 }
