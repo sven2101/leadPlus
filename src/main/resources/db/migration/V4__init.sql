@@ -14,7 +14,7 @@ ALTER TABLE license_id_seq
 CREATE TABLE IF NOT EXISTS public.license
 (
   id bigint NOT NULL DEFAULT nextval('license_id_seq'::regclass),
-  licenseType NOT NULL character varying(255),
+  licenseType character varying(255) NOT NULL,
   trial boolean NOT NULL,
   "term" timestamp without time zone,
   CONSTRAINT license_pkey PRIMARY KEY (id)
