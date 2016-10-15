@@ -78,6 +78,10 @@ module.exports = {
 			src: baseSrcPath + 'main.html',
 			dst: baseDstPath + ''
 		},
+		logout: {
+			src: baseSrcPath + 'logout.html',
+			dst: baseDstPath + ''
+		},
 		componentViews: {
 			src: baseSrcPath + 'components/**/*.html',
 			dst: baseDstPath + 'components'

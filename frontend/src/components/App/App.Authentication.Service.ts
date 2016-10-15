@@ -77,11 +77,11 @@ class AuthService {
     }
 
     logout() {
-        this.rootScope.globals.user = null;
-        this.rootScope.globals = {};
+        // this.rootScope.globals.user = null;
+        // this.rootScope.globals = {};
         this.cookieStore.remove("globals");
-        this.http.defaults.headers.common.Authorization = "Basic";
-        location.reload(true);
+        // this.http.defaults.headers.common.Authorization = "Basic";
+        window.open("/logout.html", "_self");
         /*
         let self = this;
         this.http.post("logout", {})

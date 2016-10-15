@@ -146,7 +146,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 }
             });
             $rootScope.logout = function () {
-                $location.path("/login");
+                // $location.path("/login");
                 Auth.logout();
             };
 
