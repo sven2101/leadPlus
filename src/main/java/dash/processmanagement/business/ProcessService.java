@@ -83,7 +83,11 @@ public class ProcessService implements IProcessService {
 
 		if (workflow.equals(Workflow.LEAD)) {
 			processes = processRepository.findByStatusAndLeadIsNotNull(status);
-		} else if (workflow.equals(Workflow.OFFER)) {
+			// TODO Workaround to get inContacts - function should accept an
+			// array
+			processes.addAll(processRepository.findByStatusAndLeadIsNotNull(Status.INCONTACT));
+		} 
+		else if (workflow.equals(Workflow.OFFER)) {
 			processes = processRepository.findByStatusAndOfferIsNotNull(status);
 			// TODO Workaround to get followups - function should accept an
 			// array

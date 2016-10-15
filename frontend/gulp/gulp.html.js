@@ -12,7 +12,7 @@ var opts = {
     comments: false
 };
 
-gulp.task('html',['minify-index','minify-main','minify-components-view'],function () {
+gulp.task('html',['minify-index','minify-main','minify-logout','minify-components-view'],function () {
     return null;
 });
 
@@ -26,6 +26,12 @@ gulp.task('minify-main', function () {
     return gulp.src(path.main.src)
         .pipe(minifyHTML(opts))
         .pipe(gulp.dest(path.main.dst));
+});
+
+gulp.task('minify-logout', function () {
+    return gulp.src(path.logout.src)
+        .pipe(minifyHTML(opts))
+        .pipe(gulp.dest(path.logout.dst));
 });
 
 gulp.task('minify-components-view', function () {

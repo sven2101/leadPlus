@@ -177,6 +177,10 @@ class LeadController extends AbstractWorkflow {
         });
     }
 
+    inContact(process: Process) {
+        this.leadService.inContact(process, this.dtInstance, this.scope);
+    }
+
     save(edit: boolean) {
         if (edit === true) {
             this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope);

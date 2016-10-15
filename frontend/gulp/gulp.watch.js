@@ -30,6 +30,13 @@ gulp.task('watch-minify-index', ['default'], function () {
     return null;
 });
 
+gulp.task('watch-minify-logout', ['default'], function () {
+    watch(path.logout.src, function () {
+        gulp.start('minify-logout');
+    });
+    return null;
+});
+
 gulp.task('watch-minify-main', ['default'], function () {
     watch(path.main.src, function () {
         gulp.start('minify-main');

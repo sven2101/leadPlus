@@ -146,9 +146,9 @@ class LeadDataTableService {
             "closeOrOpenDisable": false,
             "openOrLock": this.translate.instant("LEAD_CLOSE_LEAD"),
             "faOpenOrLock": "fa fa-lock",
-            "minwidth": 140
+            "minwidth": 180
         };
-        if (templateData.process.status !== "OPEN") {
+        if (templateData.process.status !== "OPEN" && templateData.process.status !== "INCONTACT") {
             config.disabled = true;
             config.disablePin = true;
             config.openOrLock = this.translate.instant("LEAD_OPEN_LEAD");
@@ -198,7 +198,12 @@ class LeadDataTableService {
         } else if (data.status === "OFFER") {
             return "<span style='color: #f79d3c;'>"
                 + this.translate.instant("COMMON_STATUS_OFFER") + "</span>";
-        } else if (data.status === "FOLLOWUP") {
+        }
+        else if (data.status === "INCONTACT") {
+            return "<span style='color: #f79d3c;'>"
+                + this.translate.instant("COMMON_STATUS_INCONTACT") + "</span>";
+        }
+        else if (data.status === "FOLLOWUP") {
             return "<span style='color: #f79d3c;'>"
                 + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>";
         } else if (data.status === "SALE") {

@@ -18,7 +18,7 @@
                     </button></span>
         </div>
         <div class="row">
-            <div style="min-width:290px" class="col-lg-4">
+            <div style="min-width:290px" class="col-lg-3">
                 <div class="ibox">
                     <div class="ibox-content">
                         <h3>{{ 'DASHBOARD_OPEN_LEADS' | translate }} {{dashboardCtrl.dashboardService.openLeadsValue| currency:'\u20AC'}}
@@ -48,7 +48,37 @@
                     </div>
                 </div>
             </div>
-            <div style="min-width:290px" class="col-lg-4">
+            <div style="min-width:290px" class="col-lg-3">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <h3>{{ 'COMMON_STATUS_INCONTACT' | translate }} {{dashboardCtrl.dashboardService.inContactsValue| currency:'\u20AC'}}
+                        </h3>
+                        <ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="lead" ng-model="dashboardCtrl.dashboardService.inContacts">
+                            <li class="danger-element draggable" ng-repeat="process in dashboardCtrl.getInContacts() | limitTo:10">
+                                <div style="height:17px;max-width:52%;">
+                                    {{process.lead.customer.company}}
+
+                                </div>
+                                <div style="margin-top:-13px">
+                                    <span ng-if="process.processor!=null" class="pull-right">
+                                            <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" ng-src="users/{{process.processor.id}}/profile/picture" alt="">
+                                        </span>
+                                    <a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.lead,'lead',process)" class="pull-right btn btn-xs btn-white"
+                                        data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
+                                    <div class="agile-detail">
+                                        <a style="min-width:50px;margin-right:-50px" ng-href="#/leads/{{process.id}}" class="pull-right btn btn-xs btn-white">{{
+                                                'DASHBOARD_GOTO_BUTTON' | translate }}</a>
+                                    </div>
+                                    <div style="white-space: nowrap;max-width:55%;overflow:hidden;text-overflow: ellipsis;">
+                                        <i style="margin-top:12px;" class="fa fa-clock-o"></i> {{process.lead.timestamp}}
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div style="min-width:290px" class="col-lg-3">
                 <div class="ibox">
                     <div class="ibox-content">
                         <h3>{{ 'DASHBOARD_OPEN_OFFERS' | translate }} {{dashboardCtrl.dashboardService.openOffersValue| currency:'\u20AC'}}
@@ -80,7 +110,7 @@
                     </div>
                 </div>
             </div>
-            <div style="min-width:290px" class="col-lg-4">
+            <div style="min-width:290px" class="col-lg-3">
                 <div class="ibox">
                     <div class="ibox-content">
                         <h3>{{ 'DASHBOARD_LATEST_SALES' | translate }} {{dashboardCtrl.dashboardService.closedSalesValue| currency:'\u20AC'}}

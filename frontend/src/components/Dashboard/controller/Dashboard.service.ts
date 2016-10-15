@@ -36,10 +36,12 @@ class DashboardService {
     q: any;
 
     openLeads: Array<Process>;
+    inContacts: Array<Process>;
     openOffers: Array<Process>;
     closedSales: Array<Process>;
 
     openLeadsValue: number = 0;
+    inContactsValue: number = 0;
     openOffersValue: number = 0;
     closedSalesValue: number = 0;
 
@@ -73,8 +75,20 @@ class DashboardService {
     initDashboard() {
         let self = this;
         this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function (result) {
-            self.openLeads = self.orderBy(result, "lead.timestamp", false);
+            let open: Array<Process> = new Array<Process>();
+            let contact: Array<Process> = new Array<Process>();
+            for (let i = 0; i < result.length; i++) {
+                if (result[i].status === "OPEN") {
+                    open.push(result[i]);
+                }
+                else if (result[i].status === "INCONTACT") {
+                    contact.push(result[i]);
+                }
+            }
+            self.openLeads = self.orderBy(open, "lead.timestamp", false);
             self.sumLeads();
+            self.inContacts = self.orderBy(contact, "lead.timestamp", false);
+            self.sumInContacts();
         });
         this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
             self.openOffers = self.orderBy(result, "offer.timestamp", false);
@@ -90,6 +104,12 @@ class DashboardService {
         this.openLeadsValue = 0;
         for (let i = 0; i < this.openLeads.length; i++) {
             this.openLeadsValue += this.workflowService.sumOrderPositions(this.openLeads[i].lead.orderPositions);
+        }
+    }
+    sumInContacts(): void {
+        this.inContactsValue = 0;
+        for (let i = 0; i < this.inContacts.length; i++) {
+            this.inContactsValue += this.workflowService.sumOrderPositions(this.inContacts[i].lead.orderPositions);
         }
     }
     sumOffers(): void {
@@ -128,7 +148,10 @@ class DashboardService {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
                 if ((self.openLeads === target && self.openOffers === source) ||
+                    (self.openLeads === target && self.inContacts === source) ||
                     (self.openLeads === source && self.closedSales === target) ||
+                    (self.inContacts === target && self.openOffers === source) ||
+                    (self.inContacts === target && self.closedSales === source) ||
                     target === source) {
                     ui.item.sortable.cancel();
                 }
@@ -140,8 +163,12 @@ class DashboardService {
                 if (self.closedSales === target && self.openOffers === source) {
                     self.createSale(item);
                 }
-                else if (self.openOffers === target && self.openLeads === source) {
+                else if (self.openOffers === target && self.openLeads === source
+                    || self.openOffers === target && self.inContacts === source) {
                     self.startOfferTransformation(item);
+                }
+                else if (self.inContacts === target && self.openLeads === source) {
+                    self.inContact(item);
                 }
             },
             connectWith: ".connectList",
@@ -163,8 +190,24 @@ class DashboardService {
         });
     }
 
+    inContact(process: Process) {
+        let self = this;
+        this.processResource.setStatus({
+            id: process.id
+        }, "INCONTACT").$promise.then(function () {
+            self.toaster.pop("success", "", self.translate
+                .instant("COMMON_TOAST_SUCCESS_INCONTACT"));
+            process.status = "INCONTACT";
+            self.sumLeads();
+            self.sumInContacts();
+        });
+    }
+
     getOpenLeads(): Array<Process> {
         return this.openLeads;
+    }
+    getInContacts(): Array<Process> {
+        return this.inContacts;
     }
     getOpenOffers(): Array<Process> {
         return this.openOffers;
