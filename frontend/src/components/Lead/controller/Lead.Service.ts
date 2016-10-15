@@ -98,6 +98,19 @@ class LeadService {
 
     }
 
+    inContact(process: Process, dtInstance: any, scope: any) {
+        let self = this;
+        this.processResource.setStatus({
+            id: process.id
+        }, "INCONTACT").$promise.then(function() {
+            self.toaster.pop("success", "", self.translate
+                .instant("COMMON_TOAST_SUCCESS_INCONTACT"));
+            process.status = "INCONTACT";
+            self.updateRow(process, dtInstance, scope);
+            self.rootScope.$broadcast("onTodosChange");
+        });
+    }
+
     createOffer(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {
         let self = this;
         this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {

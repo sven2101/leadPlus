@@ -5,6 +5,9 @@
    -- VALUES ('api@eviarc.com', true, 'api', 'DE', 'Foitzik', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'API', 'api');
 
 INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username)
+    VALUES ('test@eviarc.com', true, 'Test', 'DE', 'Test', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'SUPERADMIN', 'test');
+
+INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username)
     VALUES ('andreas.foitzik@eviarc.com', true, 'Andreas', 'DE', 'Foitzik', '$2a$10$qHeCPYEWNlaQs3HAmXZ3NOXbu8Mc0lpM9xp1xVAeX9.NYrK5GjqOu', 'SUPERADMIN', 'andreas.foitzik');
     
 INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username)

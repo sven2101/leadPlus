@@ -103,6 +103,9 @@ class DashboardController {
     getOpenLeads(): Array<Process> {
         return this.dashboardService.getOpenLeads();
     }
+    getInContacts(): Array<Process> {
+        return this.dashboardService.getInContacts();
+    }
     getOpenOffers(): Array<Process> {
         return this.dashboardService.getOpenOffers();
     }

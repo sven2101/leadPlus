@@ -15,5 +15,5 @@
 package dash.workflowmanagement.domain;
 
 public enum Workflow {
-	LEAD, OFFER, CONTACT, SALE;
+	LEAD, OFFER, SALE;
 }
