@@ -81,6 +81,14 @@ class OfferController extends AbstractWorkflow {
         this.window = $window;
         this.templateService = TemplateService;
 
+        this.currentWizard = 1;
+        this.currentWizard1Class = "current";
+        this.currentWizard2Class = "done";
+        this.currentWizard3Class = "done";
+        this.currentWizard4Class = "done";
+        this.currentWizard5Class = "done";
+        this.currentWizard6Class = "done";
+
         let self = this;
         function createdRow(row, data: Process, dataIndex) {
             self.offerService.setRow(data.id, row);

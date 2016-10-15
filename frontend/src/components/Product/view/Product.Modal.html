@@ -14,7 +14,7 @@
                         <!-- PRODUCTNAME -->
                         <div class="col-sm-6 b-r">
                             <div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.name.$invalid && !productCtrl.createProductForm.name.$pristine }">
-                                <label>{{ 'PRODUCT_PRODUCTNAME' | translate }}</label>
+                                <label>{{ 'PRODUCT_PRODUCTNAME' | translate }}<span style="color:red">*</span></label>
                                 <input type=" text " name="name " class="form-control " ng-model="productCtrl.currentProduct.name" ng-maxlength="30" required>
                                 <p ng-show="productCtrl.createProductForm.name.$invalid && !productCtrl.createProductForm.name.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
@@ -27,7 +27,7 @@
                                </div>
                             <!-- PRICE -->
                             <div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.priceNetto.$invalid && !productCtrl.createProductForm.priceNetto.$pristine }">
-                                <label>{{ 'PRODUCT_PRICE' | translate }}</label>
+                                <label>{{ 'PRODUCT_PRICE' | translate }}<span style="color:red">*</span></label>
                                  <div class="input-group">
                                     <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>                                    
                                      <input type="number" name="priceNetto"class="form-control currency" ng-model="productCtrl.currentProduct.priceNetto" ng-maxlength="50" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01">

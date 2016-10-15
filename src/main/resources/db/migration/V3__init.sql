@@ -43,53 +43,53 @@ INSERT INTO vendor(id, name, phone, deleted)
     
  -- Leads
  INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '7011 Stuttgart, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-03-26 12:23:00', 1, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '7011 Stuttgart, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-03-26 12:23:00', 1, 1);
    	
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '76133 Karlsruhe, Hauptstrasse 55', 300, 'Wichtige Anfrage!', '2016-04-26 12:23:00', 2, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '76133 Karlsruhe, Hauptstrasse 55', 300, 'Wichtige Anfrage!', '2016-04-26 12:23:00', 2, 1);
 
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '10115 Berlin, Hauptstrasse 10', 300, 'Wichtige Anfrage!', '2016-05-25 12:23:00', 3, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '10115 Berlin, Hauptstrasse 10', 300, 'Wichtige Anfrage!', '2016-05-25 12:23:00', 3, 1);
    	
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-06-06 12:23:00', 4, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-06-06 12:23:00', 4, 1);
    	
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '10115 Berlin, Hauptstrasse 10', 300, 'Wichtige Anfrage!', '2016-08-30 12:23:00', 3, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '10115 Berlin, Hauptstrasse 10', 300, 'Wichtige Anfrage!', '2016-08-30 12:23:00', 3, 1);
    	
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-16 12:23:00', 4, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-16 12:23:00', 4, 1);
    	
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-25 12:23:00', 2, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-25 12:23:00', 2, 1);
    	
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-26 12:23:00', 2, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-26 12:23:00', 2, 1);
    	
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-25 12:23:00', 4, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-25 12:23:00', 4, 1);
    	
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-26 12:23:00', 2, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-26 12:23:00', 2, 1);
    	
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-26 12:23:00', 2, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-26 12:23:00', 2, 1);
    	   	
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-24 12:23:00', 4, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-24 12:23:00', 4, 1);
    	
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-08-30 12:23:00', 5, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-08-30 12:23:00', 5, 1);
      	
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-08-30 12:23:00', 3, 1); 
+   	VALUES (nextval('workflow_id_seq'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-08-30 12:23:00', 3, 1); 
    	
 INSERT INTO lead(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk)
-   	VALUES (nextval('hibernate_sequence'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-13 12:23:00', 1, 1);
+   	VALUES (nextval('workflow_id_seq'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-13 12:23:00', 1, 1);
 
 -- Offer
 INSERT INTO offer(id, deleted, deliveryaddress, deliverycosts, message, timestamp, customer_fk, vendor_fk, deliverydate, offerprice)
-   VALUES (nextval('hibernate_sequence'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-13 12:23:00', 1, 1, '2016-09-13 12:23:00', 2000);
+   VALUES (nextval('workflow_id_seq'), false, '20113 Hamburg, Einsiedlerweg 1', 300, 'Wichtige Anfrage!', '2016-09-13 12:23:00', 1, 1, '2016-09-13 12:23:00', 2000);
 
 -- Processes
 INSERT INTO process(id, deleted, status, lead_fk)

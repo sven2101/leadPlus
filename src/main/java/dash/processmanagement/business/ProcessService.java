@@ -43,13 +43,14 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
-import dash.leadmanagement.business.LeadService;
+import dash.leadmanagement.business.ILeadService;
 import dash.leadmanagement.domain.Lead;
+import dash.offermanagement.business.IOfferService;
 import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.productmanagement.domain.OrderPosition;
-import dash.salemanagement.business.SaleService;
+import dash.salemanagement.business.ISaleService;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
 import dash.usermanagement.business.UserService;
@@ -68,13 +69,13 @@ public class ProcessService implements IProcessService {
 	private UserService userService;
 
 	@Autowired
-	private LeadService leadService;
+	private ILeadService leadService;
 
 	@Autowired
-	private OfferService offerService;
+	private IOfferService offerService;
 
 	@Autowired
-	private SaleService saleService;
+	private ISaleService saleService;
 
 	@Override
 	public List<Process> getElementsByStatus(final Workflow workflow, final Status status) {

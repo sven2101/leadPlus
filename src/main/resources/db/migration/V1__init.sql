@@ -130,8 +130,16 @@ CREATE SEQUENCE IF NOT EXISTS fileupload_id_seq
 ALTER TABLE fileupload_id_seq
   OWNER TO postgres;
 
+  -- Sequence: workflow_id_seq
 
-
+CREATE SEQUENCE IF NOT EXISTS workflow_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE workflow_id_seq
+  OWNER TO postgres;
 
 
 
@@ -285,7 +293,7 @@ ALTER TABLE product
 
 CREATE TABLE IF NOT EXISTS sale
 (
-  id bigint NOT NULL,
+  id bigint NOT NULL DEFAULT nextval('workflow_id_seq'::regclass),
   deleted boolean NOT NULL,
   deliveryaddress character varying(255),
   deliverycosts double precision NOT NULL,
@@ -314,7 +322,7 @@ ALTER TABLE sale
 
 CREATE TABLE IF NOT EXISTS lead
 (
-  id bigint NOT NULL,
+  id bigint NOT NULL DEFAULT nextval('workflow_id_seq'::regclass),
   deleted boolean NOT NULL,
   deliveryaddress character varying(255),
   deliverycosts double precision NOT NULL,
@@ -361,7 +369,7 @@ ALTER TABLE notification
 
 CREATE TABLE IF NOT EXISTS offer
 (
-  id bigint NOT NULL,
+  id bigint NOT NULL DEFAULT nextval('workflow_id_seq'::regclass),
   deleted boolean NOT NULL,
   deliveryaddress character varying(255),
   deliverycosts double precision NOT NULL,

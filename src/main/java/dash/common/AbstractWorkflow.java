@@ -39,7 +39,7 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "workflow_auto_gen")
-	@SequenceGenerator(name = "workflow_auto_gen", sequenceName = "hibernate_sequence")
+	@SequenceGenerator(name = "workflow_auto_gen", sequenceName = "workflow_id_seq")
 	@ApiModelProperty(hidden = true)
 	@Column(name = "id", nullable = false)
 	private Long id;
@@ -173,7 +173,7 @@ public abstract class AbstractWorkflow implements Request {
 		long temp;
 		temp = Double.doubleToLongBits(deliveryCosts);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
 		result = prime * result + ((orderPositions == null) ? 0 : orderPositions.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
@@ -204,7 +204,10 @@ public abstract class AbstractWorkflow implements Request {
 			return false;
 		if (Double.doubleToLongBits(deliveryCosts) != Double.doubleToLongBits(other.deliveryCosts))
 			return false;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (message == null) {
 			if (other.message != null)
