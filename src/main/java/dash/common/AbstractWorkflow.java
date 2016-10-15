@@ -39,7 +39,8 @@ public abstract class AbstractWorkflow implements Request {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
 	@ApiModelProperty(hidden = true)
-	private long id;
+	@Column(name = "id", nullable = false)
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "customer_fk", nullable = true)
@@ -103,12 +104,8 @@ public abstract class AbstractWorkflow implements Request {
 		this.deliveryCosts = deliveryCosts;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	@Override

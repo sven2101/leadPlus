@@ -41,8 +41,8 @@ public class Notification {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "notification_auto_gen")
 	@SequenceGenerator(name = "notification_auto_gen", sequenceName = "notification_id_seq")
-	@Column(name = "id")
-	private long id;
+	@Column(name = "id", nullable = false)
+	private Long id;
 
 	@NotNull
 	@Size(max = 255)
@@ -80,11 +80,7 @@ public class Notification {
 		this.deleted = deleted;
 	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -127,7 +123,7 @@ public class Notification {
 		result = prime * result + ((attachment == null) ? 0 : attachment.hashCode());
 		result = prime * result + ((content == null) ? 0 : content.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((recipient == null) ? 0 : recipient.hashCode());
 		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
 		return result;
@@ -154,7 +150,10 @@ public class Notification {
 			return false;
 		if (deleted != other.deleted)
 			return false;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (recipient == null) {
 			if (other.recipient != null)

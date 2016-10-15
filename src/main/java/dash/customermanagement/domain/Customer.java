@@ -46,8 +46,8 @@ public class Customer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_auto_gen")
 	@SequenceGenerator(name = "customer_auto_gen", sequenceName = "customer_id_seq")
-	@Column(name = "id")
-	private long id;
+	@Column(name = "id", nullable = false)
+	private Long id;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "title", length = 255, nullable = true)
@@ -73,7 +73,7 @@ public class Customer {
 	private String company;
 
 	@Size(max = 255)
-	@Column(name = "email", length = 255, nullable = true)
+	@Column(name = "email", length = 255, nullable = true, unique = true)
 	private String email;
 
 	@Size(max = 255)
@@ -96,11 +96,10 @@ public class Customer {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar timestamp;
 
-	@Column(name = "customernumber", nullable = true)
-	private long customerNumber;
+	@Column(name = "customernumber")
+	private Long customerNumber;
 
 	public Customer() {
-
 	}
 
 	public boolean isDeactivated() {
@@ -111,7 +110,7 @@ public class Customer {
 		this.deactivated = deactivated;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -187,15 +186,11 @@ public class Customer {
 		this.deleted = deleted;
 	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public long getCustomerNumber() {
+	public Long getCustomerNumber() {
 		return customerNumber;
 	}
 
-	public void setCustomerNumber(long customerNumber) {
+	public void setCustomerNumber(Long customerNumber) {
 		this.customerNumber = customerNumber;
 	}
 
@@ -205,12 +200,12 @@ public class Customer {
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((company == null) ? 0 : company.hashCode());
-		result = prime * result + (int) (customerNumber ^ (customerNumber >>> 32));
+		result = prime * result + ((customerNumber == null) ? 0 : customerNumber.hashCode());
 		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
@@ -237,7 +232,10 @@ public class Customer {
 				return false;
 		} else if (!company.equals(other.company))
 			return false;
-		if (customerNumber != other.customerNumber)
+		if (customerNumber == null) {
+			if (other.customerNumber != null)
+				return false;
+		} else if (!customerNumber.equals(other.customerNumber))
 			return false;
 		if (deactivated != other.deactivated)
 			return false;
@@ -253,7 +251,10 @@ public class Customer {
 				return false;
 		} else if (!firstname.equals(other.firstname))
 			return false;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (lastname == null) {
 			if (other.lastname != null)
@@ -279,7 +280,7 @@ public class Customer {
 	public String toString() {
 		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname + ", lastname=" + lastname + ", company="
 				+ company + ", email=" + email + ", phone=" + phone + ", address=" + address + ", deactivated=" + deactivated + ", timestamp=" + timestamp
-				+ "]";
+				+ ", customerNumber=" + customerNumber + "]";
 	}
 
 }

@@ -40,8 +40,8 @@ public class Smtp {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "smtp_auto_gen")
 	@SequenceGenerator(name = "smtp_auto_gen", sequenceName = "smtp_id_seq")
-	@Column(name = "id")
-	private long id;
+	@Column(name = "id", nullable = false)
+	private Long id;
 
 	@NotNull
 	@Size(max = 255)
@@ -79,7 +79,7 @@ public class Smtp {
 
 	@NotNull
 	@Column(name = "port", nullable = false)
-	private int port;
+	private Integer port;
 
 	@NotNull
 	@Column(name = "connection", nullable = false)
@@ -163,11 +163,11 @@ public class Smtp {
 		this.encryption = encryption;
 	}
 
-	public int getPort() {
+	public Integer getPort() {
 		return port;
 	}
 
-	public void setPort(int port) {
+	public void setPort(Integer port) {
 		this.port = port;
 	}
 
@@ -185,10 +185,6 @@ public class Smtp {
 
 	public void setUser(User user) {
 		this.user = user;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public byte[] getSalt() {
@@ -215,10 +211,10 @@ public class Smtp {
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((encryption == null) ? 0 : encryption.hashCode());
 		result = prime * result + ((host == null) ? 0 : host.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + Arrays.hashCode(iv);
 		result = prime * result + Arrays.hashCode(password);
-		result = prime * result + port;
+		result = prime * result + ((port == null) ? 0 : port.hashCode());
 		result = prime * result + ((responseAdress == null) ? 0 : responseAdress.hashCode());
 		result = prime * result + Arrays.hashCode(salt);
 		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
@@ -250,13 +246,19 @@ public class Smtp {
 				return false;
 		} else if (!host.equals(other.host))
 			return false;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (!Arrays.equals(iv, other.iv))
 			return false;
 		if (!Arrays.equals(password, other.password))
 			return false;
-		if (port != other.port)
+		if (port == null) {
+			if (other.port != null)
+				return false;
+		} else if (!port.equals(other.port))
 			return false;
 		if (responseAdress == null) {
 			if (other.responseAdress != null)
@@ -286,7 +288,8 @@ public class Smtp {
 	@Override
 	public String toString() {
 		return "Smtp [id=" + id + ", sender=" + sender + ", responseAdress=" + responseAdress + ", host=" + host + ", username=" + username + ", password="
-				+ password + ", email=" + email + ", encryption=" + encryption + ", port=" + port + ", connection=" + connection + ", user=" + user + "]";
+				+ Arrays.toString(password) + ", email=" + email + ", encryption=" + encryption + ", port=" + port + ", connection=" + connection + ", salt="
+				+ Arrays.toString(salt) + ", iv=" + Arrays.toString(iv) + ", user=" + user + "]";
 	}
 
 }

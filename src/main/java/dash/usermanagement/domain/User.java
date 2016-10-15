@@ -53,8 +53,8 @@ public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_auto_gen")
 	@SequenceGenerator(name = "user_auto_gen", sequenceName = "user_id_seq")
-	@Column(name = "id")
-	private long id;
+	@Column(name = "id", nullable = false)
+	private Long id;
 
 	@NotNull
 	@Size(max = 30)
@@ -107,7 +107,6 @@ public class User implements UserDetails {
 	private boolean enabled;
 
 	public User() {
-
 	}
 
 	public String getFirstname() {
@@ -136,10 +135,6 @@ public class User implements UserDetails {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public Long getId() {

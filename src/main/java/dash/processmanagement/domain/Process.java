@@ -51,7 +51,8 @@ public class Process {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "process_auto_gen")
 	@SequenceGenerator(name = "process_auto_gen", sequenceName = "process_id_seq")
-	private long id;
+	@Column(name = "id", nullable = false)
+	private Long id;
 
 	@NotNull
 	@Column(name = "deleted", nullable = false)
@@ -86,16 +87,15 @@ public class Process {
 	@Where(clause = "deleted <> '1'")
 	private User processor;
 
-	public Process() {
-
-	}
-
 	public Process(Lead lead) {
 		this.lead = lead;
 		this.offer = null;
 		this.sale = null;
 		this.status = Status.OPEN;
 		this.processor = null;
+	}
+
+	public Process() {
 	}
 
 	public boolean isDeleted() {
@@ -106,12 +106,8 @@ public class Process {
 		this.deleted = deleted;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public Lead getLead() {
@@ -168,7 +164,7 @@ public class Process {
 		int result = 1;
 		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lead == null) ? 0 : lead.hashCode());
 		result = prime * result + ((offer == null) ? 0 : offer.hashCode());
 		result = prime * result + ((processor == null) ? 0 : processor.hashCode());
@@ -193,7 +189,10 @@ public class Process {
 			return false;
 		if (deleted != other.deleted)
 			return false;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (lead == null) {
 			if (other.lead != null)

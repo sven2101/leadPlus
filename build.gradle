@@ -70,7 +70,8 @@ flyway {
     url = "jdbc:postgresql://localhost:5432/applica"
     user = "postgres"
     password = "***REMOVED***"
-    placeholderReplacement = "false"
+    placeholderPrefix = "\$&{"
+    placeholderSuffix = "}&\$"
 }
 
 task wrapper(type: Wrapper) {

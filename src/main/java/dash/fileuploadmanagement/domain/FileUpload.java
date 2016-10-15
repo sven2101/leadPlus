@@ -39,8 +39,8 @@ public class FileUpload {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fileupload_auto_gen")
 	@SequenceGenerator(name = "fileupload_auto_gen", sequenceName = "fileupload_id_seq")
-	@Column(name = "id")
-	private long id;
+	@Column(name = "id", nullable = false)
+	private Long id;
 
 	@NotNull
 	@Size(max = 255)
@@ -65,11 +65,7 @@ public class FileUpload {
 	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
-	public FileUpload() {
-
-	}
-
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -124,7 +120,7 @@ public class FileUpload {
 		result = prime * result + Arrays.hashCode(content);
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((filename == null) ? 0 : filename.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((mimeType == null) ? 0 : mimeType.hashCode());
 		result = prime * result + (int) (size ^ (size >>> 32));
 		return result;
@@ -148,7 +144,10 @@ public class FileUpload {
 				return false;
 		} else if (!filename.equals(other.filename))
 			return false;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (mimeType == null) {
 			if (other.mimeType != null)

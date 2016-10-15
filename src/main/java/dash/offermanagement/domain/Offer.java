@@ -47,7 +47,7 @@ public class Offer extends AbstractWorkflow {
 	@NotNull
 	@Digits(integer = 10, fraction = 4)
 	@Column(name = "offerprice", nullable = false)
-	private double offerPrice;
+	private Double offerPrice;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "notification_id", nullable = true)
@@ -55,14 +55,13 @@ public class Offer extends AbstractWorkflow {
 	private Notification notification;
 
 	public Offer() {
-
 	}
 
-	public double getOfferPrice() {
+	public Double getOfferPrice() {
 		return offerPrice;
 	}
 
-	public void setOfferPrice(double price) {
+	public void setOfferPrice(Double price) {
 		this.offerPrice = price;
 	}
 
@@ -87,9 +86,8 @@ public class Offer extends AbstractWorkflow {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((deliveryDate == null) ? 0 : deliveryDate.hashCode());
-		long temp;
-		temp = Double.doubleToLongBits(offerPrice);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((notification == null) ? 0 : notification.hashCode());
+		result = prime * result + ((offerPrice == null) ? 0 : offerPrice.hashCode());
 		return result;
 	}
 
@@ -107,14 +105,22 @@ public class Offer extends AbstractWorkflow {
 				return false;
 		} else if (!deliveryDate.equals(other.deliveryDate))
 			return false;
-		if (Double.doubleToLongBits(offerPrice) != Double.doubleToLongBits(other.offerPrice))
+		if (notification == null) {
+			if (other.notification != null)
+				return false;
+		} else if (!notification.equals(other.notification))
+			return false;
+		if (offerPrice == null) {
+			if (other.offerPrice != null)
+				return false;
+		} else if (!offerPrice.equals(other.offerPrice))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Offer [deliveryDate=" + deliveryDate + ", offerPrice=" + offerPrice + "]";
+		return "Offer [deliveryDate=" + deliveryDate + ", offerPrice=" + offerPrice + ", notification=" + notification + "]";
 	}
 
 }

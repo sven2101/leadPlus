@@ -76,7 +76,7 @@ public class PublicApiService implements IPublicApiService {
 				orderPosition.setProduct(productService.getById(orderPosition.getProduct().getId()));
 				orderPosition.setPrice(orderPosition.getProduct().getPriceNetto());
 				orderPosition.setDeleted(false);
-				orderPosition.setId(0);
+				//orderPosition.setId(0);
 				orderPosition.setWorkflow(lead);
 			}
 		}
@@ -87,8 +87,7 @@ public class PublicApiService implements IPublicApiService {
 		} else if (!isValidEmailAddress(lead.getCustomer().getEmail())) {
 			throw new SaveFailedException(INVALID_CUSTOMER_EMAIL);
 		}
-		Customer tempCustomer = lead.getCustomer().getEmail() != null
-				? customerService.getByEmail(lead.getCustomer().getEmail()) : null;
+		Customer tempCustomer = lead.getCustomer().getEmail() != null ? customerService.getByEmail(lead.getCustomer().getEmail()) : null;
 		lead.getCustomer().setTimestamp(Calendar.getInstance());
 		if (tempCustomer == null) {
 			lead.getCustomer().setId(0);
@@ -103,13 +102,13 @@ public class PublicApiService implements IPublicApiService {
 		// set Vendor
 		if (lead.getVendor() != null) {
 			lead.getVendor().setDeleted(false);
-			lead.getVendor().setId(0);
+			//lead.getVendor().setId(0);
 		}
 
 		// set Lead
 		lead.setTimestamp(Calendar.getInstance());
 		lead.setDeleted(false);
-		lead.setId(0);
+		//lead.setId(0);
 
 		return leadservice.save(lead);
 	}

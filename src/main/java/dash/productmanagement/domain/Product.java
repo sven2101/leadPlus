@@ -53,8 +53,8 @@ public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_auto_gen")
 	@SequenceGenerator(name = "product_auto_gen", sequenceName = "product_id_seq")
-	@Column(name = "id")
-	private long id;
+	@Column(name = "id", nullable = false)
+	private Long id;
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
@@ -92,13 +92,16 @@ public class Product {
 	@NotNull
 	@Digits(integer = 10, fraction = 4)
 	@Column(name = "pricenetto", nullable = false)
-	private double priceNetto;
+	private Double priceNetto;
 
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@ApiModelProperty(hidden = true)
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "picture_id", nullable = true)
 	private FileUpload picture;
+
+	public Product() {
+	}
 
 	public boolean isDeleted() {
 		return deleted;
@@ -140,14 +143,6 @@ public class Product {
 		this.picture = picture;
 	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public Product() {
-
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -168,11 +163,11 @@ public class Product {
 		this.description = description;
 	}
 
-	public double getPriceNetto() {
+	public Double getPriceNetto() {
 		return priceNetto;
 	}
 
-	public void setPriceNetto(double priceNetto) {
+	public void setPriceNetto(Double priceNetto) {
 		this.priceNetto = priceNetto;
 	}
 
@@ -183,12 +178,10 @@ public class Product {
 		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		long temp;
-		temp = Double.doubleToLongBits(priceNetto);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
+		result = prime * result + ((priceNetto == null) ? 0 : priceNetto.hashCode());
 		result = prime * result + ((productState == null) ? 0 : productState.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		return result;
@@ -212,19 +205,25 @@ public class Product {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (picture == null) {
-			if (other.picture != null)
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!picture.equals(other.picture))
-			return false;
-		if (id != other.id)
+		} else if (!id.equals(other.id))
 			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (Double.doubleToLongBits(priceNetto) != Double.doubleToLongBits(other.priceNetto))
+		if (picture == null) {
+			if (other.picture != null)
+				return false;
+		} else if (!picture.equals(other.picture))
+			return false;
+		if (priceNetto == null) {
+			if (other.priceNetto != null)
+				return false;
+		} else if (!priceNetto.equals(other.priceNetto))
 			return false;
 		if (productState != other.productState)
 			return false;
@@ -239,7 +238,7 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description + ", productState=" + productState
-				+ ", timestamp=" + timestamp + ", deactivated=" + deactivated + ", priceNetto=" + priceNetto + ", fileUpload=" + picture + "]";
+				+ ", timestamp=" + timestamp + ", deactivated=" + deactivated + ", priceNetto=" + priceNetto + ", picture=" + picture + "]";
 	}
 
 }

@@ -30,8 +30,8 @@ public class Template {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "template_auto_gen")
 	@SequenceGenerator(name = "template_auto_gen", sequenceName = "template_id_seq")
-	@Column(name = "id")
-	private long id;
+	@Column(name = "id", nullable = false)
+	private Long id;
 
 	@NotNull
 	@Size(max = 255)
@@ -52,10 +52,9 @@ public class Template {
 	private boolean deactivated;
 
 	public Template() {
-
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -98,7 +97,7 @@ public class Template {
 		result = prime * result + ((content == null) ? 0 : content.hashCode());
 		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
@@ -124,7 +123,10 @@ public class Template {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (name == null) {
 			if (other.name != null)

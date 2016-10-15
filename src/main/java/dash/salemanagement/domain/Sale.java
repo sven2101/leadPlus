@@ -20,43 +20,42 @@ public class Sale extends AbstractWorkflow {
 	@NotNull
 	@Digits(integer = 10, fraction = 4)
 	@Column(name = "saleturnover", nullable = false)
-	private double saleTurnover;
+	private Double saleTurnover;
 
 	@NotNull
 	@Digits(integer = 10, fraction = 4)
 	@Column(name = "saleprofit", nullable = false)
-	private double saleProfit;
+	private Double saleProfit;
 
 	@NotNull
 	@Digits(integer = 10, fraction = 4)
 	@Column(name = "salecost", nullable = false)
-	private double saleCost;
+	private Double saleCost;
 
 	public Sale() {
-
 	}
 
-	public double getSaleTurnover() {
+	public Double getSaleTurnover() {
 		return saleTurnover;
 	}
 
-	public void setSaleTurnover(double saleTurnover) {
+	public void setSaleTurnover(Double saleTurnover) {
 		this.saleTurnover = saleTurnover;
 	}
 
-	public double getSaleProfit() {
+	public Double getSaleProfit() {
 		return saleProfit;
 	}
 
-	public void setSaleProfit(double saleProfit) {
+	public void setSaleProfit(Double saleProfit) {
 		this.saleProfit = saleProfit;
 	}
 
-	public double getSaleCost() {
+	public Double getSaleCost() {
 		return saleCost;
 	}
 
-	public void setSaleCost(double saleCost) {
+	public void setSaleCost(Double saleCost) {
 		this.saleCost = saleCost;
 	}
 
@@ -64,11 +63,9 @@ public class Sale extends AbstractWorkflow {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		long temp;
-		temp = Double.doubleToLongBits(saleProfit);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(saleTurnover);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((saleCost == null) ? 0 : saleCost.hashCode());
+		result = prime * result + ((saleProfit == null) ? 0 : saleProfit.hashCode());
+		result = prime * result + ((saleTurnover == null) ? 0 : saleTurnover.hashCode());
 		return result;
 	}
 
@@ -81,16 +78,27 @@ public class Sale extends AbstractWorkflow {
 		if (getClass() != obj.getClass())
 			return false;
 		Sale other = (Sale) obj;
-		if (Double.doubleToLongBits(saleProfit) != Double.doubleToLongBits(other.saleProfit))
+		if (saleCost == null) {
+			if (other.saleCost != null)
+				return false;
+		} else if (!saleCost.equals(other.saleCost))
 			return false;
-		if (Double.doubleToLongBits(saleTurnover) != Double.doubleToLongBits(other.saleTurnover))
+		if (saleProfit == null) {
+			if (other.saleProfit != null)
+				return false;
+		} else if (!saleProfit.equals(other.saleProfit))
+			return false;
+		if (saleTurnover == null) {
+			if (other.saleTurnover != null)
+				return false;
+		} else if (!saleTurnover.equals(other.saleTurnover))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Sale [saleTurnover=" + saleTurnover + ", saleProfit=" + saleProfit + "]";
+		return "Sale [saleTurnover=" + saleTurnover + ", saleProfit=" + saleProfit + ", saleCost=" + saleCost + "]";
 	}
 
 }

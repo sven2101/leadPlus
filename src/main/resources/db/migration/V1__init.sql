@@ -210,7 +210,7 @@ ALTER TABLE fileupload
 CREATE TABLE IF NOT EXISTS "user"
 (
   id bigint NOT NULL DEFAULT nextval('"user_id_seq"'::regclass),
-  email character varying(50) NOT NULL,
+  email character varying(50) NOT NULL UNIQUE,
   enabled boolean NOT NULL,
   firstname character varying(50) NOT NULL,
   language character varying(255),
@@ -241,7 +241,7 @@ CREATE TABLE IF NOT EXISTS customer
   company character varying(255),
   deactivated boolean NOT NULL,
   deleted boolean NOT NULL,
-  email character varying(255),
+  email character varying(255) UNIQUE,
   firstname character varying(255),
   lastname character varying(255),
   phone character varying(255),

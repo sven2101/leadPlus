@@ -44,8 +44,8 @@ public class OrderPosition {
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "orderposition_auto_gen")
 	@SequenceGenerator(name = "orderposition_auto_gen", sequenceName = "orderposition_id_seq")
 	@ApiModelProperty(hidden = true)
-	@Column(name = "id")
-	private long id;
+	@Column(name = "id", nullable = false)
+	private Long id;
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
@@ -65,36 +65,31 @@ public class OrderPosition {
 
 	@NotNull
 	@Column(name = "amount", nullable = false)
-	private int amount;
+	private Integer amount;
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
 	@Digits(integer = 10, fraction = 4)
 	@Column(name = "price", nullable = false)
-	private double price;
+	private Double price;
 
 	@NotNull
 	@Column(name = "discount", nullable = false)
-	private double discount;
+	private Double discount;
 
 	public OrderPosition() {
-
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public double getDiscount() {
+	public Double getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(double discount) {
+	public void setDiscount(Double discount) {
 		this.discount = discount;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public Product getProduct() {
@@ -105,11 +100,11 @@ public class OrderPosition {
 		this.product = product;
 	}
 
-	public int getAmount() {
+	public Integer getAmount() {
 		return amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(Integer amount) {
 		this.amount = amount;
 	}
 
@@ -121,11 +116,11 @@ public class OrderPosition {
 		this.workflow = workflow;
 	}
 
-	public double getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
@@ -141,15 +136,13 @@ public class OrderPosition {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + amount;
+		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
-		long temp;
-		temp = Double.doubleToLongBits(discount);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + (int) (id ^ (id >>> 32));
-		temp = Double.doubleToLongBits(price);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((discount == null) ? 0 : discount.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((product == null) ? 0 : product.hashCode());
+		result = prime * result + ((workflow == null) ? 0 : workflow.hashCode());
 		return result;
 	}
 
@@ -162,28 +155,45 @@ public class OrderPosition {
 		if (getClass() != obj.getClass())
 			return false;
 		OrderPosition other = (OrderPosition) obj;
-		if (amount != other.amount)
+		if (amount == null) {
+			if (other.amount != null)
+				return false;
+		} else if (!amount.equals(other.amount))
 			return false;
 		if (deleted != other.deleted)
 			return false;
-		if (Double.doubleToLongBits(discount) != Double.doubleToLongBits(other.discount))
+		if (discount == null) {
+			if (other.discount != null)
+				return false;
+		} else if (!discount.equals(other.discount))
 			return false;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
-		if (Double.doubleToLongBits(price) != Double.doubleToLongBits(other.price))
+		if (price == null) {
+			if (other.price != null)
+				return false;
+		} else if (!price.equals(other.price))
 			return false;
 		if (product == null) {
 			if (other.product != null)
 				return false;
 		} else if (!product.equals(other.product))
 			return false;
+		if (workflow == null) {
+			if (other.workflow != null)
+				return false;
+		} else if (!workflow.equals(other.workflow))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", product=" + product + ", amount=" + amount + ", price=" + price + ", discount="
-				+ discount + "]";
+		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", product=" + product + ", workflow=" + workflow + ", amount=" + amount + ", price="
+				+ price + ", discount=" + discount + "]";
 	}
 
 }

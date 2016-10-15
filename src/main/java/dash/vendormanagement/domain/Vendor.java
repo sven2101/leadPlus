@@ -38,8 +38,8 @@ public class Vendor {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vendor_auto_gen")
 	@SequenceGenerator(name = "vendor_auto_gen", sequenceName = "vendor_id_seq")
-	@Column(name = "id")
-	private long id;
+	@Column(name = "id", nullable = false)
+	private Long id;
 
 	@NotNull
 	@Size(max = 255)
@@ -56,7 +56,6 @@ public class Vendor {
 	private String phone;
 
 	public Vendor() {
-
 	}
 
 	public String getPhone() {
@@ -83,12 +82,8 @@ public class Vendor {
 		this.deleted = deleted;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	@Override
@@ -96,7 +91,7 @@ public class Vendor {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (deleted ? 1231 : 1237);
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		return result;
@@ -113,7 +108,10 @@ public class Vendor {
 		Vendor other = (Vendor) obj;
 		if (deleted != other.deleted)
 			return false;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (name == null) {
 			if (other.name != null)
