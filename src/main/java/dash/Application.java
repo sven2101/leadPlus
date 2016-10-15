@@ -36,6 +36,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import dash.security.AngularCsrfHeaderFilter;
 import dash.security.listener.RESTAuthenticationEntryPoint;
@@ -63,14 +64,16 @@ public class Application {
 	public static class SwaggerConfig {
 		@Bean
 		public Docket api() {
-			return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("dash.publicapi")).paths(PathSelectors.any())
-					.build().apiInfo(apiInfo());
+			return new Docket(DocumentationType.SWAGGER_2).select()
+					.apis(RequestHandlerSelectors.basePackage("dash.publicapi")).paths(PathSelectors.any()).build()
+					.apiInfo(apiInfo());
 
 		}
 	}
 
 	private static ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("Lead+").description("Lead+ - Lead Management Tool").license("").licenseUrl("").version("2.0").build();
+		return new ApiInfoBuilder().title("Lead+").description("Lead+ - Lead Management Tool").license("")
+				.licenseUrl("").version("2.0").build();
 	}
 
 	@Bean
@@ -102,13 +105,16 @@ public class Application {
 		protected void configure(HttpSecurity http) throws Exception {
 
 			http.httpBasic().and().authorizeRequests()
-					.antMatchers("/", "/images/favicon**", "/assets/**", "/fonts/**", "/app/**", "/components/Login/view/Login.html",
-							"/components/Signup/view/Signup.html", "/api/rest/registrations/**", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
+					.antMatchers("/", "/images/favicon**", "/assets/**", "/fonts/**", "/app/**",
+							"/components/Login/view/Login.html", "/components/Signup/view/Signup.html",
+							"/api/rest/registrations/**", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
 							"/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")
-					.permitAll().antMatchers("/api/rest/public**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API").anyRequest().authenticated().antMatchers("/**")
-					.hasAnyAuthority("SUPERADMIN,ADMIN,USER").anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
-					.csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().logout().logoutUrl("/logout").logoutSuccessUrl("/").and()
-					.headers().frameOptions().sameOrigin().httpStrictTransportSecurity().disable();
+					.permitAll().antMatchers("/api/rest/public**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")
+					.anyRequest().authenticated().antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER")
+					.anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
+					.csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().headers().frameOptions()
+					.sameOrigin().httpStrictTransportSecurity().disable().and().logout()
+					.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/#/login");
 
 			http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
 		}
