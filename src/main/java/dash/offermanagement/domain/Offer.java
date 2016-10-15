@@ -19,9 +19,11 @@ import java.util.Calendar;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -36,15 +38,17 @@ import dash.notificationmanagement.domain.Notification;
 @Where(clause = "deleted <> '1'")
 public class Offer extends AbstractWorkflow {
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = true, columnDefinition = "timestamptz", name = "deliverydate")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "deliverydate", nullable = true)
 	private Calendar deliveryDate;
 
-	@Column(name = "offerprice")
+	@NotNull
+	@Column(name = "offerprice", nullable = false)
 	private double offerPrice;
 
 	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "notification_id", nullable = true)
 	@Where(clause = "deleted <> '1'")
 	private Notification notification;
 

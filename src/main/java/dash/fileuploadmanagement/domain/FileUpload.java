@@ -22,6 +22,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -40,19 +42,26 @@ public class FileUpload {
 	@Column(name = "id")
 	private long id;
 
+	@NotNull
+	@Size(max = 255)
 	@Column(name = "filename", length = 255, nullable = false)
 	private String filename;
 
+	@NotNull
+	@Size(max = 255)
 	@Column(name = "mimetype", length = 255, nullable = false)
 	private String mimeType;
 
+	@NotNull
 	@Column(name = "size", nullable = false)
 	private long size;
 
+	@NotNull
 	@Column(name = "content", nullable = false)
 	private byte[] content;
 
 	@ApiModelProperty(hidden = true)
+	@NotNull
 	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 

@@ -55,6 +55,7 @@ public class OfferMessage extends AbstractMessage {
 		String unescapedString = unescapeString(this.template);
 		stringLoader.putTemplate("greetTemplate", unescapedString);
 
+		@SuppressWarnings("deprecation")
 		Configuration cfg = new Configuration();
 		cfg.setTemplateLoader(stringLoader);
 		Writer writer = new StringWriter();

@@ -30,6 +30,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -52,29 +54,43 @@ public class User implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_auto_gen")
 	@SequenceGenerator(name = "user_auto_gen", sequenceName = "user_id_seq")
 	@Column(name = "id")
-	private Long id;
+	private long id;
 
-	@Column(name = "username", length = 30)
+	@NotNull
+	@Size(max = 30)
+	@Column(name = "username", length = 30, nullable = false)
 	private String username;
 
-	@Column(name = "firstname", length = 50)
+	@NotNull
+	@Size(max = 50)
+	@Column(name = "firstname", length = 50, nullable = false)
 	private String firstname;
 
-	@Column(name = "phone", length = 50)
+	@NotNull
+	@Size(max = 50)
+	@Column(name = "phone", length = 50, nullable = true)
 	private String phone;
 
+	@NotNull
+	@Size(max = 50)
 	@Column(name = "lastname", unique = true, length = 50, nullable = false)
 	private String lastname;
 
+	@NotNull
+	@Size(max = 50)
 	@Column(name = "email", unique = true, length = 50, nullable = false)
 	private String email;
 
 	@JsonIgnore
+	@NotNull
+	@Size(max = 60)
 	@Column(name = "password", length = 60, nullable = false)
 	private String password;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "role")
+	@NotNull
+	@Size(max = 255)
+	@Column(name = "role", length = 255, nullable = false)
 	private Role role;
 
 	@JsonProperty(access = Access.WRITE_ONLY)
@@ -83,10 +99,13 @@ public class User implements UserDetails {
 	private FileUpload picture;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "language")
+	@NotNull
+	@Size(max = 255)
+	@Column(name = "language", length = 255, nullable = false)
 	private Language language;
 
-	@Column(name = "enabled")
+	@NotNull
+	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
 
 	public User() {
@@ -121,7 +140,7 @@ public class User implements UserDetails {
 		return serialVersionUID;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -222,10 +241,11 @@ public class User implements UserDetails {
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + (enabled ? 1231 : 1237);
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((language == null) ? 0 : language.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
@@ -253,10 +273,7 @@ public class User implements UserDetails {
 				return false;
 		} else if (!firstname.equals(other.firstname))
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
+		if (id != other.id)
 			return false;
 		if (language != other.language)
 			return false;
@@ -269,6 +286,11 @@ public class User implements UserDetails {
 			if (other.password != null)
 				return false;
 		} else if (!password.equals(other.password))
+			return false;
+		if (phone == null) {
+			if (other.phone != null)
+				return false;
+		} else if (!phone.equals(other.phone))
 			return false;
 		if (picture == null) {
 			if (other.picture != null)

@@ -17,6 +17,7 @@ package dash.processmanagement.domain;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -27,6 +28,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -39,16 +43,17 @@ import dash.statusmanagement.domain.Status;
 import dash.usermanagement.domain.User;
 
 @Entity
-// Override the default Hibernation delete and set the deleted flag rather than
-// deleting the record from the db.
 @SQLDelete(sql = "UPDATE process SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
+@Table(name = "process")
 public class Process {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private Long id;
+	private long id;
 
+	@NotNull
+	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
@@ -71,6 +76,9 @@ public class Process {
 	private List<Comment> comments;
 
 	@Enumerated(EnumType.STRING)
+	@NotNull
+	@Size(max = 255)
+	@Column(name = "status", length = 255)
 	private Status status;
 
 	@OneToOne(cascade = CascadeType.PERSIST)
@@ -98,11 +106,11 @@ public class Process {
 		this.deleted = deleted;
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -160,7 +168,7 @@ public class Process {
 		int result = 1;
 		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((lead == null) ? 0 : lead.hashCode());
 		result = prime * result + ((offer == null) ? 0 : offer.hashCode());
 		result = prime * result + ((processor == null) ? 0 : processor.hashCode());
@@ -185,10 +193,7 @@ public class Process {
 			return false;
 		if (deleted != other.deleted)
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
+		if (id != other.id)
 			return false;
 		if (lead == null) {
 			if (other.lead != null)

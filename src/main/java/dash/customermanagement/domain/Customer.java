@@ -27,6 +27,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -48,42 +50,54 @@ public class Customer {
 	private long id;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "title", length = 255)
+	@Size(max = 255)
+	@Column(name = "title", length = 255, nullable = true)
 	private Title title;
 
 	@ApiModelProperty(hidden = true)
+	@NotNull
 	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
+	@NotNull
+	@Size(max = 255)
 	@Column(name = "firstname", length = 255, nullable = false)
 	private String firstname;
 
+	@NotNull
+	@Size(max = 255)
 	@Column(name = "lastname", length = 255, nullable = false)
 	private String lastname;
 
-	@Column(name = "company", length = 255)
+	@Size(max = 255)
+	@Column(name = "company", length = 255, nullable = true)
 	private String company;
 
-	@Column(name = "email", length = 255)
+	@Size(max = 255)
+	@Column(name = "email", length = 255, nullable = true)
 	private String email;
 
-	@Column(name = "phone", length = 255)
+	@Size(max = 255)
+	@Column(name = "phone", length = 255, nullable = true)
 	private String phone;
 
-	@Column(name = "address", length = 255)
+	@Size(max = 255)
+	@Column(name = "address", length = 255, nullable = true)
 	private String address;
 
 	@ApiModelProperty(hidden = true)
+	@NotNull
 	@Column(name = "deactivated", nullable = false)
 	private boolean deactivated;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
 	@ApiModelProperty(hidden = true)
-	@Column(name = "timestamp")
+	@NotNull
+	@Column(name = "timestamp", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar timestamp;
 
-	@Column(name = "customernumber")
+	@Column(name = "customernumber", nullable = true)
 	private long customerNumber;
 
 	public Customer() {

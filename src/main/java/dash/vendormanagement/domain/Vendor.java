@@ -21,6 +21,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -39,14 +41,19 @@ public class Vendor {
 	@Column(name = "id")
 	private long id;
 
-	@Column(name = "name")
+	@NotNull
+	@Size(max = 255)
+	@Column(name = "name", length = 255, nullable = false)
 	private String name;
 
 	@ApiModelProperty(hidden = true)
-	@Column(name = "deleted")
+	@NotNull
+	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
-	@Column(name = "phone")
+	@NotNull
+	@Size(max = 255)
+	@Column(name = "phone", length = 255, nullable = true)
 	private String phone;
 
 	public Vendor() {

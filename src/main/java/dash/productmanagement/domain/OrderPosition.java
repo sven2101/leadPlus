@@ -23,6 +23,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -46,26 +47,31 @@ public class OrderPosition {
 	private long id;
 
 	@ApiModelProperty(hidden = true)
+	@NotNull
 	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
 	@ManyToOne
+	@JoinColumn(name = "product_id", nullable = false)
 	@Where(clause = "deleted <> '1'")
 	private Product product;
 
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(nullable = false)
+	@JoinColumn(name = "workflow_id", nullable = false)
 	@Where(clause = "deleted <> '1'")
 	private AbstractWorkflow workflow;
 
+	@NotNull
 	@Column(name = "amount", nullable = false)
 	private int amount;
 
 	@ApiModelProperty(hidden = true)
+	@NotNull
 	@Column(name = "price", nullable = false)
 	private double price;
 
+	@NotNull
 	@Column(name = "discount", nullable = false)
 	private double discount;
 

@@ -27,6 +27,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -49,23 +51,29 @@ public class Comment {
 	@Column(name = "id")
 	private long id;
 
+	@NotNull
 	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "creator_fk", nullable = false)
 	private User creator;
 
+	@NotNull
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Process process;
 
+	@NotNull
+	@Size(max = 5000)
 	@Column(name = "commenttext", length = 5000, nullable = false)
 	private String commentText;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
-	@Column(name = "timestamp", columnDefinition = "timestamptz", nullable = false)
+	@NotNull
+	@Column(name = "timestamp", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar timestamp;
 

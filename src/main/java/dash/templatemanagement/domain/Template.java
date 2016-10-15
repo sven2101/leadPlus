@@ -20,6 +20,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "template")
@@ -29,17 +31,23 @@ public class Template {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "template_auto_gen")
 	@SequenceGenerator(name = "template_auto_gen", sequenceName = "template_id_seq")
 	@Column(name = "id")
-	private Long id;
+	private long id;
 
-	@Column(name = "name")
+	@NotNull
+	@Size(max = 255)
+	@Column(name = "name", length = 255, nullable = false)
 	private String name;
 
-	@Column(name = "description")
+	@Size(max = 255)
+	@Column(name = "description", length = 255, nullable = true)
 	private String description;
 
-	@Column(name = "content", length = 30000)
+	@NotNull
+	@Size(max = 30000)
+	@Column(name = "content", length = 30000, nullable = false)
 	private String content;
 
+	@NotNull
 	@Column(name = "deactivated", nullable = false)
 	private boolean deactivated;
 
@@ -47,7 +55,7 @@ public class Template {
 
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -81,6 +89,49 @@ public class Template {
 
 	public void setDeactivated(boolean deactivated) {
 		this.deactivated = deactivated;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((content == null) ? 0 : content.hashCode());
+		result = prime * result + (deactivated ? 1231 : 1237);
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Template other = (Template) obj;
+		if (content == null) {
+			if (other.content != null)
+				return false;
+		} else if (!content.equals(other.content))
+			return false;
+		if (deactivated != other.deactivated)
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (id != other.id)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
 	}
 
 	@Override

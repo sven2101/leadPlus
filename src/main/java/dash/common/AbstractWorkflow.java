@@ -18,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Where;
 
@@ -43,33 +45,36 @@ public abstract class AbstractWorkflow implements Request {
 	@Where(clause = "deleted <> '1'")
 	private Customer customer;
 
-	@Column(name = "deliveryaddress")
+	@Size(max = 255)
+	@Column(name = "deliveryaddress", length = 255, nullable = true)
 	private String deliveryAddress;
 
+	@NotNull
 	@ApiModelProperty(hidden = true)
+	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
-	@Column(name = "deliverycosts")
+	@NotNull
+	@Column(name = "deliverycosts", nullable = false)
 	private double deliveryCosts;
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "workflow", fetch = FetchType.LAZY)
 	@Where(clause = "deleted <> '1'")
 	private List<OrderPosition> orderPositions;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable = true, columnDefinition = "timestamp")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
 	@ApiModelProperty(hidden = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "timestamp", nullable = true)
 	private Calendar timestamp;
 
 	@OneToOne(cascade = { CascadeType.PERSIST })
 	@JoinColumn(name = "vendor_fk", nullable = true)
-	// @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
-	// @JoinColumn(name = "vendor_fk", nullable = true)
 	@Where(clause = "deleted <> '1'")
 	private Vendor vendor;
 
-	@Column(length = 4096)
+	@Size(max = 4096)
+	@Column(length = 4096, nullable = true)
 	private String message;
 
 	public String getMessage() {

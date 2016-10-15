@@ -24,6 +24,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -41,42 +43,60 @@ public class Smtp {
 	@Column(name = "id")
 	private long id;
 
+	@NotNull
+	@Size(max = 255)
 	@Column(name = "sender", nullable = false, length = 255)
 	private String sender;
 
+	@NotNull
+	@Size(max = 255)
 	@Column(name = "responseAdress", nullable = false, length = 255)
 	private String responseAdress;
 
+	@NotNull
+	@Size(max = 255)
 	@Column(name = "host", nullable = false, length = 255)
 	private String host;
 
+	@NotNull
+	@Size(max = 255)
 	@Column(name = "username", nullable = false, length = 255)
 	private String username;
 
+	@NotNull
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(name = "password", nullable = false)
 	private byte[] password;
 
-	@Column(name = "email", nullable = false, length = 255)
+	@NotNull
+	@Size(max = 255)
+	@Column(name = "email", length = 255, nullable = false)
 	private String email;
 
-	@Column(name = "encryption", nullable = false)
+	@NotNull
+	@Size(max = 255)
+	@Column(name = "encryption", length = 255, nullable = false)
 	private Encryption encryption;
 
+	@NotNull
 	@Column(name = "port", nullable = false)
 	private int port;
 
+	@NotNull
 	@Column(name = "connection", nullable = false)
 	private boolean connection;
 
+	@NotNull
 	@JsonIgnore
 	@Column(name = "salt", nullable = false)
 	private byte[] salt;
 
+	@NotNull
 	@JsonIgnore
 	@Column(name = "iv", nullable = false)
 	private byte[] iv;
 
+	@NotNull
 	@OneToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;

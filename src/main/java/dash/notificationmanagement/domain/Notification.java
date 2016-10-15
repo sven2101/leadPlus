@@ -23,6 +23,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -42,22 +44,29 @@ public class Notification {
 	@Column(name = "id")
 	private long id;
 
+	@NotNull
+	@Size(max = 255)
 	@Column(name = "recipient", length = 255, nullable = false)
 	private String recipient;
 
+	@NotNull
+	@Size(max = 255)
 	@Column(name = "subject", length = 255, nullable = false)
 	private String subject;
 
 	@ApiModelProperty(hidden = true)
+	@NotNull
 	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
+	@NotNull
+	@Size(max = 30000)
 	@Column(name = "content", length = 30000, nullable = false)
 	private String content;
 
 	// @JsonProperty(access = Access.WRITE_ONLY)
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "attachment_id")
+	@JoinColumn(name = "attachment_id", nullable = true)
 	private FileUpload attachment;
 
 	public Notification() {
@@ -75,7 +84,7 @@ public class Notification {
 		this.id = id;
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 

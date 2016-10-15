@@ -30,6 +30,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -54,40 +56,47 @@ public class Product {
 	private long id;
 
 	@ApiModelProperty(hidden = true)
+	@NotNull
 	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
 	@ApiModelProperty(hidden = true)
+	@NotNull
 	@Column(name = "name", nullable = false)
 	private String name;
 
 	@ApiModelProperty(hidden = true)
-	@Column(name = "description")
+	@Size(max = 255)
+	@Column(name = "description", length = 255, nullable = true)
 	private String description;
 
 	@Enumerated(EnumType.STRING)
 	@ApiModelProperty(hidden = true)
-	@Column(name = "productstate")
+	@Size(max = 255)
+	@Column(name = "productstate", length = 255, nullable = true)
 	private ProductState productState;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
 	@ApiModelProperty(hidden = true)
+	@NotNull
 	@Column(name = "timestamp", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar timestamp;
 
 	@ApiModelProperty(hidden = true)
+	@NotNull
 	@Column(name = "deactivated", nullable = false)
 	private boolean deactivated;
 
 	@ApiModelProperty(hidden = true)
+	@NotNull
 	@Column(name = "pricenetto", nullable = false)
 	private double priceNetto;
 
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@ApiModelProperty(hidden = true)
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "picture_id")
+	@JoinColumn(name = "picture_id", nullable = true)
 	private FileUpload picture;
 
 	public boolean isDeleted() {
