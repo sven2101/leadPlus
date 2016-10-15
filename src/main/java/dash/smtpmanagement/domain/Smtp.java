@@ -50,11 +50,6 @@ public class Smtp {
 
 	@NotNull
 	@Size(max = 255)
-	@Column(name = "responseaddress", nullable = false, length = 255)
-	private String responseAddress;
-
-	@NotNull
-	@Size(max = 255)
 	@Column(name = "host", nullable = false, length = 255)
 	private String host;
 
@@ -81,17 +76,14 @@ public class Smtp {
 	@Column(name = "port", nullable = false)
 	private Integer port;
 
-	@NotNull
 	@Column(name = "connection", nullable = false)
 	private boolean connection;
 
 	@JsonIgnore
-	@NotNull
 	@Column(name = "salt", nullable = false)
 	private byte[] salt;
 
 	@JsonIgnore
-	@NotNull
 	@Column(name = "iv", nullable = false)
 	private byte[] iv;
 
@@ -121,14 +113,6 @@ public class Smtp {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getResponseAdress() {
-		return responseAddress;
-	}
-
-	public void setResponseAdress(String responseAdress) {
-		this.responseAddress = responseAdress;
 	}
 
 	public String getHost() {
@@ -215,7 +199,6 @@ public class Smtp {
 		result = prime * result + Arrays.hashCode(iv);
 		result = prime * result + Arrays.hashCode(password);
 		result = prime * result + ((port == null) ? 0 : port.hashCode());
-		result = prime * result + ((responseAddress == null) ? 0 : responseAddress.hashCode());
 		result = prime * result + Arrays.hashCode(salt);
 		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
@@ -260,11 +243,6 @@ public class Smtp {
 				return false;
 		} else if (!port.equals(other.port))
 			return false;
-		if (responseAddress == null) {
-			if (other.responseAddress != null)
-				return false;
-		} else if (!responseAddress.equals(other.responseAddress))
-			return false;
 		if (!Arrays.equals(salt, other.salt))
 			return false;
 		if (sender == null) {
@@ -287,9 +265,9 @@ public class Smtp {
 
 	@Override
 	public String toString() {
-		return "Smtp [id=" + id + ", sender=" + sender + ", responseAdress=" + responseAddress + ", host=" + host + ", username=" + username + ", password="
-				+ Arrays.toString(password) + ", email=" + email + ", encryption=" + encryption + ", port=" + port + ", connection=" + connection + ", salt="
-				+ Arrays.toString(salt) + ", iv=" + Arrays.toString(iv) + ", user=" + user + "]";
+		return "Smtp [id=" + id + ", sender=" + sender + ", host=" + host + ", username=" + username + ", password=" + Arrays.toString(password) + ", email="
+				+ email + ", encryption=" + encryption + ", port=" + port + ", connection=" + connection + ", salt=" + Arrays.toString(salt) + ", iv="
+				+ Arrays.toString(iv) + ", user=" + user + "]";
 	}
 
 }

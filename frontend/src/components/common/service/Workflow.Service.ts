@@ -86,7 +86,7 @@ class WorkflowService {
             id: null,
             creator: this.user,
             commentText: commentText,
-            timestamp: newTimestamp("DD.MM.YYYY HH:mm:ss"),
+            timestamp: newTimestamp("DD.MM.YYYY HH:mm:ss")
         };
 
         this.commentResource.save({ id: process.id }, comment).$promise.then(function () {
@@ -307,45 +307,45 @@ class WorkflowService {
                 }
             }
         }, {
-                extend: "print",
-                orientation: "landscape",
-                title: title,
-                exportOptions: {
-                    columns: columns,
-                    modifier: {
-                        page: "current"
-                    }
+            extend: "print",
+            orientation: "landscape",
+            title: title,
+            exportOptions: {
+                columns: columns,
+                modifier: {
+                    page: "current"
                 }
-            }, {
-                extend: "csvHtml5",
-                title: title,
-                exportOptions: {
-                    columns: columns,
-                    modifier: {
-                        page: "current"
-                    }
+            }
+        }, {
+            extend: "csvHtml5",
+            title: title,
+            exportOptions: {
+                columns: columns,
+                modifier: {
+                    page: "current"
+                }
 
+            }
+        }, {
+            extend: "excelHtml5",
+            title: title,
+            exportOptions: {
+                columns: columns,
+                modifier: {
+                    page: "current"
                 }
-            }, {
-                extend: "excelHtml5",
-                title: title,
-                exportOptions: {
-                    columns: columns,
-                    modifier: {
-                        page: "current"
-                    }
+            }
+        }, {
+            extend: "pdfHtml5",
+            title: title,
+            orientation: "landscape",
+            exportOptions: {
+                columns: columns,
+                modifier: {
+                    page: "current"
                 }
-            }, {
-                extend: "pdfHtml5",
-                title: title,
-                orientation: "landscape",
-                exportOptions: {
-                    columns: columns,
-                    modifier: {
-                        page: "current"
-                    }
-                }
-            }];
+            }
+        }];
     }
 
     getDomString(): string {
