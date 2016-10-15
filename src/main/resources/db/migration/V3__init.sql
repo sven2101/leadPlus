@@ -7,7 +7,7 @@ INSERT INTO customer(id, address, company, deactivated, email, firstname, lastna
     VALUES (nextval('customer_id_seq'), '7011 Stuttgart, Einsiedlerweg 1', 'Containerbasis.de', false, 'samuel@clions.de', 'Samuel', 'Ilg', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
 
 INSERT INTO customer(id, address, company, deactivated, email, firstname, lastname, phone, timestamp, title, deleted)
-    VALUES (nextval('customer_id_seq'), '7011 Stuttgart, Stuttgarterstraﬂe 88', 'Containerbasis.de', false, 'samuel@clions.de', 'Samuel', 'Ilg', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
+    VALUES (nextval('customer_id_seq'), '7011 Stuttgart, Stuttgarterstraﬂe 88', 'Containerbasis.de', false, 'samuel@***REMOVED***.de', 'Samuel', 'Ilg', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);
 
 INSERT INTO customer(id, address, company, deactivated, email, firstname, lastname, phone, timestamp, title, deleted)
     VALUES (nextval('customer_id_seq'), '10115 Berlin, Hauptstrasse 10', 'Mustermann Schreinerei GmbH', false, 'andreas.foitzik@live.com', 'Timo', 'Neumann', '07961/55166', CURRENT_TIMESTAMP, 'MR',false);   
