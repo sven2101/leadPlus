@@ -14,6 +14,7 @@ Copyright (c) 2016 Eviarc GmbH.
 
 package dash;
 
+import java.io.IOException;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,15 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import dash.security.AngularCsrfHeaderFilter;
 import dash.security.listener.RESTAuthenticationEntryPoint;
 import dash.usermanagement.registration.domain.Validation;
+import freemarker.cache.StringTemplateLoader;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -64,16 +70,14 @@ public class Application {
 	public static class SwaggerConfig {
 		@Bean
 		public Docket api() {
-			return new Docket(DocumentationType.SWAGGER_2).select()
-					.apis(RequestHandlerSelectors.basePackage("dash.publicapi")).paths(PathSelectors.any()).build()
-					.apiInfo(apiInfo());
+			return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("dash.publicapi")).paths(PathSelectors.any())
+					.build().apiInfo(apiInfo());
 
 		}
 	}
 
 	private static ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("Lead+").description("Lead+ - Lead Management Tool").license("")
-				.licenseUrl("").version("2.0").build();
+		return new ApiInfoBuilder().title("Lead+").description("Lead+ - Lead Management Tool").license("").licenseUrl("").version("2.0").build();
 	}
 
 	@Bean
@@ -84,6 +88,28 @@ public class Application {
 	@Bean
 	public Validation validation() {
 		return new Validation();
+	}
+
+	@Bean
+	public freemarker.template.Configuration cfg() {
+		return new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_25);
+	}
+
+	@Bean
+	public FreeMarkerConfigurer freeMarkerConfigurer(WebApplicationContext applicationContext) throws IOException, TemplateException {
+		FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
+		freemarker.template.Configuration configuration = configurer.createConfiguration();
+		configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
+		configuration.setDefaultEncoding("UTF-8");
+		configuration.setOutputEncoding("UTF-8");
+		configuration.setURLEscapingCharset("UTF-8");
+		configurer.setConfiguration(configuration);
+		return configurer;
+	}
+
+	@Bean
+	public StringTemplateLoader stringTemplateLoader() {
+		return new StringTemplateLoader();
 	}
 
 	@Configuration
@@ -105,16 +131,14 @@ public class Application {
 		protected void configure(HttpSecurity http) throws Exception {
 
 			http.httpBasic().and().authorizeRequests()
-					.antMatchers("/", "/images/favicon**", "/assets/**", "/fonts/**", "/app/**",
-							"/components/Login/view/Login.html", "/components/Signup/view/Signup.html",
-							"/api/rest/registrations/**", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
+					.antMatchers("/", "/images/favicon**", "/assets/**", "/fonts/**", "/app/**", "/components/Login/view/Login.html",
+							"/components/Signup/view/Signup.html", "/api/rest/registrations/**", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
 							"/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")
-					.permitAll().antMatchers("/api/rest/public**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")
-					.anyRequest().authenticated().antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER")
-					.anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
-					.csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().headers().frameOptions()
-					.sameOrigin().httpStrictTransportSecurity().disable().and().logout()
-					.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/#/login");
+					.permitAll().antMatchers("/api/rest/public**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API").anyRequest().authenticated().antMatchers("/**")
+					.hasAnyAuthority("SUPERADMIN,ADMIN,USER").anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
+					.csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().headers().frameOptions().sameOrigin()
+					.httpStrictTransportSecurity().disable().and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+					.logoutSuccessUrl("/#/login");
 
 			http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
 		}

@@ -58,12 +58,16 @@ function config($translateProvider) {
             SIGNUP_LASTNAME: "Nachname",
             SIGNUP_VALIDATE_FIRSTNAME_TO_SHORT: "Vorname muss mindestens 2 Zeichen enthalten",
             SIGNUP_VALIDATE_LASTNAME_TO_SHORT: "Nachname muss mindestens 2 Zeichen enthalten",
-            SIGNUP_VALIDATE_PHONE_TO_SHORT: "Telefonnummer muss mindestens 2 Zeichen enthalten",
             SIGNUP_VALIDATE_USER_IN_USE: "Benutzername schon vergeben",
             SIGNUP_VALIDATE_USER_TO_SHORT: "Benutzername muss mindestens 2 Zeichen enthalten",
             SIGNUP_VALIDATE_USER_TO_LONG: "Benutzername darf höchstens 20 Zeichen enthalten",
             SIGNUP_VALIDATE_EMAIL_IN_USE: "E-Mail schon vergeben",
             SIGNUP_VALIDATE_PASSWORD_TO_LONG: "Passwort darf höchstens 20 Zeichen enthalten",
+
+            PROFIL_VALIDATE_PHONE_TO_SHORT: "Telefonnummer muss mindestens 2 Zeichen enthalten",
+            PROFIL_VALIDATE_SKYPE_TO_SHORT: "Skype muss mindestens 2 Zeichen enthalten",
+            PROFIL_VALIDATE_FAX_TO_SHORT: "FAX muss mindestens 2 Zeichen enthalten",
+            PROFIL_VALIDATE_JOB_TO_SHORT: "Job muss mindestens 2 Zeichen enthalten",
 
             // Define common elements
             MR: "Herr",
@@ -87,6 +91,9 @@ function config($translateProvider) {
             EMAIL_ATTACHMENT: "Anhang",
             EMAIL_MESSAGE: "Nachricht",
 
+            COMMON_SKYPE: "Skype",
+            COMMON_FAX: "Fax",
+            COMMON_JOB: "Berufsbezeichnung",
             COMMON_LOAD_MORE: "weitere laden",
             COMMON_CURRENCY: "€",
             COMMON_UPLOAD_NEW_IMAGE: "Neues Bild hochladen",
@@ -452,12 +459,16 @@ function config($translateProvider) {
             SIGNUP_LASTNAME: "Lastname",
             SIGNUP_VALIDATE_FIRSTNAME_TO_SHORT: "Firstname has to contain 2 or more characters",
             SIGNUP_VALIDATE_LASTNAME_TO_SHORT: "Lastname has to contain 2 or more characters",
-            SIGNUP_VALIDATE_PHONE_TO_SHORT: "Phone has to contain 2 or more characters",
             SIGNUP_VALIDATE_USER_IN_USE: "Username already in use",
             SIGNUP_VALIDATE_USER_TO_SHORT: "Username has to contain 2 or more characters",
             SIGNUP_VALIDATE_USER_TO_LONG: "Username has to contain 20 or less characters",
             SIGNUP_VALIDATE_EMAIL_IN_USE: "E-Mail already in use",
             SIGNUP_VALIDATE_PASSWORD_TO_LONG: "Password have to contain 20 or less characters",
+
+            PROFIL_VALIDATE_PHONE_TO_SHORT: "Telefonnummer has to contain 2 or more characters",
+            PROFIL_VALIDATE_SKYPE_TO_SHORT: "Skype has to contain 2 or more characters",
+            PROFIL_VALIDATE_FAX_TO_SHORT: "FAX has to contain 2 or more characters",
+            PROFIL_VALIDATE_JOB_TO_SHORT: "Job has to contain 2 or more characters",
 
             // Define common elements
             MR: "Mr.",
@@ -481,6 +492,9 @@ function config($translateProvider) {
             EMAIL_ATTACHMENT: "Attachment",
             EMAIL_MESSAGE: "Message",
 
+            COMMON_SKYPE: "Skype",
+            COMMON_FAX: "Fax",
+            COMMON_JOB: "Job Description",
             COMMON_LOAD_MORE: "more",
             COMMON_UPLOAD_NEW1_IMAGE: "Upload new image",
             COMMON_CURRENCY: "€",

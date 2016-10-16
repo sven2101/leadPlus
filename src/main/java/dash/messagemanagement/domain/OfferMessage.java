@@ -11,21 +11,20 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash.messagemanagement.domain;
 
-package dash.messagemanagement.business;
+import dash.fileuploadmanagement.domain.FileUpload;
 
-import java.io.IOException;
+public class OfferMessage extends AbstractMessage {
 
-import dash.exceptions.NotFoundException;
-import dash.messagemanagement.domain.AbstractMessage;
-import dash.offermanagement.domain.Offer;
-import freemarker.template.TemplateException;
+	/**
+	 * @param recipient - guy who receives this Message  
+	 * @param subject - subject of this specific Message
+	 * @param content - content of this specific Message 
+	 * @param attachment - attachment of this specific Message 
+	 */
+	public OfferMessage(String recipient, String subject, String content, FileUpload attachment) {
+		super(recipient, subject, content, attachment);
+	}
 
-public interface IMessageService {
-
-	String getRecipient();
-
-	String getSubject();
-
-	AbstractMessage getOfferContent(final Offer offer, String templateWithPlaceholders) throws IOException, NotFoundException, TemplateException;
 }

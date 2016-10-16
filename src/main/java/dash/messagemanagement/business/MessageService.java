@@ -11,34 +11,44 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.messagemanagement.domain;
+package dash.messagemanagement.business;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
+import dash.exceptions.NotFoundException;
+import dash.messagemanagement.domain.AbstractMessage;
+import dash.messagemanagement.domain.OfferMessage;
 import dash.offermanagement.domain.Offer;
+import dash.usermanagement.business.IUserService;
+import dash.usermanagement.domain.User;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
-public class OfferMessage extends AbstractMessage {
+@Service
+public class MessageService implements IMessageService {
 
-	private StringTemplateLoader stringLoader;
+	@Autowired
+	private Configuration cfg;
 
-	@JsonIgnore
-	private Offer offer;
+	@Autowired
+	private StringTemplateLoader stringTemplateLoader;
 
-	private String template;
+	@Autowired
+	private IUserService userService;
 
-	public OfferMessage(Offer offer, String template) {
-		super(offer.getCustomer().getEmail());
-		this.stringLoader = new StringTemplateLoader();
-		this.offer = offer;
-		this.template = template;
+	@Override
+	public String getRecipient() {
+		return null;
 	}
 
 	@Override
@@ -46,49 +56,32 @@ public class OfferMessage extends AbstractMessage {
 		return "Angebot";
 	}
 
-	private String unescapeString(String escapedString) {
-		return escapedString.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+	@Override
+	public AbstractMessage getOfferContent(final Offer offer, final String templateWithPlaceholders) throws IOException, NotFoundException, TemplateException {
+
+		cfg.setTemplateLoader(stringTemplateLoader);
+		stringTemplateLoader.putTemplate("template", unescapeString(templateWithPlaceholders));
+
+		Template template = cfg.getTemplate("template");
+
+		Map<String, Object> mapping = new HashMap<>();
+
+		mapping.put("offer", offer);
+		mapping.put("customer", offer.getCustomer());
+		mapping.put("orderPositions", offer.getOrderPositions());
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (user != null)
+			mapping.put("user", user);
+
+		Writer writer = new StringWriter();
+		template.process(mapping, writer);
+
+		return new OfferMessage(offer.getNotification().getRecipient(), offer.getNotification().getSubject(), writer.toString(),
+				offer.getNotification().getAttachment());
 	}
 
-	@Override
-	public String getContent() throws Exception {
-		String unescapedString = unescapeString(this.template);
-		stringLoader.putTemplate("greetTemplate", unescapedString);
-
-		@SuppressWarnings("deprecation")
-		Configuration cfg = new Configuration();
-		cfg.setTemplateLoader(stringLoader);
-		Writer writer = new StringWriter();
-
-		freemarker.template.Template template = null;
-
-		try {
-			template = cfg.getTemplate("greetTemplate");
-			writer = new StringWriter();
-
-			String deliveryDate = "";
-
-			if (this.offer.getDeliveryDate() != null) {
-				SimpleDateFormat format1 = new SimpleDateFormat("dd.MM.yyyy");
-				deliveryDate = format1.format(this.offer.getDeliveryDate().getTime());
-			}
-
-			Map<String, Object> mapping = new HashMap<String, Object>();
-			mapping.put("titel", String.valueOf(this.offer.getCustomer().getTitle()));
-			mapping.put("firstname", String.valueOf(this.offer.getCustomer().getFirstname()));
-			mapping.put("lastname", String.valueOf(this.offer.getCustomer().getLastname()));
-			mapping.put("deliveryAddress", String.valueOf(this.offer.getDeliveryAddress()));
-			mapping.put("offerPrice", String.valueOf(this.offer.getOfferPrice()));
-			mapping.put("deliveryDate", deliveryDate);
-			template.process(mapping, writer);
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			throw ex;
-		}
-
-		System.out.println("Template Renderer: " + writer.toString());
-		return writer.toString();
+	private String unescapeString(String escapedString) {
+		return escapedString.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
 	}
 
 }
