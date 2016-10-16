@@ -2,6 +2,8 @@
 /// <reference path="../../common/model/OrderPosition.Model.ts" />
 /// <reference path="../../common/model/IWorkflow.Interface.ts" />
 /// <reference path="../../Customer/model/Customer.Model.ts" />
+/// <reference path="../../common/model/IWorkflow.Interface.ts" />
+/// <reference path="../../Notification/model/Notification.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -21,6 +23,7 @@ class Lead extends AbstractModel implements IWorkflow {
     deliveryAddress: any;
     message: string;
     deliveryCosts: number;
+
 
     constructor() {
         super();

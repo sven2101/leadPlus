@@ -45,6 +45,7 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.business.ILeadService;
 import dash.leadmanagement.domain.Lead;
+import dash.notificationmanagement.domain.Notification;
 import dash.offermanagement.business.IOfferService;
 import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
@@ -86,8 +87,7 @@ public class ProcessService implements IProcessService {
 			// TODO Workaround to get inContacts - function should accept an
 			// array
 			processes.addAll(processRepository.findByStatusAndLeadIsNotNull(Status.INCONTACT));
-		} 
-		else if (workflow.equals(Workflow.OFFER)) {
+		} else if (workflow.equals(Workflow.OFFER)) {
 			processes = processRepository.findByStatusAndOfferIsNotNull(status);
 			// TODO Workaround to get followups - function should accept an
 			// array
@@ -102,6 +102,7 @@ public class ProcessService implements IProcessService {
 	public void saveProcesses(List<Process> processes) throws SaveFailedException {
 		for (Process process : processes) {
 			setOrderPositions(process);
+			setNotifications(process);
 			if (Optional.ofNullable(process.getLead()).isPresent())
 				leadService.save(process.getLead());
 			if (Optional.ofNullable(process.getOffer()).isPresent())
@@ -110,7 +111,8 @@ public class ProcessService implements IProcessService {
 				try {
 					process.setProcessor(userService.getUserByName("admin"));
 				} catch (NotFoundException nfex) {
-					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, nfex);
+					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+							nfex);
 				}
 				saleService.save(process.getSale());
 			}
@@ -122,6 +124,7 @@ public class ProcessService implements IProcessService {
 	public Process save(final Process process) throws SaveFailedException {
 		if (Optional.ofNullable(process).isPresent()) {
 			setOrderPositions(process);
+			setNotifications(process);
 			if (process.getComments() != null) {
 				for (Comment comment : process.getComments()) {
 					comment.setProcess(process);
@@ -142,7 +145,8 @@ public class ProcessService implements IProcessService {
 			process.setLead(lead);
 			process.setStatus(Status.OPEN);
 			setOrderPositions(process);
-			return processRepository.save(process).getLead();
+			setNotifications(process);
+			return save(process).getLead();
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
 		}
@@ -159,7 +163,8 @@ public class ProcessService implements IProcessService {
 			}
 			process.setOffer(offer);
 			setOrderPositions(process);
-			return processRepository.save(process).getOffer();
+			setNotifications(process);
+			return save(process).getOffer();
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
 		}
@@ -171,7 +176,8 @@ public class ProcessService implements IProcessService {
 		if (Optional.ofNullable(process).isPresent()) {
 			process.setSale(sale);
 			setOrderPositions(process);
-			return processRepository.save(process).getSale();
+			setNotifications(process);
+			return save(process).getSale();
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
 		}
@@ -188,6 +194,7 @@ public class ProcessService implements IProcessService {
 
 		process.setProcessor(processor);
 		setOrderPositions(process);
+		setNotifications(process);
 		processRepository.save(process);
 
 		return processor;
@@ -260,6 +267,7 @@ public class ProcessService implements IProcessService {
 				Process process = getById(id);
 				process.setProcessor(null);
 				setOrderPositions(process);
+				setNotifications(process);
 				save(process);
 			} catch (EmptyResultDataAccessException | SaveFailedException | NotFoundException ex) {
 				logger.error(ProcessService.class.getSimpleName() + ex.getMessage(), ex);
@@ -272,11 +280,13 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process setStatus(long id, String status) throws SaveFailedException, NotFoundException, UpdateFailedException {
+	public Process setStatus(long id, String status)
+			throws SaveFailedException, NotFoundException, UpdateFailedException {
 		if (Optional.ofNullable(status).isPresent()) {
 			Process process = getById(id);
 			process.setStatus(Status.valueOf(status));
 			setOrderPositions(process);
+			setNotifications(process);
 			return save(process);
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
@@ -305,6 +315,15 @@ public class ProcessService implements IProcessService {
 				temp.setWorkflow(process.getSale());
 			}
 		}
+	}
+
+	private void setNotifications(Process process) {
+		if (process.getNotifications() != null) {
+			for (Notification notification : process.getNotifications()) {
+				notification.setProcess(process);
+			}
+		}
+
 	}
 
 	@Override

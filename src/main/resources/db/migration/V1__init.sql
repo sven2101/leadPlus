@@ -344,26 +344,6 @@ WITH (
 ALTER TABLE lead
   OWNER TO postgres;
 
--- Table: notification
-
-CREATE TABLE IF NOT EXISTS notification
-(
-  id bigint NOT NULL DEFAULT nextval('notification_id_seq'::regclass),
-  content character varying(30000),
-  deleted boolean NOT NULL,
-  recipient character varying(255),
-  subject character varying(255),
-  attachment_id bigint,
-  CONSTRAINT notification_pkey PRIMARY KEY (id),
-  CONSTRAINT fker61rsj10b0uasld2vim4ym2e FOREIGN KEY (attachment_id)
-      REFERENCES fileupload (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE notification
-  OWNER TO postgres;
 
 -- Table: offer
 
@@ -379,17 +359,14 @@ CREATE TABLE IF NOT EXISTS offer
   vendor_fk bigint,
   deliverydate timestamp with time zone,
   offerprice double precision NOT NULL,
-  notification_id bigint,
+ 
   CONSTRAINT offer_pkey PRIMARY KEY (id),
   CONSTRAINT fk_6mogpqxa4c87k261g07yentij FOREIGN KEY (vendor_fk)
       REFERENCES vendor (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT fk_d552vlot1wyami90791a3ru5e FOREIGN KEY (customer_fk)
       REFERENCES customer (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT fkh32vdgri1org99pnveo45ln6w FOREIGN KEY (notification_id)
-      REFERENCES notification (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+      ON UPDATE NO ACTION ON DELETE NO ACTION  
 )
 WITH (
   OIDS=FALSE
@@ -450,7 +427,33 @@ WITH (
 ALTER TABLE process
   OWNER TO postgres;
 
-    
+-- Table: notification
+
+CREATE TABLE IF NOT EXISTS notification
+(
+  id bigint NOT NULL DEFAULT nextval('notification_id_seq'::regclass),
+  process_id bigint NOT NULL,
+  notificationtype character varying(255),
+  content character varying(30000),
+  deleted boolean NOT NULL,
+  recipient character varying(255),
+  subject character varying(255),
+  attachment_id bigint,
+  CONSTRAINT notification_pkey PRIMARY KEY (id),
+  CONSTRAINT fker61rsj10b0uasld2vim4ym2e FOREIGN KEY (attachment_id)
+      REFERENCES fileupload (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+   CONSTRAINT notification_process FOREIGN KEY (process_id)
+      REFERENCES process (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE notification
+  OWNER TO postgres;
+ 
+ 
 -- Table: comment
 
 CREATE TABLE IF NOT EXISTS comment

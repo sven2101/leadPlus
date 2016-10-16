@@ -1,60 +1,59 @@
 <form name="form">
-    <div>
-        <div class="form-group">
-            <label>{{ 'EMAIL_TEMPLATE' | translate }}</label>
-            <select ng-disabled="parent.editEmail" class="form-control" ng-model="templateId" ng-change="parent.generate(templateId, parent.editWorkflowUnit)">
+
+	<div>	
+		<div class="form-group">
+			<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>
+			<select ng-disabled="parent.editEmail" class="form-control" ng-model="templateId" ng-change="parent.generate(templateId, parent.editWorkflowUnit)">
                 <option value="-1" selected>{{ 'EMAIL_TEMPLATE_SELECT' | translate }}</option>                                                                     
                 <option value="{{template.id}}" ng-repeat="template in parent.templates">{{template.name}}</option>                                           
             </select>
-        </div>
-    </div>
-    <div>
-        <div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.recipient.$invalid}">
-            <label>{{ 'EMAIL_RECIPIENT' | translate }}</label>
-            <input ng-disabled="parent.editEmail" name="recipient" required type="email" class="form-control" ng-model="parent.editWorkflowUnit.notification.recipient"
-                ng-minlength="5">
-            <p ng-show="parent.emailEditForm.recipient.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}5{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-            <p ng-show="parent.emailEditForm.recipient.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
-            <p ng-show="parent.emailEditForm.recipient.$error.email" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
-        </div>
-        <div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.subject.$invalid}">
-            <label>{{ 'EMAIL_SUBJECT' | translate }}</label>
-            <input ng-disabled="parent.editEmail" name="subject" required type="text" class="form-control" ng-model="parent.editWorkflowUnit.notification.subject"
-                ng-minlength="3">
-            <p ng-show="parent.emailEditForm.subject.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_MIN' | translate }}3{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-            <p ng-show="parent.emailEditForm.subject.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
-        </div>
+		</div>
+		<div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.recipient.$invalid}">
+			<label>{{ 'EMAIL_RECIPIENT' | translate }}</label>
+			<input ng-disabled="parent.editEmail" name="recipient" required type="email" class="form-control" ng-model="parent.currentNotification.recipient"
+				ng-minlength="5">
+			<p ng-show="parent.emailEditForm.recipient.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}5{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+			<p ng-show="parent.emailEditForm.recipient.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+			<p ng-show="parent.emailEditForm.recipient.$error.email" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
+		</div>
+		<div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.subject.$invalid}">
+			<label>{{ 'EMAIL_SUBJECT' | translate }}</label>
+			<input ng-disabled="parent.editEmail" name="subject" required type="text" class="form-control" ng-model="parent.currentNotification.subject"
+				ng-minlength="3">
+			<p ng-show="parent.emailEditForm.subject.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_MIN' | translate }}3{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+			<p ng-show="parent.emailEditForm.subject.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+		</div>
 
-        <div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.attachement.$invalid}">
-            <label>{{ 'EMAIL_ATTACHMENT' | translate }}</label>
-            <br/>
-            <div class="fileinput fileinput-new" data-provides="fileinput">
-                <span class="btn btn-default btn-file"><span class="fileinput-new">Select file</span>
-                <span class="fileinput-exists">Change </span>
-                <input ng-disabled="parent.editEmail" name="attachement" required type="file" name="..." multiple ng-files="parent.getTheFiles($files)"
-                    accept="application/pdf,image/gif,image/jpeg">
-                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                </input>
-                </span>
-                <span class="fileinput-filename"></span>
-                <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
-            </div>
-            <a ng-click="parent.openOfferAttachment()">{{parent.editWorkflowUnit.notification.attachment.filename}}</a>
-            <br/>
-        </div>
-        <div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.editWorkflowUnit.message.$invalid}">
-            <label>{{ 'EMAIL_MESSAGE' | translate }}</label>
-            <br/>
-            <div ng-if="!parent.editEmail" class="summernote">
-                <summernote name="message" required ng-model="parent.editWorkflowUnit.notification.content">{{parent.editWorkflowUnit.notification.content}}</summernote>
-            </div>
-            <div style="border-style:solid;" ng-if="parent.editEmail ">
-                {{parent.editWorkflowUnit.notification.content}}
-            </div>
+		<div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.attachement.$invalid}">
+			<label>{{ 'EMAIL_ATTACHMENT' | translate }}</label>
+			<br/>
+			<div class="fileinput fileinput-new" data-provides="fileinput">
+				<span class="btn btn-default btn-file"><span class="fileinput-new">Select file</span>
+				<span class="fileinput-exists">Change </span>
+				<input ng-disabled="parent.editEmail" name="attachement" required type="file" name="..." multiple ng-files="parent.getTheFiles($files)"
+					accept="application/pdf,image/gif,image/jpeg">
+				<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+				</input>
+				</span>
+				<span class="fileinput-filename"></span>
+				<a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
+			</div>
+			<a ng-click="parent.openOfferAttachment()">{{parent.currentNotification.attachment.filename}}</a>
+			<br/>
+		</div>
+		<div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.message.$invalid}">
+			<label>{{ 'EMAIL_MESSAGE' | translate }}</label>
+			<br/>
+			<div ng-if="!parent.editEmail" class="summernote">
+				<summernote name="message" required ng-model="parent.currentNotification.content">{{parent.currentNotification.content}}</summernote>
+			</div>
+			<div style="border-style:solid;" ng-if="parent.editEmail ">
+				{{parent.currentNotification.content}}
+			</div>
 
-            <p ng-show="parent.emailEditForm.message.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
-        </div>
-    </div>
+			<p ng-show="parent.emailEditForm.message.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+		</div>
+	</div>
 </form>
 
 <script language="javascript " type="text/javascript ">

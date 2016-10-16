@@ -196,7 +196,6 @@ class WorkflowService {
             timestamp: newTimestamp(),
             vendor: process.lead.vendor,
             deliveryCosts: process.lead.deliveryCosts,
-            notification: null,
             message: process.lead.message
         };
         for (let i = 0; i < process.offer.orderPositions.length; i++) {
@@ -230,7 +229,7 @@ class WorkflowService {
                 process.offer = resultOffer;
                 process.status = resultProcess.status;
                 if (resultProcess.processor === null) {
-                    self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function (resultUser: User) {
+                    self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function (resultUser: User) {                    
                         process.processor = resultUser;
                         defer.resolve(process);
                         self.rootScope.$broadcast("onTodosChange");
@@ -469,9 +468,7 @@ class WorkflowService {
             return defer.promise;
         }
         let self = this;
-        this.processResource.drop({
-            id: process.id
-        }).$promise.then(function (data) {
+        this.processResource.update(process).$promise.then(function (data) {
             defer.resolve(data);
         }, function (error) {
             defer.reject(error);

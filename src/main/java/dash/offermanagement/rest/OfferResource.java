@@ -16,13 +16,10 @@ package dash.offermanagement.rest;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -30,8 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
-import dash.exceptions.SaveFailedException;
-import dash.exceptions.UpdateFailedException;
 import dash.offermanagement.business.IOfferService;
 import dash.offermanagement.domain.Offer;
 import io.swagger.annotations.Api;
@@ -39,7 +34,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Offer Resource")
-@RequestMapping(value = "/api/rest/offers", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/offers", consumes = { MediaType.ALL_VALUE }, produces = {
+		MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Offers API")
 public class OfferResource {
 
@@ -58,20 +54,6 @@ public class OfferResource {
 	@ResponseStatus(HttpStatus.OK)
 	public Offer getOfferById(@PathVariable final long id) throws NotFoundException {
 		return offerService.getOfferById(id);
-	}
-
-	@ApiOperation(value = "Save a single offer.", notes = "")
-	@RequestMapping(method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.CREATED)
-	public Offer save(@ApiParam(required = true) @RequestBody @Valid Offer offer) throws SaveFailedException, NotFoundException {
-		return offerService.save(offer);
-	}
-
-	@ApiOperation(value = "Update a single offer.", notes = "")
-	@RequestMapping(method = RequestMethod.PUT)
-	@ResponseStatus(HttpStatus.OK)
-	public Offer update(@ApiParam(required = true) @RequestBody @Valid Offer offer) throws UpdateFailedException {
-		return offerService.update(offer);
 	}
 
 	@ApiOperation(value = "Delete a single offer.", notes = "")
