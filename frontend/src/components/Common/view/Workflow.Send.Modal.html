@@ -34,7 +34,7 @@
 		ng-click="parent.send() ">{{ 'COMMON_CONTINUE_AND_SENDING'| translate }}</button>
 	<button ng-if="type == 'offer'" type="button " class="btn btn-warning " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid"
 		ng-click="parent.save() ">{{ 'COMMON_CONTINUE_WITHOUT_SENDING'| translate }}</button>
-	<button ng-if="type == 'sale'" type="button " class="btn btn-warning " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid || parent.saleEditForm.$invalid"
+	<button ng-if="type == 'sale'" type="button " class="btn btn-primary " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid || parent.saleEditForm.$invalid"
 		ng-click="parent.save() ">{{ 'OFFER_CREATE_SALE'| translate }}</button>
 </div>
 

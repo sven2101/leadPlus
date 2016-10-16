@@ -9,14 +9,18 @@
 				<div id="wizard" role="application" class="wizard clearfix">
 					<div class="steps clearfix">
 						<ul role="tablist">
-							<li ng-click="parent.wizardOnClick(1)" role="tab" class="{{parent.currentWizard1Class}}" aria-disabled="false" aria-selected="true"><a aria-controls="wizard-p-0"><span class="current-info audible">current step: </span><span class="number">1.</span> {{ 'CUSTOMER'| translate }}</a></li>
-							<li ng-click="parent.wizardOnClick(2)" role="tab" class="{{parent.currentWizard2Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-1"><span class="number">2.</span> {{ 'LEAD'| translate }}</a></li>
-							<li ng-click="parent.wizardOnClick(3)" role="tab" class="{{parent.currentWizard3Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-2"><span class="number">3.</span> {{ 'SUPPLY'| translate }}</a></li>
-							<li ng-click="parent.wizardOnClick(4)" role="tab" class="{{parent.currentWizard4Class}}" aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-3"><span class="number">4.</span> {{ 'COMMON_PRODUCT_CALCULATION'| translate }}</a></li>
-							<li ng-if="type=='offer' || type=='sale'" ng-click="parent.wizardOnClick(5)" role="tab" class="{{parent.currentWizard5Class}}"
+							<li ng-click="parent.wizardOnClick(1)" role="tab" ng-class="{error:parent.customerEditForm.$invalid,current:parent.currentWizard==1,done:parent.currentWizard!=1}"
+								aria-disabled="false" aria-selected="true"><a aria-controls="wizard-p-0"><span class="current-info audible">current step: </span><span class="number">1.</span> {{ 'CUSTOMER'| translate }}</a></li>
+							<li ng-click="parent.wizardOnClick(2)" role="tab" ng-class="{error:parent.leadEditForm.$invalid,current:parent.currentWizard==2,done:parent.currentWizard!=2}"
+								aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-1"><span class="number">2.</span> {{ 'LEAD'| translate }}</a></li>
+							<li ng-click="parent.wizardOnClick(3)" role="tab" ng-class="{error:parent.supplyEditForm.$invalid,current:parent.currentWizard==3,done:parent.currentWizard!=3}"
+								aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-2"><span class="number">3.</span> {{ 'SUPPLY'| translate }}</a></li>
+							<li ng-click="parent.wizardOnClick(4)" role="tab" ng-class="{error:parent.priceEditForm.$invalid,current:parent.currentWizard==4,done:parent.currentWizard!=4}"
+								aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-3"><span class="number">4.</span> {{ 'COMMON_PRODUCT_CALCULATION'| translate }}</a></li>
+							<li ng-if="type=='offer' || type=='sale'" ng-click="parent.wizardOnClick(5)" role="tab" ng-class="{error:parent.emailEditForm.$invalid,current:parent.currentWizard==5,done:parent.currentWizard!=5}"
 								aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-5"><span class="number">5.</span> {{ 'EMAIL'| translate }}</a></li>
-							<li ng-if="type=='sale'" ng-click="parent.wizardOnClick(6)" role="tab" class="{{parent.currentWizard6Class}}" aria-disabled="false"
-								aria-selected="false"><a aria-controls="wizard-p-6"><span class="number">6.</span> {{ 'SALE'| translate }}</a></li>
+							<li ng-if="type=='sale'" ng-click="parent.wizardOnClick(6)" role="tab" ng-class="{error:parent.saleEditForm.$invalid,current:parent.currentWizard==6,done:parent.currentWizard!=6}"
+								aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-6"><span class="number">6.</span> {{ 'SALE'| translate }}</a></li>
 						</ul>
 					</div>
 					<div class="clearfix">
@@ -31,8 +35,8 @@
 			</div>
 			<div class="modal-footer ">
 				<button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL'| translate }}</button>
-				<button type="submit" class="btn btn-primary" ng-disabled="parent.customerEditForm.$invalid" ng-click="parent.save(parent.edit)"
-					data-dismiss="modal ">{{ 'COMMON_SAVE'| translate }}</button>
+				<button type="submit" class="btn btn-primary" ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid || parent.saleEditForm.$invalid"
+					ng-click="parent.save(parent.edit)" data-dismiss="modal ">{{ 'COMMON_SAVE'| translate }}</button>
 			</div>
 		</div>
 	</div>
