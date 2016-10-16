@@ -4,6 +4,7 @@
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 /// <reference path="../../Template/controller/Template.Controller.ts" />
 /// <reference path="../../Common/model/Promise.Interface.ts" />
+/// <reference path="../../Template/model/OfferMessageContext.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -106,10 +107,13 @@ class TemplateService {
         });
     }
 
-    generate(templateId: string, offer: Offer): IPromise<Notification> {
+    generate(templateId: string, offer: Offer, notification: Notification): IPromise<Notification> {
         let defer = this.q.defer();
         let self = this;
-        this.templateResource.generate({ templateId: templateId }, offer).$promise.then(function (resultMessage: Notification) {
+        let offerMessageContext: OfferMessageContext = new OfferMessageContext();
+        offerMessageContext.offer = offer;
+        offerMessageContext.notification = notification;
+        this.templateResource.generate({ templateId: templateId }, offerMessageContext).$promise.then(function (resultMessage: Notification) {
             console.log(resultMessage);
             defer.resolve(resultMessage);
         }, function (error: any) {

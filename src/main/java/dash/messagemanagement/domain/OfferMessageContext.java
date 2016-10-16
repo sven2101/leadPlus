@@ -11,23 +11,38 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+package dash.messagemanagement.domain;
 
-package dash.messagemanagement.business;
+import javax.validation.constraints.NotNull;
 
-import java.io.IOException;
-
-import dash.exceptions.NotFoundException;
-import dash.messagemanagement.domain.AbstractMessage;
 import dash.notificationmanagement.domain.Notification;
 import dash.offermanagement.domain.Offer;
-import freemarker.template.TemplateException;
 
-public interface IMessageService {
+public class OfferMessageContext {
 
-	String getRecipient();
+	@NotNull
+	private Offer offer;
 
-	String getSubject();
+	@NotNull
+	private Notification notification;
 
-	AbstractMessage getOfferContent(final Offer offer, String templateWithPlaceholders, final Notification notification)
-			throws IOException, NotFoundException, TemplateException;
+	public OfferMessageContext() {
+	}
+
+	public Offer getOffer() {
+		return offer;
+	}
+
+	public void setOffer(Offer offer) {
+		this.offer = offer;
+	}
+
+	public Notification getNotification() {
+		return notification;
+	}
+
+	public void setNotification(Notification notification) {
+		this.notification = notification;
+	}
+
 }

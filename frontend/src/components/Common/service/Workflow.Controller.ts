@@ -171,8 +171,7 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     generate(templateId: string, offer: Offer) {
-        console.log(templateId);
-        this.templateService.generate(templateId, offer).then((result) => this.currentNotification = result, (error) => console.log(error));
+        this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => console.log(error));
     }
 
     generatePDF(templateId: string, offer: Offer) {
