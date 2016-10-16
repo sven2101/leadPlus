@@ -80,14 +80,7 @@ class OfferController extends AbstractWorkflow {
         this.compile = $compile;
         this.window = $window;
         this.templateService = TemplateService;
-
         this.currentWizard = 1;
-        this.currentWizard1Class = "current";
-        this.currentWizard2Class = "done";
-        this.currentWizard3Class = "done";
-        this.currentWizard4Class = "done";
-        this.currentWizard5Class = "done";
-        this.currentWizard6Class = "done";
 
         let self = this;
         function createdRow(row, data: Process, dataIndex) {
@@ -127,6 +120,10 @@ class OfferController extends AbstractWorkflow {
         this.dtOptions = this.offerDataTableService.getDTOptionsConfiguration(createdRow, searchLink);
         this.dtColumns = this.offerDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
         this.getAllActiveTemplates();
+
+        $rootScope.$on("deleteRow", (event, data) => {
+            self.offerService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
+        });
 
     }
 
@@ -201,7 +198,8 @@ class OfferController extends AbstractWorkflow {
     }
 
     createNextWorkflowUnit(process: Process) {
-        this.offerService.createSale(process, this.loadAllData, this.dtInstance, this.scope);
+        // this.offerService.createSale(process, this.loadAllData, this.dtInstance, this.scope);
+        this.workflowService.startSaleTransformation(process);
     }
 
     closeOrOpen(process: Process) {
@@ -233,28 +231,28 @@ class OfferController extends AbstractWorkflow {
     rollBack(process: Process): void {
         this.offerService.rollBack(process, this.dtInstance, this.scope);
     }
-
-    openOfferAttachment() {
-        let self = this;
-        let part1 = "data:application/pdf;base64,";
-        let part2 = this.editWorkflowUnit.notification.attachment.content;
-        let blob1 = part1.concat(part2);
-        /*
-        console.log("Im in !", blob1);
-        let file = new Blob([blob1], { type: "application/pdf" });
-        let fileURL = URL.createObjectURL(file);
-        this.window.open(fileURL);
-*/
-        let blob = new Blob([this.editWorkflowUnit.notification.attachment.content], { type: "application/pdf" });
-
-        let reader = new FileReader();
-        reader.readAsDataURL(blob);
-
-        reader.onloadend = function () {
-            self.window.open(this.result);
-        };
-    }
-
+    /*
+        openOfferAttachment() {
+            let self = this;
+            let part1 = "data:application/pdf;base64,";
+            let part2 = this.editWorkflowUnit.notification.attachment.content;
+            let blob1 = part1.concat(part2);
+            
+            console.log("Im in !", blob1);
+            let file = new Blob([blob1], { type: "application/pdf" });
+            let fileURL = URL.createObjectURL(file);
+            this.window.open(fileURL);
+    
+            let blob = new Blob([this.editWorkflowUnit.notification.attachment.content], { type: "application/pdf" });
+    
+            let reader = new FileReader();
+            reader.readAsDataURL(blob);
+    
+            reader.onloadend = function () {
+                self.window.open(this.result);
+            };
+        }
+    */
     getAllActiveTemplates() {
         let self = this;
         this.templateService.getAll().then((result) => self.templates = result, (error) => console.log(error));

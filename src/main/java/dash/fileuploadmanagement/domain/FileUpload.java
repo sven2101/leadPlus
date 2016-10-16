@@ -28,6 +28,9 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
@@ -58,6 +61,7 @@ public class FileUpload {
 
 	@NotNull
 	@Column(name = "content", nullable = false)
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private byte[] content;
 
 	@ApiModelProperty(hidden = true)
@@ -161,8 +165,8 @@ public class FileUpload {
 
 	@Override
 	public String toString() {
-		return "FileUpload [id=" + id + ", filename=" + filename + ", mimeType=" + mimeType + ", size=" + size + ", content=" + Arrays.toString(content)
-				+ ", deleted=" + deleted + "]";
+		return "FileUpload [id=" + id + ", filename=" + filename + ", mimeType=" + mimeType + ", size=" + size
+				+ ", content=" + Arrays.toString(content) + ", deleted=" + deleted + "]";
 	}
 
 }

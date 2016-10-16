@@ -20,7 +20,7 @@ const NotificationServiceId: string = "NotificationService";
 
 class NotificationService {
 
-    private $inject = [toasterId, $translateId, $rootScopeId, NotificationResourceId];
+    private $inject = [toasterId, $translateId, $rootScopeId, NotificationResourceId, $qId];
 
     toaster;
     translate;
@@ -29,35 +29,30 @@ class NotificationService {
     formdata;
     fileReader;
     notification: Notification;
+    q;
 
-    constructor(toaster, $translate, $rootScope, NotificationResource) {
+    constructor(toaster, $translate, $rootScope, NotificationResource, $q) {
         this.notificationResource = NotificationResource.resource;
         this.toaster = toaster;
         this.translate = $translate;
         this.rootScope = $rootScope;
+        this.q = $q;
         this.formdata = new FormData();
         this.fileReader = new FileReader();
         this.notification = new Notification();
     }
 
-    sendOffer(process: Process) {
+    sendNotification(notification: Notification): IPromise<boolean> {
         let self = this;
-        process.offer.notification.attachment = this.notification.attachment;
-        this.notificationResource.sendOffer({ userId: this.rootScope.globals.user.id}, process).$promise.then(function () {
+        let defer = this.q.defer();
+        this.notificationResource.sendNotification({ userId: this.rootScope.globals.user.id }, notification).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
+            defer.resolve(true);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));
+            defer.reject(false);
         });
-    }
-
-    sendSimple(notification: Notification) {
-        let self = this;
-        notification.attachment = this.notification.attachment;
-        this.notificationResource.sendSimple({ userId: this.rootScope.globals.user.id }, notification).$promise.then(function () {
-            self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));
-        });
+        return defer.promise;
     }
 
     getTheFiles($files) {

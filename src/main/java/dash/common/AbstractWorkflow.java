@@ -156,6 +156,10 @@ public abstract class AbstractWorkflow implements Request {
 		this.customer = customer;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public double getPrice() {
 		double sum = this.deliveryCosts;
 		for (int i = 0; i < this.orderPositions.size(); i++) {
@@ -238,8 +242,9 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Override
 	public String toString() {
-		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress + ", deleted=" + deleted + ", deliveryCosts="
-				+ deliveryCosts + ", orderPositions=" + orderPositions + ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + "]";
+		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress
+				+ ", deleted=" + deleted + ", deliveryCosts=" + deliveryCosts + ", orderPositions=" + orderPositions
+				+ ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + "]";
 	}
 
 }

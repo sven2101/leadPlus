@@ -27,8 +27,8 @@ class LeadResource {
             getAll: { url: "/api/rest/leads", method: "GET" },
             getById: { url: "/api/rest/leads/:id", method: "GET" },
             getByCustomerId: { url: "/api/rest/leads/customer/:id", method: "GET", isArray: true },
-            save: { url: "/api/rest/leads/", method: "POST" },
-            update: { url: "/api/rest/leads", method: "PUT" },
+            // save: { url: "/api/rest/leads/", method: "POST" },
+            // update: { url: "/api/rest/leads", method: "PUT" },
             drop: { url: "/api/rest/leads/:id", method: "DELETE" }
         });
     }
@@ -51,8 +51,8 @@ class OfferResource {
             getAll: { url: "/api/rest/offers", method: "GET" },
             getById: { url: "/api/rest/offers/:id", method: "GET" },
             getByCustomerId: { url: "/api/rest/offers/customer/:id", method: "GET", isArray: true },
-            save: { url: "/api/rest/offers/", method: "POST" },
-            update: { url: "/api/rest/offers", method: "PUT" },
+            // save: { url: "/api/rest/offers/", method: "POST" },
+            // update: { url: "/api/rest/offers", method: "PUT" },
             drop: { url: "/api/rest/offers/:id", method: "DELETE" },
         });
     }
@@ -75,8 +75,8 @@ class SaleResource {
             getAll: { url: "/api/rest/sales", method: "GET" },
             getById: { url: "/api/rest/sales/:id", method: "GET" },
             getByCustomerId: { url: "/api/rest/sales/customer/:id", method: "GET", isArray: true },
-            save: { url: "/api/rest/sales/", method: "POST" },
-            update: { url: "/api/rest/sales", method: "PUT" },
+            // save: { url: "/api/rest/sales/", method: "POST" },
+            // update: { url: "/api/rest/sales", method: "PUT" },
             drop: { url: "/api/rest/sales/:id", method: "DELETE" },
         });
     }
@@ -100,7 +100,7 @@ class ProcessResource {
             getStatus: { url: "/api/rest/processes/:id/status", method: "GET" },
             getAll: { url: "/api/rest/processes", method: "GET", isArray: true },
             save: { url: "/api/rest/processes", method: "POST" },
-            update: { url: "/api/rest/processes", method: "PUT" },
+            update: { url: "/api/rest/processes/update", method: "POST" },
             drop: { url: "/api/rest/processes/:id", method: "DELETE" },
 
             createOffer: { url: "/api/rest/processes/:id/offers", method: "POST" },
@@ -407,8 +407,7 @@ class NotificationResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/notifications", {}, {
-            sendOffer: { url: "/api/rest/notifications/users/:userId/offers/send", method: "POST" },
-            sendSimple: { url: "/api/rest/notifications/users/:userId/notifications/send", method: "POST" }
+            sendNotification: { url: "/api/rest/notifications/users/:userId/notifications/send", method: "POST" }
         });
     }
 }

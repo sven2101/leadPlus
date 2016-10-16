@@ -63,7 +63,7 @@ class OfferService {
 
     createSale(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {
         let self = this;
-        this.workflowService.addOfferToSale(process).then(function(isResolved: boolean) {
+        this.workflowService.addOfferToSale(process).then(function(isResolved: Process) {
             if (loadAllData === true) {
                 self.updateRow(process, loadAllData, scope);
             } else if (loadAllData === false) {

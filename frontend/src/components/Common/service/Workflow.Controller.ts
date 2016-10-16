@@ -28,11 +28,11 @@ class WorkflowController extends AbstractWorkflow {
 
     $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId, $rootScopeId];
 
-    type: string = "offer";
+    type: string;
 
     uibModalInstance;
 
-    editWorkflowUnit: Offer = new Offer();
+    editWorkflowUnit: any;
     process: Process;
     template: Template = new Template();
 
@@ -40,8 +40,8 @@ class WorkflowController extends AbstractWorkflow {
     products: Array<Product> = [];
 
     customerService: CustomerService;
-    productService: ProductService;
     notificationService: NotificationService;
+    productService: ProductService;
     templateService: TemplateService;
     workflowService: WorkflowService;
     dashboardService: DashboardService;
@@ -51,9 +51,11 @@ class WorkflowController extends AbstractWorkflow {
     currentProductAmount = 1;
     currentCustomerId = "-1";
     customerSelected: boolean = false;
+    currentNotification: Notification;
 
     editProcess: Process;
     edit: boolean;
+    editEmail: boolean;
 
     leadService: LeadService;
     offerService: OfferService;
@@ -65,17 +67,32 @@ class WorkflowController extends AbstractWorkflow {
     priceEditForm: any;
     emailEditForm: any;
     saleEditForm: any;
-    rootScope;
 
-    constructor(process, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, $rootScope) {
+    rootScope;
+    templateId = "-1";
+    notificationId = "-1";
+
+    constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, $rootScope) {
 
         super(WorkflowService);
 
         this.rootScope = $rootScope;
         this.process = process;
-        this.editWorkflowUnit = this.process.offer;
-        this.editWorkflowUnit.notification = new Notification();
-        this.editWorkflowUnit.notification.recipient = this.editWorkflowUnit.customer.email;
+        this.type = type;
+
+        if (this.type === "offer") {
+            this.editWorkflowUnit = new Offer();
+            this.editWorkflowUnit = this.process.offer;
+            this.currentNotification = new Notification();
+            this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
+            this.editEmail = false;
+        }
+        else if (this.type === "sale") {
+            this.wizardOnClick(6);
+            this.editWorkflowUnit = new Sale();
+            this.editWorkflowUnit = this.process.sale;
+            this.editEmail = true;
+        }
         this.uibModalInstance = $uibModalInstance;
 
         this.notificationService = NotificationService;
@@ -121,23 +138,41 @@ class WorkflowController extends AbstractWorkflow {
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = process;
-        this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
-        this.customerSelected = this.editProcess.offer.customer.id > 0;
-        this.currentCustomerId = this.editProcess.offer.customer.id + "";
-        this.editWorkflowUnit = deepCopy(this.editProcess.offer);
+
+        if (this.type === "offer") {
+            this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
+            this.customerSelected = this.editProcess.offer.customer.id > 0;
+            this.currentCustomerId = this.editProcess.offer.customer.id + "";
+            this.editWorkflowUnit = deepCopy(this.editProcess.offer);
+        } else if (this.type === "sale") {
+            this.currentOrderPositions = deepCopy(this.editProcess.sale.orderPositions);
+            this.customerSelected = this.editProcess.sale.customer.id > 0;
+            this.currentCustomerId = this.editProcess.sale.customer.id + "";
+            this.editWorkflowUnit = deepCopy(this.editProcess.sale);
+        }
     }
 
     close() {
         this.uibModalInstance.close();
-        this.dashboardService.openOffers = this.dashboardService.orderBy(this.dashboardService.openOffers, "offer.timestamp", false);
-        this.dashboardService.sumLeads();
-        this.dashboardService.sumOffers();
+        if (this.type === "offer") {
+            this.dashboardService.openOffers = this.dashboardService.orderBy(this.dashboardService.openOffers, "offer.timestamp", false);
+            this.dashboardService.sumLeads();
+            this.dashboardService.sumOffers();
+        } else if (this.type === "sale") {
+            this.dashboardService.closedSales = this.dashboardService.orderBy(this.dashboardService.closedSales, "sale.timestamp", false);
+            this.dashboardService.sumOffers();
+            this.dashboardService.sumSales();
+        }
         this.dashboardService.initDashboard();
+    }
 
+    calculateProfit() {
+        this.editWorkflowUnit.saleProfit = this.editWorkflowUnit.saleTurnover - this.editWorkflowUnit.saleCost;
     }
 
     generate(templateId: string, offer: Offer) {
-        this.templateService.generate(templateId, offer).then((result) => this.editWorkflowUnit.notification = result, (error) => console.log(error));
+        console.log(templateId);
+        this.templateService.generate(templateId, offer).then((result) => this.currentNotification = result, (error) => console.log(error));
     }
 
     generatePDF(templateId: string, offer: Offer) {
@@ -159,20 +194,48 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     send() {
+        let self = this;
         this.process.offer = this.editWorkflowUnit;
-        this.notificationService.sendOffer(this.process);
-        this.rootScope.$broadcast("deleteRow", this.process);
-        this.close();
+        let process = this.process;
+        let notification = this.currentNotification;
+        this.currentNotification.notificationType = NotificationType.OFFER;
+        this.notificationService.sendNotification(notification).then(() => {
+            self.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
+                self.rootScope.$broadcast("deleteRow", self.process);
+                if (isNullOrUndefined(process.notifications)) {
+                    process.notifications = [];
+                }
+                process.notifications.push(notification);
+                self.workflowService.saveProcess(process);
+                self.close();
+            });
+        });
     }
 
     save() {
-        this.process.offer = this.editWorkflowUnit;
-        this.process.offer.notification = null;
-        let self = this;
-        this.workflowService.addLeadToOffer(this.process).then(function (tmpprocess: Process) {
-            self.rootScope.$broadcast("deleteRow", self.process);
-            self.close();
-        });
+        if (this.type === "offer") {
+            let self = this;
+            this.process.offer = this.editWorkflowUnit;
+            let process = this.process;
+            this.currentNotification.notificationType = NotificationType.OFFER;
+            let notification = this.currentNotification;
+            this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
+                self.rootScope.$broadcast("deleteRow", tmpprocess);
+                if (isNullOrUndefined(tmpprocess.notifications)) {
+                    tmpprocess.notifications = [];
+                }
+                tmpprocess.notifications.push(notification);
+                self.workflowService.saveProcess(tmpprocess);
+                self.close();
+            });
+        } else if (this.type === "sale") {
+            this.process.sale = this.editWorkflowUnit;
+            let self = this;
+            this.workflowService.addOfferToSale(this.process).then(function (tmpprocess: Process) {
+                self.rootScope.$broadcast("deleteRow", self.process);
+                self.close();
+            });
+        }
     }
 
     selectCustomer(workflow: any) {

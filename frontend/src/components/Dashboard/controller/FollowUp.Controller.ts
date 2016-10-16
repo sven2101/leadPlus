@@ -3,6 +3,7 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Template/model/Template.Model.ts" />
 /// <reference path="../../Notification/model/Notification.Model.ts" />
+/// <reference path="../../Notification/model/NotificationType.ts" />
 /// <reference path="../../Notification/controller/Notification.Service.ts" />
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
@@ -25,7 +26,7 @@ const FollowUpControllerId: string = "FollowUpController";
 
 class FollowUpController {
 
-    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, WorkflowServiceId];
 
     uibModalInstance;
 
@@ -34,7 +35,9 @@ class FollowUpController {
     templates: Array<Template> = [];
 
     notificationService: NotificationService;
+    currentNotification: Notification;
     templateService: TemplateService;
+    workflowService: WorkflowService;
 
     editForm: any;
 
@@ -42,14 +45,15 @@ class FollowUpController {
     editProcess: Process;
     edit: boolean;
 
-    constructor(process, $uibModalInstance, NotificationService, TemplateService) {
+    constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService) {
         this.process = process;
         this.editWorkflowUnit = process.offer;
-        this.editWorkflowUnit.notification = new Notification();
-        this.editWorkflowUnit.notification.recipient = this.editWorkflowUnit.customer.email;
+        this.currentNotification = new Notification();
+        this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
         this.uibModalInstance = $uibModalInstance;
         this.notificationService = NotificationService;
         this.templateService = TemplateService;
+        this.workflowService = WorkflowService;
 
         this.getAllActiveTemplates();
     }
@@ -65,7 +69,7 @@ class FollowUpController {
 
     generate(templateId: string, offer: Offer) {
         console.log(offer);
-        this.templateService.generate(templateId, offer).then((result) => this.editWorkflowUnit.notification = result, (error) => console.log(error));
+        this.templateService.generate(templateId, offer).then((result) => this.currentNotification = result, (error) => console.log(error));
     }
 
     getAllActiveTemplates() {
@@ -73,8 +77,19 @@ class FollowUpController {
     }
 
     send() {
-        this.notificationService.sendSimple(this.editWorkflowUnit.notification);
-        this.close();
+        this.process.offer = this.editWorkflowUnit;
+        let process = this.process;
+        let notification = this.currentNotification;
+        this.currentNotification.notificationType = NotificationType.FOLLOWUP;
+        this.notificationService.sendNotification(notification).then(() => {
+            if (isNullOrUndefined(process.notifications)) {
+                process.notifications = [];
+            }
+            process.notifications.push(notification);
+            this.workflowService.saveProcess(process).then(() => {
+                this.close();
+            });
+        });
     }
 
     getTheFiles($files) {

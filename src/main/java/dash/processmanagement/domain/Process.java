@@ -35,8 +35,11 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import dash.commentmanagement.domain.Comment;
 import dash.leadmanagement.domain.Lead;
+import dash.notificationmanagement.domain.Notification;
 import dash.offermanagement.domain.Offer;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
@@ -86,6 +89,11 @@ public class Process {
 	@JoinColumn(name = "processor_fk", nullable = true)
 	@Where(clause = "deleted <> '1'")
 	private User processor;
+
+	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
+	@JsonProperty("notifications")
+	@Where(clause = "deleted <> '1'")
+	private List<Notification> notifications;
 
 	public Process(Lead lead) {
 		this.lead = lead;
@@ -158,6 +166,18 @@ public class Process {
 		this.comments = comments;
 	}
 
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -166,6 +186,7 @@ public class Process {
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lead == null) ? 0 : lead.hashCode());
+		result = prime * result + ((notifications == null) ? 0 : notifications.hashCode());
 		result = prime * result + ((offer == null) ? 0 : offer.hashCode());
 		result = prime * result + ((processor == null) ? 0 : processor.hashCode());
 		result = prime * result + ((sale == null) ? 0 : sale.hashCode());
@@ -199,6 +220,11 @@ public class Process {
 				return false;
 		} else if (!lead.equals(other.lead))
 			return false;
+		if (notifications == null) {
+			if (other.notifications != null)
+				return false;
+		} else if (!notifications.equals(other.notifications))
+			return false;
 		if (offer == null) {
 			if (other.offer != null)
 				return false;
@@ -221,8 +247,9 @@ public class Process {
 
 	@Override
 	public String toString() {
-		return "Process [id=" + id + ", deleted=" + deleted + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale + ", comments=" + comments + ", status="
-				+ status + ", processor=" + processor + "]";
+		return "Process [id=" + id + ", deleted=" + deleted + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale
+				+ ", comments=" + comments + ", status=" + status + ", processor=" + processor + ", notifications="
+				+ notifications + "]";
 	}
 
 }

@@ -1,41 +1,40 @@
 <form name="form">
-    <div class="row">
-        <div class="col-sm-6 text-left">
-            <!-- SALE TURNOVER -->
-            <div ng-if="type=='sale'" class="form-group" ng-class="{ 'has-error' : parent.saleEditForm.saleTurnover.$invalid && !parent.saleEditForm.saleTurnover.$pristine }">
-                <label>{{ 'COMMON_PRODUCT_SALE_TURNOVER'| translate }}<span style="color:red">*</span></label>
-                <div class="input-group">
-                    <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
-                    <input type="number" name="saleTurnover" class="form-control" ng-model="parent.editWorkflowUnit.saleTurnover" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
-                        step="0.01" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency"
-                        id="c2" required>
-                </div>
-                <p ng-show="parent.saleEditForm.saleTurnover.$invalid && !parent.saleEditForm.saleTurnover.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
-            </div>
-            <!-- SALE COST -->
-            <div ng-if="type=='sale'" class="form-group" ng-class="{ 'has-error' : parent.saleEditForm.saleCost.$invalid && !parent.saleEditForm.saleCost.$pristine }">
-                <label>{{ 'COMMON_PRODUCT_SALE_COST'| translate }}<span style="color:red">*</span></label>
-                <div class="input-group">
-                    <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
-                    <input type="number" name="saleCost" class="form-control" ng-model="parent.editWorkflowUnit.saleCost" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
-                        step="0.01" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency"
-                        id="c2" required>
-                </div>
-                <p ng-show="parent.saleEditForm.saleCost.$invalid && !parent.saleEditForm.saleCost.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
-            </div>
-            <!-- SALE PROFIT -->
-            <div ng-if="type=='sale'" class="form-group" ng-class="{ 'has-error' : parent.saleEditForm.saleProfit.$invalid && !parent.saleEditForm.saleProfit.$pristine }">
-                <label>{{ 'COMMON_PRODUCT_SALE_PROFIT'| translate }}<span style="color:red">*</span></label>
-                <div class="input-group">
-                    <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
-                    <input type="number" name="saleProfit" ng-disabled="true" class="form-control" ng-model="parent.editWorkflowUnit.saleProfit"
-                        ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100"
-                        class="form-control currency" id="c2" required>
-                </div>
-                <p ng-show="parent.saleEditForm.saleProfit.$invalid && !parent.saleEditForm.saleProfit.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
-            </div>
-        </div>
-    </div>
+	<div class="row">
+		<div class="col-sm-6 text-left">
+			<!-- SALE TURNOVER -->
+			<div ng-if="type=='sale'" class="form-group" ng-class="{ 'has-error' : parent.saleEditForm.saleTurnover.$invalid && !parent.saleEditForm.saleTurnover.$pristine }">
+				<label>{{ 'COMMON_PRODUCT_SALE_TURNOVER'| translate }}<span style="color:red">*</span></label>
+				<div class="input-group">
+					<span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
+					<input type="number" name="saleTurnover" class="form-control" ng-model="parent.editWorkflowUnit.saleTurnover" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+						step="0.01" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency"
+						id="c2" required ng-keyup="parent.calculateProfit()">
+				</div>
+				<p ng-show="parent.saleEditForm.saleTurnover.$invalid && !parent.saleEditForm.saleTurnover.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
+			</div>
+			<!-- SALE COST -->
+			<div ng-if="type=='sale'" class="form-group" ng-class="{ 'has-error' : parent.saleEditForm.saleCost.$invalid && !parent.saleEditForm.saleCost.$pristine }">
+				<label>{{ 'COMMON_PRODUCT_SALE_COST'| translate }}<span style="color:red">*</span></label>
+				<div class="input-group">
+					<span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
+					<input type="number" name="saleCost" class="form-control" ng-model="parent.editWorkflowUnit.saleCost" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+						step="0.01" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency"
+						id="c2" required ng-keyup="parent.calculateProfit()">
+				</div>
+				<p ng-show="parent.saleEditForm.saleCost.$invalid && !parent.saleEditForm.saleCost.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
+			</div>
+			<!-- SALE PROFIT -->
+			<div ng-if="type=='sale'" class="form-group" ng-class="{ 'has-error' : parent.saleEditForm.saleProfit.$invalid && !parent.saleEditForm.saleProfit.$pristine }">
+				<label>{{ 'COMMON_PRODUCT_SALE_PROFIT'| translate }}<span style="color:red">*</span></label>
+				<div class="input-group">
+					<span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
+					<input type="number" name="saleProfit" ng-disabled="true" class="form-control" ng-model="parent.editWorkflowUnit.saleProfit"
+						step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" id="c2" required>
+				</div>
+				<p ng-show="parent.saleEditForm.saleProfit.$invalid && !parent.saleEditForm.saleProfit.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
+			</div>
+		</div>
+	</div>
 </form>
 
 <script>
