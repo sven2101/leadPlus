@@ -27,6 +27,7 @@ import dash.exceptions.NotFoundException;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.messagemanagement.domain.OfferMessage;
 import dash.notificationmanagement.domain.Notification;
+import dash.notificationmanagement.domain.NotificationType;
 import dash.offermanagement.domain.Offer;
 import dash.usermanagement.domain.User;
 import freemarker.cache.StringTemplateLoader;
@@ -39,9 +40,6 @@ public class MessageService implements IMessageService {
 
 	@Autowired
 	private Configuration cfg;
-
-	@Autowired
-	private StringTemplateLoader stringTemplateLoader;
 
 	@Override
 	public String getRecipient() {
@@ -57,6 +55,7 @@ public class MessageService implements IMessageService {
 	public AbstractMessage getOfferContent(final Offer offer, final String templateWithPlaceholders, final Notification notification)
 			throws IOException, NotFoundException, TemplateException {
 
+		final StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
 		cfg.setTemplateLoader(stringTemplateLoader);
 		stringTemplateLoader.putTemplate("template", unescapeString(templateWithPlaceholders));
 
@@ -74,7 +73,8 @@ public class MessageService implements IMessageService {
 		Writer writer = new StringWriter();
 		template.process(mapping, writer);
 
-		return new OfferMessage(notification.getRecipient(), notification.getSubject(), writer.toString(), notification.getAttachment());
+		return new OfferMessage(notification.getRecipient(), notification.getSubject(), writer.toString(), notification.getAttachment(),
+				NotificationType.OFFER);
 	}
 
 	private String unescapeString(String escapedString) {

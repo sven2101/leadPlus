@@ -44,7 +44,6 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import dash.security.AngularCsrfHeaderFilter;
 import dash.security.listener.RESTAuthenticationEntryPoint;
 import dash.usermanagement.registration.domain.Validation;
-import freemarker.cache.StringTemplateLoader;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -105,11 +104,6 @@ public class Application {
 		configuration.setURLEscapingCharset("UTF-8");
 		configurer.setConfiguration(configuration);
 		return configurer;
-	}
-
-	@Bean
-	public StringTemplateLoader stringTemplateLoader() {
-		return new StringTemplateLoader();
 	}
 
 	@Configuration
