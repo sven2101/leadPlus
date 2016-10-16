@@ -31,6 +31,7 @@ class SaleController extends AbstractWorkflow {
     $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId, TemplateServiceId, , $routeParamsId];
 
     type: string = "sale";
+    process: Process;
 
     workflowService: WorkflowService;
     saleDataTableService: SaleDataTableService;
@@ -50,6 +51,7 @@ class SaleController extends AbstractWorkflow {
     editProcess: Process;
     editWorkflowUnit: Sale = new Sale();
     edit: boolean;
+    editEmail: boolean = true;
 
     currentOrderPositions: Array<OrderPosition>;
     templates: Array<Template> = [];
@@ -161,6 +163,7 @@ class SaleController extends AbstractWorkflow {
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = process;
+        this.process = this.editProcess;
         this.currentOrderPositions = deepCopy(this.editProcess.sale.orderPositions);
         this.customerSelected = this.editProcess.sale.customer.id > 0;
         this.currentCustomerId = this.editProcess.sale.customer.id + "";

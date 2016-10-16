@@ -35,6 +35,7 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.messagemanagement.business.IMessageService;
 import dash.messagemanagement.domain.AbstractMessage;
+import dash.notificationmanagement.domain.Notification;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.templatemanagement.domain.Template;
@@ -121,10 +122,10 @@ public class TemplateService implements ITemplateService {
 	}
 
 	@Override
-	public AbstractMessage generateOfferContent(final long templateId, final Offer offer) throws NotFoundException {
+	public AbstractMessage generateOfferContent(final long templateId, final Offer offer, final Notification notification) throws NotFoundException {
 		if (offer != null) {
 			try {
-				return messageService.getOfferContent(offer, getById(templateId).getContent());
+				return messageService.getOfferContent(offer, getById(templateId).getContent(), notification);
 			} catch (Exception ex) {
 				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw new NotFoundException(OFFER_NOT_FOUND);

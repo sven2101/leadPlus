@@ -38,7 +38,7 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.messagemanagement.domain.AbstractMessage;
-import dash.offermanagement.domain.Offer;
+import dash.messagemanagement.domain.OfferMessageContext;
 import dash.processmanagement.domain.Process;
 import dash.templatemanagement.business.ITemplateService;
 import dash.templatemanagement.domain.Template;
@@ -93,8 +93,8 @@ public class TemplateResource {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Generate a email content based on a template and an offer.", notes = "")
 	public AbstractMessage generate(@ApiParam(required = true) @PathVariable final Long templateId,
-			@ApiParam(required = true) @RequestBody @Valid final Offer offer) throws NotFoundException {
-		return templateService.generateOfferContent(templateId, offer);
+			@ApiParam(required = true) @RequestBody @Valid final OfferMessageContext offerMessageContext) throws NotFoundException {
+		return templateService.generateOfferContent(templateId, offerMessageContext.getOffer(), offerMessageContext.getNotification());
 	}
 
 	@RequestMapping(value = "/{templateId}/offers/pdf/generate", method = RequestMethod.POST, produces = "application/pdf")

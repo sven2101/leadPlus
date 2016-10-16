@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import dash.exceptions.NotFoundException;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.messagemanagement.domain.OfferMessage;
+import dash.notificationmanagement.domain.Notification;
 import dash.offermanagement.domain.Offer;
 import dash.usermanagement.domain.User;
 import freemarker.cache.StringTemplateLoader;
@@ -53,7 +54,7 @@ public class MessageService implements IMessageService {
 	}
 
 	@Override
-	public AbstractMessage getOfferContent(final Offer offer, final String templateWithPlaceholders)
+	public AbstractMessage getOfferContent(final Offer offer, final String templateWithPlaceholders, final Notification notification)
 			throws IOException, NotFoundException, TemplateException {
 
 		cfg.setTemplateLoader(stringTemplateLoader);
@@ -73,7 +74,7 @@ public class MessageService implements IMessageService {
 		Writer writer = new StringWriter();
 		template.process(mapping, writer);
 
-		return new OfferMessage("xxx", "yyy", writer.toString(), null);
+		return new OfferMessage(notification.getRecipient(), notification.getSubject(), writer.toString(), notification.getAttachment());
 	}
 
 	private String unescapeString(String escapedString) {
