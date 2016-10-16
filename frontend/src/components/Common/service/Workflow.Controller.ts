@@ -112,7 +112,6 @@ class WorkflowController extends AbstractWorkflow {
         this.saleService = SaleService;
 
         this.loadDataToModal(process);
-
     }
 
     loadDataToModal(process: Process) {
