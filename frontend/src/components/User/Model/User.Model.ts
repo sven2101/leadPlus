@@ -30,6 +30,9 @@ class User extends AbstractModel {
     firstname: string;
     lastname: string;
     phone: string;
+    skype: string;
+    fax: string;
+    job: string;
 
     constructor() {
         super();

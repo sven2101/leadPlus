@@ -110,6 +110,10 @@ public abstract class AbstractWorkflow implements Request {
 		return id;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@Override
 	public List<OrderPosition> getOrderPositions() {
 		return orderPositions;

@@ -12,13 +12,20 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.messagemanagement.domain;
+package dash.messagemanagement.business;
 
-public interface IMessage {
+import java.io.IOException;
+
+import dash.exceptions.NotFoundException;
+import dash.messagemanagement.domain.AbstractMessage;
+import dash.offermanagement.domain.Offer;
+import freemarker.template.TemplateException;
+
+public interface IMessageService {
 
 	String getRecipient();
 
 	String getSubject();
 
-	String getContent() throws Exception;
+	AbstractMessage getOfferContent(final Offer offer, String templateWithPlaceholders) throws IOException, NotFoundException, TemplateException;
 }

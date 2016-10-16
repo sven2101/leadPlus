@@ -1,138 +1,165 @@
 <meta charset="utf-8">
 <div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-12">
-        <div class="row">
-            <div class="col-lg-10">
-                <h2>{{ 'PROFILE_MENU' | translate }}</h2>
-                <ol class="breadcrumb">
-                    <li>
-                        <a href="#/dashboard">Home</a>
-                    </li>
-                    <li class="active">
-                        <strong>{{ 'PROFILE_MENU' | translate }}</strong>
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </div>
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-10">
+				<h2>{{ 'PROFILE_MENU' | translate }}</h2>
+				<ol class="breadcrumb">
+					<li>
+						<a href="#/dashboard">Home</a>
+					</li>
+					<li class="active">
+						<strong>{{ 'PROFILE_MENU' | translate }}</strong>
+					</li>
+				</ol>
+			</div>
+		</div>
+	</div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>{{ 'PROFILE_PROFILE_INFORMATION' | translate }}</h5>
-                </div>
-                <div class="ibox-content">
-                    <form name="profilInfoForm" ng-submit="profileCtrl.submitProfilInfoForm()" novalidate>
-                        <!-- EMAIL -->
-                        <div class="form-group" ng-class="{ 'has-error' : profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine }">
-                            <label>{{ 'COMMON_EMAIL' | translate }}</label>
-                            <input type="email" name="email" class="form-control" ng-model="profileCtrl.currentUser.email">
-                            <p ng-show="profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
-                        </div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>{{ 'PROFILE_PROFILE_INFORMATION' | translate }}</h5>
+				</div>
+				<div class="ibox-content">
+					<form name="profilInfoForm" ng-submit="profileCtrl.submitProfilInfoForm()" novalidate>
+						<div class="row">
+							<div class="col-sm-6 b-r">
+								<!-- EMAIL -->
+								<div class="form-group" ng-class="{ 'has-error' : profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine }">
+									<label><i class="fa fa-at" aria-hidden="true"></i>  {{ 'COMMON_EMAIL' | translate }}</label>
+									<input type="email" name="email" class="form-control" ng-model="profileCtrl.currentUser.email">
+									<p ng-show="profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
+								</div>
+								<!-- fIRSTNAME -->
+								<div class="form-group">
+									<label><i class="fa fa-user" aria-hidden="true"></i>    {{ 'COMMON_FIRSTNAME' | translate }}</label>
+									<input type="text" id="firstname" name="firstname" class="form-control" placeholder="{{ 'COMMON_FIRSTNAME' | translate }}"
+										required ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/" ng-model="profileCtrl.currentUser.firstname" ng-minlength="2" ng-maxlength="50">
 
-                        <div class="form-group">
-                            <label>{{ 'COMMON_FIRSTNAME' | translate }}</label>
-                            <input type="text" id="firstname" name="firstname" class="form-control" placeholder="{{ 'COMMON_FIRSTNAME' | translate }}"
-                                required ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/" ng-model="profileCtrl.currentUser.firstname"
-                                ng-minlength="2" ng-maxlength="50">
+									<span ng-show="profilInfoForm.firstname.$error.required&&!profilInfoForm.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+									<span ng-show="profilInfoForm.firstname.$error.minlength&&!profilInfoForm.firstname.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_FIRSTNAME_TO_SHORT' | translate }}</span>
+									<span ng-show="profilInfoForm.firstname.$error.maxlength&&!profilInfoForm.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
 
-                            <span ng-show="profilInfoForm.firstname.$error.required&&!profilInfoForm.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
-                            <span ng-show="profilInfoForm.firstname.$error.minlength&&!profilInfoForm.firstname.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_FIRSTNAME_TO_SHORT' | translate }}</span>
-                            <span ng-show="profilInfoForm.firstname.$error.maxlength&&!profilInfoForm.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+								</div>
+								<!-- LASTNAME -->
+								<div class="form-group">
+									<label><i class="fa fa-user" aria-hidden="true"></i>    {{ 'COMMON_LASTNAME' | translate }}</label>
+									<input type="text" id="lastname" name="lastname" class="form-control" placeholder="{{ 'COMMON_LASTNAME' | translate }}" required
+										ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/" ng-model="profileCtrl.currentUser.lastname" ng-minlength="2" ng-maxlength="50">
 
-                        </div>
+									<span ng-show="profilInfoForm.lastname.$error.required&&!profilInfoForm.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+									<span ng-show="profilInfoForm.lastname.$error.minlength&&!profilInfoForm.lastname.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_LASTNAME_TO_SHORT' | translate }}</span>
+									<span ng-show="profilInfoForm.lastname.$error.maxlength&&!profilInfoForm.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+								</div>
+								<!-- LANGUAGE -->
+								<div class="form-group">
+									<label><i class="fa fa-globe" aria-hidden="true"></i>   {{ 'PROFILE_DEFAULT_LANGUAGE' | translate }}</label>
+									<select class="form-control" ng-model="profileCtrl.currentUser.language">
+                                        <option value="DE">Deutsch(de)</option>
+                                        <option value="EN">English(en)</option>
+                                    </select>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<!-- PHONE -->
+								<div class="form-group">
+									<label><i class="fa fa-phone" aria-hidden="true"></i>   {{ 'COMMON_PHONE' | translate }}</label>
+									<input type="text" id="phone" name="phone" class="form-control" placeholder="{{ 'COMMON_PHONE' | translate }}" ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/"
+										ng-model="profileCtrl.currentUser.phone" ng-minlength="2" ng-maxlength="50">
 
-                        <div class="form-group">
-                            <label>{{ 'COMMON_LASTNAME' | translate }}</label>
-                            <input type="text" id="lastname" name="lastname" class="form-control" placeholder="{{ 'COMMON_LASTNAME' | translate }}" required
-                                ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/" ng-model="profileCtrl.currentUser.lastname" ng-minlength="2"
-                                ng-maxlength="50">
+									<span ng-show="profilInfoForm.phone.$error.minlength&&!profilInfoForm.phone.$pristine" class="help-block">{{ 'PROFIL_VALIDATE_PHONE_TO_SHORT' | translate }}</span>
+									<span ng-show="profilInfoForm.phone.$error.maxlength&&!profilInfoForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+								</div>
+								<!-- SKYPE -->
+								<div class="form-group">
+									<label><i class="fa fa-skype" aria-hidden="true"></i>   {{ 'COMMON_SKYPE' | translate }}</label>
+									<input type="text" id="skype" name="skype" class="form-control" placeholder="{{ 'COMMON_SKYPE' | translate }}" ng-model="profileCtrl.currentUser.skype"
+										ng-minlength="2" ng-maxlength="50">
 
-                            <span ng-show="profilInfoForm.lastname.$error.required&&!profilInfoForm.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
-                            <span ng-show="profilInfoForm.lastname.$error.minlength&&!profilInfoForm.lastname.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_LASTNAME_TO_SHORT' | translate }}</span>
-                            <span ng-show="profilInfoForm.lastname.$error.maxlength&&!profilInfoForm.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+									<span ng-show="profilInfoForm.skype.$error.minlength&&!profilInfoForm.skype.$pristine" class="help-block">{{ 'PROFIL_VALIDATE_SKYPE_TO_SHORT' | translate }}</span>
+									<span ng-show="profilInfoForm.skype.$error.maxlength&&!profilInfoForm.skype.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+								</div>
+								<!-- FAX -->
+								<div class="form-group">
+									<label><i class="fa fa-fax" aria-hidden="true"></i> {{ 'COMMON_FAX' | translate }}</label>
+									<input type="text" id="fax" name="fax" class="form-control" placeholder="{{ 'COMMON_FAX' | translate }}" ng-model="profileCtrl.currentUser.fax"
+										ng-minlength="2" ng-maxlength="50">
 
-                        </div>
+									<span ng-show="profilInfoForm.fax.$error.minlength&&!profilInfoForm.fax.$pristine" class="help-block">{{ 'PROFIL_VALIDATE_FAX_TO_SHORT' | translate }}</span>
+									<span ng-show="profilInfoForm.fax.$error.maxlength&&!profilInfoForm.fax.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+								</div>
+								<!-- JOB-POSITION -->
+								<div class="form-group">
+									<label><i class="fa fa-fax" aria-hidden="true"></i> {{ 'COMMON_FAX' | translate }}</label>
+									<input type="text" id="job" name="job" class="form-control" placeholder="{{ 'COMMON_JOB' | translate }}" ng-model="profileCtrl.currentUser.job"
+										ng-minlength="2" ng-maxlength="50">
 
-                        <div class="form-group">
-                            <label>{{ 'COMMON_PHONE' | translate }}</label>
-                            <input type="text" id="phone" name="phone" class="form-control" placeholder="{{ 'COMMON_PHONE' | translate }}" required
-                                ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/" ng-model="profileCtrl.currentUser.phone" ng-minlength="2"
-                                ng-maxlength="50">
+									<span ng-show="profilInfoForm.job.$error.minlength&&!profilInfoForm.job.$pristine" class="help-block">{{ 'PROFIL_VALIDATE_JOB_TO_SHORT' | translate }}</span>
+									<span ng-show="profilInfoForm.job.$error.maxlength&&!profilInfoForm.job.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+								</div>
+							</div>
+						</div>
 
-                            <span ng-show="profilInfoForm.phone.$error.required&&!profilInfoForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
-                            <span ng-show="profilInfoForm.phone.$error.minlength&&!profilInfoForm.phone.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_PHONE_TO_SHORT' | translate }}</span>
-                            <span ng-show="profilInfoForm.phone.$error.maxlength&&!profilInfoForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
-
-                        </div>
-
-                        <!-- default language -->
-                        <div class="form-group">
-                            <label>{{ 'PROFILE_DEFAULT_LANGUAGE' | translate }}</label>
-                            <select class="form-control" ng-model="profileCtrl.currentUser.language">
-                                <option value="DE">Deutsch(de)</option>
-                                <option value="EN">English(en)</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-success" type="submit" ng-disabled="profilInfoForm.$invalid">
+						<button class="btn btn-success" type="submit" ng-disabled="profilInfoForm.$invalid">
                             <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
                         </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>{{ 'PROFILE_PASSWORD_MANAGEMENT' | translate }}</h5>
-                </div>
-                <div class="ibox-content">
-                    <form name="profileCtrl.profileService.passwordForm" ng-submit="profileCtrl.submitPasswordForm()" novalidate>
-                        <!-- password -->
-                        <div class="form-group" ng-class="{ 'has-error' : profileCtrl.profileService.profileService.passwordForm.oldPassword.$invalid && !profileCtrl.profileService.passwordForm.oldPassword.$pristine }">
-                            <label>{{ 'PROFILE_OLD_PASSWORD' | translate }}</label>
-                            <input type="password" name="oldPassword" class="form-control" ng-model="profileCtrl.profileService.oldPassword" required>
-                            <p ng-show="profileCtrl.profileService.passwordForm.oldPassword.$invalid && !profileCtrl.profileService.passwordForm.oldPassword.$pristine"
-                                class="help-block">{{ 'PROFILE_VALIDATE_OLD_PASSWORD' | translate }}</p>
-                        </div>
-                        <div class="form-group" ng-class="{ 'has-error' : profileCtrl.profileService.passwordForm.newPassword1.$invalid && !profileCtrl.profileService.passwordForm.newPassword1.$pristine }">
-                            <label>{{ 'COMMON_NEW_PASSWORD' | translate }}</label>
-                            <input type="password" name="newPassword1" id="newPassword1" class="form-control" ng-model="profileCtrl.profileService.newPassword1"
-                                required ng-minlength="6" />
-                            <p ng-show="profileCtrl.profileService.passwordForm.newPassword1.$invalid && !profileCtrl.profileService.passwordForm.newPassword1.$pristine"
-                                class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</p>
-                        </div>
-                        <div class="form-group" ng-class="{ 'has-error' : profileCtrl.profileService.passwordForm.newPassword2.$invalid && !profileCtrl.profileService.passwordForm.newPassword2.$pristine }">
-                            <label>{{ 'COMMON_NEW_PASSWORD' | translate }}</label>
-                            <input type="password" name="newPassword2" id="newPassword2" class="form-control" ng-model="profileCtrl.profileService.newPassword2"
-                                required ng-minlength="6" pw-check="newPassword1" />
-                            <p ng-show="profileCtrl.profileService.passwordForm.newPassword2.$invalid && !profileCtrl.profileService.passwordForm.newPassword2.$pristine"
-                                class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</p>
-                            <p ng-show="profileCtrl.profileService.passwordForm.newPassword2.$error.pwmatch" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</p>
-                        </div>
-                        <button class="btn btn-success" type="submit" ng-disabled="profileCtrl.profileService.passwordForm.$invalid">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>{{ 'PROFILE_PASSWORD_MANAGEMENT' | translate }}</h5>
+				</div>
+				<div class="ibox-content">
+					<form name="profileCtrl.profileService.passwordForm" ng-submit="profileCtrl.submitPasswordForm()" novalidate>
+						<!-- password -->
+						<div class="form-group" ng-class="{ 'has-error' : profileCtrl.profileService.profileService.passwordForm.oldPassword.$invalid && !profileCtrl.profileService.passwordForm.oldPassword.$pristine }">
+							<label><i class="fa fa-unlock-alt" aria-hidden="true"></i> {{ 'PROFILE_OLD_PASSWORD' | translate }}</label>
+							<input type="password" name="oldPassword" class="form-control" ng-model="profileCtrl.profileService.oldPassword" required>
+							<p ng-show="profileCtrl.profileService.passwordForm.oldPassword.$invalid && !profileCtrl.profileService.passwordForm.oldPassword.$pristine"
+								class="help-block">{{ 'PROFILE_VALIDATE_OLD_PASSWORD' | translate }}</p>
+						</div>
+						<div class="form-group" ng-class="{ 'has-error' : profileCtrl.profileService.passwordForm.newPassword1.$invalid && !profileCtrl.profileService.passwordForm.newPassword1.$pristine }">
+							<label><i class="fa fa-unlock" aria-hidden="true"></i>  {{ 'COMMON_NEW_PASSWORD' | translate }}</label>
+							<input type="password" name="newPassword1" id="newPassword1" class="form-control" ng-model="profileCtrl.profileService.newPassword1"
+								required ng-minlength="6" />
+							<p ng-show="profileCtrl.profileService.passwordForm.newPassword1.$invalid && !profileCtrl.profileService.passwordForm.newPassword1.$pristine"
+								class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</p>
+						</div>
+						<div class="form-group" ng-class="{ 'has-error' : profileCtrl.profileService.passwordForm.newPassword2.$invalid && !profileCtrl.profileService.passwordForm.newPassword2.$pristine }">
+							<label><i class="fa fa-unlock" aria-hidden="true"></i>  {{ 'COMMON_NEW_PASSWORD' | translate }}</label>
+							<input type="password" name="newPassword2" id="newPassword2" class="form-control" ng-model="profileCtrl.profileService.newPassword2"
+								required ng-minlength="6" pw-check="newPassword1" />
+							<p ng-show="profileCtrl.profileService.passwordForm.newPassword2.$invalid && !profileCtrl.profileService.passwordForm.newPassword2.$pristine"
+								class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</p>
+							<p ng-show="profileCtrl.profileService.passwordForm.newPassword2.$error.pwmatch" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</p>
+						</div>
+						<button class="btn btn-success" type="submit" ng-disabled="profileCtrl.profileService.passwordForm.$invalid">
                             <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
                         </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>{{ 'PROFILE_PICTURE_MANAGEMENT' | translate }}</h5>
-                </div>
-                <div class="ibox-content">
-                    <div style="margin-left:15px;max-width:700px" quality="50" savebutton="passt" imagecrop event="profileImageSaved"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>{{ 'PROFILE_PICTURE_MANAGEMENT' | translate }}</h5>
+				</div>
+				<div class="ibox-content">
+					<div style="margin-left:15px;max-width:700px" quality="50" savebutton="passt" imagecrop event="profileImageSaved"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </div>

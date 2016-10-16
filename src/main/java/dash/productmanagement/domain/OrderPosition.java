@@ -84,6 +84,10 @@ public class OrderPosition {
 		return id;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public Double getDiscount() {
 		return discount;
 	}

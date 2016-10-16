@@ -80,7 +80,7 @@ public class PublicApiService implements IPublicApiService {
 				orderPosition.setProduct(productService.getById(orderPosition.getProduct().getId()));
 				orderPosition.setPrice(orderPosition.getProduct().getPriceNetto());
 				orderPosition.setDeleted(false);
-				//orderPosition.setId(0);
+				orderPosition.setId(null);
 				orderPosition.setWorkflow(lead);
 			}
 		}
@@ -105,13 +105,13 @@ public class PublicApiService implements IPublicApiService {
 		// set Vendor
 		if (lead.getVendor() != null) {
 			lead.getVendor().setDeleted(false);
-			//lead.getVendor().setId(0);
+			lead.getVendor().setId(null);
 		}
 
 		// set Lead
 		lead.setTimestamp(Calendar.getInstance());
 		lead.setDeleted(false);
-		//lead.setId(0);
+		lead.setId(null);
 
 		logging();
 
