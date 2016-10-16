@@ -63,6 +63,7 @@ class OfferController extends AbstractWorkflow {
     customerSelected: boolean = false;
 
     otherCurrentTab: number = 1;
+    currentNotification: Notification;
 
     customerEditForm: any;
     leadEditForm: any;
@@ -89,7 +90,7 @@ class OfferController extends AbstractWorkflow {
             self.compile(angular.element(row).contents())(self.scope);
         }
         function addActionsButtons(data: Process, type, full, meta) {
-            let templatedata = { "process": self.processes[data.id] };
+            let templatedata = { "process": deepCopy(self.processes[data.id]) };
             return self.offerDataTableService.getActionButtonsHTML(templatedata);
         }
         function addStatusStyle(data: Process, type, full, meta) {
@@ -256,6 +257,17 @@ class OfferController extends AbstractWorkflow {
     getAllActiveTemplates() {
         let self = this;
         this.templateService.getAll().then((result) => self.templates = result, (error) => console.log(error));
+    }
+
+    setFormerNotification(notificationId: number) {
+        if (Number(notificationId) === -1) {
+            this.currentNotification = null;
+        }
+        let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
+        if (!isNullOrUndefined(notification)) {
+            this.currentNotification = deepCopy(notification);
+            this.currentNotification.content = unescapeHtmlQuote(notification.content);
+        }
     }
 }
 

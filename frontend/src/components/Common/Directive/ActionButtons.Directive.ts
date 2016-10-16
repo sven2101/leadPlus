@@ -39,15 +39,11 @@ angular.module(moduleApp)
             let templateData = JSON.parse(scope.templatedata);
             if (!isNullOrUndefined(templateData.process.notifications)) {
                 for (let i = 0; i < templateData.process.notifications.length; i++) {
-                    let notification = templateData.process.notifications[i];
-                    notification.content = decodeURIComponent(atob(notification.content));
-                    templateData.process.notifications[i] = notification;
+
+                    templateData.process.notifications[i].content = decodeURIComponent(atob(templateData.process.notifications[i].content));
+
                 }
             }
-
-
-
-
             scope.directiveData = templateData;
             scope.partial = null;
             scope.openModal = function (payload: any, method: any) {

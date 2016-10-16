@@ -29,6 +29,8 @@ angular.module(moduleApp)
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs, controller) {
+            scope.templateId = "-1";
+            scope.notificationId = "-1";
             if (scope.type === "lead") {
                 scope.service = scope.parent.leadService;
             }

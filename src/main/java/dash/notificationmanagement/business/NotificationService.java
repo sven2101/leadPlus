@@ -95,7 +95,7 @@ public class NotificationService implements INotificationService {
 				throw new SMTPdoesntExistsException("No valid SMTP Data for this User");
 			}
 		} catch (Exception ex) {
-			throw ex;
+			return;
 		}
 	}
 

@@ -47,6 +47,7 @@ class FollowUpController {
 
     constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService) {
         this.process = process;
+        this.editProcess = process;
         this.editWorkflowUnit = process.offer;
         this.currentNotification = new Notification();
         this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
@@ -79,8 +80,10 @@ class FollowUpController {
     send() {
         this.process.offer = this.editWorkflowUnit;
         let process = this.process;
-        let notification = this.currentNotification;
         this.currentNotification.notificationType = NotificationType.FOLLOWUP;
+        let notification = this.currentNotification;
+        notification.id = undefined;
+
         this.notificationService.sendNotification(notification).then(() => {
             if (isNullOrUndefined(process.notifications)) {
                 process.notifications = [];
@@ -94,6 +97,18 @@ class FollowUpController {
 
     getTheFiles($files) {
         this.notificationService.getTheFiles($files);
+    }
+
+    setFormerNotification(notificationId: number) {
+        if (Number(notificationId) === -1) {
+            this.currentNotification = null;
+        }
+        let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
+        console.log(this.editProcess);
+        console.log(notificationId);
+        if (!isNullOrUndefined(notification)) {
+            this.currentNotification = deepCopy(notification);
+        }
     }
 
 }

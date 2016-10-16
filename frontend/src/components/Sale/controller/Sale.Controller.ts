@@ -53,6 +53,7 @@ class SaleController extends AbstractWorkflow {
 
     currentOrderPositions: Array<OrderPosition>;
     templates: Array<Template> = [];
+    currentNotification: Notification;
 
     currentProductId = "-1";
     currentProductAmount = 1;
@@ -85,7 +86,7 @@ class SaleController extends AbstractWorkflow {
             self.compile(angular.element(row).contents())(self.scope);
         }
         function addActionsButtons(data: Process, type, full, meta) {
-            let templatedata = { "process": self.processes[data.id] };
+            let templatedata = { "process": deepCopy(self.processes[data.id]) };
             return self.saleDataTableService.getActionButtonsHTML(templatedata);
         }
         function addStatusStyle(data: Process, type, full, meta) {
@@ -217,6 +218,18 @@ class SaleController extends AbstractWorkflow {
 
     getAllActiveTemplates() {
         this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
+    }
+
+    setFormerNotification(notificationId: number) {
+        if (Number(notificationId) === -1) {
+            this.currentNotification = null;
+        }
+        let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
+        console.log(this.editProcess);
+        console.log(notificationId);
+        if (!isNullOrUndefined(notification)) {
+            this.currentNotification = deepCopy(notification);
+        }
     }
 }
 angular.module(moduleSale, [ngResourceId]).controller(SaleControllerId, SaleController);

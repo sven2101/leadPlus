@@ -84,6 +84,10 @@ let unescapeHtmlBrackets = function (html: string): string {
     return html.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
 };
 
+let unescapeHtmlQuote = function (html: string): string {
+    return html.replace(/&quot;/g, "'");
+};
+
 
 
 

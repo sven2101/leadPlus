@@ -86,7 +86,7 @@ class LeadController extends AbstractWorkflow {
             self.compile(angular.element(row).contents())(self.scope);
         }
         function addActionsButtons(data: Process, type, full, meta) {
-            let templatedata = { "process": self.processes[data.id] };
+            let templatedata = { "process": deepCopy(self.processes[data.id]) };
             return self.leadDataTableService.getActionButtonsHTML(templatedata);
         }
         function addStatusStyle(data: Process, type, full, meta) {

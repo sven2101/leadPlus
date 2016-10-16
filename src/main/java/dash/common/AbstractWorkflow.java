@@ -156,10 +156,6 @@ public abstract class AbstractWorkflow implements Request {
 		this.customer = customer;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public double getPrice() {
 		double sum = this.deliveryCosts;
 		for (int i = 0; i < this.orderPositions.size(); i++) {

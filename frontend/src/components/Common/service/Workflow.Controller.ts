@@ -67,10 +67,7 @@ class WorkflowController extends AbstractWorkflow {
     priceEditForm: any;
     emailEditForm: any;
     saleEditForm: any;
-
     rootScope;
-    templateId = "-1";
-    notificationId = "-1";
 
     constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, $rootScope) {
 
@@ -197,8 +194,9 @@ class WorkflowController extends AbstractWorkflow {
         let self = this;
         this.process.offer = this.editWorkflowUnit;
         let process = this.process;
-        let notification = this.currentNotification;
         this.currentNotification.notificationType = NotificationType.OFFER;
+        let notification = this.currentNotification;
+        notification.id = undefined;
         this.notificationService.sendNotification(notification).then(() => {
             self.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
                 self.rootScope.$broadcast("deleteRow", self.process);
@@ -224,7 +222,9 @@ class WorkflowController extends AbstractWorkflow {
                 if (isNullOrUndefined(tmpprocess.notifications)) {
                     tmpprocess.notifications = [];
                 }
-                tmpprocess.notifications.push(notification);
+                if (isNaN(notification.id)) {
+                    tmpprocess.notifications.push(notification);
+                }
                 self.workflowService.saveProcess(tmpprocess);
                 self.close();
             });
@@ -244,6 +244,18 @@ class WorkflowController extends AbstractWorkflow {
 
     getTheFiles($files) {
         this.notificationService.getTheFiles($files);
+    }
+
+    setFormerNotification(notificationId: number) {
+        if (Number(notificationId) === -1) {
+            this.currentNotification = null;
+        }
+        let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
+
+
+        if (!isNullOrUndefined(notification)) {
+            this.currentNotification = deepCopy(notification);
+        }
     }
 
 }

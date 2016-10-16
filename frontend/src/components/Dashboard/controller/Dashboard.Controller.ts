@@ -164,6 +164,16 @@ class DashboardController {
         return text;
     }
 
+    getAmountOfFollowUps(process: Process): number {
+        let amount: number = 0;
+        for (let i = 0; i < process.notifications.length; i++) {
+            if (process.notifications[i].notificationType === NotificationType.FOLLOWUP) {
+                amount++;
+            }
+        }
+        return amount;
+    }
+
 }
 
 angular.module(moduleDashboard, [ngResourceId, "summernote"]).controller(DashboardControllerId, DashboardController);

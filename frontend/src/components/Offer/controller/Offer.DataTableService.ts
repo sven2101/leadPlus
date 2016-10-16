@@ -199,9 +199,7 @@ class OfferDataTableService {
         this.setActionButtonsConfig(this.user, templateData);
         if (!isNullOrUndefined(templateData.process.notifications)) {
             for (let i = 0; i < templateData.process.notifications.length; i++) {
-                let notification = templateData.process.notifications[i];
-                notification.content = btoa(encodeURIComponent(notification.content));
-                templateData.process.notifications[i] = notification;
+                templateData.process.notifications[i].content = btoa(encodeURIComponent(templateData.process.notifications[i].content));
             }
         }
 
