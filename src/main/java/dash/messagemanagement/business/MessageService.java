@@ -27,7 +27,6 @@ import dash.exceptions.NotFoundException;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.messagemanagement.domain.OfferMessage;
 import dash.offermanagement.domain.Offer;
-import dash.usermanagement.business.IUserService;
 import dash.usermanagement.domain.User;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
@@ -42,9 +41,6 @@ public class MessageService implements IMessageService {
 
 	@Autowired
 	private StringTemplateLoader stringTemplateLoader;
-
-	@Autowired
-	private IUserService userService;
 
 	@Override
 	public String getRecipient() {
