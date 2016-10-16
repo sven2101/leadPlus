@@ -1,110 +1,135 @@
 <form name="form">
-    <div class="row">
-        <div class="col-sm-4 text-left">
-            <!-- OFFER PRICE -->
-            <div ng-if="type=='offer' " class="form-group" ng-class="{ 'has-error' : parent.priceEditForm.offerPrice.$invalid
+	<div class="row">
+		<div class="col-sm-4 text-left">
+			<!-- OFFER PRICE -->
+			<div ng-if="type=='offer' " class="form-group" ng-class="{ 'has-error' : parent.priceEditForm.offerPrice.$invalid
                                 && !parent.priceEditForm.offerPrice.$pristine } ">
-                <label>{{ 'COMMON_PRODUCT_OFFER_PRICE'| translate }}<span style="color:red ">*</span></label>
-                <div class="input-group ">
-                    <span class="input-group-addon ">{{ 'COMMON_CURRENCY'| translate }}</span>
-                    <input type="number " name="offerPrice " class="form-control currency" ng-model="parent.editWorkflowUnit.offerPrice
+				<label>{{ 'COMMON_PRODUCT_OFFER_PRICE'| translate }}<span style="color:red ">*</span></label>
+				<div class="input-group ">
+					<span class="input-group-addon ">{{ 'COMMON_CURRENCY'| translate }}</span>
+					<input type="number " name="offerPrice " class="form-control currency" ng-model="parent.editWorkflowUnit.offerPrice
                                 " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " data-number-to-fixed="2 "
-                        data-number-stepfactor="100 " id="c2 " required>
-                </div>
-                <p ng-show="parent.priceEditForm.offerPrice.$invalid && !parent.priceEditForm.offerPrice.$pristine " class="help-block ">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
-            </div>
-        </div>
-        <div class="col-sm-12">
-            <div>
-                <div class="form-group ">
-                    <table class="table ">
-                        <tr>
-                            <td></td>
-                            <td>{{ 'COMMON_PRODUCT_BASE_PRICE' | translate }}</td>
-                            <td>{{parent.sumBasicPriceOrderPositions(parent.currentOrderPositions)| currency:'\u20AC'}}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><b>-</b></td>
-                            <td>{{ 'PRODUCT_DISCOUNT' | translate }}</td>
-                            <td>{{parent.sumBasicPriceOrderPositions(parent.currentOrderPositions) - parent.sumOrderPositions(parent.currentOrderPositions)|
-                                currency:'\u20AC'}} ({{parent.workflowService.calculateDiscount(parent.sumBasicPriceOrderPositions(parent.currentOrderPositions),parent.sumOrderPositions(parent.currentOrderPositions))}}%)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><b>+</b></td>
-                            <td>{{ 'COMMON_PRODUCT_DELIVERYCOSTS' | translate }}</td>
-                            <td>{{parent.editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</td>
-                        </tr>
-                        <tr>
-                            <td><b>=</b></td>
-                            <td>
-                                <h3>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}({{ 'CALCULATION_NET' | translate }})</h3>
-                            </td>
-                            <td>
-                                <h3>{{parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</h3>
-                            </td>
-                        </tr>
-                        <tr ng-if="type=='offer' ">
-                            <td><b>-</b></td>
-                            <td>{{ 'PRODUCT_DISCOUNT' | translate }}</td>
-                            <td>{{(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts)-parent.editWorkflowUnit.offerPrice|
-                                currency:'\u20AC'}} ({{parent.workflowService.calculateDiscount(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts,parent.editWorkflowUnit.offerPrice)}}%)
-                            </td>
-                        </tr>
-                        <tr ng-if="type=='offer' ">
-                            <td><b>=</b></td>
-                            <td>
-                                <h3>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}({{ 'CALCULATION_NET' | translate }})</h3>
-                            </td>
-                            <td>
-                                <h3>{{parent.editWorkflowUnit.offerPrice|currency:'\u20AC'}}</h3>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><b>+</b></td>
-                            <td>
-                                <table style="table-layout:fixed;">
-                                    <td style="vertical-align:top; overflow: hidden;">
-                                        {{ 'CALCULATION_VAT' | translate }} &nbsp;<span ng-show="!inputfield ">{{parent.vat}}%</span>
-                                    </td>
-                                    <td style="overflow: hidden;">
-                                        <div class="input-group " ng-show="inputfield " ng-class="{
+						data-number-stepfactor="100 " id="c2 " required>
+				</div>
+				<p ng-show="parent.priceEditForm.offerPrice.$invalid && !parent.priceEditForm.offerPrice.$pristine " class="help-block ">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
+			</div>
+		</div>
+		<div class="col-sm-12">
+			<div>
+				<div class="form-group ">
+					<table class="table ">
+						<tr>
+							<td></td>
+							<td>{{ 'COMMON_PRODUCT_BASE_PRICE' | translate }}</td>
+							<td>{{parent.sumBasicPriceOrderPositions(parent.currentOrderPositions)| currency:'\u20AC'}}
+							</td>
+						</tr>
+						<tr>
+							<td><b>-</b></td>
+							<td>{{ 'PRODUCT_DISCOUNT' | translate }}</td>
+							<td>{{parent.sumBasicPriceOrderPositions(parent.currentOrderPositions) - parent.sumOrderPositions(parent.currentOrderPositions)|
+								currency:'\u20AC'}} ({{parent.workflowService.calculateDiscount(parent.sumBasicPriceOrderPositions(parent.currentOrderPositions),parent.sumOrderPositions(parent.currentOrderPositions))}}%)
+							</td>
+						</tr>
+						<tr>
+							<td><b>+</b></td>
+							<td>{{ 'COMMON_PRODUCT_DELIVERYCOSTS' | translate }}</td>
+							<td>{{parent.editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</td>
+						</tr>
+						<tr>
+							<td><b>=</b></td>
+							<td>
+								<h3>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}({{ 'CALCULATION_NET' | translate }})</h3>
+							</td>
+							<td>
+								<h3>{{parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</h3>
+							</td>
+						</tr>
+						<tr ng-if="type=='offer' ">
+							<td><b>-</b></td>
+							<td>{{ 'PRODUCT_DISCOUNT' | translate }}</td>
+							<td>{{(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts)-parent.editWorkflowUnit.offerPrice|
+								currency:'\u20AC'}} ({{parent.workflowService.calculateDiscount(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts,parent.editWorkflowUnit.offerPrice)}}%)
+							</td>
+						</tr>
+						<tr ng-if="type=='offer' ">
+							<td><b>=</b></td>
+							<td>
+								<h3>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}({{ 'CALCULATION_NET' | translate }})</h3>
+							</td>
+							<td>
+								<h3>{{parent.editWorkflowUnit.offerPrice|currency:'\u20AC'}}</h3>
+							</td>
+						</tr>
+						<tr ng-if="type=='sale' ">
+							<td><b>-</b></td>
+							<td>{{ 'PRODUCT_DISCOUNT' | translate }}</td>
+							<td>{{(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts)-parent.process.offer.offerPrice|
+								currency:'\u20AC'}} ({{parent.workflowService.calculateDiscount(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts,parent.process.offer.offerPrice)}}%)
+							</td>
+						</tr>
+						<tr ng-if="type=='sale' ">
+							<td><b>=</b></td>
+							<td>
+								<h3>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}({{ 'CALCULATION_NET' | translate }})</h3>
+							</td>
+							<td>
+								<h3>{{parent.process.offer.offerPrice|currency:'\u20AC'}}</h3>
+							</td>
+						</tr>
+						<tr>
+							<td><b>+</b></td>
+							<td>
+								<table style="table-layout:fixed;">
+									<td style="vertical-align:top; overflow: hidden;">
+										{{ 'CALCULATION_VAT' | translate }} &nbsp;<span ng-show="!inputfield ">{{parent.vat}}%</span>
+									</td>
+									<td style="overflow: hidden;">
+										<div class="input-group " ng-show="inputfield " ng-class="{
                                 'has-error' : parent.priceEditForm.vat.$invalid && !parent.priceEditForm.vat.$pristine } ">
-                                            <span class="input-group-addon ">%</span>
-                                            <input class="form-control currency" focus-me="inputfield" name="vat" type="number " ng-model="parent.vat " ng-init="parent.vat=19 "
-                                                ng-blur="inputfield = !(inputfield && !(parent.priceEditForm.vat.$invalid && !parent.priceEditForm.vat.$pristine))"
-                                                ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " max="100 " required>
-                                        </div>&nbsp;
-                                        <a class="close-link " ng-click="inputfield=! inputfield" ng-show="!inputfield
-                                "><i class="fa fa-pencil-square-o "></i></a>
-                                    </td>
-                                </table>
-                            </td>
-                            <td ng-if="type=='offer' ">{{parent.editWorkflowUnit.offerPrice*(parent.vat/100)|currency:'\u20AC'}}</td>
-                            <td ng-if="type=='lead' ">{{(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts)*(parent.vat/100)|currency:'\u20AC'}}</td>
-                        </tr>
-                        <tr ng-if="type=='lead' ">
-                            <td><b>=</b></td>
-                            <td>
-                                <h3>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}({{ 'CALCULATION_GROSS' | translate }})</h3>
-                            </td>
-                            <td>
-                                <h3>{{(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts)*(1+(parent.vat/100))|currency:'\u20AC'}}</h3>
-                            </td>
-                        </tr>
-                        <tr ng-if="type=='offer' ">
-                            <td><b>=</b></td>
-                            <td>
-                                <h3>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}({{ 'CALCULATION_GROSS' | translate }})</h3>
-                            </td>
-                            <td>
-                                <h3>{{parent.editWorkflowUnit.offerPrice*(1+(parent.vat/100))|currency:'\u20AC'}}</h3>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+											<span class="input-group-addon ">%</span>
+											<input class="form-control currency" focus-me="inputfield" name="vat" type="number " ng-model="parent.vat " ng-init="parent.vat=19 "
+												ng-blur="inputfield = !(inputfield && !(parent.priceEditForm.vat.$invalid && !parent.priceEditForm.vat.$pristine))"
+												ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " max="100 " required>
+										</div>&nbsp;
+										<a class="close-link " ng-click="inputfield=! inputfield" ng-show="type!=='sale' && !inputfield"><i class="fa fa-pencil-square-o "></i></a>
+									</td>
+								</table>
+							</td>
+							<td ng-if="type=='sale' ">{{parent.process.offer.offerPrice*(parent.vat/100)|currency:'\u20AC'}}</td>
+							<td ng-if="type=='offer' ">{{parent.editWorkflowUnit.offerPrice*(parent.vat/100)|currency:'\u20AC'}}</td>
+							<td ng-if="type=='lead' ">{{(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts)*(parent.vat/100)|currency:'\u20AC'}}</td>
+						</tr>
+						<tr ng-if="type=='lead' ">
+							<td><b>=</b></td>
+							<td>
+								<h3>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}({{ 'CALCULATION_GROSS' | translate }})</h3>
+							</td>
+							<td>
+								<h3>{{(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts)*(1+(parent.vat/100))|currency:'\u20AC'}}</h3>
+							</td>
+						</tr>
+						<tr ng-if="type=='offer' ">
+							<td><b>=</b></td>
+							<td>
+								<h3>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}({{ 'CALCULATION_GROSS' | translate }})</h3>
+							</td>
+							<td>
+								<h3>{{parent.editWorkflowUnit.offerPrice*(1+(parent.vat/100))|currency:'\u20AC'}}</h3>
+							</td>
+						</tr>
+						<tr ng-if="type=='sale' ">
+							<td><b>=</b></td>
+							<td>
+								<h3>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}({{ 'CALCULATION_GROSS' | translate }})</h3>
+							</td>
+							<td>
+								<h3>{{parent.process.offer.offerPrice*(1+(parent.vat/100))|currency:'\u20AC'}}</h3>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 </form>

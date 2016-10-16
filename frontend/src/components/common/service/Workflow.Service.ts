@@ -213,6 +213,47 @@ class WorkflowService {
             resolve: {
                 process: function () {
                     return process;
+                }, type: function (): string {
+                    return "offer";
+                }
+            }
+        });
+    }
+
+
+    startSaleTransformation(process: Process) {
+        let self = this;
+        process.sale = {
+            id: 0,
+            deliveryAddress: process.offer.deliveryAddress,
+            deliveryDate: process.offer.deliveryDate,
+            orderPositions: deepCopy(process.offer.orderPositions),
+            transport: process.offer.deliveryAddress,
+            customer: process.offer.customer,
+            saleProfit: process.offer.offerPrice,
+            saleCost: 0,
+            saleTurnover: process.offer.offerPrice,
+            timestamp: newTimestamp(),
+            vendor: process.offer.vendor,
+            deliveryCosts: process.offer.deliveryCosts,
+            message: process.offer.message
+        };
+        for (let i = 0; i < process.sale.orderPositions.length; i++) {
+            process.sale.orderPositions[i].id = 0;
+        }
+
+        this.uibModal.open({
+            template: " <div sendworkflow parent='workflowCtrl' type='sale'></div>",
+            controller: WorkflowController,
+            controllerAs: "workflowCtrl",
+            backdrop: "static",
+            keyboard: false,
+            size: "lg",
+            resolve: {
+                process: function (): Process {
+                    return process;
+                }, type: function (): string {
+                    return "sale";
                 }
             }
         });
@@ -242,57 +283,36 @@ class WorkflowService {
                     self.rootScope.$broadcast("onTodosChange");
                     defer.resolve(process);
                 }
-
-
-
             }, function () {
-                defer.reject(false);
+                defer.reject(process);
             });
         }, function () {
-            defer.reject(false);
+            defer.reject(process);
         });
         return defer.promise;
     }
 
-    addOfferToSale(process: Process): IPromise<boolean> {
+    addOfferToSale(process: Process): IPromise<Process> {
         let defer = this.$q.defer();
         let self = this;
-        let sale: Sale = {
-            id: 0,
-            deliveryAddress: process.offer.deliveryAddress,
-            deliveryDate: process.offer.deliveryDate,
-            orderPositions: deepCopy(process.lead.orderPositions),
-            transport: process.offer.deliveryAddress,
-            customer: process.offer.customer,
-            saleProfit: 0,
-            saleCost: 0,
-            saleTurnover: process.offer.offerPrice,
-            timestamp: newTimestamp(),
-            vendor: process.offer.vendor,
-            deliveryCosts: process.offer.deliveryCosts,
-            message: process.offer.message
-        };
-        for (let i = 0; i < sale.orderPositions.length; i++) {
-            sale.orderPositions[i].id = 0;
-        }
-        this.processResource.createSale({ id: process.id }, sale).$promise.then(function () {
-            self.processResource.setStatus({ id: process.id }, Status.SALE).$promise.then(function () {
+        this.processResource.createSale({ id: process.id }, process.sale).$promise.then(function (resultSale: Sale) {
+            self.processResource.setStatus({ id: process.id }, Status.SALE).$promise.then(function (resultProcess: Process) {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
                 self.rootScope.offersCount -= 1;
-                process.sale = sale;
-                process.status = Status.SALE;
-                self.processResource.setProcessor({ id: process.id }, self.user.id).$promise.then(function () {
+                process.sale = resultSale;
+                process.status = resultProcess.status;
+                self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function () {
                     process.processor = self.user;
                     self.rootScope.$broadcast("onTodosChange");
-                    defer.resolve(true);
+                    defer.resolve(process);
                 });
 
 
             }, function () {
-                defer.reject(false);
+                defer.reject(process);
             });
         }, function () {
-            defer.reject(false);
+            defer.reject(process);
         });
         return defer.promise;
     }

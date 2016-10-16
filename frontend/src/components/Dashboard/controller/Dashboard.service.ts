@@ -182,7 +182,7 @@ class DashboardService {
 
     createSale(process: Process) {
         let self = this;
-        this.workflowService.addOfferToSale(process).then(function (isResolved: boolean) {
+        this.workflowService.addOfferToSale(process).then(function (isResolved: Process) {
             self.closedSales = self.orderBy(self.closedSales, "sale.timestamp", true);
             self.sumOffers();
             self.sumSales();

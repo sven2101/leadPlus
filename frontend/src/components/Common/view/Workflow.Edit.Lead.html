@@ -6,7 +6,7 @@
 				<thead>
 					<tr>
 						<th class="col-md-5">
-							<select class="form-control" ng-model="parent.currentProductId">
+							<select class="form-control" ng-model="parent.currentProductId" ng-disabled="type=='sale'">
                             <option value="-1" selected disabled hidden>{{ 'LEAD_EDIT_SELECT_PRODUCT' | translate }}</option>                                     
                             <option value="{{product.id}}" ng-repeat="product in service.productService.getActiveProducts()">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
                         </select>
@@ -20,7 +20,7 @@
 						</th>
 						<th class="col-md-2">
 							<input min="1" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" name="addOrderPosition" type="number" class="input-sm form-control"
-								ng-model="parent.currentProductAmount" required>
+								ng-model="parent.currentProductAmount" required ng-disabled="type=='sale'">
 						</th>
 						<th class="col-md-1">
 							<button ng-disabled="parent.leadEditForm.addOrderPosition.$invalid||parent.currentProductId==-1" type="button" class="btn btn-white btn-sm"
@@ -29,6 +29,15 @@
 						</th>
 					</tr>
 				</thead>
+				<tfoot>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td><h2><b>{{parent.sumOrderPositions(parent.currentOrderPositions)|currency:'\u20AC'}}</b></h2></td>
+					</tr>
+				</tfoot>
 				<tbody>
 					<th>{{ 'PRODUCT_PRODUCTNAME' | translate }}</th>
 					<th class="text-center">{{ 'PRODUCT_DISCOUNT' | translate }}</th>
@@ -47,7 +56,7 @@
                                     " ng-model="orderPosition.discount " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " min="0 "
 									max="100 " step="0.1 " data-number-to-fixed="2 " data-number-stepfactor="100
                                     " class="form-control currency " ng-keyup="[parent.workflowService.setPrice(orderPosition),parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.currentOrderPositions)]"
-									id="c3 " required>
+									id="c3 " required ng-disabled="type=='sale'">
 							</div>
 						</td>
 						<td class="col-md-2 text-center">
@@ -55,15 +64,15 @@
 								<span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
 								<input type="number" name="{{'orderPosition'+$index}}" class="form-control" ng-model="orderPosition.price" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ "
 									min="0 " step="0.01 " data-number-to-fixed="2 " data-number-stepfactor="100" class="form-control currency " ng-keyup="[parent.workflowService.setDiscount(orderPosition),parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.currentOrderPositions)] "
-									id="c2 " required>
+									id="c2 " required ng-disabled="type=='sale'">
 							</div>
 						</td>
 						<td class="col-md-2 text-center ">{{orderPosition.amount}}</td>
 						<td class="col-md-2 text-center ">{{orderPosition.price*orderPosition.amount| currency:'\u20AC'}}
 						</td>
 						<td class=" col-md-1 ">
-							<button type="button " class="btn btn-white btn-sm " ng-click="[parent.deleteProduct(parent.currentOrderPositions,$index),parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.currentOrderPositions)] ">
-                                <i class="fa fa-trash "></i>&nbsp;
+							<button type="button " class="btn btn-white btn-sm " ng-click="[parent.deleteProduct(parent.currentOrderPositions,$index),parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.currentOrderPositions)] " ng-disabled="type=='sale'">
+                                <i class="fa fa-trash " ></i>&nbsp;
                             </button>
 						</td>
 					</tr>

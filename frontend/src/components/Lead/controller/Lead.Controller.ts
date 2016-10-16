@@ -71,14 +71,7 @@ class LeadController extends AbstractWorkflow {
         this.leadService = LeadService;
         this.scope = $scope;
         this.compile = $compile;
-
         this.currentWizard = 1;
-        this.currentWizard1Class = "current";
-        this.currentWizard2Class = "done";
-        this.currentWizard3Class = "done";
-        this.currentWizard4Class = "done";
-        this.currentWizard5Class = "done";
-        this.currentWizard6Class = "done";
 
         let self = this;
         $rootScope.$on("deleteRow", (event, data) => {

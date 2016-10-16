@@ -80,14 +80,7 @@ class OfferController extends AbstractWorkflow {
         this.compile = $compile;
         this.window = $window;
         this.templateService = TemplateService;
-
         this.currentWizard = 1;
-        this.currentWizard1Class = "current";
-        this.currentWizard2Class = "done";
-        this.currentWizard3Class = "done";
-        this.currentWizard4Class = "done";
-        this.currentWizard5Class = "done";
-        this.currentWizard6Class = "done";
 
         let self = this;
         function createdRow(row, data: Process, dataIndex) {
@@ -127,6 +120,10 @@ class OfferController extends AbstractWorkflow {
         this.dtOptions = this.offerDataTableService.getDTOptionsConfiguration(createdRow, searchLink);
         this.dtColumns = this.offerDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
         this.getAllActiveTemplates();
+
+        $rootScope.$on("deleteRow", (event, data) => {
+            self.offerService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
+        });
 
     }
 
@@ -201,7 +198,8 @@ class OfferController extends AbstractWorkflow {
     }
 
     createNextWorkflowUnit(process: Process) {
-        this.offerService.createSale(process, this.loadAllData, this.dtInstance, this.scope);
+        // this.offerService.createSale(process, this.loadAllData, this.dtInstance, this.scope);
+        this.workflowService.startSaleTransformation(process);
     }
 
     closeOrOpen(process: Process) {

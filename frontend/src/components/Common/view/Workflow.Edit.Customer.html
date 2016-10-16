@@ -3,7 +3,7 @@
 		<div class="col-sm-6 b-r">
 			<div class="form-group">
 				<label>{{ 'CUSTOMER_MENU' | translate }}</label>
-				<select class="form-control" ng-model="parent.currentCustomerId" ng-change="parent.selectCustomer(parent.editWorkflowUnit)">
+				<select class="form-control" ng-model="parent.currentCustomerId" ng-change="parent.selectCustomer(parent.editWorkflowUnit)" ng-disabled="type=='sale'">
                     <option value="-1" selected > - {{ 'CUSTOMER_CREATE' | translate }} - </option>                                                                     
                     <option value="{{customer.id}}" ng-repeat="customer in service.customerService.getActiveCustomers()">{{customer.firstname}} {{customer.lastname}}</option>                                          
                 </select>
@@ -57,7 +57,7 @@
 			<div>
 				<div class="form-group">
 					<label>{{ 'COMMON_NOTE' | translate }}</label>
-					<div type="text " name="content " class="form-control" ng-model="parent.editWorkflowUnit.message" id="summernote"></div>
+					<summernote name="content " class="form-control" ng-model="parent.editWorkflowUnit.message" height="300px"></summernote>
 				</div>
 			</div>
 		</div>
@@ -77,10 +77,5 @@
             calendarWeeks: true,
             autoclose: true
         });
-    });
-
-    $('#summernote').summernote({
-        height: ($(window).height() - 580),
-        focus: false
     });
 </script>
