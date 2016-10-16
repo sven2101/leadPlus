@@ -16,10 +16,13 @@ package dash.notificationmanagement.domain;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -29,7 +32,10 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dash.fileuploadmanagement.domain.FileUpload;
+import dash.processmanagement.domain.Process;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
@@ -64,10 +70,20 @@ public class Notification {
 	@Column(name = "content", length = 30000, nullable = false)
 	private String content;
 
-	// @JsonProperty(access = Access.WRITE_ONLY)
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "attachment_id", nullable = true)
 	private FileUpload attachment;
+
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "process_id", nullable = false)
+	@Where(clause = "deleted <> '1'")
+	private Process process;
+
+	@Enumerated(EnumType.STRING)
+	@NotNull
+	@Column(name = "notificationtype", length = 255)
+	private NotificationType notificationType;
 
 	public Notification() {
 	}
@@ -116,6 +132,26 @@ public class Notification {
 		this.attachment = attachment;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public NotificationType getNotificationType() {
+		return notificationType;
+	}
+
+	public void setNotificationType(NotificationType notificationType) {
+		this.notificationType = notificationType;
+	}
+
+	public Process getProcess() {
+		return process;
+	}
+
+	public void setProcess(Process process) {
+		this.process = process;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -124,6 +160,7 @@ public class Notification {
 		result = prime * result + ((content == null) ? 0 : content.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((notificationType == null) ? 0 : notificationType.hashCode());
 		result = prime * result + ((recipient == null) ? 0 : recipient.hashCode());
 		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
 		return result;
@@ -155,6 +192,8 @@ public class Notification {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
+		if (notificationType != other.notificationType)
+			return false;
 		if (recipient == null) {
 			if (other.recipient != null)
 				return false;
@@ -170,8 +209,9 @@ public class Notification {
 
 	@Override
 	public String toString() {
-		return "Notification [id=" + id + ", recipient=" + recipient + ", subject=" + subject + ", deleted=" + deleted + ", content=" + content
-				+ ", attachment=" + attachment + "]";
+		return "Notification [id=" + id + ", recipient=" + recipient + ", subject=" + subject + ", deleted=" + deleted
+				+ ", content=" + content + ", attachment=" + attachment + ", notificationType=" + notificationType
+				+ "]";
 	}
 
 }

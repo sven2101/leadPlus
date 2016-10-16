@@ -179,6 +179,13 @@ class LeadDataTableService {
 
     getActionButtonsHTML(templateData: any): string {
         this.setActionButtonsConfig(this.user, templateData);
+        if (!isNullOrUndefined(templateData.process.notifications)) {
+            for (let i = 0; i < templateData.process.notifications.length; i++) {
+                let notification = templateData.process.notifications[i];
+                notification.content = btoa(encodeURIComponent(notification.content));
+                templateData.process.notifications[i] = notification;
+            }
+        }
         if ($(window).width() > 1300) {
             return "<div actionbuttons template='standard' type='lead' parent='leadCtrl' templatedata='" + JSON.stringify(templateData) + "'></div>";
         } else {

@@ -73,6 +73,21 @@ public class User implements UserDetails {
 
 	@NotNull
 	@Size(max = 50)
+	@Column(name = "skype", length = 50, nullable = true)
+	private String skype;
+
+	@NotNull
+	@Size(max = 50)
+	@Column(name = "fax", length = 50, nullable = true)
+	private String fax;
+
+	@NotNull
+	@Size(max = 50)
+	@Column(name = "job", length = 50, nullable = true)
+	private String job;
+
+	@NotNull
+	@Size(max = 50)
 	@Column(name = "lastname", unique = true, length = 50, nullable = false)
 	private String lastname;
 
@@ -197,6 +212,34 @@ public class User implements UserDetails {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public String getSkype() {
+		return skype;
+	}
+
+	public void setSkype(String skype) {
+		this.skype = skype;
+	}
+
+	public String getFax() {
+		return fax;
+	}
+
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+
+	public String getJob() {
+		return job;
+	}
+
+	public void setJob(String job) {
+		this.job = job;
+	}
+
+	public void setPicture(FileUpload picture) {
+		this.picture = picture;
 	}
 
 	@Override

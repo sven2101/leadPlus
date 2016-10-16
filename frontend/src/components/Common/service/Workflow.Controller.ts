@@ -40,8 +40,8 @@ class WorkflowController extends AbstractWorkflow {
     products: Array<Product> = [];
 
     customerService: CustomerService;
-    productService: ProductService;
     notificationService: NotificationService;
+    productService: ProductService;
     templateService: TemplateService;
     workflowService: WorkflowService;
     dashboardService: DashboardService;
@@ -51,6 +51,7 @@ class WorkflowController extends AbstractWorkflow {
     currentProductAmount = 1;
     currentCustomerId = "-1";
     customerSelected: boolean = false;
+    currentNotification: Notification;
 
     editProcess: Process;
     edit: boolean;
@@ -68,6 +69,8 @@ class WorkflowController extends AbstractWorkflow {
     saleEditForm: any;
 
     rootScope;
+    templateId = "-1";
+    notificationId = "-1";
 
     constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, $rootScope) {
 
@@ -76,11 +79,12 @@ class WorkflowController extends AbstractWorkflow {
         this.rootScope = $rootScope;
         this.process = process;
         this.type = type;
+
         if (this.type === "offer") {
             this.editWorkflowUnit = new Offer();
             this.editWorkflowUnit = this.process.offer;
-            this.editWorkflowUnit.notification = new Notification();
-            this.editWorkflowUnit.notification.recipient = this.editWorkflowUnit.customer.email;
+            this.currentNotification = new Notification();
+            this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
             this.editEmail = false;
         }
         else if (this.type === "sale") {
@@ -89,7 +93,6 @@ class WorkflowController extends AbstractWorkflow {
             this.editWorkflowUnit = this.process.sale;
             this.editEmail = true;
         }
-
         this.uibModalInstance = $uibModalInstance;
 
         this.notificationService = NotificationService;
@@ -169,7 +172,8 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     generate(templateId: string, offer: Offer) {
-        this.templateService.generate(templateId, offer).then((result) => this.editWorkflowUnit.notification = result, (error) => console.log(error));
+        console.log(templateId);
+        this.templateService.generate(templateId, offer).then((result) => this.currentNotification = result, (error) => console.log(error));
     }
 
     generatePDF(templateId: string, offer: Offer) {
@@ -191,19 +195,38 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     send() {
+        let self = this;
         this.process.offer = this.editWorkflowUnit;
-        this.notificationService.sendOffer(this.process);
-        this.rootScope.$broadcast("deleteRow", this.process);
-        this.close();
+        let process = this.process;
+        let notification = this.currentNotification;
+        this.currentNotification.notificationType = NotificationType.OFFER;
+        this.notificationService.sendNotification(notification).then(() => {
+            self.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
+                self.rootScope.$broadcast("deleteRow", self.process);
+                if (isNullOrUndefined(process.notifications)) {
+                    process.notifications = [];
+                }
+                process.notifications.push(notification);
+                self.workflowService.saveProcess(process);
+                self.close();
+            });
+        });
     }
 
     save() {
         if (this.type === "offer") {
-            this.process.offer = this.editWorkflowUnit;
-            this.process.offer.notification = null;
             let self = this;
-            this.workflowService.addLeadToOffer(this.process).then(function (tmpprocess: Process) {
-                self.rootScope.$broadcast("deleteRow", self.process);
+            this.process.offer = this.editWorkflowUnit;
+            let process = this.process;
+            this.currentNotification.notificationType = NotificationType.OFFER;
+            let notification = this.currentNotification;
+            this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
+                self.rootScope.$broadcast("deleteRow", tmpprocess);
+                if (isNullOrUndefined(tmpprocess.notifications)) {
+                    tmpprocess.notifications = [];
+                }
+                tmpprocess.notifications.push(notification);
+                self.workflowService.saveProcess(tmpprocess);
                 self.close();
             });
         } else if (this.type === "sale") {

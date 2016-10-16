@@ -110,6 +110,10 @@ public abstract class AbstractWorkflow implements Request {
 		return id;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@Override
 	public List<OrderPosition> getOrderPositions() {
 		return orderPositions;
@@ -150,6 +154,10 @@ public abstract class AbstractWorkflow implements Request {
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public double getPrice() {
@@ -234,8 +242,9 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Override
 	public String toString() {
-		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress + ", deleted=" + deleted + ", deliveryCosts="
-				+ deliveryCosts + ", orderPositions=" + orderPositions + ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + "]";
+		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress
+				+ ", deleted=" + deleted + ", deliveryCosts=" + deliveryCosts + ", orderPositions=" + orderPositions
+				+ ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + "]";
 	}
 
 }

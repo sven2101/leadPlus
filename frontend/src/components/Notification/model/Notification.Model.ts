@@ -1,6 +1,7 @@
 /// <reference path="../../common/model/AbstractModel.Model.ts" />
 /// <reference path="../../Customer/model/Customer.Model.ts" />
 /// <reference path="../../FileUpload/model/FileUpload.Model.ts" />
+/// <reference path="./NotificationType.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -20,6 +21,7 @@ class Notification extends AbstractModel {
     subject: string;
     content: string;
     attachment: FileUpload;
+    notificationType: NotificationType;
 
     constructor() {
         super();

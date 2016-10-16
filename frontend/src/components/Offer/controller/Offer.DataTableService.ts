@@ -197,8 +197,12 @@ class OfferDataTableService {
 
     getActionButtonsHTML(templateData: any): string {
         this.setActionButtonsConfig(this.user, templateData);
-        if (!isNullOrUndefined(templateData.process.offer.notification) && !isNullOrUndefined(templateData.process.offer.notification.content)) {
-            templateData.process.offer.notification.content = btoa(encodeURIComponent(templateData.process.offer.notification.content));
+        if (!isNullOrUndefined(templateData.process.notifications)) {
+            for (let i = 0; i < templateData.process.notifications.length; i++) {
+                let notification = templateData.process.notifications[i];
+                notification.content = btoa(encodeURIComponent(notification.content));
+                templateData.process.notifications[i] = notification;
+            }
         }
 
         if ($(window).width() > 1300) {
