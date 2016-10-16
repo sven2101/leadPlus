@@ -64,7 +64,7 @@ class LeadController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    sce;
+    messageAsHtml;
 
     constructor($rootScope, $compile, $scope, WorkflowService, LeadDataTableService, LeadService, $routeParams, $sce) {
         super(WorkflowService);
@@ -115,8 +115,7 @@ class LeadController extends AbstractWorkflow {
         }
         this.dtOptions = this.leadDataTableService.getDTOptionsConfiguration(createdRow, searchLink);
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
-        this.sce = $sce;
-        this.sce.getTrustedHtml(this.editWorkflowUnit.message);
+        this.messageAsHtml = $sce.trustAsHtml(this.editWorkflowUnit.message);
     }
 
     close() {
@@ -135,7 +134,6 @@ class LeadController extends AbstractWorkflow {
 
     appendChildRow(process: Process) {
         let childScope = this.scope.$new(true);
-        this.sce.getTrustedHtml(process.lead.message);
         this.workflowService.appendChildRow(childScope, process, process.lead, this.dtInstance, this, "lead");
     }
 

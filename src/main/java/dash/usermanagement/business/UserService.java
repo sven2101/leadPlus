@@ -172,6 +172,28 @@ public class UserService implements IUserService {
 	}
 
 	@Override
+	public User updateProfilPicture(final User user) throws UpdateFailedException {
+		if (Optional.ofNullable(user).isPresent()) {
+			try {
+				User updateUser = getById(user.getId());
+				if (Optional.ofNullable(updateUser).isPresent()) {
+					updateUser.setProfilPicture(user.getPicture());
+					return save(updateUser);
+				} else {
+					throw new NotFoundException(USER_NOT_FOUND);
+				}
+			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
+				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			}
+		} else {
+			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			throw ufex;
+		}
+	}
+
+	@Override
 	public void delete(final long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {

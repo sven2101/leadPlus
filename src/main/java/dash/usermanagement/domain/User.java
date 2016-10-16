@@ -66,22 +66,18 @@ public class User implements UserDetails {
 	@Column(name = "firstname", length = 50, nullable = false)
 	private String firstname;
 
-	@NotNull
 	@Size(max = 50)
 	@Column(name = "phone", length = 50, nullable = true)
 	private String phone;
 
-	@NotNull
 	@Size(max = 50)
 	@Column(name = "skype", length = 50, nullable = true)
 	private String skype;
 
-	@NotNull
 	@Size(max = 50)
 	@Column(name = "fax", length = 50, nullable = true)
 	private String fax;
 
-	@NotNull
 	@Size(max = 50)
 	@Column(name = "job", length = 50, nullable = true)
 	private String job;

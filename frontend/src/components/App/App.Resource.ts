@@ -168,9 +168,12 @@ class UserResource {
             getById: { url: "/users/:id", method: "GET" },
             update: { url: "/users", method: "PUT" },
             changePassword: { url: "/users/:id/pw", method: "POST" },
-            setProfilePicture: {
+            setProfilePicture2: {
                 url: "/users/:id/profile/picture", params: { file: "@file" }, method: "POST", transformRequest: angular.identity,
                 headers: { "Content-Type": undefined }
+            },
+            setProfilePicture: {
+                url: "/users/profile/picture", method: "POST"
             },
             getProfilePicture: {
                 url: "/users/:id/profile/picture/object", method: "GET"
