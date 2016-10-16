@@ -28,7 +28,7 @@ const LeadControllerId: string = "LeadController";
 
 class LeadController extends AbstractWorkflow {
 
-    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId];
+    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId, "$sce"];
 
     type: string = "lead";
 
@@ -64,7 +64,9 @@ class LeadController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($rootScope, $compile, $scope, WorkflowService, LeadDataTableService, LeadService, $routeParams) {
+    sce;
+
+    constructor($rootScope, $compile, $scope, WorkflowService, LeadDataTableService, LeadService, $routeParams, $sce) {
         super(WorkflowService);
         this.workflowService = WorkflowService;
         this.leadDataTableService = LeadDataTableService;
@@ -120,6 +122,8 @@ class LeadController extends AbstractWorkflow {
         }
         this.dtOptions = this.leadDataTableService.getDTOptionsConfiguration(createdRow, searchLink);
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
+        this.sce = $sce;
+        this.sce.getTrustedHtml(this.editWorkflowUnit.message);
     }
 
     close() {
@@ -138,6 +142,7 @@ class LeadController extends AbstractWorkflow {
 
     appendChildRow(process: Process) {
         let childScope = this.scope.$new(true);
+        this.sce.getTrustedHtml(process.lead.message);
         this.workflowService.appendChildRow(childScope, process, process.lead, this.dtInstance, this, "lead");
     }
 
