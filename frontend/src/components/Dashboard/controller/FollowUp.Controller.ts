@@ -70,7 +70,7 @@ class FollowUpController {
 
     generate(templateId: string, offer: Offer) {
         console.log(offer);
-        this.templateService.generate(templateId, offer, null).then((result) => this.currentNotification = result, (error) => console.log(error));
+        this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => console.log(error));
     }
 
     getAllActiveTemplates() {
@@ -96,7 +96,7 @@ class FollowUpController {
     }
 
     getTheFiles($files) {
-        this.notificationService.getTheFiles($files);
+        this.notificationService.setAttachmentToNotification($files, this.currentNotification);
     }
 
     setFormerNotification(notificationId: number) {

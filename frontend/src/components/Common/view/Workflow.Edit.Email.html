@@ -4,8 +4,8 @@
 
 		<div class="form-group">
 			<label>{{ 'EMAIL_NOTIICATIONS' | translate }}</label>
-			<select class="form-control" ng-model="notificationId" ng-change="parent.setFormerNotification(notificationId)">
-                <option value="-1" selected>{{ 'EMAIL_TEMPLATE_SELECT' | translate }}</option>                                                                     
+			<select class="form-control" ng-disabled="parent.editProcess.notifications.length==0" ng-model="notificationId" ng-change="parent.setFormerNotification(notificationId)">
+                <option value="-1" selected disabled>{{ 'EMAIL_SELECT_HISTORY' | translate }}</option>                                                                     
                 <option value="{{notification.id}}" ng-repeat="notification in parent.editProcess.notifications track by $index">{{notification.notificationType.toLowerCase()+" - "+notification.subject}}</option>                                           
             </select>
 		</div>
@@ -13,7 +13,7 @@
 		<div class="form-group">
 			<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>
 			<select ng-disabled="parent.editEmail" class="form-control" ng-model="templateId" ng-change="parent.generate(templateId, parent.editWorkflowUnit)">
-                <option value="-1" selected>{{ 'EMAIL_TEMPLATE_SELECT' | translate }}</option>                                                                     
+                <option value="-1" selected disabled>{{ 'EMAIL_TEMPLATE_SELECT' | translate }}</option>                                                                     
                 <option value="{{template.id}}" ng-repeat="template in parent.templates">{{template.name}}</option>                                           
             </select>
 		</div>
@@ -56,11 +56,6 @@
 			<div class="summernote">
 				<summernote name="message" required ng-model="parent.currentNotification.content">{{parent.currentNotification.content}}</summernote>
 			</div>
-			<!--
-				<div style="border-style:solid;" ng-if="parent.editEmail ">
-					{{parent.currentNotification.content}}
-				</div>
-			-->
 			<p ng-show="parent.emailEditForm.message.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
 		</div>
 	</div>

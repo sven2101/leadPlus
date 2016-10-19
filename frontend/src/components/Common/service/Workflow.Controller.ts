@@ -223,6 +223,7 @@ class WorkflowController extends AbstractWorkflow {
                 }
                 if (isNaN(notification.id)) {
                     tmpprocess.notifications.push(notification);
+                    console.log(notification);
                 }
                 self.workflowService.saveProcess(tmpprocess);
                 self.close();
@@ -242,7 +243,7 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     getTheFiles($files) {
-        this.notificationService.getTheFiles($files);
+        this.notificationService.setAttachmentToNotification($files, this.currentNotification);
     }
 
     setFormerNotification(notificationId: number) {

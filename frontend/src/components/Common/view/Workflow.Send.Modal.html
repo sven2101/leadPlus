@@ -2,7 +2,7 @@
 	<button type="button" class="close" ng-click="parent.close()">
         <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 	<div id="wizard" role="application" class="wizard clearfix">
-		<div class="steps clearfix"> 
+		<div class="steps clearfix">
 			<ul role="tablist">
 				<li ng-click="parent.wizardOnClick(1)" role="tab" ng-class="{error:parent.customerEditForm.$invalid,current:parent.currentWizard==1,done:parent.currentWizard!=1}"
 					aria-disabled="false" aria-selected="true"><a aria-controls="wizard-p-0"><span class="number">1.</span> {{ 'CUSTOMER'| translate }}</a></li>
@@ -32,7 +32,7 @@
 	<button type="button " class="btn btn-white " ng-click="parent.close()">{{ 'COMMON_CANCEL'| translate }}</button>
 	<button ng-if="parent.currentWizard==5 && type == 'offer'" type="button " class="btn btn-primary " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid || parent.emailEditForm.$invalid"
 		ng-click="parent.send() ">{{ 'COMMON_CONTINUE_AND_SENDING'| translate }}</button>
-	<button ng-if="type == 'offer'" type="button " class="btn btn-warning " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid"
+	<button ng-if="type == 'offer'" type="button " class="btn btn-warning " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid||parent.emailEditForm.$invalid"
 		ng-click="parent.save() ">{{ 'COMMON_CONTINUE_WITHOUT_SENDING'| translate }}</button>
 	<button ng-if="type == 'sale'" type="button " class="btn btn-primary " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid || parent.saleEditForm.$invalid"
 		ng-click="parent.save() ">{{ 'OFFER_CREATE_SALE'| translate }}</button>
