@@ -12,7 +12,7 @@
 					aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-2"><span class="number">3.</span> {{ 'SUPPLY'| translate }}</a></li>
 				<li ng-click="parent.wizardOnClick(4)" role="tab" ng-class="{error:parent.priceEditForm.$invalid,current:parent.currentWizard==4,done:parent.currentWizard!=4}"
 					aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-3"><span class="number">4.</span> {{ 'COMMON_PRODUCT_CALCULATION'| translate }}</a></li>
-				<li ng-click="parent.wizardOnClick(5)" role="tab" ng-class="{error:parent.emailEditForm.$invalid,current:parent.currentWizard==5,done:parent.currentWizard!=5}"
+				<li ng-click="parent.wizardOnClick(5)" role="tab" ng-class="{error:parent.emailEditForm.$invalid&&!parent.emailEditForm.$pristine,current:parent.currentWizard==5,done:parent.currentWizard!=5}"
 					aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-4"><span class="number">5.</span> {{ 'EMAIL'| translate }}</a></li>
 				<li ng-if="type=='sale'" ng-click="parent.wizardOnClick(6)" role="tab" ng-class="{error:parent.saleEditForm.$invalid,current:parent.currentWizard==6,done:parent.currentWizard!=6}"
 					aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-5"><span class="number">6.</span> {{ 'SALE'| translate }}</a></li>
@@ -30,12 +30,11 @@
 </div>
 <div class="modal-footer ">
 	<button type="button " class="btn btn-white " ng-click="parent.close()">{{ 'COMMON_CANCEL'| translate }}</button>
-	<button ng-if="parent.currentWizard==5 && type == 'offer'" type="button " class="btn btn-primary " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid || parent.emailEditForm.$invalid"
+	<button type="button " class="btn btn-primary " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid"
+		ng-click="parent.save() ">{{ 'COMMON_SAVE'| translate }}</button>
+	<button ng-if="parent.currentWizard==5 && type == 'offer'" type="button " class="btn btn-warning " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid || parent.emailEditForm.$invalid"
 		ng-click="parent.send() ">{{ 'COMMON_CONTINUE_AND_SENDING'| translate }}</button>
-	<button ng-if="type == 'offer'" type="button " class="btn btn-warning " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid||parent.emailEditForm.$invalid"
-		ng-click="parent.save() ">{{ 'COMMON_CONTINUE_WITHOUT_SENDING'| translate }}</button>
-	<button ng-if="type == 'sale'" type="button " class="btn btn-primary " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid || parent.saleEditForm.$invalid"
-		ng-click="parent.save() ">{{ 'OFFER_CREATE_SALE'| translate }}</button>
+	
 </div>
 
 <script language="javascript " type="text/javascript ">

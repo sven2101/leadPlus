@@ -195,16 +195,18 @@ class WorkflowController extends AbstractWorkflow {
         let process = this.process;
         this.currentNotification.notificationType = NotificationType.OFFER;
         let notification = this.currentNotification;
-        notification.id = undefined;
         this.notificationService.sendNotification(notification).then(() => {
             self.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
-                self.rootScope.$broadcast("deleteRow", self.process);
                 if (isNullOrUndefined(process.notifications)) {
                     process.notifications = [];
                 }
                 process.notifications.push(notification);
-                self.workflowService.saveProcess(process);
-                self.close();
+                self.workflowService.saveProcess(process).then((resultProcess) => {
+                    self.process.notifications = resultProcess.notifications;
+                    self.rootScope.$broadcast("deleteRow", self.process);
+                    self.close();
+                });
+
             });
         });
     }
@@ -214,18 +216,8 @@ class WorkflowController extends AbstractWorkflow {
             let self = this;
             this.process.offer = this.editWorkflowUnit;
             let process = this.process;
-            this.currentNotification.notificationType = NotificationType.OFFER;
-            let notification = this.currentNotification;
             this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
                 self.rootScope.$broadcast("deleteRow", tmpprocess);
-                if (isNullOrUndefined(tmpprocess.notifications)) {
-                    tmpprocess.notifications = [];
-                }
-                if (isNaN(notification.id)) {
-                    tmpprocess.notifications.push(notification);
-                    console.log(notification);
-                }
-                self.workflowService.saveProcess(tmpprocess);
                 self.close();
             });
         } else if (this.type === "sale") {
@@ -248,11 +240,9 @@ class WorkflowController extends AbstractWorkflow {
 
     setFormerNotification(notificationId: number) {
         if (Number(notificationId) === -1) {
-            this.currentNotification = null;
+            this.currentNotification = new Notification();
         }
         let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
-
-
         if (!isNullOrUndefined(notification)) {
             this.currentNotification = deepCopy(notification);
         }

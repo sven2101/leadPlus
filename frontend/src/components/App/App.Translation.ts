@@ -84,12 +84,14 @@ function config($translateProvider) {
             SALE: "Verkauf",
 
             // Template
-            EMAIL_TEMPLATE: "Email - Template",
-            EMAIL_TEMPLATE_SELECT: "Select - Template",
+            EMAIL_TEMPLATE: "Email Vorlagen",
+            EMAIL_TEMPLATE_SELECT: "Vorlage auswählen",
             EMAIL_RECIPIENT: "Empfänger",
             EMAIL_SUBJECT: "Betreff",
             EMAIL_ATTACHMENT: "Anhang",
             EMAIL_MESSAGE: "Nachricht",
+            EMAIL_NOTIFICATION_HISTORY: "Bisher gesendete Nachrichten",
+            EMAIL_NOTIFICATION_SELECT: "Nachricht auswählen",
 
             COMMON_SKYPE: "Skype",
             COMMON_FAX: "Fax",
@@ -485,12 +487,14 @@ function config($translateProvider) {
             SALE: "Sale",
 
             // Template
-            EMAIL_TEMPLATE: "Email - Template",
-            EMAIL_TEMPLATE_SELECT: "Select - Template",
+            EMAIL_TEMPLATE: "Email templates",
+            EMAIL_TEMPLATE_SELECT: "Select template",
             EMAIL_RECIPIENT: "Recipient",
             EMAIL_SUBJECT: "Subject",
             EMAIL_ATTACHMENT: "Attachment",
             EMAIL_MESSAGE: "Message",
+            EMAIL_NOTIFICATION_HISTORY: "Previous send notifications",
+            EMAIL_NOTIFICATION_SELECT: "Select notification",
 
             COMMON_SKYPE: "Skype",
             COMMON_FAX: "Fax",

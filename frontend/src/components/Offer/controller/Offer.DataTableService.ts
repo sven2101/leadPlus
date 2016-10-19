@@ -197,6 +197,7 @@ class OfferDataTableService {
 
     getActionButtonsHTML(templateData: any): string {
         this.setActionButtonsConfig(this.user, templateData);
+        console.log(templateData);
         if (!isNullOrUndefined(templateData.process.notifications)) {
             for (let i = 0; i < templateData.process.notifications.length; i++) {
                 templateData.process.notifications[i].content = btoa(encodeURIComponent(templateData.process.notifications[i].content));

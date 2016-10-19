@@ -79,18 +79,21 @@ class FollowUpController {
 
     send() {
         this.process.offer = this.editWorkflowUnit;
-        let process = this.process;
+        let self = this;
+        let process = deepCopy(this.process);
         this.currentNotification.notificationType = NotificationType.FOLLOWUP;
         let notification = this.currentNotification;
         notification.id = undefined;
+
 
         this.notificationService.sendNotification(notification).then(() => {
             if (isNullOrUndefined(process.notifications)) {
                 process.notifications = [];
             }
             process.notifications.push(notification);
-            this.workflowService.saveProcess(process).then(() => {
-                this.close();
+            self.workflowService.saveProcess(process).then((resultProcess) => {
+                self.process.notifications = resultProcess.notifications;
+                self.close();
             });
         });
     }
@@ -101,14 +104,11 @@ class FollowUpController {
 
     setFormerNotification(notificationId: number) {
         if (Number(notificationId) === -1) {
-            this.currentNotification = null;
+            this.currentNotification = new Notification();
         }
         let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
-        console.log(this.editProcess);
-        console.log(notificationId);
         if (!isNullOrUndefined(notification)) {
             this.currentNotification = deepCopy(notification);
-            this.currentNotification.content = decodeURIComponent(atob(notification.content));
         }
     }
 

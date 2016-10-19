@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	targetNamespace="http://www.activiti.org/processdef" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:activiti="http://activiti.org/bpmn" 	
+	xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+	xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+	xmlns:di="http://www.omg.org/spec/DD/20100524/DI">
+	<bpmn:process id="leadProcess" isExecutable="true">
+	    <bpmn:startEvent id="StartEvent_1"/>  
+	    <bpmn:endEvent id="EndEvent_1uhur92"/>     
+	    <bpmn:userTask id="userTask_0k9oxv5" name="Anfrage" activiti:expression="${resumeService.storeResume()}">
+	    	<bpmn:documentation textFormat="application/json">
+	       		{
+	       			"headline":test,
+	       			"array":[]
+	     		}
+	     	</bpmn:documentation>	 
+	    </bpmn:userTask>
+	    <bpmn:sequenceFlow id="SequenceFlow_1tg3b5x" sourceRef="StartEvent_1" targetRef="userTask_0k9oxv5" />
+	    <bpmn:userTask id="userTask_117lr29" name="Angebot"/>
+	    <bpmn:exclusiveGateway id="ExclusiveGateway_1t2kxbf"/>     
+	    <bpmn:sequenceFlow id="SequenceFlow_1wimc43" sourceRef="userTask_0k9oxv5" targetRef="ExclusiveGateway_1t2kxbf" />
+	    <bpmn:userTask id="userTask_1bcjbzi" name="Email verschicken"/>    
+	    <bpmn:userTask id="userTask_10j0k4o" name="Verkauf"/>
+	    <bpmn:exclusiveGateway id="ExclusiveGateway_0tlbj0b"/>
+	    <bpmn:sequenceFlow id="SequenceFlow_0uana17" sourceRef="userTask_117lr29" targetRef="ExclusiveGateway_0tlbj0b" />
+	    <bpmn:sequenceFlow id="SequenceFlow_1kl0j4r" name="Email" sourceRef="ExclusiveGateway_0tlbj0b" targetRef="userTask_1bcjbzi" >
+	    	<bpmn:conditionExpression xsi:type="tFormalExpression">
+	    		<![CDATA[${execution.getVariable('sendEmail') != null&&sendEmail == true}]]>
+	    	</bpmn:conditionExpression>
+	    </bpmn:sequenceFlow>
+	    <bpmn:sequenceFlow id="SequenceFlow_1v16vh0" sourceRef="ExclusiveGateway_0tlbj0b" targetRef="ExclusiveGateway_1szsyaa" />
+	    <bpmn:sequenceFlow id="SequenceFlow_1wp2wj3" sourceRef="userTask_1bcjbzi" targetRef="ExclusiveGateway_1szsyaa" />
+	    <bpmn:sequenceFlow id="SequenceFlow_1xjg1ry" sourceRef="userTask_10j0k4o" targetRef="EndEvent_1uhur92" />
+	    <bpmn:userTask id="userTask_0uo9ycy" name="In Verhandlung"/>     
+	    <bpmn:sequenceFlow id="SequenceFlow_1p5uahw" name="Verhandlung" sourceRef="ExclusiveGateway_1t2kxbf" targetRef="userTask_0uo9ycy" >
+	    	<bpmn:conditionExpression xsi:type="tFormalExpression">
+	    		<![CDATA[${execution.getVariable('inVerhandlung') != null&&inVerhandlung == true}]]>
+	   		</bpmn:conditionExpression>
+	    </bpmn:sequenceFlow>
+	    <bpmn:sequenceFlow id="SequenceFlow_1r2wx8s" sourceRef="userTask_0uo9ycy" targetRef="ExclusiveGateway_139960v" />
+	    <bpmn:sequenceFlow id="SequenceFlow_0iildh2" sourceRef="ExclusiveGateway_1t2kxbf" targetRef="ExclusiveGateway_139960v" />
+	    <bpmn:exclusiveGateway id="ExclusiveGateway_139960v"/>
+	    <bpmn:sequenceFlow id="SequenceFlow_09ijt1u" sourceRef="ExclusiveGateway_139960v" targetRef="userTask_117lr29" />
+	    <bpmn:exclusiveGateway id="ExclusiveGateway_1szsyaa"/>     
+	    <bpmn:sequenceFlow id="SequenceFlow_0gn2tti" sourceRef="ExclusiveGateway_1szsyaa" targetRef="userTask_10j0k4o" />
+  	</bpmn:process> 
+  
+	<bpmndi:BPMNDiagram id="BPMNDiagram_1">
+	    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+	      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+	        <dc:Bounds x="144" y="159" width="36" height="36" />
+	        <bpmndi:BPMNLabel>
+	          <dc:Bounds x="162" y="195" width="0" height="0" />
+	        </bpmndi:BPMNLabel>
+	      </bpmndi:BPMNShape>
+	      <bpmndi:BPMNShape id="EndEvent_1uhur92_di" bpmnElement="EndEvent_1uhur92">
+	        <dc:Bounds x="1230" y="159" width="36" height="36" />
+	        <bpmndi:BPMNLabel>
+	          <dc:Bounds x="1248" y="195" width="0" height="0" />
+	        </bpmndi:BPMNLabel>
+	      </bpmndi:BPMNShape>
+	      <bpmndi:BPMNShape id="Task_0k9oxv5_di" bpmnElement="Task_0k9oxv5">
+	        <dc:Bounds x="227" y="137" width="100" height="80" />
+	      </bpmndi:BPMNShape>
+	      <bpmndi:BPMNEdge id="SequenceFlow_1tg3b5x_di" bpmnElement="SequenceFlow_1tg3b5x">
+	        <di:waypoint xsi:type="dc:Point" x="180" y="177" />
+	        <di:waypoint xsi:type="dc:Point" x="227" y="177" />
+	        <bpmndi:BPMNLabel>
+	          <dc:Bounds x="204" y="162" width="0" height="0" />
+	        </bpmndi:BPMNLabel>
+	      </bpmndi:BPMNEdge>	      
+	    </bpmndi:BPMNPlane>
+	</bpmndi:BPMNDiagram>  
+</bpmn:definitions>
