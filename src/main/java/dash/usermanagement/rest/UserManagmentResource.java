@@ -29,16 +29,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.DontMatchException;
 import dash.exceptions.EmailAlreadyExistsException;
 import dash.exceptions.NotFoundException;
-import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
 import dash.fileuploadmanagement.domain.FileUpload;
@@ -72,8 +69,7 @@ public class UserManagmentResource {
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update a single user.", notes = "Provide a valid user ID.")
-	public User update(@RequestBody @Valid final User user)
-			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+	public User update(@RequestBody @Valid final User user) throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		return userService.update(user);
 	}
 
@@ -95,8 +91,7 @@ public class UserManagmentResource {
 	@RequestMapping(value = "/{id}/role/{role}/update", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Set a User Role .", notes = "Provide a valid user ID.")
-	public User setRoleForUser(@PathVariable final long id, @PathVariable @Valid final Role role)
-			throws UpdateFailedException {
+	public User setRoleForUser(@PathVariable final long id, @PathVariable @Valid final Role role) throws UpdateFailedException {
 		return userService.setRoleForUser(id, role);
 	}
 
@@ -140,13 +135,19 @@ public class UserManagmentResource {
 		throw new NotFoundException(USER_NOT_FOUND);
 	}
 
-	@RequestMapping(value = "/{id}/profile/picture", method = RequestMethod.POST)
+	//	@RequestMapping(value = "/{id}/profile/picture", method = RequestMethod.POST)
+	//	@ResponseStatus(HttpStatus.OK)
+	//	@ApiOperation(value = "Post a file. ", notes = "")
+	//	public User setProfilePicture(@PathVariable final long id, @RequestParam("file") MultipartFile file)
+	//			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+	//		return userService.setProfilePicture(id, file);
+	//	}
+
+	@RequestMapping(value = "/profile/picture", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Post a file. ", notes = "")
-	public User setProfilePicture(@PathVariable final long id, @RequestParam("file") MultipartFile file)
-			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException,
-			EmailAlreadyExistsException {
-		return userService.setProfilePicture(id, file);
+	@ApiOperation(value = "Update a single user.", notes = "Provide a valid user ID.")
+	public User setProfilePicture(@RequestBody final User user) throws UpdateFailedException {
+		return userService.updateProfilPicture(user);
 	}
 
 }

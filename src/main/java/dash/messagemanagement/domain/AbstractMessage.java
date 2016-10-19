@@ -14,6 +14,7 @@
 package dash.messagemanagement.domain;
 
 import dash.fileuploadmanagement.domain.FileUpload;
+import dash.notificationmanagement.domain.NotificationType;
 
 public abstract class AbstractMessage {
 
@@ -21,12 +22,14 @@ public abstract class AbstractMessage {
 	protected String subject;
 	protected String content;
 	protected FileUpload attachment;
+	protected NotificationType notificationType;
 
-	public AbstractMessage(String recipient, String subject, String content, FileUpload attachment) {
+	public AbstractMessage(String recipient, String subject, String content, FileUpload attachment, NotificationType notificationType) {
 		this.recipient = recipient;
 		this.subject = subject;
 		this.content = content;
 		this.attachment = attachment;
+		this.notificationType = notificationType;
 	}
 
 	public String getRecipient() {
@@ -45,4 +48,11 @@ public abstract class AbstractMessage {
 		return attachment;
 	}
 
+	public NotificationType getNotificationType() {
+		return notificationType;
+	}
+
+	public void setNotificationType(NotificationType notificationType) {
+		this.notificationType = notificationType;
+	}
 }

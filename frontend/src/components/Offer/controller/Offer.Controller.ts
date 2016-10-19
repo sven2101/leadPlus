@@ -266,7 +266,6 @@ class OfferController extends AbstractWorkflow {
         let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
         if (!isNullOrUndefined(notification)) {
             this.currentNotification = deepCopy(notification);
-            this.currentNotification.content = unescapeHtmlQuote(notification.content);
         }
     }
 }

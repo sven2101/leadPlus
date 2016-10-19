@@ -69,7 +69,8 @@ class ProfileService {
 
     updateProfileImage(user: User) {
         let self = this;
-        this.userResource.update(user).$promise.then(function (data) {
+        console.log("Picture: ", user.picture);
+        this.userResource.setProfilePicture(user).$promise.then(function (data) {
             self.rootScope.globals.user.picture = null;
             self.cookieStore.put("globals", self.rootScope.globals);
             self.rootScope.globals.user.picture = user.picture;

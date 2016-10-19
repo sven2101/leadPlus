@@ -108,6 +108,7 @@ class FollowUpController {
         console.log(notificationId);
         if (!isNullOrUndefined(notification)) {
             this.currentNotification = deepCopy(notification);
+            this.currentNotification.content = decodeURIComponent(atob(notification.content));
         }
     }
 

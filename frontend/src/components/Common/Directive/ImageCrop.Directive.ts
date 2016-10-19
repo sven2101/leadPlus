@@ -70,7 +70,8 @@ angular.module(moduleApp)
 
                 let picture = new FileUpload();
                 picture.mimeType = "image/jpeg";
-
+                picture.filename = "profilepicture";
+                picture.size = 3000;
                 if (!isNullOrUndefined(scope.quality) && !isNaN(scope.quality) && scope.quality > 0 && scope.quality < 100) {
                     picture.content = canvas.toDataURL("image/jpeg", scope.quality / 100).split(",")[1];
                 } else {
