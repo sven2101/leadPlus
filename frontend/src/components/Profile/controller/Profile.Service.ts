@@ -23,53 +23,46 @@ const ProfileServiceId: string = "ProfileService";
 
 class ProfileService {
 
-    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId, $cookieStoreId];
+    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, $qId, $cookieStoreId];
 
     userResource;
     translate;
     toaster;
     rootScope;
     authService;
-    passwordForm;
     fileResource;
     formdata;
     q;
     cookieStore;
-    user: User;
 
-    oldPassword: string;
-    newPassword1: string;
-    newPassword2: string;
-
-    constructor($rootScope, toaster, $translate, UserResource, FileResource, $q, $cookieStore) {
+    constructor($rootScope, toaster, $translate, UserResource, $q, $cookieStore) {
         this.userResource = UserResource.resource;
         this.translate = $translate;
         this.toaster = toaster;
         this.rootScope = $rootScope;
-        this.fileResource = FileResource.resource;
         this.formdata = new FormData();
-        this.user = new User();
-        this.user.picture = new FileUpload();
         this.q = $q;
         this.cookieStore = $cookieStore;
     }
 
-    submitProfilInfoForm(user: User) {
+    updateProfilInfo(user: User): IPromise<User> {
+        let defer = this.q.defer();
         let self = this;
-        this.userResource.update(user).$promise.then(function (data) {
-            self.rootScope.globals.user.firstname = data.firstname;
-            self.rootScope.globals.user.lastname = data.lastname;
+        this.userResource.update(user).$promise.then(function (updatedUser: User) {
+            self.updateRootScope(updatedUser);
             self.cookieStore.put("globals", self.rootScope.globals);
             self.rootScope.changeLanguage(self.rootScope.globals.user.language);
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
+            defer.resolve(updatedUser);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
+            defer.reject(self.rootScope.globals.user);
         });
+        return defer.promise;
     }
 
     updateProfileImage(user: User) {
         let self = this;
-        console.log("Picture: ", user.picture);
         this.userResource.setProfilePicture(user).$promise.then(function (data) {
             self.rootScope.globals.user.picture = null;
             self.cookieStore.put("globals", self.rootScope.globals);
@@ -82,18 +75,17 @@ class ProfileService {
         });
     }
 
-    submitPasswordForm() {
+    updatePassword(oldPassword, newPassword1, newPassword2): IPromise<boolean> {
+        let defer = this.q.defer();
         let self = this;
-        this.userResource.changePassword({ id: this.rootScope.globals.user.id }, { newPassword: this.newPassword1, oldPassword: this.oldPassword }).$promise.then(function () {
+        this.userResource.changePassword({ id: this.rootScope.globals.user.id }, { newPassword: newPassword1, oldPassword: oldPassword }).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
-            self.passwordForm.$setPristine();
-
-            self.oldPassword = "";
-            self.newPassword1 = "";
-            self.newPassword2 = "";
+            defer.resolve(true);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
+            defer.reject(false);
         });
+        return defer.promise;
     }
 
     uploadFiles() {
@@ -111,13 +103,22 @@ class ProfileService {
         let defer = this.q.defer();
         let self = this;
         this.userResource.getById({ id: this.rootScope.globals.user.id }).$promise.then(function (resultUser: User) {
-            console.log("User: ", resultUser);
-            self.user = resultUser;
             defer.resolve(resultUser);
         }, function (error: any) {
             defer.reject(error);
         });
         return defer.promise;
+    }
+
+    updateRootScope(user: User) {
+        this.rootScope.globals.user.email = user.email;
+        this.rootScope.globals.user.firstname = user.firstname;
+        this.rootScope.globals.user.lastname = user.lastname;
+        this.rootScope.globals.user.phone = user.phone;
+        this.rootScope.globals.user.language = user.language;
+        this.rootScope.globals.user.skype = user.skype;
+        this.rootScope.globals.user.job = user.job;
+        this.rootScope.globals.user.fax = user.fax;
     }
 
     getTheFiles($files) {

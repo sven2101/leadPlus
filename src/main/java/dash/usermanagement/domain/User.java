@@ -31,6 +31,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -88,12 +89,12 @@ public class User implements UserDetails {
 	private String lastname;
 
 	@NotNull
+	@Pattern(regexp = "^(.+)@(.+)$")
 	@Size(max = 50)
 	@Column(name = "email", unique = true, length = 50, nullable = false)
 	private String email;
 
 	@JsonIgnore
-	@NotNull
 	@Size(max = 60)
 	@Column(name = "password", length = 60, nullable = false)
 	private String password;

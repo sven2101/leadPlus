@@ -1,125 +1,140 @@
 <div ng-if="settingCtrl.currentTab==1">
-    <div class="wrapper wrapper-content">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>{{ 'SETTING_EMAIL_MANAGEMENT' | translate }}</h5>                        
-                    </div>
-                    <div class="ibox-content">
-                        <form name="settingCtrl.smtpForm" method="get" class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_SENDER' | translate }}* </label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.sender"></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_EMAIL' | translate }}* </label>
-                                <div class="col-sm-10">
-                                    <input type="email" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.email"></div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
+	<div class="wrapper wrapper-content">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>{{ 'SETTING_EMAIL_MANAGEMENT' | translate }}</h5>
+						<div class="ibox-tools">
+							<a class="collapse-link" data-toggle="collapse" data-target="#smtpForm">
+								<i class="fa fa-chevron-up"></i>
+							</a>
+						</div>
+					</div>
+					<div class="ibox-content collapse in" id="smtpForm">
+						<form name="settingCtrl.smtpForm" method="get" class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_SENDER' | translate }}* </label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.sender"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_EMAIL' | translate }}* </label>
+								<div class="col-sm-10">
+									<input type="email" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.email"></div>
+							</div>
+							<div class="hr-line-dashed"></div>
 
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_SERVER' | translate }}* </label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.host"></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_USERNAME' | translate }}* </label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.username"></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_PASSWORD' | translate }}* </label>
-                                <div class="col-sm-10">
-                                    <input name="smtpPassword" type="password" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.stringPassword">                         
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_ENCRYPTION' | translate }}* </label>
-                                <div class="col-sm-10">
-                                    <select class="form-control m-b" name="account" ng-model="settingCtrl.smtpService.currentSmtp.encryption">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_SERVER' | translate }}* </label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.host"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_USERNAME' | translate }}* </label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.username"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_PASSWORD' | translate }}* </label>
+								<div class="col-sm-10">
+									<input name="smtpPassword" type="password" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.stringPassword">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_ENCRYPTION' | translate }}* </label>
+								<div class="col-sm-10">
+									<select class="form-control m-b" name="account" ng-model="settingCtrl.smtpService.currentSmtp.encryption">
                                         <option>SSL</option>
                                         <option>TLS</option>
                                     </select></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_PORT' | translate }}* </label>
-                                <div class="col-sm-10">
-                                    <input type="number" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.port">                                    Keine Eingabe = Standardport (TLS = 25 / SSL = 465)</div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_CONNECTION_TEST' | translate }}* </label>
-                                <div class="col-sm-4">
-                                    <button class="btn btn-primary" ng-click="settingCtrl.testSmtpConnection()">
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_PORT' | translate }}* </label>
+								<div class="col-sm-10">
+									<input type="number" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.port"> Keine Eingabe = Standardport
+									(TLS = 25 / SSL = 465)</div>
+							</div>
+							<div class="hr-line-dashed"></div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_CONNECTION_TEST' | translate }}* </label>
+								<div class="col-sm-4">
+									<button class="btn btn-primary" ng-click="settingCtrl.testSmtpConnection()">
                                     <i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;{{ 'SETTING_EMAIL_MANAGEMENT_CONNECTION_TEST' | translate }}
                                 </button>
-                                </div>
-                            </div>
-                            <div class="hr-line-dashed"></div>
+								</div>
+							</div>
+							<div class="hr-line-dashed"></div>
 
-                            <button class="btn btn-success" type="submit" ng-click="settingCtrl.saveSmtpConnection()" ng-disabled="profilInfoForm.$invalid">
+							<button class="btn btn-success" type="submit" ng-click="settingCtrl.saveSmtpConnection()" ng-disabled="profilInfoForm.$invalid">
                             <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
                         </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>{{ 'SETTING_EMAIL_TEMPLATES_MANAGEMENT' | translate }}</h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="ibox-content">
-                        <button type="button" class="btn btn-success" ng-click="settingCtrl.openEmailTemplateModal()" data-toggle="modal">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>{{ 'SETTING_EMAIL_TEMPLATES_MANAGEMENT' | translate }}</h5>
+						<div class="ibox-tools">
+							<a class="collapse-link" data-toggle="collapse" data-target="#templates">
+								<i class="fa fa-chevron-down"></i>
+							</a>
+						</div>
+					</div>
+					<div class="ibox-content collapse" id="templates">
+						<button type="button" class="btn btn-success" ng-click="settingCtrl.openEmailTemplateModal()" data-toggle="modal">
                             <i class="fa fa-plus"></i>&nbsp; Neues Template
                         </button>
 
-                        <br/>
-                        <br/>
+						<br/>
+						<br/>
 
-                        <div class="project-list">
-                            <table class="table table-hover">
-                                <tbody>
-                                    <tr ng-repeat="template in settingCtrl.templateService.templates|orderBy:'name'">
-                                        <td class="project-status col-md-1">
-                                            <span ng-show="!template.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
-                                            <span ng-show="template.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
-                                        </td>
-                                        <td class="project-title col-md-2">
-                                            <small>{{template.name}}</small>
-                                        </td>
-                                        <td class="project-completion col-md-7" max>
-                                            <small style="word-wrap: break-word; word-break: break-all;">{{template.description}}</small>
-                                        </td>
-                                        <td class="project-actions col-md-3">
-                                            <button type="button" class="btn btn-white btn-sm" ng-click="settingCtrl.openEditEmailTemplateModal(template)" title="{{ 'SETTING_EMAIL_TEMPLATE_EDIT' | translate }}">
+						<div class="project-list">
+							<table class="table table-hover">
+								<tbody>
+									<tr ng-repeat="template in settingCtrl.templateService.templates|orderBy:'name'">
+										<td class="project-status col-md-1">
+											<span ng-show="!template.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
+											<span ng-show="template.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
+										</td>
+										<td class="project-title col-md-2">
+											<small>{{template.name}}</small>
+										</td>
+										<td class="project-completion col-md-7" max>
+											<small style="word-wrap: break-word; word-break: break-all;">{{template.description}}</small>
+										</td>
+										<td class="project-actions col-md-3">
+											<button type="button" class="btn btn-white btn-sm" ng-click="settingCtrl.openEditEmailTemplateModal(template)" title="{{ 'SETTING_EMAIL_TEMPLATE_EDIT' | translate }}">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </button>
-                                            <button type="button" class="btn btn-white btn-sm" ng-click="settingCtrl.openEmailTemplateDeleteModal(template)" title="{{ 'SETTING_EMAIL_TEMPLATE_DELETE' | translate }}">
+											<button type="button" class="btn btn-white btn-sm" ng-click="settingCtrl.openEmailTemplateDeleteModal(template)" title="{{ 'SETTING_EMAIL_TEMPLATE_DELETE' | translate }}">
                                             <i class="fa fa-trash" aria-hidden="true">
                                         </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 
 
-                </div>
-            </div>
-        </div>
+				</div>
+			</div>
+		</div>
 
-    </div>
+	</div>
 </div>
+
+<script>
+	// Collapse iBox Contents
+    $('.collapse').on('shown.bs.collapse', function(){
+        $(this).parent().find(".fa-chevron-down").removeClass("fa-chevron-down").addClass("fa-chevron-up");
+    }).on('hidden.bs.collapse', function(){
+        $(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
+    });
+</script>

@@ -62,6 +62,9 @@ public class PrincipleResource {
 		map.put("id", String.valueOf(internalUser.getId()));
 		map.put("language", String.valueOf(internalUser.getLanguage()));
 		map.put("profilePicture", internalUser.getPicture());
+		map.put("skype", String.valueOf(internalUser.getSkype()));
+		map.put("job", String.valueOf(internalUser.getJob()));
+		map.put("fax", String.valueOf(internalUser.getFax()));
 
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 	}

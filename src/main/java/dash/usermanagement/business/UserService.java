@@ -131,25 +131,25 @@ public class UserService implements IUserService {
 
 	@Override
 	public User update(final User user) throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
-		if (Optional.ofNullable(user).isPresent()) {
+		if (user != null) {
 			try {
 				User updateUser = getById(user.getId());
-				if (Optional.ofNullable(updateUser).isPresent()) {
-					if (!Optional.ofNullable(getUserByName(user.getUsername())).isPresent()) {
-						updateUser.setUsername(user.getUsername());
-					} else if (!user.getUsername().equals(updateUser.getUsername())) {
-						throw new UsernameAlreadyExistsException(USER_EXISTS);
-					}
-					if (!Optional.ofNullable(getUserByEmail(user.getEmail())).isPresent()) {
+				if (updateUser != null) {
+					User validateUser = getUserByEmail(user.getEmail());
+					if (user.getEmail() != null) {
+						if (validateUser != null && updateUser.getId() != validateUser.getId()) {
+							throw new EmailAlreadyExistsException(EMAIL_EXISTS);
+						}
 						updateUser.setEmail(user.getEmail());
-					} else if (!user.getUsername().equals(updateUser.getUsername())) {
-						throw new EmailAlreadyExistsException(EMAIL_EXISTS);
-					}
-					updateUser.setLanguage(user.getLanguage());
+					} else
+						updateUser.setLanguage(user.getLanguage());
 					updateUser.setProfilPicture(user.getPicture());
 					updateUser.setFirstname(user.getFirstname());
 					updateUser.setLastname(user.getLastname());
 					updateUser.setPhone(user.getPhone());
+					updateUser.setSkype(user.getSkype());
+					updateUser.setFax(user.getFax());
+					updateUser.setJob(user.getJob());
 					return save(updateUser);
 				} else {
 					throw new NotFoundException(USER_NOT_FOUND);
@@ -157,9 +157,6 @@ public class UserService implements IUserService {
 			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
 				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			} catch (UsernameAlreadyExistsException uaeex) {
-				logger.error(USER_EXISTS + UserService.class.getSimpleName(), uaeex);
-				throw uaeex;
 			} catch (EmailAlreadyExistsException eaeex) {
 				logger.error(EMAIL_EXISTS + UserService.class.getSimpleName(), eaeex);
 				throw eaeex;
@@ -169,6 +166,10 @@ public class UserService implements IUserService {
 			logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
 			throw ufex;
 		}
+	}
+
+	private void validateEmail(String email) throws NotFoundException {
+		User user = getUserByEmail(email);
 	}
 
 	@Override

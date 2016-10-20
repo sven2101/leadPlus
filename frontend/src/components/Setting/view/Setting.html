@@ -1,31 +1,40 @@
 <meta charset="utf-8">
 <div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-12">
-        <div class="row">
-            <div class="col-lg-10">
-                <h2>{{ 'SETTINGS_MENU' | translate }}</h2>
-                <ol class="breadcrumb">
-                    <li>
-                        <a href="#/dashboard">Home</a>
-                    </li>
-                    <li class="active">
-                        <strong>{{ 'SETTINGS_MENU' | translate }}</strong>
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </div>
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-10">
+				<h2>{{ 'SETTINGS_MENU' | translate }}</h2>
+				<ol class="breadcrumb">
+					<li>
+						<a href="#/dashboard">Home</a>
+					</li>
+					<li class="active">
+						<strong>{{ 'SETTINGS_MENU' | translate }}</strong>
+					</li>
+				</ol>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <ul class="nav nav-tabs">
+	<ul class="nav nav-tabs">
 
-        <li ng-click="settingCtrl.tabOnClick(1)" class="active"><a data-toggle="tab" aria-expanded="true">{{ 'SETTING_EMAIL' | translate
+		<li ng-click="settingCtrl.tabOnClick(1)" class="active"><a data-toggle="tab" aria-expanded="true">{{ 'SETTING_EMAIL' | translate
 				}}</a></li>
-        <li ng-if="globals.user.role!='USER'" ng-click="settingCtrl.tabOnClick(2)"><a data-toggle="tab" aria-expanded="true">{{
+		<li ng-if="globals.user.role!='USER'" ng-click="settingCtrl.tabOnClick(2)"><a data-toggle="tab" aria-expanded="true">{{
 				'SETTING_USER' | translate }}</a></li>
-    </ul>
-    </br>
-    <div ng-include="'components/Setting/view/Setting.Users.html'"></div>
-    <div ng-include="'components/Setting/view/Setting.Email.html'"></div>
+	</ul>
+	</br>
+	<div ng-include="'components/Setting/view/Setting.Users.html'"></div>
+	<div ng-include="'components/Setting/view/Setting.Email.html'"></div>
 </div>
+
+<script>
+	// Collapse iBox Contents
+    $('.collapse').on('shown.bs.collapse', function(){
+        $(this).parent().find(".fa-chevron-down").removeClass("fa-chevron-down").addClass("fa-chevron-up");
+    }).on('hidden.bs.collapse', function(){
+        $(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
+    });
+</script>

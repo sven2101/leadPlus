@@ -29,12 +29,18 @@ class ProfileController {
     myCroppedImage = "";
     profileService: ProfileService;
     rootscope;
+
+    passwordForm;
+
     currentUser: User;
+    oldPassword: string;
+    newPassword1: string;
+    newPassword2: string;
 
     constructor(ProfileService: ProfileService, $rootScope) {
         this.profileService = ProfileService;
         this.rootscope = $rootScope;
-        this.currentUser = deepCopy(this.rootscope.globals.user);
+        // this.currentUser = deepCopy(this.rootscope.globals.user);
         this.getById();
         let self = this;
         $rootScope.$on("profileImageSaved", function (evt, data: FileUpload) {
@@ -43,7 +49,6 @@ class ProfileController {
                 user.picture = data;
                 self.updateProfileImage(user);
             }
-
         });
     }
 
@@ -51,16 +56,33 @@ class ProfileController {
         this.rootscope.$broadcast("saveCroppedImage");
     }
 
-    submitProfilInfoForm() {
-        this.profileService.submitProfilInfoForm(this.currentUser);
+    updateProfilInfo() {
+        this.profileService.updateProfilInfo(this.currentUser).then((result) => this.currentUser = result, (error) => { this.reduceCurrentUserInfo(); });
+    }
+
+    reduceCurrentUserInfo() {
+        this.currentUser.email = this.rootscope.globals.user.email;
+        this.currentUser.firstname = this.rootscope.globals.user.firstname;
+        this.currentUser.lastname = this.rootscope.globals.user.lastname;
+        this.currentUser.phone = this.rootscope.globals.user.phone;
+        this.currentUser.language = this.rootscope.globals.user.language;
+        this.currentUser.skype = this.rootscope.globals.user.skype;
+        this.currentUser.job = this.rootscope.globals.user.job;
+        this.currentUser.fax = this.rootscope.globals.user.fax;
     }
 
     updateProfileImage(user: User) {
         this.profileService.updateProfileImage(user);
     }
 
-    submitPasswordForm() {
-        this.profileService.submitPasswordForm();
+    updatePassword() {
+        this.profileService.updatePassword(this.oldPassword, this.newPassword1, this.newPassword2).then((result) => { this.passwordForm.$setPristine(); this.clearPasswordForm(); }, (error) => { this.passwordForm.$setPristine(); this.clearPasswordForm(); });
+    }
+
+    clearPasswordForm() {
+        this.oldPassword = "";
+        this.newPassword1 = "";
+        this.newPassword2 = "";
     }
 
     uploadFiles() {

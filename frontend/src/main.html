@@ -1,18 +1,18 @@
 <nav class="navbar-default navbar-static-side" role="navigation" style="position: fixed; height: 100%;">
-    <div class="sidebar-collapse">
-        <ul class="nav metismenu" id="side-menu">
-            <li class="nav-header">
-                <div class="dropdown profile-element">
-                    <div style="margin-top:-20px" class="row">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-6">
-                            <img style="margin-left:-40px; width: 100px; height:100px;border-radius: 10%;" ng-src="data:image/png;base64,{{globals.user.picture.content}}"
-                                alt="">
-                        </div>
-                        <div class="col-md-4"></div>
-                    </div>
-                    <a data-toggle="dropdown" class="dropdown-toggle">
-                        <span class="clear"> 
+	<div class="sidebar-collapse">
+		<ul class="nav metismenu" id="side-menu">
+			<li class="nav-header">
+				<div class="dropdown profile-element">
+					<div style="margin-top:-20px" class="row">
+						<div class="col-md-2"></div>
+						<div class="col-md-6">
+							<img style="margin-left:-40px; width: 100px; height:100px;border-radius: 10%;" ng-src="data:image/png;base64,{{globals.user.picture.content}}"
+								alt="">
+						</div>
+						<div class="col-md-4"></div>
+					</div>
+					<a data-toggle="dropdown" class="dropdown-toggle">
+						<span class="clear"> 
                             <span class="block m-t-xs">
                                 <strong class="font-bold" ng-if="(globals.user.firstname==null||globals.user.firstname=='')&&(globals.user.lastname==null||globals.user.lastname=='')">
                                     {{globals.user.username}}
@@ -21,128 +21,126 @@
                                     {{globals.user.firstname}} {{globals.user.lastname}}
                                  </strong>
                             </span>
-                        <span class="text-muted text-xs block">{{ 'TITLE' | translate }}<b
+						<span class="text-muted text-xs block">{{ 'TITLE' | translate }}<b
                                     class="caret"></b>
                             </span>
-                        </span>
-                    </a>
-                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                        <li><a href="#/profile">{{ 'PROFILE_MENU' | translate }}</a></li>
-                        <li class="divider"></li>
-                        <li><a href="" ng-click="logout()">{{ 'LOGOUT' | translate }}</a></li>
-                    </ul>
-                </div>
-                <div class="logo-element">
-                    {{ 'LOGO' | translate }}
-                </div>
-            </li>
-            <li>
-                <a href="#/dashboard"><i class="fa fa-th-large"></i> <span class="nav-label">{{ 'DASHBOARD_MENU' | translate }}</span></a>
-            </li>
-            <li>
-                <a href="#/leads"><i class="fa fa-inbox"></i> <span
+						</span>
+					</a>
+					<ul class="dropdown-menu animated fadeInRight m-t-xs">
+						<li><a href="#/profile">{{ 'PROFILE_MENU' | translate }}</a></li>
+						<li class="divider"></li>
+						<li><a href="" ng-click="logout()">{{ 'LOGOUT' | translate }}</a></li>
+					</ul>
+				</div>
+				<div class="logo-element">
+					{{ 'LOGO' | translate }}
+				</div>
+			</li>
+			<li>
+				<a href="#/dashboard"><i class="fa fa-th-large"></i> <span class="nav-label">{{ 'DASHBOARD_MENU' | translate }}</span></a>
+			</li>
+			<li>
+				<a href="#/leads"><i class="fa fa-inbox"></i> <span
                         class="nav-label">{{ 'LEADS_MENU' | translate }}</span><span ng-if="leadsCount>0"
                                                                                      class="label label-danger pull-right">{{leadsCount}}</span></a>
-            </li>
-            <li>
-                <a href="#/offers"><i class="fa fa-level-up"></i> <span
+			</li>
+			<li>
+				<a href="#/offers"><i class="fa fa-level-up"></i> <span
                         class="nav-label">{{ 'OFFERS_MENU' | translate }}</span><span ng-if="offersCount>0"
                                                                                       class="label label-warning pull-right">{{offersCount}}</span></a>
-            </li>
-            <li>
-                <a href="#/sales"><i class="fa fa-usd"></i> <span
+			</li>
+			<li>
+				<a href="#/sales"><i class="fa fa-usd"></i> <span
                         class="nav-label">{{ 'SALES_MENU' | translate }}</span></a>
-            </li>
-            <li>
-                <a href="#/statistic"><i class="fa fa-line-chart"></i> <span class="nav-label">{{ 'STATISTIC_MENU' | translate }}</span></a>
-            </li>
-            <li>
-                <a href="#/product"><i class="fa fa-table"></i> <span class="nav-label">{{ 'PRODUCT_MENU' | translate }}</span></a>
-            </li>
-            <li>
-                <a href="#/customer"><i class="fa fa-users"></i> <span class="nav-label">{{ 'CUSTOMER_MENU' | translate }}</span></a>
-            </li>
-            <li>
-                <a href="#/settings"><i class="fa fa-cogs"></i> <span class="nav-label">{{ 'SETTINGS_MENU' | translate }}</span></a>
-            </li>
-        </ul>
-    </div>
+			</li>
+			<li>
+				<a href="#/statistic"><i class="fa fa-line-chart"></i> <span class="nav-label">{{ 'STATISTIC_MENU' | translate }}</span></a>
+			</li>
+			<li>
+				<a href="#/product"><i class="fa fa-table"></i> <span class="nav-label">{{ 'PRODUCT_MENU' | translate }}</span></a>
+			</li>
+			<li>
+				<a href="#/customer"><i class="fa fa-users"></i> <span class="nav-label">{{ 'CUSTOMER_MENU' | translate }}</span></a>
+			</li>
+			<li>
+				<a href="#/settings"><i class="fa fa-cogs"></i> <span class="nav-label">{{ 'SETTINGS_MENU' | translate }}</span></a>
+			</li>
+		</ul>
+	</div>
 </nav>
 
 <!-- <div ng-attr-id="{{ authenticated ? 'page-wrapper' : '' }}" id="page-wrapper" class="gray-bg dashbard-1"> -->
 <div id="page-wrapper" class="gray-bg dashbard-1">
-    <div class="row border-bottom">
-        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                <a class="navbar-minimalize minimalize-styl-2 btn btn-success "><i class="fa fa-bars"></i> </a>
-            </div>
-            <ul class="nav navbar-top-links navbar-right">
-                <li class="dropdown">
-                    <a class="dropdown-toggle count-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span>{{ 'LANGUAGE' | translate }}<b class="caret"></b></span>
-                    </a>
-                    <ul class="dropdown-menu animated fadeInRight m-t-xs ng-scope">
-                        <li>
-                            <a ng-click="changeLanguage('DE')">
-                                <img alt="image" class="img-thumbnail" src="assets/img/flags/16/Germany.png">&nbsp;&nbsp;Deutsch
-                                (de)
-                            </a>
-                        </li>
-                        <li>
-                            <a ng-click="changeLanguage('EN')">
-                                <img alt="image" class="img-thumbnail" src="assets/img/flags/16/United-States.png">&nbsp;&nbsp;English
-                                (en)
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle count-info" data-toggle="dropdown">
-                        <i class="fa fa-envelope fa-lg"></i>
+	<div class="row border-bottom">
+		<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+			<div class="navbar-header">
+				<a class="navbar-minimalize minimalize-styl-2 btn btn-success "><i class="fa fa-bars"></i> </a>
+			</div>
+			<ul class="nav navbar-top-links navbar-right">
+				<li class="dropdown">
+					<a class="dropdown-toggle count-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span>{{ 'LANGUAGE' | translate }}<b class="caret"></b></span>
+					</a>
+					<ul class="dropdown-menu animated fadeInRight m-t-xs ng-scope">
+						<li>
+							<a ng-click="changeLanguage('DE')">
+								<img alt="image" class="img-thumbnail" src="assets/img/flags/16/Germany.png">&nbsp;&nbsp;Deutsch (de)
+							</a>
+						</li>
+						<li>
+							<a ng-click="changeLanguage('EN')">
+								<img alt="image" class="img-thumbnail" src="assets/img/flags/16/United-States.png">&nbsp;&nbsp;English (en)
+							</a>
+						</li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a class="dropdown-toggle count-info" data-toggle="dropdown">
+						<i class="fa fa-envelope fa-lg"></i>
 
-                        <span ng-if="appCtrl.todos.length>0" class="label label-danger">{{ appCtrl.todos.length}}</span>
+						<span ng-if="appCtrl.todos.length>0" class="label label-danger">{{ appCtrl.todos.length}}</span>
 
-                    </a>
-                    <ul style="min-width:400px" class="dropdown-menu dropdown-messages">
-                        <li>
-                            <div class="dropdown-messages-box">
+					</a>
+					<ul style="min-width:400px" class="dropdown-menu dropdown-messages">
+						<li>
+							<div class="dropdown-messages-box">
 
-                                <div class="media-body">
-                                    <strong>  {{ 'TODO_TODOS' | translate }}</strong> <br>
+								<div class="media-body">
+									<strong>  {{ 'TODO_TODOS' | translate }}</strong> <br>
 
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <table class="table table-hover">
-                                <tbody>
-                                    <tr style="cursor:pointer" ng-click="appCtrl.navigateTo(todo)" ng-repeat="todo in appCtrl.todos | limitTo:5 | orderBy:'timestamp'">
-                                        <td class="project-status">
-                                            <span ng-if="todo.status=='OPEN'" class="label label-danger">Lead</span>
-                                            <span ng-if="todo.status=='OFFER'" class="label label-warning">Offer</span>
-                                            <span ng-if="todo.status=='FOLLOWUP'" class="label">Follow up</span>
-                                        </td>
-                                        <td align="left" class="project-title">
-                                            <a ng-if="todo.status=='OPEN'">{{todo.lead.customer.firstname}} {{todo.lead.customer.lastname}}</a>
-                                            <a ng-if="todo.status=='OFFER'">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</a>
-                                            <a ng-if="todo.status=='FOLLOWUP'">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</a>
-                                        </td>
-                                        <td class="project-completion">
-                                            <small ng-if="todo.status=='OPEN'">{{appCtrl.sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</small>
-                                            <small ng-if="todo.status=='OFFER'">{{appCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</small>
-                                            <small ng-if="todo.status=='FOLLOWUP'">{{appCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</small>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <p ng-if="appCtrl.todos.length>5" style="margin-left:160px">...</p>
-                            <div ng-if="appCtrl.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
-                                <p style="margin-top:7px">{{ 'TODO_NO_TODOS' | translate }}</p>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-                <!-- TODO should usesd for comments or mails
+								</div>
+							</div>
+						</li>
+						<li>
+							<table class="table table-hover">
+								<tbody>
+									<tr style="cursor:pointer" ng-click="appCtrl.navigateTo(todo)" ng-repeat="todo in appCtrl.todos | limitTo:5 | orderBy:'timestamp'">
+										<td class="project-status">
+											<span ng-if="todo.status=='OPEN'" class="label label-danger">Lead</span>
+											<span ng-if="todo.status=='OFFER'" class="label label-warning">Offer</span>
+											<span ng-if="todo.status=='FOLLOWUP'" class="label">Follow up</span>
+										</td>
+										<td align="left" class="project-title">
+											<a ng-if="todo.status=='OPEN'">{{todo.lead.customer.firstname}} {{todo.lead.customer.lastname}}</a>
+											<a ng-if="todo.status=='OFFER'">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</a>
+											<a ng-if="todo.status=='FOLLOWUP'">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</a>
+										</td>
+										<td class="project-completion">
+											<small ng-if="todo.status=='OPEN'">{{appCtrl.sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</small>
+											<small ng-if="todo.status=='OFFER'">{{appCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</small>
+											<small ng-if="todo.status=='FOLLOWUP'">{{appCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</small>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<p ng-if="appCtrl.todos.length>5" style="margin-left:160px">...</p>
+							<div ng-if="appCtrl.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
+								<p style="margin-top:7px">{{ 'TODO_NO_TODOS' | translate }}</p>
+							</div>
+						</li>
+					</ul>
+				</li>
+				<!-- TODO should usesd for comments or mails
                 <li class="dropdown">
                     <a class="dropdown-toggle count-info" data-toggle="dropdown">
                         <i class="fa fa-bell"></i>
@@ -169,22 +167,22 @@
                 </li>
                 -->
 
-                <li>
-                    <a ng-click="logout()">
-                        <i class="fa fa-sign-out"></i> {{ 'LOGOUT' | translate }}
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        <div class="footer">
-            <div class="pull-right">
-                <strong>Copyright</strong> &copy; Get-Net
-            </div>
-        </div>
-        <!--/footer -->
-    </div>
-    <!--/row border-bottom -->
-    <div ng-view class="md-skin"></div>
+				<li>
+					<a ng-click="logout()">
+						<i class="fa fa-sign-out"></i> {{ 'LOGOUT' | translate }}
+					</a>
+				</li>
+			</ul>
+		</nav>
+		<div class="footer">
+			<div class="pull-right">
+				<strong>Copyright</strong> &copy; Get-Net
+			</div>
+		</div>
+		<!--/footer -->
+	</div>
+	<!--/row border-bottom -->
+	<div ng-view class="md-skin"></div>
 </div>
 <!--/page-wrapper -->
 <!-- page level javascript -->
@@ -198,6 +196,14 @@
         });
 
     });
+
+    // Collapse iBox Contents
+    $('.collapse').on('shown.bs.collapse', function(){
+        $(this).parent().find(".fa-chevron-down").removeClass("fa-chevron-down").addClass("fa-chevron-up");
+    }).on('hidden.bs.collapse', function(){
+        $(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
+    });
+
 
     function SmoothlyMenu() {
         if (!$('body').hasClass('mini-navbar') || $('body').hasClass('body-small')) {

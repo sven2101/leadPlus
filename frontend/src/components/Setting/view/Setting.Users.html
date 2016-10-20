@@ -1,59 +1,68 @@
 <div ng-if="settingCtrl.currentTab==2">
-    <div ng-if="globals.user.role!='USER'" class="row">
-        <div class="col-lg-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>{{ 'SETTING_ACCESS_MANAGEMENT' | translate }}</h5>
-                </div>
-                <div class="ibox-content">
-                    <table class="table text-center">
-                        <thead>
-                            <tr>
-                                <th class="text-center"></th>
-                                <th class="text-center">{{ 'COMMON_USERNAME' | translate }}</th>
-                                <th class="text-center">{{ 'COMMON_FIRSTNAME' | translate }}</th>
-                                <th class="text-center">{{ 'COMMON_LASTNAME' | translate }}</th>
-                                <th class="text-center">{{ 'COMMON_EMAIL' | translate }}</th>
-                                <th class="text-center">{{ 'COMMON_ROLE' | translate }}</th>
-                                <th class="text-center"><i class="fa fa-cog"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-if="user.role!='API'" ng-repeat="user in settingCtrl.settingService.users">
-                                <td><a ng-href="#/settings/detail/{{user.id}} " class="btn btn-xs btn-success btn-circle
+	<div ng-if="globals.user.role!='USER'" class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>{{ 'SETTING_ACCESS_MANAGEMENT' | translate }}</h5>
+				</div>
+				<div class="ibox-content">
+					<table class="table text-center">
+						<thead>
+							<tr>
+								<th class="text-center"></th>
+								<th class="text-center">{{ 'COMMON_USERNAME' | translate }}</th>
+								<th class="text-center">{{ 'COMMON_FIRSTNAME' | translate }}</th>
+								<th class="text-center">{{ 'COMMON_LASTNAME' | translate }}</th>
+								<th class="text-center">{{ 'COMMON_EMAIL' | translate }}</th>
+								<th class="text-center">{{ 'COMMON_ROLE' | translate }}</th>
+								<th class="text-center"><i class="fa fa-cog"></i></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-if="user.role!='API'" ng-repeat="user in settingCtrl.settingService.users">
+								<td><a ng-href="#/settings/detail/{{user.id}} " class="btn btn-xs btn-success btn-circle
                                             " type="button "><i style="color:white; " class="fa fa-line-chart"></i></a></td>
-                                </td>
-                                <td>{{user.username}}</td>
-                                <td>{{user.firstname}}</td>
-                                <td>{{user.lastname}}</td>
-                                <td>{{user.email}}</td>
-                                <td ng-if="user.role!='SUPERADMIN'">
-                                    <select ng-disabled="user.role=='ADMIN'&&globals.user.role!='SUPERADMIN'" class="form-control" ng-change="settingCtrl.changeRole(user)"
-                                        ng-model="user.role ">                            
+								</td>
+								<td>{{user.username}}</td>
+								<td>{{user.firstname}}</td>
+								<td>{{user.lastname}}</td>
+								<td>{{user.email}}</td>
+								<td ng-if="user.role!='SUPERADMIN'">
+									<select ng-disabled="user.role=='ADMIN'&&globals.user.role!='SUPERADMIN'" class="form-control" ng-change="settingCtrl.changeRole(user)"
+										ng-model="user.role ">                            
                                         <option value="USER ">{{ 'COMMON_USER' | translate }}</option>
                                         <option value="ADMIN ">{{ 'COMMON_ADMIN' | translate }}</option>                                        
                                     </select>
-                                </td>
-                                <td ng-if="user.role=='SUPERADMIN' ">
-                                    {{ 'COMMON_SUPERADMIN' | translate }}
-                                </td>
-                                <td ng-if="user.enabled==false ">
-                                    <button ng-click="settingCtrl.activateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&globals.user.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
+								</td>
+								<td ng-if="user.role=='SUPERADMIN' ">
+									{{ 'COMMON_SUPERADMIN' | translate }}
+								</td>
+								<td ng-if="user.enabled==false ">
+									<button ng-click="settingCtrl.activateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&globals.user.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
                                     <i class="fa fa-check "></i>&nbsp;{{ 'SETTING_ACTIVATE_USER' | translate }}
                                 </button>
-                                </td>
-                                <td ng-if="user.enabled==true ">
-                                    <button ng-click="settingCtrl.deactivateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&globals.user.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
+								</td>
+								<td ng-if="user.enabled==true ">
+									<button ng-click="settingCtrl.deactivateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&globals.user.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
                                     <i class="fa fa-ban "></i>&nbsp;{{ 'SETTING_DEACTIVATE_USER' | translate }}
                                 </button>
 
-                                </td>
+								</td>
 
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
+
+<script>
+	// Collapse iBox Contents
+    $('.collapse').on('shown.bs.collapse', function(){
+        $(this).parent().find(".fa-chevron-down").removeClass("fa-chevron-down").addClass("fa-chevron-up");
+    }).on('hidden.bs.collapse', function(){
+        $(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
+    });
+</script>

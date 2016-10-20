@@ -16,24 +16,30 @@
 		</div>
 	</div>
 </div>
+
 <div class="wrapper wrapper-content animated fadeInRight">
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="ibox float-e-margins">
 				<div class="ibox-title">
 					<h5>{{ 'PROFILE_PROFILE_INFORMATION' | translate }}</h5>
+					<div class="ibox-tools">
+						<a class="collapse-link" data-toggle="collapse" data-target="#profilInfoForm">
+							<i class="fa fa-chevron-down"></i>
+						</a>
+					</div>
 				</div>
-				<div class="ibox-content">
-					<form name="profilInfoForm" ng-submit="profileCtrl.submitProfilInfoForm()" novalidate>
+				<div class="ibox-content collapse in" id="profilInfoForm">
+					<form name="profilInfoForm" novalidate>
 						<div class="row">
 							<div class="col-sm-6 b-r">
 								<!-- EMAIL -->
 								<div class="form-group" ng-class="{ 'has-error' : profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine }">
 									<label><i class="fa fa-at" aria-hidden="true"></i>  {{ 'COMMON_EMAIL' | translate }}</label>
-									<input type="email" name="email" class="form-control" ng-model="profileCtrl.currentUser.email">
+									<input required type="email" name="email" class="form-control" ng-model="profileCtrl.currentUser.email">
 									<p ng-show="profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
 								</div>
-								<!-- fIRSTNAME -->
+								<!-- FIRSTNAME -->
 								<div class="form-group">
 									<label><i class="fa fa-user" aria-hidden="true"></i>    {{ 'COMMON_FIRSTNAME' | translate }}</label>
 									<input type="text" id="firstname" name="firstname" class="form-control" placeholder="{{ 'COMMON_FIRSTNAME' | translate }}"
@@ -93,7 +99,7 @@
 								</div>
 								<!-- JOB-POSITION -->
 								<div class="form-group">
-									<label><i class="fa fa-fax" aria-hidden="true"></i> {{ 'COMMON_FAX' | translate }}</label>
+									<label><i class="fa fa-briefcase" aria-hidden="true"></i> {{ 'COMMON_JOB' | translate }}</label>
 									<input type="text" id="job" name="job" class="form-control" placeholder="{{ 'COMMON_JOB' | translate }}" ng-model="profileCtrl.currentUser.job"
 										ng-minlength="2" ng-maxlength="50">
 
@@ -103,7 +109,7 @@
 							</div>
 						</div>
 
-						<button class="btn btn-success" type="submit" ng-disabled="profilInfoForm.$invalid">
+						<button class="btn btn-success" type="button" ng-click="profileCtrl.updateProfilInfo()" ng-disabled="profilInfoForm.$invalid">
                             <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
                         </button>
 					</form>
@@ -116,32 +122,34 @@
 			<div class="ibox float-e-margins">
 				<div class="ibox-title">
 					<h5>{{ 'PROFILE_PASSWORD_MANAGEMENT' | translate }}</h5>
+					<div class="ibox-tools">
+						<a class="collapse-link" data-toggle="collapse" data-target="#passwordForm">
+							<i class="fa fa-chevron-down"></i>
+						</a>
+					</div>
 				</div>
-				<div class="ibox-content">
-					<form name="profileCtrl.profileService.passwordForm" ng-submit="profileCtrl.submitPasswordForm()" novalidate>
+				<div class="ibox-content collapse" id="passwordForm">
+					<form name="profileCtrl.passwordForm" novalidate>
 						<!-- password -->
-						<div class="form-group" ng-class="{ 'has-error' : profileCtrl.profileService.profileService.passwordForm.oldPassword.$invalid && !profileCtrl.profileService.passwordForm.oldPassword.$pristine }">
+						<div class="form-group" ng-class="{ 'has-error' : profileCtrl.passwordForm.oldPassword.$invalid && !profileCtrl.passwordForm.oldPassword.$pristine }">
 							<label><i class="fa fa-unlock-alt" aria-hidden="true"></i> {{ 'PROFILE_OLD_PASSWORD' | translate }}</label>
-							<input type="password" name="oldPassword" class="form-control" ng-model="profileCtrl.profileService.oldPassword" required>
-							<p ng-show="profileCtrl.profileService.passwordForm.oldPassword.$invalid && !profileCtrl.profileService.passwordForm.oldPassword.$pristine"
-								class="help-block">{{ 'PROFILE_VALIDATE_OLD_PASSWORD' | translate }}</p>
+							<input type="password" name="oldPassword" class="form-control" ng-model="profileCtrl.oldPassword" required>
+							<p ng-show="profileCtrl.passwordForm.oldPassword.$invalid && !profileCtrl.passwordForm.oldPassword.$pristine" class="help-block">{{ 'PROFILE_VALIDATE_OLD_PASSWORD' | translate }}</p>
 						</div>
-						<div class="form-group" ng-class="{ 'has-error' : profileCtrl.profileService.passwordForm.newPassword1.$invalid && !profileCtrl.profileService.passwordForm.newPassword1.$pristine }">
+						<div class="form-group" ng-class="{ 'has-error' : profileCtrl.passwordForm.newPassword1.$invalid && !profileCtrl.passwordForm.newPassword1.$pristine }">
 							<label><i class="fa fa-unlock" aria-hidden="true"></i>  {{ 'COMMON_NEW_PASSWORD' | translate }}</label>
-							<input type="password" name="newPassword1" id="newPassword1" class="form-control" ng-model="profileCtrl.profileService.newPassword1"
-								required ng-minlength="6" />
-							<p ng-show="profileCtrl.profileService.passwordForm.newPassword1.$invalid && !profileCtrl.profileService.passwordForm.newPassword1.$pristine"
-								class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</p>
+							<input type="password" name="newPassword1" id="newPassword1" class="form-control" ng-model="profileCtrl.newPassword1" required
+								ng-minlength="6" />
+							<p ng-show="profileCtrl.passwordForm.newPassword1.$invalid && !profileCtrl.passwordForm.newPassword1.$pristine" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</p>
 						</div>
-						<div class="form-group" ng-class="{ 'has-error' : profileCtrl.profileService.passwordForm.newPassword2.$invalid && !profileCtrl.profileService.passwordForm.newPassword2.$pristine }">
+						<div class="form-group" ng-class="{ 'has-error' : profileCtrl.passwordForm.newPassword2.$invalid && !profileCtrl.passwordForm.newPassword2.$pristine }">
 							<label><i class="fa fa-unlock" aria-hidden="true"></i>  {{ 'COMMON_NEW_PASSWORD' | translate }}</label>
-							<input type="password" name="newPassword2" id="newPassword2" class="form-control" ng-model="profileCtrl.profileService.newPassword2"
-								required ng-minlength="6" pw-check="newPassword1" />
-							<p ng-show="profileCtrl.profileService.passwordForm.newPassword2.$invalid && !profileCtrl.profileService.passwordForm.newPassword2.$pristine"
-								class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</p>
-							<p ng-show="profileCtrl.profileService.passwordForm.newPassword2.$error.pwmatch" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</p>
+							<input type="password" name="newPassword2" id="newPassword2" class="form-control" ng-model="profileCtrl.newPassword2" required
+								ng-minlength="6" pw-check="newPassword1" />
+							<p ng-show="profileCtrl.passwordForm.newPassword2.$invalid && !profileCtrl.passwordForm.newPassword2.$pristine" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</p>
+							<p ng-show="profileCtrl.passwordForm.newPassword2.$error.pwmatch && !profileCtrl.passwordForm.newPassword2.$pristine" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</p>
 						</div>
-						<button class="btn btn-success" type="submit" ng-disabled="profileCtrl.profileService.passwordForm.$invalid">
+						<button class="btn btn-success" type="button" ng-click="profileCtrl.updatePassword()" ng-disabled="profileCtrl.passwordForm.$invalid">
                             <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
                         </button>
 					</form>
@@ -154,8 +162,13 @@
 			<div class="ibox float-e-margins">
 				<div class="ibox-title">
 					<h5>{{ 'PROFILE_PICTURE_MANAGEMENT' | translate }}</h5>
+					<div class="ibox-tools">
+						<a class="collapse-link" data-toggle="collapse" data-target="#profilPicture">
+							<i class="fa fa-chevron-down"></i>
+						</a>
+					</div>
 				</div>
-				<div class="ibox-content">
+				<div class="ibox-content collapse" id="profilPicture">
 					<div style="margin-left:15px;max-width:700px" quality="50" savebutton="passt" imagecrop event="profileImageSaved"></div>
 				</div>
 			</div>
@@ -163,3 +176,13 @@
 	</div>
 
 </div>
+
+
+<script>
+	// Collapse iBox Contents
+    $('.collapse').on('shown.bs.collapse', function(){
+        $(this).parent().find(".fa-chevron-down").removeClass("fa-chevron-down").addClass("fa-chevron-up");
+    }).on('hidden.bs.collapse', function(){
+        $(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
+    });
+</script>

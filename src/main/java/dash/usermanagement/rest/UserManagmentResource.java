@@ -69,7 +69,7 @@ public class UserManagmentResource {
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update a single user.", notes = "Provide a valid user ID.")
-	public User update(@RequestBody @Valid final User user) throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+	public User update(@RequestBody final User user) throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		return userService.update(user);
 	}
 
