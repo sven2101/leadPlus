@@ -245,11 +245,4 @@ public class Process {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "Process [id=" + id + ", deleted=" + deleted + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale
-				+ ", comments=" + comments + ", status=" + status + ", processor=" + processor + ", notifications="
-				+ notifications + "]";
-	}
-
 }
