@@ -16,8 +16,10 @@ package dash.fileuploadmanagement.rest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,11 +55,13 @@ public class FileUploadResource {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_PDF_VALUE })
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get file by Id. ", notes = "")
-	public byte[] getContentByFileUploadId(@ApiParam(required = true) @PathVariable final long id)
+	public ResponseEntity<byte[]> getContentByFileUploadId(@ApiParam(required = true) @PathVariable final long id)
 			throws NotFoundException {
-
-		return fileService.getById(id).getContent();
-
+		FileUpload fileUpload = fileService.getById(id);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentType(
+				new MediaType(fileUpload.getMimeType().split("/")[0], fileUpload.getMimeType().split("/")[1]));
+		return new ResponseEntity<byte[]>(fileUpload.getContent(), responseHeaders, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
