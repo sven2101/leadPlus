@@ -333,10 +333,9 @@ class FileResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/files", {}, {
-            uploadFiles: {
-                url: "/api/rest/files", method: "POST", transformRequest: angular.identity,
-                headers: { "Content-Type": undefined }
-            }
+
+            createFileUpload: { url: "/api/rest/files", method: "POST" },
+
         });
     }
 }

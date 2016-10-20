@@ -13,7 +13,6 @@
  *******************************************************************************/
 package dash.notificationmanagement.domain;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -23,7 +22,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -70,7 +68,7 @@ public class Notification {
 	@Column(name = "content", length = 30000, nullable = false)
 	private String content;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "attachment_id", nullable = true)
 	private FileUpload attachment;
 

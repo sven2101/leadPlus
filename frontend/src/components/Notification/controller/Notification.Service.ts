@@ -20,19 +20,21 @@ const NotificationServiceId: string = "NotificationService";
 
 class NotificationService {
 
-    private $inject = [toasterId, $translateId, $rootScopeId, NotificationResourceId, $qId];
+    private $inject = [toasterId, $translateId, $rootScopeId, NotificationResourceId, $qId, FileResourceId];
 
     toaster;
     translate;
     rootScope;
     notificationResource;
+    fileResource;
     formdata;
     fileReader;
     notification: Notification;
     q;
 
-    constructor(toaster, $translate, $rootScope, NotificationResource, $q) {
+    constructor(toaster, $translate, $rootScope, NotificationResource, $q, FileResource) {
         this.notificationResource = NotificationResource.resource;
+        this.fileResource = FileResource.resource;
         this.toaster = toaster;
         this.translate = $translate;
         this.rootScope = $rootScope;
@@ -55,7 +57,18 @@ class NotificationService {
         return defer.promise;
     }
 
+    saveFileUpload(fileUpload: FileUpload): IPromise<FileUpload> {
+        let defer = this.q.defer();
+        if (isNullOrUndefined(fileUpload) || isNullOrUndefined(fileUpload.content)) {
+            defer.resolve(fileUpload);
+            return defer.promise;
+        }
+        this.fileResource.createFileUpload(fileUpload).$promise.then((resultFileUpload) => defer.resolve(resultFileUpload), (error) => defer.reject(error));
+        return defer.promise;
+    }
+
     setAttachmentToNotification($files, notification: Notification) {
+        console.log("files");
         let defer = this.q.defer();
         let self = this;
         this.formdata.append("file", $files[0]);
@@ -67,6 +80,7 @@ class NotificationService {
         fileReader.readAsDataURL($files[0]);
         fileReader.onload = function () {
             notification.attachment.content = this.result.split(",")[1];
+            console.log(notification.attachment);
             defer.resolve(notification);
         };
         fileReader.onerror = (error) => {

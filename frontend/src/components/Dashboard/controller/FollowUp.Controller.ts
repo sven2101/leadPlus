@@ -87,13 +87,18 @@ class FollowUpController {
 
 
         this.notificationService.sendNotification(notification).then(() => {
-            if (isNullOrUndefined(process.notifications)) {
-                process.notifications = [];
-            }
-            process.notifications.push(notification);
-            self.workflowService.saveProcess(process).then((resultProcess) => {
-                self.process.notifications = resultProcess.notifications;
-                self.close();
+            self.notificationService.saveFileUpload(notification.attachment).then((resultFileUpload) => {
+                console.log(notification.attachment);
+                notification.attachment = resultFileUpload;
+                if (isNullOrUndefined(process.notifications)) {
+                    process.notifications = [];
+                }
+                console.log(notification.attachment);
+                process.notifications.push(notification);
+                self.workflowService.saveProcess(process).then((resultProcess) => {
+                    self.process.notifications = resultProcess.notifications;
+                    self.close();
+                });
             });
         });
     }
@@ -109,6 +114,7 @@ class FollowUpController {
         let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
         if (!isNullOrUndefined(notification)) {
             this.currentNotification = deepCopy(notification);
+            this.currentNotification.id = null;
         }
     }
 

@@ -37,6 +37,8 @@ import org.springframework.stereotype.Service;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.exceptions.SaveFailedException;
+import dash.fileuploadmanagement.business.IFileUploadService;
+import dash.fileuploadmanagement.domain.FileUpload;
 import dash.notificationmanagement.domain.Notification;
 import dash.smtpmanagement.business.ISmtpService;
 import dash.smtpmanagement.domain.Smtp;
@@ -49,11 +51,21 @@ public class NotificationService implements INotificationService {
 	@Autowired
 	private ISmtpService smtpService;
 
+	@Autowired
+	private IFileUploadService fileUploadService;
+
 	@Override
 	public void sendNotification(final long userId, final Notification notification)
 			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException, Exception {
 		try {
 			Smtp smtp = smtpService.findByUser(userId);
+			if (notification != null && notification.getAttachment() != null
+					&& notification.getAttachment().getId() != null) {
+				FileUpload attachment = fileUploadService.getById(notification.getAttachment().getId());
+				if (attachment != null) {
+					notification.setAttachment(attachment);
+				}
+			}
 			smtp = smtpService.decrypt(smtp);
 			if (smtp != null) {
 

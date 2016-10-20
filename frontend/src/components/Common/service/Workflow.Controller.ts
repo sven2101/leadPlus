@@ -197,14 +197,17 @@ class WorkflowController extends AbstractWorkflow {
         let notification = this.currentNotification;
         this.notificationService.sendNotification(notification).then(() => {
             self.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
-                if (isNullOrUndefined(process.notifications)) {
-                    process.notifications = [];
-                }
-                process.notifications.push(notification);
-                self.workflowService.saveProcess(process).then((resultProcess) => {
-                    self.process.notifications = resultProcess.notifications;
-                    self.rootScope.$broadcast("deleteRow", self.process);
-                    self.close();
+                self.notificationService.saveFileUpload(notification.attachment).then((resultFileUpload) => {
+                    notification.attachment = resultFileUpload;
+                    if (isNullOrUndefined(process.notifications)) {
+                        process.notifications = [];
+                    }
+                    console.log(notification.attachment);
+                    process.notifications.push(notification);
+                    self.workflowService.saveProcess(process).then((resultProcess) => {
+                        self.process.notifications = resultProcess.notifications;
+                        self.close();
+                    });
                 });
 
             });
@@ -245,6 +248,7 @@ class WorkflowController extends AbstractWorkflow {
         let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
         if (!isNullOrUndefined(notification)) {
             this.currentNotification = deepCopy(notification);
+            this.currentNotification.id = null;
         }
     }
 

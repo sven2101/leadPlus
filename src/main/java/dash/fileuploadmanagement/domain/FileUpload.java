@@ -59,7 +59,6 @@ public class FileUpload {
 	@Column(name = "size", nullable = false)
 	private long size;
 
-	@NotNull
 	@Column(name = "content", nullable = false)
 	@JsonProperty(access = Access.WRITE_ONLY)
 	private byte[] content;
@@ -166,7 +165,7 @@ public class FileUpload {
 	@Override
 	public String toString() {
 		return "FileUpload [id=" + id + ", filename=" + filename + ", mimeType=" + mimeType + ", size=" + size
-				+ ", content=" + Arrays.toString(content) + ", deleted=" + deleted + "]";
+				+ ", deleted=" + deleted + "]";
 	}
 
 }

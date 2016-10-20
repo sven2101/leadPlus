@@ -6,7 +6,7 @@
 			<label>{{ 'EMAIL_NOTIFICATION_HISTORY' | translate }}</label>
 			<select class="form-control" ng-disabled="parent.editProcess.notifications.length==0" ng-model="notificationId" ng-change="parent.setFormerNotification(notificationId)">
                 <option value="-1" selected disabled hidden>{{ 'EMAIL_NOTIFICATION_SELECT' | translate }}</option>                                                                     
-                <option value="{{notification.id}}" ng-repeat="notification in parent.editProcess.notifications">{{notification.notificationType.toLowerCase()+" - "+notification.subject}}</option>                                           
+                <option value="{{notification.id}}" ng-repeat="notification in parent.editProcess.notifications track by $index">{{notification.notificationType.toLowerCase()+" - "+notification.subject}}</option>                                           
             </select>
 		</div>
 
@@ -39,7 +39,7 @@
 			<div class="fileinput fileinput-new" data-provides="fileinput">
 				<span class="btn btn-default btn-file"><span class="fileinput-new">Select file</span>
 				<span class="fileinput-exists">Change </span>
-				<input ng-disabled="parent.editEmail" name="attachement" required type="file" name="..." multiple ng-files="parent.getTheFiles($files)"
+				<input ng-disabled="parent.editEmail" name="attachement" required type="file" name="..." multiple ng-files="parent.currentNotification.attachment.id=null;parent.getTheFiles($files);"
 					accept="application/pdf,image/gif,image/jpeg">
 				<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
 				</input>
@@ -47,7 +47,7 @@
 				<span class="fileinput-filename"></span>
 				<a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
 			</div>
-			<a ng-click="parent.openOfferAttachment()">{{parent.currentNotification.attachment.filename}}</a>
+			<a ng-if="parent.currentNotification.attachment.id!=null" ng-click="openAttachment(parent.currentNotification.attachment.id)">{{parent.currentNotification.attachment.filename}}</a>
 			<br/>
 		</div>
 		<div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.message.$invalid}">
