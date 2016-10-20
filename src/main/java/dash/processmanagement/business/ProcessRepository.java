@@ -24,8 +24,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import dash.leadmanagement.domain.Lead;
-import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
@@ -38,24 +36,24 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 
 	List<Process> findByStatusAndLeadIsNotNull(Status status);
 
-	Page<Lead> findByLeadIsNotNull(Pageable pageable);
+	Page<Process> findByLeadIsNotNull(Pageable pageable);
 
-	Page<Lead> findByLeadCustomerFirstnameContainingOrLeadCustomerLastnameContainingOrLeadCustomerEmailContainingOrLeadCustomerCompanyContainingOrLeadCustomerPhoneContainingOrLeadDeliveryAddressContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
+	Page<Process> findByLeadCustomerFirstnameContainingOrLeadCustomerLastnameContainingOrLeadCustomerEmailContainingOrLeadCustomerCompanyContainingOrLeadCustomerPhoneContainingOrLeadDeliveryAddressContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
 			String firstname, String lastname, String email, String company, String phone, String deliveryAddress, String message, String status,
 			Pageable pageable);
 
 	List<Process> findByStatusAndOfferIsNotNull(Status status);
 
-	Page<Offer> findByOfferIsNotNull(Pageable pageable);
+	Page<Process> findByOfferIsNotNull(Pageable pageable);
 
-	Page<Offer> findByOfferCustomerFirstnameContainingOrOfferCustomerLastnameContainingOrOfferCustomerEmailContainingOrOfferCustomerCompanyContainingOrOfferCustomerPhoneContainingOrOfferDeliveryAddressContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(
+	Page<Process> findByOfferCustomerFirstnameContainingOrOfferCustomerLastnameContainingOrOfferCustomerEmailContainingOrOfferCustomerCompanyContainingOrOfferCustomerPhoneContainingOrOfferDeliveryAddressContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(
 			String firstname, String lastname, String email, String company, String phone, String deliveryAddress, String status, Pageable pageable);
 
 	List<Process> findByStatusAndSaleIsNotNull(Status status);
 
-	Page<Sale> findBySaleIsNotNull(Pageable pageable);
+	Page<Process> findBySaleIsNotNull(Pageable pageable);
 
-	Page<Sale> findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
+	Page<Process> findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
 			String firstname, String lastname, String email, String company, String phone, String status, Pageable pageable);
 
 	List<Sale> findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
