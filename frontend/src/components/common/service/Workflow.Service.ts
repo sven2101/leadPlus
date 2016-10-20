@@ -187,7 +187,7 @@ class WorkflowService {
     startOfferTransformation(process: Process) {
         let self = this;
         process.offer = {
-            id: 0,
+            id: null,
             orderPositions: deepCopy(process.lead.orderPositions),
             deliveryAddress: process.lead.deliveryAddress,
             deliveryDate: null,
@@ -223,7 +223,7 @@ class WorkflowService {
     startSaleTransformation(process: Process) {
         let self = this;
         process.sale = {
-            id: 0,
+            id: null,
             deliveryAddress: process.offer.deliveryAddress,
             deliveryDate: process.offer.deliveryDate,
             orderPositions: deepCopy(process.offer.orderPositions),

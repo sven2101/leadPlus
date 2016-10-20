@@ -55,8 +55,6 @@ class LeadService {
         this.customerService = CustomerService;
         this.productService = ProductService;
         this.user = $rootScope.globals.user;
-
-
     }
 
     saveLead(dtInstance: any, newLead: Lead, currentOrderPositions: Array<OrderPosition>) {
@@ -102,7 +100,7 @@ class LeadService {
         let self = this;
         this.processResource.setStatus({
             id: process.id
-        }, "INCONTACT").$promise.then(function() {
+        }, "INCONTACT").$promise.then(function () {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_INCONTACT"));
             process.status = "INCONTACT";
@@ -187,10 +185,8 @@ class LeadService {
             });
             return;
         }
-
-        this.leadResource.update(editProcess.lead).$promise.then(function (result) {
-            self.toaster.pop("success", "", self.translate
-                .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
+        this.processResource.save(editProcess).$promise.then(function (result) {
+            self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD")); self.rootScope.leadsCount += 1;
             self.updateRow(editProcess, dtInstance, scope);
             if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
                 self.rootScope.$broadcast("onTodosChange");

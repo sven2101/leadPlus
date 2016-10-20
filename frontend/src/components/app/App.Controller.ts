@@ -151,8 +151,6 @@ class AppController {
 
     }
 
-
-
     sumOrderPositions(array: Array<OrderPosition>): number {
         let sum = 0;
         if (isNullOrUndefined(array)) {
@@ -170,4 +168,4 @@ class AppController {
     }
 }
 
-angular.module(moduleAppController, [ngResourceId]).controller(AppControllerId, AppController);
+angular.module(moduleAppController, [ngResourceId, moduleSanitize]).controller(AppControllerId, AppController);

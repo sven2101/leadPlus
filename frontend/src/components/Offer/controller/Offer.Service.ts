@@ -63,7 +63,7 @@ class OfferService {
 
     createSale(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {
         let self = this;
-        this.workflowService.addOfferToSale(process).then(function(isResolved: Process) {
+        this.workflowService.addOfferToSale(process).then(function (isResolved: Process) {
             if (loadAllData === true) {
                 self.updateRow(process, loadAllData, scope);
             } else if (loadAllData === false) {
@@ -79,7 +79,7 @@ class OfferService {
         let self = this;
         this.processResource.setStatus({
             id: process.id
-        }, "FOLLOWUP").$promise.then(function() {
+        }, "FOLLOWUP").$promise.then(function () {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_FOLLOW_UP"));
             process.status = "FOLLOWUP";
@@ -95,7 +95,7 @@ class OfferService {
         if (process.status === "OFFER" || process.status === "FOLLOWUP") {
             this.processResource.setStatus({
                 id: process.id
-            }, "CLOSED").$promise.then(function() {
+            }, "CLOSED").$promise.then(function () {
                 self.toaster.pop("success", "", self.translate
                     .instant("COMMON_TOAST_SUCCESS_CLOSE_OFFER"));
                 self.rootScope.offersCount -= 1;
@@ -105,7 +105,7 @@ class OfferService {
         } else if (process.status === "CLOSED") {
             this.processResource.setStatus({
                 id: process.id
-            }, "OFFER").$promise.then(function() {
+            }, "OFFER").$promise.then(function () {
                 self.toaster.pop("success", "", self.translate
                     .instant("COMMON_TOAST_SUCCESS_OPEN_OFFER"));
                 self.rootScope.offersCount += 1;
@@ -123,9 +123,9 @@ class OfferService {
         let temp: Offer = editProcess.offer;
         if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
             temp.customer.timestamp = newTimestamp();
-            this.customerResource.createCustomer(temp.customer).$promise.then(function(customer) {
+            this.customerResource.createCustomer(temp.customer).$promise.then(function (customer) {
                 temp.customer = customer;
-                self.processResource.save(editProcess).$promise.then(function(result) {
+                self.processResource.save(editProcess).$promise.then(function (result) {
                     self.updateRow(editProcess, dtInstance, scope);
                     self.customerService.getAllCustomer();
                     if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
@@ -136,7 +136,7 @@ class OfferService {
             return;
         }
 
-        this.offerResource.update(editProcess.offer).$promise.then(function(result) {
+        this.offerResource.update(editProcess.offer).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_OFFER"));
             editProcess.offer = result;
@@ -155,9 +155,9 @@ class OfferService {
         let temp: Offer = editProcess.offer;
         if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
             temp.customer.timestamp = newTimestamp();
-            this.customerResource.createCustomer(temp.customer).$promise.then(function(customer) {
+            this.customerResource.createCustomer(temp.customer).$promise.then(function (customer) {
                 temp.customer = customer;
-                self.processResource.save(editProcess).$promise.then(function(result) {
+                self.processResource.save(editProcess).$promise.then(function (result) {
                     self.customerService.getAllCustomer();
                     if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
                         self.rootScope.$broadcast("onTodosChange");
@@ -167,7 +167,7 @@ class OfferService {
             return;
         }
 
-        this.offerResource.update(editProcess.offer).$promise.then(function(result) {
+        this.processResource.save(editProcess).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_UPDATE_OFFER"));
             editProcess.offer = result;
             if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
@@ -200,7 +200,7 @@ class OfferService {
         if (user !== null) {
             this.processResource.setProcessor({
                 id: process.id
-            }, user.id).$promise.then(function() {
+            }, user.id).$promise.then(function () {
                 process.processor = user;
                 self.updateRow(process, dtInstance, scope);
                 self.rootScope.$broadcast("onTodosChange");
@@ -208,7 +208,7 @@ class OfferService {
         } else if (process.processor !== null) {
             this.processResource.removeProcessor({
                 id: process.id
-            }).$promise.then(function() {
+            }).$promise.then(function () {
                 process.processor = null;
                 self.updateRow(process, dtInstance, scope);
                 self.rootScope.$broadcast("onTodosChange");
@@ -224,7 +224,7 @@ class OfferService {
         process.offer = null;
         process.status = Status.OPEN;
         let self = this;
-        this.processResource.save(process).$promise.then(function(result) {
+        this.processResource.save(process).$promise.then(function (result) {
             self.offerResource.drop({
                 id: offer.id
             }).$promise.then(() => { dtInstance.DataTable.row(self.rows[process.id]).remove().draw(); self.rootScope.leadsCount += 1; self.rootScope.offersCount -= 1; });

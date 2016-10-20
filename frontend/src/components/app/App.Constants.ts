@@ -113,6 +113,7 @@ const moduleHighchartsNg: string = "highcharts-ng";
 const moduleUIBootstrap: string = "ui.bootstrap";
 const moduleSummernote: string = "summernote";
 const moduleFootable: string = "ui.footable";
+const moduleSanitize: string = "ngSanitize";
 
 const workflowLead: string = "LEAD";
 const workflowOffer: string = "OFFER";
