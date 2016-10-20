@@ -1,50 +1,53 @@
 <div class="modal-header">
-    <button type="button" class="close" ng-click="templateCtrl.close()">
+	<button type="button" class="close" ng-click="templateCtrl.close()">
         <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-    <h4 class="modal-title">{{ 'SETTING_EMAIL_TEMPLATE_CREATE' | translate }}</h4>
+	<h4 class="modal-title">{{ 'SETTING_EMAIL_TEMPLATE_CREATE' | translate }}</h4>
 </div>
 <div class="modal-body">
-    <form name="createTemplate">
-        <div class="row">
-            <!-- Name -->
-            <div class="form-group">
-                <label>{{ 'COMMON_NAME' | translate }}<span style="color:red">*</span></label>
-                <input required type="text" name="name" class="form-control" ng-model="templateCtrl.template.name" ng-maxlength="30">
-                <p ng-show="template.createTemplate.name.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-                <p ng-show="template.createTemplate.name.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
-            </div>
-            <!-- Description -->
-            <div class="form-group" ng-class="{ 'has-error' : template.createTemplate.description.$invalid && !template.createTemplate.description.$pristine }">
-                <label>{{ 'COMMON_DESCRIPTION' | translate }}</label>
-                <input required type="text" name="description" class="form-control" ng-model="templateCtrl.template.description" ng-maxlength="30">
-                <p ng-show="template.createTemplate.description.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-                <p ng-show="template.createTemplate.description.$error.required " class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
-            </div>
-            <!-- Deactivated -->
-            <div class="form-group">
-                <label class="checkbox-inline "> <input type="checkbox " ng-model="templateCtrl.template.deactivated">{{ 'COMMON_DEACTIVATED' | translate }}</label>
-            </div>
-            <!-- Template -->
-            <div class="form-group " ng-class="{ 'has-error' : template.createTemplate.content.$invalid && !template.createTemplate.content.$pristine
+	<form name="createTemplate">
+		<div class="row">
+			<!-- Name -->
+			<div class="form-group">
+				<label>{{ 'COMMON_NAME' | translate }}<span style="color:red">*</span></label>
+				<input required type="text" name="name" class="form-control" ng-model="templateCtrl.template.name" ng-maxlength="30">
+				<p ng-show="createTemplate.name.$error.maxlength && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+				<p ng-show="createTemplate.name.$error.required  && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+			</div>
+			<!-- Description -->
+			<div class="form-group" ng-class="{ 'has-error' : createTemplate.description.$invalid && !createTemplate.description.$pristine }">
+				<label>{{ 'COMMON_DESCRIPTION' | translate }}</label>
+				<input required type="text" name="description" class="form-control" ng-model="templateCtrl.template.description" ng-maxlength="30">
+				<p ng-show="createTemplate.description.$error.maxlength && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+				<p ng-show="createTemplate.description.$error.required  && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+			</div>
+			<!-- Deactivated -->
+			<div class="form-group">
+				<label class="checkbox-inline "> <input type="checkbox " ng-model="templateCtrl.template.deactivated">{{ 'COMMON_DEACTIVATED' | translate }}</label>
+			</div>
+			<!-- Template -->
+			<div class="form-group " ng-class="{ 'has-error' : createTemplate.content.$invalid && !createTemplate.content.$pristine
                 } ">
-                <label>{{ 'SETTING_EMAIL_TEMPLATE_TEXT' | translate }}<span style="color:red">*</span></label>
-                <div class="summernote ">
-                    <summernote required type="text " name="content " class="form-control " ng-model="templateCtrl.template.content "></summernote>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer ">
-            <button type="button " class="btn btn-white " data-dismiss="modal " ng-click="templateCtrl.close()">{{ 'COMMON_CANCEL'| translate }}
+				<label>{{ 'SETTING_EMAIL_TEMPLATE_TEXT' | translate }}<span style="color:red">*</span></label>
+				<summernote required type="text " name="content " class="form-control " ng-model="templateCtrl.template.content "></summernote>
+			</div>
+		</div>
+		<div class="modal-footer ">
+			<button type="button " class="btn btn-white " data-dismiss="modal " ng-click="templateCtrl.close()">{{ 'COMMON_CANCEL'| translate }}
                 </button>
-            <button type="submit " class="btn btn-success " ng-disabled="template.createTemplate.$invalid " ng-click="templateCtrl.save() "
-                data-dismiss="modal ">{{ 'COMMON_SAVE'| translate }}
+			<button type="submit " class="btn btn-success " ng-disabled="createTemplate.$invalid " ng-click="templateCtrl.save() " data-dismiss="modal ">{{ 'COMMON_SAVE'| translate }}
                 </button>
-        </div>
-    </form>
+		</div>
+	</form>
 </div>
 
 <style>
-    .btn-toolbar{
-        margin-left:0px;
-    }
+	.btn-toolbar {
+		margin-left: 0px;
+	}
 </style>
+
+<script>
+    $('.summernote').summernote({
+        height: 350,   //set editable area's height
+    });
+</script>

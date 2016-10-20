@@ -25,7 +25,7 @@ const TemplateServiceId: string = "TemplateService";
 
 class TemplateService {
 
-    private $inject = [toasterId, $translateId, TemplateResourceId, $uibModalId, $qId, $windowId, $sceId];
+    private $inject = [toasterId, $translateId, TemplateResourceId, $uibModalId, $qId, $windowId];
 
     templateResource;
 
@@ -34,11 +34,10 @@ class TemplateService {
     uibModal;
     q;
     window;
-    sce;
     content: any;
     templates: Array<Template>;
 
-    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q, $window, $sce) {
+    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q, $window) {
         this.toaster = toaster;
         this.translate = $translate;
         this.uibModal = $uibModal;
@@ -49,7 +48,7 @@ class TemplateService {
 
     openEmailTemplateModal(template: Template) {
         this.uibModal.open({
-            templateUrl: "http://localhost:8080/components/Template/view/Template.Modal.html",
+            templateUrl: "http://localhost:5000/components/Template/view/Template.Modal.html",
             controller: "TemplateController",
             controllerAs: "templateCtrl",
             size: "lg",
@@ -65,7 +64,7 @@ class TemplateService {
 
     openEmailTemplateDeleteModal(template: Template) {
         this.uibModal.open({
-            templateUrl: "http://localhost:8080/components/Template/view/Template.Delete.Modal.html",
+            templateUrl: "http://localhost:5000/components/Template/view/Template.Delete.Modal.html",
             controller: "TemplateController",
             controllerAs: "templateCtrl",
             size: "sm",
