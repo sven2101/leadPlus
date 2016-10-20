@@ -107,6 +107,7 @@ class TemplateService {
     }
 
     generate(templateId: string, offer: Offer, notification: Notification): IPromise<Notification> {
+        console.log("Offer: ", offer);
         let defer = this.q.defer();
         let self = this;
         let offerMessageContext: OfferMessageContext = new OfferMessageContext();
