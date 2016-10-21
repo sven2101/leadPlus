@@ -30,7 +30,7 @@ public class Encryptor {
 			AlgorithmParameters params = cipher.getParameters();
 			byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
 			byte[] ciphertext = cipher.doFinal(text);
-
+			String y = new String(ciphertext, "UTF-8");
 			return new EncryptionWrapper(ciphertext, salt, iv);
 		} catch (Exception ex) {
 			ex.printStackTrace();

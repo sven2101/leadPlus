@@ -18,16 +18,8 @@ import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 
 import java.io.UnsupportedEncodingException;
-import java.security.AlgorithmParameters;
-import java.security.spec.KeySpec;
 import java.util.Properties;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -36,9 +28,6 @@ import javax.mail.internet.InternetAddress;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.keygen.BytesKeyGenerator;
-import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Service;
 
 import com.sun.mail.smtp.SMTPMessage;
@@ -109,6 +98,8 @@ public class SmtpService implements ISmtpService {
 			if (smtp.getPassword() == null || new String(smtp.getPassword(), "UTF-8") == "") {
 				Smtp tempSmpt = smptRepository.findOne(smtp.getId());
 				smtp.setPassword(tempSmpt.getPassword());
+				smtp.setSalt(tempSmpt.getSalt());
+				smtp.setIv(tempSmpt.getIv());
 			} else {
 				EncryptionWrapper encryptionWrapper = Encryptor.encrypt(smtp.getPassword(), smtpKey);
 				smtp.setPassword(encryptionWrapper.getCiphertext());
@@ -131,69 +122,5 @@ public class SmtpService implements ISmtpService {
 			throw new NotFoundException(BECAUSE_OF_OBJECT_IS_NULL);
 		}
 		return smpt;
-	}
-
-	@Override
-	public Smtp encrypt2(Smtp smtp) throws Exception {
-		try {
-			if (SecurityContextHolder.getContext().getAuthentication() == null
-					|| SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null) {
-				throw new Exception("no Authentication");
-			}
-			User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			if (currentUser == null || currentUser.getPassword() == null || currentUser.getPassword().equals("")) {
-				throw new Exception("no password available");
-			}
-
-			BytesKeyGenerator generator = KeyGenerators.secureRandom();
-			byte[] salt = generator.generateKey();
-			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-			KeySpec spec = new PBEKeySpec(currentUser.getPassword().toCharArray(), salt, 65536, 128);
-			SecretKey tmp = factory.generateSecret(spec);
-			SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
-
-			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			cipher.init(Cipher.ENCRYPT_MODE, secret);
-			AlgorithmParameters params = cipher.getParameters();
-			byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
-			byte[] ciphertext = cipher.doFinal(smtp.getPassword());
-
-			smtp.setPassword(ciphertext);
-			smtp.setIv(iv);
-			smtp.setSalt(salt);
-
-			return smtp;
-		} catch (Exception ex) {
-			throw ex;
-		}
-
-	}
-
-	@Override
-	public Smtp decrypt2(Smtp smtp) throws Exception {
-		try {
-			if (SecurityContextHolder.getContext().getAuthentication() == null
-					|| SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null) {
-				throw new Exception("no Authentication");
-			}
-			User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			if (currentUser == null || currentUser.getPassword() == null || currentUser.getPassword().equals("")) {
-				throw new Exception("no password available");
-			}
-
-			SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-			KeySpec spec = new PBEKeySpec(currentUser.getPassword().toCharArray(), smtp.getSalt(), 65536, 128);
-			SecretKey tmp = factory.generateSecret(spec);
-			SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
-
-			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(smtp.getIv()));
-			smtp.setPassword(cipher.doFinal(smtp.getPassword()));
-
-			return smtp;
-		} catch (Exception ex) {
-			throw ex;
-		}
-
 	}
 }

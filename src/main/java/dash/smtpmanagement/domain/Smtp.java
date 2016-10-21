@@ -58,7 +58,6 @@ public class Smtp {
 	@Column(name = "username", nullable = false, length = 255)
 	private String username;
 
-	@NotNull
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(name = "password", nullable = false)
 	private byte[] password;
@@ -265,9 +264,10 @@ public class Smtp {
 
 	@Override
 	public String toString() {
-		return "Smtp [id=" + id + ", sender=" + sender + ", host=" + host + ", username=" + username + ", password=" + Arrays.toString(password) + ", email="
-				+ email + ", encryption=" + encryption + ", port=" + port + ", connection=" + connection + ", salt=" + Arrays.toString(salt) + ", iv="
-				+ Arrays.toString(iv) + ", user=" + user + "]";
+		return "Smtp [id=" + id + ", sender=" + sender + ", host=" + host + ", username=" + username + ", password="
+				+ Arrays.toString(password) + ", email=" + email + ", encryption=" + encryption + ", port=" + port
+				+ ", connection=" + connection + ", salt=" + Arrays.toString(salt) + ", iv=" + Arrays.toString(iv)
+				+ ", user=" + user + "]";
 	}
 
 }

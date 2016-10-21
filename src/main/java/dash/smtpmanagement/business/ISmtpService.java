@@ -34,8 +34,4 @@ public interface ISmtpService {
 
 	Smtp findByUser(long id) throws NotFoundException;
 
-	Smtp decrypt2(Smtp smtp) throws Exception;
-
-	Smtp encrypt2(Smtp smtp) throws Exception;
-
 }
