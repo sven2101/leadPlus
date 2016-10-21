@@ -68,10 +68,10 @@ public class NotificationService implements INotificationService {
 					notification.setAttachment(attachment);
 				}
 			}
-			smtp.setPassword(Encryptor.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()),
-					smtpKey));
-			if (smtp != null) {
 
+			if (smtp != null) {
+				smtp.setPassword(Encryptor
+						.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
 				final Session emailSession = newSession(smtp);
 				Transport transport = emailSession.getTransport("smtp");
 				transport.connect();

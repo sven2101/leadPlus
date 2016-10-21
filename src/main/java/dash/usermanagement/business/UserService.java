@@ -230,10 +230,12 @@ public class UserService implements IUserService {
 						user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
 
 						Smtp smtp = smtpService.findByUser(id);
-						smtp.setPassword(Encryptor.decrypt(
-								new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()),
-								passwordChange.getOldSmtpKey()));
-						smtpService.save(smtp, passwordChange.getNewSmtpKey());
+						if (smtp != null) {
+							smtp.setPassword(Encryptor.decrypt(
+									new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()),
+									passwordChange.getOldSmtpKey()));
+							smtpService.save(smtp, passwordChange.getNewSmtpKey());
+						}
 						save(user);
 					} else {
 						throw new DontMatchException(UPDATE_FAILED_EXCEPTION);
