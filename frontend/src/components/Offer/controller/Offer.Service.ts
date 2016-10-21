@@ -121,10 +121,9 @@ class OfferService {
             return;
         }
 
-        this.offerResource.update(editProcess.offer).$promise.then(function (result) {
+        this.processResource.save(editProcess).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_OFFER"));
-            editProcess.offer = result;
             self.updateRow(editProcess, dtInstance, scope);
             if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
                 self.rootScope.$broadcast("onTodosChange");

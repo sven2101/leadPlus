@@ -80,7 +80,6 @@ class SaleService {
 
         this.processResource.save(editProcess).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_UPDATE_SALE"));
-            editProcess.sale = result;
             self.updateRow(editProcess, dtInstance, scope);
         });
     }
