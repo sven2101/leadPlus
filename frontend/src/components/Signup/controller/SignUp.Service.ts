@@ -61,8 +61,8 @@ class SignupService {
 
     signup(user: Signup): void {
         let self = this;
-        user.password = sha256ToBase64(user.password, 3);
-        user.password2 = sha256ToBase64(user.password2, 3);
+        user.password = hashPassword(user.password);
+        user.password2 = hashPassword(user.password2);
         this.signupResource.signup({ username: user.username, email: user.email, password: user.password, password2: user.password2, firstname: user.firstname, lastname: user.lastname }).$promise.then(function () {
             user = null;
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));

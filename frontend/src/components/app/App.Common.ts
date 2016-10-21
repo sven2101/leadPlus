@@ -88,7 +88,7 @@ let unescapeHtmlQuote = function (html: string): string {
     return html.replace(/&quot;/g, "'");
 };
 
-let sha256ToBase64 = function (text: string, iterations: number) {
+let sha256ToBase64 = function (text: string, iterations: number): string {
     if (isNullOrUndefined(text) || text === "") {
         return;
     }
@@ -100,6 +100,10 @@ let sha256ToBase64 = function (text: string, iterations: number) {
         hash = sjcl.codec.base64.fromBits(sjcl.hash.sha256.hash(atob(hash)));
     }
     return hash;
+};
+
+let hashPassword = function (password: string): string {
+    return sha256ToBase64(password, 10000);
 };
 
 

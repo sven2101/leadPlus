@@ -10,10 +10,13 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.log4j.Logger;
 import org.springframework.security.crypto.keygen.BytesKeyGenerator;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 
 public class Encryptor {
+
+	private static final Logger logger = Logger.getLogger(Encryptor.class);
 
 	public static EncryptionWrapper encrypt(byte[] text, String password) throws Exception {
 		try {
@@ -31,6 +34,7 @@ public class Encryptor {
 			byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
 			byte[] ciphertext = cipher.doFinal(text);
 			String y = new String(ciphertext, "UTF-8");
+			logger.error(y);
 			return new EncryptionWrapper(ciphertext, salt, iv);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -50,6 +54,7 @@ public class Encryptor {
 			cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(encryptionWrapper.getIv()));
 			byte[] x = cipher.doFinal(encryptionWrapper.getCiphertext());
 			String y = new String(x, "UTF-8");
+			logger.error(y);
 			return x;
 
 		} catch (Exception ex) {

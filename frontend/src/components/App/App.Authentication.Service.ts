@@ -43,7 +43,8 @@ class AuthService {
     login(credentials, success, error) {
         let self = this;
         if (credentials) {
-            let authorization = btoa(credentials.username + ":" + sha256ToBase64(credentials.password, 3));
+            let hashedPassword = hashPassword(credentials.password);
+            let authorization = btoa(credentials.username + ":" + hashedPassword);
             let headers = credentials ? { authorization: "Basic " + authorization } : {};
             this.http.get("user", { headers: headers }).success(function (data) {
                 if (data.username) {
@@ -61,7 +62,7 @@ class AuthService {
                             language: data.language,
                             pictureLink: "http://localhost:8080/users/" + data.id + "/profile/picture",
                             authorization: authorization,
-                            smtpKey: sha256ToBase64(credentials.password, 10)
+                            smtpKey: hashPassword(hashedPassword)
                         }
                     };
                     self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;

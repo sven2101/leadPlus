@@ -76,15 +76,27 @@ class ProfileService {
     }
 
     updatePassword(oldPassword, newPassword1, newPassword2): IPromise<boolean> {
+        console.log("start");
+        oldPassword = hashPassword(oldPassword);
+        newPassword1 = hashPassword(newPassword1);
+        newPassword2 = hashPassword(newPassword2);
+        console.log("ziel");
         let defer = this.q.defer();
         let self = this;
-        this.userResource.changePassword({ id: this.rootScope.globals.user.id }, { newPassword: newPassword1, oldPassword: oldPassword }).$promise.then(function () {
-            self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
-            defer.resolve(true);
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
-            defer.reject(false);
-        });
+        this.userResource.changePassword({
+            id: this.rootScope.globals.user.id
+        }, {
+                newPassword: newPassword1,
+                oldPassword: oldPassword,
+                oldSmtpKey: self.rootScope.globals.user.smtpKey,
+                newSmtpKey: self.rootScope.globals.user.smtpKey
+            }).$promise.then(function () {
+                self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
+                defer.resolve(true);
+            }, function () {
+                self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
+                defer.reject(false);
+            });
         return defer.promise;
     }
 
