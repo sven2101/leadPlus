@@ -208,7 +208,6 @@ class WorkflowService {
             controller: WorkflowController,
             controllerAs: "workflowCtrl",
             backdrop: "static",
-            keyboard: false,
             size: "lg",
             resolve: {
                 process: function () {
@@ -248,7 +247,6 @@ class WorkflowService {
             controller: WorkflowController,
             controllerAs: "workflowCtrl",
             backdrop: "static",
-            keyboard: false,
             size: "lg",
             resolve: {
                 process: function (): Process {
@@ -504,7 +502,6 @@ class WorkflowService {
             controller: FollowUpController,
             controllerAs: "followUpCtrl",
             backdrop: "static",
-            keyboard: false,
             size: "lg",
             resolve: {
                 process: function () {

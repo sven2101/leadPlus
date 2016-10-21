@@ -136,6 +136,7 @@ class DashboardService {
                     (self.openLeads === source && self.closedSales === target) ||
                     (self.inContacts === target && self.openOffers === source) ||
                     (self.inContacts === target && self.closedSales === source) ||
+                    (self.closedSales === target && self.inContacts === source) ||
                     target === source) {
                     ui.item.sortable.cancel();
                 }

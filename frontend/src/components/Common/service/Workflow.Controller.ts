@@ -72,9 +72,8 @@ class WorkflowController extends AbstractWorkflow {
     invoiceNumberAlreadyExists: boolean = false;
 
     constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, $rootScope) {
-
         super(WorkflowService);
-
+        let self = this;
         this.rootScope = $rootScope;
         this.process = process;
         this.type = type;
@@ -93,7 +92,11 @@ class WorkflowController extends AbstractWorkflow {
             this.editEmail = true;
         }
         this.uibModalInstance = $uibModalInstance;
-
+        this.uibModalInstance.result.then(function () {
+            self.updateDashboard();
+        }, function () {
+            self.updateDashboard();
+        });
         this.notificationService = NotificationService;
 
         this.templateService = TemplateService;
@@ -153,6 +156,9 @@ class WorkflowController extends AbstractWorkflow {
 
     close() {
         this.uibModalInstance.close();
+    }
+
+    updateDashboard() {
         if (this.type === "offer") {
             this.dashboardService.openOffers = this.dashboardService.orderBy(this.dashboardService.openOffers, "offer.timestamp", false);
             this.dashboardService.sumLeads();
