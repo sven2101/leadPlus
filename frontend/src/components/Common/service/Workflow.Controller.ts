@@ -26,7 +26,7 @@ const WorkflowControllerId: string = "WorkflowController";
 
 class WorkflowController extends AbstractWorkflow {
 
-    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId, $rootScopeId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId, $rootScopeId, $sceId];
 
     type: string;
 
@@ -71,8 +71,8 @@ class WorkflowController extends AbstractWorkflow {
 
     invoiceNumberAlreadyExists: boolean = false;
 
-    constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, $rootScope) {
-        super(WorkflowService);
+    constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, $rootScope, $sce) {
+        super(WorkflowService, $sce);
         let self = this;
         this.rootScope = $rootScope;
         this.process = process;

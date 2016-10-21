@@ -28,7 +28,7 @@ const OfferControllerId: string = "OfferController";
 
 class OfferController extends AbstractWorkflow {
 
-    $inject = [$rootScopeId, $compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, TemplateServiceId, $routeParamsId];
+    $inject = [$rootScopeId, $compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, TemplateServiceId, $routeParamsId, $sceId];
 
     type: string = "offer";
 
@@ -72,8 +72,8 @@ class OfferController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService, $routeParams) {
-        super(WorkflowService);
+    constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService, $routeParams, $sce) {
+        super(WorkflowService, $sce);
         this.workflowService = WorkflowService;
         this.offerDataTableService = OfferDataTableService;
         this.offerService = OfferService;

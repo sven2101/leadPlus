@@ -28,7 +28,7 @@ const SaleControllerId: string = "SaleController";
 
 class SaleController extends AbstractWorkflow {
 
-    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId, TemplateServiceId, , $routeParamsId];
+    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId, TemplateServiceId, , $routeParamsId, $sceId];
 
     type: string = "sale";
     process: Process;
@@ -71,8 +71,8 @@ class SaleController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($rootScope, $compile, $scope, WorkflowService, SaleDataTableService, SaleService, TemplateService, $routeParams) {
-        super(WorkflowService);
+    constructor($rootScope, $compile, $scope, WorkflowService, SaleDataTableService, SaleService, TemplateService, $routeParams, $sce) {
+        super(WorkflowService, $sce);
         this.workflowService = WorkflowService;
         this.saleDataTableService = SaleDataTableService;
         this.saleService = SaleService;
