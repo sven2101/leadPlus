@@ -33,8 +33,9 @@ public class Encryptor {
 			AlgorithmParameters params = cipher.getParameters();
 			byte[] iv = params.getParameterSpec(IvParameterSpec.class).getIV();
 			byte[] ciphertext = cipher.doFinal(text);
-			String y = new String(ciphertext, "UTF-8");
-			logger.error(y);
+			String y;
+			y = new String(ciphertext, "UTF-8");
+
 			return new EncryptionWrapper(ciphertext, salt, iv);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -53,8 +54,11 @@ public class Encryptor {
 			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 			cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(encryptionWrapper.getIv()));
 			byte[] x = cipher.doFinal(encryptionWrapper.getCiphertext());
-			String y = new String(x, "UTF-8");
-			logger.error(y);
+
+			String y;
+
+			y = new String(x, "UTF-8");
+
 			return x;
 
 		} catch (Exception ex) {

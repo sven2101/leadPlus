@@ -89,9 +89,10 @@ class ProfileService {
                 newPassword: newPassword1,
                 oldPassword: oldPassword,
                 oldSmtpKey: self.rootScope.globals.user.smtpKey,
-                newSmtpKey: self.rootScope.globals.user.smtpKey
+                newSmtpKey: hashPassword(hashPassword(newPassword1))
             }).$promise.then(function () {
                 self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
+                self.rootScope.globals.user.smtpKey = hashPassword(hashPassword(newPassword1));
                 defer.resolve(true);
             }, function () {
                 self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));

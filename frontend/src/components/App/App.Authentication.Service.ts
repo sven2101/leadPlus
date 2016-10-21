@@ -62,7 +62,7 @@ class AuthService {
                             language: data.language,
                             pictureLink: "http://localhost:8080/users/" + data.id + "/profile/picture",
                             authorization: authorization,
-                            smtpKey: hashPassword(hashedPassword)
+                            smtpKey: encodeURIComponent(hashPassword(hashedPassword))
                         }
                     };
                     self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
