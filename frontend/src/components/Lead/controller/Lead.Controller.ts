@@ -28,7 +28,7 @@ const LeadControllerId: string = "LeadController";
 
 class LeadController extends AbstractWorkflow {
 
-    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId];
+    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId, $sceId];
 
     type: string = "lead";
 
@@ -64,8 +64,8 @@ class LeadController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($rootScope, $compile, $scope, WorkflowService, LeadDataTableService, LeadService, $routeParams) {
-        super(WorkflowService);
+    constructor($rootScope, $compile, $scope, WorkflowService, LeadDataTableService, LeadService, $routeParams, $sce) {
+        super(WorkflowService, $sce);
         this.workflowService = WorkflowService;
         this.leadDataTableService = LeadDataTableService;
         this.leadService = LeadService;

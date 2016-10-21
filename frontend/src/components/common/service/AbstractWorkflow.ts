@@ -12,13 +12,17 @@
 "use strict";
 
 class AbstractWorkflow {
-
     workflowService: WorkflowService;
-
     currentWizard: number = 1;
+    sce;
 
-    constructor(WorkflowService) {
+    constructor(WorkflowService, $sce) {
         this.workflowService = WorkflowService;
+        this.sce = $sce;
+    }
+
+    getAsHtml(html: string) {
+        return this.sce.trustAsHtml(html);
     }
 
     addProduct(array: Array<OrderPosition>, currentProductId: string, currentProductAmount: number) {

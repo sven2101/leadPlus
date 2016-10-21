@@ -26,7 +26,7 @@ const WorkflowControllerId: string = "WorkflowController";
 
 class WorkflowController extends AbstractWorkflow {
 
-    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId, $rootScopeId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId, $rootScopeId, $sceId];
 
     type: string;
 
@@ -63,16 +63,17 @@ class WorkflowController extends AbstractWorkflow {
 
     customerEditForm: any;
     leadEditForm: any;
-    supplyEditForm: any;
     priceEditForm: any;
+    supplyEditForm: any;
     emailEditForm: any;
     saleEditForm: any;
     rootScope;
 
-    constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, $rootScope) {
+    invoiceNumberAlreadyExists: boolean = false;
 
-        super(WorkflowService);
-
+    constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, $rootScope, $sce) {
+        super(WorkflowService, $sce);
+        let self = this;
         this.rootScope = $rootScope;
         this.process = process;
         this.type = type;
@@ -91,7 +92,11 @@ class WorkflowController extends AbstractWorkflow {
             this.editEmail = true;
         }
         this.uibModalInstance = $uibModalInstance;
-
+        this.uibModalInstance.result.then(function () {
+            self.updateDashboard();
+        }, function () {
+            self.updateDashboard();
+        });
         this.notificationService = NotificationService;
 
         this.templateService = TemplateService;
@@ -151,6 +156,9 @@ class WorkflowController extends AbstractWorkflow {
 
     close() {
         this.uibModalInstance.close();
+    }
+
+    updateDashboard() {
         if (this.type === "offer") {
             this.dashboardService.openOffers = this.dashboardService.orderBy(this.dashboardService.openOffers, "offer.timestamp", false);
             this.dashboardService.sumLeads();
@@ -188,6 +196,17 @@ class WorkflowController extends AbstractWorkflow {
         if (!isNullOrUndefined(process.offer)) {
             return process.offer.orderPositions;
         }
+    }
+
+    existsInvoiceNumber() {
+        let self = this;
+        this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function (result: Sale) {
+            if (!isNullOrUndefined(result)) {
+                self.invoiceNumberAlreadyExists = true;
+            } else {
+                self.invoiceNumberAlreadyExists = false;
+            }
+        });
     }
 
     send() {

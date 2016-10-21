@@ -78,10 +78,11 @@ class DashboardController {
         createOffer(process: Process) {
             this.dashboardService.createOffer(process);
         }
-    */
+   
     createSale(process: Process) {
         this.dashboardService.createSale(process);
     }
+     */
 
     saveDataToModal(info, type, process) {
         this.workflowModalData = info;

@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -68,6 +69,13 @@ public class SaleResource {
 	@ResponseStatus(HttpStatus.OK)
 	public List<Sale> getByCustomer(@ApiParam(required = true) @PathVariable final Long id) {
 		return saleService.getByCustomer(id);
+	}
+
+	@ApiOperation(value = "Return sale by invoice.", notes = "")
+	@RequestMapping(value = "/invoice", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseStatus(HttpStatus.OK)
+	public Sale getByInvoiceNumber(@RequestBody final String invoiceNumber) {
+		return saleService.getByInvoiceNumber(invoiceNumber);
 	}
 
 }

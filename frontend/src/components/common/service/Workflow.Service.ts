@@ -208,7 +208,6 @@ class WorkflowService {
             controller: WorkflowController,
             controllerAs: "workflowCtrl",
             backdrop: "static",
-            keyboard: false,
             size: "lg",
             resolve: {
                 process: function () {
@@ -233,6 +232,7 @@ class WorkflowService {
             saleProfit: process.offer.offerPrice,
             saleCost: 0,
             saleTurnover: process.offer.offerPrice,
+            invoiceNumber: "",
             timestamp: newTimestamp(),
             vendor: process.offer.vendor,
             deliveryCosts: process.offer.deliveryCosts,
@@ -247,7 +247,6 @@ class WorkflowService {
             controller: WorkflowController,
             controllerAs: "workflowCtrl",
             backdrop: "static",
-            keyboard: false,
             size: "lg",
             resolve: {
                 process: function (): Process {
@@ -503,7 +502,6 @@ class WorkflowService {
             controller: FollowUpController,
             controllerAs: "followUpCtrl",
             backdrop: "static",
-            keyboard: false,
             size: "lg",
             resolve: {
                 process: function () {

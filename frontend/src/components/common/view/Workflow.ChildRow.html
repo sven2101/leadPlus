@@ -42,6 +42,11 @@
 						<td>{{workflowUnit.offerPrice | currency:'\u20AC'}}</td>
 					</tr>
 					<tr ng-if="type=='sale'">
+						<td>{{ 'COMMON_PRODUCT_SALE_INVOICE_NUMBER' | translate }}</td>
+						<td>{{workflowUnit.invoiceNumber }}
+						</td>
+					</tr>
+					<tr ng-if="type=='sale'">
 						<td>{{ 'COMMON_PRODUCT_SALE_TURNOVER' | translate }}</td>
 						<td>{{workflowUnit.saleTurnover | currency:'\u20AC'}}
 						</td>
@@ -71,7 +76,7 @@
 				<h3>{{ 'COMMON_NOTE' | translate }}</h3>
 			</div>
 			<div class="ibox-content">
-				<div ng-bind-html="workflowUnit.message"></div>
+				<div ng-bind-html="parent.getAsHtml(workflowUnit.message)" ></div>
 			</div>
 		</div>
 	</div>

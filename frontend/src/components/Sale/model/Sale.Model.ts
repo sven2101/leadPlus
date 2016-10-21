@@ -26,6 +26,7 @@ class Sale extends AbstractModel implements IWorkflow {
     saleProfit: number;
     saleCost: number;
     deliveryCosts: number;
+    invoiceNumber: string;
     message: string;
 
 

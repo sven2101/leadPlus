@@ -136,6 +136,7 @@ class DashboardService {
                     (self.openLeads === source && self.closedSales === target) ||
                     (self.inContacts === target && self.openOffers === source) ||
                     (self.inContacts === target && self.closedSales === source) ||
+                    (self.closedSales === target && self.inContacts === source) ||
                     target === source) {
                     ui.item.sortable.cancel();
                 }
@@ -145,7 +146,7 @@ class DashboardService {
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
                 if (self.closedSales === target && self.openOffers === source) {
-                    self.createSale(item);
+                    self.startSaleTransformation(item);
                 }
                 else if (self.openOffers === target && self.openLeads === source
                     || self.openOffers === target && self.inContacts === source) {
@@ -164,14 +165,8 @@ class DashboardService {
         this.workflowService.startOfferTransformation(process);
     }
 
-    createSale(process: Process) {
-        let self = this;
-        this.workflowService.addOfferToSale(process).then(function (isResolved: Process) {
-            self.closedSales = self.orderBy(self.closedSales, "sale.timestamp", true);
-            self.sumOffers();
-            self.sumSales();
-            self.rootScope.$broadcast("onTodosChange");
-        });
+    startSaleTransformation(process: Process) {
+        this.workflowService.startSaleTransformation(process);
     }
 
     inContact(process: Process) {
