@@ -140,7 +140,7 @@ class LeadService {
 
     closeOrOpenInquiry(process: Process, dtInstance: any, scope: any, loadAllData: boolean) {
         let self = this;
-        if (process.status === "OPEN") {
+        if (process.status === "OPEN" || process.status === "INCONTACT") {
             this.processResource.setStatus({
                 id: process.id
             }, "CLOSED").$promise.then(function () {
