@@ -28,5 +28,7 @@ import dash.salemanagement.domain.Sale;
 public interface SaleRepository extends RequestRepository<Sale, Long> {
 
 	List<Sale> findByCustomerIdAndDeleted(Long id, boolean deleted);
+	
+	Sale findByInvoiceNumber(String invoiceNumber);
 
 }

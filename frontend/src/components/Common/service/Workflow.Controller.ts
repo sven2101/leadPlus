@@ -63,11 +63,13 @@ class WorkflowController extends AbstractWorkflow {
 
     customerEditForm: any;
     leadEditForm: any;
-    supplyEditForm: any;
     priceEditForm: any;
+    supplyEditForm: any;
     emailEditForm: any;
     saleEditForm: any;
     rootScope;
+
+    invoiceNumberAlreadyExists: boolean = false;
 
     constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, $rootScope) {
 
@@ -188,6 +190,17 @@ class WorkflowController extends AbstractWorkflow {
         if (!isNullOrUndefined(process.offer)) {
             return process.offer.orderPositions;
         }
+    }
+
+    existsInvoiceNumber() {
+        let self = this;
+        this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function (result: Sale) {
+            if (!isNullOrUndefined(result)) {
+                self.invoiceNumberAlreadyExists = true;
+            } else {
+                self.invoiceNumberAlreadyExists = false;
+            }
+        });
     }
 
     send() {

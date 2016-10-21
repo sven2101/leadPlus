@@ -24,7 +24,7 @@ const SaleServiceId: string = "SaleService";
 
 class SaleService {
 
-    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, SaleResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId];
+    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, SaleResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId, $qId];
     processResource;
     customerResource;
     saleResource;
@@ -37,11 +37,12 @@ class SaleService {
     filter;
     toaster;
     compile;
+    $q;
 
     rows: { [key: number]: any } = {};
     user: User;
 
-    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, SaleResource, WorkflowService, CustomerService, ProductService, TemplateService) {
+    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, SaleResource, WorkflowService, CustomerService, ProductService, TemplateService, $q) {
         this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
@@ -55,6 +56,7 @@ class SaleService {
         this.customerService = CustomerService;
         this.productService = ProductService;
         this.user = $rootScope.globals.user;
+        this.$q = $q;
     }
 
     save(editSale: Sale, editProcess: Process, currentOrderPositions: Array<OrderPosition>, dtInstance: any, scope: any) {
@@ -102,6 +104,19 @@ class SaleService {
                 self.rootScope.$broadcast("onTodosChange");
             });
         }
+    }
+
+    getSaleByInvoiceNumber(invoiceNumber: string): IPromise<Sale> {
+        let defer = this.$q.defer();
+        this.saleResource.getByinvoiceNumber({}, invoiceNumber).$promise.then(function (result) {
+            if (isNullOrUndefined(result.id)) {
+                defer.resolve(null);
+            }
+            else {
+                defer.resolve(result);
+            }
+        });
+        return defer.promise;
     }
 
     setRow(id: number, row: any) {

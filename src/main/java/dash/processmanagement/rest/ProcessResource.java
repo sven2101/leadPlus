@@ -292,14 +292,14 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns a list of latest 100 sales.", notes = "")
 	@RequestMapping(value = "/sales/latest/100", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Sale> getProcessWithLatest100Sales() {
+	public List<Process> getProcessWithLatest100Sales() {
 		return processRepository.findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
 	}
 
 	@ApiOperation(value = "Returns a list of latest 10 sales.", notes = "")
 	@RequestMapping(value = "/sales/latest/10", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Sale> getProcessWithLatest10Sales() {
+	public List<Process> getProcessWithLatest10Sales() {
 		return processRepository.findTop10BySaleIsNotNullOrderBySaleTimestampDesc();
 	}
 

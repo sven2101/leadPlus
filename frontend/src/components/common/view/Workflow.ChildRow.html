@@ -42,6 +42,11 @@
 						<td>{{workflowUnit.offerPrice | currency:'\u20AC'}}</td>
 					</tr>
 					<tr ng-if="type=='sale'">
+						<td>{{ 'COMMON_PRODUCT_SALE_INVOICE_NUMBER' | translate }}</td>
+						<td>{{workflowUnit.invoiceNumber }}
+						</td>
+					</tr>
+					<tr ng-if="type=='sale'">
 						<td>{{ 'COMMON_PRODUCT_SALE_TURNOVER' | translate }}</td>
 						<td>{{workflowUnit.saleTurnover | currency:'\u20AC'}}
 						</td>

@@ -134,4 +134,9 @@ public class SaleService implements ISaleService {
 	public List<Sale> getByCustomer(Long id) {
 		return saleRepository.findByCustomerIdAndDeleted(id, false);
 	}
+
+	@Override
+	public Sale getByInvoiceNumber(String invoiceNumber) {
+		return saleRepository.findByInvoiceNumber(invoiceNumber);
+	}
 }

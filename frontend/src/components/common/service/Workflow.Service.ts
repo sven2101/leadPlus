@@ -232,6 +232,7 @@ class WorkflowService {
             saleProfit: process.offer.offerPrice,
             saleCost: 0,
             saleTurnover: process.offer.offerPrice,
+            invoiceNumber: "",
             timestamp: newTimestamp(),
             vendor: process.offer.vendor,
             deliveryCosts: process.offer.deliveryCosts,

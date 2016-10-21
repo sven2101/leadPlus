@@ -57,7 +57,7 @@ class SaleDataTableService {
             .withOption("stateSave", true)
             .withDOM(this.workflowService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowService.getButtons(this.translate("SALE_SALES"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11]))
+            .withButtons(this.workflowService.getButtons(this.translate("SALE_SALES"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 12]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("order", [4, "desc"])
@@ -118,6 +118,8 @@ class SaleDataTableService {
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_STATUS")).withClass("text-center")
                 .renderWith(addStatusStyle),
+            this.DTColumnBuilder.newColumn("sale.invoiceNumber").withTitle(
+                this.translate("COMMON_PRODUCT_SALE_INVOICE_NUMBER")).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
                 "text-center").notSortable().renderWith(addActionsButtons),

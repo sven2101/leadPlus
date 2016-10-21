@@ -31,6 +31,9 @@ public class Sale extends AbstractWorkflow {
 	@Digits(integer = 10, fraction = 4)
 	@Column(name = "salecost", nullable = false)
 	private Double saleCost;
+	
+	@Column(name = "invoicenumber", nullable = false)
+	private String invoiceNumber;
 
 	public Sale() {
 	}
@@ -59,10 +62,19 @@ public class Sale extends AbstractWorkflow {
 		this.saleCost = saleCost;
 	}
 
+	public String getInvoiceNumber() {
+		return invoiceNumber;
+	}
+
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
+		result = prime * result + ((invoiceNumber == null) ? 0 : invoiceNumber.hashCode());
 		result = prime * result + ((saleCost == null) ? 0 : saleCost.hashCode());
 		result = prime * result + ((saleProfit == null) ? 0 : saleProfit.hashCode());
 		result = prime * result + ((saleTurnover == null) ? 0 : saleTurnover.hashCode());
@@ -78,6 +90,11 @@ public class Sale extends AbstractWorkflow {
 		if (getClass() != obj.getClass())
 			return false;
 		Sale other = (Sale) obj;
+		if (invoiceNumber == null) {
+			if (other.invoiceNumber != null)
+				return false;
+		} else if (!invoiceNumber.equals(other.invoiceNumber))
+			return false;
 		if (saleCost == null) {
 			if (other.saleCost != null)
 				return false;
@@ -98,7 +115,8 @@ public class Sale extends AbstractWorkflow {
 
 	@Override
 	public String toString() {
-		return "Sale [saleTurnover=" + saleTurnover + ", saleProfit=" + saleProfit + ", saleCost=" + saleCost + "]";
+		return "Sale [saleTurnover=" + saleTurnover + ", saleProfit=" + saleProfit + ", saleCost=" + saleCost
+				+ ", invoiceNumber=" + invoiceNumber + "]";
 	}
 
 }

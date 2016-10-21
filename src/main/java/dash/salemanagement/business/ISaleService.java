@@ -43,4 +43,6 @@ public interface ISaleService {
 
 	List<Sale> getByCustomer(Long id);
 
+	public Sale getByInvoiceNumber(String invoiceNumber);
+
 }
