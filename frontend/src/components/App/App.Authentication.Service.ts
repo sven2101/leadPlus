@@ -43,9 +43,7 @@ class AuthService {
     login(credentials, success, error) {
         let self = this;
         if (credentials) {
-            console.log(sha256ToBase64(credentials.password, 3));
-            console.log(sha256ToBase64(credentials.password, 10));
-            let authorization = btoa(credentials.username + ":" + credentials.password);
+            let authorization = btoa(credentials.username + ":" + sha256ToBase64(credentials.password, 3));
             let headers = credentials ? { authorization: "Basic " + authorization } : {};
             this.http.get("user", { headers: headers }).success(function (data) {
                 if (data.username) {

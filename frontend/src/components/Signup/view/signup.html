@@ -83,7 +83,7 @@
 												'has-error has-feedback': 		registration.password.$error.minlength ||
 																				registration.password.$error.maxlength	 }">
                 <input type="password" id="password" name="password" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-                    required ng-model="signupCtrl.user.password" ng-minlength="6" ng-maxlength="20">
+                    required ng-model="signupCtrl.user.password" ng-minlength="1" ng-maxlength="20">
 
                 <span ng-show="registration.password.$dirty && registration.password.$error.required" class="help-block">Password is required</span>
                 <span ng-show="registration.password.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
@@ -97,7 +97,7 @@
 																				registration.password2.$error.maxlength	 ||
 																				registration.password2.$error.pwmatch}">
                 <input type="password" id="password2" name="password2" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-                    required ng-model="signupCtrl.user.password2" ng-minlength="6" ng-maxlength="20" pw-check="password">
+                    required ng-model="signupCtrl.user.password2" ng-minlength="1" ng-maxlength="20" pw-check="password">
 
                 <span ng-show="registration.password2.$dirty && registration.password2.$error.required" class="help-block">Password is required</span>
                 <span ng-show="registration.password2.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
@@ -105,6 +105,7 @@
                 <span ng-show="registration.password2.$error.pwmatch" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</span>
             </div>
 
+            <button type="button" id="registration" ng-disabled="registration.$invalid || vm.dataLoading || emailExist || usernameExist"
             <button type="button" id="registration" 
                 ng-click="signupCtrl.signup();" class="btn btn-success block full-width m-b">{{ 'LOGIN_CREATE_ACCOUNT' | translate }}
             </button>

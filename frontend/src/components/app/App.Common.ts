@@ -89,6 +89,9 @@ let unescapeHtmlQuote = function (html: string): string {
 };
 
 let sha256ToBase64 = function (text: string, iterations: number) {
+    if (isNullOrUndefined(text) || text === "") {
+        return;
+    }
     if (isNaN(iterations) || iterations <= 0) {
         iterations = 1;
     }
