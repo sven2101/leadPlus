@@ -43,6 +43,8 @@ import org.springframework.stereotype.Service;
 
 import com.sun.mail.smtp.SMTPMessage;
 
+import dash.common.EncryptionWrapper;
+import dash.common.Encryptor;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.smtpmanagement.domain.Smtp;
@@ -61,12 +63,10 @@ public class SmtpService implements ISmtpService {
 	private UserService userService;
 
 	@Override
-	public void testSmtp(final long id) throws Exception {
+	public void testSmtp(final long id, String smtpKey) throws Exception {
 		Smtp smtp = smptRepository.findOne(id);
-		smtp = decrypt(smtp);
-		if (smtp == null) {
-			throw new NotFoundException(BECAUSE_OF_OBJECT_IS_NULL);
-		}
+		smtp.setPassword(
+				Encryptor.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
 
 		final Session emailSession = newSession(smtp);
 		Transport transport = emailSession.getTransport("smtp");
@@ -104,14 +104,16 @@ public class SmtpService implements ISmtpService {
 	}
 
 	@Override
-	public Smtp save(final Smtp smtp) throws Exception {
+	public Smtp save(final Smtp smtp, String smtpKey) throws Exception {
 		if (smtp != null) {
 			if (smtp.getPassword() == null || new String(smtp.getPassword(), "UTF-8") == "") {
 				Smtp tempSmpt = smptRepository.findOne(smtp.getId());
 				smtp.setPassword(tempSmpt.getPassword());
 			} else {
-				smtp.setPassword(encrypt(smtp).getPassword());
-
+				EncryptionWrapper encryptionWrapper = Encryptor.encrypt(smtp.getPassword(), smtpKey);
+				smtp.setPassword(encryptionWrapper.getCiphertext());
+				smtp.setSalt(encryptionWrapper.getSalt());
+				smtp.setIv(encryptionWrapper.getIv());
 			}
 			return smptRepository.save(smtp);
 		} else {
@@ -132,7 +134,7 @@ public class SmtpService implements ISmtpService {
 	}
 
 	@Override
-	public Smtp encrypt(Smtp smtp) throws Exception {
+	public Smtp encrypt2(Smtp smtp) throws Exception {
 		try {
 			if (SecurityContextHolder.getContext().getAuthentication() == null
 					|| SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null) {
@@ -168,7 +170,7 @@ public class SmtpService implements ISmtpService {
 	}
 
 	@Override
-	public Smtp decrypt(Smtp smtp) throws Exception {
+	public Smtp decrypt2(Smtp smtp) throws Exception {
 		try {
 			if (SecurityContextHolder.getContext().getAuthentication() == null
 					|| SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null) {

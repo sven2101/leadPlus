@@ -388,8 +388,8 @@ class SmtpResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/smtp", {}, {
-            save: { url: "/api/rest/smtp/", method: "POST" },
-            testSmtp: { url: "/api/rest/smtp/test/:id", method: "GET" },
+            createSmtp: { url: "/api/rest/smtp/:smtpKey", method: "POST" },
+            testSmtp: { url: "/api/rest/smtp/test/:id/:smtpKey", method: "GET" },
             getByUserId: { url: "/api/rest/smtp/user/:id", method: "GET" },
         });
     }
@@ -409,7 +409,7 @@ class NotificationResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/notifications", {}, {
-            sendNotification: { url: "/api/rest/notifications/users/:userId/notifications/send", method: "POST" }
+            sendNotification: { url: "/api/rest/notifications/users/:userId/notifications/send/:smtpKey", method: "POST" }
         });
     }
 }

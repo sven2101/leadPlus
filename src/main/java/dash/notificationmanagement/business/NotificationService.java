@@ -34,6 +34,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dash.common.EncryptionWrapper;
+import dash.common.Encryptor;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.exceptions.SaveFailedException;
@@ -55,7 +57,7 @@ public class NotificationService implements INotificationService {
 	private IFileUploadService fileUploadService;
 
 	@Override
-	public void sendNotification(final long userId, final Notification notification)
+	public void sendNotification(final long userId, final Notification notification, String smtpKey)
 			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException, Exception {
 		try {
 			Smtp smtp = smtpService.findByUser(userId);
@@ -66,7 +68,8 @@ public class NotificationService implements INotificationService {
 					notification.setAttachment(attachment);
 				}
 			}
-			smtp = smtpService.decrypt(smtp);
+			smtp.setPassword(Encryptor.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()),
+					smtpKey));
 			if (smtp != null) {
 
 				final Session emailSession = newSession(smtp);

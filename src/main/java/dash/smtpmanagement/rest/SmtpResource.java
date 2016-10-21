@@ -43,17 +43,19 @@ public class SmtpResource {
 	private ISmtpService smtpService;
 
 	@ApiOperation(value = "Testing Connection.")
-	@RequestMapping(value = "/test/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/test/{id}/{smtpKey}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public void testConnection(@PathVariable final long id) throws Exception {
-		smtpService.testSmtp(id);
+	public void testConnection(@PathVariable(required = true) final long id,
+			@PathVariable(required = true) String smtpKey) throws Exception {
+		smtpService.testSmtp(id, smtpKey);
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/{smtpKey}", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Create a single Smtp.", notes = "You have to provide a valid Smtp entity.")
-	public Smtp save(@ApiParam(required = true) @RequestBody @Valid final Smtp smpt) throws Exception {
-		return smtpService.save(smpt);
+	public Smtp save(@PathVariable(required = true) String smtpKey,
+			@ApiParam(required = true) @RequestBody @Valid final Smtp smpt) throws Exception {
+		return smtpService.save(smpt, smtpKey);
 	}
 
 	@RequestMapping(value = "/user/{id}", method = RequestMethod.GET)

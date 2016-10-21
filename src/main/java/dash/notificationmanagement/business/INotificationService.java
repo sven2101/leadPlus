@@ -23,7 +23,7 @@ import dash.notificationmanagement.domain.Notification;
 
 public interface INotificationService {
 
-	void sendNotification(final long userId, final Notification notification)
+	void sendNotification(final long userId, final Notification notification, String smtpKey)
 			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException, Exception;
 
 }

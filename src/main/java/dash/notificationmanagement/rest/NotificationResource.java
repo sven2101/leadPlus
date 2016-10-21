@@ -42,11 +42,12 @@ public class NotificationResource {
 	private INotificationService notificationService;
 
 	@ApiOperation(value = "Send a single Notification.", notes = "")
-	@RequestMapping(value = "/users/{userId}/notifications/send", method = RequestMethod.POST)
+	@RequestMapping(value = "/users/{userId}/notifications/send/{smtpKey}", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	public void sendNotification(@ApiParam(required = true) @PathVariable final Long userId,
+			@PathVariable(required = true) String smtpKey,
 			@ApiParam(required = true) @RequestBody @Valid final Notification notification) throws Exception {
-		notificationService.sendNotification(userId, notification);
+		notificationService.sendNotification(userId, notification, smtpKey);
 	}
 
 }

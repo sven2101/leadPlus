@@ -98,7 +98,7 @@ class SettingController {
         if (this.smtpForm.smtpPassword.$pristine) {
             this.smtpService.currentSmtp.stringPassword = null;
         }
-        this.smtpService.save();
+        this.smtpService.save().then(() => this.smtpForm.smtpPassword.$setPristine());
     }
 }
 angular.module(moduleSetting, [ngResourceId]).controller(SettingControllerId, SettingController);
