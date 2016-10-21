@@ -2,6 +2,7 @@
 /// <reference path="../User/model/User.Model.ts" />
 /// <reference path="../app/App.Resource.ts" />
 /// <reference path="../app/App.Common.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -42,12 +43,15 @@ class AuthService {
     login(credentials, success, error) {
         let self = this;
         if (credentials) {
-
+            console.log(sha256ToBase64(credentials.password, 3));
+            console.log(sha256ToBase64(credentials.password, 10));
             let authorization = btoa(credentials.username + ":" + credentials.password);
             let headers = credentials ? { authorization: "Basic " + authorization } : {};
             this.http.get("user", { headers: headers }).success(function (data) {
                 if (data.username) {
+
                     self.rootScope.globals = {
+
                         user: {
                             id: data.id,
                             username: data.username,
@@ -58,8 +62,8 @@ class AuthService {
                             phone: data.phone,
                             language: data.language,
                             pictureLink: "http://localhost:8080/users/" + data.id + "/profile/picture",
-                            smtp: data.smtp,
-                            authorization: authorization
+                            authorization: authorization,
+                            smtpKey: sha256ToBase64(credentials.password, 10)
                         }
                     };
                     self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;

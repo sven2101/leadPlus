@@ -1,6 +1,6 @@
 /// <reference path="../common/model/AbstractModel.Model.ts" />
 /// <reference path="../User/model/User.Model.ts" />
-
+/// <reference path="../../typeDefinitions/sjcl.d.ts" />
 /// <reference path="../../typeDefinitions/Moment.d.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -88,6 +88,16 @@ let unescapeHtmlQuote = function (html: string): string {
     return html.replace(/&quot;/g, "'");
 };
 
+let sha256ToBase64 = function (text: string, iterations: number) {
+    if (isNaN(iterations) || iterations <= 0) {
+        iterations = 1;
+    }
+    let hash = btoa(text);
+    for (let i = 0; i < iterations; i++) {
+        hash = sjcl.codec.base64.fromBits(sjcl.hash.sha256.hash(atob(hash)));
+    }
+    return hash;
+};
 
 
 

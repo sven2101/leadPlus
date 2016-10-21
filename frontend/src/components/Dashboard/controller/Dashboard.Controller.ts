@@ -147,7 +147,7 @@ class DashboardController {
     }
 
     openFollowUpModal(process: Process) {
-        this.dashboardService.openFollowUpModal(process);
+        this.workflowService.openFollowUpModal(process);
     }
 
     getOrderPositionList(workflow: any): string {

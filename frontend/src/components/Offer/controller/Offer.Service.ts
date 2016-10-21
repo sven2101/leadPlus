@@ -75,21 +75,6 @@ class OfferService {
     }
 
 
-    followUp(process: Process, dtInstance: any, scope: any) {
-        let self = this;
-        this.processResource.setStatus({
-            id: process.id
-        }, "FOLLOWUP").$promise.then(function () {
-            self.toaster.pop("success", "", self.translate
-                .instant("COMMON_TOAST_SUCCESS_FOLLOW_UP"));
-            process.status = "FOLLOWUP";
-            self.updateRow(process, dtInstance, scope);
-            self.rootScope.$broadcast("onTodosChange");
-        });
-
-    }
-
-
     closeOrOpenOffer(process: Process, dtInstance: any, scope: any, loadAllData: boolean) {
         let self = this;
         if (process.status === "OFFER" || process.status === "FOLLOWUP") {
@@ -181,8 +166,7 @@ class OfferService {
     }
 
     updateRow(process: Process, dtInstance: any, scope: any) {
-        dtInstance.DataTable.row(this.rows[process.id]).data(process).draw(
-            false);
+        dtInstance.DataTable.row(this.rows[process.id]).data(process).draw(false);
         this.compile(angular.element(this.rows[process.id]).contents())(scope);
     }
 

@@ -26,6 +26,7 @@ class Process extends AbstractModel {
     status: any;
     comments: Array<Commentary>;
     notifications: Array<Notification>;
+    followUpAmount: number;
     constructor() {
         super();
         this.comments = new Array<Commentary>();

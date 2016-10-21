@@ -82,7 +82,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             })
             .when("/signup",
             {
-                templateUrl: "components/Signup/view/signup.html",
+                templateUrl: "components/Signup/view/Signup.html",
                 controller: "SignupController",
                 controllerAs: "signupCtrl"
             })

@@ -40,6 +40,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import dash.commentmanagement.domain.Comment;
 import dash.leadmanagement.domain.Lead;
 import dash.notificationmanagement.domain.Notification;
+import dash.notificationmanagement.domain.NotificationType;
 import dash.offermanagement.domain.Offer;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
@@ -101,6 +102,19 @@ public class Process {
 		this.sale = null;
 		this.status = Status.OPEN;
 		this.processor = null;
+	}
+
+	public int getFollowUpAmount() {
+		if (getNotifications() == null) {
+			return 0;
+		}
+		int amount = 0;
+		for (Notification notification : getNotifications()) {
+			if (notification.getNotificationType() == NotificationType.FOLLOWUP) {
+				amount++;
+			}
+		}
+		return amount;
 	}
 
 	public Process() {

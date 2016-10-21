@@ -17,6 +17,7 @@
 /// <reference path="../../Sale/controller/Sale.Controller.ts" />
 /// <reference path="../../Dashboard/controller/Dashboard.Controller.ts" />
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
+/// <reference path="./FollowUp.Controller.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -494,6 +495,22 @@ class WorkflowService {
             defer.reject(error);
         });
         return defer.promise;
+    }
+
+    openFollowUpModal(process: Process) {
+        this.uibModal.open({
+            template: " <div sendfollowup parent='followUpCtrl' form='parent.emailEditForm' type='offer'></div>",
+            controller: FollowUpController,
+            controllerAs: "followUpCtrl",
+            backdrop: "static",
+            keyboard: false,
+            size: "lg",
+            resolve: {
+                process: function () {
+                    return process;
+                }
+            }
+        });
     }
 }
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);
