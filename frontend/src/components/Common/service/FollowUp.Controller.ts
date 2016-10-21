@@ -26,7 +26,7 @@ const FollowUpControllerId: string = "FollowUpController";
 
 class FollowUpController {
 
-    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, WorkflowServiceId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, WorkflowServiceId, ProcessResourceId, toasterId, $translateId, $rootScopeId];
 
     uibModalInstance;
 
@@ -38,6 +38,10 @@ class FollowUpController {
     currentNotification: Notification;
     templateService: TemplateService;
     workflowService: WorkflowService;
+    processResource;
+    toaster;
+    translate;
+    rootScope;
 
     editForm: any;
 
@@ -45,10 +49,14 @@ class FollowUpController {
     editProcess: Process;
     edit: boolean;
 
-    constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService) {
+    constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService, ProcessResource, toaster, $translate, $rootScope) {
         this.process = process;
         this.editProcess = process;
         this.editWorkflowUnit = process.offer;
+        this.processResource = ProcessResource.resource;
+        this.toaster = toaster;
+        this.translate = $translate;
+        this.rootScope = $rootScope;
         this.currentNotification = new Notification();
         this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
         this.uibModalInstance = $uibModalInstance;
@@ -97,6 +105,8 @@ class FollowUpController {
                 process.notifications.push(notification);
                 self.workflowService.saveProcess(process).then((resultProcess) => {
                     self.process.notifications = resultProcess.notifications;
+                    self.process.followUpAmount = resultProcess.followUpAmount;
+                    self.followUp();
                     self.close();
                 });
             });
@@ -116,6 +126,24 @@ class FollowUpController {
             this.currentNotification = deepCopy(notification);
             this.currentNotification.id = null;
         }
+    }
+
+    followUp() {
+        let self = this;
+        console.log(this.process.status);
+        if (this.process.status === Status.FOLLOWUP) {
+            self.rootScope.$broadcast("updateRow", this.process);
+        }
+        this.processResource.setStatus({
+            id: this.process.id
+        }, "FOLLOWUP").$promise.then(function () {
+            self.toaster.pop("success", "", self.translate
+                .instant("COMMON_TOAST_SUCCESS_FOLLOW_UP"));
+            self.process.status = "FOLLOWUP";
+            self.rootScope.$broadcast("updateRow", self.process);
+            self.rootScope.$broadcast("onTodosChange");
+            self.close();
+        });
     }
 
 }

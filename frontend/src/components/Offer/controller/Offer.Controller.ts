@@ -126,6 +126,10 @@ class OfferController extends AbstractWorkflow {
             self.offerService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
         });
 
+        $rootScope.$on("updateRow", (event, data) => {
+            self.offerService.updateRow(data, self.dtInstance, self.scope);
+        });
+
     }
 
     refreshData() {
@@ -221,10 +225,6 @@ class OfferController extends AbstractWorkflow {
         this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
 
-    followUp(process: Process) {
-        this.offerService.followUp(process, this.dtInstance, this.scope);
-    }
-
     pin(process: Process, user: User) {
         this.offerService.pin(process, this.dtInstance, this.scope, user);
     }
@@ -267,6 +267,10 @@ class OfferController extends AbstractWorkflow {
         if (!isNullOrUndefined(notification)) {
             this.currentNotification = deepCopy(notification);
         }
+    }
+
+    openFollowUpModal(process: Process) {
+        this.workflowService.openFollowUpModal(process);
     }
 }
 

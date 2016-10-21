@@ -1,14 +1,15 @@
 <form name="parent.editForm" novalidate>
-    <div class="modal-header">
-        <button type="button" class="close" ng-click="parent.close()"><span
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="parent.close()"><span
                         aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title">{{ 'COMMON_FOLLOWUP' | translate }}</h4>
-    </div>
-    <div class="modal-body">
-        <div email parent='parent' form='form' type='type' ></div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-white" ng-click="parent.close()">{{ 'COMMON_CANCEL' | translate }}</button>
-        <button type="button" class="btn btn-primary" ng-click="parent.send()" ng-disabled="parent.editForm.$invalid" data-dismiss="modal">{{ 'COMMON_SEND' | translate }}</button>
-    </div>
+		<h4 class="modal-title">{{ 'COMMON_FOLLOWUP' | translate }}</h4>
+	</div>
+	<div class="modal-body">
+		<div email parent='parent' form='form' type='type'></div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-white" ng-click="parent.close()">{{ 'COMMON_CANCEL' | translate }}</button>
+		<button type="button" class="btn btn-primary" ng-click="parent.followUp()" data-dismiss="modal">{{ 'COMMON_STATUS_FOLLOW_UP_NO_SEND' | translate }}</button>
+		<button type="button" class="btn btn-warning" ng-click="parent.send()" ng-disabled="parent.editForm.$invalid" data-dismiss="modal">{{ 'COMMON_STATUS_FOLLOW_UP_AND_SEND' | translate }}</button>
+	</div>
 </form>

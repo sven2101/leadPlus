@@ -1,0 +1,9 @@
+diff a/frontend/src/components/Signup/view/signup.html b/frontend/src/components/Signup/view/signup.html	(rejected hunks)
+@@ -105,7 +105,6 @@
+                 <span ng-show="registration.password2.$error.pwmatch" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</span>
+             </div>
+ 
+-            <button type="button" id="registration" ng-disabled="registration.$invalid || vm.dataLoading || emailExist || usernameExist"
+             <button type="button" id="registration" 
+                 ng-click="signupCtrl.signup();" class="btn btn-success block full-width m-b">{{ 'LOGIN_CREATE_ACCOUNT' | translate }}
+             </button>

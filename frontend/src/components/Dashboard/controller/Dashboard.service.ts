@@ -7,7 +7,7 @@
 /// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../common/model/Promise.interface.ts" />
 /// <reference path="../../common/service/Workflow.Controller.ts" />
-/// <reference path="../../dashboard/controller/FollowUp.Controller.ts" />
+
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -123,22 +123,6 @@ class DashboardService {
         for (let i = 0; i < this.closedSales.length; i++) {
             this.closedSalesValue += this.closedSales[i].sale.saleTurnover;
         }
-    }
-
-    openFollowUpModal(process: Process) {
-        this.uibModal.open({
-            template: " <div sendfollowup parent='followUpCtrl' form='parent.emailEditForm' type='offer'></div>",
-            controller: FollowUpController,
-            controllerAs: "followUpCtrl",
-            backdrop: "static",
-            keyboard: false,
-            size: "lg",
-            resolve: {
-                process: function () {
-                    return process;
-                }
-            }
-        });
     }
 
     setSortableOptions(): any {
