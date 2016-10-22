@@ -148,4 +148,4 @@ class FollowUpController {
 
 }
 
-angular.module(moduleFollowUp, ["summernote"]).service(FollowUpControllerId, FollowUpController);
+angular.module(moduleFollowUp, [moduleSummernote]).service(FollowUpControllerId, FollowUpController);

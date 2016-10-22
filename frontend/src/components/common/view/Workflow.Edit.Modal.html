@@ -9,7 +9,7 @@
 				<div id="wizard" role="application" class="wizard clearfix">
 					<div class="steps clearfix">
 						<ul role="tablist">
-							<li ng-click="parent.wizardOnClick(1)" role="tab" ng-class="{error:parent.customerEditForm.$invalid,current:parent.currentWizard==1,done:parent.currentWizard!=1}"
+							<li ng-click="parent.wizardOnClick(1)" role="tab" ng-class="{error:parent.customerEditForm.$invalid&&!parent.customerEditForm.$pristine,current:parent.currentWizard==1,done:parent.currentWizard!=1}"
 								aria-disabled="false" aria-selected="true"><a aria-controls="wizard-p-0"><span class="current-info audible">current step: </span><span class="number">1.</span> {{ 'CUSTOMER'| translate }}</a></li>
 							<li ng-click="parent.wizardOnClick(2)" role="tab" ng-class="{error:parent.leadEditForm.$invalid,current:parent.currentWizard==2,done:parent.currentWizard!=2}"
 								aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-1"><span class="number">2.</span> {{ 'LEAD'| translate }}</a></li>

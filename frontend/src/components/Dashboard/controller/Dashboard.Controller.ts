@@ -177,4 +177,4 @@ class DashboardController {
 
 }
 
-angular.module(moduleDashboard, [ngResourceId, "summernote"]).controller(DashboardControllerId, DashboardController);
+angular.module(moduleDashboard, [ngResourceId, moduleSummernote]).controller(DashboardControllerId, DashboardController);

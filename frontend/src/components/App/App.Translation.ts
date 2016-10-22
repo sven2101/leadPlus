@@ -85,10 +85,12 @@ function config($translateProvider) {
 
             // Template
             EMAIL_TEMPLATE: "Email Vorlagen",
-            EMAIL_TEMPLATE_SELECT: "Vorlage auswählen",
+            EMAIL_TEMPLATE_SELECT: "Keine Vorlage",
             EMAIL_RECIPIENT: "Empfänger",
             EMAIL_SUBJECT: "Betreff",
             EMAIL_ATTACHMENT: "Anhang",
+            EMAIL_ATTACHMENT_SELECT: "Datei auswählen",
+            EMAIL_ATTACHMENT_CHANGE: "Ändern",
             EMAIL_MESSAGE: "Nachricht",
             EMAIL_NOTIFICATION_HISTORY: "Bisher gesendete Nachrichten",
             EMAIL_NOTIFICATION_SELECT: "Nachricht auswählen",
@@ -161,6 +163,7 @@ function config($translateProvider) {
             COMMON_COMMENTS_MODAL_HISTORY: "Kommentar Verlauf",
             COMMON_VALIDATE_MAX_FILE_SIZE: "Das Bild darf nicht größer als 4MB sein",
             COMMON_VALIDATE_MAX: "Nicht mehr als ",
+            COMMON_VALIDATE_MIN: "Das Feld muss mindestens {{number}} Zeichen lang sein",
             COMMON_VALIDATE_MAX_END: " Zeichen gültig!",
             COMMON_VALIDATE_REQ: "Feld benötigt ",
             COMMON_VALIDATE_REQ_NUMBER: "Eingabe darf nicht negativ sein oder ungültige Zeichen enthalten",
@@ -283,6 +286,7 @@ function config($translateProvider) {
             SETTING_EMAIL_MANAGEMENT_PASSWORD: "Passwort",
             SETTING_EMAIL_MANAGEMENT_ENCRYPTION: "Verschlüsselung",
             SETTING_EMAIL_MANAGEMENT_PORT: "Port",
+            SETTING_EMAIL_MANAGEMENT_PORT_NO_INPUT: "Keine Eingabe = Standardport",
             SETTING_EMAIL_MANAGEMENT_CONNECTION_TEST: "Verbindung testen",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST: "Verbindung zum SMTP Server erfolgreich. ",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST_ERROR: "Verbindung zum SMTP Server fehlgeschlagen. ",
@@ -492,10 +496,12 @@ function config($translateProvider) {
 
             // Template
             EMAIL_TEMPLATE: "Email templates",
-            EMAIL_TEMPLATE_SELECT: "Select template",
+            EMAIL_TEMPLATE_SELECT: "No template",
             EMAIL_RECIPIENT: "Recipient",
             EMAIL_SUBJECT: "Subject",
             EMAIL_ATTACHMENT: "Attachment",
+            EMAIL_ATTACHMENT_SELECT: "Select file",
+            EMAIL_ATTACHMENT_CHANGE: "Change",
             EMAIL_MESSAGE: "Message",
             EMAIL_NOTIFICATION_HISTORY: "Previous send notifications",
             EMAIL_NOTIFICATION_SELECT: "Select notification",
@@ -568,6 +574,7 @@ function config($translateProvider) {
             COMMON_COMMENTS_MODAL_HISTORY: "Comment history",
             COMMON_VALIDATE_MAX_FILE_SIZE: "The image may not exceed 4MB",
             COMMON_VALIDATE_MAX: "Only ",
+            COMMON_VALIDATE_MIN: "The field have to be {{number}} characters long",
             COMMON_VALIDATE_MAX_END: " letters are allowed",
             COMMON_VALIDATE_REQ: "Field required ",
             COMMON_VALIDATE_REQ_NUMBER: "Negative numbers and invalid characters are restricted",
@@ -682,6 +689,7 @@ function config($translateProvider) {
             SALE_ROLLBACK: "Reset to Offer",
 
             // Define setting elements
+            SETTING_USER: "Users",
             SETTING_USER_MANAGEMENT: "User Management",
             SETTING_EMAIL_MANAGEMENT: "Email Management",
             SETTING_EMAIL_MANAGEMENT_SENDER: "Sender-Name",
@@ -691,6 +699,7 @@ function config($translateProvider) {
             SETTING_EMAIL_MANAGEMENT_PASSWORD: "Password",
             SETTING_EMAIL_MANAGEMENT_ENCRYPTION: "Encryption",
             SETTING_EMAIL_MANAGEMENT_PORT: "Port",
+            SETTING_EMAIL_MANAGEMENT_PORT_NO_INPUT: "No input = standardport",
             SETTING_EMAIL_MANAGEMENT_CONNECTION_TEST: "Testing Connection",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST: "Connection to SMTP Server successful.  ",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST_ERROR: "Connection to SMTP Server failed. ",

@@ -176,8 +176,13 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     generate(templateId: string, offer: Offer) {
-        offer.orderPositions = this.currentOrderPositions;
-        this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => console.log(error));
+        if (Number(templateId) === -1) {
+            this.currentNotification.content = "";
+            this.currentNotification.id = null;
+        } else {
+            offer.orderPositions = this.currentOrderPositions;
+            this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => console.log(error));
+        }
     }
 
     generatePDF(templateId: string, offer: Offer) {
@@ -274,4 +279,4 @@ class WorkflowController extends AbstractWorkflow {
 
 }
 
-angular.module(moduleWorkflow, ["summernote"]).service(WorkflowControllerId, WorkflowController);
+angular.module(moduleWorkflow, [moduleSummernote]).service(WorkflowControllerId, WorkflowController);

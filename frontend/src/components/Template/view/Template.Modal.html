@@ -28,7 +28,7 @@
 			<div class="form-group " ng-class="{ 'has-error' : createTemplate.content.$invalid && !createTemplate.content.$pristine
                 } ">
 				<label>{{ 'SETTING_EMAIL_TEMPLATE_TEXT' | translate }}<span style="color:red">*</span></label>
-				<summernote required type="text " name="content " class="form-control " ng-model="templateCtrl.template.content "></summernote>
+				<summernote required type="text " name="content " class="form-control" height="300px" ng-model="templateCtrl.template.content "></summernote>
 			</div>
 		</div>
 		<div class="modal-footer ">
@@ -45,9 +45,3 @@
 		margin-left: 0px;
 	}
 </style>
-
-<script>
-    $('.summernote').summernote({
-        height: 350,   //set editable area's height
-    });
-</script>
