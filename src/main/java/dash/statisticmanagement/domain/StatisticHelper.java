@@ -111,9 +111,10 @@ public class StatisticHelper {
 		case DAILY:
 		case WEEKLY:
 		case MONTHLY:
-			return String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+			return String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)) + "_"
+					+ String.valueOf(calendar.get(Calendar.MONTH));
 		case YEARLY:
-			return String.valueOf(calendar.get(Calendar.YEAR)) + String.valueOf(calendar.get(Calendar.MONTH));
+			return String.valueOf(calendar.get(Calendar.YEAR)) + "_" + String.valueOf(calendar.get(Calendar.MONTH));
 		case ALL:
 			return String.valueOf(calendar.get(Calendar.YEAR));
 		default:
