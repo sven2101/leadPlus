@@ -25,13 +25,12 @@ const DashboardServiceId: string = "DashboardService";
 
 class DashboardService {
 
-    private $inject = [ProcessResourceId, toasterId, $rootScopeId, $translateId, $filterId, WorkflowServiceId, $uibModalId, $qId];
+    private $inject = [ProcessResourceId, toasterId, $rootScopeId, $translateId, WorkflowServiceId, $uibModalId, $qId];
 
     processResource: any;
     workflowService: WorkflowService;
     toaster: any;
     translate: any;
-    orderBy: any;
     rootScope: any;
     q: any;
 
@@ -50,13 +49,12 @@ class DashboardService {
     user: User;
     todos: Array<Process> = [];
 
-    constructor(ProcessResource, toaster, $rootScope, $translate, $filter, WorkflowService, $uibModal, $q) {
+    constructor(ProcessResource, toaster, $rootScope, $translate, WorkflowService, $uibModal, $q) {
         this.processResource = ProcessResource.resource;
         this.workflowService = WorkflowService;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
-        this.orderBy = $filter("orderBy");
         this.q = $q;
         this.user = $rootScope.globals.user;
         this.uibModal = $uibModal;
@@ -85,13 +83,13 @@ class DashboardService {
                     contact.push(result[i]);
                 }
             }
-            self.openLeads = self.orderBy(open, "lead.timestamp", false);
+            self.openLeads = self.orderProcessByTimestamp(open, "lead");
             self.sumLeads();
-            self.inContacts = self.orderBy(contact, "lead.timestamp", false);
+            self.inContacts = self.orderProcessByTimestamp(contact, "lead");
             self.sumInContacts();
         });
         this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
-            self.openOffers = self.orderBy(result, "offer.timestamp", false);
+            self.openOffers = self.orderProcessByTimestamp(result, "offer");
             self.sumOffers();
         });
         this.processResource.getLatestSales().$promise.then(function (result) {
@@ -170,6 +168,7 @@ class DashboardService {
                 }
                 else if (self.inContacts === target && self.openLeads === source) {
                     self.inContact(item);
+                    self.updateDashboard("lead");
                 }
             },
             connectWith: ".connectList",
@@ -179,16 +178,22 @@ class DashboardService {
     }
 
     updateDashboard(type: string) {
-        if (type === "offer") {
-            this.openOffers = this.orderBy(this.openOffers, "offer.timestamp", false);
-            this.openLeads = this.orderBy(this.openLeads, "lead.timestamp", false);
-            this.inContacts = this.orderBy(this.inContacts, "lead.timestamp", false);
+        if (type === "lead") {
+            this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead");
+            this.inContacts = this.orderProcessByTimestamp(this.inContacts, "lead");
+            this.sumLeads();
+            this.sumInContacts();
+        }
+        else if (type === "offer") {
+            this.openOffers = this.orderProcessByTimestamp(this.openOffers, "offer");
+            this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead");
+            this.inContacts = this.orderProcessByTimestamp(this.inContacts, "lead");
             this.sumLeads();
             this.sumInContacts();
             this.sumOffers();
         } else if (type === "sale") {
-            this.closedSales = this.orderBy(this.closedSales, "sale.timestamp", false);
-            this.openOffers = this.orderBy(this.openOffers, "offer.timestamp", false);
+            this.closedSales = this.orderProcessByTimestamp(this.closedSales, "sale");
+            this.openOffers = this.orderProcessByTimestamp(this.openOffers, "offer");
             this.sumOffers();
             this.sumSales();
         }
@@ -254,11 +259,40 @@ class DashboardService {
 
     orderByTimestamp(todos: Array<Process>): Array<Process> {
         return todos.sort((a, b) => {
-            let tempA = isNullOrUndefined(a.offer) ? a.lead.timestamp : a.offer.timestamp;
-            let tempB = isNullOrUndefined(b.offer) ? b.lead.timestamp : b.offer.timestamp;
-            return tempA - tempB;
-
+            let tempA = isNullOrUndefined(a.offer) ? moment(a.lead.timestamp, "DD.MM.YYYY HH:mm:ss") : moment(a.offer.timestamp, "DD.MM.YYYY HH:mm:ss");
+            let tempB = isNullOrUndefined(b.offer) ? moment(b.lead.timestamp, "DD.MM.YYYY HH:mm:ss") : moment(b.offer.timestamp, "DD.MM.YYYY HH:mm:ss");
+            if (tempA < tempB) { return -1; }
+            else if (tempA > tempB) { return 1; }
+            else { return 0; }
         });
+    }
+
+    orderProcessByTimestamp(process: Array<Process>, type: string): Array<Process> {
+        if (type === "lead") {
+            return process.sort((a, b) => {
+                let tempA = moment(a.lead.timestamp, "DD.MM.YYYY HH:mm:ss");
+                let tempB = moment(b.lead.timestamp, "DD.MM.YYYY HH:mm:ss");
+                if (tempA < tempB) { return -1; }
+                else if (tempA > tempB) { return 1; }
+                else { return 0; }
+            });
+        } else if (type === "offer") {
+            return process.sort((a, b) => {
+                let tempA = moment(a.offer.timestamp, "DD.MM.YYYY HH:mm:ss");
+                let tempB = moment(b.offer.timestamp, "DD.MM.YYYY HH:mm:ss");
+                if (tempA < tempB) { return -1; }
+                else if (tempA > tempB) { return 1; }
+                else { return 0; }
+            });
+        } else if (type === "sale") {
+            return process.sort((a, b) => {
+                let tempA = moment(a.sale.timestamp, "DD.MM.YYYY HH:mm:ss");
+                let tempB = moment(b.sale.timestamp, "DD.MM.YYYY HH:mm:ss");
+                if (tempA < tempB) { return -1; }
+                else if (tempA > tempB) { return 1; }
+                else { return 0; }
+            });
+        }
     }
 }
 angular.module(moduleDashboardService, [ngResourceId]).service(DashboardServiceId, DashboardService);

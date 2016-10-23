@@ -104,7 +104,7 @@
 				</div>
 				<div class="row">
 					<label>{{ 'COMMON_NOTE' | translate }}</label>
-					<div style="margin-left:20px" style="word-wrap:break-word;">{{dashboardCtrl.workflowModalData.message}}</div>
+					<div style="margin-left:20px" ng-bind-html="dashboardCtrl.getAsHtml(dashboardCtrl.workflowModalData.message)"></div>
 				</div>
 				<br>
 				<div class="row">

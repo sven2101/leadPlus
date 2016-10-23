@@ -36,7 +36,7 @@
                                 <p ng-show="productCtrl.createProductForm.priceNetto.$invalid && !productCtrl.createProductForm.priceNetto.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
                             </div>
                            <div class="form-group">
-                                <label>productState}</label>
+                                <label> {{ 'PRODUCT_PRODUCT_STATE' | translate }}</label>
                                 <select class="form-control" ng-model="productCtrl.currentProduct.productState">
                                     <option value="NEW" selected > {{ 'PRODUCT_PRODUCT_STATE_NEW' | translate }} </option>                                                                     
                                     <option value="USED" >{{ 'PRODUCT_PRODUCT_STATE_USED' | translate }}</option>                                                     

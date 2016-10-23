@@ -32,7 +32,7 @@ const DashboardControllerId: string = "DashboardController";
 
 class DashboardController {
 
-    $inject = [WorkflowServiceId, StatisticServiceId, DashboardServiceId, $rootScopeId, TemplateServiceId, NotificationServiceId];
+    $inject = [WorkflowServiceId, StatisticServiceId, DashboardServiceId, $rootScopeId, TemplateServiceId, NotificationServiceId, $sceId];
 
     workflowService: WorkflowService;
     statisticService: StatisticService;
@@ -48,17 +48,19 @@ class DashboardController {
     sortableOptions: any;
 
     rootScope;
+    sce;
 
     template: Template = new Template();
     templates: Array<Template> = [];
 
-    constructor(WorkflowService, StatisticService, DashboardService, $rootScope, TemplateService, NotificationService) {
+    constructor(WorkflowService, StatisticService, DashboardService, $rootScope, TemplateService, NotificationService, $sce) {
         this.workflowService = WorkflowService;
         this.statisticService = StatisticService;
         this.dashboardService = DashboardService;
         this.templateService = TemplateService;
         this.getAllActiveTemplates();
 
+        this.sce = $sce;
         this.rootScope = $rootScope;
         this.statisticService.loadAllResourcesByDateRange("MONTHLY");
         this.sortableOptions = this.dashboardService.setSortableOptions();
@@ -90,6 +92,10 @@ class DashboardController {
         this.workflowService.addComment(process, this.commentModalInput).then(function () {
             self.commentModalInput = "";
         });
+    }
+
+    getAsHtml(html: string) {
+        return this.sce.trustAsHtml(html);
     }
 
     getOpenLeads(): Array<Process> {

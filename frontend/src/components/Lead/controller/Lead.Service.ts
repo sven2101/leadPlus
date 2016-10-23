@@ -63,8 +63,7 @@ class LeadService {
             newLead.customer = new Customer();
             newLead.customer.title = "UNKNOWN";
         }
-        newLead.timestamp = this.filter("date")
-            (new Date(), "dd.MM.yyyy HH:mm", "UTC");
+        newLead.timestamp = newTimestamp();
         newLead.vendor = {
             name: "***REMOVED***"
         };

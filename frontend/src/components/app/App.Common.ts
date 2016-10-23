@@ -50,7 +50,7 @@ let shallowCopy = function (oldObject: Object, newObject: Object) {
     }
 };
 
-let newTimestamp = function (pattern: string = "DD.MM.YYYY HH:mm") {
+let newTimestamp = function (pattern: string = "DD.MM.YYYY HH:mm:ss") {
     return moment.utc().format(pattern);
 };
 
