@@ -1,9 +1,15 @@
 package dash.statisticmanagement.product.business;
 
+import java.io.Serializable;
+
 import dash.productmanagement.domain.Product;
 
-public class ProductStatistic {
+public class ProductStatistic implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private double count;
 	private double turnover;
 	private double discount;
@@ -71,6 +77,53 @@ public class ProductStatistic {
 
 	public void setDiscount(double discount) {
 		this.discount = discount;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(count);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(discount);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + orderPositions;
+		result = prime * result + ((product == null) ? 0 : product.hashCode());
+		temp = Double.doubleToLongBits(turnover);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProductStatistic other = (ProductStatistic) obj;
+		if (Double.doubleToLongBits(count) != Double.doubleToLongBits(other.count))
+			return false;
+		if (Double.doubleToLongBits(discount) != Double.doubleToLongBits(other.discount))
+			return false;
+		if (orderPositions != other.orderPositions)
+			return false;
+		if (product == null) {
+			if (other.product != null)
+				return false;
+		} else if (!product.equals(other.product))
+			return false;
+		if (Double.doubleToLongBits(turnover) != Double.doubleToLongBits(other.turnover))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ProductStatistic [count=" + count + ", turnover=" + turnover + ", discount=" + discount
+				+ ", orderPositions=" + orderPositions + ", product=" + product + "]";
 	}
 
 }

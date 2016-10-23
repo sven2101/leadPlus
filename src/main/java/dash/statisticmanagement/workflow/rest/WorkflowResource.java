@@ -14,6 +14,8 @@
 
 package dash.statisticmanagement.workflow.rest;
 
+import java.util.Arrays;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;
+import dash.statisticmanagement.domain.OLAP;
+import dash.statisticmanagement.rest.OlapRepository;
 import dash.statisticmanagement.result.domain.Result;
 import dash.statisticmanagement.workflow.business.WorkflowStatisticService;
 import dash.workflowmanagement.domain.Workflow;
@@ -41,6 +45,9 @@ import io.swagger.annotations.ApiParam;
 public class WorkflowResource {
 
 	@Autowired
+	private OlapRepository olapRepository;
+
+	@Autowired
 	private WorkflowStatisticService statisticsService;
 
 	@RequestMapping(value = "/{workflow}/daterange/{dateRange}", method = { RequestMethod.GET, RequestMethod.POST })
@@ -49,6 +56,22 @@ public class WorkflowResource {
 	public Result getWorkflowStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
-		return statisticsService.getStatisticByDateRange(workflow, dateRange, null);
+		OLAP olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
+		if (olap != null) {
+			System.out.println("Informationen aus OLAP");
+			if (workflow.equals(Workflow.LEAD) && olap.getLeads() != null) {
+				return new Result(Arrays.asList(olap.getLeads()));
+			} else if (workflow.equals(Workflow.OFFER) && olap.getOffers() != null) {
+				return new Result(Arrays.asList(olap.getOffers()));
+			} else if (workflow.equals(Workflow.SALE) && olap.getSales() != null) {
+				return new Result(Arrays.asList(olap.getSales()));
+			} else {
+				System.out.println("Informationen direkt berechnet");
+				return statisticsService.getStatisticByDateRange(workflow, dateRange, null);
+			}
+		} else {
+			System.out.println("Informationen direkt berechnet");
+			return statisticsService.getStatisticByDateRange(workflow, dateRange, null);
+		}
 	}
 }

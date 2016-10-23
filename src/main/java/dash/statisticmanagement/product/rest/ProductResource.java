@@ -14,6 +14,8 @@
 
 package dash.statisticmanagement.product.rest;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -28,8 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;
+import dash.statisticmanagement.domain.OLAP;
 import dash.statisticmanagement.product.business.ProductStatistic;
 import dash.statisticmanagement.product.business.ProductStatisticService;
+import dash.statisticmanagement.rest.OlapRepository;
 import dash.workflowmanagement.domain.Workflow;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,6 +45,9 @@ import io.swagger.annotations.ApiParam;
 public class ProductResource {
 
 	@Autowired
+	private OlapRepository olapRepository;
+
+	@Autowired
 	private ProductStatisticService productStatisticService;
 
 	@RequestMapping(value = "/{workflow}/daterange/{dateRange}", method = { RequestMethod.GET, RequestMethod.POST })
@@ -49,7 +56,14 @@ public class ProductResource {
 	public List<ProductStatistic> getProductStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
-		return productStatisticService.getTopProductStatstic(workflow, dateRange, null);
+		OLAP olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
+		if (olap != null && olap.getProducts() != null) {
+			System.out.println("Informationen aus OLAP");
+			return Arrays.asList(olap.getProducts());
+		} else {
+			System.out.println("Informationen direkt berechnet");
+			return productStatisticService.getTopProductStatstic(workflow, dateRange, null);
+		}
 	}
 
 	@RequestMapping(value = "/{workflow}/daterange/{dateRange}/id/{id}", method = { RequestMethod.GET,
@@ -61,7 +75,8 @@ public class ProductResource {
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
 			@ApiParam(required = true) @PathVariable @Valid final Long id) throws NotFoundException {
 		ProductStatistic productStatistic = null;
-		List<ProductStatistic> productStatisticList = productStatisticService.getTopProductStatstic(workflow, dateRange, id);
+		List<ProductStatistic> productStatisticList = productStatisticService.getTopProductStatstic(workflow, dateRange,
+				id);
 		if (productStatisticList.size() > 0)
 			productStatistic = productStatisticList.get(0);
 		return productStatistic;

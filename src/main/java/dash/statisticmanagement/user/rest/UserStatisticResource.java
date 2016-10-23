@@ -14,6 +14,7 @@
 
 package dash.statisticmanagement.user.rest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;
+import dash.statisticmanagement.domain.OLAP;
+import dash.statisticmanagement.rest.OlapRepository;
 import dash.statisticmanagement.user.business.UserStatistic;
 import dash.statisticmanagement.user.business.UserStatisticService;
 import io.swagger.annotations.Api;
@@ -40,6 +43,9 @@ import io.swagger.annotations.ApiParam;
 public class UserStatisticResource {
 
 	@Autowired
+	private OlapRepository olapRepository;
+
+	@Autowired
 	private UserStatisticService userStatisticService;
 
 	@RequestMapping(value = "/daterange/{dateRange}", method = { RequestMethod.GET, RequestMethod.POST })
@@ -47,17 +53,23 @@ public class UserStatisticResource {
 	@ApiOperation(value = "Get Statistic by dateRange", notes = "")
 	public List<UserStatistic> getProductStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
-		return userStatisticService.getTopSalesMen(dateRange);
+		OLAP olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
+		if (olap != null && olap.getUsers() != null) {
+			System.out.println("Informationen aus OLAP");
+			return Arrays.asList(olap.getUsers());
+		} else {
+			System.out.println("Informationen direkt berechnet");
+			return userStatisticService.getTopSalesMen(dateRange);
+		}
 	}
-	
-	@RequestMapping(value = "/daterange/{dateRange}/id/{id}", method = { RequestMethod.GET,
-			RequestMethod.POST })
+
+	@RequestMapping(value = "/daterange/{dateRange}/id/{id}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get Statistic by dateRange and processor", notes = "")
 	public UserStatistic getSingleProductStatistic(
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
 			@ApiParam(required = true) @PathVariable @Valid final Long id) throws NotFoundException {
-		return userStatisticService.getUserStatisticByIdAndDateRange(dateRange,id);
+		return userStatisticService.getUserStatisticByIdAndDateRange(dateRange, id);
 	}
 
 }

@@ -14,6 +14,8 @@
 
 package dash.statisticmanagement.turnover.rest;
 
+import java.util.Arrays;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;
+import dash.statisticmanagement.domain.OLAP;
+import dash.statisticmanagement.rest.OlapRepository;
 import dash.statisticmanagement.result.domain.Result;
 import dash.statisticmanagement.turnover.business.TurnoverStatisticService;
 import dash.workflowmanagement.domain.Workflow;
@@ -39,14 +43,26 @@ import io.swagger.annotations.ApiParam;
 public class TurnoverResource {
 
 	@Autowired
+	private OlapRepository olapRepository;
+
+	@Autowired
 	private TurnoverStatisticService turnoverStatisticService;
 
 	@RequestMapping(value = "/{workflow}/daterange/{dateRange}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get Statistic by dateRange and workflow", notes = "")
-	public Result getConversionStatisticByDateRange(
+	public Result getTurnoverStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
-		return turnoverStatisticService.getStatisticByDateRange(workflow, dateRange, null);
+
+		OLAP olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
+		if (olap != null && olap.getTurnover() != null) {
+			System.out.println("Informationen aus OLAP");
+			return new Result(Arrays.asList(olap.getTurnover()));
+		} else {
+			System.out.println("Informationen direkt berechnet");
+			return turnoverStatisticService.getStatisticByDateRange(workflow, dateRange, null);
+		}
+
 	}
 }

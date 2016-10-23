@@ -14,6 +14,8 @@
 
 package dash.statisticmanagement.profit.rest;
 
+import java.util.Arrays;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;
+import dash.statisticmanagement.domain.OLAP;
 import dash.statisticmanagement.profit.business.ProfitStatisticService;
+import dash.statisticmanagement.rest.OlapRepository;
 import dash.statisticmanagement.result.domain.Result;
 import dash.workflowmanagement.domain.Workflow;
 import io.swagger.annotations.Api;
@@ -39,14 +43,24 @@ import io.swagger.annotations.ApiParam;
 public class ProfitResource {
 
 	@Autowired
+	private OlapRepository olapRepository;
+
+	@Autowired
 	private ProfitStatisticService profitStatisticService;
 
 	@RequestMapping(value = "/{workflow}/daterange/{dateRange}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get Statistic by dateRange and workflow", notes = "")
-	public Result getConversionStatisticByDateRange(
+	public Result getProfitStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
-		return profitStatisticService.getStatisticByDateRange(workflow, dateRange, null);
+		OLAP olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
+		if (olap != null && olap.getProfit() != null) {
+			System.out.println("Informationen aus OLAP");
+			return new Result(Arrays.asList(olap.getProfit()));
+		} else {
+			System.out.println("Informationen direkt berechnet");
+			return profitStatisticService.getStatisticByDateRange(workflow, dateRange, null);
+		}
 	}
 }

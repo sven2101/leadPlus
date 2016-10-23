@@ -134,8 +134,8 @@ INSERT INTO process(id, deleted, status, lead_fk)
 INSERT INTO process(id, deleted, status, lead_fk)
     VALUES (nextval('process_id_seq'), false, 'OPEN', 14 );
     
-INSERT INTO process(id, deleted, status, lead_fk)
-    VALUES (nextval('process_id_seq'), false, 'OPEN', 15 );
+INSERT INTO process(id, deleted, status, lead_fk, offer_fk, processor_fk)
+    VALUES (nextval('process_id_seq'), false, 'OFFER', 15 , 16, 1);
  
 -- Templates
 INSERT INTO public.template(content, deactivated, description, name)
