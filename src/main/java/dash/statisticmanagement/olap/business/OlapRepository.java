@@ -12,17 +12,21 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.statisticmanagement.rest;
+package dash.statisticmanagement.olap.business;
+
+import java.util.Calendar;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import dash.statisticmanagement.domain.DateRange;
-import dash.statisticmanagement.domain.OLAP;
+import dash.statisticmanagement.olap.domain.OLAP;
 
 @Repository
 @Transactional
 public interface OlapRepository extends JpaRepository<OLAP, Long> {
 	OLAP findTopByDateRangeOrderByTimestampDesc(DateRange daterange);
+	
+	void deleteByTimestampBefore(Calendar timestamp);
 }

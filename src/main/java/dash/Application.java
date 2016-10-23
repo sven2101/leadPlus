@@ -14,9 +14,18 @@ Copyright (c) 2016 Eviarc GmbH.
 
 package dash;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -61,7 +70,33 @@ public class Application {
 
 	public static void main(String[] args) {
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+
 		SpringApplication.run(Application.class, args);
+		Runnable runnable = new Runnable() {
+			public void run() {
+				try {
+					if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) > 6) {
+						System.out.println("Generate Statistics...");
+						URL generateStatistic = new URL("http://localhost:8080/api/rest/processes/statistics/generate");
+						URLConnection connection = generateStatistic.openConnection();
+						String userpass = "test" + ":" + "9lVUCPPoOlXqS1qX8UxDQb9ggY3jbtbM0x2ScyEbMHw=";
+						String basicAuth = "Basic " + new String(new Base64().encode(userpass.getBytes()));
+						connection.setRequestProperty("Authorization", basicAuth);
+						BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+						String inputLine;
+
+						while ((inputLine = in.readLine()) != null)
+							System.out.println(inputLine);
+						in.close();
+						System.out.println("Statistics generated...");
+					}
+				} catch (IOException e) {
+					System.out.println("Something went wrong...");
+				}
+			}
+		};
+		ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+		service.scheduleAtFixedRate(runnable, 10, 1500, TimeUnit.SECONDS);
 	}
 
 	@Configuration
@@ -74,6 +109,7 @@ public class Application {
 					.apiInfo(apiInfo());
 
 		}
+
 	}
 
 	private static ApiInfo apiInfo() {

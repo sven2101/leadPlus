@@ -1,32 +1,16 @@
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-
-package dash.statisticmanagement.rest;
+package dash.statisticmanagement.olap.business;
 
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import dash.exceptions.NotFoundException;
+import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.DateRange;
-import dash.statisticmanagement.domain.OLAP;
+import dash.statisticmanagement.olap.domain.OLAP;
 import dash.statisticmanagement.product.business.ProductStatistic;
 import dash.statisticmanagement.product.business.ProductStatisticService;
 import dash.statisticmanagement.profit.business.ProfitStatisticService;
@@ -35,13 +19,10 @@ import dash.statisticmanagement.user.business.UserStatistic;
 import dash.statisticmanagement.user.business.UserStatisticService;
 import dash.statisticmanagement.workflow.business.WorkflowStatisticService;
 import dash.workflowmanagement.domain.Workflow;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
-@RestController
-@RequestMapping("/api/rest/processes/statistics/generate")
-@Api(value = "Statistic generate API")
-public class GenerateResource {
+@Service
+public class OlapStatisticService {
+	private static final Logger logger = Logger.getLogger(AbstractStatisticService.class);
 
 	@Autowired
 	private OlapRepository olapRepository;
@@ -61,15 +42,15 @@ public class GenerateResource {
 	@Autowired
 	private UserStatisticService userStatisticService;
 
-	@RequestMapping(method = { RequestMethod.GET, RequestMethod.POST })
-	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Generate Statistics", notes = "")
-	public void getConversionStatisticByDateRange() throws NotFoundException {
+	public void generateOlapStatistics() throws NotFoundException {
+		Calendar timestamp = Calendar.getInstance();
+		timestamp.add(Calendar.HOUR_OF_DAY, -1);
 		saveStatisticInOLAP(DateRange.DAILY);
 		saveStatisticInOLAP(DateRange.WEEKLY);
 		saveStatisticInOLAP(DateRange.MONTHLY);
 		saveStatisticInOLAP(DateRange.YEARLY);
 		saveStatisticInOLAP(DateRange.ALL);
+		olapRepository.deleteByTimestampBefore(timestamp);
 	}
 
 	private void saveStatisticInOLAP(DateRange dateRange) throws NotFoundException {

@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;
-import dash.statisticmanagement.domain.OLAP;
-import dash.statisticmanagement.rest.OlapRepository;
+import dash.statisticmanagement.olap.business.OlapRepository;
+import dash.statisticmanagement.olap.domain.OLAP;
 import dash.statisticmanagement.user.business.UserStatistic;
 import dash.statisticmanagement.user.business.UserStatisticService;
 import io.swagger.annotations.Api;

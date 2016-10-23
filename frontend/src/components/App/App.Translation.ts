@@ -348,7 +348,7 @@ function config($translateProvider) {
             STATISTIC_TOP_SALESMAN: "Top Verkäufer",
             STATISTIC_INVOLVED_IN_PROCESSES: "An Prozessen beteiligt",
             STATISTIC_WORKED_ON_LEADS: "Bearbeitete Anfragen",
-            STATISTIC_WORKED_ON_OFFERS: "Bearbeitete Anfragen",
+            STATISTIC_WORKED_ON_OFFERS: "Bearbeitete Angebote",
             STATISTIC_COMPLETED_SALES: "Abgeschlossene Verkäufe",
             STATISTIC_PRODUCT_SALES: "Verkaufte Produkte",
 

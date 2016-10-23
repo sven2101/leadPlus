@@ -302,7 +302,7 @@ class StatisticService {
             let first = firstAmount[counter];
             let second = secondAmount[counter];
             if (angular.isNumber(second) && angular.isNumber(first) && second !== 0) {
-                conversion.push((first / second) * 100);
+                conversion.push(Math.round((((first / second) * 100)) * 100) / 100);
             } else {
                 conversion.push(0);
             }
@@ -319,7 +319,7 @@ class StatisticService {
     }
     getRatePercentage(firstAmount: number, secondAmount: number): number {
         if (secondAmount !== 0) {
-            return (firstAmount / secondAmount) * 100;
+            return Math.round((((firstAmount / secondAmount) * 100)) * 100) / 100;
         }
         else {
             return 0;

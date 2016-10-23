@@ -1,4 +1,4 @@
-package dash.statisticmanagement.domain;
+package dash.statisticmanagement.olap.domain;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -16,6 +16,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.product.business.ProductStatistic;
 import dash.statisticmanagement.user.business.UserStatistic;
 

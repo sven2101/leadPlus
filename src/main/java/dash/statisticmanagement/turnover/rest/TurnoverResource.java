@@ -28,8 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;
-import dash.statisticmanagement.domain.OLAP;
-import dash.statisticmanagement.rest.OlapRepository;
+import dash.statisticmanagement.olap.business.OlapRepository;
+import dash.statisticmanagement.olap.domain.OLAP;
 import dash.statisticmanagement.result.domain.Result;
 import dash.statisticmanagement.turnover.business.TurnoverStatisticService;
 import dash.workflowmanagement.domain.Workflow;
