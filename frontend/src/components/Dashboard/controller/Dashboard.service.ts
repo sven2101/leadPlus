@@ -127,7 +127,7 @@ class DashboardService {
 
     setSortableOptions(): any {
         let self: DashboardService = this;
-        return {
+        let sortableList = {
             update: function (e, ui) {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
@@ -146,11 +146,27 @@ class DashboardService {
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
                 if (self.closedSales === target && self.openOffers === source) {
-                    self.startSaleTransformation(item);
+                    self.startSaleTransformation(item).then(function (result) {
+                        if (result === false) {
+                            target.splice(target.indexOf(item), 1);
+                            source.push(item);
+                        }
+                        self.updateDashboard("sale");
+                    }, function (result) {
+                        self.updateDashboard("sale");
+                    });
                 }
                 else if (self.openOffers === target && self.openLeads === source
                     || self.openOffers === target && self.inContacts === source) {
-                    self.startOfferTransformation(item);
+                    self.startOfferTransformation(item).then(function (result) {
+                        if (result === false) {
+                            target.splice(target.indexOf(item), 1);
+                            source.push(item);
+                        }
+                        self.updateDashboard("offer");
+                    }, function (result) {
+                        self.updateDashboard("offer");
+                    });
                 }
                 else if (self.inContacts === target && self.openLeads === source) {
                     self.inContact(item);
@@ -159,14 +175,43 @@ class DashboardService {
             connectWith: ".connectList",
             items: "li:not(.not-sortable)"
         };
+        return sortableList;
     }
 
-    startOfferTransformation(process: Process) {
-        this.workflowService.startOfferTransformation(process);
+    updateDashboard(type: string) {
+        if (type === "offer") {
+            this.openOffers = this.orderBy(this.openOffers, "offer.timestamp", false);
+            this.openLeads = this.orderBy(this.openLeads, "lead.timestamp", false);
+            this.inContacts = this.orderBy(this.inContacts, "lead.timestamp", false);
+            this.sumLeads();
+            this.sumInContacts();
+            this.sumOffers();
+        } else if (type === "sale") {
+            this.closedSales = this.orderBy(this.closedSales, "sale.timestamp", false);
+            this.openOffers = this.orderBy(this.openOffers, "offer.timestamp", false);
+            this.sumOffers();
+            this.sumSales();
+        }
     }
 
-    startSaleTransformation(process: Process) {
-        this.workflowService.startSaleTransformation(process);
+    startOfferTransformation(process: Process): IPromise<boolean> {
+        let defer = this.q.defer();
+        this.workflowService.startOfferTransformation(process).then(function (result) {
+            defer.resolve(result);
+        }, function () {
+            defer.reject(false);
+        });
+        return defer.promise;
+    }
+
+    startSaleTransformation(process: Process): IPromise<boolean> {
+        let defer = this.q.defer();
+        this.workflowService.startSaleTransformation(process).then(function (result) {
+            defer.resolve(result);
+        }, function () {
+            defer.reject(false);
+        });
+        return defer.promise;
     }
 
     inContact(process: Process) {

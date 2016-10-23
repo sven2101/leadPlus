@@ -185,7 +185,8 @@ class WorkflowService {
     }
 
 
-    startOfferTransformation(process: Process) {
+    startOfferTransformation(process: Process): IPromise<boolean> {
+        let defer = this.$q.defer();
         let self = this;
         process.offer = {
             id: null,
@@ -216,11 +217,17 @@ class WorkflowService {
                     return "offer";
                 }
             }
+        }).result.then(function (result) {
+            defer.resolve(result);
+        }, function () {
+            defer.resolve(false);
         });
+        return defer.promise;
     }
 
 
-    startSaleTransformation(process: Process) {
+    startSaleTransformation(process: Process): IPromise<boolean> {
+        let defer = this.$q.defer();
         let self = this;
         process.sale = {
             id: null,
@@ -255,7 +262,12 @@ class WorkflowService {
                     return "sale";
                 }
             }
+        }).result.then(function (result) {
+            defer.resolve(result);
+        }, function () {
+            defer.resolve(false);
         });
+        return defer.promise;
     }
 
     addLeadToOffer(process: Process): IPromise<Process> {

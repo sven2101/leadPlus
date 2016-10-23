@@ -74,15 +74,6 @@ class DashboardController {
     getAllActiveTemplates() {
         this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
     }
-    /*
-        createOffer(process: Process) {
-            this.dashboardService.createOffer(process);
-        }
-   
-    createSale(process: Process) {
-        this.dashboardService.createSale(process);
-    }
-     */
 
     saveDataToModal(info, type, process) {
         this.workflowModalData = info;

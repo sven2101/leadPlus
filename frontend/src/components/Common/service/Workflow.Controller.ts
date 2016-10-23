@@ -77,7 +77,6 @@ class WorkflowController extends AbstractWorkflow {
         this.rootScope = $rootScope;
         this.process = process;
         this.type = type;
-
         if (this.type === "offer") {
             this.editWorkflowUnit = new Offer();
             this.editWorkflowUnit = this.process.offer;
@@ -92,11 +91,6 @@ class WorkflowController extends AbstractWorkflow {
             this.editEmail = true;
         }
         this.uibModalInstance = $uibModalInstance;
-        this.uibModalInstance.result.then(function () {
-            self.updateDashboard();
-        }, function () {
-            self.updateDashboard();
-        });
         this.notificationService = NotificationService;
 
         this.templateService = TemplateService;
@@ -154,21 +148,8 @@ class WorkflowController extends AbstractWorkflow {
         }
     }
 
-    close() {
-        this.uibModalInstance.close();
-    }
-
-    updateDashboard() {
-        if (this.type === "offer") {
-            this.dashboardService.openOffers = this.dashboardService.orderBy(this.dashboardService.openOffers, "offer.timestamp", false);
-            this.dashboardService.sumLeads();
-            this.dashboardService.sumOffers();
-        } else if (this.type === "sale") {
-            this.dashboardService.closedSales = this.dashboardService.orderBy(this.dashboardService.closedSales, "sale.timestamp", false);
-            this.dashboardService.sumOffers();
-            this.dashboardService.sumSales();
-        }
-        this.dashboardService.initDashboard();
+    close(result: boolean) {
+        this.uibModalInstance.close(result);
     }
 
     calculateProfit() {
@@ -231,7 +212,7 @@ class WorkflowController extends AbstractWorkflow {
                     process.notifications.push(notification);
                     self.workflowService.saveProcess(process).then((resultProcess) => {
                         self.process.notifications = resultProcess.notifications;
-                        self.close();
+                        self.close(true);
                     });
                 });
 
@@ -246,14 +227,14 @@ class WorkflowController extends AbstractWorkflow {
             let process = this.process;
             this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
                 self.rootScope.$broadcast("deleteRow", tmpprocess);
-                self.close();
+                self.close(true);
             });
         } else if (this.type === "sale") {
             this.process.sale = this.editWorkflowUnit;
             let self = this;
             this.workflowService.addOfferToSale(this.process).then(function (tmpprocess: Process) {
                 self.rootScope.$broadcast("deleteRow", self.process);
-                self.close();
+                self.close(true);
             });
         }
     }
