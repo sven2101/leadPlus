@@ -6,10 +6,9 @@ import dash.usermanagement.domain.User;
 
 public class UserStatistic implements Serializable{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 5459662571105864769L;
+	
 	private int countLead;
 	private int countOffer;
 	private int countSale;

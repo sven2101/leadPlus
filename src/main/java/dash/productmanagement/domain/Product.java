@@ -14,6 +14,7 @@
 
 package dash.productmanagement.domain;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 import javax.persistence.CascadeType;
@@ -48,7 +49,9 @@ import io.swagger.annotations.ApiModelProperty;
 @SQLDelete(sql = "UPDATE product SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
 @Table(name = "product")
-public class Product {
+public class Product implements Serializable {
+
+	private static final long serialVersionUID = 2316129901873904110L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_auto_gen")

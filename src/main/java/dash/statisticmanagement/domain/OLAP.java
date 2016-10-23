@@ -1,5 +1,6 @@
 package dash.statisticmanagement.domain;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 import javax.persistence.Column;
@@ -20,7 +21,9 @@ import dash.statisticmanagement.user.business.UserStatistic;
 
 @Entity
 @Table(name = "olap")
-public class OLAP {
+public class OLAP implements Serializable{
+
+	private static final long serialVersionUID = -593506710480238767L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "olap_auto_gen")
