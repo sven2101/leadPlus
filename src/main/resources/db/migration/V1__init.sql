@@ -342,7 +342,7 @@ CREATE TABLE IF NOT EXISTS sale
   salecost double precision NOT NULL,
   saleprofit double precision NOT NULL,
   saleturnover double precision NOT NULL,
-  invoicenumber character varying(255) NOT NULL,
+  invoicenumber character varying(255),
   CONSTRAINT sale_pkey PRIMARY KEY (id),
   CONSTRAINT fk_ahdkaweufsvpdg3va553r1mux FOREIGN KEY (vendor_fk)
       REFERENCES vendor (id) MATCH SIMPLE

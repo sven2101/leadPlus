@@ -32,7 +32,7 @@ public class Sale extends AbstractWorkflow {
 	@Column(name = "salecost", nullable = false)
 	private Double saleCost;
 	
-	@Column(name = "invoicenumber", nullable = false)
+	@Column(name = "invoicenumber")
 	private String invoiceNumber;
 
 	public Sale() {
