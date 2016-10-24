@@ -76,11 +76,11 @@ class ProfileService {
     }
 
     updatePassword(oldPassword, newPassword1, newPassword2): IPromise<boolean> {
-        console.log("start");
-        oldPassword = hashPassword(oldPassword);
-        newPassword1 = hashPassword(newPassword1);
-        newPassword2 = hashPassword(newPassword2);
-        console.log("ziel");
+        // let salt: string = this.rootScope.globals.user.email;
+        let salt = "test";
+        oldPassword = hashPasswordPbkdf2(oldPassword, salt);
+        newPassword1 = hashPasswordPbkdf2(newPassword1, salt);
+        newPassword2 = hashPasswordPbkdf2(newPassword2, salt);
         let defer = this.q.defer();
         let self = this;
         this.userResource.changePassword({
@@ -89,10 +89,10 @@ class ProfileService {
                 newPassword: newPassword1,
                 oldPassword: oldPassword,
                 oldSmtpKey: self.rootScope.globals.user.smtpKey,
-                newSmtpKey: hashPassword(hashPassword(newPassword1))
+                newSmtpKey: encodeURIComponent(hashPasswordPbkdf2(newPassword1, salt))
             }).$promise.then(function () {
                 self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
-                self.rootScope.globals.user.smtpKey = hashPassword(hashPassword(newPassword1));
+                self.rootScope.globals.user.smtpKey = encodeURIComponent(hashPasswordPbkdf2(newPassword1, salt));
                 defer.resolve(true);
             }, function () {
                 self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
