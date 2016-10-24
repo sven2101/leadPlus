@@ -69,6 +69,7 @@ class AuthService {
                         }
                     };
                     self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
+                    console.log(hashedPassword);
                     self.cookieStore.put("globals", self.rootScope.globals);
                     success(data);
                     self.injector.get("DashboardService");

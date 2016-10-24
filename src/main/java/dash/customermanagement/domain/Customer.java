@@ -102,6 +102,10 @@ public class Customer {
 	public Customer() {
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public boolean isDeactivated() {
 		return deactivated;
 	}
@@ -278,8 +282,9 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname + ", lastname=" + lastname + ", company="
-				+ company + ", email=" + email + ", phone=" + phone + ", address=" + address + ", deactivated=" + deactivated + ", timestamp=" + timestamp
+		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname
+				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone
+				+ ", address=" + address + ", deactivated=" + deactivated + ", timestamp=" + timestamp
 				+ ", customerNumber=" + customerNumber + "]";
 	}
 

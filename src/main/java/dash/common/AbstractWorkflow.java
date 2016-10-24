@@ -87,7 +87,7 @@ public abstract class AbstractWorkflow implements Request {
 	}
 
 	public void setMessage(String message) {
-		this.message = message;
+		this.message = HtmlCleaner.cleanHtml(message);
 	}
 
 	public boolean isDeleted() {
@@ -154,17 +154,6 @@ public abstract class AbstractWorkflow implements Request {
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
-	}
-
-	public double getPrice() {
-		double sum = this.deliveryCosts;
-		for (int i = 0; i < this.orderPositions.size(); i++) {
-			OrderPosition temp = this.orderPositions.get(i);
-			if (temp != null && temp.getProduct() != null) {
-				sum += temp.getAmount() * temp.getPrice();
-			}
-		}
-		return sum;
 	}
 
 	@Override
@@ -238,8 +227,9 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Override
 	public String toString() {
-		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress + ", deleted=" + deleted + ", deliveryCosts="
-				+ deliveryCosts + ", orderPositions=" + orderPositions + ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + "]";
+		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress
+				+ ", deleted=" + deleted + ", deliveryCosts=" + deliveryCosts + ", orderPositions=" + orderPositions
+				+ ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + "]";
 	}
 
 }

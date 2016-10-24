@@ -32,6 +32,7 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import dash.common.HtmlCleaner;
 import dash.fileuploadmanagement.domain.FileUpload;
 import dash.processmanagement.domain.Process;
 import io.swagger.annotations.ApiModelProperty;
@@ -119,7 +120,7 @@ public class Notification {
 	}
 
 	public void setContent(String content) {
-		this.content = content;
+		this.content = HtmlCleaner.cleanHtml(content);
 	}
 
 	public FileUpload getAttachment() {

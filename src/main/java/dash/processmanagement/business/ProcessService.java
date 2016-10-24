@@ -111,7 +111,8 @@ public class ProcessService implements IProcessService {
 				try {
 					process.setProcessor(userService.getUserByName("admin"));
 				} catch (NotFoundException nfex) {
-					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, nfex);
+					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+							nfex);
 				}
 				saleService.save(process.getSale());
 			}
@@ -124,11 +125,7 @@ public class ProcessService implements IProcessService {
 		if (Optional.ofNullable(process).isPresent()) {
 			setOrderPositions(process);
 			setNotifications(process);
-			if (process.getComments() != null) {
-				for (Comment comment : process.getComments()) {
-					comment.setProcess(process);
-				}
-			}
+			setComments(process);
 			return processRepository.save(process);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
@@ -143,8 +140,6 @@ public class ProcessService implements IProcessService {
 		if (Optional.ofNullable(process).isPresent()) {
 			process.setLead(lead);
 			process.setStatus(Status.OPEN);
-			setOrderPositions(process);
-			setNotifications(process);
 			return save(process).getLead();
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
@@ -155,14 +150,7 @@ public class ProcessService implements IProcessService {
 	public Offer createOffer(final long processId, final Offer offer) throws SaveFailedException {
 		Process process = processRepository.findOne(processId);
 		if (Optional.ofNullable(process).isPresent()) {
-			if (process.getOffer() != null) {
-				for (OrderPosition temp : process.getOffer().getOrderPositions()) {
-					temp.setWorkflow(process.getOffer());
-				}
-			}
 			process.setOffer(offer);
-			setOrderPositions(process);
-			setNotifications(process);
 			return save(process).getOffer();
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
@@ -174,8 +162,6 @@ public class ProcessService implements IProcessService {
 		Process process = processRepository.findOne(processId);
 		if (Optional.ofNullable(process).isPresent()) {
 			process.setSale(sale);
-			setOrderPositions(process);
-			setNotifications(process);
 			return save(process).getSale();
 		} else {
 			throw new SaveFailedException(PROCESS_NOT_FOUND);
@@ -183,19 +169,15 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public User setProcessor(final long processId, final long userId) throws NotFoundException {
+	public User setProcessor(final long processId, final long userId) throws NotFoundException, SaveFailedException {
 		Process process = processRepository.findOne(processId);
 		final User processor = userService.getById(userId);
 		if (!Optional.ofNullable(process).isPresent())
 			throw new NotFoundException(PROCESS_NOT_FOUND);
 		if (!Optional.ofNullable(processor).isPresent())
 			throw new NotFoundException(USER_NOT_FOUND);
-
 		process.setProcessor(processor);
-		setOrderPositions(process);
-		setNotifications(process);
-		processRepository.save(process);
-
+		save(process);
 		return processor;
 	}
 
@@ -265,8 +247,6 @@ public class ProcessService implements IProcessService {
 			try {
 				Process process = getById(id);
 				process.setProcessor(null);
-				setOrderPositions(process);
-				setNotifications(process);
 				save(process);
 			} catch (EmptyResultDataAccessException | SaveFailedException | NotFoundException ex) {
 				logger.error(ProcessService.class.getSimpleName() + ex.getMessage(), ex);
@@ -279,12 +259,11 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process setStatus(long id, String status) throws SaveFailedException, NotFoundException, UpdateFailedException {
+	public Process setStatus(long id, String status)
+			throws SaveFailedException, NotFoundException, UpdateFailedException {
 		if (Optional.ofNullable(status).isPresent()) {
 			Process process = getById(id);
 			process.setStatus(Status.valueOf(status));
-			setOrderPositions(process);
-			setNotifications(process);
 			return save(process);
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
@@ -322,6 +301,14 @@ public class ProcessService implements IProcessService {
 			}
 		}
 
+	}
+
+	private void setComments(Process process) {
+		if (process.getComments() != null) {
+			for (Comment comment : process.getComments()) {
+				comment.setProcess(process);
+			}
+		}
 	}
 
 	@Override

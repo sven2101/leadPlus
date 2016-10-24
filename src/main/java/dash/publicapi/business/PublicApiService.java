@@ -41,10 +41,13 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.leadmanagement.business.ILeadService;
 import dash.leadmanagement.domain.Lead;
+import dash.processmanagement.business.IProcessService;
+import dash.processmanagement.domain.Process;
 import dash.productmanagement.business.IProductService;
 import dash.productmanagement.business.ProductService;
 import dash.productmanagement.domain.OrderPosition;
 import dash.productmanagement.domain.Product;
+import dash.statusmanagement.domain.Status;
 
 @Service
 @Transactional
@@ -60,6 +63,9 @@ public class PublicApiService implements IPublicApiService {
 
 	@Autowired
 	private ICustomerService customerService;
+
+	@Autowired
+	private IProcessService processService;
 
 	@Override
 	public Lead saveLead(Lead lead) throws SaveFailedException, NotFoundException {
@@ -92,9 +98,11 @@ public class PublicApiService implements IPublicApiService {
 			throw new SaveFailedException(INVALID_CUSTOMER_EMAIL);
 		}
 
-		Customer tempCustomer = lead.getCustomer().getEmail() != null ? customerService.getByEmail(lead.getCustomer().getEmail()) : null;
+		Customer tempCustomer = customerService.getByEmail(lead.getCustomer().getEmail());
 		if (tempCustomer != null) {
 			lead.setCustomer(tempCustomer);
+		} else {
+			lead.getCustomer().setId(null);
 		}
 
 		lead.getCustomer().setDeactivated(false);
@@ -115,7 +123,11 @@ public class PublicApiService implements IPublicApiService {
 
 		logging();
 
-		return leadservice.save(lead);
+		Process process = new Process();
+		process.setStatus(Status.OPEN);
+		process.setLead(lead);
+
+		return processService.save(process).getLead();
 	}
 
 	@Override
@@ -131,7 +143,8 @@ public class PublicApiService implements IPublicApiService {
 
 	private void logging() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		logger.log(Level.INFO, PUBLIC_API_NEW_LEAD + "in " + PublicApiService.class.getSimpleName() + ". DETAILS: " + auth.getDetails().toString());
+		logger.log(Level.INFO, PUBLIC_API_NEW_LEAD + "in " + PublicApiService.class.getSimpleName() + ". DETAILS: "
+				+ auth.getDetails().toString());
 	}
 
 }
