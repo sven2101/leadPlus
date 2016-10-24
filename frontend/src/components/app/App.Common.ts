@@ -102,8 +102,12 @@ let sha256ToBase64 = function (text: string, iterations: number): string {
     return hash;
 };
 
-let hashPassword = function (password: string): string {
+let hashPasswordSha256 = function (password: string): string {
     return sha256ToBase64(password, 10000);
+};
+
+let hashPasswordPbkdf2 = function (password: string, salt: string): string {
+    return sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2(password, salt, 10000));
 };
 
 

@@ -42,8 +42,10 @@ class AuthService {
 
     login(credentials, success, error) {
         let self = this;
+        // let salt: string = this.rootScope.globals.user.email;
+        let salt = "test";
         if (credentials) {
-            let hashedPassword = hashPassword(credentials.password);
+            let hashedPassword = hashPasswordPbkdf2(credentials.password, salt);
             let authorization = btoa(credentials.username + ":" + hashedPassword);
             let headers = credentials ? { authorization: "Basic " + authorization } : {};
             this.http.get("user", { headers: headers }).success(function (data) {
@@ -62,7 +64,7 @@ class AuthService {
                             language: data.language,
                             pictureLink: "http://localhost:8080/users/" + data.id + "/profile/picture",
                             authorization: authorization,
-                            smtpKey: encodeURIComponent(hashPassword(hashedPassword))
+                            smtpKey: encodeURIComponent(hashPasswordPbkdf2(hashedPassword, salt))
                         }
                     };
                     self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
