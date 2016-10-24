@@ -52,6 +52,7 @@ class SaleController extends AbstractWorkflow {
     editWorkflowUnit: Sale = new Sale();
     edit: boolean;
     editEmail: boolean = true;
+    editable: boolean = true;
 
     currentOrderPositions: Array<OrderPosition>;
     templates: Array<Template> = [];

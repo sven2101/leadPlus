@@ -48,7 +48,7 @@ class TemplateService {
 
     openEmailTemplateModal(template: Template) {
         this.uibModal.open({
-            templateUrl: "http://localhost:5000/components/Template/view/Template.Modal.html",
+            templateUrl: "components/Template/view/Template.Modal.html",
             controller: "TemplateController",
             controllerAs: "templateCtrl",
             size: "lg",
@@ -64,7 +64,7 @@ class TemplateService {
 
     openEmailTemplateDeleteModal(template: Template) {
         this.uibModal.open({
-            templateUrl: "http://localhost:5000/components/Template/view/Template.Delete.Modal.html",
+            templateUrl: "components/Template/view/Template.Delete.Modal.html",
             controller: "TemplateController",
             controllerAs: "templateCtrl",
             size: "sm",

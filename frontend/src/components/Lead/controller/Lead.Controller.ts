@@ -50,6 +50,7 @@ class LeadController extends AbstractWorkflow {
     editProcess: Process;
     editWorkflowUnit: Lead = new Lead();
     edit: boolean;
+    editable: boolean = true;
 
     currentOrderPositions: Array<OrderPosition>;
     currentProductId = "-1";

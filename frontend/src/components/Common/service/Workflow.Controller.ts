@@ -56,6 +56,7 @@ class WorkflowController extends AbstractWorkflow {
     editProcess: Process;
     edit: boolean;
     editEmail: boolean;
+    editable: boolean;
 
     leadService: LeadService;
     offerService: OfferService;
@@ -83,12 +84,14 @@ class WorkflowController extends AbstractWorkflow {
             this.currentNotification = new Notification();
             this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
             this.editEmail = false;
+            this.editable = true;
         }
         else if (this.type === "sale") {
             this.wizardOnClick(6);
             this.editWorkflowUnit = new Sale();
             this.editWorkflowUnit = this.process.sale;
             this.editEmail = true;
+            this.editable = false;
         }
         this.uibModalInstance = $uibModalInstance;
         this.notificationService = NotificationService;
