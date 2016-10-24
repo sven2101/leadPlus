@@ -53,7 +53,6 @@ class TemplateService {
             controllerAs: "templateCtrl",
             size: "lg",
             backdrop: "static",
-            keyboard: false,
             resolve: {
                 template: function () {
                     return template;

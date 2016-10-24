@@ -240,6 +240,7 @@ function config($translateProvider) {
             LEAD_CLOSE_LEAD: "Anfrage schließen",
             LEAD_EDIT_LEAD: "Anfrage bearbeiten",
             LEAD_DELETE_LEAD: "Anfrage löschen",
+            LEAD_DELETE_LEAD_BODY: "Möchten Sie die Anfrage wirklich löschen?",
             LEAD_EDIT_SELECT_PRODUCT: "Produkt wählen",
 
 
@@ -257,11 +258,14 @@ function config($translateProvider) {
             OFFER_CLOSE_OFFER: "Angebot schließen",
             OFFER_EDIT_OFFER: "Angebot bearbeiten",
             OFFER_DELETE_OFFER: "Angebot löschen",
+            OFFER_DELETE_OFFER_BODY: "Möchten Sie das Angebot wirklich löschen?",
             OFFER_TAB_OFFERS: "Angebot - Angebote",
             OFFER_TAB_FILES: "Angebote - Dateien",
             OFFER_TAB_TEMPLATES: "Angebote - Vorlagen",
             OFFER_GENERATION_AND_SENDING: "Angebot generieren und versenden",
             OFFER_ROLLBACK: "Zurücksetzen zu Anfrage",
+            OFFER_ROLLBACK_BODY: "Möchten Sie das Angebot wirklich zurücksetzen?",
+
 
             // Define all offer elements
             SALE_SALES: "Verkäufe",
@@ -272,7 +276,9 @@ function config($translateProvider) {
             SALE_EDIT_SALE_MODAL: "Verkauf bearbeiten",
             SALE_SHOW_ALL_SALES: "Alle Verkäufe",
             SALE_DELETE_SALE: "Verkauf löschen",
+            SALE_DELETE_SALE_BODY: "Möchten Sie den Verkauf wirklich löschen?",
             SALE_ROLLBACK: "Zurücksetzen zu Angebot",
+            SALE_ROLLBACK_BODY: "Möchten Sie den Verkauf wirklich zurücksetzen?",
 
             // Define setting elements
             SETTING_USER: "Benutzer",
@@ -656,6 +662,7 @@ function config($translateProvider) {
             LEAD_CLOSE_LEAD: "Lock lead",
             LEAD_EDIT_LEAD: "Edit lead",
             LEAD_DELETE_LEAD: "Delete lead",
+            LEAD_DELETE_LEAD_BODY: "Are you sure to delete this lead?",
             LEAD_EDIT_SELECT_PRODUCT: "Choose product",
 
             // Define all offer elements
@@ -672,11 +679,13 @@ function config($translateProvider) {
             OFFER_CLOSE_OFFER: "Lock offer",
             OFFER_EDIT_OFFER: "Edit offer",
             OFFER_DELETE_OFFER: "Delete offer",
+            OFFER_DELETE_OFFER_BODY: "Are you sure to delete this offer?",
             OFFER_TAB_OFFERS: "Offer - Offers",
             OFFER_TAB_FILES: "Offer - Files",
             OFFER_TAB_TEMPLATES: "Offer - Templates",
             OFFER_GENERATION_AND_SENDING: "Generate and Send Offer",
             OFFER_ROLLBACK: "Reset to lead",
+            OFFER_ROLLBACK_BODY: "Are you sure to reset this offer?",
 
             // Define all sale elements
             SALE_SALES: "Sales",
@@ -687,7 +696,9 @@ function config($translateProvider) {
             SALE_EDIT_SALE_MODAL: "Edit sale",
             SALE_SHOW_ALL_SALES: "Total sales",
             SALE_DELETE_SALE: "Delete sale",
+            SALE_DELETE_SALE_BODY: "Are you sure to delete this sale?",
             SALE_ROLLBACK: "Reset to Offer",
+            SALE_ROLLBACK_BODY: "Are you sure to reset this sale?",
 
             // Define setting elements
             SETTING_USER: "Users",
