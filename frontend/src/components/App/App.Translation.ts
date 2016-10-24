@@ -83,6 +83,9 @@ function config($translateProvider) {
             EMAIL: "Email",
             SALE: "Verkauf",
 
+            YES: "Ja",
+            NO: "Nein",
+
             // Template
             EMAIL_TEMPLATE: "Email Vorlagen",
             EMAIL_TEMPLATE_SELECT: "Keine Vorlage",
@@ -238,6 +241,7 @@ function config($translateProvider) {
             LEAD_PIN: "Zuweisen",
             LEAD_OPEN_LEAD: "Anfrage öffnen",
             LEAD_CLOSE_LEAD: "Anfrage schließen",
+            LEAD_CLOSE_LEAD_REALLY: "Möchten Sie die Anfrage wirklich schließen?",
             LEAD_EDIT_LEAD: "Anfrage bearbeiten",
             LEAD_DELETE_LEAD: "Anfrage löschen",
             LEAD_DELETE_LEAD_BODY: "Möchten Sie die Anfrage wirklich löschen?",
@@ -256,6 +260,7 @@ function config($translateProvider) {
             LEAD_IN_CONTACT: "In Verhandlung",
             OFFER_OPEN_OFFER: "Angebot öffnen",
             OFFER_CLOSE_OFFER: "Angebot schließen",
+            OFFER_CLOSE_OFFER_REALLY: "Möchten Sie das Angebot wirklich schließen?",
             OFFER_EDIT_OFFER: "Angebot bearbeiten",
             OFFER_DELETE_OFFER: "Angebot löschen",
             OFFER_DELETE_OFFER_BODY: "Möchten Sie das Angebot wirklich löschen?",
@@ -501,6 +506,9 @@ function config($translateProvider) {
             EMAIL: "Email",
             SALE: "Sale",
 
+            YES: "Yes",
+            NO: "No",
+
             // Template
             EMAIL_TEMPLATE: "Email templates",
             EMAIL_TEMPLATE_SELECT: "No template",
@@ -660,6 +668,7 @@ function config($translateProvider) {
             LEAD_PIN: "Assign to me",
             LEAD_OPEN_LEAD: "Unlock lead",
             LEAD_CLOSE_LEAD: "Lock lead",
+            LEAD_CLOSE_LEAD_REALLY: "Are you sure to close this lead?",
             LEAD_EDIT_LEAD: "Edit lead",
             LEAD_DELETE_LEAD: "Delete lead",
             LEAD_DELETE_LEAD_BODY: "Are you sure to delete this lead?",
@@ -677,6 +686,7 @@ function config($translateProvider) {
             LEAD_IN_CONTACT: "In negotiation",
             OFFER_OPEN_OFFER: "Unlock offer",
             OFFER_CLOSE_OFFER: "Lock offer",
+            OFFER_CLOSE_OFFER_REALLY: "Are you sure to close this offer?",
             OFFER_EDIT_OFFER: "Edit offer",
             OFFER_DELETE_OFFER: "Delete offer",
             OFFER_DELETE_OFFER_BODY: "Are you sure to delete this offer?",

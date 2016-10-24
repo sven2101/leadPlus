@@ -25,7 +25,7 @@ const DashboardServiceId: string = "DashboardService";
 
 class DashboardService {
 
-    private $inject = [ProcessResourceId, toasterId, $rootScopeId, $translateId, WorkflowServiceId, $uibModalId, $qId];
+    private $inject = [ProcessResourceId, toasterId, $rootScopeId, $translateId, WorkflowServiceId, $uibModalId, $qId, "SweetAlert"];
 
     processResource: any;
     workflowService: WorkflowService;
@@ -43,19 +43,20 @@ class DashboardService {
     inContactsValue: number = 0;
     openOffersValue: number = 0;
     closedSalesValue: number = 0;
-
+    SweetAlert: any;
     uibModal;
 
     user: User;
     todos: Array<Process> = [];
 
-    constructor(ProcessResource, toaster, $rootScope, $translate, WorkflowService, $uibModal, $q) {
+    constructor(ProcessResource, toaster, $rootScope, $translate, WorkflowService, $uibModal, $q, SweetAlert) {
         this.processResource = ProcessResource.resource;
         this.workflowService = WorkflowService;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
         this.q = $q;
+        this.SweetAlert = SweetAlert;
         this.user = $rootScope.globals.user;
         this.uibModal = $uibModal;
         this.initDashboard();
@@ -151,6 +152,8 @@ class DashboardService {
                         }
                         self.updateDashboard("sale");
                     }, function (result) {
+                        target.splice(target.indexOf(item), 1);
+                        source.push(item);
                         self.updateDashboard("sale");
                     });
                 }
@@ -163,12 +166,43 @@ class DashboardService {
                         }
                         self.updateDashboard("offer");
                     }, function (result) {
+                        target.splice(target.indexOf(item), 1);
+                        source.push(item);
                         self.updateDashboard("offer");
                     });
                 }
                 else if (self.inContacts === target && self.openLeads === source) {
                     self.inContact(item);
                     self.updateDashboard("lead");
+                } else if (isNullOrUndefined(target)) {
+                    let title = "";
+                    let text = "";
+                    if (source === self.openLeads || source === self.inContacts) {
+                        title = self.translate.instant("LEAD_CLOSE_LEAD");
+                        text = self.translate.instant("LEAD_CLOSE_LEAD_REALLY");
+                    } else if (source === self.openOffers) {
+                        title = self.translate.instant("OFFER_CLOSE_OFFER");
+                        text = self.translate.instant("OFFER_CLOSE_OFFER_REALLY");
+                    }
+                    self.SweetAlert.swal({
+                        title: title,
+                        text: text,
+                        type: "warning",
+                        showCancelButton: true,
+                        cancelButtonText: self.translate.instant("NO"),
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: self.translate.instant("YES"),
+                    }, function (isConfirm) {
+                        if (isConfirm) {
+                            self.closeProcess(item, source);
+                            source.splice(source.indexOf(item), 1);
+                            let todoElement: Process = findElementById(self.todos, item.id) as Process;
+                            if (!isNullOrUndefined(todoElement)) {
+                                self.todos.splice(self.todos.indexOf(todoElement), 1);
+                                self.rootScope.$broadcast("todosChanged", self.todos);
+                            }
+                        }
+                    });
                 }
             },
             connectWith: ".connectList",
@@ -229,6 +263,32 @@ class DashboardService {
             process.status = "INCONTACT";
             self.sumLeads();
             self.sumInContacts();
+        });
+    }
+
+    closeProcess(process: Process, source: any) {
+        let self = this;
+        this.processResource.setStatus({
+            id: process.id
+        }, "CLOSED").$promise.then(function () {
+            let message = "";
+            if (source === self.openLeads) {
+                self.sumLeads();
+                self.rootScope.leadsCount -= 1;
+                message = self.translate.instant("COMMON_TOAST_SUCCESS_CLOSE_LEAD");
+            }
+            else if (source === self.inContacts) {
+                self.rootScope.leadsCount -= 1;
+                self.sumInContacts();
+                message = self.translate.instant("COMMON_TOAST_SUCCESS_CLOSE_LEAD");
+            }
+            else if (source === self.openOffers) {
+                self.rootScope.offersCount -= 1;
+                self.sumOffers();
+                message = self.translate.instant("COMMON_TOAST_SUCCESS_CLOSE_OFFER");
+            }
+            self.toaster.pop("success", "", message);
+            process.status = "CLOSED";
         });
     }
 

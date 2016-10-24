@@ -84,5 +84,6 @@ angular.module(moduleApp,
         moduleUIBootstrap,
         moduleSummernote,
         moduleFootable,
-        moduleSanitize
+        moduleSanitize,
+        moduleSweetAlert
     ]);
