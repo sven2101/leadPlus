@@ -3,10 +3,9 @@
 		<div class="col-sm-6 text-left">
 			<!-- SALE INVOICE NUMBER -->
 			<div ng-if="type=='sale'" class="form-group" ng-class="{ 'has-error' : parent.saleEditForm.saleInvoiceNumber.$invalid }">
-				<label>{{ 'COMMON_PRODUCT_SALE_INVOICE_NUMBER'| translate }}<span style="color:red">*</span></label>
-				<input type="text" name="saleInvoiceNumber" class="form-control" ng-model="parent.editWorkflowUnit.invoiceNumber" required
+				<label>{{ 'COMMON_PRODUCT_SALE_INVOICE_NUMBER'| translate }}</label>
+				<input type="text" name="saleInvoiceNumber" class="form-control" ng-model="parent.editWorkflowUnit.invoiceNumber"
 					ng-blur="parent.existsInvoiceNumber()">
-				<p ng-show="parent.saleEditForm.saleInvoiceNumber.$invalid && !parent.saleEditForm.saleInvoiceNumber.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }})</p>
 				<p ng-show="parent.invoiceNumberAlreadyExists" class="help-block" style="color:#FFCC00"> {{ 'COMMON_VALIDATE_INVOICE_NUMBER_ALREADY_EXISTS'| translate }}</p>
 			</div>
 
