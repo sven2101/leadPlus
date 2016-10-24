@@ -139,9 +139,11 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                         initialLoaded = false;
                     }
                     if (!$rootScope.globals.user) {
+
                         $location.path("/login");
-                    } else {
-                        $injector.get("DashboardService");
+                    } else if ($rootScope.globals.user) {
+
+                        // $injector.get("DashboardService");
                     }
                 }
             });

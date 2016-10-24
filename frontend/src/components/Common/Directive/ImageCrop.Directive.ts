@@ -40,6 +40,7 @@ angular.module(moduleApp)
                         }
 
                         file = files[0];
+                        scope.currentFileSize = file.size;
                         if (file.size > 1024 * 1024 * 4) {
                             $("#errorMessage").show();
                             return;
@@ -71,11 +72,12 @@ angular.module(moduleApp)
                 let picture = new FileUpload();
                 picture.mimeType = "image/jpeg";
                 picture.filename = "profilepicture";
-                picture.size = 3000;
                 if (!isNullOrUndefined(scope.quality) && !isNaN(scope.quality) && scope.quality > 0 && scope.quality < 100) {
-                    picture.content = canvas.toDataURL("image/jpeg", scope.quality / 100).split(",")[1];
+                    picture.content = canvas.toDataURL("image/png", scope.quality / 100).split(",")[1];
+                    picture.size = Math.round((picture.content.length) * 3 / 4);
                 } else {
-                    picture.content = canvas.toDataURL().split(",")[1];
+                    picture.content = canvas.toDataURL("image/png", 0.5).split(",")[1];
+                    picture.size = scope.currentFileSize / 2;
                 }
                 $rootScope.$broadcast(scope.event, picture);
             };
