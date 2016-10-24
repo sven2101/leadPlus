@@ -89,8 +89,7 @@ class SaleController extends AbstractWorkflow {
             self.compile(angular.element(row).contents())(self.scope);
         }
         function addActionsButtons(data: Process, type, full, meta) {
-            let templatedata = { "process": deepCopy(self.processes[data.id]) };
-            return self.saleDataTableService.getActionButtonsHTML(templatedata);
+            return self.saleDataTableService.getActionButtonsHTML(data, self.templateData);
         }
         function addStatusStyle(data: Process, type, full, meta) {
             self.processes[data.id] = data;

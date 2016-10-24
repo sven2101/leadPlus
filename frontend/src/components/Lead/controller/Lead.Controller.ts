@@ -85,8 +85,7 @@ class LeadController extends AbstractWorkflow {
             self.compile(angular.element(row).contents())(self.scope);
         }
         function addActionsButtons(data: Process, type, full, meta) {
-            let templatedata = { "process": deepCopy(self.processes[data.id]) };
-            return self.leadDataTableService.getActionButtonsHTML(templatedata);
+            return self.leadDataTableService.getActionButtonsHTML(data, self.templateData);
         }
         function addStatusStyle(data: Process, type, full, meta) {
             self.processes[data.id] = data;
@@ -226,6 +225,10 @@ class LeadController extends AbstractWorkflow {
         if (!isNullOrUndefined(process.lead)) {
             return process.lead.orderPositions;
         }
+    }
+
+    getTemplateData(processId: number): any {
+        return this.templateData[processId];
     }
 
 }

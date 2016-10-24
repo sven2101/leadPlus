@@ -130,7 +130,9 @@ class SaleDataTableService {
                 }).notVisible()];
     }
 
-    setActionButtonsConfig(user: User, templateData: any) {
+    setActionButtonsConfig(user: User, process: Process) {
+        let templateData = {} as any;
+        templateData.process = process;
         let config = {
             "hasRightToDelete": false,
             "disablePinDropdown": false,
@@ -157,19 +159,17 @@ class SaleDataTableService {
             "rollBackWorkflowUnit": this.translate.instant("SALE_ROLLBACK"),
         };
         templateData.translation = translation;
+        return templateData;
     }
 
-    getActionButtonsHTML(templateData: any): string {
-        this.setActionButtonsConfig(this.user, templateData);
-        if (!isNullOrUndefined(templateData.process.notifications)) {
-            for (let i = 0; i < templateData.process.notifications.length; i++) {
-                templateData.process.notifications[i].content = btoa(encodeURIComponent(templateData.process.notifications[i].content));
-            }
-        }
+    getActionButtonsHTML(process: Process, map: { [key: number]: any }): string {
+        let templateData = this.setActionButtonsConfig(this.user, process);
+        map[templateData.process.id] = templateData;
+
         if ($(window).width() > 1300) {
-            return "<div actionbuttons template='standard' parent='saleCtrl' type='sale' templatedata='" + JSON.stringify(templateData) + "'></div>";
+            return "<div actionbuttons template='standard' type='sale' parent='saleCtrl' templatedata='saleCtrl.templateData[" + templateData.process.id + "]'></div>";
         } else {
-            return "<div actionbuttons template='dropdown' parent='saleCtrl' type='sale' templatedata='" + JSON.stringify(templateData) + "'></div>";
+            return "<div actionbuttons template='dropdown' type='sale' parent='saleCtrl' templatedata='saleCtrl.templateData[" + templateData.process.id + "]'></div>";
         }
     }
 

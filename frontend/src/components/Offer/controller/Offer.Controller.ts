@@ -91,8 +91,7 @@ class OfferController extends AbstractWorkflow {
             self.compile(angular.element(row).contents())(self.scope);
         }
         function addActionsButtons(data: Process, type, full, meta) {
-            let templatedata = { "process": deepCopy(self.processes[data.id]) };
-            return self.offerDataTableService.getActionButtonsHTML(templatedata);
+            return self.offerDataTableService.getActionButtonsHTML(data, self.templateData);
         }
         function addStatusStyle(data: Process, type, full, meta) {
             self.processes[data.id] = data;

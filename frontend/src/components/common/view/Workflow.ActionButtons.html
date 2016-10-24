@@ -1,35 +1,35 @@
-<div ng-style="{'min-width':directiveData.config.minwidth+'px'}" class="text-center btn-group" role="group" aria-label="...">
-	<button style="min-height:34px" ng-if="type=='lead' || type =='offer'" class="btn btn-white" ng-disabled="directiveData.config.disabled"
-		ng-click="parent.createNextWorkflowUnit(parent.processes[directiveData.process.id])" title="{{directiveData.translation.nextWorkflowUnit}}">
+<div ng-style="{'min-width':templatedata.config.minwidth+'px'}" class="text-center btn-group" role="group" aria-label="...">
+	<button style="min-height:34px" ng-if="type=='lead' || type =='offer'" class="btn btn-white" ng-disabled="templatedata.config.disabled"
+		ng-click="parent.createNextWorkflowUnit(parent.processes[templatedata.process.id])" title="{{templatedata.translation.nextWorkflowUnit}}">
         <i class="fa fa-check"></i>
     </button>
-	<div ng-if="!directiveData.config.disablePinDropdown" class="btn-group" role="group">
-		<button type="button" class="btn btn-default dropdown-toggle" ng-disabled="directiveData.config.disabled" data-toggle="dropdown"
+	<div ng-if="!templatedata.config.disablePinDropdown" class="btn-group" role="group">
+		<button type="button" class="btn btn-default dropdown-toggle" ng-disabled="templatedata.config.disabled" data-toggle="dropdown"
 			aria-haspopup="true" aria-expanded="false">
        <i class="fa fa-thumb-tack"></i>
       <span class="caret"></span>
     </button>
 		<ul style="max-height: 200px; overflow-x: hidden;" class="dropdown-menu right">
-			<li ng-if="type=='lead'" ng-click="parent.pin(parent.processes[directiveData.process.id],null)"><a>{{ 'COMMON_EMPTY_PROCESSOR' | translate }}</a></li>
+			<li ng-if="type=='lead'" ng-click="parent.pin(parent.processes[templatedata.process.id],null)"><a>{{ 'COMMON_EMPTY_PROCESSOR' | translate }}</a></li>
 			<li ng-if="type=='lead'" role="separator" class="divider"></li>
-			<li ng-click="parent.pin(parent.processes[directiveData.process.id],user)" ng-repeat="user in parent.workflowService.users">
-				<a ng-if="((user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname==''))&&user.role!='API'" ng-style="user.id==directiveData.process.processor.id?{ 'font-weight': 'bold', 'font-style': 'italic'}:{
+			<li ng-click="parent.pin(parent.processes[templatedata.process.id],user)" ng-repeat="user in parent.workflowService.users">
+				<a ng-if="((user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname==''))&&user.role!='API'" ng-style="user.id==templatedata.process.processor.id?{ 'font-weight': 'bold', 'font-style': 'italic'}:{
                     'font-weight': 'normal', 'font-style': 'normal'} ">{{user.username}}</a>
 				<a ng-if="!((user.firstname==null||user.firstname=='' )&&(user.lastname==null||user.lastname==''
-                    ))&&user.role!='API'" ng-style="user.id==directiveData.process.processor.id?{'font-weight': 'bold','font-style':'italic'}:{'font-weight': 'normal','font-style':'normal'}">  {{user.firstname}} {{user.lastname}}</a>
+                    ))&&user.role!='API'" ng-style="user.id==templatedata.process.processor.id?{'font-weight': 'bold','font-style':'italic'}:{'font-weight': 'normal','font-style':'normal'}">  {{user.firstname}} {{user.lastname}}</a>
 			</li>
 		</ul>
 	</div>
-	<button style="min-height:34px" ng-if="directiveData.config.disablePinDropdown" class="btn btn-white" ng-disabled="directiveData.config.disablePin"
-		ng-click="parent.pin(parent.processes[directiveData.process.id],directiveData.process.processor==null?parent.workflowService.user:null)"
+	<button style="min-height:34px" ng-if="templatedata.config.disablePinDropdown" class="btn btn-white" ng-disabled="templatedata.config.disablePin"
+		ng-click="parent.pin(parent.processes[templatedata.process.id],templatedata.process.processor==null?parent.workflowService.user:null)"
 		title="{{'LEAD_PIN'| translate }}">
          <i class="fa fa-thumb-tack"></i>
     </button>
-	<button style="min-height:34px" ng-if="type=='lead'" class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.inContact(parent.processes[directiveData.process.id])"
+	<button style="min-height:34px" ng-if="type=='lead'" class="btn btn-white" ng-disabled="templatedata.config.disabled" ng-click="parent.inContact(parent.processes[templatedata.process.id])"
 		title="{{'LEAD_IN_CONTACT'| translate }}">
          <i  class="fa fa-user-plus"></i>
     </button>
-	<button style="min-height:34px" ng-if="type=='offer'" class="btn btn-white" ng-disabled="directiveData.config.disabled" ng-click="parent.openFollowUpModal(parent.processes[directiveData.process.id]);parent.followUp(parent.processes[directiveData.process.id])"
+	<button style="min-height:34px" ng-if="type=='offer'" class="btn btn-white" ng-disabled="templatedata.config.disabled" ng-click="parent.openFollowUpModal(parent.processes[templatedata.process.id]);parent.followUp(parent.processes[templatedata.process.id])"
 		title="{{'OFFER_FOLLOW_UP'| translate }}">
          <i  class="fa fa-eye"></i>
     </button>
@@ -39,21 +39,21 @@
       <span class="caret"></span>
     </button>
 		<ul style="max-height: 200px;" class="dropdown-menu right">
-			<li ng-class="{ 'disabled': directiveData.config.closeOrOpenDisable }" ng-if="type=='lead' || type =='offer'" ng-click="parent.closeOrOpen(parent.processes[directiveData.process.id])">
-				<a><i class="{{directiveData.config.faOpenOrLock}}"></i>&nbsp;{{directiveData.config.openOrLock}}</a></li>
+			<li ng-class="{ 'disabled': templatedata.config.closeOrOpenDisable }" ng-if="type=='lead' || type =='offer'" ng-click="parent.closeOrOpen(parent.processes[templatedata.process.id])">
+				<a><i class="{{templatedata.config.faOpenOrLock}}"></i>&nbsp;{{templatedata.config.openOrLock}}</a></li>
 			<li ng-if="type=='lead' || type =='offer'" role="separator" class="divider"></li>
-			<li ng-class="{ 'disabled': directiveData.config.disabled }" ng-click="parent.loadDataToModal(parent.processes[directiveData.process.id])"
-				data-toggle="{{!directiveData.config.disabled ? 'modal' : ''}}" data-target="#editModal">
-				<a><i class="fa fa-edit"></i>&nbsp;{{directiveData.translation.editWorkflowUnit}}</a></li>
+			<li ng-class="{ 'disabled': templatedata.config.disabled }" ng-click="parent.loadDataToModal(parent.processes[templatedata.process.id])"
+				data-toggle="{{!templatedata.config.disabled ? 'modal' : ''}}" data-target="#editModal">
+				<a><i class="fa fa-edit"></i>&nbsp;{{templatedata.translation.editWorkflowUnit}}</a></li>
 			<li role="separator" class="divider"></li>
-			<li ng-if="type!='lead'" ng-class="{ 'disabled': directiveData.config.closeOrOpenDisable }" ng-click="openModal(parent.processes[directiveData.process.id],'rollBack')"
-				data-toggle="{{!directiveData.config.closeOrOpenDisable ? 'modal' : ''}}" data-target="#rollbackConfirmationModal">
-				<a><i class="fa fa-reply"></i>&nbsp;{{directiveData.translation.rollBackWorkflowUnit}}</a></li>
+			<li ng-if="type!='lead'" ng-class="{ 'disabled': templatedata.config.closeOrOpenDisable }" ng-click="openModal(parent.processes[templatedata.process.id],'rollBack')"
+				data-toggle="{{!templatedata.config.closeOrOpenDisable ? 'modal' : ''}}" data-target="#rollbackConfirmationModal">
+				<a><i class="fa fa-reply"></i>&nbsp;{{templatedata.translation.rollBackWorkflowUnit}}</a></li>
 			</li>
 			<li ng-if="type!='lead'" role="separator" class="divider"></li>
-			<li ng-class="{ 'disabled': !directiveData.config.hasRightToDelete }" ng-click="openModal(parent.processes[directiveData.process.id],'deleteRow')"
-				data-toggle="{{directiveData.config.hasRightToDelete ? 'modal' : ''}}" data-target="#deleteConfirmationModal">
-				<a><i class="fa fa-trash-o"></i>&nbsp;{{directiveData.translation.deleteWorkflowUnit}}</a></li>
+			<li ng-class="{ 'disabled': !templatedata.config.hasRightToDelete }" ng-click="openModal(parent.processes[templatedata.process.id],'deleteRow')"
+				data-toggle="{{templatedata.config.hasRightToDelete ? 'modal' : ''}}" data-target="#deleteConfirmationModal">
+				<a><i class="fa fa-trash-o"></i>&nbsp;{{templatedata.translation.deleteWorkflowUnit}}</a></li>
 			</li>
 		</ul>
 	</div>
