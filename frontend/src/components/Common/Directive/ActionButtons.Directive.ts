@@ -21,7 +21,7 @@ angular.module(moduleApp)
         directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
         directive.restrict = "A";
         directive.scope = {
-            templatedata: "@",
+            templatedata: "=",
             type: "@",
             parent: "="
         };
@@ -36,15 +36,6 @@ angular.module(moduleApp)
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {
-            let templateData = JSON.parse(scope.templatedata);
-            if (!isNullOrUndefined(templateData.process.notifications)) {
-                for (let i = 0; i < templateData.process.notifications.length; i++) {
-
-                    templateData.process.notifications[i].content = decodeURIComponent(atob(templateData.process.notifications[i].content));
-
-                }
-            }
-            scope.directiveData = templateData;
             scope.partial = null;
             scope.openModal = function (payload: any, method: any) {
                 $rootScope.$broadcast("confirmationModalFunction", { "payload": payload, "method": method });

@@ -32,6 +32,7 @@ class LeadDataTableService {
     compile;
     rootScope;
 
+
     user: User;
 
     constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService) {
@@ -137,7 +138,9 @@ class LeadDataTableService {
                 }).notVisible()];
     }
 
-    setActionButtonsConfig(user: User, templateData: any) {
+    setActionButtonsConfig(user: User, process: Process): any {
+        let templateData = {} as any;
+        templateData.process = process;
         let config = {
             "disabled": false,
             "disablePin": false,
@@ -175,19 +178,17 @@ class LeadDataTableService {
             "deleteWorkflowUnit": this.translate.instant("LEAD_DELETE_LEAD")
         };
         templateData.translation = translation;
+        return templateData;
     }
 
-    getActionButtonsHTML(templateData: any): string {
-        this.setActionButtonsConfig(this.user, templateData);
-        if (!isNullOrUndefined(templateData.process.notifications)) {
-            for (let i = 0; i < templateData.process.notifications.length; i++) {
-                templateData.process.notifications[i].content = btoa(encodeURIComponent(templateData.process.notifications[i].content));
-            }
-        }
+    getActionButtonsHTML(process: Process, map: { [key: number]: any }): string {
+        let templateData = this.setActionButtonsConfig(this.user, process);
+        map[templateData.process.id] = templateData;
+
         if ($(window).width() > 1300) {
-            return "<div actionbuttons template='standard' type='lead' parent='leadCtrl' templatedata='" + JSON.stringify(templateData) + "'></div>";
+            return "<div actionbuttons template='standard' type='lead' parent='leadCtrl' templatedata='leadCtrl.templateData[" + templateData.process.id + "]'></div>";
         } else {
-            return "<div actionbuttons template='dropdown' type='lead' parent='leadCtrl' templatedata='" + JSON.stringify(templateData) + "'></div>";
+            return "<div actionbuttons template='dropdown' type='lead' parent='leadCtrl' templatedata='leadCtrl.templateData[" + templateData.process.id + "]'></div>";
         }
     }
 
