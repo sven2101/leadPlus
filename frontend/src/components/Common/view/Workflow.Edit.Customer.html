@@ -4,7 +4,7 @@
 			<div class="form-group">
 				<label>{{ 'CUSTOMER_MENU' | translate }}</label>
 				<select class="form-control" ng-model="parent.currentCustomerId" ng-change="parent.selectCustomer(parent.editWorkflowUnit)"
-					ng-disabled="type=='sale'">
+					ng-disabled="!parent.editable">
                     <option value="-1" selected > - {{ 'CUSTOMER_CREATE' | translate }} - </option>                                                                     
                     <option value="{{customer.id}}" ng-repeat="customer in service.customerService.getActiveCustomers()">{{customer.firstname}} {{customer.lastname}}</option>                                          
                 </select>
@@ -56,9 +56,9 @@
 		<div class="col-sm-6">
 			<!-- MESSAGE -->
 			<div class="form-group">
-				<label>{{ 'COMMON_NOTE' | translate }}</label>
-				<summernote ng-if="type !='sale'" name="content " class="form-control" ng-model="parent.editWorkflowUnit.message" height="300px"></summernote>
-				<div ng-if="type =='sale'" style="border: 1px solid gray;  padding: 15px;">
+				<label>{{ 'COMMON_NOTE' | translate }}Parent:{{parent.editable}}</label>
+				<summernote ng-if="parent.editable" name="content " class="form-control" ng-model="parent.editWorkflowUnit.message" height="300px"></summernote>
+				<div ng-if="!parent.editable" style="border: 1px solid gray;  padding: 15px;">
 					<div ng-bind-html="parent.getAsHtml(parent.editWorkflowUnit.message)"></div>
 				</div>
 			</div>

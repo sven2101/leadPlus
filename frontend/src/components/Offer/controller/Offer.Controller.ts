@@ -53,6 +53,7 @@ class OfferController extends AbstractWorkflow {
     editWorkflowUnit: Offer = new Offer();
     edit: boolean;
     editEmail: boolean = true;
+    editable: boolean = true;
 
     currentOrderPositions: Array<OrderPosition>;
     templates: Array<Template> = [];
