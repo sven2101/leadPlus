@@ -32,7 +32,7 @@ angular.module(moduleApp)
             scope.templateId = "-1";
             scope.notificationId = "-1";
             scope.openAttachment = function (id: number) {
-                window.open("/api/rest/files/" + id, "_blank");
+                window.open("/api/rest/files/content/" + id, "_blank");
             };
             if (scope.type === "lead") {
                 scope.service = scope.parent.leadService;

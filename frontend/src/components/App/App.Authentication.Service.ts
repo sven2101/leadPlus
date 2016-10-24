@@ -22,7 +22,7 @@ const AuthServiceId: string = "AuthService";
 
 class AuthService {
 
-    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, UserResourceId, $injectorId];
+    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, UserResourceId, $injectorId, FileResourceId];
 
     http;
     rootScope;
@@ -30,14 +30,16 @@ class AuthService {
     location;
     userResource;
     injector;
+    fileResource;
 
-    constructor($http, $rootScope, $cookieStore, $location, UserResource, $injector) {
+    constructor($http, $rootScope, $cookieStore, $location, UserResource, $injector, FileResource) {
         this.http = $http;
         this.rootScope = $rootScope;
         this.cookieStore = $cookieStore;
         this.location = $location;
         this.userResource = UserResource.resource;
         this.injector = $injector;
+        this.fileResource = FileResource.resource;
     }
 
     login(credentials, success, error) {
@@ -62,14 +64,12 @@ class AuthService {
                             lastname: data.lastname,
                             phone: data.phone,
                             language: data.language,
-                            pictureLink: "http://localhost:8080/users/" + data.id + "/profile/picture",
                             authorization: authorization,
                             smtpKey: encodeURIComponent(hashPasswordPbkdf2(hashedPassword, salt))
                         }
                     };
                     self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
                     self.cookieStore.put("globals", self.rootScope.globals);
-                    self.rootScope.globals.user.picture = data.profilePicture;
                     success(data);
                     self.injector.get("DashboardService");
                     self.rootScope.$broadcast("onTodosChange");

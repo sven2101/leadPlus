@@ -64,10 +64,8 @@ class ProfileService {
     updateProfileImage(user: User) {
         let self = this;
         this.userResource.setProfilePicture(user).$promise.then(function (data) {
-            self.rootScope.globals.user.picture = null;
-            self.cookieStore.put("globals", self.rootScope.globals);
-            self.rootScope.globals.user.picture = user.picture;
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
+            $("#profilePicture").prop("src", "users/" + self.rootScope.globals.user.id + "/profile/picture?" + new Date().valueOf());
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
             self.rootScope.globals.user.picture = null;
