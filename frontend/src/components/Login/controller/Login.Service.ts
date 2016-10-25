@@ -49,10 +49,10 @@ class LoginService {
         let self = this;
         self.authService.login(credentials).then(
             function (res) {
-                if (self.location.host() === credentials.tenant + ".leadplus.localhost") {
+                if (self.location.host() === credentials.tenant) {
                     self.location.path("/dashboard");
                 } else {
-                    let domain = "http://" + credentials.tenant + ".leadplus.localhost:8080/#/dashboard";
+                    let domain = "http://" + credentials.tenant + ":8080/#/dashboard";
                     self.window.open(domain, "_self");
                 }
                 self.rootScope.setUserDefaultLanguage();

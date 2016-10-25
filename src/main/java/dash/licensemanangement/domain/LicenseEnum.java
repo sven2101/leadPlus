@@ -8,19 +8,16 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum LicenseEnum {
-	FREE("free", 
-			new HashSet<String>(Arrays.asList("/", "/images/favicon/**", "/assets/**", "/fonts/**", "/app/**",
-					"/components/Login/view/Login.html", "/components/Signup/view/Signup.html",
-					"/components/Tenant/Registration/view/**", "/components/Licence/view/**",
-					"/api/rest/tenants/unique/key", "/api/rest/tenants", "/api/rest/registrations/**",
-					"/components/Common/view/NotFound.html", "/components/Common/view/Unauthorized.html",
-					"/components/Common/view/Forbidden.html", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
-					"/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")),
+	FREE("free",
+			new HashSet<String>(Arrays.asList("/", "/images/favicon/**", "/assets/**", "/fonts/**", "/app/**", "/components/Login/view/Login.html",
+					"/components/Signup/view/Signup.html", "/components/Tenant/Registration/view/**", "/components/Licence/view/**",
+					"/api/rest/tenants/unique/key", "/api/rest/tenants", "/api/rest/registrations/**", "/components/Common/view/NotFound.html",
+					"/components/Common/view/Unauthorized.html", "/components/Common/view/Forbidden.html", "/swagger-ui.html",
+					"/webjars/springfox-swagger-ui/**", "/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")),
 			0), BASIC("basic",
-					new HashSet<String>(Arrays.asList("/components/Common/view/**", "/components/Customer/view/**",
-							"/components/Dashboard/view/**", "/components/FileUpload/view/**",
-							"/components/Lead/view/**", "/components/Offer/view/**", "/components/Product/view/**",
-							"/components/Profile/view/**", "/components/Sale/view/**", "/components/Setting/view/**",
+					new HashSet<String>(Arrays.asList("/user", "/users/all", "/components/Common/view/**", "/components/Customer/view/**",
+							"/components/Dashboard/view/**", "/components/FileUpload/view/**", "/components/Lead/view/**", "/components/Offer/view/**",
+							"/components/Product/view/**", "/components/Profile/view/**", "/components/Sale/view/**", "/components/Setting/view/**",
 							"/components/Template/view/**", "/main.html", "/api/rest/**")),
 					1), PRO("pro", new HashSet<String>(Arrays.asList("/components/Statistic/view/**")),
 							2), ULTIMATE("ultimate", new HashSet<String>(Arrays.asList("")), 3);
@@ -35,11 +32,11 @@ public enum LicenseEnum {
 		this.allowedRoutes = allowedRoutes;
 		this.order = order;
 		combinedRoutes = new HashSet<>(allowedRoutes);
-		for (int i = this.order-1; i >= 0; i--) {
+		for (int i = this.order - 1; i >= 0; i--) {
 			combinedRoutes.addAll(this.getLicenseByOrder(i).getAllowedRoutes());
-		}	
+		}
 	}
-	
+
 	public String getLicense() {
 		return this.license;
 	}
@@ -94,10 +91,10 @@ public enum LicenseEnum {
 		}
 		return false;
 	}
-	
+
 	@JsonCreator
-	public static LicenseEnum fromValue(String value){
+	public static LicenseEnum fromValue(String value) {
 		return LicenseEnum.valueOf(value);
 	}
-	
+
 }

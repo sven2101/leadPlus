@@ -107,8 +107,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             {
                 templateUrl: "components/Tenant/Registration/view/Registration.html",
                 controller: "RegistrationController",
-                controllerAs: "registrationCtrl",
-                package: "basic"
+                controllerAs: "registrationCtrl"
             })
             .when("/login",
             {
@@ -188,12 +187,12 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             $rootScope.tenant = $cookies.getObject("tenant");
 
             if (!angular.isUndefined($rootScope.user)) {
-                if ($rootScope.user.tenant === $window.location.hostname.split(".")[0]) {
-                    $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
-                    $http.defaults.headers.common["X-TenantID"] = $window.location.hostname.split(".")[0];
-                } else {
-                    console.log("Error - please don't try to cheat dude. ");
-                }
+                // if ($rootScope.user.tenant === $window.location.hostname.split(".")[0]) {
+                $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
+                $http.defaults.headers.common["X-TenantID"] = $window.location.hostname;
+                // } else {
+                //    console.log("Error - please don't try to cheat dude. ");
+                // }
             }
             let initialLoaded = true;
 
@@ -202,12 +201,12 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 $rootScope.tenant = $cookies.getObject("tenant");
 
                 if (!angular.isUndefined($rootScope.user)) {
-                    if ($rootScope.user.tenant === $window.location.hostname.split(".")[0]) {
-                        $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
-                        $http.defaults.headers.common["X-TenantID"] = $window.location.hostname.split(".")[0];
-                    } else {
-                        console.log("Error - please don't try to cheat dude. ");
-                    }
+                    // if ($rootScope.user.tenant === $window.location.hostname.split(".")[0]) {
+                    $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
+                    $http.defaults.headers.common["X-TenantID"] = $window.location.hostname;
+                    //  } else {
+                    //    console.log("Error - please don't try to cheat dude. ");
+                    // }
                 }
 
                 if (next.authenticated === true) {

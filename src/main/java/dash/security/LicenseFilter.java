@@ -24,24 +24,21 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import dash.usermanagement.domain.User;
+import dash.tenantmanagement.business.TenantContext;
 
 public class LicenseFilter extends OncePerRequestFilter {
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
-		if (SecurityContextHolder.getContext().getAuthentication() != null
-				&& SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-				&& !SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-			//TODO get tenant from authentification object!
-			User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			
-			if (!currentUser.getTenant().getLicense().getLicenseType().hasLicenseForURL(request.getRequestURI())) {
+		if (SecurityContextHolder.getContext().getAuthentication() != null
+				&& SecurityContextHolder.getContext().getAuthentication() instanceof TenantAuthenticationToken) {
+			TenantAuthenticationToken auth = (TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+			TenantContext.setTenant(auth.getAuthenticatedTenant().getTenantKey());
+
+			if (!auth.getAuthenticatedTenant().getLicense().getLicenseType().hasLicenseForURL(request.getRequestURI())) {
 				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			}
-
 		}
 		filterChain.doFilter(request, response);
 	}

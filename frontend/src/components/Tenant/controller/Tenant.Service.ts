@@ -41,6 +41,7 @@ class TenantService {
     save(tenant: Tenant): IPromise<Tenant> {
         let defer = this.q.defer();
         let self = this;
+
         this.tenantResource.save(tenant).$promise.then(function (tenant: Tenant) {
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
             defer.resolve(tenant);

@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,8 +29,8 @@ import org.springframework.stereotype.Service;
 
 import dash.exceptions.NotFoundException;
 import dash.exceptions.UserIsNotActivatedException;
+import dash.security.TenantAuthenticationToken;
 import dash.tenantmanagement.business.TenantContext;
-import dash.tenantmanagement.business.TenantService;
 import dash.usermanagement.domain.User;
 
 @Service
@@ -40,16 +41,13 @@ public class UserLoginService implements UserDetailsService {
 	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private TenantService tenantService;
-	
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		User user;
 		try {
-			TenantContext.setTenant(email.split("/")[0]);
-			user = userService.getUserByEmail(email.split("/")[1]);
- 			user.setTenant(tenantService.getTenantByName(email.split("/")[0]));
+			TenantAuthenticationToken sec = (TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+			TenantContext.setTenant(sec.getAuthenticatedTenant().getTenantKey());
+			user = userService.getUserByEmail(email);
 			if (!Optional.ofNullable(user).isPresent()) {
 				throw new NotFoundException(USER_NOT_FOUND);
 			}

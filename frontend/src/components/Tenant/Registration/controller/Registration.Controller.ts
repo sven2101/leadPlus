@@ -25,11 +25,11 @@ const RegistrationControllerId: string = "RegistrationController";
 
 class RegistrationController {
 
-    private $inject = [RegistrationServiceId, SignupServiceId, TenantServiceId, LoginServiceId, $httpId];
+    private $inject = [RegistrationServiceId, SignupServiceId, TenantServiceId, LoginServiceId, $httpId, $locationId];
 
     signupService;
-    registrationService;
-    tenantService;
+    registrationService: RegistrationService;
+    tenantService: TenantService;
     loginService;
 
     credentials: Credentials;
@@ -37,8 +37,9 @@ class RegistrationController {
     user: Signup;
 
     http;
+    location;
 
-    constructor(RegistrationService, SignupService, TenantService, LoginService, $http) {
+    constructor(RegistrationService, SignupService, TenantService, LoginService, $http, $location) {
         this.registrationService = RegistrationService;
         this.signupService = SignupService;
         this.tenantService = TenantService;
@@ -47,6 +48,7 @@ class RegistrationController {
         this.user = new Signup();
         this.credentials = new Credentials();
         this.http = $http;
+        this.location = $location;
     }
 
     uniqueTenantKey(): void {
@@ -64,10 +66,11 @@ class RegistrationController {
 
         this.credentials.email = this.user.email;
         this.credentials.password = this.user.password;
-        this.credentials.tenant = this.tenant.tenantKey;
+        this.credentials.tenant = this.tenant.tenantKey + "." + this.location.host();
 
+        self.http.defaults.headers.common["X-TenantID"] = this.location.host();
         this.tenantService.save(this.tenant).then(function (createdTenant: Tenant) {
-            self.http.defaults.headers.common["X-TenantID"] = createdTenant.tenantKey;
+            self.http.defaults.headers.common["X-TenantID"] = self.credentials.tenant;
             self.signupService.signup(self.user).then(function (createdUser: User) {
                 self.loginService.login(self.credentials);
             }, function () {

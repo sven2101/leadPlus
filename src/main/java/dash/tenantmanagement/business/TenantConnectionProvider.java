@@ -65,7 +65,7 @@ public class TenantConnectionProvider implements MultiTenantConnectionProvider {
 	}
 
 	@Override
-	public boolean isUnwrappableAs(Class unwrapType) {
+	public boolean isUnwrappableAs(@SuppressWarnings("rawtypes") Class unwrapType) {
 		return false;
 	}
 

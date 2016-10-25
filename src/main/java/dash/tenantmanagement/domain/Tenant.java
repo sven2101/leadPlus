@@ -13,8 +13,6 @@
  *******************************************************************************/
 package dash.tenantmanagement.domain;
 
-import dash.licensemanangement.domain.License;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,6 +24,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Where;
+
+import dash.licensemanangement.domain.License;
 
 @Entity
 @Table(name = "tenant", schema = "public")

@@ -54,7 +54,7 @@ class AuthService {
         let defer = this.$q.defer();
         if (credentials) {
 
-            let authorization = btoa(credentials.tenant + "/" + credentials.email + ":" + credentials.password);
+            let authorization = btoa(credentials.email + ":" + credentials.password);
             let header = credentials ? { Authorization: "Basic " + authorization } : {};
 
             this.http.defaults.headers.common["Authorization"] = "Basic " + authorization;

@@ -13,21 +13,51 @@
  *******************************************************************************/
 package dash.security;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import java.util.Arrays;
+
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.SpringSecurityCoreVersion;
 
-public class TenantUsernamePasswordAuthenticationToken extends UsernamePasswordAuthenticationToken {
+import dash.tenantmanagement.domain.Tenant;
+
+public class TenantAuthenticationToken extends AbstractAuthenticationToken {
 
 	private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
-	private Object tenant;
+	private String tenant;
+	private Tenant authenticatedTenant;
 
-	public TenantUsernamePasswordAuthenticationToken(Object tenant, Object principle, Object credentials) {
-		super(principle, credentials);
+	public TenantAuthenticationToken(String tenant) {
+		super(Arrays.asList());
 		this.tenant = tenant;
 	}
 
-	public Object getTenant() {
+	public TenantAuthenticationToken(Tenant authenticatedTenant) {
+		super(Arrays.asList());
+		this.authenticatedTenant = authenticatedTenant;
+		//this.setAuthenticated(true);
+	}
+
+	public String getTenant() {
 		return this.tenant;
 	}
+
+	public void setAuthenticatedTenant(Tenant authenticatedTenant) {
+		this.authenticatedTenant = authenticatedTenant;
+	}
+
+	public Tenant getAuthenticatedTenant() {
+		return this.authenticatedTenant;
+	}
+
+	@Override
+	public Object getCredentials() {
+		return "";
+	}
+
+	@Override
+	public Object getPrincipal() {
+		return "";
+	}
+
 }

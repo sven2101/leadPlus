@@ -33,14 +33,8 @@ class LoginController {
     }
 
     login() {
-        let host = this.location.host();
-        let tenant = host.split(".");
-        if (tenant.length > 1) {
-            this.credentials.tenant = tenant[0];
-            this.loginService.login(this.credentials);
-        } else {
-            console.log("Error - you need to login via your tenant subdomain dude.");
-        }
+        this.credentials.tenant = this.location.host();
+        this.loginService.login(this.credentials);
     }
 }
 
