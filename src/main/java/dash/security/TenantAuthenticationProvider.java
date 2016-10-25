@@ -52,7 +52,6 @@ public class TenantAuthenticationProvider implements AuthenticationProvider {
 
 		if (tenant == null) {
 			throw new TenantAuthentificationException("Invalid tenantkey");
-
 		}
 
 		return new TenantAuthenticationToken(tenant);

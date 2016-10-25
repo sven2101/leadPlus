@@ -71,6 +71,8 @@ function config($translateProvider) {
             REGISTRATION_VALIDATE_TENANT_ADDRESS: "Adresse",
             REGISTRATION_VALIDATE_TENANT_PHONE: "Telefonnummer",
             REGISTRATION_VALIDATE_TENANT_EMAIL: "Email",
+            REGISTRATION_VALIDATE_PASSWORD_TOO_SHORT: "Subdomain ist zu kurz",
+            REGISTRATION_VALIDATE_PASSWORD_TOO_LONG: "Subdomain ist zu lang",
 
             // Define common elements
             MR: "Herr",
@@ -469,6 +471,8 @@ function config($translateProvider) {
             REGISTRATION_VALIDATE_TENANT_ADDRESS: "Address",
             REGISTRATION_VALIDATE_TENANT_PHONE: "Phone",
             REGISTRATION_VALIDATE_TENANT_EMAIL: "Email",
+            REGISTRATION_VALIDATE_PASSWORD_TOO_SHORT: "Subdomain is too short",
+            REGISTRATION_VALIDATE_PASSWORD_TOO_LONG: "Subdomain is too long",
 
             // Define common elements
             MR: "Mr.",
