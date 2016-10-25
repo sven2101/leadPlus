@@ -6,8 +6,9 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
     path = require('./gulp.path.js').path,
-    typescript = require('gulp-tsc');
-ts = require('gulp-typescript');
+    typescript = require('gulp-tsc'),
+    ts = require('gulp-typescript'),
+    babel = require('gulp-babel');
 
 
 gulp.task('compile', ['typescript'], function () {
@@ -37,7 +38,7 @@ gulp.task('typescript-task', function () {
     }
 
 });
-gulp.task('typescript/angular-task',['tslint'], function () {
+gulp.task('typescript/angular-task', ['tslint'], function () {
     return gulp.src(path.typescript.src)
         .pipe(ts({
 

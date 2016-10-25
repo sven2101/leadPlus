@@ -110,5 +110,9 @@ let hashPasswordPbkdf2 = function (password: string, salt: string): string {
     return sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2(password, salt, 10000));
 };
 
+let handleError = (error): void => {
+    console.log(error);
+};
+
 
 

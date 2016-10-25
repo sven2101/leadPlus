@@ -120,6 +120,13 @@ class SaleController extends AbstractWorkflow {
         this.dtColumns = this.saleDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
 
         this.getAllActiveTemplates();
+         $rootScope.$on("deleteRow", (event, data) => {
+            self.saleService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
+        });
+
+        $rootScope.$on("updateRow", (event, data) => {
+            self.saleService.updateRow(data, self.dtInstance, self.scope);
+        });
     }
 
     refreshData() {

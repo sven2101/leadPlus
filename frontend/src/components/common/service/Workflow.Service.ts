@@ -9,6 +9,7 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../Common/model/Status.Model.ts" />
 /// <reference path="../../Common/model/Promise.Interface.ts" />
+/// <reference path="../../Common/model/Defer.Interface.ts" />
 /// <reference path="../../Common/model/Workflow.Model.ts" />
 /// <reference path="../../Common/service/AbstractWorkflow.ts" />
 /// <reference path="../../Common/service/Workflow.Controller.ts" />
@@ -522,5 +523,86 @@ class WorkflowService {
             }
         });
     }
+    createNextWorkflowUnit(process: Process): void {
+        switch (process.status) {
+            case Status.OPEN: this.startOfferTransformation(process);
+                break;
+            case Status.OFFER: this.startSaleTransformation(process);
+                break;
+            default: ;
+                break;
+        }
+    }
+    togglePin(process: Process, user: User): void {
+        let self = this;
+        if (user !== null) {
+            this.processResource.setProcessor({
+                id: process.id
+            }, user.id).$promise.then(() => {
+                process.processor = user;
+                self.rootScope.$broadcast("updateRow", process);
+                self.rootScope.$broadcast("onTodosChange");
+            }, (error) => handleError(error));
+        } else if (process.processor !== null) {
+            this.processResource.removeProcessor({
+                id: process.id
+            }).$promise.then(function () {
+                process.processor = null;
+                self.rootScope.$broadcast("updateRow", process);
+                self.rootScope.$broadcast("onTodosChange");
+            }, (error) => handleError(error));
+        }
+    }
+    inContact(process: Process): void {
+        let self = this;
+        this.processResource.setStatus({
+            id: process.id
+        }, "INCONTACT").$promise.then(function () {
+            self.toaster.pop("success", "", self.translate
+                .instant("COMMON_TOAST_SUCCESS_INCONTACT"));
+            process.status = "INCONTACT";
+            self.rootScope.$broadcast("updateRow", process);
+            self.rootScope.$broadcast("onTodosChange");
+        }, (error) => handleError(error));
+    }
+
+    setProcessStatus(process: Process, status: Status): IPromise<Process> {
+        let defer: IDefer<Process> = this.$q.defer();
+        let self = this;
+        this.processResource.setStatus({
+            id: process.id
+        }, status).$promise.then((process: Process) => {
+            defer.resolve(process);
+        }, (error) => {
+            handleError(error);
+            defer.reject(error);
+        });
+        return defer.promise;
+    }
+
+    toggleClosedOrOpenState(process: Process): void {
+        let self = this;
+        if (process.status !== Status.CLOSED) {
+            this.setProcessStatus(process, Status.CLOSED).then((process: Process) => {
+                self.rootScope.offersCount -= 1;
+                process.status = Status.CLOSED;
+                self.rootScope.$broadcast("deleteRow", process);
+            });
+        } else if (isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
+            this.setProcessStatus(process, Status.OPEN).then((process: Process) => {
+                self.rootScope.leadsCount += 1;
+                process.status = Status.OPEN;
+                self.rootScope.$broadcast("updateRow", process);
+            });
+        } else if (!isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
+            this.setProcessStatus(process, Status.OFFER).then((process: Process) => {
+                self.rootScope.offersCount += 1;
+                process.status = Status.OFFER;
+                self.rootScope.$broadcast("updateRow", process);
+            });
+        }
+    }
+
+
 }
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);

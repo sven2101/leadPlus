@@ -75,9 +75,6 @@ class LeadController extends AbstractWorkflow {
         this.currentWizard = 1;
 
         let self = this;
-        $rootScope.$on("deleteRow", (event, data) => {
-            self.leadService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
-        });
 
         function createdRow(row, data: Process, dataIndex) {
             self.leadService.setRow(data.id, row);
@@ -113,6 +110,14 @@ class LeadController extends AbstractWorkflow {
         }
         this.dtOptions = this.leadDataTableService.getDTOptionsConfiguration(createdRow, searchLink);
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
+
+        $rootScope.$on("deleteRow", (event, data) => {
+            self.leadService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
+        });
+
+        $rootScope.$on("updateRow", (event, data) => {
+            self.leadService.updateRow(data, self.dtInstance, self.scope);
+        });
     }
 
     close() {
@@ -230,6 +235,8 @@ class LeadController extends AbstractWorkflow {
     getTemplateData(processId: number): any {
         return this.templateData[processId];
     }
+
+
 
 }
 angular.module(moduleLead, [ngResourceId]).controller(LeadControllerId, LeadController);

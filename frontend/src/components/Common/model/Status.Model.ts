@@ -18,5 +18,6 @@ enum Status {
     OFFER = <any>"OFFER",
     FOLLOWUP = <any>"FOLLOWUP",
     SALE = <any>"SALE",
-    CLOSED = <any>"CLOSED"
+    CLOSED = <any>"CLOSED",
+    INCONTACT = <any>"INCONTACT"
 }

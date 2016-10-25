@@ -15,8 +15,11 @@
  *******************************************************************************/
 "use strict";
 
+/*
+
 angular.module(moduleApp)
-    .directive("actionbuttons", function ($rootScope) {
+    .directive("actionbuttons", ["DashboardService", "$rootScope", function (DashboardService, $rootScope) {
+        console.log(DashboardService);
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
         directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
         directive.restrict = "A";
@@ -36,11 +39,13 @@ angular.module(moduleApp)
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {
+            // console.log(DashboardService);
             scope.partial = null;
             scope.openModal = function (payload: any, method: any) {
                 $rootScope.$broadcast("confirmationModalFunction", { "payload": payload, "method": method });
             };
         };
         return directive;
-    });
+    }]);
 
+*/

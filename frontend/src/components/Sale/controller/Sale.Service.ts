@@ -128,6 +128,16 @@ class SaleService {
         this.compile(angular.element(this.rows[process.id]).contents())(scope);
     }
 
+
+    removeOrUpdateRow(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {
+        if (loadAllData === true) {
+            this.updateRow(process, dtInstance, scope);
+        } else if (loadAllData === false) {
+            dtInstance.DataTable.row(this.rows[process.id]).remove()
+                .draw();
+        }
+    }
+
     rollBack(process: Process, dtInstance: any, scope: any): void {
         if (isNullOrUndefined(process)) {
             return;

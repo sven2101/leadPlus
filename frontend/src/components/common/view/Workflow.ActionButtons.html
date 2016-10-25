@@ -1,6 +1,6 @@
 <div ng-style="{'min-width':templatedata.config.minwidth+'px'}" class="text-center btn-group" role="group" aria-label="...">
-	<button style="min-height:34px" ng-if="type=='lead' || type =='offer'" class="btn btn-white" ng-disabled="templatedata.config.disabled"
-		ng-click="parent.createNextWorkflowUnit(parent.processes[templatedata.process.id])" title="{{templatedata.translation.nextWorkflowUnit}}">
+	<button style="min-height:34px" ng-if="process.status!=='SALE'" class="btn btn-white" ng-disabled="templatedata.config.disabled"
+		ng-click="workflowService.createNextWorkflowUnit(process)" title="{{templatedata.translation.nextWorkflowUnit}}">
         <i class="fa fa-check"></i>
     </button>
 	<div ng-if="!templatedata.config.disablePinDropdown" class="btn-group" role="group">
@@ -10,9 +10,9 @@
       <span class="caret"></span>
     </button>
 		<ul style="max-height: 200px; overflow-x: hidden;" class="dropdown-menu right">
-			<li ng-if="type=='lead'" ng-click="parent.pin(parent.processes[templatedata.process.id],null)"><a>{{ 'COMMON_EMPTY_PROCESSOR' | translate }}</a></li>
-			<li ng-if="type=='lead'" role="separator" class="divider"></li>
-			<li ng-click="parent.pin(parent.processes[templatedata.process.id],user)" ng-repeat="user in parent.workflowService.users">
+			<li ng-if="process.status=='OPEN'" ng-click="workflowService.togglePin(process,null)"><a>{{ 'COMMON_EMPTY_PROCESSOR' | translate }}</a></li>
+			<li ng-if="process.status=='OPEN'" role="separator" class="divider"></li>
+			<li ng-click="workflowService.togglePin(process,user)" ng-repeat="user in workflowService.users">
 				<a ng-if="((user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname==''))&&user.role!='API'" ng-style="user.id==templatedata.process.processor.id?{ 'font-weight': 'bold', 'font-style': 'italic'}:{
                     'font-weight': 'normal', 'font-style': 'normal'} ">{{user.username}}</a>
 				<a ng-if="!((user.firstname==null||user.firstname=='' )&&(user.lastname==null||user.lastname==''
@@ -21,25 +21,26 @@
 		</ul>
 	</div>
 	<button style="min-height:34px" ng-if="templatedata.config.disablePinDropdown" class="btn btn-white" ng-disabled="templatedata.config.disablePin"
-		ng-click="parent.pin(parent.processes[templatedata.process.id],templatedata.process.processor==null?parent.workflowService.user:null)"
-		title="{{'LEAD_PIN'| translate }}">
+		ng-click="workflowService.togglePin(process,process.processor==null?rootScope.globals.user:null)" title="{{'LEAD_PIN'| translate }}">
          <i class="fa fa-thumb-tack"></i>
     </button>
-	<button style="min-height:34px" ng-if="type=='lead'" class="btn btn-white" ng-disabled="templatedata.config.disabled" ng-click="parent.inContact(parent.processes[templatedata.process.id])"
-		title="{{'LEAD_IN_CONTACT'| translate }}">
+	<button style="min-height:34px" ng-if="process.status=='OPEN'||process.status=='INCONTACT'" class="btn btn-white" ng-disabled="process.status=='INCONTACT'"
+		ng-click="workflowService.inContact(process)" title="{{'LEAD_IN_CONTACT'| translate }}">
          <i  class="fa fa-user-plus"></i>
     </button>
-	<button style="min-height:34px" ng-if="type=='offer'" class="btn btn-white" ng-disabled="templatedata.config.disabled" ng-click="parent.openFollowUpModal(parent.processes[templatedata.process.id]);parent.followUp(parent.processes[templatedata.process.id])"
-		title="{{'OFFER_FOLLOW_UP'| translate }}">
+	<button style="min-height:34px" ng-if="process.status=='OFFER'||process.status=='FOLLOWUP'||(process.status=='CLOSED'&&process.offer!=null)" class="btn btn-white" ng-disabled="templatedata.config.disabled"
+		ng-click="workflowService.openFollowUpModal(process)" title="{{'OFFER_FOLLOW_UP'| translate }}">
          <i  class="fa fa-eye"></i>
     </button>
+
 	<div class="btn-group" role="group">
 		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
        <i class="fa fa-ellipsis-h"></i>
       <span class="caret"></span>
     </button>
 		<ul style="max-height: 200px;" class="dropdown-menu right">
-			<li ng-class="{ 'disabled': templatedata.config.closeOrOpenDisable }" ng-if="type=='lead' || type =='offer'" ng-click="parent.closeOrOpen(parent.processes[templatedata.process.id])">
+			<li ng-class="{ 'disabled': templatedata.config.closeOrOpenDisable }" ng-if="process.status!='SALE'"
+				ng-click="workflowService.toggleClosedOrOpenState(process)">
 				<a><i class="{{templatedata.config.faOpenOrLock}}"></i>&nbsp;{{templatedata.config.openOrLock}}</a></li>
 			<li ng-if="type=='lead' || type =='offer'" role="separator" class="divider"></li>
 			<li ng-class="{ 'disabled': templatedata.config.disabled }" ng-click="parent.loadDataToModal(parent.processes[templatedata.process.id])"
