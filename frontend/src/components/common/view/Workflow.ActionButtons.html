@@ -28,8 +28,8 @@
 		ng-click="workflowService.inContact(process)" title="{{'LEAD_IN_CONTACT'| translate }}">
          <i  class="fa fa-user-plus"></i>
     </button>
-	<button style="min-height:34px" ng-if="process.status=='OFFER'||process.status=='FOLLOWUP'||(process.status=='CLOSED'&&process.offer!=null)" class="btn btn-white" ng-disabled="templatedata.config.disabled"
-		ng-click="workflowService.openFollowUpModal(process)" title="{{'OFFER_FOLLOW_UP'| translate }}">
+	<button style="min-height:34px" ng-if="process.status=='OFFER'||process.status=='FOLLOWUP'||(process.status=='CLOSED'&&process.offer!=null)"
+		class="btn btn-white" ng-disabled="templatedata.config.disabled" ng-click="workflowService.openFollowUpModal(process)" title="{{'OFFER_FOLLOW_UP'| translate }}">
          <i  class="fa fa-eye"></i>
     </button>
 
@@ -39,8 +39,7 @@
       <span class="caret"></span>
     </button>
 		<ul style="max-height: 200px;" class="dropdown-menu right">
-			<li ng-class="{ 'disabled': templatedata.config.closeOrOpenDisable }" ng-if="process.status!='SALE'"
-				ng-click="workflowService.toggleClosedOrOpenState(process)">
+			<li ng-class="{ 'disabled': templatedata.config.closeOrOpenDisable }" ng-if="process.status!='SALE'" ng-click="workflowService.toggleClosedOrOpenState(process)">
 				<a><i class="{{templatedata.config.faOpenOrLock}}"></i>&nbsp;{{templatedata.config.openOrLock}}</a></li>
 			<li ng-if="type=='lead' || type =='offer'" role="separator" class="divider"></li>
 			<li ng-class="{ 'disabled': templatedata.config.disabled }" ng-click="parent.loadDataToModal(parent.processes[templatedata.process.id])"

@@ -1,6 +1,7 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../User/Model/User.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
+/// <reference path="../../common/model/ActionButtonConfigBuilder.Model.ts" />
 /// <reference path="../../common/service/Workflow.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -138,7 +139,48 @@ class LeadDataTableService {
                 }).notVisible()];
     }
 
+    setActionButtonConfig(process: Process, user: User): { [key: string]: ActionButtonConfig } {
+        let config = new ActionButtonConfigBuilder();
+        // Create offer
+        config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("LEAD_FOLLOW_UP");
+        if (process.status === Status.OPEN || process.status === Status.FOLLOWUP || process.status === Status.INCONTACT) {
+            config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled();
+        }
+        // Pin
+        if (user.role === Role.ADMIN || user.role === Role.SUPERADMIN) {
+            config.get(ActionButtonType.PIN_DROPDOWN).setVisible().setEnabled(process.processor !== null && process.processor.username !== user.username).setTitle("LEAD_PIN");
+        } else {
+            config.get(ActionButtonType.PIN_BUTTON).setEnabled().setTitle("LEAD_PIN");
+        }
+        // In contact
+        config.get(ActionButtonType.SET_INCONTACT).setVisible().setTitle("COMMON_STATUS_INCONTACT");
+        if (process.status === Status.OPEN) {
+            config.get(ActionButtonType.SET_INCONTACT).setEnabled();
+        }
+        // Close or open
+        config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("LEAD_CLOSE_LEAD").setIcon("fa fa-lock");
+        // Edit
+        config.get(ActionButtonType.DETAILS_OPEN_EDIT_MODAL).setEnabled().setTitle("LEAD_EDIT_LEAD");
+        // Delete
+        config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible()
+            .setEnabled(isNullOrUndefined(process.processor) || process.processor.username !== user.username).setTitle("LEAD_DELETE_LEAD");
+        // Eventually disable All visible buttons
+        if (!isNullOrUndefined(process.offer)) {
+            config.disableAll();
+        } else if (process.status === Status.CLOSED) {
+            config.disableAll();
+            config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("LEAD_OPEN_LEAD").setIcon("fa fa-unlock");
+        }
+        // Detail dropdown
+        config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
+        return config.actionButtons;
+    }
+
     setActionButtonsConfig(user: User, process: Process): any {
+        let x = this.setActionButtonConfig(process, user);
+        console.log(x);
+
+
         let templateData = {} as any;
         templateData.process = process;
         let config = {
