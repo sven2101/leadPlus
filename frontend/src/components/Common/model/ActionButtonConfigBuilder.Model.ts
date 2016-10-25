@@ -3,12 +3,13 @@
 
 
 class ActionButtonConfigBuilder {
-    actionButtons: { [key: string]: ActionButtonConfig } = {};
+    private actionButtons: { [key: string]: ActionButtonConfig } = {};
 
     constructor() {
 
         this.actionButtons[ActionButtonType.CREATE_NEXT_WORKFLOWUNIT] = new ActionButtonConfig(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT);
         this.actionButtons[ActionButtonType.PIN_DROPDOWN] = new ActionButtonConfig(ActionButtonType.PIN_DROPDOWN);
+        this.actionButtons[ActionButtonType.PIN_DROPDOWN_EMPTY_PROCESSOR] = new ActionButtonConfig(ActionButtonType.PIN_DROPDOWN_EMPTY_PROCESSOR);
         this.actionButtons[ActionButtonType.PIN_BUTTON] = new ActionButtonConfig(ActionButtonType.PIN_BUTTON);
         this.actionButtons[ActionButtonType.SET_INCONTACT] = new ActionButtonConfig(ActionButtonType.SET_INCONTACT);
         this.actionButtons[ActionButtonType.OPEN_FOLLOWUP_MODAL] = new ActionButtonConfig(ActionButtonType.OPEN_FOLLOWUP_MODAL);
@@ -27,5 +28,8 @@ class ActionButtonConfigBuilder {
         for (let actionButtonConfig in this.actionButtons) {
             this.actionButtons[actionButtonConfig].setEnabled(false);
         }
+    }
+    build(): { [key: string]: ActionButtonConfig } {
+        return this.actionButtons;
     }
 }

@@ -82,7 +82,7 @@ class LeadController extends AbstractWorkflow {
             self.compile(angular.element(row).contents())(self.scope);
         }
         function addActionsButtons(data: Process, type, full, meta) {
-            return self.leadDataTableService.getActionButtonsHTML(data, self.templateData);
+            return self.leadDataTableService.getActionButtonsHTML(data, self.templateData, self.actionButtonConfig);
         }
         function addStatusStyle(data: Process, type, full, meta) {
             self.processes[data.id] = data;
@@ -118,6 +118,12 @@ class LeadController extends AbstractWorkflow {
         $rootScope.$on("updateRow", (event, data) => {
             self.leadService.updateRow(data, self.dtInstance, self.scope);
         });
+
+        $rootScope.$on("loadDataToModal", (event, data) => {
+            self.loadDataToModal(data);
+        });
+
+
     }
 
     close() {
@@ -234,6 +240,10 @@ class LeadController extends AbstractWorkflow {
 
     getTemplateData(processId: number): any {
         return this.templateData[processId];
+    }
+
+    getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
+        return this.leadDataTableService.getActionButtonConfig(process);
     }
 
 

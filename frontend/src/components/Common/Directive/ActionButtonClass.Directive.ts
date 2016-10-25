@@ -11,9 +11,9 @@ class ActionButtonDirective implements IDirective {
     transclude = false;
     restrict = "A";
     scope = {
-        templatedata: "=",
-        type: "@",
-        parent: "="
+        actionbuttonconfig: "=",
+        process: "=",
+        minwidth: "@"
     };
 
     constructor(private WorkflowService: WorkflowService, private $rootScope) { }
@@ -25,10 +25,14 @@ class ActionButtonDirective implements IDirective {
     }
 
     link(scope, element, attrs, ctrl, transclude): void {
-        scope.process = scope.templatedata.process;
+        scope.minwidth = isNullOrUndefined(scope.minwidth) ? 180 : scope.minwidth;
         scope.workflowService = this.WorkflowService;
         scope.rootScope = this.$rootScope;
-        scope.openModal = function (payload: any, method: any) {
+        scope.config = scope.actionbuttonconfig;
+        scope.loadDataToModal = (process: Process): void => {
+            this.$rootScope.$broadcast("loadDataToModal", process);
+        };
+        scope.openModal = (payload: any, method: any): void => {
             this.$rootScope.$broadcast("confirmationModalFunction", { "payload": payload, "method": method });
         };
     };

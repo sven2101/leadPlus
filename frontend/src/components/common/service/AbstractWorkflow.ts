@@ -16,6 +16,7 @@ class AbstractWorkflow {
     currentWizard: number = 1;
     sce;
     templateData: { [key: number]: any } = {};
+    actionButtonConfig: { [key: number]: any } = {};
 
     constructor(WorkflowService, $sce) {
         this.workflowService = WorkflowService;

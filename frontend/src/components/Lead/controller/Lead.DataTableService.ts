@@ -139,48 +139,39 @@ class LeadDataTableService {
                 }).notVisible()];
     }
 
-    setActionButtonConfig(process: Process, user: User): { [key: string]: ActionButtonConfig } {
+    getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
+        let user: User = this.rootScope.globals.user;
         let config = new ActionButtonConfigBuilder();
-        // Create offer
         config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("LEAD_FOLLOW_UP");
         if (process.status === Status.OPEN || process.status === Status.FOLLOWUP || process.status === Status.INCONTACT) {
             config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled();
         }
-        // Pin
         if (user.role === Role.ADMIN || user.role === Role.SUPERADMIN) {
-            config.get(ActionButtonType.PIN_DROPDOWN).setVisible().setEnabled(process.processor !== null && process.processor.username !== user.username).setTitle("LEAD_PIN");
+            config.get(ActionButtonType.PIN_DROPDOWN).setEnabled().setTitle("LEAD_PIN");
+            config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible().setEnabled().setTitle("LEAD_DELETE_LEAD");
+            config.get(ActionButtonType.PIN_DROPDOWN_EMPTY_PROCESSOR).setEnabled();
         } else {
-            config.get(ActionButtonType.PIN_BUTTON).setEnabled().setTitle("LEAD_PIN");
+            config.get(ActionButtonType.PIN_BUTTON).setVisible().setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username).setTitle("LEAD_PIN");
+            config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible()
+                .setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username).setTitle("LEAD_DELETE_LEAD");
         }
-        // In contact
         config.get(ActionButtonType.SET_INCONTACT).setVisible().setTitle("COMMON_STATUS_INCONTACT");
         if (process.status === Status.OPEN) {
             config.get(ActionButtonType.SET_INCONTACT).setEnabled();
         }
-        // Close or open
         config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("LEAD_CLOSE_LEAD").setIcon("fa fa-lock");
-        // Edit
         config.get(ActionButtonType.DETAILS_OPEN_EDIT_MODAL).setEnabled().setTitle("LEAD_EDIT_LEAD");
-        // Delete
-        config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible()
-            .setEnabled(isNullOrUndefined(process.processor) || process.processor.username !== user.username).setTitle("LEAD_DELETE_LEAD");
-        // Eventually disable All visible buttons
         if (!isNullOrUndefined(process.offer)) {
             config.disableAll();
         } else if (process.status === Status.CLOSED) {
             config.disableAll();
             config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("LEAD_OPEN_LEAD").setIcon("fa fa-unlock");
         }
-        // Detail dropdown
         config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
-        return config.actionButtons;
+        return config.build();
     }
 
     setActionButtonsConfig(user: User, process: Process): any {
-        let x = this.setActionButtonConfig(process, user);
-        console.log(x);
-
-
         let templateData = {} as any;
         templateData.process = process;
         let config = {
@@ -223,15 +214,12 @@ class LeadDataTableService {
         return templateData;
     }
 
-    getActionButtonsHTML(process: Process, map: { [key: number]: any }): string {
+    getActionButtonsHTML(process: Process, map: { [key: number]: any }, actionButtonConfig: { [key: number]: any }): string {
         let templateData = this.setActionButtonsConfig(this.user, process);
         map[templateData.process.id] = templateData;
+        actionButtonConfig[process.id] = this.getActionButtonConfig(process);
+        return "<div actionbuttons actionbuttonconfig=leadCtrl.actionButtonConfig[" + templateData.process.id + "]  process='leadCtrl.processes[" + process.id + "]'></div>";
 
-        if ($(window).width() > 1300) {
-            return "<div actionbuttons template='standard' type='lead' parent='leadCtrl' templatedata='leadCtrl.templateData[" + templateData.process.id + "]'></div>";
-        } else {
-            return "<div actionbuttons template='dropdown' type='lead' parent='leadCtrl' templatedata='leadCtrl.templateData[" + templateData.process.id + "]'></div>";
-        }
     }
 
     getStatusStyleHTML(data: Process): string {

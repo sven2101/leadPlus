@@ -604,5 +604,7 @@ class WorkflowService {
     }
 
 
+
+
 }
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);
