@@ -14,16 +14,19 @@
 package dash.tenantmanagement.business;
 
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
+import static dash.Constants.TENANT_NOT_FOUND;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.route53.AmazonRoute53;
@@ -40,11 +43,18 @@ import com.amazonaws.services.route53.model.ResourceRecordSet;
 
 import dash.exceptions.NotFoundException;
 import dash.tenantmanagement.domain.Tenant;
-import dash.usermanagement.business.UserService;
 import dash.usermanagement.registration.domain.Validation;
 
 @Service
 public class TenantService implements ITenantService {
+
+	private static final Logger logger = Logger.getLogger(TenantService.class);
+
+	@Value("${hostname.suffix}")
+	private static String hostnameSuffix;
+
+	@Value("${zone.hosted.id}")
+	private static String hostedZoneId;
 
 	@Autowired
 	private TenantRepository tenantRepository;
@@ -55,27 +65,27 @@ public class TenantService implements ITenantService {
 	@Autowired
 	private AmazonRoute53 r53;
 
-	private static final Logger logger = Logger.getLogger(TenantService.class);
-	
 	@Override
-	public Tenant getTenantByName(final String name) throws NotFoundException{
-		if (name!= null) {
+	public Tenant getTenantByName(final String name) throws NotFoundException {
+		if (Optional.ofNullable(name).isPresent()) {
 			return tenantRepository.findByTenantKey(name);
 		} else {
-			NotFoundException cnfex = new NotFoundException("Tenant name is null");
-			logger.error("tenant parameter is null" + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
+			NotFoundException cnfex = new NotFoundException(TENANT_NOT_FOUND);
+			logger.error(TENANT_NOT_FOUND + TenantService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
 			throw cnfex;
 		}
 	}
-	
+
 	@Override
 	public Tenant createNewTenant(final Tenant tenant) {
 		try {
 			tenant.setEnabled(true);
+			// TODO - tenant.setLicense()
+
 			tenant.getLicense().getTerm().add(Calendar.YEAR, 1);
 			tenantRepository.save(tenant);
 			createSchema(tenant);
-			if (validateUniquenessOfSubdomain(tenant)) {
+			if (!subdomainAlreadyExists(tenant)) {
 				System.out.println("CREATING SUBDOMAIN ON AWS.");
 				// createTenantSubdomain(tenant);
 			}
@@ -92,15 +102,14 @@ public class TenantService implements ITenantService {
 		flyway.migrate();
 	}
 
-	private boolean validateUniquenessOfSubdomain(final Tenant tenant) {
+	private boolean subdomainAlreadyExists(final Tenant tenant) {
 		ListResourceRecordSetsRequest request = new ListResourceRecordSetsRequest();
-		request.setHostedZoneId("***REMOVED***");
+		request.setHostedZoneId(hostedZoneId);
 
 		ListResourceRecordSetsResult result = r53.listResourceRecordSets(request);
 		List<ResourceRecordSet> recordSets = result.getResourceRecordSets();
 		boolean subdomainAlreadyExists = false;
 		for (ResourceRecordSet recordSet : recordSets) {
-			System.out.println("RECORD SET: " + recordSet.toString());
 			if (recordSet.getName().contains(tenant.getTenantKey() + ".")) {
 				subdomainAlreadyExists = true;
 			}
@@ -110,21 +119,19 @@ public class TenantService implements ITenantService {
 
 	public void createTenantSubdomain(final Tenant tenant) {
 
-		System.out.println("TRY----------------------------------");
-
-		List<ResourceRecord> records = new ArrayList<ResourceRecord>();
+		List<ResourceRecord> records = new ArrayList<>();
 		ResourceRecord record = new ResourceRecord();
-		record.setValue("***REMOVED***");
+		record.setValue(hostnameSuffix);
 		records.add(record);
 
 		ResourceRecordSet recordSet = new ResourceRecordSet();
-		recordSet.setName(tenant.getTenantKey() + ".leadplus.io");
+		recordSet.setName(tenant.getTenantKey() + hostnameSuffix);
 		recordSet.setType(RRType.CNAME);
-		recordSet.setTTL(new Long(60));
+		recordSet.setTTL(Long.valueOf(60));
 		recordSet.setResourceRecords(records);
 
 		// Create the Change
-		List<Change> changes = new ArrayList<Change>();
+		List<Change> changes = new ArrayList<>();
 		Change change = new Change();
 		change.setAction(ChangeAction.CREATE);
 		change.setResourceRecordSet(recordSet);
@@ -136,11 +143,13 @@ public class TenantService implements ITenantService {
 
 		// Create a Request and add the batch to it.
 		ChangeResourceRecordSetsRequest request = new ChangeResourceRecordSetsRequest();
-		request.setHostedZoneId("***REMOVED***");
+		request.setHostedZoneId(hostedZoneId);
 		request.setChangeBatch(batch);
 
 		// send the request
 		ChangeResourceRecordSetsResult result = r53.changeResourceRecordSets(request);
+		// TODO - verify Result
+
 		System.out.println(result.toString());
 
 		System.out.println("DONE---------------------------------");
@@ -148,11 +157,29 @@ public class TenantService implements ITenantService {
 
 	@Override
 	public Validation uniqueTenantKey(Tenant tenant) {
-		Validation validation = new Validation();
-		validation.setValidation(validateUniquenessOfSubdomain(tenant));
+		final Validation validation = new Validation();
+		final Tenant validateTenant;
+
+		boolean proofUniquenessLocal = true;
+		boolean proofUniquenessRemote;
+
+		try {
+			validateTenant = getTenantByName(tenant.getTenantKey());
+			if (validateTenant == null)
+				proofUniquenessLocal = false;
+		} catch (NotFoundException nfex) {
+			logger.error("Validate uniqueness of Tenant: " + TenantService.class.getSimpleName(), nfex);
+			proofUniquenessLocal = false;
+		}
+
+		proofUniquenessRemote = subdomainAlreadyExists(tenant);
+
+		if (proofUniquenessLocal && proofUniquenessRemote)
+			validation.setValidation(true);
+		else if (!proofUniquenessLocal && !proofUniquenessRemote)
+			validation.setValidation(false);
+
 		return validation;
 	}
-	
-	
 
 }
