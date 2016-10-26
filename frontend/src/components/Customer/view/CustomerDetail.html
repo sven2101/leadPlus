@@ -53,8 +53,8 @@
 								<h2 ng-if="workflow.type==='lead'">{{ 'CUSTOMER_DETAIL_LEAD' | translate }}</h2>
 								<h2 ng-if="workflow.type==='offer'">{{ 'CUSTOMER_DETAIL_OFFER' | translate }}</h2>
 								<h2 ng-if="workflow.type==='sale'">{{ 'CUSTOMER_DETAIL_SALE' | translate }}</h2>
-								<p ng-if="workflow.type==='lead'"> {{workflow.message}}</p>
-							
+								<p ng-if="workflow.type==='lead'" ng-bind-html="customerDetailCtrl.getAsHtml(workflow.message)"></p>
+
 								<a ng-if="workflow.orderPositions.length>0" class="btn btn-sm btn-primary" ng-click="workflow.showChildRow=!workflow.showChildRow">{{ 'PRODUCT_MENU' | translate }}</a>
 								<a ng-if="workflow.orderPositions.length==0" ng-disabled="workflow.orderPositions.length==0" class="btn btn-sm btn-primary disabled">{{ 'PRODUCT_MENU' | translate }}</a>
 
