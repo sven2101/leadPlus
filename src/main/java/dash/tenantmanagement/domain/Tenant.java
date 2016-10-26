@@ -22,6 +22,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Where;
 
@@ -36,13 +37,17 @@ public class Tenant {
 	@Column(name = "id")
 	private long id;
 
-	@Column(name = "tenantkey", unique = true)
+	@NotNull
+	@Column(name = "tenantkey", unique = true, length = 50, nullable = false)
 	private String tenantKey;
 
+	@Column(name = "description", length = 255)
 	private String description;
 
+	@Column(name = "address", length = 255)
 	private String address;
 
+	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
@@ -153,10 +158,8 @@ public class Tenant {
 
 	@Override
 	public String toString() {
-		return "Tenant [id=" + id + ", tenantKey=" + tenantKey + ", description=" + description + ", address=" + address
-				+ ", enabled=" + enabled + ", license=" + license + "]";
+		return "Tenant [id=" + id + ", tenantKey=" + tenantKey + ", description=" + description + ", address=" + address + ", enabled=" + enabled + ", license="
+				+ license + "]";
 	}
-	
-	
-	
+
 }
