@@ -112,22 +112,15 @@ class LeadController extends AbstractWorkflow {
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
 
         let deleteRow = $rootScope.$on("deleteRow", (event, data) => {
-
             self.leadService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
-
         });
 
         let updateRow = $rootScope.$on("updateRow", (event, data) => {
-
-
             self.leadService.updateRow(data, self.dtInstance, self.scope);
-
         });
 
         let loadDataToModal = $rootScope.$on("loadDataToModal", (event, data: Process) => {
-
             self.loadDataToModal(data);
-
         });
 
         $scope.$on("$destroy", function handler() {

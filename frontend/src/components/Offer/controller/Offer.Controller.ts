@@ -123,21 +123,15 @@ class OfferController extends AbstractWorkflow {
         this.getAllActiveTemplates();
 
         let deleteRow = $rootScope.$on("deleteRow", (event, data) => {
-
             self.offerService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
-
         });
 
         let updateRow = $rootScope.$on("updateRow", (event, data) => {
-
             self.offerService.updateRow(data, self.dtInstance, self.scope);
-
         });
 
         let loadDataToModal = $rootScope.$on("loadDataToModal", (event, data) => {
-
             self.loadDataToModal(data);
-
         });
 
         $scope.$on("$destroy", function handler() {
