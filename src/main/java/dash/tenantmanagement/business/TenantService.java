@@ -85,10 +85,11 @@ public class TenantService implements ITenantService {
 			tenant.getLicense().getTerm().add(Calendar.YEAR, 1);
 			tenantRepository.save(tenant);
 			createSchema(tenant);
-			if (!subdomainAlreadyExists(tenant)) {
-				System.out.println("CREATING SUBDOMAIN ON AWS.");
+			//if (!subdomainAlreadyExists(tenant)) {
+				//System.out.println("CREATING SUBDOMAIN ON AWS.");
 				// createTenantSubdomain(tenant);
-			}
+			//}
+			//TODO no general exception -> AWS throws expcetion...
 		} catch (Exception ex) {
 			System.out.println("TENANT KEY already exists: " + ex.getMessage());
 		}
