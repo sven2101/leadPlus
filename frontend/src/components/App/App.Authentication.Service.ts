@@ -87,6 +87,7 @@ class AuthService {
                     };
                     console.log(data);
                     self.rootScope.tenant = {
+                        tenantKey: credentials.tenant,
                         license: {
                             package: ["basic", "pro"],
                             term: "09.12.2017",

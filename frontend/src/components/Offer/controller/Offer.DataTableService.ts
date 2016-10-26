@@ -32,7 +32,8 @@ class OfferDataTableService {
     compile;
     rootScope;
 
-    user: User;
+    user: any;
+    tenant: any;
 
     constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService) {
         this.translate = $translate;
@@ -43,16 +44,22 @@ class OfferDataTableService {
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
         this.user = $rootScope.user;
+        this.tenant = $rootScope.tenant;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
+        let self = this;
         return this.DTOptionsBuilder.newOptions()
             .withOption("ajax", {
                 url: openDataOfferRoute,
                 error: function (xhr, error, thrown) {
                     console.log(xhr);
                 },
-                type: "GET"
+                type: "GET",
+                "beforeSend": function (request) {
+                    request.setRequestHeader("Authorization", "Basic " + self.user.authorization);
+                    request.setRequestHeader("X-TenantID", self.tenant.tenantKey);
+                }
             })
             .withOption("stateSave", true)
             .withDOM(this.workflowService.getDomString())

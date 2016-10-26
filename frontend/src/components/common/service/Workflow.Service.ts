@@ -54,7 +54,8 @@ class WorkflowService {
     uibModal;
     users: Array<User> = [];
 
-    user: User;
+    user: any;
+    tenant: any;
 
     constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService) {
         this.commentResource = CommentResource.resource;
@@ -71,6 +72,7 @@ class WorkflowService {
         this.customerService = CustomerService;
         this.uibModal = $uibModal;
         this.user = $rootScope.user;
+        this.tenant = $rootScope.tenant;
         this.refreshUsers();
     }
 
@@ -408,6 +410,7 @@ class WorkflowService {
     }
 
     getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): any {
+        let self = this;
         if (loadAllData === true) {
             return {
                 url: allDataRoute,
@@ -416,6 +419,10 @@ class WorkflowService {
                 dataSrc: "data",
                 error: function (xhr, error, thrown) {
                     console.log(xhr);
+                },
+                "beforeSend": function (request) {
+                    request.setRequestHeader("Authorization", "Basic " + self.user.authorization);
+                    request.setRequestHeader("X-TenantID", self.tenant.tenantKey);
                 }
             };
         } else {
@@ -424,7 +431,11 @@ class WorkflowService {
                 error: function (xhr, error, thrown) {
                     console.log(xhr);
                 },
-                type: "GET"
+                type: "GET",
+                "beforeSend": function (request) {
+                    request.setRequestHeader("Authorization", "Basic " + self.user.authorization);
+                    request.setRequestHeader("X-TenantID", self.tenant.tenantKey);
+                }
             };
         }
     }
