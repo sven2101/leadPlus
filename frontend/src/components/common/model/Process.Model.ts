@@ -31,4 +31,8 @@ class Process extends AbstractModel {
         super();
         this.comments = new Array<Commentary>();
     }
+
+    isProcessor(user: User): boolean {
+        return this.processor.username === user.username;
+    }
 }

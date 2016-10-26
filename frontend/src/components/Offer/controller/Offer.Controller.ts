@@ -91,7 +91,7 @@ class OfferController extends AbstractWorkflow {
             self.compile(angular.element(row).contents())(self.scope);
         }
         function addActionsButtons(data: Process, type, full, meta) {
-            return self.offerDataTableService.getActionButtonsHTML(data, self.templateData);
+            return self.offerDataTableService.getActionButtonsHTML(data, self.actionButtonConfig);
         }
         function addStatusStyle(data: Process, type, full, meta) {
             self.processes[data.id] = data;
@@ -122,13 +122,30 @@ class OfferController extends AbstractWorkflow {
         this.dtColumns = this.offerDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
         this.getAllActiveTemplates();
 
-        $rootScope.$on("deleteRow", (event, data) => {
+        let deleteRow = $rootScope.$on("deleteRow", (event, data) => {
+
             self.offerService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
+
         });
 
-        $rootScope.$on("updateRow", (event, data) => {
+        let updateRow = $rootScope.$on("updateRow", (event, data) => {
+
             self.offerService.updateRow(data, self.dtInstance, self.scope);
+
         });
+
+        let loadDataToModal = $rootScope.$on("loadDataToModal", (event, data) => {
+
+            self.loadDataToModal(data);
+
+        });
+
+        $scope.$on("$destroy", function handler() {
+            deleteRow();
+            updateRow();
+            loadDataToModal();
+        });
+
 
     }
 
@@ -271,6 +288,10 @@ class OfferController extends AbstractWorkflow {
 
     openFollowUpModal(process: Process) {
         this.workflowService.openFollowUpModal(process);
+    }
+
+    getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
+        return this.offerDataTableService.getActionButtonConfig(process);
     }
 }
 

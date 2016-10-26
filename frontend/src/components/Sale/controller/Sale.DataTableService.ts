@@ -113,8 +113,13 @@ class SaleDataTableService {
                     return self.filter("currency")
                         (data.sale.saleProfit, "€", 2);
                 }).notVisible(),
-            this.DTColumnBuilder.newColumn("processor.username").withTitle(
-                this.translate("COMMON_PROCESSOR")).notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(
+                this.translate("COMMON_PROCESSOR")).renderWith((data: Process, type, full) => {
+                    if (isNullOrUndefined(data.processor)) {
+                        return "";
+                    }
+                    return data.processor.username;
+                }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_STATUS")).withClass("text-center")
                 .renderWith(addStatusStyle),
@@ -130,47 +135,29 @@ class SaleDataTableService {
                 }).notVisible()];
     }
 
-    setActionButtonsConfig(user: User, process: Process) {
-        let templateData = {} as any;
-        templateData.process = process;
-        let config = {
-            "hasRightToDelete": false,
-            "disablePinDropdown": false,
-            "disablePin": false,
-            "minwidth": 100
-        };
-        if (isNullOrUndefined(templateData.process.processor) || (templateData.process.processor !== null
-            && user.username === templateData.process.processor.username)) {
-            config.hasRightToDelete = true;
+    getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
+        let user: User = this.rootScope.globals.user;
+        let config = new ActionButtonConfigBuilder();
+        if (user.role === Role.ADMIN || user.role === Role.SUPERADMIN) {
+            config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setEnabled().setTitle("SALE_DELETE_SALE");
+            config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setEnabled().setTitle("SALE_ROLLBACK");
+        } else {
+            config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible()
+                .setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username).setTitle("SALE_DELETE_SALE");
+            config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setVisible()
+                .setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username).setTitle("SALE_ROLLBACK");
         }
-
-        if (user.role === Role.USER) {
-            config.disablePinDropdown = true;
+        config.get(ActionButtonType.DETAILS_OPEN_EDIT_MODAL).setEnabled().setTitle("SALE_EDIT_SALE");
+        config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
+        if (!(user.role === Role.ADMIN || user.role === Role.SUPERADMIN) && (!isNullOrUndefined(process.processor) && process.processor.username !== user.username)) {
+            config.disableAll();
         }
-
-        if (templateData.process.processor !== null
-            && user.username !== templateData.process.processor.username) {
-            config.disablePin = true;
-        }
-        templateData.config = config;
-        let translation = {
-            "editWorkflowUnit": this.translate.instant("SALE_EDIT_SALE"),
-            "deleteWorkflowUnit": this.translate.instant("SALE_DELETE_SALE"),
-            "rollBackWorkflowUnit": this.translate.instant("SALE_ROLLBACK"),
-        };
-        templateData.translation = translation;
-        return templateData;
+        return config.build();
     }
 
-    getActionButtonsHTML(process: Process, map: { [key: number]: any }): string {
-        let templateData = this.setActionButtonsConfig(this.user, process);
-        map[templateData.process.id] = templateData;
-
-        if ($(window).width() > 1300) {
-            return "<div actionbuttons template='standard' type='sale' parent='saleCtrl' templatedata='saleCtrl.templateData[" + templateData.process.id + "]'></div>";
-        } else {
-            return "<div actionbuttons template='dropdown' type='sale' parent='saleCtrl' templatedata='saleCtrl.templateData[" + templateData.process.id + "]'></div>";
-        }
+    getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {
+        actionButtonConfig[process.id] = this.getActionButtonConfig(process);
+        return "<div actionbuttons minwidth='50' actionbuttonconfig=saleCtrl.actionButtonConfig[" + process.id + "]  process='saleCtrl.processes[" + process.id + "]'></div>";
     }
 
     getStatusStyleHTML(data: Process): string {

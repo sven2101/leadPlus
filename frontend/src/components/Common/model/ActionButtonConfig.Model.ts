@@ -7,6 +7,8 @@ class ActionButtonConfig {
     disabled: boolean;
     title: string;
     icon: string;
+    priority: number;
+    visibleInDetailsDropdown: boolean;
     constructor(type: ActionButtonType) {
         this.type = type;
         this.visible = false;

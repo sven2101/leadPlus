@@ -82,7 +82,7 @@ class LeadController extends AbstractWorkflow {
             self.compile(angular.element(row).contents())(self.scope);
         }
         function addActionsButtons(data: Process, type, full, meta) {
-            return self.leadDataTableService.getActionButtonsHTML(data, self.templateData, self.actionButtonConfig);
+            return self.leadDataTableService.getActionButtonsHTML(data, self.actionButtonConfig);
         }
         function addStatusStyle(data: Process, type, full, meta) {
             self.processes[data.id] = data;
@@ -111,16 +111,29 @@ class LeadController extends AbstractWorkflow {
         this.dtOptions = this.leadDataTableService.getDTOptionsConfiguration(createdRow, searchLink);
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
 
-        $rootScope.$on("deleteRow", (event, data) => {
+        let deleteRow = $rootScope.$on("deleteRow", (event, data) => {
+
             self.leadService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
+
         });
 
-        $rootScope.$on("updateRow", (event, data) => {
+        let updateRow = $rootScope.$on("updateRow", (event, data) => {
+
+
             self.leadService.updateRow(data, self.dtInstance, self.scope);
+
         });
 
-        $rootScope.$on("loadDataToModal", (event, data) => {
+        let loadDataToModal = $rootScope.$on("loadDataToModal", (event, data: Process) => {
+
             self.loadDataToModal(data);
+
+        });
+
+        $scope.$on("$destroy", function handler() {
+            deleteRow();
+            updateRow();
+            loadDataToModal();
         });
 
 
@@ -238,15 +251,9 @@ class LeadController extends AbstractWorkflow {
         }
     }
 
-    getTemplateData(processId: number): any {
-        return this.templateData[processId];
-    }
-
     getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
         return this.leadDataTableService.getActionButtonConfig(process);
     }
-
-
 
 }
 angular.module(moduleLead, [ngResourceId]).controller(LeadControllerId, LeadController);

@@ -524,10 +524,15 @@ class WorkflowService {
         });
     }
     createNextWorkflowUnit(process: Process): void {
+
         switch (process.status) {
             case Status.OPEN: this.startOfferTransformation(process);
                 break;
+            case Status.INCONTACT: this.startOfferTransformation(process);
+                break;
             case Status.OFFER: this.startSaleTransformation(process);
+                break;
+            case Status.FOLLOWUP: this.startSaleTransformation(process);
                 break;
             default: ;
                 break;

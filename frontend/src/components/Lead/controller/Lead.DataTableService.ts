@@ -143,17 +143,18 @@ class LeadDataTableService {
         let user: User = this.rootScope.globals.user;
         let config = new ActionButtonConfigBuilder();
         config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("LEAD_FOLLOW_UP");
-        if (process.status === Status.OPEN || process.status === Status.FOLLOWUP || process.status === Status.INCONTACT) {
+        if (process.status === Status.OPEN || process.status === Status.INCONTACT) {
             config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled();
         }
         if (user.role === Role.ADMIN || user.role === Role.SUPERADMIN) {
             config.get(ActionButtonType.PIN_DROPDOWN).setEnabled().setTitle("LEAD_PIN");
-            config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible().setEnabled().setTitle("LEAD_DELETE_LEAD");
+            config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setEnabled().setTitle("LEAD_DELETE_LEAD");
             config.get(ActionButtonType.PIN_DROPDOWN_EMPTY_PROCESSOR).setEnabled();
         } else {
             config.get(ActionButtonType.PIN_BUTTON).setVisible().setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username).setTitle("LEAD_PIN");
             config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible()
                 .setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username).setTitle("LEAD_DELETE_LEAD");
+            config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username);
         }
         config.get(ActionButtonType.SET_INCONTACT).setVisible().setTitle("COMMON_STATUS_INCONTACT");
         if (process.status === Status.OPEN) {
@@ -161,65 +162,22 @@ class LeadDataTableService {
         }
         config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("LEAD_CLOSE_LEAD").setIcon("fa fa-lock");
         config.get(ActionButtonType.DETAILS_OPEN_EDIT_MODAL).setEnabled().setTitle("LEAD_EDIT_LEAD");
-        if (!isNullOrUndefined(process.offer)) {
+        config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
+        if (!isNullOrUndefined(process.offer)
+            || !(user.role === Role.ADMIN || user.role === Role.SUPERADMIN) && (!isNullOrUndefined(process.processor) && process.processor.username !== user.username)) {
             config.disableAll();
         } else if (process.status === Status.CLOSED) {
             config.disableAll();
             config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("LEAD_OPEN_LEAD").setIcon("fa fa-unlock");
+            config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
         }
-        config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
+
         return config.build();
     }
 
-    setActionButtonsConfig(user: User, process: Process): any {
-        let templateData = {} as any;
-        templateData.process = process;
-        let config = {
-            "disabled": false,
-            "disablePin": false,
-            "disablePinDropdown": false,
-            "hasRightToDelete": false,
-            "closeOrOpenDisable": false,
-            "openOrLock": this.translate.instant("LEAD_CLOSE_LEAD"),
-            "faOpenOrLock": "fa fa-lock",
-            "minwidth": 180
-        };
-        if (templateData.process.status !== "OPEN" && templateData.process.status !== "INCONTACT") {
-            config.disabled = true;
-            config.disablePin = true;
-            config.openOrLock = this.translate.instant("LEAD_OPEN_LEAD");
-            config.faOpenOrLock = "fa fa-unlock";
-        }
-        if (templateData.process.offer !== null || templateData.process.sale !== null) {
-            config.closeOrOpenDisable = true;
-        }
-        if (isNullOrUndefined(templateData.process.offer) && (isNullOrUndefined(templateData.process.processor) || (templateData.process.processor !== null
-            && user.username === templateData.process.processor.username))) {
-            config.hasRightToDelete = true;
-        }
-        if (user.role === Role.USER) {
-            config.disablePinDropdown = true;
-        }
-        if (templateData.process.processor !== null
-            && user.username !== templateData.process.processor.username) {
-            config.disablePin = true;
-        }
-        templateData.config = config;
-        let translation = {
-            "nextWorkflowUnit": this.translate.instant("LEAD_FOLLOW_UP"),
-            "editWorkflowUnit": this.translate.instant("LEAD_EDIT_LEAD"),
-            "deleteWorkflowUnit": this.translate.instant("LEAD_DELETE_LEAD")
-        };
-        templateData.translation = translation;
-        return templateData;
-    }
-
-    getActionButtonsHTML(process: Process, map: { [key: number]: any }, actionButtonConfig: { [key: number]: any }): string {
-        let templateData = this.setActionButtonsConfig(this.user, process);
-        map[templateData.process.id] = templateData;
+    getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {
         actionButtonConfig[process.id] = this.getActionButtonConfig(process);
-        return "<div actionbuttons actionbuttonconfig=leadCtrl.actionButtonConfig[" + templateData.process.id + "]  process='leadCtrl.processes[" + process.id + "]'></div>";
-
+        return "<div actionbuttons actionbuttonconfig=leadCtrl.actionButtonConfig[" + process.id + "]  process='leadCtrl.processes[" + process.id + "]'></div>";
     }
 
     getStatusStyleHTML(data: Process): string {

@@ -6,6 +6,9 @@
 
 INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username)
     VALUES ('test@eviarc.com', true, 'Test', 'DE', 'testLastname', '$2a$10$Qt047/OSJ..kpyeDq8Y6eOrlJQZ4RqAM7VuVnBVKpTbglpgYZ1VJm', 'SUPERADMIN', 'test');
+	
+	INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username)
+    VALUES ('testUser@eviarc.com', true, 'Test', 'DE', 'testLastname', '$2a$10$Qt047/OSJ..kpyeDq8Y6eOrlJQZ4RqAM7VuVnBVKpTbglpgYZ1VJm', 'USER', 'testUser');
 
 INSERT INTO public."user"(email, enabled, firstname, language, lastname, password, role, username)
     VALUES ('andreas.foitzik@eviarc.com', true, 'Andreas', 'DE', 'Foitzik', '$2a$10$Qt047/OSJ..kpyeDq8Y6eOrlJQZ4RqAM7VuVnBVKpTbglpgYZ1VJm', 'SUPERADMIN', 'andreas.foitzik');

@@ -136,8 +136,15 @@ class OfferDataTableService {
                     return self.filter("currency")(data.offer.offerPrice,
                         "€", 2);
                 }).notVisible(),
-            this.DTColumnBuilder.newColumn("processor.username").withTitle(
-                this.translate("COMMON_PROCESSOR")).notVisible(),
+
+            this.DTColumnBuilder.newColumn(null).withTitle(
+                this.translate("COMMON_PROCESSOR")).renderWith((data: Process, type, full) => {
+                    if (isNullOrUndefined(data.processor)) {
+                        return "";
+                    }
+                    return data.processor.username;
+                }).notVisible(),
+
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_STATUS")).withClass("text-center")
                 .renderWith(addStatusStyle),
@@ -151,62 +158,47 @@ class OfferDataTableService {
                 }).notVisible()];
     }
 
-    setActionButtonsConfig(user: User, process: Process) {
-        let templateData = {} as any;
-        templateData.process = process;
-        let config = {
-            "disabled": false,
-            "disablePin": false,
-            "disablePinDropdown": false,
-            "hasRightToDelete": false,
-            "closeOrOpenDisable": false,
-            "openOrLock": this.translate.instant("OFFER_CLOSE_OFFER"),
-            "faOpenOrLock": "fa fa-lock",
-            "minwidth": 180
-        };
-        if (templateData.process.status !== "OFFER" && templateData.process.status !== "FOLLOWUP") {
-            config.disabled = true;
-            config.openOrLock = this.translate.instant("OFFER_OPEN_OFFER");
-            config.faOpenOrLock = "fa fa-unlock";
+    getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
+        let user: User = this.rootScope.globals.user;
+        let config = new ActionButtonConfigBuilder();
+        config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("OFFER_CREATE_SALE");
+        if (process.status === Status.OFFER || process.status === Status.FOLLOWUP) {
+            config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled();
+        }
+        if (user.role === Role.ADMIN || user.role === Role.SUPERADMIN) {
+            config.get(ActionButtonType.PIN_DROPDOWN).setEnabled().setTitle("LEAD_PIN");
+            config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setEnabled().setTitle("OFFER_DELETE_OFFER");
+            config.get(ActionButtonType.PIN_DROPDOWN_EMPTY_PROCESSOR).setEnabled();
+            config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setEnabled().setTitle("OFFER_ROLLBACK");
+        } else {
+            config.get(ActionButtonType.PIN_BUTTON).setVisible().setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username).setTitle("LEAD_PIN");
+            config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible()
+                .setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username).setTitle("LEAD_DELETE_LEAD");
+            config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setVisible()
+                .setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username).setTitle("OFFER_ROLLBACK");
+            config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username);
+        }
+        config.get(ActionButtonType.OPEN_FOLLOWUP_MODAL).setEnabled().setTitle("COMMON_STATUS_FOLLOW_UP");
+        config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("OFFER_CLOSE_OFFER").setIcon("fa fa-lock");
+        config.get(ActionButtonType.DETAILS_OPEN_EDIT_MODAL).setEnabled().setTitle("OFFER_EDIT_OFFER");
+        config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
+        if (!isNullOrUndefined(process.sale)
+            || !(user.role === Role.ADMIN || user.role === Role.SUPERADMIN) && (!isNullOrUndefined(process.processor) && process.processor.username !== user.username)) {
+            config.disableAll();
+        } else if (process.status === Status.CLOSED) {
+            config.disableAll();
+            config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("OFFER_OPEN_OFFER").setIcon("fa fa-unlock");
+            config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
         }
 
-        if (templateData.process.sale !== null) {
-            config.closeOrOpenDisable = true;
-        }
-
-        if (isNullOrUndefined(templateData.process.sale) && (isNullOrUndefined(templateData.process.processor) || (templateData.process.processor !== null
-            && user.username === templateData.process.processor.username))) {
-            config.hasRightToDelete = true;
-        }
-
-        if (user.role === Role.USER) {
-            config.disablePinDropdown = true;
-        }
-
-        if (templateData.process.processor !== null
-            && user.username !== templateData.process.processor.username) {
-            config.disablePin = true;
-        }
-        templateData.config = config;
-        let translation = {
-            "nextWorkflowUnit": this.translate.instant("OFFER_CREATE_SALE"),
-            "editWorkflowUnit": this.translate.instant("OFFER_EDIT_OFFER"),
-            "deleteWorkflowUnit": this.translate.instant("OFFER_DELETE_OFFER"),
-            "rollBackWorkflowUnit": this.translate.instant("OFFER_ROLLBACK"),
-        };
-        templateData.translation = translation;
-        return templateData;
+        return config.build();
     }
 
-    getActionButtonsHTML(process: Process, map: { [key: number]: any }): string {
-        let templateData = this.setActionButtonsConfig(this.user, process);
-        map[templateData.process.id] = templateData;
+    getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {
+        actionButtonConfig[process.id] = this.getActionButtonConfig(process);
+        return "<div actionbuttons actionbuttonconfig=offerCtrl.actionButtonConfig[" + process.id + "]  process='offerCtrl.processes[" + process.id + "]'></div>";
 
-        if ($(window).width() > 1300) {
-            return "<div actionbuttons template='standard' type='offer' parent='offerCtrl' templatedata='offerCtrl.templateData[" + templateData.process.id + "]'></div>";
-        } else {
-            return "<div actionbuttons template='dropdown' type='offer' parent='offerCtrl' templatedata='offerCtrl.templateData[" + templateData.process.id + "]'></div>";
-        }
+
     }
 
     getStatusStyleHTML(data: Process): string {

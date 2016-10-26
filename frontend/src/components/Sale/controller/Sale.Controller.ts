@@ -89,7 +89,7 @@ class SaleController extends AbstractWorkflow {
             self.compile(angular.element(row).contents())(self.scope);
         }
         function addActionsButtons(data: Process, type, full, meta) {
-            return self.saleDataTableService.getActionButtonsHTML(data, self.templateData);
+            return self.saleDataTableService.getActionButtonsHTML(data, self.actionButtonConfig);
         }
         function addStatusStyle(data: Process, type, full, meta) {
             self.processes[data.id] = data;
@@ -120,12 +120,29 @@ class SaleController extends AbstractWorkflow {
         this.dtColumns = this.saleDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
 
         this.getAllActiveTemplates();
-         $rootScope.$on("deleteRow", (event, data) => {
+
+        let deleteRow = $rootScope.$on("deleteRow", (event, data) => {
+
             self.saleService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
+
         });
 
-        $rootScope.$on("updateRow", (event, data) => {
+        let updateRow = $rootScope.$on("updateRow", (event, data) => {
+
             self.saleService.updateRow(data, self.dtInstance, self.scope);
+
+        });
+
+        let loadDataToModal = $rootScope.$on("loadDataToModal", (event, data) => {
+
+            self.loadDataToModal(data);
+
+        });
+
+        $scope.$on("$destroy", function handler() {
+            deleteRow();
+            updateRow();
+            loadDataToModal();
         });
     }
 
@@ -240,6 +257,9 @@ class SaleController extends AbstractWorkflow {
         if (!isNullOrUndefined(notification)) {
             this.currentNotification = deepCopy(notification);
         }
+    }
+    getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
+        return this.saleDataTableService.getActionButtonConfig(process);
     }
 }
 angular.module(moduleSale, [ngResourceId]).controller(SaleControllerId, SaleController);
