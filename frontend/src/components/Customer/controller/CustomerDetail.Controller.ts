@@ -27,7 +27,7 @@ const CustomerDetailControllerId: string = "CustomerDetailController";
 
 class CustomerDetailController {
 
-    $inject = [CustomerServiceId, $routeParamsId, CustomerResourceId, LeadResourceId, OfferResourceId, SaleResourceId, $qId, WorkflowServiceId, $filterId];
+    $inject = [CustomerServiceId, $routeParamsId, CustomerResourceId, LeadResourceId, OfferResourceId, SaleResourceId, $qId, WorkflowServiceId, $filterId, $sceId];
 
     customerService: CustomerService;
     workflowService: WorkflowService;
@@ -42,9 +42,10 @@ class CustomerDetailController {
     q;
     orderBy;
     customerFound: boolean = false;
+    sce;
 
 
-    constructor(CustomerService, $routeParams, CustomerResource, LeadResource, OfferResource, SaleResource, $q, WorkflowService, $filter) {
+    constructor(CustomerService, $routeParams, CustomerResource, LeadResource, OfferResource, SaleResource, $q, WorkflowService, $filter, $sce) {
         this.customerService = CustomerService;
         this.workflowService = WorkflowService;
         this.customerResource = CustomerResource.resource;
@@ -57,9 +58,15 @@ class CustomerDetailController {
         let self = this;
         this.orderBy = $filter("orderBy");
         this.q = $q;
+        this.sce = $sce;
         this.getWorkflowByCustomerId().then(function (result) { self.workflows = self.orderBy(result, "timestamp", true); });
 
     }
+
+    getAsHtml(html: string) {
+        return this.sce.trustAsHtml(html);
+    }
+
 
     getCustomerById() {
         let self = this;
