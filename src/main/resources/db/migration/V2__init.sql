@@ -110,13 +110,16 @@ ALTER TABLE vendor_id_seq
   OWNER TO postgres;
 
 
+-- Sequence: olap_id_seq
 
-
-
-
-
-
-
+CREATE SEQUENCE IF NOT EXISTS olap_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE olap_id_seq
+  OWNER TO postgres;
 
 
 -- Table: hibernate_sequences
@@ -478,3 +481,25 @@ WITH (
 );
 ALTER TABLE smtp
   OWNER TO postgres; 
+  
+ -- Table: Olap
+CREATE TABLE IF NOT EXISTS olap
+(
+  id bigint NOT NULL DEFAULT nextval('olap_id_seq'::regclass),
+  daterange smallint NOT NULL,
+  "timestamp" timestamp without time zone,
+  profit bytea NOT NULL,
+  turnover bytea NOT NULL,
+  leads bytea NOT NULL,
+  offers bytea NOT NULL,
+  sales bytea NOT NULL,
+  products bytea,
+  users bytea,
+  CONSTRAINT olap_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE olap
+  OWNER TO postgres;
+   
