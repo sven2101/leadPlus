@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.olap.business.OlapRepository;
-import dash.statisticmanagement.olap.domain.OLAP;
+import dash.statisticmanagement.olap.domain.Olap;
 import dash.statisticmanagement.user.business.UserStatistic;
 import dash.statisticmanagement.user.business.UserStatisticService;
 import io.swagger.annotations.Api;
@@ -53,7 +53,7 @@ public class UserStatisticResource {
 	@ApiOperation(value = "Get Statistic by dateRange", notes = "")
 	public List<UserStatistic> getProductStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
-		OLAP olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
+		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
 		if (olap != null && olap.getUsers() != null) {
 			System.out.println("Informationen aus OLAP");
 			return Arrays.asList(olap.getUsers());

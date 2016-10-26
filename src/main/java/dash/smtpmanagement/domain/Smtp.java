@@ -39,7 +39,7 @@ public class Smtp {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "smtp_auto_gen")
-	@SequenceGenerator(name = "smtp_auto_gen", sequenceName = "smtp_id_seq")
+	@SequenceGenerator(name = "smtp_auto_gen", sequenceName = "smtp_id_seq", allocationSize = 1)
 	@Column(name = "id", nullable = false)
 	private Long id;
 

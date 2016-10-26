@@ -47,7 +47,7 @@ public class Comment {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comment_auto_gen")
-	@SequenceGenerator(name = "comment_auto_gen", sequenceName = "comment_id_seq")
+	@SequenceGenerator(name = "comment_auto_gen", sequenceName = "comment_id_seq", allocationSize = 1)
 	@Column(name = "id", nullable = false)
 	private Long id;
 
@@ -177,7 +177,8 @@ public class Comment {
 
 	@Override
 	public String toString() {
-		return "Comment [id=" + id + ", deleted=" + deleted + ", creator=" + creator + ", commentText=" + commentText + ", timestamp=" + timestamp + "]";
+		return "Comment [id=" + id + ", deleted=" + deleted + ", creator=" + creator + ", commentText=" + commentText
+				+ ", timestamp=" + timestamp + "]";
 	}
 
 }

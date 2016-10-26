@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.olap.business.OlapRepository;
-import dash.statisticmanagement.olap.domain.OLAP;
+import dash.statisticmanagement.olap.domain.Olap;
 import dash.statisticmanagement.profit.business.ProfitStatisticService;
 import dash.statisticmanagement.result.domain.Result;
 import dash.workflowmanagement.domain.Workflow;
@@ -54,7 +54,7 @@ public class ProfitResource {
 	public Result getProfitStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
-		OLAP olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
+		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
 		if (olap != null && olap.getProfit() != null) {
 			System.out.println("Informationen aus OLAP");
 			return new Result(Arrays.asList(olap.getProfit()));

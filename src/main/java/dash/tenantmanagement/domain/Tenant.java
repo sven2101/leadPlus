@@ -21,6 +21,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -33,8 +34,9 @@ import dash.licensemanangement.domain.License;
 public class Tenant {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tenant_auto_gen")
+	@SequenceGenerator(name = "tenant_auto_gen", sequenceName = "public.tenant_id_seq", allocationSize = 1)
+	@Column(name = "id", nullable = false)
 	private long id;
 
 	@NotNull

@@ -38,13 +38,13 @@ import io.swagger.annotations.ApiModelProperty;
 @SQLDelete(sql = "UPDATE notification SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
 @Table(name = "fileupload")
-public class FileUpload implements Serializable{
+public class FileUpload implements Serializable {
 
 	private static final long serialVersionUID = -4166157600571249289L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fileupload_auto_gen")
-	@SequenceGenerator(name = "fileupload_auto_gen", sequenceName = "fileupload_id_seq")
+	@SequenceGenerator(name = "fileupload_auto_gen", sequenceName = "fileupload_id_seq", allocationSize = 1)
 	@Column(name = "id", nullable = false)
 	private Long id;
 

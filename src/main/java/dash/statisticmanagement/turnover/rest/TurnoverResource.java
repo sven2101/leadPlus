@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.olap.business.OlapRepository;
-import dash.statisticmanagement.olap.domain.OLAP;
+import dash.statisticmanagement.olap.domain.Olap;
 import dash.statisticmanagement.result.domain.Result;
 import dash.statisticmanagement.turnover.business.TurnoverStatisticService;
 import dash.workflowmanagement.domain.Workflow;
@@ -55,7 +55,7 @@ public class TurnoverResource {
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
 
-		OLAP olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
+		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
 		if (olap != null && olap.getTurnover() != null) {
 			System.out.println("Informationen aus OLAP");
 			return new Result(Arrays.asList(olap.getTurnover()));

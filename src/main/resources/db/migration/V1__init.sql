@@ -1,24 +1,30 @@
 CREATE SCHEMA IF NOT EXISTS public;
 
 -- Sequence: tenant_id_seq
-
-  
-  -- Sequence: license_id_seq
-
-CREATE SEQUENCE license_id_seq
+CREATE SEQUENCE IF NOT EXISTS public.tenant_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE license_id_seq
+ALTER TABLE public.tenant_id_seq
+  OWNER TO postgres;
+  
+-- Sequence: license_id_seq
+CREATE SEQUENCE IF NOT EXISTS public.license_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.license_id_seq
   OWNER TO postgres;
 
 -- Table: license
 
 CREATE TABLE IF NOT EXISTS public.license
 (
-  id bigint NOT NULL DEFAULT nextval('license_id_seq'::regclass),
+  id bigint NOT NULL DEFAULT nextval('public.license_id_seq'::regclass),
   licenseType character varying(255) NOT NULL,
   trial boolean NOT NULL,
   "term" timestamp without time zone,
@@ -33,15 +39,6 @@ ALTER TABLE public.license
 INSERT INTO public.license(licenseType, trial, term)
     VALUES ('BASIC', false, now())
         ON CONFLICT DO NOTHING;   
-  
-CREATE SEQUENCE IF NOT EXISTS public.tenant_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-ALTER TABLE public.tenant_id_seq
-  OWNER TO postgres;
 
 -- Table: tenant
 

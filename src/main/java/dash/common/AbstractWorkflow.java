@@ -39,7 +39,7 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "workflow_auto_gen")
-	@SequenceGenerator(name = "workflow_auto_gen", sequenceName = "workflow_id_seq")
+	@SequenceGenerator(name = "workflow_auto_gen", sequenceName = "workflow_id_seq", allocationSize = 1)
 	@ApiModelProperty(hidden = true)
 	@Column(name = "id", nullable = false)
 	private Long id;

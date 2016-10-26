@@ -37,7 +37,7 @@ public class Vendor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vendor_auto_gen")
-	@SequenceGenerator(name = "vendor_auto_gen", sequenceName = "vendor_id_seq")
+	@SequenceGenerator(name = "vendor_auto_gen", sequenceName = "vendor_id_seq", allocationSize = 1)
 	@Column(name = "id", nullable = false)
 	private Long id;
 

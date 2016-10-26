@@ -54,7 +54,7 @@ public class Process {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "process_auto_gen")
-	@SequenceGenerator(name = "process_auto_gen", sequenceName = "process_id_seq")
+	@SequenceGenerator(name = "process_auto_gen", sequenceName = "process_id_seq", allocationSize = 1)
 	@Column(name = "id", nullable = false)
 	private Long id;
 

@@ -42,7 +42,7 @@ public class OrderPosition {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "orderposition_auto_gen")
-	@SequenceGenerator(name = "orderposition_auto_gen", sequenceName = "orderposition_id_seq")
+	@SequenceGenerator(name = "orderposition_auto_gen", sequenceName = "orderposition_id_seq", allocationSize = 1)
 	@ApiModelProperty(hidden = true)
 	@Column(name = "id", nullable = false)
 	private Long id;
@@ -196,7 +196,8 @@ public class OrderPosition {
 
 	@Override
 	public String toString() {
-		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", amount=" + amount + ", price=" + price + ", discount=" + discount + "]";
+		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", amount=" + amount + ", price=" + price
+				+ ", discount=" + discount + "]";
 	}
 
 }

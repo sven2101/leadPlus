@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -20,7 +21,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class License {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "license_auto_gen")
+	@SequenceGenerator(name = "license_auto_gen", sequenceName = "public.license_id_seq", allocationSize = 1)
+	@Column(name = "id", nullable = false)
 	private long id;
 
 	@Enumerated(EnumType.STRING)

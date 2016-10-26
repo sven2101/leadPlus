@@ -55,7 +55,7 @@ public class Product implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_auto_gen")
-	@SequenceGenerator(name = "product_auto_gen", sequenceName = "product_id_seq")
+	@SequenceGenerator(name = "product_auto_gen", sequenceName = "product_id_seq", allocationSize = 1)
 	@Column(name = "id", nullable = false)
 	private Long id;
 
@@ -240,8 +240,9 @@ public class Product implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description + ", productState=" + productState
-				+ ", timestamp=" + timestamp + ", deactivated=" + deactivated + ", priceNetto=" + priceNetto + ", picture=" + picture + "]";
+		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description
+				+ ", productState=" + productState + ", timestamp=" + timestamp + ", deactivated=" + deactivated
+				+ ", priceNetto=" + priceNetto + ", picture=" + picture + "]";
 	}
 
 }

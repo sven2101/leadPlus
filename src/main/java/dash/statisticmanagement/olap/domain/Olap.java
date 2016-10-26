@@ -22,13 +22,13 @@ import dash.statisticmanagement.user.business.UserStatistic;
 
 @Entity
 @Table(name = "olap")
-public class OLAP implements Serializable{
+public class Olap implements Serializable{
 
-	private static final long serialVersionUID = -593506710480238767L;
+	private static final long serialVersionUID = -3360986303697232612L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "olap_auto_gen")
-	@SequenceGenerator(name = "olap_auto_gen", sequenceName = "olap_id_seq")
+	@SequenceGenerator(name = "olap_auto_gen", sequenceName = "olap_id_seq", allocationSize = 1)
 	@Column(name = "id", nullable = false)
 	private Long id;
 
@@ -68,7 +68,7 @@ public class OLAP implements Serializable{
 	@Column(name = "users")
 	private UserStatistic[] users;
 
-	public OLAP() {
+	public Olap() {
 
 	}
 
@@ -185,7 +185,7 @@ public class OLAP implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		OLAP other = (OLAP) obj;
+		Olap other = (Olap) obj;
 		if (dateRange != other.dateRange)
 			return false;
 		if (id == null) {

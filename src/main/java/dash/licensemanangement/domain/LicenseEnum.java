@@ -9,17 +9,19 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum LicenseEnum {
 	FREE("free",
-			new HashSet<String>(Arrays.asList("/", "/images/favicon/**", "/assets/**", "/fonts/**", "/app/**", "/components/Login/view/Login.html",
-					"/components/Signup/view/Signup.html", "/components/Tenant/Registration/view/**", "/components/Licence/view/**",
-					"/api/rest/tenants/unique/key", "/api/rest/tenants", "/api/rest/registrations/**", "/components/Common/view/NotFound.html",
-					"/components/Common/view/Unauthorized.html", "/components/Common/view/Forbidden.html", "/swagger-ui.html",
-					"/webjars/springfox-swagger-ui/**", "/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")),
-			0), BASIC("basic",
-					new HashSet<String>(Arrays.asList("/user", "/users/all", "/components/Common/view/**", "/components/Customer/view/**",
-							"/components/Dashboard/view/**", "/components/FileUpload/view/**", "/components/Lead/view/**", "/components/Offer/view/**",
-							"/components/Product/view/**", "/components/Profile/view/**", "/components/Sale/view/**", "/components/Setting/view/**",
-							"/components/Template/view/**", "/main.html", "/api/rest/**")),
-					1), PRO("pro", new HashSet<String>(Arrays.asList("/components/Statistic/view/**")),
+			new HashSet<String>(Arrays.asList("/", "/images/favicon/**", "/assets/**", "/fonts/**", "/app/**",
+					"/components/Login/view/Login.html", "/logout.html", "/components/Signup/view/Signup.html",
+					"/components/Tenant/Registration/view/**", "/components/Licence/view/**",
+					"/api/rest/tenants/unique/key", "/api/rest/tenants", "/api/rest/registrations/**",
+					"/components/Common/view/NotFound.html", "/components/Common/view/Unauthorized.html",
+					"/components/Common/view/Forbidden.html", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
+					"/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")),
+			0), BASIC("basic", new HashSet<String>(Arrays.asList("/user", "/users/all", "/components/Common/view/**",
+					"/components/Customer/view/**", "/components/Dashboard/view/**", "/components/FileUpload/view/**",
+					"/components/Lead/view/**", "/components/Offer/view/**", "/components/Product/view/**",
+					"/components/Profile/view/**", "/components/Sale/view/**", "/components/Setting/view/**",
+					"/components/Template/view/**", "/main.html", "/api/rest/**")), 1), PRO("pro",
+							new HashSet<String>(Arrays.asList("/components/Statistic/view/**")),
 							2), ULTIMATE("ultimate", new HashSet<String>(Arrays.asList("")), 3);
 
 	private Set<String> allowedRoutes;
@@ -64,20 +66,20 @@ public enum LicenseEnum {
 		return Collections.unmodifiableSet(this.allowedRoutes);
 	}
 
-	public boolean hasLicenseForURL(String URL) {
+	public boolean hasLicenseForUrl(String Url) {
 		boolean hasLicense = false;
-		if (URLMatchAnyPattern(this.combinedRoutes, URL)) {
+		if (URLMatchAnyPattern(this.combinedRoutes, Url)) {
 			hasLicense = true;
 		}
 		return hasLicense;
 	}
 
-	private boolean URLMatchAnyPattern(HashSet<String> allowedRoutes, String URL) {
-		if (allowedRoutes.contains(URL)) {
+	private boolean URLMatchAnyPattern(HashSet<String> allowedRoutes, String Url) {
+		if (allowedRoutes.contains(Url)) {
 			return true;
 		} else {
-			if (URL != null) {
-				String[] urlPart = URL.split("/");
+			if (Url != null) {
+				String[] urlPart = Url.split("/");
 				for (int i = 1; i <= urlPart.length - 2; i++) {
 					String urlPatternBuilder = "";
 					for (int k = 1; k <= i; k++) {

@@ -3,14 +3,12 @@ package dash.statisticmanagement.olap.business;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.NotFoundException;
-import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.DateRange;
-import dash.statisticmanagement.olap.domain.OLAP;
+import dash.statisticmanagement.olap.domain.Olap;
 import dash.statisticmanagement.product.business.ProductStatistic;
 import dash.statisticmanagement.product.business.ProductStatisticService;
 import dash.statisticmanagement.profit.business.ProfitStatisticService;
@@ -22,7 +20,6 @@ import dash.workflowmanagement.domain.Workflow;
 
 @Service
 public class OlapStatisticService {
-	private static final Logger logger = Logger.getLogger(AbstractStatisticService.class);
 
 	@Autowired
 	private OlapRepository olapRepository;
@@ -54,7 +51,7 @@ public class OlapStatisticService {
 	}
 
 	private void saveStatisticInOLAP(DateRange dateRange) throws NotFoundException {
-		OLAP olap = new OLAP();
+		Olap olap = new Olap();
 		olap.setDateRange(dateRange);
 		olap.setTimeStamp(Calendar.getInstance());
 		List<Double> profit = profitStatisticService.getStatisticByDateRange(Workflow.SALE, dateRange, null)

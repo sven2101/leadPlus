@@ -29,7 +29,7 @@ public class Template {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "template_auto_gen")
-	@SequenceGenerator(name = "template_auto_gen", sequenceName = "template_id_seq")
+	@SequenceGenerator(name = "template_auto_gen", sequenceName = "template_id_seq", allocationSize = 1)
 	@Column(name = "id", nullable = false)
 	private Long id;
 
@@ -138,7 +138,8 @@ public class Template {
 
 	@Override
 	public String toString() {
-		return "Template [id=" + id + ", name=" + name + ", description=" + description + ", content=" + content + ", deactivated=" + deactivated + "]";
+		return "Template [id=" + id + ", name=" + name + ", description=" + description + ", content=" + content
+				+ ", deactivated=" + deactivated + "]";
 	}
 
 }

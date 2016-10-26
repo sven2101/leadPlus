@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.olap.business.OlapRepository;
-import dash.statisticmanagement.olap.domain.OLAP;
+import dash.statisticmanagement.olap.domain.Olap;
 import dash.statisticmanagement.product.business.ProductStatistic;
 import dash.statisticmanagement.product.business.ProductStatisticService;
 import dash.workflowmanagement.domain.Workflow;
@@ -56,7 +56,7 @@ public class ProductResource {
 	public List<ProductStatistic> getProductStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
-		OLAP olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
+		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
 		if (olap != null && olap.getProducts() != null) {
 			System.out.println("Informationen aus OLAP");
 			return Arrays.asList(olap.getProducts());

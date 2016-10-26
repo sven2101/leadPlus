@@ -182,4 +182,9 @@ public class TenantService implements ITenantService {
 		return validation;
 	}
 
+	@Override
+	public List<Tenant> getAllTenants() {
+		return tenantRepository.findAll();
+	}
+
 }

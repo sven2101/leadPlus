@@ -36,7 +36,7 @@ public class LicenseFilter extends OncePerRequestFilter {
 			TenantAuthenticationToken auth = (TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 			TenantContext.setTenant(auth.getAuthenticatedTenant().getTenantKey());
 
-			if (!auth.getAuthenticatedTenant().getLicense().getLicenseType().hasLicenseForURL(request.getRequestURI())) {
+			if (!auth.getAuthenticatedTenant().getLicense().getLicenseType().hasLicenseForUrl(request.getRequestURI())) {
 				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			}
 		}

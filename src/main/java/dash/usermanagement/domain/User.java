@@ -56,7 +56,7 @@ public class User implements UserDetails, Principal {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_auto_gen")
-	@SequenceGenerator(name = "user_auto_gen", sequenceName = "user_id_seq")
+	@SequenceGenerator(name = "user_auto_gen", sequenceName = "user_id_seq", allocationSize = 1)
 	@Column(name = "id", nullable = false)
 	private Long id;
 
