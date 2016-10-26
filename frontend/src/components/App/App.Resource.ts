@@ -418,3 +418,23 @@ class NotificationResource {
 }
 
 angular.module(moduleNotificationResource, [ngResourceId]).service(NotificationResourceId, NotificationResource);
+
+// ----------------------------------------------------------------------------------------
+
+const TenantResourceId: string = "TenantResource";
+
+class TenantResource {
+
+    private $inject = [$resourceId];
+
+    resource: any;
+
+    constructor($resource) {
+        this.resource = $resource("/api/rest/tenants", {}, {
+            save: { url: "/api/rest/tenants", method: "POST" },
+            uniqueTenantKey: { url: "/api/rest/tenants/unique/key", method: "POST" }
+        });
+    }
+}
+
+angular.module(moduleTenantResource, [ngResourceId]).service(TenantResourceId, TenantResource);

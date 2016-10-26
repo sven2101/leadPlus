@@ -16,15 +16,11 @@ package dash.offermanagement.business;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-
-import org.springframework.stereotype.Repository;
-
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.request.RequestRepository;
 
-@Transactional
-@Repository
+//@Transactional
+//@Repository
 public interface OfferRepository extends RequestRepository<Offer, Long> {
 
 	List<Offer> findByCustomerIdAndDeleted(Long id, boolean deleted);

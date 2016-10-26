@@ -57,7 +57,7 @@ class DashboardService {
         this.translate = $translate;
         this.q = $q;
         this.SweetAlert = SweetAlert;
-        this.user = $rootScope.globals.user;
+        this.user = $rootScope.user;
         this.uibModal = $uibModal;
         this.initDashboard();
         this.refreshTodos();
@@ -306,11 +306,11 @@ class DashboardService {
     }
 
     refreshTodos(): void {
-        if (isNullOrUndefined(this.rootScope.globals.user)) {
+        if (isNullOrUndefined(this.rootScope.user)) {
             return;
         }
 
-        this.processResource.getTodos({ processorId: this.rootScope.globals.user.id }).$promise.then((data) => {
+        this.processResource.getTodos({ processorId: this.rootScope.user.id }).$promise.then((data) => {
             this.todos = this.orderByTimestamp(data);
             this.rootScope.$broadcast("todosChanged", this.todos);
         }, (error) => console.log(error));

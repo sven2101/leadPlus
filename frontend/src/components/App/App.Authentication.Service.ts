@@ -2,6 +2,9 @@
 /// <reference path="../User/model/User.Model.ts" />
 /// <reference path="../app/App.Resource.ts" />
 /// <reference path="../app/App.Common.ts" />
+/// <reference path="../Common/model/Promise.Interface.ts" />
+/// <reference path="../Login/model/Credentials.Model.ts" />
+
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -22,72 +25,117 @@ const AuthServiceId: string = "AuthService";
 
 class AuthService {
 
-    $inject = [$httpId, $rootScopeId, $cookieStoreId, $locationId, UserResourceId, $injectorId, FileResourceId];
+
+
+    $inject = [$httpId, $rootScopeId, $cookiesId, $locationId, $windowId, UserResourceId, $injectorId, $qId];
+
+
 
     http;
     rootScope;
-    cookieStore;
+    cookies;
     location;
+    window;
     userResource;
     injector;
-    fileResource;
 
-    constructor($http, $rootScope, $cookieStore, $location, UserResource, $injector, FileResource) {
+    $q;
+
+
+    constructor($http, $rootScope, $cookies, $location, $window, UserResource, $injector, $q) {
+
         this.http = $http;
+        this.$q = $q;
         this.rootScope = $rootScope;
-        this.cookieStore = $cookieStore;
+        this.cookies = $cookies;
         this.location = $location;
+        this.window = $window;
         this.userResource = UserResource.resource;
         this.injector = $injector;
-        this.fileResource = FileResource.resource;
     }
 
-    login(credentials, success, error) {
+    login(credentials): IPromise<boolean> {
+
         let self = this;
-        // let salt: string = this.rootScope.globals.user.email;
-        let salt = "test";
+
+        let defer = this.$q.defer();
         if (credentials) {
+            // let salt: string = this.rootScope.globals.user.email;
+            let salt = "test";
             let hashedPassword = hashPasswordPbkdf2(credentials.password, salt);
-            let authorization = btoa(credentials.username + ":" + hashedPassword);
-            let headers = credentials ? { authorization: "Basic " + authorization } : {};
-            this.http.get("user", { headers: headers }).success(function (data) {
-                if (data.username) {
+            let authorization = btoa(credentials.email + ":" + hashedPassword);
+            let header = credentials ? { Authorization: "Basic " + authorization } : {};
 
-                    self.rootScope.globals = {
+            this.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
+            console.log("credentials.tenantKey: ", credentials.tenant);
+            this.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
 
-                        user: {
-                            id: data.id,
-                            username: data.username,
-                            role: data.role,
-                            email: data.email,
-                            firstname: data.firstname,
-                            lastname: data.lastname,
-                            phone: data.phone,
-                            language: data.language,
-                            authorization: authorization,
-                            smtpKey: encodeURIComponent(hashPasswordPbkdf2(hashedPassword, salt))
+            this.http.get("user").then(function (response) {
+                let data = response.data;
+                if (data) {
+                    self.rootScope.user = {
+                        id: data.id,
+                        role: data.role,
+                        email: data.email,
+                        tenant: data.tenant,
+                        firstname: data.firstname,
+                        lastname: data.lastname,
+                        phone: data.phone,
+                        language: data.language,
+                        smtpKey: encodeURIComponent(hashPasswordPbkdf2(hashedPassword, salt)),
+                        authorization: authorization
+                    };
+                    console.log(data);
+                    self.rootScope.tenant = {
+                        license: {
+                            package: ["basic", "pro"],
+                            term: "09.12.2017",
+                            trial: false
                         }
                     };
-                    self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
-                    console.log(hashedPassword);
-                    self.cookieStore.put("globals", self.rootScope.globals);
-                    success(data);
-                    self.injector.get("DashboardService");
-                    self.rootScope.$broadcast("onTodosChange");
-                } else {
-                    console.log("username is null");
-                }
-            }).error(error);
 
+                    if (!hasLicense(self.rootScope.tenant.license, "basic")) {
+                        alert("Lizenz abgelaufen am: " + self.rootScope.tenant.license.term);
+                        self.rootScope.user = null;
+                        self.rootScope.tenant = null;
+                        defer.reject(false);
+                    } else {
+                        self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
+                        self.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
+                        console.log("X-TenantID", credentials.tenant);
+
+
+                        let date = new Date();
+                        date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
+                        self.cookies.putObject("user", self.rootScope.user, { domain: "leadplus.localhost", path: "/", expires: date });
+                        self.cookies.putObject("tenant", self.rootScope.tenant, { domain: "leadplus.localhost", path: "/", expires: date });
+
+                        self.rootScope.user.picture = data.profilePicture;
+                        self.injector.get("DashboardService");
+                        self.rootScope.$broadcast("onTodosChange");
+                        defer.resolve(true);
+                    }
+
+                } else {
+                    defer.reject(false);
+                }
+            }, (function (error) {
+                defer.reject(false);
+            }));
+        } else {
+            defer.reject(false);
         }
+        return defer.promise;
     }
 
     logout() {
-        // this.rootScope.globals.user = null;
-        // this.rootScope.globals = {};
-        this.cookieStore.remove("globals");
-        // this.http.defaults.headers.common.Authorization = "Basic";
+
+
+        this.cookies.remove("user", { domain: "leadplus.localhost", path: "/" });
+        this.cookies.remove("tenant", { domain: "leadplus.localhost", path: "/" });
+        this.http.defaults.headers.common.Authorization = "Basic";
         window.open("/logout.html", "_self");
+
         /*
         let self = this;
         this.http.post("logout", {})

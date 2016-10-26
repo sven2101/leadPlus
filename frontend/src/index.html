@@ -9,6 +9,7 @@
 
 	<title>LeadPlus</title>
 
+
 	<link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
 
@@ -34,8 +35,8 @@
 
 	<div id="wrapper">
 		<toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
-		<div ng-if="!globals.user" ng-view></div>
-		<div ng-if="globals.user">
+		<div ng-if="!user" ng-view></div>
+		<div ng-if="user">
 			<div ng-include="'main.html'"></div>
 		</div>
 	</div>
@@ -115,6 +116,7 @@
 	<!--Switch for checkbox-->
 	<script src="assets/js/switchery.min.js"></script>
 	<script src="assets/js/angular/ng-switchery.js"></script>
+	<script src="assets/js/icheck.min.js"></script>
 
 	<script src="assets/js/chosen.js"></script>
 

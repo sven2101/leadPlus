@@ -14,6 +14,7 @@
 
 package dash.usermanagement.domain;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,6 +31,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -43,11 +45,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import dash.fileuploadmanagement.domain.FileUpload;
+import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.settings.language.Language;
 
 @Entity
 @Table(name = "\"user\"")
-public class User implements UserDetails {
+public class User implements UserDetails, Principal {
 
 	private static final long serialVersionUID = 3125258392087209376L;
 
@@ -118,6 +121,17 @@ public class User implements UserDetails {
 	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
 
+	@Transient
+	private Tenant tenant;
+
+	public Tenant getTenant() {
+		return tenant;
+	}
+
+	public void setTenant(Tenant tenant) {
+		this.tenant = tenant;
+	}
+
 	public User() {
 	}
 
@@ -158,16 +172,13 @@ public class User implements UserDetails {
 		return this.username;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 	public String getEmail() {
 		return this.email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
+		this.username = email;
 	}
 
 	public Role getRole() {
@@ -281,7 +292,6 @@ public class User implements UserDetails {
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -332,17 +342,19 @@ public class User implements UserDetails {
 			return false;
 		if (role != other.role)
 			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password="
-				+ password + ", role=" + role + ", profilPicture=" + picture + ", language=" + language + ", enabled=" + enabled + "]";
+		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
+				+ ", email=" + email + ", password=" + password + ", role=" + role + ", profilPicture=" + picture
+				+ ", language=" + language + ", enabled=" + enabled + "]";
 	}
+
+	@Override
+	public String getName() {
+		return this.email;
+	}
+
 }

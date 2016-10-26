@@ -36,8 +36,6 @@ public interface IUserService {
 
 	public User getById(final long id) throws NotFoundException;
 
-	public User getUserByName(String username) throws NotFoundException;
-
 	public User save(final User user) throws SaveFailedException;
 
 	public User update(final User user)

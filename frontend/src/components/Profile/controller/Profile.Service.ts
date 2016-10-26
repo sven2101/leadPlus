@@ -23,7 +23,9 @@ const ProfileServiceId: string = "ProfileService";
 
 class ProfileService {
 
-    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, $qId, $cookieStoreId];
+
+    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId, $cookiesId];
+
 
     userResource;
     translate;
@@ -33,24 +35,30 @@ class ProfileService {
     fileResource;
     formdata;
     q;
-    cookieStore;
+    cookies;
+    user: User;
 
-    constructor($rootScope, toaster, $translate, UserResource, $q, $cookieStore) {
+    oldPassword: string;
+    newPassword1: string;
+    newPassword2: string;
+
+    constructor($rootScope, toaster, $translate, UserResource, FileResource, $q, $cookies) {
         this.userResource = UserResource.resource;
         this.translate = $translate;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.formdata = new FormData();
         this.q = $q;
-        this.cookieStore = $cookieStore;
+        this.cookies = $cookies;
     }
 
     updateProfilInfo(user: User): IPromise<User> {
         let defer = this.q.defer();
         let self = this;
+
         this.userResource.update(user).$promise.then(function (updatedUser: User) {
             self.updateRootScope(updatedUser);
-            self.cookieStore.put("globals", self.rootScope.globals);
+            self.cookies.put("globals", self.rootScope.globals);
             self.rootScope.changeLanguage(self.rootScope.globals.user.language);
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
             defer.resolve(updatedUser);
@@ -69,7 +77,7 @@ class ProfileService {
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
             self.rootScope.globals.user.picture = null;
-            self.cookieStore.put("globals", self.rootScope.globals);
+            self.cookies.put("globals", self.rootScope.globals);
         });
     }
 

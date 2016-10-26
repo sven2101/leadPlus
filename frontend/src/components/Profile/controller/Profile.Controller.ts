@@ -40,12 +40,12 @@ class ProfileController {
     constructor(ProfileService: ProfileService, $rootScope) {
         this.profileService = ProfileService;
         this.rootscope = $rootScope;
-        // this.currentUser = deepCopy(this.rootscope.globals.user);
+        this.currentUser = deepCopy(this.rootscope.user);
         this.getById();
         let self = this;
         $rootScope.$on("profileImageSaved", function (evt, data: FileUpload) {
             if (!isNullOrUndefined(data)) {
-                let user = deepCopy(self.rootscope.globals.user);
+                let user = deepCopy(self.rootscope.user);
                 user.picture = data;
                 self.updateProfileImage(user);
             }

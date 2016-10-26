@@ -82,6 +82,7 @@ public class Notification {
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Column(name = "notificationtype", length = 255)
+
 	private NotificationType notificationType;
 
 	public Notification() {

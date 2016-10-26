@@ -44,7 +44,7 @@ class LeadDataTableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
-        this.user = $rootScope.globals.user;
+        this.user = $rootScope.user;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
@@ -140,7 +140,7 @@ class LeadDataTableService {
     }
 
     getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
-        let user: User = this.rootScope.globals.user;
+        let user: User = this.rootScope.user;
         let config = new ActionButtonConfigBuilder();
         config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("LEAD_FOLLOW_UP");
         if (process.status === Status.OPEN || process.status === Status.INCONTACT) {
@@ -151,10 +151,10 @@ class LeadDataTableService {
             config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setEnabled().setTitle("LEAD_DELETE_LEAD");
             config.get(ActionButtonType.PIN_DROPDOWN_EMPTY_PROCESSOR).setEnabled();
         } else {
-            config.get(ActionButtonType.PIN_BUTTON).setVisible().setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username).setTitle("LEAD_PIN");
+            config.get(ActionButtonType.PIN_BUTTON).setVisible().setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("LEAD_PIN");
             config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible()
-                .setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username).setTitle("LEAD_DELETE_LEAD");
-            config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username);
+                .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("LEAD_DELETE_LEAD");
+            config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id);
         }
         config.get(ActionButtonType.SET_INCONTACT).setVisible().setTitle("COMMON_STATUS_INCONTACT");
         if (process.status === Status.OPEN) {
@@ -164,7 +164,7 @@ class LeadDataTableService {
         config.get(ActionButtonType.DETAILS_OPEN_EDIT_MODAL).setEnabled().setTitle("LEAD_EDIT_LEAD");
         config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
         if (!isNullOrUndefined(process.offer)
-            || !(user.role === Role.ADMIN || user.role === Role.SUPERADMIN) && (!isNullOrUndefined(process.processor) && process.processor.username !== user.username)) {
+            || !(user.role === Role.ADMIN || user.role === Role.SUPERADMIN) && (!isNullOrUndefined(process.processor) && process.processor.id !== user.id)) {
             config.disableAll();
         } else if (process.status === Status.CLOSED) {
             config.disableAll();

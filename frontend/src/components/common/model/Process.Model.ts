@@ -22,7 +22,7 @@ class Process extends AbstractModel {
     lead: Lead;
     offer: Offer;
     sale: Sale;
-    processor: any;
+    processor: User;
     status: any;
     comments: Array<Commentary>;
     notifications: Array<Notification>;
@@ -30,9 +30,5 @@ class Process extends AbstractModel {
     constructor() {
         super();
         this.comments = new Array<Commentary>();
-    }
-
-    isProcessor(user: User): boolean {
-        return this.processor.username === user.username;
     }
 }

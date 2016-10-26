@@ -52,8 +52,9 @@
 			<li>
 				<a href="#/sales"><i class="fa fa-usd"></i> <span
                         class="nav-label">{{ 'SALES_MENU' | translate }}</span></a>
+
 			</li>
-			<li>
+			<li ng-if="appCtrl.hasLicense(tenant.license,'pro')">
 				<a href="#/statistic"><i class="fa fa-line-chart"></i> <span class="nav-label">{{ 'STATISTIC_MENU' | translate }}</span></a>
 			</li>
 			<li>
@@ -67,6 +68,7 @@
 			</li>
 		</ul>
 	</div>
+
 </nav>
 
 <!-- <div ng-attr-id="{{ authenticated ? 'page-wrapper' : '' }}" id="page-wrapper" class="gray-bg dashbard-1"> -->

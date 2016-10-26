@@ -99,9 +99,9 @@ public class BaseConfig {
 	public void setup() {
 		User test = new User();
 
-		test.setUsername("test".toLowerCase());
 		test.setPassword(passwordEncoder().encode("test"));
 		test.setEmail("test@eviarc.com");
+
 		test.setRole(Role.USER);
 		test.setEnabled(true);
 		test.setLanguage(Language.DE);

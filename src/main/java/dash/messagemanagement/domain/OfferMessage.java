@@ -19,13 +19,17 @@ import dash.notificationmanagement.domain.NotificationType;
 public class OfferMessage extends AbstractMessage {
 
 	/**
-	 * @param recipient - guy who receives this Message  
-	 * @param subject - subject of this specific Message
-	 * @param content - content of this specific Message 
-	 * @param attachment - attachment of this specific Message 
+	 * @param recipient
+	 *            - guy who receives this Message
+	 * @param subject
+	 *            - subject of this specific Message
+	 * @param content
+	 *            - content of this specific Message
+	 * @param attachment
+	 *            - attachment of this specific Message
 	 */
-	public OfferMessage(String recipient, String subject, String content, FileUpload attachment, NotificationType notificationType) {
+	public OfferMessage(String recipient, String subject, String content, FileUpload attachment,
+			NotificationType notificationType) {
 		super(recipient, subject, content, attachment, notificationType);
 	}
-
 }

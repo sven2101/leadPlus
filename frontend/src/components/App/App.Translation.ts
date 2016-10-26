@@ -69,6 +69,16 @@ function config($translateProvider) {
             PROFIL_VALIDATE_FAX_TO_SHORT: "FAX muss mindestens 2 Zeichen enthalten",
             PROFIL_VALIDATE_JOB_TO_SHORT: "Job muss mindestens 2 Zeichen enthalten",
 
+            // Tenant Registration
+            REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE: "Subdomain wird bereits verwendet",
+            REGISTRATION_VALIDATE_TENANT_COMPANY_NAME: "Firmenname",
+            REGISTRATION_VALIDATE_TENANT_ADDRESS: "Adresse",
+            REGISTRATION_VALIDATE_TENANT_PHONE: "Telefonnummer",
+            REGISTRATION_VALIDATE_TENANT_EMAIL: "Email",
+            REGISTRATION_VALIDATE_PASSWORD_TOO_SHORT: "Subdomain ist zu kurz",
+            REGISTRATION_VALIDATE_PASSWORD_TOO_LONG: "Subdomain ist zu lang",
+
+
             // Define common elements
             MR: "Herr",
             MS: "Frau",
@@ -491,6 +501,15 @@ function config($translateProvider) {
             PROFIL_VALIDATE_SKYPE_TO_SHORT: "Skype has to contain 2 or more characters",
             PROFIL_VALIDATE_FAX_TO_SHORT: "FAX has to contain 2 or more characters",
             PROFIL_VALIDATE_JOB_TO_SHORT: "Job has to contain 2 or more characters",
+
+            // Tenant Registration
+            REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE: "Subdomain is already in use",
+            REGISTRATION_VALIDATE_TENANT_COMPANY_NAME: "Company Name",
+            REGISTRATION_VALIDATE_TENANT_ADDRESS: "Address",
+            REGISTRATION_VALIDATE_TENANT_PHONE: "Phone",
+            REGISTRATION_VALIDATE_TENANT_EMAIL: "Email",
+            REGISTRATION_VALIDATE_PASSWORD_TOO_SHORT: "Subdomain is too short",
+            REGISTRATION_VALIDATE_PASSWORD_TOO_LONG: "Subdomain is too long",
 
             // Define common elements
             MR: "Mr.",

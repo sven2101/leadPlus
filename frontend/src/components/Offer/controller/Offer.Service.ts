@@ -58,12 +58,14 @@ class OfferService {
         this.customerService = CustomerService;
         this.productService = ProductService;
         this.dashboardService = DashboardService;
-        this.user = $rootScope.globals.user;
+        this.user = $rootScope.user;
     }
 
     createSale(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {
         let self = this;
+
         this.workflowService.addOfferToSale(process).then(function (isResolved: Process) {
+
             if (loadAllData === true) {
                 self.updateRow(process, loadAllData, scope);
             } else if (loadAllData === false) {
@@ -73,6 +75,7 @@ class OfferService {
             self.rootScope.$broadcast("onTodosChange");
         });
     }
+
 
 
     closeOrOpenOffer(process: Process, dtInstance: any, scope: any, loadAllData: boolean) {
@@ -113,7 +116,7 @@ class OfferService {
                 self.processResource.save(editProcess).$promise.then(function (result) {
                     self.updateRow(editProcess, dtInstance, scope);
                     self.customerService.getAllCustomer();
-                    if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
+                    if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                         self.rootScope.$broadcast("onTodosChange");
                     }
                 });
@@ -121,11 +124,13 @@ class OfferService {
             return;
         }
 
+
         this.processResource.save(editProcess).$promise.then(function (result) {
+
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_UPDATE_OFFER"));
             self.updateRow(editProcess, dtInstance, scope);
-            if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
+            if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                 self.rootScope.$broadcast("onTodosChange");
             }
         });
@@ -143,7 +148,7 @@ class OfferService {
                 temp.customer = customer;
                 self.processResource.save(editProcess).$promise.then(function (result) {
                     self.customerService.getAllCustomer();
-                    if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
+                    if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                         self.rootScope.$broadcast("onTodosChange");
                     }
                 });
@@ -151,10 +156,12 @@ class OfferService {
             return;
         }
 
+
         this.processResource.save(editProcess).$promise.then(function (result) {
+
             self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_UPDATE_OFFER"));
             editProcess.offer = result;
-            if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.globals.user.id)) {
+            if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                 self.rootScope.$broadcast("onTodosChange");
             }
         });

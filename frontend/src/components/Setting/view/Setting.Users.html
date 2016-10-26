@@ -1,5 +1,6 @@
 <div ng-if="settingCtrl.currentTab==2">
-	<div ng-if="globals.user.role!='USER'" class="row">
+	<div ng-if="user.role!='USER'" class="row">
+
 		<div class="col-lg-12">
 			<div class="ibox float-e-margins">
 				<div class="ibox-title">
@@ -28,7 +29,9 @@
 								<td>{{user.lastname}}</td>
 								<td>{{user.email}}</td>
 								<td ng-if="user.role!='SUPERADMIN'">
-									<select ng-disabled="user.role=='ADMIN'&&globals.user.role!='SUPERADMIN'" class="form-control" ng-change="settingCtrl.changeRole(user)"
+
+									<select ng-disabled="user.role=='ADMIN'&&user.role!='SUPERADMIN'" class="form-control" ng-change="settingCtrl.changeRole(user)"
+
 										ng-model="user.role ">                            
                                         <option value="USER ">{{ 'COMMON_USER' | translate }}</option>
                                         <option value="ADMIN ">{{ 'COMMON_ADMIN' | translate }}</option>                                        
@@ -38,12 +41,16 @@
 									{{ 'COMMON_SUPERADMIN' | translate }}
 								</td>
 								<td ng-if="user.enabled==false ">
-									<button ng-click="settingCtrl.activateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&globals.user.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
+
+									<button ng-click="settingCtrl.activateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&user.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
+
                                     <i class="fa fa-check "></i>&nbsp;{{ 'SETTING_ACTIVATE_USER' | translate }}
                                 </button>
 								</td>
 								<td ng-if="user.enabled==true ">
-									<button ng-click="settingCtrl.deactivateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&globals.user.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
+
+									<button ng-click="settingCtrl.deactivateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&user.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
+
                                     <i class="fa fa-ban "></i>&nbsp;{{ 'SETTING_DEACTIVATE_USER' | translate }}
                                 </button>
 
@@ -56,6 +63,7 @@
 			</div>
 		</div>
 	</div>
+
 </div>
 
 <script>
@@ -66,3 +74,4 @@
         $(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
     });
 </script>
+

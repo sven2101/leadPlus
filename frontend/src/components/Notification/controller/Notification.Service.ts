@@ -47,7 +47,7 @@ class NotificationService {
     sendNotification(notification: Notification): IPromise<boolean> {
         let self = this;
         let defer = this.q.defer();
-        this.notificationResource.sendNotification({ userId: this.rootScope.globals.user.id, smtpKey: this.rootScope.globals.user.smtpKey}, notification).$promise.then(function () {
+        this.notificationResource.sendNotification({ userId: this.rootScope.user.id, smtpKey: this.rootScope.user.smtpKey }, notification).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
             defer.resolve(true);
         }, function () {
@@ -65,6 +65,7 @@ class NotificationService {
         }
         this.fileResource.createFileUpload(fileUpload).$promise.then((resultFileUpload) => defer.resolve(resultFileUpload), (error) => defer.reject(error));
         return defer.promise;
+
     }
 
     setAttachmentToNotification($files, notification: Notification) {

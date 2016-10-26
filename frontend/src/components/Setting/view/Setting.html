@@ -33,12 +33,15 @@
 
 		<li ng-click="settingCtrl.tabOnClick(1)" class="active"><a data-toggle="tab" aria-expanded="true">{{ 'SETTING_EMAIL' | translate
 				}}</a></li>
-		<li ng-if="globals.user.role!='USER'" ng-click="settingCtrl.tabOnClick(2)"><a data-toggle="tab" aria-expanded="true">{{
+
+		<li ng-if="user.role!='USER'" ng-click="settingCtrl.tabOnClick(2)"><a data-toggle="tab" aria-expanded="true">{{
+
 				'SETTING_USER' | translate }}</a></li>
 	</ul>
 	</br>
 	<div ng-include="'components/Setting/view/Setting.Users.html'"></div>
 	<div ng-include="'components/Setting/view/Setting.Email.html'"></div>
+
 </div>
 
 <script>
@@ -49,3 +52,4 @@
         $(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
     });
 </script>
+

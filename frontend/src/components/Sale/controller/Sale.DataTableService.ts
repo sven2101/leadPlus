@@ -42,7 +42,7 @@ class SaleDataTableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
-        this.user = $rootScope.globals.user;
+        this.user = $rootScope.user;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
@@ -143,14 +143,15 @@ class SaleDataTableService {
             config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setEnabled().setTitle("SALE_ROLLBACK");
         } else {
             config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible()
-                .setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username).setTitle("SALE_DELETE_SALE");
+                .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("SALE_DELETE_SALE");
             config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setVisible()
-                .setEnabled(isNullOrUndefined(process.processor) || process.processor.username === user.username).setTitle("SALE_ROLLBACK");
+                .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("SALE_ROLLBACK");
         }
         config.get(ActionButtonType.DETAILS_OPEN_EDIT_MODAL).setEnabled().setTitle("SALE_EDIT_SALE");
         config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
-        if (!(user.role === Role.ADMIN || user.role === Role.SUPERADMIN) && (!isNullOrUndefined(process.processor) && process.processor.username !== user.username)) {
+        if (!(user.role === Role.ADMIN || user.role === Role.SUPERADMIN) && (!isNullOrUndefined(process.processor) && process.processor.id !== user.id)) {
             config.disableAll();
+
         }
         return config.build();
     }

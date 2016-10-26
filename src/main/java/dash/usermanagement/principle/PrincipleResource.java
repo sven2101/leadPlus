@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
+import dash.tenantmanagement.business.TenantContext;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 
@@ -41,9 +42,11 @@ public class PrincipleResource {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> getUser(Principal user) throws NotFoundException {
-
-		User internalUser = userService.getUserByName(user.getName());
-
+		
+		User internalUser = userService.getUserByEmail(user.getName());
+		// TODO override authentification object and set tenant here.
+		
+	
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 
 		if (!Optional.ofNullable(user).isPresent())
@@ -53,9 +56,9 @@ public class PrincipleResource {
 			map.put("role", authority.getAuthority());
 		}
 
-		map.put("username", user.getName());
 		map.put("email", internalUser.getEmail());
 		map.put("firstname", internalUser.getFirstname());
+		map.put("tenant", TenantContext.getTenant());
 		map.put("lastname", internalUser.getLastname());
 		map.put("phone", internalUser.getPhone());
 		map.put("email", internalUser.getEmail());

@@ -21,18 +21,19 @@ import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import dash.exceptions.NotFoundException;
 import dash.exceptions.UserIsNotActivatedException;
+import dash.security.TenantAuthenticationToken;
+import dash.tenantmanagement.business.TenantContext;
 import dash.usermanagement.domain.User;
 
 @Service
-@Transactional
 public class UserLoginService implements UserDetailsService {
 
 	private static final Logger logger = Logger.getLogger(UserLoginService.class);
@@ -41,10 +42,13 @@ public class UserLoginService implements UserDetailsService {
 	private UserService userService;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		User user;
 		try {
-			user = userService.getUserByName(username);
+			TenantAuthenticationToken sec = (TenantAuthenticationToken) SecurityContextHolder.getContext()
+					.getAuthentication();
+			TenantContext.setTenant(sec.getAuthenticatedTenant().getTenantKey());
+			user = userService.getUserByEmail(email);
 			if (!Optional.ofNullable(user).isPresent()) {
 				throw new NotFoundException(USER_NOT_FOUND);
 			}
@@ -52,8 +56,8 @@ public class UserLoginService implements UserDetailsService {
 				throw new UserIsNotActivatedException(USER_NOT_ACTIVATED);
 			}
 		} catch (NotFoundException | UserIsNotActivatedException ex) {
-			logger.error(ex.getMessage() + username + UserLoginService.class.getSimpleName(), ex);
-			throw new UsernameNotFoundException(USER_NOT_FOUND + username);
+			logger.error(ex.getMessage() + email + UserLoginService.class.getSimpleName(), ex);
+			throw new UsernameNotFoundException(USER_NOT_FOUND + email);
 		}
 
 		return user;

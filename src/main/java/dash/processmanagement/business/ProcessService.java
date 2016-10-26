@@ -108,12 +108,12 @@ public class ProcessService implements IProcessService {
 			if (Optional.ofNullable(process.getOffer()).isPresent())
 				offerService.save(process.getOffer());
 			if (Optional.ofNullable(process.getSale()).isPresent()) {
-				try {
-					process.setProcessor(userService.getUserByName("admin"));
-				} catch (NotFoundException nfex) {
-					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-							nfex);
-				}
+				//				try {
+				//					process.setProcessor(userService.getUserByName("admin"));
+				//				} catch (NotFoundException nfex) {
+				//					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+				//							nfex);
+				//				}
 				saleService.save(process.getSale());
 			}
 			save(process);
@@ -259,8 +259,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process setStatus(long id, String status)
-			throws SaveFailedException, NotFoundException, UpdateFailedException {
+	public Process setStatus(long id, String status) throws SaveFailedException, NotFoundException, UpdateFailedException {
 		if (Optional.ofNullable(status).isPresent()) {
 			Process process = getById(id);
 			process.setStatus(Status.valueOf(status));

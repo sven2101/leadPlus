@@ -70,7 +70,7 @@ class WorkflowService {
         this.productService = ProductService;
         this.customerService = CustomerService;
         this.uibModal = $uibModal;
-        this.user = $rootScope.globals.user;
+        this.user = $rootScope.user;
         this.refreshUsers();
     }
 

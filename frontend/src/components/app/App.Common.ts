@@ -27,12 +27,21 @@ let isNullOrUndefined = function (object: any): boolean {
     return object === null || typeof object === "undefined";
 };
 
+let hasLicense = function (userLicense: any, routeLicense: String): boolean {
+    if (isNullOrUndefined(userLicense) || isNullOrUndefined(routeLicense)) {
+        return false;
+    } else if (userLicense.package.indexOf(routeLicense) !== -1 && moment(userLicense.term, "DD.MM.YYYY").isAfter(moment(newTimestamp("DD.MM.YYYY"), "DD.MM.YYYY"))) {
+        return true;
+    }
+    return false;
+};
+
 let getNameOfUser = function (user: User): string {
     if (!isNullOrUndefined(user.firstname) && user.firstname !== "" && !isNullOrUndefined(user.lastname) && user.lastname !== "") {
         return user.firstname + " " + user.lastname;
     }
     else {
-        return user.username;
+        return user.email;
     }
 
 };

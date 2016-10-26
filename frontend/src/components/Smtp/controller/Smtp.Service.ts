@@ -59,7 +59,7 @@ class SmtpService {
 
     getSMtp() {
         let self = this;
-        this.smtpResource.getByUserId({ id: this.rootScope.globals.user.id }).$promise.then((data) => {
+        this.smtpResource.getByUserId({ id: this.rootScope.user.id }).$promise.then((data) => {
             self.currentSmtp = data;
             self.currentSmtp.stringPassword = "";
             for (let i = 0; i < self.currentPasswordLength; i++) {

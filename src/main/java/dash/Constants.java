@@ -35,6 +35,7 @@ public final class Constants {
 	public static final String PROSPECT_NOT_FOUND = "Prospect not found. ";
 	public static final String FILE_NOT_FOUND = "File not found. ";
 	public static final String TEMPLATE_NOT_FOUND = "Template not found. ";
+	public static final String TENANT_NOT_FOUND = "Tenant not found. ";
 
 	public static final String USER_NOT_ACTIVATED = "User not activated. ";
 	public static final String USER_EXISTS = "Username already exists. ";
@@ -50,5 +51,8 @@ public final class Constants {
 	public static final String BECAUSE_OF_USER_NOT_FOUND = " BECAUSE OF USER NOT FOUND ";
 
 	public static final String PUBLIC_API_NEW_LEAD = "Created new LEAD via Public API. ";
+
+	public static final String CURRENT_TENANT_IDENTIFIER = "CURRENT_TENANT_IDENTIFIER";
+	public static final String UNKNOWN_TENANT = "unknown";
 
 }

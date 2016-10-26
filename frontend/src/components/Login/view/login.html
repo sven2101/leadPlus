@@ -1,31 +1,31 @@
 <div class="middle-box text-center">
-    <h1 class="logo-name">{{ 'LOGO' | translate }}</h1>
+	<h1 class="logo-name">{{ 'LOGO' | translate }}</h1>
 </div>
 
 <div class="middle-box text-center loginscreen animated fadeInDown">
-    <div>
-        <h3>{{ 'LOGIN_WELCOME' | translate }}</h3>
-        <p>{{ 'LOGIN_WELCOME_DESCRIPTION' | translate }}</p>
-        </br>
-        <form name="loginform">
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="{{ 'COMMON_USERNAME' | translate }}" required="" ng-model="credentials.username">
-            </div>
-            <div class="form-group">
-                <input type="password" name="loginPassword" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}" required=""
-                    ng-model="credentials.password">
-            </div>
-            <button type="submit" class="btn btn-success block full-width m-b" ng-click="loginCtrl.login(credentials)" OnClick="document.loginform.loginPassword.focus();">{{ 'LOGIN' | translate }}
+	<div>
+		<h3>{{ 'LOGIN_WELCOME' | translate }}</h3>
+		<p>{{ 'LOGIN_WELCOME_DESCRIPTION' | translate }}</p>
+		</br>
+		<form name="loginform">
+			<div class="form-group">
+				<input type="text" class="form-control" placeholder="{{ 'COMMON_USERNAME' | translate }}" required="" ng-model="loginCtrl.credentials.email">
+			</div>
+			<div class="form-group">
+				<input type="password" name="loginPassword" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}" required=""
+					ng-model="loginCtrl.credentials.password">
+			</div>
+			<button type="submit" class="btn btn-success block full-width m-b" ng-click="loginCtrl.login()" OnClick="document.loginform.loginPassword.focus();">{{ 'LOGIN' | translate }}
             </button>
-        </form>
-        <p class="text-muted text-center">
-            <small>{{ 'LOGIN_NO_ACCOUNT' | translate }}</small>
-        </p>
-        <a class="btn btn-sm btn-white btn-block" href="#/signup">{{ 'LOGIN_CREATE_ACCOUNT' | translate }}</a>
-        <p class="m-t">
-            <a href="/swagger-ui.html">Public Api description</a>
-            <br>
-            <small>In cooperation with eviarc GmbH &copy; 2016</small>
-        </p>
-    </div>
+		</form>
+		<p class="text-muted text-center">
+			<small>{{ 'LOGIN_NO_ACCOUNT' | translate }}</small>
+		</p>
+		<a class="btn btn-sm btn-white btn-block" href="#/signup">{{ 'LOGIN_CREATE_ACCOUNT' | translate }}</a>
+		<p class="m-t">
+			<a href="/swagger-ui.html">Public Api description</a>
+			<br>
+			<small>In cooperation with eviarc GmbH &copy; 2016</small>
+		</p>
+	</div>
 </div>

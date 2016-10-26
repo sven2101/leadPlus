@@ -14,16 +14,13 @@
 
 package dash.smtpmanagement.business;
 
-import javax.transaction.Transactional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.domain.User;
 
-@Repository
-@Transactional
+//@Repository
+//@Transactional
 public interface SmtpRepository extends JpaRepository<Smtp, Long> {
 	Smtp findByUser(User user);
 }

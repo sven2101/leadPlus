@@ -102,9 +102,9 @@ class SettingService {
     }
 
     hasRight(user: User): boolean {
-        if (user.username === this.rootScope.globals.user.username
-            || (user.role === this.rootScope.globals.user.role)
-            || this.rootScope.globals.user.role === Role.USER
+        if (user.id === this.rootScope.user.id
+            || (user.role === this.rootScope.user.role)
+            || this.rootScope.user.role === Role.USER
             || user.role === Role.SUPERADMIN) {
             return true;
         } else {
