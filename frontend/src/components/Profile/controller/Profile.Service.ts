@@ -73,7 +73,7 @@ class ProfileService {
         let self = this;
         this.userResource.setProfilePicture(user).$promise.then(function (data) {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
-            $("#profilePicture").prop("src", "users/" + self.rootScope.user.id + "/profile/picture?" + new Date().valueOf());
+            $("#profilePicture").prop("httpsrc", "users/" + self.rootScope.user.id + "/profile/picture?" + new Date().valueOf());
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
             self.rootScope.user.picture = null;
