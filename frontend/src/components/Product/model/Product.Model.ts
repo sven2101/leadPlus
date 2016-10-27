@@ -25,6 +25,7 @@ class Product extends AbstractModel {
     deactivated: boolean;
     productState: ProductState;
     picture: FileUpload;
+    productNumber;
 
     constructor() {
         super();

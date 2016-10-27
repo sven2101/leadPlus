@@ -42,6 +42,12 @@
                                     <option value="USED" >{{ 'PRODUCT_PRODUCT_STATE_USED' | translate }}</option>                                                     
                                 </select>
                             </div>
+                             <!-- PRODUCTNUMBER -->
+                            <div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.productNumber.$invalid && !productCtrl.createProductForm.productNumber.$pristine }">
+                                <label>{{ 'PRODUCT_NUMBER' | translate }}</label>
+                                <input type="text" name="productNumber" class="form-control" ng-model="productCtrl.currentProduct.productNumber" ng-maxlength="50">
+                                <p ng-show="productCtrl.createProductForm.productNumber.$invalid && !productCtrl.createProductForm.productNumber.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            </div>
                             <div class="form-group" ng-show="!productCtrl.isCurrentProductNew">
                                 <label class="checkbox-inline"> <input type="checkbox"  ng-model="productCtrl.currentProduct.deactivated" id="inlineCheckbox1">{{ 'COMMON_DEACTIVATE' | translate }}</label>
                             </div>

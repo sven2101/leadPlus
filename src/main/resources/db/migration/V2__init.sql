@@ -245,7 +245,7 @@ CREATE TABLE customer
   phone character varying(255),
   "timestamp" timestamp without time zone,
   title character varying(255),
-  customernumber bigint,
+  customernumber character varying(255),
   CONSTRAINT customer_pkey PRIMARY KEY (id)
 )
 WITH (
@@ -268,6 +268,7 @@ CREATE TABLE product
   productstate character varying(255),
   "timestamp" timestamp without time zone,
   picture_id bigint,
+  productnumber character varying(255),
   CONSTRAINT product_pkey PRIMARY KEY (id),
   CONSTRAINT fkgk3l6scw566juj92do6pam2cu FOREIGN KEY (picture_id)
       REFERENCES fileupload (id) MATCH SIMPLE
