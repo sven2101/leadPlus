@@ -107,10 +107,8 @@ class AuthService {
                         let date = new Date();
                         date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
 
-                        this.location.host();
-                        console.log(this.location.host());
-                        self.cookies.putObject("user", self.rootScope.user, { domain: "leadplus.localhost", path: "/", expires: date });
-                        self.cookies.putObject("tenant", self.rootScope.tenant, { domain: "leadplus.localhost", path: "/", expires: date });
+                        self.cookies.putObject("user", self.rootScope.user, { domain: self.location.host(), path: "/", expires: date });
+                        self.cookies.putObject("tenant", self.rootScope.tenant, { domain: self.location.host(), path: "/", expires: date });
 
                         self.rootScope.user.picture = data.profilePicture;
                         self.injector.get("DashboardService");
@@ -132,9 +130,8 @@ class AuthService {
 
     logout() {
 
-
-        this.cookies.remove("user", { domain: "leadplus.localhost", path: "/" });
-        this.cookies.remove("tenant", { domain: "leadplus.localhost", path: "/" });
+        this.cookies.remove("user", { domain: this.location.host(), path: "/" });
+        this.cookies.remove("tenant", { domain: this.location.host(), path: "/" });
         this.http.defaults.headers.common.Authorization = "Basic";
         window.open("/logout.html", "_self");
 
