@@ -15,21 +15,15 @@
 package dash.usermanagement.principle;
 
 import java.security.Principal;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
-import dash.tenantmanagement.business.TenantContext;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 
@@ -41,35 +35,15 @@ public class PrincipleResource {
 	private UserService userService;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> getUser(Principal user) throws NotFoundException {
-		
+	public ResponseEntity<User> getUser(Principal user) throws NotFoundException {
+
+		if (user == null)
+			new ResponseEntity<User>((User) null, HttpStatus.UNAUTHORIZED);
+
 		User internalUser = userService.getUserByEmail(user.getName());
 		// TODO override authentification object and set tenant here.
-		
-	
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
 
-		if (!Optional.ofNullable(user).isPresent())
-			return new ResponseEntity<Map<String, Object>>(map, HttpStatus.UNAUTHORIZED);
-
-		for (GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
-			map.put("role", authority.getAuthority());
-		}
-
-		map.put("email", internalUser.getEmail());
-		map.put("firstname", internalUser.getFirstname());
-		map.put("tenant", TenantContext.getTenant());
-		map.put("lastname", internalUser.getLastname());
-		map.put("phone", internalUser.getPhone());
-		map.put("email", internalUser.getEmail());
-		map.put("id", String.valueOf(internalUser.getId()));
-		map.put("language", String.valueOf(internalUser.getLanguage()));
-		map.put("profilePicture", internalUser.getPicture());
-		map.put("skype", String.valueOf(internalUser.getSkype()));
-		map.put("job", String.valueOf(internalUser.getJob()));
-		map.put("fax", String.valueOf(internalUser.getFax()));
-
-		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+		return new ResponseEntity<User>(internalUser, HttpStatus.OK);
 	}
 
 }

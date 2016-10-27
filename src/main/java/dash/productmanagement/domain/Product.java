@@ -103,6 +103,10 @@ public class Product implements Serializable {
 	@JoinColumn(name = "picture_fk", nullable = true)
 	private FileUpload picture;
 
+	@Size(max = 255)
+	@Column(name = "productnumber")
+	private String productNumber;
+
 	public Product() {
 	}
 
@@ -174,6 +178,18 @@ public class Product implements Serializable {
 		this.priceNetto = priceNetto;
 	}
 
+	public String getProductNumber() {
+		return productNumber;
+	}
+
+	public void setProductNumber(String productNumber) {
+		this.productNumber = productNumber;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -185,6 +201,7 @@ public class Product implements Serializable {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((priceNetto == null) ? 0 : priceNetto.hashCode());
+		result = prime * result + ((productNumber == null) ? 0 : productNumber.hashCode());
 		result = prime * result + ((productState == null) ? 0 : productState.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		return result;
@@ -228,6 +245,11 @@ public class Product implements Serializable {
 				return false;
 		} else if (!priceNetto.equals(other.priceNetto))
 			return false;
+		if (productNumber == null) {
+			if (other.productNumber != null)
+				return false;
+		} else if (!productNumber.equals(other.productNumber))
+			return false;
 		if (productState != other.productState)
 			return false;
 		if (timestamp == null) {
@@ -240,8 +262,9 @@ public class Product implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description + ", productState=" + productState
-				+ ", timestamp=" + timestamp + ", deactivated=" + deactivated + ", priceNetto=" + priceNetto + ", picture=" + picture + "]";
+		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description
+				+ ", productState=" + productState + ", timestamp=" + timestamp + ", deactivated=" + deactivated
+				+ ", priceNetto=" + priceNetto + ", picture=" + picture + "]";
 	}
 
 }
