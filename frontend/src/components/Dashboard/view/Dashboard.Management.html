@@ -25,8 +25,12 @@
 						</h3>
 						<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="lead" ng-model="dashboardCtrl.dashboardService.openLeads">
 							<li class="danger-element draggable" ng-repeat="process in dashboardCtrl.getOpenLeads() | limitTo:10">
-								<div style="height:17px;max-width:52%;">
+									<div ng-if="process.lead.customer.company!=null&&process.lead.customer.company!=''" style="max-width:50%;max-height:22px;min-height:22px">
 									{{process.lead.customer.company}}
+
+								</div>
+								<div ng-if="process.lead.customer.company==null||process.lead.customer.company==''" style="max-width:50%;max-height:22px;min-height:22px">
+									{{process.lead.customer.firstname}} {{process.lead.customer.lastname}}
 
 								</div>
 								<div style="margin-top:-13px">
@@ -55,8 +59,12 @@
 						</h3>
 						<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="lead" ng-model="dashboardCtrl.dashboardService.inContacts">
 							<li class="danger-element draggable" ng-repeat="process in dashboardCtrl.getInContacts() | limitTo:10">
-								<div style="height:17px;max-width:52%;">
+										<div ng-if="process.lead.customer.company!=null&&process.lead.customer.company!=''" style="max-width:50%;max-height:22px;min-height:22px">
 									{{process.lead.customer.company}}
+
+								</div>
+								<div ng-if="process.lead.customer.company==null||process.lead.customer.company==''" style="max-width:50%;max-height:22px;min-height:22px">
+									{{process.lead.customer.firstname}} {{process.lead.customer.lastname}}
 
 								</div>
 								<div style="margin-top:-13px">
@@ -85,8 +93,12 @@
 						</h3>
 						<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="offer" ng-model="dashboardCtrl.dashboardService.openOffers">
 							<li class="warning-element draggable" ng-repeat="process in dashboardCtrl.getOpenOffers() | limitTo:10">
-								<div style="max-width:50%;max-height:22px;min-height:22px">
+										<div ng-if="process.offer.customer.company!=null&&process.offer.customer.company!=''" style="max-width:50%;max-height:22px;min-height:22px">
 									{{process.offer.customer.company}}
+
+								</div>
+								<div ng-if="process.offer.customer.company==null||process.offer.customer.company==''" style="max-width:50%;max-height:22px;min-height:22px">
+									{{process.offer.customer.firstname}} {{process.offer.customer.lastname}}
 
 								</div>
 								<div style="margin-top:-20px">
@@ -118,8 +130,12 @@
 						</h3>
 						<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="sale" ng-model="dashboardCtrl.dashboardService.closedSales">
 							<li class="info-element not-sortable draggable" ng-repeat="process in dashboardCtrl.getClosedSales() | limitTo:10">
-								<div style="max-width:50%;max-height:22px;min-height:22px">
+								<div ng-if="process.sale.customer.company!=null&&process.sale.customer.company!=''" style="max-width:50%;max-height:22px;min-height:22px">
 									{{process.sale.customer.company}}
+
+								</div>
+								<div ng-if="process.sale.customer.company==null||process.sale.customer.company==''" style="max-width:50%;max-height:22px;min-height:22px">
+									{{process.sale.customer.firstname}} {{process.sale.customer.lastname}}
 
 								</div>
 

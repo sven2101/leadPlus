@@ -33,6 +33,7 @@ public class OlapThread extends Thread {
 		}
 		TenantContext.setTenant(tenantKey);
 		try {
+			System.out.println("Generate Statistic in Olap for: " + tenantKey);
 			olapStatisticService.generateOlapStatistics();
 		} catch (NotFoundException e) {
 			logger.error("Something went wrong when trying to generate olap statistics", e);

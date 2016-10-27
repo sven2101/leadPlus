@@ -123,5 +123,12 @@ let handleError = (error): void => {
     console.log(error);
 };
 
+let stringIsNullorEmpty = (text: string): boolean => {
+    if (isNullOrUndefined(text)) {
+        return true;
+    }
+    return text === "";
+};
+
 
 

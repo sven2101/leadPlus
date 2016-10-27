@@ -1,4 +1,3 @@
- 
 INSERT INTO public.license(licenseType, trial, term)
     VALUES ('BASIC', false, now())
         ON CONFLICT DO NOTHING; 
