@@ -1,5 +1,5 @@
 group 'com.getnet'
-version '1.0-SNAPSHOT'
+version '2.0'
 
 buildscript {
     repositories {
@@ -19,7 +19,7 @@ apply plugin: "org.flywaydb.flyway"
 
 jar {
     baseName = 'leadplus'
-    version =  '1.0.0'
+    version =  '2.0.0'
 }
 
 repositories {

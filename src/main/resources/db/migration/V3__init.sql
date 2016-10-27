@@ -245,7 +245,7 @@ CREATE TABLE customer
   phone character varying(255),
   "timestamp" timestamp without time zone,
   title character varying(255),
-  customernumber bigint,
+  customernumber character varying(255),
   CONSTRAINT customer_pkey PRIMARY KEY (id)
 )
 WITH (
@@ -266,6 +266,7 @@ CREATE TABLE product
   name character varying(255),
   pricenetto double precision NOT NULL,
   productstate character varying(255),
+  productnumber character varying(255),
   "timestamp" timestamp without time zone,
   picture_fk bigint,
   CONSTRAINT product_pkey PRIMARY KEY (id),

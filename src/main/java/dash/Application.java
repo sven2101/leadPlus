@@ -150,7 +150,7 @@ public class Application {
 			http.httpBasic().and().authorizeRequests()
 					.antMatchers(LicenseEnum.FREE.getAllowedRoutes().toArray(new String[LicenseEnum.FREE.getAllowedRoutes().size()])).permitAll()
 					.antMatchers("/api/rest/public/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API").antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER")
-					.anyRequest().authenticated().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+					.anyRequest().authenticated().and()
 					.addFilterBefore(new TenantAuthenticationFilter(this.tenantAuthenticationProvider), BasicAuthenticationFilter.class)
 					.addFilterAfter(new LicenseFilter(), TenantAuthenticationFilter.class).authorizeRequests().anyRequest().authenticated().and()
 					.addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class).csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable()
