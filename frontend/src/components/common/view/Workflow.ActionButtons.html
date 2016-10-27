@@ -23,7 +23,7 @@
 		</ul>
 	</div>
 	<button style="min-height:34px " ng-if="config[ 'PIN_BUTTON'].visible " class="btn btn-white " ng-disabled="config[
-			'PIN_BUTTON'].disabled " ng-click="workflowService.togglePin(process,process.processor==null?rootScope.globals.user:null) "
+			'PIN_BUTTON'].disabled " ng-click="workflowService.togglePin(process,process.processor==null?rootScope.user:null) "
 		title="{{config[
 			'PIN_BUTTON'].title| translate }} ">
          <i class="fa fa-thumb-tack "></i>

@@ -215,7 +215,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                     }
                     if (angular.isUndefined($rootScope.user)) {
                         $location.path("/login");
-                    } else if ($rootScope.globals.user) {
+                    } else if ($rootScope.user) {
 
                         // $injector.get("DashboardService");
                     }

@@ -46,7 +46,7 @@ class SmtpService {
         let self = this;
         let defer = this.q.defer();
         this.save().then(function () {
-            self.smtpResource.testSmtp({ id: self.currentSmtp.id, smtpKey: self.rootScope.globals.user.smtpKey }).$promise.then(function () {
+            self.smtpResource.testSmtp({ id: self.currentSmtp.id, smtpKey: self.rootScope.user.smtpKey }).$promise.then(function () {
                 defer.resolve(null);
                 self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST"));
             }, function (error) {
@@ -73,10 +73,10 @@ class SmtpService {
             this.currentSmtp.stringPassword = null;
         }
         let defer = this.q.defer();
-        this.currentSmtp.user = this.rootScope.globals.user;
+        this.currentSmtp.user = this.rootScope.user;
         this.currentSmtp.password = this.currentSmtp.stringPassword !== null ? btoa(this.currentSmtp.stringPassword) : null;
         let self = this;
-        this.smtpResource.createSmtp({ smtpKey: self.rootScope.globals.user.smtpKey }, this.currentSmtp).$promise.then(function (data) {
+        this.smtpResource.createSmtp({ smtpKey: self.rootScope.user.smtpKey }, this.currentSmtp).$promise.then(function (data) {
             self.currentSmtp = data;
             self.currentSmtp.stringPassword = "";
             for (let i = 0; i < self.currentPasswordLength; i++) {

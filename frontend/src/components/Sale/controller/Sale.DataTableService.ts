@@ -143,7 +143,7 @@ class SaleDataTableService {
     }
 
     getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
-        let user: User = this.rootScope.globals.user;
+        let user: User = this.rootScope.user;
         let config = new ActionButtonConfigBuilder();
         if (user.role === Role.ADMIN || user.role === Role.SUPERADMIN) {
             config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setEnabled().setTitle("SALE_DELETE_SALE");
