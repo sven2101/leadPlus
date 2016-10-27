@@ -172,6 +172,7 @@ class LeadDataTableService {
         config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
         if (!isNullOrUndefined(process.offer)
             || !(user.role === Role.ADMIN || user.role === Role.SUPERADMIN) && (!isNullOrUndefined(process.processor) && process.processor.id !== user.id)) {
+            console.log(process.processor, user);
             config.disableAll();
         } else if (process.status === Status.CLOSED) {
             config.disableAll();
@@ -198,21 +199,25 @@ class LeadDataTableService {
                 + hasProcessor;
         } else if (data.status === "OFFER") {
             return "<span style='color: #f79d3c;'>"
-                + this.translate.instant("COMMON_STATUS_OFFER") + "</span>";
+                + this.translate.instant("COMMON_STATUS_OFFER") + "</span>"
+                + hasProcessor;
         }
         else if (data.status === "INCONTACT") {
             return "<span style='color: #f79d3c;'>"
-                + this.translate.instant("COMMON_STATUS_INCONTACT") + "</span>";
+                + this.translate.instant("COMMON_STATUS_INCONTACT") + "</span>"
+                + hasProcessor;
         }
         else if (data.status === "FOLLOWUP") {
             return "<span style='color: #f79d3c;'>"
-                + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>";
+                + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>"
+                + hasProcessor;
         } else if (data.status === "SALE") {
             return "<span style='color: #1872ab;'>"
                 + this.translate.instant("COMMON_STATUS_SALE") + "</span>";
         } else if (data.status === "CLOSED") {
             return "<span style='color: #ea394c;'>"
-                + this.translate.instant("COMMON_STATUS_CLOSED") + "</span>";
+                + this.translate.instant("COMMON_STATUS_CLOSED") + "</span>"
+                + hasProcessor;
         }
     }
 

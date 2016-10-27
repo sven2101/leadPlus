@@ -222,13 +222,15 @@ class OfferDataTableService {
                 + hasProcessor;
         } else if (data.status === "FOLLOWUP") {
             return "<span style='color: #f79d3c;'>"
-                + data.followUpAmount + "x " + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>";
+                + data.followUpAmount + "x " + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>"
+                + hasProcessor;
         } else if (data.status === "SALE") {
             return "<span style='color: #1872ab;'>"
                 + this.translate.instant("COMMON_STATUS_SALE") + "</span>";
         } else if (data.status === "CLOSED") {
             return "<span style='color: #ea394c;'>"
-                + this.translate.instant("COMMON_STATUS_CLOSED") + "</span>";
+                + this.translate.instant("COMMON_STATUS_CLOSED") + "</span>"
+                + hasProcessor;
         }
     }
 
