@@ -31,7 +31,6 @@ class SubdomainService {
 
     getSubdomain(): string {
         let host = this.location.host();
-        console.log("Host: ", host);
         if (host.indexOf(".") < 0) {
             return null;
         } else {

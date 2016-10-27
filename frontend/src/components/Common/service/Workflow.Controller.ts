@@ -165,20 +165,20 @@ class WorkflowController extends AbstractWorkflow {
             this.currentNotification.id = null;
         } else {
             offer.orderPositions = this.currentOrderPositions;
-            this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => console.log(error));
+            this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => handleError(error));
         }
     }
 
     generatePDF(templateId: string, offer: Offer) {
-        this.templateService.generatePDF(templateId, offer).then((result) => console.log(result), (error) => console.log(error));
+        this.templateService.generatePDF(templateId, offer).then((result) => { }, (error) => handleError(error));
     }
 
     getAllActiveTemplates() {
-        this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
+        this.templateService.getAll().then((result) => this.templates = result, (error) => handleError(error));
     }
 
     getAllActiveProducts() {
-        this.productService.getAllProducts().then((result) => this.products = result, (error) => console.log(error));
+        this.productService.getAllProducts().then((result) => this.products = result, (error) => handleError(error));
     }
 
     getOrderPositions(process: Process): Array<OrderPosition> {
@@ -211,7 +211,6 @@ class WorkflowController extends AbstractWorkflow {
                     if (isNullOrUndefined(process.notifications)) {
                         process.notifications = [];
                     }
-                    console.log(notification.attachment);
                     process.notifications.push(notification);
                     self.workflowService.saveProcess(process).then((resultProcess) => {
                         self.process.notifications = resultProcess.notifications;

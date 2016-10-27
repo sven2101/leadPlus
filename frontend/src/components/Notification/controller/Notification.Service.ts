@@ -69,7 +69,6 @@ class NotificationService {
     }
 
     setAttachmentToNotification($files, notification: Notification) {
-        console.log("files");
         let defer = this.q.defer();
         let self = this;
         this.formdata.append("file", $files[0]);
@@ -81,11 +80,10 @@ class NotificationService {
         fileReader.readAsDataURL($files[0]);
         fileReader.onload = function () {
             notification.attachment.content = this.result.split(",")[1];
-            console.log(notification.attachment);
             defer.resolve(notification);
         };
         fileReader.onerror = (error) => {
-            console.log(error);
+            handleError(error);
             defer.reject(notification);
         };
         return defer.promise;

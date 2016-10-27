@@ -75,7 +75,6 @@ angular.module(moduleApp)
                 if (!isNullOrUndefined(scope.quality) && !isNaN(scope.quality) && scope.quality > 0 && scope.quality <= 100) {
                     picture.content = canvas.toDataURL("image/jpeg", scope.quality / 100).split(",")[1];
                     picture.size = Math.round((picture.content.length) * 3 / 4);
-                    console.log(picture.size);
                 } else {
                     picture.content = canvas.toDataURL("image/png", 0.5).split(",")[1];
                     picture.size = Math.round((picture.content.length) * 3 / 4);

@@ -74,7 +74,7 @@ class DashboardController {
     }
 
     getAllActiveTemplates() {
-        this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
+        this.templateService.getAll().then((result) => this.templates = result, (error) => handleError(error));
     }
 
     saveDataToModal(info, type, process) {

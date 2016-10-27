@@ -313,7 +313,7 @@ class DashboardService {
         this.processResource.getTodos({ processorId: this.rootScope.user.id }).$promise.then((data) => {
             this.todos = this.orderByTimestamp(data);
             this.rootScope.$broadcast("todosChanged", this.todos);
-        }, (error) => console.log(error));
+        }, (error) => handleError(error));
 
     }
 

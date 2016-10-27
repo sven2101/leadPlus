@@ -418,7 +418,7 @@ class WorkflowService {
                 pages: 5,
                 dataSrc: "data",
                 error: function (xhr, error, thrown) {
-                    console.log(xhr);
+                    handleError(xhr);
                 },
                 "beforeSend": function (request) {
                     request.setRequestHeader("Authorization", "Basic " + self.user.authorization);
@@ -429,7 +429,7 @@ class WorkflowService {
             return {
                 url: latestDataRoute,
                 error: function (xhr, error, thrown) {
-                    console.log(xhr);
+                    handleError(xhr);
                 },
                 type: "GET",
                 "beforeSend": function (request) {
@@ -484,7 +484,7 @@ class WorkflowService {
     refreshUsers(): void {
         this.userResource.getAll().$promise.then((data) => {
             this.users = data;
-        }, (error) => console.log(error));
+        }, (error) => handleError(error));
 
     }
 
