@@ -96,8 +96,9 @@ public class Customer {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar timestamp;
 
+	@Size(max = 255)
 	@Column(name = "customernumber")
-	private Long customerNumber;
+	private String customerNumber;
 
 	public Customer() {
 	}
@@ -190,11 +191,11 @@ public class Customer {
 		this.deleted = deleted;
 	}
 
-	public Long getCustomerNumber() {
+	public String getCustomerNumber() {
 		return customerNumber;
 	}
 
-	public void setCustomerNumber(Long customerNumber) {
+	public void setCustomerNumber(String customerNumber) {
 		this.customerNumber = customerNumber;
 	}
 
