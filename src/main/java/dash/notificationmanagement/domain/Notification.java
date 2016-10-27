@@ -70,19 +70,18 @@ public class Notification {
 	private String content;
 
 	@ManyToOne
-	@JoinColumn(name = "attachment_id", nullable = true)
+	@JoinColumn(name = "attachment_fk", nullable = true)
 	private FileUpload attachment;
 
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name = "process_id", nullable = false)
+	@JoinColumn(name = "process_fk", nullable = false)
 	@Where(clause = "deleted <> '1'")
 	private Process process;
 
 	@Enumerated(EnumType.STRING)
 	@NotNull
-	@Column(name = "notificationtype", length = 255)
-
+	@Column(name = "notificationtype", length = 255, nullable = false)
 	private NotificationType notificationType;
 
 	public Notification() {
@@ -209,9 +208,8 @@ public class Notification {
 
 	@Override
 	public String toString() {
-		return "Notification [id=" + id + ", recipient=" + recipient + ", subject=" + subject + ", deleted=" + deleted
-				+ ", content=" + content + ", attachment=" + attachment + ", notificationType=" + notificationType
-				+ "]";
+		return "Notification [id=" + id + ", recipient=" + recipient + ", subject=" + subject + ", deleted=" + deleted + ", content=" + content
+				+ ", attachment=" + attachment + ", notificationType=" + notificationType + "]";
 	}
 
 }

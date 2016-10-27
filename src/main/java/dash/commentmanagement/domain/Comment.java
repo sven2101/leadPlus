@@ -62,7 +62,7 @@ public class Comment {
 
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name = "process_id", nullable = false)
+	@JoinColumn(name = "process_fk", nullable = false)
 	private Process process;
 
 	@NotNull
@@ -177,8 +177,7 @@ public class Comment {
 
 	@Override
 	public String toString() {
-		return "Comment [id=" + id + ", deleted=" + deleted + ", creator=" + creator + ", commentText=" + commentText
-				+ ", timestamp=" + timestamp + "]";
+		return "Comment [id=" + id + ", deleted=" + deleted + ", creator=" + creator + ", commentText=" + commentText + ", timestamp=" + timestamp + "]";
 	}
 
 }

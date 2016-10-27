@@ -217,9 +217,9 @@ CREATE TABLE "user"
   job character varying(50),
   role character varying(255),
   username character varying(30),	
-  picture_id bigint,
+  picture_fk bigint,
   CONSTRAINT "user_pkey" PRIMARY KEY (id),
-  CONSTRAINT fkoxacr7c2iwurvyel2h0jwblu3 FOREIGN KEY (picture_id)
+  CONSTRAINT fkoxacr7c2iwurvyel2h0jwblu3 FOREIGN KEY (picture_fk)
       REFERENCES fileupload (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT uk_e6gkqunxajvyxl5uctpl2vl2p UNIQUE (email)
@@ -267,9 +267,9 @@ CREATE TABLE product
   pricenetto double precision NOT NULL,
   productstate character varying(255),
   "timestamp" timestamp without time zone,
-  picture_id bigint,
+  picture_fk bigint,
   CONSTRAINT product_pkey PRIMARY KEY (id),
-  CONSTRAINT fkgk3l6scw566juj92do6pam2cu FOREIGN KEY (picture_id)
+  CONSTRAINT fkgk3l6scw566juj92do6pam2cu FOREIGN KEY (picture_fk)
       REFERENCES fileupload (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
@@ -335,27 +335,6 @@ WITH (
 ALTER TABLE lead
   OWNER TO postgres;
 
--- Table: notification
-
-CREATE TABLE notification
-(
-  id bigint NOT NULL DEFAULT nextval('notification_id_seq'::regclass),
-  content character varying(30000),
-  deleted boolean NOT NULL,
-  recipient character varying(255),
-  subject character varying(255),
-  attachment_id bigint,
-  CONSTRAINT notification_pkey PRIMARY KEY (id),
-  CONSTRAINT fker61rsj10b0uasld2vim4ym2e FOREIGN KEY (attachment_id)
-      REFERENCES fileupload (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE notification
-  OWNER TO postgres;
-
 -- Table: offer
 
 CREATE TABLE offer
@@ -370,16 +349,12 @@ CREATE TABLE offer
   vendor_fk bigint,
   deliverydate timestamp with time zone,
   offerprice double precision NOT NULL,
-  notification_id bigint,
   CONSTRAINT offer_pkey PRIMARY KEY (id),
   CONSTRAINT fk_6mogpqxa4c87k261g07yentij FOREIGN KEY (vendor_fk)
       REFERENCES vendor (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT fk_d552vlot1wyami90791a3ru5e FOREIGN KEY (customer_fk)
       REFERENCES customer (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT fkh32vdgri1org99pnveo45ln6w FOREIGN KEY (notification_id)
-      REFERENCES notification (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
@@ -397,10 +372,10 @@ CREATE TABLE orderposition
   deleted boolean NOT NULL,
   discount double precision NOT NULL,
   price double precision NOT NULL,
-  product_id bigint,
-  workflow_id bigint NOT NULL,
+  product_fk bigint,
+  workflow_fk bigint NOT NULL,
   CONSTRAINT orderposition_pkey PRIMARY KEY (id),
-  CONSTRAINT fkm30o7q4mt907eab95uadthrk7 FOREIGN KEY (product_id)
+  CONSTRAINT fkm30o7q4mt907eab95uadthrk7 FOREIGN KEY (product_fk)
       REFERENCES product (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
@@ -441,6 +416,31 @@ WITH (
 ALTER TABLE process
   OWNER TO postgres;
 
+-- Table: notification
+
+CREATE TABLE notification
+(
+  id bigint NOT NULL DEFAULT nextval('notification_id_seq'::regclass),
+  process_fk bigint NOT NULL,
+  content character varying(30000),
+  deleted boolean NOT NULL,
+  recipient character varying(255),
+  subject character varying(255),
+  attachment_fk bigint,
+  notificationtype character varying(255) NOT NULL, 
+  CONSTRAINT notification_pkey PRIMARY KEY (id),
+  CONSTRAINT fker61rsj10b0uasld2vim4ym2e FOREIGN KEY (attachment_fk)
+      REFERENCES fileupload (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT notification_process FOREIGN KEY (process_fk)
+      REFERENCES process (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE notification
+  OWNER TO postgres;
     
 -- Table: comment
 
@@ -451,12 +451,12 @@ CREATE TABLE comment
   deleted boolean NOT NULL,
   "timestamp" timestamp with time zone,
   creator_fk bigint NOT NULL,
-  process_id bigint NOT NULL,
+  process_fk bigint NOT NULL,
   CONSTRAINT comment_pkey PRIMARY KEY (id),
   CONSTRAINT fk1wni9g8xoxv69t0p8gqf1l9u4 FOREIGN KEY (creator_fk)
       REFERENCES "user" (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT fk260uoiig31xoni9ap126hrbjq FOREIGN KEY (process_id)
+  CONSTRAINT fk260uoiig31xoni9ap126hrbjq FOREIGN KEY (process_fk)
       REFERENCES process (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
@@ -482,9 +482,9 @@ CREATE TABLE smtp
   salt bytea,
   sender character varying(255),
   username character varying(255),
-  user_id bigint,
+  user_fk bigint,
   CONSTRAINT smtp_pkey PRIMARY KEY (id),
-  CONSTRAINT fkgmivoqfpw4ssva180dtvkcln0 FOREIGN KEY (user_id)
+  CONSTRAINT fkgmivoqfpw4ssva180dtvkcln0 FOREIGN KEY (user_fk)
       REFERENCES "user" (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
