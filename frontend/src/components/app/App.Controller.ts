@@ -40,7 +40,6 @@ class AppController {
         this.userResource = UserResource.resource;
         this.profileService = ProfileService;
         this.rootScope.leadsCount = 0;
-        this.rootScope.todos = "test";
         this.location = $location;
 
         this.rootScope.offersCount = 0;

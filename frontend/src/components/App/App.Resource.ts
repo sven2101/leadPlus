@@ -27,8 +27,6 @@ class LeadResource {
             getAll: { url: "/api/rest/leads", method: "GET" },
             getById: { url: "/api/rest/leads/:id", method: "GET" },
             getByCustomerId: { url: "/api/rest/leads/customer/:id", method: "GET", isArray: true },
-            // save: { url: "/api/rest/leads/", method: "POST" },
-            // update: { url: "/api/rest/leads", method: "PUT" },
             drop: { url: "/api/rest/leads/:id", method: "DELETE" }
         });
     }
@@ -51,8 +49,6 @@ class OfferResource {
             getAll: { url: "/api/rest/offers", method: "GET" },
             getById: { url: "/api/rest/offers/:id", method: "GET" },
             getByCustomerId: { url: "/api/rest/offers/customer/:id", method: "GET", isArray: true },
-            // save: { url: "/api/rest/offers/", method: "POST" },
-            // update: { url: "/api/rest/offers", method: "PUT" },
             drop: { url: "/api/rest/offers/:id", method: "DELETE" },
         });
     }
@@ -76,8 +72,6 @@ class SaleResource {
             getById: { url: "/api/rest/sales/:id", method: "GET" },
             getByCustomerId: { url: "/api/rest/sales/customer/:id", method: "GET", isArray: true },
             getByinvoiceNumber: { url: "/api/rest/sales/invoice", method: "POST" },
-            // save: { url: "/api/rest/sales/", method: "POST" },
-            // update: { url: "/api/rest/sales", method: "PUT" },
             drop: { url: "/api/rest/sales/:id", method: "DELETE" },
         });
     }

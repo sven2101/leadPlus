@@ -128,28 +128,10 @@ class AuthService {
     }
 
     logout() {
-
-
         this.cookies.remove("user", { domain: "leadplus.localhost", path: "/" });
         this.cookies.remove("tenant", { domain: "leadplus.localhost", path: "/" });
         this.http.defaults.headers.common.Authorization = "Basic";
         window.open("/logout.html", "_self");
-
-        /*
-        let self = this;
-        this.http.post("logout", {})
-            .success(function () {
-                // self.location.path("#/login");
-                self.rootScope.$broadcast("$destroy");
-                // location.reload();
-            })
-            .error(function (data) {
-                // self.location.path("#/login");
-                self.rootScope.$broadcast("$destroy");
-                // location.reload();
-
-            });
-        */
     }
 
 }
