@@ -39,8 +39,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import dash.fileuploadmanagement.domain.FileUpload;
 import io.swagger.annotations.ApiModelProperty;
@@ -97,7 +95,6 @@ public class Product implements Serializable {
 	@Column(name = "pricenetto", nullable = false)
 	private Double priceNetto;
 
-	@JsonProperty(access = Access.WRITE_ONLY)
 	@ApiModelProperty(hidden = true)
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "picture_fk", nullable = true)

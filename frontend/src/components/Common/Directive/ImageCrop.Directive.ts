@@ -72,12 +72,12 @@ angular.module(moduleApp)
                 let picture = new FileUpload();
                 picture.mimeType = "image/jpeg";
                 picture.filename = "profilepicture";
-                if (!isNullOrUndefined(scope.quality) && !isNaN(scope.quality) && scope.quality > 0 && scope.quality < 100) {
-                    picture.content = canvas.toDataURL("image/png", scope.quality / 100).split(",")[1];
+                if (!isNullOrUndefined(scope.quality) && !isNaN(scope.quality) && scope.quality > 0 && scope.quality <= 100) {
+                    picture.content = canvas.toDataURL("image/jpeg", scope.quality / 100).split(",")[1];
                     picture.size = Math.round((picture.content.length) * 3 / 4);
                 } else {
                     picture.content = canvas.toDataURL("image/png", 0.5).split(",")[1];
-                    picture.size = scope.currentFileSize / 2;
+                    picture.size = Math.round((picture.content.length) * 3 / 4);
                 }
                 $rootScope.$broadcast(scope.event, picture);
             };

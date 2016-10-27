@@ -53,7 +53,7 @@ class SaleDataTableService {
             .withOption("ajax", {
                 url: openDataSaleRoute,
                 error: function (xhr, error, thrown) {
-                    console.log(xhr);
+                    handleError(xhr);
                 },
                 type: "GET",
                 "beforeSend": function (request) {

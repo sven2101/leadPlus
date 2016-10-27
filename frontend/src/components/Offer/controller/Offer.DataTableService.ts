@@ -53,7 +53,7 @@ class OfferDataTableService {
             .withOption("ajax", {
                 url: openDataOfferRoute,
                 error: function (xhr, error, thrown) {
-                    console.log(xhr);
+                    handleError(xhr);
                 },
                 type: "GET",
                 "beforeSend": function (request) {

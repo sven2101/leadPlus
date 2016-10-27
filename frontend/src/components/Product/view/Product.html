@@ -70,7 +70,7 @@
 										<small style="word-wrap: break-word; word-break: break-all;">{{product.description}}</small>
 									</td>
 									<td>
-										<img style="width: 60px; height:60px;border-radius: 10%" ng-src="/api/rest/products/{{product.id}}/image"
+										<img ng-if="product.picture!=null" style="width: 60px; height:60px;border-radius: 10%" pictureId="{{product.picture.id}}" httpsrc="/api/rest/products/{{product.id}}/image"
 											alt="">
 									</td>
 									<td class="project-actions col-md-1">

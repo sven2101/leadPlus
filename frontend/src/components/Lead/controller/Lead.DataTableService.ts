@@ -55,7 +55,7 @@ class LeadDataTableService {
             .withOption("ajax", {
                 url: openDataLeadRoute,
                 error: function (xhr, error, thrown) {
-                    console.log(xhr);
+                    handleError(xhr);
                 },
                 type: "GET",
                 "beforeSend": function (request) {
@@ -172,7 +172,6 @@ class LeadDataTableService {
         config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
         if (!isNullOrUndefined(process.offer)
             || !(user.role === Role.ADMIN || user.role === Role.SUPERADMIN) && (!isNullOrUndefined(process.processor) && process.processor.id !== user.id)) {
-            console.log(process.processor, user);
             config.disableAll();
         } else if (process.status === Status.CLOSED) {
             config.disableAll();

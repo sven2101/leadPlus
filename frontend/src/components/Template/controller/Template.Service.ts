@@ -106,14 +106,13 @@ class TemplateService {
     }
 
     generate(templateId: string, offer: Offer, notification: Notification): IPromise<Notification> {
-        console.log("Offer: ", offer);
         let defer = this.q.defer();
         let self = this;
         let offerMessageContext: OfferMessageContext = new OfferMessageContext();
         offerMessageContext.offer = offer;
         offerMessageContext.notification = notification;
         this.templateResource.generate({ templateId: templateId }, offerMessageContext).$promise.then(function (resultMessage: Notification) {
-            console.log(resultMessage);
+
             defer.resolve(resultMessage);
         }, function (error: any) {
             defer.reject(error);
@@ -125,8 +124,6 @@ class TemplateService {
         let defer = this.q.defer();
         let self = this;
         this.templateResource.generatePDF({ templateId: templateId }, offer).$promise.then(function (result) {
-            console.log("PDf result: ", result);
-            console.log(result);
             let file = new Blob([result], { type: "application/pdf" });
             let fileURL = URL.createObjectURL(file);
 
