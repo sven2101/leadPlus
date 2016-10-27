@@ -35,10 +35,6 @@ WITH (
 );
 ALTER TABLE public.license
   OWNER TO postgres;
-  
-INSERT INTO public.license(licenseType, trial, term)
-    VALUES ('BASIC', false, now())
-        ON CONFLICT DO NOTHING;   
 
 -- Table: tenant
 
@@ -61,7 +57,4 @@ WITH (
 );
 ALTER TABLE public.tenant
   OWNER TO postgres; 
-  
-INSERT INTO public.tenant (address, description, enabled, tenantkey, license_fk)
-    VALUES ('Hauptstrasse 55', 'Test Tenant', true, 'tenant', 1)
-        ON CONFLICT DO NOTHING; 
+        
