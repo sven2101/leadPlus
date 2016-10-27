@@ -114,7 +114,6 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 templateUrl: "components/Login/view/Login.html",
                 controller: "LoginController",
                 controllerAs: "loginCtrl",
-                package: "basic"
             }).when("/product",
             {
                 templateUrl: "components/Product/view/Product.html",
@@ -146,15 +145,12 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             }).when("/401",
             {
                 templateUrl: "components/Common/view/Unauthorized.html",
-                package: "basic"
             }).when("/403",
             {
                 templateUrl: "components/Common/view/Forbidden.html",
-                package: "basic"
             }).when("/404",
             {
                 templateUrl: "components/Common/view/NotFound.html",
-                package: "basic"
             }).otherwise({
                 redirectTo: "/404"
             });
@@ -165,7 +161,6 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             return {
                 "responseError": function (rejection) {
                     let defer = $q.defer();
-                    console.log(rejection.config.url);
                     if (rejection.config.url.includes(".html")) {
                         if (rejection.status === 401) {
                             $location.path("/401");
@@ -184,18 +179,16 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             };
         });
     }])
-    .run([$locationId, $windowId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId, ProfileServiceId,
-        function ($location, $window, $http, $rootScope, Auth, $cookies, $injector, ProfileService) {
+    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId,
+        function ($location, $http, $rootScope, Auth, $cookies) {
             $rootScope.user = $cookies.getObject("user");
             $rootScope.tenant = $cookies.getObject("tenant");
 
-            if (!angular.isUndefined($rootScope.user)) {
-                // if ($rootScope.user.tenant === $window.location.hostname.split(".")[0]) {
+            if (!isNullOrUndefined($rootScope.user)) {
                 $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
                 $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
 
             }
-            let initialLoaded = true;
 
             $rootScope.$on("$routeChangeStart", function (event, next, current) {
                 $rootScope.user = $cookies.getObject("user");
@@ -209,27 +202,20 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                     }
                 }
 
-                if (!angular.isUndefined($rootScope.user)) {
-                    // if ($rootScope.user.tenant === $window.location.hostname.split(".")[0]) {
+                if (!isNullOrUndefined($rootScope.user)) {
                     $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
+                }
+                if (!isNullOrUndefined($rootScope.tenant)) {
                     $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
-
                 }
 
                 if (next.authenticated === true) {
-                    if (initialLoaded) {
-                        initialLoaded = false;
-                    }
-                    if (angular.isUndefined($rootScope.user)) {
+                    if (isNullOrUndefined($rootScope.user)) {
                         $location.path("/login");
-                    } else if ($rootScope.user) {
-
-                        // $injector.get("DashboardService");
                     }
                 }
             });
             $rootScope.logout = function () {
-                // $location.path("/login");
                 Auth.logout();
             };
         }]);
