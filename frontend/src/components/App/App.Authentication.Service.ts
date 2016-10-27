@@ -83,7 +83,8 @@ class AuthService {
                         phone: data.phone,
                         language: data.language,
                         smtpKey: encodeURIComponent(hashPasswordPbkdf2(hashedPassword, salt)),
-                        authorization: authorization
+                        authorization: authorization,
+                        picture: data.picture
                     };
                     console.log(data);
                     self.rootScope.tenant = {
