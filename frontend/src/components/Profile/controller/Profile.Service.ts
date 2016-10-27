@@ -58,13 +58,13 @@ class ProfileService {
 
         this.userResource.update(user).$promise.then(function (updatedUser: User) {
             self.updateRootScope(updatedUser);
-            self.cookies.put("globals", self.rootScope.globals);
-            self.rootScope.changeLanguage(self.rootScope.globals.user.language);
+            self.cookies.put("globals", self.rootScope);
+            self.rootScope.changeLanguage(self.rootScope.user.language);
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
             defer.resolve(updatedUser);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
-            defer.reject(self.rootScope.globals.user);
+            defer.reject(self.rootScope.user);
         });
         return defer.promise;
     }
@@ -73,16 +73,16 @@ class ProfileService {
         let self = this;
         this.userResource.setProfilePicture(user).$promise.then(function (data) {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
-            $("#profilePicture").prop("src", "users/" + self.rootScope.globals.user.id + "/profile/picture?" + new Date().valueOf());
+            $("#profilePicture").prop("src", "users/" + self.rootScope.user.id + "/profile/picture?" + new Date().valueOf());
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
-            self.rootScope.globals.user.picture = null;
-            self.cookies.put("globals", self.rootScope.globals);
+            self.rootScope.user.picture = null;
+            self.cookies.put("globals", self.rootScope);
         });
     }
 
     updatePassword(oldPassword, newPassword1, newPassword2): IPromise<boolean> {
-        // let salt: string = this.rootScope.globals.user.email;
+        // let salt: string = this.rootScope.user.email;
         let salt = "test";
         oldPassword = hashPasswordPbkdf2(oldPassword, salt);
         newPassword1 = hashPasswordPbkdf2(newPassword1, salt);
@@ -90,15 +90,15 @@ class ProfileService {
         let defer = this.q.defer();
         let self = this;
         this.userResource.changePassword({
-            id: this.rootScope.globals.user.id
+            id: this.rootScope.user.id
         }, {
                 newPassword: newPassword1,
                 oldPassword: oldPassword,
-                oldSmtpKey: self.rootScope.globals.user.smtpKey,
+                oldSmtpKey: self.rootScope.user.smtpKey,
                 newSmtpKey: encodeURIComponent(hashPasswordPbkdf2(newPassword1, salt))
             }).$promise.then(function () {
                 self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
-                self.rootScope.globals.user.smtpKey = encodeURIComponent(hashPasswordPbkdf2(newPassword1, salt));
+                self.rootScope.user.smtpKey = encodeURIComponent(hashPasswordPbkdf2(newPassword1, salt));
                 defer.resolve(true);
             }, function () {
                 self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
@@ -109,8 +109,8 @@ class ProfileService {
 
     uploadFiles() {
         let self = this;
-        this.userResource.setProfilePicture({ id: this.rootScope.globals.user.id }, this.formdata).$promise.then(function (data) {
-            self.rootScope.globals.user.picture = data.picture;
+        this.userResource.setProfilePicture({ id: this.rootScope.user.id }, this.formdata).$promise.then(function (data) {
+            self.rootScope.user.picture = data.picture;
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
             self.getById();
         }, function () {
@@ -121,7 +121,7 @@ class ProfileService {
     getById(): IPromise<User> {
         let defer = this.q.defer();
         let self = this;
-        this.userResource.getById({ id: this.rootScope.globals.user.id }).$promise.then(function (resultUser: User) {
+        this.userResource.getById({ id: this.rootScope.user.id }).$promise.then(function (resultUser: User) {
             defer.resolve(resultUser);
         }, function (error: any) {
             defer.reject(error);
@@ -130,14 +130,14 @@ class ProfileService {
     }
 
     updateRootScope(user: User) {
-        this.rootScope.globals.user.email = user.email;
-        this.rootScope.globals.user.firstname = user.firstname;
-        this.rootScope.globals.user.lastname = user.lastname;
-        this.rootScope.globals.user.phone = user.phone;
-        this.rootScope.globals.user.language = user.language;
-        this.rootScope.globals.user.skype = user.skype;
-        this.rootScope.globals.user.job = user.job;
-        this.rootScope.globals.user.fax = user.fax;
+        this.rootScope.user.email = user.email;
+        this.rootScope.user.firstname = user.firstname;
+        this.rootScope.user.lastname = user.lastname;
+        this.rootScope.user.phone = user.phone;
+        this.rootScope.user.language = user.language;
+        this.rootScope.user.skype = user.skype;
+        this.rootScope.user.job = user.job;
+        this.rootScope.user.fax = user.fax;
     }
 
     getTheFiles($files) {

@@ -61,14 +61,14 @@ class ProfileController {
     }
 
     reduceCurrentUserInfo() {
-        this.currentUser.email = this.rootscope.globals.user.email;
-        this.currentUser.firstname = this.rootscope.globals.user.firstname;
-        this.currentUser.lastname = this.rootscope.globals.user.lastname;
-        this.currentUser.phone = this.rootscope.globals.user.phone;
-        this.currentUser.language = this.rootscope.globals.user.language;
-        this.currentUser.skype = this.rootscope.globals.user.skype;
-        this.currentUser.job = this.rootscope.globals.user.job;
-        this.currentUser.fax = this.rootscope.globals.user.fax;
+        this.currentUser.email = this.rootscope.user.email;
+        this.currentUser.firstname = this.rootscope.user.firstname;
+        this.currentUser.lastname = this.rootscope.user.lastname;
+        this.currentUser.phone = this.rootscope.user.phone;
+        this.currentUser.language = this.rootscope.user.language;
+        this.currentUser.skype = this.rootscope.user.skype;
+        this.currentUser.job = this.rootscope.user.job;
+        this.currentUser.fax = this.rootscope.user.fax;
     }
 
     updateProfileImage(user: User) {

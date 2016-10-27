@@ -166,7 +166,7 @@ class OfferDataTableService {
     }
 
     getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
-        let user: User = this.rootScope.globals.user;
+        let user: User = this.rootScope.user;
         let config = new ActionButtonConfigBuilder();
         config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("OFFER_CREATE_SALE");
         if (process.status === Status.OFFER || process.status === Status.FOLLOWUP) {
