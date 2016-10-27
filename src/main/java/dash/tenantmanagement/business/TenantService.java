@@ -51,10 +51,10 @@ public class TenantService implements ITenantService {
 	private static final Logger logger = Logger.getLogger(TenantService.class);
 
 	@Value("${hostname.suffix}")
-	private static String hostnameSuffix;
+	private String hostnameSuffix;
 
 	@Value("${zone.hosted.id}")
-	private static String hostedZoneId;
+	private String hostedZoneId;
 
 	@Autowired
 	private TenantRepository tenantRepository;
@@ -86,8 +86,8 @@ public class TenantService implements ITenantService {
 			tenantRepository.save(tenant);
 			createSchema(tenant);
 			//if (!subdomainAlreadyExists(tenant)) {
-				//System.out.println("CREATING SUBDOMAIN ON AWS.");
-				// createTenantSubdomain(tenant);
+			//System.out.println("CREATING SUBDOMAIN ON AWS.");
+			// createTenantSubdomain(tenant);
 			//}
 			//TODO no general exception -> AWS throws expcetion...
 		} catch (Exception ex) {

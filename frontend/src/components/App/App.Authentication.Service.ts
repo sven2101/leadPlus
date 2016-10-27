@@ -108,6 +108,9 @@ class AuthService {
 
                         let date = new Date();
                         date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
+
+                        this.location.host();
+                        console.log(this.location.host());
                         self.cookies.putObject("user", self.rootScope.user, { domain: "leadplus.localhost", path: "/", expires: date });
                         self.cookies.putObject("tenant", self.rootScope.tenant, { domain: "leadplus.localhost", path: "/", expires: date });
 

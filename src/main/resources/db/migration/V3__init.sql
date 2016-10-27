@@ -7,8 +7,6 @@ CREATE SEQUENCE "user_id_seq"
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE "user_id_seq"
-  OWNER TO postgres;
    
 -- Sequence: comment_id_seq
 
@@ -18,8 +16,6 @@ CREATE SEQUENCE comment_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE comment_id_seq
-  OWNER TO postgres;
 
 -- Sequence: customer_id_seq
 
@@ -29,8 +25,6 @@ CREATE SEQUENCE customer_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE customer_id_seq
-  OWNER TO postgres;
 
 -- Sequence: notification_id_seq
 
@@ -40,8 +34,6 @@ CREATE SEQUENCE notification_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE notification_id_seq
-  OWNER TO postgres;
 
 -- Sequence: orderposition_id_seq
 
@@ -51,8 +43,6 @@ CREATE SEQUENCE orderposition_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE orderposition_id_seq
-  OWNER TO postgres;
 
 -- Sequence: process_id_seq
 
@@ -62,8 +52,6 @@ CREATE SEQUENCE process_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE process_id_seq
-  OWNER TO postgres;
 
 -- Sequence: product_id_seq
 
@@ -73,8 +61,6 @@ CREATE SEQUENCE product_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE product_id_seq
-  OWNER TO postgres;
 
 -- Sequence: smtp_id_seq
 
@@ -84,8 +70,6 @@ CREATE SEQUENCE smtp_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE smtp_id_seq
-  OWNER TO postgres;
 
 -- Sequence: template_id_seq
 
@@ -95,8 +79,6 @@ CREATE SEQUENCE template_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE template_id_seq
-  OWNER TO postgres;
 
 -- Sequence: vendor_id_seq
 
@@ -106,8 +88,6 @@ CREATE SEQUENCE vendor_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE vendor_id_seq
-  OWNER TO postgres;
   
  -- Sequence: fileupload_id_seq
 
@@ -117,10 +97,6 @@ CREATE SEQUENCE IF NOT EXISTS fileupload_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE fileupload_id_seq
-  OWNER TO postgres;
-
-
 
 -- Sequence: olap_id_seq
 
@@ -130,8 +106,6 @@ CREATE SEQUENCE IF NOT EXISTS olap_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE olap_id_seq
-  OWNER TO postgres;
 
  -- Sequence: workflow_id_seq
 
@@ -141,10 +115,7 @@ CREATE SEQUENCE IF NOT EXISTS workflow_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE workflow_id_seq
-  OWNER TO postgres;
-
-  
+ 
 
 -- Table: hibernate_sequences
 
@@ -157,9 +128,6 @@ CREATE TABLE hibernate_sequences
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE hibernate_sequences
-  OWNER TO postgres;
-
   
 -- Table: template
 
@@ -175,8 +143,6 @@ CREATE TABLE template
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE template
-  OWNER TO postgres;
   
 -- Table: vendor
 
@@ -191,8 +157,6 @@ CREATE TABLE vendor
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE vendor
-  OWNER TO postgres;
   
 -- Table: fileupload
 
@@ -209,8 +173,6 @@ CREATE TABLE fileupload
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE fileupload
-  OWNER TO postgres;
   
 -- Table: "User"
 
@@ -239,8 +201,6 @@ CREATE TABLE "user"
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE "user"
-  OWNER TO postgres;
   
 -- Table: customer
 
@@ -263,9 +223,6 @@ CREATE TABLE customer
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE customer
-  OWNER TO postgres;
-
     
 -- Table: product
 
@@ -289,8 +246,6 @@ CREATE TABLE product
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE product
-  OWNER TO postgres;
 
 -- Table: sale
 
@@ -319,8 +274,6 @@ CREATE TABLE sale
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE sale
-  OWNER TO postgres;
 
 -- Table: lead
 
@@ -345,8 +298,6 @@ CREATE TABLE lead
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE lead
-  OWNER TO postgres;
 
 -- Table: offer
 
@@ -373,8 +324,6 @@ CREATE TABLE offer
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE offer
-  OWNER TO postgres;
 
 -- Table: orderposition
 
@@ -395,8 +344,6 @@ CREATE TABLE orderposition
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE orderposition
-  OWNER TO postgres;
 
 -- Table: process
 
@@ -426,8 +373,6 @@ CREATE TABLE process
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE process
-  OWNER TO postgres;
 
 -- Table: notification
 
@@ -452,8 +397,6 @@ CREATE TABLE notification
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE notification
-  OWNER TO postgres;
     
 -- Table: comment
 
@@ -476,8 +419,6 @@ CREATE TABLE comment
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE comment
-  OWNER TO postgres;
 
 -- Table: smtp
 
@@ -504,10 +445,9 @@ CREATE TABLE smtp
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE smtp
-  OWNER TO postgres; 
   
  -- Table: Olap
+ 
 CREATE TABLE IF NOT EXISTS olap
 (
   id bigint NOT NULL DEFAULT nextval('olap_id_seq'::regclass),
@@ -525,6 +465,5 @@ CREATE TABLE IF NOT EXISTS olap
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE olap
-  OWNER TO postgres;
+
    
