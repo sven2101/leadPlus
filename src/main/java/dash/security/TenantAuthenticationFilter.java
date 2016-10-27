@@ -44,11 +44,11 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 
 		if (tenant.isPresent()) {
 			String tenantKey = validateTenant(tenant.get());
-			if (authenticationIsRequired(tenantKey) && !TenantContext.REGISTRATION_TENANT.equals(tenantKey)) {
+			if (authenticationIsRequired(tenantKey) && !TenantContext.NO_TENANT.equals(tenantKey)) {
 				TenantAuthenticationToken authRequest = new TenantAuthenticationToken(tenantKey);
 				Authentication authResult = this.authProvider.authenticate(authRequest);
 				SecurityContextHolder.getContext().setAuthentication(authResult);
-			} else if (TenantContext.REGISTRATION_TENANT.equals(tenantKey)) {
+			} else if (TenantContext.NO_TENANT.equals(tenantKey)) {
 				TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
 			}
 		}
@@ -61,7 +61,7 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 		if (tenant.length == 3)
 			return tenant[0];
 		else if (tenant.length == 2)
-			return TenantContext.REGISTRATION_TENANT;
+			return TenantContext.NO_TENANT;
 		else
 			return null;
 	}

@@ -161,12 +161,12 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
 
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-        $httpProvider.interceptors.push(function ($q, $location) {
+        $httpProvider.interceptors.push(function ($q, $location, $rootScope) {
             return {
-
                 "responseError": function (rejection) {
                     let defer = $q.defer();
-                    if (rejection.config.url.includes("#")) {
+                    console.log(rejection.config.url);
+                    if (rejection.config.url.includes(".html")) {
                         if (rejection.status === 401) {
                             $location.path("/401");
                         }
@@ -202,6 +202,14 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             $rootScope.$on("$routeChangeStart", function (event, next, current) {
                 $rootScope.user = $cookies.getObject("user");
                 $rootScope.tenant = $cookies.getObject("tenant");
+
+                if (isNullOrUndefined($http.defaults.headers.common["X-TenantID"])) {
+                    if (!isNullOrUndefined($rootScope.tenant)) {
+                        $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
+                    } else {
+                        $http.defaults.headers.common["X-TenantID"] = $location.host();
+                    }
+                }
 
                 if (!angular.isUndefined($rootScope.user)) {
                     // if ($rootScope.user.tenant === $window.location.hostname.split(".")[0]) {

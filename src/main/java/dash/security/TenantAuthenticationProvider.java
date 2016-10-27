@@ -44,21 +44,18 @@ public class TenantAuthenticationProvider implements AuthenticationProvider {
 		TenantAuthenticationToken tenantAuthentication = (TenantAuthenticationToken) authentication;
 
 		String tenantKey = null;
-		if (tenantAuthentication.getTenant() != null)
-			tenantKey = tenantAuthentication.getTenant();
-		else if (tenantAuthentication.getAuthenticatedTenant() != null)
+		if (tenantAuthentication.getAuthenticatedTenant() != null)
 			tenantKey = tenantAuthentication.getAuthenticatedTenant().getTenantKey();
-		System.out.println(TenantContext.getTenant());
+		else if (tenantAuthentication.getTenant() != null)
+			tenantKey = tenantAuthentication.getTenant();
+
 		if (TenantContext.getTenant() == null)
 			TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
 		Tenant tenant = null;
 		if (tenantKey != null)
 			tenant = tenantRepository.findByTenantKey(tenantKey);
-		System.out.println("After repo");
-
-		if (tenant == null) {
+		else
 			throw new TenantAuthentificationException("Invalid tenantkey: " + tenantKey);
-		}
 
 		return new TenantAuthenticationToken(tenant);
 	}
