@@ -193,9 +193,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 // if ($rootScope.user.tenant === $window.location.hostname.split(".")[0]) {
                 $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
                 $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
-                // } else {
-                //    console.log("Error - please don't try to cheat dude. ");
-                // }
+
             }
             let initialLoaded = true;
 
@@ -207,9 +205,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                     // if ($rootScope.user.tenant === $window.location.hostname.split(".")[0]) {
                     $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
                     $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
-                    //  } else {
-                    //    console.log("Error - please don't try to cheat dude. ");
-                    // }
+
                 }
 
                 if (next.authenticated === true) {

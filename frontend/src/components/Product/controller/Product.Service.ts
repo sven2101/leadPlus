@@ -85,7 +85,6 @@ class ProductService {
     }
 
     getTheFiles($files) {
-        console.log("files: ", $files);
         this.formdata.append("file", $files[0]);
     }
 }

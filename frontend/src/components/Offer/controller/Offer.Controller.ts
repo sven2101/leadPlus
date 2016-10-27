@@ -243,31 +243,10 @@ class OfferController extends AbstractWorkflow {
     rollBack(process: Process): void {
         this.offerService.rollBack(process, this.dtInstance, this.scope);
     }
-    /*
-        openOfferAttachment() {
-            let self = this;
-            let part1 = "data:application/pdf;base64,";
-            let part2 = this.editWorkflowUnit.notification.attachment.content;
-            let blob1 = part1.concat(part2);
-            
-            console.log("Im in !", blob1);
-            let file = new Blob([blob1], { type: "application/pdf" });
-            let fileURL = URL.createObjectURL(file);
-            this.window.open(fileURL);
-    
-            let blob = new Blob([this.editWorkflowUnit.notification.attachment.content], { type: "application/pdf" });
-    
-            let reader = new FileReader();
-            reader.readAsDataURL(blob);
-    
-            reader.onloadend = function () {
-                self.window.open(this.result);
-            };
-        }
-    */
+
     getAllActiveTemplates() {
         let self = this;
-        this.templateService.getAll().then((result) => self.templates = result, (error) => console.log(error));
+        this.templateService.getAll().then((result) => self.templates = result, (error) => handleError(error));
     }
 
     setFormerNotification(notificationId: number) {

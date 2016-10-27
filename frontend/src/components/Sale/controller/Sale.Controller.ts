@@ -238,7 +238,7 @@ class SaleController extends AbstractWorkflow {
     }
 
     getAllActiveTemplates() {
-        this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
+        this.templateService.getAll().then((result) => this.templates = result, (error) => handleError(error));
     }
 
     setFormerNotification(notificationId: number) {
@@ -246,8 +246,6 @@ class SaleController extends AbstractWorkflow {
             this.currentNotification = null;
         }
         let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
-        console.log(this.editProcess);
-        console.log(notificationId);
         if (!isNullOrUndefined(notification)) {
             this.currentNotification = deepCopy(notification);
         }

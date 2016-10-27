@@ -73,11 +73,11 @@ class RegistrationController {
             self.http.defaults.headers.common["X-TenantID"] = self.credentials.tenant;
             self.signupService.signup(self.user).then(function (createdUser: User) {
                 self.loginService.login(self.credentials);
-            }, function () {
-                console.log("ERRRROR - Signup - Save");
+            }, function (error) {
+                handleError(error);
             });
-        }, function () {
-            console.log("ERRRROR - Tenant - Save");
+        }, function (error) {
+            handleError(error);
         });
     }
 }

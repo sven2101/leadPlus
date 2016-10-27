@@ -262,7 +262,7 @@ class StatisticService {
                 break;
             }
             default: {
-                console.log("Timesegment not found");
+
             }
         }
         this.setTimeSegment(timeSegment);

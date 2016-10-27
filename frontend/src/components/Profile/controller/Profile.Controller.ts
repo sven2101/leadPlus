@@ -90,7 +90,7 @@ class ProfileController {
     }
 
     getById() {
-        this.profileService.getById().then((result) => this.currentUser = result, (error) => console.log(error));
+        this.profileService.getById().then((result) => this.currentUser = result, (error) => handleError(error));
     }
 
     getTheFiles($files) {

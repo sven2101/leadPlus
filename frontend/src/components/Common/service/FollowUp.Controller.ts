@@ -77,12 +77,11 @@ class FollowUpController {
     }
 
     generate(templateId: string, offer: Offer) {
-        console.log(offer);
-        this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => console.log(error));
+        this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => handleError(error));
     }
 
     getAllActiveTemplates() {
-        this.templateService.getAll().then((result) => this.templates = result, (error) => console.log(error));
+        this.templateService.getAll().then((result) => this.templates = result, (error) => handleError(error));
     }
 
     send() {
@@ -96,12 +95,12 @@ class FollowUpController {
 
         this.notificationService.sendNotification(notification).then(() => {
             self.notificationService.saveFileUpload(notification.attachment).then((resultFileUpload) => {
-                console.log(notification.attachment);
+
                 notification.attachment = resultFileUpload;
                 if (isNullOrUndefined(process.notifications)) {
                     process.notifications = [];
                 }
-                console.log(notification.attachment);
+
                 process.notifications.push(notification);
                 self.workflowService.saveProcess(process).then((resultProcess) => {
                     self.process.notifications = resultProcess.notifications;
@@ -130,7 +129,6 @@ class FollowUpController {
 
     followUp() {
         let self = this;
-        console.log(this.process.status);
         if (this.process.status === Status.FOLLOWUP) {
             self.rootScope.$broadcast("updateRow", this.process);
         }
