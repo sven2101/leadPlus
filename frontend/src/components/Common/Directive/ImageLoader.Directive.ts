@@ -27,7 +27,7 @@ class ImageLoaderDirective implements IDirective {
             responseType: "arraybuffer",
             cache: "true"
         };
-
+        attrs.$set("src", "assets/img/placeholder_person.png");
         let self = this;
         this.$http(requestConfig)
             .success(function (data) {

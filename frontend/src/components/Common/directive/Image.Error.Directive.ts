@@ -14,7 +14,7 @@ angular.module(moduleApp)
                     // after this error function has been called
                     if (w <= 20) { w = 100; }
                     if (h <= 20) { h = 100; }
-                    let url = "assets/img/fa-user.jpg";
+                    let url = "assets/img/placeholder_person.png";
                     element.prop("src", url);
                     // element.css("border", "double 3px #cccccc");
                 });
