@@ -198,7 +198,7 @@ ALTER TABLE vendor
 
 CREATE TABLE fileupload
 (
-  id bigint NOT NULL DEFAULT nextval('"fileupload_id_seq"'::regclass),,
+  id bigint NOT NULL DEFAULT nextval('"fileupload_id_seq"'::regclass),
   content bytea,
   deleted boolean NOT NULL,
   filename character varying(255),
