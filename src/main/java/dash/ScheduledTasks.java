@@ -25,6 +25,7 @@ public class ScheduledTasks {
 
 	@Scheduled(fixedRate = 300000)
 	public void generateStatistics() {
+		TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
 		List<Tenant> tenants = tenantService.getAllTenants();
 		int threadAmount = THREAD_MIN;
 		if (tenants.size() >= 30)
@@ -32,8 +33,7 @@ public class ScheduledTasks {
 		Semaphore semaphore = new Semaphore(threadAmount);
 
 		for (Tenant tenant : tenants) {
-			if (tenant == null || tenant.getTenantKey() == null
-					|| tenant.getTenantKey().equals(TenantContext.DEFAULT_TENANT))
+			if (tenant == null || tenant.getTenantKey() == null)
 				continue;
 			OlapThread olapThread = new OlapThread(semaphore, tenant.getTenantKey(), this.olapStatisticService);
 			olapThread.start();

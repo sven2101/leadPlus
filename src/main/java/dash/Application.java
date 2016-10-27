@@ -32,6 +32,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,6 +55,7 @@ import dash.security.LicenseFilter;
 import dash.security.TenantAuthenticationFilter;
 import dash.security.TenantAuthenticationProvider;
 import dash.security.listener.RESTAuthenticationEntryPoint;
+import dash.tenantmanagement.business.TenantContext;
 import dash.usermanagement.registration.domain.Validation;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
@@ -73,6 +75,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class Application {
 
 	public static void main(String[] args) {
+		TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 		SpringApplication.run(Application.class, args);
 	}
@@ -156,6 +159,7 @@ public class Application {
 							.toArray(new String[LicenseEnum.FREE.getAllowedRoutes().size()]))
 					.permitAll().antMatchers("/api/rest/public/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")
 					.antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER").anyRequest().authenticated().and()
+					.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 					.addFilterBefore(new TenantAuthenticationFilter(this.tenantAuthenticationProvider),
 							BasicAuthenticationFilter.class)
 					.addFilterAfter(new LicenseFilter(), TenantAuthenticationFilter.class).authorizeRequests()

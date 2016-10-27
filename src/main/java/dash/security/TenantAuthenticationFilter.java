@@ -37,16 +37,19 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 	}
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
 
 		Optional<String> tenant = Optional.ofNullable(request.getHeader("X-TenantID"));
 
 		if (tenant.isPresent()) {
 			String tenantKey = validateTenant(tenant.get());
-			if (authenticationIsRequired(tenantKey)) {
+			if (authenticationIsRequired(tenantKey) && !TenantContext.REGISTRATION_TENANT.equals(tenantKey)) {
 				TenantAuthenticationToken authRequest = new TenantAuthenticationToken(tenantKey);
 				Authentication authResult = this.authProvider.authenticate(authRequest);
 				SecurityContextHolder.getContext().setAuthentication(authResult);
+			} else if (TenantContext.REGISTRATION_TENANT.equals(tenantKey)) {
+				TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
 			}
 		}
 
@@ -57,8 +60,10 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 		String[] tenant = tenantKey.split("\\.");
 		if (tenant.length == 3)
 			return tenant[0];
+		else if (tenant.length == 2)
+			return TenantContext.REGISTRATION_TENANT;
 		else
-			return TenantContext.DEFAULT_TENANT;
+			return null;
 	}
 
 	private boolean authenticationIsRequired(String tenant) {
@@ -68,7 +73,8 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 			return true;
 		}
 
-		if (existingAuth instanceof TenantAuthenticationToken && !((TenantAuthenticationToken) existingAuth).getTenant().equals(tenant)) {
+		if (existingAuth instanceof TenantAuthenticationToken
+				&& !((TenantAuthenticationToken) existingAuth).getTenant().equals(tenant)) {
 			return true;
 		}
 
