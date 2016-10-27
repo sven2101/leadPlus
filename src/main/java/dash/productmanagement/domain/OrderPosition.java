@@ -53,13 +53,13 @@ public class OrderPosition {
 	private boolean deleted;
 
 	@ManyToOne
-	@JoinColumn(name = "product_id", nullable = false)
+	@JoinColumn(name = "product_fk", nullable = false)
 	@Where(clause = "deleted <> '1'")
 	private Product product;
 
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name = "workflow_id", nullable = false)
+	@JoinColumn(name = "workflow_fk", nullable = false)
 	@Where(clause = "deleted <> '1'")
 	private AbstractWorkflow workflow;
 
@@ -196,8 +196,7 @@ public class OrderPosition {
 
 	@Override
 	public String toString() {
-		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", amount=" + amount + ", price=" + price
-				+ ", discount=" + discount + "]";
+		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", amount=" + amount + ", price=" + price + ", discount=" + discount + "]";
 	}
 
 }

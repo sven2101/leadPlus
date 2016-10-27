@@ -109,7 +109,7 @@ public class User implements UserDetails, Principal {
 
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "picture_id")
+	@JoinColumn(name = "picture_fk")
 	private FileUpload picture;
 
 	@Enumerated(EnumType.STRING)
@@ -347,9 +347,8 @@ public class User implements UserDetails, Principal {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
-				+ ", email=" + email + ", password=" + password + ", role=" + role + ", profilPicture=" + picture
-				+ ", language=" + language + ", enabled=" + enabled + "]";
+		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password="
+				+ password + ", role=" + role + ", profilPicture=" + picture + ", language=" + language + ", enabled=" + enabled + "]";
 	}
 
 	@Override

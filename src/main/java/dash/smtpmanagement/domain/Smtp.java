@@ -88,7 +88,7 @@ public class Smtp {
 
 	@NotNull
 	@OneToOne
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "user_fk", nullable = false)
 	private User user;
 
 	public Smtp() {
@@ -264,10 +264,9 @@ public class Smtp {
 
 	@Override
 	public String toString() {
-		return "Smtp [id=" + id + ", sender=" + sender + ", host=" + host + ", username=" + username + ", password="
-				+ Arrays.toString(password) + ", email=" + email + ", encryption=" + encryption + ", port=" + port
-				+ ", connection=" + connection + ", salt=" + Arrays.toString(salt) + ", iv=" + Arrays.toString(iv)
-				+ ", user=" + user + "]";
+		return "Smtp [id=" + id + ", sender=" + sender + ", host=" + host + ", username=" + username + ", password=" + Arrays.toString(password) + ", email="
+				+ email + ", encryption=" + encryption + ", port=" + port + ", connection=" + connection + ", salt=" + Arrays.toString(salt) + ", iv="
+				+ Arrays.toString(iv) + ", user=" + user + "]";
 	}
 
 }

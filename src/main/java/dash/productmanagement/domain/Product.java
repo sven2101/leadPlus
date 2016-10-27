@@ -100,7 +100,7 @@ public class Product implements Serializable {
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@ApiModelProperty(hidden = true)
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "picture_id", nullable = true)
+	@JoinColumn(name = "picture_fk", nullable = true)
 	private FileUpload picture;
 
 	@Size(max = 255)
@@ -264,7 +264,7 @@ public class Product implements Serializable {
 	public String toString() {
 		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description
 				+ ", productState=" + productState + ", timestamp=" + timestamp + ", deactivated=" + deactivated
-				+ ", priceNetto=" + priceNetto + ", picture=" + picture + ", productNumber=" + productNumber + "]";
+				+ ", priceNetto=" + priceNetto + ", picture=" + picture + "]";
 	}
 
 }
