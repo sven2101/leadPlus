@@ -52,6 +52,7 @@ class RegistrationController {
     }
 
     uniqueTenantKey(): void {
+        this.http.defaults.headers.common["X-TenantID"] = this.location.host();
         this.registrationService.uniqueTenantKey(this.tenant);
     }
 

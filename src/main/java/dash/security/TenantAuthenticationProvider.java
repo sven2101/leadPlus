@@ -27,7 +27,6 @@ import dash.tenantmanagement.domain.Tenant;
 @Component
 public class TenantAuthenticationProvider implements AuthenticationProvider {
 
-
 	private TenantRepository tenantRepository;
 
 	@Autowired
@@ -44,15 +43,19 @@ public class TenantAuthenticationProvider implements AuthenticationProvider {
 
 		TenantAuthenticationToken tenantAuthentication = (TenantAuthenticationToken) authentication;
 
-		String tenantKey = TenantContext.DEFAULT_TENANT;
-		if (tenantAuthentication.getTenant() != null)
+		String tenantKey = null;
+		if (tenantAuthentication.getAuthenticatedTenant() != null)
+			tenantKey = tenantAuthentication.getAuthenticatedTenant().getTenantKey();
+		else if (tenantAuthentication.getTenant() != null)
 			tenantKey = tenantAuthentication.getTenant();
 
-		Tenant tenant = tenantRepository.findByTenantKey(tenantKey);
-
-		if (tenant == null) {
-			throw new TenantAuthentificationException("Invalid tenantkey");
-		}
+		if (TenantContext.getTenant() == null)
+			TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
+		Tenant tenant = null;
+		if (tenantKey != null)
+			tenant = tenantRepository.findByTenantKey(tenantKey);
+		else
+			throw new TenantAuthentificationException("Invalid tenantkey: " + tenantKey);
 
 		return new TenantAuthenticationToken(tenant);
 	}

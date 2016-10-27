@@ -43,6 +43,7 @@ class ProfileService {
     newPassword2: string;
 
     constructor($rootScope, toaster, $translate, UserResource, FileResource, $q, $cookies) {
+        this.fileResource = FileResource.resource;
         this.userResource = UserResource.resource;
         this.translate = $translate;
         this.toaster = toaster;
@@ -71,13 +72,11 @@ class ProfileService {
 
     updateProfileImage(user: User) {
         let self = this;
-        this.userResource.setProfilePicture(user).$promise.then(function (data) {
+        this.userResource.setProfilePicture(user).$promise.then(function (data: User) {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
-            $("#profilePicture").prop("src", "users/" + self.rootScope.user.id + "/profile/picture?" + new Date().valueOf());
+            $("#profilePicture").prop("src", "data:image/jpeg;base64," + user.picture.content);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
-            self.rootScope.user.picture = null;
-            self.cookies.put("globals", self.rootScope);
         });
     }
 

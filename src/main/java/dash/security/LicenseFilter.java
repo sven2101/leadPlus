@@ -29,15 +29,22 @@ import dash.tenantmanagement.business.TenantContext;
 public class LicenseFilter extends OncePerRequestFilter {
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
 
 		if (SecurityContextHolder.getContext().getAuthentication() != null
 				&& SecurityContextHolder.getContext().getAuthentication() instanceof TenantAuthenticationToken) {
-			TenantAuthenticationToken auth = (TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-			TenantContext.setTenant(auth.getAuthenticatedTenant().getTenantKey());
-
-			if (!auth.getAuthenticatedTenant().getLicense().getLicenseType().hasLicenseForUrl(request.getRequestURI())) {
+			TenantAuthenticationToken auth = (TenantAuthenticationToken) SecurityContextHolder.getContext()
+					.getAuthentication();
+			if (auth.getAuthenticatedTenant() == null) {
 				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			} else {
+				TenantContext.setTenant(auth.getAuthenticatedTenant().getTenantKey());
+
+				if (!auth.getAuthenticatedTenant().getLicense().getLicenseType()
+						.hasLicenseForUrl(request.getRequestURI())) {
+					response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				}
 			}
 		}
 		filterChain.doFilter(request, response);

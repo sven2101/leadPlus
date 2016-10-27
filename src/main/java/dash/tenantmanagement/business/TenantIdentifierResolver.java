@@ -21,6 +21,9 @@ public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver
 
 	@Override
 	public String resolveCurrentTenantIdentifier() {
+		String tenant = TenantContext.getTenant();
+		if(tenant == null || tenant.equals(""))
+			return TenantContext.PUBLIC_TENANT;	
 		return TenantContext.getTenant();
 	}
 

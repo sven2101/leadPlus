@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -33,6 +32,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -55,6 +55,7 @@ import dash.security.LicenseFilter;
 import dash.security.TenantAuthenticationFilter;
 import dash.security.TenantAuthenticationProvider;
 import dash.security.listener.RESTAuthenticationEntryPoint;
+import dash.tenantmanagement.business.TenantContext;
 import dash.usermanagement.registration.domain.Validation;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
@@ -68,17 +69,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableScheduling
-@EnableJpaRepositories(basePackages = { "dash" }, entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "entityTransactionManager")
+@EnableJpaRepositories(basePackages = {
+		"dash" }, entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "entityTransactionManager")
 @EnableContextRegion(region = "eu-central-1")
 public class Application {
 
-	@Value("${aws.key.access}")
-	private String awsKeyAccess;
-
-	@Value("${aws.key.secret}")
-	private String awsKeySecret;
-
 	public static void main(String[] args) {
+		TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 		SpringApplication.run(Application.class, args);
 	}
@@ -88,13 +85,16 @@ public class Application {
 	public static class SwaggerConfig {
 		@Bean
 		public Docket api() {
-			return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("dash.publicapi")).paths(PathSelectors.any())
-					.build().apiInfo(apiInfo());
+			return new Docket(DocumentationType.SWAGGER_2).select()
+					.apis(RequestHandlerSelectors.basePackage("dash.publicapi")).paths(PathSelectors.any()).build()
+					.apiInfo(apiInfo());
 		}
+
 	}
 
 	private static ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("Lead+").description("Lead+ - Lead Management Tool").license("").licenseUrl("").version("2.0").build();
+		return new ApiInfoBuilder().title("Lead+").description("Lead+ - Lead Management Tool").license("")
+				.licenseUrl("").version("2.0").build();
 	}
 
 	@Bean
@@ -104,7 +104,8 @@ public class Application {
 
 	@Bean
 	public AmazonRoute53 getAmazonRoute53() {
-		AWSCredentials awsCredentials = new BasicAWSCredentials(awsKeyAccess, awsKeySecret);
+		AWSCredentials awsCredentials = new BasicAWSCredentials("***REMOVED***",
+				"***REMOVED***");
 		return new AmazonRoute53Client(awsCredentials);
 	}
 
@@ -114,7 +115,8 @@ public class Application {
 	}
 
 	@Bean
-	public FreeMarkerConfigurer freeMarkerConfigurer(WebApplicationContext applicationContext) throws IOException, TemplateException {
+	public FreeMarkerConfigurer freeMarkerConfigurer(WebApplicationContext applicationContext)
+			throws IOException, TemplateException {
 		FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
 		freemarker.template.Configuration configuration = configurer.createConfiguration();
 		configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
@@ -153,13 +155,17 @@ public class Application {
 		protected void configure(HttpSecurity http) throws Exception {
 
 			http.httpBasic().and().authorizeRequests()
-					.antMatchers(LicenseEnum.FREE.getAllowedRoutes().toArray(new String[LicenseEnum.FREE.getAllowedRoutes().size()])).permitAll()
-					.antMatchers("/api/rest/public/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API").antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER")
-					.anyRequest().authenticated().and()
-					.addFilterBefore(new TenantAuthenticationFilter(this.tenantAuthenticationProvider), BasicAuthenticationFilter.class)
-					.addFilterAfter(new LicenseFilter(), TenantAuthenticationFilter.class).authorizeRequests().anyRequest().authenticated().and()
-					.addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class).csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable()
-					.headers().frameOptions().sameOrigin().httpStrictTransportSecurity().disable().and().logout()
+					.antMatchers(LicenseEnum.FREE.getAllowedRoutes()
+							.toArray(new String[LicenseEnum.FREE.getAllowedRoutes().size()]))
+					.permitAll().antMatchers("/api/rest/public/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")
+					.antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER").anyRequest().authenticated().and()
+					.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+					.addFilterBefore(new TenantAuthenticationFilter(this.tenantAuthenticationProvider),
+							BasicAuthenticationFilter.class)
+					.addFilterAfter(new LicenseFilter(), TenantAuthenticationFilter.class).authorizeRequests()
+					.anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
+					.csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().headers().frameOptions()
+					.sameOrigin().httpStrictTransportSecurity().disable().and().logout()
 					.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/#/login");
 
 			http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
