@@ -4,7 +4,7 @@
         "class-name": true,
         "typedef": [false, "call-signature", "parameter", "member-variable-declaration"],
         "curly": true,
-        "no-console": [true, "log", "error","console"],
+        "no-console": [false, "log", "error","console"],
         "interface-name": [true, "always-prefix"],
         "comment-format": [true, "check-space"],
         "indent": [true, "spaces"],
