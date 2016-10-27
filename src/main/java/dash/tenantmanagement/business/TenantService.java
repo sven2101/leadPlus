@@ -14,6 +14,7 @@
 package dash.tenantmanagement.business;
 
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
+import static dash.Constants.CREATING_SUBDOMAIN;
 import static dash.Constants.TENANT_NOT_FOUND;
 
 import java.util.ArrayList;
@@ -48,13 +49,19 @@ import dash.usermanagement.registration.domain.Validation;
 @Service
 public class TenantService implements ITenantService {
 
+	private static final String SPRINT_PROFILE_PRODUCTION = "production";
+	private static final String RESOURCE_RECORD_SET_CNAME = "CNAME";
+
 	private static final Logger logger = Logger.getLogger(TenantService.class);
 
 	@Value("${hostname.suffix}")
-	private static String hostnameSuffix;
+	private String hostnameSuffix;
 
 	@Value("${zone.hosted.id}")
-	private static String hostedZoneId;
+	private String hostedZoneId;
+
+	@Value("${spring.profiles.active}")
+	private String springProfileActive;
 
 	@Autowired
 	private TenantRepository tenantRepository;
@@ -80,18 +87,15 @@ public class TenantService implements ITenantService {
 	public Tenant createNewTenant(final Tenant tenant) {
 		try {
 			tenant.setEnabled(true);
-			// TODO - tenant.setLicense()
-
 			tenant.getLicense().getTerm().add(Calendar.YEAR, 1);
 			tenantRepository.save(tenant);
 			createSchema(tenant);
-			//if (!subdomainAlreadyExists(tenant)) {
-				//System.out.println("CREATING SUBDOMAIN ON AWS.");
-				// createTenantSubdomain(tenant);
-			//}
-			//TODO no general exception -> AWS throws expcetion...
+			if (!subdomainAlreadyExists(tenant)) {
+				createTenantSubdomain(tenant);
+				logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
+			}
 		} catch (Exception ex) {
-			System.out.println("TENANT KEY already exists: " + ex.getMessage());
+			logger.error("ENANT KEY already exists: ", ex);
 		}
 		return tenant;
 	}
@@ -111,8 +115,12 @@ public class TenantService implements ITenantService {
 		List<ResourceRecordSet> recordSets = result.getResourceRecordSets();
 		boolean subdomainAlreadyExists = false;
 		for (ResourceRecordSet recordSet : recordSets) {
-			if (recordSet.getName().contains(tenant.getTenantKey() + ".")) {
-				subdomainAlreadyExists = true;
+			if (recordSet.getType().equals(RESOURCE_RECORD_SET_CNAME)) {
+				String[] cnameParts = recordSet.getName().split("\\.");
+				for (String parts : cnameParts) {
+					if (parts.equals(tenant.getTenantKey()))
+						subdomainAlreadyExists = true;
+				}
 			}
 		}
 		return subdomainAlreadyExists;
@@ -149,11 +157,8 @@ public class TenantService implements ITenantService {
 
 		// send the request
 		ChangeResourceRecordSetsResult result = r53.changeResourceRecordSets(request);
+		logger.debug("Result of creating Resource Record: " + result.toString());
 		// TODO - verify Result
-
-		System.out.println(result.toString());
-
-		System.out.println("DONE---------------------------------");
 	}
 
 	@Override
@@ -169,11 +174,14 @@ public class TenantService implements ITenantService {
 			if (validateTenant == null)
 				proofUniquenessLocal = false;
 		} catch (NotFoundException nfex) {
-			logger.error("Validate uniqueness of Tenant: " + TenantService.class.getSimpleName(), nfex);
 			proofUniquenessLocal = false;
+			logger.error("Validate uniqueness of Tenant: " + TenantService.class.getSimpleName(), nfex);
 		}
 
-		// proofUniquenessRemote = subdomainAlreadyExists(tenant);
+		if (springProfileActive.equals(SPRINT_PROFILE_PRODUCTION))
+			proofUniquenessRemote = subdomainAlreadyExists(tenant);
+		else
+			proofUniquenessRemote = false;
 
 		if (proofUniquenessLocal && proofUniquenessRemote)
 			validation.setValidation(true);

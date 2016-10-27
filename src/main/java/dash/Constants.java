@@ -55,4 +55,7 @@ public final class Constants {
 	public static final String CURRENT_TENANT_IDENTIFIER = "CURRENT_TENANT_IDENTIFIER";
 	public static final String UNKNOWN_TENANT = "unknown";
 
+	// DEBUGGING - NOTIFICATIONS
+	public static final String CREATING_SUBDOMAIN = "CREATING SUBDOMAIN ON AWS R53 FOR ";
+
 }

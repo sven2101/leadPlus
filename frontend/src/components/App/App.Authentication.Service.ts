@@ -106,8 +106,9 @@ class AuthService {
 
                         let date = new Date();
                         date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
-                        self.cookies.putObject("user", self.rootScope.user, { domain: "leadplus.localhost", path: "/", expires: date });
-                        self.cookies.putObject("tenant", self.rootScope.tenant, { domain: "leadplus.localhost", path: "/", expires: date });
+
+                        self.cookies.putObject("user", self.rootScope.user, { domain: self.location.host(), path: "/", expires: date });
+                        self.cookies.putObject("tenant", self.rootScope.tenant, { domain: self.location.host(), path: "/", expires: date });
 
                         self.rootScope.user.picture = data.profilePicture;
                         self.injector.get("DashboardService");
@@ -128,10 +129,27 @@ class AuthService {
     }
 
     logout() {
-        this.cookies.remove("user", { domain: "leadplus.localhost", path: "/" });
-        this.cookies.remove("tenant", { domain: "leadplus.localhost", path: "/" });
+
+        this.cookies.remove("user", { domain: this.location.host(), path: "/" });
+        this.cookies.remove("tenant", { domain: this.location.host(), path: "/" });
         this.http.defaults.headers.common.Authorization = "Basic";
         window.open("/logout.html", "_self");
+
+        /*
+        let self = this;
+        this.http.post("logout", {})
+            .success(function () {
+                // self.location.path("#/login");
+                self.rootScope.$broadcast("$destroy");
+                // location.reload();
+            })
+            .error(function (data) {
+                // self.location.path("#/login");
+                self.rootScope.$broadcast("$destroy");
+                // location.reload();
+
+            });
+        */
     }
 
 }

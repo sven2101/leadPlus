@@ -7,8 +7,6 @@ CREATE SEQUENCE IF NOT EXISTS public.tenant_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE public.tenant_id_seq
-  OWNER TO postgres;
   
 -- Sequence: license_id_seq
 CREATE SEQUENCE IF NOT EXISTS public.license_id_seq
@@ -17,8 +15,6 @@ CREATE SEQUENCE IF NOT EXISTS public.license_id_seq
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER TABLE public.license_id_seq
-  OWNER TO postgres;
 
 -- Table: license
 
@@ -33,8 +29,6 @@ CREATE TABLE IF NOT EXISTS public.license
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.license
-  OWNER TO postgres;
 
 -- Table: tenant
 
@@ -55,6 +49,4 @@ CREATE TABLE IF NOT EXISTS public.tenant
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.tenant
-  OWNER TO postgres; 
         
