@@ -163,21 +163,24 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
         $httpProvider.interceptors.push(function ($q, $location) {
             return {
+
                 "responseError": function (rejection) {
                     let defer = $q.defer();
-                    if (rejection.status === 401 && rejection.config.url !== "user") {
-                        $location.path("/401");
+                    if (rejection.config.url.includes("#")) {
+                        if (rejection.status === 401) {
+                            $location.path("/401");
+                        }
+                        else if (rejection.status === 403) {
+                            $location.path("/403");
+                        }
+                        else if (rejection.status === 404) {
+                            $location.path("/404");
+                        }
+                        defer.reject(rejection);
                     }
-                    else if (rejection.status === 403) {
-                        $location.path("/403");
-                    }
-                    else if (rejection.status === 404) {
-                        $location.path("/404");
-                    }
-                    defer.reject(rejection);
-
                     return defer.promise;
                 }
+
             };
         });
     }])

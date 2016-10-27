@@ -40,8 +40,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import dash.fileuploadmanagement.domain.FileUpload;
 import dash.usermanagement.settings.language.Language;
@@ -105,7 +103,6 @@ public class User implements UserDetails, Principal {
 	@Column(name = "role", length = 255, nullable = false)
 	private Role role;
 
-	@JsonProperty(access = Access.WRITE_ONLY)
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "picture_fk")
 	private FileUpload picture;
@@ -334,8 +331,9 @@ public class User implements UserDetails, Principal {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname + ", email=" + email + ", password="
-				+ password + ", role=" + role + ", profilPicture=" + picture + ", language=" + language + ", enabled=" + enabled + "]";
+		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
+				+ ", email=" + email + ", password=" + password + ", role=" + role + ", profilPicture=" + picture
+				+ ", language=" + language + ", enabled=" + enabled + "]";
 	}
 
 	@Override
