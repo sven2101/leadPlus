@@ -1,4 +1,3 @@
-
 -- Sequence: "User_id_seq"
 
 CREATE SEQUENCE "user_id_seq"
@@ -131,6 +130,18 @@ CREATE SEQUENCE IF NOT EXISTS workflow_id_seq
   CACHE 1;
 ALTER TABLE workflow_id_seq
   OWNER TO postgres;
+  
+ -- Sequence: fileupload_id_seq
+
+CREATE SEQUENCE IF NOT EXISTS fileupload_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE fileupload_id_seq
+  OWNER TO postgres;
+
 
   
 
@@ -186,7 +197,7 @@ ALTER TABLE vendor
 
 CREATE TABLE fileupload
 (
-  id bigint NOT NULL,
+  id bigint NOT NULL DEFAULT nextval('fileupload_id_seq'::regclass),
   content bytea,
   deleted boolean NOT NULL,
   filename character varying(255),

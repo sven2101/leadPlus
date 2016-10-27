@@ -157,7 +157,6 @@ public class Application {
 							.toArray(new String[LicenseEnum.FREE.getAllowedRoutes().size()]))
 					.permitAll().antMatchers("/api/rest/public/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")
 					.antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER").anyRequest().authenticated().and()
-					.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 					.addFilterBefore(new TenantAuthenticationFilter(this.tenantAuthenticationProvider),
 							BasicAuthenticationFilter.class)
 					.addFilterAfter(new LicenseFilter(), TenantAuthenticationFilter.class).authorizeRequests()

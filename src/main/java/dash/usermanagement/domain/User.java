@@ -31,7 +31,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -45,7 +44,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import dash.fileuploadmanagement.domain.FileUpload;
-import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.settings.language.Language;
 
 @Entity
@@ -120,17 +118,6 @@ public class User implements UserDetails, Principal {
 	@NotNull
 	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
-
-	@Transient
-	private Tenant tenant;
-
-	public Tenant getTenant() {
-		return tenant;
-	}
-
-	public void setTenant(Tenant tenant) {
-		this.tenant = tenant;
-	}
 
 	public User() {
 	}
