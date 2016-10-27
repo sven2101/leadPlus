@@ -26,6 +26,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import dash.tenantmanagement.business.TenantContext;
+
 public class TenantAuthenticationFilter extends OncePerRequestFilter {
 
 	public TenantAuthenticationProvider authProvider;
@@ -56,7 +58,7 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 		if (tenant.length == 3)
 			return tenant[0];
 		else
-			return "tenant";
+			return TenantContext.DEFAULT_TENANT;
 	}
 
 	private boolean authenticationIsRequired(String tenant) {

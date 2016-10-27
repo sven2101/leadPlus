@@ -20,13 +20,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import dash.exceptions.TenantAuthentificationException;
+import dash.tenantmanagement.business.TenantContext;
 import dash.tenantmanagement.business.TenantRepository;
 import dash.tenantmanagement.domain.Tenant;
 
 @Component
 public class TenantAuthenticationProvider implements AuthenticationProvider {
 
-	private static final String DEFAULT_TENANT_KEY = "tenant";
 
 	private TenantRepository tenantRepository;
 
@@ -44,7 +44,7 @@ public class TenantAuthenticationProvider implements AuthenticationProvider {
 
 		TenantAuthenticationToken tenantAuthentication = (TenantAuthenticationToken) authentication;
 
-		String tenantKey = DEFAULT_TENANT_KEY;
+		String tenantKey = TenantContext.DEFAULT_TENANT;
 		if (tenantAuthentication.getTenant() != null)
 			tenantKey = tenantAuthentication.getTenant();
 
