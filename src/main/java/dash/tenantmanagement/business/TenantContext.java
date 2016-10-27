@@ -16,7 +16,7 @@ package dash.tenantmanagement.business;
 public class TenantContext {
 
 	private static final ThreadLocal<String> tenantThreadLocal = new ThreadLocal<>();
-	public static final String DEFAULT_TENANT = "tenant";
+	public static final String DEFAULT_TENANT = "demo";
 
 	public static String getTenant() {
 		String tenant = tenantThreadLocal.get();
