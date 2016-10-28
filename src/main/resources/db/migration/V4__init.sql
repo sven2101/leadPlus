@@ -1,13 +1,13 @@
 INSERT INTO "user"(email, enabled, firstname, language, lastname, password, role, username)
-    VALUES ('superadmin@eviarc.com', true, 'Superadmin', 'DE', 'Superadmin', '$2a$10$Qt047/OSJ..kpyeDq8Y6eOrlJQZ4RqAM7VuVnBVKpTbglpgYZ1VJm', 'SUPERADMIN', 'superadmin@eviarc.com')
+    VALUES ('superadmin@eviarc.com', true, 'Superadmin', 'DE', 'Superadmin', '$2a$10$sMJ9QB33t9q5/ct0j.rSoeE6bZGYgGi/ybQ/9sZqDKUW8ZMcjGstS', 'SUPERADMIN', 'superadmin@eviarc.com')
     ON CONFLICT DO NOTHING; 
 
 INSERT INTO "user"(email, enabled, firstname, language, lastname, password, role, username)
-    VALUES ('admin@eviarc.com', true, 'Admin', 'DE', 'Admin', '$2a$10$Qt047/OSJ..kpyeDq8Y6eOrlJQZ4RqAM7VuVnBVKpTbglpgYZ1VJm', 'ADMIN', 'admin@eviarc.com')
+    VALUES ('admin@eviarc.com', true, 'Admin', 'DE', 'Admin', '$2a$10$Vfjr4MHsZRMrfLfjReUEk.V77lCUnXXc/VwC5C3uEz1./V/xjRoyG', 'ADMIN', 'admin@eviarc.com')
     ON CONFLICT DO NOTHING; 
 
 INSERT INTO "user"(email, enabled, firstname, language, lastname, password, role, username)
-    VALUES ('test@eviarc.com', true, 'User', 'DE', 'User', '$2a$10$Qt047/OSJ..kpyeDq8Y6eOrlJQZ4RqAM7VuVnBVKpTbglpgYZ1VJm', 'USER', 'test@eviarc.com')
+    VALUES ('test@eviarc.com', true, 'User', 'DE', 'User', '$2a$10$hrTS64GHgGshns/VavWbQOf81MfoWbOND/qagVIL1xVVrLo2qxoNq', 'USER', 'test@eviarc.com')
     ON CONFLICT DO NOTHING;
     
 /*

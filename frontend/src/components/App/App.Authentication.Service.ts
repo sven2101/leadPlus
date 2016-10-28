@@ -60,8 +60,7 @@ class AuthService {
 
         let defer = this.$q.defer();
         if (credentials) {
-            // let salt: string = this.rootScope.globals.user.email;
-            let salt = "test";
+            let salt: string = credentials.email;      
             let hashedPassword = hashPasswordPbkdf2(credentials.password, salt);
             let authorization = btoa(credentials.email + ":" + hashedPassword);
             let header = credentials ? { Authorization: "Basic " + authorization } : {};

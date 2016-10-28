@@ -84,7 +84,7 @@
 																				registration.password.$error.maxlength	 }">
 
                 <input type="password" id="password" name="password" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-                    required ng-model="signupCtrl.user.password" ng-minlength="6" ng-maxlength="20">
+                    required ng-model="signupCtrl.user.password" ng-minlength="1" ng-maxlength="20">
 
                 <span ng-show="registration.password.$dirty && registration.password.$error.required" class="help-block">Password is required</span>
                 <span ng-show="registration.password.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
@@ -100,7 +100,7 @@
 																				registration.password2.$error.pwmatch}">
 
                 <input type="password" id="password2" name="password2" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-                    required ng-model="signupCtrl.user.password2" ng-minlength="6" ng-maxlength="20" pw-check="password">
+                    required ng-model="signupCtrl.user.password2" ng-minlength="1" ng-maxlength="20" pw-check="password">
 
 
 				<span ng-show="registration.password2.$dirty && registration.password2.$error.required" class="help-block">Password is required</span>

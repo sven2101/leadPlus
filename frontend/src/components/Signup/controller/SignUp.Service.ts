@@ -64,8 +64,7 @@ class SignupService {
         let defer = this.q.defer();
         let self = this;
 
-        // let salt: string = user.email;
-        let salt = "test";
+        let salt: string = user.email;
         user.password = hashPasswordPbkdf2(user.password, salt);
         user.password2 = hashPasswordPbkdf2(user.password2, salt);
 

@@ -81,8 +81,7 @@ class ProfileService {
     }
 
     updatePassword(oldPassword, newPassword1, newPassword2): IPromise<boolean> {
-        // let salt: string = this.rootScope.user.email;
-        let salt = "test";
+        let salt: string = this.rootScope.user.email;
         oldPassword = hashPasswordPbkdf2(oldPassword, salt);
         newPassword1 = hashPasswordPbkdf2(newPassword1, salt);
         newPassword2 = hashPasswordPbkdf2(newPassword2, salt);
