@@ -29,8 +29,6 @@ class AuthService {
 
     $inject = [$httpId, $rootScopeId, $cookiesId, $locationId, $windowId, UserResourceId, $injectorId, $qId];
 
-
-
     http;
     rootScope;
     cookies;
@@ -40,7 +38,6 @@ class AuthService {
     injector;
 
     $q;
-
 
     constructor($http, $rootScope, $cookies, $location, $window, UserResource, $injector, $q) {
 
@@ -103,7 +100,6 @@ class AuthService {
                         self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
                         self.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
 
-
                         let date = new Date();
                         date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
 
@@ -129,29 +125,11 @@ class AuthService {
     }
 
     logout() {
-
         this.cookies.remove("user", { domain: this.location.host(), path: "/" });
         this.cookies.remove("tenant", { domain: this.location.host(), path: "/" });
         this.http.defaults.headers.common.Authorization = "Basic";
         window.open("/logout.html", "_self");
-
-        /*
-        let self = this;
-        this.http.post("logout", {})
-            .success(function () {
-                // self.location.path("#/login");
-                self.rootScope.$broadcast("$destroy");
-                // location.reload();
-            })
-            .error(function (data) {
-                // self.location.path("#/login");
-                self.rootScope.$broadcast("$destroy");
-                // location.reload();
-
-            });
-        */
     }
-
 }
 
 angular.module(moduleAuthService, [ngResourceId]).service(AuthServiceId, AuthService);

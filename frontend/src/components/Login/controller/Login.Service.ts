@@ -48,21 +48,19 @@ class LoginService {
     login(credentials: Credentials) {
         let self = this;
         self.authService.login(credentials).then(
-            function (res) {
+            (data) => {
                 if (self.location.host() === credentials.tenant) {
                     self.location.path("/dashboard");
                 } else {
-                    let domain = "http://" + credentials.tenant + ":8080/#/dashboard";
+                    let domain = "http://" + credentials.tenant + "/#/dashboard";
                     self.window.open(domain, "_self");
                 }
                 self.rootScope.setUserDefaultLanguage();
                 self.rootScope.loadLabels();
-            },
-            function (err) {
+            }, (error) => {
                 self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
-            }
-        );
-    };
+            });
+    }
 }
 
 angular.module(moduleLoginService, [ngResourceId]).service(LoginServiceId, LoginService);
