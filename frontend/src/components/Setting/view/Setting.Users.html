@@ -30,8 +30,7 @@
 								<td>{{user.email}}</td>
 								<td ng-if="user.role!='SUPERADMIN'">
 
-									<select ng-disabled="user.role=='ADMIN'&&user.role!='SUPERADMIN'" class="form-control" ng-change="settingCtrl.changeRole(user)"
-
+									<select ng-disabled="user.role=='ADMIN'&&settingCtrl.currentUser.role!='SUPERADMIN'" class="form-control" ng-change="settingCtrl.changeRole(user)"
 										ng-model="user.role ">                            
                                         <option value="USER ">{{ 'COMMON_USER' | translate }}</option>
                                         <option value="ADMIN ">{{ 'COMMON_ADMIN' | translate }}</option>                                        
@@ -42,14 +41,14 @@
 								</td>
 								<td ng-if="user.enabled==false ">
 
-									<button ng-click="settingCtrl.activateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&user.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
+									<button ng-click="settingCtrl.activateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&settingCtrl.currentUser.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
 
                                     <i class="fa fa-check "></i>&nbsp;{{ 'SETTING_ACTIVATE_USER' | translate }}
                                 </button>
 								</td>
 								<td ng-if="user.enabled==true ">
 
-									<button ng-click="settingCtrl.deactivateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&user.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
+									<button ng-click="settingCtrl.deactivateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&settingCtrl.currentUser.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
 
                                     <i class="fa fa-ban "></i>&nbsp;{{ 'SETTING_DEACTIVATE_USER' | translate }}
                                 </button>
@@ -74,4 +73,3 @@
         $(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
     });
 </script>
-

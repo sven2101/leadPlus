@@ -43,6 +43,7 @@ class SettingController {
     smtpForm;
 
     rootScope;
+    currentUser: User;
 
     constructor(SettingService, SmtpService, TemplateService, $rootScope) {
 
@@ -52,9 +53,8 @@ class SettingController {
         this.settingService = SettingService;
         this.templateService = TemplateService;
         this.smtpService = SmtpService;
-
         this.rootScope = $rootScope;
-
+        this.currentUser = this.rootScope.user;
         this.settingService.loadUsers();
     }
 

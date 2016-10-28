@@ -299,7 +299,6 @@ public class UserService implements IUserService {
 				user.setLastname(registration.getLastname());
 				user.setPassword(passwordEncoder.encode(registration.getPassword()));
 				user.setRole(Role.USER);
-				user.setEnabled(true);
 				user.setLanguage(Language.DE);
 
 				return save(user);
