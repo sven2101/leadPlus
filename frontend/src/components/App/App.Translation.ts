@@ -428,6 +428,7 @@ function config($translateProvider) {
             PRODUCT_TOAST_SAVE_ERROR: "Produkt konnte nicht angelegt werden",
             PRODUCT_TOAST_UPDATE: "Produkt wurde erfolgreich aktuallisiert",
             PRODUCT_TOAST_UPDATE_ERROR: "Produkt konnte nicht aktuallisiert werden",
+            PRODUCT_NUMBER: "Produktnummer",
 
             // Define customer elements
             CUSTOMER: "Kunde",
@@ -861,6 +862,7 @@ function config($translateProvider) {
             PRODUCT_TOAST_SAVE_ERROR: "Creating product was unsuccessful",
             PRODUCT_TOAST_UPDATE: "Updating product was successful",
             PRODUCT_TOAST_UPDATE_ERROR: "Updating product was unsuccessful",
+            PRODUCT_NUMBER: "Product number",
 
             // Define customer elements
             CUSTOMER: "Customer",
