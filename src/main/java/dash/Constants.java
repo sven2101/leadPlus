@@ -57,5 +57,6 @@ public final class Constants {
 
 	// DEBUGGING - NOTIFICATIONS
 	public static final String CREATING_SUBDOMAIN = "CREATING SUBDOMAIN ON AWS R53 FOR ";
+	public static final String TENANT_ALREADY_EXISTS = "TENANT KEY already exists ";
 
 }
