@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import dash.licensemanangement.domain.LicenseEnum;
 import dash.tenantmanagement.business.TenantContext;
 
 public class LicenseFilter extends OncePerRequestFilter {
@@ -36,9 +37,12 @@ public class LicenseFilter extends OncePerRequestFilter {
 				&& SecurityContextHolder.getContext().getAuthentication() instanceof TenantAuthenticationToken) {
 			TenantAuthenticationToken auth = (TenantAuthenticationToken) SecurityContextHolder.getContext()
 					.getAuthentication();
-			if (auth.getAuthenticatedTenant() == null) {
+			if (TenantContext.TENANT_NOT_FOUND.equals(auth.getTenant())
+					&& !LicenseEnum.ERROR.hasLicenseForUrl(request.getRequestURI())) {
 				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			} else {
+				filterChain.doFilter(request, response);
+			}
+			if (auth.getAuthenticatedTenant() != null) {
 				TenantContext.setTenant(auth.getAuthenticatedTenant().getTenantKey());
 
 				if (!auth.getAuthenticatedTenant().getLicense().getLicenseType()

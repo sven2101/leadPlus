@@ -8,21 +8,26 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum LicenseEnum {
-	FREE("free",
-			new HashSet<String>(Arrays.asList("/", "/images/favicon/**", "/assets/**", "/fonts/**", "/app/**",
-					"/components/Login/view/Login.html", "/logout.html", "/components/Signup/view/Signup.html",
-					"/components/Tenant/Registration/view/**", "/components/Licence/view/**",
-					"/api/rest/tenants/unique/key", "/api/rest/tenants", "/api/rest/registrations/**",
-					"/components/Common/view/NotFound.html", "/components/Common/view/Unauthorized.html",
-					"/components/Common/view/Forbidden.html", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
-					"/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security")),
-			0), BASIC("basic", new HashSet<String>(Arrays.asList("/user", "/users/all", "/components/Common/view/**",
-					"/components/Customer/view/**", "/components/Dashboard/view/**", "/components/FileUpload/view/**",
-					"/components/Lead/view/**", "/components/Offer/view/**", "/components/Product/view/**",
-					"/components/Profile/view/**", "/components/Sale/view/**", "/components/Setting/view/**",
-					"/components/Template/view/**", "/main.html", "/api/rest/**")), 1), PRO("pro",
-							new HashSet<String>(Arrays.asList("/components/Statistic/view/**")),
-							2), ULTIMATE("ultimate", new HashSet<String>(Arrays.asList("")), 3);
+	ERROR("error",
+			new HashSet<String>(Arrays.asList("/components/Common/view/NotFound.html",
+					"/components/Common/view/Unauthorized.html", "/components/Common/view/Forbidden.html")),
+			0), FREE("free",
+					new HashSet<String>(Arrays.asList("/", "/images/favicon/**", "/assets/**", "/fonts/**", "/app/**",
+							"/components/Login/view/Login.html", "/logout.html", "/components/Signup/view/Signup.html",
+							"/components/Tenant/Registration/view/**", "/components/Licence/view/**",
+							"/api/rest/tenants/unique/key", "/api/rest/tenants", "/api/rest/registrations/**",
+							"/components/Common/view/NotFound.html", "/components/Common/view/Unauthorized.html",
+							"/components/Common/view/Forbidden.html", "/swagger-ui.html",
+							"/webjars/springfox-swagger-ui/**", "/configuration/ui", "/swagger-resources",
+							"/v2/api-docs/**", "/configuration/security")),
+					1), BASIC("basic", new HashSet<String>(Arrays.asList("/user", "/users/all",
+							"/components/Common/view/**", "/components/Customer/view/**",
+							"/components/Dashboard/view/**", "/components/FileUpload/view/**",
+							"/components/Lead/view/**", "/components/Offer/view/**", "/components/Product/view/**",
+							"/components/Profile/view/**", "/components/Sale/view/**", "/components/Setting/view/**",
+							"/components/Template/view/**", "/main.html", "/api/rest/**")), 2), PRO("pro",
+									new HashSet<String>(Arrays.asList("/components/Statistic/view/**")),
+									3), ULTIMATE("ultimate", new HashSet<String>(Arrays.asList("")), 4);
 
 	private Set<String> allowedRoutes;
 	private String license;
@@ -50,12 +55,14 @@ public enum LicenseEnum {
 	private LicenseEnum getLicenseByOrder(int order) {
 		switch (order) {
 		case 0:
-			return LicenseEnum.FREE;
+			return LicenseEnum.ERROR;
 		case 1:
-			return LicenseEnum.BASIC;
+			return LicenseEnum.FREE;
 		case 2:
-			return LicenseEnum.PRO;
+			return LicenseEnum.BASIC;
 		case 3:
+			return LicenseEnum.PRO;
+		case 4:
 			return LicenseEnum.ULTIMATE;
 		default:
 			throw new IllegalArgumentException(String.valueOf(order));

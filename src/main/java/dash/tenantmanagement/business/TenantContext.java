@@ -18,6 +18,7 @@ public class TenantContext {
 	private static final ThreadLocal<String> tenantThreadLocal = new ThreadLocal<>();
 	
 	public static final String NO_TENANT = "NO_TENANT";
+	public static final String TENANT_NOT_FOUND = "TENANT_NOT_FOUND";
 	public static final String PUBLIC_TENANT = "public";
 	
 	public static String getTenant() {
