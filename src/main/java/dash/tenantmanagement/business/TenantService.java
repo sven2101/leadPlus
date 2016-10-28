@@ -15,6 +15,7 @@ package dash.tenantmanagement.business;
 
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.CREATING_SUBDOMAIN;
+import static dash.Constants.TENANT_ALREADY_EXISTS;
 import static dash.Constants.TENANT_NOT_FOUND;
 
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class TenantService implements ITenantService {
 
 	private static final String SPRINT_PROFILE_PRODUCTION = "production";
 	private static final String RESOURCE_RECORD_SET_CNAME = "CNAME";
+	private static final String WWW = "www";
 
 	private static final Logger logger = Logger.getLogger(TenantService.class);
 
@@ -90,12 +92,12 @@ public class TenantService implements ITenantService {
 			tenant.getLicense().getTerm().add(Calendar.YEAR, 1);
 			tenantRepository.save(tenant);
 			createSchema(tenant);
-			if (!subdomainAlreadyExists(tenant)) {
+			if (!subdomainAlreadyExists(tenant) && springProfileActive.equals(SPRINT_PROFILE_PRODUCTION)) {
 				createTenantSubdomain(tenant);
 				logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
 			}
 		} catch (Exception ex) {
-			logger.error("ENANT KEY already exists: ", ex);
+			logger.error(TENANT_ALREADY_EXISTS + tenant.getTenantKey(), ex);
 		}
 		return tenant;
 	}
@@ -116,8 +118,7 @@ public class TenantService implements ITenantService {
 		boolean subdomainAlreadyExists = false;
 		for (ResourceRecordSet recordSet : recordSets) {
 			if (recordSet.getType().equals(RESOURCE_RECORD_SET_CNAME)) {
-				String[] cnameParts = recordSet.getName().split("\\.");
-				for (String parts : cnameParts) {
+				for (String parts : recordSet.getName().split("\\.")) {
 					if (parts.equals(tenant.getTenantKey()))
 						subdomainAlreadyExists = true;
 				}
@@ -133,18 +134,34 @@ public class TenantService implements ITenantService {
 		record.setValue(hostnameSuffix);
 		records.add(record);
 
-		ResourceRecordSet recordSet = new ResourceRecordSet();
-		recordSet.setName(tenant.getTenantKey() + hostnameSuffix);
-		recordSet.setType(RRType.CNAME);
-		recordSet.setTTL(Long.valueOf(60));
-		recordSet.setResourceRecords(records);
-
 		// Create the Change
 		List<Change> changes = new ArrayList<>();
+
+		//Resource Record Set CNAME for tenantKey.leadplus.io
+		ResourceRecordSet recordSet = new ResourceRecordSet();
+		recordSet.setName(tenant.getTenantKey() + "." + hostnameSuffix);
+		recordSet.setType(RRType.CNAME);
+		recordSet.setTTL(Long.valueOf(300));
+		recordSet.setResourceRecords(records);
+
+		//change for tenantKey.leadplus.io
 		Change change = new Change();
 		change.setAction(ChangeAction.CREATE);
 		change.setResourceRecordSet(recordSet);
 		changes.add(change);
+
+		//Resource Record Set CNAME for tenantKey.leadplus.io
+		ResourceRecordSet recordSetWWW = new ResourceRecordSet();
+		recordSet.setName(WWW + "." + tenant.getTenantKey() + "." + hostnameSuffix);
+		recordSet.setType(RRType.CNAME);
+		recordSet.setTTL(Long.valueOf(300));
+		recordSet.setResourceRecords(records);
+
+		//change for www.tenantKey.leadplus.io
+		Change changeWWW = new Change();
+		change.setAction(ChangeAction.CREATE);
+		change.setResourceRecordSet(recordSetWWW);
+		changes.add(changeWWW);
 
 		// Create a batch and add the change to it
 		ChangeBatch batch = new ChangeBatch();
@@ -183,7 +200,7 @@ public class TenantService implements ITenantService {
 		else
 			proofUniquenessRemote = false;
 
-		if (proofUniquenessLocal && proofUniquenessRemote)
+		if (proofUniquenessLocal || proofUniquenessRemote)
 			validation.setValidation(true);
 		else if (!proofUniquenessLocal && !proofUniquenessRemote)
 			validation.setValidation(false);

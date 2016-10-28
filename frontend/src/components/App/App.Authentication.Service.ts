@@ -113,12 +113,15 @@ class AuthService {
                     }
 
                 } else {
+                    console.log("Else: ");
                     defer.reject(false);
                 }
             }, (function (error) {
+                console.log("Else: ", error);
                 defer.reject(false);
             }));
         } else {
+            console.log("Else: ");
             defer.reject(false);
         }
         return defer.promise;

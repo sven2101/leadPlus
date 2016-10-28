@@ -45,8 +45,7 @@ public class UserLoginService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		User user;
 		try {
-			TenantAuthenticationToken sec = (TenantAuthenticationToken) SecurityContextHolder.getContext()
-					.getAuthentication();
+			TenantAuthenticationToken sec = (TenantAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 			TenantContext.setTenant(sec.getAuthenticatedTenant().getTenantKey());
 			user = userService.getUserByEmail(email);
 			if (!Optional.ofNullable(user).isPresent()) {

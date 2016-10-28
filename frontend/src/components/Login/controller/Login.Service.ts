@@ -47,12 +47,13 @@ class LoginService {
 
     login(credentials: Credentials) {
         let self = this;
+        console.log("Port: ", this.location.port());
         self.authService.login(credentials).then(
             (data) => {
                 if (self.location.host() === credentials.tenant) {
                     self.location.path("/dashboard");
                 } else {
-                    let domain = "http://" + credentials.tenant + "/#/dashboard";
+                    let domain = "https://" + credentials.tenant + ":" + self.location.port() + "/#/dashboard";
                     self.window.open(domain, "_self");
                 }
                 self.rootScope.setUserDefaultLanguage();
