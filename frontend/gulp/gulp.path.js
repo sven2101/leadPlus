@@ -10,19 +10,34 @@ var baseTmpPath = 'frontend/tmp/';
 module.exports = {
 	path: {
 		assetsJs: {
-			src: [
-				/*
-				 '!'+baseSrcPath+'assets/js/angular/angular-mock.js',
-				baseSrcPath + 'assets/js/jquery/jquery-2.2.1.min.js',
-				baseSrcPath + 'assets/js/jquery/jquery-ui.min.js',
-				baseSrcPath + 'assets/js/angular/angular.min.js',
-				baseSrcPath + 'assets/js/bootstrap-datepicker.min.js',
-				baseSrcPath + 'assets/js/datatables/datatables.min.js',
-				baseSrcPath + 'assets/js/datatables/dataTables.buttons.js',
-				*/
-				'!' + baseSrcPath + 'assets/js/**/*.js.map',
-				baseSrcPath + 'assets/js/**/*.js'],
-			dest: baseDstPath + 'assets/js'
+			basic: {
+				src: baseSrcPath + 'assets/js/basic/*.js',
+				dst: baseDstPath + 'assets/js/basic'
+			},
+			jquery: {
+				src: baseSrcPath + 'assets/js/jquery/*.js',
+				dst: baseDstPath + 'assets/js/jquery'
+			},
+			angular: {
+				src: baseSrcPath + 'assets/js/angular/*.js',
+				dst: baseDstPath + 'assets/js/angular'
+			},
+			datatable: {
+				src: baseSrcPath + 'assets/js/datatable/*.js',
+				dst: baseDstPath + 'assets/js/datatable'
+			},
+			others: {
+				src: baseSrcPath + 'assets/js/others/*.js',
+
+				dst: baseDstPath + 'assets/js/others'
+			},
+			unbundled: {
+				src: baseSrcPath + 'assets/js/unbundled/*.js',
+
+				dst: baseDstPath + 'assets/js/unbundled'
+			}
+
+
 		},
 		assetsCss: {
 			src: [
@@ -51,7 +66,7 @@ module.exports = {
 		},
 		fonts: {
 			src: [baseSrcPath + 'assets/fonts/**/*',
-				baseSrcPath + 'assets/font-awesome/fonts/**/*'],
+			baseSrcPath + 'assets/font-awesome/fonts/**/*'],
 			dest: baseDstPath + 'fonts'
 		},
 		assets: {
@@ -111,9 +126,9 @@ module.exports = {
 		},
 		clean: {
 			src: [baseDstPath + '', '!' + baseTmpPath + 'js/app.module.js',
-				'!' + baseTmpPath + 'js/app.routes.js',
-				'!' + baseTmpPath + 'js/app.appCtrl.js',
-				baseTmpPath + 'js/**/*.js']
+			'!' + baseTmpPath + 'js/app.routes.js',
+			'!' + baseTmpPath + 'js/app.appCtrl.js',
+			baseTmpPath + 'js/**/*.js']
 		},
 		browserSync: {
 			src: [baseDstPath + '**/*.js', baseDstPath + '**/*.html']

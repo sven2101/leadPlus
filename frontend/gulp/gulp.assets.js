@@ -7,31 +7,63 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
     path = require('./gulp.path.js').path,
-    typescript = require('gulp-tsc');
+    typescript = require('gulp-tsc'),
+    order = require('gulp-order');
 
-gulp.task('assets',['concat-assetsJs','concat-assetsCss','concat-scripts'],function () {
+gulp.task('assets', ['concat-assetsCss', 'concat-basic-js', 'concat-jquery-js', 'concat-angular-js', 'concat-datatable-js', 'concat-others-js', 'copy-unbundled-js'], function () {
     return null;
 });
 
+gulp.task('concat-basic-js', function () {
+    return gulp.src(path.assetsJs.basic.src)
 
-gulp.task('concat-assetsJs', ['copy'], function () {
-    return gulp.src(path.assetsJs.src)
-        //.pipe(concat('assets.js'))
-        .pipe(gulp.dest(path.assetsJs.dest));
-});
+        .pipe(order([
+            "jquery-2.2.1.min.js",
+            "bootstrap.min.js",
+            "angular.min.js",
+            "*.js"
+        ]))
+        .pipe(concat("basic.js"))
 
-gulp.task('concat-scripts', ['concat-assetsJs'], function () {
-    return gulp.start('concat-scripts-task');
-});
+        .pipe(gulp.dest(path.assetsJs.basic.dst));
+})
 
-gulp.task('concat-scripts-task', function () {
-    return gulp.src(path.scripts.src)
-        .pipe(concat('scripts.js'))
-        .pipe(gulp.dest(path.scripts.dest));
-});
+gulp.task('concat-jquery-js', function () {
+    return gulp.src(path.assetsJs.jquery.src)
+        .pipe(order([
+            "angular.min.js",
+        ]))
+        .pipe(concat("basic.js"))
+        .pipe(concat("jquery.js"))
+        .pipe(gulp.dest(path.assetsJs.jquery.dst));
+})
+
+gulp.task('concat-angular-js', function () {
+    return gulp.src(path.assetsJs.angular.src)
+        .pipe(concat("angular.js"))
+        .pipe(gulp.dest(path.assetsJs.angular.dst));
+})
+
+gulp.task('concat-datatable-js', function () {
+    return gulp.src(path.assetsJs.datatable.src)
+        .pipe(concat("datatable.js"))
+        .pipe(gulp.dest(path.assetsJs.datatable.dst));
+})
+
+gulp.task('concat-others-js', function () {
+    return gulp.src(path.assetsJs.others.src)
+        .pipe(concat("others.js"))
+        .pipe(gulp.dest(path.assetsJs.others.dst));
+})
+
+gulp.task('copy-unbundled-js', function () {
+    return gulp.src(path.assetsJs.unbundled.src)
+        .pipe(gulp.dest(path.assetsJs.unbundled.dst));
+})
 
 
-gulp.task('concat-assetsCss', ['copy'], function () {
+
+gulp.task('concat-assetsCss', function () {
     return gulp.src(path.assetsCss.src)
         .pipe(concat('assets.css'))
         //.pipe(uglify())
