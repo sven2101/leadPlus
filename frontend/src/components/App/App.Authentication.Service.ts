@@ -60,7 +60,7 @@ class AuthService {
 
         let defer = this.$q.defer();
         if (credentials) {
-            let salt: string = credentials.email;      
+            let salt: string = credentials.email;
             let hashedPassword = hashPasswordPbkdf2(credentials.password, salt);
             let authorization = btoa(credentials.email + ":" + hashedPassword);
             let header = credentials ? { Authorization: "Basic " + authorization } : {};
@@ -105,7 +105,6 @@ class AuthService {
 
                         let date = new Date();
                         date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
-
                         self.cookies.putObject("user", self.rootScope.user, { domain: self.location.host(), path: "/", expires: date });
                         self.cookies.putObject("tenant", self.rootScope.tenant, { domain: self.location.host(), path: "/", expires: date });
 

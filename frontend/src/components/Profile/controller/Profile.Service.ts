@@ -24,7 +24,7 @@ const ProfileServiceId: string = "ProfileService";
 class ProfileService {
 
 
-    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId, $cookiesId];
+    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId, $cookiesId, $locationId];
 
 
     userResource;
@@ -41,8 +41,9 @@ class ProfileService {
     oldPassword: string;
     newPassword1: string;
     newPassword2: string;
+    location;
 
-    constructor($rootScope, toaster, $translate, UserResource, FileResource, $q, $cookies) {
+    constructor($rootScope, toaster, $translate, UserResource, FileResource, $q, $cookies, $location) {
         this.fileResource = FileResource.resource;
         this.userResource = UserResource.resource;
         this.translate = $translate;
@@ -51,6 +52,7 @@ class ProfileService {
         this.formdata = new FormData();
         this.q = $q;
         this.cookies = $cookies;
+        this.location = $location;
     }
 
     updateProfilInfo(user: User): IPromise<User> {
@@ -96,9 +98,14 @@ class ProfileService {
                 newSmtpKey: encodeURIComponent(hashPasswordPbkdf2(newPassword1, salt))
             }).$promise.then(function () {
                 self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
+                let authorization = btoa(self.rootScope.user.email + ":" + newPassword1);
+                self.rootScope.user.authorization = authorization;
+                let date = new Date();
+                date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
+                self.cookies.putObject("user", self.rootScope.user, { domain: self.location.host(), path: "/", expires: date });
                 self.rootScope.user.smtpKey = encodeURIComponent(hashPasswordPbkdf2(newPassword1, salt));
                 defer.resolve(true);
-            }, function () {
+            }, function (error) {
                 self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
                 defer.reject(false);
             });
