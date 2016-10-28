@@ -23,7 +23,7 @@ class ImageLoaderDirective implements IDirective {
     link(scope, element, attrs) {
         let requestConfig = {
             method: "Get",
-            url: attrs.httpsrc + "?" + attrs.pictureid,
+            url: attrs.httpsrc + attrs.pictureid,
             responseType: "arraybuffer",
             cache: "true"
         };

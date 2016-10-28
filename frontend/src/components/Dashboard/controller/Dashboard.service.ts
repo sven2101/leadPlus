@@ -65,6 +65,7 @@ class DashboardService {
         $rootScope.$on("onTodosChange", (event) => {
             this.refreshTodos();
         });
+
         let self = this;
         setInterval(function () {
             self.refreshTodos();

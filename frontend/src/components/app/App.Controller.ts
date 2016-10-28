@@ -19,7 +19,7 @@ const AppControllerId: string = "AppController";
 
 class AppController {
 
-    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId];
+    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId];
 
     translate;
     rootScope;
@@ -32,7 +32,7 @@ class AppController {
 
     profileService: ProfileService;
 
-    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location) {
+    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope) {
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.interval = $interval;
@@ -55,8 +55,12 @@ class AppController {
         this.rootScope.setUserDefaultLanguage();
         this.registerInterval();
 
-        $rootScope.$on("todosChanged", (event, result) => {
+        let todosChanged = $rootScope.$on("todosChanged", (event, result) => {
             this.todos = result;
+        });
+
+        $scope.$on("$destroy", function handler() {
+            todosChanged();
         });
     }
 

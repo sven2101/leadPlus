@@ -25,17 +25,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
-@SQLDelete(sql = "UPDATE notification SET deleted = '1' WHERE id = ?")
-@Where(clause = "deleted <> '1'")
 @Table(name = "fileupload")
 public class FileUpload implements Serializable {
 

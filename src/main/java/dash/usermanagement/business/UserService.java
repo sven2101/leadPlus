@@ -169,6 +169,7 @@ public class UserService implements IUserService {
 				User updateUser = getById(user.getId());
 				if (Optional.ofNullable(updateUser).isPresent()) {
 					updateUser.setProfilPicture(user.getPicture());
+					updateUser.setThumbnail(user.getThumbnail());
 					return save(updateUser);
 				} else {
 					throw new NotFoundException(USER_NOT_FOUND);

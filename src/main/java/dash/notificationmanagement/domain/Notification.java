@@ -208,8 +208,9 @@ public class Notification {
 
 	@Override
 	public String toString() {
-		return "Notification [id=" + id + ", recipient=" + recipient + ", subject=" + subject + ", deleted=" + deleted + ", content=" + content
-				+ ", attachment=" + attachment + ", notificationType=" + notificationType + "]";
+		return "Notification [id=" + id + ", recipient=" + recipient + ", subject=" + subject + ", deleted=" + deleted
+				+ ", content=" + content + ", attachment=" + attachment + ", notificationType=" + notificationType
+				+ "]";
 	}
 
 }

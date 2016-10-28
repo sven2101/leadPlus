@@ -36,7 +36,7 @@
 									</div>
 									<div style="margin-top:-13px">
 										<span ng-if="process.processor!=null" class="pull-right">
-                                            <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{process.processor.picture.id}}" httpsrc="users/{{process.processor.id}}/profile/picture" alt="">
+                                            <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         </span>
 										<a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.lead,'lead',process)" class="pull-right btn btn-xs btn-white"
 											data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
@@ -70,7 +70,7 @@
 									</div>
 									<div style="margin-top:-13px">
 										<span ng-if="process.processor!=null" class="pull-right">
-                                            <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" httpsrc="users/{{process.processor.id}}/profile/picture" alt="">
+                                            <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         </span>
 										<a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.lead,'lead',process)" class="pull-right btn btn-xs btn-white"
 											data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
@@ -104,7 +104,7 @@
 									</div>
 									<div style="margin-top:-20px">
 										<span ng-if="process.processor!=null" class="pull-right">
-                                                    <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" httpsrc="users/{{process.processor.id}}/profile/picture" alt="">
+                                                    <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                                  </span>
 										<a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.offer,'offer',process)" class="pull-right btn btn-xs btn-white"
 											data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
@@ -142,7 +142,7 @@
 
 									<div style="margin-top:-20px">
 										<span ng-if="process.processor!=null" class="pull-right">
-                                            <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureid="{{process.processor.picture.id}}" httpsrc="users/{{process.processor.id}}/profile/picture" alt="">
+                                            <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         </span>
 										<a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.sale,'sale',process)" class="pull-right btn btn-xs btn-white"
 											data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;

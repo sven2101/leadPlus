@@ -23,7 +23,7 @@ const ProfileControllerId: string = "ProfileController";
 
 class ProfileController {
 
-    private $inject = [ProfileServiceId, $rootScopeId];
+    private $inject = [ProfileServiceId, $rootScopeId, $scopeId];
 
     myImage = "";
     myCroppedImage = "";
@@ -37,18 +37,22 @@ class ProfileController {
     newPassword1: string;
     newPassword2: string;
 
-    constructor(ProfileService: ProfileService, $rootScope) {
+    constructor(ProfileService: ProfileService, $rootScope, $scope) {
         this.profileService = ProfileService;
         this.rootscope = $rootScope;
         this.currentUser = deepCopy(this.rootscope.user);
         this.getById();
         let self = this;
-        $rootScope.$on("profileImageSaved", function (evt, data: FileUpload) {
+        let profileImageSaved = $rootScope.$on("profileImageSaved", function (evt, data: FileUpload) {
             if (!isNullOrUndefined(data)) {
                 let user = deepCopy(self.rootscope.user);
-                user.picture = data;
+                user.picture = data[0];
+                user.thumbnail = data[1];
                 self.updateProfileImage(user);
             }
+        });
+        $scope.$on("$destroy", function handler() {
+            profileImageSaved();
         });
     }
 

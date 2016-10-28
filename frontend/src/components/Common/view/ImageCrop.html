@@ -1,19 +1,19 @@
 <h5>max 4MB</h5>
 <div class="row">
-    <div>
-        <div class="image-crop">
-            <img style="max-width: 100%;" id="imageCroper" ng-src="data:image/png;base64,{{defaultpicture.content}}" />
-        </div>
-    </div>
+	<div>
+		<div class="image-crop">
+			<img style="max-width: 100%;" id="imageCroper" ng-src="data:image/png;base64,{{defaultpicture.content}}" />
+		</div>
+	</div>
 </div>
 <br>
 <p id="errorMessage" class="error-block">{{ 'COMMON_VALIDATE_MAX_FILE_SIZE' | translate }}</p>
 <div class="btn-group" role="group">
-    <label ng-click="hideErrorMessage();" style="margin-left:-15px;min-width:165px" title="Upload image file" for="inputImage" class="btn btn-white">
+	<label ng-click="hideErrorMessage();" style="margin-left:-15px;min-width:165px" title="Upload image file" for="inputImage"
+		class="btn btn-white">
         <input type="file" accept="image/*" name="file" id="inputImage" class="hide">{{ 'COMMON_UPLOAD_NEW_IMAGE' | translate }}
     </label>
-    <label ng-if="savebutton" ng-click="hideErrorMessage();save();" title="Save upload image file"
-        class="btn btn-white">
+	<label ng-if="savebutton" ng-click="hideErrorMessage();save();" title="Save upload image file" class="btn btn-white">
     {{ 'COMMON_SAVE' | translate }}
     </label>
 </div>

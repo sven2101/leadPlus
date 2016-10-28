@@ -13,7 +13,7 @@
                     <div class="chat-discussion" ng-model="process.comments">
                         <div ng-repeat="comment in process.comments | orderBy: '-timestamp' | limitTo: 3">
                             <div ng-if="$index%2==0" class="chat-message left">
-                                <img class="message-avatar" pictureId="{{comment.creator.picture.id}}" httpsrc="users/{{comment.creator.id}}/profile/picture" alt="">
+                                <img class="message-avatar" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                 <div class="message">
                                     <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
                                     <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
@@ -24,7 +24,7 @@
                                 </div>
                             </div>
                             <div ng-if="$index%2!=0" class="chat-message right">
-                                <img class="message-avatar" pictureId="{{comment.creator.picture.id}}" httpsrc="users/{{comment.creator.id}}/profile/picture" alt="">
+                                <img class="message-avatar" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                 <div class="message">
                                     <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
                                     <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>

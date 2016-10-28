@@ -62,31 +62,34 @@ angular.module(moduleApp)
             };
             scope.buildImageCropper();
             scope.save = function () {
-                let $image = $(".image-crop > img") as any;
-                let canvas = $image.cropper("getCroppedCanvas");
-                if (isNullOrUndefined(canvas.toDataURL)) {
-                    $rootScope.$broadcast(scope.event, undefined);
-                    return;
-                }
-
-                let picture = new FileUpload();
-                picture.mimeType = "image/jpeg";
-                picture.filename = "profilepicture";
-                if (!isNullOrUndefined(scope.quality) && !isNaN(scope.quality) && scope.quality > 0 && scope.quality <= 100) {
-                    picture.content = canvas.toDataURL("image/jpeg", scope.quality / 100).split(",")[1];
+                let qualityArray: Array<number> = scope.quality.split(",");
+                let result: Array<FileUpload> = [];
+                for (let i = 0; i < qualityArray.length; i++) {
+                    let quality = Number(qualityArray[i]);
+                    if (isNullOrUndefined(quality) || isNaN(quality) || quality <= 0 || quality > 100) {
+                        $rootScope.$broadcast(scope.event, undefined);
+                        return;
+                    }
+                    let $image = $(".image-crop > img") as any;
+                    let canvas = $image.cropper("getCroppedCanvas");
+                    if (isNullOrUndefined(canvas.toDataURL)) {
+                        $rootScope.$broadcast(scope.event, undefined);
+                        return;
+                    }
+                    let picture = new FileUpload();
+                    picture.mimeType = "image/jpeg";
+                    picture.filename = "profilepicture";
+                    picture.content = canvas.toDataURL("image/jpeg", quality / 100).split(",")[1];
                     picture.size = Math.round((picture.content.length) * 3 / 4);
-                } else {
-                    picture.content = canvas.toDataURL("image/png", 0.5).split(",")[1];
-                    picture.size = Math.round((picture.content.length) * 3 / 4);
+                    result.push(picture);
                 }
-                $rootScope.$broadcast(scope.event, picture);
+                $rootScope.$broadcast(scope.event, result);
             };
 
             scope.buildImageCropper();
 
-
             scope.$on("saveCroppedImage", function (evt, data) {
-                scope.save();
+                scope.save(data);
             });
 
         };

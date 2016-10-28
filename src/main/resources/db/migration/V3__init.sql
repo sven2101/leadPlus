@@ -192,8 +192,12 @@ CREATE TABLE "user"
   role character varying(255),
   username character varying(30),	
   picture_fk bigint,
+  thumbnail_fk bigint,
   CONSTRAINT "user_pkey" PRIMARY KEY (id),
   CONSTRAINT fkoxacr7c2iwurvyel2h0jwblu3 FOREIGN KEY (picture_fk)
+      REFERENCES fileupload (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT thumbnail_fileupload FOREIGN KEY (thumbnail_fk)
       REFERENCES fileupload (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT uk_e6gkqunxajvyxl5uctpl2vl2p UNIQUE (email)

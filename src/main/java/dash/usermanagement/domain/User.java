@@ -103,9 +103,13 @@ public class User implements UserDetails, Principal {
 	@Column(name = "role", length = 255, nullable = false)
 	private Role role;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "picture_fk")
 	private FileUpload picture;
+
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "thumbnail_fk")
+	private FileUpload thumbnail;
 
 	@Enumerated(EnumType.STRING)
 	@NotNull
@@ -234,6 +238,22 @@ public class User implements UserDetails, Principal {
 		this.picture = picture;
 	}
 
+	public FileUpload getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(FileUpload thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	@Override
 	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -268,14 +288,19 @@ public class User implements UserDetails, Principal {
 		int result = 1;
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + (enabled ? 1231 : 1237);
+		result = prime * result + ((fax == null) ? 0 : fax.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((job == null) ? 0 : job.hashCode());
 		result = prime * result + ((language == null) ? 0 : language.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result + ((skype == null) ? 0 : skype.hashCode());
+		result = prime * result + ((thumbnail == null) ? 0 : thumbnail.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -295,12 +320,25 @@ public class User implements UserDetails, Principal {
 			return false;
 		if (enabled != other.enabled)
 			return false;
+		if (fax == null) {
+			if (other.fax != null)
+				return false;
+		} else if (!fax.equals(other.fax))
+			return false;
 		if (firstname == null) {
 			if (other.firstname != null)
 				return false;
 		} else if (!firstname.equals(other.firstname))
 			return false;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (job == null) {
+			if (other.job != null)
+				return false;
+		} else if (!job.equals(other.job))
 			return false;
 		if (language != other.language)
 			return false;
@@ -326,13 +364,29 @@ public class User implements UserDetails, Principal {
 			return false;
 		if (role != other.role)
 			return false;
+		if (skype == null) {
+			if (other.skype != null)
+				return false;
+		} else if (!skype.equals(other.skype))
+			return false;
+		if (thumbnail == null) {
+			if (other.thumbnail != null)
+				return false;
+		} else if (!thumbnail.equals(other.thumbnail))
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", lastname=" + lastname
-				+ ", email=" + email + ", password=" + password + ", role=" + role + ", profilPicture=" + picture
+		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", phone=" + phone
+				+ ", skype=" + skype + ", fax=" + fax + ", job=" + job + ", lastname=" + lastname + ", email=" + email
+				+ ", password=" + password + ", role=" + role + ", picture=" + picture + ", thumbnail=" + thumbnail
 				+ ", language=" + language + ", enabled=" + enabled + "]";
 	}
 
