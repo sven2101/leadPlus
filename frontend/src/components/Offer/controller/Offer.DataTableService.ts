@@ -149,7 +149,7 @@ class OfferDataTableService {
                     if (isNullOrUndefined(data.processor)) {
                         return "";
                     }
-                    return data.processor.username;
+                    return data.processor.email;
                 }).notVisible(),
 
             this.DTColumnBuilder.newColumn(null).withTitle(

@@ -125,7 +125,7 @@ class SaleDataTableService {
                     if (isNullOrUndefined(data.processor)) {
                         return "";
                     }
-                    return data.processor.username;
+                    return data.processor.email;
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_STATUS")).withClass("text-center")
