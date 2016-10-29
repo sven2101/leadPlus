@@ -13,13 +13,18 @@
 
 class AbstractWorkflow {
     workflowService: WorkflowService;
+    fileService: FileService;
+
     currentWizard: number = 1;
     sce;
+    window;
     actionButtonConfig: { [key: number]: any } = {};
 
-    constructor(WorkflowService, $sce) {
+    constructor(WorkflowService, $sce, $window, FileService) {
         this.workflowService = WorkflowService;
+        this.fileService = FileService;
         this.sce = $sce;
+        this.window = $window;
     }
 
     getAsHtml(html: string) {
@@ -44,5 +49,18 @@ class AbstractWorkflow {
 
     wizardOnClick(wizard: number) {
         this.currentWizard = wizard;
+    }
+
+    openAttachment(id: number) {
+        let pdfAttachment;
+        let self = this;
+        this.fileService.getFileById(id).then((result) => {
+            pdfAttachment = result.data;
+            console.log("Pdf - Attachment: ", pdfAttachment);
+            console.log("Result: ", result.data);
+            let file = new Blob([pdfAttachment], { type: "application/pdf" });
+            let fileURL = URL.createObjectURL(file);
+            self.window.open(fileURL, "_blank");
+        }, (error) => { console.log("Error"); });
     }
 }

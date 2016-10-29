@@ -9,6 +9,7 @@
 /// <reference path="../../Template/controller/Template.Service.ts" />
 /// <reference path="../../Common/service/Workflow.Service.ts" />
 /// <reference path="../../Common/model/Process.Model.ts" />
+/// <reference path="../../FileUpload/controller/File.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -26,7 +27,7 @@ const WorkflowControllerId: string = "WorkflowController";
 
 class WorkflowController extends AbstractWorkflow {
 
-    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId, $rootScopeId, $sceId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId, FileServiceId, $rootScopeId, $sceId, $windowId];
 
     type: string;
 
@@ -45,6 +46,7 @@ class WorkflowController extends AbstractWorkflow {
     templateService: TemplateService;
     workflowService: WorkflowService;
     dashboardService: DashboardService;
+    fileService: FileService;
 
     currentOrderPositions: Array<OrderPosition>;
     currentProductId = "-1";
@@ -72,8 +74,10 @@ class WorkflowController extends AbstractWorkflow {
 
     invoiceNumberAlreadyExists: boolean = false;
 
-    constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, $rootScope, $sce) {
-        super(WorkflowService, $sce);
+    window;
+
+    constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, FileService, $rootScope, $sce, $window) {
+        super(WorkflowService, $sce, FileService, $window);
         let self = this;
         this.rootScope = $rootScope;
         this.process = process;
@@ -102,6 +106,7 @@ class WorkflowController extends AbstractWorkflow {
         this.productService = ProductService;
         this.workflowService = WorkflowService;
         this.dashboardService = DashboardService;
+        this.fileService = FileService;
 
         this.getAllActiveTemplates();
         this.getAllActiveProducts();
@@ -111,6 +116,8 @@ class WorkflowController extends AbstractWorkflow {
         this.saleService = SaleService;
 
         this.loadDataToModal(process);
+
+        this.window = $window;
     }
 
     loadDataToModal(process: Process) {
@@ -171,6 +178,15 @@ class WorkflowController extends AbstractWorkflow {
 
     generatePDF(templateId: string, offer: Offer) {
         this.templateService.generatePDF(templateId, offer).then((result) => { }, (error) => handleError(error));
+    }
+
+    openAttachment(id: number) {
+        let pdfAttachment;
+        this.fileService.getFileById(id).then((result) => { pdfAttachment = result.content; }, (error) => { console.log("Error"); });
+        console.log("Pdf - Attachment: ", pdfAttachment);
+        let file = new Blob([pdfAttachment], { type: "application/pdf" });
+        let fileURL = URL.createObjectURL(file);
+
     }
 
     getAllActiveTemplates() {

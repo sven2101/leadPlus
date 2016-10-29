@@ -28,8 +28,8 @@ public interface IFileUploadService {
 
 	public FileUpload save(final FileUpload fileUpload) throws SaveFailedException;
 
-	public void delete(final long id) throws DeleteFailedException;
+	public void delete(final Long id) throws DeleteFailedException;
 
-	public FileUpload getById(final long id) throws NotFoundException;
+	public FileUpload getById(final Long id) throws NotFoundException;
 
 }

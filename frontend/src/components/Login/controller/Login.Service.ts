@@ -47,7 +47,6 @@ class LoginService {
 
     login(credentials: Credentials) {
         let self = this;
-        console.log("Port: ", this.location.port());
         self.authService.login(credentials).then(
             (data) => {
                 if (self.location.host() === credentials.tenant) {

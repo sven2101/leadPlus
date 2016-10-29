@@ -81,7 +81,7 @@ public class FileUploadService implements IFileUploadService {
 	}
 
 	@Override
-	public void delete(final long id) throws DeleteFailedException {
+	public void delete(final Long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
 				fileRepository.delete(id);
@@ -98,7 +98,7 @@ public class FileUploadService implements IFileUploadService {
 	}
 
 	@Override
-	public FileUpload getById(final long id) throws NotFoundException {
+	public FileUpload getById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
 				return fileRepository.findOne(id);

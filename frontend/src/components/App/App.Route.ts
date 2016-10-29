@@ -157,6 +157,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
 
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+        /*
         $httpProvider.interceptors.push(function ($q, $location, $rootScope) {
             return {
                 "responseError": function (rejection) {
@@ -178,6 +179,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
 
             };
         });
+        */
     }])
     .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId,
         function ($location, $http, $rootScope, Auth, $cookies) {

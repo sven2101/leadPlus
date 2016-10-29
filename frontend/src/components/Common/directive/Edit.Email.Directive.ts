@@ -15,7 +15,7 @@
 "use strict";
 
 angular.module(moduleApp)
-    .directive("email", function () {
+    .directive("email", ["$location", function () {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
         directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
         directive.scope = {
@@ -29,10 +29,13 @@ angular.module(moduleApp)
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs, controller) {
+
             scope.templateId = "-1";
             scope.notificationId = "-1";
+            console.log("Scope: ", scope);
             scope.openAttachment = function (id: number) {
-                window.open("/api/rest/files/content/" + id, "_blank");
+
+                // window.open("https://YWRtaW5AZXZpYXJjLmNvbTorNVJvOEMvbWFqSEJtalNDUDVIazUwakRjYncyYUFxSHZ3MHRoZ05jc2pRPQ==@demo.leadplus.localhost:8080/api/rest/files/content/" + id, "_blank");
             };
             if (scope.type === "lead") {
                 scope.service = scope.parent.leadService;
@@ -45,5 +48,5 @@ angular.module(moduleApp)
             }
         };
         return directive;
-    });
+    }]);
 

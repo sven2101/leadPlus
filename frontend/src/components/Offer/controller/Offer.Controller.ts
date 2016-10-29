@@ -11,6 +11,8 @@
 /// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../common/service/Workflow.Service.ts" />
 /// <reference path="../../common/service/AbstractWorkflow.ts" />
+/// <reference path="../../FileUpload/controller/File.Service.ts" />
+
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -28,7 +30,7 @@ const OfferControllerId: string = "OfferController";
 
 class OfferController extends AbstractWorkflow {
 
-    $inject = [$rootScopeId, $compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, TemplateServiceId, $routeParamsId, $sceId];
+    $inject = [$rootScopeId, $compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, TemplateServiceId, FileServiceId, $routeParamsId, $sceId];
 
     type: string = "offer";
 
@@ -36,6 +38,7 @@ class OfferController extends AbstractWorkflow {
     offerDataTableService: OfferDataTableService;
     offerService: OfferService;
     templateService: TemplateService;
+    fileService: FileService;
 
     scope;
     compile;
@@ -73,11 +76,13 @@ class OfferController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService, $routeParams, $sce) {
-        super(WorkflowService, $sce);
+    constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService, FileService, $routeParams, $sce) {
+        super(WorkflowService, $sce, FileService, $window);
         this.workflowService = WorkflowService;
         this.offerDataTableService = OfferDataTableService;
         this.offerService = OfferService;
+        this.fileService = FileService;
+
         this.scope = $scope;
         this.compile = $compile;
         this.window = $window;
