@@ -15,7 +15,8 @@
 				<input type="password" name="loginPassword" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}" required=""
 					ng-model="loginCtrl.credentials.password">
 			</div>
-			<button type="submit" class="btn btn-success block full-width m-b" ng-click="loginCtrl.login()" OnClick="document.loginform.loginPassword.focus();">{{ 'LOGIN' | translate }}
+			<button ng-disabled="loginCtrl.credentials.email==null||loginCtrl.credentials.password==null" type="submit" class="btn btn-success block full-width m-b"
+				ng-click="loginCtrl.login()" OnClick="document.loginform.loginPassword.focus();">{{ 'LOGIN' | translate }}
             </button>
 		</form>
 		<p class="text-muted text-center">
