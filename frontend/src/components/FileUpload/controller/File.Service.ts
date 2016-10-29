@@ -42,8 +42,9 @@ class FileService {
     getContentFileById(id: number) {
         let self = this;
         this.http.get("/api/rest/files/content/" + id, { method: "GET", responseType: "arraybuffer" }).
-            success(function (data) {
-                let file = new Blob([data], { type: "application/pdf" });
+            success(function (data, status, headers, config, statusText) {
+                let contentType = headers("content-type");
+                let file = new Blob([data], { type: contentType });
                 let fileURL = URL.createObjectURL(file);
                 self.window.open(fileURL, "_blank");
             }).error(function (data, status) {
