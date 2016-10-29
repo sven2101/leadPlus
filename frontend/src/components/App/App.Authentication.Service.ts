@@ -111,15 +111,12 @@ class AuthService {
                     }
 
                 } else {
-                    console.log("Else: ");
                     defer.reject(false);
                 }
             }, (function (error) {
-                console.log("Else: ", error);
                 defer.reject(false);
             }));
         } else {
-            console.log("Else: ");
             defer.reject(false);
         }
         return defer.promise;
@@ -129,7 +126,7 @@ class AuthService {
         this.cookies.remove("user", { domain: this.location.host(), path: "/" });
         this.cookies.remove("tenant", { domain: this.location.host(), path: "/" });
         this.http.defaults.headers.common.Authorization = "Basic";
-        window.open("/logout.html", "_self");
+        window.open("https://" + this.location.host() + ":" + this.location.port() + "/logout.html", "_self");
     }
 }
 
