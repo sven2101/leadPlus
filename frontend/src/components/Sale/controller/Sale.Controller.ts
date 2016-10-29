@@ -75,7 +75,7 @@ class SaleController extends AbstractWorkflow {
     saleEditForm: any;
 
     constructor($rootScope, $compile, $scope, WorkflowService, SaleDataTableService, SaleService, TemplateService, FileService, $routeParams, $sce, $window) {
-        super(WorkflowService, $sce, FileService, $window);
+        super(WorkflowService, $sce, FileService);
         this.workflowService = WorkflowService;
         this.saleDataTableService = SaleDataTableService;
         this.saleService = SaleService;

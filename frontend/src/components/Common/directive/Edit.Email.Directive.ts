@@ -32,11 +32,12 @@ angular.module(moduleApp)
 
             scope.templateId = "-1";
             scope.notificationId = "-1";
-            console.log("Scope: ", scope);
+            /*
             scope.openAttachment = function (id: number) {
 
                 // window.open("https://YWRtaW5AZXZpYXJjLmNvbTorNVJvOEMvbWFqSEJtalNDUDVIazUwakRjYncyYUFxSHZ3MHRoZ05jc2pRPQ==@demo.leadplus.localhost:8080/api/rest/files/content/" + id, "_blank");
             };
+            */
             if (scope.type === "lead") {
                 scope.service = scope.parent.leadService;
             }

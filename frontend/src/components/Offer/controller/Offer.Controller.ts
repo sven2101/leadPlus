@@ -77,7 +77,7 @@ class OfferController extends AbstractWorkflow {
     saleEditForm: any;
 
     constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService, FileService, $routeParams, $sce) {
-        super(WorkflowService, $sce, FileService, $window);
+        super(WorkflowService, $sce, FileService);
         this.workflowService = WorkflowService;
         this.offerDataTableService = OfferDataTableService;
         this.offerService = OfferService;

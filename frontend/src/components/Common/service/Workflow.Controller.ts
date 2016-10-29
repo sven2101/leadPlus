@@ -77,7 +77,7 @@ class WorkflowController extends AbstractWorkflow {
     window;
 
     constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, FileService, $rootScope, $sce, $window) {
-        super(WorkflowService, $sce, FileService, $window);
+        super(WorkflowService, $sce, FileService);
         let self = this;
         this.rootScope = $rootScope;
         this.process = process;
@@ -181,12 +181,7 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     openAttachment(id: number) {
-        let pdfAttachment;
-        this.fileService.getFileById(id).then((result) => { pdfAttachment = result.content; }, (error) => { console.log("Error"); });
-        console.log("Pdf - Attachment: ", pdfAttachment);
-        let file = new Blob([pdfAttachment], { type: "application/pdf" });
-        let fileURL = URL.createObjectURL(file);
-
+        this.fileService.getContentFileById(id);
     }
 
     getAllActiveTemplates() {

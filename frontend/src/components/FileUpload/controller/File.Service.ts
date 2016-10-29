@@ -21,20 +21,34 @@ const FileServiceId: string = "FileService";
 
 class FileService {
 
-    private $inject = [FileResourceId, $qId];
+    private $inject = [FileResourceId, $qId, $httpId, $windowId, toasterId, $translateId];
 
     fileResource;
     q;
+    http;
+    window;
+    toaster;
+    translate;
 
-    constructor(FileResource, $q) {
+    constructor(FileResource, $q, $http, $window, toaster, $translate) {
         this.fileResource = FileResource.resource;
         this.q = $q;
+        this.http = $http;
+        this.window = $window;
+        this.toaster = toaster;
+        this.translate = $translate;
     }
 
-    getFileById(id: number): IPromise<any> {
-        let defer = this.q.defer();
-        this.fileResource.getContentByFileUploadId({ id: id }).$promise.then((resultFileUpload) => defer.resolve(resultFileUpload), (error) => defer.reject(error));
-        return defer.promise;
+    getContentFileById(id: number) {
+        let self = this;
+        this.http.get("/api/rest/files/content/" + id, { method: "GET", responseType: "arraybuffer" }).
+            success(function (data) {
+                let file = new Blob([data], { type: "application/pdf" });
+                let fileURL = URL.createObjectURL(file);
+                self.window.open(fileURL, "_blank");
+            }).error(function (data, status) {
+                self.toaster.pop("error", "", self.translate.instant("COMMON_TOAST_FAILURE_DELETE_LEAD"));
+            });
     }
 }
 
