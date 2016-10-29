@@ -90,8 +90,8 @@ public class NotificationService implements INotificationService {
 
 					if (notification.getAttachment().getContent() != null) {
 						MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getContent(),
-								"application/octet-stream");
+						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(),
+								notification.getAttachment().getMimeType());
 						attachmentBodyPart.setDataHandler(new DataHandler(ds));
 						attachmentBodyPart.setFileName(notification.getAttachment().getFilename());
 						multipart.addBodyPart(attachmentBodyPart);
@@ -110,7 +110,7 @@ public class NotificationService implements INotificationService {
 				throw new SMTPdoesntExistsException("No valid SMTP Data for this User");
 			}
 		} catch (Exception ex) {
-			return;
+			throw ex;
 		}
 	}
 

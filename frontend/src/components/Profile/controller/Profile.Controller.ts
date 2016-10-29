@@ -80,7 +80,16 @@ class ProfileController {
     }
 
     updatePassword() {
-        this.profileService.updatePassword(this.oldPassword, this.newPassword1, this.newPassword2).then((result) => { this.passwordForm.$setPristine(); this.clearPasswordForm(); }, (error) => { this.passwordForm.$setPristine(); this.clearPasswordForm(); });
+        this.profileService.updatePassword(this.oldPassword, this.newPassword1, this.newPassword2).then((result) => {
+            this.passwordForm.$setPristine();
+            this.clearPasswordForm();
+        }, (error) => {
+            handleError(error);
+            /*
+            this.passwordForm.$setPristine();
+            this.clearPasswordForm();
+            */
+        });
     }
 
     clearPasswordForm() {
