@@ -26,7 +26,7 @@ const FollowUpControllerId: string = "FollowUpController";
 
 class FollowUpController {
 
-    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, WorkflowServiceId, ProcessResourceId, toasterId, $translateId, $rootScopeId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, WorkflowServiceId, FileServiceId, ProcessResourceId, toasterId, $translateId, $rootScopeId];
 
     uibModalInstance;
 
@@ -38,6 +38,7 @@ class FollowUpController {
     currentNotification: Notification;
     templateService: TemplateService;
     workflowService: WorkflowService;
+    fileService: FileService;
     processResource;
     toaster;
     translate;
@@ -49,7 +50,7 @@ class FollowUpController {
     editProcess: Process;
     edit: boolean;
 
-    constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService, ProcessResource, toaster, $translate, $rootScope) {
+    constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService, FileService, ProcessResource, toaster, $translate, $rootScope) {
         this.process = process;
         this.editProcess = process;
         this.editWorkflowUnit = process.offer;
@@ -63,7 +64,7 @@ class FollowUpController {
         this.notificationService = NotificationService;
         this.templateService = TemplateService;
         this.workflowService = WorkflowService;
-
+        this.fileService = FileService;
         this.getAllActiveTemplates();
     }
 
@@ -82,6 +83,10 @@ class FollowUpController {
 
     getAllActiveTemplates() {
         this.templateService.getAll().then((result) => this.templates = result, (error) => handleError(error));
+    }
+
+    openAttachment(id: number) {
+        this.fileService.getContentFileById(id);
     }
 
     send() {
