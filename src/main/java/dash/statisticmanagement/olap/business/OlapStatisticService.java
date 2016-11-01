@@ -3,6 +3,8 @@ package dash.statisticmanagement.olap.business;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,7 @@ public class OlapStatisticService {
 	@Autowired
 	private UserStatisticService userStatisticService;
 
+	@Transactional
 	public void generateOlapStatistics() throws NotFoundException {
 		Calendar timestamp = Calendar.getInstance();
 		timestamp.add(Calendar.HOUR_OF_DAY, -1);

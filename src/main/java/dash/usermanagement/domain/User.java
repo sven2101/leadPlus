@@ -57,7 +57,7 @@ public class User implements UserDetails, Principal {
 	private Long id;
 
 	@NotNull
-	@Size(max = 30)
+	@Size(max = 100)
 	@Column(name = "username", length = 30, nullable = false)
 	private String username;
 
@@ -78,7 +78,7 @@ public class User implements UserDetails, Principal {
 	@Column(name = "fax", length = 50, nullable = true)
 	private String fax;
 
-	@Size(max = 50)
+	@Size(max = 100)
 	@Column(name = "job", length = 50, nullable = true)
 	private String job;
 
@@ -89,7 +89,7 @@ public class User implements UserDetails, Principal {
 
 	@NotNull
 	@Pattern(regexp = "^(.+)@(.+)$")
-	@Size(max = 50)
+	@Size(max = 100)
 	@Column(name = "email", unique = true, length = 50, nullable = false)
 	private String email;
 
@@ -113,7 +113,7 @@ public class User implements UserDetails, Principal {
 
 	@Enumerated(EnumType.STRING)
 	@NotNull
-	@Column(name = "language", length = 255, nullable = false)
+	@Column(name = "language", length = 50, nullable = false)
 	private Language language;
 
 	@NotNull
