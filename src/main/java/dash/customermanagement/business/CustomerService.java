@@ -117,4 +117,9 @@ public class CustomerService implements ICustomerService {
 		return customerRepository.getByEmail(email);
 	}
 
+	@Override
+	public List<Customer> getAllCustomersWithSale() {
+		return customerRepository.getAllCustomersWithSale();
+	}
+
 }

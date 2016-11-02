@@ -14,12 +14,18 @@
 
 package dash.customermanagement.business;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import dash.customermanagement.domain.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 	public Customer getByEmail(String email);
+	
+	@Query("SELECT DISTINCT c from Sale s JOIN s.customer c")
+	public List<Customer> getAllCustomersWithSale(); 
 
 }

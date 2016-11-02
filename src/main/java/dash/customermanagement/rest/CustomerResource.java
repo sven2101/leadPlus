@@ -53,6 +53,13 @@ public class CustomerResource {
 	public List<Customer> getAll() {
 		return customerService.getAll();
 	}
+	
+	@RequestMapping(value = "/real", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get all Customers with sale", notes = "")
+	public List<Customer> getAllCustomersWithSale() {
+		return customerService.getAllCustomersWithSale();
+	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
