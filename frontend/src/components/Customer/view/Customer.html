@@ -1,106 +1,107 @@
 <style>
-    .important {
-        background: #FFEBEB;
-    }
+	.important {
+		background: #FFEBEB;
+	}
 </style>
 <meta charset="utf-8">
 <div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-12">
-        <div class="row">
-            <div class="col-lg-10">
-                <h2>{{ 'CUSTOMER_MENU' | translate }}</h2>
-                <ol class="breadcrumb">
-                    <li>
-                        <a href="#/dashboard">Home</a>
-                    </li>
-                    <li class="active">
-                        <strong>{{ 'CUSTOMER_MENU' | translate }}</strong>
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </div>
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-10">
+				<h2>{{ 'CUSTOMER_MENU' | translate }}</h2>
+				<ol class="breadcrumb">
+					<li>
+						<a href="#/dashboard">Home</a>
+					</li>
+					<li class="active">
+						<strong>{{ 'CUSTOMER_MENU' | translate }}</strong>
+					</li>
+				</ol>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>{{ 'CUSTOMER_MANAGE_CUSTOMER' | translate }} - <strong>{{customerCtrl.customerService.customers.length}}</strong> {{ 'CUSTOMER_MENU' | translate }}</h5>
-                </div>
-                <div class="ibox-content">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>{{ 'CUSTOMER_MANAGE_CUSTOMER' | translate }} - <strong>{{customerCtrl.customerService.customers.length}}</strong> {{
+						'CUSTOMER_MENU' | translate }}</h5>
+				</div>
+				<div class="ibox-content">
 
 
-                    <form role="form" class="form-inline">
+					<form role="form" class="form-inline">
 
-                        <button type="button" class="btn btn-success btn-sm btn-primary" ng-click="customerCtrl.clearCustomer()" data-toggle="modal"
-                            data-target="#createCustomerModal">
+						<button type="button" class="btn btn-success btn-sm btn-primary" ng-click="customerCtrl.clearCustomer()" data-toggle="modal"
+							data-target="#createCustomerModal">
                                 <i class="fa fa-plus"></i>
                                 &nbsp;{{ 'CUSTOMER_CREATE' | translate }}
                         </button>
-                        <!--
+						<!--
                             <button type="button" ng-click="customerCtrl.refreshData()" type="button" class="btn btn-success btn-sm btn-primary">
                                 <i class="fa fa-refresh"></i>
                                 &nbsp;{{ 'COMMON_REFRESH' | translate }}
                         </button>
                         -->
 
-                        <span class="pull-right ">
+						<span class="pull-right ">
                                  <input  type="text" placeholder="Search" class="input-sm form-control" ng-model="searchText">
                          </span>
 
 
 
-                    </form>
+					</form>
 
 
 
-                    <div class="project-list">
-                        <table class="table table-hover">
-                            <tbody>
-                                <tr ng-repeat="customer in customerCtrl.customerService.customers| filter:searchText|orderBy:'lastname' | limitTo:customerCtrl.customerAmountLimit ">
-                                    <td class="project-status col-md-1">
-                                        <span ng-show="!customer.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
-                                        <span ng-show="customer.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
-                                    </td>
-                                    <td ng-click="customerCtrl.goToCustomerDetail(customer.id)" style="cursor: pointer;">
-                                        <a ng-href="#/customer/detail/{{customer.id}} " class="btn btn-xs btn-success btn-circle
+					<div class="project-list">
+						<table class="table table-hover">
+							<tbody>
+								<tr ng-repeat="customer in customerCtrl.customerService.customers| filter:searchText|orderBy:'lastname' | limitTo:customerCtrl.customerAmountLimit ">
+									<td class="project-status col-md-1">
+										<span ng-show="!customer.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
+										<span ng-show="customer.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
+									</td>
+									<td ng-click="customerCtrl.goToCustomerDetail(customer.id)" style="cursor: pointer;">
+										<a ng-href="#/customer/detail/{{customer.id}} " class="btn btn-xs btn-success btn-circle
                                             " type="button "><i style="color:white; " class="fa fa-user "></i></a></td>
-                                    <td ng-click="customerCtrl.goToCustomerDetail(customer.id)" style="cursor: pointer;" class="project-title col-md-2">
+									<td ng-click="customerCtrl.goToCustomerDetail(customer.id)" style="cursor: pointer;" class="project-title col-md-2">
 
-                                        <a ">{{customer.firstname}} {{customer.lastname}}</a>
-                                        <br>
-                                        <small>{{ 'CUSTOMER_CREATED' | translate }} {{customerCtrl.getLocalTimestamp(customer)}}</small>
-                                       
-                                    </td>                                  
-                                       {{customer.email}}
-                                    </td>
-                                     <td >
-                                      {{customer.phone}}
-                                    </td>
-                                    <td class="project-completion col-md-7 " max>
-                                        <small style="word-wrap: break-word; word-break: break-all; ">{{customer.company}}</small>
-                                    </td>
-                                    <td class="project-people col-md-1 ">
-                                       
-                                    </td>
-                                    <td class="project-actions col-md-1 ">
-                                        <button type="button " class="btn btn-white btn-sm " ng-click="customerCtrl.editCustomer(customer)
+										<a>{{customer.firstname}} {{customer.lastname}}</a>
+										<br>
+										<small>{{ 'CUSTOMER_CREATED' | translate }} {{customerCtrl.getLocalTimestamp(customer)}}</small>
+
+									</td>
+									{{customer.email}}
+									</td>
+									<td style="white-space: nowrap;">
+										{{customer.phone}}
+									</td>
+									<td class="project-completion col-md-7 " max>
+										<small style="word-wrap: break-word; word-break: break-all; ">{{customer.company}}</small>
+									</td>
+									<td class="project-people col-md-1 ">
+
+									</td>
+									<td class="project-actions col-md-1 ">
+										<button type="button " class="btn btn-white btn-sm " ng-click="customerCtrl.editCustomer(customer)
                                             " data-toggle="modal " data-target="#createCustomerModal ">
                                      <i class="fa fa-pencil "></i>&nbsp;Edit</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                         <div ng-if="customerCtrl.customerAmountLimit<=customerCtrl.customerService.customers.length" class="row" style="text-align: center;">
-                            <a href="" ng-click="customerCtrl.customerAmountLimit=customerCtrl.customerAmountLimit+20">20 {{ 'COMMON_LOAD_MORE' | translate }}</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div ng-if="customerCtrl.customerAmountLimit<=customerCtrl.customerService.customers.length" class="row" style="text-align: center;">
+							<a href="" ng-click="customerCtrl.customerAmountLimit=customerCtrl.customerAmountLimit+20">20 {{ 'COMMON_LOAD_MORE' | translate }}</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <div ng-include=" 'components/Customer/view/Customer.Modal.html' "></div>
 <script>
