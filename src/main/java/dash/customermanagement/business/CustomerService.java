@@ -29,7 +29,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import dash.customermanagement.domain.Customer;
-import dash.customermanagement.domain.CustomerType;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -116,11 +115,6 @@ public class CustomerService implements ICustomerService {
 	public Customer getByEmail(String email) {
 
 		return customerRepository.getByEmail(email);
-	}
-
-	@Override
-	public List<Customer> getAllByType(CustomerType type) {
-		return customerRepository.getByType(type);
 	}
 
 }

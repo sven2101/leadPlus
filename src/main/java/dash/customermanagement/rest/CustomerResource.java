@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.customermanagement.business.ICustomerService;
 import dash.customermanagement.domain.Customer;
-import dash.customermanagement.domain.CustomerType;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -48,11 +47,11 @@ public class CustomerResource {
 	@Autowired
 	private ICustomerService customerService;
 
-	@RequestMapping(value = "/type/{type}", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get all Customers", notes = "")
-	public List<Customer> getAll(@ApiParam(required = true) @PathVariable final CustomerType type) {
-		return customerService.getAllByType(type);
+	public List<Customer> getAll() {
+		return customerService.getAll();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

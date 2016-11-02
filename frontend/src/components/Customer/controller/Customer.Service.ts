@@ -2,7 +2,6 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../../typeDefinitions/Moment.d.ts" />
 /// <reference path="../../Customer/model/Customer.Model.ts" />
-/// <reference path="../../Customer/model/CustomerType.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -50,7 +49,7 @@ class CustomerService {
 
     getAllCustomer() {
         let self = this;
-        this.customerResource.getCustomerByType({ type: CustomerType.CUSTOMER }).$promise.then(function (result: Array<Customer>) {
+        this.customerResource.getAllCustomer().$promise.then(function (result: Array<Customer>) {
             self.customers = result;
         });
     }

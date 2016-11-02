@@ -35,6 +35,7 @@ public class TenantAuthenticationToken extends AbstractAuthenticationToken {
 	public TenantAuthenticationToken(Tenant authenticatedTenant) {
 		super(Arrays.asList());
 		this.authenticatedTenant = authenticatedTenant;
+		//this.setAuthenticated(true);
 	}
 
 	public String getTenant() {
