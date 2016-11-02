@@ -221,6 +221,7 @@ CREATE TABLE customer
   phone character varying(255),
   "timestamp" timestamp without time zone,
   title character varying(255),
+  "type" character varying(255) NOT NULL,
   customernumber character varying(255),
   CONSTRAINT customer_pkey PRIMARY KEY (id)
 )

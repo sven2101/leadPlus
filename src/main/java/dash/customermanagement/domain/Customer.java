@@ -52,6 +52,10 @@ public class Customer {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "title", length = 255, nullable = true)
 	private Title title;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "type", length = 255, nullable = false)
+	private CustomerType type;
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
@@ -198,6 +202,15 @@ public class Customer {
 	public void setCustomerNumber(String customerNumber) {
 		this.customerNumber = customerNumber;
 	}
+	
+
+	public CustomerType getType() {
+		return type;
+	}
+
+	public void setType(CustomerType type) {
+		this.type = type;
+	}
 
 	@Override
 	public int hashCode() {
@@ -215,6 +228,7 @@ public class Customer {
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
@@ -278,14 +292,16 @@ public class Customer {
 			return false;
 		if (title != other.title)
 			return false;
+		if (type != other.type)
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname
-				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone
-				+ ", address=" + address + ", deactivated=" + deactivated + ", timestamp=" + timestamp
+		return "Customer [id=" + id + ", title=" + title + ", type=" + type + ", deleted=" + deleted + ", firstname="
+				+ firstname + ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone="
+				+ phone + ", address=" + address + ", deactivated=" + deactivated + ", timestamp=" + timestamp
 				+ ", customerNumber=" + customerNumber + "]";
 	}
 

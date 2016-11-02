@@ -18,6 +18,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import dash.customermanagement.domain.Customer;
+import dash.customermanagement.domain.CustomerType;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -27,7 +28,9 @@ import dash.exceptions.UpdateFailedException;
 public interface ICustomerService {
 
 	public List<Customer> getAll();
-
+	
+	public List<Customer> getAllByType(CustomerType type);
+	
 	public Customer getById(final Long id) throws NotFoundException;
 
 	public Customer getByEmail(String email);

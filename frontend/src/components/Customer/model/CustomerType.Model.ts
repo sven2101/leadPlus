@@ -11,20 +11,10 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
+"use strict";
 
-package dash.customermanagement.business;
-
-import java.util.List;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import dash.customermanagement.domain.Customer;
-import dash.customermanagement.domain.CustomerType;
-
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
-
-	public Customer getByEmail(String email);
-	
-	public List<Customer> getByType(CustomerType type);
-
+enum CustomerType {
+    INQUIRER = <any>"INQUIRER",
+    PROSPECT = <any>"PROSPECT",
+    CUSTOMER = <any>"CUSTOMER",
 }

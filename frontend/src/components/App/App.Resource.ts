@@ -285,7 +285,7 @@ class CustomerResource {
     constructor($resource) {
         this.resource = $resource("/api/rest/customer", {}, {
             getCustomerById: { url: "/api/rest/customer/:id", method: "GET" },
-            getAllCustomer: { url: "/api/rest/customer", method: "GET", isArray: true },
+            getCustomerByType: { url: "/api/rest/customer/type/:type", method: "GET", isArray: true },
             createCustomer: { url: "/api/rest/customer", method: "POST" },
             updateCustomer: { url: "/api/rest/customer", method: "PUT" },
             deleteCustomer: { url: "/api/rest/customer", method: "DELETE" }

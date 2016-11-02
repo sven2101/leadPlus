@@ -12,19 +12,9 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.customermanagement.business;
+package dash.customermanagement.domain;
 
-import java.util.List;
+public enum CustomerType {
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import dash.customermanagement.domain.Customer;
-import dash.customermanagement.domain.CustomerType;
-
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
-
-	public Customer getByEmail(String email);
-	
-	public List<Customer> getByType(CustomerType type);
-
+	INQUIRER, PROSPECT, CUSTOMER;
 }
