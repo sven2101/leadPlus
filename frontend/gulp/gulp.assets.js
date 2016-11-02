@@ -19,8 +19,12 @@ gulp.task('concat-basic-js', function () {
 
         .pipe(order([
             "jquery-2.2.1.min.js",
-            "bootstrap.min.js",
+            "jquery.metisMenu.js",
+            "jquery-ui.min.js",
+            "jquery.slimscroll.min.js",
+            "jquery.ui.touch-punch.min.js",
             "angular.min.js",
+            "bootstrap.min.js",
             "*.js"
         ]))
         .pipe(concat("basic.js"))
