@@ -65,7 +65,7 @@ class SmtpService {
             for (let i = 0; i < self.currentPasswordLength; i++) {
                 self.currentSmtp.stringPassword += "x";
             }
-        });
+        }, (error) => handleError(error));
     }
     save(): IPromise<any> {
         this.currentPasswordLength = this.currentSmtp.stringPassword !== null ? this.currentSmtp.stringPassword.length : this.currentPasswordLength;
