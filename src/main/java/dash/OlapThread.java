@@ -2,8 +2,6 @@ package dash;
 
 import java.util.concurrent.Semaphore;
 
-import javax.transaction.Transactional;
-
 import org.apache.log4j.Logger;
 
 import dash.exceptions.NotFoundException;
@@ -24,7 +22,7 @@ public class OlapThread extends Thread {
 		this.olapStatisticService = olapStatisticService;
 	}
 
-	@Transactional
+
 	public void run() {
 		try {
 			semaphore.acquire();

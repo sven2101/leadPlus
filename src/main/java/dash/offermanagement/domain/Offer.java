@@ -98,6 +98,6 @@ public class Offer extends AbstractWorkflow {
 	@Override
 	public String toString() {
 		return "Offer [deliveryDate=" + deliveryDate + ", offerPrice=" + offerPrice + "]";
-	}
+	}	
 
 }
