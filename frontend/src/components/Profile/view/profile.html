@@ -46,11 +46,10 @@
 						<div class="row ">
 							<div class="col-sm-6 b-r ">
 								<!-- EMAIL -->
-								<div class="form-group " ng-class="{ 'has-error' : profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine
-					} ">
+								<div class="form-group">
 									<label><i class="fa fa-at " aria-hidden="true "></i>  {{ 'COMMON_EMAIL' | translate }}</label>
-									<input required type="email " name="email " class="form-control " ng-model="profileCtrl.currentUser.email ">
-									<p ng-show="profilInfoForm.email.$invalid && !profilInfoForm.email.$pristine " class="help-block ">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
+									<p >{{::profileCtrl.currentUser.email}}</p>
+
 								</div>
 								<!-- FIRSTNAME -->
 								<div class="form-group ">
