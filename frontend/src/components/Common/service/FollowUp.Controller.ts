@@ -44,7 +44,7 @@ class FollowUpController {
     translate;
     rootScope;
 
-    editForm: any;
+    emailEditForm: any;
 
     process: Process;
     editProcess: Process;
@@ -73,7 +73,7 @@ class FollowUpController {
     }
 
     close() {
-        this.editForm.$setPristine();
+        this.emailEditForm.$setPristine();
         this.uibModalInstance.close();
     }
 
