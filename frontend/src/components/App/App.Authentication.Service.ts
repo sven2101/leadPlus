@@ -101,8 +101,9 @@ class AuthService {
 
                         let date = new Date();
                         date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
-                        self.cookies.putObject("user", self.rootScope.user, { domain: self.location.host(), path: "/", expires: date });
-                        self.cookies.putObject("tenant", self.rootScope.tenant, { domain: self.location.host(), path: "/", expires: date });
+
+                        self.cookies.putObject("user", self.rootScope.user, { domain: credentials.tenant, path: "/", expires: date });
+                        self.cookies.putObject("tenant", self.rootScope.tenant, { domain: credentials.tenant, path: "/", expires: date });
 
                         self.rootScope.user.picture = data.profilePicture;
                         self.injector.get("DashboardService");
@@ -128,6 +129,7 @@ class AuthService {
         this.http.defaults.headers.common.Authorization = "Basic";
         window.open("https://" + this.location.host() + ":" + this.location.port() + "/logout.html", "_self");
     }
+
 }
 
 angular.module(moduleAuthService, [ngResourceId]).service(AuthServiceId, AuthService);
