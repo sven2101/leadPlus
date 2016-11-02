@@ -21,7 +21,6 @@
 			<label>{{ 'EMAIL_RECIPIENT' | translate }}</label><span style="color:red">*</span>
 			<input ng-disabled="parent.editEmail" name="recipient" required type="email" class="form-control" ng-model="parent.currentNotification.recipient"
 				ng-minlength="5">
-			<p ng-show="parent.emailEditForm.recipient.$error.minlength&&!parent.editEmail" class="help-block">{{ 'COMMON_VALIDATE_MIN' | translate:'{ number: "5" }' }}</p>
 			<p ng-show="parent.emailEditForm.recipient.$error.required&&!parent.editEmail&&!parent.emailEditForm.recipient.$pristine"
 				class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
 			<p ng-show="parent.emailEditForm.recipient.$error.email&&!parent.editEmail" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
@@ -59,7 +58,7 @@
 			<div ng-if="parent.editEmail" style="border: 1px solid gray;  padding: 15px;">
 				<div ng-bind-html="parent.getAsHtml(parent.currentNotification.content)"></div>
 			</div>
-			<p ng-show="parent.emailEditForm.message.$error.required&&!parent.editEmail&&!parent.emailEditForm.message.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+			<p ng-show="parent.emailEditForm.message.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
 		</div>
 	</div>
 </form>

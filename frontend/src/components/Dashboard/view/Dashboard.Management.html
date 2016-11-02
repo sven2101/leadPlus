@@ -112,10 +112,11 @@
 											<a style="min-width:50px;margin-right:-50px" ng-href="#/offers/{{process.id}}" class="pull-right btn btn-xs btn-white">{{
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
 										</div>
-										<div style="white-space: nowrap;max-width:55%;overflow:hidden;text-overflow: ellipsis;">
+										<div style="max-width:55%;overflow:hidden;text-overflow: ellipsis;">
 											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{dashboardCtrl.toLocalDate(process.offer.timestamp)}}
-											<i ng-if="process.status== 'FOLLOWUP'" title="{{'OFFER_FOLLOW_UP'| translate }}" class="fa fa-eye" aria-hidden="true" ng-click="dashboardCtrl.openFollowUpModal(process)"></i>
-											<i ng-if="process.status== 'FOLLOWUP'">{{ process.followUpAmount}}</i>
+											<i ng-if="process.status== 'FOLLOWUP'" title="{{'OFFER_FOLLOW_UP'| translate }}" class="fa fa-eye" aria-hidden="true" ng-click="dashboardCtrl.openFollowUpModal(process)">
+												&nbsp;{{ process.followUpAmount}}
+											</i>									
 										</div>
 
 									</div>
