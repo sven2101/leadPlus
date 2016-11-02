@@ -90,10 +90,10 @@ public class TenantService implements ITenantService {
 		try {
 			tenant.setEnabled(true);
 			tenant.getLicense().getTerm().add(Calendar.YEAR, 1);
-			tenantRepository.save(tenant);
-			createSchema(tenant);
 			if (!subdomainAlreadyExists(tenant) && springProfileActive.equals(SPRINT_PROFILE_PRODUCTION)) {
 				createTenantSubdomain(tenant);
+				createSchema(tenant);
+				tenantRepository.save(tenant);
 				logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
 			}
 		} catch (Exception ex) {
@@ -130,12 +130,10 @@ public class TenantService implements ITenantService {
 	public void createTenantSubdomain(final Tenant tenant) {
 
 		List<ResourceRecord> records = new ArrayList<>();
+
 		ResourceRecord record = new ResourceRecord();
 		record.setValue(hostnameSuffix);
 		records.add(record);
-
-		// Create the Change
-		List<Change> changes = new ArrayList<>();
 
 		//Resource Record Set CNAME for tenantKey.leadplus.io
 		ResourceRecordSet recordSet = new ResourceRecordSet();
@@ -148,19 +146,22 @@ public class TenantService implements ITenantService {
 		Change change = new Change();
 		change.setAction(ChangeAction.CREATE);
 		change.setResourceRecordSet(recordSet);
-		changes.add(change);
 
 		//Resource Record Set CNAME for tenantKey.leadplus.io
 		ResourceRecordSet recordSetWWW = new ResourceRecordSet();
-		recordSet.setName(WWW + "." + tenant.getTenantKey() + "." + hostnameSuffix);
-		recordSet.setType(RRType.CNAME);
-		recordSet.setTTL(Long.valueOf(300));
-		recordSet.setResourceRecords(records);
+		recordSetWWW.setName(WWW + "." + tenant.getTenantKey() + "." + hostnameSuffix);
+		recordSetWWW.setType(RRType.CNAME);
+		recordSetWWW.setTTL(Long.valueOf(300));
+		recordSetWWW.setResourceRecords(records);
 
 		//change for www.tenantKey.leadplus.io
 		Change changeWWW = new Change();
-		change.setAction(ChangeAction.CREATE);
-		change.setResourceRecordSet(recordSetWWW);
+		changeWWW.setAction(ChangeAction.CREATE);
+		changeWWW.setResourceRecordSet(recordSetWWW);
+
+		// Create the Change
+		List<Change> changes = new ArrayList<>();
+		changes.add(change);
 		changes.add(changeWWW);
 
 		// Create a batch and add the change to it
