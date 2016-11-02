@@ -14,6 +14,8 @@
  *******************************************************************************/
 "use strict";
 
+declare var Ladda;
+
 angular.module(moduleApp)
     .directive("sendfollowup", function () {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
@@ -29,6 +31,7 @@ angular.module(moduleApp)
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {
+
             if (scope.type === "lead") {
                 scope.service = scope.parent.leadService;
             }

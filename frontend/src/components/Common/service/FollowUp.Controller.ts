@@ -136,6 +136,7 @@ class FollowUpController {
         let self = this;
         if (this.process.status === Status.FOLLOWUP) {
             self.rootScope.$broadcast("updateRow", this.process);
+            return;
         }
         this.processResource.setStatus({
             id: this.process.id

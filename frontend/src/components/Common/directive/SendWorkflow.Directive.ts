@@ -14,6 +14,8 @@
  *******************************************************************************/
 "use strict";
 
+declare var Ladda;
+
 angular.module(moduleApp)
     .directive("sendworkflow", function () {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };

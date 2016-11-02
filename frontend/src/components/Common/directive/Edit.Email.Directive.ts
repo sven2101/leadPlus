@@ -14,6 +14,8 @@
  *******************************************************************************/
 "use strict";
 
+declare var Ladda;
+
 angular.module(moduleApp)
     .directive("email", ["$location", function () {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
@@ -29,15 +31,14 @@ angular.module(moduleApp)
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs, controller) {
-
+            let l = $(".ladda-button").ladda();
+            let button = $(".ladda-button");
+            button.click(function () {
+                l.ladda("start");
+            });
             scope.templateId = "-1";
             scope.notificationId = "-1";
-            /*
-            scope.openAttachment = function (id: number) {
 
-                // window.open("https://YWRtaW5AZXZpYXJjLmNvbTorNVJvOEMvbWFqSEJtalNDUDVIazUwakRjYncyYUFxSHZ3MHRoZ05jc2pRPQ==@demo.leadplus.localhost:8080/api/rest/files/content/" + id, "_blank");
-            };
-            */
             if (scope.type === "lead") {
                 scope.service = scope.parent.leadService;
             }
