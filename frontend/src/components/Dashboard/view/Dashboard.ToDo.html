@@ -1,61 +1,62 @@
 <div class="row">
-    <div class="col-lg-12">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5>ToDo</h5>
-            </div>
-            <div class="ibox-content">
+	<div class="col-lg-12">
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<h5>ToDo</h5>
+			</div>
+			<div class="ibox-content">
 
-                <form role="form" class="form-inline">
-                    <!--
+				<form role="form" class="form-inline">
+					<!--
                     <div class="col-md-1">
                         <button ng-click="dashboardCtrl.refreshTodos();" type="button" id="loading-example-btn" class="btn btn-white btn-sm"><i class="fa fa-refresh"></i> Refresh</button>
                     </div>
                     -->
-                    <span class="pull-right ">
+					<span class="pull-right ">
                                  <input  type="text" placeholder="Search" class="input-sm form-control" ng-model="searchText">
                          </span>
 
 
 
-                </form>
+				</form>
 
-                <div class="project-list">
+				<div class="project-list">
 
-                    <table class="table table-hover">
-                        <tbody>
-                            <tr ng-repeat="todo in dashboardCtrl.dashboardService.todos|filter:searchText| orderBy:'timestamp'">
-                                <td class="project-status">
-                                    <span ng-if="todo.status=='OPEN'" class="label label-danger">Lead</span>
-                                    <span ng-if="todo.status=='OFFER'" class="label label-warning">Offer</span>
-                                    <span ng-if="todo.status=='FOLLOWUP'" class="label">Follow up</span>
-                                </td>
-                                <td align="left" class="project-title">
-                                    <a ng-if="todo.status=='OPEN'">{{todo.lead.customer.firstname}} {{todo.lead.customer.lastname}}</a>
-                                    <a ng-if="todo.status=='OFFER'">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</a>
-                                    <a ng-if="todo.status=='FOLLOWUP'">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</a>
-                                    <br>
-                                    <small ng-if="todo.status=='OPEN'">{{ 'COMMON_CREATED' | translate }} {{dashboardCtrl.toLocalDate(todo.lead.timestamp)}}</small>
-                                    <small ng-if="todo.status=='OFFER'">{{ 'COMMON_CREATED' | translate }} {{dashboardCtrl.toLocalDate(todo.offer.timestamp)}}</small>
-                                    <small ng-if="todo.status=='FOLLOWUP'">{{ 'COMMON_CREATED' | translate }} {{dashboardCtrl.toLocalDate(todo.offer.timestamp)}}</small>
-                                </td>
-                                <td class="project-completion">
-                                    <strong ng-if="todo.status=='OPEN'">{{dashboardCtrl.sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</strong>
-                                    <strong ng-if="todo.status=='OFFER'">{{dashboardCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</strong>
-                                    <strong ng-if="todo.status=='FOLLOWUP'">{{dashboardCtrl.sumOrderPositions(todo.offer.orderPositions)| currency:'\u20AC'}}</strong>
-                                </td>
-                                <td class="project-actions">
-                                    <a class="btn btn-white btn-sm" ng-if="todo.status=='OPEN'" ng-href="#/leads/{{todo.id}}"><i class="fa fa-pencil"></i> Go to </a>
-                                    <a class="btn btn-white btn-sm" ng-if="todo.status=='OFFER' || todo.status=='FOLLOWUP'" ng-href="#/offers/{{todo.id}}"><i class="fa fa-pencil"></i> Go to </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div ng-if="dashboardCtrl.dashboardService.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
-                        <p style="margin-top:7px">{{ 'TODO_NO_TODOS' | translate }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+					<table class="table table-hover">
+						<tbody>
+							<tr ng-repeat="todo in dashboardCtrl.dashboardService.todos|filter:searchText| orderBy:'timestamp'">
+								<td class="project-status">
+									<span ng-if="todo.status=='OPEN'" class="label label-danger">{{ 'LEAD' | translate }}</span>
+									<span ng-if="todo.status=='OFFER'" class="label label-warning">{{ 'COMMON_STATUS_OFFER' | translate }}</span>
+									<span ng-if="todo.status=='FOLLOWUP'" class="label">{{ 'COMMON_STATUS_FOLLOW_UP' | translate }}</span>
+									<span ng-if="todo.status=='INCONTACT'" class="label label-primary">{{ 'COMMON_STATUS_INCONTACT' | translate }}</span>
+								</td>
+								<td align="left" class="project-title">
+									<a ng-if="todo.status=='OPEN'||todo.status=='INCONTACT'">{{todo.lead.customer.firstname}} {{todo.lead.customer.lastname}}</a>
+									<a ng-if="todo.status=='OFFER'">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</a>
+									<a ng-if="todo.status=='FOLLOWUP'">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</a>
+									<br>
+									<small ng-if="todo.status=='OPEN'">{{ 'COMMON_CREATED' | translate }} {{dashboardCtrl.toLocalDate(todo.lead.timestamp)}}</small>
+									<small ng-if="todo.status=='OFFER'">{{ 'COMMON_CREATED' | translate }} {{dashboardCtrl.toLocalDate(todo.offer.timestamp)}}</small>
+									<small ng-if="todo.status=='FOLLOWUP'">{{ 'COMMON_CREATED' | translate }} {{dashboardCtrl.toLocalDate(todo.offer.timestamp)}}</small>
+								</td>
+								<td class="project-completion">
+									<strong ng-if="todo.status=='OPEN'||todo.status=='INCONTACT'">{{dashboardCtrl.sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</strong>
+									<strong ng-if="todo.status=='OFFER'">{{todo.offer.offerPrice| currency:'\u20AC'}}</strong>
+									<strong ng-if="todo.status=='FOLLOWUP'">{{todo.offer.offerPrice| currency:'\u20AC'}}</strong>
+								</td>
+								<td class="project-actions">
+									<a class="btn btn-white btn-sm" ng-if="todo.status=='OPEN'||todo.status=='INCONTACT'" ng-href="#/leads/{{todo.id}}"><i class="fa fa-pencil"></i> Go to </a>
+									<a class="btn btn-white btn-sm" ng-if="todo.status=='OFFER' || todo.status=='FOLLOWUP'" ng-href="#/offers/{{todo.id}}"><i class="fa fa-pencil"></i> Go to </a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div ng-if="dashboardCtrl.dashboardService.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
+						<p style="margin-top:7px">{{ 'TODO_NO_TODOS' | translate }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
