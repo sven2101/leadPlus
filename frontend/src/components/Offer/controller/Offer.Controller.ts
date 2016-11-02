@@ -63,8 +63,6 @@ class OfferController extends AbstractWorkflow {
 
     currentProductId = "-1";
     currentProductAmount = 1;
-    currentCustomerId = "-1";
-    customerSelected: boolean = false;
 
     otherCurrentTab: number = 1;
     currentNotification: Notification;
@@ -192,7 +190,7 @@ class OfferController extends AbstractWorkflow {
         this.editProcess = process;
         this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
         this.customerSelected = this.editProcess.offer.customer.id > 0;
-        this.currentCustomerId = this.editProcess.offer.customer.id + "";
+        this.selectedCustomer = this.editProcess.offer.customer;
         this.editWorkflowUnit = deepCopy(this.editProcess.offer);
     }
 
@@ -213,7 +211,7 @@ class OfferController extends AbstractWorkflow {
         this.editWorkflowUnit.orderPositions = new Array<OrderPosition>();
         this.currentOrderPositions = new Array<OrderPosition>();
         this.currentProductId = "-1";
-        this.currentCustomerId = "-1";
+        this.customerSelected = null;
         this.currentProductAmount = 1;
         this.customerSelected = false;
     }
@@ -235,10 +233,6 @@ class OfferController extends AbstractWorkflow {
         if (!isNullOrUndefined(process.offer)) {
             return process.offer.orderPositions;
         }
-    }
-
-    selectCustomer(workflow: any) {
-        this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
 
     pin(process: Process, user: User) {

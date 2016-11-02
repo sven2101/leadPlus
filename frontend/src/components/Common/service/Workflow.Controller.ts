@@ -51,8 +51,6 @@ class WorkflowController extends AbstractWorkflow {
     currentOrderPositions: Array<OrderPosition>;
     currentProductId = "-1";
     currentProductAmount = 1;
-    currentCustomerId = "-1";
-    customerSelected: boolean = false;
     currentNotification: Notification;
 
     editProcess: Process;
@@ -148,12 +146,12 @@ class WorkflowController extends AbstractWorkflow {
         if (this.type === "offer") {
             this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
             this.customerSelected = this.editProcess.offer.customer.id > 0;
-            this.currentCustomerId = this.editProcess.offer.customer.id + "";
+            this.selectedCustomer = this.editProcess.offer.customer;
             this.editWorkflowUnit = deepCopy(this.editProcess.offer);
         } else if (this.type === "sale") {
             this.currentOrderPositions = deepCopy(this.editProcess.sale.orderPositions);
             this.customerSelected = this.editProcess.sale.customer.id > 0;
-            this.currentCustomerId = this.editProcess.sale.customer.id + "";
+            this.selectedCustomer = this.editProcess.sale.customer;
             this.editWorkflowUnit = deepCopy(this.editProcess.sale);
         }
     }
@@ -250,10 +248,6 @@ class WorkflowController extends AbstractWorkflow {
                 self.close(true);
             });
         }
-    }
-
-    selectCustomer(workflow: any) {
-        this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
 
     getTheFiles($files) {

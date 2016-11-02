@@ -3,11 +3,15 @@
 		<div class="col-sm-6 b-r">
 			<div class="form-group">
 				<label>{{ 'CUSTOMER_MENU' | translate }}</label>
-				<select class="form-control" ng-model="parent.currentCustomerId" ng-change="parent.selectCustomer(parent.editWorkflowUnit)"
-					ng-disabled="!parent.editable">
-                    <option value="-1" selected > - {{ 'CUSTOMER_CREATE' | translate }} - </option>                                                                     
-                    <option value="{{customer.id}}" ng-repeat="customer in service.customerService.getActiveCustomers()">{{customer.firstname}} {{customer.lastname}}</option>                                          
-                </select>
+				<div class="input-group">
+					<input type="text" class="form-control" ng-model="parent.selectedCustomer" placeholder="{{ 'CUSTOMER_CREATE' | translate }}"
+						uib-typeahead="customer as customer.firstname + ' ' + customer.lastname for customer in service.customerService.getActiveCustomers()  | filter:$viewValue | limitTo:8"
+						typeahead-editable="false" typeahead-on-select="parent.selectCustomer(parent.editWorkflowUnit,$model)" typeahead-no-results="noResults" typeahead-show-hint="true" typeahead-min-length="0"
+						ng-blur="(noResults) ? parent.selectCustomer(parent.editWorkflowUnit,$model):'doNothing'" ng-disabled="!parent.editable">
+					<span class="input-group-btn">
+       				 <button class="btn btn-secondary btn btn-white" type="button" ng-disabled="!parent.editable" ng-click="parent.selectCustomer(parent.editWorkflowUnit,undefined)">&nbsp;<i class="fa fa-times"></i>&nbsp;</button>
+      				</span>
+				</div>
 			</div>
 			<div class="form-group">
 				<label>{{ 'COMMON_TITLE' | translate }}</label>
@@ -56,7 +60,7 @@
 		<div class="col-sm-6">
 			<!-- MESSAGE -->
 			<div class="form-group">
-				<label>{{ 'COMMON_NOTE' | translate }}Parent:{{parent.editable}}</label>
+				<label>{{ 'COMMON_NOTE' | translate }}</label>
 				<summernote ng-if="parent.editable" name="content " class="form-control" ng-model="parent.editWorkflowUnit.message" height="300px"></summernote>
 				<div ng-if="!parent.editable" style="border: 1px solid gray;  padding: 15px;">
 					<div ng-bind-html="parent.getAsHtml(parent.editWorkflowUnit.message)"></div>

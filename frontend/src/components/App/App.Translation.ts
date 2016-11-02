@@ -433,7 +433,7 @@ function config($translateProvider) {
             // Define customer elements
             CUSTOMER: "Kunde",
             CUSTOMER_MANAGE_CUSTOMER: "Kunden verwalten",
-            CUSTOMER_CREATE: "Neuer Kunde",
+            CUSTOMER_CREATE: "Kunde suchen",
             CUSTOMER_EDIT: "Kunde bearbeiten",
             CUSTOMER_DEACTIVATED: "Deaktivieren",
             CUSTOMER_CREATED: "Erstellt",
@@ -867,8 +867,8 @@ function config($translateProvider) {
             // Define customer elements
             CUSTOMER: "Customer",
             CUSTOMER_MANAGE_CUSTOMER: "Manage Customer",
-            CUSTOMER_CREATE: "New Customer",
-            CUSTOMER_EDIT: "Edit cCstomer",
+            CUSTOMER_CREATE: "Search Customer",
+            CUSTOMER_EDIT: "Edit Customer",
             CUSTOMER_DEACTIVATED: "Deactivate",
             CUSTOMER_CREATED: "Created",
             CUSTOMER_DETAIL_LEAD: "Lead",

@@ -62,8 +62,6 @@ class SaleController extends AbstractWorkflow {
 
     currentProductId = "-1";
     currentProductAmount = 1;
-    currentCustomerId = "-1";
-    customerSelected: boolean = false;
 
     currentTab: number = 1;
 
@@ -189,7 +187,7 @@ class SaleController extends AbstractWorkflow {
         this.process = this.editProcess;
         this.currentOrderPositions = deepCopy(this.editProcess.sale.orderPositions);
         this.customerSelected = this.editProcess.sale.customer.id > 0;
-        this.currentCustomerId = this.editProcess.sale.customer.id + "";
+        this.selectedCustomer = this.editProcess.sale.customer;
         this.editWorkflowUnit = deepCopy(this.editProcess.sale);
         // this.editWorkflowUnit.saleTurnover = this.editProcess.offer.offerPrice;
     }
@@ -215,7 +213,7 @@ class SaleController extends AbstractWorkflow {
         this.editWorkflowUnit.orderPositions = new Array<OrderPosition>();
         this.currentOrderPositions = new Array<OrderPosition>();
         this.currentProductId = "-1";
-        this.currentCustomerId = "-1";
+        this.selectedCustomer = null;
         this.currentProductAmount = 1;
         this.customerSelected = false;
     }
@@ -232,10 +230,6 @@ class SaleController extends AbstractWorkflow {
 
     pin(process: Process, user: User) {
         this.saleService.pin(process, this.dtInstance, this.scope, user);
-    }
-
-    selectCustomer(workflow: any) {
-        this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
 
     rollBack(process: Process): void {

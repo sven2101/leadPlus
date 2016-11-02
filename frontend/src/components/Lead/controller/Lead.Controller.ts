@@ -58,8 +58,6 @@ class LeadController extends AbstractWorkflow {
     currentOrderPositions: Array<OrderPosition>;
     currentProductId = "-1";
     currentProductAmount = 1;
-    currentCustomerId = "-1";
-    customerSelected: boolean = false;
 
     customerEditForm: any;
     leadEditForm: any;
@@ -183,7 +181,7 @@ class LeadController extends AbstractWorkflow {
         this.editProcess = process;
         this.currentOrderPositions = deepCopy(this.editProcess.lead.orderPositions);
         this.customerSelected = this.editProcess.lead.customer.id > 0;
-        this.currentCustomerId = this.editProcess.lead.customer.id + "";
+        this.selectedCustomer = this.editProcess.lead.customer;
         this.editWorkflowUnit = deepCopy(this.editProcess.lead);
     }
 
@@ -214,7 +212,7 @@ class LeadController extends AbstractWorkflow {
         this.editWorkflowUnit.orderPositions = new Array<OrderPosition>();
         this.currentOrderPositions = new Array<OrderPosition>();
         this.currentProductId = "-1";
-        this.currentCustomerId = "-1";
+        this.selectedCustomer = null;
         this.currentProductAmount = 1;
         this.customerSelected = false;
     }
@@ -234,10 +232,6 @@ class LeadController extends AbstractWorkflow {
 
     deleteRow(process: Process) {
         this.leadService.deleteRow(process, this.dtInstance);
-    }
-
-    selectCustomer(workflow: any) {
-        this.customerSelected = this.workflowService.selectCustomer(workflow, this.currentCustomerId);
     }
 
     preventPropagation($event) {

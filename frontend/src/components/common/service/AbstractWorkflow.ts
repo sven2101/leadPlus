@@ -19,6 +19,9 @@ class AbstractWorkflow {
     sce;
     actionButtonConfig: { [key: number]: any } = {};
 
+    customerSelected: boolean = false;
+    selectedCustomer: Customer;
+
     constructor(WorkflowService, $sce, FileService) {
         this.workflowService = WorkflowService;
         this.fileService = FileService;
@@ -51,5 +54,16 @@ class AbstractWorkflow {
 
     openAttachment(id: number) {
         this.fileService.getContentFileById(id);
+    }
+
+    selectCustomer(workflow: any, customer: Customer) {
+        let customerId = "-1";
+        if (!isNullOrUndefined(customer)) {
+            customerId = customer.id.toString();
+        }
+        else {
+            this.selectedCustomer = null;
+        }
+        this.customerSelected = this.workflowService.selectCustomer(workflow, customerId);
     }
 }
