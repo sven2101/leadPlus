@@ -27,7 +27,7 @@ class RegistrationController {
 
     private $inject = [RegistrationServiceId, SignupServiceId, TenantServiceId, LoginServiceId, $httpId, $locationId];
 
-    signupService;
+    signupService: SignupService;
     registrationService: RegistrationService;
     tenantService: TenantService;
     loginService;
@@ -65,6 +65,7 @@ class RegistrationController {
         this.tenant.license.term = newTimestamp();
         this.tenant.license.trial = false;
 
+        this.user.email = this.user.email.toLowerCase();
         this.credentials.email = this.user.email;
         this.credentials.password = this.user.password;
         this.credentials.tenant = this.tenant.tenantKey + "." + this.location.host();

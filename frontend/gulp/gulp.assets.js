@@ -56,6 +56,12 @@ gulp.task('concat-datatable-js', function () {
 
 gulp.task('concat-others-js', function () {
     return gulp.src(path.assetsJs.others.src)
+        .pipe(order([
+            "spin.min.js",
+            "ladda.min.js",
+            "ladda.jquery.min.js",
+            "*.js"
+        ]))
         .pipe(concat("others.js"))
         .pipe(gulp.dest(path.assetsJs.others.dst));
 })

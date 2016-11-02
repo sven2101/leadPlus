@@ -32,8 +32,11 @@
 	<button type="button " class="btn btn-white " ng-click="parent.close(false)">{{ 'COMMON_CANCEL'| translate }}</button>
 	<button type="button " class="btn btn-primary " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid || parent.saleEditForm.$invalid"
 		ng-click="parent.save() ">{{ 'COMMON_SAVE'| translate }}</button>
-	<button ng-if="parent.currentWizard==5 && type == 'offer'" type="button " class="btn btn-warning " ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid || parent.emailEditForm.$invalid"
-		ng-click="parent.send() ">{{ 'COMMON_CONTINUE_AND_SENDING'| translate }}</button>
+	<button ng-show="parent.currentWizard==5 && type == 'offer'" type="button " class="btn btn-warning ladda-button" data-style="zoom-in"
+		ng-disabled="parent.customerEditForm.$invalid || parent.leadEditForm.$invalid || parent.supplyEditForm.$invalid || parent.priceEditForm.$invalid || parent.emailEditForm.$invalid"
+		ng-click="parent.send() ">
+		<span class="ladda-label">{{ 'COMMON_CONTINUE_AND_SENDING'| translate }}</span>
+		</button>
 
 </div>
 

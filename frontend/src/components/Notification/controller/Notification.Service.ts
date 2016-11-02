@@ -16,6 +16,8 @@
  *******************************************************************************/
 "use strict";
 
+declare var Ladda;
+
 const NotificationServiceId: string = "NotificationService";
 
 class NotificationService {

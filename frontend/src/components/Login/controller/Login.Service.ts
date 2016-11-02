@@ -47,6 +47,7 @@ class LoginService {
 
     login(credentials: Credentials) {
         let self = this;
+        credentials.email = credentials.email.toLowerCase();
         self.authService.login(credentials).then(
             (data) => {
                 if (self.location.host() === credentials.tenant) {

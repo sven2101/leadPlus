@@ -53,6 +53,7 @@ class SignupService {
 
     uniqueEmail(user: Signup): void {
         let self = this;
+        user.email = user.email.toLowerCase();
         this.signupResource.uniqueEmail({ username: user.username, email: user.email, password: user.password, password2: user.password2 }).$promise.then(function (data, headersGetter, status) {
             self.emailExist = data.validation;
         }, function () {
@@ -63,7 +64,7 @@ class SignupService {
     signup(user: Signup): IPromise<User> {
         let defer = this.q.defer();
         let self = this;
-
+        user.email = user.email.toLowerCase();
         let salt: string = user.email;
         user.password = hashPasswordPbkdf2(user.password, salt);
         user.password2 = hashPasswordPbkdf2(user.password2, salt);

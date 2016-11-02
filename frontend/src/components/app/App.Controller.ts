@@ -65,10 +65,10 @@ class AppController {
     }
 
     navigateTo(todo: Process) {
-        if (todo.status === "OPEN") {
+        if (todo.status === "OPEN" || todo.status === "INCONTACT") {
             this.location.path("/leads/" + todo.id);
         }
-        else if (todo.status === "OFFER" || "FOLLOWUP") {
+        else if (todo.status === "OFFER" || todo.status === "FOLLOWUP") {
             this.location.path("/offers/" + todo.id);
         }
     }

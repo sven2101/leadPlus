@@ -21,6 +21,10 @@ class ImageLoaderDirective implements IDirective {
     }
 
     link(scope, element, attrs) {
+        if (isNullOrUndefined(attrs.pictureid) || attrs.pictureid === "") {
+            attrs.$set("src", "");
+            return;
+        }
         let requestConfig = {
             method: "Get",
             url: attrs.httpsrc + attrs.pictureid,

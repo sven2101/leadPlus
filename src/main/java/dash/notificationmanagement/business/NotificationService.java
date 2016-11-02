@@ -111,6 +111,7 @@ public class NotificationService implements INotificationService {
 			}
 		} catch (Exception ex) {
 			throw ex;
+			// return;
 		}
 	}
 
