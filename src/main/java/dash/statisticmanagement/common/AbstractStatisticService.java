@@ -33,8 +33,6 @@ public abstract class AbstractStatisticService implements IStatisticService {
 
 	@Autowired
 	private RequestRepository<Sale, Long> saleRepository;
-	
-	protected StatisticHelper statisticHelper;
 
 	@Override
 	public Result getStatisticByDateRange(Workflow workflow, DateRange dateRange, Long elementId)
@@ -44,15 +42,15 @@ public abstract class AbstractStatisticService implements IStatisticService {
 			logger.error(STATISTIC_NOT_FOUND + this.getClass().getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
 			throw pnfex;
 		}
-		statisticHelper = new StatisticHelper(dateRange);
+		StatisticHelper statisticHelper = new StatisticHelper(dateRange);
 		final Map<String, Double> calendarMap = statisticHelper.getCalendarMap();
 		final List<Request> requests = getStatisticBetween(getRepositoryByWorkflow(workflow), statisticHelper.getFrom(),
 				statisticHelper.getUntil());
-		return new Result(buildStatistic(calendarMap, requests, elementId));
+		return new Result(buildStatistic(calendarMap, requests, elementId, statisticHelper));
 	}
 
-	public abstract List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests,
-			Long elementId);
+	public abstract List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId,
+			StatisticHelper statisticHelper);
 
 	@SuppressWarnings("unchecked")
 	@Override

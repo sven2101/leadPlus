@@ -39,7 +39,7 @@ public class ProductStatisticService extends AbstractStatisticService {
 	private static final Logger logger = Logger.getLogger(ProductStatisticService.class);
 
 	@Override
-	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId) {
+	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId, StatisticHelper statisticHelper) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -52,7 +52,7 @@ public class ProductStatisticService extends AbstractStatisticService {
 			logger.error(STATISTIC_NOT_FOUND + this.getClass().getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
 			throw pnfex;
 		}
-		statisticHelper = new StatisticHelper(dateRange);
+		StatisticHelper statisticHelper = new StatisticHelper(dateRange);
 		final List<Request> requests = getStatisticBetween(this.getRepositoryByWorkflow(workflow),
 				statisticHelper.getFrom(), statisticHelper.getUntil());
 

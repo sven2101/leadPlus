@@ -24,12 +24,14 @@ import org.springframework.stereotype.Service;
 import dash.processmanagement.request.Request;
 import dash.salemanagement.domain.Sale;
 import dash.statisticmanagement.common.AbstractStatisticService;
+import dash.statisticmanagement.domain.StatisticHelper;
 
 @Service
 public class TurnoverStatisticService extends AbstractStatisticService {
 
 	@Override
-	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId) {
+	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId,
+			StatisticHelper statisticHelper) {
 		for (Request request : requests) {
 			if (request instanceof Sale) {
 				Sale sale = (Sale) request;

@@ -44,7 +44,8 @@ public class UserStatisticService extends AbstractStatisticService {
 	private ProcessService ProcessService;
 
 	@Override
-	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId) {
+	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId,
+			StatisticHelper statisticHelper) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -57,8 +58,9 @@ public class UserStatisticService extends AbstractStatisticService {
 			throw pnfex;
 		}
 
-		statisticHelper = new StatisticHelper(dateRange);
-		final List<Process> processes = ProcessService.getProcessesBetweenTimestamp(statisticHelper.getFrom(), statisticHelper.getUntil());
+		StatisticHelper statisticHelper = new StatisticHelper(dateRange);
+		final List<Process> processes = ProcessService.getProcessesBetweenTimestamp(statisticHelper.getFrom(),
+				statisticHelper.getUntil());
 		long key;
 
 		for (Process process : processes) {
@@ -73,9 +75,9 @@ public class UserStatisticService extends AbstractStatisticService {
 			userMap.get(key).addCountProcess();
 			if (process.getLead() != null && !process.getLead().isDeleted())
 				userMap.get(key).addCountLead();
-			if (process.getOffer() != null  && !process.getOffer().isDeleted())
+			if (process.getOffer() != null && !process.getOffer().isDeleted())
 				userMap.get(key).addCountOffer();
-			if (process.getSale() != null  && !process.getSale().isDeleted()) {
+			if (process.getSale() != null && !process.getSale().isDeleted()) {
 				userMap.get(key).addCountSale();
 				userMap.get(key).addCountTurnover(process.getSale().getSaleTurnover());
 				userMap.get(key).addCountProfit(process.getSale().getSaleProfit());
@@ -93,9 +95,9 @@ public class UserStatisticService extends AbstractStatisticService {
 			logger.error(STATISTIC_NOT_FOUND + this.getClass().getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
 			throw pnfex;
 		}
-		statisticHelper = new StatisticHelper(dateRange);
-		final List<Process> processes = ProcessService.getProcessesByProcessorAndBetweenTimestamp(userId, statisticHelper.getFrom(),
-				statisticHelper.getUntil());
+		StatisticHelper statisticHelper = new StatisticHelper(dateRange);
+		final List<Process> processes = ProcessService.getProcessesByProcessorAndBetweenTimestamp(userId,
+				statisticHelper.getFrom(), statisticHelper.getUntil());
 
 		UserStatistic userStatistic = new UserStatistic();
 		if (processes.size() > 0)
