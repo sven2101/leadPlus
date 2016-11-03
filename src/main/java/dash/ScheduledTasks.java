@@ -58,5 +58,6 @@ public class ScheduledTasks {
 				}
 			});
 		}
+		pool.destroy();
 	}
 }
