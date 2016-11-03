@@ -37,8 +37,9 @@ public class ScheduledTasks {
 		if (tenants.size() >= 30)
 			threadAmount = tenants.size() / 5;
 		pool.setCorePoolSize(threadAmount);
+		pool.setWaitForTasksToCompleteOnShutdown(true);
 		pool.initialize();
-		
+
 		for (Tenant tenant : tenants) {
 			if (tenant == null || tenant.getTenantKey() == null)
 				continue;
@@ -58,6 +59,6 @@ public class ScheduledTasks {
 				}
 			});
 		}
-		pool.destroy();
+		pool.shutdown();
 	}
 }
