@@ -24,6 +24,7 @@ import dash.exceptions.NotFoundException;
 import dash.processmanagement.request.Request;
 import dash.processmanagement.request.RequestRepository;
 import dash.statisticmanagement.domain.DateRange;
+import dash.statisticmanagement.domain.StatisticHelper;
 import dash.statisticmanagement.result.domain.Result;
 import dash.workflowmanagement.domain.Workflow;
 
@@ -35,5 +36,5 @@ public interface IStatisticService {
 	<T> List<Request> getStatisticBetween(RequestRepository<T, Long> repository, Calendar from, Calendar until)
 			throws NotFoundException;
 
-	List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId);
+	List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId, StatisticHelper statisticHelper);
 }

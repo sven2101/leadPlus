@@ -23,12 +23,14 @@ import org.springframework.stereotype.Service;
 
 import dash.processmanagement.request.Request;
 import dash.statisticmanagement.common.AbstractStatisticService;
+import dash.statisticmanagement.domain.StatisticHelper;
 
 @Service
 public class WorkflowStatisticService extends AbstractStatisticService {
 
 	@Override
-	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId) {
+	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId,
+			StatisticHelper statisticHelper) {
 		for (Request request : requests) {
 			Calendar timeStamp = request.getTimestamp();
 			String key = statisticHelper.getKeyByDateRange(timeStamp, statisticHelper.getDateRange());

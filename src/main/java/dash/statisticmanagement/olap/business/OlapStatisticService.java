@@ -43,13 +43,17 @@ public class OlapStatisticService {
 
 	@Transactional
 	public void generateOlapStatistics() throws NotFoundException {
-		Calendar timestamp = Calendar.getInstance();
-		timestamp.add(Calendar.HOUR_OF_DAY, -1);
 		saveStatisticInOLAP(DateRange.DAILY);
 		saveStatisticInOLAP(DateRange.WEEKLY);
 		saveStatisticInOLAP(DateRange.MONTHLY);
 		saveStatisticInOLAP(DateRange.YEARLY);
 		saveStatisticInOLAP(DateRange.ALL);
+		deleteOldData();
+	}
+
+	private void deleteOldData() {
+		Calendar timestamp = Calendar.getInstance();
+		timestamp.add(Calendar.HOUR_OF_DAY, -1);
 		olapRepository.deleteByTimestampBefore(timestamp);
 	}
 
