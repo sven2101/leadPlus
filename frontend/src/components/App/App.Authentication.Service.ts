@@ -127,7 +127,13 @@ class AuthService {
         this.cookies.remove("user", { domain: this.location.host(), path: "/" });
         this.cookies.remove("tenant", { domain: this.location.host(), path: "/" });
         this.http.defaults.headers.common.Authorization = "Basic";
-        window.open("https://" + this.location.host() + ":" + this.location.port() + "/logout.html", "_self");
+        let port = this.location.port();
+        port = ":" + port;
+        if (port !== ":8080") {
+            port = null;
+        }
+        window.open("https://" + this.location.host() + port, "_self");
+        // window.open("https://" + this.location.host() + ":" + this.location.port() + "/logout.html", "_self");
     }
 
 }

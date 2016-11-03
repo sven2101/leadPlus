@@ -27,7 +27,8 @@ const WorkflowControllerId: string = "WorkflowController";
 
 class WorkflowController extends AbstractWorkflow {
 
-    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId, WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId, FileServiceId, $rootScopeId, $sceId, $windowId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId,
+        WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId, FileServiceId, $rootScopeId, $sceId, $windowId, $scopeId];
 
     type: string;
 
@@ -69,15 +70,18 @@ class WorkflowController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
     rootScope;
+    scope;
 
     invoiceNumberAlreadyExists: boolean = false;
 
     window;
 
-    constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService, WorkflowService, LeadService, OfferService, SaleService, DashboardService, FileService, $rootScope, $sce, $window) {
+    constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService,
+        WorkflowService, LeadService, OfferService, SaleService, DashboardService, FileService, $rootScope, $sce, $window, $scope) {
         super(WorkflowService, $sce, FileService);
         let self = this;
         this.rootScope = $rootScope;
+        this.scope = $scope;
         this.process = process;
         this.type = type;
         if (this.type === "offer") {
@@ -251,7 +255,14 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     getTheFiles($files) {
-        this.notificationService.setAttachmentToNotification($files, this.currentNotification);
+        let self = this;
+        this.notificationService.setAttachmentToNotification($files, this.currentNotification).then(() => {
+            try {
+                self.scope.$digest();
+            } catch (error) {
+                handleError(error);
+            }
+        });
     }
 
     setFormerNotification(notificationId: number) {
