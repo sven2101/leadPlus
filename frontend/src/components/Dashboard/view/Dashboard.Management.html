@@ -26,26 +26,26 @@
 							</h3>
 							<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="lead" ng-model="dashboardCtrl.dashboardService.openLeads">
 								<li ng-class="dashboardCtrl.getClassToDrag(process, 'danger')" ng-repeat="process in dashboardCtrl.getOpenLeads() | limitTo:10">
-									<div ng-if="process.lead.customer.company!=null&&process.lead.customer.company!=''" style="max-width:50%;max-height:22px;min-height:22px">
-										{{process.lead.customer.company}}
+									<div ng-if="::(process.lead.customer.company!=null&&process.lead.customer.company!='')" style="max-width:50%;max-height:22px;min-height:22px">
+										{{::process.lead.customer.company}}
 
 									</div>
-									<div ng-if="process.lead.customer.company==null||process.lead.customer.company==''" style="max-width:50%;max-height:22px;min-height:22px">
-										{{process.lead.customer.firstname}} {{process.lead.customer.lastname}}
+									<div ng-if="::(process.lead.customer.company==null||process.lead.customer.company=='')" style="max-width:50%;max-height:22px;min-height:22px">
+										{{::process.lead.customer.firstname}} {{::process.lead.customer.lastname}}
 
 									</div>
 									<div style="margin-top:-13px">
-										<span ng-if="process.processor!=null" class="pull-right">
-                                            <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+										<span ng-if="::process.processor!=null" class="pull-right">
+                                            <img title="{{::(process.processor.firstname+' '+process.processor.lastname)}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{::process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         </span>
 										<a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.lead,'lead',process)" class="pull-right btn btn-xs btn-white"
 											data-toggle="modal" data-target="#infoModal" data-backdrop="static">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
 										<div class="agile-detail">
-											<a style="min-width:50px;margin-right:-50px" ng-href="#/leads/{{process.id}}" class="pull-right btn btn-xs btn-white">{{
-                                                'DASHBOARD_GOTO_BUTTON' | translate }}</a>
+											<a style="min-width:50px;margin-right:-50px" ng-href="#/leads/{{::process.id}}" class="pull-right btn btn-xs btn-white">
+											{{'DASHBOARD_GOTO_BUTTON' | translate }}</a>
 										</div>
 										<div style="white-space: nowrap;max-width:55%;overflow:hidden;text-overflow: ellipsis;">
-											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{dashboardCtrl.toLocalDate(process.lead.timestamp)}}
+											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{::dashboardCtrl.toLocalDate(process.lead.timestamp)}}
 										</div>
 									</div>
 								</li>
@@ -60,26 +60,26 @@
 							</h3>
 							<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="lead" ng-model="dashboardCtrl.dashboardService.inContacts">
 								<li ng-class="dashboardCtrl.getClassToDrag(process, 'danger')" ng-repeat="process in dashboardCtrl.getInContacts() | limitTo:10">
-									<div ng-if="process.lead.customer.company!=null&&process.lead.customer.company!=''" style="max-width:50%;max-height:22px;min-height:22px">
-										{{process.lead.customer.company}}
+									<div ng-if="::(process.lead.customer.company!=null&&process.lead.customer.company!='')" style="max-width:50%;max-height:22px;min-height:22px">
+										{{::process.lead.customer.company}}
 
 									</div>
-									<div ng-if="process.lead.customer.company==null||process.lead.customer.company==''" style="max-width:50%;max-height:22px;min-height:22px">
-										{{process.lead.customer.firstname}} {{process.lead.customer.lastname}}
+									<div ng-if="::(process.lead.customer.company==null||process.lead.customer.company=='')" style="max-width:50%;max-height:22px;min-height:22px">
+										{{::process.lead.customer.firstname}} {{::process.lead.customer.lastname}}
 
 									</div>
 									<div style="margin-top:-13px">
-										<span ng-if="process.processor!=null" class="pull-right">
-                                            <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+										<span ng-if="::process.processor!=null" class="pull-right">
+                                            <img title="{{::(process.processor.firstname+' '+process.processor.lastname)}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{::process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         </span>
 										<a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.lead,'lead',process)" class="pull-right btn btn-xs btn-white"
 											data-toggle="modal" data-target="#infoModal" data-backdrop="static">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
 										<div class="agile-detail">
-											<a style="min-width:50px;margin-right:-50px" ng-href="#/leads/{{process.id}}" class="pull-right btn btn-xs btn-white">{{
-                                                'DASHBOARD_GOTO_BUTTON' | translate }}</a>
+											<a style="min-width:50px;margin-right:-50px" ng-href="#/leads/{{::process.id}}" class="pull-right btn btn-xs btn-white">
+											{{'DASHBOARD_GOTO_BUTTON' | translate }}</a>
 										</div>
 										<div style="white-space: nowrap;max-width:55%;overflow:hidden;text-overflow: ellipsis;">
-											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{dashboardCtrl.toLocalDate(process.lead.timestamp)}}
+											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{::dashboardCtrl.toLocalDate(process.lead.timestamp)}}
 										</div>
 									</div>
 								</li>
@@ -94,28 +94,28 @@
 							</h3>
 							<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="offer" ng-model="dashboardCtrl.dashboardService.openOffers">
 								<li ng-class="dashboardCtrl.getClassToDrag(process, 'warning')" ng-repeat="process in dashboardCtrl.getOpenOffers() | limitTo:10">
-									<div ng-if="process.offer.customer.company!=null&&process.offer.customer.company!=''" style="max-width:50%;max-height:22px;min-height:22px">
-										{{process.offer.customer.company}}
+									<div ng-if="::(process.offer.customer.company!=null&&process.offer.customer.company!='')" style="max-width:50%;max-height:22px;min-height:22px">
+										{{::process.offer.customer.company}}
 
 									</div>
-									<div ng-if="process.offer.customer.company==null||process.offer.customer.company==''" style="max-width:50%;max-height:22px;min-height:22px">
-										{{process.offer.customer.firstname}} {{process.offer.customer.lastname}}
+									<div ng-if="::(process.offer.customer.company==null||process.offer.customer.company=='')" style="max-width:50%;max-height:22px;min-height:22px">
+										{{::process.offer.customer.firstname}} {{::process.offer.customer.lastname}}
 
 									</div>
 									<div style="margin-top:-20px">
-										<span ng-if="process.processor!=null" class="pull-right">
-                                                    <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+										<span ng-if="::process.processor!=null" class="pull-right">
+                                                    <img title="{{::(process.processor.firstname+' '+process.processor.lastname)}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{::process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                                  </span>
 										<a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.offer,'offer',process)" class="pull-right btn btn-xs btn-white"
 											data-toggle="modal" data-target="#infoModal" data-backdrop="static">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
 										<div class="agile-detail">
-											<a style="min-width:50px;margin-right:-50px" ng-href="#/offers/{{process.id}}" class="pull-right btn btn-xs btn-white">{{
+											<a style="min-width:50px;margin-right:-50px" ng-href="#/offers/{{::process.id}}" class="pull-right btn btn-xs btn-white">{{
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
 										</div>
 										<div style="max-width:55%;overflow:hidden;text-overflow: ellipsis;">
-											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{dashboardCtrl.toLocalDate(process.offer.timestamp)}}
-											<i ng-if="process.status== 'FOLLOWUP'" title="{{'OFFER_FOLLOW_UP'| translate }}" class="fa fa-eye" aria-hidden="true" ng-click="dashboardCtrl.openFollowUpModal(process)">
-												&nbsp;{{ process.followUpAmount}}
+											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{::dashboardCtrl.toLocalDate(process.offer.timestamp)}}
+											<i ng-if="::process.status== 'FOLLOWUP'" title="{{'OFFER_FOLLOW_UP'| translate }}" class="fa fa-eye" aria-hidden="true" ng-click="dashboardCtrl.openFollowUpModal(process)">
+												&nbsp;{{process.followUpAmount}}
 											</i>
 										</div>
 
@@ -132,27 +132,27 @@
 							</h3>
 							<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="sale" ng-model="dashboardCtrl.dashboardService.closedSales">
 								<li class="info-element not-sortable draggable" ng-repeat="process in dashboardCtrl.getClosedSales() | limitTo:10">
-									<div ng-if="process.sale.customer.company!=null&&process.sale.customer.company!=''" style="max-width:50%;max-height:22px;min-height:22px">
-										{{process.sale.customer.company}}
+									<div ng-if="::(process.sale.customer.company!=null&&process.sale.customer.company!='')" style="max-width:50%;max-height:22px;min-height:22px">
+										{{::process.sale.customer.company}}
 
 									</div>
-									<div ng-if="process.sale.customer.company==null||process.sale.customer.company==''" style="max-width:50%;max-height:22px;min-height:22px">
-										{{process.sale.customer.firstname}} {{process.sale.customer.lastname}}
+									<div ng-if="::(process.sale.customer.company==null||process.sale.customer.company=='')" style="max-width:50%;max-height:22px;min-height:22px">
+										{{::process.sale.customer.firstname}} {{::process.sale.customer.lastname}}
 
 									</div>
 
 									<div style="margin-top:-20px">
-										<span ng-if="process.processor!=null" class="pull-right">
-                                            <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+										<span ng-if="::(process.processor!=null)" class="pull-right">
+                                            <img title="{{::(process.processor.firstname+' '+process.processor.lastname)}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{::process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         </span>
-										<a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.sale,'sale',process)" class="pull-right btn btn-xs btn-white"
+										<a style="min-width:50px;margin-right:5px" ng-click="::dashboardCtrl.saveDataToModal(process.sale,'sale',process)" class="pull-right btn btn-xs btn-white"
 											data-toggle="modal" data-target="#infoModal" data-backdrop="static">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
 										<div class="agile-detail">
-											<a style="min-width:50px;margin-right:-50px" ng-href="#/sales/{{process.id}}" class="pull-right btn btn-xs btn-white">{{
+											<a style="min-width:50px;margin-right:-50px" ng-href="#/sales/{{::process.id}}" class="pull-right btn btn-xs btn-white">{{
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
 										</div>
 										<div style="white-space: nowrap;max-width:55%;overflow:hidden;text-overflow: ellipsis;">
-											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{dashboardCtrl.toLocalDate(process.sale.timestamp)}}
+											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{::dashboardCtrl.toLocalDate(process.sale.timestamp)}}
 										</div>
 									</div>
 								</li>
