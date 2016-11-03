@@ -1,60 +1,61 @@
 <style>
-    .important {
-        background: #FFEBEB;
-    }
+	.important {
+		background: #FFEBEB;
+	}
 </style>
 <meta charset="utf-8">
 <div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-12">
-        <div class="row">
-            <div class="col-lg-10">
-                <h2>{{ 'LEAD_LEADS' | translate }}</h2>
-                <ol class="breadcrumb">
-                    <li>
-                        <a href="#/dashboard">Home</a>
-                    </li>
-                    <li class="active">
-                        <strong>{{ 'LEAD_LEADS' | translate }}</strong>
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </div>
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-10">
+				<h2>{{ 'LEAD_LEADS' | translate }}</h2>
+				<ol class="breadcrumb">
+					<li>
+						<a href="#/dashboard">Home</a>
+					</li>
+					<li class="active">
+						<strong>{{ 'LEAD_LEADS' | translate }}</strong>
+					</li>
+				</ol>
+			</div>
+		</div>
+	</div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>{{ 'LEAD_MANAGE_LEADS' | translate }}</h5>
-                </div>
-                <div class="ibox-content">
-                    <button type="button" class="btn btn-success" ng-click="leadCtrl.clearNewLead()" data-toggle="modal" data-target="#editModal">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>{{ 'LEAD_MANAGE_LEADS' | translate }}</h5>
+				</div>
+				<div class="ibox-content">
+					<button type="button" class="btn btn-success" ng-click="leadCtrl.clearNewLead()" data-backdrop="static"data-toggle="modal"
+						data-target="#editModal">
                         <i class="fa fa-plus"></i>&nbsp;{{ 'LEAD_ADD_LEAD' | translate }}
                     </button>
-                    <!--<button ng-click="leadCtrl.refreshData()" type="button" class="btn btn-success">
+					<!--<button ng-click="leadCtrl.refreshData()" type="button" class="btn btn-success">
                         <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
                     </button>-->
-                    <span class="pull-right" style=" font-size: 1.5em;">{{ 'LEAD_SHOW_ALL_LEADS' | translate }} &nbsp;<input
+					<span class="pull-right" style=" font-size: 1.5em;">{{ 'LEAD_SHOW_ALL_LEADS' | translate }} &nbsp;<input
                             type="checkbox"
                             ng-model="leadCtrl.loadAllData"
                             ng-change="leadCtrl.changeDataInput()"
                             class="js-switch"
                             ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
-                    </br>
-                    </br>
-                    <div class="table-responsive text-center">
-                        <table id="ngdatatable" datatable="" dt-options="leadCtrl.dtOptions" dt-columns="leadCtrl.dtColumns" dt-instance="leadCtrl.dtInstance"
-                            class="table table-bordered table-hover table-condensed text-center" style="width:100%;"></table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+					</br>
+					</br>
+					<div class="table-responsive text-center">
+						<table id="ngdatatable" datatable="" dt-options="leadCtrl.dtOptions" dt-columns="leadCtrl.dtColumns" dt-instance="leadCtrl.dtInstance"
+							class="table table-bordered table-hover table-condensed text-center" style="width:100%;"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <div editworkflow parent="leadCtrl" type="lead" modaltitle="{{'LEAD_EDIT_LEAD_MODAL'| translate}}"></div>
 <div confirmationmodal modalid="deleteConfirmationModal" parent="leadCtrl" title="{{'LEAD_DELETE_LEAD'| translate}}" body="{{'LEAD_DELETE_LEAD_BODY'| translate}}"
-    submittext="{{'COMMON_DELETE'| translate}}"></div>
+	submittext="{{'COMMON_DELETE'| translate}}"></div>
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {

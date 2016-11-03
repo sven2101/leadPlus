@@ -39,7 +39,7 @@
                                             <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         </span>
 										<a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.lead,'lead',process)" class="pull-right btn btn-xs btn-white"
-											data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
+											data-toggle="modal" data-target="#infoModal" data-backdrop="static">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
 										<div class="agile-detail">
 											<a style="min-width:50px;margin-right:-50px" ng-href="#/leads/{{process.id}}" class="pull-right btn btn-xs btn-white">{{
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
@@ -73,7 +73,7 @@
                                             <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         </span>
 										<a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.lead,'lead',process)" class="pull-right btn btn-xs btn-white"
-											data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
+											data-toggle="modal" data-target="#infoModal" data-backdrop="static">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
 										<div class="agile-detail">
 											<a style="min-width:50px;margin-right:-50px" ng-href="#/leads/{{process.id}}" class="pull-right btn btn-xs btn-white">{{
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
@@ -107,7 +107,7 @@
                                                     <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                                  </span>
 										<a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.offer,'offer',process)" class="pull-right btn btn-xs btn-white"
-											data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
+											data-toggle="modal" data-target="#infoModal" data-backdrop="static">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
 										<div class="agile-detail">
 											<a style="min-width:50px;margin-right:-50px" ng-href="#/offers/{{process.id}}" class="pull-right btn btn-xs btn-white">{{
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
@@ -116,7 +116,7 @@
 											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{dashboardCtrl.toLocalDate(process.offer.timestamp)}}
 											<i ng-if="process.status== 'FOLLOWUP'" title="{{'OFFER_FOLLOW_UP'| translate }}" class="fa fa-eye" aria-hidden="true" ng-click="dashboardCtrl.openFollowUpModal(process)">
 												&nbsp;{{ process.followUpAmount}}
-											</i>									
+											</i>
 										</div>
 
 									</div>
@@ -146,7 +146,7 @@
                                             <img title="{{process.processor.firstname+' '+process.processor.lastname}}" style="width: 45px; height:45px;border-radius: 10%;" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         </span>
 										<a style="min-width:50px;margin-right:5px" ng-click="dashboardCtrl.saveDataToModal(process.sale,'sale',process)" class="pull-right btn btn-xs btn-white"
-											data-toggle="modal" data-target="#infoModal">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
+											data-toggle="modal" data-target="#infoModal" data-backdrop="static">{{ 'DASHBOARD_INFO_BUTTON' |  translate }}</a>&nbsp;&nbsp;&nbsp;
 										<div class="agile-detail">
 											<a style="min-width:50px;margin-right:-50px" ng-href="#/sales/{{process.id}}" class="pull-right btn btn-xs btn-white">{{
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>

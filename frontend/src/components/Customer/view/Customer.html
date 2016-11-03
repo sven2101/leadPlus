@@ -36,7 +36,7 @@
 					<form role="form" class="form-inline">
 
 						<button type="button" class="btn btn-success btn-sm btn-primary" ng-click="customerCtrl.clearCustomer()" data-toggle="modal"
-							data-target="#createCustomerModal">
+							data-target="#createCustomerModal" data-backdrop="static">
                                 <i class="fa fa-plus"></i>
                                 &nbsp;{{ 'CUSTOMER_CREATE' | translate }}
                         </button>
@@ -88,7 +88,7 @@
 									</td>
 									<td class="project-actions col-md-1 ">
 										<button type="button " class="btn btn-white btn-sm " ng-click="customerCtrl.editCustomer(customer)
-                                            " data-toggle="modal " data-target="#createCustomerModal ">
+                                            " data-toggle="modal " data-target="#createCustomerModal " data-backdrop="static">
                                      <i class="fa fa-pencil "></i>&nbsp;Edit</button>
 									</td>
 								</tr>
