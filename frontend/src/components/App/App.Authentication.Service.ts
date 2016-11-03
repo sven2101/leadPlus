@@ -130,7 +130,7 @@ class AuthService {
         let port = this.location.port();
         port = ":" + port;
         if (port !== ":8080") {
-            port = null;
+            port = "";
         }
         window.open("https://" + this.location.host() + port, "_self");
         // window.open("https://" + this.location.host() + ":" + this.location.port() + "/logout.html", "_self");
