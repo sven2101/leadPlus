@@ -50,7 +50,8 @@ import dash.usermanagement.registration.domain.Validation;
 @Service
 public class TenantService implements ITenantService {
 
-	private static final String SPRINT_PROFILE_PRODUCTION = "production";
+	private static final String SPRING_PROFILE_PRODUCTION = "production";
+	private static final String SPRING_PROFILE_DEVELOPMENT = "development";
 	private static final String RESOURCE_RECORD_SET_CNAME = "CNAME";
 	private static final String WWW = "www";
 
@@ -90,11 +91,18 @@ public class TenantService implements ITenantService {
 		try {
 			tenant.setEnabled(true);
 			tenant.getLicense().getTerm().add(Calendar.YEAR, 1);
-			if (!subdomainAlreadyExists(tenant) && springProfileActive.equals(SPRINT_PROFILE_PRODUCTION)) {
-				createTenantSubdomain(tenant);
-				createSchema(tenant);
-				tenantRepository.save(tenant);
-				logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
+			Validation tenantNotExists = uniqueTenantKey(tenant);
+			if (tenantNotExists.isValidation()) {
+				if (springProfileActive.equals(SPRING_PROFILE_DEVELOPMENT)) {
+					createSchema(tenant);
+					tenantRepository.save(tenant);
+					logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
+				} else if (springProfileActive.equals(SPRING_PROFILE_PRODUCTION)) {
+					createTenantSubdomain(tenant);
+					createSchema(tenant);
+					tenantRepository.save(tenant);
+					logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
+				}
 			}
 		} catch (Exception ex) {
 			logger.error(TENANT_ALREADY_EXISTS + tenant.getTenantKey(), ex);
@@ -135,26 +143,26 @@ public class TenantService implements ITenantService {
 		record.setValue(hostnameSuffix);
 		records.add(record);
 
-		//Resource Record Set CNAME for tenantKey.leadplus.io
+		// Resource Record Set CNAME for tenantKey.leadplus.io
 		ResourceRecordSet recordSet = new ResourceRecordSet();
 		recordSet.setName(tenant.getTenantKey() + "." + hostnameSuffix);
 		recordSet.setType(RRType.CNAME);
 		recordSet.setTTL(Long.valueOf(300));
 		recordSet.setResourceRecords(records);
 
-		//change for tenantKey.leadplus.io
+		// change for tenantKey.leadplus.io
 		Change change = new Change();
 		change.setAction(ChangeAction.CREATE);
 		change.setResourceRecordSet(recordSet);
 
-		//Resource Record Set CNAME for tenantKey.leadplus.io
+		// Resource Record Set CNAME for tenantKey.leadplus.io
 		ResourceRecordSet recordSetWWW = new ResourceRecordSet();
 		recordSetWWW.setName(WWW + "." + tenant.getTenantKey() + "." + hostnameSuffix);
 		recordSetWWW.setType(RRType.CNAME);
 		recordSetWWW.setTTL(Long.valueOf(300));
 		recordSetWWW.setResourceRecords(records);
 
-		//change for www.tenantKey.leadplus.io
+		// change for www.tenantKey.leadplus.io
 		Change changeWWW = new Change();
 		changeWWW.setAction(ChangeAction.CREATE);
 		changeWWW.setResourceRecordSet(recordSetWWW);
@@ -189,21 +197,21 @@ public class TenantService implements ITenantService {
 
 		try {
 			validateTenant = getTenantByName(tenant.getTenantKey());
-			if (validateTenant == null)
+			if (validateTenant != null)
 				proofUniquenessLocal = false;
 		} catch (NotFoundException nfex) {
 			proofUniquenessLocal = false;
 			logger.error("Validate uniqueness of Tenant: " + TenantService.class.getSimpleName(), nfex);
 		}
 
-		if (springProfileActive.equals(SPRINT_PROFILE_PRODUCTION))
-			proofUniquenessRemote = subdomainAlreadyExists(tenant);
+		if (springProfileActive.equals(SPRING_PROFILE_PRODUCTION))
+			proofUniquenessRemote = !subdomainAlreadyExists(tenant);
 		else
-			proofUniquenessRemote = false;
+			proofUniquenessRemote = true;
 
-		if (proofUniquenessLocal || proofUniquenessRemote)
+		if (proofUniquenessLocal && proofUniquenessRemote)
 			validation.setValidation(true);
-		else if (!proofUniquenessLocal && !proofUniquenessRemote)
+		else
 			validation.setValidation(false);
 
 		return validation;
