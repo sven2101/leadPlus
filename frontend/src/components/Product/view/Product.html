@@ -34,7 +34,7 @@
 				<div class="ibox-content">
 					<form role="form" class="form-inline">
 						<button type="button" class="btn btn-success btn-sm btn-primary" ng-click="productCtrl.clearProduct()" data-toggle="modal"
-							data-target="#createProductModal">
+							data-target="#createProductModal" data-backdrop="static">
                                 <i class="fa fa-plus"></i>
                                 &nbsp;{{ 'PRODUCT_CREATE' | translate }}
                         </button>
@@ -70,11 +70,12 @@
 										<small style="word-wrap: break-word; word-break: break-all;">{{product.description}}</small>
 									</td>
 									<td>
-										<img ng-if="product.picture!=null" style="width: 60px; height:60px;border-radius: 10%" pictureId="{{product.picture.id}}" httpsrc="/api/rest/files/content/"
-											alt="">
+										<img ng-if="product.picture!=null" style="width: 60px; height:60px;border-radius: 10%" pictureId="{{product.picture.id}}"
+											httpsrc="/api/rest/files/content/" alt="">
 									</td>
 									<td class="project-actions col-md-1">
-										<button type="button" class="btn btn-white btn-sm" ng-click="productCtrl.editProduct(product)" data-toggle="modal" data-target="#createProductModal">
+										<button type="button" class="btn btn-white btn-sm" ng-click="productCtrl.editProduct(product)" data-toggle="modal" data-target="#createProductModal"
+											data-backdrop="static">
                                      <i class="fa fa-pencil"></i>&nbsp;Edit</button>
 									</td>
 								</tr>

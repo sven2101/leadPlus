@@ -131,6 +131,7 @@ class DashboardService {
             update: function (e, ui) {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
+                let item = ui.item.sortable.model;
                 if ((self.openLeads === target && self.openOffers === source) ||
                     (self.openLeads === target && self.inContacts === source) ||
                     (self.openLeads === source && self.closedSales === target) ||
@@ -138,6 +139,7 @@ class DashboardService {
                     (self.inContacts === target && self.closedSales === source) ||
                     (self.closedSales === target && self.inContacts === source) ||
                     target === source) {
+
                     ui.item.sortable.cancel();
                 }
             },

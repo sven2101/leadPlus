@@ -46,6 +46,7 @@ class DashboardController {
     editWorkflowUnit: Offer;
     workflowModalProcess: Process;
     sortableOptions: any;
+    currentUser: User;
 
     rootScope;
     sce;
@@ -64,6 +65,7 @@ class DashboardController {
         this.rootScope = $rootScope;
         this.statisticService.loadAllResourcesByDateRange("MONTHLY");
         this.sortableOptions = this.dashboardService.setSortableOptions();
+        this.currentUser = this.rootScope.user;
 
         this.refreshData();
         this.refreshTodos();
@@ -170,6 +172,21 @@ class DashboardController {
             }
         }
         return amount;
+    }
+
+    hasRightToDrag(process: Process): boolean {
+        if (isNullOrUndefined(process.processor)) {
+            return true;
+        } else if (this.currentUser.role === Role.ADMIN || this.currentUser.role === Role.SUPERADMIN) {
+            return true;
+        } else if (this.currentUser.id === process.processor.id) {
+            return true;
+        }
+        return false;
+    }
+
+    getClassToDrag(process: Process, element: string): string {
+        return element + (this.hasRightToDrag(process) ? "-element draggable" : "-element not-sortable draggable");
     }
 
 }
