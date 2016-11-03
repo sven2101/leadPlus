@@ -26,7 +26,7 @@ const FollowUpControllerId: string = "FollowUpController";
 
 class FollowUpController {
 
-    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, WorkflowServiceId, FileServiceId, ProcessResourceId, toasterId, $translateId, $rootScopeId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, WorkflowServiceId, FileServiceId, ProcessResourceId, toasterId, $translateId, $rootScopeId, $scopeId];
 
     uibModalInstance;
 
@@ -43,6 +43,7 @@ class FollowUpController {
     toaster;
     translate;
     rootScope;
+    scope;
 
     emailEditForm: any;
 
@@ -50,7 +51,7 @@ class FollowUpController {
     editProcess: Process;
     edit: boolean;
 
-    constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService, FileService, ProcessResource, toaster, $translate, $rootScope) {
+    constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService, FileService, ProcessResource, toaster, $translate, $rootScope, $scope) {
         this.process = process;
         this.editProcess = process;
         this.editWorkflowUnit = process.offer;
@@ -58,6 +59,7 @@ class FollowUpController {
         this.toaster = toaster;
         this.translate = $translate;
         this.rootScope = $rootScope;
+        this.scope = $scope;
         this.currentNotification = new Notification();
         this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
         this.uibModalInstance = $uibModalInstance;
@@ -118,7 +120,14 @@ class FollowUpController {
     }
 
     getTheFiles($files) {
-        this.notificationService.setAttachmentToNotification($files, this.currentNotification);
+        let self = this;
+        this.notificationService.setAttachmentToNotification($files, this.currentNotification).then(() => {
+            try {
+                self.scope.$digest();
+            } catch (error) {
+                handleError(error);
+            }
+        });
     }
 
     setFormerNotification(notificationId: number) {

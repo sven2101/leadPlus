@@ -72,22 +72,29 @@ class NotificationService {
 
     setAttachmentToNotification($files, notification: Notification) {
         let defer = this.q.defer();
-        let self = this;
-        this.formdata.append("file", $files[0]);
-        notification.attachment = new FileUpload();
-        notification.attachment.filename = $files[0].name;
-        notification.attachment.mimeType = $files[0].type;
-        notification.attachment.size = $files[0].size;
-        let fileReader = new FileReader();
-        fileReader.readAsDataURL($files[0]);
-        fileReader.onload = function () {
-            notification.attachment.content = this.result.split(",")[1];
+        if (isNullOrUndefined($files[0])) {
+            notification.attachment = undefined;
             defer.resolve(notification);
-        };
-        fileReader.onerror = (error) => {
-            handleError(error);
-            defer.reject(notification);
-        };
+
+        } else {
+            let self = this;
+            this.formdata.append("file", $files[0]);
+            notification.attachment = new FileUpload();
+            notification.attachment.filename = $files[0].name;
+            notification.attachment.mimeType = $files[0].type;
+            notification.attachment.size = $files[0].size;
+            let fileReader = new FileReader();
+            fileReader.readAsDataURL($files[0]);
+            fileReader.onload = function () {
+                notification.attachment.content = this.result.split(",")[1];
+                defer.resolve(notification);
+            };
+            fileReader.onerror = (error) => {
+                handleError(error);
+                defer.reject(notification);
+            };
+        }
+
         return defer.promise;
     }
 
