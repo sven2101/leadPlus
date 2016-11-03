@@ -10,7 +10,7 @@
 			<div class="form-group">
 				<label>{{ 'CUSTOMER_MENU' | translate }}</label>
 				<div class="input-group" id="typeahead-autocompletion">
-					<input type="text" class="form-control" ng-model="parent.selectedCustomer" placeholder="{{ 'CUSTOMER_CREATE' | translate }}"
+					<input type="text" class="form-control" ng-model="parent.selectedCustomer" placeholder="{{ 'CUSTOMER_SELECT' | translate }}"
 						uib-typeahead="customer as customer.firstname + ' ' + customer.lastname + ' (' + customer.company + ')' for customer in service.customerService.getActiveCustomers()  | filter:$viewValue"
 						typeahead-editable="false" typeahead-on-select="parent.selectCustomer(parent.editWorkflowUnit,$model)" typeahead-no-results="noResults"
 						typeahead-show-hint="true" typeahead-min-length="0" ng-blur="(noResults) ? parent.selectCustomer(parent.editWorkflowUnit,$model):'doNothing'"

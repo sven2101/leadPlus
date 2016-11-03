@@ -69,7 +69,7 @@ class DashboardService {
         let self = this;
         setInterval(function () {
             self.refreshTodos();
-        }, 5 * 60 * 1000); 544
+        }, 5 * 60 * 1000);
     }
 
     initDashboard() {
