@@ -1,37 +1,37 @@
-<div ng-style="{'min-width':minwidth+'px'}" class="text-center btn-group" role="group" aria-label="...">
-	<button style="min-height:34px" ng-if="config['CREATE_NEXT_WORKFLOWUNIT'].visible" class="btn btn-white" ng-disabled="config['CREATE_NEXT_WORKFLOWUNIT'].disabled"
+<div ng-style="::{'min-width':minwidth+'px'}" class="text-center btn-group" role="group" aria-label="...">
+	<button style="min-height:34px" ng-if="::config['CREATE_NEXT_WORKFLOWUNIT'].visible" class="btn btn-white" ng-disabled="config['CREATE_NEXT_WORKFLOWUNIT'].disabled"
 		ng-click="workflowService.createNextWorkflowUnit(process)" title="{{ config['CREATE_NEXT_WORKFLOWUNIT'].title | translate }}">
         <i class="fa fa-check"></i>
     </button>
-	<div ng-if="config['PIN_DROPDOWN'].visible" class="btn-group" role="group">
+	<div ng-if="::config['PIN_DROPDOWN'].visible" class="btn-group" role="group">
 		<button style="height:34px" type="button" class="btn btn-default dropdown-toggle" ng-disabled="config['PIN_DROPDOWN'].disabled"
 			data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{{config['PIN_DROPDOWN'].title| translate }}">
        <i class=" fa fa-thumb-tack "></i>
       <span class="caret "></span>
     </button>
 		<ul style="max-height: 200px; overflow-x: hidden; " class="dropdown-menu right ">
-			<li ng-if="config[ 'PIN_DROPDOWN_EMPTY_PROCESSOR'].visible " ng-click="workflowService.togglePin(process,null) "><a>{{ 'COMMON_EMPTY_PROCESSOR' | translate }}</a></li>
-			<li ng-if="config[ 'PIN_DROPDOWN_EMPTY_PROCESSOR'].visible " role="separator " class="divider "></li>
-			<li ng-click="workflowService.togglePin(process,user) " ng-repeat="user in workflowService.users ">
-				<a ng-if="((user.firstname==null||user.firstname=='' )&&(user.lastname==null||user.lastname=='' ))&&user.role!='API'
-			" ng-style="user.id==process.processor.id?{ 'font-weight': 'bold', 'font-style': 'italic'}:{ 'font-weight': 'normal', 'font-style':
-			'normal'} ">{{user.username}}</a>
-				<a ng-if="!((user.firstname==null||user.firstname=='' )&&(user.lastname==null||user.lastname=='' ))&&user.role!='API'
-			" ng-style="user.id==process.processor.id?{ 'font-weight': 'bold', 'font-style': 'italic'}:{ 'font-weight': 'normal', 'font-style':
-			'normal'} ">  {{user.firstname}} {{user.lastname}}</a>
+			<li ng-if="::config[ 'PIN_DROPDOWN_EMPTY_PROCESSOR'].visible " ng-click="workflowService.togglePin(process,null) "><a>{{ 'COMMON_EMPTY_PROCESSOR' | translate }}</a></li>
+			<li ng-if="::config[ 'PIN_DROPDOWN_EMPTY_PROCESSOR'].visible " role="separator " class="divider "></li>
+			<li ng-click="workflowService.togglePin(process,user) " ng-repeat="user in ::workflowService.users ">
+				<a ng-if="::(((user.firstname==null||user.firstname=='' )&&(user.lastname==null||user.lastname=='' ))&&user.role!='API')"
+					ng-style="::(user.id==process.processor.id?{ 'font-weight': 'bold', 'font-style': 'italic'}:{ 'font-weight': 'normal', 'font-style':
+			'normal'} )">{{::user.username}}</a>
+				<a ng-if="::(!((user.firstname==null||user.firstname=='' )&&(user.lastname==null||user.lastname=='' ))&&user.role!='API')"
+					ng-style="::(user.id==process.processor.id?{ 'font-weight': 'bold', 'font-style': 'italic'}:{ 'font-weight': 'normal', 'font-style':
+			'normal'}) ">  {{::user.firstname}} {{::user.lastname}}</a>
 			</li>
 		</ul>
 	</div>
-	<button style="min-height:34px " ng-if="config[ 'PIN_BUTTON'].visible " class="btn btn-white " ng-disabled="config[
+	<button style="min-height:34px " ng-if="::config[ 'PIN_BUTTON'].visible " class="btn btn-white " ng-disabled="config[
 			'PIN_BUTTON'].disabled " ng-click="workflowService.togglePin(process,process.processor==null?rootScope.user:null) " title="{{config[
 			'PIN_BUTTON'].title| translate }} ">
          <i class="fa fa-thumb-tack "></i>
     </button>
-	<button style="min-height:34px " ng-if="config[ 'SET_INCONTACT'].visible " class="btn btn-white " ng-disabled="config[
+	<button style="min-height:34px " ng-if="::config[ 'SET_INCONTACT'].visible " class="btn btn-white " ng-disabled="config[
 			'SET_INCONTACT'].disabled " ng-click="workflowService.inContact(process) " title="{{config[ 'SET_INCONTACT'].title| translate }} ">
          <i  class="fa fa-user-plus "></i>
     </button>
-	<button style="min-height:34px" ng-if="config[ 'OPEN_FOLLOWUP_MODAL'].visible" class="btn btn-white " ng-disabled="config['OPEN_FOLLOWUP_MODAL'].disabled"
+	<button style="min-height:34px" ng-if="::config[ 'OPEN_FOLLOWUP_MODAL'].visible" class="btn btn-white " ng-disabled="config['OPEN_FOLLOWUP_MODAL'].disabled"
 		ng-click="workflowService.openFollowUpModal(process) " title="{{config['OPEN_FOLLOWUP_MODAL'].title| translate }} ">
          <i  class="fa fa-eye "></i>
     </button>
@@ -43,23 +43,23 @@
       <span class="caret "></span>
     </button>
 		<ul style="max-height: 200px; " class="dropdown-menu right ">
-			<li ng-class="{ 'disabled': config[ 'DETAILS_TOGGLE_CLOSE_OR_OPEN'].disabled } " ng-if="config[
+			<li ng-class="{ 'disabled': config[ 'DETAILS_TOGGLE_CLOSE_OR_OPEN'].disabled } " ng-if="::config[
 		'DETAILS_TOGGLE_CLOSE_OR_OPEN'].visible " ng-click="workflowService.toggleClosedOrOpenState(process) ">
-				<a><i class="{{config[ 'DETAILS_TOGGLE_CLOSE_OR_OPEN'].icon}} "></i>&nbsp;{{config['DETAILS_TOGGLE_CLOSE_OR_OPEN'].title| translate }}</a></li>
-			<li ng-if="config[ 'DETAILS_TOGGLE_CLOSE_OR_OPEN'].visible " role="separator " class="divider "></li>
-			<li ng-class="{ 'disabled': config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled } " ng-if="config[ 'DETAILS_OPEN_EDIT_MODAL'].visible "
-				ng-click="loadDataToModal(process) " data-toggle="{{!config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled ? 'modal' : ''}} " data-backdrop="static"
-				data-target="#editModal ">
+				<a><i class="{{::config[ 'DETAILS_TOGGLE_CLOSE_OR_OPEN'].icon}} "></i>&nbsp;{{config['DETAILS_TOGGLE_CLOSE_OR_OPEN'].title| translate }}</a></li>
+			<li ng-if="::config[ 'DETAILS_TOGGLE_CLOSE_OR_OPEN'].visible " role="separator " class="divider "></li>
+			<li ng-class="{ 'disabled': config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled } " ng-if="::config[ 'DETAILS_OPEN_EDIT_MODAL'].visible "
+				ng-click="loadDataToModal(process) " data-toggle="{{::!config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled ? 'modal' : ''}} "
+				data-backdrop="static" data-target="#editModal ">
 				<a><i class="fa fa-edit "></i>&nbsp;{{config['DETAILS_OPEN_EDIT_MODAL'].title| translate }}</a></li>
-			<li ng-if="config[ 'DETAILS_OPEN_EDIT_MODAL'].visible " role="separator " class="divider "></li>
-			<li ng-if="config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].visible " ng-class="{ 'disabled': config[
-		'DETAILS_OPEN_ROLLBACK_MODAL'].disabled } " ng-click="openModal(process, 'rollBack') " data-toggle="{{!config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].disabled ?
+			<li ng-if="::config[ 'DETAILS_OPEN_EDIT_MODAL'].visible " role="separator " class="divider "></li>
+			<li ng-if="::config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].visible " ng-class="{ 'disabled': config[
+		'DETAILS_OPEN_ROLLBACK_MODAL'].disabled } " ng-click="openModal(process, 'rollBack') " data-toggle="{{::!config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].disabled ?
 		'modal' : ''}} " data-backdrop="static" data-target="#rollbackConfirmationModal ">
 				<a><i class="fa fa-reply "></i>&nbsp;{{config['DETAILS_OPEN_ROLLBACK_MODAL'].title| translate }}</a></li>
 			</li>
-			<li ng-if="config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].visible " role="separator " class="divider "></li>
-			<li ng-if="config[ 'DETAILS_OPEN_DELETE_MODAL'].visible " ng-class="{ 'disabled': config[
-		'DETAILS_OPEN_DELETE_MODAL'].disabled } " ng-click="openModal(process, 'deleteRow') " data-toggle="{{!config[ 'DETAILS_OPEN_DELETE_MODAL'].disabled ? 'modal'
+			<li ng-if="::config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].visible " role="separator " class="divider "></li>
+			<li ng-if="::config[ 'DETAILS_OPEN_DELETE_MODAL'].visible " ng-class="{ 'disabled': config[
+		'DETAILS_OPEN_DELETE_MODAL'].disabled } " ng-click="openModal(process, 'deleteRow') " data-toggle="{{::!config[ 'DETAILS_OPEN_DELETE_MODAL'].disabled ? 'modal'
 		: ''}} " data-backdrop="static" data-target="#deleteConfirmationModal ">
 				<a><i class="fa fa-trash-o "></i>&nbsp;{{config['DETAILS_OPEN_DELETE_MODAL'].title| translate }}</a></li>
 			</li>

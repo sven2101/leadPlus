@@ -14,14 +14,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="orderPosition in parent.getOrderPositions(process)">
-                    <td>{{orderPosition.product.name}} ({{orderPosition.product.priceNetto| currency:'\u20AC'}})</td>
-                    <td>{{orderPosition.product.priceNetto-parent.workflowService.calculatePrice(orderPosition.product.priceNetto,orderPosition.discount)|
-                        currency:'\u20AC'}} ({{orderPosition.discount}}%)
+                <tr ng-repeat="orderPosition in ::parent.getOrderPositions(process)">
+                    <td>{{::orderPosition.product.name}} ({{::orderPosition.product.priceNetto| currency:'\u20AC'}})</td>
+                    <td>{{::orderPosition.product.priceNetto-parent.workflowService.calculatePrice(orderPosition.product.priceNetto,orderPosition.discount)|
+                        currency:'\u20AC'}} ({{::orderPosition.discount}}%)
                     </td>
-                    <td>{{orderPosition.price| currency:'\u20AC'}}</td>
-                    <td>{{orderPosition.amount}}</td>
-                    <td>{{orderPosition.price*orderPosition.amount| currency:'\u20AC'}}</td>
+                    <td>{{::orderPosition.price| currency:'\u20AC'}}</td>
+                    <td>{{::orderPosition.amount}}</td>
+                    <td>{{::orderPosition.price*orderPosition.amount| currency:'\u20AC'}}</td>
                 </tr>
             </tbody>
         </table>

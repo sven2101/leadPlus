@@ -33,6 +33,7 @@ class User extends AbstractModel {
     skype: string;
     fax: string;
     job: string;
+    authorization: string;
 
     constructor() {
         super();
