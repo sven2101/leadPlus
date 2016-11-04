@@ -77,7 +77,6 @@ public class SmtpService implements ISmtpService {
 
 	private Session newSession(Smtp smtp) throws UnsupportedEncodingException {
 		Properties props = new Properties();
-		props.put("mail.smtp.starttls.enable", "true");
 		props.setProperty("mail.smtp.host", smtp.getHost());
 		props.setProperty("mail.smtp.port", String.valueOf(smtp.getPort()));
 		props.put("mail.smtp.ssl.trust", smtp.getHost());
