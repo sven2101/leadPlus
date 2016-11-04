@@ -19,6 +19,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,12 +54,21 @@ public class CustomerResource {
 	public List<Customer> getAll() {
 		return customerService.getAll();
 	}
-	
+
+	@ApiOperation(value = "Returns a list of customer by page.", notes = "")
+	@RequestMapping(value = "/all/{start}/{length}/{searchtext}/{allCustomers}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Customer> getAllByPage(@PathVariable Integer start, @PathVariable Integer length,
+			@PathVariable String searchtext, @PathVariable Boolean allCustomers) {
+		return customerService.getAllByPage(start, length, searchtext, allCustomers);
+
+	}
+
 	@RequestMapping(value = "/real", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get all Customers with sale", notes = "")
-	public List<Customer> getAllCustomersWithSale() {
-		return customerService.getAllCustomersWithSale();
+	public List<Customer> getRealCustomer() {
+		return customerService.getRealCustomer();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

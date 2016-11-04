@@ -35,7 +35,7 @@ import dash.common.AbstractWorkflow;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
-@SQLDelete(sql = "UPDATE order_position SET deleted = '1' WHERE id = ?")
+@SQLDelete(sql = "UPDATE orderposition SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
 @Table(name = "orderposition")
 public class OrderPosition {
@@ -196,7 +196,8 @@ public class OrderPosition {
 
 	@Override
 	public String toString() {
-		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", amount=" + amount + ", price=" + price + ", discount=" + discount + "]";
+		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", amount=" + amount + ", price=" + price
+				+ ", discount=" + discount + "]";
 	}
 
 }

@@ -78,11 +78,9 @@ class ProfileService {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
             data.authorization = self.rootScope.user.authorization;
             self.rootScope.user = data;
-
             let date = new Date();
             date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
             self.cookies.putObject("user", self.rootScope.user, { domain: self.rootScope.tenant.tenantKey, path: "/", expires: date });
-            console.log(self.cookies.get("user"));
             $("#profilePicture").prop("src", "data:image/jpeg;base64," + user.picture.content);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));

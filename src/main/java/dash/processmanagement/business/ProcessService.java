@@ -39,6 +39,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import dash.commentmanagement.domain.Comment;
+import dash.customermanagement.business.CustomerService;
+import dash.customermanagement.domain.Customer;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -68,6 +70,9 @@ public class ProcessService implements IProcessService {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private CustomerService customerService;
 
 	@Autowired
 	private ILeadService leadService;
@@ -108,12 +113,14 @@ public class ProcessService implements IProcessService {
 			if (Optional.ofNullable(process.getOffer()).isPresent())
 				offerService.save(process.getOffer());
 			if (Optional.ofNullable(process.getSale()).isPresent()) {
-				//				try {
-				//					process.setProcessor(userService.getUserByName("admin"));
-				//				} catch (NotFoundException nfex) {
-				//					logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-				//							nfex);
-				//				}
+				// try {
+				// process.setProcessor(userService.getUserByName("admin"));
+				// } catch (NotFoundException nfex) {
+				// logger.error(PROCESS_NOT_FOUND +
+				// ProcessService.class.getSimpleName() +
+				// BECAUSE_OF_OBJECT_IS_NULL,
+				// nfex);
+				// }
 				saleService.save(process.getSale());
 			}
 			save(process);
@@ -161,6 +168,9 @@ public class ProcessService implements IProcessService {
 	public Sale createSale(final long processId, final Sale sale) throws SaveFailedException {
 		Process process = processRepository.findOne(processId);
 		if (Optional.ofNullable(process).isPresent()) {
+			Customer updateCustomer = sale.getCustomer();
+			updateCustomer.setRealCustomer(true);
+			customerService.save(updateCustomer);
 			process.setSale(sale);
 			return save(process).getSale();
 		} else {
@@ -259,7 +269,8 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Process setStatus(long id, String status) throws SaveFailedException, NotFoundException, UpdateFailedException {
+	public Process setStatus(long id, String status)
+			throws SaveFailedException, NotFoundException, UpdateFailedException {
 		if (Optional.ofNullable(status).isPresent()) {
 			Process process = getById(id);
 			process.setStatus(Status.valueOf(status));
