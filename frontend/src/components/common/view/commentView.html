@@ -2,41 +2,41 @@
 	<div class="ibox chat-view">
 		<div class="ibox-title text-left">
 			{{ 'COMMON_COMMENTS' | translate }}
-			<small ng-if="process.comments.length>0" class="pull-right text-muted">{{ 'COMMON_COMMENTS_LAST' | translate }}:
-                {{process.comments[process.comments.length-1].timestamp|
+			<small ng-if="::process.comments.length>0" class="pull-right text-muted">{{ 'COMMON_COMMENTS_LAST' | translate }}:
+                {{::process.comments[process.comments.length-1].timestamp|
                 date:'dd.MM.yyyy HH:mm'}}
             </small>
 		</div>
 		<div class="ibox-content text-left">
-			<div class="row" ng-if="process.comments.length>0">
+			<div class="row" ng-if="::process.comments.length>0">
 				<div class="col-md-12">
 					<div class="chat-discussion" ng-model="process.comments">
 						<div ng-repeat="comment in process.comments | orderBy: '-timestamp' | limitTo: 3">
-							<div ng-if="$index%2==0" class="chat-message left">
-								<img class="message-avatar" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+							<div ng-if="::$index%2==0" class="chat-message left">
+								<img class="message-avatar" pictureId="{{::process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
 								<div class="message">
-									<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-									<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
-									<span class="message-date"> {{comment.timestamp|  date:'dd.MM.yyyy HH:mm'}} </span>
+									<a ng-if="::comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{::comment.creator.username}} </a>
+									<a ng-if="::!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{::comment.creator.firstname}} {{::comment.creator.lastname}} </a>
+									<span class="message-date"> {{::comment.timestamp|  date:'dd.MM.yyyy HH:mm'}} </span>
 									<span class="message-content">
-                                                {{comment.commentText}}
+                                                {{::comment.commentText}}
                                             </span>
 								</div>
 							</div>
-							<div ng-if="$index%2!=0" class="chat-message right">
-								<img class="message-avatar" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+							<div ng-if="::$index%2!=0" class="chat-message right">
+								<img class="message-avatar" pictureId="{{::process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
 								<div class="message">
-									<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-									<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
-									<span class="message-date"> {{comment.timestamp |  date:'dd.MM.yyyy HH:mm'}} </span>
+									<a ng-if="::comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{::comment.creator.username}} </a>
+									<a ng-if="::!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{::comment.creator.firstname}} {{::comment.creator.lastname}} </a>
+									<span class="message-date"> {{::comment.timestamp |  date:'dd.MM.yyyy HH:mm'}} </span>
 									<span class="message-content">
-                                                {{comment.commentText}}
+                                                {{::comment.commentText}}
                                             </span>
 								</div>
 							</div>
 						</div>
 						</br>
-						<div ng-if="process.comments.length>3" class="text-center"><a data-toggle="modal" data-backdrop="static" data-target="#commentModal">{{ 'COMMON_COMMENTS_HISTORY' | translate }}</a>
+						<div ng-if="::process.comments.length>3" class="text-center"><a data-toggle="modal" data-backdrop="static" data-target="#commentModal">{{ 'COMMON_COMMENTS_HISTORY' | translate }}</a>
 						</div>
 					</div>
 				</div>
