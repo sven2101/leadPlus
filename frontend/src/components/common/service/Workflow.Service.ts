@@ -93,10 +93,13 @@ class WorkflowService {
             timestamp: newTimestamp("DD.MM.YYYY HH:mm:ss")
         };
 
-        this.commentResource.save({ id: process.id }, comment).$promise.then(function () {
+        this.commentResource.save({ id: process.id }, comment).$promise.then(function (result: Commentary) {
             let timestamp = toLocalDate(comment.timestamp, "DD.MM.YYYY HH:mm:ss");
             comment.timestamp = timestamp;
-            process.comments.push(comment);
+            result.creator = self.rootScope.user;
+            process.comments.push(result);
+
+
             defer.resolve(true);
         }, function () {
             defer.reject(false);

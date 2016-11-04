@@ -65,7 +65,7 @@ class AuthService {
             this.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
             this.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
 
-            this.http.get("user").then(function (response) {
+            this.http.get("user").then(function(response) {
                 let data = response.data;
                 if (data) {
                     self.rootScope.user = {
@@ -79,7 +79,8 @@ class AuthService {
                         language: data.language,
                         smtpKey: encodeURIComponent(hashPasswordPbkdf2(hashedPassword, salt)),
                         authorization: authorization,
-                        picture: data.picture
+                        picture: data.picture,
+                        thumbnail: data.thumbnail
                     };
                     self.rootScope.tenant = {
                         tenantKey: credentials.tenant,
@@ -114,7 +115,7 @@ class AuthService {
                 } else {
                     defer.reject(false);
                 }
-            }, (function (error) {
+            }, (function(error) {
                 defer.reject(false);
             }));
         } else {
