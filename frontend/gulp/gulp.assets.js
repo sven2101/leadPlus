@@ -60,6 +60,7 @@ gulp.task('concat-others-js', function () {
             "spin.min.js",
             "ladda.min.js",
             "ladda.jquery.min.js",
+            "moment.min.js",
             "*.js"
         ]))
         .pipe(concat("others.js"))
