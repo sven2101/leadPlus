@@ -61,7 +61,7 @@ class ProfileService {
 
         this.userResource.update(user).$promise.then(function (updatedUser: User) {
             self.updateRootScope(updatedUser);
-            self.cookies.put("globals", self.rootScope);
+            self.cookies.put("user", self.rootScope.user);
             self.rootScope.changeLanguage(self.rootScope.user.language);
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
             defer.resolve(updatedUser);
@@ -76,6 +76,8 @@ class ProfileService {
         let self = this;
         this.userResource.setProfilePicture(user).$promise.then(function (data: User) {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
+            self.rootScope.user = data;
+            self.cookies.put("user", self.rootScope.user);
             $("#profilePicture").prop("src", "data:image/jpeg;base64," + user.picture.content);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
