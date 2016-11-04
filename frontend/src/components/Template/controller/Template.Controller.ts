@@ -34,7 +34,7 @@ class TemplateController {
     }
 
     save() {
-        if (this.template.id === 0) {
+        if (isNullOrUndefined(this.template.id)) {
             this.templateService.save(this.template);
         } else {
             this.templateService.update(this.template);

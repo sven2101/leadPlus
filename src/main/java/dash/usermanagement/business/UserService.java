@@ -109,8 +109,7 @@ public class UserService implements IUserService {
 	@Override
 	public User save(final User user) throws SaveFailedException {
 		if (Optional.ofNullable(user).isPresent()) {
-			// TODO - needs to be enabled. Otherwise redirect after Tenant
-			// Registration would fail.
+			// TODO - needs to be enabled. Otherwise redirect after Tenant Registration would fail. 
 			user.setEnabled(true);
 			return userRepository.save(user);
 		} else {
@@ -121,8 +120,7 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public User update(final User user)
-			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+	public User update(final User user) throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		if (user != null) {
 			try {
 				User updateUser = getById(user.getId());
@@ -134,9 +132,8 @@ public class UserService implements IUserService {
 						}
 
 						updateUser.setEmail(user.getEmail());
-					} else
-						updateUser.setLanguage(user.getLanguage());
-					// updateUser.setProfilPicture(user.getPicture());
+					}
+					updateUser.setLanguage(user.getLanguage());
 					updateUser.setFirstname(user.getFirstname());
 					updateUser.setLastname(user.getLastname());
 					updateUser.setPhone(user.getPhone());
@@ -144,6 +141,7 @@ public class UserService implements IUserService {
 					updateUser.setFax(user.getFax());
 					updateUser.setJob(user.getJob());
 					return save(updateUser);
+
 				} else {
 					throw new NotFoundException(USER_NOT_FOUND);
 				}
@@ -210,21 +208,14 @@ public class UserService implements IUserService {
 		if (Optional.ofNullable(id).isPresent() && Optional.ofNullable(passwordChange).isPresent()) {
 			try {
 				User user = getById(id);
-				if (user != null && passwordChange.getOldPassword() != null
-						&& passwordChange.getNewPassword() != null) {
+				if (user != null && passwordChange.getOldPassword() != null && passwordChange.getNewPassword() != null) {
 					if (passwordEncoder.matches(passwordChange.getOldPassword(), user.getPassword())) {
 						user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
-						Smtp smtp = null;
-						try {
-							smtp = smtpService.findByUser(id);
-						} catch (NotFoundException ex) {
-							smtp = null;
-						}
 
+						Smtp smtp = smtpService.findByUser(id);
 						if (smtp != null) {
-							smtp.setPassword(Encryptor.decrypt(
-									new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()),
-									passwordChange.getOldSmtpKey()));
+							smtp.setPassword(
+									Encryptor.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), passwordChange.getOldSmtpKey()));
 							smtpService.save(smtp, passwordChange.getNewSmtpKey());
 						}
 						save(user);
@@ -261,8 +252,7 @@ public class UserService implements IUserService {
 				}
 			} catch (NotFoundException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(
-						UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
+				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
 			}
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
@@ -283,8 +273,7 @@ public class UserService implements IUserService {
 				}
 			} catch (NotFoundException | SaveFailedException ex) {
 				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(
-						UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
+				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + ex.getMessage());
 			}
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
@@ -316,8 +305,7 @@ public class UserService implements IUserService {
 			}
 		} else {
 			RegisterFailedException rfex = new RegisterFailedException(REGISTER_FAILED_EXCEPTION);
-			logger.error(REGISTER_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					rfex);
+			logger.error(REGISTER_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, rfex);
 			throw rfex;
 		}
 	}
@@ -330,8 +318,8 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public User setProfilePicture(long id, MultipartFile file) throws NotFoundException, SaveFailedException,
-			UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+	public User setProfilePicture(long id, MultipartFile file)
+			throws NotFoundException, SaveFailedException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
 		User user = getById(id);
 		user.setProfilPicture(fileUploadService.save(file));
 		return update(user);
