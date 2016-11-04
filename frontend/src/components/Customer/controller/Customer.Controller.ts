@@ -20,7 +20,7 @@ const CustomerControllerId: string = "CustomerController";
 
 class CustomerController {
 
-    $inject = [CustomerServiceId, $locationId];
+    $inject = [CustomerServiceId, $locationId, $scopeId];
 
     createCustomerForm;
     currentCustomer: Customer;
@@ -30,11 +30,22 @@ class CustomerController {
     location;
 
     customers: Array<Customer>;
-    customerAmountLimit: number = 20;
+    pageStart: number = 20;
+    searchText: string;
+    loadAllCustomers: boolean = false;
 
-    constructor(CustomerService: CustomerService, $location) {
+    constructor(CustomerService: CustomerService, $location, $scope) {
         this.customerService = CustomerService;
         this.location = $location;
+        this.searchCustomer("noSearchText");
+        let self = this;
+        $scope.$watch("customerCtrl.searchText", function (searchText) {
+            if (!isNullOrUndefined(searchText) && searchText.length !== 0) {
+                self.searchCustomer(searchText);
+            } else if (!isNullOrUndefined(searchText) && searchText.length === 0) {
+                self.searchCustomer("noSearchText");
+            }
+        });
     }
 
     refreshData(): void {
@@ -52,6 +63,21 @@ class CustomerController {
         this.currentCustomer = new Customer();
         shallowCopy(this.currentEditCustomer, this.currentCustomer);
         this.isCurrentCustomerNew = false;
+    }
+
+    searchCustomer(searchText: string) {
+        this.pageStart = 0;
+        this.customerService.pagingCustomers = new Array<Customer>();
+        this.customerService.getAllCustomerByPage(this.pageStart, 20, searchText, this.loadAllCustomers);
+    }
+
+    loadNextCustomers() {
+        let searchText = this.searchText;
+        if (isNullOrUndefined(searchText) || searchText.length === 0) {
+            searchText = "noSearchText";
+        }
+        this.customerService.getAllCustomerByPage(this.pageStart, 20, searchText, this.loadAllCustomers);
+        this.pageStart += 20;
     }
 
     saveCustomer() {

@@ -54,8 +54,7 @@ public class SmtpService implements ISmtpService {
 	@Override
 	public void testSmtp(final long id, String smtpKey) throws Exception {
 		Smtp smtp = smptRepository.findOne(id);
-		smtp.setPassword(
-				Encryptor.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
+		smtp.setPassword(Encryptor.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
 
 		final Session emailSession = newSession(smtp);
 		Transport transport = emailSession.getTransport("smtp");
@@ -71,16 +70,19 @@ public class SmtpService implements ISmtpService {
 				"text/html");
 		smtpMessage.setNotifyOptions(SMTPMessage.NOTIFY_SUCCESS);
 		smtpMessage.setReturnOption(1);
+
 		transport.sendMessage(smtpMessage, InternetAddress.parse(smtp.getEmail()));
 		transport.close();
 	}
 
 	private Session newSession(Smtp smtp) throws UnsupportedEncodingException {
 		Properties props = new Properties();
+		props.put("mail.smtp.starttls.enable", "true");
 		props.setProperty("mail.smtp.host", smtp.getHost());
 		props.setProperty("mail.smtp.port", String.valueOf(smtp.getPort()));
 		props.put("mail.smtp.ssl.trust", smtp.getHost());
 		props.put("mail.smtp.auth", "true");
+
 		final String mailUser = smtp.getUsername();
 		final String mailPassword = new String(smtp.getPassword(), "UTF-8");
 

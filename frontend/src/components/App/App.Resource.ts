@@ -287,6 +287,7 @@ class CustomerResource {
             getCustomerById: { url: "/api/rest/customer/:id", method: "GET" },
             getAllCustomer: { url: "/api/rest/customer", method: "GET", isArray: true },
             getRealCustomer: { url: "/api/rest/customer/real", method: "GET", isArray: true },
+            getAllCustomerByPage: { url: "/api/rest/customer/all/:start/:length/:searchtext/:allCustomers", method: "GET", isArray: false },
             createCustomer: { url: "/api/rest/customer", method: "POST" },
             updateCustomer: { url: "/api/rest/customer", method: "PUT" },
             deleteCustomer: { url: "/api/rest/customer", method: "DELETE" }

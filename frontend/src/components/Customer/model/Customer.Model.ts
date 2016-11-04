@@ -24,6 +24,7 @@ class Customer extends AbstractModel {
     timestamp: any;
     deactivated: boolean;
     customerNumber: string;
+    realCustomer: boolean;
     constructor() {
         super();
     }

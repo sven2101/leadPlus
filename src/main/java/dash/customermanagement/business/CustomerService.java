@@ -26,6 +26,9 @@ import java.util.Optional;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import dash.customermanagement.domain.Customer;
@@ -43,8 +46,32 @@ public class CustomerService implements ICustomerService {
 	private CustomerRepository customerRepository;
 
 	@Override
-	public List<Customer> getAll() {
-		return customerRepository.findAll();
+	public Page<Customer> getAllByPage(Integer start, Integer length, String searchText, Boolean allCustomers) {
+
+		Page<Customer> page = null;
+		Sort.Direction sortDirection = Sort.Direction.ASC;
+		String sortColumn = "lastname";
+
+		if (!allCustomers.booleanValue()) {
+			if (null == searchText || searchText.equals("noSearchText") || searchText.equals("")) {
+				page = customerRepository.findByRealCustomer(true,
+						new PageRequest(start / length, length, sortDirection, sortColumn));
+			} else {
+				page = customerRepository.findRealCustomerBySearchText(searchText,
+						new PageRequest(start / length, length, sortDirection, sortColumn));
+			}
+		} else {
+			if (null == searchText || searchText.equals("noSearchText") || searchText.equals("")) {
+				page = customerRepository.findAll(new PageRequest(start / length, length, sortDirection, sortColumn));
+			} else {
+				page = customerRepository
+						.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingAllIgnoreCase(
+								searchText, searchText, searchText, searchText,
+								new PageRequest(start / length, length, sortDirection, sortColumn));
+			}
+		}
+
+		return page;
 	}
 
 	@Override
@@ -118,8 +145,13 @@ public class CustomerService implements ICustomerService {
 	}
 
 	@Override
-	public List<Customer> getAllCustomersWithSale() {
-		return customerRepository.getAllCustomersWithSale();
+	public List<Customer> getRealCustomer() {
+		return customerRepository.findByRealCustomer(true);
+	}
+
+	@Override
+	public List<Customer> getAll() {
+		return customerRepository.findAll();
 	}
 
 }

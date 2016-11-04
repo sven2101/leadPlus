@@ -165,8 +165,7 @@ public class FileUpload implements Serializable {
 
 	@Override
 	public String toString() {
-		return "FileUpload [id=" + id + ", filename=" + filename + ", mimeType=" + mimeType + ", size=" + size + ", content=" + Arrays.toString(content)
-				+ ", deleted=" + deleted + "]";
+		return "FileUpload [id=" + id + ", filename=" + filename + ", mimeType=" + mimeType + ", size=" + size + ", deleted=" + deleted + "]";
 	}
 
 }

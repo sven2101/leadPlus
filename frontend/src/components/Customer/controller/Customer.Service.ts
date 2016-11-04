@@ -22,19 +22,24 @@ class CustomerService {
 
     customerResource: any;
     customers: Array<Customer>;
+    pagingCustomers: Array<Customer> = new Array<Customer>();
+    page: any;
 
     constructor(CustomerResource: CustomerResource) {
         this.customerResource = CustomerResource.resource;
         this.customers = new Array<Customer>();
         this.getAllCustomer();
+        this.getAllCustomerByPage(1, 20, "noSearchText", false);
     }
 
     saveCustomer(customer: Customer, insert: boolean = true) {
         let self = this;
         if (insert) {
             customer.timestamp = newTimestamp();
+            customer.realCustomer = true;
             this.customerResource.createCustomer(customer).$promise.then(function (result: Customer) {
                 self.customers.push(result);
+                self.pagingCustomers.push(result);
             });
         } else {
             this.customerResource.updateCustomer(customer).$promise.then(function (result: Customer) {
@@ -51,6 +56,16 @@ class CustomerService {
         let self = this;
         this.customerResource.getRealCustomer().$promise.then(function (result: Array<Customer>) {
             self.customers = result;
+        });
+    }
+
+    getAllCustomerByPage(start: number, length: number, searchtext: string, allCustomers: boolean) {
+        let self = this;
+        this.customerResource.getAllCustomerByPage({ start: start, length: length, searchtext: searchtext, allCustomers: allCustomers }).$promise.then(function (result: any) {
+            self.page = result;
+            for (let customer of result.content) {
+                self.pagingCustomers.push(customer);
+            }
         });
     }
 
