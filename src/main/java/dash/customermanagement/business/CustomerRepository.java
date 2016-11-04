@@ -16,16 +16,26 @@ package dash.customermanagement.business;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import dash.customermanagement.domain.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 	public Customer getByEmail(String email);
-	
-	@Query("SELECT DISTINCT c from Sale s JOIN s.customer c")
-	public List<Customer> getAllCustomersWithSale(); 
+
+	public Page<Customer> findByRealCustomer(Boolean realCustomer, Pageable pageable);
+
+	@Query("select c from Customer c where c.realCustomer = true AND (LOWER(c.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.email) like LOWER(CONCAT('%',:searchText,'%')))")
+	public Page<Customer> findRealCustomerBySearchText(@Param(value = "searchText") String searchText, Pageable pageable);
+
+	public List<Customer> findByRealCustomer(Boolean realCustomer);
+
+	public Page<Customer> findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingAllIgnoreCase(
+			String firstname, String lastname, String email, String company, Pageable pageable);
 
 }

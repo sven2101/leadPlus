@@ -173,7 +173,7 @@ public class ProcessResource {
 		Sort.Direction sortDirection = Sort.Direction.ASC;
 		if (orderDir.equals("desc"))
 			sortDirection = Sort.Direction.DESC;
-		Page page;
+		Page<Process> page;
 
 		if (null == searchText || searchText.equals("")) {
 			page = processRepository.findByLeadIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
@@ -225,7 +225,7 @@ public class ProcessResource {
 		Sort.Direction sortDirection = Sort.Direction.ASC;
 		if (orderDir.equals("desc"))
 			sortDirection = Sort.Direction.DESC;
-		Page page;
+		Page<Process> page;
 
 		if (null == searchText || searchText.equals(""))
 			page = processRepository.findByOfferIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
@@ -276,7 +276,7 @@ public class ProcessResource {
 		Sort.Direction sortDirection = Sort.Direction.ASC;
 		if (orderDir.equals("desc"))
 			sortDirection = Sort.Direction.DESC;
-		Page page;
+		Page<Process> page;
 
 		if (null == searchText || searchText.equals(""))
 			page = processRepository.findBySaleIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));

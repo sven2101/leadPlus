@@ -22,7 +22,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import dash.processmanagement.domain.Process;
-import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
 
 //@Transactional

@@ -15,6 +15,7 @@ package dash.customermanagement.business;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import dash.customermanagement.domain.Customer;
@@ -31,13 +32,15 @@ public interface ICustomerService {
 	public Customer getById(final Long id) throws NotFoundException;
 
 	public Customer getByEmail(String email);
-	
-	public List<Customer> getAllCustomersWithSale();
+
+	public List<Customer> getRealCustomer();
 
 	public Customer save(final Customer inquirer) throws SaveFailedException;
 
 	public Customer update(final Customer inquirer) throws UpdateFailedException;
 
 	public void delete(final Long id) throws DeleteFailedException;
+
+	public Page<Customer> getAllByPage(Integer start, Integer length, String searchText, Boolean allCustomers);
 
 }

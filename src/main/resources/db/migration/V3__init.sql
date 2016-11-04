@@ -222,6 +222,7 @@ CREATE TABLE customer
   "timestamp" timestamp without time zone,
   title character varying(255),
   customernumber character varying(255),
+  realcustomer boolean NOT NULL DEFAULT FALSE,
   CONSTRAINT customer_pkey PRIMARY KEY (id)
 )
 WITH (
