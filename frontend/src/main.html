@@ -2,35 +2,23 @@
 	<div class="sidebar-collapse">
 		<ul class="nav metismenu" id="side-menu">
 			<li class="nav-header">
-				<div class="dropdown profile-element">
+				<div class="profile-element">
 					<div style="margin-top:-20px" class="row">
 						<div class="col-md-2"></div>
 						<div id="profilePictureDiv" class="col-md-6">
 							<img id="profilePicture" style="margin-left:-40px; width: 100px; height:100px;border-radius: 10%;" pictureId="{{user.picture.id}}"
 								httpsrc="/api/rest/files/content/" alt="">
-						</div>
-						<div class="col-md-4"></div>
+						</div>					
 					</div>
-					<a data-toggle="dropdown" class="dropdown-toggle">
-						<span class="clear"> 
-                            <span class="block m-t-xs">
-                                <strong class="font-bold" ng-if="(user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname=='')">
+					<br>
+					<div>
+						<strong class="font-bold" ng-if="(user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname=='')">
                                     {{user.username}}
-                                </strong>
-                                <strong class="font-bold" ng-if="!((user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname==''))">
-                                    {{user.firstname}} {{user.lastname}}
-                                 </strong>
-                            </span>
-						<span class="text-muted text-xs block">{{ 'TITLE' | translate }}<b
-                                    class="caret"></b>
-                            </span>
-						</span>
-					</a>
-					<ul class="dropdown-menu animated fadeInRight m-t-xs">
-						<li><a href="#/profile">{{ 'PROFILE_MENU' | translate }}</a></li>
-						<li class="divider"></li>
-						<li><a href="" ng-click="logout()">{{ 'LOGOUT' | translate }}</a></li>
-					</ul>
+                        </strong>
+						<strong class="font-bold" ng-if="!((user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname==''))">
+                                   <a href="#/profile"> {{user.firstname}} {{user.lastname}}</a>
+                        </strong>
+					</div>
 				</div>
 				<div class="logo-element">
 					{{ 'LOGO' | translate }}
