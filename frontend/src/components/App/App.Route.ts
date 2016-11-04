@@ -15,7 +15,7 @@
 "use strict";
 
 angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
-    function ($routeProvider, $httpProvider) {
+    function($routeProvider, $httpProvider) {
         $routeProvider
             .when("/",
             {
@@ -158,10 +158,10 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
-        $httpProvider.interceptors.push(function ($q, $location, $rootScope) {
+        $httpProvider.interceptors.push(function($q, $location, $rootScope) {
 
             return {
-                "responseError": function (rejection) {
+                "responseError": function(rejection) {
                     let defer = $q.defer();
                     if (rejection.status < 300) {
                         defer.resolve(rejection);
@@ -186,9 +186,16 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
 
     }])
     .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId,
-        function ($location, $http, $rootScope, Auth, $cookies) {
-            $rootScope.user = $cookies.getObject("user");
-            $rootScope.tenant = $cookies.getObject("tenant");
+        function($location, $http, $rootScope, Auth, $cookies) {
+
+            try {
+                $rootScope.user = $cookies.getObject("user");
+                $rootScope.tenant = $cookies.getObject("tenant");
+            } catch (error) {
+                $rootScope.user = undefined;
+                $rootScope.tenant = undefined;
+                Auth.logout();
+            }
 
             if (!isNullOrUndefined($rootScope.user)) {
                 $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
@@ -196,9 +203,14 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
 
             }
 
-            $rootScope.$on("$routeChangeStart", function (event, next, current) {
-                $rootScope.user = $cookies.getObject("user");
-                $rootScope.tenant = $cookies.getObject("tenant");
+            $rootScope.$on("$routeChangeStart", function(event, next, current) {
+                try {
+                    $rootScope.user = $cookies.getObject("user");
+                    $rootScope.tenant = $cookies.getObject("tenant");
+                } catch (error) {
+                    $cookies.remove("user");
+                    $cookies.remove("tenant");
+                }
 
                 if (isNullOrUndefined($http.defaults.headers.common["X-TenantID"])) {
                     if (!isNullOrUndefined($rootScope.tenant)) {
@@ -221,7 +233,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                     }
                 }
             });
-            $rootScope.logout = function () {
+            $rootScope.logout = function() {
                 Auth.logout();
             };
         }]);
