@@ -172,6 +172,7 @@ class LeadService {
             temp.customer.timestamp = newTimestamp();
             this.customerResource.createCustomer(temp.customer).$promise.then(function (customer) {
                 temp.customer = customer;
+
                 self.processResource.save(editProcess).$promise.then(function (result) {
                     self.toaster.pop("success", "", self.translate
                         .instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
@@ -180,8 +181,8 @@ class LeadService {
                     if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                         self.rootScope.$broadcast("onTodosChange");
                     }
-                });
-            });
+                }, (error) => handleError(error));
+            }, (error) => handleError(error));
             return;
         }
         this.processResource.save(editProcess).$promise.then(function (result) {
@@ -190,7 +191,7 @@ class LeadService {
             if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                 self.rootScope.$broadcast("onTodosChange");
             }
-        });
+        }, (error) => handleError(error));
     }
 
     setRow(id: number, row: any) {

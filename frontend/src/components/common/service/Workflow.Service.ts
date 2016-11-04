@@ -516,6 +516,7 @@ class WorkflowService {
             defer.resolve(data);
         }, function (error) {
             defer.reject(error);
+            handleError(error);
         });
         return defer.promise;
     }
