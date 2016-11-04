@@ -61,7 +61,7 @@ class ProfileService {
 
         this.userResource.update(user).$promise.then(function (updatedUser: User) {
             self.updateRootScope(updatedUser);
-            self.cookies.put("globals", self.rootScope);
+            self.cookies.putObject("user", self.rootScope.user);
             self.rootScope.changeLanguage(self.rootScope.user.language);
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
             defer.resolve(updatedUser);
@@ -76,6 +76,11 @@ class ProfileService {
         let self = this;
         this.userResource.setProfilePicture(user).$promise.then(function (data: User) {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
+            data.authorization = self.rootScope.user.authorization;
+            self.rootScope.user = data;
+            let date = new Date();
+            date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
+            self.cookies.putObject("user", self.rootScope.user, { domain: self.rootScope.tenant.tenantKey, path: "/", expires: date });
             $("#profilePicture").prop("src", "data:image/jpeg;base64," + user.picture.content);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
@@ -107,7 +112,7 @@ class ProfileService {
                 defer.resolve(true);
             }, function (error) {
                 self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
-                defer.reject(false);
+                defer.reject(error);
             });
         return defer.promise;
     }

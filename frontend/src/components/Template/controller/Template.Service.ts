@@ -75,23 +75,31 @@ class TemplateService {
         });
     }
 
-    save(template: Template) {
+    save(template: Template): IPromise<Template> {
+        let defer = this.q.defer();
         let self = this;
         this.templateResource.save(template).$promise.then(function (result: Template) {
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_TEMPLATE_SAVE"));
             self.templates.push(result);
+            defer.resolve(result);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_TEMPLATE_SAVE_ERROR"));
+            defer.reject(null);
         });
+        return defer.promise;
     }
 
-    update(template: Template) {
+    update(template: Template): IPromise<Template> {
+        let defer = this.q.defer();
         let self = this;
-        this.templateResource.update(template).$promise.then(function () {
+        this.templateResource.update(template).$promise.then(function (result: Template) {
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_TEMPLATE_UPDATE"));
+            defer.resolve(result);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_TEMPLATE_UPDATE_ERROR"));
+            defer.reject(null);
         });
+        return defer.promise;
     }
 
     remove(template: Template) {

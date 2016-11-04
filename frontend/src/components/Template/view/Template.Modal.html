@@ -16,8 +16,8 @@
 			<!-- Description -->
 			<div class="form-group" ng-class="{ 'has-error' : createTemplate.description.$invalid && !createTemplate.description.$pristine }">
 				<label>{{ 'COMMON_DESCRIPTION' | translate }}</label>
-				<input required type="text" name="description" class="form-control" ng-model="templateCtrl.template.description" ng-maxlength="30">
-				<p ng-show="createTemplate.description.$error.maxlength && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+				<input required type="text" name="description" class="form-control" ng-model="templateCtrl.template.description" ng-maxlength="255">
+				<p ng-show="createTemplate.description.$error.maxlength && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
 				<p ng-show="createTemplate.description.$error.required  && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
 			</div>
 			<!-- Deactivated -->
@@ -44,4 +44,8 @@
 	.btn-toolbar {
 		margin-left: 0px;
 	}
+	.note-editor .dropdown-menu { min-width: 90px; left: -300px; }
+	.note-editor .note-color-palette { line-height: 1; }
+	.note-editor .note-color-palette div .note-color-btn { width: 17px; height: 17px; padding: 0px; margin: 0px; border: 1px solid rgb(255, 255, 255); }
+	.note-editor .note-color-palette div .note-color-btn:hover { border: 1px solid rgb(0, 0, 0); }
 </style>
