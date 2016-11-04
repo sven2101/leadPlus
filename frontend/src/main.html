@@ -1,3 +1,10 @@
+<style>
+a.profileLink:link {color: #DFE4ED;}
+a.profileLink:active {color: #DFE4ED;}
+a.profileLink:visited {color: #DFE4ED;}
+a.profileLink:hover {color: #DFE4ED;}
+</style>
+
 <nav class="navbar-default navbar-static-side" role="navigation" style="position: fixed; height: 100%;">
 	<div class="sidebar-collapse">
 		<ul class="nav metismenu" id="side-menu">
@@ -11,13 +18,16 @@
 						</div>					
 					</div>
 					<br>
-					<div>
-						<strong class="font-bold" ng-if="(user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname=='')">
-                                    {{user.username}}
-                        </strong>
-						<strong class="font-bold" ng-if="!((user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname==''))">
-                                   <a href="#/profile"> {{user.firstname}} {{user.lastname}}</a>
-                        </strong>
+					<div> 
+						<a class="profileLink" href="#/profile" >
+							<i class="fa fa-user" aria-hidden="true"></i>
+							<strong class="font-bold" ng-if="(user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname=='')">
+										{{user.username}}
+							</strong>
+							<strong class="font-bold" ng-if="!((user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname==''))">
+										{{user.firstname}} {{user.lastname}}
+							</strong>
+						</a>
 					</div>
 				</div>
 				<div class="logo-element">
