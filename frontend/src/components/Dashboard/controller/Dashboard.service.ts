@@ -34,10 +34,10 @@ class DashboardService {
     rootScope: any;
     q: any;
 
-    openLeads: Array<Process>;
-    inContacts: Array<Process>;
-    openOffers: Array<Process>;
-    closedSales: Array<Process>;
+    openLeads: Array<Process> = [];
+    inContacts: Array<Process> = [];
+    openOffers: Array<Process> = [];
+    closedSales: Array<Process> = [];
 
     openLeadsValue: number = 0;
     inContactsValue: number = 0;
