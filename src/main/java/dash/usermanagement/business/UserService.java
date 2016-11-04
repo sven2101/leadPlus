@@ -132,9 +132,8 @@ public class UserService implements IUserService {
 						}
 
 						updateUser.setEmail(user.getEmail());
-					} else
-						updateUser.setLanguage(user.getLanguage());
-					updateUser.setProfilPicture(user.getPicture());
+					}
+					updateUser.setLanguage(user.getLanguage());
 					updateUser.setFirstname(user.getFirstname());
 					updateUser.setLastname(user.getLastname());
 					updateUser.setPhone(user.getPhone());
@@ -142,6 +141,7 @@ public class UserService implements IUserService {
 					updateUser.setFax(user.getFax());
 					updateUser.setJob(user.getJob());
 					return save(updateUser);
+
 				} else {
 					throw new NotFoundException(USER_NOT_FOUND);
 				}
