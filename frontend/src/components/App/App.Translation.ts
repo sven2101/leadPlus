@@ -135,6 +135,7 @@ function config($translateProvider) {
             COMMON_USERNAME: "Benutzername",
             COMMON_DESCRIPTION: "Beschreibung",
             COMMON_PASSWORD: "Passwort",
+            COMMON_PASSWORD_2: "Passwort wiederholen",
             COMMON_USER: "Benutzer",
             COMMON_ADMIN: "Administrator",
             COMMON_SUPERADMIN: "Superadmin",
@@ -452,8 +453,10 @@ function config($translateProvider) {
             // Define calculation elements 
             CALCULATION_NET: "Netto",
             CALCULATION_GROSS: "Brutto",
-            CALCULATION_VAT: "Mehrwertsteuer"
+            CALCULATION_VAT: "Mehrwertsteuer",
 
+             // Tooltip
+            TOOLTIP_SIGN_UP: "Registrieren Sie sich jetzt unter ihrer spezifischen Subdomain um vollen Zugriff auf die Anwendung zu erhalten. Nach der erfolgreichen Registrierung, muss ihr Anwendungs-Administrator ihren Account freischalten."
         })
         .translations(Language[Language.EN], {
             // GENERAL
@@ -570,6 +573,7 @@ function config($translateProvider) {
             COMMON_USERNAME: "Username",
             COMMON_DESCRIPTION: "Description",
             COMMON_PASSWORD: "Password",
+            COMMON_PASSWORD_2: "Repeat Password",
             COMMON_USER: "User",
             COMMON_ADMIN: "Administrator",
             COMMON_SUPERADMIN: "Superadmin",
@@ -888,7 +892,10 @@ function config($translateProvider) {
             // Define calculation elements 
             CALCULATION_NET: "Net",
             CALCULATION_GROSS: "Gross",
-            CALCULATION_VAT: "Value-added tax"
+            CALCULATION_VAT: "Value-added tax",
+
+            // Tooltip
+            TOOLTIP_SIGN_UP: "Sign up now under your unique tenant domain section to get full access. After Sign up your administrator needs to enable your account."
 
         });
 

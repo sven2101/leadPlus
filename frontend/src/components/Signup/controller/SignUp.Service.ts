@@ -1,6 +1,7 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Signup/model/Signup.Model.ts" />
 /// <reference path="../../app/App.Common.ts" />
+/// <reference path="../../Common/model/Promise.Interface.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -42,19 +43,10 @@ class SignupService {
         this.emailExist = false;
     }
 
-    uniqueUsername(user: Signup): void {
-        let self = this;
-        this.signupResource.uniqueUsername({ username: user.username, email: user.email, password: user.password, password2: user.password2 }).$promise.then(function (data, headersGetter, status) {
-            self.usernameExist = data.validation;
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
-        });
-    }
-
     uniqueEmail(user: Signup): void {
         let self = this;
         user.email = user.email.toLowerCase();
-        this.signupResource.uniqueEmail({ username: user.username, email: user.email, password: user.password, password2: user.password2 }).$promise.then(function (data, headersGetter, status) {
+        this.signupResource.uniqueEmail(user).$promise.then(function (data, headersGetter, status) {
             self.emailExist = data.validation;
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
@@ -70,7 +62,6 @@ class SignupService {
         user.password2 = hashPasswordPbkdf2(user.password2, salt);
 
         this.signupResource.signup(user).$promise.then(function (createdUser: User) {
-
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
             defer.resolve(createdUser);
         }, function () {

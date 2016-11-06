@@ -30,10 +30,6 @@ class SignupController {
         this.user = new Signup();
     }
 
-    uniqueUsername(): void {
-        this.signupService.uniqueUsername(this.user);
-    }
-
     uniqueEmail(): void {
         this.signupService.uniqueEmail(this.user);
     }
