@@ -1,5 +1,6 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Smtp/model/Smtp.Model.ts" />
+/// <reference path="../../Common/model/Promise.Interface.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.

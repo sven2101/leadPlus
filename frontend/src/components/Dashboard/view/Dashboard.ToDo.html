@@ -3,6 +3,9 @@
 		<div class="ibox float-e-margins">
 			<div class="ibox-title">
 				<h5>ToDo</h5>
+				<div class="ibox-tools">
+					<i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'TOOLTIP_TODO' | translate }}"></i>
+				</div>
 			</div>
 			<div class="ibox-content">
 
@@ -60,3 +63,9 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip({ placement: 'left'});
+	});
+</script>

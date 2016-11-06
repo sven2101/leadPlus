@@ -185,6 +185,7 @@
 					<div class="ibox-title ">
 						<h5>{{ 'PROFILE_PICTURE_MANAGEMENT' | translate }}</h5>
 						<div class="ibox-tools ">
+							<i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'TOOLTIP_PROFIL_PICTURE' | translate }}"></i>
 							<i class="fa fa-chevron-down "></i>
 						</div>
 					</div>
@@ -206,4 +207,8 @@
     }).on('hidden.bs.collapse', function(){
         $(this).parent().find(".fa-chevron-up ").removeClass("fa-chevron-up ").addClass("fa-chevron-down ");
     });
+
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip({ placement: 'left'});
+	});
 </script>

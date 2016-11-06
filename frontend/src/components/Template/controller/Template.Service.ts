@@ -25,7 +25,7 @@ const TemplateServiceId: string = "TemplateService";
 
 class TemplateService {
 
-    private $inject = [toasterId, $translateId, TemplateResourceId, $uibModalId, $qId, $windowId];
+    private $inject = [toasterId, $translateId, TemplateResourceId, $uibModalId, $qId, $windowId, $sceId];
 
     templateResource;
 
@@ -36,14 +36,16 @@ class TemplateService {
     window;
     content: any;
     templates: Array<Template>;
+    sce;
 
-    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q, $window) {
+    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q, $window, $sce) {
         this.toaster = toaster;
         this.translate = $translate;
         this.uibModal = $uibModal;
         this.q = $q;
         this.window = $window;
         this.templateResource = TemplateResource.resource;
+        this.sce = $sce;
     }
 
     openEmailTemplateModal(template: Template) {
@@ -134,7 +136,7 @@ class TemplateService {
         this.templateResource.generatePDF({ templateId: templateId }, offer).$promise.then(function (result) {
             let file = new Blob([result], { type: "application/pdf" });
             let fileURL = URL.createObjectURL(file);
-
+            self.window.open(self.sce.trustAsResourceUrl(fileURL), "_blank");
             self.window.open(fileURL);
             defer.resolve(result);
         }, function (error: any) {

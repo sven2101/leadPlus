@@ -4,8 +4,11 @@
 			<div class="ibox float-e-margins">
 				<a class="collapse-link" data-toggle="collapse" data-target="#smtpForm">
 					<div class="ibox-title">
-						<h5>{{ 'SETTING_EMAIL_MANAGEMENT' | translate }}</h5>
+						<h5>
+							{{ 'SETTING_EMAIL_MANAGEMENT' | translate }}
+						</h5>
 						<div class="ibox-tools">
+							<i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'asdfasdf' | translate }}"></i>
 							<i class="fa fa-chevron-up"></i>
 						</div>
 					</div>
@@ -15,19 +18,22 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_SENDER' | translate }}<span style="color:red">*</span></label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.sender" required></div>
+								<input type="text" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.sender" required>
+							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_EMAIL' | translate }}<span style="color:red">*</span></label>
 							<div class="col-sm-10">
-								<input type="email" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.email" required></div>
+								<input type="email" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.email" required>
+							</div>
 						</div>
 						<div class="hr-line-dashed"></div>
 
 						<div class="form-group">
 							<label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_SERVER' | translate }}<span style="color:red">*</span></label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.host" required></div>
+								<input type="text" class="form-control" ng-model="settingCtrl.smtpService.currentSmtp.host" required>
+							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">{{ 'SETTING_EMAIL_MANAGEMENT_USERNAME' | translate }}<span style="color:red">*</span></label>
@@ -81,6 +87,7 @@
 					<div class="ibox-title">
 						<h5>{{ 'SETTING_EMAIL_TEMPLATES_MANAGEMENT' | translate }}</h5>
 						<div class="ibox-tools">
+							<i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'asdfasdf' | translate }}"></i>
 							<i class="fa fa-chevron-down"></i>
 						</div>
 					</div>
@@ -131,4 +138,8 @@
     }).on('hidden.bs.collapse', function(){
         $(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
     });
+
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip({ placement: 'left'});
+	});
 </script>
