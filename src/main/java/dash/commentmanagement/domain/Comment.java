@@ -70,7 +70,7 @@ public class Comment {
 	@Column(name = "commenttext", length = 5000, nullable = false)
 	private String commentText;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss:SSSS")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss:SSS")
 	@NotNull
 	@Column(name = "timestamp", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)

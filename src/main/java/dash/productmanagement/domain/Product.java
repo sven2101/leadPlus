@@ -77,7 +77,7 @@ public class Product implements Serializable {
 	@Column(name = "productstate", length = 255, nullable = true)
 	private ProductState productState;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss:SSS")
 	@ApiModelProperty(hidden = true)
 	@NotNull
 	@Column(name = "timestamp", nullable = false)
