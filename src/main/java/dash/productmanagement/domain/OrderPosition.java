@@ -32,8 +32,10 @@ import org.hibernate.annotations.Where;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.common.AbstractWorkflow;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel(value = "OrderPosition", description = "OrderPosition")
 @Entity
 @SQLDelete(sql = "UPDATE orderposition SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
@@ -100,6 +102,7 @@ public class OrderPosition {
 		return product;
 	}
 
+	@ApiModelProperty(value = "product", dataType = "dash.productmanagement.domain.Product", required = true)
 	public void setProduct(Product product) {
 		this.product = product;
 	}
@@ -196,8 +199,7 @@ public class OrderPosition {
 
 	@Override
 	public String toString() {
-		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", amount=" + amount + ", price=" + price
-				+ ", discount=" + discount + "]";
+		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", amount=" + amount + ", price=" + price + ", discount=" + discount + "]";
 	}
 
 }
