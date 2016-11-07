@@ -45,6 +45,7 @@ class LeadController extends AbstractWorkflow {
     dtOptions;
     dtColumns;
     dtInstance: any = { DataTable: null };
+    dtInstanceCallback: any;
 
     commentInput: string;
     commentModalInput: string;
@@ -97,6 +98,14 @@ class LeadController extends AbstractWorkflow {
             return self.leadDataTableService.getDetailHTML(data.id);
         }
 
+        this.dtInstanceCallback = function dtInstanceCallback(dtInstance) {
+            self.dtInstance = dtInstance;
+            dtInstance.DataTable.on("page.dt", function () {
+                if (self.loadAllData) {
+                    self.destroyAllScopes();
+                }
+            });
+        };
         let searchLink = "";
         let processId = $routeParams.processId;
         if (!isNullOrUndefined(processId) && processId !== "") {
@@ -116,11 +125,17 @@ class LeadController extends AbstractWorkflow {
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
 
         let deleteRow = $rootScope.$on("deleteRow", (event, data) => {
-            self.leadService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
+            if (self.loadAllData) {
+                self.destroyAllScopes();
+            }
+            self.leadService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.dropCreateScope("compileScope"));
         });
 
         let updateRow = $rootScope.$on("updateRow", (event, data) => {
-            self.leadService.updateRow(data, self.dtInstance, self.scope);
+            if (self.loadAllData) {
+                self.destroyAllScopes();
+            }
+            self.leadService.updateRow(data, self.dtInstance, self.dropCreateScope("compileScope"));
         });
 
         let loadDataToModal = $rootScope.$on("loadDataToModal", (event, data: Process) => {
@@ -194,12 +209,12 @@ class LeadController extends AbstractWorkflow {
     }
 
     inContact(process: Process) {
-        this.leadService.inContact(process, this.dtInstance, this.scope);
+        this.leadService.inContact(process, this.dtInstance, this.dropCreateScope("compileScope"));
     }
 
     save(edit: boolean) {
         if (edit === true) {
-            this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope);
+            this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.dropCreateScope("compileScope"));
         }
         else {
             this.leadService.saveLead(this.dtInstance, this.editWorkflowUnit, this.currentOrderPositions);
@@ -220,17 +235,15 @@ class LeadController extends AbstractWorkflow {
     }
 
     createNextWorkflowUnit(process: Process) {
-        // this.leadService.createOffer(process, this.loadAllData, this.dtInstance, this.scope);
         this.workflowService.startOfferTransformation(process);
     }
 
     pin(process: Process, user: User) {
-
         this.leadService.pin(process, this.dtInstance, this.dropCreateScope("compileScope"), user);
     }
 
     closeOrOpen(process: Process) {
-        this.leadService.closeOrOpenInquiry(process, this.dtInstance, this.scope, this.loadAllData);
+        this.leadService.closeOrOpenInquiry(process, this.dtInstance, this.dropCreateScope("compileScope"), this.loadAllData);
     }
 
     deleteRow(process: Process) {

@@ -45,6 +45,7 @@ class SaleController extends AbstractWorkflow {
     dtOptions;
     dtColumns;
     dtInstance: any = { DataTable: null };
+    dtInstanceCallback: any;
 
     commentInput: string;
     commentModalInput: string;
@@ -102,6 +103,14 @@ class SaleController extends AbstractWorkflow {
             self.processes[data.id] = data;
             return self.saleDataTableService.getDetailHTML(data.id);
         }
+        this.dtInstanceCallback = function dtInstanceCallback(dtInstance) {
+            self.dtInstance = dtInstance;
+            dtInstance.DataTable.on("page.dt", function () {
+                if (self.loadAllData) {
+                    self.destroyAllScopes();
+                }
+            });
+        };
 
         let searchLink = "";
         let processId = $routeParams.processId;
@@ -125,11 +134,17 @@ class SaleController extends AbstractWorkflow {
         this.getAllActiveTemplates();
 
         let deleteRow = $rootScope.$on("deleteRow", (event, data) => {
-            self.saleService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
+            if (self.loadAllData) {
+                self.destroyAllScopes();
+            }
+            self.saleService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.dropCreateScope("compileScope"));
         });
 
         let updateRow = $rootScope.$on("updateRow", (event, data) => {
-            self.saleService.updateRow(data, self.dtInstance, self.scope);
+            if (self.loadAllData) {
+                self.destroyAllScopes();
+            }
+            self.saleService.updateRow(data, self.dtInstance, self.dropCreateScope("compileScope"));
         });
 
         let loadDataToModal = $rootScope.$on("loadDataToModal", (event, data) => {
@@ -204,7 +219,7 @@ class SaleController extends AbstractWorkflow {
     }
 
     save(edit: boolean) {
-        this.saleService.save(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope);
+        this.saleService.save(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, dropCreateScope);
     }
 
     clearNewSale() {
@@ -230,11 +245,11 @@ class SaleController extends AbstractWorkflow {
     }
 
     pin(process: Process, user: User) {
-        this.saleService.pin(process, this.dtInstance, this.scope, user);
+        this.saleService.pin(process, this.dtInstance, this.dropCreateScope("compileScope"), user);
     }
 
     rollBack(process: Process): void {
-        this.saleService.rollBack(process, this.dtInstance, this.scope);
+        this.saleService.rollBack(process, this.dtInstance, this.dropCreateScope("compileScope"));
     }
 
     getAllActiveTemplates() {

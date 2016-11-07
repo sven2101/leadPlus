@@ -15,16 +15,16 @@
 "use strict";
 
 angular.module(moduleApp)
-    .directive("childrow", function () {
+    .directive("childrow", function() {
         let directive: { restrict: string, templateUrl: any, transclude: boolean, link: any };
         directive = { restrict: null, templateUrl: null, transclude: null, link: null };
         directive.restrict = "A";
-        directive.templateUrl = function (elem, attr) {
+        directive.templateUrl = function(elem, attr) {
             return "components/Common/view/Workflow.ChildRow.html";
         };
         directive.transclude = true;
-        directive.link = function (scope, element, attrs) {
-            scope.getTimestamp = function (timestamp, pattern) {
+        directive.link = function(scope, element, attrs) {
+            scope.getTimestamp = function(timestamp, pattern) {
                 return toLocalDate(timestamp, pattern);
             };
         };

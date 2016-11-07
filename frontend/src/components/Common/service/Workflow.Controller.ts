@@ -162,6 +162,11 @@ class WorkflowController extends AbstractWorkflow {
 
     close(result: boolean) {
         this.uibModalInstance.close(result);
+        if (!result && (this.editProcess.status === Status.OPEN || this.editProcess.status === Status.INCONTACT)) {
+            this.editProcess.offer = undefined;
+        } else if (!result && (this.editProcess.status === Status.OFFER || this.editProcess.status === Status.FOLLOWUP)) {
+            this.editProcess.sale = undefined;
+        }
     }
 
     calculateProfit() {
