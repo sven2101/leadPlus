@@ -76,7 +76,7 @@ class OfferController extends AbstractWorkflow {
     saleEditForm: any;
 
     constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService, FileService, $routeParams, $sce) {
-        super(WorkflowService, $sce, FileService);
+        super(WorkflowService, $sce, FileService, $scope);
         this.workflowService = WorkflowService;
         this.offerDataTableService = OfferDataTableService;
         this.offerService = OfferService;
@@ -92,7 +92,7 @@ class OfferController extends AbstractWorkflow {
         function createdRow(row, data: Process, dataIndex) {
             self.offerService.setRow(data.id, row);
             self.offerDataTableService.configRow(row, data);
-            self.compile(angular.element(row).contents())(self.scope);
+            self.compile(angular.element(row).contents())(self.getScopeByKey("actionButtonScope" + data.id));
         }
         function addActionsButtons(data: Process, type, full, meta) {
             return self.offerDataTableService.getActionButtonsHTML(data, self.actionButtonConfig);
@@ -106,15 +106,11 @@ class OfferController extends AbstractWorkflow {
             return self.offerDataTableService.getDetailHTML(data.id);
         }
         this.dtInstanceCallback = function dtInstanceCallback(dtInstance) {
-            console.log("Set DT-Instace");
             self.dtInstance = dtInstance;
             dtInstance.DataTable.on("page.dt", function () {
-                console.log("Change page");
-                self.actionButtonConfig = {};
-                self.processes = {};
-                console.log(size(self.actionButtonConfig));
-                console.log(size(self.processes));
-                console.log(self.dtInstance);
+                if (self.loadAllData) {
+                    self.destroyAllScopes();
+                }
             });
         };
 
@@ -139,11 +135,17 @@ class OfferController extends AbstractWorkflow {
         this.getAllActiveTemplates();
 
         let deleteRow = $rootScope.$on("deleteRow", (event, data) => {
-            self.offerService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.scope);
+            if (self.loadAllData) {
+                self.destroyAllScopes();
+            }
+            self.offerService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.dropCreateScope("compileScope"));
         });
 
         let updateRow = $rootScope.$on("updateRow", (event, data) => {
-            self.offerService.updateRow(data, self.dtInstance, self.scope);
+            if (self.loadAllData) {
+                self.destroyAllScopes();
+            }
+            self.offerService.updateRow(data, self.dtInstance, self.dropCreateScope("compileScope"));
         });
 
         let loadDataToModal = $rootScope.$on("loadDataToModal", (event, data) => {
@@ -154,6 +156,7 @@ class OfferController extends AbstractWorkflow {
             deleteRow();
             updateRow();
             loadDataToModal();
+            self.destroyAllScopes();
         });
 
     }
@@ -164,6 +167,7 @@ class OfferController extends AbstractWorkflow {
     }
 
     changeDataInput() {
+        this.destroyAllScopes();
         this.workflowService.changeDataInput(this.loadAllData, this.dtOptions, allDataOfferRoute, openDataOfferRoute);
     }
 
@@ -172,8 +176,7 @@ class OfferController extends AbstractWorkflow {
     }
 
     appendChildRow(process: Process) {
-        let childScope = this.scope.$new(true);
-        this.workflowService.appendChildRow(childScope, process, process.offer, this.dtInstance, this, "offer");
+        this.workflowService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process.offer, this.dtInstance, this, "offer");
     }
 
     loadDataToModal(process: Process) {
@@ -213,7 +216,7 @@ class OfferController extends AbstractWorkflow {
     }
 
     save(edit: boolean) {
-        this.offerService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.scope);
+        this.offerService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.dropCreateScope("compileScope"));
     }
 
     clearNewOffer() {
@@ -229,12 +232,11 @@ class OfferController extends AbstractWorkflow {
     }
 
     createNextWorkflowUnit(process: Process) {
-        // this.offerService.createSale(process, this.loadAllData, this.dtInstance, this.scope);
         this.workflowService.startSaleTransformation(process);
     }
 
     closeOrOpen(process: Process) {
-        this.offerService.closeOrOpenOffer(process, this.dtInstance, this.scope, this.loadAllData);
+        this.offerService.closeOrOpenOffer(process, this.dtInstance, this.dropCreateScope("compileScope"), this.loadAllData);
     }
 
     deleteRow(process: Process) {
@@ -248,11 +250,11 @@ class OfferController extends AbstractWorkflow {
     }
 
     pin(process: Process, user: User) {
-        this.offerService.pin(process, this.dtInstance, this.scope, user);
+        this.offerService.pin(process, this.dtInstance, this.dropCreateScope("compileScope"), user);
     }
 
     rollBack(process: Process): void {
-        this.offerService.rollBack(process, this.dtInstance, this.scope);
+        this.offerService.rollBack(process, this.dtInstance, this.dropCreateScope("compileScope"));
     }
 
     getAllActiveTemplates() {

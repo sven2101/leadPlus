@@ -118,8 +118,7 @@
                            </span>
 						<small ng-if="dashboardCtrl.workflowModalProcess.comments.length>0" class="pull-right text-muted">
                             {{ 'COMMON_COMMENTS_LAST' | translate }}:
-                            {{dashboardCtrl.workflowModalProcess.comments[dashboardCtrl.workflowModalProcess.comments.length-1].timestamp|
-                            date:'dd.MM.yyyy HH:mm'}}
+							{{dashboardCtrl.toLocalDate(dashboardCtrl.workflowModalProcess.comments[dashboardCtrl.workflowModalProcess.comments.length-1].timestamp)}}
                         </small>
 					</div>
 
@@ -137,7 +136,7 @@
 													<div class="message">
 														<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
 														<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
-														<span class="message-date"> {{comment.timestamp|  date:'dd.MM.yyyy HH:mm'}} </span>
+														<span class="message-date"> {{dashboardCtrl.toLocalDate(comment.timestamp)}} </span>
 														<span class="message-content">
                                                 {{comment.commentText}}
                                             </span>
@@ -148,7 +147,7 @@
 													<div class="message">
 														<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
 														<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
-														<span class="message-date"> {{comment.timestamp |  date:'dd.MM.yyyy HH:mm'}} </span>
+														<span class="message-date"> {{dashboardCtrl.toLocalDate(comment.timestamp )}} </span>
 														<span class="message-content">
                                                 {{comment.commentText}}
                                             </span>

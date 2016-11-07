@@ -78,7 +78,7 @@ class WorkflowController extends AbstractWorkflow {
 
     constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService,
         WorkflowService, LeadService, OfferService, SaleService, DashboardService, FileService, $rootScope, $sce, $window, $scope) {
-        super(WorkflowService, $sce, FileService);
+        super(WorkflowService, $sce, FileService, $scope);
         let self = this;
         this.rootScope = $rootScope;
         this.scope = $scope;
@@ -162,6 +162,11 @@ class WorkflowController extends AbstractWorkflow {
 
     close(result: boolean) {
         this.uibModalInstance.close(result);
+        if (!result && (this.editProcess.status === Status.OPEN || this.editProcess.status === Status.INCONTACT)) {
+            this.editProcess.offer = undefined;
+        } else if (!result && (this.editProcess.status === Status.OFFER || this.editProcess.status === Status.FOLLOWUP)) {
+            this.editProcess.sale = undefined;
+        }
     }
 
     calculateProfit() {

@@ -18,14 +18,17 @@ class AbstractWorkflow {
     currentWizard: number = 1;
     sce;
     actionButtonConfig: { [key: number]: any } = {};
+    scopes: { [key: string]: any } = {};
+    scope;
 
     customerSelected: boolean = false;
     selectedCustomer: Customer;
 
-    constructor(WorkflowService, $sce, FileService) {
+    constructor(WorkflowService, $sce, FileService, $scope) {
         this.workflowService = WorkflowService;
         this.fileService = FileService;
         this.sce = $sce;
+        this.scope = $scope;
     }
 
     getAsHtml(html: string) {
@@ -66,4 +69,36 @@ class AbstractWorkflow {
         }
         this.customerSelected = this.workflowService.selectCustomer(workflow, customerId);
     }
+
+    destroyAllScopes(): void {
+        for (let key in this.scopes) {
+            if (this.scopes.hasOwnProperty(key)) {
+                this.scopes[key].$destroy();
+            }
+        }
+        this.scopes = {};
+    }
+
+    getScopeByKey(key: string, isolated: boolean = false): any {
+        let childScope = this.scopes[key];
+        if (isNullOrUndefined(childScope) || childScope.$$destroyed) {
+            childScope = this.scope.$new(isolated);
+            this.scopes[key] = childScope;
+        }
+        return childScope;
+    }
+
+    dropCreateScope(key: string, isolated: boolean = false): any {
+        let childScope = this.scopes[key];
+        if (isNullOrUndefined(childScope) || childScope.$$destroyed) {
+            childScope = this.scope.$new(isolated);
+            this.scopes[key] = childScope;
+        } else {
+            this.scopes[key].$destroy();
+            childScope = this.scope.$new(isolated);
+            this.scopes[key] = childScope;
+        }
+        return childScope;
+    }
+
 }

@@ -459,6 +459,7 @@ class WorkflowService {
                 .addClass("glyphicon-plus-sign");
             row.child.hide();
             tr.removeClass("shown");
+            childScope.$destroy();
         } else {
             icon.removeClass("glyphicon-plus-sign")
                 .addClass("glyphicon-minus-sign");
