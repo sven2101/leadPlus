@@ -24,6 +24,9 @@ angular.module(moduleApp)
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {
+            scope.getTimestamp = function (timestamp, pattern) {
+                return toLocalDate(timestamp, pattern);
+            };
         };
         return directive;
     });

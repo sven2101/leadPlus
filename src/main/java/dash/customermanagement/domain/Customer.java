@@ -96,7 +96,7 @@ public class Customer {
 	@Column(name = "realcustomer", nullable = false)
 	private boolean realCustomer;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss:SSS")
 	@ApiModelProperty(hidden = true)
 	@NotNull
 	@Column(name = "timestamp", nullable = false)
@@ -304,8 +304,9 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname + ", lastname=" + lastname + ", company="
-				+ company + ", email=" + email + ", phone=" + phone + ", address=" + address + ", deactivated=" + deactivated + ", realCustomer=" + realCustomer
+		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname
+				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone
+				+ ", address=" + address + ", deactivated=" + deactivated + ", realCustomer=" + realCustomer
 				+ ", timestamp=" + timestamp + ", customerNumber=" + customerNumber + "]";
 	}
 

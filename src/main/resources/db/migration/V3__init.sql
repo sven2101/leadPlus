@@ -316,7 +316,7 @@ CREATE TABLE offer
   "timestamp" timestamp without time zone,
   customer_fk bigint,
   vendor_fk bigint,
-  deliverydate timestamp with time zone,
+  deliverydate timestamp without time zone,
   offerprice double precision NOT NULL,
   CONSTRAINT offer_pkey PRIMARY KEY (id),
   CONSTRAINT fk_6mogpqxa4c87k261g07yentij FOREIGN KEY (vendor_fk)
@@ -410,7 +410,7 @@ CREATE TABLE comment
   id bigint NOT NULL DEFAULT nextval('comment_id_seq'::regclass),
   commenttext character varying(5000),
   deleted boolean NOT NULL,
-  "timestamp" timestamp with time zone,
+  "timestamp" timestamp without time zone,
   creator_fk bigint NOT NULL,
   process_fk bigint NOT NULL,
   CONSTRAINT comment_pkey PRIMARY KEY (id),

@@ -139,9 +139,9 @@ public class CustomerService implements ICustomerService {
 	}
 
 	@Override
-	public List<Customer> getByEmail(String email) {
+	public List<Customer> getByEmailIgnoreCase(String email) {
 
-		return customerRepository.getByEmail(email);
+		return customerRepository.getByEmailIgnoreCase(email);
 	}
 
 	@Override

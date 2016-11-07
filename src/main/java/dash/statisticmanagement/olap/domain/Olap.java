@@ -22,7 +22,7 @@ import dash.statisticmanagement.user.business.UserStatistic;
 
 @Entity
 @Table(name = "olap")
-public class Olap implements Serializable{
+public class Olap implements Serializable {
 
 	private static final long serialVersionUID = -3360986303697232612L;
 
@@ -36,7 +36,7 @@ public class Olap implements Serializable{
 	@Column(name = "daterange", nullable = false)
 	private DateRange dateRange;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss:SSS")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar timestamp;
 
@@ -56,7 +56,7 @@ public class Olap implements Serializable{
 	@Column(name = "offers", nullable = false)
 	private Double[] offers;
 
-	@NotNull	
+	@NotNull
 	@Column(name = "sales", nullable = false)
 	private Double[] sales;
 

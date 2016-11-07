@@ -67,7 +67,7 @@ public abstract class AbstractWorkflow implements Request {
 	@Where(clause = "deleted <> '1'")
 	private List<OrderPosition> orderPositions;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss:SSS")
 	@ApiModelProperty(hidden = true)
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "timestamp", nullable = true)

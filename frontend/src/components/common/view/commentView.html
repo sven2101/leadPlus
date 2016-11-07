@@ -3,8 +3,7 @@
 		<div class="ibox-title text-left">
 			{{ 'COMMON_COMMENTS' | translate }}
 			<small ng-if="process.comments.length>0" class="pull-right text-muted">{{ 'COMMON_COMMENTS_LAST' | translate }}:
-                {{process.comments[process.comments.length-1].timestamp|
-                date:'dd.MM.yyyy HH:mm'}}
+				{{getTimestamp(process.comments[process.comments.length-1].timestamp)}}
             </small>
 		</div>
 		<div class="ibox-content text-left">
@@ -17,7 +16,7 @@
 								<div class="message">
 									<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
 									<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
-									<span class="message-date"> {{comment.timestamp|  date:'dd.MM.yyyy HH:mm'}} </span>
+									<span class="message-date"> {{getTimestamp(comment.timestamp)}} </span>
 									<span class="message-content">
                                                 {{comment.commentText}}
                                             </span>
@@ -28,7 +27,7 @@
 								<div class="message">
 									<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
 									<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
-									<span class="message-date"> {{comment.timestamp |  date:'dd.MM.yyyy HH:mm'}} </span>
+									<span class="message-date"> {{getTimestamp(comment.timestamp)}} </span>
 									<span class="message-content">
                                                 {{comment.commentText}}
                                             </span>

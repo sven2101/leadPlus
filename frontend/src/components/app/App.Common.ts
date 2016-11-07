@@ -32,7 +32,7 @@ let isNullOrUndefined = function (object: any): boolean {
 let hasLicense = function (userLicense: any, routeLicense: String): boolean {
     if (isNullOrUndefined(userLicense) || isNullOrUndefined(routeLicense)) {
         return false;
-    } else if (userLicense.package.indexOf(routeLicense) !== -1 && moment(userLicense.term, "DD.MM.YYYY").isAfter(moment(newTimestamp("DD.MM.YYYY"), "DD.MM.YYYY"))) {
+    } else if (userLicense.package.indexOf(routeLicense) !== -1 && moment(userLicense.term, "DD.MM.YYYY").isAfter(moment(newTimestamp(), "DD.MM.YYYY"))) {
         return true;
     }
     return false;
@@ -61,7 +61,9 @@ let shallowCopy = function (oldObject: Object, newObject: Object) {
     }
 };
 
-let newTimestamp = function (pattern: string = "DD.MM.YYYY HH:mm:ss"): string {
+
+let newTimestamp = function (): string {
+    let pattern: string = "DD.MM.YYYY HH:mm:ss:SSS";
     let timezone = jstz.determine().name();
     let date: any = moment.utc();
     // return date.tz(timezone).format(pattern);

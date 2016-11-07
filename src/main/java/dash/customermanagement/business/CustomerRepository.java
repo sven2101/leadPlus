@@ -26,7 +26,7 @@ import dash.customermanagement.domain.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-	public List<Customer> getByEmail(String email);
+	public List<Customer> getByEmailIgnoreCase(String email);
 
 	public Page<Customer> findByRealCustomer(Boolean realCustomer, Pageable pageable);
 
