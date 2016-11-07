@@ -73,10 +73,11 @@ class OfferDataTableService {
     }
 
     configRow(row: any, data: Process) {
-        let currentDate = moment(moment().utc + "", "DD.MM.YYYY");
+        let currentDate = moment(newTimestamp("DD.MM.YYYY"));
         let offerDate = moment(data.offer.timestamp, "DD.MM.YYYY");
-        if ((currentDate["businessDiff"](offerDate, "days") > 3 && data.status === "OFFER")
-            || (currentDate["businessDiff"](offerDate, "days") > 5 && data.status === "FOLLOWUP")) {
+
+        if ((currentDate["businessDiff"](offerDate, "days") < -3 && data.status === "OFFER")
+            || (currentDate["businessDiff"](offerDate, "days") < -5 && data.status === "FOLLOWUP")) {
             $(row).addClass("important");
         }
     }
