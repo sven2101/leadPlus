@@ -96,6 +96,7 @@ class WorkflowService {
         this.commentResource.save({ id: process.id }, comment).$promise.then(function (result: Commentary) {
             let timestamp = toLocalDate(comment.timestamp, "DD.MM.YYYY HH:mm:ss");
             comment.timestamp = timestamp;
+            console.log(comment.timestamp);
             result.creator = self.rootScope.user;
             process.comments.push(result);
 

@@ -11,8 +11,7 @@
                 <div class="text-left">
                     {{ 'COMMON_COMMENTS' | translate }}
                     <small class="pull-right text-muted">{{ 'COMMON_COMMENTS_LAST' | translate }}:
-                        {{process.comments[process.comments.length-1].timestamp|
-                        date:'dd.MM.yyyy HH:mm'}}
+                    {{getTimestamp(process.comments[process.comments.length-1].timestamp)}}
                     </small>
                 </div>
                 <div class=" text-left">
@@ -21,22 +20,22 @@
                             <div class="chat-discussion" ng-model="process.comments">
                                 <div ng-repeat="comment in process.comments | orderBy: '-timestamp'">
                                     <div ng-if="$index%2==0" class="chat-message left">
-                                           <img class="message-avatar" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+                                        <img class="message-avatar" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         <div class="message">
                                             <a ng-if="(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-                                    <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
-                                            <span class="message-date"> {{comment.timestamp|  date:'dd.MM.yyyy HH:mm'}} </span>
+                                            <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+                                            <span class="message-date"> {{getTimestamp(comment.timestamp)}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}
                                             </span>
                                         </div>
                                     </div>
                                     <div ng-if="$index%2!=0" class="chat-message right">
-                                          <img class="message-avatar" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+                                        <img class="message-avatar" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         <div class="message">
                                             <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-                                    <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
-                                            <span class="message-date"> {{comment.timestamp |  date:'dd.MM.yyyy HH:mm'}} </span>
+                                            <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+                                            <span class="message-date"> {{getTimestamp(comment.timestamp)}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}
                                             </span>

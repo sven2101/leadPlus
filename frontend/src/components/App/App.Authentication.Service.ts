@@ -59,6 +59,7 @@ class AuthService {
         if (credentials) {
             let salt: string = credentials.email;
             let hashedPassword = hashPasswordPbkdf2(credentials.password, salt);
+            console.log(hashedPassword);
             let authorization = btoa(credentials.email + ":" + hashedPassword);
             let header = credentials ? { Authorization: "Basic " + authorization } : {};
             this.http.defaults.headers.common["Authorization"] = "Basic " + authorization;

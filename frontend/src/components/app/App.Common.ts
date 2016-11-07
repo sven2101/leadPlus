@@ -61,7 +61,7 @@ let shallowCopy = function (oldObject: Object, newObject: Object) {
     }
 };
 
-let newTimestamp = function (pattern: string = "DD.MM.YYYY HH:mm:ss") {
+let newTimestamp = function (pattern: string = "DD.MM.YYYY HH:mm:ss:SSSS") {
     let timezone = jstz.determine().name();
     let date: any = moment.utc();
     // return date.tz(timezone).format(pattern);

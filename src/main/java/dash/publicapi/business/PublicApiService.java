@@ -100,7 +100,7 @@ public class PublicApiService implements IPublicApiService {
 			throw new SaveFailedException(INVALID_CUSTOMER_EMAIL);
 		}
 
-		List<Customer> tempCustomer = customerService.getByEmail(lead.getCustomer().getEmail());
+		List<Customer> tempCustomer = customerService.getByEmailIgnoreCase(lead.getCustomer().getEmail());
 		if (tempCustomer == null || tempCustomer.size() == 0) {
 			lead.getCustomer().setId(null);
 		} else {
