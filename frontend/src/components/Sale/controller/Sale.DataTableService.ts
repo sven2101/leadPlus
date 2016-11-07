@@ -16,7 +16,7 @@
 
 const SaleDataTableServiceId: string = "SaleDataTableService";
 const allDataSaleRoute: string = "/api/rest/processes/sales";
-const openDataSaleRoute: string = "/api/rest/processes/workflow/SALE/state/SALE";
+const openDataSaleRoute: string = "/api/rest/processes/sales/latest/50";
 
 class SaleDataTableService {
 
@@ -67,6 +67,8 @@ class SaleDataTableService {
             .withButtons(this.workflowService.getButtons(this.translate("SALE_SALES"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 12]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
+            .withOption("deferRender", true)
+            .withOption("lengthMenu", [10, 20, 50])
             .withOption("order", [4, "desc"])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowService.getLanguageSource(this.rootScope.language));
@@ -134,7 +136,7 @@ class SaleDataTableService {
                 this.translate("COMMON_PRODUCT_SALE_INVOICE_NUMBER")).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").notSortable().renderWith(addActionsButtons),
+                "text-center").withOption("width", "50px").notSortable().renderWith(addActionsButtons),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {

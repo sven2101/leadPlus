@@ -110,6 +110,11 @@ class SaleController extends AbstractWorkflow {
                     self.destroyAllScopes();
                 }
             });
+            dtInstance.DataTable.on("length.dt", function () {
+                if (self.loadAllData) {
+                    self.destroyAllScopes();
+                }
+            });
         };
 
         let searchLink = "";

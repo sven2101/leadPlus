@@ -406,7 +406,7 @@ class WorkflowService {
     changeDataInput(loadAllData: boolean, dtOptions: any, allDataRoute: string, latestDataRoute: string) {
         let searchDelay: number = 0;
         if (loadAllData === true) {
-            searchDelay = 500;
+            searchDelay = 600;
         }
         dtOptions.withOption("serverSide", loadAllData)
             .withOption("ajax", this.getData(loadAllData, allDataRoute, latestDataRoute))

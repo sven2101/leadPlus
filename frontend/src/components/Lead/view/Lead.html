@@ -2,6 +2,10 @@
 	.important {
 		background: #FFEBEB;
 	}
+	
+	#ngdatatable tr td {
+		height: 62px;
+	}
 </style>
 <meta charset="utf-8">
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -29,7 +33,7 @@
 					<h5>{{ 'LEAD_MANAGE_LEADS' | translate }}</h5>
 				</div>
 				<div class="ibox-content">
-					<button type="button" class="btn btn-success" ng-click="leadCtrl.clearNewLead()" data-backdrop="static"data-toggle="modal"
+					<button type="button" class="btn btn-success" ng-click="leadCtrl.clearNewLead()" data-backdrop="static" data-toggle="modal"
 						data-target="#editModal">
                         <i class="fa fa-plus"></i>&nbsp;{{ 'LEAD_ADD_LEAD' | translate }}
                     </button>

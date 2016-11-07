@@ -67,6 +67,8 @@ class OfferDataTableService {
             .withButtons(this.workflowService.getButtons(this.translate("OFFER_OFFERS"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
+            .withOption("deferRender", true)
+            .withOption("lengthMenu", [10, 20, 50])
             .withOption("order", [4, "desc"])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowService.getLanguageSource(this.rootScope.language));
@@ -158,7 +160,7 @@ class OfferDataTableService {
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").notSortable().renderWith(addActionsButtons),
+                "text-center").withOption("width", "180px").notSortable().renderWith(addActionsButtons),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {

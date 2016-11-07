@@ -105,6 +105,11 @@ class LeadController extends AbstractWorkflow {
                     self.destroyAllScopes();
                 }
             });
+            dtInstance.DataTable.on("length.dt", function () {
+                if (self.loadAllData) {
+                    self.destroyAllScopes();
+                }
+            });
         };
         let searchLink = "";
         let processId = $routeParams.processId;
