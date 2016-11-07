@@ -35,8 +35,10 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel(value = "Customer", description = "Customer")
 @Entity
 @SQLDelete(sql = "UPDATE customer SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
@@ -132,6 +134,7 @@ public class Customer {
 		this.title = title;
 	}
 
+	@ApiModelProperty(value = "firstname", dataType = "java.lang.String", required = true)
 	public String getFirstname() {
 		return firstname;
 	}
@@ -148,6 +151,7 @@ public class Customer {
 		this.company = company;
 	}
 
+	@ApiModelProperty(value = "firstname", dataType = "java.lang.String", required = true)
 	public String getLastname() {
 		return lastname;
 	}
@@ -299,9 +303,8 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname
-				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone
-				+ ", address=" + address + ", deactivated=" + deactivated + ", realCustomer=" + realCustomer
+		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname + ", lastname=" + lastname + ", company="
+				+ company + ", email=" + email + ", phone=" + phone + ", address=" + address + ", deactivated=" + deactivated + ", realCustomer=" + realCustomer
 				+ ", timestamp=" + timestamp + ", customerNumber=" + customerNumber + "]";
 	}
 
