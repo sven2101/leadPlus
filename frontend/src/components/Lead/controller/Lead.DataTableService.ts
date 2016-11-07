@@ -75,9 +75,10 @@ class LeadDataTableService {
     }
 
     configRow(row: any, data: Process) {
-        let currentDate = moment(newTimestamp("DD.MM.YYYY"));
+        let currentDate = moment(newTimestamp(), "DD.MM.YYYY");
         let leadDate = moment(data.lead.timestamp, "DD.MM.YYYY");
-        if (currentDate["businessDiff"](leadDate, "days") < -3
+
+        if (currentDate["businessDiff"](leadDate, "days") > 3
             && data.status === "OPEN") {
             $(row).addClass("important");
         }

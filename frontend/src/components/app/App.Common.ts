@@ -61,14 +61,15 @@ let shallowCopy = function (oldObject: Object, newObject: Object) {
     }
 };
 
-let newTimestamp = function (pattern: string = "DD.MM.YYYY HH:mm:ss:SSSS") {
+
+let newTimestamp = function (pattern: string = "DD.MM.YYYY HH:mm:ss:SSSS"): string {
     let timezone = jstz.determine().name();
     let date: any = moment.utc();
     // return date.tz(timezone).format(pattern);
     return date.format(pattern);
 };
 
-let toLocalDate = function (date: any, pattern: string = "DD.MM.YYYY HH:mm:ss") {
+let toLocalDate = function (date: any, pattern: string = "DD.MM.YYYY HH:mm:ss"): string {
     let timezone = jstz.determine().name();
     let currentDateUtc: any = moment.utc(date, pattern);
     let currentDateLocal = currentDateUtc.tz(timezone);
