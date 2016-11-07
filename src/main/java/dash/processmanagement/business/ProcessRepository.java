@@ -35,26 +35,30 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 	Page<Process> findByLeadIsNotNull(Pageable pageable);
 
 	Page<Process> findByLeadCustomerFirstnameContainingOrLeadCustomerLastnameContainingOrLeadCustomerEmailContainingOrLeadCustomerCompanyContainingOrLeadCustomerPhoneContainingOrLeadDeliveryAddressContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
-			String firstname, String lastname, String email, String company, String phone, String deliveryAddress, String message, String status,
-			Pageable pageable);
+			String firstname, String lastname, String email, String company, String phone, String deliveryAddress,
+			String message, String status, Pageable pageable);
 
 	List<Process> findByStatusAndOfferIsNotNull(Status status);
 
 	Page<Process> findByOfferIsNotNull(Pageable pageable);
 
 	Page<Process> findByOfferCustomerFirstnameContainingOrOfferCustomerLastnameContainingOrOfferCustomerEmailContainingOrOfferCustomerCompanyContainingOrOfferCustomerPhoneContainingOrOfferDeliveryAddressContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(
-			String firstname, String lastname, String email, String company, String phone, String deliveryAddress, String status, Pageable pageable);
+			String firstname, String lastname, String email, String company, String phone, String deliveryAddress,
+			String status, Pageable pageable);
 
 	List<Process> findByStatusAndSaleIsNotNull(Status status);
 
 	Page<Process> findBySaleIsNotNull(Pageable pageable);
 
 	Page<Process> findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
-			String firstname, String lastname, String email, String company, String phone, String status, Pageable pageable);
+			String firstname, String lastname, String email, String company, String phone, String status,
+			Pageable pageable);
 
 	List<Process> findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
 
 	List<Process> findTop10BySaleIsNotNullOrderBySaleTimestampDesc();
+
+	List<Process> findTop50BySaleIsNotNullOrderBySaleTimestampDesc();
 
 	List<Process> findAll(Specification<Process> spec);
 }

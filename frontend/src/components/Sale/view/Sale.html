@@ -1,3 +1,8 @@
+<style>
+	#ngdatatable tr td {
+		height: 62px;
+	}
+</style>
 <meta charset="utf-8">
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-12">
@@ -36,7 +41,7 @@
                     </br>
                     </br>
                     <div class="table-responsive text-center">
-                        <table datatable="" dt-options="saleCtrl.dtOptions" dt-columns="saleCtrl.dtColumns" dt-instance="saleCtrl.dtInstanceCallback" class="table table-bordered table-hover table-condensed text-center"
+                        <table id="ngdatatable" datatable="" dt-options="saleCtrl.dtOptions" dt-columns="saleCtrl.dtColumns" dt-instance="saleCtrl.dtInstanceCallback" class="table table-bordered table-hover table-condensed text-center"
                             style="width:100%;"></table>
                     </div>
                 </div>
