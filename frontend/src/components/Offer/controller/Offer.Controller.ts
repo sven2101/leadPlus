@@ -47,6 +47,7 @@ class OfferController extends AbstractWorkflow {
     dtOptions;
     dtColumns;
     dtInstance: any = { DataTable: null };
+    dtInstanceCallback;
 
     commentInput: string;
     commentModalInput: string;
@@ -104,6 +105,19 @@ class OfferController extends AbstractWorkflow {
             self.processes[data.id] = data;
             return self.offerDataTableService.getDetailHTML(data.id);
         }
+        this.dtInstanceCallback = function dtInstanceCallback(dtInstance) {
+            console.log("Set DT-Instace");
+            self.dtInstance = dtInstance;
+            dtInstance.DataTable.on("page.dt", function () {
+                console.log("Change page");
+                self.actionButtonConfig = {};
+                self.processes = {};
+                self.dtInstance.DataTable.clear();
+                console.log(size(self.actionButtonConfig));
+                console.log(size(self.processes));
+                console.log(self.dtInstance);
+            });
+        };
 
         let searchLink = "";
         let processId = $routeParams.processId;
@@ -143,7 +157,6 @@ class OfferController extends AbstractWorkflow {
             loadDataToModal();
             self.destroyAllScopes();
         });
-
 
     }
 
