@@ -9,6 +9,12 @@ INSERT INTO "user"(email, enabled, firstname, language, lastname, password, role
 INSERT INTO "user"(email, enabled, firstname, language, lastname, password, role, username)
     VALUES ('test@eviarc.com', true, 'User', 'DE', 'User', '$2a$10$hrTS64GHgGshns/VavWbQOf81MfoWbOND/qagVIL1xVVrLo2qxoNq', 'USER', 'test@eviarc.com')
     ON CONFLICT DO NOTHING;
+	
+	-- VXRH1A7ZCURBafS9YZv6tXbKzMyaF4/I5oCELeXsEAc=
+	
+	INSERT INTO "user"(email, enabled, firstname, language, lastname, password, role, username)
+    VALUES ('api@eviarc', true, 'api', 'DE', 'user', '$2a$10$2giR01Zq6.stHfGGg.uocuUgvgP2xzzLmoFMkwx0M1RtL74Pnqi3y', 'API', 'api@eviarc')
+    ON CONFLICT DO NOTHING;
     
 /*
 -- Data Setup
