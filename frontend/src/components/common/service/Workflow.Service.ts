@@ -93,7 +93,7 @@ class WorkflowService {
             timestamp: newTimestamp()
         };
 
-        this.commentResource.save({ id: process.id }, comment).$promise.then(function(result: Commentary) {
+        this.commentResource.save({ id: process.id }, comment).$promise.then(function (result: Commentary) {
             let timestamp = toLocalDate(comment.timestamp, "DD.MM.YYYY HH:mm:ss");
             comment.timestamp = timestamp;
             console.log(comment.timestamp);
@@ -102,7 +102,7 @@ class WorkflowService {
 
 
             defer.resolve(true);
-        }, function() {
+        }, function () {
             defer.reject(false);
         });
         return defer.promise;
@@ -110,7 +110,7 @@ class WorkflowService {
 
     getCommentsByProcessId(id: number): Array<Commentary> {
         let comments: Array<Commentary> = new Array<Commentary>();
-        this.commentResource.getByProcessId({ id: id }).$promise.then(function(result) {
+        this.commentResource.getByProcessId({ id: id }).$promise.then(function (result) {
             for (let comment of result) {
                 let timestamp = toLocalDate(comment.timestamp);
                 comment.timestamp = timestamp;
@@ -218,15 +218,15 @@ class WorkflowService {
             backdrop: "static",
             size: "lg",
             resolve: {
-                process: function() {
+                process: function () {
                     return process;
-                }, type: function(): string {
+                }, type: function (): string {
                     return "offer";
                 }
             }
-        }).result.then(function(result) {
+        }).result.then(function (result) {
             defer.resolve(result);
-        }, function() {
+        }, function () {
             defer.resolve(false);
         });
         return defer.promise;
@@ -263,15 +263,15 @@ class WorkflowService {
             backdrop: "static",
             size: "lg",
             resolve: {
-                process: function(): Process {
+                process: function (): Process {
                     return process;
-                }, type: function(): string {
+                }, type: function (): string {
                     return "sale";
                 }
             }
-        }).result.then(function(result) {
+        }).result.then(function (result) {
             defer.resolve(result);
-        }, function() {
+        }, function () {
             defer.resolve(false);
         });
         return defer.promise;
@@ -280,20 +280,20 @@ class WorkflowService {
     addLeadToOffer(process: Process): IPromise<Process> {
         let defer = this.$q.defer();
         let self = this;
-        this.processResource.createOffer({ id: process.id }, process.offer).$promise.then(function(resultOffer: Offer) {
+        this.processResource.createOffer({ id: process.id }, process.offer).$promise.then(function (resultOffer: Offer) {
 
-            self.processResource.setStatus({ id: process.id }, Status.OFFER).$promise.then(function(resultProcess: Process) {
+            self.processResource.setStatus({ id: process.id }, Status.OFFER).$promise.then(function (resultProcess: Process) {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
                 self.rootScope.leadsCount -= 1;
                 self.rootScope.offersCount += 1;
                 process.offer = resultOffer;
                 process.status = resultProcess.status;
                 if (resultProcess.processor === null) {
-                    self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function(resultUser: User) {
+                    self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function (resultUser: User) {
                         process.processor = resultUser;
                         defer.resolve(process);
                         self.rootScope.$broadcast("onTodosChange");
-                    }, function(resultUser: User) {
+                    }, function (resultUser: User) {
 
                     });
                 }
@@ -301,10 +301,10 @@ class WorkflowService {
                     self.rootScope.$broadcast("onTodosChange");
                     defer.resolve(process);
                 }
-            }, function() {
+            }, function () {
                 defer.reject(process);
             });
-        }, function() {
+        }, function () {
             defer.reject(process);
         });
         return defer.promise;
@@ -313,23 +313,23 @@ class WorkflowService {
     addOfferToSale(process: Process): IPromise<Process> {
         let defer = this.$q.defer();
         let self = this;
-        this.processResource.createSale({ id: process.id }, process.sale).$promise.then(function(resultSale: Sale) {
-            self.processResource.setStatus({ id: process.id }, Status.SALE).$promise.then(function(resultProcess: Process) {
+        this.processResource.createSale({ id: process.id }, process.sale).$promise.then(function (resultSale: Sale) {
+            self.processResource.setStatus({ id: process.id }, Status.SALE).$promise.then(function (resultProcess: Process) {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
                 self.rootScope.offersCount -= 1;
                 process.sale = resultSale;
                 process.status = resultProcess.status;
-                self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function() {
+                self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function () {
                     process.processor = self.user;
                     self.rootScope.$broadcast("onTodosChange");
                     defer.resolve(process);
                 });
 
 
-            }, function() {
+            }, function () {
                 defer.reject(process);
             });
-        }, function() {
+        }, function () {
             defer.reject(process);
         });
         return defer.promise;
@@ -419,12 +419,12 @@ class WorkflowService {
             return {
                 url: allDataRoute,
                 type: "GET",
-                pages: 5,
+                pages: 2,
                 dataSrc: "data",
-                error: function(xhr, error, thrown) {
+                error: function (xhr, error, thrown) {
                     handleError(xhr);
                 },
-                "beforeSend": function(request) {
+                "beforeSend": function (request) {
                     request.setRequestHeader("Authorization", "Basic " + self.user.authorization);
                     request.setRequestHeader("X-TenantID", self.tenant.tenantKey);
                 }
@@ -432,11 +432,11 @@ class WorkflowService {
         } else {
             return {
                 url: latestDataRoute,
-                error: function(xhr, error, thrown) {
+                error: function (xhr, error, thrown) {
                     handleError(xhr);
                 },
                 type: "GET",
-                "beforeSend": function(request) {
+                "beforeSend": function (request) {
                     request.setRequestHeader("Authorization", "Basic " + self.user.authorization);
                     request.setRequestHeader("X-TenantID", self.tenant.tenantKey);
                 }
@@ -476,7 +476,7 @@ class WorkflowService {
             workflow.customer.id = 0;
             return false;
         }
-        let temp: Customer = findElementById(this.customerService.customers, Number(currentCustomerId)) as Customer;
+        let temp: Customer = findElementById(this.customerService.searchCustomers, Number(currentCustomerId)) as Customer;
         if (isNullOrUndefined(temp)) {
             workflow.customer = new Customer();
             workflow.customer.id = 0;
@@ -501,9 +501,9 @@ class WorkflowService {
         let self = this;
         this.processResource.drop({
             id: process.id
-        }).$promise.then(function(data) {
+        }).$promise.then(function (data) {
             defer.resolve(data);
-        }, function(error) {
+        }, function (error) {
             defer.reject(error);
         });
         return defer.promise;
@@ -516,9 +516,9 @@ class WorkflowService {
             return defer.promise;
         }
         let self = this;
-        this.processResource.update(process).$promise.then(function(data) {
+        this.processResource.update(process).$promise.then(function (data) {
             defer.resolve(data);
-        }, function(error) {
+        }, function (error) {
             defer.reject(error);
             handleError(error);
         });
@@ -533,7 +533,7 @@ class WorkflowService {
             backdrop: "static",
             size: "lg",
             resolve: {
-                process: function() {
+                process: function () {
                     return process;
                 }
             }
@@ -567,7 +567,7 @@ class WorkflowService {
         } else if (process.processor !== null) {
             this.processResource.removeProcessor({
                 id: process.id
-            }).$promise.then(function() {
+            }).$promise.then(function () {
                 process.processor = null;
                 self.rootScope.$broadcast("updateRow", process);
                 self.rootScope.$broadcast("onTodosChange");
@@ -578,7 +578,7 @@ class WorkflowService {
         let self = this;
         this.processResource.setStatus({
             id: process.id
-        }, "INCONTACT").$promise.then(function() {
+        }, "INCONTACT").$promise.then(function () {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_INCONTACT"));
             process.status = "INCONTACT";

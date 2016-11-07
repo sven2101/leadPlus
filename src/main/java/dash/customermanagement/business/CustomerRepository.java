@@ -36,6 +36,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 	public List<Customer> findByRealCustomer(Boolean realCustomer);
 
+	public List<Customer> findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingAllIgnoreCase(
+			String firstname, String lastname, String email, String company);
+
 	public Page<Customer> findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingAllIgnoreCase(
 			String firstname, String lastname, String email, String company, Pageable pageable);
 

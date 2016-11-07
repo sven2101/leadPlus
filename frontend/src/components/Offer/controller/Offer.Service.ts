@@ -115,7 +115,6 @@ class OfferService {
                 temp.customer = customer;
                 self.processResource.save(editProcess).$promise.then(function (result) {
                     self.updateRow(editProcess, dtInstance, scope);
-                    self.customerService.getAllCustomer();
                     if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                         self.rootScope.$broadcast("onTodosChange");
                     }
@@ -147,7 +146,6 @@ class OfferService {
             this.customerResource.createCustomer(temp.customer).$promise.then(function (customer) {
                 temp.customer = customer;
                 self.processResource.save(editProcess).$promise.then(function (result) {
-                    self.customerService.getAllCustomer();
                     if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                         self.rootScope.$broadcast("onTodosChange");
                     }

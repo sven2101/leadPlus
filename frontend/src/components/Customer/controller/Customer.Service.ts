@@ -18,17 +18,17 @@ const CustomerServiceId: string = "CustomerService";
 
 class CustomerService {
 
-    private $inject = [CustomerResourceId];
+    private $inject = [CustomerResourceId, $httpId];
 
     customerResource: any;
-    customers: Array<Customer>;
     pagingCustomers: Array<Customer> = new Array<Customer>();
+    searchCustomers: Array<Customer> = new Array<Customer>();
     page: any;
+    http: any;
 
-    constructor(CustomerResource: CustomerResource) {
+    constructor(CustomerResource: CustomerResource, $http) {
         this.customerResource = CustomerResource.resource;
-        this.customers = new Array<Customer>();
-        this.getAllCustomer();
+        this.http = $http;
         this.getAllCustomerByPage(1, 20, "noSearchText", false);
     }
 
@@ -38,7 +38,6 @@ class CustomerService {
             customer.timestamp = newTimestamp();
             customer.realCustomer = true;
             this.customerResource.createCustomer(customer).$promise.then(function (result: Customer) {
-                self.customers.push(result);
                 self.pagingCustomers.push(result);
             });
         } else {
@@ -52,13 +51,6 @@ class CustomerService {
         return this.customerResource.createCustomer(customer).$promise;
     }
 
-    getAllCustomer() {
-        let self = this;
-        this.customerResource.getRealCustomer().$promise.then(function (result: Array<Customer>) {
-            self.customers = result;
-        });
-    }
-
     getAllCustomerByPage(start: number, length: number, searchtext: string, allCustomers: boolean) {
         let self = this;
         this.customerResource.getAllCustomerByPage({ start: start, length: length, searchtext: searchtext, allCustomers: allCustomers }).$promise.then(function (result: any) {
@@ -69,14 +61,20 @@ class CustomerService {
         });
     }
 
-    getActiveCustomers(): Array<Customer> {
-        let temp: Array<Customer> = new Array<Customer>();
-        for (let customer of this.customers) {
-            if (customer.deactivated === false) {
-                temp.push(customer);
-            }
+    getCustomerBySearchText(searchtext: string): any {
+        if (!isNullOrUndefined(searchtext) && searchtext.length > 0) {
+            let self = this;
+            return this.http.get("/api/rest/customer/search/" + searchtext).then(function (response) {
+                let temp: Array<Customer> = new Array<Customer>();
+                for (let customer of response.data) {
+                    if (customer.deactivated === false) {
+                        self.searchCustomers.push(customer);
+                        temp.push(customer);
+                    }
+                }
+                return temp;
+            });
         }
-        return temp;
     }
 }
 

@@ -63,6 +63,14 @@ public class CustomerResource {
 		return customerService.getAllByPage(start, length, searchtext, allCustomers);
 
 	}
+	
+	@ApiOperation(value = "Returns a list of customer by page.", notes = "")
+	@RequestMapping(value = "/search/{searchtext}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public List<Customer> getAllBySearchText(@PathVariable String searchtext) {
+		return customerService.getCustomerBySearchText(searchtext);
+
+	}
 
 	@RequestMapping(value = "/real", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)

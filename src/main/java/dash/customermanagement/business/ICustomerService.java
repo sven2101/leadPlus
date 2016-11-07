@@ -42,5 +42,7 @@ public interface ICustomerService {
 	public void delete(final Long id) throws DeleteFailedException;
 
 	public Page<Customer> getAllByPage(Integer start, Integer length, String searchText, Boolean allCustomers);
+	
+	public List<Customer> getCustomerBySearchText(String searchText);
 
 }

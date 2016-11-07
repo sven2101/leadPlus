@@ -112,7 +112,6 @@ class OfferController extends AbstractWorkflow {
                 console.log("Change page");
                 self.actionButtonConfig = {};
                 self.processes = {};
-                self.dtInstance.DataTable.clear();
                 console.log(size(self.actionButtonConfig));
                 console.log(size(self.processes));
                 console.log(self.dtInstance);

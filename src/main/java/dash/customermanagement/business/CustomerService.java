@@ -153,5 +153,10 @@ public class CustomerService implements ICustomerService {
 	public List<Customer> getAll() {
 		return customerRepository.findAll();
 	}
+	
+	@Override
+	public List<Customer> getCustomerBySearchText(String searchText) {
+		return customerRepository.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingAllIgnoreCase(searchText, searchText, searchText, searchText);
+	}
 
 }

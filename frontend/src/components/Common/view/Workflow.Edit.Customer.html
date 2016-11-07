@@ -1,7 +1,9 @@
 <style>
 	#typeahead-autocompletion .dropdown-menu {
 		max-height: 225px;
+		max-width: 400px;
 		overflow-y: auto;
+		overflow-x: hidden;
 	}
 </style>
 <form name="form">
@@ -11,9 +13,9 @@
 				<label>{{ 'CUSTOMER_MENU' | translate }}</label>
 				<div class="input-group" id="typeahead-autocompletion">
 					<input type="text" class="form-control" ng-model="parent.selectedCustomer" placeholder="{{ 'CUSTOMER_SELECT' | translate }}"
-						uib-typeahead="customer as customer.firstname + ' ' + customer.lastname + ' (' + customer.company + ')' for customer in service.customerService.getActiveCustomers()  | filter:$viewValue"
+						uib-typeahead="customer as customer.firstname +' '+ customer.lastname +' '+ customer.company for customer in service.customerService.getCustomerBySearchText($viewValue)"
 						typeahead-editable="false" typeahead-on-select="parent.selectCustomer(parent.editWorkflowUnit,$model)" typeahead-no-results="noResults"
-						typeahead-show-hint="true" typeahead-min-length="0" ng-blur="(noResults) ? parent.selectCustomer(parent.editWorkflowUnit,$model):'doNothing'"
+						typeahead-show-hint="true" typeahead-min-length="3" typeahead-wait-ms="600" ng-blur="(noResults) ? parent.selectCustomer(parent.editWorkflowUnit,$model):'doNothing'"
 						ng-disabled="!parent.editable">
 					<span class="input-group-btn">
        				 <button class="btn btn-secondary btn btn-white" type="button" ng-disabled="!parent.editable" ng-click="parent.selectCustomer(parent.editWorkflowUnit,undefined)">&nbsp;<i class="fa fa-times"></i>&nbsp;</button>
@@ -80,10 +82,27 @@
 	.btn-toolbar {
 		margin-left: 0px;
 	}
-	.note-editor .dropdown-menu { min-width: 90px; left: -300px; }
-	.note-editor .note-color-palette { line-height: 1; }
-	.note-editor .note-color-palette div .note-color-btn { width: 17px; height: 17px; padding: 0px; margin: 0px; border: 1px solid rgb(255, 255, 255); }
-	.note-editor .note-color-palette div .note-color-btn:hover { border: 1px solid rgb(0, 0, 0); }
+	
+	.note-editor .dropdown-menu {
+		min-width: 90px;
+		left: -300px;
+	}
+	
+	.note-editor .note-color-palette {
+		line-height: 1;
+	}
+	
+	.note-editor .note-color-palette div .note-color-btn {
+		width: 17px;
+		height: 17px;
+		padding: 0px;
+		margin: 0px;
+		border: 1px solid rgb(255, 255, 255);
+	}
+	
+	.note-editor .note-color-palette div .note-color-btn:hover {
+		border: 1px solid rgb(0, 0, 0);
+	}
 </style>
 <script>
     $(document).ready(function () {

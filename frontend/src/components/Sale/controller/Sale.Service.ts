@@ -72,7 +72,6 @@ class SaleService {
 
                 self.processResource.save(editProcess).$promise.then(function (result) {
                     self.updateRow(editProcess, dtInstance, scope);
-                    self.customerService.getAllCustomer();
                 });
             });
             return;

@@ -48,10 +48,6 @@ class CustomerController {
         });
     }
 
-    refreshData(): void {
-        this.customerService.getAllCustomer();
-    }
-
     clearCustomer(): void {
         this.createCustomerForm.$setPristine();
         this.currentCustomer = new Customer();
