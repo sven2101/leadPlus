@@ -67,7 +67,7 @@ class LeadController extends AbstractWorkflow {
     saleEditForm: any;
 
     constructor($rootScope, $compile, $scope, WorkflowService, LeadDataTableService, LeadService, FileService, $routeParams, $sce) {
-        super(WorkflowService, $sce, FileService);
+        super(WorkflowService, $sce, FileService, $scope);
         this.workflowService = WorkflowService;
         this.leadDataTableService = LeadDataTableService;
         this.leadService = LeadService;
@@ -83,7 +83,7 @@ class LeadController extends AbstractWorkflow {
         function createdRow(row, data: Process, dataIndex) {
             self.leadService.setRow(data.id, row);
             self.leadDataTableService.configRow(row, data);
-            self.compile(angular.element(row).contents())(self.scope);
+            self.compile(angular.element(row).contents())(self.getScopeByKey("actionButtonScope" + data.id));
         }
         function addActionsButtons(data: Process, type, full, meta) {
             return self.leadDataTableService.getActionButtonsHTML(data, self.actionButtonConfig);
@@ -131,6 +131,7 @@ class LeadController extends AbstractWorkflow {
             deleteRow();
             updateRow();
             loadDataToModal();
+            self.destroyAllScopes();
         });
 
 
@@ -142,6 +143,7 @@ class LeadController extends AbstractWorkflow {
     }
 
     changeDataInput() {
+        this.destroyAllScopes();
         this.workflowService.changeDataInput(this.loadAllData, this.dtOptions, allDataLeadRoute, openDataLeadRoute);
     }
 
@@ -151,8 +153,8 @@ class LeadController extends AbstractWorkflow {
     }
 
     appendChildRow(process: Process) {
-        let childScope = this.scope.$new(true);
-        this.workflowService.appendChildRow(childScope, process, process.lead, this.dtInstance, this, "lead");
+
+        this.workflowService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process.lead, this.dtInstance, this, "lead");
     }
 
     loadDataToModal(process: Process) {
@@ -223,7 +225,8 @@ class LeadController extends AbstractWorkflow {
     }
 
     pin(process: Process, user: User) {
-        this.leadService.pin(process, this.dtInstance, this.scope, user);
+
+        this.leadService.pin(process, this.dtInstance, this.dropCreateScope("compileScope"), user);
     }
 
     closeOrOpen(process: Process) {
@@ -247,6 +250,8 @@ class LeadController extends AbstractWorkflow {
     getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
         return this.leadDataTableService.getActionButtonConfig(process);
     }
+
+
 
 }
 angular.module(moduleLead, [ngResourceId]).controller(LeadControllerId, LeadController);

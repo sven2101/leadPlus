@@ -73,7 +73,7 @@ class SaleController extends AbstractWorkflow {
     saleEditForm: any;
 
     constructor($rootScope, $compile, $scope, WorkflowService, SaleDataTableService, SaleService, TemplateService, FileService, $routeParams, $sce, $window) {
-        super(WorkflowService, $sce, FileService);
+        super(WorkflowService, $sce, FileService, $scope);
         this.workflowService = WorkflowService;
         this.saleDataTableService = SaleDataTableService;
         this.saleService = SaleService;
@@ -89,7 +89,7 @@ class SaleController extends AbstractWorkflow {
 
         function createdRow(row, data: Process, dataIndex) {
             self.saleService.setRow(data.id, row);
-            self.compile(angular.element(row).contents())(self.scope);
+            self.compile(angular.element(row).contents())(self.getScopeByKey("actionButtonScope" + data.id));
         }
         function addActionsButtons(data: Process, type, full, meta) {
             return self.saleDataTableService.getActionButtonsHTML(data, self.actionButtonConfig);
@@ -140,6 +140,7 @@ class SaleController extends AbstractWorkflow {
             deleteRow();
             updateRow();
             loadDataToModal();
+            self.destroyAllScopes();
         });
     }
 
@@ -148,6 +149,7 @@ class SaleController extends AbstractWorkflow {
         this.dtInstance.reloadData(resetPaging);
     }
     changeDataInput() {
+        this.destroyAllScopes();
         this.workflowService.changeDataInput(this.loadAllData, this.dtOptions, allDataSaleRoute, openDataSaleRoute);
     }
 
@@ -156,8 +158,7 @@ class SaleController extends AbstractWorkflow {
     }
 
     appendChildRow(process: Process) {
-        let childScope = this.scope.$new(true);
-        this.workflowService.appendChildRow(childScope, process, process.sale, this.dtInstance, this, "sale");
+        this.workflowService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process.sale, this.dtInstance, this, "sale");
     }
 
     loadDataToModal(process: Process) {

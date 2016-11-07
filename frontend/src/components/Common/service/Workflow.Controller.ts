@@ -78,7 +78,7 @@ class WorkflowController extends AbstractWorkflow {
 
     constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService,
         WorkflowService, LeadService, OfferService, SaleService, DashboardService, FileService, $rootScope, $sce, $window, $scope) {
-        super(WorkflowService, $sce, FileService);
+        super(WorkflowService, $sce, FileService, $scope);
         let self = this;
         this.rootScope = $rootScope;
         this.scope = $scope;

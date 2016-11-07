@@ -201,6 +201,7 @@ class LeadService {
     updateRow(process: Process, dtInstance: any, scope: any) {
         dtInstance.DataTable.row(this.rows[process.id]).data(process).draw(
             false);
+
         this.compile(angular.element(this.rows[process.id]).contents())(scope);
     }
 

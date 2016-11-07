@@ -75,7 +75,7 @@ class OfferController extends AbstractWorkflow {
     saleEditForm: any;
 
     constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService, FileService, $routeParams, $sce) {
-        super(WorkflowService, $sce, FileService);
+        super(WorkflowService, $sce, FileService, $scope);
         this.workflowService = WorkflowService;
         this.offerDataTableService = OfferDataTableService;
         this.offerService = OfferService;
@@ -91,7 +91,7 @@ class OfferController extends AbstractWorkflow {
         function createdRow(row, data: Process, dataIndex) {
             self.offerService.setRow(data.id, row);
             self.offerDataTableService.configRow(row, data);
-            self.compile(angular.element(row).contents())(self.scope);
+            self.compile(angular.element(row).contents())(self.getScopeByKey("actionButtonScope" + data.id));
         }
         function addActionsButtons(data: Process, type, full, meta) {
             return self.offerDataTableService.getActionButtonsHTML(data, self.actionButtonConfig);
@@ -141,6 +141,7 @@ class OfferController extends AbstractWorkflow {
             deleteRow();
             updateRow();
             loadDataToModal();
+            self.destroyAllScopes();
         });
 
 
@@ -152,6 +153,7 @@ class OfferController extends AbstractWorkflow {
     }
 
     changeDataInput() {
+        this.destroyAllScopes();
         this.workflowService.changeDataInput(this.loadAllData, this.dtOptions, allDataOfferRoute, openDataOfferRoute);
     }
 
@@ -160,8 +162,7 @@ class OfferController extends AbstractWorkflow {
     }
 
     appendChildRow(process: Process) {
-        let childScope = this.scope.$new(true);
-        this.workflowService.appendChildRow(childScope, process, process.offer, this.dtInstance, this, "offer");
+        this.workflowService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process.offer, this.dtInstance, this, "offer");
     }
 
     loadDataToModal(process: Process) {
