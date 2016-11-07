@@ -26,12 +26,13 @@ import dash.customermanagement.domain.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-	public Customer getByEmail(String email);
+	public List<Customer> getByEmail(String email);
 
 	public Page<Customer> findByRealCustomer(Boolean realCustomer, Pageable pageable);
 
 	@Query("select c from Customer c where c.realCustomer = true AND (LOWER(c.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.email) like LOWER(CONCAT('%',:searchText,'%')))")
-	public Page<Customer> findRealCustomerBySearchText(@Param(value = "searchText") String searchText, Pageable pageable);
+	public Page<Customer> findRealCustomerBySearchText(@Param(value = "searchText") String searchText,
+			Pageable pageable);
 
 	public List<Customer> findByRealCustomer(Boolean realCustomer);
 

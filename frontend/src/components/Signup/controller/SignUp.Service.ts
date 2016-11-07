@@ -59,6 +59,7 @@ class SignupService {
         user.email = user.email.toLowerCase();
         let salt: string = user.email;
         user.password = hashPasswordPbkdf2(user.password, salt);
+        console.log(user.password);
         user.password2 = hashPasswordPbkdf2(user.password2, salt);
 
         this.signupResource.signup(user).$promise.then(function (createdUser: User) {

@@ -64,13 +64,18 @@ let shallowCopy = function (oldObject: Object, newObject: Object) {
 let newTimestamp = function (pattern: string = "DD.MM.YYYY HH:mm:ss") {
     let timezone = jstz.determine().name();
     let date: any = moment.utc();
-    return date.tz(timezone).format(pattern);
+    // return date.tz(timezone).format(pattern);
+    return date.format(pattern);
 };
 
 let toLocalDate = function (date: any, pattern: string = "DD.MM.YYYY HH:mm:ss") {
     let timezone = jstz.determine().name();
-    let momentDate: any = moment(date, pattern);
-    return momentDate.tz(timezone).format(pattern);
+    let currentDateUtc: any = moment.utc(date);
+    let currentDateLocal = currentDateUtc.tz(timezone);
+    if (currentDateLocal.isDST()) {
+        currentDateLocal.add(-1, "h");
+    }
+    return currentDateLocal.format(pattern);
 };
 
 let partial = function (func: any, []) {

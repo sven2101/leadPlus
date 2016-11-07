@@ -139,7 +139,7 @@ public class CustomerService implements ICustomerService {
 	}
 
 	@Override
-	public Customer getByEmail(String email) {
+	public List<Customer> getByEmail(String email) {
 
 		return customerRepository.getByEmail(email);
 	}

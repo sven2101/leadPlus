@@ -82,6 +82,8 @@ public class PublicApiService implements IPublicApiService {
 					throw new SaveFailedException(INVALID_ORDERPOSITIONS);
 				} else if (orderPosition.getProduct().getId() <= 0) {
 					throw new NotFoundException(PRODUCT_NOT_FOUND);
+				} else if (orderPosition.getDiscount() < 0 || orderPosition.getDiscount() > 100) {
+					throw new SaveFailedException(INVALID_ORDERPOSITIONS);
 				}
 				orderPosition.setProduct(productService.getById(orderPosition.getProduct().getId()));
 				orderPosition.setPrice(orderPosition.getProduct().getPriceNetto());
@@ -98,11 +100,11 @@ public class PublicApiService implements IPublicApiService {
 			throw new SaveFailedException(INVALID_CUSTOMER_EMAIL);
 		}
 
-		Customer tempCustomer = customerService.getByEmail(lead.getCustomer().getEmail());
-		if (tempCustomer != null) {
-			lead.setCustomer(tempCustomer);
-		} else {
+		List<Customer> tempCustomer = customerService.getByEmail(lead.getCustomer().getEmail());
+		if (tempCustomer == null || tempCustomer.size() == 0) {
 			lead.getCustomer().setId(null);
+		} else {
+			lead.setCustomer(tempCustomer.get(0));
 		}
 
 		lead.getCustomer().setDeactivated(false);
@@ -111,10 +113,7 @@ public class PublicApiService implements IPublicApiService {
 		lead.setCustomer(customerService.save(lead.getCustomer()));
 
 		// set Vendor
-		if (lead.getVendor() != null) {
-			lead.getVendor().setDeleted(false);
-			lead.getVendor().setId(null);
-		}
+		lead.setVendor(null);
 
 		// set Lead
 		lead.setTimestamp(Calendar.getInstance());

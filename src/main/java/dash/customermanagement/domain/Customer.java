@@ -101,6 +101,7 @@ public class Customer {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Calendar timestamp;
 
+	@ApiModelProperty(hidden = true)
 	@Size(max = 255)
 	@Column(name = "customernumber")
 	private String customerNumber;

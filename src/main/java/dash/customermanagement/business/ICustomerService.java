@@ -31,7 +31,7 @@ public interface ICustomerService {
 
 	public Customer getById(final Long id) throws NotFoundException;
 
-	public Customer getByEmail(String email);
+	public List<Customer> getByEmail(String email);
 
 	public List<Customer> getRealCustomer();
 

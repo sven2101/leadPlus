@@ -30,7 +30,7 @@
                                 <label>{{ 'PRODUCT_PRICE' | translate }}<span style="color:red">*</span></label>
                                  <div class="input-group">
                                     <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>                                    
-                                     <input required type="number" name="priceNetto"class="form-control currency" ng-model="productCtrl.currentProduct.priceNetto" ng-maxlength="50" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01">
+                                     <input required type="number" name="priceNetto"class="form-control currency" ng-model="productCtrl.currentProduct.priceNetto" ng-maxlength="10" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01">
                                 </div>
                                
                                 <p ng-show="productCtrl.createProductForm.priceNetto.$invalid && !productCtrl.createProductForm.priceNetto.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>

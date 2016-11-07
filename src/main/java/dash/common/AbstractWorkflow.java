@@ -73,6 +73,7 @@ public abstract class AbstractWorkflow implements Request {
 	@Column(name = "timestamp", nullable = true)
 	private Calendar timestamp;
 
+	@ApiModelProperty(hidden = true)
 	@OneToOne(cascade = { CascadeType.PERSIST })
 	@JoinColumn(name = "vendor_fk", nullable = true)
 	@Where(clause = "deleted <> '1'")

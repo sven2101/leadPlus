@@ -100,6 +100,7 @@ public class Product implements Serializable {
 	@JoinColumn(name = "picture_fk", nullable = true)
 	private FileUpload picture;
 
+	@ApiModelProperty(hidden = true)
 	@Size(max = 255)
 	@Column(name = "productnumber")
 	private String productNumber;

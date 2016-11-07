@@ -61,7 +61,7 @@ class AuthService {
             let hashedPassword = hashPasswordPbkdf2(credentials.password, salt);
             let authorization = btoa(credentials.email + ":" + hashedPassword);
             let header = credentials ? { Authorization: "Basic " + authorization } : {};
-
+            console.log(hashedPassword);
             this.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
             this.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
 
