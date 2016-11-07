@@ -61,11 +61,10 @@ class AuthService {
             let hashedPassword = hashPasswordPbkdf2(credentials.password, salt);
             let authorization = btoa(credentials.email + ":" + hashedPassword);
             let header = credentials ? { Authorization: "Basic " + authorization } : {};
-            console.log(hashedPassword);
             this.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
             this.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
 
-            this.http.get("user").then(function(response) {
+            this.http.get("user").then(function (response) {
                 let data = response.data;
                 if (data) {
                     self.rootScope.user = {
@@ -115,7 +114,7 @@ class AuthService {
                 } else {
                     defer.reject(false);
                 }
-            }, (function(error) {
+            }, (function (error) {
                 defer.reject(false);
             }));
         } else {
