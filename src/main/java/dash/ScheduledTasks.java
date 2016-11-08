@@ -27,9 +27,17 @@ public class ScheduledTasks {
 	@Autowired
 	private ITenantService tenantService;
 
-	@Scheduled(fixedRate = 300000)
+	@Scheduled(cron = "0 0/10 5-23 * * MON-FRI")
+	private void generateStatisticsSchedulerMoToFr(){
+		generateStatistics();
+	}
+	
+	@Scheduled(cron = "0 0 6-22/2 * * SAT,SUN")
+	private void generateStatisticsSchedulerSatToSun(){
+		generateStatistics();
+	}
+	
 	public void generateStatistics() {
-
 		ThreadPoolTaskExecutor pool = new ThreadPoolTaskExecutor();
 		TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
 		List<Tenant> tenants = tenantService.getAllTenants();
@@ -49,9 +57,7 @@ public class ScheduledTasks {
 				public void run() {
 					TenantContext.setTenant(tenantKey);
 					try {
-						System.out.println("Generate Statistic in Olap for: " + tenantKey);
 						olapStatisticService.generateOlapStatistics();
-						System.out.println("Statistics generated!");
 					} catch (NotFoundException ex) {
 						logger.error("Something went wrong when trying to generate olap statistics for" + tenantKey,
 								ex);
@@ -61,4 +67,7 @@ public class ScheduledTasks {
 		}
 		pool.shutdown();
 	}
+	
+	
+	
 }
