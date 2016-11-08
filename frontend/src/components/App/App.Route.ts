@@ -197,10 +197,9 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 Auth.logout();
             }
 
-            if (!isNullOrUndefined($rootScope.user)) {
+            if (!isNullOrUndefined($rootScope.user) && !isNullOrUndefined($rootScope.tenant)) {
                 $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
                 $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
-
             }
 
             $rootScope.$on("$routeChangeStart", function(event, next, current) {
