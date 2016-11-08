@@ -10,7 +10,7 @@
 	<div class="row">
 		<div class="col-sm-6 b-r">
 			<div class="form-group">
-				<label>{{ 'CUSTOMER_MENU' | translate }}</label>
+				<label>{{ 'CUSTOMER_MENU' | translate }}</label><i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'TOOLTIP_CUSTOMER_LOOKUP' | translate }}"></i>
 				<div class="input-group" id="typeahead-autocompletion">
 					<input type="text" class="form-control" ng-model="parent.selectedCustomer" placeholder="{{ 'CUSTOMER_SELECT' | translate }}"
 						uib-typeahead="customer as customer.firstname +' '+ customer.lastname +' '+ customer.company for customer in service.customerService.getCustomerBySearchText($viewValue)"

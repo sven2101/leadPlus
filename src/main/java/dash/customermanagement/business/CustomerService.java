@@ -65,8 +65,8 @@ public class CustomerService implements ICustomerService {
 				page = customerRepository.findAll(new PageRequest(start / length, length, sortDirection, sortColumn));
 			} else {
 				page = customerRepository
-						.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingAllIgnoreCase(
-								searchText, searchText, searchText, searchText,
+						.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCase(
+								searchText, searchText, searchText, searchText, searchText,
 								new PageRequest(start / length, length, sortDirection, sortColumn));
 			}
 		}
@@ -153,10 +153,12 @@ public class CustomerService implements ICustomerService {
 	public List<Customer> getAll() {
 		return customerRepository.findAll();
 	}
-	
+
 	@Override
 	public List<Customer> getCustomerBySearchText(String searchText) {
-		return customerRepository.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingAllIgnoreCase(searchText, searchText, searchText, searchText);
+		return customerRepository
+				.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCase(
+						searchText, searchText, searchText, searchText, searchText);
 	}
 
 }

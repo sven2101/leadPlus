@@ -458,7 +458,8 @@ function config($translateProvider) {
              // Tooltip
             TOOLTIP_SIGN_UP: "Registrieren Sie sich jetzt unter ihrer spezifischen Subdomain um vollen Zugriff auf die Anwendung zu erhalten. Nach der erfolgreichen Registrierung, muss ihr Anwendungs-Administrator ihren Account freischalten.",
             TOOLTIP_TODO: "Über ToDo kannst Du all die Prozesse im Auge behalten, an denen Du beteiligt bist.",
-            TOOLTIP_PROFIL_PICTURE: "Wähle dein Profilbild und speichere es. Danach präsentiert es Dich innerhalb der Anwendung."
+            TOOLTIP_PROFIL_PICTURE: "Wähle dein Profilbild und speichere es. Danach präsentiert es Dich innerhalb der Anwendung.",
+            TOOLTIP_CUSTOMER_LOOKUP: "Ab einer Eingabe von 3 Zeichen werden dir relevante Kunden angezeigt.\nDu kannst nach Vorname, Nachname, Firma, E-Mail und Kundennummer suchen."
 
         })
         .translations(Language[Language.EN], {
@@ -898,9 +899,11 @@ function config($translateProvider) {
             CALCULATION_VAT: "Value-added tax",
 
             // Tooltip
-            TOOLTIP_SIGN_UP: "Sign up now under your unique tenant domain section to get full access. After Sign up your administrator needs to enable your account.",
+            TOOLTIP_SIGN_UP: "Sign up now under your unique tenant domain section to get full acces<br>s. After Sign up your administrator needs to enable your account.",
             TOOLTIP_TODO: "Via ToDo you can keep all your processes in mind.",
-            TOOLTIP_PROFIL_PICTURE: "Select your Profil Picture and press save to keep it. Afterwards it will present you within this Application."
+            TOOLTIP_PROFIL_PICTURE: "Select your Profil Picture and press save to keep it. Afterwards it will present you within this Application.",
+            TOOLTIP_CUSTOMER_LOOKUP: "From 3 characters the relevant customers will appear.\nYou can search for firstname, lastname, company, e-mail and customernumber."
+
         });
 
     $translateProvider.preferredLanguage(Language[Language.DE]);

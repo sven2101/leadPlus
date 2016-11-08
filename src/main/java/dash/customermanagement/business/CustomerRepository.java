@@ -30,16 +30,16 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 	public Page<Customer> findByRealCustomer(Boolean realCustomer, Pageable pageable);
 
-	@Query("select c from Customer c where c.realCustomer = true AND (LOWER(c.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.email) like LOWER(CONCAT('%',:searchText,'%')))")
+	@Query("select c from Customer c where c.realCustomer = true AND (LOWER(c.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.email) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.customerNumber) like LOWER(CONCAT('%',:searchText,'%')))")
 	public Page<Customer> findRealCustomerBySearchText(@Param(value = "searchText") String searchText,
 			Pageable pageable);
 
 	public List<Customer> findByRealCustomer(Boolean realCustomer);
 
-	public List<Customer> findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingAllIgnoreCase(
-			String firstname, String lastname, String email, String company);
+	public List<Customer> findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCase(
+			String firstname, String lastname, String email, String company, String customernumber);
 
-	public Page<Customer> findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingAllIgnoreCase(
-			String firstname, String lastname, String email, String company, Pageable pageable);
+	public Page<Customer> findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCase(
+			String firstname, String lastname, String email, String company, String customernumber, Pageable pageable);
 
 }
