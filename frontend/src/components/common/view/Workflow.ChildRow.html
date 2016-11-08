@@ -2,6 +2,10 @@
 	.chat-view {
 		word-break: break-all;
 	}
+	
+	#childrow tr td {
+		height: auto;
+	}
 </style>
 <div class="row">
 	<div class="col-lg-6">
@@ -10,7 +14,7 @@
 				<h3>{{ 'COMMON_CHILDROW_ADDITONAL_TITLE' | translate }}</h3>
 			</div>
 			<div class="ibox-content">
-				<table class="table table-bordered text-left">
+				<table id="childrow" class="table table-bordered text-left">
 					<tr>
 						<td>{{ 'COMMON_NAME' | translate }}</td>
 						<td>{{ workflowUnit.customer.title | translate }} {{workflowUnit.customer.firstname}} {{workflowUnit.customer.lastname}}
@@ -76,13 +80,12 @@
 				<h3>{{ 'COMMON_NOTE' | translate }}</h3>
 			</div>
 			<div class="ibox-content text-left">
-				<div ng-bind-html="parent.getAsHtml(workflowUnit.message)" ></div>
+				<div ng-bind-html="parent.getAsHtml(workflowUnit.message)"></div>
 			</div>
 		</div>
 	</div>
 </div>
-<div class="col-lg-12" ng-include="'components/Common/view/ProductView.html'"></div>
-</div>
+<div class="row" ng-include="'components/Common/view/ProductView.html'"></div>
 <div class="row" ng-include="'components/Common/view/CommentView.html'"></div>
 <div class="row" ng-include="'components/Common/view/AllComments.Modal.html'"></div>
 
