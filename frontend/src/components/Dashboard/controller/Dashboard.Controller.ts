@@ -139,7 +139,10 @@ class DashboardController {
     getConversionrate(): number {
         return this.statisticService.getLeadConversionRate();
     }
-    toLocalDate(timestamp: any): any {
+    toLocalDate(timestamp: any, process: Process = null): any {
+        if (timestamp === undefined) {
+            timestamp = newTimestamp();
+        }
         return toLocalDate(timestamp);
     }
     sumOrderPositions(array: Array<OrderPosition>): number {
