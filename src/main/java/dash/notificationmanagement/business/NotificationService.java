@@ -61,8 +61,7 @@ public class NotificationService implements INotificationService {
 			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException, Exception {
 		try {
 			Smtp smtp = smtpService.findByUser(userId);
-			if (notification != null && notification.getAttachment() != null
-					&& notification.getAttachment().getId() != null) {
+			if (notification != null && notification.getAttachment() != null && notification.getAttachment().getId() != null) {
 				FileUpload attachment = fileUploadService.getById(notification.getAttachment().getId());
 				if (attachment != null) {
 					notification.setAttachment(attachment);
@@ -70,8 +69,7 @@ public class NotificationService implements INotificationService {
 			}
 
 			if (smtp != null) {
-				smtp.setPassword(Encryptor
-						.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
+				smtp.setPassword(Encryptor.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
 				final Session emailSession = newSession(smtp);
 				Transport transport = emailSession.getTransport("smtp");
 				transport.connect();
@@ -88,10 +86,9 @@ public class NotificationService implements INotificationService {
 					textBodyPart.setContent(notification.getContent(), "text/html; charset=utf-8");
 					multipart.addBodyPart(textBodyPart);
 
-					if (notification.getAttachment().getContent() != null) {
+					if (notification.getAttachment() != null && notification.getAttachment().getContent() != null) {
 						MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(),
-								notification.getAttachment().getMimeType());
+						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(), notification.getAttachment().getMimeType());
 						attachmentBodyPart.setDataHandler(new DataHandler(ds));
 						attachmentBodyPart.setFileName(notification.getAttachment().getFilename());
 						multipart.addBodyPart(attachmentBodyPart);
