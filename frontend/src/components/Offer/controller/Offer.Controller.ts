@@ -117,25 +117,26 @@ class OfferController extends AbstractWorkflow {
                     self.destroyAllScopes();
                 }
             });
+
+            let searchLink = "";
+            let processId = $routeParams.processId;
+            if (!isNullOrUndefined(processId) && processId !== "") {
+                searchLink = "#id:" + processId + "#";
+                self.dtInstance.DataTable.search(searchLink).draw;
+                let intervall = setInterval(function () {
+                    if (!isNullOrUndefined(angular.element("#id_" + processId)) && !isNullOrUndefined(self.processes[processId])) {
+                        self.appendChildRow(self.processes[processId]);
+                        clearInterval(intervall);
+                    }
+                }, 100);
+
+                setTimeout(function () {
+                    clearInterval(intervall);
+                }, 10000);
+            }
         };
 
-        let searchLink = "";
-        let processId = $routeParams.processId;
-        if (!isNullOrUndefined(processId) && processId !== "") {
-            searchLink = "#id:" + processId + "#";
-            let intervall = setInterval(function () {
-                if (!isNullOrUndefined(angular.element("#id_" + processId)) && !isNullOrUndefined(self.processes[processId])) {
-                    self.appendChildRow(self.processes[processId]);
-                    clearInterval(intervall);
-                }
-            }, 100);
-
-            setTimeout(function () {
-                clearInterval(intervall);
-            }, 10000);
-        }
-
-        this.dtOptions = this.offerDataTableService.getDTOptionsConfiguration(createdRow, searchLink);
+        this.dtOptions = this.offerDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.offerDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
         this.getAllActiveTemplates();
 

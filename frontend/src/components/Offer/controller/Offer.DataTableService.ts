@@ -61,7 +61,7 @@ class OfferDataTableService {
                     request.setRequestHeader("X-TenantID", self.tenant.tenantKey);
                 }
             })
-            .withOption("stateSave", true)
+            .withOption("stateSave", false)
             .withDOM(this.workflowService.getDomString())
             .withPaginationType("full_numbers")
             .withButtons(this.workflowService.getButtons(this.translate("OFFER_OFFERS"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13]))
