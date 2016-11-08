@@ -36,6 +36,7 @@ import dash.common.EncryptionWrapper;
 import dash.common.Encryptor;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
+import dash.smtpmanagement.domain.Encryption;
 import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
@@ -56,36 +57,57 @@ public class SmtpService implements ISmtpService {
 		Smtp smtp = smptRepository.findOne(id);
 		smtp.setPassword(Encryptor.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
 
-		final Session emailSession = newSession(smtp);
-		Transport transport = emailSession.getTransport("smtp");
-		transport.connect();
-		SMTPMessage smtpMessage = new SMTPMessage(emailSession);
-		smtpMessage.setFrom(new InternetAddress(smtp.getEmail(), "lead+ Test-Mail"));
-		smtpMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtp.getEmail()));
-		smtpMessage.setHeader("Content-Type", "text/html");
-		smtpMessage.setSubject("Test");
-		smtpMessage.setContent(
-				"<html style='font-family:Arial;'><h3>Dear " + smtp.getSender() + ", </h3>"
-						+ "<br/>this is an auto generated Email to verify your SMTP-Connection for lead+. <br/> <br/> Best regards, <br/><br/> Your lead+ Team</html>",
-				"text/html");
-		smtpMessage.setNotifyOptions(SMTPMessage.NOTIFY_SUCCESS);
-		smtpMessage.setReturnOption(1);
+		Session emailSession;
+		Transport transport = null;
 
-		transport.sendMessage(smtpMessage, InternetAddress.parse(smtp.getEmail()));
-		transport.close();
+		try {
+			emailSession = newSession(smtp);
+			transport = emailSession.getTransport("smtp");
+			transport.connect();
+			SMTPMessage smtpMessage = new SMTPMessage(emailSession);
+			smtpMessage.setFrom(new InternetAddress(smtp.getEmail(), "lead+ Test-Mail"));
+			smtpMessage.setRecipients(Message.RecipientType.TO, InternetAddress.parse(smtp.getEmail()));
+			smtpMessage.setHeader("Content-Type", "text/html");
+			smtpMessage.setSubject("Test");
+			smtpMessage.setContent(
+					"<html style='font-family:Arial;'><h3>Dear " + smtp.getSender() + ", </h3>"
+							+ "<br/>this is an auto generated Email to verify your SMTP-Connection for lead+. <br/> <br/> Best regards, <br/><br/> Your lead+ Team</html>",
+					"text/html");
+			smtpMessage.setNotifyOptions(SMTPMessage.NOTIFY_SUCCESS);
+			smtpMessage.setReturnOption(1);
+
+			transport.sendMessage(smtpMessage, InternetAddress.parse(smtp.getEmail()));
+		} catch (Exception ex) {
+			throw ex;
+		} finally {
+			if (transport != null)
+				transport.close();
+
+			emailSession = null;
+		}
 	}
 
 	private Session newSession(Smtp smtp) throws UnsupportedEncodingException {
 		Properties props = new Properties();
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.ssl.trust", smtp.getHost());
-		props.setProperty("mail.smtp.host", smtp.getHost());
-		props.setProperty("mail.smtp.port", String.valueOf(smtp.getPort()));
+		String mailUser = smtp.getUsername();
+		String mailPassword = new String(smtp.getPassword(), "UTF-8");
 
-		final String mailUser = smtp.getUsername();
-		final String mailPassword = new String(smtp.getPassword(), "UTF-8");
+		if (smtp.getEncryption() == Encryption.TLS) {
+			props.setProperty("mail.smtp.host", smtp.getHost());
+			props.setProperty("mail.smtp.port", String.valueOf(smtp.getPort()));
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.ssl.trust", smtp.getHost());
+			if (smtp.getHost().contains("gmail"))
+				props.put("mail.smtp.starttls.enable", "true");
+		} else if (smtp.getEncryption() == Encryption.SSL) {
+			props.put("mail.smtp.host", smtp.getHost());
+			props.put("mail.smtp.socketFactory.port", String.valueOf(smtp.getPort()));
+			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+			props.put("mail.smtp.auth", "true");
+			props.put("mail.smtp.port", String.valueOf(smtp.getPort()));
+		}
 
-		return Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+		return Session.getInstance(props, new javax.mail.Authenticator() {
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(mailUser, mailPassword);
