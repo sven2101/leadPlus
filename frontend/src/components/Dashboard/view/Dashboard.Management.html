@@ -45,7 +45,7 @@
 											{{'DASHBOARD_GOTO_BUTTON' | translate }}</a>
 										</div>
 										<div style="white-space: nowrap;max-width:55%;overflow:hidden;text-overflow: ellipsis;">
-											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{::dashboardCtrl.toLocalDate(process.lead.timestamp)}}
+											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{dashboardCtrl.toLocalDate(process.lead.timestamp)}}
 										</div>
 									</div>
 								</li>
@@ -79,7 +79,7 @@
 											{{'DASHBOARD_GOTO_BUTTON' | translate }}</a>
 										</div>
 										<div style="white-space: nowrap;max-width:55%;overflow:hidden;text-overflow: ellipsis;">
-											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{::dashboardCtrl.toLocalDate(process.lead.timestamp)}}
+											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{dashboardCtrl.toLocalDate(process.lead.timestamp)}}
 										</div>
 									</div>
 								</li>
@@ -113,7 +113,7 @@
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
 										</div>
 										<div style="max-width:55%;overflow:hidden;text-overflow: ellipsis;">
-											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{::dashboardCtrl.toLocalDate(process.offer.timestamp)}}
+											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{dashboardCtrl.toLocalDate(process.offer.timestamp)}}
 											<i ng-if="::process.status== 'FOLLOWUP'" title="{{'OFFER_FOLLOW_UP'| translate }}" class="fa fa-eye" aria-hidden="true" ng-click="dashboardCtrl.openFollowUpModal(process)">
 												&nbsp;{{process.followUpAmount}}
 											</i>
@@ -152,7 +152,7 @@
                                                 'DASHBOARD_GOTO_BUTTON' | translate }}</a>
 										</div>
 										<div style="white-space: nowrap;max-width:55%;overflow:hidden;text-overflow: ellipsis;">
-											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{::dashboardCtrl.toLocalDate(process.sale.timestamp)}}
+											<i style="margin-top:12px;" class="fa fa-clock-o"></i> {{dashboardCtrl.toLocalDate(process.sale.timestamp)}}
 										</div>
 									</div>
 								</li>
