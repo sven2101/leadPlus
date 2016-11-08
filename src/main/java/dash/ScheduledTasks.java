@@ -28,15 +28,17 @@ public class ScheduledTasks {
 	private ITenantService tenantService;
 
 	@Scheduled(cron = "0 0/10 5-23 * * MON-FRI")
-	private void generateStatisticsSchedulerMoToFr(){
+	private void generateStatisticsSchedulerMoToFr() {
+		logger.info("Do cronejob for MON-FRI");
 		generateStatistics();
 	}
-	
+
 	@Scheduled(cron = "0 0 6-22/2 * * SAT,SUN")
-	private void generateStatisticsSchedulerSatToSun(){
+	private void generateStatisticsSchedulerSatToSun() {
+		logger.info("Do cronejob for SAT,SUN");
 		generateStatistics();
 	}
-	
+
 	public void generateStatistics() {
 		ThreadPoolTaskExecutor pool = new ThreadPoolTaskExecutor();
 		TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
@@ -57,7 +59,9 @@ public class ScheduledTasks {
 				public void run() {
 					TenantContext.setTenant(tenantKey);
 					try {
+						logger.info("Generate Statistics for " + tenantKey);
 						olapStatisticService.generateOlapStatistics();
+						logger.info("Statistics generated for " + tenantKey);
 					} catch (NotFoundException ex) {
 						logger.error("Something went wrong when trying to generate olap statistics for" + tenantKey,
 								ex);
@@ -67,7 +71,5 @@ public class ScheduledTasks {
 		}
 		pool.shutdown();
 	}
-	
-	
-	
+
 }

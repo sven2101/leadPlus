@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,8 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/api/rest/processes/statistics/user")
 @Api(value = "Statistic Profit API")
 public class UserStatisticResource {
+	
+	private static final Logger logger = Logger.getLogger(UserStatisticResource.class);
 
 	@Autowired
 	private OlapRepository olapRepository;
@@ -55,10 +58,10 @@ public class UserStatisticResource {
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
 		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
 		if (olap != null && olap.getUsers() != null) {
-			System.out.println("Informationen aus OLAP");
+			logger.info("Information from OLAP.");
 			return Arrays.asList(olap.getUsers());
 		} else {
-			System.out.println("Informationen direkt berechnet");
+			logger.info("Information directly calculating.");
 			return userStatisticService.getTopSalesMen(dateRange);
 		}
 	}

@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.apache.pdfbox.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -51,6 +52,8 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "Template API")
 public class TemplateResource {
 
+	private static final Logger logger = Logger.getLogger(TemplateResource.class);
+
 	@Autowired
 	private ITemplateService templateService;
 
@@ -71,14 +74,16 @@ public class TemplateResource {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Post a template. ", notes = "")
-	public Template save(@ApiParam(required = true) @RequestBody @Valid final Template template) throws SaveFailedException {
+	public Template save(@ApiParam(required = true) @RequestBody @Valid final Template template)
+			throws SaveFailedException {
 		return templateService.save(template);
 	}
 
 	@ApiOperation(value = "Update a single template.", notes = "")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Template update(@ApiParam(required = true) @RequestBody @Valid final Template template) throws UpdateFailedException {
+	public Template update(@ApiParam(required = true) @RequestBody @Valid final Template template)
+			throws UpdateFailedException {
 		return templateService.update(template);
 	}
 
@@ -93,20 +98,23 @@ public class TemplateResource {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Generate a email content based on a template and an offer.", notes = "")
 	public AbstractMessage generate(@ApiParam(required = true) @PathVariable final Long templateId,
-			@ApiParam(required = true) @RequestBody @Valid final OfferMessageContext offerMessageContext) throws NotFoundException {
-		return templateService.generateOfferContent(templateId, offerMessageContext.getOffer(), offerMessageContext.getNotification());
+			@ApiParam(required = true) @RequestBody @Valid final OfferMessageContext offerMessageContext)
+			throws NotFoundException {
+		return templateService.generateOfferContent(templateId, offerMessageContext.getOffer(),
+				offerMessageContext.getNotification());
 	}
 
 	@RequestMapping(value = "/{templateId}/offers/pdf/generate", method = RequestMethod.POST, produces = "application/pdf")
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Generate a pdf based on a template and an offer.", notes = "")
 	public ResponseEntity<byte[]> generatePdf(@ApiParam(required = true) @PathVariable final Long templateId,
-			@ApiParam(required = true) @PathVariable final long offerId, @ApiParam(required = true) @RequestBody @Valid final Process process)
+			@ApiParam(required = true) @PathVariable final long offerId,
+			@ApiParam(required = true) @RequestBody @Valid final Process process)
 			throws NotFoundException, IOException {
 
 		FileInputStream fileStream;
 		fileStream = new FileInputStream(new File("D://abc.pdf"));
-		System.out.println("PDF: " + fileStream.toString());
+		logger.info("PDF: " + fileStream.toString());
 		byte[] contents = IOUtils.toByteArray(fileStream);
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.parseMediaType("application/pdf"));

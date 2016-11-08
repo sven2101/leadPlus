@@ -18,6 +18,7 @@ import java.util.Arrays;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,8 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/api/rest/processes/statistics/turnover")
 @Api(value = "Statistic Profit API")
 public class TurnoverResource {
+	
+	private static final Logger logger = Logger.getLogger(TurnoverResource.class);
 
 	@Autowired
 	private OlapRepository olapRepository;
@@ -57,10 +60,10 @@ public class TurnoverResource {
 
 		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
 		if (olap != null && olap.getTurnover() != null) {
-			System.out.println("Informationen aus OLAP");
+			logger.info("Information from OLAP.");
 			return new Result(Arrays.asList(olap.getTurnover()));
 		} else {
-			System.out.println("Informationen direkt berechnet");
+			logger.info("Information directly calculating.");
 			return turnoverStatisticService.getStatisticByDateRange(workflow, dateRange, null);
 		}
 

@@ -18,6 +18,7 @@ import java.util.Arrays;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,6 +45,8 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "Statistic Conversion API")
 public class WorkflowResource {
 
+	private static final Logger logger = Logger.getLogger(WorkflowResource.class);
+
 	@Autowired
 	private OlapRepository olapRepository;
 
@@ -58,7 +61,7 @@ public class WorkflowResource {
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
 		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
 		if (olap != null) {
-			System.out.println("Informationen aus OLAP");
+			logger.info("Information from OLAP.");
 			if (workflow.equals(Workflow.LEAD) && olap.getLeads() != null) {
 				return new Result(Arrays.asList(olap.getLeads()));
 			} else if (workflow.equals(Workflow.OFFER) && olap.getOffers() != null) {
@@ -66,11 +69,11 @@ public class WorkflowResource {
 			} else if (workflow.equals(Workflow.SALE) && olap.getSales() != null) {
 				return new Result(Arrays.asList(olap.getSales()));
 			} else {
-				System.out.println("Informationen direkt berechnet");
+				logger.info("Information directly calculating.");
 				return statisticsService.getStatisticByDateRange(workflow, dateRange, null);
 			}
 		} else {
-			System.out.println("Informationen direkt berechnet");
+			logger.info("Information directly calculating.");
 			return statisticsService.getStatisticByDateRange(workflow, dateRange, null);
 		}
 	}

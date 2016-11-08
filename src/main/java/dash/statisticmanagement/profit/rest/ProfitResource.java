@@ -18,6 +18,7 @@ import java.util.Arrays;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,13 +42,15 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/api/rest/processes/statistics/profit")
 @Api(value = "Statistic Profit API")
 public class ProfitResource {
+	
+	private static final Logger logger = Logger.getLogger(ProfitResource.class);
 
 	@Autowired
 	private OlapRepository olapRepository;
 
 	@Autowired
 	private ProfitStatisticService profitStatisticService;
-
+	
 	@RequestMapping(value = "/{workflow}/daterange/{dateRange}", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get Statistic by dateRange and workflow", notes = "")
@@ -56,10 +59,10 @@ public class ProfitResource {
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
 		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
 		if (olap != null && olap.getProfit() != null) {
-			System.out.println("Informationen aus OLAP");
+			logger.info("Information from OLAP.");
 			return new Result(Arrays.asList(olap.getProfit()));
 		} else {
-			System.out.println("Informationen direkt berechnet");
+			logger.info("Information directly calculating.");
 			return profitStatisticService.getStatisticByDateRange(workflow, dateRange, null);
 		}
 	}
