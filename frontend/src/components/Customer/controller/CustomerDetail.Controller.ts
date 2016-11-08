@@ -27,7 +27,7 @@ const CustomerDetailControllerId: string = "CustomerDetailController";
 
 class CustomerDetailController {
 
-    $inject = [CustomerServiceId, $routeParamsId, CustomerResourceId, LeadResourceId, OfferResourceId, SaleResourceId, $qId, WorkflowServiceId, $filterId, $sceId];
+    $inject = [CustomerServiceId, $routeParamsId, CustomerResourceId, LeadResourceId, OfferResourceId, SaleResourceId, $qId, WorkflowServiceId, $sceId];
 
     customerService: CustomerService;
     workflowService: WorkflowService;
@@ -40,12 +40,10 @@ class CustomerDetailController {
     currentCustomerId: number;
     workflows: Array<IWorkflow>;
     q;
-    orderBy;
     customerFound: boolean = false;
     sce;
 
-
-    constructor(CustomerService, $routeParams, CustomerResource, LeadResource, OfferResource, SaleResource, $q, WorkflowService, $filter, $sce) {
+    constructor(CustomerService, $routeParams, CustomerResource, LeadResource, OfferResource, SaleResource, $q, WorkflowService, $sce) {
         this.customerService = CustomerService;
         this.workflowService = WorkflowService;
         this.customerResource = CustomerResource.resource;
@@ -56,17 +54,15 @@ class CustomerDetailController {
         this.currentCustomerId = this.routeParams.customerId;
         this.getCustomerById();
         let self = this;
-        this.orderBy = $filter("orderBy");
         this.q = $q;
         this.sce = $sce;
-        this.getWorkflowByCustomerId().then(function (result) { self.workflows = self.orderBy(result, "timestamp", true); });
+        this.getWorkflowByCustomerId().then(function (result: Array<IWorkflow>) { self.workflows = self.orderByTimestamp(result); });
 
     }
 
     getAsHtml(html: string) {
         return this.sce.trustAsHtml(html);
     }
-
 
     getCustomerById() {
         let self = this;
@@ -114,6 +110,7 @@ class CustomerDetailController {
 
 
     }
+
     getWorkflow(leads: Array<IWorkflow>, offers: Array<IWorkflow>, sales: Array<IWorkflow>): Array<IWorkflow> {
         for (let i = 0; i < leads.length; i++) {
             let temp = leads[i] as any;
@@ -141,6 +138,15 @@ class CustomerDetailController {
         return this.workflowService.sumOrderPositions(array);
     }
 
+    orderByTimestamp(workflows: Array<IWorkflow>): Array<IWorkflow> {
+        return workflows.sort((a, b) => {
+            let tempA = moment(a.timestamp, "DD.MM.YYYY HH:mm:ss");
+            let tempB = moment(b.timestamp, "DD.MM.YYYY HH:mm:ss");
+            if (tempA < tempB) { return -1; }
+            else if (tempA > tempB) { return 1; }
+            else { return 0; }
+        });
+    }
 }
 
 angular.module(moduleCustomerDetail, [ngResourceId]).controller(CustomerDetailControllerId, CustomerDetailController);
