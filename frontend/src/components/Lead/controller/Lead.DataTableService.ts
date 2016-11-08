@@ -150,7 +150,11 @@ class LeadDataTableService {
     }
 
     getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
-        let user: User = this.rootScope.user;
+        let user = new User();
+        let rootScopeUser: User = this.rootScope.user;
+        user.id = rootScopeUser.id;
+        user.role = Role.SUPERADMIN;
+
         let config = new ActionButtonConfigBuilder();
         config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("LEAD_FOLLOW_UP");
         if (process.status === Status.OPEN || process.status === Status.INCONTACT) {
