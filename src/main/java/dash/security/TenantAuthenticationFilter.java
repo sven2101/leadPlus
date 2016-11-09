@@ -37,8 +37,7 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 	}
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
 		Optional<String> tenant = Optional.ofNullable(request.getHeader("X-TenantID"));
 
@@ -58,7 +57,10 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 
 	private String validateTenant(String tenantKey) {
 		String[] tenant = tenantKey.split("\\.");
-		if (tenant.length == 3)
+
+		if (tenant.length == 4 && tenant[0].equals("www"))
+			return tenant[1];
+		else if (tenant.length == 3)
 			return tenant[0];
 		else if (tenant.length == 2)
 			return TenantContext.NO_TENANT;
@@ -73,8 +75,7 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 			return true;
 		}
 
-		if (existingAuth instanceof TenantAuthenticationToken
-				&& !((TenantAuthenticationToken) existingAuth).getTenant().equals(tenant)) {
+		if (existingAuth instanceof TenantAuthenticationToken && !((TenantAuthenticationToken) existingAuth).getTenant().equals(tenant)) {
 			return true;
 		}
 

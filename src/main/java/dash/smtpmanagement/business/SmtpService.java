@@ -97,7 +97,7 @@ public class SmtpService implements ISmtpService {
 			props.setProperty("mail.smtp.port", String.valueOf(smtp.getPort()));
 			props.put("mail.smtp.auth", "true");
 			props.put("mail.smtp.ssl.trust", smtp.getHost());
-			if (smtp.getHost().contains("gmail"))
+			if (smtp.getPort() == 587)
 				props.put("mail.smtp.starttls.enable", "true");
 		} else if (smtp.getEncryption() == Encryption.SSL) {
 			props.put("mail.smtp.host", smtp.getHost());
