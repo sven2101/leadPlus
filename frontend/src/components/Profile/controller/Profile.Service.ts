@@ -61,7 +61,9 @@ class ProfileService {
 
         this.userResource.update(user).$promise.then(function (updatedUser: User) {
             self.updateRootScope(updatedUser);
-            self.cookies.putObject("user", self.rootScope.user);
+            let date = new Date();
+            date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
+            self.cookies.putObject("user", self.rootScope.user, { domain: self.rootScope.tenant.tenantKey, path: "/", expires: date });
             self.rootScope.changeLanguage(self.rootScope.user.language);
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
             defer.resolve(updatedUser);
@@ -74,9 +76,10 @@ class ProfileService {
 
     updateProfileImage(user: User) {
         let self = this;
-        this.userResource.setProfilePicture(user).$promise.then(function (data: User) {
+        this.userResource.setProfilePicture(user).$promise.then(function (data: any) {
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
             data.authorization = self.rootScope.user.authorization;
+            data.smtpKey = self.rootScope.user.smtpKey;
             self.rootScope.user = data;
             let date = new Date();
             date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
