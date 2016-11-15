@@ -455,7 +455,7 @@ function config($translateProvider) {
             CALCULATION_GROSS: "Brutto",
             CALCULATION_VAT: "Mehrwertsteuer",
 
-             // Tooltip
+            // Tooltip
             TOOLTIP_SIGN_UP: "Registrieren Sie sich jetzt unter ihrer spezifischen Subdomain um vollen Zugriff auf die Anwendung zu erhalten. Nach der erfolgreichen Registrierung, muss ihr Anwendungs-Administrator ihren Account freischalten.",
             TOOLTIP_TODO: "Über ToDo kannst Du all die Prozesse im Auge behalten, an denen Du beteiligt bist.",
             TOOLTIP_PROFIL_PICTURE: "Wähle dein Profilbild und speichere es. Danach präsentiert es Dich innerhalb der Anwendung.",
