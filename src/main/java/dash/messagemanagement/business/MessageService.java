@@ -52,8 +52,8 @@ public class MessageService implements IMessageService {
 	}
 
 	@Override
-	public AbstractMessage getOfferContent(final Offer offer, final String templateWithPlaceholders,
-			final Notification notification) throws IOException, NotFoundException, TemplateException {
+	public AbstractMessage getOfferContent(final Offer offer, final String templateWithPlaceholders, final Notification notification)
+			throws IOException, NotFoundException, TemplateException {
 
 		final StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
 		cfg.setTemplateLoader(stringTemplateLoader);
@@ -73,8 +73,8 @@ public class MessageService implements IMessageService {
 		Writer writer = new StringWriter();
 		template.process(mapping, writer);
 
-		return new OfferMessage(notification.getRecipient(), notification.getSubject(), writer.toString(),
-				notification.getAttachment(), NotificationType.OFFER);
+		return new OfferMessage(notification.getRecipient(), notification.getSubject(), writer.toString(), notification.getAttachments(),
+				NotificationType.OFFER);
 	}
 
 	private String unescapeString(String escapedString) {

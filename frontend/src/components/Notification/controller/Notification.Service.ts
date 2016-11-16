@@ -1,5 +1,7 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Notification/model/Notification.Model.ts" />
+/// <reference path="../../Attachment/model/Attachment.Model.ts" />
+/// <reference path="../../Common/model/Promise.Interface.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -22,21 +24,21 @@ const NotificationServiceId: string = "NotificationService";
 
 class NotificationService {
 
-    private $inject = [toasterId, $translateId, $rootScopeId, NotificationResourceId, $qId, FileResourceId];
+    private $inject = [toasterId, $translateId, $rootScopeId, NotificationResourceId, $qId, AttachmentResourceId];
 
     toaster;
     translate;
     rootScope;
     notificationResource;
-    fileResource;
+    attachmentResource;
     formdata;
     fileReader;
     notification: Notification;
     q;
 
-    constructor(toaster, $translate, $rootScope, NotificationResource, $q, FileResource) {
+    constructor(toaster, $translate, $rootScope, NotificationResource, $q, AttachmentResource) {
         this.notificationResource = NotificationResource.resource;
-        this.fileResource = FileResource.resource;
+        this.attachmentResource = AttachmentResource.resource;
         this.toaster = toaster;
         this.translate = $translate;
         this.rootScope = $rootScope;
@@ -59,40 +61,48 @@ class NotificationService {
         return defer.promise;
     }
 
-    saveFileUpload(fileUpload: FileUpload): IPromise<FileUpload> {
+    saveAttachments(attachments: Attachment[]): IPromise<Attachment[]> {
         let defer = this.q.defer();
-        if (isNullOrUndefined(fileUpload) || isNullOrUndefined(fileUpload.content)) {
-            defer.resolve(fileUpload);
-            return defer.promise;
+        for (let attachment of attachments) {
+            if (isNullOrUndefined(attachment) || isNullOrUndefined(attachment.fileUpload) || isNullOrUndefined(attachment.fileUpload.content)) {
+                defer.resolve(attachments);
+                return defer.promise;
+            }
         }
-        this.fileResource.createFileUpload(fileUpload).$promise.then((resultFileUpload) => defer.resolve(resultFileUpload), (error) => defer.reject(error));
+        this.attachmentResource.createAttachments(attachments).$promise.then((resultAttachments) => defer.resolve(resultAttachments), (error) => defer.reject(error));
         return defer.promise;
-
     }
 
     setAttachmentToNotification($files, notification: Notification) {
         let defer = this.q.defer();
         if (isNullOrUndefined($files[0])) {
-            notification.attachment = undefined;
+            notification.attachments = undefined;
             defer.resolve(notification);
-
         } else {
             let self = this;
-            this.formdata.append("file", $files[0]);
-            notification.attachment = new FileUpload();
-            notification.attachment.filename = $files[0].name;
-            notification.attachment.mimeType = $files[0].type;
-            notification.attachment.size = $files[0].size;
-            let fileReader = new FileReader();
-            fileReader.readAsDataURL($files[0]);
-            fileReader.onload = function () {
-                notification.attachment.content = this.result.split(",")[1];
-                defer.resolve(notification);
-            };
-            fileReader.onerror = (error) => {
-                handleError(error);
-                defer.reject(notification);
-            };
+            for (let file of $files) {
+                let attachment = new Attachment();
+                let fileUpload = new FileUpload();
+                let fileReader = new FileReader();
+
+                this.formdata.append("file", file);
+
+                fileUpload.filename = file.name;
+                fileUpload.mimeType = file.type;
+                fileUpload.size = file.size;
+                fileReader.readAsDataURL(file);
+                fileReader.onload = function () {
+                    fileUpload.content = this.result.split(",")[1];
+                    attachment.fileUpload = fileUpload;
+                    attachment.notification = notification;
+                    notification.attachments.push(attachment);
+                    defer.resolve(notification);
+                };
+                fileReader.onerror = (error) => {
+                    handleError(error);
+                    defer.reject(notification);
+                };
+            }
         }
 
         return defer.promise;

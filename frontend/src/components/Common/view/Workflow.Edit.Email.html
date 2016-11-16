@@ -37,9 +37,10 @@
 			<label>{{ 'EMAIL_ATTACHMENT' | translate }}</label>
 			<br/>
 			<div ng-if="!parent.editEmail" class="fileinput fileinput-new" data-provides="fileinput">
-				<span class="btn btn-default btn-file"><span class="fileinput-new">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }}</span>
+				<span class="btn btn-default btn-file">
+					<span class="fileinput-new">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }}</span>
 				<span class="fileinput-exists">{{ 'EMAIL_ATTACHMENT_CHANGE' | translate }} </span>
-				<input ng-disabled="parent.editEmail" name="attachement" required type="file" name="..." ng-files="parent.getTheFiles($files);"
+				<input ng-disabled="parent.editEmail" name="attachement" required type="file" multiple="multiple" name="..." ng-files="parent.getTheFiles($files);"
 					accept="application/pdf,image/gif,image/jpeg">
 				<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
 				</input>
@@ -52,6 +53,11 @@
 				class="close fileinput-exists" style="float: none">×</a>
 			<br/>
 		</div>
+		<form action="#" class="dropzone" id="dropzoneForm">
+			<div class="fallback">
+				<input name="file" type="file" multiple />
+			</div>
+		</form>
 		<div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.message.$invalid}">
 			<label>{{ 'EMAIL_MESSAGE' | translate }}</label><span style="color:red">*</span>
 			<br/>
@@ -63,3 +69,7 @@
 		</div>
 	</div>
 </form>
+
+<script type="text/javascript">
+	Dropzone.autoDiscover = false;
+</script>

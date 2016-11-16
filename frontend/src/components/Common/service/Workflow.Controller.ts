@@ -224,8 +224,8 @@ class WorkflowController extends AbstractWorkflow {
         let notification = this.currentNotification;
         this.notificationService.sendNotification(notification).then(() => {
             self.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
-                self.notificationService.saveFileUpload(notification.attachment).then((resultFileUpload) => {
-                    notification.attachment = resultFileUpload;
+                self.notificationService.saveAttachments(notification.attachments).then((result) => {
+                    notification.attachments = result;
                     if (isNullOrUndefined(process.notifications)) {
                         process.notifications = [];
                     }

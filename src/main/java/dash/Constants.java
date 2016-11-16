@@ -34,6 +34,7 @@ public final class Constants {
 	public static final String CUSTOMER_NOT_FOUND = "Customer not found. ";
 	public static final String PROSPECT_NOT_FOUND = "Prospect not found. ";
 	public static final String FILE_NOT_FOUND = "File not found. ";
+	public static final String ATTACHMENT_NOT_FOUND = "Attachment not found. ";
 	public static final String TEMPLATE_NOT_FOUND = "Template not found. ";
 	public static final String TENANT_NOT_FOUND = "Tenant not found. ";
 

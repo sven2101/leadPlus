@@ -342,6 +342,27 @@ angular.module(moduleFileResource, [ngResourceId]).service(FileResourceId, FileR
 
 // ----------------------------------------------------------------------------------------
 
+const AttachmentResourceId: string = "AttachmentResource";
+
+class AttachmentResource {
+
+    private $inject = [$resourceId];
+
+    resource: any;
+
+    constructor($resource) {
+        this.resource = $resource("/api/rest/attachments", {}, {
+            createAttachments: { url: "/api/rest/attachments", method: "POST" },
+            getAttachmentById: { url: "/api/rest/attachments/:id", method: "GET" },
+            getContentByAttachmentId: { url: "/api/rest/attachments/content/:id", method: "GET", responseType: "arraybuffer" }
+        });
+    }
+}
+
+angular.module(moduleAttachmentResource, [ngResourceId]).service(AttachmentResourceId, AttachmentResource);
+
+// ----------------------------------------------------------------------------------------
+
 const TemplateResourceId: string = "TemplateResource";
 
 class TemplateResource {

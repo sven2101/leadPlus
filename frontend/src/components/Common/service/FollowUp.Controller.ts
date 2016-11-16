@@ -99,11 +99,10 @@ class FollowUpController {
         let notification = this.currentNotification;
         notification.id = undefined;
 
-
         this.notificationService.sendNotification(notification).then(() => {
-            self.notificationService.saveFileUpload(notification.attachment).then((resultFileUpload) => {
+            self.notificationService.saveAttachments(notification.attachments).then((result) => {
 
-                notification.attachment = resultFileUpload;
+                notification.attachments = result;
                 if (isNullOrUndefined(process.notifications)) {
                     process.notifications = [];
                 }
