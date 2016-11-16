@@ -86,7 +86,7 @@
 								<div class="form-group " ng-class="{
                                 'has-error' :profilInfoForm.vat.$invalid && !profilInfoForm.vat.$pristine } ">
 									<label><i class="fa fa-percent " aria-hidden="true "></i>   {{ 'PROFILE_DEFAULT_VAT' | translate }}</label>
-									<input class="form-control currency" focus-me="inputfield" name="vat" type="number " ng-model="profileCtrl.currentUser.defaultVat  "
+									<input class="form-control currency" name="vat" type="number " ng-model="profileCtrl.currentUser.defaultVat  "
 										ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " max="100 ">
 								</div>
 							</div>
