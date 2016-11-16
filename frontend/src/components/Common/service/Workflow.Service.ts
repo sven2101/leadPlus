@@ -53,7 +53,7 @@ class WorkflowService {
     uibModal;
     users: Array<User> = [];
 
-    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService) {
+    constructor(CommentResource, ProcessResource, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService) {
         this.commentResource = CommentResource.resource;
         this.processResource = ProcessResource.resource;
         this.userResource = UserResource.resource;
