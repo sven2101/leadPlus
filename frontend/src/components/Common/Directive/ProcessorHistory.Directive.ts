@@ -58,7 +58,6 @@ class ProcessorHistoryDirective implements IDirective {
         if (timestamp === undefined) {
             timestamp = newTimestamp();
         }
-        console.log(timestamp);
         return toLocalDate(timestamp);
     }
 }

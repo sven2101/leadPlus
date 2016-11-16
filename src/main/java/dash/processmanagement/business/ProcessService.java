@@ -52,6 +52,7 @@ import dash.offermanagement.business.IOfferService;
 import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
+import dash.processmanagement.domain.Processor;
 import dash.productmanagement.domain.OrderPosition;
 import dash.salemanagement.business.ISaleService;
 import dash.salemanagement.domain.Sale;
@@ -300,6 +301,11 @@ public class ProcessService implements IProcessService {
 		if (process.getSale() != null) {
 			for (OrderPosition temp : process.getSale().getOrderPositions()) {
 				temp.setWorkflow(process.getSale());
+			}
+		}
+		if (process.getFormerProcessors() != null) {
+			for (Processor temp : process.getFormerProcessors()) {
+				temp.setProcess(process);
 			}
 		}
 	}
