@@ -61,6 +61,7 @@ class ProfileController {
     }
 
     updateProfilInfo() {
+        console.log(this.currentUser);
         this.profileService.updateProfilInfo(this.currentUser).then((result) => this.currentUser = result, (error) => { this.reduceCurrentUserInfo(); });
     }
 

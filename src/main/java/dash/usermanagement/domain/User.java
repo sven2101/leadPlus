@@ -31,6 +31,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -119,6 +120,11 @@ public class User implements UserDetails, Principal {
 	@NotNull
 	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
+	
+	@NotNull
+	@Digits(integer = 4, fraction = 2)
+	@Column(name = "default_vat", nullable = false)
+	private Double default_vat;
 
 	public User() {
 	}
@@ -253,6 +259,15 @@ public class User implements UserDetails, Principal {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	
+
+	public Double getDefault_vat() {
+		return default_vat;
+	}
+
+	public void setDefault_vat(Double default_vat) {
+		this.default_vat = default_vat;
+	}
 
 	@Override
 	@JsonIgnore
@@ -286,6 +301,7 @@ public class User implements UserDetails, Principal {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((default_vat == null) ? 0 : default_vat.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + (enabled ? 1231 : 1237);
 		result = prime * result + ((fax == null) ? 0 : fax.hashCode());
@@ -313,6 +329,11 @@ public class User implements UserDetails, Principal {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
+		if (default_vat == null) {
+			if (other.default_vat != null)
+				return false;
+		} else if (!default_vat.equals(other.default_vat))
+			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
@@ -387,7 +408,7 @@ public class User implements UserDetails, Principal {
 		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", phone=" + phone
 				+ ", skype=" + skype + ", fax=" + fax + ", job=" + job + ", lastname=" + lastname + ", email=" + email
 				+ ", password=" + password + ", role=" + role + ", picture=" + picture + ", thumbnail=" + thumbnail
-				+ ", language=" + language + ", enabled=" + enabled + "]";
+				+ ", language=" + language + ", enabled=" + enabled + ", default_vat=" + default_vat + "]";
 	}
 
 	@Override

@@ -201,6 +201,7 @@ class WorkflowService {
             deliveryDate: null,
             offerPrice: self.sumOrderPositions(process.lead.orderPositions) + process.lead.deliveryCosts,
             customer: process.lead.customer,
+            vat: self.user.defaultVat,
             timestamp: newTimestamp(),
             vendor: process.lead.vendor,
             deliveryCosts: process.lead.deliveryCosts,
