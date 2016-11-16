@@ -36,14 +36,13 @@ const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId, UserResourceId, TemplateServiceId];
+    private $inject = [CommentResourceId, ProcessResourceId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId, UserResourceId, TemplateServiceId];
 
     commentResource;
     processResource;
     userResource;
     templateService;
 
-    filter;
     toaster;
     rootScope;
     translate;
@@ -54,15 +53,12 @@ class WorkflowService {
     uibModal;
     users: Array<User> = [];
 
-    user: any;
-    tenant: any;
 
-    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService) {
+    constructor(CommentResource, ProcessResource, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService) {
         this.commentResource = CommentResource.resource;
         this.processResource = ProcessResource.resource;
         this.userResource = UserResource.resource;
         this.templateService = TemplateService;
-        this.filter = $filter;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
@@ -71,8 +67,6 @@ class WorkflowService {
         this.productService = ProductService;
         this.customerService = CustomerService;
         this.uibModal = $uibModal;
-        this.user = $rootScope.user;
-        this.tenant = $rootScope.tenant;
         this.refreshUsers();
     }
 
@@ -88,7 +82,7 @@ class WorkflowService {
         let self: WorkflowService = this;
         let comment: Commentary = {
             id: null,
-            creator: this.user,
+            creator: this.rootScope.user,
             commentText: commentText,
             timestamp: newTimestamp()
         };
@@ -201,6 +195,7 @@ class WorkflowService {
             deliveryDate: null,
             offerPrice: self.sumOrderPositions(process.lead.orderPositions) + process.lead.deliveryCosts,
             customer: process.lead.customer,
+            vat: self.rootScope.user.defaultVat,
             timestamp: newTimestamp(),
             vendor: process.lead.vendor,
             deliveryCosts: process.lead.deliveryCosts,
@@ -288,7 +283,7 @@ class WorkflowService {
                 process.offer = resultOffer;
                 process.status = resultProcess.status;
                 if (resultProcess.processor === null) {
-                    self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function (resultUser: User) {
+                    self.processResource.setProcessor({ id: resultProcess.id }, self.rootScope.user.id).$promise.then(function (resultUser: User) {
                         process.processor = resultUser;
                         defer.resolve(process);
                         self.rootScope.$broadcast("onTodosChange");
@@ -318,8 +313,8 @@ class WorkflowService {
                 self.rootScope.offersCount -= 1;
                 process.sale = resultSale;
                 process.status = resultProcess.status;
-                self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function () {
-                    process.processor = self.user;
+                self.processResource.setProcessor({ id: resultProcess.id }, self.rootScope.user.id).$promise.then(function () {
+                    process.processor = self.rootScope.user;
                     self.rootScope.$broadcast("onTodosChange");
                     defer.resolve(process);
                 });
@@ -424,8 +419,8 @@ class WorkflowService {
                     handleError(xhr);
                 },
                 "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.tenant.tenantKey);
+                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
+                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
                 }
             };
         } else {
@@ -436,8 +431,8 @@ class WorkflowService {
                 },
                 type: "GET",
                 "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.tenant.tenantKey);
+                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
+                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
                 }
             };
         }
@@ -623,9 +618,6 @@ class WorkflowService {
             });
         }
     }
-
-
-
 
 }
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);

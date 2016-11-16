@@ -142,6 +142,7 @@ public class UserService implements IUserService {
 					updateUser.setSkype(user.getSkype());
 					updateUser.setFax(user.getFax());
 					updateUser.setJob(user.getJob());
+					updateUser.setDefaultVat(user.getDefaultVat());
 					return save(updateUser);
 
 				} else {

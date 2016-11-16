@@ -61,7 +61,6 @@ class ProfileController {
     }
 
     updateProfilInfo() {
-        console.log(this.currentUser);
         this.profileService.updateProfilInfo(this.currentUser).then((result) => this.currentUser = result, (error) => { this.reduceCurrentUserInfo(); });
     }
 
@@ -74,6 +73,7 @@ class ProfileController {
         this.currentUser.skype = this.rootscope.user.skype;
         this.currentUser.job = this.rootscope.user.job;
         this.currentUser.fax = this.rootscope.user.fax;
+        this.currentUser.defaultVat = this.rootscope.user.defaultVat;
     }
 
     updateProfileImage(user: User) {

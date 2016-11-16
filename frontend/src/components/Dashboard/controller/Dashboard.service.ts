@@ -46,7 +46,6 @@ class DashboardService {
     SweetAlert: any;
     uibModal;
 
-    user: User;
     todos: Array<Process> = [];
 
     constructor(ProcessResource, toaster, $rootScope, $translate, WorkflowService, $uibModal, $q, SweetAlert) {
@@ -57,7 +56,6 @@ class DashboardService {
         this.translate = $translate;
         this.q = $q;
         this.SweetAlert = SweetAlert;
-        this.user = $rootScope.user;
         this.uibModal = $uibModal;
         this.initDashboard();
         this.refreshTodos();

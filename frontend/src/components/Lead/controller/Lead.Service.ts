@@ -24,7 +24,7 @@ const LeadServiceId: string = "LeadService";
 
 class LeadService {
 
-    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, LeadResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId];
+    $inject = [$rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, LeadResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId];
     processResource;
     customerResource;
     leadResource;
@@ -33,19 +33,16 @@ class LeadService {
     productService: ProductService;
     translate;
     rootScope;
-    filter;
     toaster;
     compile;
     templateService;
 
     rows: { [key: number]: any } = {};
-    user: User;
 
-    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, LeadResource, WorkflowService, CustomerService, ProductService, TemplateService) {
+    constructor($rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, LeadResource, WorkflowService, CustomerService, ProductService, TemplateService) {
         this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
-        this.filter = $filter;
         this.toaster = toaster;
         this.compile = $compile;
         this.processResource = ProcessResource.resource;
@@ -54,7 +51,6 @@ class LeadService {
         this.workflowService = WorkflowService;
         this.customerService = CustomerService;
         this.productService = ProductService;
-        this.user = $rootScope.user;
     }
 
     saveLead(dtInstance: any, newLead: Lead, currentOrderPositions: Array<OrderPosition>) {

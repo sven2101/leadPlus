@@ -24,7 +24,7 @@ const OfferServiceId: string = "OfferService";
 
 class OfferService {
 
-    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, OfferResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, DashboardServiceId, TemplateServiceId];
+    $inject = [$rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, OfferResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, DashboardServiceId, TemplateServiceId];
     processResource;
     customerResource;
     offerResource;
@@ -37,18 +37,15 @@ class OfferService {
 
     translate;
     rootScope;
-    filter;
     toaster;
     compile;
 
     rows: { [key: number]: any } = {};
-    user: User;
 
-    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, OfferResource, WorkflowService, CustomerService, ProductService, DashboardService, TemplateService) {
+    constructor($rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, OfferResource, WorkflowService, CustomerService, ProductService, DashboardService, TemplateService) {
         this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
-        this.filter = $filter;
         this.toaster = toaster;
         this.compile = $compile;
         this.processResource = ProcessResource.resource;
@@ -58,7 +55,6 @@ class OfferService {
         this.customerService = CustomerService;
         this.productService = ProductService;
         this.dashboardService = DashboardService;
-        this.user = $rootScope.user;
     }
 
     createSale(process: Process, loadAllData: boolean, dtInstance: any, scope: any) {

@@ -23,9 +23,7 @@ const ProfileServiceId: string = "ProfileService";
 
 class ProfileService {
 
-
     private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId, $cookiesId, $locationId];
-
 
     userResource;
     translate;
@@ -36,7 +34,6 @@ class ProfileService {
     formdata;
     q;
     cookies;
-    user: User;
 
     oldPassword: string;
     newPassword1: string;
@@ -151,6 +148,7 @@ class ProfileService {
         this.rootScope.user.skype = user.skype;
         this.rootScope.user.job = user.job;
         this.rootScope.user.fax = user.fax;
+        this.rootScope.user.defaultVat = user.defaultVat;
     }
 
     getTheFiles($files) {
