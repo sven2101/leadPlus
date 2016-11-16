@@ -1,0 +1,78 @@
+<div class="modal inmodal" id="createCustomerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 ng-show="customerCtrl.isCurrentCustomerNew" class="modal-title">{{ 'CUSTOMER_CREATE' | translate }}</h4>
+                <h4 ng-show="!customerCtrl.isCurrentCustomerNew" class="modal-title">{{ 'CUSTOMER_EDIT' | translate }}</h4>
+
+            </div>
+            <div class="modal-body">
+                <form name="customerCtrl.createCustomerForm" novalidate>
+                    <div class="row">
+                        <!-- NAME -->
+                        <div class="col-sm-6 b-r">
+                            <div class="form-group">
+                                <label>{{ 'COMMON_TITLE' | translate }}</label>
+                                <select name="title" class="form-control" ng-model="customerCtrl.currentCustomer.title">
+                                    <option value="MR">{{ 'COMMON_TITLE_MR' | translate }}</option>
+                                    <option value="MS">{{ 'COMMON_TITLE_MS' | translate }}</option>
+                                </select>
+                            </div>
+                            <!-- FIRSTNAME -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.firstname.$invalid && !customerCtrl.createCustomerForm.firstname.$pristine }">
+                                <label>{{ 'COMMON_FIRSTNAME' | translate }}<span style="color:red">*</span></label>
+                                <input required type="text" name="firstname" class="form-control" ng-model="customerCtrl.currentCustomer.firstname" ng-maxlength="30">
+                                <p ng-show="customerCtrl.createCustomerForm.firstname.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                                <p ng-show="customerCtrl.createCustomerForm.firstname.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+                            </div>
+                            <!-- LASTNAME -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.lastname.$invalid && !customerCtrl.createCustomerForm.lastname.$pristine }">
+                                <label>{{ 'COMMON_LASTNAME' | translate }}<span style="color:red">*</span></label>
+                                <input required type="text" name="lastname" class="form-control" ng-model="customerCtrl.currentCustomer.lastname" ng-maxlength="30">
+                                <p ng-show="customerCtrl.createCustomerForm.lastname.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                                <p ng-show="customerCtrl.createCustomerForm.lastname.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+                            </div>
+                            <div class="form-group" ng-show="!customerCtrl.isCurrentCustomerNew">
+                                <label class="checkbox-inline"> <input type="checkbox"  ng-model="customerCtrl.currentCustomer.deactivated" id="inlineCheckbox1">{{ 'PRODUCT_DEACTIVATED' | translate }}</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <!-- COMPANY -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.company.$invalid && !customerCtrl.createCustomerForm.company.$pristine }">
+                                <label>{{ 'COMMON_COMPANY' | translate }}</label>
+                                <input type="text" name="company" class="form-control" ng-model="customerCtrl.currentCustomer.company" ng-maxlength="50">
+                                <p ng-show="customerCtrl.createCustomerForm.company.$invalid && !customerCtrl.createCustomerForm.company.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            </div>
+                            <!-- EMAIL -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.email.$invalid && !customerCtrl.createCustomerForm.email.$pristine }">
+                                <label>{{ 'COMMON_EMAIL' | translate }}</label>
+                                <input type="email" name="email" class="form-control" ng-model="customerCtrl.currentCustomer.email">
+                                <p ng-show="customerCtrl.createCustomerForm.email.$invalid && !customerCtrl.createCustomerForm.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL'| translate }}</p>
+                            </div>
+                            <!-- PHONE -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.phone.$invalid && !customerCtrl.createCustomerForm.phone.$pristine }">
+                                <label>{{ 'COMMON_PHONE' | translate }}</label>
+                                <input type="text" name="phone" class="form-control" ng-model="customerCtrl.currentCustomer.phone" ng-maxlength="50">
+                                <p ng-show="customerCtrl.createCustomerForm.phone.$invalid && !customerCtrl.createCustomerForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            </div>
+                            <!-- CUSTOMERNUMBER -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.customerNumber.$invalid && !customerCtrl.createCustomerForm.customerNumber.$pristine }">
+                                <label>{{ 'CUSTOMER_NUMBER' | translate }}</label>
+                                <input type="text" name="customerNumber" class="form-control" ng-model="customerCtrl.currentCustomer.customerNumber" ng-maxlength="50">
+                                <p ng-show="customerCtrl.createCustomerForm.customerNumber.$invalid && !customerCtrl.createCustomerForm.customerNumber.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}</button>
+                <button type="button" class="btn btn-success" ng-disabled="customerCtrl.createCustomerForm.$invalid" ng-click="customerCtrl.saveCustomer()"
+                    data-dismiss="modal">{{ 'COMMON_SAVE' | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>
