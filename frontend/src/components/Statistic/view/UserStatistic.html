@@ -1,0 +1,60 @@
+<div ng-if="statisticCtrl.currentTab==3">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-right">{{ statisticCtrl.dateRange | translate }}</span>
+                    <h5>{{ 'STATISTIC_TOP_SALESMAN' | translate }}</h5>
+                </div>
+                <div class="ibox-content">
+                    <table class="footable table">
+                        <thead>
+                            <tr>
+                                <th data-toggle="true"></th>
+                                <th class="text-center">#</th>
+                                <th class="text-center">{{ 'COMMON_USER' | translate }}</th>
+                                <th class="text-center" data-hide="all"></th>
+                                <th class="text-center">{{ 'STATISTIC_COMPLETED_SALES' | translate }}</th>
+                                <th class="text-center">{{ 'COMMON_CONVERSIONRATE' | translate }}</th>
+                                <th class="text-center">{{ 'DETAIL_STATISTIC_REALISED_TURNOVER' | translate }}</th>
+                                <th class="text-center">{{ 'DETAIL_STATISTIC_REALISED_PROFIT' | translate }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="userStatistic in  statisticCtrl.getUserStatistic() | orderBy:'-turnover' | limitTo:10" foo-repeat-done>
+                                <td></td>
+                                <td class="text-center">{{$index+1}}</td>
+                                <td class="text-center">{{statisticCtrl.getUserString(userStatistic.user)}}</td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td><b>{{ 'STATISTIC_INVOLVED_IN_PROCESSES' | translate }}:</b></td>
+                                            <td>&nbsp;&nbsp;{{userStatistic.countProcess}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>{{ 'STATISTIC_WORKED_ON_LEADS' | translate }}:</b></td>
+                                            <td>&nbsp;&nbsp;{{userStatistic.countLead}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>{{ 'STATISTIC_WORKED_ON_OFFERS' | translate }}:</b></td>
+                                            <td>&nbsp;&nbsp;{{userStatistic.countOffer}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>{{ 'STATISTIC_PRODUCT_SALES' | translate }}:</b></td>
+                                            <td>&nbsp;&nbsp;{{userStatistic.countProduct}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td class="text-center">{{userStatistic.countSale}}</td>
+                                <td class="text-center">{{statisticCtrl.getRatePercentage(userStatistic.countSale,userStatistic.countLead) | number:2}}%
+                                </td>
+                                <td class="text-center" style="color:green">{{userStatistic.turnover | currency:'\u20AC'}}</td>
+                                <td class="text-center" style="color:green">{{userStatistic.profit | currency:'\u20AC'}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
