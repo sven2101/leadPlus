@@ -27,6 +27,7 @@
                                 <option value="OPEN">OPEN</option>
                                 <option value="OFFER">OFFER</option>
                                 <option value="SALE">SALE</option>
+                                <option value="INCONTACT">SALE</option>
                             </select>
                         </td>
                         <td>
@@ -52,9 +53,11 @@
                             <select class="form-control" ng-change="checkForDups(process.formerProcessors,currentSelectedFomerProcessor,currentSelectedActivity)"
                                 ng-model="currentSelectedActivity">
                                 <option value="-1" hidden disabled>{{ 'FORMER_PROCESSOR_SELECT_ACTIVITY' | translate }}</option>
-                                <option value="OPEN">OPEN</option>
-                                <option value="OFFER">OFFER</option>
-                                <option value="SALE">SALE</option>
+                                <option value="OPEN">{{ 'COMMON_STATUS_LEAD' | translate }}</option>
+                                       <option value="INCONTACT">{{ 'COMMON_STATUS_INCONTACT' | translate }}</option>
+                                <option value="OFFER">{{ 'COMMON_STATUS_OFFER' | translate }}</option>
+                                <option value="SALE">{{ 'COMMON_STATUS_SALE' | translate }}</option>
+                         
                             </select>
                         </td>
                         <td></td>

@@ -209,6 +209,7 @@ function config($translateProvider) {
             COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD: "Angebot wurde erfolgreich auf eine Anfrage zurückgesetzt",
             COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD_ERROR: "Angebot konnte nicht auf eine Anfrage zurückgesetzt werden",
             COMMON_STATUS_OPEN: "Offen",
+            COMMON_STATUS_LEAD: "Anfrage",
             COMMON_STATUS_INCONTACT: "In Kontakt",
             COMMON_STATUS_OFFER: "Angebot",
             COMMON_STATUS_FOLLOW_UP: "Follow up",
@@ -459,7 +460,15 @@ function config($translateProvider) {
             TOOLTIP_SIGN_UP: "Registrieren Sie sich jetzt unter ihrer spezifischen Subdomain um vollen Zugriff auf die Anwendung zu erhalten. Nach der erfolgreichen Registrierung, muss ihr Anwendungs-Administrator ihren Account freischalten.",
             TOOLTIP_TODO: "Über ToDo kannst Du all die Prozesse im Auge behalten, an denen Du beteiligt bist.",
             TOOLTIP_PROFIL_PICTURE: "Wähle dein Profilbild und speichere es. Danach präsentiert es Dich innerhalb der Anwendung.",
-            TOOLTIP_CUSTOMER_LOOKUP: "Ab einer Eingabe von 3 Zeichen werden dir relevante Kunden angezeigt.\nDu kannst nach Vorname, Nachname, Firma, E-Mail und Kundennummer suchen."
+            TOOLTIP_CUSTOMER_LOOKUP: "Ab einer Eingabe von 3 Zeichen werden dir relevante Kunden angezeigt.\nDu kannst nach Vorname, Nachname, Firma, E-Mail und Kundennummer suchen.",
+
+            // former Processor 
+            FORMER_PROCESSOR: "Ehemalige Bearbeiter",
+            FORMER_PROCESSOR_NAME: "Bearbeiter",
+            FORMER_PROCESSOR_ACTIVITY: "Tätigkeit",
+            FORMER_PROCESSOR_TIMESTAMP: "Datum",
+            FORMER_PROCESSOR_SELECT_ACTIVITY: "Tätigkeit auswählen",
+
 
         })
         .translations(Language[Language.EN], {
@@ -651,6 +660,7 @@ function config($translateProvider) {
             COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD: "Succesfull rollback of Offer to Lead",
             COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD_ERROR: "Unsuccesfull rollback of Offer to Lead",
             COMMON_STATUS_OPEN: "Open",
+            COMMON_STATUS_LEAD: "Lead",
             COMMON_STATUS_INCONTACT: "In contact",
             COMMON_STATUS_OFFER: "Offer",
             COMMON_STATUS_FOLLOW_UP: "Follow up",
@@ -902,7 +912,14 @@ function config($translateProvider) {
             TOOLTIP_SIGN_UP: "Sign up now under your unique tenant domain section to get full acces<br>s. After Sign up your administrator needs to enable your account.",
             TOOLTIP_TODO: "Via ToDo you can keep all your processes in mind.",
             TOOLTIP_PROFIL_PICTURE: "Select your Profil Picture and press save to keep it. Afterwards it will present you within this Application.",
-            TOOLTIP_CUSTOMER_LOOKUP: "From 3 characters the relevant customers will appear.\nYou can search for firstname, lastname, company, e-mail and customernumber."
+            TOOLTIP_CUSTOMER_LOOKUP: "From 3 characters the relevant customers will appear.\nYou can search for firstname, lastname, company, e-mail and customernumber.",
+
+            // former Processor 
+            FORMER_PROCESSOR: "Former Processors",
+            FORMER_PROCESSOR_NAME: "Processor",
+            FORMER_PROCESSOR_ACTIVITY: "Activity",
+            FORMER_PROCESSOR_TIMESTAMP: "Date",
+            FORMER_PROCESSOR_SELECT_ACTIVITY: "Select activity",
 
         });
 
