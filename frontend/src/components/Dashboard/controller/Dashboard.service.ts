@@ -255,16 +255,7 @@ class DashboardService {
     }
 
     inContact(process: Process) {
-        let self = this;
-        this.processResource.setStatus({
-            id: process.id
-        }, "INCONTACT").$promise.then(function () {
-            self.toaster.pop("success", "", self.translate
-                .instant("COMMON_TOAST_SUCCESS_INCONTACT"));
-            process.status = "INCONTACT";
-            self.sumLeads();
-            self.sumInContacts();
-        });
+        this.workflowService.inContact(process);
     }
 
     closeProcess(process: Process, source: any) {
