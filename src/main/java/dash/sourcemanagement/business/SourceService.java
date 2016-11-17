@@ -43,4 +43,11 @@ public class SourceService implements ISourceService {
 			return;
 		sourceRepository.delete(id);
 	}
+
+	@Override
+	public Source getByName(String name) {
+		if (null == name)
+			return null;
+		return sourceRepository.findByName(name);
+	}
 }

@@ -38,7 +38,6 @@ import dash.customermanagement.business.ICustomerService;
 import dash.customermanagement.domain.Customer;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
-import dash.leadmanagement.business.ILeadService;
 import dash.leadmanagement.domain.Lead;
 import dash.processmanagement.business.IProcessService;
 import dash.processmanagement.domain.Process;
@@ -46,6 +45,8 @@ import dash.productmanagement.business.IProductService;
 import dash.productmanagement.business.ProductService;
 import dash.productmanagement.domain.OrderPosition;
 import dash.productmanagement.domain.Product;
+import dash.sourcemanagement.business.ISourceService;
+import dash.sourcemanagement.domain.Source;
 import dash.statusmanagement.domain.Status;
 
 @Service
@@ -53,9 +54,6 @@ import dash.statusmanagement.domain.Status;
 public class PublicApiService implements IPublicApiService {
 
 	private static final Logger logger = Logger.getLogger(ProductService.class);
-
-	@Autowired
-	private ILeadService leadservice;
 
 	@Autowired
 	private IProductService productService;
@@ -66,8 +64,11 @@ public class PublicApiService implements IPublicApiService {
 	@Autowired
 	private IProcessService processService;
 
+	@Autowired
+	private ISourceService sourceService;
+
 	@Override
-	public Lead saveLead(Lead lead) throws SaveFailedException, NotFoundException {
+	public Lead saveLead(Lead lead, String source) throws SaveFailedException, NotFoundException {
 		if (lead == null) {
 			throw new SaveFailedException(INVALID_LEAD);
 		}
@@ -126,9 +127,16 @@ public class PublicApiService implements IPublicApiService {
 
 		logging();
 
+		
+		Source sourceObj = null;
+		if(null != source && !source.equals("")){
+			sourceObj = sourceService.getByName(source);
+		}
+			
 		Process process = new Process();
 		process.setStatus(Status.OPEN);
 		process.setLead(lead);
+		process.setSource(sourceObj);
 
 		return processService.save(process).getLead();
 	}

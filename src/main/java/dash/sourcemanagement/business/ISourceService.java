@@ -14,6 +14,8 @@ public interface ISourceService {
 	public List<Source> getAll();
 
 	public Source getById(final Long id);
+	
+	public Source getByName(final String name);
 
 	public Source update(final Source source);
 
