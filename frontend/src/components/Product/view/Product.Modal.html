@@ -1,41 +1,42 @@
 <div class="modal inmodal" id="createProductModal" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content animated fadeIn">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"><span
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span
                         aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-				<h4 ng-show="productCtrl.isCurrentProductNew" class="modal-title">{{ 'PRODUCT_CREATE' | translate }}</h4>
-				<h4 ng-show="!productCtrl.isCurrentProductNew" class="modal-title">{{ 'PRODUCT_EDIT' | translate }}</h4>
+                <h4 ng-show="productCtrl.isCurrentProductNew" class="modal-title">{{ 'PRODUCT_CREATE' | translate }}</h4>
+                <h4 ng-show="!productCtrl.isCurrentProductNew" class="modal-title">{{ 'PRODUCT_EDIT' | translate }}</h4>
 
-			</div>
-			<div class="modal-body">
-				<form name="productCtrl.createProductForm" novalidate>
-					<div class="row">
-						<!-- PRODUCTNAME -->
-						<div class="col-sm-6 b-r">
-							<div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.name.$invalid && !productCtrl.createProductForm.name.$pristine }">
-								<label>{{ 'PRODUCT_PRODUCTNAME' | translate }}<span style="color:red">*</span></label>
-								<input type=" text " name="name " class="form-control " ng-model="productCtrl.currentProduct.name" ng-maxlength="30" required>
-								<p ng-show="productCtrl.createProductForm.name.$invalid && !productCtrl.createProductForm.name.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-							</div>
-							<!--DESCRIPTION -->
-							<div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.description.$invalid && !productCtrl.createProductForm.description.$pristine }">
-								<label>{{ 'PRODUCT_DESCRIPTION' | translate }}</label>
-								<textarea style="resize: none" rows="7" type="text " name="description " class="form-control " ng-model="productCtrl.currentProduct.description"
-									ng-maxlength="500">
-                               <p ng-show="productCtrl.createProductForm.description.$invalid && !productCtrl.createProductForm.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}500{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p> 
-                               </div>
+            </div>
+            <div class="modal-body">
+                <form name="productCtrl.createProductForm" novalidate>
+                    <div class="row">
+                        <!-- PRODUCTNAME -->
+                        <div class="col-sm-6 b-r">
+                            <div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.name.$invalid && !productCtrl.createProductForm.name.$pristine }">
+                                <label>{{ 'PRODUCT_PRODUCTNAME' | translate }}<span style="color:red">*</span></label>
+                                <input type=" text " name="name" class="form-control " ng-model="productCtrl.currentProduct.name" ng-maxlength="30" required>
+                                <p ng-show="productCtrl.createProductForm.name.$invalid && !productCtrl.createProductForm.name.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            </div>
+                            <!--DESCRIPTION -->
+                            <div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.description.$invalid && !productCtrl.createProductForm.description.$pristine }">
+                                <label>{{ 'PRODUCT_DESCRIPTION' | translate }}</label>
+                                <textarea style="resize: none" rows="7" type="text" name="description" class="form-control " ng-model="productCtrl.currentProduct.description"
+                                    ng-maxlength="3000"></textarea>
+                                <p ng-show="productCtrl.createProductForm.description.$invalid" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}3000{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                            </div>
                             <!-- PRICE -->
                             <div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.priceNetto.$invalid && !productCtrl.createProductForm.priceNetto.$pristine }">
                                 <label>{{ 'PRODUCT_PRICE' | translate }}<span style="color:red">*</span></label>
-                                 <div class="input-group">
-                                    <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>                                    
-                                     <input required type="number" name="priceNetto"class="form-control currency" ng-model="productCtrl.currentProduct.priceNetto" ng-maxlength="10" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01">
+                                <div class="input-group">
+                                    <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
+                                    <input required type="number" name="priceNetto" class="form-control currency" ng-model="productCtrl.currentProduct.priceNetto"
+                                        ng-maxlength="10" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01">
                                 </div>
-                               
+
                                 <p ng-show="productCtrl.createProductForm.priceNetto.$invalid && !productCtrl.createProductForm.priceNetto.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
                             </div>
-                           <div class="form-group">
+                            <div class="form-group">
                                 <label> {{ 'PRODUCT_PRODUCT_STATE' | translate }}</label>
                                 <select class="form-control" ng-model="productCtrl.currentProduct.productState">
                                     <option value="NEW" selected > {{ 'PRODUCT_PRODUCT_STATE_NEW' | translate }} </option>                                                                     
@@ -45,11 +46,12 @@
                                     <option value="USED_D" >{{ 'PRODUCT_PRODUCT_STATE_USED' | translate }}&nbsp;D</option>                                                
                                 </select>
                             </div>
-                             <!-- PRODUCTNUMBER -->
+                            <!-- PRODUCTNUMBER -->
                             <div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.productNumber.$invalid && !productCtrl.createProductForm.productNumber.$pristine }">
                                 <label>{{ 'PRODUCT_NUMBER' | translate }}</label>
                                 <input type="text" name="productNumber" class="form-control" ng-model="productCtrl.currentProduct.productNumber" ng-maxlength="50">
-                                <p ng-show="productCtrl.createProductForm.productNumber.$invalid && !productCtrl.createProductForm.productNumber.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                                <p ng-show="productCtrl.createProductForm.productNumber.$invalid && !productCtrl.createProductForm.productNumber.$pristine"
+                                    class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                             <div class="form-group" ng-show="!productCtrl.isCurrentProductNew">
                                 <label class="checkbox-inline"> <input type="checkbox"  ng-model="productCtrl.currentProduct.deactivated" id="inlineCheckbox1">{{ 'COMMON_DEACTIVATE' | translate }}</label>
@@ -59,15 +61,16 @@
                         <div class="col-sm-6">
                             <label>{{ 'PRODUCT_IMAGE' | translate }}</label>
                             <br/>
-                            <div imagecrop style="margin-left:15px" ng-if="productCtrl.showImageCropper" quality="10"  event="productImageSaved"></div>
-                   
+                            <div imagecrop style="margin-left:15px" ng-if="productCtrl.showImageCropper" quality="10" event="productImageSaved"></div>
+
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" ng-click="productCtrl.showImageCropper=false" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}</button>
-                <button type="button" class="btn btn-success" ng-disabled="productCtrl.createProductForm.$invalid" ng-click="productCtrl.savePicture()" data-dismiss="modal">{{ 'COMMON_SAVE' | translate }}</button>
+                <button type="button" class="btn btn-success" ng-disabled="productCtrl.createProductForm.$invalid" ng-click="productCtrl.savePicture()"
+                    data-dismiss="modal">{{ 'COMMON_SAVE' | translate }}</button>
             </div>
         </div>
     </div>

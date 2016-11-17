@@ -77,18 +77,21 @@
 								<h3>{{parent.process.offer.offerPrice|currency:'\u20AC'}}</h3>
 							</td>
 						</tr>
-						<tr>
+						<tr ng-if="type=='sale' || type=='offer'">
 							<td><b>+</b></td>
 							<td>
 								<table style="table-layout:fixed;">
-									<td style="vertical-align:top; overflow: hidden;">
-										{{ 'CALCULATION_VAT' | translate }} &nbsp;<span ng-show="!inputfield ">{{parent.vat}}%</span>
+									<td ng-if="type=='offer'" style="vertical-align:top; overflow: hidden;">
+										{{ 'CALCULATION_VAT' | translate }} &nbsp;<span ng-show="!inputfield ">{{parent.editWorkflowUnit.vat}}%</span>
 									</td>
-									<td style="overflow: hidden;">
+									<td ng-if="type=='sale'" style="vertical-align:top; overflow: hidden;">
+										{{ 'CALCULATION_VAT' | translate }} &nbsp;<span>{{parent.process.offer.vat}}%</span>
+									</td>
+									<td ng-if="type=='offer'" style="overflow: hidden;">
 										<div class="input-group " ng-show="inputfield " ng-class="{
                                 'has-error' : parent.priceEditForm.vat.$invalid && !parent.priceEditForm.vat.$pristine } ">
 											<span class="input-group-addon ">%</span>
-											<input class="form-control currency" focus-me="inputfield" name="vat" type="number " ng-model="parent.vat " ng-init="parent.vat=19 "
+											<input class="form-control currency" focus-me="inputfield" name="vat" type="number " ng-model="parent.editWorkflowUnit.vat "
 												ng-blur="inputfield = !(inputfield && !(parent.priceEditForm.vat.$invalid && !parent.priceEditForm.vat.$pristine))"
 												ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " max="100 " required>
 										</div>&nbsp;
@@ -96,18 +99,8 @@
 									</td>
 								</table>
 							</td>
-							<td ng-if="type=='sale' ">{{parent.process.offer.offerPrice*(parent.vat/100)|currency:'\u20AC'}}</td>
-							<td ng-if="type=='offer' ">{{parent.editWorkflowUnit.offerPrice*(parent.vat/100)|currency:'\u20AC'}}</td>
-							<td ng-if="type=='lead' ">{{(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts)*(parent.vat/100)|currency:'\u20AC'}}</td>
-						</tr>
-						<tr ng-if="type=='lead' ">
-							<td><b>=</b></td>
-							<td>
-								<h3>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}({{ 'CALCULATION_GROSS' | translate }})</h3>
-							</td>
-							<td>
-								<h3>{{(parent.sumOrderPositions(parent.currentOrderPositions)+parent.editWorkflowUnit.deliveryCosts)*(1+(parent.vat/100))|currency:'\u20AC'}}</h3>
-							</td>
+							<td ng-if="type=='sale' ">{{parent.process.offer.offerPrice*(parent.process.offer.vat/100)|currency:'\u20AC'}}</td>
+							<td ng-if="type=='offer' ">{{parent.editWorkflowUnit.offerPrice*(parent.editWorkflowUnit.vat/100)|currency:'\u20AC'}}</td>
 						</tr>
 						<tr ng-if="type=='offer' ">
 							<td><b>=</b></td>
@@ -115,7 +108,7 @@
 								<h3>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}({{ 'CALCULATION_GROSS' | translate }})</h3>
 							</td>
 							<td>
-								<h3>{{parent.editWorkflowUnit.offerPrice*(1+(parent.vat/100))|currency:'\u20AC'}}</h3>
+								<h3>{{parent.editWorkflowUnit.offerPrice*(1+(parent.editWorkflowUnit.vat/100))|currency:'\u20AC'}}</h3>
 							</td>
 						</tr>
 						<tr ng-if="type=='sale' ">
@@ -124,7 +117,7 @@
 								<h3>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}({{ 'CALCULATION_GROSS' | translate }})</h3>
 							</td>
 							<td>
-								<h3>{{parent.process.offer.offerPrice*(1+(parent.vat/100))|currency:'\u20AC'}}</h3>
+								<h3>{{parent.process.offer.offerPrice*(1+(parent.process.offer.vat/100))|currency:'\u20AC'}}</h3>
 							</td>
 						</tr>
 					</table>

@@ -1,5 +1,6 @@
 package dash.common;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -121,6 +122,10 @@ public abstract class AbstractWorkflow implements Request {
 	}
 
 	public void setOrderPositions(List<OrderPosition> orderPositions) {
+		if (orderPositions == null) {
+			this.orderPositions = new ArrayList<>();
+			return;
+		}
 		this.orderPositions = orderPositions;
 	}
 

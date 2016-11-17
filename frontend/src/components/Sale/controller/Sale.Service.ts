@@ -24,7 +24,7 @@ const SaleServiceId: string = "SaleService";
 
 class SaleService {
 
-    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, SaleResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId, $qId];
+    $inject = [$rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, SaleResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId, $qId, SourceServiceId];
     processResource;
     customerResource;
     saleResource;
@@ -32,21 +32,19 @@ class SaleService {
     customerService: CustomerService;
     productService: ProductService;
     templateService: TemplateService;
+    sourceService: SourceService;
     translate;
     rootScope;
-    filter;
     toaster;
     compile;
     $q;
 
     rows: { [key: number]: any } = {};
-    user: User;
 
-    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, SaleResource, WorkflowService, CustomerService, ProductService, TemplateService, $q) {
+    constructor($rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, SaleResource, WorkflowService, CustomerService, ProductService, TemplateService, $q, SourceService) {
         this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
-        this.filter = $filter;
         this.toaster = toaster;
         this.compile = $compile;
         this.processResource = ProcessResource.resource;
@@ -55,8 +53,8 @@ class SaleService {
         this.workflowService = WorkflowService;
         this.customerService = CustomerService;
         this.productService = ProductService;
+        this.sourceService = SourceService;
         this.$q = $q;
-        this.user = $rootScope.user;
     }
 
     save(editSale: Sale, editProcess: Process, currentOrderPositions: Array<OrderPosition>, dtInstance: any, scope: any) {

@@ -73,6 +73,7 @@ class ProfileController {
         this.currentUser.skype = this.rootscope.user.skype;
         this.currentUser.job = this.rootscope.user.job;
         this.currentUser.fax = this.rootscope.user.fax;
+        this.currentUser.defaultVat = this.rootscope.user.defaultVat;
     }
 
     updateProfileImage(user: User) {

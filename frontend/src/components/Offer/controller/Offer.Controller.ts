@@ -215,7 +215,7 @@ class OfferController extends AbstractWorkflow {
         this.editWorkflowUnit = deepCopy(this.editProcess.offer);
     }
 
-    addComment(id: number, input: string) {
+    addComment(id: number, input: Array<string>) {
         this.workflowService.addComment(this.processes[id], input[id]).then(function () {
             input[id] = "";
         });

@@ -55,7 +55,7 @@ class SaleController extends AbstractWorkflow {
     editWorkflowUnit: Sale = new Sale();
     edit: boolean;
     editEmail: boolean = true;
-    editable: boolean = true;
+    editable: boolean = false;
 
     currentOrderPositions: Array<OrderPosition>;
     templates: Array<Template> = [];
@@ -214,7 +214,7 @@ class SaleController extends AbstractWorkflow {
         // this.editWorkflowUnit.saleTurnover = this.editProcess.offer.offerPrice;
     }
 
-    addComment(id: number, input: string) {
+    addComment(id: number, input: Array<string>) {
         this.workflowService.addComment(this.processes[id], input[id]).then(function () {
             input[id] = "";
         });

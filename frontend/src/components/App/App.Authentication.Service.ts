@@ -76,6 +76,7 @@ class AuthService {
                         lastname: data.lastname,
                         phone: data.phone,
                         language: data.language,
+                        defaultVat: data.default_vat,
                         smtpKey: encodeURIComponent(hashPasswordPbkdf2(hashedPassword, salt)),
                         authorization: authorization,
                         picture: data.picture,

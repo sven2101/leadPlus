@@ -219,6 +219,7 @@ class WorkflowController extends AbstractWorkflow {
     send() {
         let self = this;
         this.process.offer = this.editWorkflowUnit;
+        this.process.offer.orderPositions = this.currentOrderPositions;
         let process = this.process;
         this.currentNotification.notificationType = NotificationType.OFFER;
         let notification = this.currentNotification;
@@ -244,6 +245,7 @@ class WorkflowController extends AbstractWorkflow {
         if (this.type === "offer") {
             let self = this;
             this.process.offer = this.editWorkflowUnit;
+            this.process.offer.orderPositions = this.currentOrderPositions;
             let process = this.process;
             this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
                 self.rootScope.$broadcast("deleteRow", tmpprocess);
@@ -251,6 +253,7 @@ class WorkflowController extends AbstractWorkflow {
             });
         } else if (this.type === "sale") {
             this.process.sale = this.editWorkflowUnit;
+            this.process.sale.orderPositions = this.currentOrderPositions;
             let self = this;
             this.workflowService.addOfferToSale(this.process).then(function (tmpprocess: Process) {
                 self.rootScope.$broadcast("deleteRow", self.process);

@@ -14,6 +14,7 @@
 
 package dash.processmanagement.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -26,6 +27,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -43,6 +45,7 @@ import dash.notificationmanagement.domain.Notification;
 import dash.notificationmanagement.domain.NotificationType;
 import dash.offermanagement.domain.Offer;
 import dash.salemanagement.domain.Sale;
+import dash.sourcemanagement.domain.Source;
 import dash.statusmanagement.domain.Status;
 import dash.usermanagement.domain.User;
 
@@ -95,6 +98,12 @@ public class Process {
 	@JsonProperty("notifications")
 	@Where(clause = "deleted <> '1'")
 	private List<Notification> notifications;
+	
+	@ManyToOne
+	@JoinColumn(name = "source_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
+	private Source source;
+
 
 	public Process(Lead lead) {
 		this.lead = lead;
@@ -177,6 +186,10 @@ public class Process {
 	}
 
 	public void setComments(List<Comment> comments) {
+		if (comments == null) {
+			this.comments = new ArrayList<>();
+			return;
+		}
 		this.comments = comments;
 	}
 
@@ -185,11 +198,24 @@ public class Process {
 	}
 
 	public void setNotifications(List<Notification> notifications) {
+		if (notifications == null) {
+			this.notifications = new ArrayList<>();
+			return;
+		}
 		this.notifications = notifications;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+
+	public Source getSource() {
+		return source;
+	}
+
+	public void setSource(Source source) {
+		this.source = source;
 	}
 
 	@Override
@@ -204,6 +230,7 @@ public class Process {
 		result = prime * result + ((offer == null) ? 0 : offer.hashCode());
 		result = prime * result + ((processor == null) ? 0 : processor.hashCode());
 		result = prime * result + ((sale == null) ? 0 : sale.hashCode());
+		result = prime * result + ((source == null) ? 0 : source.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		return result;
 	}
@@ -254,9 +281,21 @@ public class Process {
 				return false;
 		} else if (!sale.equals(other.sale))
 			return false;
+		if (source == null) {
+			if (other.source != null)
+				return false;
+		} else if (!source.equals(other.source))
+			return false;
 		if (status != other.status)
 			return false;
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Process [id=" + id + ", deleted=" + deleted + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale
+				+ ", comments=" + comments + ", status=" + status + ", processor=" + processor + ", notifications="
+				+ notifications + ", source=" + source + "]";
+	}
+	
 }

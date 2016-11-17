@@ -232,6 +232,7 @@ function config($translateProvider) {
             // Define profile elements
             PROFILE_PROFILE_INFORMATION: "Profilinformationen",
             PROFILE_DEFAULT_LANGUAGE: "Standard Sprache",
+            PROFILE_DEFAULT_VAT: "Standard Mehrwertsteuer",
             PROFILE_PASSWORD_MANAGEMENT: "Passwortverwaltung",
             PROFILE_OLD_PASSWORD: "Altes Passwort",
             PROFILE_VALIDATE_OLD_PASSWORD: "Altes Passwort wird benötigt",
@@ -431,6 +432,19 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE_ERROR: "Produkt konnte nicht aktuallisiert werden",
             PRODUCT_NUMBER: "Produktnummer",
 
+            // Define source elements
+            SOURCE_SOURCES: "Quellen",
+            SOURCE_SOURCE: "Quelle",
+            SOURCE_MANAGE_SOURCES: "Quellen verwalten",
+            SOURCE_CREATE: "Neue Quelle",
+            SOURCE_SOURCENAME: "Quellenname",
+            SOURCE_DESCRIPTION: "Beschreibung",
+            SOURCE_EDIT: "Quelle bearbeiten",
+            SOURCE_DEACTIVATED: "Deaktivieren",
+            SOURCE_CREATED: "Erstellt",
+            SOURCE_TOAST_SAVE: "Quelle wurde erfolgreich angelegt/bearbeitet",
+            SOURCE_TOAST_SAVE_ERROR: "Quelle konnte nicht angelegt/aktualisiert werden",
+
             // Define customer elements
             CUSTOMER: "Kunde",
             CUSTOMER_MANAGE_CUSTOMER: "Kunden verwalten",
@@ -455,7 +469,7 @@ function config($translateProvider) {
             CALCULATION_GROSS: "Brutto",
             CALCULATION_VAT: "Mehrwertsteuer",
 
-             // Tooltip
+            // Tooltip
             TOOLTIP_SIGN_UP: "Registrieren Sie sich jetzt unter ihrer spezifischen Subdomain um vollen Zugriff auf die Anwendung zu erhalten. Nach der erfolgreichen Registrierung, muss ihr Anwendungs-Administrator ihren Account freischalten.",
             TOOLTIP_TODO: "Über ToDo kannst Du all die Prozesse im Auge behalten, an denen Du beteiligt bist.",
             TOOLTIP_PROFIL_PICTURE: "Wähle dein Profilbild und speichere es. Danach präsentiert es Dich innerhalb der Anwendung.",
@@ -678,6 +692,7 @@ function config($translateProvider) {
             // Define profile elements
             PROFILE_PROFILE_INFORMATION: "Profile information",
             PROFILE_DEFAULT_LANGUAGE: "Default language",
+            PROFILE_DEFAULT_VAT: "Default vat",
             PROFILE_PASSWORD_MANAGEMENT: "Password management",
             PROFILE_OLD_PASSWORD: "Old password",
             PROFILE_VALIDATE_OLD_PASSWORD: "Old password is required",
@@ -873,6 +888,19 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE: "Updating product was successful",
             PRODUCT_TOAST_UPDATE_ERROR: "Updating product was unsuccessful",
             PRODUCT_NUMBER: "Product number",
+
+            // Define source elements
+            SOURCE_SOURCES: "Sources",
+            SOURCE_SOURCE: "Source",
+            SOURCE_MANAGE_SOURCES: "Manage Sources",
+            SOURCE_CREATE: "New Source",
+            SOURCE_SOURCENAME: "Source Name",
+            SOURCE_DESCRIPTION: "Description",
+            SOURCE_EDIT: "Edit Source",
+            SOURCE_DEACTIVATED: "Deactivate",
+            SOURCE_CREATED: "Created",
+            SOURCE_TOAST_SAVE: "Creating/Editing Source was successful",
+            SOURCE_TOAST_SAVE_ERROR: "Creating/Editing Source was unsuccessful",
 
             // Define customer elements
             CUSTOMER: "Customer",

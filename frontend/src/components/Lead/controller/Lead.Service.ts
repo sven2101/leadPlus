@@ -24,28 +24,26 @@ const LeadServiceId: string = "LeadService";
 
 class LeadService {
 
-    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, LeadResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId];
+    $inject = [$rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, LeadResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId, SourceServiceId];
     processResource;
     customerResource;
     leadResource;
     workflowService: WorkflowService;
     customerService: CustomerService;
     productService: ProductService;
+    sourceService: SourceService;
     translate;
     rootScope;
-    filter;
     toaster;
     compile;
     templateService;
 
     rows: { [key: number]: any } = {};
-    user: User;
 
-    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, LeadResource, WorkflowService, CustomerService, ProductService, TemplateService) {
+    constructor($rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, LeadResource, WorkflowService, CustomerService, ProductService, TemplateService, SourceService) {
         this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
-        this.filter = $filter;
         this.toaster = toaster;
         this.compile = $compile;
         this.processResource = ProcessResource.resource;
@@ -54,10 +52,10 @@ class LeadService {
         this.workflowService = WorkflowService;
         this.customerService = CustomerService;
         this.productService = ProductService;
-        this.user = $rootScope.user;
+        this.sourceService = SourceService;
     }
 
-    saveLead(dtInstance: any, newLead: Lead, currentOrderPositions: Array<OrderPosition>) {
+    saveLead(dtInstance: any, newLead: Lead, currentOrderPositions: Array<OrderPosition>, source: Source) {
         let self = this;
         if (angular.isUndefined(newLead.customer)) {
             newLead.customer = new Customer();
@@ -70,7 +68,8 @@ class LeadService {
         newLead.orderPositions = currentOrderPositions;
         let process = {
             lead: newLead,
-            status: "OPEN"
+            status: "OPEN",
+            source: source
         };
         let tempLead: Lead = newLead;
         if (isNullOrUndefined(tempLead.customer.id) || isNaN(Number(tempLead.customer.id)) || Number(tempLead.customer.id) <= 0) {

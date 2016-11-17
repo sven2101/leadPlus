@@ -1,0 +1,40 @@
+<div class="modal inmodal" id="createSourceModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span
+                        aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 ng-show="sourceCtrl.isCurrentSourceNew" class="modal-title">{{ 'SOURCE_CREATE' | translate }}</h4>
+                <h4 ng-show="!sourceCtrl.isCurrentSourceNew" class="modal-title">{{ 'SOURCE_EDIT' | translate }}</h4>
+            </div>
+            <div class="modal-body">
+                <form name="sourceCtrl.createSourceForm" novalidate>
+                    <div class="row">
+                        <!-- SOURCENAME -->
+                        <div class="col-sm-12">
+                            <div class="form-group" ng-class="{ 'has-error' : sourceCtrl.createSourceForm.name.$invalid && !sourceCtrl.createSourceForm.name.$pristine }">
+                                <label>{{ 'SOURCE_SOURCENAME' | translate }}<span style="color:red">*</span></label>
+                                <input type=" text " name="name " class="form-control " ng-model="sourceCtrl.currentSource.name" ng-maxlength="30" required>
+                                <p ng-show="sourceCtrl.createSourceForm.name.$invalid && !sourceCtrl.createSourceForm.name.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                        </div>
+                        <!--DESCRIPTION -->
+                        <div class="form-group" ng-class="{ 'has-error' : sourceCtrl.createSourceForm.description.$invalid && !sourceCtrl.createSourceForm.description.$pristine }">
+                            <label>{{ 'SOURCE_DESCRIPTION' | translate }}</label>
+                            <textarea style="resize: none" rows="7" type="text " name="description " class="form-control " ng-model="sourceCtrl.currentSource.description"
+                                  ng-maxlength="500">
+                             <p ng-show="sourceCtrl.createSourceForm.description.$invalid && !sourceCtrl.createSourceForm.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}500{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p> 
+                        </div>
+                        <!--DEACTIVATED -->
+                         <div class="form-group" ng-show="!sourceCtrl.isCurrentSourceNew">
+                            <label class="checkbox-inline"> <input type="checkbox"  ng-model="sourceCtrl.currentSource.deactivated" id="inlineCheckbox1">{{ 'COMMON_DEACTIVATE' | translate }}</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}</button>
+                <button type="button" class="btn btn-success" ng-disabled="sourceCtrl.createSourceForm.$invalid" ng-click="sourceCtrl.saveSource()" data-dismiss="modal">{{ 'COMMON_SAVE' | translate }}</button>
+            </div>
+        </div>
+    </div>
+</div>

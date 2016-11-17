@@ -1,3 +1,4 @@
+
 -- Table: attachment
 
 CREATE SEQUENCE attachment_id_seq
@@ -47,3 +48,12 @@ CREATE TABLE IF NOT EXISTS recipient
 WITH (
   OIDS=FALSE
 );
+
+ALTER TABLE offer
+ADD vat double precision NOT NULL DEFAULT (19);
+
+ALTER TABLE "user"
+ADD default_vat double precision NOT NULL DEFAULT (19);
+ 
+DELETE FROM olap;
+

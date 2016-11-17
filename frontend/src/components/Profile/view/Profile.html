@@ -48,7 +48,7 @@
 								<!-- EMAIL -->
 								<div class="form-group">
 									<label><i class="fa fa-at " aria-hidden="true "></i>  {{ 'COMMON_EMAIL' | translate }}</label>
-									<p >{{::profileCtrl.currentUser.email}}</p>
+									<p>{{::profileCtrl.currentUser.email}}</p>
 
 								</div>
 								<!-- FIRSTNAME -->
@@ -82,12 +82,20 @@
                                         <option value="EN ">English(en)</option>
                                     </select>
 								</div>
+								<!-- DEFAULT VAT -->
+								<div class="form-group " ng-class="{
+                                'has-error' :profilInfoForm.vat.$invalid && !profilInfoForm.vat.$pristine } ">
+									<label><i class="fa fa-percent " aria-hidden="true "></i>   {{ 'PROFILE_DEFAULT_VAT' | translate }}</label>
+									<input class="form-control currency" name="vat" type="number " ng-model="profileCtrl.currentUser.defaultVat  "
+										ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " max="100 ">
+								</div>
 							</div>
 							<div class="col-sm-6 ">
 								<!-- PHONE -->
 								<div class="form-group ">
 									<label><i class="fa fa-phone " aria-hidden="true "></i>   {{ 'COMMON_PHONE' | translate }}</label>
-									<input type="text " id="phone " name="phone " class="form-control " placeholder="{{ 'COMMON_PHONE' | translate}} " ng-model="profileCtrl.currentUser.phone " ng-minlength="2 " ng-maxlength="50 ">
+									<input type="text " id="phone " name="phone " class="form-control " placeholder="{{ 'COMMON_PHONE' | translate}} " ng-model="profileCtrl.currentUser.phone "
+										ng-minlength="2 " ng-maxlength="50 ">
 
 									<span ng-show="profilInfoForm.phone.$error.minlength&&!profilInfoForm.phone.$pristine " class="help-block ">{{ 'PROFIL_VALIDATE_PHONE_TO_SHORT' | translate }}</span>
 									<span ng-show="profilInfoForm.phone.$error.maxlength&&!profilInfoForm.phone.$pristine " class="help-block ">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
