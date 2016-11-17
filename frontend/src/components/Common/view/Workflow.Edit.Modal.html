@@ -21,7 +21,7 @@
 								aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-5"><span class="number">5.</span> {{ 'EMAIL'| translate }}</a></li>
 							<li ng-if="type=='sale'" ng-click="parent.wizardOnClick(6)" role="tab" ng-class="{error:parent.saleEditForm.$invalid,current:parent.currentWizard==6,done:parent.currentWizard!=6}"
 								aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-6"><span class="number">6.</span> {{ 'SALE'| translate }}</a></li>
-							<li ng-click="parent.wizardOnClick(7)" role="tab" ng-class="{error:parent.prosessorHistoryEditForm.$invalid,current:parent.currentWizard==7,done:parent.currentWizard!=7}"
+							<li ng-if="parent.editWorkflowUnit.id!=null" ng-click="parent.wizardOnClick(7)" role="tab" ng-class="{error:parent.prosessorHistoryEditForm.$invalid,current:parent.currentWizard==7,done:parent.currentWizard!=7}"
 								aria-disabled="false" aria-selected="false"><a aria-controls="wizard-p-6">
 									<span ng-if="type=='lead'" class="number">5.</span>
 									<span ng-if="type=='offer'" class="number">6.</span>

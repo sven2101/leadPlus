@@ -233,6 +233,7 @@ function config($translateProvider) {
             // Define profile elements
             PROFILE_PROFILE_INFORMATION: "Profilinformationen",
             PROFILE_DEFAULT_LANGUAGE: "Standard Sprache",
+            PROFILE_DEFAULT_VAT: "Standard Mehrwertsteuer",
             PROFILE_PASSWORD_MANAGEMENT: "Passwortverwaltung",
             PROFILE_OLD_PASSWORD: "Altes Passwort",
             PROFILE_VALIDATE_OLD_PASSWORD: "Altes Passwort wird benötigt",
@@ -688,6 +689,7 @@ function config($translateProvider) {
             // Define profile elements
             PROFILE_PROFILE_INFORMATION: "Profile information",
             PROFILE_DEFAULT_LANGUAGE: "Default language",
+            PROFILE_DEFAULT_VAT: "Default vat",
             PROFILE_PASSWORD_MANAGEMENT: "Password management",
             PROFILE_OLD_PASSWORD: "Old password",
             PROFILE_VALIDATE_OLD_PASSWORD: "Old password is required",

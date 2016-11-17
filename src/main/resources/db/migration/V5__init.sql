@@ -1,3 +1,4 @@
+
 -- Sequence: "Processor_id_seq"
 
 CREATE SEQUENCE "processor_id_seq"
@@ -22,4 +23,13 @@ CREATE SEQUENCE "processor_id_seq"
    CONSTRAINT processor_processor FOREIGN KEY (process_fk)
       REFERENCES process (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
-)
+);
+
+ALTER TABLE offer
+ADD vat double precision NOT NULL DEFAULT (19);
+
+ALTER TABLE "user"
+ADD default_vat double precision NOT NULL DEFAULT (19);
+ 
+DELETE FROM olap;
+

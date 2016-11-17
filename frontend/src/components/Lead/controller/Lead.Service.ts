@@ -4,6 +4,8 @@
 /// <reference path="../../User/Model/User.Model.ts" />
 /// <reference path="../../Common/model/OrderPosition.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
+/// <reference path="../../common/model/Activity.enum.ts" />
+/// <reference path="../../common/model/Processor.Model.ts" />
 /// <reference path="../../Lead/model/Lead.Model.ts" />
 /// <reference path="../../common/service/Workflow.Service.ts" />
 /// <reference path="../../Customer/Controller/Customer.Service.ts" />
@@ -24,7 +26,7 @@ const LeadServiceId: string = "LeadService";
 
 class LeadService {
 
-    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, LeadResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId];
+    $inject = [$rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, LeadResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId];
     processResource;
     customerResource;
     leadResource;
@@ -33,19 +35,16 @@ class LeadService {
     productService: ProductService;
     translate;
     rootScope;
-    filter;
     toaster;
     compile;
     templateService;
 
     rows: { [key: number]: any } = {};
-    user: User;
 
-    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, LeadResource, WorkflowService, CustomerService, ProductService, TemplateService) {
+    constructor($rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, LeadResource, WorkflowService, CustomerService, ProductService, TemplateService) {
         this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
-        this.filter = $filter;
         this.toaster = toaster;
         this.compile = $compile;
         this.processResource = ProcessResource.resource;
@@ -54,7 +53,6 @@ class LeadService {
         this.workflowService = WorkflowService;
         this.customerService = CustomerService;
         this.productService = ProductService;
-        this.user = $rootScope.user;
     }
 
     saveLead(dtInstance: any, newLead: Lead, currentOrderPositions: Array<OrderPosition>) {
@@ -68,7 +66,7 @@ class LeadService {
             name: "***REMOVED***"
         };
         newLead.orderPositions = currentOrderPositions;
-        let process = {
+        let process: any = {
             lead: newLead,
             status: "OPEN"
         };
@@ -77,6 +75,7 @@ class LeadService {
             tempLead.customer.timestamp = newTimestamp();
             this.customerResource.createCustomer(tempLead.customer).$promise.then(function (customer) {
                 tempLead.customer = customer;
+                process.formerProcessors = [new Processor(self.rootScope.user, Activity.OPEN)];
                 self.processResource.save(process).$promise.then(function (result) {
                     self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
                     self.rootScope.leadsCount += 1;
@@ -85,7 +84,7 @@ class LeadService {
             });
             return;
         }
-
+        process.formerProcessors = [new Processor(self.rootScope.user, Activity.OPEN)];
         this.processResource.save(process).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
             self.rootScope.leadsCount += 1;

@@ -55,7 +55,7 @@ class SaleController extends AbstractWorkflow {
     editWorkflowUnit: Sale = new Sale();
     edit: boolean;
     editEmail: boolean = true;
-    editable: boolean = true;
+    editable: boolean = false;
 
     currentOrderPositions: Array<OrderPosition>;
     templates: Array<Template> = [];
@@ -208,13 +208,14 @@ class SaleController extends AbstractWorkflow {
         this.editProcess = process;
         this.process = this.editProcess;
         this.currentOrderPositions = deepCopy(this.editProcess.sale.orderPositions);
+        this.editProcess.currentFormerProcessors = deepCopy(this.editProcess.formerProcessors);
         this.customerSelected = this.editProcess.sale.customer.id > 0;
         this.selectedCustomer = this.editProcess.sale.customer;
         this.editWorkflowUnit = deepCopy(this.editProcess.sale);
         // this.editWorkflowUnit.saleTurnover = this.editProcess.offer.offerPrice;
     }
 
-    addComment(id: number, input: string) {
+    addComment(id: number, input: Array<string>) {
         this.workflowService.addComment(this.processes[id], input[id]).then(function () {
             input[id] = "";
         });
@@ -225,6 +226,7 @@ class SaleController extends AbstractWorkflow {
     }
 
     save(edit: boolean) {
+        this.editProcess.formerProcessors = deepCopy(this.editProcess.currentFormerProcessors);
         this.saleService.save(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.dropCreateScope("compileScope"));
     }
 

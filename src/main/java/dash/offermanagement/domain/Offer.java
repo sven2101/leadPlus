@@ -45,6 +45,11 @@ public class Offer extends AbstractWorkflow {
 	@Column(name = "offerprice", nullable = false)
 	private Double offerPrice;
 
+	@NotNull
+	@Digits(integer = 4, fraction = 2)
+	@Column(name = "vat", nullable = false)
+	private Double vat;
+
 	public Offer() {
 	}
 
@@ -64,12 +69,25 @@ public class Offer extends AbstractWorkflow {
 		this.deliveryDate = deliveryDate;
 	}
 
+	public Double getVat() {
+		return vat;
+	}
+
+	public void setVat(Double vat) {
+		this.vat = vat;
+	}
+
+	public Double getBruttoPrice() {
+		return this.offerPrice * (1 + this.vat / 100);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((deliveryDate == null) ? 0 : deliveryDate.hashCode());
 		result = prime * result + ((offerPrice == null) ? 0 : offerPrice.hashCode());
+		result = prime * result + ((vat == null) ? 0 : vat.hashCode());
 		return result;
 	}
 
@@ -92,12 +110,17 @@ public class Offer extends AbstractWorkflow {
 				return false;
 		} else if (!offerPrice.equals(other.offerPrice))
 			return false;
+		if (vat == null) {
+			if (other.vat != null)
+				return false;
+		} else if (!vat.equals(other.vat))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Offer [deliveryDate=" + deliveryDate + ", offerPrice=" + offerPrice + "]";
-	}	
+		return "Offer [deliveryDate=" + deliveryDate + ", offerPrice=" + offerPrice + ", vat=" + vat + "]";
+	}
 
 }

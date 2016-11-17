@@ -210,18 +210,20 @@ class OfferController extends AbstractWorkflow {
         this.currentProductAmount = 1;
         this.editProcess = process;
         this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
+        this.editProcess.currentFormerProcessors = deepCopy(this.editProcess.formerProcessors);
         this.customerSelected = this.editProcess.offer.customer.id > 0;
         this.selectedCustomer = this.editProcess.offer.customer;
         this.editWorkflowUnit = deepCopy(this.editProcess.offer);
     }
 
-    addComment(id: number, input: string) {
+    addComment(id: number, input: Array<string>) {
         this.workflowService.addComment(this.processes[id], input[id]).then(function () {
             input[id] = "";
         });
     }
 
     save(edit: boolean) {
+        this.editProcess.formerProcessors = deepCopy(this.editProcess.currentFormerProcessors);
         this.offerService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.dropCreateScope("compileScope"));
     }
 

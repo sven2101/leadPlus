@@ -14,6 +14,7 @@
 
 package dash.processmanagement.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -181,6 +182,10 @@ public class Process {
 	}
 
 	public void setComments(List<Comment> comments) {
+		if (comments == null) {
+			this.comments = new ArrayList<>();
+			return;
+		}
 		this.comments = comments;
 	}
 
@@ -189,6 +194,10 @@ public class Process {
 	}
 
 	public void setNotifications(List<Notification> notifications) {
+		if (notifications == null) {
+			this.notifications = new ArrayList<>();
+			return;
+		}
 		this.notifications = notifications;
 	}
 

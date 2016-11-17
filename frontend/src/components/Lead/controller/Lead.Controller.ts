@@ -57,6 +57,7 @@ class LeadController extends AbstractWorkflow {
     editable: boolean = true;
 
     currentOrderPositions: Array<OrderPosition>;
+
     currentProductId = "-1";
     currentProductAmount = 1;
 
@@ -205,12 +206,13 @@ class LeadController extends AbstractWorkflow {
         this.currentProductAmount = 1;
         this.editProcess = process;
         this.currentOrderPositions = deepCopy(this.editProcess.lead.orderPositions);
+        this.editProcess.currentFormerProcessors = deepCopy(this.editProcess.formerProcessors);
         this.customerSelected = this.editProcess.lead.customer.id > 0;
         this.selectedCustomer = this.editProcess.lead.customer;
         this.editWorkflowUnit = deepCopy(this.editProcess.lead);
     }
 
-    addComment(id: number, input: string) {
+    addComment(id: number, input: Array<string>) {
         this.workflowService.addComment(this.processes[id], input[id]).then(function () {
             input[id] = "";
         });
@@ -221,6 +223,7 @@ class LeadController extends AbstractWorkflow {
     }
 
     save(edit: boolean) {
+        this.editProcess.formerProcessors = deepCopy(this.editProcess.currentFormerProcessors);
         if (edit === true) {
             this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.dropCreateScope("compileScope"));
         }
@@ -236,6 +239,7 @@ class LeadController extends AbstractWorkflow {
         this.editProcess = new Process();
         this.editWorkflowUnit.orderPositions = new Array<OrderPosition>();
         this.currentOrderPositions = new Array<OrderPosition>();
+        this.editProcess.currentFormerProcessors = [];
         this.currentProductId = "-1";
         this.selectedCustomer = null;
         this.currentProductAmount = 1;

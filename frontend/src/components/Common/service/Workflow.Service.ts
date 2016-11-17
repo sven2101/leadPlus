@@ -36,14 +36,13 @@ const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [CommentResourceId, ProcessResourceId, $filterId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId, UserResourceId, TemplateServiceId];
+    private $inject = [CommentResourceId, ProcessResourceId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId, UserResourceId, TemplateServiceId];
 
     commentResource;
     processResource;
     userResource;
     templateService;
 
-    filter;
     toaster;
     rootScope;
     translate;
@@ -54,15 +53,11 @@ class WorkflowService {
     uibModal;
     users: Array<User> = [];
 
-    user: any;
-    tenant: any;
-
-    constructor(CommentResource, ProcessResource, $filter, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService) {
+    constructor(CommentResource, ProcessResource, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService) {
         this.commentResource = CommentResource.resource;
         this.processResource = ProcessResource.resource;
         this.userResource = UserResource.resource;
         this.templateService = TemplateService;
-        this.filter = $filter;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
@@ -71,8 +66,6 @@ class WorkflowService {
         this.productService = ProductService;
         this.customerService = CustomerService;
         this.uibModal = $uibModal;
-        this.user = $rootScope.user;
-        this.tenant = $rootScope.tenant;
         this.refreshUsers();
     }
 
@@ -88,7 +81,7 @@ class WorkflowService {
         let self: WorkflowService = this;
         let comment: Commentary = {
             id: null,
-            creator: this.user,
+            creator: this.rootScope.user,
             commentText: commentText,
             timestamp: newTimestamp()
         };
@@ -201,6 +194,7 @@ class WorkflowService {
             deliveryDate: null,
             offerPrice: self.sumOrderPositions(process.lead.orderPositions) + process.lead.deliveryCosts,
             customer: process.lead.customer,
+            vat: self.rootScope.user.defaultVat,
             timestamp: newTimestamp(),
             vendor: process.lead.vendor,
             deliveryCosts: process.lead.deliveryCosts,
@@ -276,9 +270,17 @@ class WorkflowService {
         return defer.promise;
     }
 
-    addLeadToOffer(process: Process): IPromise<Process> {
-        let defer = this.$q.defer();
+    async addLeadToOffer(tempProcess: Process): Promise<Process> {
+        let defer: IDefer<Process> = this.$q.defer();
         let self = this;
+        if (isNullOrUndefined(tempProcess.formerProcessors)) {
+            tempProcess.formerProcessors = [];
+        }
+        if (!this.checkForDupsInFormerProcessors(tempProcess.formerProcessors, self.rootScope.user, Activity.OFFER)) {
+            tempProcess.formerProcessors.push(new Processor(self.rootScope.user, Activity.OFFER));
+        }
+
+        let process = await this.processResource.save(tempProcess);
         this.processResource.createOffer({ id: process.id }, process.offer).$promise.then(function (resultOffer: Offer) {
 
             self.processResource.setStatus({ id: process.id }, Status.OFFER).$promise.then(function (resultProcess: Process) {
@@ -287,19 +289,15 @@ class WorkflowService {
                 self.rootScope.offersCount += 1;
                 process.offer = resultOffer;
                 process.status = resultProcess.status;
-                if (resultProcess.processor === null) {
-                    self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function (resultUser: User) {
-                        process.processor = resultUser;
-                        defer.resolve(process);
-                        self.rootScope.$broadcast("onTodosChange");
-                    }, function (resultUser: User) {
 
-                    });
-                }
-                else {
-                    self.rootScope.$broadcast("onTodosChange");
+                self.processResource.setProcessor({ id: resultProcess.id }, self.rootScope.user.id).$promise.then(function (resultUser: User) {
+                    process.processor = resultUser;
                     defer.resolve(process);
-                }
+                    self.rootScope.$broadcast("onTodosChange");
+                }, function (resultUser: User) {
+
+                });
+
             }, function () {
                 defer.reject(process);
             });
@@ -309,17 +307,24 @@ class WorkflowService {
         return defer.promise;
     }
 
-    addOfferToSale(process: Process): IPromise<Process> {
+    async addOfferToSale(tempProcess: Process): Promise<Process> {
         let defer = this.$q.defer();
         let self = this;
+        if (isNullOrUndefined(tempProcess.formerProcessors)) {
+            tempProcess.formerProcessors = [];
+        }
+        if (!this.checkForDupsInFormerProcessors(tempProcess.formerProcessors, self.rootScope.user, Activity.SALE)) {
+            tempProcess.formerProcessors.push(new Processor(self.rootScope.user, Activity.SALE));
+        }
+        let process = await this.processResource.save(tempProcess);
         this.processResource.createSale({ id: process.id }, process.sale).$promise.then(function (resultSale: Sale) {
             self.processResource.setStatus({ id: process.id }, Status.SALE).$promise.then(function (resultProcess: Process) {
                 self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
                 self.rootScope.offersCount -= 1;
                 process.sale = resultSale;
                 process.status = resultProcess.status;
-                self.processResource.setProcessor({ id: resultProcess.id }, self.user.id).$promise.then(function () {
-                    process.processor = self.user;
+                self.processResource.setProcessor({ id: resultProcess.id }, self.rootScope.user.id).$promise.then(function () {
+                    process.processor = self.rootScope.user;
                     self.rootScope.$broadcast("onTodosChange");
                     defer.resolve(process);
                 });
@@ -424,8 +429,8 @@ class WorkflowService {
                     handleError(xhr);
                 },
                 "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.tenant.tenantKey);
+                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
+                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
                 }
             };
         } else {
@@ -436,8 +441,8 @@ class WorkflowService {
                 },
                 type: "GET",
                 "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.tenant.tenantKey);
+                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
+                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
                 }
             };
         }
@@ -574,17 +579,19 @@ class WorkflowService {
             }, (error) => handleError(error));
         }
     }
-    inContact(process: Process): void {
-        let self = this;
-        this.processResource.setStatus({
-            id: process.id
-        }, "INCONTACT").$promise.then(function () {
-            self.toaster.pop("success", "", self.translate
-                .instant("COMMON_TOAST_SUCCESS_INCONTACT"));
-            process.status = "INCONTACT";
-            self.rootScope.$broadcast("updateRow", process);
-            self.rootScope.$broadcast("onTodosChange");
-        }, (error) => handleError(error));
+    async inContact(process: Process): Promise<void> {
+        process.status = "INCONTACT";
+        process.processor = this.rootScope.user;
+        if (isNullOrUndefined(process.formerProcessors)) {
+            process.formerProcessors = [];
+        }
+        if (!this.checkForDupsInFormerProcessors(process.formerProcessors, this.rootScope.user, Activity.INCONTACT)) {
+            process.formerProcessors.push(new Processor(process.processor, Activity.INCONTACT));
+        }
+        await this.processResource.save(process);
+        this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_INCONTACT"));
+        this.rootScope.$broadcast("onTodosChange");
+        this.rootScope.$broadcast("updateRow", process);
     }
 
     setProcessStatus(process: Process, status: Status): IPromise<Process> {
@@ -622,6 +629,12 @@ class WorkflowService {
                 self.rootScope.$broadcast("updateRow", process);
             });
         }
+    }
+    checkForDupsInFormerProcessors(formerProcessors: Array<Processor>, user: User, activity: Activity): boolean {
+        if (isNullOrUndefined(formerProcessors)) {
+            return false;
+        }
+        return formerProcessors.filter(fp => fp.user.id === user.id && fp.activity === activity).length > 0;
     }
 
 

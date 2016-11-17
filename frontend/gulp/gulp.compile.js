@@ -11,7 +11,7 @@ var gulp = require('gulp'),
     babel = require('gulp-babel');
 
 
-gulp.task('compile', ['typescript'], function () {
+gulp.task('compile', ['typescript'], function() {
     return null;
 });
 /*
@@ -22,11 +22,11 @@ gulp.task('typescript', function () {
 });
 */
 
-gulp.task('typescript', ['javascript', 'tslint'], function () {
+gulp.task('typescript', ['javascript', 'tslint'], function() {
     return gulp.start('typescript-task');
 });
 
-gulp.task('typescript-task', function () {
+gulp.task('typescript-task', function() {
     try {
         return gulp.src(path.typescript.src)
             .pipe(ts({
@@ -38,10 +38,11 @@ gulp.task('typescript-task', function () {
     }
 
 });
-gulp.task('typescript/angular-task', ['tslint'], function () {
+gulp.task('typescript/angular-task', ['tslint'], function() {
     return gulp.src(path.typescript.src)
         .pipe(ts({
-
+            typescript: require('typescript'),
+            lib: ["es2015", "dom"]
         }))
         .pipe(strip())
         .pipe(replace(/"use strict";/g, ''))
@@ -59,7 +60,8 @@ gulp.task('typescript/angular-task', ['tslint'], function () {
         .pipe(concat('angular.js'))
         .pipe(gulp.dest(path.angular.dst));
 });
-gulp.task('javascript', function () {
+gulp.task('javascript', function() {
     return gulp.src(path.javascript.src)
         .pipe(gulp.dest(path.javascript.dst));
 });
+

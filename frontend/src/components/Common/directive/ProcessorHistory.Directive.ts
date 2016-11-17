@@ -32,17 +32,17 @@ class ProcessorHistoryDirective implements IDirective {
         scope.setUserById = (id) => {
             scope.currentSelectedFomerProcessor = this.getUserById(id);
         };
-        scope.deletFormerProcessor = (process: Process, index: number) => process.formerProcessors.splice(index, 1);
+        scope.deletFormerProcessor = (currentFormerProcessors: Array<Processor>, index: number) => currentFormerProcessors.splice(index, 1);
         scope.checkForDups = (formerProcessors: Array<Processor>, user: User, activity: Activity) => scope.existsDups = this.checkForDups(formerProcessors, user, activity);
         scope.toLocalDate = this.toLocalDate;
 
     };
 
-    addFormerProcessor(process: Process, user: User, activity: Activity): void {
-        if (isNullOrUndefined(process.formerProcessors)) {
-            process.formerProcessors = [];
+    addFormerProcessor(currentFormerProcessors: Array<Processor>, user: User, activity: Activity): void {
+        if (isNullOrUndefined(currentFormerProcessors)) {
+            currentFormerProcessors = [];
         }
-        process.formerProcessors.push(new Processor(user, activity));
+        currentFormerProcessors.push(new Processor(user, activity));
     }
     getUserById(userId: number): User {
         return this.WorkflowService.users.filter(user => user.id === Number(userId))[0];

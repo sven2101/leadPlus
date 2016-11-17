@@ -67,6 +67,7 @@ class AuthService {
             this.http.get("user").then(function (response) {
                 let data = response.data;
                 if (data) {
+
                     self.rootScope.user = {
                         id: data.id,
                         role: data.role,
@@ -76,6 +77,7 @@ class AuthService {
                         lastname: data.lastname,
                         phone: data.phone,
                         language: data.language,
+                        defaultVat: data.defaultVat,
                         smtpKey: encodeURIComponent(hashPasswordPbkdf2(hashedPassword, salt)),
                         authorization: authorization,
                         picture: data.picture,

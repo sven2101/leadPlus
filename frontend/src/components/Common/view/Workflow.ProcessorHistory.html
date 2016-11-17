@@ -17,24 +17,24 @@
                     </th>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="processor in process.formerProcessors">
+                    <tr ng-repeat="processor in process.currentFormerProcessors">
 
                         <td>
                             {{processor.user.firstname}}
                         </td>
                         <td>
-                            <select disabled class="form-control" ng-model="processor.activity">                               
-                                <option value="OPEN">OPEN</option>
-                                <option value="OFFER">OFFER</option>
-                                <option value="SALE">SALE</option>
-                                <option value="INCONTACT">SALE</option>
+                            <select disabled class="form-control" ng-model="processor.activity">
+                                <option value="OPEN">{{ 'COMMON_STATUS_LEAD' | translate }}</option>
+                                <option value="INCONTACT">{{ 'COMMON_STATUS_INCONTACT' | translate }}</option>
+                                <option value="OFFER">{{ 'COMMON_STATUS_OFFER' | translate }}</option>
+                                <option value="SALE">{{ 'COMMON_STATUS_SALE' | translate }}</option>
                             </select>
                         </td>
                         <td>
                             {{toLocalDate(processor.timestamp)}}
                         </td>
                         <td>
-                            <button type="button " class="btn btn-white btn-sm " ng-click="deletFormerProcessor(process,$index);checkForDups(process.formerProcessors,currentSelectedFomerProcessor,currentSelectedActivity) ">
+                            <button type="button " class="btn btn-white btn-sm " ng-click="deletFormerProcessor(process.currentFormerProcessors,$index);checkForDups(process.currentFormerProcessors,currentSelectedFomerProcessor,currentSelectedActivity) ">
                                 <i class="fa fa-trash " ></i>&nbsp;
                             </button>
 
@@ -42,7 +42,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <select class="form-control" ng-change="setUserById(currentSelectedFomerProcessorId);checkForDups(process.formerProcessors,currentSelectedFomerProcessor,currentSelectedActivity)"
+                            <select class="form-control" ng-change="setUserById(currentSelectedFomerProcessorId);checkForDups(process.currentFormerProcessors,currentSelectedFomerProcessor,currentSelectedActivity)"
                                 ng-model="currentSelectedFomerProcessorId">
                                 <option value="-1" hidden disabled>{{ 'FORMER_PROCESSOR_SELECT_FOMER_PROCESSOR' | translate }}</option>
                                 <option value="{{user.id}}" ng-repeat="user in workflowService.users| filter:{role:'!API'}">{{user.firstname}} {{user.lastname}}</option>
@@ -50,7 +50,7 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control" ng-change="checkForDups(process.formerProcessors,currentSelectedFomerProcessor,currentSelectedActivity)"
+                            <select class="form-control" ng-change="checkForDups(process.currentFormerProcessors,currentSelectedFomerProcessor,currentSelectedActivity)"
                                 ng-model="currentSelectedActivity">
                                 <option value="-1" hidden disabled>{{ 'FORMER_PROCESSOR_SELECT_ACTIVITY' | translate }}</option>
                                 <option value="OPEN">{{ 'COMMON_STATUS_LEAD' | translate }}</option>
@@ -62,8 +62,8 @@
                         </td>
                         <td></td>
                         <td>
-                            <button ng-disabled="currentSelectedActivity==-1||existsDups" type="button" class="btn btn-white btn-sm" ng-click="addFormerProcessor(process,currentSelectedFomerProcessor,currentSelectedActivity);
-                                    checkForDups(process.formerProcessors,currentSelectedFomerProcessor,currentSelectedActivity)">
+                            <button ng-disabled="currentSelectedActivity==-1||existsDups" type="button" class="btn btn-white btn-sm" ng-click="addFormerProcessor(process.currentFormerProcessors,currentSelectedFomerProcessor,currentSelectedActivity);
+                                    checkForDups(process.currentFormerProcessors,currentSelectedFomerProcessor,currentSelectedActivity)">
                                      <i class="fa fa-plus"></i>&nbsp;</button>
                         </td>
                     </tr>

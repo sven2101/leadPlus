@@ -76,13 +76,15 @@ class WorkflowController extends AbstractWorkflow {
 
     window;
 
-    constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService,
+    constructor(process: Process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService,
         WorkflowService, LeadService, OfferService, SaleService, DashboardService, FileService, $rootScope, $sce, $window, $scope) {
         super(WorkflowService, $sce, FileService, $scope);
+
         let self = this;
         this.rootScope = $rootScope;
         this.scope = $scope;
         this.process = process;
+
         this.type = type;
         if (this.type === "offer") {
             this.editWorkflowUnit = new Offer();
@@ -145,6 +147,7 @@ class WorkflowController extends AbstractWorkflow {
         this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
+        this.process.currentFormerProcessors = deepCopy(this.process.formerProcessors);
         this.editProcess = process;
 
         if (this.type === "offer") {
@@ -207,7 +210,7 @@ class WorkflowController extends AbstractWorkflow {
 
     existsInvoiceNumber() {
         let self = this;
-        this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function (result: Sale) {
+        this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function(result: Sale) {
             if (!isNullOrUndefined(result)) {
                 self.invoiceNumberAlreadyExists = true;
             } else {
@@ -218,18 +221,20 @@ class WorkflowController extends AbstractWorkflow {
 
     send() {
         let self = this;
-        this.process.offer = this.editWorkflowUnit;
-        let process = this.process;
+        let process = this.editProcess;
+        process.offer = this.editWorkflowUnit;
+        process.offer.orderPositions = this.currentOrderPositions;
         this.currentNotification.notificationType = NotificationType.OFFER;
         let notification = this.currentNotification;
         this.notificationService.sendNotification(notification).then(() => {
-            self.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
+            self.workflowService.addLeadToOffer(process).then(function(tmpprocess: Process) {
                 self.notificationService.saveFileUpload(notification.attachment).then((resultFileUpload) => {
                     notification.attachment = resultFileUpload;
                     if (isNullOrUndefined(process.notifications)) {
                         process.notifications = [];
                     }
                     process.notifications.push(notification);
+                    process.formerProcessors = deepCopy(self.editProcess.currentFormerProcessors);
                     self.workflowService.saveProcess(process).then((resultProcess) => {
                         self.process.notifications = resultProcess.notifications;
                         self.close(true);
@@ -241,18 +246,21 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     save() {
+        let process = this.editProcess;
+        process.formerProcessors = deepCopy(this.editProcess.currentFormerProcessors);
         if (this.type === "offer") {
             let self = this;
-            this.process.offer = this.editWorkflowUnit;
-            let process = this.process;
-            this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
+            process.offer = this.editWorkflowUnit;
+            process.offer.orderPositions = this.currentOrderPositions;
+            this.workflowService.addLeadToOffer(process).then(function(tmpprocess: Process) {
                 self.rootScope.$broadcast("deleteRow", tmpprocess);
                 self.close(true);
             });
         } else if (this.type === "sale") {
-            this.process.sale = this.editWorkflowUnit;
+            process.sale = this.editWorkflowUnit;
+            process.sale.orderPositions = this.currentOrderPositions;
             let self = this;
-            this.workflowService.addOfferToSale(this.process).then(function (tmpprocess: Process) {
+            this.workflowService.addOfferToSale(process).then(function(tmpprocess: Process) {
                 self.rootScope.$broadcast("deleteRow", self.process);
                 self.close(true);
             });

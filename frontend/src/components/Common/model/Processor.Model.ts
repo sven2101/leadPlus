@@ -7,6 +7,5 @@ class Processor {
         this.user = user;
         this.activity = activity;
         this.timestamp = newTimestamp();
-        console.log(this.timestamp);
     }
 }
