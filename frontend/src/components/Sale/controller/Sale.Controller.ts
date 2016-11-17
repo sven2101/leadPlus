@@ -214,7 +214,7 @@ class SaleController extends AbstractWorkflow {
         // this.editWorkflowUnit.saleTurnover = this.editProcess.offer.offerPrice;
     }
 
-    addComment(id: number, input: string) {
+    addComment(id: number, input: Array<string>) {
         this.workflowService.addComment(this.processes[id], input[id]).then(function () {
             input[id] = "";
         });

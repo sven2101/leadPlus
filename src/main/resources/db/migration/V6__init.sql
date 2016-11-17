@@ -28,3 +28,6 @@ ALTER TABLE process
 ADD CONSTRAINT source_foreignkey FOREIGN KEY (source_fk)
 REFERENCES source (id) MATCH SIMPLE
 ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+ALTER TABLE  product
+ALTER COLUMN description TYPE character varying(3000);

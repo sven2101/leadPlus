@@ -210,7 +210,7 @@ class LeadController extends AbstractWorkflow {
         this.editWorkflowUnit = deepCopy(this.editProcess.lead);
     }
 
-    addComment(id: number, input: string) {
+    addComment(id: number, input: Array<string>) {
         this.workflowService.addComment(this.processes[id], input[id]).then(function () {
             input[id] = "";
         });

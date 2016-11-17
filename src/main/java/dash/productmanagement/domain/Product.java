@@ -68,8 +68,8 @@ public class Product implements Serializable {
 	private String name;
 
 	@ApiModelProperty(hidden = true)
-	@Size(max = 255)
-	@Column(name = "description", length = 255, nullable = true)
+	@Size(max = 3000)
+	@Column(name = "description", length = 3000, nullable = true)
 	private String description;
 
 	@Enumerated(EnumType.STRING)
