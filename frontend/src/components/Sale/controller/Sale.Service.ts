@@ -24,7 +24,7 @@ const SaleServiceId: string = "SaleService";
 
 class SaleService {
 
-    $inject = [$rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, SaleResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId, $qId];
+    $inject = [$rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, SaleResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId, $qId, SourceServiceId];
     processResource;
     customerResource;
     saleResource;
@@ -32,6 +32,7 @@ class SaleService {
     customerService: CustomerService;
     productService: ProductService;
     templateService: TemplateService;
+    sourceService: SourceService;
     translate;
     rootScope;
     toaster;
@@ -40,7 +41,7 @@ class SaleService {
 
     rows: { [key: number]: any } = {};
 
-    constructor($rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, SaleResource, WorkflowService, CustomerService, ProductService, TemplateService, $q) {
+    constructor($rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, SaleResource, WorkflowService, CustomerService, ProductService, TemplateService, $q, SourceService) {
         this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
@@ -52,6 +53,7 @@ class SaleService {
         this.workflowService = WorkflowService;
         this.customerService = CustomerService;
         this.productService = ProductService;
+        this.sourceService = SourceService;
         this.$q = $q;
     }
 

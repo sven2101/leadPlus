@@ -103,6 +103,9 @@ const moduleRegistration: string = moduleApp + ".registration";
 const moduleRegistrationService: string = moduleRegistration + ".service";
 const moduleSubdomain: string = moduleApp + ".subdomain";
 const moduleSubdomainService: string = moduleSubdomain + ".service";
+const moduleSource: string = moduleApp + ".source";
+const moduleSourceResource: string = moduleSource + ".resource";
+const moduleSourceService: string = moduleSource + ".service";
 
 const moduleTranslate: string = "pascalprecht.translate";
 const moduleNgResource: string = "ngResource";

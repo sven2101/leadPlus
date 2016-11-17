@@ -225,7 +225,7 @@ class LeadController extends AbstractWorkflow {
             this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.dropCreateScope("compileScope"));
         }
         else {
-            this.leadService.saveLead(this.dtInstance, this.editWorkflowUnit, this.currentOrderPositions);
+            this.leadService.saveLead(this.dtInstance, this.editWorkflowUnit, this.currentOrderPositions, this.editProcess.source);
         }
     }
 
@@ -240,10 +240,6 @@ class LeadController extends AbstractWorkflow {
         this.selectedCustomer = null;
         this.currentProductAmount = 1;
         this.customerSelected = false;
-    }
-
-    createNextWorkflowUnit(process: Process) {
-        this.workflowService.startOfferTransformation(process);
     }
 
     pin(process: Process, user: User) {
