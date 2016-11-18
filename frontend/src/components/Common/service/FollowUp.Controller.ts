@@ -47,14 +47,14 @@ class FollowUpController {
 
     emailEditForm: any;
 
-    process: Process;
     editProcess: Process;
+    originProcess: Process;
     edit: boolean;
 
     constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService, FileService, ProcessResource, toaster, $translate, $rootScope, $scope) {
-        this.process = process;
-        this.editProcess = process;
-        this.editWorkflowUnit = process.offer;
+        this.originProcess = process;
+        this.editProcess = deepCopy(process);
+        this.editWorkflowUnit = this.editProcess.offer;
         this.processResource = ProcessResource.resource;
         this.toaster = toaster;
         this.translate = $translate;
@@ -92,14 +92,11 @@ class FollowUpController {
     }
 
     send() {
-        this.process.offer = this.editWorkflowUnit;
         let self = this;
-        let process = deepCopy(this.process);
         this.currentNotification.notificationType = NotificationType.FOLLOWUP;
         let notification = this.currentNotification;
         notification.id = undefined;
-
-
+        let process = this.editProcess;
         this.notificationService.sendNotification(notification).then(() => {
             self.notificationService.saveFileUpload(notification.attachment).then((resultFileUpload) => {
 
@@ -110,8 +107,9 @@ class FollowUpController {
 
                 process.notifications.push(notification);
                 self.workflowService.saveProcess(process).then((resultProcess) => {
-                    self.process.notifications = resultProcess.notifications;
-                    self.process.followUpAmount = resultProcess.followUpAmount;
+                    self.originProcess.notifications = resultProcess.notifications;
+                    self.originProcess.followUpAmount = resultProcess.followUpAmount;
+                    self.editProcess = resultProcess;
                     self.followUp();
                     self.close();
                 });
@@ -143,17 +141,17 @@ class FollowUpController {
 
     followUp() {
         let self = this;
-        if (this.process.status === Status.FOLLOWUP) {
-            self.rootScope.$broadcast("updateRow", this.process);
+        if (this.editProcess.status === Status.FOLLOWUP) {
+            self.rootScope.$broadcast("updateRow", this.editProcess);
             return;
         }
         this.processResource.setStatus({
-            id: this.process.id
+            id: this.editProcess.id
         }, "FOLLOWUP").$promise.then(function () {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_FOLLOW_UP"));
-            self.process.status = "FOLLOWUP";
-            self.rootScope.$broadcast("updateRow", self.process);
+            self.editProcess.status = "FOLLOWUP";
+            self.rootScope.$broadcast("updateRow", self.editProcess);
             self.rootScope.$broadcast("onTodosChange");
             self.close();
         });
