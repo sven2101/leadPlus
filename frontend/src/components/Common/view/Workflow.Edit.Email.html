@@ -4,47 +4,43 @@
 
 		<div class="form-group">
 			<label>{{ 'EMAIL_NOTIFICATION_HISTORY' | translate }}</label>
-			<select class="form-control" ng-disabled="process.notifications.length==0" ng-model="notificationId" ng-change="setFormerNotification(notificationId)">
-                <option value="-1" selected disabled hidden>{{ 'EMAIL_NOTIFICATION_SELECT' | translate }}</option>                                                                     
-                <option value="{{notification.id}}" ng-repeat="notification in process.notifications track by $index">{{notification.notificationType.toLowerCase()+" - "+notification.subject}}</option>                                           
+			<select class="form-control" ng-disabled="process.notifications.length==0" ng-model="notification" ng-options="(notification.notificationType.toLowerCase()+' - '+notification.subject) for notification in process.notifications track by notification.id">
+               <option></option>                                         
             </select>
 		</div>
 
 		<div class="form-group">
 			<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>
-			<select ng-disabled="disabled" class="form-control" ng-model="templateId" ng-change="parent.generate(templateId, parent.editWorkflowUnit)">
+			<select ng-disabled="disabled" class="form-control" ng-model="templateId" ng-change="generate(templateId, process.offer,notification)">
                 <option value="-1" selected> - {{ 'EMAIL_TEMPLATE_SELECT' | translate }} - </option>                                                                     
-                <option value="{{template.id}}" ng-repeat="template in parent.templates">{{template.name}}</option>                                           
+                <option value="{{template.id}}" ng-repeat="template in templates">{{template.name}}</option>                                           
             </select>
 		</div>
-		<div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.recipient.$invalid&&!disabled}">
+		<div class="form-group" ng-class="{ 'has-error' : form.recipient.$invalid&&!disabled}">
 			<label>{{ 'EMAIL_RECIPIENT' | translate }}</label><span style="color:red">*</span>
-			<input ng-disabled="disabled" name="recipient" required type="email" class="form-control" ng-model="parent.currentNotification.recipient"
+			<input ng-disabled="disabled" name="recipient" required type="email" class="form-control" ng-model="notification.recipient"
 				ng-minlength="5">
-			<p ng-show="parent.emailEditForm.recipient.$error.required&&!disabled&&!parent.emailEditForm.recipient.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
-			<p ng-show="parent.emailEditForm.recipient.$error.email&&!disabled" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
+			<p ng-show="form.recipient.$error.required&&!disabled&&!form.recipient.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+			<p ng-show="form.recipient.$error.email&&!disabled" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
 		</div>
-		<div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.subject.$invalid&&!disabled}">
+		<div class="form-group" ng-class="{ 'has-error' : form.subject.$invalid&&!disabled}">
 			<label>{{ 'EMAIL_SUBJECT' | translate }}</label><span style="color:red">*</span>
-			<input ng-disabled="disabled" name="subject" required type="text" class="form-control" ng-model="parent.currentNotification.subject"
+			<input ng-disabled="disabled" name="subject" required type="text" class="form-control" ng-model="notification.subject"
 				ng-minlength="3">
-			<p ng-show="parent.emailEditForm.subject.$error.minlength&&!disabled" class="help-block">{{ 'COMMON_VALIDATE_MIN' | translate:'{ number: "3" }'}}</p>
-			<p ng-show="parent.emailEditForm.subject.$error.required&&!disabled&&!parent.emailEditForm.subject.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+			<p ng-show="form.subject.$error.minlength&&!disabled" class="help-block">{{ 'COMMON_VALIDATE_MIN' | translate:'{ number: "3" }'}}</p>
+			<p ng-show="form.subject.$error.required&&!disabled&&!form.subject.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
 		</div>
 		<form class="dropzone" method="post" enctype="multipart/form-data" ng-dropzone dropzone="ctrl.dropzone" dropzone-config="ctrl.dropzoneConfig"
 			event-handlers="{ 'addedfile': dzAddedFile, 'error': dzError }">
 		</form>
-		<div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.message.$invalid}">
+		<div class="form-group" ng-class="{ 'has-error' : form.message.$invalid}">
 			<label>{{ 'EMAIL_MESSAGE' | translate }}</label><span style="color:red">*</span>
 			<br/>
-			<summernote ng-if="!disabled" name="message" class="form-control" required ng-model="parent.currentNotification.content">{{parent.currentNotification.content}}</summernote>
+			<summernote ng-if="!disabled" name="message" class="form-control" required ng-model="notification.content">{{notification.content}}</summernote>
 			<div ng-if="disabled" style="border: 1px solid gray;  padding: 15px;">
-				<div ng-bind-html="parent.getAsHtml(parent.currentNotification.content)"></div>
+				<div ng-bind-html="getAsHtml(notification.content)"></div>
 			</div>
-			<p ng-show="parent.emailEditForm.message.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+			<p ng-show="form.message.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
 		</div>
 	</div>
 </form>
-
-<script type="text/javascript">
-</script>

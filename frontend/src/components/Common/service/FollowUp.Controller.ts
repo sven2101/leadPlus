@@ -35,7 +35,6 @@ class FollowUpController {
     templates: Array<Template> = [];
 
     notificationService: NotificationService;
-    currentNotification: Notification;
     templateService: TemplateService;
     workflowService: WorkflowService;
     fileService: FileService;
@@ -44,12 +43,12 @@ class FollowUpController {
     translate;
     rootScope;
     scope;
-
+    currentNotification;
     emailEditForm: any;
 
     editProcess: Process;
     originProcess: Process;
-    edit: boolean;
+    editEmail: boolean = true;
 
     constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService, FileService, ProcessResource, toaster, $translate, $rootScope, $scope) {
         this.originProcess = process;
@@ -79,12 +78,12 @@ class FollowUpController {
         this.uibModalInstance.close();
     }
 
-    generate(templateId: string, offer: Offer) {
-        this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => handleError(error));
+    async generate(templateId: string, offer: Offer) {
+        this.currentNotification = await this.templateService.generate(templateId, offer, this.currentNotification);
     }
 
-    getAllActiveTemplates() {
-        this.templateService.getAll().then((result) => this.templates = result, (error) => handleError(error));
+    async getAllActiveTemplates() {
+        this.templates = await this.templateService.getAll();
     }
 
     openAttachment(id: number) {
@@ -98,9 +97,8 @@ class FollowUpController {
         notification.id = undefined;
         let process = this.editProcess;
         this.notificationService.sendNotification(notification).then(() => {
-            self.notificationService.saveAttachments(notification.attachments).then((result) => {
 
-                notification.attachments = result;
+
                 if (isNullOrUndefined(process.notifications)) {
                     process.notifications = [];
                 }
@@ -113,7 +111,7 @@ class FollowUpController {
                     self.followUp();
                     self.close();
                 });
-            });
+
         });
     }
 

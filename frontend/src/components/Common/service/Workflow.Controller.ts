@@ -54,7 +54,7 @@ class WorkflowController extends AbstractWorkflow {
 
     editProcess: Process;
     edit: boolean;
-    editEmail: boolean;
+    editEmail: boolean= true;
     editable: boolean = true;
 
     leadService: LeadService;
@@ -135,6 +135,7 @@ class WorkflowController extends AbstractWorkflow {
             this.customerSelected = this.editProcess.sale.customer.id > 0;
             this.selectedCustomer = this.editProcess.sale.customer;
             this.editWorkflowUnit = this.editProcess.sale;
+            this.editEmail = false;
         }
     }
 
@@ -206,8 +207,8 @@ class WorkflowController extends AbstractWorkflow {
         let notification = this.currentNotification;
         this.notificationService.sendNotification(notification).then(() => {
             self.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
-                self.notificationService.saveAttachments(notification.attachments).then((result) => {
-                    notification.attachments = result;
+
+
                     if (isNullOrUndefined(process.notifications)) {
                         process.notifications = [];
                     }
@@ -216,7 +217,6 @@ class WorkflowController extends AbstractWorkflow {
                         self.rootScope.$broadcast("deleteRow", process);
                         self.close(true);
                     });
-                });
 
             });
         });

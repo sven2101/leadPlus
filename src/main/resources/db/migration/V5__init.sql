@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS attachment
   id bigint NOT NULL DEFAULT nextval('attachment_id_seq'::regclass),
   fileUpload_fk bigint NOT NULL,
   notification_fk bigint NOT NULL,
+  deleted boolean NOT NULL,
   CONSTRAINT attachment_pkey PRIMARY KEY (id),
   CONSTRAINT attachment_fileUpload_fk FOREIGN KEY (fileUpload_fk)
       REFERENCES fileupload (id) MATCH SIMPLE

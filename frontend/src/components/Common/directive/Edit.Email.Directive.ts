@@ -1,4 +1,5 @@
 /// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../Template/controller/Template.Service.ts" />
 
 declare var Ladda;
 
@@ -14,39 +15,55 @@ class EditEmailDirective implements IDirective {
     scope = {
         form: "=",
         process: "=",
-        disabled: "@"
+        disabled: "=",
+        notification: "="
     };
 
-    constructor(private WorkflowService: WorkflowService, private $rootScope) { }
+    constructor(private WorkflowService: WorkflowService, private $rootScope, private TemplateService: TemplateService, private $sce) { }
 
     static directiveFactory(): EditEmailDirective {
-        let directive: any = (WorkflowService: WorkflowService, $rootScope) => new EditEmailDirective(WorkflowService, $rootScope);
-        directive.$inject = [WorkflowServiceId, $rootScopeId];
+        let directive: any = (WorkflowService: WorkflowService, $rootScope, TemplateService: TemplateService, $sce) => new EditEmailDirective(WorkflowService, $rootScope, TemplateService, $sce);
+        directive.$inject = [WorkflowServiceId, $rootScopeId, TemplateServiceId, $sceId];
         return directive;
     }
 
     link(scope, element, attrs, ctrl, transclude): void {
+        if (isNullOrUndefined(scope.process)) {
+            return;
+        }
         let l = $(".ladda-button").ladda();
         let button = $(".ladda-button");
         button.click(function () {
             l.ladda("start");
         });
         scope.templateId = "-1";
-        scope.notificationId = "-1";
-        scope.process.currentNotification = new Notification();
-        scope.setFormerNotification = this.setFormerNotification;
-    };
+        scope.TemplateService = this.TemplateService;
+        scope.$sce = this.$sce;
+        if (isNullOrUndefined(scope.notification) && !isNullOrUndefined(scope.process.offer)) {
+            scope.notification = new Notification();
+            scope.notification.recipient = scope.process.offer.customer.email;
+        }
+        this.TemplateService.getAll().then((templates) => scope.templates = templates);
+        scope.generate = (templateId, offer, currentNotification) => {
+            if (Number(templateId) === -1) {
+                scope.notification = new Notification();
+                scope.notification.recipient = scope.process.offer.customer.email;
+                return;
+            }
+            scope.TemplateService.generate(templateId, offer, currentNotification).then((notification) => scope.notification = notification);
+        };
+        scope.getAsHtml = this.getAsHtml;
+        // scope.getAsHtml = function (html: string) { console.log("test", html); return scope.$sce.trustAsHtml(html); };
 
-    setFormerNotification(process, notificationId: number) {
-        if (Number(notificationId) === -1) {
-            process.currentNotification = new Notification();
-        }
-        let notification: Notification = findElementById(process.notifications, Number(notificationId)) as Notification;
-        if (!isNullOrUndefined(notification)) {
-            process = deepCopy(notification);
-            process.id = null;
-        }
+
+
+
+
+    };
+    getAsHtml() {
+        return "test";
     }
+
 }
 
 angular.module(moduleApp).directive(EditEmailDirectiveId, EditEmailDirective.directiveFactory());
