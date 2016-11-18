@@ -94,7 +94,7 @@ angular.module(moduleApp,
         moduleNgImgCrop,
         moduleUIBootstrap,
         moduleSummernote,
-        moduleDropzone,
+        moduleNgDropzone,
         moduleFootable,
         moduleSanitize,
         moduleSweetAlert

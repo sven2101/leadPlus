@@ -34,8 +34,7 @@ class WorkflowController extends AbstractWorkflow {
 
     uibModalInstance;
 
-    editWorkflowUnit: any;
-    process: Process;
+    editWorkflowUnit: Offer | Sale;
     template: Template = new Template();
 
     templates: Array<Template> = [];
@@ -49,7 +48,6 @@ class WorkflowController extends AbstractWorkflow {
     dashboardService: DashboardService;
     fileService: FileService;
 
-    currentOrderPositions: Array<OrderPosition>;
     currentProductId = "-1";
     currentProductAmount = 1;
     currentNotification: Notification;
@@ -57,7 +55,7 @@ class WorkflowController extends AbstractWorkflow {
     editProcess: Process;
     edit: boolean;
     editEmail: boolean;
-    editable: boolean;
+    editable: boolean = true;
 
     leadService: LeadService;
     offerService: OfferService;
@@ -82,23 +80,7 @@ class WorkflowController extends AbstractWorkflow {
         let self = this;
         this.rootScope = $rootScope;
         this.scope = $scope;
-        this.process = process;
         this.type = type;
-        if (this.type === "offer") {
-            this.editWorkflowUnit = new Offer();
-            this.editWorkflowUnit = this.process.offer;
-            this.currentNotification = new Notification();
-            this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
-            this.editEmail = false;
-            this.editable = true;
-        }
-        else if (this.type === "sale") {
-            this.wizardOnClick(6);
-            this.editWorkflowUnit = new Sale();
-            this.editWorkflowUnit = this.process.sale;
-            this.editEmail = true;
-            this.editable = false;
-        }
         this.uibModalInstance = $uibModalInstance;
         this.notificationService = NotificationService;
 
@@ -142,21 +124,17 @@ class WorkflowController extends AbstractWorkflow {
             this.saleEditForm.$setPristine();
         }
 
-        this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = process;
-
         if (this.type === "offer") {
-            this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
             this.customerSelected = this.editProcess.offer.customer.id > 0;
             this.selectedCustomer = this.editProcess.offer.customer;
-            this.editWorkflowUnit = deepCopy(this.editProcess.offer);
+            this.editWorkflowUnit = this.editProcess.offer;
         } else if (this.type === "sale") {
-            this.currentOrderPositions = deepCopy(this.editProcess.sale.orderPositions);
             this.customerSelected = this.editProcess.sale.customer.id > 0;
             this.selectedCustomer = this.editProcess.sale.customer;
-            this.editWorkflowUnit = deepCopy(this.editProcess.sale);
+            this.editWorkflowUnit = this.editProcess.sale;
         }
     }
 
@@ -170,7 +148,10 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     calculateProfit() {
-        this.editWorkflowUnit.saleProfit = this.editWorkflowUnit.saleTurnover - this.editWorkflowUnit.saleCost;
+        if (this.editWorkflowUnit instanceof Sale) {
+            this.editWorkflowUnit.saleProfit = this.editWorkflowUnit.saleTurnover - this.editWorkflowUnit.saleCost;
+        }
+
     }
 
     generate(templateId: string, offer: Offer) {
@@ -178,7 +159,6 @@ class WorkflowController extends AbstractWorkflow {
             this.currentNotification.content = "";
             this.currentNotification.id = null;
         } else {
-            offer.orderPositions = this.currentOrderPositions;
             this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => handleError(error));
         }
     }
@@ -206,21 +186,22 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     existsInvoiceNumber() {
-        let self = this;
-        this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function (result: Sale) {
-            if (!isNullOrUndefined(result)) {
-                self.invoiceNumberAlreadyExists = true;
-            } else {
-                self.invoiceNumberAlreadyExists = false;
-            }
-        });
+        if (this.editWorkflowUnit instanceof Sale) {
+            let self = this;
+            this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function (result: Sale) {
+                if (!isNullOrUndefined(result)) {
+                    self.invoiceNumberAlreadyExists = true;
+                } else {
+                    self.invoiceNumberAlreadyExists = false;
+                }
+            });
+        }
     }
 
     send() {
         let self = this;
-        this.process.offer = this.editWorkflowUnit;
-        this.process.offer.orderPositions = this.currentOrderPositions;
-        let process = this.process;
+
+        let process = this.editProcess;
         this.currentNotification.notificationType = NotificationType.OFFER;
         let notification = this.currentNotification;
         this.notificationService.sendNotification(notification).then(() => {
@@ -232,7 +213,6 @@ class WorkflowController extends AbstractWorkflow {
                     }
                     process.notifications.push(notification);
                     self.workflowService.saveProcess(process).then((resultProcess) => {
-                        self.process.notifications = resultProcess.notifications;
                         self.close(true);
                     });
                 });
@@ -244,19 +224,16 @@ class WorkflowController extends AbstractWorkflow {
     save() {
         if (this.type === "offer") {
             let self = this;
-            this.process.offer = this.editWorkflowUnit;
-            this.process.offer.orderPositions = this.currentOrderPositions;
-            let process = this.process;
+            let process = this.editProcess;
             this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
                 self.rootScope.$broadcast("deleteRow", tmpprocess);
                 self.close(true);
             });
         } else if (this.type === "sale") {
-            this.process.sale = this.editWorkflowUnit;
-            this.process.sale.orderPositions = this.currentOrderPositions;
+            let process = this.editProcess;
             let self = this;
-            this.workflowService.addOfferToSale(this.process).then(function (tmpprocess: Process) {
-                self.rootScope.$broadcast("deleteRow", self.process);
+            this.workflowService.addOfferToSale(process).then(function (tmpprocess: Process) {
+                self.rootScope.$broadcast("deleteRow", tmpprocess);
                 self.close(true);
             });
         }

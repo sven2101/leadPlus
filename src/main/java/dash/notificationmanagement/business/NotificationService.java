@@ -61,7 +61,8 @@ public class NotificationService implements INotificationService {
 			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException, Exception {
 		try {
 			Smtp smtp = smtpService.findByUser(userId);
-			if (notification != null && notification.getAttachments() != null && notification.getAttachments().size() > 0) {
+			if (notification != null && notification.getAttachments() != null
+					&& notification.getAttachments().size() > 0) {
 				for (Attachment attachment : notification.getAttachments()) {
 					if (attachment != null) {
 						Attachment existingAttachment = attachmentService.getById(attachment.getId());
@@ -71,7 +72,8 @@ public class NotificationService implements INotificationService {
 			}
 
 			if (smtp != null) {
-				smtp.setPassword(Encryptor.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
+				smtp.setPassword(Encryptor
+						.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
 				final Session emailSession = newSession(smtp);
 				Transport transport = emailSession.getTransport("smtp");
 				transport.connect();
@@ -92,7 +94,8 @@ public class NotificationService implements INotificationService {
 						for (Attachment attachment : notification.getAttachments()) {
 							if (attachment.getFileUpload().getContent() != null) {
 								MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-								ByteArrayDataSource ds = new ByteArrayDataSource(attachment.getFileUpload().getContent(),
+								ByteArrayDataSource ds = new ByteArrayDataSource(
+										attachment.getFileUpload().getContent(),
 										attachment.getFileUpload().getMimeType());
 								attachmentBodyPart.setDataHandler(new DataHandler(ds));
 								attachmentBodyPart.setFileName(attachment.getFileUpload().getFilename());
@@ -113,8 +116,8 @@ public class NotificationService implements INotificationService {
 				throw new SMTPdoesntExistsException("No valid SMTP Data for this User");
 			}
 		} catch (Exception ex) {
-			throw ex;
-			// return;
+			// throw ex;
+			return;
 		}
 	}
 

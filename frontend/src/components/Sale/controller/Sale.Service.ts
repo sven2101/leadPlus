@@ -24,7 +24,7 @@ const SaleServiceId: string = "SaleService";
 
 class SaleService {
 
-    $inject = [$rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, SaleResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId, $qId, SourceServiceId];
+    $inject = [$qId, $rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, SaleResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId, $qId, SourceServiceId];
     processResource;
     customerResource;
     saleResource;
@@ -37,11 +37,10 @@ class SaleService {
     rootScope;
     toaster;
     compile;
-    $q;
 
     rows: { [key: number]: any } = {};
 
-    constructor($rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, SaleResource, WorkflowService, CustomerService, ProductService, TemplateService, $q, SourceService) {
+    constructor(private $q, $rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, SaleResource, WorkflowService, CustomerService, ProductService, TemplateService, SourceService) {
         this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
@@ -54,14 +53,12 @@ class SaleService {
         this.customerService = CustomerService;
         this.productService = ProductService;
         this.sourceService = SourceService;
-        this.$q = $q;
     }
 
-    save(editSale: Sale, editProcess: Process, currentOrderPositions: Array<OrderPosition>, dtInstance: any, scope: any) {
+    save(editSale: Sale, editProcess: Process, dtInstance: any, scope: any) {
+        let defer: IDefer<Process> = this.$q.defer();
         let self = this;
         shallowCopy(editSale, editProcess.sale);
-        editProcess.sale.orderPositions = currentOrderPositions;
-
         let temp: Sale = editProcess.sale;
         if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
             temp.customer.timestamp = newTimestamp();
@@ -70,15 +67,19 @@ class SaleService {
 
                 self.processResource.save(editProcess).$promise.then(function (result) {
                     self.updateRow(editProcess, dtInstance, scope);
+                    defer.resolve(result);
                 });
+
             });
-            return;
+            return defer.promise;
         }
 
         this.processResource.save(editProcess).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_UPDATE_SALE"));
             self.updateRow(editProcess, dtInstance, scope);
+            defer.resolve(result);
         });
+        return defer.promise;
     }
 
     pin(process: Process, dtInstance: any, scope: any, user: User) {

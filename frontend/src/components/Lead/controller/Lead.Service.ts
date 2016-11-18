@@ -24,7 +24,7 @@ const LeadServiceId: string = "LeadService";
 
 class LeadService {
 
-    $inject = [$rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, LeadResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId, SourceServiceId];
+    $inject = [$qId, $rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, LeadResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId, SourceServiceId];
     processResource;
     customerResource;
     leadResource;
@@ -40,7 +40,7 @@ class LeadService {
 
     rows: { [key: number]: any } = {};
 
-    constructor($rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, LeadResource, WorkflowService, CustomerService, ProductService, TemplateService, SourceService) {
+    constructor(private $q, $rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, LeadResource, WorkflowService, CustomerService, ProductService, TemplateService, SourceService) {
         this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
@@ -55,7 +55,8 @@ class LeadService {
         this.sourceService = SourceService;
     }
 
-    saveLead(dtInstance: any, newLead: Lead, currentOrderPositions: Array<OrderPosition>, source: Source) {
+    saveLead(dtInstance: any, newLead: Lead, source: Source): Promise<Process> {
+        let defer: IDefer<Process> = this.$q.defer();
         let self = this;
         if (angular.isUndefined(newLead.customer)) {
             newLead.customer = new Customer();
@@ -65,7 +66,6 @@ class LeadService {
         newLead.vendor = {
             name: "***REMOVED***"
         };
-        newLead.orderPositions = currentOrderPositions;
         let process = {
             lead: newLead,
             status: "OPEN",
@@ -80,17 +80,19 @@ class LeadService {
                     self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
                     self.rootScope.leadsCount += 1;
                     dtInstance.DataTable.row.add(result).draw();
+                    defer.resolve(result);
                 });
             });
-            return;
+            return defer.promise;
         }
 
         this.processResource.save(process).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
             self.rootScope.leadsCount += 1;
             dtInstance.DataTable.row.add(result).draw();
+            defer.resolve(result);
         });
-
+        return defer.promise;
     }
 
     inContact(process: Process, dtInstance: any, scope: any) {
@@ -160,11 +162,9 @@ class LeadService {
         }
     }
 
-    saveEditedRow(editLead: Lead, editProcess: Process, currentOrderPositions: Array<OrderPosition>, dtInstance: any, scope: any) {
+    saveEditedRow(editLead: Lead, editProcess: Process, dtInstance: any, scope: any): Promise<Process> {
+        let defer: IDefer<Process> = this.$q.defer();
         let self = this;
-        shallowCopy(editLead, editProcess.lead);
-        editProcess.lead.orderPositions = currentOrderPositions;
-
         let temp: any = editProcess.lead;
         if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
             temp.customer.timestamp = newTimestamp();
@@ -178,9 +178,10 @@ class LeadService {
                     if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                         self.rootScope.$broadcast("onTodosChange");
                     }
-                }, (error) => handleError(error));
-            }, (error) => handleError(error));
-            return;
+                    defer.resolve(result);
+                }, (error) => { handleError(error); defer.reject(error); });
+            }, (error) => { handleError(error); defer.reject(error); });
+            return defer.promise;
         }
         this.processResource.save(editProcess).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD")); self.rootScope.leadsCount += 1;
@@ -188,7 +189,9 @@ class LeadService {
             if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                 self.rootScope.$broadcast("onTodosChange");
             }
-        }, (error) => handleError(error));
+            defer.resolve(result);
+        }, (error) => { handleError(error); defer.reject(error); });
+        return defer.promise;
     }
 
     setRow(id: number, row: any) {

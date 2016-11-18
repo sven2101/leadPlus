@@ -56,7 +56,6 @@ class LeadController extends AbstractWorkflow {
     edit: boolean;
     editable: boolean = true;
 
-    currentOrderPositions: Array<OrderPosition>;
     currentProductId = "-1";
     currentProductAmount = 1;
 
@@ -203,15 +202,17 @@ class LeadController extends AbstractWorkflow {
         this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
-        this.editProcess = process;
-        this.currentOrderPositions = deepCopy(this.editProcess.lead.orderPositions);
+        this.editProcess = deepCopy(process);
         this.customerSelected = this.editProcess.lead.customer.id > 0;
         this.selectedCustomer = this.editProcess.lead.customer;
-        this.editWorkflowUnit = deepCopy(this.editProcess.lead);
+        this.editWorkflowUnit = this.editProcess.lead;
     }
 
-    addComment(id: number, input: Array<string>) {
-        this.workflowService.addComment(this.processes[id], input[id]).then(function () {
+    addComment(id: number, input: Array<string>, process: Process = null) {
+        if (isNullOrUndefined(process)) {
+            process = this.processes[id];
+        }
+        this.workflowService.addComment(process, input[id]).then(function () {
             input[id] = "";
         });
     }
@@ -220,12 +221,18 @@ class LeadController extends AbstractWorkflow {
         this.leadService.inContact(process, this.dtInstance, this.dropCreateScope("compileScope"));
     }
 
-    save(edit: boolean) {
+    async save(edit: boolean) {
         if (edit === true) {
-            this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.dropCreateScope("compileScope"));
+            let process = await this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.dtInstance, this.dropCreateScope("compileScope"));
+            this.getScopeByKey("childRowScope" + process.id).workflowUnit = process.lead;
+            this.getScopeByKey("childRowScope" + process.id).process = process;
+            this.getScopeByKey("childRowScope" + process.id).$apply();
         }
         else {
-            this.leadService.saveLead(this.dtInstance, this.editWorkflowUnit, this.currentOrderPositions, this.editProcess.source);
+            let process = await this.leadService.saveLead(this.dtInstance, this.editWorkflowUnit, this.editProcess.source);
+            this.getScopeByKey("childRowScope" + process.id).workflowUnit = process.lead;
+            this.getScopeByKey("childRowScope" + process.id).process = process;
+            this.getScopeByKey("childRowScope" + process.id).$apply();
         }
     }
 
@@ -235,7 +242,6 @@ class LeadController extends AbstractWorkflow {
         this.editWorkflowUnit = new Lead();
         this.editProcess = new Process();
         this.editWorkflowUnit.orderPositions = new Array<OrderPosition>();
-        this.currentOrderPositions = new Array<OrderPosition>();
         this.currentProductId = "-1";
         this.selectedCustomer = null;
         this.currentProductAmount = 1;
