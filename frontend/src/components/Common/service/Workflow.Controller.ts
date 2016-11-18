@@ -213,6 +213,7 @@ class WorkflowController extends AbstractWorkflow {
                     }
                     process.notifications.push(notification);
                     self.workflowService.saveProcess(process).then((resultProcess) => {
+                        self.rootScope.$broadcast("deleteRow", process);
                         self.close(true);
                     });
                 });
@@ -225,15 +226,16 @@ class WorkflowController extends AbstractWorkflow {
         if (this.type === "offer") {
             let self = this;
             let process = this.editProcess;
-            this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
-                self.rootScope.$broadcast("deleteRow", tmpprocess);
+            this.workflowService.addLeadToOffer(process).then(() => {
+                self.rootScope.$broadcast("deleteRow", process);
                 self.close(true);
             });
         } else if (this.type === "sale") {
             let process = this.editProcess;
             let self = this;
-            this.workflowService.addOfferToSale(process).then(function (tmpprocess: Process) {
-                self.rootScope.$broadcast("deleteRow", tmpprocess);
+            this.workflowService.addOfferToSale(process).then(() => {
+                self.rootScope.$broadcast("deleteRow", process);
+
                 self.close(true);
             });
         }

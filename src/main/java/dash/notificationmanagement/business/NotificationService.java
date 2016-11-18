@@ -61,6 +61,7 @@ public class NotificationService implements INotificationService {
 			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException, Exception {
 		try {
 			Smtp smtp = smtpService.findByUser(userId);
+
 			if (notification != null && notification.getAttachments() != null
 					&& notification.getAttachments().size() > 0) {
 				for (Attachment attachment : notification.getAttachments()) {
@@ -68,6 +69,7 @@ public class NotificationService implements INotificationService {
 						Attachment existingAttachment = attachmentService.getById(attachment.getId());
 						notification.addAttachment(existingAttachment);
 					}
+
 				}
 			}
 
@@ -102,6 +104,7 @@ public class NotificationService implements INotificationService {
 								multipart.addBodyPart(attachmentBodyPart);
 							}
 						}
+
 					}
 					msg.setContent(multipart);
 
