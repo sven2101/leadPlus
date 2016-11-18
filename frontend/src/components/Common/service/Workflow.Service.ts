@@ -113,6 +113,9 @@ class WorkflowService {
     }
 
     addProduct(array: Array<OrderPosition>, currentProductId: string, currentProductAmount: number) {
+        if (isNullOrUndefined(array)) {
+            array = [];
+        }
         if (!isNaN(Number(currentProductId))
             && Number(currentProductId) > 0) {
             let tempProduct = findElementById(this.productService.products,
