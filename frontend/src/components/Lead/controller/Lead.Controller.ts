@@ -208,8 +208,11 @@ class LeadController extends AbstractWorkflow {
         this.editWorkflowUnit = this.editProcess.lead;
     }
 
-    addComment(id: number, input: Array<string>) {
-        this.workflowService.addComment(this.processes[id], input[id]).then(function () {
+    addComment(id: number, input: Array<string>, process: Process = null) {
+        if (isNullOrUndefined(process)) {
+            process = this.processes[id];
+        }
+        this.workflowService.addComment(process, input[id]).then(function () {
             input[id] = "";
         });
     }
@@ -218,12 +221,18 @@ class LeadController extends AbstractWorkflow {
         this.leadService.inContact(process, this.dtInstance, this.dropCreateScope("compileScope"));
     }
 
-    save(edit: boolean) {
+    async save(edit: boolean) {
         if (edit === true) {
-            this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.dtInstance, this.dropCreateScope("compileScope"));
+            let process = await this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.dtInstance, this.dropCreateScope("compileScope"));
+            this.getScopeByKey("childRowScope" + process.id).workflowUnit = process.lead;
+            this.getScopeByKey("childRowScope" + process.id).process = process;
+            this.getScopeByKey("childRowScope" + process.id).$apply();
         }
         else {
-            this.leadService.saveLead(this.dtInstance, this.editWorkflowUnit, this.editProcess.source);
+            let process = await this.leadService.saveLead(this.dtInstance, this.editWorkflowUnit, this.editProcess.source);
+            this.getScopeByKey("childRowScope" + process.id).workflowUnit = process.lead;
+            this.getScopeByKey("childRowScope" + process.id).process = process;
+            this.getScopeByKey("childRowScope" + process.id).$apply();
         }
     }
 

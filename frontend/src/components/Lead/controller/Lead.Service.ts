@@ -37,11 +37,10 @@ class LeadService {
     toaster;
     compile;
     templateService;
-    q;
+
     rows: { [key: number]: any } = {};
 
-    constructor($q, $rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, LeadResource, WorkflowService, CustomerService, ProductService, TemplateService, SourceService) {
-        this.q = $q;
+    constructor(private $q, $rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, LeadResource, WorkflowService, CustomerService, ProductService, TemplateService, SourceService) {
         this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
@@ -57,7 +56,7 @@ class LeadService {
     }
 
     saveLead(dtInstance: any, newLead: Lead, source: Source): Promise<Process> {
-        let defer: IDefer<Process> = this.q.defer();
+        let defer: IDefer<Process> = this.$q.defer();
         let self = this;
         if (angular.isUndefined(newLead.customer)) {
             newLead.customer = new Customer();
@@ -164,9 +163,8 @@ class LeadService {
     }
 
     saveEditedRow(editLead: Lead, editProcess: Process, dtInstance: any, scope: any): Promise<Process> {
-        let defer: IDefer<Process> = this.q.defer();
+        let defer: IDefer<Process> = this.$q.defer();
         let self = this;
-        shallowCopy(editLead, editProcess.lead);
         let temp: any = editProcess.lead;
         if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
             temp.customer.timestamp = newTimestamp();

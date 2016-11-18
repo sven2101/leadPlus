@@ -24,7 +24,7 @@ const OfferServiceId: string = "OfferService";
 
 class OfferService {
 
-    $inject = [$rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, OfferResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, DashboardServiceId, TemplateServiceId, SourceServiceId];
+    $inject = [$qId, $rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, OfferResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, DashboardServiceId, TemplateServiceId, SourceServiceId];
     processResource;
     customerResource;
     offerResource;
@@ -43,7 +43,7 @@ class OfferService {
 
     rows: { [key: number]: any } = {};
 
-    constructor($rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, OfferResource, WorkflowService, CustomerService, ProductService, DashboardService, TemplateService, SourceService) {
+    constructor(private $q, $rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, OfferResource, WorkflowService, CustomerService, ProductService, DashboardService, TemplateService, SourceService) {
         this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
@@ -101,11 +101,9 @@ class OfferService {
         }
     }
 
-    saveEditedRow(editOffer: Offer, editProcess: Process, currentOrderPositions: Array<OrderPosition>, dtInstance: any, scope: any) {
+    saveEditedRow(editOffer: Offer, editProcess: Process, dtInstance: any, scope: any): Promise<Process> {
+        let defer: IDefer<Process> = this.$q.defer();
         let self = this;
-        shallowCopy(editOffer, editProcess.offer);
-        editProcess.offer.orderPositions = currentOrderPositions;
-
         let temp: Offer = editProcess.offer;
         if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
             temp.customer.timestamp = newTimestamp();
@@ -116,9 +114,10 @@ class OfferService {
                     if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                         self.rootScope.$broadcast("onTodosChange");
                     }
-                });
-            });
-            return;
+                    defer.resolve(result);
+                }, (error) => defer.reject(error));
+            }, (error) => defer.reject(error));
+            return defer.promise;
         }
 
 
@@ -130,37 +129,9 @@ class OfferService {
             if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                 self.rootScope.$broadcast("onTodosChange");
             }
-        });
-    }
-
-    save(editOffer: Offer, editProcess: Process, currentOrderPositions: Array<OrderPosition>) {
-        let self = this;
-        shallowCopy(editOffer, editProcess.offer);
-        editProcess.offer.orderPositions = currentOrderPositions;
-
-        let temp: Offer = editProcess.offer;
-        if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
-            temp.customer.timestamp = newTimestamp();
-            this.customerResource.createCustomer(temp.customer).$promise.then(function (customer) {
-                temp.customer = customer;
-                self.processResource.save(editProcess).$promise.then(function (result) {
-                    if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
-                        self.rootScope.$broadcast("onTodosChange");
-                    }
-                });
-            });
-            return;
-        }
-
-
-        this.processResource.save(editProcess).$promise.then(function (result) {
-
-            self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_UPDATE_OFFER"));
-            editProcess.offer = result;
-            if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
-                self.rootScope.$broadcast("onTodosChange");
-            }
-        });
+            defer.resolve(result);
+        }, (error) => defer.reject(error));
+        return defer.promise;
     }
 
     setRow(id: number, row: any) {
