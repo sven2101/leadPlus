@@ -31,7 +31,6 @@ class SaleController extends AbstractWorkflow {
     $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId, TemplateServiceId, FileServiceId, $routeParamsId, $sceId, $windowId];
 
     type: string = "sale";
-    process: Process;
 
     workflowService: WorkflowService;
     saleDataTableService: SaleDataTableService;
@@ -57,7 +56,6 @@ class SaleController extends AbstractWorkflow {
     editEmail: boolean = true;
     editable: boolean = false;
 
-    currentOrderPositions: Array<OrderPosition>;
     templates: Array<Template> = [];
     currentNotification: Notification;
 
@@ -206,17 +204,19 @@ class SaleController extends AbstractWorkflow {
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = process;
-        this.process = this.editProcess;
-        this.currentOrderPositions = deepCopy(this.editProcess.sale.orderPositions);
-        this.editProcess.currentFormerProcessors = deepCopy(this.editProcess.formerProcessors);
+        this.editProcess = deepCopy(process);
         this.customerSelected = this.editProcess.sale.customer.id > 0;
         this.selectedCustomer = this.editProcess.sale.customer;
-        this.editWorkflowUnit = deepCopy(this.editProcess.sale);
+        this.editWorkflowUnit = this.editProcess.sale;
         // this.editWorkflowUnit.saleTurnover = this.editProcess.offer.offerPrice;
     }
 
-    addComment(id: number, input: Array<string>) {
-        this.workflowService.addComment(this.processes[id], input[id]).then(function () {
+
+    addComment(id: number, input: Array<string>, process: Process = null) {
+        if (isNullOrUndefined(process)) {
+            process = this.processes[id];
+        }
+        this.workflowService.addComment(process, input[id]).then(function () {
             input[id] = "";
         });
     }
@@ -225,21 +225,13 @@ class SaleController extends AbstractWorkflow {
         this.editWorkflowUnit.saleProfit = this.editWorkflowUnit.saleTurnover - this.editWorkflowUnit.saleCost;
     }
 
-    save(edit: boolean) {
-        this.editProcess.formerProcessors = deepCopy(this.editProcess.currentFormerProcessors);
-        this.saleService.save(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.dropCreateScope("compileScope"));
-    }
 
-    clearNewSale() {
-        this.edit = false;
-        this.editWorkflowUnit = new Sale();
-        this.editProcess = new Process();
-        this.editWorkflowUnit.orderPositions = new Array<OrderPosition>();
-        this.currentOrderPositions = new Array<OrderPosition>();
-        this.currentProductId = "-1";
-        this.selectedCustomer = null;
-        this.currentProductAmount = 1;
-        this.customerSelected = false;
+    async save(edit: boolean) {
+        let process = await this.saleService.save(this.editWorkflowUnit, this.editProcess, this.dtInstance, this.dropCreateScope("compileScope"));
+        this.getScopeByKey("childRowScope" + process.id).workflowUnit = process.sale;
+        this.getScopeByKey("childRowScope" + process.id).process = process;
+        this.getScopeByKey("childRowScope" + process.id).$apply();
+
     }
 
     deleteRow(process: Process) {

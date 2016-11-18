@@ -67,6 +67,12 @@
 			</div>
 		</div>
 		<div class="col-sm-6">
+			<!-- SOURCE -->
+			<div class="form-group">
+				<label>{{ 'SOURCE_SOURCE' | translate }}</label>
+				<select name="source" class="form-control" ng-model="parent.editProcess.source" ng-disabled="!parent.editable" ng-options="s.name for s in service.sourceService.getActiveSources() track by s.id">
+					<option></option></select>
+			</div>
 			<!-- MESSAGE -->
 			<div class="form-group">
 				<label>{{ 'COMMON_NOTE' | translate }}</label>

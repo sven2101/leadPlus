@@ -431,5 +431,27 @@ class TenantResource {
         });
     }
 }
-
 angular.module(moduleTenantResource, [ngResourceId]).service(TenantResourceId, TenantResource);
+// ----------------------------------------------------------------------------------------
+const SourceResourceId: string = "SourceResource";
+
+class SourceResource {
+
+    private $inject = [$resourceId];
+
+    resource: any;
+
+    constructor($resource) {
+        this.resource = $resource("/api/rest/source", {}, {
+            getSourceById: { url: "/api/rest/source/:id", method: "GET" },
+            getAllSources: { url: "/api/rest/source", method: "GET", isArray: true },
+            createSource: { url: "/api/rest/source", method: "POST" },
+            updateSource: { url: "/api/rest/source", method: "PUT" },
+            deleteSource: { url: "/api/rest/source", method: "DELETE" }
+        });
+    }
+}
+
+angular.module(moduleSourceResource, [ngResourceId]).service(SourceResourceId, SourceResource);
+
+

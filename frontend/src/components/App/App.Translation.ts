@@ -433,6 +433,19 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE_ERROR: "Produkt konnte nicht aktuallisiert werden",
             PRODUCT_NUMBER: "Produktnummer",
 
+            // Define source elements
+            SOURCE_SOURCES: "Quellen",
+            SOURCE_SOURCE: "Quelle",
+            SOURCE_MANAGE_SOURCES: "Quellen verwalten",
+            SOURCE_CREATE: "Neue Quelle",
+            SOURCE_SOURCENAME: "Quellenname",
+            SOURCE_DESCRIPTION: "Beschreibung",
+            SOURCE_EDIT: "Quelle bearbeiten",
+            SOURCE_DEACTIVATED: "Deaktivieren",
+            SOURCE_CREATED: "Erstellt",
+            SOURCE_TOAST_SAVE: "Quelle wurde erfolgreich angelegt/bearbeitet",
+            SOURCE_TOAST_SAVE_ERROR: "Quelle konnte nicht angelegt/aktualisiert werden",
+
             // Define customer elements
             CUSTOMER: "Kunde",
             CUSTOMER_MANAGE_CUSTOMER: "Kunden verwalten",
@@ -885,6 +898,19 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE: "Updating product was successful",
             PRODUCT_TOAST_UPDATE_ERROR: "Updating product was unsuccessful",
             PRODUCT_NUMBER: "Product number",
+
+            // Define source elements
+            SOURCE_SOURCES: "Sources",
+            SOURCE_SOURCE: "Source",
+            SOURCE_MANAGE_SOURCES: "Manage Sources",
+            SOURCE_CREATE: "New Source",
+            SOURCE_SOURCENAME: "Source Name",
+            SOURCE_DESCRIPTION: "Description",
+            SOURCE_EDIT: "Edit Source",
+            SOURCE_DEACTIVATED: "Deactivate",
+            SOURCE_CREATED: "Created",
+            SOURCE_TOAST_SAVE: "Creating/Editing Source was successful",
+            SOURCE_TOAST_SAVE_ERROR: "Creating/Editing Source was unsuccessful",
 
             // Define customer elements
             CUSTOMER: "Customer",

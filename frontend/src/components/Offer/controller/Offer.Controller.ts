@@ -59,7 +59,6 @@ class OfferController extends AbstractWorkflow {
     editEmail: boolean = true;
     editable: boolean = true;
 
-    currentOrderPositions: Array<OrderPosition>;
     templates: Array<Template> = [];
 
     currentProductId = "-1";
@@ -208,35 +207,28 @@ class OfferController extends AbstractWorkflow {
         this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
-        this.editProcess = process;
-        this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
-        this.editProcess.currentFormerProcessors = deepCopy(this.editProcess.formerProcessors);
+        this.editProcess = deepCopy(process);
         this.customerSelected = this.editProcess.offer.customer.id > 0;
         this.selectedCustomer = this.editProcess.offer.customer;
-        this.editWorkflowUnit = deepCopy(this.editProcess.offer);
+        this.editWorkflowUnit = this.editProcess.offer;
     }
 
-    addComment(id: number, input: Array<string>) {
-        this.workflowService.addComment(this.processes[id], input[id]).then(function () {
+
+    addComment(id: number, input: Array<string>, process: Process = null) {
+        if (isNullOrUndefined(process)) {
+            process = this.processes[id];
+        }
+        this.workflowService.addComment(process, input[id]).then(function () {
             input[id] = "";
         });
     }
 
-    save(edit: boolean) {
-        this.editProcess.formerProcessors = deepCopy(this.editProcess.currentFormerProcessors);
-        this.offerService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.currentOrderPositions, this.dtInstance, this.dropCreateScope("compileScope"));
-    }
 
-    clearNewOffer() {
-        this.edit = false;
-        this.editWorkflowUnit = new Offer();
-        this.editProcess = new Process();
-        this.editWorkflowUnit.orderPositions = new Array<OrderPosition>();
-        this.currentOrderPositions = new Array<OrderPosition>();
-        this.currentProductId = "-1";
-        this.customerSelected = null;
-        this.currentProductAmount = 1;
-        this.customerSelected = false;
+    async save(edit: boolean) {
+        let process = await this.offerService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.dtInstance, this.dropCreateScope("compileScope"));
+        this.getScopeByKey("childRowScope" + process.id).workflowUnit = process.offer;
+        this.getScopeByKey("childRowScope" + process.id).process = process;
+        this.getScopeByKey("childRowScope" + process.id).$apply();
     }
 
     createNextWorkflowUnit(process: Process) {
