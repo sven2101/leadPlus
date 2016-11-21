@@ -127,12 +127,11 @@ public class PublicApiService implements IPublicApiService {
 
 		logging();
 
-		
 		Source sourceObj = null;
-		if(null != source && !source.equals("")){
+		if (source != null && source.equals("")) {
 			sourceObj = sourceService.getByName(source);
 		}
-			
+
 		Process process = new Process();
 		process.setStatus(Status.OPEN);
 		process.setLead(lead);
