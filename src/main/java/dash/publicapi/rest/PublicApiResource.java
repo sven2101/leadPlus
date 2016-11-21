@@ -24,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,9 +52,10 @@ public class PublicApiResource {
 	@Authorization(value = "API")
 	@RequestMapping(value = "/lead", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Lead save(@ApiParam(required = true) @RequestBody @Valid final Lead lead)
+	public Lead save(@ApiParam(required = true) @RequestBody @Valid final Lead lead,
+			@ApiParam(required = false) @RequestParam(required = false) String source)
 			throws SaveFailedException, NotFoundException {
-		return publicApiService.saveLead(lead);
+		return publicApiService.saveLead(lead, source);
 	}
 
 	@ApiOperation(value = "Get all active products.", notes = "")

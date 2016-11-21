@@ -11,7 +11,7 @@ CREATE SEQUENCE source_id_seq
 CREATE TABLE IF NOT EXISTS source
 (
   id bigint NOT NULL DEFAULT nextval('source_id_seq'::regclass),
-  name character varying(100),
+  name character varying(100) NOT NULL,
   description character varying(500),
   deactivated boolean NOT NULL,
   deleted boolean NOT NULL,
@@ -20,6 +20,8 @@ CREATE TABLE IF NOT EXISTS source
 WITH (
   OIDS=FALSE
 );
+
+CREATE UNIQUE INDEX source_unique_idx on source (LOWER(name));  
 
 ALTER TABLE process
 ADD source_fk bigint;

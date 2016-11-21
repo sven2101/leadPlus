@@ -28,6 +28,7 @@ class SourceController {
     sourceService: SourceService;
     rootScope;
     sourceAmountLimit: number = 20;
+    nameExists: boolean;
 
     isCurrentSourceNew: boolean;
 
@@ -46,13 +47,27 @@ class SourceController {
         this.createSourceForm.$setPristine();
         this.currentSource = new Source();
         this.isCurrentSourceNew = true;
+        this.nameExists = false;
     }
 
     editSource(source: Source): void {
+        this.createSourceForm.$setPristine();
         this.currentEditSource = source;
         this.currentSource = new Source();
         this.isCurrentSourceNew = false;
+        this.nameExists = false;
         shallowCopy(this.currentEditSource, this.currentSource);
+    }
+
+    checkSourceName(): void {
+        if (this.isCurrentSourceNew === false
+            && !isNullOrUndefined(this.currentSource.name)
+            && !isNullOrUndefined(this.currentEditSource.name)
+            && this.currentSource.name.toLowerCase() === this.currentEditSource.name.toLowerCase()) {
+            this.nameExists = false;
+            return;
+        }
+        this.nameExists = this.sourceService.checkSourceName(this.currentSource);
     }
 
     saveSource() {

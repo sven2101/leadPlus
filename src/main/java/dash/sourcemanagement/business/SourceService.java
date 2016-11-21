@@ -15,8 +15,8 @@ public class SourceService implements ISourceService {
 
 	@Override
 	public Source save(Source source) {
-		if (null == source)
-			return null;
+		if (null == source || source.getName() == null)
+			throw new IllegalArgumentException();
 		return sourceRepository.save(source);
 	}
 
@@ -27,8 +27,6 @@ public class SourceService implements ISourceService {
 
 	@Override
 	public Source getById(Long id) {
-		if (null == id)
-			return null;
 		return sourceRepository.findOne(id);
 	}
 
@@ -39,8 +37,13 @@ public class SourceService implements ISourceService {
 
 	@Override
 	public void delete(Long id) {
-		if (null == id)
-			return;
 		sourceRepository.delete(id);
+	}
+
+	@Override
+	public Source getByName(String name) {
+		if (null == name)
+			throw new IllegalArgumentException();
+		return sourceRepository.findByNameIgnoreCase(name);
 	}
 }

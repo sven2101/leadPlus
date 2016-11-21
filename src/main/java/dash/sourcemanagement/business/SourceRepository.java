@@ -6,4 +6,6 @@ import dash.sourcemanagement.domain.Source;
 
 public interface SourceRepository extends JpaRepository<Source, Long> {
 
+	public Source findByNameIgnoreCase(String name);
+
 }
