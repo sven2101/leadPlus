@@ -35,10 +35,12 @@
 						<table class="table table-hover">
 							<tbody>
 								<tr ng-repeat="source in sourceCtrl.sourceService.sources| filter:searchText |orderBy:'name' | limitTo:sourceCtrl.sourceAmountLimit ">
-									<td class="project-status col-md-1">
+									<!-- <td class="project-status col-md-1">
 										<span ng-show="!source.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
 										<span ng-show="source.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
-									</td>
+									</td> -->
+									 <td class="project-status col-md-1">
+									</td> 
 									<td class="project-title col-md-2">
 										<a>{{source.name}}</a>
 									</td>

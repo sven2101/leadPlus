@@ -38,9 +38,8 @@ public class Source {
 	@Column(name = "name", length = 100, nullable = false, unique = true)
 	private String name;
 
-	@NotNull
 	@Size(max = 500)
-	@Column(name = "description", length = 500, nullable = false)
+	@Column(name = "description", length = 500, nullable = true)
 	private String description;
 
 	public Source() {

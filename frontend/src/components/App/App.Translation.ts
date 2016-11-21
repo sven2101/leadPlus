@@ -444,6 +444,7 @@ function config($translateProvider) {
             SOURCE_CREATED: "Erstellt",
             SOURCE_TOAST_SAVE: "Quelle wurde erfolgreich angelegt/bearbeitet",
             SOURCE_TOAST_SAVE_ERROR: "Quelle konnte nicht angelegt/aktualisiert werden",
+            SOURCE_NAME_EXISTS: "Der Name existiert bereits",
 
             // Define customer elements
             CUSTOMER: "Kunde",
@@ -901,6 +902,7 @@ function config($translateProvider) {
             SOURCE_CREATED: "Created",
             SOURCE_TOAST_SAVE: "Creating/Editing Source was successful",
             SOURCE_TOAST_SAVE_ERROR: "Creating/Editing Source was unsuccessful",
+            SOURCE_NAME_EXISTS: "Name is already in use",
 
             // Define customer elements
             CUSTOMER: "Customer",
