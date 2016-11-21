@@ -71,6 +71,14 @@ class SourceService {
         }
         return temp;
     }
+
+    checkSourceName(source: Source): boolean {
+        if (isNullOrUndefined(source) || isNullOrUndefined(source.name)) {
+            return false;
+        }
+        return this.sources.filter(s => s.name.toLowerCase() === source.name.toLowerCase()).length > 0;
+    }
+
 }
 
 angular.module(moduleSourceService, [ngResourceId]).service(SourceServiceId, SourceService);

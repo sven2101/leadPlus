@@ -12,28 +12,32 @@
                     <div class="row">
                         <!-- SOURCENAME -->
                         <div class="col-sm-12">
-                            <div class="form-group" ng-class="{ 'has-error' : sourceCtrl.createSourceForm.name.$invalid && !sourceCtrl.createSourceForm.name.$pristine }">
+                            <div class="form-group" ng-class="{ 'has-error' : (sourceCtrl.createSourceForm.name.$invalid && !sourceCtrl.createSourceForm.name.$pristine) || sourceCtrl.nameExists}">
                                 <label>{{ 'SOURCE_SOURCENAME' | translate }}<span style="color:red">*</span></label>
-                                <input type=" text " name="name " class="form-control " ng-model="sourceCtrl.currentSource.name" ng-maxlength="30" required>
-                                <p ng-show="sourceCtrl.createSourceForm.name.$invalid && !sourceCtrl.createSourceForm.name.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-                        </div>
-                        <!--DESCRIPTION -->
-                        <div class="form-group" ng-class="{ 'has-error' : sourceCtrl.createSourceForm.description.$invalid && !sourceCtrl.createSourceForm.description.$pristine }">
-                            <label>{{ 'SOURCE_DESCRIPTION' | translate }}</label>
-                            <textarea style="resize: none" rows="7" type="text " name="description " class="form-control " ng-model="sourceCtrl.currentSource.description"
-                                  ng-maxlength="500">
-                             <p ng-show="sourceCtrl.createSourceForm.description.$invalid && !sourceCtrl.createSourceForm.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}500{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p> 
+                                <input type=" text " name="name " class="form-control " ng-model="sourceCtrl.currentSource.name" ng-maxlength="30" ng-keyup="sourceCtrl.checkSourceName()"
+                                    required>
+                                <p ng-show="sourceCtrl.nameExists" class="help-block">{{ 'SOURCE_NAME_EXISTS' | translate }}</p>
+                                <p ng-show="sourceCtrl.createSourceForm.name.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                                <p ng-show="sourceCtrl.createSourceForm.name.$error.required && !sourceCtrl.createSourceForm.name.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+                            </div>
+                            <!--DESCRIPTION -->
+                            <div class="form-group" ng-class="{ 'has-error' : sourceCtrl.createSourceForm.description.$invalid && !sourceCtrl.createSourceForm.description.$pristine }">
+                                <label>{{ 'SOURCE_DESCRIPTION' | translate }}</label>
+                                <textarea style="resize: none" rows="7" type="text " name="description " class="form-control " ng-model="sourceCtrl.currentSource.description"
+                                    ng-maxlength="500"></textarea>
+                                <p ng-show="sourceCtrl.createSourceForm.description.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}500{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p> 
                         </div>
                         <!--DEACTIVATED -->
-                         <div class="form-group" ng-show="!sourceCtrl.isCurrentSourceNew">
+                        <!-- <div class="form-group" ng-show="!sourceCtrl.isCurrentSourceNew">
                             <label class="checkbox-inline"> <input type="checkbox"  ng-model="sourceCtrl.currentSource.deactivated" id="inlineCheckbox1">{{ 'COMMON_DEACTIVATE' | translate }}</label>
                         </div>
+                        -->
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}</button>
-                <button type="button" class="btn btn-success" ng-disabled="sourceCtrl.createSourceForm.$invalid" ng-click="sourceCtrl.saveSource()" data-dismiss="modal">{{ 'COMMON_SAVE' | translate }}</button>
+                <button type="button" class="btn btn-success" ng-disabled="sourceCtrl.createSourceForm.$invalid || sourceCtrl.nameExists" ng-click="sourceCtrl.saveSource()" data-dismiss="modal">{{ 'COMMON_SAVE' | translate }}</button>
             </div>
         </div>
     </div>

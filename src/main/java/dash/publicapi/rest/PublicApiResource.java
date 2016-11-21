@@ -53,7 +53,8 @@ public class PublicApiResource {
 	@RequestMapping(value = "/lead", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Lead save(@ApiParam(required = true) @RequestBody @Valid final Lead lead,
-			@RequestParam(required = false) String source) throws SaveFailedException, NotFoundException {
+			@ApiParam(required = false) @RequestParam(required = false) String source)
+			throws SaveFailedException, NotFoundException {
 		return publicApiService.saveLead(lead, source);
 	}
 
