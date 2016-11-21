@@ -50,11 +50,10 @@ public class PublicApiResource {
 
 	@ApiOperation(value = "Create a single lead. (Valid values for 'customer.title' are ['UNKNOWN', 'MR', 'MS'])", notes = "")
 	@Authorization(value = "API")
-	@RequestMapping(value = "/lead", method = RequestMethod.POST, params = { "source" })
+	@RequestMapping(value = "/lead", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Lead save(@ApiParam(required = true) @RequestBody @Valid final Lead lead,
-			@ApiParam(required = false) @RequestParam(value = "source", required = false) String source)
-			throws SaveFailedException, NotFoundException {
+			@RequestParam(required = false) String source) throws SaveFailedException, NotFoundException {
 		return publicApiService.saveLead(lead, source);
 	}
 
