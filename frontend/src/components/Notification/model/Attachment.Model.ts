@@ -17,7 +17,7 @@
 
 class Attachment extends AbstractModel {
 
-    notification: Notification;
+
     fileUpload: FileUpload;
 
     constructor() {

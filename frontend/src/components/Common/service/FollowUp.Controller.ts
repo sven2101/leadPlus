@@ -43,7 +43,7 @@ class FollowUpController {
     translate;
     rootScope;
     scope;
-    currentNotification;
+    currentNotification: Notification;
     emailEditForm: any;
 
     editProcess: Process;
@@ -90,29 +90,34 @@ class FollowUpController {
         this.fileService.getContentFileById(id);
     }
 
-    send() {
+    async send() {
         let self = this;
+        let process = this.editProcess;
+        process.notifications = process.notifications ? process.notifications : [];
+
         this.currentNotification.notificationType = NotificationType.FOLLOWUP;
         let notification = this.currentNotification;
         notification.id = undefined;
-        let process = this.editProcess;
-        this.notificationService.sendNotification(notification).then(() => {
+        await this.notificationService.sendNotification(notification);
+        let promises: Array<Promise<void>> = notification.attachments ?
+            notification.attachments
+                .filter(a => isNullOrUndefined(a.id))
+                .map(a => self.fileService.saveAttachment(a)) : [];
+        for (let p of promises) {
+            await p;
+        }
+        notification.attachments.forEach(a => a.id = undefined);
+        process.notifications.push(notification);
+
+        let resultProcess = await this.workflowService.saveProcess(process);
+        self.originProcess.notifications = resultProcess.notifications;
+        self.originProcess.followUpAmount = resultProcess.followUpAmount;
+        self.editProcess = resultProcess;
+        self.followUp();
+        self.close();
 
 
-                if (isNullOrUndefined(process.notifications)) {
-                    process.notifications = [];
-                }
 
-                process.notifications.push(notification);
-                self.workflowService.saveProcess(process).then((resultProcess) => {
-                    self.originProcess.notifications = resultProcess.notifications;
-                    self.originProcess.followUpAmount = resultProcess.followUpAmount;
-                    self.editProcess = resultProcess;
-                    self.followUp();
-                    self.close();
-                });
-
-        });
     }
 
     getTheFiles($files) {

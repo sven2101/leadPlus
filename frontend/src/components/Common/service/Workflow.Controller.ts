@@ -54,7 +54,7 @@ class WorkflowController extends AbstractWorkflow {
 
     editProcess: Process;
     edit: boolean;
-    editEmail: boolean= true;
+    editEmail: boolean = true;
     editable: boolean = true;
 
     leadService: LeadService;
@@ -131,6 +131,8 @@ class WorkflowController extends AbstractWorkflow {
             this.customerSelected = this.editProcess.offer.customer.id > 0;
             this.selectedCustomer = this.editProcess.offer.customer;
             this.editWorkflowUnit = this.editProcess.offer;
+            this.currentNotification = new Notification();
+            this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
         } else if (this.type === "sale") {
             this.customerSelected = this.editProcess.sale.customer.id > 0;
             this.selectedCustomer = this.editProcess.sale.customer;
@@ -199,7 +201,7 @@ class WorkflowController extends AbstractWorkflow {
         }
     }
 
-    send() {
+    send2() {
         let self = this;
 
         let process = this.editProcess;
@@ -209,17 +211,42 @@ class WorkflowController extends AbstractWorkflow {
             self.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
 
 
-                    if (isNullOrUndefined(process.notifications)) {
-                        process.notifications = [];
-                    }
-                    process.notifications.push(notification);
-                    self.workflowService.saveProcess(process).then((resultProcess) => {
-                        self.rootScope.$broadcast("deleteRow", process);
-                        self.close(true);
-                    });
+                if (isNullOrUndefined(process.notifications)) {
+                    process.notifications = [];
+                }
+                process.notifications.push(notification);
+                self.workflowService.saveProcess(process).then((resultProcess) => {
+                    self.rootScope.$broadcast("deleteRow", process);
+                    self.close(true);
+                });
 
             });
         });
+    }
+
+    async send() {
+        let self = this;
+        let process = this.editProcess;
+        process.notifications = process.notifications ? process.notifications : [];
+
+        this.currentNotification.notificationType = NotificationType.FOLLOWUP;
+        let notification = this.currentNotification;
+        notification.id = undefined;
+        await this.notificationService.sendNotification(notification);
+        await this.workflowService.addLeadToOffer(process);
+        let promises: Array<Promise<void>> = notification.attachments ?
+            notification.attachments
+                .filter(a => isNullOrUndefined(a.id))
+                .map(a => self.fileService.saveAttachment(a)) : [];
+        for (let p of promises) {
+            await p;
+        }
+        notification.attachments.forEach(a => a.id = undefined);
+        process.notifications.push(notification);
+        let resultProcess = await this.workflowService.saveProcess(process);
+        self.rootScope.$broadcast("deleteRow", process);
+        self.close(true);
+
     }
 
     save() {

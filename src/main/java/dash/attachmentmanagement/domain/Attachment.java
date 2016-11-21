@@ -28,6 +28,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import dash.fileuploadmanagement.domain.FileUpload;
 import dash.notificationmanagement.domain.Notification;
 import io.swagger.annotations.ApiModel;
@@ -58,6 +60,7 @@ public class Attachment {
 	private FileUpload fileUpload;
 
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "notification_fk", nullable = false)
 	@Where(clause = "deleted <> '1'")
 	private Notification notification;

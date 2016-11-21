@@ -94,7 +94,7 @@ class NotificationService {
                 fileReader.onload = function () {
                     fileUpload.content = this.result.split(",")[1];
                     attachment.fileUpload = fileUpload;
-                    attachment.notification = notification;
+
                     notification.attachments.push(attachment);
                     defer.resolve(notification);
                 };

@@ -4,18 +4,23 @@
 
 		<div class="form-group">
 			<label>{{ 'EMAIL_NOTIFICATION_HISTORY' | translate }}</label>
-			<select ng-change="reloadHtml()" class="form-control" ng-disabled="process.notifications.length==0" ng-model="notification" ng-options="(notification.notificationType.toLowerCase()+' - '+notification.subject) for notification in process.notifications track by notification.id">
+			<select ng-change="onNotificationSelected()" class="form-control" ng-disabled="process.notifications.length==0" ng-model="notification"
+				ng-options="(notification.notificationType.toLowerCase()+' - '+notification.subject) for notification in process.notifications track by notification.id">
                <option></option>                                         
             </select>
 		</div>
+		<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>
+		<div class="form-inline">
 
-		<div class="form-group">
-			<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>
-			<select ng-disabled="disabled" class="form-control" ng-model="templateId" ng-change="generate(templateId, process.offer,notification)">
+			<div class="form-group" style="width:95%">
+				<select style="width:100%" ng-disabled="disabled" class="form-control" ng-model="templateId" ng-change="generate(templateId, process.offer,notification)">
                 <option value="-1" selected> - {{ 'EMAIL_TEMPLATE_SELECT' | translate }} - </option>                                                                     
                 <option value="{{template.id}}" ng-repeat="template in templates">{{template.name}}</option>                                           
-            </select>
+            	</select>
+			</div>
+			<button ng-disabled="disabled" style="height:34px" class="btn btn-default pull-right" ng-click="generate(templateId, process.offer,notification)"><i class="fa fa-refresh" aria-hidden="true"></i></button>
 		</div>
+
 		<div class="form-group" ng-class="{ 'has-error' : form.recipient.$invalid&&!disabled}">
 			<label>{{ 'EMAIL_RECIPIENT' | translate }}</label><span style="color:red">*</span>
 			<input ng-disabled="disabled" name="recipient" required type="email" class="form-control" ng-model="notification.recipient"
@@ -25,15 +30,32 @@
 		</div>
 		<div class="form-group" ng-class="{ 'has-error' : form.subject.$invalid&&!disabled}">
 			<label>{{ 'EMAIL_SUBJECT' | translate }}</label><span style="color:red">*</span>
-			<input ng-disabled="disabled" name="subject" required type="text" class="form-control" ng-model="notification.subject"
-				ng-minlength="3">
+			<input ng-disabled="disabled" name="subject" required type="text" class="form-control" ng-model="notification.subject" ng-minlength="3">
 			<p ng-show="form.subject.$error.minlength&&!disabled" class="help-block">{{ 'COMMON_VALIDATE_MIN' | translate:'{ number: "3" }'}}</p>
 			<p ng-show="form.subject.$error.required&&!disabled&&!form.subject.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
 		</div>
-		<form class="dropzone" method="post" enctype="multipart/form-data" ng-dropzone dropzone="ctrl.dropzone" dropzone-config="ctrl.dropzoneConfig"
-			event-handlers="{ 'addedfile': dzAddedFile, 'error': dzError }">
-		</form>
-		<div class="form-group" ng-class="{ 'has-error' : form.message.$invalid}">
+		<div ng-if="!disabled||(disabled&&notification.attachments.length>0)" class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.attachement.$invalid}">
+			<label>{{ 'EMAIL_ATTACHMENT' | translate }}</label>
+			<br/>
+			<div ng-if="!disabled" style="white-space: nowrap;float:left;margin-right:7px" ng-if="!parent.editEmail" class="fileinput fileinput-new"
+				data-provides="fileinput">
+				<span class="btn btn-default btn-file"><span class="fileinput-new">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }}</span>
+				<span class="fileinput-exists">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }} </span>
+				<input name="attachement" multiple required type="file" name="..." ng-files="setAttachments($files);" accept="application/pdf,image/gif,image/jpeg">
+				</span>
+
+			</div>
+			<div style="white-space: nowrap;float:left;margin-right:5px" ng-repeat="attachment in notification.attachments">
+				<a ng-click="openAttachment(attachment.fileUpload)">{{attachment.fileUpload.filename}}</a>
+				<a ng-click="deleteAttachment($index)" href="" class="close fileinput-exists" style="float: none">×</a>
+			</div>
+			<br/>
+			<div ng-class="{ 'has-error' : form.fileSize.$invalid&&!disabled}">
+				<input hidden disabled ng-max="20*1024*2014" type="number" name="fileSize" ng-model="fileSize">
+				<p ng-if="form.fileSize.$error.max" class="help-block" style="clear: left;">max 20 MB</p>
+			</div>
+		</div>
+		<div style="clear: left;" class="form-group" ng-class="{ 'has-error' : form.message.$invalid}">
 			<label>{{ 'EMAIL_MESSAGE' | translate }}</label><span style="color:red">*</span>
 			<br/>
 			<summernote ng-if="!disabled" name="message" class="form-control" required ng-model="notification.content">{{notification.content}}</summernote>

@@ -13,6 +13,7 @@
  *******************************************************************************/
 package dash.notificationmanagement.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -132,6 +133,10 @@ public class Notification {
 	}
 
 	public void setAttachments(List<Attachment> attachments) {
+		if (attachments == null) {
+			this.attachments = new ArrayList<>();
+			return;
+		}
 		this.attachments = attachments;
 	}
 
@@ -216,8 +221,9 @@ public class Notification {
 
 	@Override
 	public String toString() {
-		return "Notification [id=" + id + ", recipient=" + recipient + ", subject=" + subject + ", deleted=" + deleted + ", content=" + content
-				+ ", attachments=" + attachments + ", notificationType=" + notificationType + "]";
+		return "Notification [id=" + id + ", recipient=" + recipient + ", subject=" + subject + ", deleted=" + deleted
+				+ ", content=" + content + ", attachments=" + attachments + ", notificationType=" + notificationType
+				+ "]";
 	}
 
 }
