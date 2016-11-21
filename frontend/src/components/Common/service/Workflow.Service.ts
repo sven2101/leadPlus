@@ -341,45 +341,45 @@ class WorkflowService {
                 }
             }
         }, {
-            extend: "print",
-            orientation: "landscape",
-            title: title,
-            exportOptions: {
-                columns: columns,
-                modifier: {
-                    page: "current"
+                extend: "print",
+                orientation: "landscape",
+                title: title,
+                exportOptions: {
+                    columns: columns,
+                    modifier: {
+                        page: "current"
+                    }
                 }
-            }
-        }, {
-            extend: "csvHtml5",
-            title: title,
-            exportOptions: {
-                columns: columns,
-                modifier: {
-                    page: "current"
-                }
+            }, {
+                extend: "csvHtml5",
+                title: title,
+                exportOptions: {
+                    columns: columns,
+                    modifier: {
+                        page: "current"
+                    }
 
-            }
-        }, {
-            extend: "excelHtml5",
-            title: title,
-            exportOptions: {
-                columns: columns,
-                modifier: {
-                    page: "current"
                 }
-            }
-        }, {
-            extend: "pdfHtml5",
-            title: title,
-            orientation: "landscape",
-            exportOptions: {
-                columns: columns,
-                modifier: {
-                    page: "current"
+            }, {
+                extend: "excelHtml5",
+                title: title,
+                exportOptions: {
+                    columns: columns,
+                    modifier: {
+                        page: "current"
+                    }
                 }
-            }
-        }];
+            }, {
+                extend: "pdfHtml5",
+                title: title,
+                orientation: "landscape",
+                exportOptions: {
+                    columns: columns,
+                    modifier: {
+                        page: "current"
+                    }
+                }
+            }];
     }
 
     getDomString(): string {

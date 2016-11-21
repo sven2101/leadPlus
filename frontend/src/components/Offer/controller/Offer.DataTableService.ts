@@ -100,7 +100,7 @@ class OfferDataTableService {
             this.DTColumnBuilder.newColumn("offer.timestamp").withTitle(
                 this.translate("COMMON_DATE")).renderWith(
                 function (data, type, full) {
-                    return toLocalDate(data);
+                    return toLocalDate(data, "DD.MM.YYYY HH:mm");
                 }).withOption("type", "date-euro")
                 .withClass("text-center"),
             this.DTColumnBuilder.newColumn("offer.customer.phone").withTitle(

@@ -143,7 +143,7 @@ class DashboardController {
         if (timestamp === undefined) {
             timestamp = newTimestamp();
         }
-        return toLocalDate(timestamp);
+        return toLocalDate(timestamp, "DD.MM.YYYY HH:mm");
     }
     sumOrderPositions(array: Array<OrderPosition>): number {
         return this.workflowService.sumOrderPositions(array);
