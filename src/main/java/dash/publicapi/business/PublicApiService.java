@@ -128,7 +128,7 @@ public class PublicApiService implements IPublicApiService {
 		logging();
 
 		Source sourceObj = null;
-		if (source != null && source.equals("")) {
+		if (source != null && !source.equals("")) {
 			sourceObj = sourceService.getByName(source);
 		}
 

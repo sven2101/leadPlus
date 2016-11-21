@@ -21,6 +21,8 @@ WITH (
   OIDS=FALSE
 );
 
+CREATE UNIQUE INDEX source_unique_idx on source (LOWER(name));  
+
 ALTER TABLE process
 ADD source_fk bigint;
 
