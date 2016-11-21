@@ -1,4 +1,5 @@
-/// <reference path="../../app/App.Constants.ts" />
+/// <reference path="../../App/App.Constants.ts" />
+/// <reference path="../../Common/service/Workflow.Service.ts" />
 /// <reference path="../../Template/controller/Template.Service.ts" />
 
 declare var Ladda;
@@ -52,18 +53,9 @@ class EditEmailDirective implements IDirective {
             }
             scope.TemplateService.generate(templateId, offer, currentNotification).then((notification) => scope.notification = notification);
         };
-        scope.getAsHtml = this.getAsHtml;
-        // scope.getAsHtml = function (html: string) { console.log("test", html); return scope.$sce.trustAsHtml(html); };
-
-
-
-
-
+        scope.htmlString = "";
+        scope.reloadHtml = () => scope.htmlString = scope.$sce.trustAsHtml(scope.notification.content);
     };
-    getAsHtml() {
-        return "test";
-    }
-
 }
 
 angular.module(moduleApp).directive(EditEmailDirectiveId, EditEmailDirective.directiveFactory());

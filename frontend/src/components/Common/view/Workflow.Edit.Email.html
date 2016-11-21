@@ -4,7 +4,7 @@
 
 		<div class="form-group">
 			<label>{{ 'EMAIL_NOTIFICATION_HISTORY' | translate }}</label>
-			<select class="form-control" ng-disabled="process.notifications.length==0" ng-model="notification" ng-options="(notification.notificationType.toLowerCase()+' - '+notification.subject) for notification in process.notifications track by notification.id">
+			<select ng-change="reloadHtml()" class="form-control" ng-disabled="process.notifications.length==0" ng-model="notification" ng-options="(notification.notificationType.toLowerCase()+' - '+notification.subject) for notification in process.notifications track by notification.id">
                <option></option>                                         
             </select>
 		</div>
@@ -38,7 +38,7 @@
 			<br/>
 			<summernote ng-if="!disabled" name="message" class="form-control" required ng-model="notification.content">{{notification.content}}</summernote>
 			<div ng-if="disabled" style="border: 1px solid gray;  padding: 15px;">
-				<div ng-bind-html="getAsHtml(notification.content)"></div>
+				<div ng-bind-html="htmlString"></div>
 			</div>
 			<p ng-show="form.message.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
 		</div>
