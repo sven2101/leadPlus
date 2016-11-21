@@ -94,9 +94,8 @@ class FollowUpController {
         let self = this;
         let process = this.editProcess;
         process.notifications = process.notifications ? process.notifications : [];
-
-        this.currentNotification.notificationType = NotificationType.FOLLOWUP;
-        let notification = this.currentNotification;
+        let notification = deepCopy(this.currentNotification);
+        notification.notificationType = NotificationType.FOLLOWUP;
         notification.id = undefined;
         await this.notificationService.sendNotification(notification);
         let promises: Array<Promise<void>> = notification.attachments ?
