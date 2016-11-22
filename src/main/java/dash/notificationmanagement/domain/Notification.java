@@ -267,8 +267,8 @@ public class Notification {
 		}
 		String result = "";
 		for (String email : emails.split(",")) {
-			if (email.length() > 0) {
-				result += email + ",";
+			if (email.trim().length() > 0) {
+				result += email.trim() + ",";
 			}
 		}
 		if ("".equals(result)) {
