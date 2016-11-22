@@ -98,6 +98,7 @@ class FollowUpController {
         notification.notificationType = NotificationType.FOLLOWUP;
         notification.id = undefined;
         await this.notificationService.sendNotification(notification);
+
         let promises: Array<Promise<void>> = notification.attachments ?
             notification.attachments
                 .filter(a => isNullOrUndefined(a.id))
@@ -105,30 +106,17 @@ class FollowUpController {
         for (let p of promises) {
             await p;
         }
+
         notification.attachments.forEach(a => a.id = undefined);
         process.notifications.push(notification);
-
         let resultProcess = await this.workflowService.saveProcess(process);
         self.originProcess.notifications = resultProcess.notifications;
         self.originProcess.followUpAmount = resultProcess.followUpAmount;
         self.editProcess = resultProcess;
         self.followUp();
         self.close();
-
-
-
     }
 
-    getTheFiles($files) {
-        let self = this;
-        this.notificationService.setAttachmentToNotification($files, this.currentNotification).then(() => {
-            try {
-                self.scope.$digest();
-            } catch (error) {
-                handleError(error);
-            }
-        });
-    }
 
     setFormerNotification(notificationId: number) {
         if (Number(notificationId) === -1) {

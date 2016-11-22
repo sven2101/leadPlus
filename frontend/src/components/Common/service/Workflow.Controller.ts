@@ -191,7 +191,7 @@ class WorkflowController extends AbstractWorkflow {
     existsInvoiceNumber() {
         if (this.editWorkflowUnit instanceof Sale) {
             let self = this;
-            this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function (result: Sale) {
+            this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function(result: Sale) {
                 if (!isNullOrUndefined(result)) {
                     self.invoiceNumberAlreadyExists = true;
                 } else {
@@ -199,29 +199,6 @@ class WorkflowController extends AbstractWorkflow {
                 }
             });
         }
-    }
-
-    send2() {
-        let self = this;
-
-        let process = this.editProcess;
-        this.currentNotification.notificationType = NotificationType.OFFER;
-        let notification = this.currentNotification;
-        this.notificationService.sendNotification(notification).then(() => {
-            self.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
-
-
-                if (isNullOrUndefined(process.notifications)) {
-                    process.notifications = [];
-                }
-                process.notifications.push(notification);
-                self.workflowService.saveProcess(process).then((resultProcess) => {
-                    self.rootScope.$broadcast("deleteRow", process);
-                    self.close(true);
-                });
-
-            });
-        });
     }
 
     async send() {
@@ -268,16 +245,6 @@ class WorkflowController extends AbstractWorkflow {
         }
     }
 
-    getTheFiles($files) {
-        let self = this;
-        this.notificationService.setAttachmentToNotification($files, this.currentNotification).then(() => {
-            try {
-                self.scope.$digest();
-            } catch (error) {
-                handleError(error);
-            }
-        });
-    }
 
     setFormerNotification(notificationId: number) {
         if (Number(notificationId) === -1) {

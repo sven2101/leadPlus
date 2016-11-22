@@ -42,7 +42,7 @@ class EditEmailDirective implements IDirective {
         scope.sizeInvalid = false;
         let l = $(".ladda-button").ladda();
         let button = $(".ladda-button");
-        button.click(function () {
+        button.click(function() {
             l.ladda("start");
         });
         scope.templateId = "-1";
@@ -66,7 +66,7 @@ class EditEmailDirective implements IDirective {
             fileUpload.mimeType = file.type;
             fileUpload.size = file.size;
             fileReader.readAsDataURL(file);
-            fileReader.onload = function () {
+            fileReader.onload = function() {
                 fileUpload.content = this.result.split(",")[1];
                 attachment.fileUpload = fileUpload;
                 notification.attachments.push(attachment);
@@ -80,12 +80,14 @@ class EditEmailDirective implements IDirective {
         }
 
     }
+
     isFileSizeInvalid(notification: Notification, scope: any): void {
         if (isNullOrUndefined(notification.attachments)) {
             return;
         }
         scope.fileSize = notification.attachments.map(a => a.fileUpload.size).reduce((a, b) => a + b, 0);
     }
+
     openAttachment(fileUpload: FileUpload, scope: any): void {
         if (!isNullOrUndefined(fileUpload.content)) {
             let file = b64toBlob(fileUpload.content, fileUpload.mimeType);
@@ -94,13 +96,14 @@ class EditEmailDirective implements IDirective {
             return;
         }
         scope.$http.get("/api/rest/files/content/" + fileUpload.id, { method: "GET", responseType: "arraybuffer" }).
-            success(function (data, status, headers, config, statusText) {
+            success(function(data, status, headers, config, statusText) {
                 let contentType = headers("content-type");
                 let file = new Blob([data], { type: contentType });
                 let fileURL = URL.createObjectURL(file);
                 window.open(scope.$sce.trustAsResourceUrl(fileURL), "_blank");
             });
     }
+
     generateContent(templateId: string, offer: Offer, currentNotification: Notification, scope: any): void {
         if (Number(templateId) === -1) {
             scope.notification = new Notification();
