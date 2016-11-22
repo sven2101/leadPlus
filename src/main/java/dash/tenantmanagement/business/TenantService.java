@@ -90,7 +90,9 @@ public class TenantService implements ITenantService {
 	public Tenant createNewTenant(final Tenant tenant) {
 		try {
 			tenant.setEnabled(true);
-			tenant.getLicense().getTerm().add(Calendar.YEAR, 1);
+			Calendar oneYearLater = Calendar.getInstance();
+			oneYearLater.add(Calendar.YEAR, 1);
+			tenant.getLicense().setTerm(oneYearLater);
 			Validation tenantNotExists = uniqueTenantKey(tenant);
 			if (tenantNotExists.isValidation()) {
 				if (springProfileActive.equals(SPRING_PROFILE_DEVELOPMENT)) {
