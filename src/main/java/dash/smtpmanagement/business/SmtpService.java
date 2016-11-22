@@ -56,7 +56,8 @@ public class SmtpService implements ISmtpService {
 	@Override
 	public void testSmtp(final long id, String smtpKey) throws Exception {
 		Smtp smtp = smptRepository.findOne(id);
-		smtp.setPassword(Encryptor.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
+		smtp.setPassword(
+				Encryptor.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
 
 		Session emailSession;
 		Transport transport = null;
@@ -99,8 +100,8 @@ public class SmtpService implements ISmtpService {
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.dsn.notify", "SUCCESS, FAILURE, DELAY");
 		props.put("mail.smtp.dsn.ret", "FULL");
-		props.put("mail.smtp.connectiontimeout", "1000");
-		props.put("mail.smtp.timeout", "1000");
+		props.put("mail.smtp.connectiontimeout", "3000");
+		props.put("mail.smtp.timeout", "10000");
 		props.put("mail.smtp.sendpartial", "true");
 
 		if (smtp.getEncryption() == Encryption.TLS) {

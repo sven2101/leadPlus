@@ -80,7 +80,8 @@ class FollowUpController {
     }
 
     generate(templateId: string, offer: Offer) {
-        this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => handleError(error));
+        let self = this;
+        this.templateService.generate(templateId, offer, this.currentNotification).then((result) => self.currentNotification.content = result.content, (error) => handleError(error));
     }
 
     getAllActiveTemplates() {
