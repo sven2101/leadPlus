@@ -938,7 +938,7 @@ function config($translateProvider) {
 
         });
 
-    $translateProvider.preferredLanguage(Language[Language.DE]);
+    $translateProvider.preferredLanguage(Language[Language.EN]);
     $translateProvider.fallbackLanguage(Language[Language.EN]);
 
 }
