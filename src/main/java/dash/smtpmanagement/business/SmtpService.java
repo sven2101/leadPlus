@@ -18,6 +18,7 @@ import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -75,6 +76,7 @@ public class SmtpService implements ISmtpService {
 					"text/html");
 			smtpMessage.setNotifyOptions(SMTPMessage.NOTIFY_SUCCESS);
 			smtpMessage.setReturnOption(1);
+			smtpMessage.setSentDate(new Date());
 
 			transport.sendMessage(smtpMessage, InternetAddress.parse(smtp.getEmail()));
 		} catch (Exception ex) {
@@ -87,23 +89,28 @@ public class SmtpService implements ISmtpService {
 		}
 	}
 
+	@Override
 	public Session newSession(Smtp smtp) throws UnsupportedEncodingException {
 		Properties props = new Properties();
 		String mailUser = smtp.getUsername();
 		String mailPassword = new String(smtp.getPassword(), "UTF-8");
 
+		props.put("mail.smtp.host", smtp.getHost());
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.dsn.notify", "SUCCESS, FAILURE, DELAY");
+		props.put("mail.smtp.dsn.ret", "FULL");
+		props.put("mail.smtp.connectiontimeout", "1000");
+		props.put("mail.smtp.timeout", "1000");
+		props.put("mail.smtp.sendpartial", "true");
+
 		if (smtp.getEncryption() == Encryption.TLS) {
-			props.setProperty("mail.smtp.host", smtp.getHost());
 			props.setProperty("mail.smtp.port", String.valueOf(smtp.getPort()));
-			props.put("mail.smtp.auth", "true");
 			props.put("mail.smtp.ssl.trust", smtp.getHost());
 			if (smtp.getPort() == 587)
 				props.put("mail.smtp.starttls.enable", "true");
 		} else if (smtp.getEncryption() == Encryption.SSL) {
-			props.put("mail.smtp.host", smtp.getHost());
 			props.put("mail.smtp.socketFactory.port", String.valueOf(smtp.getPort()));
 			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-			props.put("mail.smtp.auth", "true");
 			props.put("mail.smtp.port", String.valueOf(smtp.getPort()));
 		}
 
