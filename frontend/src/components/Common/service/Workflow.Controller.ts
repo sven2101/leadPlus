@@ -179,7 +179,8 @@ class WorkflowController extends AbstractWorkflow {
             this.currentNotification.id = null;
         } else {
             offer.orderPositions = this.currentOrderPositions;
-            this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => handleError(error));
+            let self = this;
+            this.templateService.generate(templateId, offer, this.currentNotification).then((result) => self.currentNotification.content = result.content, (error) => handleError(error));
         }
     }
 
@@ -233,6 +234,7 @@ class WorkflowController extends AbstractWorkflow {
                     process.notifications.push(notification);
                     self.workflowService.saveProcess(process).then((resultProcess) => {
                         self.process.notifications = resultProcess.notifications;
+                        self.rootScope.$broadcast("deleteRow", resultProcess);
                         self.close(true);
                     });
                 });
