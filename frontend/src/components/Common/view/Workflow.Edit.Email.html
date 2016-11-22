@@ -19,7 +19,7 @@
 			</div>
 			<a ng-disabled="disabled" style="width:9%;height:34px" class="btn btn-default pull-right" ng-click="generate(templateId, process.offer,notification)"><i class="fa fa-refresh" aria-hidden="true"></i></a>
 		</div>
-		<hr style="border-top: 1px dashed #8c8b8b" />
+		<hr style="border-top: 1px dashed #8c8b8b;" />
 		<span><label>{{ 'EMAIL_RECIPIENT' | translate }} {{ 'EMAIL_RECIPIENT_COMMA' | translate }}</label>
 		<span style="color:red">*</span>
 		<span style="color:red" ng-show="form.recipients.$error.required&&!disabled&&!form.recipients.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
@@ -45,7 +45,6 @@
 			<input style="width:100%" ng-disabled="disabled" multipleemails form="form" emails="notification.recipientsBCC" name="recipientsBCC"
 				class="form-control" ng-model="notification.recipientsBCC">	
 		</div>
-		<hr style="border-top: 1px dashed #8c8b8b" />
 		<div class="form-group" ng-class="{ 'has-error' : form.subject.$invalid&&!disabled&&!form.subject.$pristine}">
 			<label>{{ 'EMAIL_SUBJECT' | translate }}</label>
 			<span style="color:red">*</span>
