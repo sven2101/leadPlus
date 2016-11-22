@@ -87,7 +87,7 @@ public class SmtpService implements ISmtpService {
 		}
 	}
 
-	private Session newSession(Smtp smtp) throws UnsupportedEncodingException {
+	public Session newSession(Smtp smtp) throws UnsupportedEncodingException {
 		Properties props = new Properties();
 		String mailUser = smtp.getUsername();
 		String mailPassword = new String(smtp.getPassword(), "UTF-8");
