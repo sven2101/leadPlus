@@ -38,8 +38,8 @@
 				</br>
 				<div class="row">
 					<div class="col-md-12">
-						<h1 class="no-margins" ng-if="userStatistic.countLead>0">{{userStatistic.profit/userStatistic.countOffer | currency:'\u20AC'}}</h1>
-						<h1 class="no-margins" ng-if="userStatistic.countLead<=0">{{0 | currency:'\u20AC'}}</h1>
+						<h1 class="no-margins" ng-if="userStatistic.countOffer>0">{{userStatistic.profit/userStatistic.countOffer | currency:'\u20AC'}}</h1>
+						<h1 class="no-margins" ng-if="userStatistic.countOffer<=0">{{0 | currency:'\u20AC'}}</h1>
 						<small>{{ 'PROFIT_PER_OFFER' | translate }}</small>
 					</div>
 				</div>
@@ -109,8 +109,8 @@
 				</br>
 				<div class="row">
 					<div class="col-md-12">
-						<h1 class="no-margins" ng-if="userStatistic.countLead>0">{{userStatistic.turnover/userStatistic.countOffer | currency:'\u20AC'}}</h1>
-						<h1 class="no-margins" ng-if="userStatistic.countLead<=0">{{0 | currency:'\u20AC'}}</h1>
+						<h1 class="no-margins" ng-if="userStatistic.countOffer>0">{{userStatistic.turnover/userStatistic.countOffer | currency:'\u20AC'}}</h1>
+						<h1 class="no-margins" ng-if="userStatistic.countOffer<=0">{{0 | currency:'\u20AC'}}</h1>
 						<small>{{ 'TURNOVER_PER_OFFER' | translate }}</small>
 					</div>
 				</div>
