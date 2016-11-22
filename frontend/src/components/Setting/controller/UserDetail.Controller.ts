@@ -49,12 +49,16 @@ class UserDetailController {
         this.userResource.getById({ id: this.currentUserId }).$promise.then(function (result: User) {
             self.currentUser = result;
             if (!isNullOrUndefined(self.currentUser.id)) {
-                self.userStatisticColumnChart = new ColumnChart(self.translate, "SPCLOS", self.currentUser.email, ""
+                self.userStatisticColumnChart = new ColumnChart(self.translate, "SPCLOS", getNameOfUser(self.currentUser), ""
                     , self.translate.instant("DETAIL_STATISTIC_USER_TOOLTIP", { username: "{series.name}", count: "{point.y}", workflow: "{point.name}" })
                     , [self.translate.instant("LEAD_LEADS"), self.translate.instant("OFFER_OFFERS"), self.translate.instant("SALE_SALES")]);
                 self.userFound = true;
             }
         });
+    }
+
+    getNameOfUser(user: User): string {
+        return getNameOfUser(user);
     }
 }
 angular.module(moduleUserDetail, [ngResourceId]).controller(UserDetailControllerId, UserDetailController);

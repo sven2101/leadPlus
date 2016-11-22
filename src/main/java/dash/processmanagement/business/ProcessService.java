@@ -21,6 +21,7 @@ import static dash.Constants.PROCESS_NOT_FOUND;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_NOT_FOUND;
+import static dash.processmanagement.business.ProcessSpecs.hasProcessorInDistinct;
 import static dash.processmanagement.business.ProcessSpecs.isBetweenTimestamp;
 import static dash.processmanagement.business.ProcessSpecs.isClosed;
 import static dash.processmanagement.business.ProcessSpecs.isProcessor;
@@ -335,6 +336,12 @@ public class ProcessService implements IProcessService {
 	@Override
 	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId, Calendar from, Calendar until) {
 		return processRepository.findAll(where(isProcessor(processorId)).and(isBetweenTimestamp(from, until)));
+	}
+
+	@Override
+	public List<Process> getProcessesByProcessorsAndBetweenTimestamp(long processorId, Calendar from, Calendar until) {
+		return processRepository
+				.findAll(where(hasProcessorInDistinct(processorId)).and(isBetweenTimestamp(from, until)));
 	}
 
 	@Override

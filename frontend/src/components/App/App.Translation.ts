@@ -263,6 +263,7 @@ function config($translateProvider) {
 
             // Define all offer elements
             OFFER_OFFERS: "Angebote",
+            OFFER_OFFER: "Angebot",
             OFFER_MANAGE_OFFERS: "Angebote verwalten",
             OFFER_ADD_OFFER: "Neues Angebot",
             OFFER_ADD_OFFER_MODAL: "Angebot erstellen",
@@ -373,8 +374,10 @@ function config($translateProvider) {
             STATISTIC_INVOLVED_IN_PROCESSES: "An Prozessen beteiligt",
             STATISTIC_WORKED_ON_LEADS: "Bearbeitete Anfragen",
             STATISTIC_WORKED_ON_OFFERS: "Bearbeitete Angebote",
-            STATISTIC_COMPLETED_SALES: "Abgeschlossene Verkäufe",
+            STATISTIC_WORKED_ON_SALES: "Bearbeitete Verkäufe",
+            STATISTIC_COMPLETED_PROCESSES: "Abgeschlossene Prozesse",
             STATISTIC_PRODUCT_SALES: "Verkaufte Produkte",
+            STATISTIC_EARNING_RATE: "Erfolgsrate - Prozessbeteilgung",
 
             // Define detail statistic
             DETAIL_STATISTIC_PRODUCTSTATISTIC: "Produktstatistik",
@@ -387,7 +390,12 @@ function config($translateProvider) {
             DETAIL_STATISTIC_SALES_PRICE: "Verkaufspreis",
             DETAIL_STATISTIC_ADVERTISED_PRICE: "Angezeigter Preis",
             DETAIL_STATISTIC_TOOLTIP: "<span>Das Produkt {{productname}} wurde <b>{{count}}x</b> in {{workflow}} verwendet.</span>",
-            DETAIL_STATISTIC_USER_TOOLTIP: "<span>Der Benutzer {{username}} hat <b>{{count}}</b> {{workflow}} bearbeitet.</span>",
+            DETAIL_STATISTIC_USER_TOOLTIP: "<span>{{username}} hat <b>{{count}}</b> {{workflow}} bearbeitet.</span>",
+            DETAIL_STATISTIC_SUCCESS_INDICATOR: "Erfolgskennzahlen",
+            PROFIT_PER_LEAD: "Gewinn pro Anfrage",
+            PROFIT_PER_OFFER: "Gewinn pro Angebot",
+            TURNOVER_PER_LEAD: "Umsatz pro Anfrage",
+            TURNOVER_PER_OFFER: "Umsatz pro Angebot",
 
             // Define all week and month names
             SUNDAY: "Sonntag",
@@ -731,6 +739,7 @@ function config($translateProvider) {
 
             // Define all offer elements
             OFFER_OFFERS: "Offers",
+            OFFER_OFFER: "Offer",
             OFFER_MANAGE_OFFERS: "Manage offers",
             OFFER_ADD_OFFER: "New offer",
             OFFER_ADD_OFFER_MODAL: "Create offer",
@@ -837,9 +846,11 @@ function config($translateProvider) {
             STATISTIC_TOP_SALESMAN: "Top salesmen",
             STATISTIC_INVOLVED_IN_PROCESSES: "Involved in processes",
             STATISTIC_WORKED_ON_LEADS: "Worked on leads",
-            STATISTIC_WORKED_ON_OFFERS: "worked on offers",
-            STATISTIC_COMPLETED_SALES: "Completed sales",
+            STATISTIC_WORKED_ON_OFFERS: "Worked on offers",
+            STATISTIC_WORKED_ON_SALES: "Worked on sales",
+            STATISTIC_COMPLETED_PROCESSES: "Completed Processes",
             STATISTIC_PRODUCT_SALES: "Sold products",
+            STATISTIC_EARNING_RATE: "Successrate - process involvement",
 
             // Define detail statistic
             DETAIL_STATISTIC_PRODUCTSTATISTIC: "Productstatistic",
@@ -852,8 +863,12 @@ function config($translateProvider) {
             DETAIL_STATISTIC_SALES_PRICE: "Sales price",
             DETAIL_STATISTIC_ADVERTISED_PRICE: "Advertised Price",
             DETAIL_STATISTIC_TOOLTIP: "<span>The product {{productname}} is used <b>{{count}}x</b> in {{workflow}}.</span>",
-            DETAIL_STATISTIC_USER_TOOLTIP: "<span>The user {{username}} worked on <b>{{count}}</b> {{workflow}}.</span>",
-
+            DETAIL_STATISTIC_USER_TOOLTIP: "<span>{{username}} worked on <b>{{count}}</b> {{workflow}}.</span>",
+            DETAIL_STATISTIC_SUCCESS_INDICATOR: "Success key data",
+            PROFIT_PER_LEAD: "Profit per lead",
+            PROFIT_PER_OFFER: "Profit per offer",
+            TURNOVER_PER_LEAD: "Turnover per lead",
+            TURNOVER_PER_OFFER: "Turnover per offer",
 
             // Define all week and month names
             SUNDAY: "Sunday",

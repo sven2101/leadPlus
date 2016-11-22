@@ -39,13 +39,15 @@ let hasLicense = function (userLicense: any, routeLicense: String): boolean {
 };
 
 let getNameOfUser = function (user: User): string {
-    if (!isNullOrUndefined(user.firstname) && user.firstname !== "" && !isNullOrUndefined(user.lastname) && user.lastname !== "") {
+    if (isNullOrUndefined(user)) {
+        return "";
+    }
+    else if (!isNullOrUndefined(user.firstname) && user.firstname !== "" && !isNullOrUndefined(user.lastname) && user.lastname !== "") {
         return user.firstname + " " + user.lastname;
     }
     else {
         return user.email;
     }
-
 };
 
 let deepCopy = function (old: Object): any {
