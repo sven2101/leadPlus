@@ -85,8 +85,8 @@ class AuthService {
                     self.rootScope.tenant = {
                         tenantKey: credentials.tenant,
                         license: {
-                            package: ["basic", "pro"],
-                            term: "09.12.2017",
+                            package: ["basic", "pro", "ultimate"],
+                            term: "09.12.2020",
                             trial: false
                         }
                     };
