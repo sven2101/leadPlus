@@ -12,7 +12,7 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.attachmentmanagement.domain;
+package dash.notificationmanagement.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,7 +31,6 @@ import org.hibernate.annotations.Where;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.fileuploadmanagement.domain.FileUpload;
-import dash.notificationmanagement.domain.Notification;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -94,6 +93,45 @@ public class Attachment {
 
 	public void setNotification(Notification notification) {
 		this.notification = notification;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (deleted ? 1231 : 1237);
+		result = prime * result + ((fileUpload == null) ? 0 : fileUpload.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Attachment other = (Attachment) obj;
+		if (deleted != other.deleted)
+			return false;
+		if (fileUpload == null) {
+			if (other.fileUpload != null)
+				return false;
+		} else if (!fileUpload.equals(other.fileUpload))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Attachment [id=" + id + ", deleted=" + deleted + ", fileUpload=" + fileUpload + "]";
 	}
 
 }

@@ -34,13 +34,12 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import dash.attachmentmanagement.business.IAttachmentService;
-import dash.attachmentmanagement.domain.Attachment;
 import dash.common.EncryptionWrapper;
 import dash.common.Encryptor;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.exceptions.SaveFailedException;
+import dash.notificationmanagement.domain.Attachment;
 import dash.notificationmanagement.domain.Notification;
 import dash.smtpmanagement.business.ISmtpService;
 import dash.smtpmanagement.domain.Smtp;
@@ -84,7 +83,7 @@ public class NotificationService implements INotificationService {
 				try {
 
 					msg.setFrom(new InternetAddress(smtp.getEmail(), smtp.getSender()));
-					msg.setRecipient(Message.RecipientType.TO, new InternetAddress(notification.getRecipient()));
+					msg.setRecipient(Message.RecipientType.TO, new InternetAddress(notification.getRecipients()));
 					msg.setSubject(notification.getSubject());
 					Multipart multipart = new MimeMultipart();
 

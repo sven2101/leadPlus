@@ -38,7 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import dash.attachmentmanagement.domain.Attachment;
 import dash.commentmanagement.domain.Comment;
 import dash.customermanagement.business.CustomerService;
 import dash.customermanagement.domain.Customer;
@@ -48,6 +47,7 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.business.ILeadService;
 import dash.leadmanagement.domain.Lead;
+import dash.notificationmanagement.domain.Attachment;
 import dash.notificationmanagement.domain.Notification;
 import dash.offermanagement.business.IOfferService;
 import dash.offermanagement.business.OfferService;

@@ -15,27 +15,28 @@ package dash.messagemanagement.domain;
 
 import java.util.List;
 
-import dash.attachmentmanagement.domain.Attachment;
+import dash.notificationmanagement.domain.Attachment;
 import dash.notificationmanagement.domain.NotificationType;
 
 public abstract class AbstractMessage {
 
-	protected String recipient;
+	protected String recipients;
 	protected String subject;
 	protected String content;
 	protected List<Attachment> attachments;
 	protected NotificationType notificationType;
 
-	public AbstractMessage(String recipient, String subject, String content, List<Attachment> attachments, NotificationType notificationType) {
-		this.recipient = recipient;
+	public AbstractMessage(String recipients, String subject, String content, List<Attachment> attachments,
+			NotificationType notificationType) {
+		this.recipients = recipients;
 		this.subject = subject;
 		this.content = content;
 		this.attachments = attachments;
 		this.notificationType = notificationType;
 	}
 
-	public String getRecipient() {
-		return recipient;
+	public String getRecipients() {
+		return recipients;
 	}
 
 	public String getSubject() {

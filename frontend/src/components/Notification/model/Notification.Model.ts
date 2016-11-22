@@ -17,7 +17,9 @@
 
 class Notification extends AbstractModel {
 
-    recipient: string;
+    recipients: string;
+    recipientsCC: string;
+    recipientsBCC: string;
     subject: string;
     content: string;
     attachments: Attachment[];

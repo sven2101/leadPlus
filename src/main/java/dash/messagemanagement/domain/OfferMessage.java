@@ -15,7 +15,7 @@ package dash.messagemanagement.domain;
 
 import java.util.List;
 
-import dash.attachmentmanagement.domain.Attachment;
+import dash.notificationmanagement.domain.Attachment;
 import dash.notificationmanagement.domain.NotificationType;
 
 public class OfferMessage extends AbstractMessage {

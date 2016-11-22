@@ -37,7 +37,6 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import dash.attachmentmanagement.domain.Attachment;
 import dash.common.HtmlCleaner;
 import dash.processmanagement.domain.Process;
 import io.swagger.annotations.ApiModelProperty;
@@ -56,8 +55,16 @@ public class Notification {
 
 	@NotNull
 	@Size(max = 255)
-	@Column(name = "recipient", length = 255, nullable = false)
-	private String recipient;
+	@Column(name = "recipients", length = 255, nullable = false)
+	private String recipients;
+
+	@Size(max = 255)
+	@Column(name = "recipients_cc", length = 255, nullable = false)
+	private String recipientsCC;
+
+	@Size(max = 255)
+	@Column(name = "recipients_bcc", length = 255, nullable = false)
+	private String recipientsBCC;
 
 	@NotNull
 	@Size(max = 255)
@@ -102,14 +109,6 @@ public class Notification {
 
 	public Long getId() {
 		return id;
-	}
-
-	public String getRecipient() {
-		return recipient;
-	}
-
-	public void setRecipient(String recipient) {
-		this.recipient = recipient;
 	}
 
 	public String getSubject() {
@@ -164,6 +163,30 @@ public class Notification {
 		this.process = process;
 	}
 
+	public String getRecipientsCC() {
+		return recipientsCC;
+	}
+
+	public void setRecipientsCC(String recipientsCC) {
+		this.recipientsCC = formatEmails(recipientsCC);
+	}
+
+	public String getRecipientsBCC() {
+		return recipientsBCC;
+	}
+
+	public void setRecipientsBCC(String recipientsBCC) {
+		this.recipientsBCC = formatEmails(recipientsBCC);
+	}
+
+	public String getRecipients() {
+		return recipients;
+	}
+
+	public void setRecipients(String recipients) {
+		this.recipients = formatEmails(recipients);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -173,7 +196,9 @@ public class Notification {
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((notificationType == null) ? 0 : notificationType.hashCode());
-		result = prime * result + ((recipient == null) ? 0 : recipient.hashCode());
+		result = prime * result + ((recipients == null) ? 0 : recipients.hashCode());
+		result = prime * result + ((recipientsBCC == null) ? 0 : recipientsBCC.hashCode());
+		result = prime * result + ((recipientsCC == null) ? 0 : recipientsCC.hashCode());
 		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
 		return result;
 	}
@@ -206,10 +231,20 @@ public class Notification {
 			return false;
 		if (notificationType != other.notificationType)
 			return false;
-		if (recipient == null) {
-			if (other.recipient != null)
+		if (recipients == null) {
+			if (other.recipients != null)
 				return false;
-		} else if (!recipient.equals(other.recipient))
+		} else if (!recipients.equals(other.recipients))
+			return false;
+		if (recipientsBCC == null) {
+			if (other.recipientsBCC != null)
+				return false;
+		} else if (!recipientsBCC.equals(other.recipientsBCC))
+			return false;
+		if (recipientsCC == null) {
+			if (other.recipientsCC != null)
+				return false;
+		} else if (!recipientsCC.equals(other.recipientsCC))
 			return false;
 		if (subject == null) {
 			if (other.subject != null)
@@ -221,9 +256,25 @@ public class Notification {
 
 	@Override
 	public String toString() {
-		return "Notification [id=" + id + ", recipient=" + recipient + ", subject=" + subject + ", deleted=" + deleted
-				+ ", content=" + content + ", attachments=" + attachments + ", notificationType=" + notificationType
-				+ "]";
+		return "Notification [id=" + id + ", recipientsCC=" + recipientsCC + ", recipientsBCC=" + recipientsBCC
+				+ ", recipients=" + recipients + ", subject=" + subject + ", deleted=" + deleted + ", content="
+				+ content + ", attachments=" + attachments + ", notificationType=" + notificationType + "]";
+	}
+
+	private String formatEmails(String emails) {
+		if (emails == null || "".equals(emails)) {
+			return null;
+		}
+		String result = "";
+		for (String email : emails.split(",")) {
+			if (email.length() > 0) {
+				result += email + ",";
+			}
+		}
+		if ("".equals(result)) {
+			return null;
+		}
+		return result.substring(0, result.length() - 1);
 	}
 
 }

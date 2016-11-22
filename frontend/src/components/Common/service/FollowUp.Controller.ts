@@ -60,7 +60,7 @@ class FollowUpController {
         this.rootScope = $rootScope;
         this.scope = $scope;
         this.currentNotification = new Notification();
-        this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
+        this.currentNotification.recipients = this.editWorkflowUnit.customer.email;
         this.uibModalInstance = $uibModalInstance;
         this.notificationService = NotificationService;
         this.templateService = TemplateService;
@@ -95,6 +95,7 @@ class FollowUpController {
         let process = this.editProcess;
         process.notifications = process.notifications ? process.notifications : [];
         let notification = deepCopy(this.currentNotification);
+        notification.attachments = notification.attachments ? notification.attachments : [];
         notification.notificationType = NotificationType.FOLLOWUP;
         notification.id = undefined;
         await this.notificationService.sendNotification(notification);

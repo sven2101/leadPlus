@@ -132,7 +132,7 @@ class WorkflowController extends AbstractWorkflow {
             this.selectedCustomer = this.editProcess.offer.customer;
             this.editWorkflowUnit = this.editProcess.offer;
             this.currentNotification = new Notification();
-            this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
+            this.currentNotification.recipients = this.editWorkflowUnit.customer.email;
         } else if (this.type === "sale") {
             this.customerSelected = this.editProcess.sale.customer.id > 0;
             this.selectedCustomer = this.editProcess.sale.customer;
@@ -206,7 +206,8 @@ class WorkflowController extends AbstractWorkflow {
         let process = this.editProcess;
         process.notifications = process.notifications ? process.notifications : [];
 
-        let notification = deepCopy(this.currentNotification);
+        let notification: Notification = deepCopy(this.currentNotification);
+        notification.attachments = notification.attachments ? notification.attachments : [];
         notification.notificationType = NotificationType.OFFER;
         notification.id = undefined;
         await this.notificationService.sendNotification(notification);

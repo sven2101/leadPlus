@@ -11,12 +11,17 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.attachmentmanagement.business;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+package dash.notificationmanagement.business;
 
-import dash.attachmentmanagement.domain.Attachment;
+import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
+import dash.notificationmanagement.domain.Attachment;
 
-public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
+public interface IAttachmentService {
+
+	public Attachment save(final Attachment attachment) throws SaveFailedException;
+
+	public Attachment getById(final Long id) throws NotFoundException;
 
 }
