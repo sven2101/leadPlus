@@ -11,26 +11,17 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.messagemanagement.domain;
 
-import java.util.List;
+package dash.attachmentmanagement.business;
 
 import dash.attachmentmanagement.domain.Attachment;
-import dash.notificationmanagement.domain.NotificationType;
+import dash.exceptions.NotFoundException;
+import dash.exceptions.SaveFailedException;
 
-public class OfferMessage extends AbstractMessage {
+public interface IAttachmentService {
 
-	/**
-	 * @param recipient
-	 *            - guy who receives this Message
-	 * @param subject
-	 *            - subject of this specific Message
-	 * @param content
-	 *            - content of this specific Message
-	 * @param attachment
-	 *            - attachment of this specific Message
-	 */
-	public OfferMessage(String recipient, String subject, String content, List<Attachment> attachments, NotificationType notificationType) {
-		super(recipient, subject, content, attachments, notificationType);
-	}
+	public Attachment save(final Attachment attachment) throws SaveFailedException;
+
+	public Attachment getById(final Long id) throws NotFoundException;
+
 }

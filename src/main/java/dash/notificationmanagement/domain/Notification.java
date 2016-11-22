@@ -13,6 +13,10 @@
  *******************************************************************************/
 package dash.notificationmanagement.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -22,6 +26,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -32,8 +37,8 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import dash.attachmentmanagement.domain.Attachment;
 import dash.common.HtmlCleaner;
-import dash.fileuploadmanagement.domain.FileUpload;
 import dash.processmanagement.domain.Process;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -69,9 +74,9 @@ public class Notification {
 	@Column(name = "content", length = 30000, nullable = false)
 	private String content;
 
-	@ManyToOne
-	@JoinColumn(name = "attachment_fk", nullable = true)
-	private FileUpload attachment;
+	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "notification")
+	@Where(clause = "deleted <> '1'")
+	private List<Attachment> attachments;
 
 	@JsonIgnore
 	@ManyToOne
@@ -123,12 +128,20 @@ public class Notification {
 		this.content = HtmlCleaner.cleanHtml(content);
 	}
 
-	public FileUpload getAttachment() {
-		return attachment;
+	public List<Attachment> getAttachments() {
+		return attachments;
 	}
 
-	public void setAttachment(FileUpload attachment) {
-		this.attachment = attachment;
+	public void setAttachments(List<Attachment> attachments) {
+		if (attachments == null) {
+			this.attachments = new ArrayList<>();
+			return;
+		}
+		this.attachments = attachments;
+	}
+
+	public void addAttachment(Attachment attachment) {
+		this.attachments.add(attachment);
 	}
 
 	public void setId(Long id) {
@@ -155,7 +168,7 @@ public class Notification {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((attachment == null) ? 0 : attachment.hashCode());
+		result = prime * result + ((attachments == null) ? 0 : attachments.hashCode());
 		result = prime * result + ((content == null) ? 0 : content.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -174,10 +187,10 @@ public class Notification {
 		if (getClass() != obj.getClass())
 			return false;
 		Notification other = (Notification) obj;
-		if (attachment == null) {
-			if (other.attachment != null)
+		if (attachments == null) {
+			if (other.attachments != null)
 				return false;
-		} else if (!attachment.equals(other.attachment))
+		} else if (!attachments.equals(other.attachments))
 			return false;
 		if (content == null) {
 			if (other.content != null)
@@ -209,7 +222,7 @@ public class Notification {
 	@Override
 	public String toString() {
 		return "Notification [id=" + id + ", recipient=" + recipient + ", subject=" + subject + ", deleted=" + deleted
-				+ ", content=" + content + ", attachment=" + attachment + ", notificationType=" + notificationType
+				+ ", content=" + content + ", attachments=" + attachments + ", notificationType=" + notificationType
 				+ "]";
 	}
 

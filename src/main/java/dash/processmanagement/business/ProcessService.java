@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import dash.attachmentmanagement.domain.Attachment;
 import dash.commentmanagement.domain.Comment;
 import dash.customermanagement.business.CustomerService;
 import dash.customermanagement.domain.Customer;
@@ -307,6 +308,11 @@ public class ProcessService implements IProcessService {
 	private void setNotifications(Process process) {
 		if (process.getNotifications() != null) {
 			for (Notification notification : process.getNotifications()) {
+				if (process.getNotifications() != null) {
+					for (Attachment attachment : notification.getAttachments()) {
+						attachment.setNotification(notification);
+					}
+				}
 				notification.setProcess(process);
 			}
 		}
