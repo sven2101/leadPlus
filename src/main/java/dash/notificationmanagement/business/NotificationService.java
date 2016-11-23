@@ -14,14 +14,10 @@
 
 package dash.notificationmanagement.business;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Properties;
-
 import javax.activation.DataHandler;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -76,7 +72,7 @@ public class NotificationService implements INotificationService {
 			if (smtp != null) {
 				smtp.setPassword(Encryptor
 						.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
-				final Session emailSession = newSession(smtp);
+				final Session emailSession = smtpService.newSession(smtp);
 				Transport transport = emailSession.getTransport("smtp");
 				transport.connect();
 
@@ -119,26 +115,9 @@ public class NotificationService implements INotificationService {
 				throw new SMTPdoesntExistsException("No valid SMTP Data for this User");
 			}
 		} catch (Exception ex) {
-			// throw ex;
-			return;
+			throw ex;
+			// return;
 		}
-	}
-
-	private Session newSession(Smtp smtp) throws UnsupportedEncodingException {
-		Properties props = new Properties();
-		props.setProperty("mail.smtp.host", smtp.getHost());
-		props.setProperty("mail.smtp.port", String.valueOf(smtp.getPort()));
-		props.put("mail.smtp.ssl.trust", smtp.getHost());
-		props.put("mail.smtp.auth", "true");
-		final String mailUser = smtp.getUsername();
-		final String mailPassword = new String(smtp.getPassword(), "UTF-8");
-
-		return Session.getDefaultInstance(props, new javax.mail.Authenticator() {
-			@Override
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(mailUser, mailPassword);
-			}
-		});
 	}
 
 }
