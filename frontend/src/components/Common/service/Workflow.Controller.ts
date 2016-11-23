@@ -140,8 +140,8 @@ class WorkflowController extends AbstractWorkflow {
         }
     }
 
-    close(result: boolean) {
-        this.uibModalInstance.close(result);
+    close(result: boolean, process: Process) {
+        this.uibModalInstance.close(process);
         if (!result && (this.editProcess.status === Status.OPEN || this.editProcess.status === Status.INCONTACT)) {
             this.editProcess.offer = undefined;
         } else if (!result && (this.editProcess.status === Status.OFFER || this.editProcess.status === Status.FOLLOWUP)) {
@@ -216,7 +216,7 @@ class WorkflowController extends AbstractWorkflow {
                     process.notifications.push(notification);
                     self.workflowService.saveProcess(process).then((resultProcess) => {
                         self.rootScope.$broadcast("deleteRow", process);
-                        self.close(true);
+                        self.close(true, resultProcess);
                     });
                 });
 
@@ -230,17 +230,17 @@ class WorkflowController extends AbstractWorkflow {
             let self = this;
 
             let process = this.editProcess;
-            this.workflowService.addLeadToOffer(process).then(() => {
-                self.rootScope.$broadcast("deleteRow", process);
-                self.close(true);
+            this.workflowService.addLeadToOffer(process).then((resultProcess) => {
+                self.rootScope.$broadcast("deleteRow", resultProcess);
+                self.close(true, resultProcess);
             });
         } else if (this.type === "sale") {
             let process = this.editProcess;
             let self = this;
-            this.workflowService.addOfferToSale(process).then(() => {
-                self.rootScope.$broadcast("deleteRow", process);
+            this.workflowService.addOfferToSale(process).then((resultProcess) => {
+                self.rootScope.$broadcast("deleteRow", resultProcess);
 
-                self.close(true);
+                self.close(true, resultProcess);
             });
         }
     }

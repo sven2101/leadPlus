@@ -187,7 +187,7 @@ class WorkflowService {
     }
 
 
-    startOfferTransformation(process: Process): IPromise<boolean> {
+    startOfferTransformation(process: Process): IPromise<Process> {
         let defer = this.$q.defer();
         let self = this;
         process.offer = {
@@ -223,7 +223,7 @@ class WorkflowService {
         }).result.then(function (result) {
             defer.resolve(result);
         }, function () {
-            defer.resolve(false);
+            defer.resolve(undefined);
         });
         return defer.promise;
     }
@@ -268,78 +268,38 @@ class WorkflowService {
         }).result.then(function (result) {
             defer.resolve(result);
         }, function () {
-            defer.resolve(false);
+            defer.resolve(undefined);
         });
         return defer.promise;
     }
 
     async addLeadToOffer(tempProcess: Process): Promise<Process> {
-        let defer: IDefer<Process> = this.$q.defer();
-        let self = this;
-        if (isNullOrUndefined(tempProcess.formerProcessors)) {
-            tempProcess.formerProcessors = [];
+        tempProcess.formerProcessors = tempProcess.formerProcessors ? tempProcess.formerProcessors : [];
+        if (!this.checkForDupsInFormerProcessors(tempProcess.formerProcessors, this.rootScope.user, Activity.OFFER)) {
+            tempProcess.formerProcessors.push(new Processor(this.rootScope.user, Activity.OFFER));
         }
-        if (!this.checkForDupsInFormerProcessors(tempProcess.formerProcessors, self.rootScope.user, Activity.OFFER)) {
-            tempProcess.formerProcessors.push(new Processor(self.rootScope.user, Activity.OFFER));
-        }
-
+        tempProcess.status = Status.OFFER;
+        tempProcess.processor = this.rootScope.user;
         let process = await this.processResource.save(tempProcess);
-        this.processResource.createOffer({ id: process.id }, process.offer).$promise.then(function (resultOffer: Offer) {
-
-            self.processResource.setStatus({ id: process.id }, Status.OFFER).$promise.then(function (resultProcess: Process) {
-                self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
-                self.rootScope.leadsCount -= 1;
-                self.rootScope.offersCount += 1;
-                process.offer = resultOffer;
-                process.status = resultProcess.status;
-
-                self.processResource.setProcessor({ id: resultProcess.id }, self.rootScope.user.id).$promise.then(function (resultUser: User) {
-                    process.processor = resultUser;
-                    defer.resolve(process);
-                    self.rootScope.$broadcast("onTodosChange");
-                }, function (resultUser: User) {
-
-                });
-
-            }, function () {
-                defer.reject(process);
-            });
-        }, function () {
-            defer.reject(process);
-        });
-        return defer.promise;
+        this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
+        this.rootScope.leadsCount -= 1;
+        this.rootScope.offersCount += 1;
+        this.rootScope.$broadcast("onTodosChange");
+        return process;
     }
 
     async addOfferToSale(tempProcess: Process): Promise<Process> {
-        let defer = this.$q.defer();
-        let self = this;
-        if (isNullOrUndefined(tempProcess.formerProcessors)) {
-            tempProcess.formerProcessors = [];
+        tempProcess.formerProcessors = tempProcess.formerProcessors ? tempProcess.formerProcessors : [];
+        if (!this.checkForDupsInFormerProcessors(tempProcess.formerProcessors, this.rootScope.user, Activity.SALE)) {
+            tempProcess.formerProcessors.push(new Processor(this.rootScope.user, Activity.SALE));
         }
-        if (!this.checkForDupsInFormerProcessors(tempProcess.formerProcessors, self.rootScope.user, Activity.SALE)) {
-            tempProcess.formerProcessors.push(new Processor(self.rootScope.user, Activity.SALE));
-        }
-        let process = await this.processResource.save(tempProcess);
-        this.processResource.createSale({ id: process.id }, process.sale).$promise.then(function (resultSale: Sale) {
-            self.processResource.setStatus({ id: process.id }, Status.SALE).$promise.then(function (resultProcess: Process) {
-                self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
-                self.rootScope.offersCount -= 1;
-                process.sale = resultSale;
-                process.status = resultProcess.status;
-                self.processResource.setProcessor({ id: resultProcess.id }, self.rootScope.user.id).$promise.then(function () {
-                    process.processor = self.rootScope.user;
-                    self.rootScope.$broadcast("onTodosChange");
-                    defer.resolve(process);
-                });
-
-
-            }, function () {
-                defer.reject(process);
-            });
-        }, function () {
-            defer.reject(process);
-        });
-        return defer.promise;
+        tempProcess.status = Status.SALE;
+        tempProcess.processor = this.rootScope.user;
+        let process: Process = await this.processResource.save(tempProcess);
+        this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
+        this.rootScope.offersCount -= 1;
+        this.rootScope.$broadcast("onTodosChange");
+        return process;
     }
 
     getButtons(title: string, columns: Array<number>): Array<any> {
