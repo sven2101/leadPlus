@@ -39,8 +39,8 @@ public class ProductStatisticService extends AbstractStatisticService {
 	private static final Logger logger = Logger.getLogger(ProductStatisticService.class);
 
 	@Override
-	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId, StatisticHelper statisticHelper) {
-		// TODO Auto-generated method stub
+	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId,
+			StatisticHelper statisticHelper) {
 		return null;
 	}
 

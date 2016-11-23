@@ -8,9 +8,8 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum LicenseEnum {
-	ERROR("error",
-			new HashSet<String>(Arrays.asList("/components/Common/view/NotFound.html",
-					"/components/Common/view/Unauthorized.html", "/components/Common/view/Forbidden.html")),
+	ERROR("error", new HashSet<String>(Arrays.asList("/components/Common/view/NotFound.html",
+			"/components/Common/view/Unauthorized.html", "/components/Common/view/Forbidden.html", "/main.html")),
 			0), FREE("free",
 					new HashSet<String>(Arrays.asList("/", "/images/favicon/**", "/assets/**", "/fonts/**", "/app/**",
 							"/components/Login/view/Login.html", "/logout", "/logout.html",
@@ -20,13 +19,15 @@ public enum LicenseEnum {
 							"/components/Common/view/Unauthorized.html", "/components/Common/view/Forbidden.html",
 							"/swagger-ui.html", "/webjars/springfox-swagger-ui/**", "/configuration/ui",
 							"/swagger-resources", "/v2/api-docs/**", "/configuration/security")),
-					1), BASIC("basic", new HashSet<String>(Arrays.asList("/user", "/users/all",
-							"/components/Common/view/**", "/components/Customer/view/**",
-							"/components/Dashboard/view/**", "/components/FileUpload/view/**",
-							"/components/Lead/view/**", "/components/Offer/view/**", "/components/Product/view/**",
-							"/components/Profile/view/**", "/components/Sale/view/**", "/components/Setting/view/**",
-							"/components/Template/view/**", "/main.html", "/api/rest/**")), 2), PRO("pro",
-									new HashSet<String>(Arrays.asList("/components/Statistic/view/**")),
+					1), BASIC("basic",
+							new HashSet<String>(Arrays.asList("/user", "/users/all", "/components/Common/view/**",
+									"/components/Customer/view/**", "/components/Dashboard/view/**",
+									"/components/FileUpload/view/**", "/components/Lead/view/**",
+									"/components/Offer/view/**", "/components/Product/view/**",
+									"/components/Profile/view/**", "/components/Sale/view/**",
+									"/components/Setting/view/**", "/components/Template/view/**", "/main.html",
+									"/api/rest/**", "/components/Statistic/view/**")),
+							2), PRO("pro", new HashSet<String>(Arrays.asList("")),
 									3), ULTIMATE("ultimate", new HashSet<String>(Arrays.asList("")), 4);
 
 	private Set<String> allowedRoutes;

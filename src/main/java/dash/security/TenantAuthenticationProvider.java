@@ -53,7 +53,7 @@ public class TenantAuthenticationProvider implements AuthenticationProvider {
 			TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
 		Tenant tenant = null;
 		if (tenantKey != null) {
-			tenant = tenantRepository.findByTenantKey(tenantKey);
+			tenant = tenantRepository.findByTenantKeyIgnoreCase(tenantKey);
 			if (tenant == null)
 				return new TenantAuthenticationToken(TenantContext.TENANT_NOT_FOUND);
 		} else {

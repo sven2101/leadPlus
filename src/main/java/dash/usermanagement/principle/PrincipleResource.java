@@ -41,7 +41,6 @@ public class PrincipleResource {
 			new ResponseEntity<User>((User) null, HttpStatus.UNAUTHORIZED);
 
 		User internalUser = userService.getUserByEmail(user.getName());
-		// TODO override authentification object and set tenant here.
 
 		return new ResponseEntity<User>(internalUser, HttpStatus.OK);
 	}

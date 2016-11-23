@@ -15,6 +15,7 @@
 package dash.security;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import dash.licensemanangement.domain.License;
 import dash.licensemanangement.domain.LicenseEnum;
 import dash.tenantmanagement.business.TenantContext;
 
@@ -45,8 +47,12 @@ public class LicenseFilter extends OncePerRequestFilter {
 			if (auth.getAuthenticatedTenant() != null) {
 				TenantContext.setTenant(auth.getAuthenticatedTenant().getTenantKey());
 
-				if (!auth.getAuthenticatedTenant().getLicense().getLicenseType()
-						.hasLicenseForUrl(request.getRequestURI())) {
+				License license = auth.getAuthenticatedTenant().getLicense();
+
+				if (!license.getLicenseType().hasLicenseForUrl(request.getRequestURI())
+						|| (Calendar.getInstance().after(license.getTerm())
+								&& !LicenseEnum.ERROR.hasLicenseForUrl(request.getRequestURI())
+								&& !LicenseEnum.FREE.hasLicenseForUrl(request.getRequestURI()))) {
 					response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				}
 			}
