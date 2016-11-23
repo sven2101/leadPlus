@@ -123,7 +123,6 @@ class WorkflowController extends AbstractWorkflow {
         if (!isNullOrUndefined(this.saleEditForm)) {
             this.saleEditForm.$setPristine();
         }
-
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = process;
@@ -135,6 +134,7 @@ class WorkflowController extends AbstractWorkflow {
             this.customerSelected = this.editProcess.sale.customer.id > 0;
             this.selectedCustomer = this.editProcess.sale.customer;
             this.editWorkflowUnit = this.editProcess.sale;
+            this.wizardOnClick(6);
         }
     }
 
