@@ -13,15 +13,12 @@
  *******************************************************************************/
 package dash.tenantmanagement.business;
 
-import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.CREATING_SUBDOMAIN;
 import static dash.Constants.TENANT_ALREADY_EXISTS;
-import static dash.Constants.TENANT_NOT_FOUND;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -43,7 +40,6 @@ import com.amazonaws.services.route53.model.RRType;
 import com.amazonaws.services.route53.model.ResourceRecord;
 import com.amazonaws.services.route53.model.ResourceRecordSet;
 
-import dash.exceptions.NotFoundException;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.registration.domain.Validation;
 
@@ -76,14 +72,10 @@ public class TenantService implements ITenantService {
 	private AmazonRoute53 r53;
 
 	@Override
-	public Tenant getTenantByName(final String name) throws NotFoundException {
-		if (Optional.ofNullable(name).isPresent()) {
-			return tenantRepository.findByTenantKey(name);
-		} else {
-			NotFoundException cnfex = new NotFoundException(TENANT_NOT_FOUND);
-			logger.error(TENANT_NOT_FOUND + TenantService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
-			throw cnfex;
-		}
+	public Tenant getTenantByName(final String name) throws IllegalArgumentException {
+		if (name == null)
+			throw new IllegalArgumentException("Cannot getTenantByName because parameter name is null");
+		return tenantRepository.findByTenantKeyIgnoreCase(name);
 	}
 
 	@Override
@@ -201,9 +193,9 @@ public class TenantService implements ITenantService {
 			validateTenant = getTenantByName(tenant.getTenantKey());
 			if (validateTenant != null)
 				proofUniquenessLocal = false;
-		} catch (NotFoundException nfex) {
+		} catch (IllegalArgumentException ilax) {
 			proofUniquenessLocal = false;
-			logger.error("Validate uniqueness of Tenant: " + TenantService.class.getSimpleName(), nfex);
+			logger.error("Validate uniqueness of Tenant: " + TenantService.class.getSimpleName(), ilax);
 		}
 
 		if (springProfileActive.equals(SPRING_PROFILE_PRODUCTION))

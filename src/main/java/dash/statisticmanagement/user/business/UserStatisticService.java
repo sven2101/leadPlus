@@ -46,7 +46,6 @@ public class UserStatisticService extends AbstractStatisticService {
 	@Override
 	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId,
 			StatisticHelper statisticHelper) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -1,5 +1,6 @@
 <style>
 	/* Tooltip */
+	
 	.tooltipstyle + .tooltip > .tooltip-inner {
 		background-color: #1dc5a3;
 	}
@@ -15,31 +16,20 @@
 			<h2><i class="tooltipstyle fa fa-question-circle" data-toggle="tooltip" title="You can access this application afterwards via your choosen sitename 'yourcompany.leadplus.me' for example. You can only use letters."></i></h2>
 			<label stlye="color: #ffffff;">Reserve your Company name as subdomain</label>
 		</div>
-
 		<!-- Sitename -->
-		<div class="form-group">
+		<div class="form-group" ng-class="{'has-error': validation.tenantKey.$error.$invalid
+											|| registrationCtrl.registrationService.tenantKeyExist }">
 			<label class="sr-only" for="tenantKey">yoursitename</label>
 			<div class="input-group">
-				<input autofocus type="text" class="form-control" id="tenantKey" name="tenantKey" placeholder="yoursitename" required ng-pattern="/^[a-zA-Z]*$/"
-					ng-minlength="2" ng-maxlength="20" ng-model="registrationCtrl.tenant.tenantKey" ng-blur="registrationCtrl.uniqueTenantKey()"
-					ng-class="{ 'has-success': 	!validation.tenantKey.$error.required &&
-												!validation.tenantKey.$error.minlength &&
-												!validation.tenantKey.$error.maxlength &&
-												!registrationCtrl.registrationService.tenantKeyExist&&  
-												!validation.tenantKey.$pristine,														
-								'has-error': 	validation.tenantKey.$error.required ||
-												validation.tenantKey.$error.minlength ||
-												validation.tenantKey.$error.maxlength ||
-												registrationCtrl.registrationService.tenantKeyExist  &&  
-												!validation.tenantKey.$pristine		 }">
+				<input autofocus type="text" class="form-control" name="tenantKey" placeholder="yoursitename" required ng-pattern="/^[a-zA-Z]*$/"
+					ng-minlength="2" ng-maxlength="20" ng-model="registrationCtrl.tenant.tenantKey" ng-blur="registrationCtrl.uniqueTenantKey()">
 				<div class="input-group-addon">.leadplus.me</div>
 			</div>
 
 			<span ng-show="registrationCtrl.registrationService.tenantKeyExist&&!validation.tenantKey.$pristine" class="help-block">{{ 'REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE' | translate }}</span>
-			<span ng-show="validation.tenantKey.$error.tenantKeyExist&&!validation.tenantKey.$pristine" class="help-block">{{ 'REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE' | translate }}</span>
-			<span ng-show="validation.tenantKey.$error.required &&!validation.tenantKey.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+			<span ng-show="validation.tenantKey.$error.required&&!validation.tenantKey.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
 			<span ng-show="validation.tenantKey.$error.minlength&&!validation.tenantKey.$pristine" class="help-block">{{ 'REGISTRATION_VALIDATE_PASSWORD_TOO_SHORT' | translate }}</span>
-			<span ng-show="validation.tenantKey.$error.maxlength&&!validation.tenantKey.$pristine" class="help-block">{{ 'REGISTRATION_VALIDATE_PASSWORD_TOO_LONG' | translate }}</span>
+			<span ng-show="validation.tenantKey.$error.maxlength" class="help-block">{{ 'REGISTRATION_VALIDATE_PASSWORD_TOO_LONG' | translate }}</span>
 		</div>
 
 		<!-- Package -->

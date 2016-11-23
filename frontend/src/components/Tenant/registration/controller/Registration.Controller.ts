@@ -30,7 +30,7 @@ class RegistrationController {
     signupService: SignupService;
     registrationService: RegistrationService;
     tenantService: TenantService;
-    loginService;
+    loginService: LoginService;
 
     credentials: Credentials;
     tenant: Tenant;
@@ -64,6 +64,7 @@ class RegistrationController {
         let self = this;
         this.tenant.license.term = newTimestamp();
         this.tenant.license.trial = true;
+        this.tenant.license.licenseType = "BASIC";
 
         this.user.email = this.user.email.toLowerCase();
         this.credentials.email = this.user.email;

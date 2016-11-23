@@ -162,10 +162,6 @@ public class UserService implements IUserService {
 		}
 	}
 
-	private void validateEmail(String email) throws NotFoundException {
-		User user = getUserByEmail(email);
-	}
-
 	@Override
 	public User updateProfilPicture(final User user) throws UpdateFailedException {
 		if (Optional.ofNullable(user).isPresent()) {
@@ -308,6 +304,7 @@ public class UserService implements IUserService {
 				user.setPassword(passwordEncoder.encode(registration.getPassword()));
 				user.setRole(Role.USER);
 				user.setLanguage(Language.DE);
+				user.setDefaultVat(19.00);
 
 				return save(user);
 			} catch (SaveFailedException ex) {
