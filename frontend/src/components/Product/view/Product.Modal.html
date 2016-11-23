@@ -15,8 +15,8 @@
                         <div class="col-sm-6 b-r">
                             <div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.name.$invalid && !productCtrl.createProductForm.name.$pristine }">
                                 <label>{{ 'PRODUCT_PRODUCTNAME' | translate }}<span style="color:red">*</span></label>
-                                <input type=" text " name="name" class="form-control " ng-model="productCtrl.currentProduct.name" ng-maxlength="30" required>
-                                <p ng-show="productCtrl.createProductForm.name.$invalid && !productCtrl.createProductForm.name.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                                <input type=" text " name="name" class="form-control " ng-model="productCtrl.currentProduct.name" ng-maxlength="100" required>
+                                <p ng-show="productCtrl.createProductForm.name.$invalid && !productCtrl.createProductForm.name.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}100{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                             <!--DESCRIPTION -->
                             <div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.description.$invalid && !productCtrl.createProductForm.description.$pristine }">

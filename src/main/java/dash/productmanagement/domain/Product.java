@@ -64,6 +64,7 @@ public class Product implements Serializable {
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
+	@Size(max = 100)
 	@Column(name = "name", nullable = false)
 	private String name;
 

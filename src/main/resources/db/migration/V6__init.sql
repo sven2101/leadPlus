@@ -33,6 +33,8 @@ ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 ALTER TABLE  product
 ALTER COLUMN description TYPE character varying(3000);
+ALTER TABLE  product
+ALTER COLUMN name TYPE character varying(100);
 
 ALTER TABLE "user" DROP CONSTRAINT uk_e6gkqunxajvyxl5uctpl2vl2p;
 CREATE UNIQUE INDEX user_email_unique_idx on "user" (LOWER(email));  
