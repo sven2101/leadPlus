@@ -180,6 +180,7 @@ class DashboardService {
                 }
                 else if (self.inContacts === target && self.openLeads === source) {
                     self.inContact(item);
+                    item.processor = self.rootScope.user;
                     self.updateDashboard("lead");
                 } else if (isNullOrUndefined(target)) {
                     let title = "";

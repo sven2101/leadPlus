@@ -542,7 +542,7 @@ class WorkflowService {
             }, (error) => handleError(error));
         }
     }
-    async inContact(process: Process): Promise<void> {
+    async inContact(process: Process): Promise<Process> {
         process.status = "INCONTACT";
         process.processor = this.rootScope.user;
         if (isNullOrUndefined(process.formerProcessors)) {
@@ -551,10 +551,11 @@ class WorkflowService {
         if (!this.checkForDupsInFormerProcessors(process.formerProcessors, this.rootScope.user, Activity.INCONTACT)) {
             process.formerProcessors.push(new Processor(process.processor, Activity.INCONTACT));
         }
-        await this.processResource.save(process);
+        let resultProcess = await this.processResource.save(process) as Process;
         this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_INCONTACT"));
         this.rootScope.$broadcast("onTodosChange");
         this.rootScope.$broadcast("updateRow", process);
+        return resultProcess;
     }
 
     setProcessStatus(process: Process, status: Status): IPromise<Process> {
