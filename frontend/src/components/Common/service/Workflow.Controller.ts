@@ -148,12 +148,12 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     calculateProfit() {
-        if (this.editWorkflowUnit instanceof Sale) {
-            this.editWorkflowUnit.saleProfit = this.editWorkflowUnit.saleTurnover - this.editWorkflowUnit.saleCost;
+        if (!isNullOrUndefined(this.editWorkflowUnit["saleTurnover"]) && !isNullOrUndefined(this.editWorkflowUnit["saleCost"])) {
+            let tempSale = this.editWorkflowUnit as Sale;
+            tempSale.saleProfit = tempSale.saleTurnover - tempSale.saleCost;
+            this.editWorkflowUnit = tempSale;
         }
-
     }
-
     generate(templateId: string, offer: Offer) {
         if (Number(templateId) === -1) {
             this.currentNotification.content = "";
