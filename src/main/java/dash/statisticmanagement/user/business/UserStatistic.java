@@ -4,15 +4,15 @@ import java.io.Serializable;
 
 import dash.usermanagement.domain.User;
 
-public class UserStatistic implements Serializable{
-
+public class UserStatistic implements Serializable {
 
 	private static final long serialVersionUID = 5459662571105864769L;
-	
+
 	private int countLead;
 	private int countOffer;
 	private int countSale;
 	private int countProcess;
+	private int completedProcess;
 	private double turnover;
 	private double profit;
 	private double discount;
@@ -24,6 +24,7 @@ public class UserStatistic implements Serializable{
 		countOffer = 0;
 		countSale = 0;
 		countProcess = 0;
+		completedProcess = 0;
 		turnover = 0;
 		profit = 0;
 		discount = 0;
@@ -44,6 +45,10 @@ public class UserStatistic implements Serializable{
 
 	public void addCountProcess() {
 		countProcess++;
+	}
+
+	public void addCompletedProcess() {
+		completedProcess++;
 	}
 
 	public void addCountTurnover(double value) {
@@ -110,6 +115,14 @@ public class UserStatistic implements Serializable{
 		this.countProcess = countProcess;
 	}
 
+	public int getCompletedProcess() {
+		return completedProcess;
+	}
+
+	public void setCompletedProcess(int completedProcess) {
+		this.completedProcess = completedProcess;
+	}
+
 	public double getTurnover() {
 		return turnover;
 	}
@@ -138,6 +151,7 @@ public class UserStatistic implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + completedProcess;
 		result = prime * result + countLead;
 		result = prime * result + countOffer;
 		result = prime * result + countProcess;
@@ -163,6 +177,8 @@ public class UserStatistic implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		UserStatistic other = (UserStatistic) obj;
+		if (completedProcess != other.completedProcess)
+			return false;
 		if (countLead != other.countLead)
 			return false;
 		if (countOffer != other.countOffer)
@@ -190,8 +206,9 @@ public class UserStatistic implements Serializable{
 	@Override
 	public String toString() {
 		return "UserStatistic [countLead=" + countLead + ", countOffer=" + countOffer + ", countSale=" + countSale
-				+ ", countProcess=" + countProcess + ", turnover=" + turnover + ", profit=" + profit + ", discount="
-				+ discount + ", countProduct=" + countProduct + ", user=" + user + "]";
+				+ ", countProcess=" + countProcess + ", completedProcess=" + completedProcess + ", turnover=" + turnover
+				+ ", profit=" + profit + ", discount=" + discount + ", countProduct=" + countProduct + ", user=" + user
+				+ "]";
 	}
 
 }

@@ -69,4 +69,6 @@ public interface IProcessService {
 
 	public List<Process> getProcessesBetweenTimestamp(Calendar from, Calendar until);
 
+	List<Process> getProcessesByProcessorsAndBetweenTimestamp(long processorId, Calendar from, Calendar until);
+
 }

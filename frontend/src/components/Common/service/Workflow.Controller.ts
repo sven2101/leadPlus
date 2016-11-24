@@ -74,12 +74,14 @@ class WorkflowController extends AbstractWorkflow {
 
     window;
 
-    constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService,
+    constructor(process: Process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService,
         WorkflowService, LeadService, OfferService, SaleService, DashboardService, FileService, $rootScope, $sce, $window, $scope) {
         super(WorkflowService, $sce, FileService, $scope);
+
         let self = this;
         this.rootScope = $rootScope;
         this.scope = $scope;
+
         this.type = type;
         this.uibModalInstance = $uibModalInstance;
         this.notificationService = NotificationService;
@@ -141,8 +143,8 @@ class WorkflowController extends AbstractWorkflow {
         }
     }
 
-    close(result: boolean) {
-        this.uibModalInstance.close(result);
+    close(result: boolean, process: Process) {
+        this.uibModalInstance.close(process);
         if (!result && (this.editProcess.status === Status.OPEN || this.editProcess.status === Status.INCONTACT)) {
             this.editProcess.offer = undefined;
         } else if (!result && (this.editProcess.status === Status.OFFER || this.editProcess.status === Status.FOLLOWUP)) {
@@ -191,7 +193,7 @@ class WorkflowController extends AbstractWorkflow {
     existsInvoiceNumber() {
         if (this.editWorkflowUnit instanceof Sale) {
             let self = this;
-            this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function(result: Sale) {
+            this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function (result: Sale) {
                 if (!isNullOrUndefined(result)) {
                     self.invoiceNumberAlreadyExists = true;
                 } else {
@@ -199,6 +201,7 @@ class WorkflowController extends AbstractWorkflow {
                 }
             });
         }
+
     }
 
     async send() {
@@ -223,25 +226,25 @@ class WorkflowController extends AbstractWorkflow {
         process.notifications.push(notification);
         let resultProcess = await this.workflowService.saveProcess(process);
         self.rootScope.$broadcast("deleteRow", process);
-        self.close(true);
-
+        self.close(true, resultProcess);
     }
 
     save() {
+        let process = this.editProcess;
         if (this.type === "offer") {
             let self = this;
+
             let process = this.editProcess;
-            this.workflowService.addLeadToOffer(process).then(() => {
-                self.rootScope.$broadcast("deleteRow", process);
-                self.close(true);
+            this.workflowService.addLeadToOffer(process).then((resultProcess) => {
+                self.rootScope.$broadcast("deleteRow", resultProcess);
+                self.close(true, resultProcess);
             });
         } else if (this.type === "sale") {
             let process = this.editProcess;
             let self = this;
-            this.workflowService.addOfferToSale(process).then(() => {
-                self.rootScope.$broadcast("deleteRow", process);
-
-                self.close(true);
+            this.workflowService.addOfferToSale(process).then((resultProcess) => {
+                self.rootScope.$broadcast("deleteRow", resultProcess);
+                self.close(true, resultProcess);
             });
         }
     }

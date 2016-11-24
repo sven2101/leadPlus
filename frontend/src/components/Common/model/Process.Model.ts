@@ -27,9 +27,12 @@ class Process extends AbstractModel {
     comments: Array<Commentary>;
     notifications: Array<Notification>;
     followUpAmount: number;
+    formerProcessors: Array<Processor>;
     source: Source;
+
     constructor() {
         super();
         this.comments = new Array<Commentary>();
+        this.formerProcessors = [];
     }
 }

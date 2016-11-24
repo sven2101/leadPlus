@@ -51,6 +51,11 @@ angular.module(moduleApp)
                     scope.chart.pushData($translate.instant("SALE_SALES"), [scope.userStatistic.countSale], "#1a7bb9");
                 });
             }
+
+            scope.calculateRate = function calculateRate(firstAmount: number, secondAmount: number): number {
+                return StatisticService.getRatePercentage(firstAmount, secondAmount);
+            };
+            scope.getNameOfUser = getNameOfUser;
         };
         return directive;
     }]);

@@ -211,6 +211,7 @@ class SaleController extends AbstractWorkflow {
         // this.editWorkflowUnit.saleTurnover = this.editProcess.offer.offerPrice;
     }
 
+
     addComment(id: number, input: Array<string>, process: Process = null) {
         if (isNullOrUndefined(process)) {
             process = this.processes[id];
@@ -224,11 +225,13 @@ class SaleController extends AbstractWorkflow {
         this.editWorkflowUnit.saleProfit = this.editWorkflowUnit.saleTurnover - this.editWorkflowUnit.saleCost;
     }
 
+
     async save(edit: boolean) {
         let process = await this.saleService.save(this.editWorkflowUnit, this.editProcess, this.dtInstance, this.dropCreateScope("compileScope"));
         this.getScopeByKey("childRowScope" + process.id).workflowUnit = process.sale;
         this.getScopeByKey("childRowScope" + process.id).process = process;
         this.getScopeByKey("childRowScope" + process.id).$apply();
+
     }
 
     deleteRow(process: Process) {

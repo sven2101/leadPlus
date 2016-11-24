@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import dash.common.AbstractWorkflow_;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Process_;
+import dash.processmanagement.domain.Processor_;
 import dash.statusmanagement.domain.Status;
 import dash.usermanagement.domain.User_;
 
@@ -23,6 +24,15 @@ public class ProcessSpecs {
 				return builder.equal(root.join(Process_.processor).get(User_.id), id);
 			}
 
+		};
+	}
+
+	public static Specification<Process> hasProcessorInDistinct(final long id) {
+		return new Specification<Process>() {
+			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+				query.distinct(true);
+				return builder.equal(root.join(Process_.formerProcessors).join(Processor_.user).get(User_.id), id);
+			}
 		};
 	}
 
@@ -41,7 +51,7 @@ public class ProcessSpecs {
 			}
 		};
 	}
-	
+
 	public static Specification<Process> isBetweenTimestamp(final Calendar from, final Calendar until) {
 		return new Specification<Process>() {
 			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
