@@ -99,7 +99,7 @@ public class ProductResource {
 			@ApiParam(required = true) @PathVariable @Valid final Long id) throws NotFoundException {
 		if (Strings.isNullOrEmpty(source))
 			source = AbstractStatisticService.ALL_STATISTIC_KEY;
-		ProductStatistic productStatistic = null;
+		ProductStatistic productStatistic = new ProductStatistic();
 		Map<String, List<ProductStatistic>> sourceMap = productStatisticService.getTopProductStatstic(workflow,
 				dateRange, id);
 		if (!sourceMap.containsKey(source))

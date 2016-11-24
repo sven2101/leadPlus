@@ -97,7 +97,7 @@ public class UserStatisticResource {
 			source = AbstractStatisticService.ALL_STATISTIC_KEY;
 		Map<String, UserStatistic> sourceMap = userStatisticService.getUserStatisticByIdAndDateRange(dateRange, id);
 		if (!sourceMap.containsKey(source))
-			return null;
+			return new UserStatistic();
 		return sourceMap.get(source);
 	}
 

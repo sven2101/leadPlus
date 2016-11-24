@@ -27,7 +27,7 @@ public class ScheduledTasks {
 	@Autowired
 	private ITenantService tenantService;
 
-	@Scheduled(cron = "0 0/1 5-23 * * MON-FRI")
+	@Scheduled(cron = "0 0/10 5-23 * * MON-FRI")
 	private void generateStatisticsSchedulerMoToFr() {
 		logger.info("Do cronejob for MON-FRI");
 		generateStatistics();
