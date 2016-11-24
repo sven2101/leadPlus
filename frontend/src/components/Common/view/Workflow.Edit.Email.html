@@ -41,7 +41,7 @@
 				data-provides="fileinput">
 				<span class="btn btn-default btn-file"><span class="fileinput-new">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }}</span>
 				<span class="fileinput-exists">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }} </span>
-				<input name="attachement" multiple required type="file" name="..." ng-files="setAttachments($files);" accept="application/pdf,image/gif,image/jpeg">
+				<input name="attachement" multiple required type="file" name="..." ng-files="setAttachments($files);" accept="application/pdf,image/*,.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.csv,application/vnd.ms-excel,text/plain,application/vnd.ms-powerpoint, application/msword,.pps,.xlsx,.xls,.doc,.docx,.ppt,.pptx,.txt,.zip,.rar">
 				</span>
 
 			</div>
@@ -51,8 +51,8 @@
 			</div>
 			<br/>
 			<div ng-class="{ 'has-error' : form.fileSize.$invalid&&!disabled}">
-				<input hidden disabled ng-max="20*1024*2014" type="number" name="fileSize" ng-model="fileSize">
-				<p ng-if="form.fileSize.$error.max" class="help-block" style="clear: left;">max 20 MB</p>
+				<input hidden disabled ng-max="10*1024*1024" type="number" name="fileSize" ng-model="fileSize">
+				<p ng-if="form.fileSize.$error.max" class="help-block" style="clear: left;">max 10 MB</p>
 			</div>
 		</div>
 		<div style="clear: left;" class="form-group" ng-class="{ 'has-error' : form.message.$invalid}">
