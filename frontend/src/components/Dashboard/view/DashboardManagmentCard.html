@@ -25,7 +25,6 @@
                 <div ng-if="process.processor!=null" style="height:48px;">
                     <img itle="{{(process.processor.firstname+' '+process.processor.lastname)}}" style="width: 48px; height:48px;border-radius: 10%;"
                         pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
-
                 </div>
                 <div ng-if="process.processor==null" style="height:48px;border-radius: 10%;border-style: dashed;  border-width: 1px; border-color: grey;">
                     <a ng-if="!disabled" style="margin-left:15px;margin-top:15px;" class="btn btn-xs" ng-click="pin(process)">
@@ -50,11 +49,13 @@
                 <div style="height:54px;" ng-if="(editWorkflowUnit.customer.company==null||editWorkflowUnit.customer.company=='')">
                     {{editWorkflowUnit.customer.firstname}} {{editWorkflowUnit.customer.lastname}}
                 </div>
-                <span><i class="fa fa-clock-o"></i> {{toLocalDate(editWorkflowUnit.timestamp)}}</span>
-                <span ng-if="process.status== 'FOLLOWUP'" ng-click="openFollowUpModal(process)">
-                    <i  title="{{'OFFER_FOLLOW_UP'| translate }}" class="fa fa-eye" aria-hidden="true" ></i>
-                    {{process.followUpAmount}}
-                </span>
+                <span><small><i class="fa fa-clock-o"></i> {{toLocalDate(editWorkflowUnit.timestamp)}}</small></span>
+                <small class="pull-right">
+                    <span ng-if="process.status== 'FOLLOWUP'" ng-click="openFollowUpModal(process)">
+                        <i  title="{{'OFFER_FOLLOW_UP'| translate }}" class="fa fa-eye" aria-hidden="true" ></i>
+                        {{process.followUpAmount}}
+                    </span>
+                </small>
             </div>
         </div>
     </div>

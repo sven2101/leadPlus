@@ -192,7 +192,7 @@ class DashboardController {
     }
 
     getClassToDrag(process: Process, element: string): string {
-        return element + (this.hasRightToDrag(process) ? "-element draggable drag-item" : "-element not-sortable draggable drag-item");
+        return element + (this.hasRightToDrag(process) ? "-element draggable dragItem" : "-element not-sortable draggable dragItem");
     }
 
 }

@@ -37,7 +37,7 @@ class DashboardService {
     openLeads: Array<Process> = [];
     inContacts: Array<Process> = [];
     openOffers: Array<Process> = [];
-    preSales: Array<Process> = [new Process()];
+    preSales: Array<Process> = [];
     closedSales: Array<Process> = [];
 
     openLeadsValue: number = 0;
