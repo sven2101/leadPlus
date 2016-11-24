@@ -23,10 +23,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
-import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dash.common.CommonMethods;
 import dash.exceptions.NotFoundException;
 import dash.processmanagement.business.ProcessService;
 import dash.processmanagement.domain.Activity;
@@ -70,7 +70,7 @@ public class UserStatisticService extends AbstractStatisticService {
 			if (process.getFormerProcessors().size() == 0)
 				continue;
 			addToMapKey(ALL_STATISTIC_KEY, process, userMap);
-			if (process.getSource() != null && !Strings.isNullOrEmpty(process.getSource().getName())) {
+			if (process.getSource() != null && !CommonMethods.isNullOrEmpty(process.getSource().getName())) {
 				addToMapKey(process.getSource().getName(), process, userMap);
 			}
 
@@ -149,7 +149,7 @@ public class UserStatisticService extends AbstractStatisticService {
 			return userMap;
 		for (Process process : processes) {
 			addMapToKeySingleUserStatistic(ALL_STATISTIC_KEY, process, user, userMap);
-			if (process.getSource() != null && !Strings.isNullOrEmpty(process.getSource().getName())) {
+			if (process.getSource() != null && !CommonMethods.isNullOrEmpty(process.getSource().getName())) {
 				addMapToKeySingleUserStatistic(process.getSource().getName(), process, user, userMap);
 			}
 		}

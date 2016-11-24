@@ -22,7 +22,6 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
-import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import dash.common.ByteSearializer;
+import dash.common.CommonMethods;
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.DateRange;
@@ -65,7 +65,7 @@ public class UserStatisticResource {
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
 			@ApiParam(required = true) @PathVariable @Valid String source)
 			throws NotFoundException, ClassNotFoundException, IOException {
-		if (Strings.isNullOrEmpty(source))
+		if (CommonMethods.isNullOrEmpty(source))
 			source = AbstractStatisticService.ALL_STATISTIC_KEY;
 
 		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
@@ -93,7 +93,7 @@ public class UserStatisticResource {
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
 			@ApiParam(required = true) @PathVariable @Valid String source,
 			@ApiParam(required = true) @PathVariable @Valid final Long id) throws NotFoundException {
-		if (Strings.isNullOrEmpty(source))
+		if (CommonMethods.isNullOrEmpty(source))
 			source = AbstractStatisticService.ALL_STATISTIC_KEY;
 		Map<String, UserStatistic> sourceMap = userStatisticService.getUserStatisticByIdAndDateRange(dateRange, id);
 		if (!sourceMap.containsKey(source))
