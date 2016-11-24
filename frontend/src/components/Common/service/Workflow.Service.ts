@@ -36,7 +36,9 @@ const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [CommentResourceId, ProcessResourceId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId, UserResourceId, TemplateServiceId];
+    private $inject = [CommentResourceId, ProcessResourceId, toasterId, $rootScopeId,
+        $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId,
+        UserResourceId, TemplateServiceId, NotificationServiceId, FileServiceId];
 
     commentResource;
     processResource;
@@ -53,7 +55,7 @@ class WorkflowService {
     uibModal;
     users: Array<User> = [];
 
-    constructor(CommentResource, ProcessResource, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService) {
+    constructor(CommentResource, ProcessResource, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService, private NotificationService, private FileService) {
         this.commentResource = CommentResource.resource;
         this.processResource = ProcessResource.resource;
         this.userResource = UserResource.resource;
@@ -187,7 +189,7 @@ class WorkflowService {
     }
 
 
-    startOfferTransformation(process: Process): IPromise<boolean> {
+    startOfferTransformation(process: Process): IPromise<Process> {
         let defer = this.$q.defer();
         let self = this;
         process.offer = {
@@ -223,7 +225,7 @@ class WorkflowService {
         }).result.then(function (result) {
             defer.resolve(result);
         }, function () {
-            defer.resolve(false);
+            defer.resolve(undefined);
         });
         return defer.promise;
     }
@@ -268,67 +270,38 @@ class WorkflowService {
         }).result.then(function (result) {
             defer.resolve(result);
         }, function () {
-            defer.resolve(false);
+            defer.resolve(undefined);
         });
         return defer.promise;
     }
 
-    addLeadToOffer(process: Process): IPromise<Process> {
-        let defer = this.$q.defer();
-        let self = this;
-        this.processResource.createOffer({ id: process.id }, process.offer).$promise.then(function (resultOffer: Offer) {
-
-            self.processResource.setStatus({ id: process.id }, Status.OFFER).$promise.then(function (resultProcess: Process) {
-                self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
-                self.rootScope.leadsCount -= 1;
-                self.rootScope.offersCount += 1;
-                process.offer = resultOffer;
-                process.status = resultProcess.status;
-                if (resultProcess.processor === null) {
-                    self.processResource.setProcessor({ id: resultProcess.id }, self.rootScope.user.id).$promise.then(function (resultUser: User) {
-                        process.processor = resultUser;
-                        defer.resolve(process);
-                        self.rootScope.$broadcast("onTodosChange");
-                    }, function (resultUser: User) {
-
-                    });
-                }
-                else {
-                    self.rootScope.$broadcast("onTodosChange");
-                    defer.resolve(process);
-                }
-            }, function () {
-                defer.reject(process);
-            });
-        }, function () {
-            defer.reject(process);
-        });
-        return defer.promise;
+    async addLeadToOffer(tempProcess: Process): Promise<Process> {
+        tempProcess.formerProcessors = tempProcess.formerProcessors ? tempProcess.formerProcessors : [];
+        if (!this.checkForDupsInFormerProcessors(tempProcess.formerProcessors, this.rootScope.user, Activity.OFFER)) {
+            tempProcess.formerProcessors.push(new Processor(this.rootScope.user, Activity.OFFER));
+        }
+        tempProcess.status = Status.OFFER;
+        tempProcess.processor = this.rootScope.user;
+        let process = await this.processResource.save(tempProcess);
+        this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
+        this.rootScope.leadsCount -= 1;
+        this.rootScope.offersCount += 1;
+        this.rootScope.$broadcast("onTodosChange");
+        return process;
     }
 
-    addOfferToSale(process: Process): IPromise<Process> {
-        let defer = this.$q.defer();
-        let self = this;
-        this.processResource.createSale({ id: process.id }, process.sale).$promise.then(function (resultSale: Sale) {
-            self.processResource.setStatus({ id: process.id }, Status.SALE).$promise.then(function (resultProcess: Process) {
-                self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
-                self.rootScope.offersCount -= 1;
-                process.sale = resultSale;
-                process.status = resultProcess.status;
-                self.processResource.setProcessor({ id: resultProcess.id }, self.rootScope.user.id).$promise.then(function () {
-                    process.processor = self.rootScope.user;
-                    self.rootScope.$broadcast("onTodosChange");
-                    defer.resolve(process);
-                });
-
-
-            }, function () {
-                defer.reject(process);
-            });
-        }, function () {
-            defer.reject(process);
-        });
-        return defer.promise;
+    async addOfferToSale(tempProcess: Process): Promise<Process> {
+        tempProcess.formerProcessors = tempProcess.formerProcessors ? tempProcess.formerProcessors : [];
+        if (!this.checkForDupsInFormerProcessors(tempProcess.formerProcessors, this.rootScope.user, Activity.SALE)) {
+            tempProcess.formerProcessors.push(new Processor(this.rootScope.user, Activity.SALE));
+        }
+        tempProcess.status = Status.SALE;
+        tempProcess.processor = this.rootScope.user;
+        let process: Process = await this.processResource.save(tempProcess);
+        this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
+        this.rootScope.offersCount -= 1;
+        this.rootScope.$broadcast("onTodosChange");
+        return process;
     }
 
     getButtons(title: string, columns: Array<number>): Array<any> {
@@ -571,17 +544,20 @@ class WorkflowService {
             }, (error) => handleError(error));
         }
     }
-    inContact(process: Process): void {
-        let self = this;
-        this.processResource.setStatus({
-            id: process.id
-        }, "INCONTACT").$promise.then(function () {
-            self.toaster.pop("success", "", self.translate
-                .instant("COMMON_TOAST_SUCCESS_INCONTACT"));
-            process.status = "INCONTACT";
-            self.rootScope.$broadcast("updateRow", process);
-            self.rootScope.$broadcast("onTodosChange");
-        }, (error) => handleError(error));
+    async inContact(process: Process): Promise<Process> {
+        process.status = "INCONTACT";
+        process.processor = this.rootScope.user;
+        if (isNullOrUndefined(process.formerProcessors)) {
+            process.formerProcessors = [];
+        }
+        if (!this.checkForDupsInFormerProcessors(process.formerProcessors, this.rootScope.user, Activity.INCONTACT)) {
+            process.formerProcessors.push(new Processor(process.processor, Activity.INCONTACT));
+        }
+        let resultProcess = await this.processResource.save(process) as Process;
+        this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_INCONTACT"));
+        this.rootScope.$broadcast("onTodosChange");
+        this.rootScope.$broadcast("updateRow", process);
+        return resultProcess;
     }
 
     setProcessStatus(process: Process, status: Status): IPromise<Process> {
@@ -620,6 +596,13 @@ class WorkflowService {
             });
         }
     }
+    checkForDupsInFormerProcessors(formerProcessors: Array<Processor>, user: User, activity: Activity): boolean {
+        if (isNullOrUndefined(formerProcessors)) {
+            return false;
+        }
+        return formerProcessors.filter(fp => fp.user.id === user.id && fp.activity === activity).length > 0;
+    }
+
 
 
 

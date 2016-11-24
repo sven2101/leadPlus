@@ -21,6 +21,7 @@ import static dash.Constants.PROCESS_NOT_FOUND;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_NOT_FOUND;
+import static dash.processmanagement.business.ProcessSpecs.hasProcessorInDistinct;
 import static dash.processmanagement.business.ProcessSpecs.isBetweenTimestamp;
 import static dash.processmanagement.business.ProcessSpecs.isClosed;
 import static dash.processmanagement.business.ProcessSpecs.isDeleted;
@@ -51,12 +52,14 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.business.ILeadService;
 import dash.leadmanagement.domain.Lead;
+import dash.notificationmanagement.domain.Attachment;
 import dash.notificationmanagement.domain.Notification;
 import dash.offermanagement.business.IOfferService;
 import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Process_;
+import dash.processmanagement.domain.Processor;
 import dash.productmanagement.domain.OrderPosition;
 import dash.salemanagement.business.ISaleService;
 import dash.salemanagement.domain.Sale;
@@ -307,11 +310,21 @@ public class ProcessService implements IProcessService {
 				temp.setWorkflow(process.getSale());
 			}
 		}
+		if (process.getFormerProcessors() != null) {
+			for (Processor temp : process.getFormerProcessors()) {
+				temp.setProcess(process);
+			}
+		}
 	}
 
 	private void setNotifications(Process process) {
 		if (process.getNotifications() != null) {
 			for (Notification notification : process.getNotifications()) {
+				if (process.getNotifications() != null) {
+					for (Attachment attachment : notification.getAttachments()) {
+						attachment.setNotification(notification);
+					}
+				}
 				notification.setProcess(process);
 			}
 		}
@@ -333,8 +346,8 @@ public class ProcessService implements IProcessService {
 
 	@Override
 	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId, Calendar from, Calendar until) {
-		return processRepository
-				.findAll(where(isProcessor(processorId)).and(isBetweenTimestamp(from, until, Process_.lead)));
+		return processRepository.findAll(
+				where(hasProcessorInDistinct(processorId)).and(isBetweenTimestamp(from, until, Process_.lead)));
 	}
 
 	@Override
@@ -343,5 +356,4 @@ public class ProcessService implements IProcessService {
 		return processRepository
 				.findAll(where(isBetweenTimestamp(from, until, abstractWorkflowAttribute)).and(isDeleted(false)));
 	}
-
 }

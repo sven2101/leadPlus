@@ -16,6 +16,7 @@ class AbstractWorkflow {
     fileService: FileService;
 
     currentWizard: number = 1;
+    currentFormerProcessors: Array<Processor> = [];
     sce;
     actionButtonConfig: { [key: number]: any } = {};
     scopes: { [key: string]: any } = {};

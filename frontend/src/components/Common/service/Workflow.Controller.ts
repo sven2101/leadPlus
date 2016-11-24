@@ -54,7 +54,7 @@ class WorkflowController extends AbstractWorkflow {
 
     editProcess: Process;
     edit: boolean;
-    editEmail: boolean;
+    editEmail: boolean = true;
     editable: boolean = true;
 
     leadService: LeadService;
@@ -74,12 +74,14 @@ class WorkflowController extends AbstractWorkflow {
 
     window;
 
-    constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService,
+    constructor(process: Process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService,
         WorkflowService, LeadService, OfferService, SaleService, DashboardService, FileService, $rootScope, $sce, $window, $scope) {
         super(WorkflowService, $sce, FileService, $scope);
+
         let self = this;
         this.rootScope = $rootScope;
         this.scope = $scope;
+
         this.type = type;
         this.uibModalInstance = $uibModalInstance;
         this.notificationService = NotificationService;
@@ -130,16 +132,19 @@ class WorkflowController extends AbstractWorkflow {
             this.customerSelected = this.editProcess.offer.customer.id > 0;
             this.selectedCustomer = this.editProcess.offer.customer;
             this.editWorkflowUnit = this.editProcess.offer;
+            this.currentNotification = new Notification();
+            this.currentNotification.recipients = this.editWorkflowUnit.customer.email;
         } else if (this.type === "sale") {
             this.customerSelected = this.editProcess.sale.customer.id > 0;
             this.selectedCustomer = this.editProcess.sale.customer;
             this.editWorkflowUnit = this.editProcess.sale;
             this.wizardOnClick(6);
+            this.editEmail = false;
         }
     }
 
-    close(result: boolean) {
-        this.uibModalInstance.close(result);
+    close(result: boolean, process: Process) {
+        this.uibModalInstance.close(process);
         if (!result && (this.editProcess.status === Status.OPEN || this.editProcess.status === Status.INCONTACT)) {
             this.editProcess.offer = undefined;
         } else if (!result && (this.editProcess.status === Status.OFFER || this.editProcess.status === Status.FOLLOWUP)) {
@@ -196,60 +201,54 @@ class WorkflowController extends AbstractWorkflow {
                 }
             });
         }
+
     }
 
-    send() {
+    async send() {
         let self = this;
-
         let process = this.editProcess;
-        this.currentNotification.notificationType = NotificationType.OFFER;
-        let notification = this.currentNotification;
-        this.notificationService.sendNotification(notification).then(() => {
-            self.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
-                self.notificationService.saveFileUpload(notification.attachment).then((resultFileUpload) => {
-                    notification.attachment = resultFileUpload;
-                    if (isNullOrUndefined(process.notifications)) {
-                        process.notifications = [];
-                    }
-                    process.notifications.push(notification);
-                    self.workflowService.saveProcess(process).then((resultProcess) => {
-                        self.rootScope.$broadcast("deleteRow", process);
-                        self.close(true);
-                    });
-                });
+        process.notifications = process.notifications ? process.notifications : [];
 
-            });
-        });
+        let notification: Notification = deepCopy(this.currentNotification);
+        notification.attachments = notification.attachments ? notification.attachments : [];
+        notification.notificationType = NotificationType.OFFER;
+        notification.id = undefined;
+        await this.notificationService.sendNotification(notification);
+        await this.workflowService.addLeadToOffer(process);
+        let promises: Array<Promise<void>> = notification.attachments ?
+            notification.attachments
+                .filter(a => isNullOrUndefined(a.id))
+                .map(a => self.fileService.saveAttachment(a)) : [];
+        for (let p of promises) {
+            await p;
+        }
+        notification.attachments.forEach(a => a.id = undefined);
+        process.notifications.push(notification);
+        let resultProcess = await this.workflowService.saveProcess(process);
+        self.rootScope.$broadcast("deleteRow", process);
+        self.close(true, resultProcess);
     }
 
     save() {
+        let process = this.editProcess;
         if (this.type === "offer") {
             let self = this;
+
             let process = this.editProcess;
-            this.workflowService.addLeadToOffer(process).then(() => {
-                self.rootScope.$broadcast("deleteRow", process);
-                self.close(true);
+            this.workflowService.addLeadToOffer(process).then((resultProcess) => {
+                self.rootScope.$broadcast("deleteRow", resultProcess);
+                self.close(true, resultProcess);
             });
         } else if (this.type === "sale") {
             let process = this.editProcess;
             let self = this;
-            this.workflowService.addOfferToSale(process).then(() => {
-                self.rootScope.$broadcast("deleteRow", process);
-                self.close(true);
+            this.workflowService.addOfferToSale(process).then((resultProcess) => {
+                self.rootScope.$broadcast("deleteRow", resultProcess);
+                self.close(true, resultProcess);
             });
         }
     }
 
-    getTheFiles($files) {
-        let self = this;
-        this.notificationService.setAttachmentToNotification($files, this.currentNotification).then(() => {
-            try {
-                self.scope.$digest();
-            } catch (error) {
-                handleError(error);
-            }
-        });
-    }
 
     setFormerNotification(notificationId: number) {
         if (Number(notificationId) === -1) {

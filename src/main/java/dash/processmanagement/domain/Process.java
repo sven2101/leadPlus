@@ -98,12 +98,15 @@ public class Process {
 	@JsonProperty("notifications")
 	@Where(clause = "deleted <> '1'")
 	private List<Notification> notifications;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "source_fk", nullable = true)
 	@Where(clause = "deleted <> '1'")
 	private Source source;
 
+	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
+	@Where(clause = "deleted <> '1'")
+	private List<Processor> formerProcessors;
 
 	public Process(Lead lead) {
 		this.lead = lead;
@@ -208,7 +211,6 @@ public class Process {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
 
 	public Source getSource() {
 		return source;
@@ -218,12 +220,21 @@ public class Process {
 		this.source = source;
 	}
 
+	public List<Processor> getFormerProcessors() {
+		return formerProcessors;
+	}
+
+	public void setFormerProcessors(List<Processor> formerProcessors) {
+		this.formerProcessors = formerProcessors;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
+		result = prime * result + ((formerProcessors == null) ? 0 : formerProcessors.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lead == null) ? 0 : lead.hashCode());
 		result = prime * result + ((notifications == null) ? 0 : notifications.hashCode());
@@ -250,6 +261,11 @@ public class Process {
 		} else if (!comments.equals(other.comments))
 			return false;
 		if (deleted != other.deleted)
+			return false;
+		if (formerProcessors == null) {
+			if (other.formerProcessors != null)
+				return false;
+		} else if (!formerProcessors.equals(other.formerProcessors))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -297,5 +313,5 @@ public class Process {
 				+ ", comments=" + comments + ", status=" + status + ", processor=" + processor + ", notifications="
 				+ notifications + ", source=" + source + "]";
 	}
-	
+
 }

@@ -99,6 +99,7 @@ function config($translateProvider) {
             // Template
             EMAIL_TEMPLATE: "Email Vorlagen",
             EMAIL_TEMPLATE_SELECT: "Keine Vorlage",
+            EMAIL_RECIPIENT_COMMA: "(mit Komma getrennt)",
             EMAIL_RECIPIENT: "Empfänger",
             EMAIL_SUBJECT: "Betreff",
             EMAIL_ATTACHMENT: "Anhang",
@@ -210,6 +211,7 @@ function config($translateProvider) {
             COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD: "Angebot wurde erfolgreich auf eine Anfrage zurückgesetzt",
             COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD_ERROR: "Angebot konnte nicht auf eine Anfrage zurückgesetzt werden",
             COMMON_STATUS_OPEN: "Offen",
+            COMMON_STATUS_LEAD: "Anfrage",
             COMMON_STATUS_INCONTACT: "In Kontakt",
             COMMON_STATUS_OFFER: "Angebot",
             COMMON_STATUS_FOLLOW_UP: "Follow up",
@@ -263,6 +265,7 @@ function config($translateProvider) {
 
             // Define all offer elements
             OFFER_OFFERS: "Angebote",
+            OFFER_OFFER: "Angebot",
             OFFER_MANAGE_OFFERS: "Angebote verwalten",
             OFFER_ADD_OFFER: "Neues Angebot",
             OFFER_ADD_OFFER_MODAL: "Angebot erstellen",
@@ -373,8 +376,10 @@ function config($translateProvider) {
             STATISTIC_INVOLVED_IN_PROCESSES: "An Prozessen beteiligt",
             STATISTIC_WORKED_ON_LEADS: "Bearbeitete Anfragen",
             STATISTIC_WORKED_ON_OFFERS: "Bearbeitete Angebote",
-            STATISTIC_COMPLETED_SALES: "Abgeschlossene Verkäufe",
+            STATISTIC_WORKED_ON_SALES: "Bearbeitete Verkäufe",
+            STATISTIC_COMPLETED_PROCESSES: "Abgeschlossene Prozesse",
             STATISTIC_PRODUCT_SALES: "Verkaufte Produkte",
+            STATISTIC_EARNING_RATE: "Erfolgsrate - Prozessbeteilgung",
 
             // Define detail statistic
             DETAIL_STATISTIC_PRODUCTSTATISTIC: "Produktstatistik",
@@ -387,7 +392,12 @@ function config($translateProvider) {
             DETAIL_STATISTIC_SALES_PRICE: "Verkaufspreis",
             DETAIL_STATISTIC_ADVERTISED_PRICE: "Angezeigter Preis",
             DETAIL_STATISTIC_TOOLTIP: "<span>Das Produkt {{productname}} wurde <b>{{count}}x</b> in {{workflow}} verwendet.</span>",
-            DETAIL_STATISTIC_USER_TOOLTIP: "<span>Der Benutzer {{username}} hat <b>{{count}}</b> {{workflow}} bearbeitet.</span>",
+            DETAIL_STATISTIC_USER_TOOLTIP: "<span>{{username}} hat <b>{{count}}</b> {{workflow}} bearbeitet.</span>",
+            DETAIL_STATISTIC_SUCCESS_INDICATOR: "Erfolgskennzahlen",
+            PROFIT_PER_LEAD: "Gewinn pro Anfrage",
+            PROFIT_PER_OFFER: "Gewinn pro Angebot",
+            TURNOVER_PER_LEAD: "Umsatz pro Anfrage",
+            TURNOVER_PER_OFFER: "Umsatz pro Angebot",
 
             // Define all week and month names
             SUNDAY: "Sonntag",
@@ -475,7 +485,15 @@ function config($translateProvider) {
             TOOLTIP_SIGN_UP: "Registrieren Sie sich jetzt unter ihrer spezifischen Subdomain um vollen Zugriff auf die Anwendung zu erhalten. Nach der erfolgreichen Registrierung, muss ihr Anwendungs-Administrator ihren Account freischalten.",
             TOOLTIP_TODO: "Über ToDo kannst Du all die Prozesse im Auge behalten, an denen Du beteiligt bist.",
             TOOLTIP_PROFIL_PICTURE: "Wähle dein Profilbild und speichere es. Danach präsentiert es Dich innerhalb der Anwendung.",
-            TOOLTIP_CUSTOMER_LOOKUP: "Ab einer Eingabe von 3 Zeichen werden dir relevante Kunden angezeigt.\nDu kannst nach Vorname, Nachname, Firma, E-Mail und Kundennummer suchen."
+            TOOLTIP_CUSTOMER_LOOKUP: "Ab einer Eingabe von 3 Zeichen werden dir relevante Kunden angezeigt.\nDu kannst nach Vorname, Nachname, Firma, E-Mail und Kundennummer suchen.",
+
+            // former Processor 
+            FORMER_PROCESSOR: "Ehemalige Bearbeiter",
+            FORMER_PROCESSOR_NAME: "Bearbeiter",
+            FORMER_PROCESSOR_ACTIVITY: "Tätigkeit",
+            FORMER_PROCESSOR_TIMESTAMP: "Datum",
+            FORMER_PROCESSOR_SELECT_ACTIVITY: "Tätigkeit auswählen",
+
 
         })
         .translations(Language[Language.EN], {
@@ -557,6 +575,7 @@ function config($translateProvider) {
             // Template
             EMAIL_TEMPLATE: "Email templates",
             EMAIL_TEMPLATE_SELECT: "No template",
+            EMAIL_RECIPIENT_COMMA: "(seperated by comma)",
             EMAIL_RECIPIENT: "Recipient",
             EMAIL_SUBJECT: "Subject",
             EMAIL_ATTACHMENT: "Attachment",
@@ -668,6 +687,7 @@ function config($translateProvider) {
             COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD: "Succesfull rollback of Offer to Lead",
             COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD_ERROR: "Unsuccesfull rollback of Offer to Lead",
             COMMON_STATUS_OPEN: "Open",
+            COMMON_STATUS_LEAD: "Lead",
             COMMON_STATUS_INCONTACT: "In contact",
             COMMON_STATUS_OFFER: "Offer",
             COMMON_STATUS_FOLLOW_UP: "Follow up",
@@ -724,6 +744,7 @@ function config($translateProvider) {
 
             // Define all offer elements
             OFFER_OFFERS: "Offers",
+            OFFER_OFFER: "Offer",
             OFFER_MANAGE_OFFERS: "Manage offers",
             OFFER_ADD_OFFER: "New offer",
             OFFER_ADD_OFFER_MODAL: "Create offer",
@@ -830,9 +851,11 @@ function config($translateProvider) {
             STATISTIC_TOP_SALESMAN: "Top salesmen",
             STATISTIC_INVOLVED_IN_PROCESSES: "Involved in processes",
             STATISTIC_WORKED_ON_LEADS: "Worked on leads",
-            STATISTIC_WORKED_ON_OFFERS: "worked on offers",
-            STATISTIC_COMPLETED_SALES: "Completed sales",
+            STATISTIC_WORKED_ON_OFFERS: "Worked on offers",
+            STATISTIC_WORKED_ON_SALES: "Worked on sales",
+            STATISTIC_COMPLETED_PROCESSES: "Completed Processes",
             STATISTIC_PRODUCT_SALES: "Sold products",
+            STATISTIC_EARNING_RATE: "Successrate - process involvement",
 
             // Define detail statistic
             DETAIL_STATISTIC_PRODUCTSTATISTIC: "Productstatistic",
@@ -845,8 +868,12 @@ function config($translateProvider) {
             DETAIL_STATISTIC_SALES_PRICE: "Sales price",
             DETAIL_STATISTIC_ADVERTISED_PRICE: "Advertised Price",
             DETAIL_STATISTIC_TOOLTIP: "<span>The product {{productname}} is used <b>{{count}}x</b> in {{workflow}}.</span>",
-            DETAIL_STATISTIC_USER_TOOLTIP: "<span>The user {{username}} worked on <b>{{count}}</b> {{workflow}}.</span>",
-
+            DETAIL_STATISTIC_USER_TOOLTIP: "<span>{{username}} worked on <b>{{count}}</b> {{workflow}}.</span>",
+            DETAIL_STATISTIC_SUCCESS_INDICATOR: "Success key data",
+            PROFIT_PER_LEAD: "Profit per lead",
+            PROFIT_PER_OFFER: "Profit per offer",
+            TURNOVER_PER_LEAD: "Turnover per lead",
+            TURNOVER_PER_OFFER: "Turnover per offer",
 
             // Define all week and month names
             SUNDAY: "Sunday",
@@ -934,7 +961,14 @@ function config($translateProvider) {
             TOOLTIP_SIGN_UP: "Sign up now under your unique tenant domain section to get full acces<br>s. After Sign up your administrator needs to enable your account.",
             TOOLTIP_TODO: "Via ToDo you can keep all your processes in mind.",
             TOOLTIP_PROFIL_PICTURE: "Select your Profil Picture and press save to keep it. Afterwards it will present you within this Application.",
-            TOOLTIP_CUSTOMER_LOOKUP: "From 3 characters the relevant customers will appear.\nYou can search for firstname, lastname, company, e-mail and customernumber."
+            TOOLTIP_CUSTOMER_LOOKUP: "From 3 characters the relevant customers will appear.\nYou can search for firstname, lastname, company, e-mail and customernumber.",
+
+            // former Processor 
+            FORMER_PROCESSOR: "Former Processors",
+            FORMER_PROCESSOR_NAME: "Processor",
+            FORMER_PROCESSOR_ACTIVITY: "Activity",
+            FORMER_PROCESSOR_TIMESTAMP: "Date",
+            FORMER_PROCESSOR_SELECT_ACTIVITY: "Select activity",
 
         });
 

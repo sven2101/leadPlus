@@ -1,5 +1,6 @@
 package dash.processmanagement.domain;
 
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -23,5 +24,7 @@ public class Process_ {
 	public static volatile SingularAttribute<Process, Status> status;
 
 	public static volatile SingularAttribute<Process, User> processor;
+
+	public static volatile ListAttribute<Process, Processor> formerProcessors;
 
 }

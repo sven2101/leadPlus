@@ -70,7 +70,7 @@ public interface IProcessService {
 
 	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId, Calendar from, Calendar until);
 
-	List<Process> getProcessesBetweenTimestamp(Calendar from, Calendar until,
+	public List<Process> getProcessesBetweenTimestamp(Calendar from, Calendar until,
 			SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute);
 
 }

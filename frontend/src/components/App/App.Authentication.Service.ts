@@ -67,6 +67,7 @@ class AuthService {
             this.http.get("user").then(function (response) {
                 let data = response.data;
                 if (data) {
+
                     self.rootScope.user = {
                         id: data.id,
                         role: data.role,
