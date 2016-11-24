@@ -33,15 +33,15 @@
                 <div class="ibox-content">
                     <ul class="stat-list m-t-lg">
                         <li>
-                            <h2 class="no-margins">{{statisticCtrl.getSaleAmount()}}/{{statisticCtrl.getLeadAmount()}}</h2>
-                            <small>{{ 'STATISTIC_SALES_OF_LEADS' | translate }}</small>
+                            <h2 class="no-margins">{{statisticCtrl.getLeadConversionRate() | number:2}}%</h2>
+                            <small>{{ 'STATISTIC_SALES_OF_LEADS' | translate }} ({{statisticCtrl.getSaleAmount()}}/{{statisticCtrl.getLeadAmount()}})</small>
                             <div class="progress progress-mini">
                                 <div ng-style="{'width':statisticCtrl.getLeadConversionRate()+'%'}" class="progress-bar progress-bar-danger"></div>
                             </div>
                         </li>
                         <li>
-                            <h2 class="no-margins">{{statisticCtrl.getSaleAmount()}}/{{statisticCtrl.getOfferAmount()}}</h2>
-                            <small>{{ 'STATISTIC_SALES_OF_OFFERS' | translate }}</small>
+                            <h2 class="no-margins">{{statisticCtrl.getOfferConversionRate() | number:2}}%</h2>
+                            <small>{{ 'STATISTIC_SALES_OF_OFFERS' | translate }} ({{statisticCtrl.getSaleAmount()}}/{{statisticCtrl.getOfferAmount()}})</small>
                             <div class="progress progress-mini">
                                 <div ng-style="{'width':statisticCtrl.getOfferConversionRate()+'%'}" class="progress-bar progress-bar-warning"></div>
                             </div>
@@ -69,19 +69,6 @@
                 </div>
                 <div class="ibox-content">
                     <h1 class="no-margins">{{statisticCtrl.getProfitPerSale() | currency:'\u20AC'}}</h1>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <span class="label label-success pull-right">{{ statisticCtrl.dateRange | translate }}</span>
-                    <h5>{{ 'STATISTIC_CONVERSIONRATE' | translate }}</h5>
-                </div>
-                <div class="ibox-content">
-                    <h1 class="no-margins">{{statisticCtrl.getLeadConversionRate() | number:2}}%</h1>
                 </div>
             </div>
         </div>

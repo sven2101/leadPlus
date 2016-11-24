@@ -298,7 +298,8 @@ class StatisticService {
 
     pushConversionRateSplineChartByModel(model: AbstractStatisticModel, firstAmount: Array<number>, secondAmount: Array<number>, name: string, color: string) {
         let conversion: Array<number> = new Array<number>();
-        for (let counter of firstAmount) {
+        let counter: number = 0;
+        for (let element of firstAmount) {
             let first = firstAmount[counter];
             let second = secondAmount[counter];
             if (angular.isNumber(second) && angular.isNumber(first) && second !== 0) {
@@ -306,6 +307,7 @@ class StatisticService {
             } else {
                 conversion.push(0);
             }
+            counter++;
         }
         model.pushData(name, conversion, color);
     }
