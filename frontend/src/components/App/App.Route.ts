@@ -105,7 +105,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             })
             .when("/tenants/registration",
             {
-                templateUrl: "components/Tenant/Registration/view/Registration.html",
+                templateUrl: "components/Tenant/registration/view/Registration.html",
                 controller: "RegistrationController",
                 controllerAs: "registrationCtrl"
             })

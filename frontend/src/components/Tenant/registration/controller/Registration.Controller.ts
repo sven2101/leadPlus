@@ -30,7 +30,7 @@ class RegistrationController {
     signupService: SignupService;
     registrationService: RegistrationService;
     tenantService: TenantService;
-    loginService;
+    loginService: LoginService;
 
     credentials: Credentials;
     tenant: Tenant;
