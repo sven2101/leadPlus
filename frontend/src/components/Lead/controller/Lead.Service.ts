@@ -4,6 +4,8 @@
 /// <reference path="../../User/Model/User.Model.ts" />
 /// <reference path="../../Common/model/OrderPosition.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
+/// <reference path="../../common/model/Activity.enum.ts" />
+/// <reference path="../../common/model/Processor.Model.ts" />
 /// <reference path="../../Lead/model/Lead.Model.ts" />
 /// <reference path="../../common/service/Workflow.Service.ts" />
 /// <reference path="../../Customer/Controller/Customer.Service.ts" />
@@ -66,7 +68,8 @@ class LeadService {
         newLead.vendor = {
             name: "***REMOVED***"
         };
-        let process = {
+
+        let process: any = {
             lead: newLead,
             status: "OPEN",
             source: source
@@ -76,6 +79,7 @@ class LeadService {
             tempLead.customer.timestamp = newTimestamp();
             this.customerResource.createCustomer(tempLead.customer).$promise.then(function (customer) {
                 tempLead.customer = customer;
+                process.formerProcessors = [new Processor(self.rootScope.user, Activity.OPEN)];
                 self.processResource.save(process).$promise.then(function (result) {
                     self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
                     self.rootScope.leadsCount += 1;
@@ -85,7 +89,7 @@ class LeadService {
             });
             return defer.promise;
         }
-
+        process.formerProcessors = [new Processor(self.rootScope.user, Activity.OPEN)];
         this.processResource.save(process).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
             self.rootScope.leadsCount += 1;

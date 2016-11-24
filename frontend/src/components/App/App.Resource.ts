@@ -331,7 +331,7 @@ class FileResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/files", {}, {
-            createFileUpload: { url: "/api/rest/files", method: "POST" },
+            save: { url: "/api/rest/files", method: "POST" },
             getFileUploadById: { url: "/api/rest/files/:id", method: "GET" },
             getContentByFileUploadId: { url: "/api/rest/files/content/:id", method: "GET", responseType: "arraybuffer" }
         });

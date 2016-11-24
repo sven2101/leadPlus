@@ -56,6 +56,7 @@ class LeadController extends AbstractWorkflow {
     edit: boolean;
     editable: boolean = true;
 
+
     currentProductId = "-1";
     currentProductAmount = 1;
 
@@ -202,11 +203,14 @@ class LeadController extends AbstractWorkflow {
         this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
+
         this.editProcess = deepCopy(process);
+
         this.customerSelected = this.editProcess.lead.customer.id > 0;
         this.selectedCustomer = this.editProcess.lead.customer;
         this.editWorkflowUnit = this.editProcess.lead;
     }
+
 
     addComment(id: number, input: Array<string>, process: Process = null) {
         if (isNullOrUndefined(process)) {
@@ -221,7 +225,9 @@ class LeadController extends AbstractWorkflow {
         this.leadService.inContact(process, this.dtInstance, this.dropCreateScope("compileScope"));
     }
 
+
     async save(edit: boolean) {
+
         if (edit === true) {
             let process = await this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.dtInstance, this.dropCreateScope("compileScope"));
             this.getScopeByKey("childRowScope" + process.id).workflowUnit = process.lead;

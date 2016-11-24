@@ -17,7 +17,7 @@
                         <a href="#/settings">{{ 'SETTINGS_MENU' | translate }}</a>
                     </li>
                     <li class="active">
-                        <strong>{{UserDetailCtrl.currentUser.username}}</strong>
+                        <strong>{{UserDetailCtrl.getNameOfUser(UserDetailCtrl.currentUser)}}</strong>
                     </li>
                 </ol>
             </div>
@@ -43,6 +43,5 @@
     </div>
 </div>
 <div ng-if="UserDetailCtrl.userFound" class="wrapper wrapper-content animated fadeInRight">
-    <div userstatistic chart="UserDetailCtrl.userStatisticColumnChart" daterange="UserDetailCtrl.dateRange"
-        userobj="UserDetailCtrl.currentUser"></div>
+    <div userstatistic chart="UserDetailCtrl.userStatisticColumnChart" daterange="UserDetailCtrl.dateRange" userobj="UserDetailCtrl.currentUser"></div>
 </div>

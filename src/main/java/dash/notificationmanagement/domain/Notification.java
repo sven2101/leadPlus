@@ -13,6 +13,10 @@
  *******************************************************************************/
 package dash.notificationmanagement.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -22,6 +26,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -33,7 +38,6 @@ import org.hibernate.annotations.Where;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.common.HtmlCleaner;
-import dash.fileuploadmanagement.domain.FileUpload;
 import dash.processmanagement.domain.Process;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -51,8 +55,16 @@ public class Notification {
 
 	@NotNull
 	@Size(max = 255)
-	@Column(name = "recipient", length = 255, nullable = false)
-	private String recipient;
+	@Column(name = "recipients", length = 255, nullable = false)
+	private String recipients;
+
+	@Size(max = 255)
+	@Column(name = "recipients_cc", length = 255, nullable = false)
+	private String recipientsCC;
+
+	@Size(max = 255)
+	@Column(name = "recipients_bcc", length = 255, nullable = false)
+	private String recipientsBCC;
 
 	@NotNull
 	@Size(max = 255)
@@ -69,9 +81,9 @@ public class Notification {
 	@Column(name = "content", length = 30000, nullable = false)
 	private String content;
 
-	@ManyToOne
-	@JoinColumn(name = "attachment_fk", nullable = true)
-	private FileUpload attachment;
+	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "notification")
+	@Where(clause = "deleted <> '1'")
+	private List<Attachment> attachments;
 
 	@JsonIgnore
 	@ManyToOne
@@ -99,14 +111,6 @@ public class Notification {
 		return id;
 	}
 
-	public String getRecipient() {
-		return recipient;
-	}
-
-	public void setRecipient(String recipient) {
-		this.recipient = recipient;
-	}
-
 	public String getSubject() {
 		return subject;
 	}
@@ -123,12 +127,20 @@ public class Notification {
 		this.content = HtmlCleaner.cleanHtml(content);
 	}
 
-	public FileUpload getAttachment() {
-		return attachment;
+	public List<Attachment> getAttachments() {
+		return attachments;
 	}
 
-	public void setAttachment(FileUpload attachment) {
-		this.attachment = attachment;
+	public void setAttachments(List<Attachment> attachments) {
+		if (attachments == null) {
+			this.attachments = new ArrayList<>();
+			return;
+		}
+		this.attachments = attachments;
+	}
+
+	public void addAttachment(Attachment attachment) {
+		this.attachments.add(attachment);
 	}
 
 	public void setId(Long id) {
@@ -151,16 +163,42 @@ public class Notification {
 		this.process = process;
 	}
 
+	public String getRecipientsCC() {
+		return recipientsCC;
+	}
+
+	public void setRecipientsCC(String recipientsCC) {
+		this.recipientsCC = formatEmails(recipientsCC);
+	}
+
+	public String getRecipientsBCC() {
+		return recipientsBCC;
+	}
+
+	public void setRecipientsBCC(String recipientsBCC) {
+		this.recipientsBCC = formatEmails(recipientsBCC);
+	}
+
+	public String getRecipients() {
+		return recipients;
+	}
+
+	public void setRecipients(String recipients) {
+		this.recipients = formatEmails(recipients);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((attachment == null) ? 0 : attachment.hashCode());
+		result = prime * result + ((attachments == null) ? 0 : attachments.hashCode());
 		result = prime * result + ((content == null) ? 0 : content.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((notificationType == null) ? 0 : notificationType.hashCode());
-		result = prime * result + ((recipient == null) ? 0 : recipient.hashCode());
+		result = prime * result + ((recipients == null) ? 0 : recipients.hashCode());
+		result = prime * result + ((recipientsBCC == null) ? 0 : recipientsBCC.hashCode());
+		result = prime * result + ((recipientsCC == null) ? 0 : recipientsCC.hashCode());
 		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
 		return result;
 	}
@@ -174,10 +212,10 @@ public class Notification {
 		if (getClass() != obj.getClass())
 			return false;
 		Notification other = (Notification) obj;
-		if (attachment == null) {
-			if (other.attachment != null)
+		if (attachments == null) {
+			if (other.attachments != null)
 				return false;
-		} else if (!attachment.equals(other.attachment))
+		} else if (!attachments.equals(other.attachments))
 			return false;
 		if (content == null) {
 			if (other.content != null)
@@ -193,10 +231,20 @@ public class Notification {
 			return false;
 		if (notificationType != other.notificationType)
 			return false;
-		if (recipient == null) {
-			if (other.recipient != null)
+		if (recipients == null) {
+			if (other.recipients != null)
 				return false;
-		} else if (!recipient.equals(other.recipient))
+		} else if (!recipients.equals(other.recipients))
+			return false;
+		if (recipientsBCC == null) {
+			if (other.recipientsBCC != null)
+				return false;
+		} else if (!recipientsBCC.equals(other.recipientsBCC))
+			return false;
+		if (recipientsCC == null) {
+			if (other.recipientsCC != null)
+				return false;
+		} else if (!recipientsCC.equals(other.recipientsCC))
 			return false;
 		if (subject == null) {
 			if (other.subject != null)
@@ -208,9 +256,25 @@ public class Notification {
 
 	@Override
 	public String toString() {
-		return "Notification [id=" + id + ", recipient=" + recipient + ", subject=" + subject + ", deleted=" + deleted
-				+ ", content=" + content + ", attachment=" + attachment + ", notificationType=" + notificationType
-				+ "]";
+		return "Notification [id=" + id + ", recipientsCC=" + recipientsCC + ", recipientsBCC=" + recipientsBCC
+				+ ", recipients=" + recipients + ", subject=" + subject + ", deleted=" + deleted + ", content="
+				+ content + ", attachments=" + attachments + ", notificationType=" + notificationType + "]";
+	}
+
+	private String formatEmails(String emails) {
+		if (emails == null || "".equals(emails)) {
+			return null;
+		}
+		String result = "";
+		for (String email : emails.split(",")) {
+			if (email.trim().length() > 0) {
+				result += email.trim() + ",";
+			}
+		}
+		if ("".equals(result)) {
+			return null;
+		}
+		return result.substring(0, result.length() - 1);
 	}
 
 }

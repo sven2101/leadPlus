@@ -35,7 +35,6 @@ class FollowUpController {
     templates: Array<Template> = [];
 
     notificationService: NotificationService;
-    currentNotification: Notification;
     templateService: TemplateService;
     workflowService: WorkflowService;
     fileService: FileService;
@@ -44,12 +43,12 @@ class FollowUpController {
     translate;
     rootScope;
     scope;
-
+    currentNotification: Notification;
     emailEditForm: any;
 
     editProcess: Process;
     originProcess: Process;
-    edit: boolean;
+    editEmail: boolean = true;
 
     constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService, FileService, ProcessResource, toaster, $translate, $rootScope, $scope) {
         this.originProcess = process;
@@ -61,7 +60,7 @@ class FollowUpController {
         this.rootScope = $rootScope;
         this.scope = $scope;
         this.currentNotification = new Notification();
-        this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
+        this.currentNotification.recipients = this.editWorkflowUnit.customer.email;
         this.uibModalInstance = $uibModalInstance;
         this.notificationService = NotificationService;
         this.templateService = TemplateService;
@@ -79,54 +78,46 @@ class FollowUpController {
         this.uibModalInstance.close();
     }
 
-    generate(templateId: string, offer: Offer) {
-        this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => handleError(error));
+    async generate(templateId: string, offer: Offer) {
+        this.currentNotification = await this.templateService.generate(templateId, offer, this.currentNotification);
     }
 
-    getAllActiveTemplates() {
-        this.templateService.getAll().then((result) => this.templates = result, (error) => handleError(error));
+    async getAllActiveTemplates() {
+        this.templates = await this.templateService.getAll();
     }
 
     openAttachment(id: number) {
         this.fileService.getContentFileById(id);
     }
 
-    send() {
+    async send() {
         let self = this;
-        this.currentNotification.notificationType = NotificationType.FOLLOWUP;
-        let notification = this.currentNotification;
-        notification.id = undefined;
         let process = this.editProcess;
-        this.notificationService.sendNotification(notification).then(() => {
-            self.notificationService.saveFileUpload(notification.attachment).then((resultFileUpload) => {
+        process.notifications = process.notifications ? process.notifications : [];
+        let notification = deepCopy(this.currentNotification);
+        notification.attachments = notification.attachments ? notification.attachments : [];
+        notification.notificationType = NotificationType.FOLLOWUP;
+        notification.id = undefined;
+        await this.notificationService.sendNotification(notification);
 
-                notification.attachment = resultFileUpload;
-                if (isNullOrUndefined(process.notifications)) {
-                    process.notifications = [];
-                }
+        let promises: Array<Promise<void>> = notification.attachments ?
+            notification.attachments
+                .filter(a => isNullOrUndefined(a.id))
+                .map(a => self.fileService.saveAttachment(a)) : [];
+        for (let p of promises) {
+            await p;
+        }
 
-                process.notifications.push(notification);
-                self.workflowService.saveProcess(process).then((resultProcess) => {
-                    self.originProcess.notifications = resultProcess.notifications;
-                    self.originProcess.followUpAmount = resultProcess.followUpAmount;
-                    self.editProcess = resultProcess;
-                    self.followUp();
-                    self.close();
-                });
-            });
-        });
+        notification.attachments.forEach(a => a.id = undefined);
+        process.notifications.push(notification);
+        let resultProcess = await this.workflowService.saveProcess(process);
+        self.originProcess.notifications = resultProcess.notifications;
+        self.originProcess.followUpAmount = resultProcess.followUpAmount;
+        self.editProcess = resultProcess;
+        self.followUp();
+        self.close();
     }
 
-    getTheFiles($files) {
-        let self = this;
-        this.notificationService.setAttachmentToNotification($files, this.currentNotification).then(() => {
-            try {
-                self.scope.$digest();
-            } catch (error) {
-                handleError(error);
-            }
-        });
-    }
 
     setFormerNotification(notificationId: number) {
         if (Number(notificationId) === -1) {

@@ -56,7 +56,7 @@ class OfferController extends AbstractWorkflow {
     editProcess: Process;
     editWorkflowUnit: Offer = new Offer();
     edit: boolean;
-    editEmail: boolean = true;
+    editEmail: boolean = false;
     editable: boolean = true;
 
     templates: Array<Template> = [];
@@ -208,11 +208,11 @@ class OfferController extends AbstractWorkflow {
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = deepCopy(process);
-
         this.customerSelected = this.editProcess.offer.customer.id > 0;
         this.selectedCustomer = this.editProcess.offer.customer;
         this.editWorkflowUnit = this.editProcess.offer;
     }
+
 
     addComment(id: number, input: Array<string>, process: Process = null) {
         if (isNullOrUndefined(process)) {
@@ -222,6 +222,7 @@ class OfferController extends AbstractWorkflow {
             input[id] = "";
         });
     }
+
 
     async save(edit: boolean) {
         let process = await this.offerService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.dtInstance, this.dropCreateScope("compileScope"));

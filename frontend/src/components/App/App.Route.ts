@@ -15,7 +15,7 @@
 "use strict";
 
 angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
-    function($routeProvider, $httpProvider) {
+    function ($routeProvider, $httpProvider) {
         $routeProvider
             .when("/",
             {
@@ -105,7 +105,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             })
             .when("/tenants/registration",
             {
-                templateUrl: "components/Tenant/Registration/view/Registration.html",
+                templateUrl: "components/Tenant/registration/view/Registration.html",
                 controller: "RegistrationController",
                 controllerAs: "registrationCtrl"
             })
@@ -158,10 +158,10 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
-        $httpProvider.interceptors.push(function($q, $location, $rootScope) {
+        $httpProvider.interceptors.push(function ($q, $location, $rootScope) {
 
             return {
-                "responseError": function(rejection) {
+                "responseError": function (rejection) {
                     let defer = $q.defer();
                     if (rejection.status < 300) {
                         defer.resolve(rejection);
@@ -186,7 +186,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
 
     }])
     .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId,
-        function($location, $http, $rootScope, Auth, $cookies) {
+        function ($location, $http, $rootScope, Auth, $cookies) {
 
             try {
                 $rootScope.user = $cookies.getObject("user");
@@ -202,8 +202,9 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
             }
 
-            $rootScope.$on("$routeChangeStart", function(event, next, current) {
+            $rootScope.$on("$routeChangeStart", function (event, next, current) {
                 try {
+                    // TODO WTF? wird das immer gemacht, ist doch mega aufwändig...?           
                     $rootScope.user = $cookies.getObject("user");
                     $rootScope.tenant = $cookies.getObject("tenant");
                 } catch (error) {
@@ -232,7 +233,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                     }
                 }
             });
-            $rootScope.logout = function() {
+            $rootScope.logout = function () {
                 Auth.logout();
             };
         }]);
