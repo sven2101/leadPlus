@@ -1,0 +1,24 @@
+<meta charset="utf-8">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-10">
+                <h2>Dashboard</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#/dashboard">Home</a>
+                    </li>
+                    <li class="active">
+                        <strong>Dashboard</strong>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div ng-include="'components/Dashboard/view/Dashboard.Statistic.html'"></div>
+    <div ng-include="'components/Dashboard/view/Dashboard.Management.html'"></div>
+    <div ng-include="'components/Dashboard/view/Dashboard.ToDo.html'"></div>
+</div>
+<div ng-include="'components/Dashboard/view/Info.Modal.html'"></div>

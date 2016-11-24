@@ -1,0 +1,123 @@
+<style>
+	#typeahead-autocompletion .dropdown-menu {
+		max-height: 225px;
+		max-width: 400px;
+		overflow-y: auto;
+		overflow-x: hidden;
+	}
+</style>
+<form name="form">
+	<div class="row">
+		<div class="col-sm-6 b-r">
+			<div class="form-group">
+				<label>{{ 'CUSTOMER_MENU' | translate }}</label><i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'TOOLTIP_CUSTOMER_LOOKUP' | translate }}"></i>
+				<div class="input-group" id="typeahead-autocompletion">
+					<input type="text" class="form-control" ng-model="parent.selectedCustomer" placeholder="{{ 'CUSTOMER_SELECT' | translate }}"
+						uib-typeahead="customer as (customer.firstname +' '+ customer.lastname +' '+ (customer.company==null?'':customer.company)) for customer in service.customerService.getCustomerBySearchText($viewValue)"
+						typeahead-editable="false" typeahead-on-select="parent.selectCustomer(parent.editWorkflowUnit,$model)" typeahead-no-results="noResults"
+						typeahead-show-hint="true" typeahead-min-length="3" typeahead-wait-ms="600" ng-blur="(noResults) ? parent.selectCustomer(parent.editWorkflowUnit,$model):'doNothing'"
+						ng-disabled="!parent.editable">
+					<span class="input-group-btn">
+       				 <button class="btn btn-secondary btn btn-white" type="button" ng-disabled="!parent.editable" ng-click="parent.selectCustomer(parent.editWorkflowUnit,undefined)">&nbsp;<i class="fa fa-times"></i>&nbsp;</button>
+      				</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label>{{ 'COMMON_TITLE' | translate }}</label>
+				<select name="title" class="form-control" ng-model="parent.editWorkflowUnit.customer.title" ng-disabled="parent.customerSelected">
+                    <option value="MR">{{ 'COMMON_TITLE_MR' | translate }}</option>
+                    <option value="MS">{{ 'COMMON_TITLE_MS' | translate }}</option>
+                </select>
+			</div>
+			<!-- FIRSTNAME -->
+			<div class="form-group" ng-class="{ 'has-error' : parent.customerEditForm.firstname.$invalid}">
+				<label>{{ 'COMMON_FIRSTNAME' | translate }}<span style="color:red">*</span></label>
+				<input required type="text" name="firstname" class="form-control" ng-model="parent.editWorkflowUnit.customer.firstname" ng-maxlength="30"
+					ng-disabled="parent.customerSelected">
+				<p ng-show="parent.customerEditForm.firstname.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+				<p ng-show="parent.customerEditForm.firstname.$error.required && !parent.customerEditForm.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+			</div>
+			<!-- LASTNAME -->
+			<div class="form-group" ng-class="{ 'has-error' : parent.customerEditForm.lastname.$invalid}">
+				<label>{{ 'COMMON_LASTNAME' | translate }}<span style="color:red">*</span></label>
+				<input required type="text" name="lastname" class="form-control" ng-model="parent.editWorkflowUnit.customer.lastname" ng-maxlength="30"
+					ng-disabled="parent.customerSelected">
+				<p ng-show="parent.customerEditForm.lastname.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+				<p ng-show="parent.customerEditForm.lastname.$error.required && !parent.customerEditForm.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+			</div>
+			<!-- COMPANY -->
+			<div class="form-group" ng-class="{ 'has-error' : parent.customerEditForm.company.$invalid && !parent.customerEditForm.company.$pristine }">
+				<label>{{ 'COMMON_COMPANY' | translate }}</label>
+				<input type="text" name="company" class="form-control" ng-model="parent.editWorkflowUnit.customer.company" ng-maxlength="50"
+					ng-disabled="parent.customerSelected">
+				<p ng-show="parent.customerEditForm.company.$invalid && !parent.customerEditForm.company.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+			</div>
+			<!-- EMAIL -->
+			<div class="form-group" ng-class="{ 'has-error' : parent.customerEditForm.email.$invalid && !parent.customerEditForm.email.$pristine }">
+				<label>{{ 'COMMON_EMAIL' | translate }}</label>
+				<input type="email" name="email" class="form-control" ng-model="parent.editWorkflowUnit.customer.email" ng-disabled="parent.customerSelected">
+				<p ng-show="parent.customerEditForm.email.$invalid && !parent.customerEditForm.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL'| translate }}</p>
+			</div>
+			<!-- PHONE -->
+			<div class="form-group" ng-class="{ 'has-error' : parent.customerEditForm.phone.$invalid && !parent.customerEditForm.phone.$pristine }">
+				<label>{{ 'COMMON_PHONE' | translate }}</label>
+				<input type="text" name="phone" class="form-control" ng-model="parent.editWorkflowUnit.customer.phone" ng-maxlength="50"
+					ng-disabled="parent.customerSelected">
+				<p ng-show="parent.customerEditForm.phone.$invalid && !parent.customerEditForm.phone.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<!-- SOURCE -->
+			<div class="form-group">
+				<label>{{ 'SOURCE_SOURCE' | translate }}</label>
+				<select name="source" class="form-control" ng-model="parent.editProcess.source" ng-disabled="!parent.editable" ng-options="s.name for s in service.sourceService.getActiveSources() track by s.id">
+					<option></option></select>
+			</div>
+			<!-- MESSAGE -->
+			<div class="form-group">
+				<label>{{ 'COMMON_NOTE' | translate }}</label>
+				<summernote ng-if="parent.editable" name="content " class="form-control" ng-model="parent.editWorkflowUnit.message" height="300px"></summernote>
+				<div ng-if="!parent.editable" style="border: 1px solid gray;  padding: 15px;">
+					<div ng-bind-html="parent.getAsHtml(parent.editWorkflowUnit.message)"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+<style>
+	.btn-toolbar {
+		margin-left: 0px;
+	}
+	
+	.note-editor .dropdown-menu {
+		min-width: 90px;
+		left: -300px;
+	}
+	
+	.note-editor .note-color-palette {
+		line-height: 1;
+	}
+	
+	.note-editor .note-color-palette div .note-color-btn {
+		width: 17px;
+		height: 17px;
+		padding: 0px;
+		margin: 0px;
+		border: 1px solid rgb(255, 255, 255);
+	}
+	
+	.note-editor .note-color-palette div .note-color-btn:hover {
+		border: 1px solid rgb(0, 0, 0);
+	}
+</style>
+<script>
+    $(document).ready(function () {
+        $('#editOfferDatepicker .input-group.date').datepicker({
+            todayBtn: "linked ",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true
+        });
+    });
+</script>

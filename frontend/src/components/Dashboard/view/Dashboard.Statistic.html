@@ -1,0 +1,85 @@
+<style>
+    .huge {
+        font-size: 2em;
+    }
+    
+    .span-left-margin {
+        margin-left: 5%;
+    }
+    
+    .span-right-margin {
+        margin-right: 5%;
+    }
+    
+    .statisticDiv {
+        height: 150px;
+    }
+</style>
+<div class="row">
+    <div class="col-lg-3 ">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-danger pull-right">{{ 'STATISTIC_PERIOD_TODAY' | translate }}</span>
+                <h5>{{ 'LEADS_MENU' | translate }}</h5>
+                <div class="ibox-content statisticDiv">
+                    <h1 class="no-margins">{{dashboardCtrl.getLeadsArray()[dashboardCtrl.getLeadsArray().length-1]}}</h1>
+                    <sparklinechart data="{{dashboardCtrl.getLeadsArray()}}" color="#ed5565"></sparklinechart>
+                    <small>{{ 'STATISTIC_PERIOD_LAST_30_DAYS' | translate }}</small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+     <div class="col-lg-3 ">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right">{{ 'STATISTIC_PERIOD_TODAY' | translate }}</span>
+                <h5>{{ 'SALES_MENU' | translate }}</h5>
+                <div class="ibox-content statisticDiv">
+                    <h1 class="no-margins">{{dashboardCtrl.getSalesArray()[dashboardCtrl.getSalesArray().length-1]}}</h1>
+                    <sparklinechart data="{{dashboardCtrl.getSalesArray()}}" color="#1c84c6"></sparklinechart>
+                    <small>{{ 'STATISTIC_PERIOD_LAST_30_DAYS' | translate }}</small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <span class="label label-success pull-right">{{ 'STATISTIC_PERIOD_MONTH' | translate }}</span>
+                <h5>{{ 'COMMON_SALE_RETURN' | translate }} & {{ 'COMMON_SALE_PROFIT' | translate }}</h5>
+            </div>
+            <div class="ibox-content statisticDiv">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="no-margins">{{dashboardCtrl.getTurnover() | currency:'\u20AC'}}</h1>
+                        <small>{{ 'COMMON_SALE_RETURN' | translate }}</small>
+                    </div>
+                </div>
+                </br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="no-margins">{{dashboardCtrl.getProfit() | currency:'\u20AC'}}</h1>
+                        <small>{{ 'COMMON_SALE_PROFIT' | translate }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="ibox">
+             <div class="ibox-title">
+                <span class="label label-success pull-right">{{ 'STATISTIC_PERIOD_MONTH' | translate }}</span>
+                <h5>{{ 'COMMON_CONVERSIONRATE' | translate }}</h5>
+            </div>
+            <div class="ibox-content statisticDiv">
+                <h1>{{dashboardCtrl.getConversionrate() | number:2}}%</h1>
+                <div class="progress progress-mini">
+                    <div ng-style="{'width':dashboardCtrl.getConversionrate()+'%'}" class="progress-bar progress-bar-success"></div>
+                </div>
+                <div class="m-t-sm small">{{ 'LEADS_MENU' | translate }} / {{ 'SALES_MENU' | translate }}</div>
+            </div>
+        </div>
+    </div>
+</div>
