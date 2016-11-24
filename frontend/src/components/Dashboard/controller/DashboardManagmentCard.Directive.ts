@@ -14,6 +14,7 @@ class DashboardManagmentCardDirective implements IDirective {
     scope = {
         process: "=",
         workflowunittype: "@",
+        disabled: "@"
     };
 
     constructor(private WorkflowService: WorkflowService, private $rootScope) { }
@@ -31,6 +32,8 @@ class DashboardManagmentCardDirective implements IDirective {
         scope.editWorkflowUnit = scope.process[scope.workflowunittype];
         scope.toLocalDate = this.toLocalDate;
         scope.onInfoClick = (editWorkflowUnit, workflowunittype, process) => scope.$parent.$parent.$parent.dashboardCtrl.saveDataToModal(editWorkflowUnit, workflowunittype, process);
+        scope.openFollowUpModal = (process) => this.WorkflowService.openFollowUpModal(process);
+        scope.pin = (process) => this.WorkflowService.togglePin(process, this.$rootScope.user);
     };
 
     toLocalDate(timestamp: any): any {

@@ -37,6 +37,7 @@ class DashboardService {
     openLeads: Array<Process> = [];
     inContacts: Array<Process> = [];
     openOffers: Array<Process> = [];
+    preSales: Array<Process> = [new Process()];
     closedSales: Array<Process> = [];
 
     openLeadsValue: number = 0;
@@ -299,6 +300,9 @@ class DashboardService {
     }
     getOpenOffers(): Array<Process> {
         return this.openOffers;
+    }
+    getPreSales(): Array<Process> {
+        return this.preSales;
     }
     getClosedSales(): Array<Process> {
         return this.closedSales;

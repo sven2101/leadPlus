@@ -91,7 +91,7 @@ class DashboardController {
 
     addComment(process) {
         let self: DashboardController = this;
-        this.workflowService.addComment(process, this.commentModalInput).then(function () {
+        this.workflowService.addComment(process, this.commentModalInput).then(function() {
             self.commentModalInput = "";
         });
     }
@@ -108,6 +108,9 @@ class DashboardController {
     }
     getOpenOffers(): Array<Process> {
         return this.dashboardService.getOpenOffers();
+    }
+    getPreSales(): Array<Process> {
+        return this.dashboardService.getPreSales();
     }
     getClosedSales(): Array<Process> {
         return this.dashboardService.getClosedSales();
@@ -189,7 +192,7 @@ class DashboardController {
     }
 
     getClassToDrag(process: Process, element: string): string {
-        return element + (this.hasRightToDrag(process) ? "-element draggable" : "-element not-sortable draggable");
+        return element + (this.hasRightToDrag(process) ? "-element draggable drag-item" : "-element not-sortable draggable drag-item");
     }
 
 }
