@@ -25,15 +25,6 @@
 		overflow: hidden;
 	}
 	
-	.customButton {}
-	
-	.workflow-container {
-		margin-top: -7px;
-		margin-bottom: -7px;
-		margin-left: -7px;
-		margin-bottom: -7px;
-	}
-	
 	.row2 > div {
 		height: 70px;
 		float: left;
@@ -44,7 +35,6 @@
 	}
 	
 	.fluid-column {
-	
 		width: calc(100% - 50px);
 	}
 </style>
@@ -160,38 +150,9 @@
 				<div class="col-xs-3" style="min-width: 100px;margin-left: -10px;margin-right: -10px;margin-top: -20px;">
 					<h3>{{ 'DASHBOARD_LATEST_SALES' | translate }} {{dashboardCtrl.dashboardService.closedSalesValue| currency:'\u20AC'}}</h3>
 					<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="sale" ng-model="dashboardCtrl.dashboardService.closedSales">
-						<li class="info-element not-sortable draggable" ng-repeat="process in dashboardCtrl.getClosedSales() | limitTo:7" style="width:190px">
-							<div class="container-fluid workflow-container">
-								<div class="row row2">
-									<div class="fixed-column">
-										<div style="clear:right;clear:left;">
-											<div>
-												<img title="{{(process.processor.firstname+' '+process.processor.lastname)}}" style="width: 48px; height:48px;border-radius: 10%;"
-													pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
-											</div>
-											<div style="margin-top:3px">
-												<a style="width:23px;height:20px;" ng-click="dashboardCtrl.saveDataToModal(process.sale,'sale',process)" class="btn btn-xs btn-white customButton"
-													data-toggle="modal" data-target="#infoModal" title="{{ 'DASHBOARD_INFO_BUTTON' |  translate }}" data-backdrop="static">
-													<i style="margin-top:3px;margin-left:-1px;color:black" class="fa fa-info-circle fa-lg" aria-hidden="true"></i></a>
-												<a style="width:23px;height:20px;" ng-href="#/sales/{{process.id}}" title="{{'DASHBOARD_GOTO_BUTTON' | translate }}" class="btn btn-xs btn-white customButton">
-													<i style="margin-top:3px;margin-left:-1px;color:black" class="fa fa-globe fa-lg" aria-hidden="true"></i></a>
-											</div>
-										</div>
-									</div>
-									<div class="fluid-column">
-										<div style="margin-left:3px;overflow:hidden;line-height:95%; word-wrap: break-word;">
-											<div style="height:54px;" ng-if="(process.sale.customer.company!=null&&process.sale.customer.company!='')">
-												{{process.sale.customer.company}}
-											</div>
-											<div style="height:54px;" ng-if="(process.sale.customer.company==null||process.sale.customer.company=='')">
-												{{process.sale.customer.firstname}} {{process.sale.customer.lastname}}
-											</div>
-											<i class="fa fa-clock-o"></i> {{dashboardCtrl.toLocalDate(process.sale.timestamp)}}
-										</div>
-									</div>
-								</div>
-							</div>
-				
+						<li class="info-element not-sortable draggable" ng-repeat="process in dashboardCtrl.getClosedSales() | limitTo:7" style="width:200px">
+							<dashboardmanagamentcard process="process" workflowunittype="sale" />
+
 
 
 							<!--
