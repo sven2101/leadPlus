@@ -55,7 +55,7 @@
 		</div>
 		<div ng-if="!disabled||(disabled&&notification.attachments.length>0)" class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.attachement.$invalid}">
 			<label>{{ 'EMAIL_ATTACHMENT' | translate }}</label>
-			<span style="color:red" ng-if="true||form.fileSize.$error.max">max 10 MB</span>
+			<span style="color:red" ng-if="form.fileSize.$error.max">max 10 MB</span>
 			<div hidden>
 				<input hidden disabled ng-max="10*1024*1024" type="number" name="fileSize" ng-model="fileSize">
 			</div>
