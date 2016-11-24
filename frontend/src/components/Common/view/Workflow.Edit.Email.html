@@ -34,7 +34,7 @@
 		</div>
 		<br/>
 		<div ng-show="showCC_BCC" class="form-group" ng-class="{ 'has-error' : form.recipientsCC.$invalid&&!disabled&&!form.recipientsCC.$pristine}">
-			<label>{{ 'EMAIL_RECIPIENT' | translate }} - CC</label>		
+			<label>{{ 'EMAIL_RECIPIENT' | translate }} - CC</label>
 			<span style="color:red" ng-show="form.recipientsCC.$error.email&&!disabled">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
 			<input style="width:100%" ng-disabled="disabled" multipleemails form="form" emails="notification.recipientsCC" name="recipientsCC"
 				class="form-control" ng-model="notification.recipientsCC">
@@ -43,26 +43,37 @@
 			<label>{{ 'EMAIL_RECIPIENT' | translate }} - BCC</label>
 			<span style="color:red" ng-show="form.recipientsBCC.$error.email&&!disabled">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
 			<input style="width:100%" ng-disabled="disabled" multipleemails form="form" emails="notification.recipientsBCC" name="recipientsBCC"
-				class="form-control" ng-model="notification.recipientsBCC">	
+				class="form-control" ng-model="notification.recipientsBCC">
 		</div>
 		<div class="form-group" ng-class="{ 'has-error' : form.subject.$invalid&&!disabled&&!form.subject.$pristine}">
 			<label>{{ 'EMAIL_SUBJECT' | translate }}</label>
 			<span style="color:red">*</span>
-			<span style="color:red" ng-show="form.subject.$error.minlength&&!disabled" >{{ 'COMMON_VALIDATE_MIN' | translate:'{ number: "3" }'}}</span>
-			<span style="color:red" ng-show="form.subject.$error.required&&!disabled&&!form.subject.$pristine" >{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+			<span style="color:red" ng-show="form.subject.$error.minlength&&!disabled">{{ 'COMMON_VALIDATE_MIN' | translate:'{ number: "3" }'}}</span>
+			<span style="color:red" ng-show="form.subject.$error.required&&!disabled&&!form.subject.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
 			<input ng-disabled="disabled" name="subject" required type="text" class="form-control" ng-model="notification.subject" ng-minlength="3">
 
 		</div>
 		<div ng-if="!disabled||(disabled&&notification.attachments.length>0)" class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.attachement.$invalid}">
 			<label>{{ 'EMAIL_ATTACHMENT' | translate }}</label>
-			<span style="color:red" ng-if="form.fileSize.$error.max"  style="clear: left;">max 20 MB</span>
+			<span style="color:red" ng-if="form.fileSize.$error.max" style="clear: left;">max 20 MB</span>
 			<br/>
 			<div ng-if="!disabled" style="white-space: nowrap;float:left;margin-right:7px" ng-if="!parent.editEmail" class="fileinput fileinput-new"
 				data-provides="fileinput">
-				<span class="btn btn-default btn-file"><span class="fileinput-new">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }}</span>
-			<span class="fileinput-exists">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }} </span>
-			<input name="attachement" multiple required type="file" name="..." ng-files="setAttachments($files);" accept="application/pdf,image/gif,image/jpeg">
-			</span>
+				<span class="btn btn-default btn-file">
+				<span class="fileinput-exists">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }} </span>
+				<input name="attachement" multiple required type="file" name="..." ng-files="setAttachments($files);" accept="application/pdf,image/*,.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.csv,application/vnd.ms-excel,text/plain,application/vnd.ms-powerpoint, application/msword,.pps,.xlsx,.xls,.doc,.docx,.ppt,.pptx,.txt,.zip,.rar">
+				</span>
+
+			</div>
+			<div style="white-space: nowrap;float:left;margin-right:5px" ng-repeat="attachment in notification.attachments">
+				<a ng-click="openAttachment(attachment.fileUpload)">{{attachment.fileUpload.filename}}</a>
+				<a ng-click="deleteAttachment($index)" href="" class="close fileinput-exists" style="float: none">×</a>
+			</div>
+			<br/>
+			<div ng-class="{ 'has-error' : form.fileSize.$invalid&&!disabled}">
+				<input hidden disabled ng-max="10*1024*1024" type="number" name="fileSize" ng-model="fileSize">
+				<p ng-if="form.fileSize.$error.max" class="help-block" style="clear: left;">max 10 MB</p>
+			</div>
 
 		</div>
 		<div style="white-space: nowrap;float:left;margin-right:5px" ng-repeat="attachment in notification.attachments">
@@ -72,13 +83,13 @@
 		<br/>
 		<div ng-class="{ 'has-error' : form.fileSize.$invalid&&!disabled}">
 			<input hidden disabled ng-max="20*1024*2014" type="number" name="fileSize" ng-model="fileSize">
-			
+
 		</div>
 	</div>
 	<div style="clear: left;" class="form-group" ng-class="{ 'has-error' : form.message.$invalid&&!form.message.$pristine}">
 		<label>{{ 'EMAIL_MESSAGE' | translate }}</label>
 		<span style="color:red">*</span>
-		<span style="color:red" ng-show="form.message.$error.required&&!form.message.$pristine" >{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+		<span style="color:red" ng-show="form.message.$error.required&&!form.message.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
 		<br/>
 		<summernote ng-if="!disabled" name="message" class="form-control" required ng-model="notification.content">{{notification.content}}</summernote>
 		<div ng-if="disabled" style="border: 1px solid gray;  padding: 15px;">

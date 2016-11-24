@@ -43,7 +43,7 @@ class EditEmailDirective implements IDirective {
         scope.sizeInvalid = false;
         let l = $(".ladda-button").ladda();
         let button = $(".ladda-button");
-        button.click(function() {
+        button.click(function () {
             l.ladda("start");
         });
         scope.templateId = "-1";
@@ -67,7 +67,7 @@ class EditEmailDirective implements IDirective {
             fileUpload.mimeType = file.type;
             fileUpload.size = file.size;
             fileReader.readAsDataURL(file);
-            fileReader.onload = function() {
+            fileReader.onload = function () {
                 fileUpload.content = this.result.split(",")[1];
                 attachment.fileUpload = fileUpload;
                 notification.attachments.push(attachment);
@@ -97,7 +97,7 @@ class EditEmailDirective implements IDirective {
             return;
         }
         scope.$http.get("/api/rest/files/content/" + fileUpload.id, { method: "GET", responseType: "arraybuffer" }).
-            success(function(data, status, headers, config, statusText) {
+            success(function (data, status, headers, config, statusText) {
                 let contentType = headers("content-type");
                 let file = new Blob([data], { type: contentType });
                 let fileURL = URL.createObjectURL(file);
@@ -111,7 +111,7 @@ class EditEmailDirective implements IDirective {
             scope.notification.recipient = scope.process.offer.customer.email;
             return;
         }
-        scope.TemplateService.generate(templateId, offer, currentNotification).then((notification) => scope.notification = notification);
+        scope.TemplateService.generate(templateId, offer, currentNotification).then((notification: Notification) => scope.notification.content = notification.content);
     };
 
     reloadHtmlString(scope: any): void {
