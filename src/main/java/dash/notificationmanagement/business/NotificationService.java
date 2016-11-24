@@ -61,11 +61,10 @@ public class NotificationService implements INotificationService {
 			if (notification != null && notification.getAttachments() != null
 					&& notification.getAttachments().size() > 0) {
 				for (Attachment attachment : notification.getAttachments()) {
-					if (attachment != null) {
+					if (attachment != null && attachment.getId() != null) {
 						Attachment existingAttachment = attachmentService.getById(attachment.getId());
 						notification.addAttachment(existingAttachment);
 					}
-
 				}
 			}
 
