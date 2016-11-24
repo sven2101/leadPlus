@@ -16,29 +16,48 @@ package dash.statisticmanagement.workflow.business;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import dash.processmanagement.request.Request;
+import dash.common.AbstractWorkflow;
+import dash.processmanagement.domain.Process;
 import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.StatisticHelper;
+import dash.workflowmanagement.domain.Workflow;
 
 @Service
 public class WorkflowStatisticService extends AbstractStatisticService {
 
 	@Override
-	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId,
-			StatisticHelper statisticHelper) {
-		for (Request request : requests) {
-			Calendar timeStamp = request.getTimestamp();
+	public Map<String, List<Double>> buildStatistic(Map<String, Double> calendarMap, List<Process> processes,
+			Long elementId, StatisticHelper statisticHelper, Workflow workflow) {
+
+		Map<String, LinkedHashMap<String, Double>> map = new HashMap<>();
+		map.put(ALL_STATISTIC_KEY, new LinkedHashMap<String, Double>(calendarMap));
+
+		for (Process process : processes) {
+			AbstractWorkflow workflowUnit = getWorkflowUnitByWorkflow(workflow, process);
+			Calendar timeStamp = workflowUnit.getTimestamp();
 			String key = statisticHelper.getKeyByDateRange(timeStamp, statisticHelper.getDateRange());
 			if (calendarMap.containsKey(key)) {
-				double value = calendarMap.get(key) + 1.00;
-				calendarMap.put(key, value);
+				double allValue = map.get(ALL_STATISTIC_KEY).get(key) + 1.00;
+				map.get(ALL_STATISTIC_KEY).put(key, allValue);
+				if (process.getSource() != null && !"".equals(process.getSource())) {
+					if (!map.containsKey(process.getSource().getName())) {
+						map.put(process.getSource().getName(), new LinkedHashMap<String, Double>(calendarMap));
+					}
+					double sourceValue = map.get(process.getSource().getName()).get(key) + 1.00;
+					map.get(process.getSource().getName()).put(key, sourceValue);
+				}
 			}
 		}
-		return new ArrayList<>(calendarMap.values());
+		Map<String, List<Double>> returnMap = new HashMap<>();
+		for (Map.Entry<String, LinkedHashMap<String, Double>> entry : map.entrySet())
+			returnMap.put(entry.getKey(), new ArrayList<>(entry.getValue().values()));
+		return returnMap;
 	}
 }

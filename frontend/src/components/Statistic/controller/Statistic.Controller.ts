@@ -25,10 +25,11 @@ class StatisticController {
     statisticService: StatisticService;
     currentTab: number = 1;
     dateRange: string = "DAILY";
+    source: string = "ALL";
 
     constructor(StatisticService) {
         this.statisticService = StatisticService;
-        this.onPeriodChange(this.dateRange);
+        this.onStatisticChange(this.dateRange, this.source);
     }
 
     tabOnClick(tab: number) {
@@ -39,12 +40,13 @@ class StatisticController {
         return this.statisticService.getChartModelById(id);
     }
 
-    onPeriodChange(dateRange: string) {
+
+    onStatisticChange(dateRange: string, source: string) {
         this.statisticService.setPromises(false);
         this.statisticService.clearAllModelsData();
         this.dateRange = dateRange;
         this.statisticService.setTimeSegmentByDateRange(dateRange);
-        this.statisticService.loadAllResourcesByDateRange(dateRange);
+        this.statisticService.loadAllResourcesByDateRange(dateRange, source);
     }
 
     getProductStatistic(): Array<any> {

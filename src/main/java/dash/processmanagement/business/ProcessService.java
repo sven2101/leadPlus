@@ -23,6 +23,7 @@ import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_NOT_FOUND;
 import static dash.processmanagement.business.ProcessSpecs.isBetweenTimestamp;
 import static dash.processmanagement.business.ProcessSpecs.isClosed;
+import static dash.processmanagement.business.ProcessSpecs.isDeleted;
 import static dash.processmanagement.business.ProcessSpecs.isProcessor;
 import static dash.processmanagement.business.ProcessSpecs.isSale;
 import static org.springframework.data.jpa.domain.Specifications.not;
@@ -33,12 +34,15 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.metamodel.SingularAttribute;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import dash.commentmanagement.domain.Comment;
+import dash.common.AbstractWorkflow;
 import dash.customermanagement.business.CustomerService;
 import dash.customermanagement.domain.Customer;
 import dash.exceptions.DeleteFailedException;
@@ -52,6 +56,7 @@ import dash.offermanagement.business.IOfferService;
 import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
+import dash.processmanagement.domain.Process_;
 import dash.productmanagement.domain.OrderPosition;
 import dash.salemanagement.business.ISaleService;
 import dash.salemanagement.domain.Sale;
@@ -328,11 +333,15 @@ public class ProcessService implements IProcessService {
 
 	@Override
 	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId, Calendar from, Calendar until) {
-		return processRepository.findAll(where(isProcessor(processorId)).and(isBetweenTimestamp(from, until)));
+		return processRepository
+				.findAll(where(isProcessor(processorId)).and(isBetweenTimestamp(from, until, Process_.lead)));
 	}
 
 	@Override
-	public List<Process> getProcessesBetweenTimestamp(Calendar from, Calendar until) {
-		return processRepository.findAll(where(isBetweenTimestamp(from, until)));
+	public List<Process> getProcessesBetweenTimestamp(Calendar from, Calendar until,
+			SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute) {
+		return processRepository
+				.findAll(where(isBetweenTimestamp(from, until, abstractWorkflowAttribute)).and(isDeleted(false)));
 	}
+
 }

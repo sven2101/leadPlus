@@ -29,11 +29,12 @@ import org.springframework.stereotype.Service;
 import dash.exceptions.NotFoundException;
 import dash.processmanagement.business.ProcessService;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.request.Request;
+import dash.processmanagement.domain.Process_;
 import dash.productmanagement.domain.OrderPosition;
 import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.domain.StatisticHelper;
+import dash.workflowmanagement.domain.Workflow;
 
 @Service
 public class UserStatisticService extends AbstractStatisticService {
@@ -43,23 +44,19 @@ public class UserStatisticService extends AbstractStatisticService {
 	@Autowired
 	private ProcessService ProcessService;
 
-	@Override
-	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId,
-			StatisticHelper statisticHelper) {
-		return null;
-	}
-
-	public List<UserStatistic> getTopSalesMen(DateRange dateRange) throws NotFoundException {
+	public List<UserStatistic> getTopSalesMen(DateRange dateRange) {
 		Map<Long, UserStatistic> userMap = new HashMap<>();
 		if (dateRange == null) {
-			NotFoundException pnfex = new NotFoundException(STATISTIC_NOT_FOUND);
-			logger.error(STATISTIC_NOT_FOUND + this.getClass().getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
-			throw pnfex;
+			IllegalArgumentException ex = new IllegalArgumentException(
+					"Workflow parameter or daterange parmeter is null");
+			logger.error("Statistic cannot be created in " + this.getClass().getSimpleName() + " because of "
+					+ ex.getMessage(), ex);
+			throw ex;
 		}
 
 		StatisticHelper statisticHelper = new StatisticHelper(dateRange);
 		final List<Process> processes = ProcessService.getProcessesBetweenTimestamp(statisticHelper.getFrom(),
-				statisticHelper.getUntil());
+				statisticHelper.getUntil(), Process_.lead);
 		long key;
 
 		for (Process process : processes) {
@@ -117,6 +114,13 @@ public class UserStatisticService extends AbstractStatisticService {
 			}
 		}
 		return userStatistic;
+	}
+
+	@Override
+	public Map<String, List<Double>> buildStatistic(Map<String, Double> calendarMap, List<Process> processes,
+			Long elementId, StatisticHelper statisticHelper, Workflow workflow) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

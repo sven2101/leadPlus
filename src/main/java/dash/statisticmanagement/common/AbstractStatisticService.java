@@ -1,81 +1,73 @@
 package dash.statisticmanagement.common;
 
-import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
-import static dash.Constants.STATISTIC_NOT_FOUND;
-
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
+import javax.persistence.metamodel.SingularAttribute;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import dash.exceptions.NotFoundException;
-import dash.leadmanagement.domain.Lead;
-import dash.offermanagement.domain.Offer;
-import dash.processmanagement.request.Request;
-import dash.processmanagement.request.RequestRepository;
-import dash.salemanagement.domain.Sale;
+import dash.common.AbstractWorkflow;
+import dash.processmanagement.business.IProcessService;
+import dash.processmanagement.domain.Process;
+import dash.processmanagement.domain.Process_;
 import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.domain.StatisticHelper;
-import dash.statisticmanagement.result.domain.Result;
 import dash.workflowmanagement.domain.Workflow;
 
 public abstract class AbstractStatisticService implements IStatisticService {
 	private static final Logger logger = Logger.getLogger(AbstractStatisticService.class);
 
 	@Autowired
-	private RequestRepository<Lead, Long> leadRepository;
+	protected IProcessService processService;
 
-	@Autowired
-	private RequestRepository<Offer, Long> offerRepository;
-
-	@Autowired
-	private RequestRepository<Sale, Long> saleRepository;
+	public final static String ALL_STATISTIC_KEY = "ALL";
 
 	@Override
-	public Result getStatisticByDateRange(Workflow workflow, DateRange dateRange, Long elementId)
-			throws NotFoundException {
+	public Map<String, List<Double>> getStatisticByDateRange(Workflow workflow, DateRange dateRange, Long elementId) {
 		if (workflow == null || dateRange == null) {
-			NotFoundException pnfex = new NotFoundException(STATISTIC_NOT_FOUND);
-			logger.error(STATISTIC_NOT_FOUND + this.getClass().getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
-			throw pnfex;
+			IllegalArgumentException ex = new IllegalArgumentException(
+					"Workflow parameter or daterange parmeter is null");
+			logger.error("Statistic cannot be created in " + this.getClass().getSimpleName() + " because of "
+					+ ex.getMessage(), ex);
+			throw ex;
 		}
 		StatisticHelper statisticHelper = new StatisticHelper(dateRange);
 		final Map<String, Double> calendarMap = statisticHelper.getCalendarMap();
-		final List<Request> requests = getStatisticBetween(getRepositoryByWorkflow(workflow), statisticHelper.getFrom(),
-				statisticHelper.getUntil());
-		return new Result(buildStatistic(calendarMap, requests, elementId, statisticHelper));
+		final List<Process> processes = processService.getProcessesBetweenTimestamp(statisticHelper.getFrom(),
+				statisticHelper.getUntil(), getAttributeByWorkflow(workflow));
+		return buildStatistic(calendarMap, processes, elementId, statisticHelper, workflow);
 	}
 
-	public abstract List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId,
-			StatisticHelper statisticHelper);
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> List<Request> getStatisticBetween(RequestRepository<T, Long> repository, Calendar from, Calendar until)
-			throws NotFoundException {
-		if (Optional.ofNullable(repository).isPresent() && Optional.ofNullable(from).isPresent()
-				&& Optional.ofNullable(until).isPresent()) {
-			return (List<Request>) repository.findByTimestampBetweenAndDeleted(from, until, false);
-		} else {
-			NotFoundException pnfex = new NotFoundException(STATISTIC_NOT_FOUND);
-			logger.error(STATISTIC_NOT_FOUND + this.getClass().getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
-			throw pnfex;
+	public abstract Map<String, List<Double>> buildStatistic(Map<String, Double> calendarMap, List<Process> processes,
+			Long elementId, StatisticHelper statisticHelper, Workflow workflow);
+
+	protected SingularAttribute<Process, AbstractWorkflow> getAttributeByWorkflow(Workflow workflow) {
+		switch (workflow) {
+		case LEAD:
+			return Process_.lead;
+		case OFFER:
+			return Process_.offer;
+		case SALE:
+			return Process_.sale;
+		default:
+			return null;
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	protected <T> RequestRepository<T, Long> getRepositoryByWorkflow(Workflow workflow) {
-		if (workflow.equals(Workflow.LEAD)) {
-			return (RequestRepository<T, Long>) leadRepository;
-		} else if (workflow.equals(Workflow.OFFER)) {
-			return (RequestRepository<T, Long>) offerRepository;
-		} else if (workflow.equals(Workflow.SALE)) {
-			return (RequestRepository<T, Long>) saleRepository;
+	protected AbstractWorkflow getWorkflowUnitByWorkflow(Workflow workflow, Process process) {
+		switch (workflow) {
+		case LEAD:
+			return process.getLead();
+		case OFFER:
+			return process.getOffer();
+		case SALE:
+			return process.getSale();
+		default:
+			return null;
 		}
-		return null;
 	}
 
 }

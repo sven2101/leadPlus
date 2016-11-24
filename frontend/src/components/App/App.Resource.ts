@@ -215,22 +215,22 @@ class StatisticResource {
     constructor($resource) {
         this.resource = $resource("/api/rest/processes/statistics", {}, {
             getWorkflowStatistic: {
-                url: "/api/rest/processes/statistics/workflow/:workflow/daterange/:dateRange", method: "GET"
+                url: "/api/rest/processes/statistics/workflow/:workflow/daterange/:dateRange/source/:source", method: "GET", isArray: true
             },
             getProfitStatistic: {
-                url: "/api/rest/processes/statistics/profit/:workflow/daterange/:dateRange", method: "GET"
+                url: "/api/rest/processes/statistics/profit/:workflow/daterange/:dateRange/source/:source", method: "GET", isArray: true
             },
             getTurnoverStatistic: {
-                url: "/api/rest/processes/statistics/turnover/:workflow/daterange/:dateRange", method: "GET"
+                url: "/api/rest/processes/statistics/turnover/:workflow/daterange/:dateRange/source/:source", method: "GET", isArray: true
             },
             getProductStatistic: {
-                url: "/api/rest/processes/statistics/product/:workflow/daterange/:dateRange", method: "GET", isArray: true
+                url: "/api/rest/processes/statistics/product/:workflow/daterange/:dateRange/source/:source", method: "GET", isArray: true
             },
             getSingleProductStatistic: {
                 url: "/api/rest/processes/statistics/product/:workflow/daterange/:dateRange/id/:id", method: "GET"
             },
             getUserStatistic: {
-                url: "/api/rest/processes/statistics/user/daterange/:dateRange", method: "GET", isArray: true
+                url: "/api/rest/processes/statistics/user/daterange/:dateRange/source/:source", method: "GET", isArray: true
             },
             getSingleUserStatistic: {
                 url: "/api/rest/processes/statistics/user/daterange/:dateRange/id/:id", method: "GET"

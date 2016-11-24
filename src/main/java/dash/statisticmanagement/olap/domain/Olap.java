@@ -17,8 +17,6 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.statisticmanagement.domain.DateRange;
-import dash.statisticmanagement.product.business.ProductStatistic;
-import dash.statisticmanagement.user.business.UserStatistic;
 
 @Entity
 @Table(name = "olap")
@@ -42,31 +40,31 @@ public class Olap implements Serializable {
 
 	@NotNull
 	@Column(name = "profit", nullable = false)
-	private Double[] profit;
+	private byte[] profit;
 
 	@NotNull
 	@Column(name = "turnover", nullable = false)
-	private Double[] turnover;
+	private byte[] turnover;
 
 	@NotNull
 	@Column(name = "leads", nullable = false)
-	private Double[] leads;
+	private byte[] leads;
 
 	@NotNull
 	@Column(name = "offers", nullable = false)
-	private Double[] offers;
+	private byte[] offers;
 
 	@NotNull
 	@Column(name = "sales", nullable = false)
-	private Double[] sales;
+	private byte[] sales;
 
 	@NotNull
 	@Column(name = "products")
-	private ProductStatistic[] products;
+	private byte[] products;
 
 	@NotNull
 	@Column(name = "users")
-	private UserStatistic[] users;
+	private byte[] users;
 
 	public Olap() {
 
@@ -104,59 +102,59 @@ public class Olap implements Serializable {
 		this.timestamp = timestamp;
 	}
 
-	public Double[] getProfit() {
+	public byte[] getProfit() {
 		return profit;
 	}
 
-	public void setProfit(Double[] profit) {
+	public void setProfit(byte[] profit) {
 		this.profit = profit;
 	}
 
-	public Double[] getTurnover() {
+	public byte[] getTurnover() {
 		return turnover;
 	}
 
-	public void setTurnover(Double[] turnover) {
+	public void setTurnover(byte[] turnover) {
 		this.turnover = turnover;
 	}
 
-	public Double[] getLeads() {
+	public byte[] getLeads() {
 		return leads;
 	}
 
-	public void setLeads(Double[] leads) {
+	public void setLeads(byte[] leads) {
 		this.leads = leads;
 	}
 
-	public Double[] getOffers() {
+	public byte[] getOffers() {
 		return offers;
 	}
 
-	public void setOffers(Double[] offers) {
+	public void setOffers(byte[] offers) {
 		this.offers = offers;
 	}
 
-	public Double[] getSales() {
+	public byte[] getSales() {
 		return sales;
 	}
 
-	public void setSales(Double[] sales) {
+	public void setSales(byte[] sales) {
 		this.sales = sales;
 	}
 
-	public ProductStatistic[] getProducts() {
+	public byte[] getProducts() {
 		return products;
 	}
 
-	public void setProducts(ProductStatistic[] products) {
+	public void setProducts(byte[] products) {
 		this.products = products;
 	}
 
-	public UserStatistic[] getUsers() {
+	public byte[] getUsers() {
 		return users;
 	}
 
-	public void setUsers(UserStatistic[] users) {
+	public void setUsers(byte[] users) {
 		this.users = users;
 	}
 

@@ -150,66 +150,66 @@ class StatisticService {
         this.isTurnoverPromise = value;
     }
 
-    loadAllResourcesByDateRange(dateRange: string) {
-        this.loadWorkflowResourcesByDateRange(dateRange);
-        this.loadProfitResourcesByDateRange(dateRange);
-        this.loadTurnoverResourcesByDateRange(dateRange);
-        this.loadProductResourcesByDateRange(dateRange);
-        this.loadUserStatisticResourcesByDateRange(dateRange);
+    loadAllResourcesByDateRange(dateRange: string, source: string) {
+        this.loadWorkflowResourcesByDateRange(dateRange, source);
+        this.loadProfitResourcesByDateRange(dateRange, source);
+        this.loadTurnoverResourcesByDateRange(dateRange, source);
+        this.loadProductResourcesByDateRange(dateRange, source);
+        this.loadUserStatisticResourcesByDateRange(dateRange, source);
     }
 
-    loadWorkflowResourcesByDateRange(dateRange: string) {
+    loadWorkflowResourcesByDateRange(dateRange: string, source: string) {
         let self: StatisticService = this;
-        this.statisticResource.getWorkflowStatistic({ workflow: workflowLead, dateRange: dateRange }).$promise.then(function (result) {
-            self.leadResultArr = result.result;
+        this.statisticResource.getWorkflowStatistic({ workflow: workflowLead, dateRange: dateRange, source: source }).$promise.then(function (result) {
+            self.leadResultArr = result;
             self.leadAmount = self.getTotalSumOf(self.leadResultArr);
             self.isLeadPromise = true;
             self.checkPromises();
         });
-        this.statisticResource.getWorkflowStatistic({ workflow: workflowOffer, dateRange: dateRange }).$promise.then(function (result) {
-            self.offerResultArr = result.result;
+        this.statisticResource.getWorkflowStatistic({ workflow: workflowOffer, dateRange: dateRange, source: source }).$promise.then(function (result) {
+            self.offerResultArr = result;
             self.offerAmount = self.getTotalSumOf(self.offerResultArr);
             self.isOfferPromise = true;
             self.checkPromises();
         });
-        this.statisticResource.getWorkflowStatistic({ workflow: workflowSale, dateRange: dateRange }).$promise.then(function (result) {
-            self.saleResultArr = result.result;
+        this.statisticResource.getWorkflowStatistic({ workflow: workflowSale, dateRange: dateRange, source: source }).$promise.then(function (result) {
+            self.saleResultArr = result;
             self.saleAmount = self.getTotalSumOf(self.saleResultArr);
             self.isSalePromise = true;
             self.checkPromises();
         });
     }
 
-    loadProfitResourcesByDateRange(dateRange: string) {
+    loadProfitResourcesByDateRange(dateRange: string, source: string) {
         let self: StatisticService = this;
-        this.statisticResource.getProfitStatistic({ workflow: workflowSale, dateRange: dateRange }).$promise.then(function (result) {
-            self.profitResultArr = result.result;
+        this.statisticResource.getProfitStatistic({ workflow: workflowSale, dateRange: dateRange, source: source }).$promise.then(function (result) {
+            self.profitResultArr = result;
             self.profitTotal = self.getTotalSumOf(self.profitResultArr);
             self.isProfitPromise = true;
             self.checkPromises();
         });
     }
 
-    loadTurnoverResourcesByDateRange(dateRange: string) {
+    loadTurnoverResourcesByDateRange(dateRange: string, source: string) {
         let self: StatisticService = this;
-        this.statisticResource.getTurnoverStatistic({ workflow: workflowSale, dateRange: dateRange }).$promise.then(function (result) {
-            self.turnoverResultArr = result.result;
+        this.statisticResource.getTurnoverStatistic({ workflow: workflowSale, dateRange: dateRange, source: source }).$promise.then(function (result) {
+            self.turnoverResultArr = result;
             self.turnoverTotal = self.getTotalSumOf(self.turnoverResultArr);
             self.isTurnoverPromise = true;
             self.checkPromises();
         });
     }
 
-    loadProductResourcesByDateRange(dateRange: string) {
+    loadProductResourcesByDateRange(dateRange: string, source: string) {
         let self: StatisticService = this;
-        this.statisticResource.getProductStatistic({ workflow: workflowSale, dateRange: dateRange }).$promise.then(function (result) {
+        this.statisticResource.getProductStatistic({ workflow: workflowSale, dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.productStatisticArr = result;
         });
     }
 
-    loadUserStatisticResourcesByDateRange(dateRange: string) {
+    loadUserStatisticResourcesByDateRange(dateRange: string, source: string) {
         let self: StatisticService = this;
-        this.statisticResource.getUserStatistic({ dateRange: dateRange }).$promise.then(function (result) {
+        this.statisticResource.getUserStatistic({ dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.userStatisticArr = result;
         });
     }

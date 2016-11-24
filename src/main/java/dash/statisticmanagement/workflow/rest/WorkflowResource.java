@@ -14,7 +14,10 @@
 
 package dash.statisticmanagement.workflow.rest;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -28,11 +31,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.common.ByteSearializer;
 import dash.exceptions.NotFoundException;
+import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.olap.business.OlapRepository;
 import dash.statisticmanagement.olap.domain.Olap;
-import dash.statisticmanagement.result.domain.Result;
 import dash.statisticmanagement.workflow.business.WorkflowStatisticService;
 import dash.workflowmanagement.domain.Workflow;
 import io.swagger.annotations.Api;
@@ -53,28 +57,47 @@ public class WorkflowResource {
 	@Autowired
 	private WorkflowStatisticService statisticsService;
 
-	@RequestMapping(value = "/{workflow}/daterange/{dateRange}", method = { RequestMethod.GET, RequestMethod.POST })
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/{workflow}/daterange/{dateRange}/source/{source}", method = { RequestMethod.GET,
+			RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Get Statistic by dateRange and workflow", notes = "")
-	public Result getWorkflowStatisticByDateRange(
+	@ApiOperation(value = "Get Statistic by workflow, dateRange and source", notes = "")
+	public List<Double> getWorkflowStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
-			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
+			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
+			@ApiParam(required = true) @PathVariable @Valid String source)
+			throws NotFoundException, ClassNotFoundException, IOException {
+		if (source == null || "".equals(source))
+			source = AbstractStatisticService.ALL_STATISTIC_KEY;
+
 		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
 		if (olap != null) {
 			logger.info("Information from OLAP.");
+			byte[] byteArr = null;
 			if (workflow.equals(Workflow.LEAD) && olap.getLeads() != null) {
-				return new Result(Arrays.asList(olap.getLeads()));
+				byteArr = olap.getLeads();
 			} else if (workflow.equals(Workflow.OFFER) && olap.getOffers() != null) {
-				return new Result(Arrays.asList(olap.getOffers()));
+				byteArr = olap.getOffers();
 			} else if (workflow.equals(Workflow.SALE) && olap.getSales() != null) {
-				return new Result(Arrays.asList(olap.getSales()));
-			} else {
+				byteArr = olap.getSales();
+			} else if (byteArr == null) {
 				logger.info("Information directly calculating.");
-				return statisticsService.getStatisticByDateRange(workflow, dateRange, null);
+				Map<String, List<Double>> sourceMap = statisticsService.getStatisticByDateRange(workflow, dateRange,
+						null);
+				if (!sourceMap.containsKey(source))
+					return new ArrayList<>();
+				return sourceMap.get(source);
 			}
+			Map<String, List<Double>> sourceMap = (Map<String, List<Double>>) ByteSearializer.deserialize(byteArr);
+			if (!sourceMap.containsKey(source))
+				return new ArrayList<Double>();
+			return sourceMap.get(source);
 		} else {
 			logger.info("Information directly calculating.");
-			return statisticsService.getStatisticByDateRange(workflow, dateRange, null);
+			Map<String, List<Double>> sourceMap = statisticsService.getStatisticByDateRange(workflow, dateRange, null);
+			if (!sourceMap.containsKey(source))
+				return new ArrayList<>();
+			return sourceMap.get(source);
 		}
 	}
 }

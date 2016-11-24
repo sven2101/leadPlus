@@ -63,7 +63,7 @@ class DashboardController {
 
         this.sce = $sce;
         this.rootScope = $rootScope;
-        this.statisticService.loadAllResourcesByDateRange("MONTHLY");
+        this.statisticService.loadAllResourcesByDateRange("MONTHLY", "ALL");
         this.sortableOptions = this.dashboardService.setSortableOptions();
         this.currentUser = this.rootScope.user;
 

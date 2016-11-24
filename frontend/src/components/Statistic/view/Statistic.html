@@ -2,7 +2,7 @@
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-lg-12">
 		<div class="row">
-			<div class="col-lg-10">
+			<div class="col-lg-8">
 				<h2>{{ 'STATISTIC_MENU' | translate }}</h2>
 				<ol class="breadcrumb">
 					<li><a href="#/dashboard">Home</a></li>
@@ -13,10 +13,23 @@
 			<div class="col-lg-2">
 				<div class="row">
 					</br>
+					<h3>{{ 'STATISTIC_SOURCE' | translate }}</h3>
+				</div>
+				<div class="row">
+					<select class="form-control" style="width: 140px;" ng-model="statisticCtrl.source" ng-change="statisticCtrl.onStatisticChange(statisticCtrl.dateRange,statisticCtrl.source)">
+						<option value="ALL">ALL</option>
+						<option value="API">API</option>
+						<option value="EMAIL">EMAIL</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-lg-2">
+				<div class="row">
+					</br>
 					<h3>{{ 'STATISTIC_PERIOD' | translate }}</h3>
 				</div>
 				<div class="row">
-					<select class="form-control" style="width: 140px;" ng-model="statisticCtrl.dateRange" ng-change="statisticCtrl.onPeriodChange(statisticCtrl.dateRange)">
+					<select class="form-control" style="width: 140px;" ng-model="statisticCtrl.dateRange" ng-change="statisticCtrl.onStatisticChange(statisticCtrl.dateRange,statisticCtrl.source)">
 						<option value="DAILY">{{ 'STATISTIC_PERIOD_TODAY' |
 							translate }}</option>
 						<option value="WEEKLY">{{ 'STATISTIC_PERIOD_WEEK' |

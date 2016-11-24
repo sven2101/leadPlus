@@ -17,8 +17,11 @@ package dash.processmanagement.business;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.persistence.metamodel.SingularAttribute;
+
 import org.springframework.stereotype.Service;
 
+import dash.common.AbstractWorkflow;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -67,6 +70,7 @@ public interface IProcessService {
 
 	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId, Calendar from, Calendar until);
 
-	public List<Process> getProcessesBetweenTimestamp(Calendar from, Calendar until);
+	List<Process> getProcessesBetweenTimestamp(Calendar from, Calendar until,
+			SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute);
 
 }
