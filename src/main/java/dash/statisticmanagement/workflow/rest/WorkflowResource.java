@@ -91,7 +91,7 @@ public class WorkflowResource {
 			}
 			Map<String, List<Double>> sourceMap = (Map<String, List<Double>>) ByteSearializer.deserialize(byteArr);
 			if (!sourceMap.containsKey(source))
-				return new ArrayList<Double>();
+				return new ArrayList<>();
 			return sourceMap.get(source);
 		} else {
 			logger.info("Information directly calculating.");
