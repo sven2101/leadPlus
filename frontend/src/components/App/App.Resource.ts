@@ -227,13 +227,13 @@ class StatisticResource {
                 url: "/api/rest/processes/statistics/product/:workflow/daterange/:dateRange/source/:source", method: "GET", isArray: true
             },
             getSingleProductStatistic: {
-                url: "/api/rest/processes/statistics/product/:workflow/daterange/:dateRange/id/:id", method: "GET"
+                url: "/api/rest/processes/statistics/product/:workflow/daterange/:dateRange/source/:source/id/:id", method: "GET"
             },
             getUserStatistic: {
                 url: "/api/rest/processes/statistics/user/daterange/:dateRange/source/:source", method: "GET", isArray: true
             },
             getSingleUserStatistic: {
-                url: "/api/rest/processes/statistics/user/daterange/:dateRange/id/:id", method: "GET"
+                url: "/api/rest/processes/statistics/user/daterange/:dateRange/source/:source/id/:id", method: "GET"
             }
         });
     }

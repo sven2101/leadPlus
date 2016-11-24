@@ -88,9 +88,10 @@ public class OlapStatisticService {
 		Map<String, List<Double>> sales = workflowStatisticService.getStatisticByDateRange(Workflow.SALE, dateRange,
 				null);
 		olap.setSales(ByteSearializer.serialize(sales));
-		List<ProductStatistic> products = productStatisticService.getTopProductStatstic(Workflow.SALE, dateRange, null);
+		Map<String, List<ProductStatistic>> products = productStatisticService.getTopProductStatstic(Workflow.SALE,
+				dateRange, null);
 		olap.setProducts(ByteSearializer.serialize(products));
-		List<UserStatistic> users = userStatisticService.getTopSalesMen(dateRange);
+		Map<String, List<UserStatistic>> users = userStatisticService.getTopSalesMen(dateRange);
 		olap.setUsers(ByteSearializer.serialize(users));
 		olapRepository.save(olap);
 	}

@@ -22,6 +22,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
+import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,7 +66,7 @@ public class ProfitResource {
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
 			@ApiParam(required = true) @PathVariable @Valid String source)
 			throws NotFoundException, ClassNotFoundException, IOException {
-		if (source == null || "".equals(source))
+		if (Strings.isNullOrEmpty(source))
 			source = AbstractStatisticService.ALL_STATISTIC_KEY;
 
 		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);

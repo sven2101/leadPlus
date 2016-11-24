@@ -1,4 +1,6 @@
 /// <reference path="../../Statistic/controller/Statistic.Service.ts" />
+/// <reference path="../../Setting/controller/Setting.Source.Service.ts" />
+
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Common.ts" />
 /*******************************************************************************
@@ -20,15 +22,17 @@ const StatisticControllerId: string = "StatisticController";
 
 class StatisticController {
 
-    $inject = [StatisticServiceId];
+    $inject = [StatisticServiceId, SourceServiceId];
 
     statisticService: StatisticService;
+    sourceService: SourceService;
     currentTab: number = 1;
     dateRange: string = "DAILY";
     source: string = "ALL";
 
-    constructor(StatisticService) {
+    constructor(StatisticService, SourceService) {
         this.statisticService = StatisticService;
+        this.sourceService = SourceService;
         this.onStatisticChange(this.dateRange, this.source);
     }
 
@@ -39,7 +43,6 @@ class StatisticController {
     getChartModelById(id: string): AbstractStatisticModel {
         return this.statisticService.getChartModelById(id);
     }
-
 
     onStatisticChange(dateRange: string, source: string) {
         this.statisticService.setPromises(false);

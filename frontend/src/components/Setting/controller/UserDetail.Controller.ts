@@ -21,9 +21,10 @@ const UserDetailControllerId: string = "UserDetailController";
 
 class UserDetailController {
 
-    $inject = [$routeParamsId, UserResourceId, StatisticServiceId, $scopeId, $translateId];
+    $inject = [$routeParamsId, UserResourceId, StatisticServiceId, SourceServiceId, $scopeId, $translateId];
 
     statisticService: StatisticService;
+    sourceService: SourceService;
     userResource;
     routeParams;
     currentUser: User;
@@ -32,12 +33,15 @@ class UserDetailController {
     userStatisticColumnChart: ColumnChart;
     translate;
     dateRange: string;
+    source: string;
 
 
-    constructor($routeParams, UserResource, StatisticService, $scope, $translate) {
+    constructor($routeParams, UserResource, StatisticService, SourceService, $scope, $translate) {
         this.statisticService = StatisticService;
+        this.sourceService = SourceService;
         this.userResource = UserResource.resource;
         this.dateRange = "ALL";
+        this.source = "ALL";
         this.routeParams = $routeParams;
         this.currentUserId = this.routeParams.userId;
         this.translate = $translate;

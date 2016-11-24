@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +52,8 @@ public class UserStatisticService extends AbstractStatisticService {
 	@Autowired
 	private IUserService userService;
 
-	public List<UserStatistic> getTopSalesMen(DateRange dateRange) {
-		Map<Long, UserStatistic> userMap = new HashMap<>();
+	public Map<String, List<UserStatistic>> getTopSalesMen(DateRange dateRange) {
+		Map<String, Map<Long, UserStatistic>> userMap = new HashMap<>();
 		if (dateRange == null) {
 			IllegalArgumentException ex = new IllegalArgumentException(
 					"Workflow parameter or daterange parmeter is null");
@@ -64,59 +65,73 @@ public class UserStatisticService extends AbstractStatisticService {
 		StatisticHelper statisticHelper = new StatisticHelper(dateRange);
 		final List<Process> processes = ProcessService.getProcessesBetweenTimestamp(statisticHelper.getFrom(),
 				statisticHelper.getUntil(), Process_.lead);
-		long key;
 
 		for (Process process : processes) {
 			if (process.getFormerProcessors().size() == 0)
 				continue;
-			List<Processor> offerProcessors = process.getFormerProcessors().stream()
-					.filter(it -> Activity.OFFER.equals(it.getActivity())).collect(Collectors.toList());
-			Set<Long> hasCountProcess = new HashSet<>();
-			Set<Long> hasCountCompletedProcess = new HashSet<>();
-			for (Processor processor : process.getFormerProcessors()) {
-				key = processor.getUser().getId();
-				Activity activity = processor.getActivity();
-				if (!userMap.containsKey(key)) {
-					UserStatistic userStatistic = new UserStatistic();
-					userStatistic.setUser(processor.getUser());
-					userMap.put(key, userStatistic);
-				}
-				if (!hasCountProcess.contains(key)) {
-					userMap.get(key).addCountProcess();
-					hasCountProcess.add(key);
-				}
-				if (process.getLead() != null && !process.getLead().isDeleted()
-						&& (Activity.OPEN.equals(activity) || Activity.INCONTACT.equals(activity))) {
-					userMap.get(key).addCountLead();
-				} else {
-					if (process.getOffer() != null && !process.getOffer().isDeleted()
-							&& Activity.OFFER.equals(activity))
-						userMap.get(key).addCountOffer();
-					if (process.getSale() != null && !process.getSale().isDeleted()) {
-						if (Activity.SALE.equals(activity)) {
-							userMap.get(key).addCountSale();
-						} else if (Activity.OFFER.equals(activity)) {
-							userMap.get(key)
-									.addCountTurnover(process.getSale().getSaleTurnover() / offerProcessors.size());
-							userMap.get(key).addCountProfit(process.getSale().getSaleProfit() / offerProcessors.size());
-							for (OrderPosition orderPosition : process.getSale().getOrderPositions()) {
-								userMap.get(key).addCountProduct(orderPosition.getAmount());
-							}
+			addToMapKey(ALL_STATISTIC_KEY, process, userMap);
+			if (process.getSource() != null && !Strings.isNullOrEmpty(process.getSource().getName())) {
+				addToMapKey(process.getSource().getName(), process, userMap);
+			}
+
+		}
+		Map<String, List<UserStatistic>> returnMap = new HashMap<>();
+		for (Map.Entry<String, Map<Long, UserStatistic>> entry : userMap.entrySet())
+			returnMap.put(entry.getKey(), new ArrayList<>(entry.getValue().values()));
+		return returnMap;
+	}
+
+	private void addToMapKey(String sourceKey, Process process, Map<String, Map<Long, UserStatistic>> userMap) {
+		List<Processor> offerProcessors = process.getFormerProcessors().stream()
+				.filter(it -> Activity.OFFER.equals(it.getActivity())).collect(Collectors.toList());
+		Set<Long> hasCountProcess = new HashSet<>();
+		Set<Long> hasCountCompletedProcess = new HashSet<>();
+		for (Processor processor : process.getFormerProcessors()) {
+			Long userIdKey = processor.getUser().getId();
+			Activity activity = processor.getActivity();
+			if (!userMap.containsKey(sourceKey)) {
+				userMap.put(sourceKey, new HashMap<>());
+			}
+			if (!userMap.get(sourceKey).containsKey(userIdKey)) {
+				UserStatistic userStatistic = new UserStatistic();
+				userStatistic.setUser(processor.getUser());
+				userMap.get(sourceKey).put(userIdKey, userStatistic);
+			}
+			if (!hasCountProcess.contains(userIdKey)) {
+				userMap.get(sourceKey).get(userIdKey).addCountProcess();
+				hasCountProcess.add(userIdKey);
+			}
+			if (process.getLead() != null && !process.getLead().isDeleted()
+					&& (Activity.OPEN.equals(activity) || Activity.INCONTACT.equals(activity))) {
+				userMap.get(sourceKey).get(userIdKey).addCountLead();
+			} else {
+				if (process.getOffer() != null && !process.getOffer().isDeleted() && Activity.OFFER.equals(activity))
+					userMap.get(sourceKey).get(userIdKey).addCountOffer();
+				if (process.getSale() != null && !process.getSale().isDeleted()) {
+					if (Activity.SALE.equals(activity)) {
+						userMap.get(sourceKey).get(userIdKey).addCountSale();
+					} else if (Activity.OFFER.equals(activity)) {
+						userMap.get(sourceKey).get(userIdKey)
+								.addCountTurnover(process.getSale().getSaleTurnover() / offerProcessors.size());
+						userMap.get(sourceKey).get(userIdKey)
+								.addCountProfit(process.getSale().getSaleProfit() / offerProcessors.size());
+						for (OrderPosition orderPosition : process.getSale().getOrderPositions()) {
+							userMap.get(sourceKey).get(userIdKey).addCountProduct(orderPosition.getAmount());
 						}
 					}
 				}
-				if (process.getSale() != null && !process.getSale().isDeleted()
-						&& !hasCountCompletedProcess.contains(key)) {
-					userMap.get(key).addCompletedProcess();
-					hasCountCompletedProcess.add(key);
+			}
+			if (process.getSale() != null && !process.getSale().isDeleted()
+					&& !hasCountCompletedProcess.contains(userIdKey)) {
+				userMap.get(sourceKey).get(userIdKey).addCompletedProcess();
+				hasCountCompletedProcess.add(userIdKey);
 
-				}
 			}
 		}
-		return new ArrayList<>(userMap.values());
 	}
 
-	public UserStatistic getUserStatisticByIdAndDateRange(DateRange dateRange, Long userId) throws NotFoundException {
+	public Map<String, UserStatistic> getUserStatisticByIdAndDateRange(DateRange dateRange, Long userId)
+			throws NotFoundException {
 		if (userId == null || dateRange == null) {
 			IllegalArgumentException ex = new IllegalArgumentException(
 					"DateRange parameter or userId parmeter is null");
@@ -124,47 +139,61 @@ public class UserStatisticService extends AbstractStatisticService {
 					+ ex.getMessage(), ex);
 			throw ex;
 		}
+		Map<String, UserStatistic> userMap = new HashMap<>();
 		StatisticHelper statisticHelper = new StatisticHelper(dateRange);
 		final List<Process> processes = ProcessService.getProcessesByProcessorAndBetweenTimestamp(userId,
 				statisticHelper.getFrom(), statisticHelper.getUntil());
 
-		UserStatistic userStatistic = new UserStatistic();
 		User user = userService.getById(userId);
-		if (!processes.isEmpty())
-			userStatistic.setUser(user);
+		if (user == null)
+			return userMap;
 		for (Process process : processes) {
-			List<Processor> offerProcessors = process.getFormerProcessors().stream()
-					.filter(it -> Activity.OFFER.equals(it.getActivity())).collect(Collectors.toList());
-			userStatistic.addCountProcess();
-			for (Processor processor : process.getFormerProcessors().stream().filter(it -> it.getUser().equals(user))
-					.collect(Collectors.toList())) {
-				Activity activity = processor.getActivity();
-				if (process.getLead() != null && !process.getLead().isDeleted()
-						&& (Activity.OPEN.equals(activity) || Activity.INCONTACT.equals(activity))) {
-					userStatistic.addCountLead();
-				} else {
-					if (process.getOffer() != null && !process.getOffer().isDeleted()
-							&& Activity.OFFER.equals(activity))
-						userStatistic.addCountOffer();
-					if (process.getSale() != null && !process.getSale().isDeleted()) {
-						if (Activity.SALE.equals(activity)) {
-							userStatistic.addCountSale();
-						} else if (Activity.OFFER.equals(activity)) {
-							userStatistic
-									.addCountTurnover(process.getSale().getSaleTurnover() / offerProcessors.size());
-							userStatistic.addCountProfit(process.getSale().getSaleProfit() / offerProcessors.size());
-							for (OrderPosition orderPosition : process.getSale().getOrderPositions()) {
-								userStatistic.addCountProduct(orderPosition.getAmount());
-							}
+			addMapToKeySingleUserStatistic(ALL_STATISTIC_KEY, process, user, userMap);
+			if (process.getSource() != null && !Strings.isNullOrEmpty(process.getSource().getName())) {
+				addMapToKeySingleUserStatistic(process.getSource().getName(), process, user, userMap);
+			}
+		}
+		return userMap;
+	}
+
+	private void addMapToKeySingleUserStatistic(String sourceKey, Process process, User user,
+			Map<String, UserStatistic> userMap) {
+		if (!userMap.containsKey(sourceKey)) {
+			UserStatistic userStatistic = new UserStatistic();
+			userStatistic.setUser(user);
+			userMap.put(sourceKey, userStatistic);
+		}
+		List<Processor> offerProcessors = process.getFormerProcessors().stream()
+				.filter(it -> Activity.OFFER.equals(it.getActivity())).collect(Collectors.toList());
+		userMap.get(sourceKey).addCountProcess();
+		for (Processor processor : process.getFormerProcessors().stream().filter(it -> it.getUser().equals(user))
+				.collect(Collectors.toList())) {
+			Activity activity = processor.getActivity();
+			if (process.getLead() != null && !process.getLead().isDeleted()
+					&& (Activity.OPEN.equals(activity) || Activity.INCONTACT.equals(activity))) {
+				userMap.get(sourceKey).addCountLead();
+			} else {
+				if (process.getOffer() != null && !process.getOffer().isDeleted() && Activity.OFFER.equals(activity))
+					userMap.get(sourceKey).addCountOffer();
+				if (process.getSale() != null && !process.getSale().isDeleted()) {
+					if (Activity.SALE.equals(activity)) {
+						userMap.get(sourceKey).addCountSale();
+					} else if (Activity.OFFER.equals(activity)) {
+						userMap.get(sourceKey)
+								.addCountTurnover(process.getSale().getSaleTurnover() / offerProcessors.size());
+						userMap.get(sourceKey)
+								.addCountProfit(process.getSale().getSaleProfit() / offerProcessors.size());
+						for (OrderPosition orderPosition : process.getSale().getOrderPositions()) {
+							userMap.get(sourceKey).addCountProduct(orderPosition.getAmount());
 						}
 					}
 				}
 			}
-			if (process.getSale() != null && !process.getSale().isDeleted()) {
-				userStatistic.addCompletedProcess();
-			}
 		}
-		return userStatistic;
+		if (process.getSale() != null && !process.getSale().isDeleted()) {
+			userMap.get(sourceKey).addCompletedProcess();
+		}
+
 	}
 
 	@Override

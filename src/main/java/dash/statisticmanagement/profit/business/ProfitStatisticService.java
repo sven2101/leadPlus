@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.assertj.core.util.Strings;
 import org.springframework.stereotype.Service;
 
 import dash.processmanagement.domain.Process;
@@ -44,7 +45,7 @@ public class ProfitStatisticService extends AbstractStatisticService {
 				if (calendarMap.containsKey(key)) {
 					double allValue = map.get(ALL_STATISTIC_KEY).get(key) + process.getSale().getSaleProfit();
 					map.get(ALL_STATISTIC_KEY).put(key, allValue);
-					if (process.getSource() != null && !"".equals(process.getSource())) {
+					if (process.getSource() != null && !Strings.isNullOrEmpty(process.getSource().getName())) {
 						if (!map.containsKey(process.getSource().getName())) {
 							map.put(process.getSource().getName(), new LinkedHashMap<String, Double>(calendarMap));
 						}

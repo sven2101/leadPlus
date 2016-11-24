@@ -326,16 +326,16 @@ class StatisticService {
         }
     }
 
-    getProductStatisticById(workflow: string, dateRange: string, id: number): any {
+    getProductStatisticById(workflow: string, dateRange: string, source: string, id: number): any {
         let deferred = this.q.defer();
-        this.statisticResource.getSingleProductStatistic({ workflow: workflow, dateRange: dateRange, id: id }).$promise.then(function (result) {
+        this.statisticResource.getSingleProductStatistic({ workflow: workflow, dateRange: dateRange, source: source, id: id }).$promise.then(function (result) {
             deferred.resolve(result);
         });
         return deferred.promise;
     }
-    getUserStatisticById(dateRange: string, id: number): any {
+    getUserStatisticById(dateRange: string, source: string, id: number, ): any {
         let deferred = this.q.defer();
-        this.statisticResource.getSingleUserStatistic({ dateRange: dateRange, id: id }).$promise.then(function (result) {
+        this.statisticResource.getSingleUserStatistic({ dateRange: dateRange, source: source, id: id }).$promise.then(function (result) {
             deferred.resolve(result);
         });
         return deferred.promise;

@@ -27,6 +27,7 @@ angular.module(moduleApp)
         directive.scope = {
             chart: "=",
             daterange: "=",
+            source: "=",
             productobj: "="
         };
         directive.templateUrl = function (elem, attr) {
@@ -48,19 +49,26 @@ angular.module(moduleApp)
                     "priceNetto": 0
                 }
             };
-            loadData(scope.daterange);
+            loadData(scope.daterange, scope.source);
             scope.$watch("daterange", function (newValue, oldValue) {
                 if (newValue !== oldValue) {
                     scope.chart.clearData();
-                    loadData(newValue);
+                    loadData(newValue, scope.source);
                 }
             }, true);
 
-            function loadData(dateRange: string) {
+            scope.$watch("source", function (newValue, oldValue) {
+                if (newValue !== oldValue) {
+                    scope.chart.clearData();
+                    loadData(scope.daterange, newValue);
+                }
+            }, true);
+
+            function loadData(dateRange: string, source: string) {
                 productLeadPromise = false;
                 productOfferPromise = false;
                 productSalePromise = false;
-                StatisticService.getProductStatisticById(Workflow[Workflow.LEAD], dateRange, scope.productobj.id).then(function (resultLeads) {
+                StatisticService.getProductStatisticById(Workflow[Workflow.LEAD], dateRange, source, scope.productobj.id).then(function (resultLeads) {
                     scope.productLeads = resultLeads;
                     if (isNullOrUndefined(resultLeads.product)) {
                         scope.productLeads = emptyProduct;
@@ -68,7 +76,7 @@ angular.module(moduleApp)
                     productLeadPromise = true;
                     checkPromise();
                 });
-                StatisticService.getProductStatisticById(Workflow[Workflow.OFFER], dateRange, scope.productobj.id).then(function (resultOffers) {
+                StatisticService.getProductStatisticById(Workflow[Workflow.OFFER], dateRange, source, scope.productobj.id).then(function (resultOffers) {
                     scope.productOffers = resultOffers;
                     if (isNullOrUndefined(resultOffers.product)) {
                         scope.productOffers = emptyProduct;
@@ -76,7 +84,7 @@ angular.module(moduleApp)
                     productOfferPromise = true;
                     checkPromise();
                 });
-                StatisticService.getProductStatisticById(Workflow[Workflow.SALE], dateRange, scope.productobj.id).then(function (resultSales) {
+                StatisticService.getProductStatisticById(Workflow[Workflow.SALE], dateRange, source, scope.productobj.id).then(function (resultSales) {
                     scope.productSales = resultSales;
                     if (isNullOrUndefined(resultSales.product)) {
                         scope.productSales = emptyProduct;

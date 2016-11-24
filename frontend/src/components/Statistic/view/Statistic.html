@@ -13,13 +13,13 @@
 			<div class="col-lg-2">
 				<div class="row">
 					</br>
-					<h3>{{ 'STATISTIC_SOURCE' | translate }}</h3>
+					<h3>{{ 'SOURCE_SOURCE' | translate }}</h3>
 				</div>
 				<div class="row">
-					<select class="form-control" style="width: 140px;" ng-model="statisticCtrl.source" ng-change="statisticCtrl.onStatisticChange(statisticCtrl.dateRange,statisticCtrl.source)">
-						<option value="ALL">ALL</option>
-						<option value="API">API</option>
-						<option value="EMAIL">EMAIL</option>
+									<select class="form-control" style="width: 140px;" ng-model="statisticCtrl.source" ng-change="statisticCtrl.onStatisticChange(statisticCtrl.dateRange,statisticCtrl.source)">
+						<option value="ALL">{{ 'STATISTIC_PERIOD_ALL' | translate
+							}}</option>
+                        <option ng-repeat="source in statisticCtrl.sourceService.sources| orderBy:'name'" value="{{source.name}}">{{source.name}}</option>
 					</select>
 				</div>
 			</div>
