@@ -34,6 +34,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import dash.common.HtmlCleaner;
 import dash.customermanagement.business.ICustomerService;
 import dash.customermanagement.domain.Customer;
 import dash.exceptions.NotFoundException;
@@ -116,6 +117,9 @@ public class PublicApiService implements IPublicApiService {
 		lead.getCustomer().setDeleted(false);
 		lead.getCustomer().setTimestamp(Calendar.getInstance());
 		lead.setCustomer(customerService.save(lead.getCustomer()));
+
+		// clean message
+		lead.setMessage(HtmlCleaner.cleanHtml(lead.getMessage()));
 
 		// set Vendor
 		lead.setVendor(null);

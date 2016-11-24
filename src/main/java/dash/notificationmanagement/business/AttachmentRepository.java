@@ -11,26 +11,12 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.messagemanagement.domain;
+package dash.notificationmanagement.business;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import dash.notificationmanagement.domain.Attachment;
-import dash.notificationmanagement.domain.NotificationType;
 
-public class OfferMessage extends AbstractMessage {
+public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
 
-	/**
-	 * @param recipient
-	 *            - guy who receives this Message
-	 * @param subject
-	 *            - subject of this specific Message
-	 * @param content
-	 *            - content of this specific Message
-	 * @param attachment
-	 *            - attachment of this specific Message
-	 */
-	public OfferMessage(String recipient, String subject, String content, List<Attachment> attachments, NotificationType notificationType) {
-		super(recipient, subject, content, attachments, notificationType);
-	}
 }

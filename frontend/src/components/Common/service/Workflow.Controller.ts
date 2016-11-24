@@ -54,7 +54,7 @@ class WorkflowController extends AbstractWorkflow {
 
     editProcess: Process;
     edit: boolean;
-    editEmail: boolean;
+    editEmail: boolean = true;
     editable: boolean = true;
 
     leadService: LeadService;
@@ -130,11 +130,14 @@ class WorkflowController extends AbstractWorkflow {
             this.customerSelected = this.editProcess.offer.customer.id > 0;
             this.selectedCustomer = this.editProcess.offer.customer;
             this.editWorkflowUnit = this.editProcess.offer;
+            this.currentNotification = new Notification();
+            this.currentNotification.recipients = this.editWorkflowUnit.customer.email;
         } else if (this.type === "sale") {
             this.customerSelected = this.editProcess.sale.customer.id > 0;
             this.selectedCustomer = this.editProcess.sale.customer;
             this.editWorkflowUnit = this.editProcess.sale;
             this.wizardOnClick(6);
+            this.editEmail = false;
         }
     }
 
@@ -188,7 +191,7 @@ class WorkflowController extends AbstractWorkflow {
     existsInvoiceNumber() {
         if (this.editWorkflowUnit instanceof Sale) {
             let self = this;
-            this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function (result: Sale) {
+            this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function(result: Sale) {
                 if (!isNullOrUndefined(result)) {
                     self.invoiceNumberAlreadyExists = true;
                 } else {
@@ -198,28 +201,30 @@ class WorkflowController extends AbstractWorkflow {
         }
     }
 
-    send() {
+    async send() {
         let self = this;
-
         let process = this.editProcess;
-        this.currentNotification.notificationType = NotificationType.OFFER;
-        let notification = this.currentNotification;
-        this.notificationService.sendNotification(notification).then(() => {
-            self.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
-                self.notificationService.saveFileUpload(notification.attachment).then((resultFileUpload) => {
-                    notification.attachment = resultFileUpload;
-                    if (isNullOrUndefined(process.notifications)) {
-                        process.notifications = [];
-                    }
-                    process.notifications.push(notification);
-                    self.workflowService.saveProcess(process).then((resultProcess) => {
-                        self.rootScope.$broadcast("deleteRow", process);
-                        self.close(true);
-                    });
-                });
+        process.notifications = process.notifications ? process.notifications : [];
 
-            });
-        });
+        let notification: Notification = deepCopy(this.currentNotification);
+        notification.attachments = notification.attachments ? notification.attachments : [];
+        notification.notificationType = NotificationType.OFFER;
+        notification.id = undefined;
+        await this.notificationService.sendNotification(notification);
+        await this.workflowService.addLeadToOffer(process);
+        let promises: Array<Promise<void>> = notification.attachments ?
+            notification.attachments
+                .filter(a => isNullOrUndefined(a.id))
+                .map(a => self.fileService.saveAttachment(a)) : [];
+        for (let p of promises) {
+            await p;
+        }
+        notification.attachments.forEach(a => a.id = undefined);
+        process.notifications.push(notification);
+        let resultProcess = await this.workflowService.saveProcess(process);
+        self.rootScope.$broadcast("deleteRow", process);
+        self.close(true);
+
     }
 
     save() {
@@ -235,21 +240,12 @@ class WorkflowController extends AbstractWorkflow {
             let self = this;
             this.workflowService.addOfferToSale(process).then(() => {
                 self.rootScope.$broadcast("deleteRow", process);
+
                 self.close(true);
             });
         }
     }
 
-    getTheFiles($files) {
-        let self = this;
-        this.notificationService.setAttachmentToNotification($files, this.currentNotification).then(() => {
-            try {
-                self.scope.$digest();
-            } catch (error) {
-                handleError(error);
-            }
-        });
-    }
 
     setFormerNotification(notificationId: number) {
         if (Number(notificationId) === -1) {

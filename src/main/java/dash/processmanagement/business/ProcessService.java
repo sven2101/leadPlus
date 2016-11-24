@@ -47,6 +47,7 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.business.ILeadService;
 import dash.leadmanagement.domain.Lead;
+import dash.notificationmanagement.domain.Attachment;
 import dash.notificationmanagement.domain.Notification;
 import dash.offermanagement.business.IOfferService;
 import dash.offermanagement.business.OfferService;
@@ -307,6 +308,11 @@ public class ProcessService implements IProcessService {
 	private void setNotifications(Process process) {
 		if (process.getNotifications() != null) {
 			for (Notification notification : process.getNotifications()) {
+				if (process.getNotifications() != null) {
+					for (Attachment attachment : notification.getAttachments()) {
+						attachment.setNotification(notification);
+					}
+				}
 				notification.setProcess(process);
 			}
 		}

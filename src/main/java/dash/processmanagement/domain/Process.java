@@ -98,12 +98,11 @@ public class Process {
 	@JsonProperty("notifications")
 	@Where(clause = "deleted <> '1'")
 	private List<Notification> notifications;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "source_fk", nullable = true)
 	@Where(clause = "deleted <> '1'")
 	private Source source;
-
 
 	public Process(Lead lead) {
 		this.lead = lead;
@@ -208,7 +207,6 @@ public class Process {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
 
 	public Source getSource() {
 		return source;
@@ -297,5 +295,5 @@ public class Process {
 				+ ", comments=" + comments + ", status=" + status + ", processor=" + processor + ", notifications="
 				+ notifications + ", source=" + source + "]";
 	}
-	
+
 }

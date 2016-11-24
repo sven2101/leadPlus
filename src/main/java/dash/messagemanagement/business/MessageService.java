@@ -73,8 +73,8 @@ public class MessageService implements IMessageService {
 		Writer writer = new StringWriter();
 		template.process(mapping, writer);
 
-		return new OfferMessage(notification.getRecipient(), notification.getSubject(), writer.toString(),
-				notification.getAttachment(), NotificationType.OFFER);
+		return new OfferMessage(notification.getRecipients(), notification.getSubject(), writer.toString(),
+				notification.getAttachments(), NotificationType.OFFER);
 	}
 
 	private String unescapeString(String escapedString) {

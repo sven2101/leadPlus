@@ -56,7 +56,7 @@ class OfferController extends AbstractWorkflow {
     editProcess: Process;
     editWorkflowUnit: Offer = new Offer();
     edit: boolean;
-    editEmail: boolean = true;
+    editEmail: boolean = false;
     editable: boolean = true;
 
     templates: Array<Template> = [];

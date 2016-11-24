@@ -36,7 +36,9 @@ const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [CommentResourceId, ProcessResourceId, toasterId, $rootScopeId, $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId, UserResourceId, TemplateServiceId];
+    private $inject = [CommentResourceId, ProcessResourceId, toasterId, $rootScopeId,
+        $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId,
+        UserResourceId, TemplateServiceId, NotificationServiceId, FileServiceId];
 
     commentResource;
     processResource;
@@ -53,7 +55,7 @@ class WorkflowService {
     uibModal;
     users: Array<User> = [];
 
-    constructor(CommentResource, ProcessResource, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService) {
+    constructor(CommentResource, ProcessResource, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService, private NotificationService, private FileService) {
         this.commentResource = CommentResource.resource;
         this.processResource = ProcessResource.resource;
         this.userResource = UserResource.resource;
@@ -620,6 +622,7 @@ class WorkflowService {
             });
         }
     }
+
 
 
 

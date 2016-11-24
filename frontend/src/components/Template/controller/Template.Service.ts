@@ -145,8 +145,8 @@ class TemplateService {
         return defer.promise;
     }
 
-    getAll(): IPromise<Array<Template>> {
-        let defer = this.q.defer();
+    getAll(): Promise<Array<Template>> {
+        let defer: IDefer<Array<Template>> = this.q.defer();
         let self = this;
         this.templateResource.getAll().$promise.then(function (result: Array<Template>) {
             self.templates = result;
