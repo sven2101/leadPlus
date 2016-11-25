@@ -158,9 +158,8 @@ class DashboardService {
                     (self.inContacts === target && self.openOffers === source) ||
                     (self.inContacts === target && self.doneOffers === source) ||
                     (self.inContacts === target && self.closedSales === source) ||
-                    (self.openOffers === target && self.doneOffer === source) ||
                     (self.doneOffers === target && self.openLeads === source) ||
-                    (self.doneOffers === target && self.inContact === source) ||
+                    (self.doneOffers === target && self.inContacts === source) ||
                     (self.closedSales === target && self.inContacts === source) ||
                     (self.closedSales === target && self.openLeads === source) ||
                     target === source) {
