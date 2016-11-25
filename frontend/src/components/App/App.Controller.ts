@@ -167,8 +167,8 @@ class AppController {
             let temp = array[i];
             if (!isNullOrUndefined(temp) && !isNaN(temp.amount)
                 && !isNullOrUndefined(temp.product)
-                && !isNaN(temp.product.priceNetto)) {
-                sum += temp.amount * temp.product.priceNetto;
+                && !isNaN(temp.product.netPrice)) {
+                sum += temp.amount * temp.product.netPrice;
             }
         }
         return sum;

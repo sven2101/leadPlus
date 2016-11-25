@@ -68,15 +68,17 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 
 		HttpEntity<Offer> entityCreateOffer = new HttpEntity<Offer>(offer, headers);
 
-		ResponseEntity<Offer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateOffer, Offer.class);
+		ResponseEntity<Offer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateOffer,
+				Offer.class);
 		Offer responseCreateOffer = responseCreate.getBody();
 
 		HttpEntity<Offer> entityGetOffer = new HttpEntity<Offer>(headers);
 
-		ResponseEntity<Offer> responseGetOffer = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET, entityGetOffer, Offer.class,
-				responseCreateOffer.getId());
+		ResponseEntity<Offer> responseGetOffer = restTemplate.exchange(EXTENDED_URI + "/{id}", HttpMethod.GET,
+				entityGetOffer, Offer.class, responseCreateOffer.getId());
 
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetOffer.getHeaders().getContentType().getCharSet());
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(),
+				responseGetOffer.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetOffer.getStatusCode());
 		assertEquals(responseCreateOffer, responseGetOffer.getBody());
 	}
@@ -86,8 +88,10 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 
 		HttpEntity<Offer> entityGetOffers = new HttpEntity<Offer>(headers);
 
-		ResponseEntity<Object[]> responseGetOffers = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET, entityGetOffers, Object[].class);
-		assertEquals(ContentType.APPLICATION_JSON.getCharset(), responseGetOffers.getHeaders().getContentType().getCharSet());
+		ResponseEntity<Object[]> responseGetOffers = restTemplate.exchange(EXTENDED_URI, HttpMethod.GET,
+				entityGetOffers, Object[].class);
+		assertEquals(ContentType.APPLICATION_JSON.getCharset(),
+				responseGetOffers.getHeaders().getContentType().getCharSet());
 		assertEquals(HttpStatus.OK, responseGetOffers.getStatusCode());
 	}
 
@@ -98,12 +102,14 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 		Offer offer = create();
 		HttpEntity<Offer> entityCreateOffer = new HttpEntity<Offer>(offer, headers);
 
-		ResponseEntity<Offer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateOffer, Offer.class);
+		ResponseEntity<Offer> responseCreate = restTemplate.exchange(EXTENDED_URI, HttpMethod.POST, entityCreateOffer,
+				Offer.class);
 		Offer responseCreateOffer = responseCreate.getBody();
 
 		HttpEntity<Offer> entity = new HttpEntity<Offer>(responseCreateOffer, headers);
 
-		ResponseEntity<Offer> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Offer.class, responseCreateOffer.getId());
+		ResponseEntity<Offer> response = restTemplate.exchange(EXTENDED_URI, HttpMethod.PUT, entity, Offer.class,
+				responseCreateOffer.getId());
 		Offer responseOffer = response.getBody();
 
 		assertEquals(ContentType.APPLICATION_JSON.getCharset(), response.getHeaders().getContentType().getCharSet());
@@ -124,7 +130,7 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 		Product container = new Product();
 		container.setName("Fusscontainer");
 		container.setDescription("Dieser Container ist 3 Fuss lang. ");
-		container.setPriceNetto(200.00);
+		container.setNetPrice(200.00);
 
 		Customer customer = new Customer();
 		customer.setTitle(Title.MR);
@@ -141,7 +147,7 @@ public class OfferIntegrationTest extends BaseConfig implements IIntegrationTest
 
 		offer.setDeliveryAddress("Berlin");
 		offer.setDeliveryDate(Calendar.getInstance());
-		offer.setOfferPrice(200.00);
+		offer.setNetPrice(200.00);
 		offer.setCustomer(customer);
 		offer.setTimestamp(Calendar.getInstance());
 		offer.setVendor(vendor);

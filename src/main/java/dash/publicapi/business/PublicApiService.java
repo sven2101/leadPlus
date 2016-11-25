@@ -91,7 +91,7 @@ public class PublicApiService implements IPublicApiService {
 					throw new NotFoundException(PRODUCT_NOT_FOUND);
 				}
 				orderPosition.setProduct(product);
-				orderPosition.setPrice(orderPosition.getProduct().getPriceNetto());
+				orderPosition.setNetPrice(orderPosition.getProduct().getNetPrice());
 				orderPosition.setDeleted(false);
 				orderPosition.setId(null);
 				orderPosition.setWorkflow(lead);

@@ -163,7 +163,7 @@ public class CommentIntegrationTest extends BaseConfig implements IIntegrationTe
 			Product container = new Product();
 			container.setName("Kühlcontainer");
 			container.setDescription("Dieser Kühlcontainer kühlt am aller besten");
-			container.setPriceNetto(1000.00);
+			container.setNetPrice(1000.00);
 
 			Lead lead = new Lead();
 			lead.setCustomer(customer);

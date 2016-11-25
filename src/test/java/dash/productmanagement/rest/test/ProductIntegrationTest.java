@@ -116,7 +116,7 @@ public class ProductIntegrationTest extends BaseConfig implements IIntegrationTe
 		Product product = new Product();
 		product.setName("Kühlcontainer");
 		product.setDescription("Dieser Kühlcontainer kühlt am aller besten");
-		product.setPriceNetto(1000.00);
+		product.setNetPrice(1000.00);
 
 		return product;
 	}

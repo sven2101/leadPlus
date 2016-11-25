@@ -8,7 +8,7 @@
 						<th class="col-md-5">
 							<select class="form-control" ng-model="parent.currentProductId" ng-disabled="!parent.editable">
                             <option value="-1" selected disabled hidden>{{ 'LEAD_EDIT_SELECT_PRODUCT' | translate }}</option>                                     
-                            <option value="{{product.id}}" ng-repeat="product in service.productService.getActiveProducts()">{{product.name}} {{product.priceNetto | currency:'\u20AC'}}</option>                                          
+                            <option value="{{product.id}}" ng-repeat="product in service.productService.getActiveProducts()">{{product.name}} {{product.netPrice | currency:'\u20AC'}}</option>                                          
                         </select>
 						</th>
 						<th class="col-md-2"></th>
@@ -48,7 +48,7 @@
 					<th class="text-center">{{ 'PRODUCT_PRICE' | translate }}</th>
 					<tr ng-repeat="orderPosition in parent.editWorkflowUnit.orderPositions">
 						<td class="col-md-3">
-							{{orderPosition.product.name}} ({{orderPosition.product.priceNetto| currency:'\u20AC'}})
+							{{orderPosition.product.name}} ({{orderPosition.product.netPrice| currency:'\u20AC'}})
 						</td>
 						<td class="col-md-2 text-center ">
 							<div class="input-group " ng-class="{ 'has-error' : parent.leadEditForm[
@@ -64,13 +64,13 @@
 						<td class="col-md-2 text-center">
 							<div class="input-group" ng-class="{ 'has-error' : parent.leadEditForm['orderPosition'+$index].$invalid && !parent.leadEditForm['orderPosition'+$index].$pristine  }">
 								<span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
-								<input type="number" name="{{'orderPosition'+$index}}" class="form-control" ng-model="orderPosition.price" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ "
+								<input type="number" name="{{'orderPosition'+$index}}" class="form-control" ng-model="orderPosition.netPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ "
 									min="0 " step="0.01 " data-number-to-fixed="2 " data-number-stepfactor="100" class="form-control currency " ng-keyup="[parent.workflowService.setDiscount(orderPosition),parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.editWorkflowUnit.orderPositions)] "
 									id="c2 " required ng-disabled="!parent.editable">
 							</div>
 						</td>
 						<td class="col-md-2 text-center ">{{orderPosition.amount}}</td>
-						<td class="col-md-2 text-center ">{{orderPosition.price*orderPosition.amount| currency:'\u20AC'}}
+						<td class="col-md-2 text-center ">{{orderPosition.netPrice*orderPosition.amount| currency:'\u20AC'}}
 						</td>
 						<td class=" col-md-1 ">
 							<button type="button " class="btn btn-white btn-sm " ng-click="[parent.deleteProduct(parent.editWorkflowUnit.orderPositions,$index),parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.editWorkflowUnit.orderPositions)] "

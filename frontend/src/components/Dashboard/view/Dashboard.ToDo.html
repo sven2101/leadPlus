@@ -45,8 +45,8 @@
 								</td>
 								<td class="project-completion">
 									<strong ng-if="todo.status=='OPEN'||todo.status=='INCONTACT'">{{::dashboardCtrl.sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</strong>
-									<strong ng-if="todo.status=='OFFER'">{{::todo.offer.offerPrice| currency:'\u20AC'}}</strong>
-									<strong ng-if="todo.status=='FOLLOWUP'">{{::todo.offer.offerPrice| currency:'\u20AC'}}</strong>
+									<strong ng-if="todo.status=='OFFER'">{{::todo.offer.netPrice| currency:'\u20AC'}}</strong>
+									<strong ng-if="todo.status=='FOLLOWUP'">{{::todo.offer.netPrice| currency:'\u20AC'}}</strong>
 								</td>
 								<td class="project-actions">
 									<a class="btn btn-white btn-sm" ng-if="todo.status=='OPEN'||todo.status=='INCONTACT'" ng-href="#/leads/{{::todo.id}}"><i class="fa fa-pencil"></i> Go to </a>

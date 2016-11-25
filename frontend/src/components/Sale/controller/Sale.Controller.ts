@@ -208,7 +208,7 @@ class SaleController extends AbstractWorkflow {
         this.customerSelected = this.editProcess.sale.customer.id > 0;
         this.selectedCustomer = this.editProcess.sale.customer;
         this.editWorkflowUnit = this.editProcess.sale;
-        // this.editWorkflowUnit.saleTurnover = this.editProcess.offer.offerPrice;
+        // this.editWorkflowUnit.saleTurnover = this.editProcess.offer.netPrice;
     }
 
 

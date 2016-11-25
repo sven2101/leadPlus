@@ -46,7 +46,7 @@ angular.module(moduleApp)
                 "turnover": 0,
                 "discount": 0,
                 "product": {
-                    "priceNetto": 0
+                    "netPrice": 0
                 }
             };
             loadData(scope.daterange, scope.source);
