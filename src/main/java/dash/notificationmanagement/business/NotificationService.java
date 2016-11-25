@@ -63,18 +63,16 @@ public class NotificationService implements INotificationService {
 
 		try {
 			Smtp smtp = smtpService.findByUser(userId);
-
-			if (notification != null && notification.getAttachments() != null
-					&& notification.getAttachments().size() > 0) {
-				for (Attachment attachment : notification.getAttachments()) {
-					if (attachment != null && attachment.getId() != null) {
-						Attachment existingAttachment = attachmentService.getById(attachment.getId());
-						notification.addAttachment(existingAttachment);
+			if (smtp != null) {
+				if (notification != null && notification.getAttachments() != null
+						&& notification.getAttachments().size() > 0) {
+					for (Attachment attachment : notification.getAttachments()) {
+						if (attachment != null && attachment.getId() != null) {
+							Attachment existingAttachment = attachmentService.getById(attachment.getId());
+							notification.addAttachment(existingAttachment);
+						}
 					}
 				}
-			}
-
-			if (smtp != null) {
 				smtp.setPassword(Encryptor
 						.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
 

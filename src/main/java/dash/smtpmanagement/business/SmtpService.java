@@ -148,11 +148,8 @@ public class SmtpService implements ISmtpService {
 	@Override
 	public Smtp findByUser(long id) throws NotFoundException {
 		User user = userService.getById(id);
-		Smtp smtp = smptRepository.findByUser(user);
-		if (smtp == null) {
-			throw new NotFoundException(BECAUSE_OF_OBJECT_IS_NULL);
-		}
-		return smtp;
+		return smptRepository.findByUser(user);
+
 	}
 
 }
