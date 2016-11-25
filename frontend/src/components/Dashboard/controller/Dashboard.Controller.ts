@@ -109,8 +109,8 @@ class DashboardController {
     getOpenOffers(): Array<Process> {
         return this.dashboardService.getOpenOffers();
     }
-    getPreSales(): Array<Process> {
-        return this.dashboardService.getPreSales();
+    getDoneOffers(): Array<Process> {
+        return this.dashboardService.getDoneOffers();
     }
     getClosedSales(): Array<Process> {
         return this.dashboardService.getClosedSales();

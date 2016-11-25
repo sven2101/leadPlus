@@ -226,7 +226,13 @@ class OfferDataTableService {
             return "<span style='color: #f79d3c;'>"
                 + data.followUpAmount + "x " + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>"
                 + hasProcessor;
-        } else if (data.status === "SALE") {
+        }
+        else if (data.status === "DONE") {
+            return "<span style='color: #f79d3c;'>"
+                + this.translate.instant("COMMON_STATUS_DONE") + "</span>"
+                + hasProcessor;
+        }
+        else if (data.status === "SALE") {
             return "<span style='color: #1872ab;'>"
                 + this.translate.instant("COMMON_STATUS_SALE") + "</span>";
         } else if (data.status === "CLOSED") {

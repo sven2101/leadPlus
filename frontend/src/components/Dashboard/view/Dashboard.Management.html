@@ -72,9 +72,9 @@
 			<div class="dragColumn ">
 				<div class="box">
 					</br>
-					<h3 style="text-align: center;">{{ 'DASHBOARD_PRE_SALE' | translate }} {{dashboardCtrl.dashboardService.preSalesValue| currency:'\u20AC'}}</h3>
-					<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="sale" ng-model="dashboardCtrl.dashboardService.preSales">
-						<li class="warning-element draggable dragItem" ng-repeat="process in dashboardCtrl.getPreSales() | limitTo:7">
+					<h3 style="text-align: center;">{{ 'DASHBOARD_DONE_OFFERS' | translate }} {{dashboardCtrl.dashboardService.doneOffersValue| currency:'\u20AC'}}</h3>
+					<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="sale" ng-model="dashboardCtrl.dashboardService.doneOffers">
+						<li class="warning-element draggable dragItem" ng-repeat="process in dashboardCtrl.getDoneOffers() | limitTo:7">
 							<dashboardmanagamentcard process="process" workflowunittype="offer" />
 						</li>
 					</ul>
