@@ -88,7 +88,7 @@ class WorkflowService {
             timestamp: newTimestamp()
         };
 
-        this.commentResource.save({ id: process.id }, comment).$promise.then(function(result: Commentary) {
+        this.commentResource.save({ id: process.id }, comment).$promise.then(function (result: Commentary) {
             let timestamp = toLocalDate(comment.timestamp, "DD.MM.YYYY HH:mm:ss");
             comment.timestamp = timestamp;
             result.creator = self.rootScope.user;
@@ -96,7 +96,7 @@ class WorkflowService {
 
 
             defer.resolve(true);
-        }, function() {
+        }, function () {
             defer.reject(false);
         });
         return defer.promise;
@@ -104,7 +104,7 @@ class WorkflowService {
 
     getCommentsByProcessId(id: number): Array<Commentary> {
         let comments: Array<Commentary> = new Array<Commentary>();
-        this.commentResource.getByProcessId({ id: id }).$promise.then(function(result) {
+        this.commentResource.getByProcessId({ id: id }).$promise.then(function (result) {
             for (let comment of result) {
                 let timestamp = toLocalDate(comment.timestamp);
                 comment.timestamp = timestamp;
@@ -216,15 +216,15 @@ class WorkflowService {
             backdrop: "static",
             size: "lg",
             resolve: {
-                process: function() {
+                process: function () {
                     return process;
-                }, type: function(): string {
+                }, type: function (): string {
                     return "offer";
                 }
             }
-        }).result.then(function(result) {
+        }).result.then(function (result) {
             defer.resolve(result);
-        }, function() {
+        }, function () {
             defer.resolve(undefined);
         });
         return defer.promise;
@@ -261,15 +261,15 @@ class WorkflowService {
             backdrop: "static",
             size: "lg",
             resolve: {
-                process: function(): Process {
+                process: function (): Process {
                     return process;
-                }, type: function(): string {
+                }, type: function (): string {
                     return "sale";
                 }
             }
-        }).result.then(function(result) {
+        }).result.then(function (result) {
             defer.resolve(result);
-        }, function() {
+        }, function () {
             defer.resolve(undefined);
         });
         return defer.promise;
@@ -390,10 +390,10 @@ class WorkflowService {
                 type: "GET",
                 pages: 2,
                 dataSrc: "data",
-                error: function(xhr, error, thrown) {
+                error: function (xhr, error, thrown) {
                     handleError(xhr);
                 },
-                "beforeSend": function(request) {
+                "beforeSend": function (request) {
                     request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
                     request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
                 }
@@ -401,11 +401,11 @@ class WorkflowService {
         } else {
             return {
                 url: latestDataRoute,
-                error: function(xhr, error, thrown) {
+                error: function (xhr, error, thrown) {
                     handleError(xhr);
                 },
                 type: "GET",
-                "beforeSend": function(request) {
+                "beforeSend": function (request) {
                     request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
                     request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
                 }
@@ -471,9 +471,9 @@ class WorkflowService {
         let self = this;
         this.processResource.drop({
             id: process.id
-        }).$promise.then(function(data) {
+        }).$promise.then(function (data) {
             defer.resolve(data);
-        }, function(error) {
+        }, function (error) {
             defer.reject(error);
         });
         return defer.promise;
@@ -486,9 +486,9 @@ class WorkflowService {
             return defer.promise;
         }
         let self = this;
-        this.processResource.update(process).$promise.then(function(data) {
+        this.processResource.update(process).$promise.then(function (data) {
             defer.resolve(data);
-        }, function(error) {
+        }, function (error) {
             defer.reject(error);
             handleError(error);
         });
@@ -503,7 +503,7 @@ class WorkflowService {
             backdrop: "static",
             size: "lg",
             resolve: {
-                process: function() {
+                process: function () {
                     return process;
                 }
             }
@@ -519,6 +519,8 @@ class WorkflowService {
             case Status.OFFER: this.startSaleTransformation(process);
                 break;
             case Status.FOLLOWUP: this.startSaleTransformation(process);
+                break;
+            case Status.DONE: this.startSaleTransformation(process);
                 break;
             default: ;
                 break;
@@ -537,7 +539,7 @@ class WorkflowService {
         } else if (process.processor !== null) {
             this.processResource.removeProcessor({
                 id: process.id
-            }).$promise.then(function() {
+            }).$promise.then(function () {
                 process.processor = null;
                 self.rootScope.$broadcast("updateRow", process);
                 self.rootScope.$broadcast("onTodosChange");
@@ -561,22 +563,22 @@ class WorkflowService {
     }
 
     async doneOffer(process: Process): Promise<Process> {
-        process.status = "DONE";
-        process.processor = null;
-
+        let toastMsg: string = "";
+        if (process.status === Status.OFFER || process.status === Status.FOLLOWUP) {
+            process.status = "DONE";
+            toastMsg = "COMMON_TOAST_SUCCESS_DONE_OFFER";
+            process.processor = null;
+        } else if (process.status === Status.DONE) {
+            if (process.followUpAmount > 0) {
+                process.status = "FOLLOWUP";
+            } else {
+                process.status = "OFFER";
+            }
+            toastMsg = "COMMON_TOAST_SUCCESS_REVERT_DONE_OFFER";
+            process.processor = this.rootScope.user;
+        }
         let resultProcess = await this.processResource.save(process) as Process;
-        this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_DONE_OFFER"));
-        this.rootScope.$broadcast("onTodosChange");
-        this.rootScope.$broadcast("updateRow", process);
-        return resultProcess;
-    }
-
-    async revertDoneOffer(process: Process): Promise<Process> {
-        process.status = "OFFER";
-        process.processor = this.rootScope.user;
-
-        let resultProcess = await this.processResource.save(process) as Process;
-        this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_REVERT_DONE_OFFER"));
+        this.toaster.pop("success", "", this.translate.instant(toastMsg));
         this.rootScope.$broadcast("onTodosChange");
         this.rootScope.$broadcast("updateRow", process);
         return resultProcess;

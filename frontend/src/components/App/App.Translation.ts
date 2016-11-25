@@ -223,6 +223,8 @@ function config($translateProvider) {
             COMMON_STATUS_SALE: "Verkauf",
             COMMON_STATUS_CLOSED: "Geschlossen",
             COMMON_EMPTY_PROCESSOR: "Niemand",
+            COMMON_STATUS_SET_DONE: "Als erledigt markieren",
+            COMMON_STATUS_SET_OPEN: "Als offen markieren",
 
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Anfragen verwalten",
@@ -703,6 +705,8 @@ function config($translateProvider) {
             COMMON_STATUS_SALE: "Sale",
             COMMON_STATUS_CLOSED: "Closed",
             COMMON_EMPTY_PROCESSOR: "Nobody",
+            COMMON_STATUS_SET_DONE: "Mark as done",
+            COMMON_STATUS_SET_OPEN: "Mark as open",
 
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Manage leads",

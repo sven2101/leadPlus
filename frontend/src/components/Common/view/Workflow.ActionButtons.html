@@ -1,7 +1,7 @@
 <div ng-style="::{'min-width':minwidth+'px'}" class="text-center btn-group" role="group" aria-label="...">
 	<button style="min-height:34px" ng-if="::config['CREATE_NEXT_WORKFLOWUNIT'].visible" class="btn btn-white" ng-disabled="config['CREATE_NEXT_WORKFLOWUNIT'].disabled"
 		ng-click="workflowService.createNextWorkflowUnit(process)" title="{{ config['CREATE_NEXT_WORKFLOWUNIT'].title | translate }}">
-        <i class="fa fa-check"></i>
+        <i class="{{::config['CREATE_NEXT_WORKFLOWUNIT'].icon}}"></i>
     </button>
 	<div ng-if="::config['PIN_DROPDOWN'].visible" class="btn-group" role="group">
 		<button style="height:34px" type="button" class="btn btn-default dropdown-toggle" ng-disabled="config['PIN_DROPDOWN'].disabled"
@@ -29,11 +29,15 @@
     </button>
 	<button style="min-height:34px " ng-if="::config[ 'SET_INCONTACT'].visible " class="btn btn-white " ng-disabled="config[
 			'SET_INCONTACT'].disabled " ng-click="workflowService.inContact(process) " title="{{config[ 'SET_INCONTACT'].title| translate }} ">
-         <i  class="fa fa-user-plus "></i>
+         <i  class="fa fa-address-card-o "></i>
     </button>
 	<button style="min-height:34px" ng-if="::config[ 'OPEN_FOLLOWUP_MODAL'].visible" class="btn btn-white " ng-disabled="config['OPEN_FOLLOWUP_MODAL'].disabled"
 		ng-click="workflowService.openFollowUpModal(process) " title="{{config['OPEN_FOLLOWUP_MODAL'].title| translate }} ">
          <i  class="fa fa-eye "></i>
+    </button>
+	<button style="min-height:34px" ng-if="::config[ 'SET_OFFER_DONE'].visible" class="btn btn-white " ng-disabled="config['SET_OFFER_DONE'].disabled"
+		ng-click="workflowService.doneOffer(process) " title="{{config['SET_OFFER_DONE'].title| translate }} ">
+         <i  class="{{::config[ 'SET_OFFER_DONE'].icon}} "></i>
     </button>
 
 	<div class="btn-group " role="group ">

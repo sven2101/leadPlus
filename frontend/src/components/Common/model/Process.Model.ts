@@ -4,6 +4,7 @@
 /// <reference path="../../Sale/model/Sale.Model.ts" />
 /// <reference path="../../common/model/Commentary.Model.ts" />
 /// <reference path="../../Notification/model/Notification.Model.ts" />
+/// <reference path="../../Setting/model/Source.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.

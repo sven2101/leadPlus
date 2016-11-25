@@ -216,7 +216,7 @@ class DashboardService {
                     self.updateDashboard("offer");
                 }
                 else if (self.openOffers === target && self.doneOffers === source) {
-                    self.revertDoneOffer(item);
+                    self.doneOffer(item);
                     item.processor = self.rootScope.user;
                     self.updateDashboard("offer");
                 }
@@ -274,7 +274,7 @@ class DashboardService {
             this.sumDoneOffers();
             this.sumOffers();
         } else if (type === "sale") {
-            this.closedSales = this.orderProcessByTimestamp(this.closedSales, "sale");
+            this.closedSales = this.orderProcessByTimestamp(this.closedSales, "sale").reverse();
             this.doneOffers = this.orderProcessByTimestamp(this.doneOffers, "offer");
             this.openOffers = this.orderProcessByTimestamp(this.openOffers, "offer");
             this.sumOffers();
@@ -310,9 +310,6 @@ class DashboardService {
     doneOffer(process: Process) {
         this.workflowService.doneOffer(process);
 
-    }
-    revertDoneOffer(process: Process) {
-        this.workflowService.revertDoneOffer(process);
     }
 
     closeProcess(process: Process, source: any) {

@@ -152,7 +152,7 @@ class LeadDataTableService {
         let config = new ActionButtonConfigBuilder();
         config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("LEAD_FOLLOW_UP");
         if (process.status === Status.OPEN || process.status === Status.INCONTACT) {
-            config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled();
+            config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled().setIcon("fa fa-level-up");
         }
         if (user.role === Role.ADMIN || user.role === Role.SUPERADMIN) {
             config.get(ActionButtonType.PIN_DROPDOWN).setEnabled().setTitle("LEAD_PIN");
