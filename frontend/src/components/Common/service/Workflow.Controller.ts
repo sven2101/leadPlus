@@ -213,7 +213,6 @@ class WorkflowController extends AbstractWorkflow {
         notification.attachments = notification.attachments ? notification.attachments : [];
         notification.notificationType = NotificationType.OFFER;
         notification.id = undefined;
-        await this.notificationService.sendNotification(notification);
         await this.workflowService.addLeadToOffer(process);
         let promises: Array<Promise<void>> = notification.attachments ?
             notification.attachments
@@ -221,6 +220,11 @@ class WorkflowController extends AbstractWorkflow {
                 .map(a => self.fileService.saveAttachment(a)) : [];
         for (let p of promises) {
             await p;
+        }
+        try {
+            await this.notificationService.sendNotification(notification);
+        } catch (error) {
+            notification.notificationType = NotificationType.ERROR;
         }
         notification.attachments.forEach(a => a.id = undefined);
         process.notifications.push(notification);

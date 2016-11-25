@@ -94,12 +94,10 @@ class FollowUpController {
         let self = this;
         let process = this.editProcess;
         process.notifications = process.notifications ? process.notifications : [];
-        let notification = deepCopy(this.currentNotification);
+        let notification: Notification = deepCopy(this.currentNotification);
         notification.attachments = notification.attachments ? notification.attachments : [];
         notification.notificationType = NotificationType.FOLLOWUP;
         notification.id = undefined;
-        await this.notificationService.sendNotification(notification);
-
         let promises: Array<Promise<void>> = notification.attachments ?
             notification.attachments
                 .filter(a => isNullOrUndefined(a.id))
@@ -107,7 +105,11 @@ class FollowUpController {
         for (let p of promises) {
             await p;
         }
-
+        try {
+            await this.notificationService.sendNotification(notification);
+        } catch (error) {
+            notification.notificationType = NotificationType.ERROR;
+        }
         notification.attachments.forEach(a => a.id = undefined);
         process.notifications.push(notification);
         let resultProcess = await this.workflowService.saveProcess(process);

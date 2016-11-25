@@ -35,6 +35,7 @@ import dash.common.Encryptor;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.exceptions.SaveFailedException;
+import dash.fileuploadmanagement.business.IFileUploadService;
 import dash.notificationmanagement.domain.Attachment;
 import dash.notificationmanagement.domain.Notification;
 import dash.smtpmanagement.business.ISmtpService;
@@ -51,6 +52,9 @@ public class NotificationService implements INotificationService {
 	@Autowired
 	private IAttachmentService attachmentService;
 
+	@Autowired
+	private IFileUploadService fileUploadService;
+
 	@Override
 	public void sendNotification(final long userId, final Notification notification, String smtpKey)
 			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException, Exception {
@@ -64,12 +68,11 @@ public class NotificationService implements INotificationService {
 		try {
 			Smtp smtp = smtpService.findByUser(userId);
 			if (smtp != null) {
-				if (notification != null && notification.getAttachments() != null
-						&& notification.getAttachments().size() > 0) {
+				if (notification != null && notification.getAttachments() != null) {
 					for (Attachment attachment : notification.getAttachments()) {
-						if (attachment != null && attachment.getId() != null) {
-							Attachment existingAttachment = attachmentService.getById(attachment.getId());
-							notification.addAttachment(existingAttachment);
+						if (attachment != null && attachment.getFileUpload() != null
+								&& attachment.getFileUpload().getId() != null) {
+							attachment.setFileUpload(fileUploadService.getById(attachment.getFileUpload().getId()));
 						}
 					}
 				}
