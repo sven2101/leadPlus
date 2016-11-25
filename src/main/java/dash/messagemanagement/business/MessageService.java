@@ -67,8 +67,10 @@ public class MessageService implements IMessageService {
 		mapping.put("customer", offer.getCustomer());
 		mapping.put("orderPositions", offer.getOrderPositions());
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (user != null)
+		if (user != null) {
+			user.setPassword(null);
 			mapping.put("user", user);
+		}
 
 		Writer writer = new StringWriter();
 		template.process(mapping, writer);
