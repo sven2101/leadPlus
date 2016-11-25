@@ -74,7 +74,6 @@ flyway {
     password = "***REMOVED***"
     placeholderPrefix = "\$&{"
     placeholderSuffix = "}&\$"
-    schemas = ["demo"]
 }
 
 task wrapper(type: Wrapper) {
