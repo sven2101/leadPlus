@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import dash.common.AbstractWorkflow;
-import dash.common.CommonMethods;
+import dash.common.CommonUtils;
 import dash.processmanagement.domain.Process;
 import dash.productmanagement.domain.OrderPosition;
 import dash.statisticmanagement.common.AbstractStatisticService;
@@ -58,7 +58,7 @@ public class ProductStatisticService extends AbstractStatisticService {
 					if (elementId != null && !orderPosition.getProduct().getId().equals(elementId))
 						continue;
 					addToMapKey(ALL_STATISTIC_KEY, orderPosition, productMap);
-					if (process.getSource() != null && !CommonMethods.isNullOrEmpty(process.getSource().getName())) {
+					if (process.getSource() != null && !CommonUtils.isNullOrEmpty(process.getSource().getName())) {
 						addToMapKey(process.getSource().getName(), orderPosition, productMap);
 					}
 				}
