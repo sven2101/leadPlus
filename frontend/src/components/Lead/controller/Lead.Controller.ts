@@ -180,7 +180,7 @@ class LeadController extends AbstractWorkflow {
         this.workflowService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process.lead, this.dtInstance, this, "lead");
     }
 
-    loadDataToModal(process: Process) {
+    setFormsPristine() {
         if (!isNullOrUndefined(this.customerEditForm)) {
             this.customerEditForm.$setPristine();
         }
@@ -199,13 +199,15 @@ class LeadController extends AbstractWorkflow {
         if (!isNullOrUndefined(this.saleEditForm)) {
             this.saleEditForm.$setPristine();
         }
+    }
 
+    loadDataToModal(process: Process) {
+        this.setFormsPristine();
+        this.currentWizard = 1;
         this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
-
         this.editProcess = deepCopy(process);
-
         this.customerSelected = this.editProcess.lead.customer.id > 0;
         this.selectedCustomer = this.editProcess.lead.customer;
         this.editWorkflowUnit = this.editProcess.lead;
@@ -243,7 +245,8 @@ class LeadController extends AbstractWorkflow {
     }
 
     clearNewLead() {
-        // this.editForm.$setPristine();
+        this.setFormsPristine();
+        this.currentWizard = 1;
         this.edit = false;
         this.editWorkflowUnit = new Lead();
         this.editProcess = new Process();
