@@ -14,6 +14,7 @@
 
 package dash.processmanagement.business;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -56,7 +57,7 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 
 	List<Process> findTop100BySaleIsNotNullOrderBySaleTimestampDesc();
 
-	List<Process> findTop10BySaleIsNotNullOrderBySaleTimestampDesc();
+	List<Process> findTop10BySaleIsNotNullAndSaleTimestampAfterOrderBySaleTimestampDesc(Calendar after);
 
 	List<Process> findTop50BySaleIsNotNullOrderBySaleTimestampDesc();
 
