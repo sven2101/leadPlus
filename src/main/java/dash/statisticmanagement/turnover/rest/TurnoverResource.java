@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import dash.common.ByteSearializer;
-import dash.common.CommonMethods;
+import dash.common.CommonUtils;
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.DateRange;
@@ -66,14 +66,16 @@ public class TurnoverResource {
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
 			@ApiParam(required = true) @PathVariable @Valid String source)
 			throws NotFoundException, ClassNotFoundException, IOException {
-		if (CommonMethods.isNullOrEmpty(source))
+		if (CommonUtils.isNullOrEmpty(source))
 			source = AbstractStatisticService.ALL_STATISTIC_KEY;
 
 		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
 		if (olap != null && olap.getTurnover() != null) {
 			logger.info("Information from OLAP.");
-			Map<String, List<Double>> sourceMap = (Map<String, List<Double>>) ByteSearializer
-					.deserialize(olap.getTurnover());
+			Object obj = ByteSearializer.deserialize(olap.getTurnover());
+			if (!(obj instanceof Map<?, ?>))
+				return new ArrayList<>();
+			Map<String, List<Double>> sourceMap = (Map<String, List<Double>>) obj;
 			if (!sourceMap.containsKey(source))
 				return new ArrayList<Double>();
 			return sourceMap.get(source);

@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import dash.common.CommonMethods;
+import dash.common.CommonUtils;
 import dash.processmanagement.domain.Process;
 import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.StatisticHelper;
@@ -45,7 +45,7 @@ public class TurnoverStatisticService extends AbstractStatisticService {
 				if (calendarMap.containsKey(key)) {
 					double allValue = map.get(ALL_STATISTIC_KEY).get(key) + process.getSale().getSaleTurnover();
 					map.get(ALL_STATISTIC_KEY).put(key, allValue);
-					if (process.getSource() != null && !CommonMethods.isNullOrEmpty(process.getSource().getName())) {
+					if (process.getSource() != null && !CommonUtils.isNullOrEmpty(process.getSource().getName())) {
 						if (!map.containsKey(process.getSource().getName())) {
 							map.put(process.getSource().getName(), new LinkedHashMap<String, Double>(calendarMap));
 						}

@@ -24,7 +24,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import dash.common.AbstractWorkflow;
-import dash.common.CommonMethods;
+import dash.common.CommonUtils;
 import dash.processmanagement.domain.Process;
 import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.StatisticHelper;
@@ -47,7 +47,7 @@ public class WorkflowStatisticService extends AbstractStatisticService {
 			if (calendarMap.containsKey(key)) {
 				double allValue = map.get(ALL_STATISTIC_KEY).get(key) + 1.00;
 				map.get(ALL_STATISTIC_KEY).put(key, allValue);
-				if (process.getSource() != null && !CommonMethods.isNullOrEmpty(process.getSource().getName())) {
+				if (process.getSource() != null && !CommonUtils.isNullOrEmpty(process.getSource().getName())) {
 					if (!map.containsKey(process.getSource().getName())) {
 						map.put(process.getSource().getName(), new LinkedHashMap<String, Double>(calendarMap));
 					}

@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import dash.common.ByteSearializer;
-import dash.common.CommonMethods;
+import dash.common.CommonUtils;
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.DateRange;
@@ -68,7 +68,7 @@ public class WorkflowResource {
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
 			@ApiParam(required = true) @PathVariable @Valid String source)
 			throws NotFoundException, ClassNotFoundException, IOException {
-		if (CommonMethods.isNullOrEmpty(source))
+		if (CommonUtils.isNullOrEmpty(source))
 			source = AbstractStatisticService.ALL_STATISTIC_KEY;
 
 		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
@@ -89,7 +89,10 @@ public class WorkflowResource {
 					return new ArrayList<>();
 				return sourceMap.get(source);
 			}
-			Map<String, List<Double>> sourceMap = (Map<String, List<Double>>) ByteSearializer.deserialize(byteArr);
+			Object obj = ByteSearializer.deserialize(byteArr);
+			if (!(obj instanceof Map<?, ?>))
+				return new ArrayList<>();
+			Map<String, List<Double>> sourceMap = (Map<String, List<Double>>) obj;
 			if (!sourceMap.containsKey(source))
 				return new ArrayList<>();
 			return sourceMap.get(source);
