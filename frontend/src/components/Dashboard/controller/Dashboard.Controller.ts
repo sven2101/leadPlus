@@ -109,6 +109,9 @@ class DashboardController {
     getOpenOffers(): Array<Process> {
         return this.dashboardService.getOpenOffers();
     }
+    getDoneOffers(): Array<Process> {
+        return this.dashboardService.getDoneOffers();
+    }
     getClosedSales(): Array<Process> {
         return this.dashboardService.getClosedSales();
     }
@@ -189,9 +192,22 @@ class DashboardController {
     }
 
     getClassToDrag(process: Process, element: string): string {
-        return element + (this.hasRightToDrag(process) ? "-element draggable" : "-element not-sortable draggable");
+        return element + (this.hasRightToDrag(process) ? "-element draggable dragItem" : "-element not-sortable draggable dragItem");
     }
 
+    getHeight(): number {
+        let max = 0;
+        let array: Array<number> = new Array<number>(this.getOpenLeads().length, this.getInContacts().length, this.getOpenOffers().length, this.getDoneOffers().length, this.getClosedSales().length);
+        for (let element of array) {
+            if (element > max) {
+                max = element;
+            }
+        }
+        if (max > 7) {
+            max = 7;
+        }
+        return (max + 2) * 80;
+    }
 }
 
 angular.module(moduleDashboard, [ngResourceId, moduleSummernote]).controller(DashboardControllerId, DashboardController);

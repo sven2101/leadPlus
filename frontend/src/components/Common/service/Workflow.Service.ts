@@ -298,6 +298,12 @@ class WorkflowService {
         tempProcess.status = Status.SALE;
         tempProcess.processor = this.rootScope.user;
         let process: Process = await this.processResource.save(tempProcess);
+        let customer: Customer = process.offer.customer;
+        if (!customer.realCustomer) {
+            customer.realCustomer = true;
+            let updatedCustomer: Customer = await this.customerService.updateCustomer(customer);
+            process.offer.customer = updatedCustomer;
+        }
         this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
         this.rootScope.offersCount -= 1;
         this.rootScope.$broadcast("onTodosChange");
@@ -314,45 +320,45 @@ class WorkflowService {
                 }
             }
         }, {
-                extend: "print",
-                orientation: "landscape",
-                title: title,
-                exportOptions: {
-                    columns: columns,
-                    modifier: {
-                        page: "current"
-                    }
+            extend: "print",
+            orientation: "landscape",
+            title: title,
+            exportOptions: {
+                columns: columns,
+                modifier: {
+                    page: "current"
                 }
-            }, {
-                extend: "csvHtml5",
-                title: title,
-                exportOptions: {
-                    columns: columns,
-                    modifier: {
-                        page: "current"
-                    }
+            }
+        }, {
+            extend: "csvHtml5",
+            title: title,
+            exportOptions: {
+                columns: columns,
+                modifier: {
+                    page: "current"
+                }
 
+            }
+        }, {
+            extend: "excelHtml5",
+            title: title,
+            exportOptions: {
+                columns: columns,
+                modifier: {
+                    page: "current"
                 }
-            }, {
-                extend: "excelHtml5",
-                title: title,
-                exportOptions: {
-                    columns: columns,
-                    modifier: {
-                        page: "current"
-                    }
+            }
+        }, {
+            extend: "pdfHtml5",
+            title: title,
+            orientation: "landscape",
+            exportOptions: {
+                columns: columns,
+                modifier: {
+                    page: "current"
                 }
-            }, {
-                extend: "pdfHtml5",
-                title: title,
-                orientation: "landscape",
-                exportOptions: {
-                    columns: columns,
-                    modifier: {
-                        page: "current"
-                    }
-                }
-            }];
+            }
+        }];
     }
 
     getDomString(): string {
@@ -520,6 +526,8 @@ class WorkflowService {
                 break;
             case Status.FOLLOWUP: this.startSaleTransformation(process);
                 break;
+            case Status.DONE: this.startSaleTransformation(process);
+                break;
             default: ;
                 break;
         }
@@ -555,6 +563,28 @@ class WorkflowService {
         }
         let resultProcess = await this.processResource.save(process) as Process;
         this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_INCONTACT"));
+        this.rootScope.$broadcast("onTodosChange");
+        this.rootScope.$broadcast("updateRow", process);
+        return resultProcess;
+    }
+
+    async doneOffer(process: Process): Promise<Process> {
+        let toastMsg: string = "";
+        if (process.status === Status.OFFER || process.status === Status.FOLLOWUP) {
+            process.status = "DONE";
+            toastMsg = "COMMON_TOAST_SUCCESS_DONE_OFFER";
+            process.processor = null;
+        } else if (process.status === Status.DONE) {
+            if (process.followUpAmount > 0) {
+                process.status = "FOLLOWUP";
+            } else {
+                process.status = "OFFER";
+            }
+            toastMsg = "COMMON_TOAST_SUCCESS_REVERT_DONE_OFFER";
+            process.processor = this.rootScope.user;
+        }
+        let resultProcess = await this.processResource.save(process) as Process;
+        this.toaster.pop("success", "", this.translate.instant(toastMsg));
         this.rootScope.$broadcast("onTodosChange");
         this.rootScope.$broadcast("updateRow", process);
         return resultProcess;

@@ -1,5 +1,5 @@
 package dash.processmanagement.domain;
 
 public enum Activity {
-	OPEN, INCONTACT, OFFER, SALE
+	OPEN, INCONTACT, OFFER, DONE, SALE
 }

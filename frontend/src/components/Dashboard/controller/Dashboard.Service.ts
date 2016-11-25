@@ -37,11 +37,13 @@ class DashboardService {
     openLeads: Array<Process> = [];
     inContacts: Array<Process> = [];
     openOffers: Array<Process> = [];
+    doneOffers: Array<Process> = [];
     closedSales: Array<Process> = [];
 
     openLeadsValue: number = 0;
     inContactsValue: number = 0;
     openOffersValue: number = 0;
+    doneOffersValue: number = 0;
     closedSalesValue: number = 0;
     SweetAlert: any;
     uibModal;
@@ -65,14 +67,14 @@ class DashboardService {
         });
 
         let self = this;
-        setInterval(function () {
+        setInterval(function() {
             self.refreshTodos();
         }, 5 * 60 * 1000);
     }
 
     initDashboard() {
         let self = this;
-        this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function (result) {
+        this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function(result) {
             let open: Array<Process> = new Array<Process>();
             let contact: Array<Process> = new Array<Process>();
             for (let i = 0; i < result.length; i++) {
@@ -88,11 +90,23 @@ class DashboardService {
             self.inContacts = self.orderProcessByTimestamp(contact, "lead");
             self.sumInContacts();
         });
-        this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
-            self.openOffers = self.orderProcessByTimestamp(result, "offer");
+        this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function(result) {
+            let open: Array<Process> = new Array<Process>();
+            let done: Array<Process> = new Array<Process>();
+            for (let i = 0; i < result.length; i++) {
+                if (result[i].status === "OFFER" || result[i].status === "FOLLOWUP") {
+                    open.push(result[i]);
+                }
+                else if (result[i].status === "DONE") {
+                    done.push(result[i]);
+                }
+            }
+            self.openOffers = self.orderProcessByTimestamp(open, "offer");
             self.sumOffers();
+            self.doneOffers = self.orderProcessByTimestamp(done, "offer");
+            self.sumDoneOffers();
         });
-        this.processResource.getLatestSales().$promise.then(function (result) {
+        this.processResource.getLatestSales().$promise.then(function(result) {
             self.closedSales = result;
             self.sumSales();
         });
@@ -116,6 +130,14 @@ class DashboardService {
             this.openOffersValue += this.openOffers[i].offer.netPrice;
         }
     }
+
+    sumDoneOffers(): void {
+        this.doneOffersValue = 0;
+        for (let i = 0; i < this.doneOffers.length; i++) {
+            this.doneOffersValue += this.doneOffers[i].offer.offerPrice;
+        }
+    }
+
     sumSales(): void {
         this.closedSalesValue = 0;
         for (let i = 0; i < this.closedSales.length; i++) {
@@ -126,27 +148,32 @@ class DashboardService {
     setSortableOptions(): any {
         let self: DashboardService = this;
         let sortableList = {
-            update: function (e, ui) {
+            update: function(e, ui) {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
                 if ((self.openLeads === target && self.openOffers === source) ||
                     (self.openLeads === target && self.inContacts === source) ||
-                    (self.openLeads === source && self.closedSales === target) ||
+                    (self.openLeads === target && self.doneOffers === source) ||
                     (self.inContacts === target && self.openOffers === source) ||
+                    (self.inContacts === target && self.doneOffers === source) ||
                     (self.inContacts === target && self.closedSales === source) ||
+                    (self.doneOffers === target && self.openLeads === source) ||
+                    (self.doneOffers === target && self.inContacts === source) ||
                     (self.closedSales === target && self.inContacts === source) ||
+                    (self.closedSales === target && self.openLeads === source) ||
                     target === source) {
 
                     ui.item.sortable.cancel();
                 }
             },
-            stop: function (e, ui) {
+            stop: function(e, ui) {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
-                if (self.closedSales === target && self.openOffers === source) {
-                    self.startSaleTransformation(item).then(function (result) {
+                if (self.closedSales === target && self.openOffers === source
+                    || self.closedSales === target && self.doneOffers === source) {
+                    self.startSaleTransformation(item).then(function(result) {
                         if (result === undefined) {
                             target.splice(target.indexOf(item), 1);
                             source.push(item);
@@ -155,7 +182,7 @@ class DashboardService {
                             target[index] = result;
                         }
                         self.updateDashboard("sale");
-                    }, function (result) {
+                    }, function(result) {
                         target.splice(target.indexOf(item), 1);
                         source.push(item);
                         self.updateDashboard("sale");
@@ -163,7 +190,7 @@ class DashboardService {
                 }
                 else if (self.openOffers === target && self.openLeads === source
                     || self.openOffers === target && self.inContacts === source) {
-                    self.startOfferTransformation(item).then(function (result) {
+                    self.startOfferTransformation(item).then(function(result) {
                         if (result === undefined) {
                             target.splice(target.indexOf(item), 1);
                             source.push(item);
@@ -172,7 +199,7 @@ class DashboardService {
                             target[index] = result;
                         }
                         self.updateDashboard("offer");
-                    }, function (result) {
+                    }, function(result) {
                         target.splice(target.indexOf(item), 1);
                         source.push(item);
                         self.updateDashboard("offer");
@@ -182,13 +209,24 @@ class DashboardService {
                     self.inContact(item);
                     item.processor = self.rootScope.user;
                     self.updateDashboard("lead");
-                } else if (isNullOrUndefined(target)) {
+                }
+                else if (self.doneOffers === target && self.openOffers === source) {
+                    self.doneOffer(item);
+                    item.processor = null;
+                    self.updateDashboard("offer");
+                }
+                else if (self.openOffers === target && self.doneOffers === source) {
+                    self.doneOffer(item);
+                    item.processor = self.rootScope.user;
+                    self.updateDashboard("offer");
+                }
+                else if (isNullOrUndefined(target)) {
                     let title = "";
                     let text = "";
                     if (source === self.openLeads || source === self.inContacts) {
                         title = self.translate.instant("LEAD_CLOSE_LEAD");
                         text = self.translate.instant("LEAD_CLOSE_LEAD_REALLY");
-                    } else if (source === self.openOffers) {
+                    } else if (source === self.openOffers || source === self.doneOffers) {
                         title = self.translate.instant("OFFER_CLOSE_OFFER");
                         text = self.translate.instant("OFFER_CLOSE_OFFER_REALLY");
                     }
@@ -200,7 +238,7 @@ class DashboardService {
                         cancelButtonText: self.translate.instant("NO"),
                         confirmButtonColor: "#DD6B55",
                         confirmButtonText: self.translate.instant("YES"),
-                    }, function (isConfirm) {
+                    }, function(isConfirm) {
                         if (isConfirm) {
                             self.closeProcess(item, source);
                             source.splice(source.indexOf(item), 1);
@@ -228,24 +266,28 @@ class DashboardService {
         }
         else if (type === "offer") {
             this.openOffers = this.orderProcessByTimestamp(this.openOffers, "offer");
+            this.doneOffers = this.orderProcessByTimestamp(this.doneOffers, "offer");
             this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead");
             this.inContacts = this.orderProcessByTimestamp(this.inContacts, "lead");
             this.sumLeads();
             this.sumInContacts();
+            this.sumDoneOffers();
             this.sumOffers();
         } else if (type === "sale") {
-            this.closedSales = this.orderProcessByTimestamp(this.closedSales, "sale");
+            this.closedSales = this.orderProcessByTimestamp(this.closedSales, "sale").reverse();
+            this.doneOffers = this.orderProcessByTimestamp(this.doneOffers, "offer");
             this.openOffers = this.orderProcessByTimestamp(this.openOffers, "offer");
             this.sumOffers();
+            this.sumDoneOffers();
             this.sumSales();
         }
     }
 
     startOfferTransformation(process: Process): IPromise<Process> {
         let defer: IDefer<Process> = this.q.defer();
-        this.workflowService.startOfferTransformation(process).then(function (result: Process) {
+        this.workflowService.startOfferTransformation(process).then(function(result: Process) {
             defer.resolve(result);
-        }, function (error) {
+        }, function(error) {
             defer.reject(error);
         });
         return defer.promise;
@@ -253,9 +295,9 @@ class DashboardService {
 
     startSaleTransformation(process: Process): IPromise<Process> {
         let defer = this.q.defer();
-        this.workflowService.startSaleTransformation(process).then(function (result) {
+        this.workflowService.startSaleTransformation(process).then(function(result) {
             defer.resolve(result);
-        }, function () {
+        }, function() {
             defer.reject(false);
         });
         return defer.promise;
@@ -265,11 +307,16 @@ class DashboardService {
         this.workflowService.inContact(process);
     }
 
+    doneOffer(process: Process) {
+        this.workflowService.doneOffer(process);
+
+    }
+
     closeProcess(process: Process, source: any) {
         let self = this;
         this.processResource.setStatus({
             id: process.id
-        }, "CLOSED").$promise.then(function () {
+        }, "CLOSED").$promise.then(function() {
             let message = "";
             if (source === self.openLeads) {
                 self.sumLeads();
@@ -286,6 +333,11 @@ class DashboardService {
                 self.sumOffers();
                 message = self.translate.instant("COMMON_TOAST_SUCCESS_CLOSE_OFFER");
             }
+            else if (source === self.doneOffers) {
+                self.rootScope.offersCount -= 1;
+                self.sumDoneOffers();
+                message = self.translate.instant("COMMON_TOAST_SUCCESS_CLOSE_OFFER");
+            }
             self.toaster.pop("success", "", message);
             process.status = "CLOSED";
         });
@@ -299,6 +351,9 @@ class DashboardService {
     }
     getOpenOffers(): Array<Process> {
         return this.openOffers;
+    }
+    getDoneOffers(): Array<Process> {
+        return this.doneOffers;
     }
     getClosedSales(): Array<Process> {
         return this.closedSales;

@@ -15,5 +15,5 @@
 package dash.statusmanagement.domain;
 
 public enum Status {
-	OPEN, INCONTACT, OFFER, FOLLOWUP, SALE, CLOSED;
+	OPEN, INCONTACT, OFFER, FOLLOWUP, DONE, SALE, CLOSED;
 }
