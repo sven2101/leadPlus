@@ -188,7 +188,7 @@ class LeadService {
             return defer.promise;
         }
         this.processResource.save(editProcess).$promise.then(function (result) {
-            self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD")); self.rootScope.leadsCount += 1;
+            self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
             self.updateRow(editProcess, dtInstance, scope);
             if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                 self.rootScope.$broadcast("onTodosChange");
