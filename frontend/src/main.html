@@ -139,8 +139,8 @@
 										</td>
 										<td class="project-completion">
 											<small ng-if="::(todo.status=='OPEN'||todo.status=='INCONTACT')">{{::appCtrl.sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</small>
-											<small ng-if="::todo.status=='OFFER'">{{::todo.offer.offerPrice| currency:'\u20AC'}}</small>
-											<small ng-if="::todo.status=='FOLLOWUP'">{{::todo.offer.offerPrice| currency:'\u20AC'}}</small>
+											<small ng-if="::todo.status=='OFFER'">{{::todo.offer.netPrice| currency:'\u20AC'}}</small>
+											<small ng-if="::todo.status=='FOLLOWUP'">{{::todo.offer.netPrice| currency:'\u20AC'}}</small>
 										</td>
 									</tr>
 								</tbody>

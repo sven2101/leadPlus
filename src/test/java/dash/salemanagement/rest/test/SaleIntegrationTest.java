@@ -123,7 +123,7 @@ public class SaleIntegrationTest extends BaseConfig implements IIntegrationTest 
 		Product container = new Product();
 		container.setName("Fusscontainer");
 		container.setDescription("Guter Container");
-		container.setPriceNetto(1000.00);
+		container.setNetPrice(1000.00);
 
 		Customer customer = new Customer();
 		customer.setTitle(Title.MR);

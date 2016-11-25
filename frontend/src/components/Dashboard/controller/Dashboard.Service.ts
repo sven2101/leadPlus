@@ -113,7 +113,7 @@ class DashboardService {
     sumOffers(): void {
         this.openOffersValue = 0;
         for (let i = 0; i < this.openOffers.length; i++) {
-            this.openOffersValue += this.openOffers[i].offer.offerPrice;
+            this.openOffersValue += this.openOffers[i].offer.netPrice;
         }
     }
     sumSales(): void {

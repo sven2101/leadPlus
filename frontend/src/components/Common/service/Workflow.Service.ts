@@ -126,7 +126,7 @@ class WorkflowService {
             tempOrderPosition.product = tempProduct as Product;
             tempOrderPosition.amount = currentProductAmount;
             tempOrderPosition.discount = 0;
-            tempOrderPosition.price = tempOrderPosition.product.priceNetto;
+            tempOrderPosition.netPrice = tempOrderPosition.product.netPrice;
             array.push(tempOrderPosition);
         }
     }
@@ -143,8 +143,8 @@ class WorkflowService {
         for (let i = 0; i < array.length; i++) {
             let temp = array[i];
             if (!isNullOrUndefined(temp) && !isNaN(temp.amount)
-                && !isNaN(temp.price)) {
-                sum += temp.amount * temp.price;
+                && !isNaN(temp.netPrice)) {
+                sum += temp.amount * temp.netPrice;
             }
         }
         return sum;
@@ -159,8 +159,8 @@ class WorkflowService {
             let temp = array[i];
             if (!isNullOrUndefined(temp) && !isNaN(temp.amount)
                 && !isNullOrUndefined(temp.product)
-                && !isNaN(temp.product.priceNetto)) {
-                sum += temp.amount * temp.product.priceNetto;
+                && !isNaN(temp.product.netPrice)) {
+                sum += temp.amount * temp.product.netPrice;
             }
         }
         return sum;
@@ -177,15 +177,15 @@ class WorkflowService {
     }
 
     reCalculateOffer(offer: Offer, array: Array<OrderPosition>) {
-        offer.offerPrice = offer.deliveryCosts + this.sumOrderPositions(array);
+        offer.netPrice = offer.deliveryCosts + this.sumOrderPositions(array);
     }
 
     setDiscount(orderPosition: OrderPosition) {
-        orderPosition.discount = this.calculateDiscount(orderPosition.product.priceNetto, orderPosition.price);
+        orderPosition.discount = this.calculateDiscount(orderPosition.product.netPrice, orderPosition.netPrice);
     }
 
     setPrice(orderPosition: OrderPosition) {
-        orderPosition.price = this.calculatePrice(orderPosition.product.priceNetto, orderPosition.discount);
+        orderPosition.netPrice = this.calculatePrice(orderPosition.product.netPrice, orderPosition.discount);
     }
 
 
@@ -197,7 +197,7 @@ class WorkflowService {
             orderPositions: deepCopy(process.lead.orderPositions),
             deliveryAddress: process.lead.deliveryAddress,
             deliveryDate: null,
-            offerPrice: self.sumOrderPositions(process.lead.orderPositions) + process.lead.deliveryCosts,
+            netPrice: self.sumOrderPositions(process.lead.orderPositions) + process.lead.deliveryCosts,
             customer: process.lead.customer,
             vat: self.rootScope.user.defaultVat,
             timestamp: newTimestamp(),
@@ -241,9 +241,9 @@ class WorkflowService {
             orderPositions: deepCopy(process.offer.orderPositions),
             transport: process.offer.deliveryAddress,
             customer: process.offer.customer,
-            saleProfit: process.offer.offerPrice,
+            saleProfit: process.offer.netPrice,
             saleCost: 0,
-            saleTurnover: process.offer.offerPrice,
+            saleTurnover: process.offer.netPrice,
             invoiceNumber: "",
             timestamp: newTimestamp(),
             vendor: process.offer.vendor,

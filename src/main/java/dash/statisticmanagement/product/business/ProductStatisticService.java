@@ -82,7 +82,7 @@ public class ProductStatisticService extends AbstractStatisticService {
 		}
 		productMap.get(sourceKey).get(orderPosition.getProduct().getId()).addCount(orderPosition.getAmount());
 		productMap.get(sourceKey).get(orderPosition.getProduct().getId())
-				.addTurnover(orderPosition.getPrice() * orderPosition.getAmount());
+				.addTurnover(orderPosition.getNetPrice() * orderPosition.getAmount());
 		productMap.get(sourceKey).get(orderPosition.getProduct().getId())
 				.addDiscount(orderPosition.getDiscount() * orderPosition.getAmount());
 		productMap.get(sourceKey).get(orderPosition.getProduct().getId()).addOrderPosition();

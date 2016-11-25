@@ -19,7 +19,7 @@ class Product extends AbstractModel {
 
     name: string;
     description: string;
-    priceNetto: number;
+    netPrice: number;
     image: any;
     timestamp: any;
     deactivated: boolean;
