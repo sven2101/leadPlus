@@ -298,6 +298,12 @@ class WorkflowService {
         tempProcess.status = Status.SALE;
         tempProcess.processor = this.rootScope.user;
         let process: Process = await this.processResource.save(tempProcess);
+        let customer: Customer = process.offer.customer;
+        if (!customer.realCustomer) {
+            customer.realCustomer = true;
+            let updatedCustomer: Customer = await this.customerService.updateCustomer(customer);
+            process.offer.customer = updatedCustomer;
+        }
         this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
         this.rootScope.offersCount -= 1;
         this.rootScope.$broadcast("onTodosChange");

@@ -170,7 +170,7 @@ class OfferDataTableService {
         user.role = Role.SUPERADMIN;
 
         let config = new ActionButtonConfigBuilder();
-        config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("OFFER_CREATE_SALE");
+        config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("OFFER_CREATE_SALE").setIcon("fa fa-usd");
         if (process.status === Status.OFFER || process.status === Status.FOLLOWUP || process.status === Status.DONE) {
             config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled().setIcon("fa fa-usd");
         }

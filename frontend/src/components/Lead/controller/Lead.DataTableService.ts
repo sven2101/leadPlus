@@ -150,7 +150,7 @@ class LeadDataTableService {
         user.role = Role.SUPERADMIN;
 
         let config = new ActionButtonConfigBuilder();
-        config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("LEAD_FOLLOW_UP");
+        config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("LEAD_FOLLOW_UP").setIcon("fa fa-level-up");
         if (process.status === Status.OPEN || process.status === Status.INCONTACT) {
             config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled().setIcon("fa fa-level-up");
         }
