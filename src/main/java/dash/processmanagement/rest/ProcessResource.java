@@ -318,9 +318,12 @@ public class ProcessResource {
 	@RequestMapping(value = "/sales/latest/10", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public List<Process> getProcessWithLatest10Sales() {
-		Calendar yesterday = Calendar.getInstance();
-		yesterday.add(Calendar.DATE, -1);
-		return processRepository.findTop10BySaleIsNotNullAndSaleTimestampAfterOrderBySaleTimestampDesc(yesterday);
+		Calendar todayMidnight = Calendar.getInstance();
+		todayMidnight.set(Calendar.HOUR_OF_DAY, 0);
+		todayMidnight.set(Calendar.MINUTE, 0);
+		todayMidnight.set(Calendar.SECOND, 0);
+		todayMidnight.set(Calendar.MILLISECOND, 0);
+		return processRepository.findTop10BySaleIsNotNullAndSaleTimestampAfterOrderBySaleTimestampDesc(todayMidnight);
 	}
 
 	@ApiOperation(value = "Returns a list of latest 50 sales.", notes = "")
