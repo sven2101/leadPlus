@@ -14,6 +14,7 @@
 
 package dash.processmanagement.rest;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -317,7 +318,12 @@ public class ProcessResource {
 	@RequestMapping(value = "/sales/latest/10", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public List<Process> getProcessWithLatest10Sales() {
-		return processRepository.findTop10BySaleIsNotNullOrderBySaleTimestampDesc();
+		Calendar todayMidnight = Calendar.getInstance();
+		todayMidnight.set(Calendar.HOUR_OF_DAY, 0);
+		todayMidnight.set(Calendar.MINUTE, 0);
+		todayMidnight.set(Calendar.SECOND, 0);
+		todayMidnight.set(Calendar.MILLISECOND, 0);
+		return processRepository.findTop10BySaleIsNotNullAndSaleTimestampAfterOrderBySaleTimestampDesc(todayMidnight);
 	}
 
 	@ApiOperation(value = "Returns a list of latest 50 sales.", notes = "")

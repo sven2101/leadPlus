@@ -1,5 +1,5 @@
 /// <reference path="../../common/model/AbstractModel.Model.ts" />
-/// <reference path="./ProductState.ts" />
+/// <reference path="./ProductState.Model.ts" />
 /// <reference path="../../FileUpload/model/FileUpload.Model.ts" />
 
 /*******************************************************************************
