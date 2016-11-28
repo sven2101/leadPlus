@@ -68,7 +68,7 @@ class AppController {
         if (todo.status === "OPEN" || todo.status === "INCONTACT") {
             this.location.path("/leads/" + todo.id);
         }
-        else if (todo.status === "OFFER" || todo.status === "FOLLOWUP") {
+        else if (todo.status === "OFFER" || todo.status === "FOLLOWUP" || todo.status === "DONE") {
             this.location.path("/offers/" + todo.id);
         }
     }

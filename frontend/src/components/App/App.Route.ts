@@ -185,9 +185,8 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
         });
 
     }])
-    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId,
-        function ($location, $http, $rootScope, Auth, $cookies) {
-
+    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId
+        function ($location, $http, $rootScope, Auth, $cookies, $injector) {
             try {
                 $rootScope.user = $cookies.getObject("user");
                 $rootScope.tenant = $cookies.getObject("tenant");
@@ -200,13 +199,17 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             if (!isNullOrUndefined($rootScope.user) && !isNullOrUndefined($rootScope.tenant)) {
                 $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
                 $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
+                let dashboardService: DashboardService = $injector.get("DashboardService");
+                dashboardService.refreshTodos();
             }
 
             $rootScope.$on("$routeChangeStart", function (event, next, current) {
                 try {
-                    // TODO WTF? wird das immer gemacht, ist doch mega aufwändig...?           
-                    $rootScope.user = $cookies.getObject("user");
-                    $rootScope.tenant = $cookies.getObject("tenant");
+                    if (isNullOrUndefined($rootScope.user) || isNullOrUndefined($rootScope.tenant)) {
+                        $rootScope.user = $cookies.getObject("user");
+                        $rootScope.tenant = $cookies.getObject("tenant");
+                    }
+
                 } catch (error) {
                     $cookies.remove("user");
                     $cookies.remove("tenant");
