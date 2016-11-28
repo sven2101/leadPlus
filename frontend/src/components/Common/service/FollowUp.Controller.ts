@@ -74,7 +74,10 @@ class FollowUpController {
     }
 
     close() {
-        this.emailEditForm.$setPristine();
+        if (!isNullOrUndefined(this.emailEditForm)) {
+            this.emailEditForm.$setPristine();
+        }
+
         this.uibModalInstance.close();
     }
 
