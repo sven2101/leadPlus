@@ -83,7 +83,8 @@ public class PublicApiService implements IPublicApiService {
 					throw new SaveFailedException(PRODUCT_NOT_FOUND);
 				} else if (orderPosition.getProduct().getId() <= 0) {
 					throw new NotFoundException(PRODUCT_NOT_FOUND);
-				} else if (orderPosition.getDiscount() < 0 || orderPosition.getDiscount() > 100) {
+				} else if (orderPosition.getDiscount() < 0 || orderPosition.getDiscount() > 100
+						|| orderPosition.getAmount() <= 0) {
 					throw new SaveFailedException(INVALID_ORDERPOSITIONS);
 				}
 				Product product = productService.getById(orderPosition.getProduct().getId());

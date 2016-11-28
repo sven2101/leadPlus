@@ -185,7 +185,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
         });
 
     }])
-    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId
+    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId,
         function ($location, $http, $rootScope, Auth, $cookies, $injector) {
             try {
                 $rootScope.user = $cookies.getObject("user");
