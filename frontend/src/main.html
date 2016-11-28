@@ -112,7 +112,7 @@
 						<span ng-if="appCtrl.todos.length>0" class="label label-danger">{{ appCtrl.todos.length}}</span>
 
 					</a>
-					<ul style="min-width:400px" class="dropdown-menu dropdown-messages">
+					<ul style="min-width:480px" class="dropdown-menu dropdown-messages">
 						<li>
 							<div class="dropdown-messages-box">
 
@@ -126,21 +126,20 @@
 							<table class="table table-hover">
 								<tbody>
 									<tr style="cursor:pointer" ng-click="appCtrl.navigateTo(todo)" ng-repeat="todo in appCtrl.todos | limitTo:5 | orderBy:'timestamp'">
-										<td class="project-status">
-											<span ng-if="::todo.status=='OPEN'" class="label label-danger">{{ 'LEAD' | translate }}</span>
-											<span ng-if="::todo.status=='OFFER'" class="label label-warning">{{ 'COMMON_STATUS_OFFER' | translate }}</span>
-											<span ng-if="::todo.status=='FOLLOWUP'" class="label">{{ 'COMMON_STATUS_FOLLOW_UP' | translate }}</span>
-											<span ng-if="::todo.status=='INCONTACT'" class="label label-primary">{{ 'COMMON_STATUS_INCONTACT' | translate }}</span>
+												<td class="project-status">
+											<span ng-if="todo.status=='OPEN'" class="label label-danger">{{ 'LEAD' | translate }}</span>
+											<span ng-if="todo.status=='OFFER'" class="label label-warning">{{ 'COMMON_STATUS_OFFER' | translate }}</span>
+											<span ng-if="todo.status=='FOLLOWUP'" class="label">{{ 'COMMON_STATUS_FOLLOW_UP' | translate }}</span>
+											<span ng-if="todo.status=='INCONTACT'" class="label label-primary">{{ 'COMMON_STATUS_INCONTACT' | translate }}</span>
+											<span ng-if="todo.status=='DONE'" class="label label-success">{{ 'COMMON_STATUS_DONE' | translate }}</span>
 										</td>
 										<td align="left" class="project-title">
-											<a ng-if="::(todo.status=='OPEN'||todo.status=='INCONTACT')">{{::todo.lead.customer.firstname}} {{::todo.lead.customer.lastname}}</a>
-											<a ng-if="::todo.status=='OFFER'">{{::todo.offer.customer.firstname}} {{::todo.offer.customer.lastname}}</a>
-											<a ng-if="::todo.status=='FOLLOWUP'">{{::todo.offer.customer.firstname}} {{::todo.offer.customer.lastname}}</a>
+											<a ng-if="todo.status=='OPEN'||todo.status=='INCONTACT'">{{::todo.lead.customer.firstname}} {{::todo.lead.customer.lastname}}</a>
+											<a ng-if="todo.status=='OFFER'||todo.status=='FOLLOWUP'||todo.status=='DONE'">{{::todo.offer.customer.firstname}} {{::todo.offer.customer.lastname}}</a>
 										</td>
 										<td class="project-completion">
-											<small ng-if="::(todo.status=='OPEN'||todo.status=='INCONTACT')">{{::appCtrl.sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</small>
-											<small ng-if="::todo.status=='OFFER'">{{::todo.offer.netPrice| currency:'\u20AC'}}</small>
-											<small ng-if="::todo.status=='FOLLOWUP'">{{::todo.offer.netPrice| currency:'\u20AC'}}</small>
+											<strong ng-if="todo.status=='OPEN'||todo.status=='INCONTACT'">{{::appCtrl.sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</strong>
+											<strong ng-if="todo.status=='OFFER'||todo.status=='FOLLOWUP'||todo.status=='DONE'">{{::todo.offer.netPrice| currency:'\u20AC'}}</strong>
 										</td>
 									</tr>
 								</tbody>
