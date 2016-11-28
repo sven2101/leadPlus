@@ -98,6 +98,7 @@ function config($translateProvider) {
 
             // Template
             EMAIL_TEMPLATE: "Email Vorlagen",
+            EMAIL_TEMPLATE_ERROR: "Fehler im Email-Template",
             EMAIL_TEMPLATE_SELECT: "Keine Vorlage",
             EMAIL_RECIPIENT_COMMA: "(mit Komma getrennt)",
             EMAIL_RECIPIENT: "Empfänger",
@@ -580,6 +581,7 @@ function config($translateProvider) {
 
             // Template
             EMAIL_TEMPLATE: "Email templates",
+            EMAIL_TEMPLATE_ERROR: "Error in email template",
             EMAIL_TEMPLATE_SELECT: "No template",
             EMAIL_RECIPIENT_COMMA: "(seperated by comma)",
             EMAIL_RECIPIENT: "Recipient",
