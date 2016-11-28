@@ -108,7 +108,6 @@ class AuthService {
                         self.cookies.putObject("tenant", self.rootScope.tenant, { domain: credentials.tenant, path: "/", expires: date });
 
                         self.rootScope.user.picture = data.profilePicture;
-                        self.injector.get("DashboardService");
                         self.rootScope.$broadcast("onTodosChange");
                         defer.resolve(true);
                     }

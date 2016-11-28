@@ -98,6 +98,7 @@ public class TenantService implements ITenantService {
 					logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
 				}
 			}
+
 		} catch (Exception ex) {
 			logger.error(TENANT_ALREADY_EXISTS + tenant.getTenantKey(), ex);
 		}

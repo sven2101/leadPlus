@@ -47,8 +47,14 @@ class DashboardService {
     closedSalesValue: number = 0;
     SweetAlert: any;
     uibModal;
-
     todos: Array<Process> = [];
+    dropzoneClass = {
+        lead: "none",
+        contact: "none",
+        offer: "none",
+        done: "none",
+        sale: "none",
+    };
 
     constructor(ProcessResource, toaster, $rootScope, $translate, WorkflowService, $uibModal, $q, SweetAlert) {
         this.processResource = ProcessResource.resource;
@@ -67,14 +73,14 @@ class DashboardService {
         });
 
         let self = this;
-        setInterval(function() {
+        setInterval(function () {
             self.refreshTodos();
         }, 5 * 60 * 1000);
     }
 
     initDashboard() {
         let self = this;
-        this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function(result) {
+        this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function (result) {
             let open: Array<Process> = new Array<Process>();
             let contact: Array<Process> = new Array<Process>();
             for (let i = 0; i < result.length; i++) {
@@ -90,7 +96,7 @@ class DashboardService {
             self.inContacts = self.orderProcessByTimestamp(contact, "lead");
             self.sumInContacts();
         });
-        this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function(result) {
+        this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
             let open: Array<Process> = new Array<Process>();
             let done: Array<Process> = new Array<Process>();
             for (let i = 0; i < result.length; i++) {
@@ -106,7 +112,7 @@ class DashboardService {
             self.doneOffers = self.orderProcessByTimestamp(done, "offer");
             self.sumDoneOffers();
         });
-        this.processResource.getLatestSales().$promise.then(function(result) {
+        this.processResource.getLatestSales().$promise.then(function (result) {
             self.closedSales = result;
             self.sumSales();
         });
@@ -145,10 +151,32 @@ class DashboardService {
         }
     }
 
-    setSortableOptions(): any {
+    setSortableOptions(scope: any): any {
         let self: DashboardService = this;
         let sortableList = {
-            update: function(e, ui) {
+            start: function (e, ui) {
+                let source = ui.item.sortable.sourceModel;
+                if (source === self.openLeads) {
+                    self.dropzoneClass.contact = "2px dashed grey";
+                    self.dropzoneClass.offer = "2px dashed grey";
+                }
+                else if (source === self.inContacts) {
+                    self.dropzoneClass.offer = "2px dashed grey";
+                }
+                else if (source === self.openOffers) {
+                    self.dropzoneClass.done = "2px dashed grey";
+                    self.dropzoneClass.sale = "2px dashed grey";
+                }
+                else if (source === self.doneOffers) {
+                    self.dropzoneClass.offer = "2px dashed grey";
+                    self.dropzoneClass.sale = "2px dashed grey";
+                }
+                else if (source === self.closedSales) {
+                    self.dropzoneClass.sale = "2px dashed grey";
+                }
+                scope.$apply();
+            },
+            update: function (e, ui) {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
@@ -167,13 +195,20 @@ class DashboardService {
                     ui.item.sortable.cancel();
                 }
             },
-            stop: function(e, ui) {
+            stop: function (e, ui) {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
+
+                self.dropzoneClass.lead = "none";
+                self.dropzoneClass.contact = "none";
+                self.dropzoneClass.offer = "none";
+                self.dropzoneClass.done = "none";
+                self.dropzoneClass.sale = "none";
+
                 if (self.closedSales === target && self.openOffers === source
                     || self.closedSales === target && self.doneOffers === source) {
-                    self.startSaleTransformation(item).then(function(result) {
+                    self.startSaleTransformation(item).then(function (result) {
                         if (result === undefined) {
                             target.splice(target.indexOf(item), 1);
                             source.push(item);
@@ -182,7 +217,7 @@ class DashboardService {
                             target[index] = result;
                         }
                         self.updateDashboard("sale");
-                    }, function(result) {
+                    }, function (result) {
                         target.splice(target.indexOf(item), 1);
                         source.push(item);
                         self.updateDashboard("sale");
@@ -190,7 +225,7 @@ class DashboardService {
                 }
                 else if (self.openOffers === target && self.openLeads === source
                     || self.openOffers === target && self.inContacts === source) {
-                    self.startOfferTransformation(item).then(function(result) {
+                    self.startOfferTransformation(item).then(function (result) {
                         if (result === undefined) {
                             target.splice(target.indexOf(item), 1);
                             source.push(item);
@@ -199,7 +234,7 @@ class DashboardService {
                             target[index] = result;
                         }
                         self.updateDashboard("offer");
-                    }, function(result) {
+                    }, function (result) {
                         target.splice(target.indexOf(item), 1);
                         source.push(item);
                         self.updateDashboard("offer");
@@ -238,7 +273,7 @@ class DashboardService {
                         cancelButtonText: self.translate.instant("NO"),
                         confirmButtonColor: "#DD6B55",
                         confirmButtonText: self.translate.instant("YES"),
-                    }, function(isConfirm) {
+                    }, function (isConfirm) {
                         if (isConfirm) {
                             self.closeProcess(item, source);
                             source.splice(source.indexOf(item), 1);
@@ -285,9 +320,9 @@ class DashboardService {
 
     startOfferTransformation(process: Process): IPromise<Process> {
         let defer: IDefer<Process> = this.q.defer();
-        this.workflowService.startOfferTransformation(process).then(function(result: Process) {
+        this.workflowService.startOfferTransformation(process).then(function (result: Process) {
             defer.resolve(result);
-        }, function(error) {
+        }, function (error) {
             defer.reject(error);
         });
         return defer.promise;
@@ -295,9 +330,9 @@ class DashboardService {
 
     startSaleTransformation(process: Process): IPromise<Process> {
         let defer = this.q.defer();
-        this.workflowService.startSaleTransformation(process).then(function(result) {
+        this.workflowService.startSaleTransformation(process).then(function (result) {
             defer.resolve(result);
-        }, function() {
+        }, function () {
             defer.reject(false);
         });
         return defer.promise;
@@ -316,7 +351,7 @@ class DashboardService {
         let self = this;
         this.processResource.setStatus({
             id: process.id
-        }, "CLOSED").$promise.then(function() {
+        }, "CLOSED").$promise.then(function () {
             let message = "";
             if (source === self.openLeads) {
                 self.sumLeads();
