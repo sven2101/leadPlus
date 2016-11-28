@@ -350,8 +350,7 @@ public class UserService implements IUserService {
 		superadmin.setFirstname("Superadmin");
 		superadmin.setLastname("Eviarc");
 		
-		// TODO Set Password not to test... This is test!--> 
-		superadmin.setPassword("$2a$10$sMJ9QB33t9q5/ct0j.rSoeE6bZGYgGi/ybQ/9sZqDKUW8ZMcjGstS");
+		superadmin.setPassword("$2a$10$V7c4F8TMpN6zUPC4llkuM.tvGp.HuHdoEmu2CqMS1IEHGyGEOUAWW");
 		superadmin.setRole(Role.SUPERADMIN);
 		superadmin.setEnabled(true);
 		superadmin.setLanguage(Language.EN);
