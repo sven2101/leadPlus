@@ -210,6 +210,7 @@ class DashboardService {
                     || self.closedSales === target && self.doneOffers === source) {
                     self.startSaleTransformation(item).then(function (result) {
                         if (result === undefined) {
+                            item.sale = undefined;
                             target.splice(target.indexOf(item), 1);
                             source.push(item);
                         } else {
@@ -218,6 +219,7 @@ class DashboardService {
                         }
                         self.updateDashboard("sale");
                     }, function (result) {
+                        item.sale = undefined;
                         target.splice(target.indexOf(item), 1);
                         source.push(item);
                         self.updateDashboard("sale");
@@ -227,6 +229,7 @@ class DashboardService {
                     || self.openOffers === target && self.inContacts === source) {
                     self.startOfferTransformation(item).then(function (result) {
                         if (result === undefined) {
+                            item.offer = undefined;
                             target.splice(target.indexOf(item), 1);
                             source.push(item);
                         } else {
@@ -235,6 +238,7 @@ class DashboardService {
                         }
                         self.updateDashboard("offer");
                     }, function (result) {
+                        item.offer = undefined;
                         target.splice(target.indexOf(item), 1);
                         source.push(item);
                         self.updateDashboard("offer");
@@ -333,7 +337,7 @@ class DashboardService {
         this.workflowService.startSaleTransformation(process).then(function (result) {
             defer.resolve(result);
         }, function () {
-            defer.reject(false);
+            defer.reject(undefined);
         });
         return defer.promise;
     }
@@ -344,7 +348,6 @@ class DashboardService {
 
     doneOffer(process: Process) {
         this.workflowService.doneOffer(process);
-
     }
 
     closeProcess(process: Process, source: any) {
