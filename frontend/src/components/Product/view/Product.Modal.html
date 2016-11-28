@@ -16,14 +16,15 @@
                             <div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.name.$invalid && !productCtrl.createProductForm.name.$pristine }">
                                 <label>{{ 'PRODUCT_PRODUCTNAME' | translate }}<span style="color:red">*</span></label>
                                 <input type=" text " name="name" class="form-control " ng-model="productCtrl.currentProduct.name" ng-maxlength="100" required>
-                                <p ng-show="productCtrl.createProductForm.name.$invalid && !productCtrl.createProductForm.name.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}100{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                                <p ng-show="productCtrl.createProductForm.name.$error.maxlength && !productCtrl.createProductForm.name.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}100{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                                <p ng-show="productCtrl.createProductForm.name.$error.required && !productCtrl.createProductForm.name.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
                             </div>
                             <!--DESCRIPTION -->
                             <div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.description.$invalid && !productCtrl.createProductForm.description.$pristine }">
                                 <label>{{ 'PRODUCT_DESCRIPTION' | translate }}</label>
                                 <textarea style="resize: none" rows="7" type="text" name="description" class="form-control " ng-model="productCtrl.currentProduct.description"
                                     ng-maxlength="3000"></textarea>
-                                <p ng-show="productCtrl.createProductForm.description.$invalid" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}3000{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+                                <p ng-show="productCtrl.createProductForm.description.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}3000{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                             <!-- PRICE -->
                             <div class="form-group" ng-class="{ 'has-error' : productCtrl.createProductForm.netPrice.$invalid && !productCtrl.createProductForm.netPrice.$pristine }">

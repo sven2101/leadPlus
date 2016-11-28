@@ -226,6 +226,7 @@ function config($translateProvider) {
             COMMON_EMPTY_PROCESSOR: "Niemand",
             COMMON_STATUS_SET_DONE: "Als erledigt markieren",
             COMMON_STATUS_SET_OPEN: "Als offen markieren",
+            COMMON_SEARCH: "Suchen...",
 
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Anfragen verwalten",
@@ -327,6 +328,7 @@ function config($translateProvider) {
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE: "Speichern der SMTP Server Verbindung erfolgreich. ",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE_ERROR: "Speichern der SMTP Server Verbindung fehlgeschlagen. ",
             SETTING_EMAIL_TEMPLATES_MANAGEMENT: "Email Templates",
+            SETTING_EMAIL_NEW_TEMPLATE: "Neues Template",
             SETTING_ACCESS_MANAGEMENT: "Benutzer freischalten",
             SETTING_ACTIVATE_USER: "Freischalten",
             SETTING_DEACTIVATE_USER: "Deaktivieren",
@@ -436,6 +438,7 @@ function config($translateProvider) {
             PRODUCT_PRODUCTNAME: "Produktname",
             PRODUCT_DESCRIPTION: "Beschreibung",
             PRODUCT_PRICE: "Nettopreis",
+            PRODUCT_GROSS_PRICE: "Bruttopreis",
             PRODUCT_IMAGE: "Bild",
             PRODUCT_EDIT: "Produkt bearbeiten",
             PRODUCT_DEACTIVATED: "Deaktivieren",
@@ -480,8 +483,8 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_CREATED: "wurde erstellt",
             CUSTOMER_NUMBER: "Kundennummer",
 
-            TODO_TODOS: "ToDos",
-            TODO_NO_TODOS: "Keine Todos vorhanden",
+            TODO_TODOS: "Aufgaben",
+            TODO_NO_TODOS: "Keine Aufgaben vorhanden",
 
             // Define calculation elements 
             CALCULATION_NET: "Netto",
@@ -490,7 +493,7 @@ function config($translateProvider) {
 
             // Tooltip
             TOOLTIP_SIGN_UP: "Registrieren Sie sich jetzt unter ihrer spezifischen Subdomain um vollen Zugriff auf die Anwendung zu erhalten. Nach der erfolgreichen Registrierung, muss ihr Anwendungs-Administrator ihren Account freischalten.",
-            TOOLTIP_TODO: "Über ToDo kannst Du all die Prozesse im Auge behalten, an denen Du beteiligt bist.",
+            TOOLTIP_TODO: "Über Aufgaben kannst Du all die Prozesse im Auge behalten, an denen Du beteiligt bist.",
             TOOLTIP_PROFIL_PICTURE: "Wähle dein Profilbild und speichere es. Danach präsentiert es Dich innerhalb der Anwendung.",
             TOOLTIP_CUSTOMER_LOOKUP: "Ab einer Eingabe von 3 Zeichen werden dir relevante Kunden angezeigt.\nDu kannst nach Vorname, Nachname, Firma, E-Mail und Kundennummer suchen.",
 
@@ -597,7 +600,7 @@ function config($translateProvider) {
             COMMON_FAX: "Fax",
             COMMON_JOB: "Job Description",
             COMMON_LOAD_MORE: "more",
-            COMMON_UPLOAD_NEW1_IMAGE: "Upload new image",
+            COMMON_UPLOAD_NEW_IMAGE: "Upload new image",
             COMMON_CURRENCY: "€",
             COMMON_RESET: "Reset",
             COMMON_SEND: "Send",
@@ -671,6 +674,7 @@ function config($translateProvider) {
             COMMON_VALIDATE_NEW_PASSWORD: "New password",
             COMMON_VALIDATE_PASSWORD: "Password have to be 6 characters long",
             COMMON_VALIDATE_PASSWORD_NOT_MATCH: "Password doesn\"t match",
+            COMMON_NEW_PASSWORD: "New password",
             COMMON_VALIDATE_INVOICE_NUMBER_ALREADY_EXISTS: "Invoice number already exists",
             COMMON_TOAST_SUCCESS_ADD_LEAD: "A new lead was generated",
             COMMON_TOAST_SUCCESS_INCONTACT: "Lead is set to in contact",
@@ -709,6 +713,7 @@ function config($translateProvider) {
             COMMON_EMPTY_PROCESSOR: "Nobody",
             COMMON_STATUS_SET_DONE: "Mark as done",
             COMMON_STATUS_SET_OPEN: "Mark as open",
+            COMMON_SEARCH: "Search...",
 
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Manage leads",
@@ -796,6 +801,7 @@ function config($translateProvider) {
             // Define setting elements
             SETTING_USER: "Users",
             SETTING_USER_MANAGEMENT: "User Management",
+            SETTING_EMAIL: "Email",
             SETTING_EMAIL_MANAGEMENT: "Email Management",
             SETTING_EMAIL_MANAGEMENT_SENDER: "Sender-Name",
             SETTING_EMAIL_MANAGEMENT_EMAIL: "Email",
@@ -806,6 +812,8 @@ function config($translateProvider) {
             SETTING_EMAIL_MANAGEMENT_PORT: "Port",
             SETTING_EMAIL_MANAGEMENT_PORT_NO_INPUT: "No input = standardport",
             SETTING_EMAIL_MANAGEMENT_CONNECTION_TEST: "Testing Connection",
+            SETTING_EMAIL_TEMPLATES_MANAGEMENT: "Email Templates",
+            SETTING_EMAIL_NEW_TEMPLATE: "New template",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST: "Connection to SMTP Server successful.  ",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST_ERROR: "Connection to SMTP Server failed. ",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE: "Successfully saved SMTP Server Connection. ",
@@ -919,6 +927,7 @@ function config($translateProvider) {
             PRODUCT_PRODUCTNAME: "Product Name",
             PRODUCT_DESCRIPTION: "Description",
             PRODUCT_PRICE: "Net price",
+            PRODUCT_GROSS_PRICE: "Gross price",
             PRODUCT_IMAGE: "Image",
             PRODUCT_EDIT: "Edit Product",
             PRODUCT_DEACTIVATED: "Deactivate",
@@ -963,8 +972,9 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_CREATED: "has been created",
             CUSTOMER_NUMBER: "Customer number",
 
-            TODO_TODOS: "ToDos",
-            TODO_NO_TODOS: "No todos existing",
+
+            TODO_TODOS: "Tasks",
+            TODO_NO_TODOS: "No tasks existing",
 
             // Define calculation elements 
             CALCULATION_NET: "Net",
@@ -973,7 +983,7 @@ function config($translateProvider) {
 
             // Tooltip
             TOOLTIP_SIGN_UP: "Sign up now under your unique tenant domain section to get full acces<br>s. After Sign up your administrator needs to enable your account.",
-            TOOLTIP_TODO: "Via ToDo you can keep all your processes in mind.",
+            TOOLTIP_TODO: "Via task you can keep all your processes in mind.",
             TOOLTIP_PROFIL_PICTURE: "Select your Profil Picture and press save to keep it. Afterwards it will present you within this Application.",
             TOOLTIP_CUSTOMER_LOOKUP: "From 3 characters the relevant customers will appear.\nYou can search for firstname, lastname, company, e-mail and customernumber.",
 

@@ -129,8 +129,8 @@
 												<td class="project-status">
 											<span ng-if="todo.status=='OPEN'" class="label label-danger">{{ 'LEAD' | translate }}</span>
 											<span ng-if="todo.status=='OFFER'" class="label label-warning">{{ 'COMMON_STATUS_OFFER' | translate }}</span>
-											<span ng-if="todo.status=='FOLLOWUP'" class="label">{{ 'COMMON_STATUS_FOLLOW_UP' | translate }}</span>
-											<span ng-if="todo.status=='INCONTACT'" class="label label-primary">{{ 'COMMON_STATUS_INCONTACT' | translate }}</span>
+											<span ng-if="todo.status=='FOLLOWUP'" class="label label-warning">{{ 'COMMON_STATUS_FOLLOW_UP' | translate }}</span>
+											<span ng-if="todo.status=='INCONTACT'" class="label label-danger">{{ 'COMMON_STATUS_INCONTACT' | translate }}</span>
 											<span ng-if="todo.status=='DONE'" class="label label-success">{{ 'COMMON_STATUS_DONE' | translate }}</span>
 										</td>
 										<td align="left" class="project-title">

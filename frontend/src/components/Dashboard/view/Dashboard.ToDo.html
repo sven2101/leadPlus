@@ -2,7 +2,7 @@
 	<div class="col-lg-12">
 		<div class="ibox float-e-margins">
 			<div class="ibox-title">
-				<h5>ToDo</h5>
+				<h5>{{ 'TODO_TODOS' | translate }}</h5>
 				<div class="ibox-tools">
 					<i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'TOOLTIP_TODO' | translate }}"></i>
 				</div>
@@ -16,7 +16,7 @@
                     </div>
                     -->
 					<span class="pull-right ">
-                                 <input  type="text" placeholder="Search" class="input-sm form-control" ng-model="searchText">
+                                 <input  type="text" placeholder="{{ 'COMMON_SEARCH' | translate }}" class="input-sm form-control" ng-model="searchText">
                          </span>
 
 
@@ -31,8 +31,8 @@
 								<td class="project-status">
 									<span ng-if="todo.status=='OPEN'" class="label label-danger">{{ 'LEAD' | translate }}</span>
 									<span ng-if="todo.status=='OFFER'" class="label label-warning">{{ 'COMMON_STATUS_OFFER' | translate }}</span>
-									<span ng-if="todo.status=='FOLLOWUP'" class="label">{{ 'COMMON_STATUS_FOLLOW_UP' | translate }}</span>
-									<span ng-if="todo.status=='INCONTACT'" class="label label-primary">{{ 'COMMON_STATUS_INCONTACT' | translate }}</span>
+									<span ng-if="todo.status=='FOLLOWUP'" class="label label-warning">{{ 'COMMON_STATUS_FOLLOW_UP' | translate }}</span>
+									<span ng-if="todo.status=='INCONTACT'" class="label label-danger">{{ 'COMMON_STATUS_INCONTACT' | translate }}</span>
 									<span ng-if="todo.status=='DONE'" class="label label-success">{{ 'COMMON_STATUS_DONE' | translate }}</span>
 								</td>
 								<td align="left" class="project-title">
