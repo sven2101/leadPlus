@@ -86,6 +86,8 @@ public class UserStatisticService extends AbstractStatisticService {
 				.filter(it -> Activity.OFFER.equals(it.getActivity())).collect(Collectors.toList());
 		Set<Long> hasCountProcess = new HashSet<>();
 		Set<Long> hasCountCompletedProcess = new HashSet<>();
+		Set<Long> hasCountSucceededLead = new HashSet<>();
+		Set<Long> hasCountSucceededOffer = new HashSet<>();
 		for (Processor processor : process.getFormerProcessors()) {
 			Long userIdKey = processor.getUser().getId();
 			Activity activity = processor.getActivity();
@@ -104,6 +106,11 @@ public class UserStatisticService extends AbstractStatisticService {
 			if (process.getLead() != null && !process.getLead().isDeleted()
 					&& (Activity.OPEN.equals(activity) || Activity.INCONTACT.equals(activity))) {
 				userMap.get(sourceKey).get(userIdKey).addCountLead();
+				if (process.getSale() != null && !process.getSale().isDeleted()
+						&& !hasCountSucceededLead.contains(userIdKey)) {
+					userMap.get(sourceKey).get(userIdKey).addSucceededLeads();
+					hasCountSucceededLead.add(userIdKey);
+				}
 			} else {
 				if (process.getOffer() != null && !process.getOffer().isDeleted() && Activity.OFFER.equals(activity))
 					userMap.get(sourceKey).get(userIdKey).addCountOffer();
@@ -117,6 +124,11 @@ public class UserStatisticService extends AbstractStatisticService {
 								.addCountProfit(process.getSale().getSaleProfit() / offerProcessors.size());
 						for (OrderPosition orderPosition : process.getSale().getOrderPositions()) {
 							userMap.get(sourceKey).get(userIdKey).addCountProduct(orderPosition.getAmount());
+						}
+						if (process.getSale() != null && !process.getSale().isDeleted()
+								&& !hasCountSucceededOffer.contains(userIdKey)) {
+							userMap.get(sourceKey).get(userIdKey).addSucceededOffers();
+							hasCountSucceededOffer.add(userIdKey);
 						}
 					}
 				}

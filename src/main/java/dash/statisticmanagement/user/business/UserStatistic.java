@@ -13,6 +13,8 @@ public class UserStatistic implements Serializable {
 	private int countSale;
 	private int countProcess;
 	private int completedProcess;
+	private int succeededLeads;
+	private int succeededOffers;
 	private double turnover;
 	private double profit;
 	private double discount;
@@ -25,6 +27,8 @@ public class UserStatistic implements Serializable {
 		countSale = 0;
 		countProcess = 0;
 		completedProcess = 0;
+		succeededLeads = 0;
+		succeededOffers = 0;
 		turnover = 0;
 		profit = 0;
 		discount = 0;
@@ -49,6 +53,14 @@ public class UserStatistic implements Serializable {
 
 	public void addCompletedProcess() {
 		completedProcess++;
+	}
+
+	public void addSucceededLeads() {
+		succeededLeads++;
+	}
+
+	public void addSucceededOffers() {
+		succeededOffers++;
 	}
 
 	public void addCountTurnover(double value) {
@@ -147,6 +159,22 @@ public class UserStatistic implements Serializable {
 		this.countProduct = countProduct;
 	}
 
+	public int getSucceededLeads() {
+		return succeededLeads;
+	}
+
+	public void setSucceededLeads(int succeededLeads) {
+		this.succeededLeads = succeededLeads;
+	}
+
+	public int getSucceededOffers() {
+		return succeededOffers;
+	}
+
+	public void setSucceededOffers(int succeededOffers) {
+		this.succeededOffers = succeededOffers;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -162,6 +190,8 @@ public class UserStatistic implements Serializable {
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(profit);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + succeededLeads;
+		result = prime * result + succeededOffers;
 		temp = Double.doubleToLongBits(turnover);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
@@ -193,6 +223,10 @@ public class UserStatistic implements Serializable {
 			return false;
 		if (Double.doubleToLongBits(profit) != Double.doubleToLongBits(other.profit))
 			return false;
+		if (succeededLeads != other.succeededLeads)
+			return false;
+		if (succeededOffers != other.succeededOffers)
+			return false;
 		if (Double.doubleToLongBits(turnover) != Double.doubleToLongBits(other.turnover))
 			return false;
 		if (user == null) {
@@ -206,9 +240,9 @@ public class UserStatistic implements Serializable {
 	@Override
 	public String toString() {
 		return "UserStatistic [countLead=" + countLead + ", countOffer=" + countOffer + ", countSale=" + countSale
-				+ ", countProcess=" + countProcess + ", completedProcess=" + completedProcess + ", turnover=" + turnover
-				+ ", profit=" + profit + ", discount=" + discount + ", countProduct=" + countProduct + ", user=" + user
-				+ "]";
+				+ ", countProcess=" + countProcess + ", completedProcess=" + completedProcess + ", succeededLeads="
+				+ succeededLeads + ", succeededOffers=" + succeededOffers + ", turnover=" + turnover + ", profit="
+				+ profit + ", discount=" + discount + ", countProduct=" + countProduct + ", user=" + user + "]";
 	}
 
 }

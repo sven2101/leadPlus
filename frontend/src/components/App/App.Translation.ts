@@ -388,7 +388,8 @@ function config($translateProvider) {
             STATISTIC_WORKED_ON_SALES: "Bearbeitete Verkäufe",
             STATISTIC_COMPLETED_PROCESSES: "Abgeschlossene Prozesse",
             STATISTIC_PRODUCT_SALES: "Verkaufte Produkte",
-            STATISTIC_EARNING_RATE: "Erfolgsrate - Prozessbeteilgung",
+            STATISTIC_EARNING_RATE: "Erfolgsrate",
+            STATISTIC_EARNING_RATE_PROCESS: "Erfolgsrate - Prozessbeteilgung",
 
             // Define detail statistic
             DETAIL_STATISTIC_PRODUCTSTATISTIC: "Produktstatistik",
@@ -877,7 +878,8 @@ function config($translateProvider) {
             STATISTIC_WORKED_ON_SALES: "Worked on sales",
             STATISTIC_COMPLETED_PROCESSES: "Completed Processes",
             STATISTIC_PRODUCT_SALES: "Sold products",
-            STATISTIC_EARNING_RATE: "Successrate - process involvement",
+            STATISTIC_EARNING_RATE: "Successrate",
+            STATISTIC_EARNING_RATE_PROCESS: "Successrate - process involvement",
 
             // Define detail statistic
             DETAIL_STATISTIC_PRODUCTSTATISTIC: "Productstatistic",

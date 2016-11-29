@@ -19,22 +19,22 @@
 			<div class="ibox-content">
 				<ul class="stat-list m-t-lg">
 					<li>
-						<h2 class="no-margins">{{calculateRate(userStatistic.completedProcess,userStatistic.countLead)| number:2}}%</h2>
-						<small>{{ 'STATISTIC_SALES_OF_LEADS' | translate }} ({{userStatistic.completedProcess}}/{{userStatistic.countLead}})</small>
+						<h2 class="no-margins">{{calculateRate(userStatistic.succeededLeads,userStatistic.countLead)| number:2}}%</h2>
+						<small>{{ 'STATISTIC_SALES_OF_LEADS' | translate }} ({{userStatistic.succeededLeads}}/{{userStatistic.countLead}})</small>
 						<div class="progress progress-mini">
-							<div ng-style="{'width':calculateRate(userStatistic.completedProcess,userStatistic.countLead)+'%'}" class="progress-bar progress-bar-danger"></div>
+							<div ng-style="{'width':calculateRate(userStatistic.succeededLeads,userStatistic.countLead)+'%'}" class="progress-bar progress-bar-danger"></div>
 						</div>
 					</li>
 					<li>
-						<h2 class="no-margins">{{calculateRate(userStatistic.completedProcess,userStatistic.countOffer)| number:2}}%</h2>
-						<small>{{ 'STATISTIC_SALES_OF_OFFERS' | translate }} ({{userStatistic.completedProcess}}/{{userStatistic.countOffer}})</small>
+						<h2 class="no-margins">{{calculateRate(userStatistic.succeededOffers,userStatistic.countOffer)| number:2}}%</h2>
+						<small>{{ 'STATISTIC_SALES_OF_OFFERS' | translate }} ({{userStatistic.succeededOffers}}/{{userStatistic.countOffer}})</small>
 						<div class="progress progress-mini">
-							<div ng-style="{'width':calculateRate(userStatistic.completedProcess,userStatistic.countOffer)+'%'}" class="progress-bar progress-bar-warning"></div>
+							<div ng-style="{'width':calculateRate(userStatistic.succeededOffers,userStatistic.countOffer)+'%'}" class="progress-bar progress-bar-warning"></div>
 						</div>
 					</li>
 					<li>
 						<h2 class="no-margins">{{calculateRate(userStatistic.completedProcess,userStatistic.countProcess)| number:2}}%</h2>
-						<small>{{ 'STATISTIC_EARNING_RATE' | translate }} ({{userStatistic.completedProcess}}/{{userStatistic.countProcess}})</small>
+						<small>{{ 'STATISTIC_EARNING_RATE_PROCESS' | translate }} ({{userStatistic.completedProcess}}/{{userStatistic.countProcess}})</small>
 						<div class="progress progress-mini">
 							<div ng-style="{'width':calculateRate(userStatistic.completedProcess,userStatistic.countProcess)+'%'}" class="progress-bar progress-bar-success"></div>
 						</div>
