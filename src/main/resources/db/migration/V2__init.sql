@@ -1,5 +1,5 @@
 INSERT INTO public.license(id, licenseType, trial, term)
-    VALUES (1,'ULTIMATE', false, '2017-12-12')
+    VALUES (1,'ULTIMATE', false, '2020-12-12')
         ON CONFLICT DO NOTHING;  
 
 -- Table: tenant

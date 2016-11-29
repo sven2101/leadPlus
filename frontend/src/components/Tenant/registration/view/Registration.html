@@ -68,7 +68,7 @@
 		<div class="row">
 			<div class="col-xs-6 col-sm-6 col-md-6">
 				<div class="form-group" ng-class="{ 'has-error': validation.firstname.$invalid && !validation.firstname.$pristine }">
-					<input required ng-minlength="2" ng-maxlength="20" type="text" name="firstname" id="firstname" class="form-control" placeholder="First Name"
+					<input required ng-minlength="2" ng-maxlength="20" type="text" name="firstname" id="firstname" class="form-control" placeholder="{{ 'COMMON_FIRSTNAME' | translate }}"
 						ng-model="registrationCtrl.user.firstname">
 				</div>
 				<span ng-show="validation.firstname.$error.required &&!validation.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
@@ -77,7 +77,7 @@
 			</div>
 			<div class="col-xs-6 col-sm-6 col-md-6">
 				<div class="form-group" ng-class="{ 'has-error': validation.lastname.$invalid && !validation.lastname.$pristine }">
-					<input required ng-minlength="2" ng-maxlength="20" type="text" name="lastname" id="lastname" class="form-control" placeholder="Last Name"
+					<input required ng-minlength="2" ng-maxlength="20" type="text" name="lastname" id="lastname" class="form-control" placeholder="{{ 'COMMON_LASTNAME' | translate }}"
 						ng-model="registrationCtrl.user.lastname">
 				</div>
 				<span ng-show="validation.lastname.$error.required&&!validation.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>

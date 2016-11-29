@@ -32,7 +32,7 @@ const DashboardControllerId: string = "DashboardController";
 
 class DashboardController {
 
-    $inject = [WorkflowServiceId, StatisticServiceId, DashboardServiceId, $rootScopeId, TemplateServiceId, NotificationServiceId, $sceId];
+    $inject = [WorkflowServiceId, StatisticServiceId, DashboardServiceId, $rootScopeId, TemplateServiceId, NotificationServiceId, $sceId, $scopeId];
 
     workflowService: WorkflowService;
     statisticService: StatisticService;
@@ -49,12 +49,13 @@ class DashboardController {
     currentUser: User;
 
     rootScope;
+    scope;
     sce;
 
     template: Template = new Template();
     templates: Array<Template> = [];
 
-    constructor(WorkflowService, StatisticService, DashboardService, $rootScope, TemplateService, NotificationService, $sce) {
+    constructor(WorkflowService, StatisticService, DashboardService, $rootScope, TemplateService, NotificationService, $sce, $scope) {
         this.workflowService = WorkflowService;
         this.statisticService = StatisticService;
         this.dashboardService = DashboardService;
@@ -62,9 +63,10 @@ class DashboardController {
         this.getAllActiveTemplates();
 
         this.sce = $sce;
+        this.scope = $scope;
         this.rootScope = $rootScope;
         this.statisticService.loadAllResourcesByDateRange("MONTHLY", "ALL");
-        this.sortableOptions = this.dashboardService.setSortableOptions();
+        this.sortableOptions = this.dashboardService.setSortableOptions(this.scope);
         this.currentUser = this.rootScope.user;
 
         this.refreshData();
@@ -204,9 +206,9 @@ class DashboardController {
             }
         }
         if (max > 7) {
-            max = 7;
+            return 7 * 85;
         }
-        return (max + 2) * 80;
+        return (max * 85) + 100;
     }
 }
 

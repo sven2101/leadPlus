@@ -231,7 +231,7 @@ class WorkflowService {
     }
 
 
-    startSaleTransformation(process: Process): IPromise<boolean> {
+    startSaleTransformation(process: Process): IPromise<Process> {
         let defer = this.$q.defer();
         let self = this;
         process.sale = {

@@ -48,6 +48,7 @@ public class TenantService implements ITenantService {
 
 	private static final String SPRING_PROFILE_PRODUCTION = "production";
 	private static final String SPRING_PROFILE_DEVELOPMENT = "development";
+	private static final String SPRING_PROFILE_TEST = "test";
 	private static final String RESOURCE_RECORD_SET_CNAME = "CNAME";
 	private static final String WWW = "www";
 
@@ -87,7 +88,8 @@ public class TenantService implements ITenantService {
 			tenant.getLicense().setTerm(oneYearLater);
 			Validation tenantNotExists = uniqueTenantKey(tenant);
 			if (tenantNotExists.isValidation()) {
-				if (springProfileActive.equals(SPRING_PROFILE_DEVELOPMENT)) {
+				if (springProfileActive.equals(SPRING_PROFILE_DEVELOPMENT)
+						|| springProfileActive.equals(SPRING_PROFILE_TEST)) {
 					createSchema(tenant);
 					tenantRepository.save(tenant);
 					logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
@@ -98,6 +100,7 @@ public class TenantService implements ITenantService {
 					logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
 				}
 			}
+
 		} catch (Exception ex) {
 			logger.error(TENANT_ALREADY_EXISTS + tenant.getTenantKey(), ex);
 		}
@@ -184,6 +187,12 @@ public class TenantService implements ITenantService {
 	@Override
 	public Validation uniqueTenantKey(Tenant tenant) {
 		final Validation validation = new Validation();
+		if ("www".contains(tenant.getTenantKey().toLowerCase())
+				|| "leadplus".contains(tenant.getTenantKey().toLowerCase())) {
+			validation.setValidation(false);
+			return validation;
+		}
+
 		final Tenant validateTenant;
 
 		boolean proofUniquenessLocal = true;

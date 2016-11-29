@@ -75,6 +75,7 @@ class RegistrationController {
         this.tenantService.save(this.tenant).then(function (createdTenant: Tenant) {
             self.http.defaults.headers.common["X-TenantID"] = self.credentials.tenant;
             self.signupService.signup(self.user).then(function (createdUser: User) {
+                self.signupService.init(self.user.password, self.tenant.tenantKey);
                 self.loginService.login(self.credentials);
             }, function (error) {
                 handleError(error);

@@ -25,13 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.EmailAlreadyExistsException;
 import dash.exceptions.RegisterFailedException;
+import dash.exceptions.SaveFailedException;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
 import dash.usermanagement.registration.domain.Validation;
 
 @RestController
-@RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.ALL_VALUE })
+@RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+		MediaType.ALL_VALUE })
 public class RegistrationResource {
 
 	@Autowired
@@ -39,7 +41,8 @@ public class RegistrationResource {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public User register(@RequestBody final Registration registration) throws EmailAlreadyExistsException, RegisterFailedException {
+	public User register(@RequestBody final Registration registration)
+			throws EmailAlreadyExistsException, RegisterFailedException {
 		return userService.register(registration);
 	}
 
@@ -47,6 +50,12 @@ public class RegistrationResource {
 	@ResponseStatus(HttpStatus.OK)
 	public Validation emailAlreadyExists(@RequestBody final Registration registration) {
 		return userService.emailAlreadyExists(registration.getEmail());
+	}
+
+	@RequestMapping(value = "/init", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.CREATED)
+	public void createInitialUsers(@RequestBody final String apiPassword) throws SaveFailedException {
+		userService.createInitialUsers(apiPassword);
 	}
 
 }

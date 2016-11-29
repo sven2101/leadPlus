@@ -20,12 +20,13 @@ class EditEmailDirective implements IDirective {
         notification: "="
     };
 
-    constructor(private WorkflowService: WorkflowService, private $rootScope, private TemplateService: TemplateService, private $sce, private $http, private $window) { }
+    constructor(private WorkflowService: WorkflowService, private $rootScope, private TemplateService: TemplateService,
+        private $sce, private $http, private $window, private $translate, private toaster) { }
 
     static directiveFactory(): EditEmailDirective {
-        let directive: any = (WorkflowService: WorkflowService, $rootScope, TemplateService: TemplateService, $sce, $http, $window) =>
-            new EditEmailDirective(WorkflowService, $rootScope, TemplateService, $sce, $http, $window);
-        directive.$inject = [WorkflowServiceId, $rootScopeId, TemplateServiceId, $sceId, $httpId, $windowId];
+        let directive: any = (WorkflowService: WorkflowService, $rootScope, TemplateService: TemplateService, $sce, $http, $window, $translate, toaster) =>
+            new EditEmailDirective(WorkflowService, $rootScope, TemplateService, $sce, $http, $window, $translate, toaster);
+        directive.$inject = [WorkflowServiceId, $rootScopeId, TemplateServiceId, $sceId, $httpId, $windowId, $translateId, toasterId];
         return directive;
     }
 
@@ -111,7 +112,12 @@ class EditEmailDirective implements IDirective {
             scope.notification.recipient = scope.process.offer.customer.email;
             return;
         }
-        scope.TemplateService.generate(templateId, offer, currentNotification).then((notification: Notification) => scope.notification.content = notification.content);
+        let self = this;
+        scope.TemplateService.generate(templateId, offer, currentNotification).then((notification: Notification) => scope.notification.content = notification.content,
+            (error) => {
+                self.toaster.pop("error", "", self.$translate
+                    .instant("EMAIL_TEMPLATE_ERROR"));
+            });
     };
 
     reloadHtmlString(scope: any): void {
