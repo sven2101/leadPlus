@@ -46,7 +46,6 @@ class SettingController {
     currentUser: User;
 
     constructor(SettingService, SmtpService, TemplateService, $rootScope) {
-
         this.smtp = new Smtp();
         this.template = new Template();
 

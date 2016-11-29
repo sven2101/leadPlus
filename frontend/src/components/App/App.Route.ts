@@ -63,7 +63,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controller: "StatisticController",
                 controllerAs: "statisticCtrl",
                 authenticated: true,
-                package: "pro"
+                package: "basic"
             })
             .when("/settings",
             {
