@@ -15,7 +15,7 @@
                                 <th class="text-center">{{ 'COMMON_USER' | translate }}</th>
                                 <th class="text-center" data-hide="all"></th>
                                 <th class="text-center">{{ 'STATISTIC_COMPLETED_PROCESSES' | translate }}</th>
-                                <th class="text-center">{{ 'COMMON_CONVERSIONRATE' | translate }}</th>
+                                <th class="text-center">{{ 'STATISTIC_EARNING_RATE' | translate }}</th>
                                 <th class="text-center">{{ 'DETAIL_STATISTIC_REALISED_TURNOVER' | translate }}</th>
                                 <th class="text-center">{{ 'DETAIL_STATISTIC_REALISED_PROFIT' | translate }}</th>
                             </tr>
@@ -50,7 +50,8 @@
                                     </table>
                                 </td>
                                 <td class="text-center">{{userStatistic.completedProcess}}</td>
-                                <td class="text-center">{{statisticCtrl.getRatePercentage(userStatistic.completedProcess,userStatistic.countOffer) | number:2}}%
+                                <td class="text-center">{{statisticCtrl.getRatePercentage(userStatistic.completedProcess,userStatistic.countProcess)
+                                    | number:2}}%
                                 </td>
                                 <td class="text-center" style="color:green">{{userStatistic.turnover | currency:'\u20AC'}}</td>
                                 <td class="text-center" style="color:green">{{userStatistic.profit | currency:'\u20AC'}}</td>
