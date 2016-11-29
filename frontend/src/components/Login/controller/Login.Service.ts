@@ -58,8 +58,6 @@ class LoginService {
                         domain += ":" + self.location.port();
                     }
                     domain += "/#/login";
-
-                    console.log(domain);
                     self.window.open(domain, "_self");
                 }
                 self.rootScope.setUserDefaultLanguage();
