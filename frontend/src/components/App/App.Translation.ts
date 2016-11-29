@@ -240,6 +240,10 @@ function config($translateProvider) {
             DASHBOARD_GOTO_BUTTON: "Go to",
             DASHBOARD_COMPLETION: "Abschlüsse",
 
+            // Define notification elements
+            NOTIICATION_SEND: "Nachricht erfolgreich versendet",
+            NOTIICATION_SEND_ERROR: "Fehler beim Senden. Bitte überprüfen sie ihre SMTP Einstellungen",
+
             // Define profile elements
             PROFILE_PROFILE_INFORMATION: "Profilinformationen",
             PROFILE_DEFAULT_LANGUAGE: "Standard Sprache",
@@ -730,7 +734,7 @@ function config($translateProvider) {
 
             // Define notification elements
             NOTIICATION_SEND: "Notification successfully send",
-            NOTIICATION_SEND_ERROR: "Error sending Notification",
+            NOTIICATION_SEND_ERROR: "Error sending Notification. Please check your SMTP settings",
 
             // Define profile elements
             PROFILE_PROFILE_INFORMATION: "Profile information",
