@@ -27,7 +27,7 @@
                     <h3>{{ 'SOURCE_SOURCE' | translate }}</h3>
                 </div>
                 <div class="row">
-                    <select class="form-control" style="width: 140px;" ng-model="UserDetailCtrl.source">
+                    <select class="form-control" style="width: 200px;" ng-model="UserDetailCtrl.source">
 						<option value="ALL">{{ 'STATISTIC_PERIOD_ALL' | translate
 							}}</option>
                         <option ng-repeat="source in UserDetailCtrl.sourceService.sources| orderBy:'name'" value="{{source.name}}">{{source.name}}</option>
