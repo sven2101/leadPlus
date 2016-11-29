@@ -24,7 +24,7 @@
             <div style="clear:right;clear:left;">
                 <div ng-if="process.processor!=null" style="height:48px;">
                     <img itle="{{(process.processor.firstname+' '+process.processor.lastname)}}" style="width: 48px; height:48px;border-radius: 10%;"
-                        pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+                        pictureid="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                 </div>
                 <div ng-if="process.processor==null" style="height:48px;border-radius: 10%;border-style: dashed;  border-width: 1px; border-color: grey;">
                     <a ng-if="!disabled" style="margin-left:15px;margin-top:15px;" class="btn btn-xs" ng-click="pin(process)">

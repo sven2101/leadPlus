@@ -59,13 +59,13 @@
 			<li ng-if="::config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].visible " ng-class="{ 'disabled': config[
 		'DETAILS_OPEN_ROLLBACK_MODAL'].disabled } " ng-click="openModal(process, 'rollBack') " data-toggle="{{::!config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].disabled ?
 		'modal' : ''}} " data-backdrop="static" data-target="#rollbackConfirmationModal ">
-				<a><i class="fa fa-reply "></i>&nbsp;{{config['DETAILS_OPEN_ROLLBACK_MODAL'].title| translate }}</a></li>
+				<a><i class="fa fa-reply "></i>&nbsp;{{config['DETAILS_OPEN_ROLLBACK_MODAL'].title| translate }}</a>
 			</li>
 			<li ng-if="::config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].visible " role="separator " class="divider "></li>
 			<li ng-if="::config[ 'DETAILS_OPEN_DELETE_MODAL'].visible " ng-class="{ 'disabled': config[
 		'DETAILS_OPEN_DELETE_MODAL'].disabled } " ng-click="openModal(process, 'deleteRow') " data-toggle="{{::!config[ 'DETAILS_OPEN_DELETE_MODAL'].disabled ? 'modal'
 		: ''}} " data-backdrop="static" data-target="#deleteConfirmationModal ">
-				<a><i class="fa fa-trash-o "></i>&nbsp;{{config['DETAILS_OPEN_DELETE_MODAL'].title| translate }}</a></li>
+				<a><i class="fa fa-trash-o "></i>&nbsp;{{config['DETAILS_OPEN_DELETE_MODAL'].title| translate }}</a>
 			</li>
 		</ul>
 	</div>

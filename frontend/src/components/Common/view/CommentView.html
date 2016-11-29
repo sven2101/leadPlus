@@ -12,10 +12,10 @@
 					<div class="chat-discussion" ng-model="process.comments">
 						<div ng-repeat="comment in process.comments | orderBy: '-timestamp' | limitTo: 3">
 							<div ng-if="$index%2==0" class="chat-message left">
-								<img class="message-avatar" pictureId="{{comment.creator.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+								<img class="message-avatar" ppictureid="{{comment.creator.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
 								<div class="message">
-									<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-									<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+									<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onclick="return false;"> {{comment.creator.username}} </a>
+									<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onclick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
 									<span class="message-date"> {{getTimestamp(comment.timestamp)}} </span>
 									<span class="message-content">
                                                 {{comment.commentText}}
@@ -23,10 +23,10 @@
 								</div>
 							</div>
 							<div ng-if="$index%2!=0" class="chat-message right">
-								<img class="message-avatar" pictureId="{{comment.creator.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+								<img class="message-avatar" ppictureid="{{comment.creator.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
 								<div class="message">
-									<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-									<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+									<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onclick="return false;"> {{comment.creator.username}} </a>
+									<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onclick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
 									<span class="message-date"> {{getTimestamp(comment.timestamp)}} </span>
 									<span class="message-content">
                                                 {{comment.commentText}}
@@ -34,7 +34,7 @@
 								</div>
 							</div>
 						</div>
-						</br>
+						<br/>
 						<div ng-if="process.comments.length>3" class="text-center"><a data-toggle="modal" data-backdrop="static" data-target="#commentModal">{{ 'COMMON_COMMENTS_HISTORY' | translate }}</a>
 						</div>
 					</div>
