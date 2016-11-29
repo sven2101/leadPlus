@@ -20,10 +20,10 @@
                             <div class="chat-discussion" ng-model="process.comments">
                                 <div ng-repeat="comment in process.comments | orderBy: '-timestamp'">
                                     <div ng-if="$index%2==0" class="chat-message left">
-                                        <img class="message-avatar" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+                                        <img class="message-avatar" pictureid="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         <div class="message">
-                                            <a ng-if="(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-                                            <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+                                            <a ng-if="(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onclick="return false;"> {{comment.creator.username}} </a>
+                                            <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onclick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
                                             <span class="message-date"> {{getTimestamp(comment.timestamp)}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}
@@ -31,10 +31,10 @@
                                         </div>
                                     </div>
                                     <div ng-if="$index%2!=0" class="chat-message right">
-                                        <img class="message-avatar" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+                                        <img class="message-avatar" pictureid="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         <div class="message">
-                                            <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-                                            <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+                                            <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onclick="return false;"> {{comment.creator.username}} </a>
+                                            <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onclick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
                                             <span class="message-date"> {{getTimestamp(comment.timestamp)}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}
@@ -68,4 +68,3 @@
             </div>
         </div>
     </div>
-</div>

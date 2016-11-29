@@ -59,7 +59,7 @@
 										<span ng-show="product.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 									</td>
 									<td><a ng-href="#/product/detail/{{product.id}} " class="btn btn-xs btn-success btn-circle
-                                            " type="button "><i style="color:white; " class="fa fa-line-chart"></i></a></td>
+                                            " type="button "><i style="color:white; " class="fa fa-line-chart"></i></a>
 									</td>
 									<td class="project-title col-md-2">
 										<a>{{product.name}}</a>
@@ -72,7 +72,7 @@
 										</small>
 									</td>
 									<td>
-										<img ng-if="product.picture!=null" style="width: 60px; height:60px;border-radius: 10%" pictureId="{{product.picture.id}}"
+										<img ng-if="product.picture!=null" style="width: 60px; height:60px;border-radius: 10%" pictureid="{{product.picture.id}}"
 											httpsrc="/api/rest/files/content/" alt="">
 									</td>
 									<td class="project-actions col-md-1">

@@ -6,7 +6,7 @@
 	<div>
 		<h3>{{ 'LOGIN_WELCOME' | translate }}</h3>
 		<p>{{ 'LOGIN_WELCOME_DESCRIPTION' | translate }}</p>
-		</br>
+		<br/>
 		<form name="loginform">
 			<div class="form-group">
 				<input type="text" class="form-control" placeholder="{{ 'COMMON_EMAIL' | translate }}" required="" ng-model="loginCtrl.credentials.email">
@@ -16,7 +16,7 @@
 					ng-model="loginCtrl.credentials.password">
 			</div>
 			<button ng-disabled="loginCtrl.credentials.email==null||loginCtrl.credentials.password==null" type="submit" class="btn btn-success block full-width m-b"
-				ng-click="loginCtrl.login()" OnClick="document.loginform.loginPassword.focus();">{{ 'LOGIN' | translate }}
+				ng-click="loginCtrl.login()" onclick="document.loginform.loginPassword.focus();">{{ 'LOGIN' | translate }}
             </button>
 		</form>
 		<p class="text-muted text-center">

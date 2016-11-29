@@ -35,7 +35,7 @@
 		<li ng-if="user.role!='USER'" ng-click="settingCtrl.tabOnClick(2)"><a data-toggle="tab" aria-expanded="true">{{'SETTING_USER' | translate }}</a></li>
 		<li ng-if="user.role!='USER'" ng-click="settingCtrl.tabOnClick(3)"><a data-toggle="tab" aria-expanded="true">{{'SOURCE_SOURCES' | translate }}</a></li>
 	</ul>
-	</br>
+	<br/>
 	<div ng-include="'components/Setting/view/Setting.Users.html'"></div>
 	<div ng-include="'components/Setting/view/Setting.Email.html'"></div>
 	<div ng-include="'components/Setting/view/Setting.Source.html'"></div>
