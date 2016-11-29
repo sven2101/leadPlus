@@ -109,7 +109,7 @@ function config($translateProvider) {
             EMAIL_MESSAGE: "Nachricht",
             EMAIL_NOTIFICATION_HISTORY: "Bisher gesendete Nachrichten",
             EMAIL_NOTIFICATION_SELECT: "Nachricht auswählen",
-
+            TEMPLATE_VARIABLES_INFO: "Sie können all die unten aufgelisteten Variablen innerhalb Ihres Templates verwenden.",
             COMMON_SKYPE: "Skype",
             COMMON_FAX: "Fax",
             COMMON_JOB: "Berufsbezeichnung",
@@ -596,7 +596,7 @@ function config($translateProvider) {
             EMAIL_MESSAGE: "Message",
             EMAIL_NOTIFICATION_HISTORY: "Previous send notifications",
             EMAIL_NOTIFICATION_SELECT: "Select notification",
-
+            TEMPLATE_VARIABLES_INFO: "Within your Template you can use each Variable listed below.",
             COMMON_SKYPE: "Skype",
             COMMON_FAX: "Fax",
             COMMON_JOB: "Job Description",
