@@ -39,6 +39,8 @@ class DashboardService {
     openOffers: Array<Process> = [];
     doneOffers: Array<Process> = [];
     closedSales: Array<Process> = [];
+    elementToDelete: Array<Process> = [];
+    delementDropzoneVisibility: string = "hidden";
 
     openLeadsValue: number = 0;
     inContactsValue: number = 0;
@@ -156,6 +158,7 @@ class DashboardService {
         let sortableList = {
             start: function (e, ui) {
                 let source = ui.item.sortable.sourceModel;
+                self.delementDropzoneVisibility = "show";
                 if (source === self.openLeads) {
                     self.dropzoneClass.contact = "2px dashed grey";
                     self.dropzoneClass.offer = "2px dashed grey";
@@ -199,6 +202,8 @@ class DashboardService {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
+
+                self.delementDropzoneVisibility = "hidden";
 
                 self.dropzoneClass.lead = "none";
                 self.dropzoneClass.contact = "none";
@@ -259,7 +264,7 @@ class DashboardService {
                     item.processor = self.rootScope.user;
                     self.updateDashboard("offer");
                 }
-                else if (isNullOrUndefined(target)) {
+                else if (target === self.elementToDelete) {
                     let title = "";
                     let text = "";
                     if (source === self.openLeads || source === self.inContacts) {
@@ -280,12 +285,16 @@ class DashboardService {
                     }, function (isConfirm) {
                         if (isConfirm) {
                             self.closeProcess(item, source);
-                            source.splice(source.indexOf(item), 1);
+                            target.splice(source.indexOf(item), 1);
                             let todoElement: Process = findElementById(self.todos, item.id) as Process;
                             if (!isNullOrUndefined(todoElement)) {
                                 self.todos.splice(self.todos.indexOf(todoElement), 1);
                                 self.rootScope.$broadcast("todosChanged", self.todos);
                             }
+                        }
+                        else {
+                            target.splice(target.indexOf(item), 1);
+                            source.push(item);
                         }
                     });
                 }
