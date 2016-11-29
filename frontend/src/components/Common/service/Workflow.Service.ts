@@ -147,7 +147,7 @@ class WorkflowService {
                 sum += temp.amount * temp.netPrice;
             }
         }
-        return sum;
+        return Math.round(sum * 100) / 100;
     }
 
     sumBasicPriceOrderPositions(array: Array<OrderPosition>): number {
@@ -177,7 +177,7 @@ class WorkflowService {
     }
 
     reCalculateOffer(offer: Offer, array: Array<OrderPosition>) {
-        offer.netPrice = offer.deliveryCosts + this.sumOrderPositions(array);
+        offer.netPrice = Math.round((offer.deliveryCosts + this.sumOrderPositions(array)) * 100) / 100;
     }
 
     setDiscount(orderPosition: OrderPosition) {
