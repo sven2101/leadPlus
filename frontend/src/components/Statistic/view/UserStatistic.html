@@ -50,7 +50,8 @@
                                     </table>
                                 </td>
                                 <td class="text-center">{{userStatistic.completedProcess}}</td>
-                                <td class="text-center">{{statisticCtrl.getRatePercentage(userStatistic.completedProcess,userStatistic.countOffer) | number:2}}%
+                                <td class="text-center">{{statisticCtrl.getRatePercentage(userStatistic.completedProcess,userStatistic.countProcess)
+                                    | number:2}}%
                                 </td>
                                 <td class="text-center" style="color:green">{{userStatistic.turnover | currency:'\u20AC'}}</td>
                                 <td class="text-center" style="color:green">{{userStatistic.profit | currency:'\u20AC'}}</td>

@@ -112,8 +112,14 @@ public class UserStatisticService extends AbstractStatisticService {
 					hasCountSucceededLead.add(userIdKey);
 				}
 			} else {
-				if (process.getOffer() != null && !process.getOffer().isDeleted() && Activity.OFFER.equals(activity))
+				if (process.getOffer() != null && !process.getOffer().isDeleted() && Activity.OFFER.equals(activity)) {
 					userMap.get(sourceKey).get(userIdKey).addCountOffer();
+					if (process.getSale() != null && !process.getSale().isDeleted()
+							&& !hasCountSucceededOffer.contains(userIdKey)) {
+						userMap.get(sourceKey).get(userIdKey).addSucceededOffers();
+						hasCountSucceededOffer.add(userIdKey);
+					}
+				}
 				if (process.getSale() != null && !process.getSale().isDeleted()) {
 					if (Activity.SALE.equals(activity)) {
 						userMap.get(sourceKey).get(userIdKey).addCountSale();
@@ -124,11 +130,6 @@ public class UserStatisticService extends AbstractStatisticService {
 								.addCountProfit(process.getSale().getSaleProfit() / offerProcessors.size());
 						for (OrderPosition orderPosition : process.getSale().getOrderPositions()) {
 							userMap.get(sourceKey).get(userIdKey).addCountProduct(orderPosition.getAmount());
-						}
-						if (process.getSale() != null && !process.getSale().isDeleted()
-								&& !hasCountSucceededOffer.contains(userIdKey)) {
-							userMap.get(sourceKey).get(userIdKey).addSucceededOffers();
-							hasCountSucceededOffer.add(userIdKey);
 						}
 					}
 				}
@@ -184,9 +185,17 @@ public class UserStatisticService extends AbstractStatisticService {
 			if (process.getLead() != null && !process.getLead().isDeleted()
 					&& (Activity.OPEN.equals(activity) || Activity.INCONTACT.equals(activity))) {
 				userMap.get(sourceKey).addCountLead();
+				if (process.getSale() != null && !process.getSale().isDeleted()) {
+					userMap.get(sourceKey).addSucceededLeads();
+				}
+
 			} else {
-				if (process.getOffer() != null && !process.getOffer().isDeleted() && Activity.OFFER.equals(activity))
+				if (process.getOffer() != null && !process.getOffer().isDeleted() && Activity.OFFER.equals(activity)) {
 					userMap.get(sourceKey).addCountOffer();
+					if (process.getSale() != null && !process.getSale().isDeleted()) {
+						userMap.get(sourceKey).addSucceededOffers();
+					}
+				}
 				if (process.getSale() != null && !process.getSale().isDeleted()) {
 					if (Activity.SALE.equals(activity)) {
 						userMap.get(sourceKey).addCountSale();
