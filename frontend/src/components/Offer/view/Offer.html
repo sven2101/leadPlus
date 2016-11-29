@@ -43,3 +43,9 @@
     -->
 </div>
 <div hidden ng-include="'components/Common/view/Workflow.Send.Modal.html'"></div>
+
+<div editworkflow parent="offerCtrl" type="offer" modaltitle="{{'OFFER_EDIT_OFFER_MODAL'| translate}}"></div>
+<div confirmationmodal modalid="deleteConfirmationModal" parent="offerCtrl" title="{{'OFFER_DELETE_OFFER'| translate}}" body="{{'OFFER_DELETE_OFFER_BODY'| translate}}"
+	submittext="{{'COMMON_DELETE'| translate}}"></div>
+<div confirmationmodal modalid="rollbackConfirmationModal" parent="offerCtrl" title="{{'OFFER_ROLLBACK'| translate}}" body="{{'OFFER_ROLLBACK_BODY'| translate}}"
+	submittext="{{'COMMON_RESET'| translate}}"></div>
