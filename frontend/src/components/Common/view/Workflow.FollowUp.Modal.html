@@ -5,7 +5,7 @@
 		<h4 class="modal-title">{{ 'COMMON_FOLLOWUP' | translate }}</h4>
 	</div>
 	<div class="modal-body">
-		<div email parent='parent' form='parent.emailEditForm' type='type'></div>
+		<div email disabled="::!parent.editEmail" notification="parent.currentNotification" process="parent.editProcess" form="parent.emailEditForm"></div>
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-white" ng-click="parent.close()">{{ 'COMMON_CANCEL' | translate }}</button>

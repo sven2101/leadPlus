@@ -1,65 +1,93 @@
-<form name="form">
+<form id="scopeStuff" name="form">
 
 	<div>
 
 		<div class="form-group">
 			<label>{{ 'EMAIL_NOTIFICATION_HISTORY' | translate }}</label>
-			<select class="form-control" ng-disabled="parent.editProcess.notifications.length==0" ng-model="notificationId" ng-change="parent.setFormerNotification(notificationId)">
-                <option value="-1" selected disabled hidden>{{ 'EMAIL_NOTIFICATION_SELECT' | translate }}</option>                                                                     
-                <option value="{{notification.id}}" ng-repeat="notification in parent.editProcess.notifications track by $index">{{notification.notificationType.toLowerCase()+" - "+notification.subject}}</option>                                           
+			<select ng-change="onNotificationSelected()" class="form-control" ng-disabled="process.notifications==null||process.notifications.length==0"
+				ng-model="notification" ng-options="(notification.notificationType.toLowerCase()+' - '+notification.subject) for notification in process.notifications track by notification.id">
+               <option></option>                                         
             </select>
 		</div>
-
-		<div class="form-group">
-			<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>
-			<select ng-disabled="parent.editEmail" class="form-control" ng-model="templateId" ng-change="parent.generate(templateId, parent.editWorkflowUnit)">
+		<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>
+		<div class="form-inline">
+			<div class="form-group" style="width:90%">
+				<select style="width:100%" ng-disabled="disabled" class="form-control" ng-model="templateId" ng-change="generate(templateId, process.offer,notification)">
                 <option value="-1" selected> - {{ 'EMAIL_TEMPLATE_SELECT' | translate }} - </option>                                                                     
-                <option value="{{template.id}}" ng-repeat="template in parent.templates">{{template.name}}</option>                                           
-            </select>
+                <option value="{{template.id}}" ng-repeat="template in templates">{{template.name}}</option>                                           
+            	</select>
+			</div>
+			<a ng-disabled="disabled" style="width:9%;height:34px" class="btn btn-default pull-right" ng-click="generate(templateId, process.offer,notification)"><i class="fa fa-refresh" aria-hidden="true"></i></a>
 		</div>
-		<div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.recipient.$invalid&&!parent.editEmail}">
-			<label>{{ 'EMAIL_RECIPIENT' | translate }}</label><span style="color:red">*</span>
-			<input ng-disabled="parent.editEmail" name="recipient" required type="email" class="form-control" ng-model="parent.currentNotification.recipient"
-				ng-minlength="5">
-			<p ng-show="parent.emailEditForm.recipient.$error.required&&!parent.editEmail&&!parent.emailEditForm.recipient.$pristine"
-				class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
-			<p ng-show="parent.emailEditForm.recipient.$error.email&&!parent.editEmail" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</p>
-		</div>
-		<div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.subject.$invalid&&!parent.editEmail}">
-			<label>{{ 'EMAIL_SUBJECT' | translate }}</label><span style="color:red">*</span>
-			<input ng-disabled="parent.editEmail" name="subject" required type="text" class="form-control" ng-model="parent.currentNotification.subject"
-				ng-minlength="3">
-			<p ng-show="parent.emailEditForm.subject.$error.minlength&&!parent.editEmail" class="help-block">{{ 'COMMON_VALIDATE_MIN' | translate:'{ number: "3" }'}}</p>
-			<p ng-show="parent.emailEditForm.subject.$error.required&&!parent.editEmail&&!parent.emailEditForm.subject.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
-		</div>
+		<hr style="border-top: 1px dashed #8c8b8b;" />
+		<label>{{ 'EMAIL_RECIPIENT' | translate }} {{ 'EMAIL_RECIPIENT_COMMA' | translate }}</label>
+		<span style="color:red">*</span>
+		<span style="color:red" ng-show="form.recipients.$error.required&&!disabled&&!form.recipients.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+		<span style="color:red" ng-show="form.recipients.$error.email&&!disabled&&!form.recipients.$pristine">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
+		<div class="form-inline">
+			<div class="form-group" style="width:90%" ng-class="{ 'has-error' : form.recipients.$invalid&&!disabled&&!form.recipients.$pristine}">
+				<input style="width:100%" ng-disabled="disabled" multipleemails form="form" emails="notification.recipients" name="recipients"
+					required class="form-control" ng-model="notification.recipients">
 
-		<div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.attachement.$invalid}">
-			<label>{{ 'EMAIL_ATTACHMENT' | translate }}</label>
-			<br/>
-			<div ng-if="!parent.editEmail" class="fileinput fileinput-new" data-provides="fileinput">
-				<span class="btn btn-default btn-file"><span class="fileinput-new">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }}</span>
-				<span class="fileinput-exists">{{ 'EMAIL_ATTACHMENT_CHANGE' | translate }} </span>
-				<input ng-disabled="parent.editEmail" name="attachement" required type="file" name="..." ng-files="parent.getTheFiles($files);"
-					accept="application/pdf,image/gif,image/jpeg">
-				<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-				</input>
-				</span>
-				<span class="fileinput-filename"></span>
-				<a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
 			</div>
-			<a ng-if="parent.currentNotification.attachment.id!=null" ng-click="parent.openAttachment(parent.currentNotification.attachment.id)">{{parent.currentNotification.attachment.filename}}</a>
-			<a ng-if="parent.currentNotification.attachment.id!=null" ng-click="parent.currentNotification.attachment=undefined" href=""
-				class="close fileinput-exists" style="float: none">×</a>
-			<br/>
+			<a ng-disabled="disabled" style="width:9%;height:34px" class="btn btn-default pull-right" ng-click="showCC_BCC=!showCC_BCC">CC/BCC</a>
 		</div>
-		<div class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.message.$invalid}">
-			<label>{{ 'EMAIL_MESSAGE' | translate }}</label><span style="color:red">*</span>
-			<br/>
-			<summernote ng-if="!parent.editEmail" name="message" class="form-control" required ng-model="parent.currentNotification.content">{{parent.currentNotification.content}}</summernote>
-			<div ng-if="parent.editEmail" style="border: 1px solid gray;  padding: 15px;">
-				<div ng-bind-html="parent.getAsHtml(parent.currentNotification.content)"></div>
+		<br/>
+		<div ng-show="showCC_BCC" class="form-group" ng-class="{ 'has-error' : form.recipientsCC.$invalid&&!disabled&&!form.recipientsCC.$pristine}">
+			<label>{{ 'EMAIL_RECIPIENT' | translate }} - CC</label>
+			<span style="color:red" ng-show="form.recipientsCC.$error.email&&!disabled">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
+			<input style="width:100%" ng-disabled="disabled" multipleemails form="form" emails="notification.recipientsCC" name="recipientsCC"
+				class="form-control" ng-model="notification.recipientsCC">
+		</div>
+		<div ng-show="showCC_BCC" class="form-group" ng-class="{ 'has-error' : form.recipientsBCC.$invalid&&!disabled&&!form.recipientsBCC.$pristine}">
+			<label>{{ 'EMAIL_RECIPIENT' | translate }} - BCC</label>
+			<span style="color:red" ng-show="form.recipientsBCC.$error.email&&!disabled">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
+			<input style="width:100%" ng-disabled="disabled" multipleemails form="form" emails="notification.recipientsBCC" name="recipientsBCC"
+				class="form-control" ng-model="notification.recipientsBCC">
+		</div>
+		<div class="form-group" ng-class="{ 'has-error' : form.subject.$invalid&&!disabled&&!form.subject.$pristine}">
+			<label>{{ 'EMAIL_SUBJECT' | translate }}</label>
+			<span style="color:red">*</span>
+			<span style="color:red" ng-show="form.subject.$error.minlength&&!disabled">{{ 'COMMON_VALIDATE_MIN' | translate:'{ number: "3" }'}}</span>
+			<span style="color:red" ng-show="form.subject.$error.required&&!disabled&&!form.subject.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+			<input ng-disabled="disabled" name="subject" required type="text" class="form-control" ng-model="notification.subject" ng-minlength="3">
+
+		</div>
+		<div ng-if="!disabled||(disabled&&notification.attachments.length>0)" class="form-group" ng-class="{ 'has-error' : parent.emailEditForm.attachement.$invalid}">
+			<label>{{ 'EMAIL_ATTACHMENT' | translate }}</label>
+			<span style="color:red" ng-if="form.fileSize.$error.max">max 10 MB</span>
+			<div hidden>
+				<input hidden disabled ng-max="10*1024*1024" type="number" name="fileSize" ng-model="fileSize">
 			</div>
-			<p ng-show="parent.emailEditForm.message.$error.required" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+			<br/>
+			<div ng-if="!disabled" style="white-space: nowrap;float:left;margin-right:7px" class="fileinput fileinput-new" data-provides="fileinput">
+				<span class="btn btn-default btn-file">
+					<span class="fileinput-new">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }}</span>
+				<span class="fileinput-exists">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }} </span>
+				<input id="fileInput" name="attachement" multiple required type="file" onchange="javascriptToAngular();" accept="application/pdf,image/*,.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.csv,application/vnd.ms-excel,text/plain,application/vnd.ms-powerpoint, application/msword,.pps,.xlsx,.xls,.doc,.docx,.ppt,.pptx,.txt,.zip,.rar">
+				</span>
+			</div>
+			<span ng-repeat="attachment in notification.attachments">
+				<a ng-click="openAttachment(attachment.fileUpload)">{{attachment.fileUpload.filename}}</a>
+				<a ng-click="deleteAttachment($index)" href="" class="close" style="float: none">x</a>
+			</span>
+			
+		</div>
+	</div>
+	<div style="clear: left;" class="form-group" ng-class="{ 'has-error' : form.message.$invalid&&!form.message.$pristine}">
+		<label>{{ 'EMAIL_MESSAGE' | translate }}</label>
+		<span style="color:red">*</span>
+		<span style="color:red" ng-show="form.message.$error.required&&!form.message.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+		<br/>
+		<summernote ng-if="!disabled" name="message" class="form-control" required ng-model="notification.content">{{notification.content}}</summernote>
+		<div ng-if="disabled" style="border: 1px solid gray;  padding: 15px;">
+			<div ng-bind-html="htmlString"></div>
 		</div>
 	</div>
 </form>
+<script>
+	function javascriptToAngular() {
+		var files = document.getElementById('fileInput').files;	
+		angular.element(document.getElementById('scopeStuff')).scope().setAttachments(files);	
+	}
+</script>

@@ -72,8 +72,8 @@ public class OrderPosition {
 	@ApiModelProperty(hidden = true)
 	@NotNull
 	@Digits(integer = 10, fraction = 4)
-	@Column(name = "price", nullable = false)
-	private Double price;
+	@Column(name = "net_price", nullable = false)
+	private Double netPrice;
 
 	@NotNull
 	@Column(name = "discount", nullable = false)
@@ -123,12 +123,12 @@ public class OrderPosition {
 		this.workflow = workflow;
 	}
 
-	public Double getPrice() {
-		return price;
+	public Double getNetPrice() {
+		return netPrice;
 	}
 
-	public void setPrice(Double price) {
-		this.price = price;
+	public void setNetPrice(Double price) {
+		this.netPrice = price;
 	}
 
 	public boolean isDeleted() {
@@ -147,7 +147,7 @@ public class OrderPosition {
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((discount == null) ? 0 : discount.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((price == null) ? 0 : price.hashCode());
+		result = prime * result + ((netPrice == null) ? 0 : netPrice.hashCode());
 		result = prime * result + ((product == null) ? 0 : product.hashCode());
 		result = prime * result + ((workflow == null) ? 0 : workflow.hashCode());
 		return result;
@@ -179,10 +179,10 @@ public class OrderPosition {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (price == null) {
-			if (other.price != null)
+		if (netPrice == null) {
+			if (other.netPrice != null)
 				return false;
-		} else if (!price.equals(other.price))
+		} else if (!netPrice.equals(other.netPrice))
 			return false;
 		if (product == null) {
 			if (other.product != null)
@@ -199,7 +199,8 @@ public class OrderPosition {
 
 	@Override
 	public String toString() {
-		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", amount=" + amount + ", price=" + price + ", discount=" + discount + "]";
+		return "OrderPosition [id=" + id + ", deleted=" + deleted + ", amount=" + amount + ", price=" + netPrice
+				+ ", discount=" + discount + "]";
 	}
 
 }

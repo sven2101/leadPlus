@@ -19,7 +19,7 @@ apply plugin: "org.flywaydb.flyway"
 
 jar {
     baseName = 'leadplus'
-    version =  '3.0.3'
+    version =  '3.1.0.9'
 }
 
 repositories {
@@ -74,7 +74,6 @@ flyway {
     password = "***REMOVED***"
     placeholderPrefix = "\$&{"
     placeholderSuffix = "}&\$"
-    schemas = ["demo"]
 }
 
 task wrapper(type: Wrapper) {

@@ -1,0 +1,62 @@
+<style>
+    .workflow-container {
+        margin-top: -7px;
+        margin-left: -7px;
+    }
+    
+    .cardRow > div {
+        height: 65px;
+        float: left;
+    }
+    
+    .fixed-column {
+        width: 50px;
+    }
+    
+    .fluid-column {
+        width: calc(100% - 50px);
+    }
+</style>
+
+<div class="container-fluid workflow-container">
+    <div class="row cardRow">
+        <div class="fixed-column">
+            <div style="clear:right;clear:left;">
+                <div ng-if="process.processor!=null" style="height:48px;">
+                    <img itle="{{(process.processor.firstname+' '+process.processor.lastname)}}" style="width: 48px; height:48px;border-radius: 10%;"
+                        pictureid="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+                </div>
+                <div ng-if="process.processor==null" style="height:48px;border-radius: 10%;border-style: dashed;  border-width: 1px; border-color: grey;">
+                    <a ng-if="!disabled" style="margin-left:15px;margin-top:15px;" class="btn btn-xs" ng-click="pin(process)">
+                        <i style="color:grey" class="fa fa-thumb-tack lg"></i>
+                    </a>
+                </div>
+                <div style="margin-top:3px">
+                    <a style="width:23px;height:20px;" ng-click="onInfoClick(editWorkflowUnit,workflowunittype,process)" class="btn btn-xs btn-white"
+                        data-toggle="modal" data-target="#infoModal" title="{{ 'DASHBOARD_INFO_BUTTON' |  translate }}" data-backdrop="static">
+                        <i style="margin-top:3px;margin-left:-1px;color:black" class="fa fa-info-circle fa-lg" aria-hidden="true"></i></a>
+                    <a style="width:23px;height:20px;" ng-href="#/{{workflowunittype}}s/{{process.id}}" title="{{'DASHBOARD_GOTO_BUTTON' | translate }}"
+                        class="btn btn-xs btn-white">
+                        <i style="margin-top:3px;margin-left:-1px;color:black" class="fa fa-globe fa-lg" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="fluid-column">
+            <div style="margin-left:3px;overflow:hidden;line-height:95%; word-wrap: break-word;">
+                <div style="height:54px;" ng-if="(editWorkflowUnit.customer.company!=null&&editWorkflowUnit.customer.company!='')">
+                    {{editWorkflowUnit.customer.company}}
+                </div>
+                <div style="height:54px;" ng-if="(editWorkflowUnit.customer.company==null||editWorkflowUnit.customer.company=='')">
+                    {{editWorkflowUnit.customer.firstname}} {{editWorkflowUnit.customer.lastname}}
+                </div>
+                <span><small><i class="fa fa-clock-o"></i> {{toLocalDate(editWorkflowUnit.timestamp)}}</small></span>
+                <small class="pull-right">
+                    <span ng-if="process.status== 'FOLLOWUP'" ng-click="openFollowUpModal(process)">
+                        <i  title="{{'OFFER_FOLLOW_UP'| translate }}" class="fa fa-eye" aria-hidden="true" ></i>
+                        {{process.followUpAmount}}
+                    </span>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>

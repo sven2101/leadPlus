@@ -98,7 +98,9 @@ function config($translateProvider) {
 
             // Template
             EMAIL_TEMPLATE: "Email Vorlagen",
+            EMAIL_TEMPLATE_ERROR: "Fehler im Email-Template",
             EMAIL_TEMPLATE_SELECT: "Keine Vorlage",
+            EMAIL_RECIPIENT_COMMA: "(mit Komma getrennt)",
             EMAIL_RECIPIENT: "Empfänger",
             EMAIL_SUBJECT: "Betreff",
             EMAIL_ATTACHMENT: "Anhang",
@@ -107,7 +109,7 @@ function config($translateProvider) {
             EMAIL_MESSAGE: "Nachricht",
             EMAIL_NOTIFICATION_HISTORY: "Bisher gesendete Nachrichten",
             EMAIL_NOTIFICATION_SELECT: "Nachricht auswählen",
-
+            TEMPLATE_VARIABLES_INFO: "Sie können all die unten aufgelisteten Variablen innerhalb Ihres Templates verwenden.",
             COMMON_SKYPE: "Skype",
             COMMON_FAX: "Fax",
             COMMON_JOB: "Berufsbezeichnung",
@@ -156,7 +158,7 @@ function config($translateProvider) {
             COMMON_PRODUCT_BASE_PRICE: "Grundpreis",
             COMMON_PRODUCT_ENTIRE_PRICE: "Gesamtpreis",
             COMMON_PRODUCT_INCL_DELIVERY_COSTS: "inkl. Lieferkosten",
-            COMMON_PRODUCT_OFFER_PRICE: "Angebotspreis",
+            COMMON_PRODUCT_OFFER_PRICE: "Nettopreis",
             COMMON_PRODUCT_DESTINATION: "Lieferort",
             COMMON_PRODUCT_DELIVERYCOSTS: "Lieferkosten",
             COMMON_PRODUCT_SALE_TURNOVER: "Umsatz",
@@ -181,6 +183,7 @@ function config($translateProvider) {
             COMMON_VALIDATE_MAX_END: " Zeichen gültig!",
             COMMON_VALIDATE_REQ: "Feld benötigt ",
             COMMON_VALIDATE_REQ_NUMBER: "Eingabe darf nicht negativ sein oder ungültige Zeichen enthalten",
+            COMMON_VALIDATE_ALPHANUMERIC: "Es sind nur Alphanumerische Zeichen erlaubt. Z.b. A-Z und 0-9",
             COMMON_VALIDATE_EMAIL: "E-Mail ungültig!",
             COMMON_NEW_PASSWORD: "Neues Passwort",
             COMMON_VALIDATE_PASSWORD: "Passwort muss mindestens 6 Zeichen lang sein",
@@ -196,6 +199,8 @@ function config($translateProvider) {
             COMMON_TOAST_SUCCESS_DELETE_LEAD: "Die Anfrage wurde gelöscht",
             COMMON_TOAST_FAILURE_DELETE_LEAD: "Die Anfrage konnte nicht gelöscht werden",
             COMMON_TOAST_SUCCESS_ADD_OFFER: "Ein neues Angebot wurde angelegt",
+            COMMON_TOAST_SUCCESS_DONE_OFFER: "Angebot wurde auf Erledigt gesetzt",
+            COMMON_TOAST_SUCCESS_REVERT_DONE_OFFER: "Das Angebot wurde zurückgesetzt",
             COMMON_TOAST_SUCCESS_CLOSE_OFFER: "Das Angebot wurde geschlossen",
             COMMON_TOAST_SUCCESS_OPEN_OFFER: "Das Angebot wurde geöffnet",
             COMMON_TOAST_SUCCESS_UPDATE_OFFER: "Das Angebot wurde bearbeitet",
@@ -209,14 +214,19 @@ function config($translateProvider) {
             COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD: "Angebot wurde erfolgreich auf eine Anfrage zurückgesetzt",
             COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD_ERROR: "Angebot konnte nicht auf eine Anfrage zurückgesetzt werden",
             COMMON_STATUS_OPEN: "Offen",
+            COMMON_STATUS_LEAD: "Anfrage",
             COMMON_STATUS_INCONTACT: "In Kontakt",
             COMMON_STATUS_OFFER: "Angebot",
+            COMMON_STATUS_DONE: "Erledigt",
             COMMON_STATUS_FOLLOW_UP: "Follow up",
             COMMON_STATUS_FOLLOW_UP_NO_SEND: "Follow up",
             COMMON_STATUS_FOLLOW_UP_AND_SEND: "Follow up und Nachricht versenden",
             COMMON_STATUS_SALE: "Verkauf",
             COMMON_STATUS_CLOSED: "Geschlossen",
             COMMON_EMPTY_PROCESSOR: "Niemand",
+            COMMON_STATUS_SET_DONE: "Als erledigt markieren",
+            COMMON_STATUS_SET_OPEN: "Als offen markieren",
+            COMMON_SEARCH: "Suchen...",
 
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Anfragen verwalten",
@@ -224,14 +234,20 @@ function config($translateProvider) {
             DASHBOARD_REFRESH: "Aktualisieren",
             DASHBOARD_OPEN_LEADS: "Offene Anfragen",
             DASHBOARD_OPEN_OFFERS: "Angebote",
-            DASHBOARD_LATEST_SALES: "Letzte Verkäufe",
+            DASHBOARD_DONE_OFFERS: "Erledigte Angebote",
+            DASHBOARD_LATEST_SALES: "Heutige Verkäufe",
             DASHBOARD_INFO_BUTTON: "Info",
             DASHBOARD_GOTO_BUTTON: "Go to",
             DASHBOARD_COMPLETION: "Abschlüsse",
 
+            // Define notification elements
+            NOTIICATION_SEND: "Nachricht erfolgreich versendet",
+            NOTIICATION_SEND_ERROR: "Fehler beim Senden. Bitte überprüfen sie ihre SMTP Einstellungen",
+
             // Define profile elements
             PROFILE_PROFILE_INFORMATION: "Profilinformationen",
             PROFILE_DEFAULT_LANGUAGE: "Standard Sprache",
+            PROFILE_DEFAULT_VAT: "Standard Mehrwertsteuer",
             PROFILE_PASSWORD_MANAGEMENT: "Passwortverwaltung",
             PROFILE_OLD_PASSWORD: "Altes Passwort",
             PROFILE_VALIDATE_OLD_PASSWORD: "Altes Passwort wird benötigt",
@@ -261,6 +277,7 @@ function config($translateProvider) {
 
             // Define all offer elements
             OFFER_OFFERS: "Angebote",
+            OFFER_OFFER: "Angebot",
             OFFER_MANAGE_OFFERS: "Angebote verwalten",
             OFFER_ADD_OFFER: "Neues Angebot",
             OFFER_ADD_OFFER_MODAL: "Angebot erstellen",
@@ -315,6 +332,7 @@ function config($translateProvider) {
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE: "Speichern der SMTP Server Verbindung erfolgreich. ",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE_ERROR: "Speichern der SMTP Server Verbindung fehlgeschlagen. ",
             SETTING_EMAIL_TEMPLATES_MANAGEMENT: "Email Templates",
+            SETTING_EMAIL_NEW_TEMPLATE: "Neues Template",
             SETTING_ACCESS_MANAGEMENT: "Benutzer freischalten",
             SETTING_ACTIVATE_USER: "Freischalten",
             SETTING_DEACTIVATE_USER: "Deaktivieren",
@@ -371,8 +389,11 @@ function config($translateProvider) {
             STATISTIC_INVOLVED_IN_PROCESSES: "An Prozessen beteiligt",
             STATISTIC_WORKED_ON_LEADS: "Bearbeitete Anfragen",
             STATISTIC_WORKED_ON_OFFERS: "Bearbeitete Angebote",
-            STATISTIC_COMPLETED_SALES: "Abgeschlossene Verkäufe",
+            STATISTIC_WORKED_ON_SALES: "Bearbeitete Verkäufe",
+            STATISTIC_COMPLETED_PROCESSES: "Abgeschlossene Prozesse",
             STATISTIC_PRODUCT_SALES: "Verkaufte Produkte",
+            STATISTIC_EARNING_RATE: "Erfolgsrate",
+            STATISTIC_EARNING_RATE_PROCESS: "Erfolgsrate - Prozessbeteilgung",
 
             // Define detail statistic
             DETAIL_STATISTIC_PRODUCTSTATISTIC: "Produktstatistik",
@@ -385,7 +406,12 @@ function config($translateProvider) {
             DETAIL_STATISTIC_SALES_PRICE: "Verkaufspreis",
             DETAIL_STATISTIC_ADVERTISED_PRICE: "Angezeigter Preis",
             DETAIL_STATISTIC_TOOLTIP: "<span>Das Produkt {{productname}} wurde <b>{{count}}x</b> in {{workflow}} verwendet.</span>",
-            DETAIL_STATISTIC_USER_TOOLTIP: "<span>Der Benutzer {{username}} hat <b>{{count}}</b> {{workflow}} bearbeitet.</span>",
+            DETAIL_STATISTIC_USER_TOOLTIP: "<span>{{username}} hat <b>{{count}}</b> {{workflow}} bearbeitet.</span>",
+            DETAIL_STATISTIC_SUCCESS_INDICATOR: "Erfolgskennzahlen",
+            PROFIT_PER_LEAD: "Gewinn pro Anfrage",
+            PROFIT_PER_OFFER: "Gewinn pro Angebot",
+            TURNOVER_PER_LEAD: "Umsatz pro Anfrage",
+            TURNOVER_PER_OFFER: "Umsatz pro Angebot",
 
             // Define all week and month names
             SUNDAY: "Sonntag",
@@ -416,7 +442,8 @@ function config($translateProvider) {
             PRODUCT_CREATE: "Neues Produkt",
             PRODUCT_PRODUCTNAME: "Produktname",
             PRODUCT_DESCRIPTION: "Beschreibung",
-            PRODUCT_PRICE: "Preis",
+            PRODUCT_PRICE: "Nettopreis",
+            PRODUCT_GROSS_PRICE: "Bruttopreis",
             PRODUCT_IMAGE: "Bild",
             PRODUCT_EDIT: "Produkt bearbeiten",
             PRODUCT_DEACTIVATED: "Deaktivieren",
@@ -430,6 +457,20 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE: "Produkt wurde erfolgreich aktuallisiert",
             PRODUCT_TOAST_UPDATE_ERROR: "Produkt konnte nicht aktuallisiert werden",
             PRODUCT_NUMBER: "Produktnummer",
+
+            // Define source elements
+            SOURCE_SOURCES: "Quellen",
+            SOURCE_SOURCE: "Quelle",
+            SOURCE_MANAGE_SOURCES: "Quellen verwalten",
+            SOURCE_CREATE: "Neue Quelle",
+            SOURCE_SOURCENAME: "Quellenname",
+            SOURCE_DESCRIPTION: "Beschreibung",
+            SOURCE_EDIT: "Quelle bearbeiten",
+            SOURCE_DEACTIVATED: "Deaktivieren",
+            SOURCE_CREATED: "Erstellt",
+            SOURCE_TOAST_SAVE: "Quelle wurde erfolgreich angelegt/bearbeitet",
+            SOURCE_TOAST_SAVE_ERROR: "Quelle konnte nicht angelegt/aktualisiert werden",
+            SOURCE_NAME_EXISTS: "Der Name existiert bereits",
 
             // Define customer elements
             CUSTOMER: "Kunde",
@@ -447,19 +488,27 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_CREATED: "wurde erstellt",
             CUSTOMER_NUMBER: "Kundennummer",
 
-            TODO_TODOS: "ToDos",
-            TODO_NO_TODOS: "Keine Todos vorhanden",
+            TODO_TODOS: "Aufgaben",
+            TODO_NO_TODOS: "Keine Aufgaben vorhanden",
 
             // Define calculation elements 
             CALCULATION_NET: "Netto",
             CALCULATION_GROSS: "Brutto",
             CALCULATION_VAT: "Mehrwertsteuer",
 
-             // Tooltip
+            // Tooltip
             TOOLTIP_SIGN_UP: "Registrieren Sie sich jetzt unter ihrer spezifischen Subdomain um vollen Zugriff auf die Anwendung zu erhalten. Nach der erfolgreichen Registrierung, muss ihr Anwendungs-Administrator ihren Account freischalten.",
-            TOOLTIP_TODO: "Über ToDo kannst Du all die Prozesse im Auge behalten, an denen Du beteiligt bist.",
+            TOOLTIP_TODO: "Über Aufgaben kannst Du all die Prozesse im Auge behalten, an denen Du beteiligt bist.",
             TOOLTIP_PROFIL_PICTURE: "Wähle dein Profilbild und speichere es. Danach präsentiert es Dich innerhalb der Anwendung.",
-            TOOLTIP_CUSTOMER_LOOKUP: "Ab einer Eingabe von 3 Zeichen werden dir relevante Kunden angezeigt.\nDu kannst nach Vorname, Nachname, Firma, E-Mail und Kundennummer suchen."
+            TOOLTIP_CUSTOMER_LOOKUP: "Ab einer Eingabe von 3 Zeichen werden dir relevante Kunden angezeigt.\nDu kannst nach Vorname, Nachname, Firma, E-Mail und Kundennummer suchen.",
+
+            // former Processor 
+            FORMER_PROCESSOR: "Ehemalige Bearbeiter",
+            FORMER_PROCESSOR_NAME: "Bearbeiter",
+            FORMER_PROCESSOR_ACTIVITY: "Tätigkeit",
+            FORMER_PROCESSOR_TIMESTAMP: "Datum",
+            FORMER_PROCESSOR_SELECT_ACTIVITY: "Tätigkeit auswählen",
+
 
         })
         .translations(Language[Language.EN], {
@@ -540,7 +589,9 @@ function config($translateProvider) {
 
             // Template
             EMAIL_TEMPLATE: "Email templates",
+            EMAIL_TEMPLATE_ERROR: "Error in email template",
             EMAIL_TEMPLATE_SELECT: "No template",
+            EMAIL_RECIPIENT_COMMA: "(seperated by comma)",
             EMAIL_RECIPIENT: "Recipient",
             EMAIL_SUBJECT: "Subject",
             EMAIL_ATTACHMENT: "Attachment",
@@ -549,12 +600,12 @@ function config($translateProvider) {
             EMAIL_MESSAGE: "Message",
             EMAIL_NOTIFICATION_HISTORY: "Previous send notifications",
             EMAIL_NOTIFICATION_SELECT: "Select notification",
-
+            TEMPLATE_VARIABLES_INFO: "Within your Template you can use each Variable listed below.",
             COMMON_SKYPE: "Skype",
             COMMON_FAX: "Fax",
             COMMON_JOB: "Job Description",
             COMMON_LOAD_MORE: "more",
-            COMMON_UPLOAD_NEW1_IMAGE: "Upload new image",
+            COMMON_UPLOAD_NEW_IMAGE: "Upload new image",
             COMMON_CURRENCY: "€",
             COMMON_RESET: "Reset",
             COMMON_SEND: "Send",
@@ -598,7 +649,7 @@ function config($translateProvider) {
             COMMON_PRODUCT_BASE_PRICE: "Base price",
             COMMON_PRODUCT_ENTIRE_PRICE: "Entire price",
             COMMON_PRODUCT_INCL_DELIVERY_COSTS: "incl. delivery costs",
-            COMMON_PRODUCT_OFFER_PRICE: "Offer price",
+            COMMON_PRODUCT_OFFER_PRICE: "Net price",
             COMMON_PRODUCT_DESTINATION: "Place of delivery",
             COMMON_PRODUCT_DELIVERYCOSTS: "Delivery costs",
             COMMON_PRODUCT_SALE_TURNOVER: "Turnover",
@@ -623,10 +674,12 @@ function config($translateProvider) {
             COMMON_VALIDATE_MAX_END: " letters are allowed",
             COMMON_VALIDATE_REQ: "Field required ",
             COMMON_VALIDATE_REQ_NUMBER: "Negative numbers and invalid characters are restricted",
+            COMMON_VALIDATE_ALPHANUMERIC: "Only alphanumeric characters are allowed. E.g. A-z and 0-9",
             COMMON_VALIDATE_EMAIL: "Enter a valid email",
             COMMON_VALIDATE_NEW_PASSWORD: "New password",
             COMMON_VALIDATE_PASSWORD: "Password have to be 6 characters long",
             COMMON_VALIDATE_PASSWORD_NOT_MATCH: "Password doesn\"t match",
+            COMMON_NEW_PASSWORD: "New password",
             COMMON_VALIDATE_INVOICE_NUMBER_ALREADY_EXISTS: "Invoice number already exists",
             COMMON_TOAST_SUCCESS_ADD_LEAD: "A new lead was generated",
             COMMON_TOAST_SUCCESS_INCONTACT: "Lead is set to in contact",
@@ -638,6 +691,8 @@ function config($translateProvider) {
             COMMON_TOAST_SUCCESS_DELETE_LEAD: "The lead was deleted",
             COMMON_TOAST_FAILURE_DELETE_LEAD: "The lead cannot be deleted",
             COMMON_TOAST_SUCCESS_ADD_OFFER: "A new offer was generated",
+            COMMON_TOAST_SUCCESS_DONE_OFFER: "Offer is set to done",
+            COMMON_TOAST_SUCCESS_REVERT_DONE_OFFER: "Offer was reverted",
             COMMON_TOAST_SUCCESS_ADD_SALE: "A new sale was created",
             COMMON_TOAST_SUCCESS_CLOSE_OFFER: "The offer was locked",
             COMMON_TOAST_SUCCESS_OPEN_OFFER: "The offer was unlocked",
@@ -651,14 +706,19 @@ function config($translateProvider) {
             COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD: "Succesfull rollback of Offer to Lead",
             COMMON_TOAST_ROLLBACK_OPEN_TO_LEAD_ERROR: "Unsuccesfull rollback of Offer to Lead",
             COMMON_STATUS_OPEN: "Open",
+            COMMON_STATUS_LEAD: "Lead",
             COMMON_STATUS_INCONTACT: "In contact",
             COMMON_STATUS_OFFER: "Offer",
+            COMMON_STATUS_DONE: "Done",
             COMMON_STATUS_FOLLOW_UP: "Follow up",
             COMMON_STATUS_FOLLOW_UP_NO_SEND: "Follow up",
             COMMON_STATUS_FOLLOW_UP_AND_SEND: "Follow up and send notification",
             COMMON_STATUS_SALE: "Sale",
             COMMON_STATUS_CLOSED: "Closed",
             COMMON_EMPTY_PROCESSOR: "Nobody",
+            COMMON_STATUS_SET_DONE: "Mark as done",
+            COMMON_STATUS_SET_OPEN: "Mark as open",
+            COMMON_SEARCH: "Search...",
 
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Manage leads",
@@ -666,18 +726,20 @@ function config($translateProvider) {
             DASHBOARD_REFRESH: "Refresh",
             DASHBOARD_OPEN_LEADS: "Open leads",
             DASHBOARD_OPEN_OFFERS: "Open offers",
-            DASHBOARD_LATEST_SALES: "Latest sales",
+            DASHBOARD_DONE_OFFERS: "Done offers",
+            DASHBOARD_LATEST_SALES: "Today's sales",
             DASHBOARD_INFO_BUTTON: "Info",
             DASHBOARD_GOTO_BUTTON: "Go to",
             DASHBOARD_COMPLETION: "Sales statements",
 
             // Define notification elements
             NOTIICATION_SEND: "Notification successfully send",
-            NOTIICATION_SEND_ERROR: "Error sending Notification",
+            NOTIICATION_SEND_ERROR: "Error sending Notification. Please check your SMTP settings",
 
             // Define profile elements
             PROFILE_PROFILE_INFORMATION: "Profile information",
             PROFILE_DEFAULT_LANGUAGE: "Default language",
+            PROFILE_DEFAULT_VAT: "Default vat",
             PROFILE_PASSWORD_MANAGEMENT: "Password management",
             PROFILE_OLD_PASSWORD: "Old password",
             PROFILE_VALIDATE_OLD_PASSWORD: "Old password is required",
@@ -706,6 +768,7 @@ function config($translateProvider) {
 
             // Define all offer elements
             OFFER_OFFERS: "Offers",
+            OFFER_OFFER: "Offer",
             OFFER_MANAGE_OFFERS: "Manage offers",
             OFFER_ADD_OFFER: "New offer",
             OFFER_ADD_OFFER_MODAL: "Create offer",
@@ -743,6 +806,7 @@ function config($translateProvider) {
             // Define setting elements
             SETTING_USER: "Users",
             SETTING_USER_MANAGEMENT: "User Management",
+            SETTING_EMAIL: "Email",
             SETTING_EMAIL_MANAGEMENT: "Email Management",
             SETTING_EMAIL_MANAGEMENT_SENDER: "Sender-Name",
             SETTING_EMAIL_MANAGEMENT_EMAIL: "Email",
@@ -753,6 +817,8 @@ function config($translateProvider) {
             SETTING_EMAIL_MANAGEMENT_PORT: "Port",
             SETTING_EMAIL_MANAGEMENT_PORT_NO_INPUT: "No input = standardport",
             SETTING_EMAIL_MANAGEMENT_CONNECTION_TEST: "Testing Connection",
+            SETTING_EMAIL_TEMPLATES_MANAGEMENT: "Email Templates",
+            SETTING_EMAIL_NEW_TEMPLATE: "New template",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST: "Connection to SMTP Server successful.  ",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST_ERROR: "Connection to SMTP Server failed. ",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE: "Successfully saved SMTP Server Connection. ",
@@ -812,9 +878,12 @@ function config($translateProvider) {
             STATISTIC_TOP_SALESMAN: "Top salesmen",
             STATISTIC_INVOLVED_IN_PROCESSES: "Involved in processes",
             STATISTIC_WORKED_ON_LEADS: "Worked on leads",
-            STATISTIC_WORKED_ON_OFFERS: "worked on offers",
-            STATISTIC_COMPLETED_SALES: "Completed sales",
+            STATISTIC_WORKED_ON_OFFERS: "Worked on offers",
+            STATISTIC_WORKED_ON_SALES: "Worked on sales",
+            STATISTIC_COMPLETED_PROCESSES: "Completed Processes",
             STATISTIC_PRODUCT_SALES: "Sold products",
+            STATISTIC_EARNING_RATE: "Successrate",
+            STATISTIC_EARNING_RATE_PROCESS: "Successrate - process involvement",
 
             // Define detail statistic
             DETAIL_STATISTIC_PRODUCTSTATISTIC: "Productstatistic",
@@ -827,8 +896,12 @@ function config($translateProvider) {
             DETAIL_STATISTIC_SALES_PRICE: "Sales price",
             DETAIL_STATISTIC_ADVERTISED_PRICE: "Advertised Price",
             DETAIL_STATISTIC_TOOLTIP: "<span>The product {{productname}} is used <b>{{count}}x</b> in {{workflow}}.</span>",
-            DETAIL_STATISTIC_USER_TOOLTIP: "<span>The user {{username}} worked on <b>{{count}}</b> {{workflow}}.</span>",
-
+            DETAIL_STATISTIC_USER_TOOLTIP: "<span>{{username}} worked on <b>{{count}}</b> {{workflow}}.</span>",
+            DETAIL_STATISTIC_SUCCESS_INDICATOR: "Success key data",
+            PROFIT_PER_LEAD: "Profit per lead",
+            PROFIT_PER_OFFER: "Profit per offer",
+            TURNOVER_PER_LEAD: "Turnover per lead",
+            TURNOVER_PER_OFFER: "Turnover per offer",
 
             // Define all week and month names
             SUNDAY: "Sunday",
@@ -859,7 +932,8 @@ function config($translateProvider) {
             PRODUCT_CREATE: "New product",
             PRODUCT_PRODUCTNAME: "Product Name",
             PRODUCT_DESCRIPTION: "Description",
-            PRODUCT_PRICE: "Price",
+            PRODUCT_PRICE: "Net price",
+            PRODUCT_GROSS_PRICE: "Gross price",
             PRODUCT_IMAGE: "Image",
             PRODUCT_EDIT: "Edit Product",
             PRODUCT_DEACTIVATED: "Deactivate",
@@ -873,6 +947,20 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE: "Updating product was successful",
             PRODUCT_TOAST_UPDATE_ERROR: "Updating product was unsuccessful",
             PRODUCT_NUMBER: "Product number",
+
+            // Define source elements
+            SOURCE_SOURCES: "Sources",
+            SOURCE_SOURCE: "Source",
+            SOURCE_MANAGE_SOURCES: "Manage Sources",
+            SOURCE_CREATE: "New Source",
+            SOURCE_SOURCENAME: "Source Name",
+            SOURCE_DESCRIPTION: "Description",
+            SOURCE_EDIT: "Edit Source",
+            SOURCE_DEACTIVATED: "Deactivate",
+            SOURCE_CREATED: "Created",
+            SOURCE_TOAST_SAVE: "Creating/Editing Source was successful",
+            SOURCE_TOAST_SAVE_ERROR: "Creating/Editing Source was unsuccessful",
+            SOURCE_NAME_EXISTS: "Name is already in use",
 
             // Define customer elements
             CUSTOMER: "Customer",
@@ -890,8 +978,9 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_CREATED: "has been created",
             CUSTOMER_NUMBER: "Customer number",
 
-            TODO_TODOS: "ToDos",
-            TODO_NO_TODOS: "No todos existing",
+
+            TODO_TODOS: "Tasks",
+            TODO_NO_TODOS: "No tasks existing",
 
             // Define calculation elements 
             CALCULATION_NET: "Net",
@@ -900,13 +989,20 @@ function config($translateProvider) {
 
             // Tooltip
             TOOLTIP_SIGN_UP: "Sign up now under your unique tenant domain section to get full acces<br>s. After Sign up your administrator needs to enable your account.",
-            TOOLTIP_TODO: "Via ToDo you can keep all your processes in mind.",
+            TOOLTIP_TODO: "Via task you can keep all your processes in mind.",
             TOOLTIP_PROFIL_PICTURE: "Select your Profil Picture and press save to keep it. Afterwards it will present you within this Application.",
-            TOOLTIP_CUSTOMER_LOOKUP: "From 3 characters the relevant customers will appear.\nYou can search for firstname, lastname, company, e-mail and customernumber."
+            TOOLTIP_CUSTOMER_LOOKUP: "From 3 characters the relevant customers will appear.\nYou can search for firstname, lastname, company, e-mail and customernumber.",
+
+            // former Processor 
+            FORMER_PROCESSOR: "Former Processors",
+            FORMER_PROCESSOR_NAME: "Processor",
+            FORMER_PROCESSOR_ACTIVITY: "Activity",
+            FORMER_PROCESSOR_TIMESTAMP: "Date",
+            FORMER_PROCESSOR_SELECT_ACTIVITY: "Select activity",
 
         });
 
-    $translateProvider.preferredLanguage(Language[Language.DE]);
+    $translateProvider.preferredLanguage(Language[Language.EN]);
     $translateProvider.fallbackLanguage(Language[Language.EN]);
 
 }

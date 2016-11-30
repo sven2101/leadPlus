@@ -53,7 +53,11 @@ class LoginService {
                 if (self.location.host() === credentials.tenant) {
                     self.location.path("/dashboard");
                 } else {
-                    let domain = "https://" + credentials.tenant + ":" + self.location.port() + "/#/dashboard";
+                    let domain = "https://" + credentials.tenant;
+                    if (Number(self.location.port()) === 8080) {
+                        domain += ":" + self.location.port();
+                    }
+                    domain += "/#/login";
                     self.window.open(domain, "_self");
                 }
                 self.rootScope.setUserDefaultLanguage();

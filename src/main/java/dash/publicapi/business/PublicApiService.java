@@ -34,11 +34,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import dash.common.HtmlCleaner;
 import dash.customermanagement.business.ICustomerService;
 import dash.customermanagement.domain.Customer;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
-import dash.leadmanagement.business.ILeadService;
 import dash.leadmanagement.domain.Lead;
 import dash.processmanagement.business.IProcessService;
 import dash.processmanagement.domain.Process;
@@ -46,6 +46,8 @@ import dash.productmanagement.business.IProductService;
 import dash.productmanagement.business.ProductService;
 import dash.productmanagement.domain.OrderPosition;
 import dash.productmanagement.domain.Product;
+import dash.sourcemanagement.business.ISourceService;
+import dash.sourcemanagement.domain.Source;
 import dash.statusmanagement.domain.Status;
 
 @Service
@@ -53,9 +55,6 @@ import dash.statusmanagement.domain.Status;
 public class PublicApiService implements IPublicApiService {
 
 	private static final Logger logger = Logger.getLogger(ProductService.class);
-
-	@Autowired
-	private ILeadService leadservice;
 
 	@Autowired
 	private IProductService productService;
@@ -66,8 +65,11 @@ public class PublicApiService implements IPublicApiService {
 	@Autowired
 	private IProcessService processService;
 
+	@Autowired
+	private ISourceService sourceService;
+
 	@Override
-	public Lead saveLead(Lead lead) throws SaveFailedException, NotFoundException {
+	public Lead saveLead(Lead lead, String source) throws SaveFailedException, NotFoundException {
 		if (lead == null) {
 			throw new SaveFailedException(INVALID_LEAD);
 		}
@@ -81,7 +83,8 @@ public class PublicApiService implements IPublicApiService {
 					throw new SaveFailedException(PRODUCT_NOT_FOUND);
 				} else if (orderPosition.getProduct().getId() <= 0) {
 					throw new NotFoundException(PRODUCT_NOT_FOUND);
-				} else if (orderPosition.getDiscount() < 0 || orderPosition.getDiscount() > 100) {
+				} else if (orderPosition.getDiscount() < 0 || orderPosition.getDiscount() > 100
+						|| orderPosition.getAmount() <= 0) {
 					throw new SaveFailedException(INVALID_ORDERPOSITIONS);
 				}
 				Product product = productService.getById(orderPosition.getProduct().getId());
@@ -89,7 +92,7 @@ public class PublicApiService implements IPublicApiService {
 					throw new NotFoundException(PRODUCT_NOT_FOUND);
 				}
 				orderPosition.setProduct(product);
-				orderPosition.setPrice(orderPosition.getProduct().getPriceNetto());
+				orderPosition.setNetPrice(orderPosition.getProduct().getNetPrice());
 				orderPosition.setDeleted(false);
 				orderPosition.setId(null);
 				orderPosition.setWorkflow(lead);
@@ -116,6 +119,9 @@ public class PublicApiService implements IPublicApiService {
 		lead.getCustomer().setTimestamp(Calendar.getInstance());
 		lead.setCustomer(customerService.save(lead.getCustomer()));
 
+		// clean message
+		lead.setMessage(HtmlCleaner.cleanHtml(lead.getMessage()));
+
 		// set Vendor
 		lead.setVendor(null);
 
@@ -126,9 +132,15 @@ public class PublicApiService implements IPublicApiService {
 
 		logging();
 
+		Source sourceObj = null;
+		if (source != null && !source.equals("")) {
+			sourceObj = sourceService.getByName(source);
+		}
+
 		Process process = new Process();
 		process.setStatus(Status.OPEN);
 		process.setLead(lead);
+		process.setSource(sourceObj);
 
 		return processService.save(process).getLead();
 	}

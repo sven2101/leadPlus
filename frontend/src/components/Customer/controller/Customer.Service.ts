@@ -50,6 +50,9 @@ class CustomerService {
     insertCustomer(customer: Customer) {
         return this.customerResource.createCustomer(customer).$promise;
     }
+    async updateCustomer(customer: Customer): Promise<Customer> {
+        return await this.customerResource.updateCustomer(customer);
+    }
 
     getAllCustomerByPage(start: number, length: number, searchtext: string, allCustomers: boolean) {
         let self = this;

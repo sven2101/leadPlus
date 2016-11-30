@@ -39,13 +39,15 @@ let hasLicense = function (userLicense: any, routeLicense: String): boolean {
 };
 
 let getNameOfUser = function (user: User): string {
-    if (!isNullOrUndefined(user.firstname) && user.firstname !== "" && !isNullOrUndefined(user.lastname) && user.lastname !== "") {
+    if (isNullOrUndefined(user)) {
+        return "";
+    }
+    else if (!isNullOrUndefined(user.firstname) && user.firstname !== "" && !isNullOrUndefined(user.lastname) && user.lastname !== "") {
         return user.firstname + " " + user.lastname;
     }
     else {
         return user.email;
     }
-
 };
 
 let deepCopy = function (old: Object): any {
@@ -145,5 +147,26 @@ let stringIsNullorEmpty = (text: string): boolean => {
     return text === "";
 };
 
+let b64toBlob = function (b64Data: string, contentType: string, sliceSize: number = 512): Blob {
+    contentType = contentType || "";
 
+    let byteCharacters = atob(b64Data);
+    let byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        let slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        let byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        let byteArray = new Uint8Array(byteNumbers);
+
+        byteArrays.push(byteArray);
+    }
+
+    let blob = new Blob(byteArrays, { type: contentType });
+    return blob;
+};
 

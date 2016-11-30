@@ -14,8 +14,8 @@
                                                                                                ng-change="offerCtrl.changeDataInput()"
                                                                                                class="js-switch"
                                                                                                ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
-					</br>
-					</br>
+					<br/>
+					<br/>
 					<div class="table-responsive text-center">
 						<table id="ngdatatable" datatable="" dt-options="offerCtrl.dtOptions" dt-columns="offerCtrl.dtColumns" dt-instance="offerCtrl.dtInstanceCallback"
 							class="table table-bordered table-hover table-condensed text-center" style="width:100%;"></table>
@@ -25,11 +25,7 @@
 		</div>
 	</div>
 </div>
-<div editworkflow parent="offerCtrl" type="offer" modaltitle="{{'OFFER_EDIT_OFFER_MODAL'| translate}}"></div>
-<div confirmationmodal modalid="deleteConfirmationModal" parent="offerCtrl" title="{{'OFFER_DELETE_OFFER'| translate}}" body="{{'OFFER_DELETE_OFFER_BODY'| translate}}"
-	submittext="{{'COMMON_DELETE'| translate}}"></div>
-<div confirmationmodal modalid="rollbackConfirmationModal" parent="offerCtrl" title="{{'OFFER_ROLLBACK'| translate}}" body="{{'OFFER_ROLLBACK_BODY'| translate}}"
-	submittext="{{'COMMON_RESET'| translate}}"></div>
+
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {

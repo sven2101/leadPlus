@@ -42,18 +42,23 @@ public class Offer extends AbstractWorkflow {
 
 	@NotNull
 	@Digits(integer = 10, fraction = 4)
-	@Column(name = "offerprice", nullable = false)
-	private Double offerPrice;
+	@Column(name = "net_price", nullable = false)
+	private Double netPrice;
+
+	@NotNull
+	@Digits(integer = 4, fraction = 2)
+	@Column(name = "vat", nullable = false)
+	private Double vat;
 
 	public Offer() {
 	}
 
-	public Double getOfferPrice() {
-		return offerPrice;
+	public Double getNetPrice() {
+		return netPrice;
 	}
 
-	public void setOfferPrice(Double price) {
-		this.offerPrice = price;
+	public void setNetPrice(Double price) {
+		this.netPrice = price;
 	}
 
 	public Calendar getDeliveryDate() {
@@ -64,12 +69,25 @@ public class Offer extends AbstractWorkflow {
 		this.deliveryDate = deliveryDate;
 	}
 
+	public Double getVat() {
+		return vat;
+	}
+
+	public void setVat(Double vat) {
+		this.vat = vat;
+	}
+
+	public Double getGrossPrice() {
+		return this.netPrice * (1 + this.vat / 100);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + ((deliveryDate == null) ? 0 : deliveryDate.hashCode());
-		result = prime * result + ((offerPrice == null) ? 0 : offerPrice.hashCode());
+		result = prime * result + ((netPrice == null) ? 0 : netPrice.hashCode());
+		result = prime * result + ((vat == null) ? 0 : vat.hashCode());
 		return result;
 	}
 
@@ -87,17 +105,22 @@ public class Offer extends AbstractWorkflow {
 				return false;
 		} else if (!deliveryDate.equals(other.deliveryDate))
 			return false;
-		if (offerPrice == null) {
-			if (other.offerPrice != null)
+		if (netPrice == null) {
+			if (other.netPrice != null)
 				return false;
-		} else if (!offerPrice.equals(other.offerPrice))
+		} else if (!netPrice.equals(other.netPrice))
+			return false;
+		if (vat == null) {
+			if (other.vat != null)
+				return false;
+		} else if (!vat.equals(other.vat))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Offer [deliveryDate=" + deliveryDate + ", offerPrice=" + offerPrice + "]";
-	}	
+		return "Offer [deliveryDate=" + deliveryDate + ", offerPrice=" + netPrice + ", vat=" + vat + "]";
+	}
 
 }

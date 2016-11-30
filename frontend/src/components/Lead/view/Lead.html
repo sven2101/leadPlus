@@ -46,8 +46,8 @@
                             ng-change="leadCtrl.changeDataInput()"
                             class="js-switch"
                             ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
-					</br>
-					</br>
+					<br/>
+					<br/>
 					<div class="table-responsive text-center">
 						<table id="ngdatatable" datatable="" dt-options="leadCtrl.dtOptions" dt-columns="leadCtrl.dtColumns" dt-instance="leadCtrl.dtInstanceCallback"
 							class="table table-bordered table-hover table-condensed text-center" style="width:100%;"></table>
@@ -60,6 +60,7 @@
 <div editworkflow parent="leadCtrl" type="lead" modaltitle="{{'LEAD_EDIT_LEAD_MODAL'| translate}}"></div>
 <div confirmationmodal modalid="deleteConfirmationModal" parent="leadCtrl" title="{{'LEAD_DELETE_LEAD'| translate}}" body="{{'LEAD_DELETE_LEAD_BODY'| translate}}"
 	submittext="{{'COMMON_DELETE'| translate}}"></div>
+<div hidden ng-include="'components/Common/view/Workflow.Send.Modal.html'"></div>
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {

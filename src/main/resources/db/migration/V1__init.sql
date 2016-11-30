@@ -5,7 +5,7 @@ CREATE SEQUENCE IF NOT EXISTS public.tenant_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
-  START 1
+  START 2
   CACHE 1;
   
 -- Sequence: license_id_seq
@@ -13,7 +13,7 @@ CREATE SEQUENCE IF NOT EXISTS public.license_id_seq
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 9223372036854775807
-  START 1
+  START 2
   CACHE 1;
 
 -- Table: license

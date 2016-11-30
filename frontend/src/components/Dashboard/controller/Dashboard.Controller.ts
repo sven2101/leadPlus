@@ -32,7 +32,7 @@ const DashboardControllerId: string = "DashboardController";
 
 class DashboardController {
 
-    $inject = [WorkflowServiceId, StatisticServiceId, DashboardServiceId, $rootScopeId, TemplateServiceId, NotificationServiceId, $sceId];
+    $inject = [WorkflowServiceId, StatisticServiceId, DashboardServiceId, $rootScopeId, TemplateServiceId, NotificationServiceId, $sceId, $scopeId];
 
     workflowService: WorkflowService;
     statisticService: StatisticService;
@@ -49,12 +49,13 @@ class DashboardController {
     currentUser: User;
 
     rootScope;
+    scope;
     sce;
 
     template: Template = new Template();
     templates: Array<Template> = [];
 
-    constructor(WorkflowService, StatisticService, DashboardService, $rootScope, TemplateService, NotificationService, $sce) {
+    constructor(WorkflowService, StatisticService, DashboardService, $rootScope, TemplateService, NotificationService, $sce, $scope) {
         this.workflowService = WorkflowService;
         this.statisticService = StatisticService;
         this.dashboardService = DashboardService;
@@ -62,9 +63,10 @@ class DashboardController {
         this.getAllActiveTemplates();
 
         this.sce = $sce;
+        this.scope = $scope;
         this.rootScope = $rootScope;
-        this.statisticService.loadAllResourcesByDateRange("MONTHLY");
-        this.sortableOptions = this.dashboardService.setSortableOptions();
+        this.statisticService.loadAllResourcesByDateRange("MONTHLY", "ALL");
+        this.sortableOptions = this.dashboardService.setSortableOptions(this.scope);
         this.currentUser = this.rootScope.user;
 
         this.refreshData();
@@ -109,6 +111,9 @@ class DashboardController {
     getOpenOffers(): Array<Process> {
         return this.dashboardService.getOpenOffers();
     }
+    getDoneOffers(): Array<Process> {
+        return this.dashboardService.getDoneOffers();
+    }
     getClosedSales(): Array<Process> {
         return this.dashboardService.getClosedSales();
     }
@@ -143,7 +148,7 @@ class DashboardController {
         if (timestamp === undefined) {
             timestamp = newTimestamp();
         }
-        return toLocalDate(timestamp);
+        return toLocalDate(timestamp, "DD.MM.YYYY HH:mm");
     }
     sumOrderPositions(array: Array<OrderPosition>): number {
         return this.workflowService.sumOrderPositions(array);
@@ -189,9 +194,22 @@ class DashboardController {
     }
 
     getClassToDrag(process: Process, element: string): string {
-        return element + (this.hasRightToDrag(process) ? "-element draggable" : "-element not-sortable draggable");
+        return element + (this.hasRightToDrag(process) ? "-element draggable dragItem" : "-element not-sortable draggable dragItem");
     }
 
+    getHeight(): number {
+        let max = 0;
+        let array: Array<number> = new Array<number>(this.getOpenLeads().length, this.getInContacts().length, this.getOpenOffers().length, this.getDoneOffers().length, this.getClosedSales().length);
+        for (let element of array) {
+            if (element > max) {
+                max = element;
+            }
+        }
+        if (max >= 7) {
+            return 7 * 85;
+        }
+        return (max * 85) + 100;
+    }
 }
 
 angular.module(moduleDashboard, [ngResourceId, moduleSummernote]).controller(DashboardControllerId, DashboardController);

@@ -38,12 +38,12 @@
 						<td>{{workflowUnit.deliveryDate}}</td>
 					</tr>
 					<tr>
-						<td>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</br>{{'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate}}</td>
+						<td>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}<br/>{{'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate}}</td>
 						<td style="vertical-align:middle">{{(parent.sumOrderPositions(workflowUnit.orderPositions)+workflowUnit.deliveryCosts)| currency:'\u20AC'}}</td>
 					</tr>
 					<tr ng-if="type=='offer'">
 						<td>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</td>
-						<td>{{workflowUnit.offerPrice | currency:'\u20AC'}}</td>
+						<td>{{workflowUnit.netPrice | currency:'\u20AC'}}</td>
 					</tr>
 					<tr ng-if="type=='sale'">
 						<td>{{ 'COMMON_PRODUCT_SALE_INVOICE_NUMBER' | translate }}</td>
@@ -59,6 +59,10 @@
 						<td>{{ 'COMMON_PRODUCT_SALE_PROFIT' | translate }}</td>
 						<td>{{workflowUnit.saleProfit | currency:'\u20AC'}}
 						</td>
+					</tr>
+					<tr>
+						<td>{{ 'SOURCE_SOURCE' | translate }}</td>
+						<td>{{process.source.name}}</td>
 					</tr>
 				</table>
 			</div>

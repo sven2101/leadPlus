@@ -28,7 +28,7 @@
 				<div class="input-group ">
 					<span class="input-group-addon ">{{ 'COMMON_CURRENCY'| translate }}</span>
 					<input name="deliveryCosts " type="number " ng-model="parent.editWorkflowUnit.deliveryCosts
-                                " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " ng-keyup="parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.currentOrderPositions) "
+                                " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " ng-keyup="parent.workflowService.reCalculateOffer(parent.editWorkflowUnit,parent.editWorkflowUnit.oderPositions) "
 						min="0 " step="0.01 " data-number-to-fixed="2 " data-number-stepfactor="100 " class="form-control currency
                                 " id="c2 " ng-disabled="!parent.editable" />
 				</div>

@@ -32,9 +32,6 @@ class OfferDataTableService {
     compile;
     rootScope;
 
-    user: any;
-    tenant: any;
-
     constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
@@ -43,8 +40,6 @@ class OfferDataTableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
-        this.user = $rootScope.user;
-        this.tenant = $rootScope.tenant;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
@@ -57,8 +52,8 @@ class OfferDataTableService {
                 },
                 type: "GET",
                 "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.tenant.tenantKey);
+                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
+                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
                 }
             })
             .withOption("stateSave", false)
@@ -105,7 +100,7 @@ class OfferDataTableService {
             this.DTColumnBuilder.newColumn("offer.timestamp").withTitle(
                 this.translate("COMMON_DATE")).renderWith(
                 function (data, type, full) {
-                    return toLocalDate(data);
+                    return toLocalDate(data, "DD.MM.YYYY HH:mm");
                 }).withOption("type", "date-euro")
                 .withClass("text-center"),
             this.DTColumnBuilder.newColumn("offer.customer.phone").withTitle(
@@ -130,20 +125,20 @@ class OfferDataTableService {
                 this.translate("COMMON_PRODUCT_ENTIRE_PRICE"))
                 .renderWith(
                 function (data, type, full) {
-                    if (isNullOrUndefined(data.offer.price)) {
+                    if (isNullOrUndefined(data.offer.netPrice)) {
                         return self.filter("currency")(0, "€", 2);
                     }
-                    return self.filter("currency")(data.offer.price,
+                    return self.filter("currency")(data.offer.netPrice,
                         "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_PRODUCT_OFFER_PRICE"))
                 .renderWith(
                 function (data, type, full) {
-                    if (isNullOrUndefined(data.offer.offerPrice)) {
+                    if (isNullOrUndefined(data.offer.netPrice)) {
                         return self.filter("currency")(0, "€", 2);
                     }
-                    return self.filter("currency")(data.offer.offerPrice,
+                    return self.filter("currency")(data.offer.netPrice,
                         "€", 2);
                 }).notVisible(),
 
@@ -160,7 +155,7 @@ class OfferDataTableService {
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").withOption("width", "180px").notSortable().renderWith(addActionsButtons),
+                "text-center").withOption("width", "200px").notSortable().renderWith(addActionsButtons),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {
@@ -175,9 +170,9 @@ class OfferDataTableService {
         user.role = Role.SUPERADMIN;
 
         let config = new ActionButtonConfigBuilder();
-        config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("OFFER_CREATE_SALE");
-        if (process.status === Status.OFFER || process.status === Status.FOLLOWUP) {
-            config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled();
+        config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("OFFER_CREATE_SALE").setIcon("fa fa-usd");
+        if (process.status === Status.OFFER || process.status === Status.FOLLOWUP || process.status === Status.DONE) {
+            config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled().setIcon("fa fa-usd");
         }
         if (user.role === Role.ADMIN || user.role === Role.SUPERADMIN) {
             config.get(ActionButtonType.PIN_DROPDOWN).setEnabled().setTitle("LEAD_PIN");
@@ -194,12 +189,17 @@ class OfferDataTableService {
 
         }
         config.get(ActionButtonType.OPEN_FOLLOWUP_MODAL).setEnabled().setTitle("COMMON_STATUS_FOLLOW_UP");
+        config.get(ActionButtonType.SET_OFFER_DONE).setEnabled().setTitle("COMMON_STATUS_SET_DONE").setIcon("fa fa-check");
         config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("OFFER_CLOSE_OFFER").setIcon("fa fa-lock");
         config.get(ActionButtonType.DETAILS_OPEN_EDIT_MODAL).setEnabled().setTitle("OFFER_EDIT_OFFER");
         config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
         if (!isNullOrUndefined(process.sale)
             || !(user.role === Role.ADMIN || user.role === Role.SUPERADMIN) && (!isNullOrUndefined(process.processor) && process.processor.id !== user.id)) {
             config.disableAll();
+        }
+        else if (process.status === Status.DONE) {
+            config.get(ActionButtonType.SET_OFFER_DONE).setEnabled().setTitle("COMMON_STATUS_SET_OPEN").setIcon("fa fa-undo");
+            config.get(ActionButtonType.OPEN_FOLLOWUP_MODAL).setEnabled(false);
         } else if (process.status === Status.CLOSED) {
             config.disableAll();
             config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("OFFER_OPEN_OFFER").setIcon("fa fa-unlock");
@@ -231,7 +231,13 @@ class OfferDataTableService {
             return "<span style='color: #f79d3c;'>"
                 + data.followUpAmount + "x " + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>"
                 + hasProcessor;
-        } else if (data.status === "SALE") {
+        }
+        else if (data.status === "DONE") {
+            return "<span style='color: #f79d3c;'>"
+                + this.translate.instant("COMMON_STATUS_DONE") + "</span>"
+                + hasProcessor;
+        }
+        else if (data.status === "SALE") {
             return "<span style='color: #1872ab;'>"
                 + this.translate.instant("COMMON_STATUS_SALE") + "</span>";
         } else if (data.status === "CLOSED") {

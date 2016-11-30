@@ -36,7 +36,7 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.exceptions.SaveFailedException;
 import dash.fileuploadmanagement.business.IFileUploadService;
-import dash.fileuploadmanagement.domain.FileUpload;
+import dash.notificationmanagement.domain.Attachment;
 import dash.notificationmanagement.domain.Notification;
 import dash.smtpmanagement.business.ISmtpService;
 import dash.smtpmanagement.domain.Smtp;
@@ -50,31 +50,59 @@ public class NotificationService implements INotificationService {
 	private ISmtpService smtpService;
 
 	@Autowired
+	private IAttachmentService attachmentService;
+
+	@Autowired
 	private IFileUploadService fileUploadService;
 
 	@Override
 	public void sendNotification(final long userId, final Notification notification, String smtpKey)
 			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException, Exception {
+
+		InternetAddress[] toList = null;
+		InternetAddress[] bccList = null;
+		InternetAddress[] ccList = null;
+
+		Message msg = null;
+
 		try {
 			Smtp smtp = smtpService.findByUser(userId);
-			if (notification != null && notification.getAttachment() != null && notification.getAttachment().getId() != null) {
-				FileUpload attachment = fileUploadService.getById(notification.getAttachment().getId());
-				if (attachment != null) {
-					notification.setAttachment(attachment);
-				}
-			}
-
 			if (smtp != null) {
-				smtp.setPassword(Encryptor.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
+				if (notification != null && notification.getAttachments() != null) {
+					for (Attachment attachment : notification.getAttachments()) {
+						if (attachment != null && attachment.getFileUpload() != null
+								&& attachment.getFileUpload().getId() != null) {
+							attachment.setFileUpload(fileUploadService.getById(attachment.getFileUpload().getId()));
+						}
+					}
+				}
+				smtp.setPassword(Encryptor
+						.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
+
 				final Session emailSession = smtpService.newSession(smtp);
 				Transport transport = emailSession.getTransport("smtp");
+
 				transport.connect();
 
-				Message msg = new MimeMessage(emailSession);
+				msg = new MimeMessage(emailSession);
+
 				try {
+					if (notification.getRecipients() != null)
+						toList = InternetAddress.parse(notification.getRecipients());
+					if (notification.getRecipientsBCC() != null)
+						bccList = InternetAddress.parse(notification.getRecipientsBCC());
+					if (notification.getRecipientsCC() != null)
+						ccList = InternetAddress.parse(notification.getRecipientsCC());
 
 					msg.setFrom(new InternetAddress(smtp.getEmail(), smtp.getSender()));
-					msg.setRecipient(Message.RecipientType.TO, new InternetAddress(notification.getRecipient()));
+
+					if (toList != null)
+						msg.setRecipients(Message.RecipientType.TO, toList);
+					if (bccList != null)
+						msg.addRecipients(Message.RecipientType.BCC, bccList);
+					if (ccList != null)
+						msg.addRecipients(Message.RecipientType.CC, ccList);
+
 					msg.setSubject(notification.getSubject());
 					Multipart multipart = new MimeMultipart();
 
@@ -82,14 +110,20 @@ public class NotificationService implements INotificationService {
 					textBodyPart.setContent(notification.getContent(), "text/html; charset=utf-8");
 					multipart.addBodyPart(textBodyPart);
 
-					if (notification.getAttachment() != null && notification.getAttachment().getContent() != null) {
-						MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-						ByteArrayDataSource ds = new ByteArrayDataSource(notification.getAttachment().getContent(), notification.getAttachment().getMimeType());
-						attachmentBodyPart.setDataHandler(new DataHandler(ds));
-						attachmentBodyPart.setFileName(notification.getAttachment().getFilename());
-						multipart.addBodyPart(attachmentBodyPart);
-					}
+					if (notification.getAttachments() != null && notification.getAttachments().size() > 0) {
+						for (Attachment attachment : notification.getAttachments()) {
+							if (attachment.getFileUpload().getContent() != null) {
+								MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+								ByteArrayDataSource ds = new ByteArrayDataSource(
+										attachment.getFileUpload().getContent(),
+										attachment.getFileUpload().getMimeType());
+								attachmentBodyPart.setDataHandler(new DataHandler(ds));
+								attachmentBodyPart.setFileName(attachment.getFileUpload().getFilename());
+								multipart.addBodyPart(attachmentBodyPart);
+							}
+						}
 
+					}
 					msg.setContent(multipart);
 
 					Transport.send(msg);

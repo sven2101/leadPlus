@@ -20,10 +20,10 @@
                             <div class="chat-discussion" ng-model="process.comments">
                                 <div ng-repeat="comment in process.comments | orderBy: '-timestamp'">
                                     <div ng-if="$index%2==0" class="chat-message left">
-                                        <img class="message-avatar" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+                                        <img class="message-avatar" pictureid="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         <div class="message">
-                                            <a ng-if="(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-                                            <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+                                            <a ng-if="(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onclick="return false;"> {{comment.creator.username}} </a>
+                                            <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onclick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
                                             <span class="message-date"> {{getTimestamp(comment.timestamp)}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}
@@ -31,10 +31,10 @@
                                         </div>
                                     </div>
                                     <div ng-if="$index%2!=0" class="chat-message right">
-                                        <img class="message-avatar" pictureId="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+                                        <img class="message-avatar" pictureid="{{process.processor.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
                                         <div class="message">
-                                            <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-                                            <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+                                            <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onclick="return false;"> {{comment.creator.username}} </a>
+                                            <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onclick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
                                             <span class="message-date"> {{getTimestamp(comment.timestamp)}} </span>
                                             <span class="message-content">
                                                 {{comment.commentText}}
@@ -47,16 +47,20 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="chat-message-form" style="width:100%">
-
-                                <div class="form-group" style="width:100%">
-                                    <textarea class="form-control message-input" ng-model="parent.commentModalInput[process.id]" style="resize: none; width:100%;box-sizing: border-box;"
-                                        name="message" placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}" />
-                                </div>
-                                <button style="width:40%; margin-top: 10px;" class="btn btn-success" ng-click="parent.addComment(process.id,parent.commentModalInput)">
+                            <form name="commentform">
+                                <div class="chat-message-form" style="width:100%">
+                                    <div class="form-group" style="width:100%" ng-class="{ 'has-error' : commentform.message.$error.maxlength && !commentform.message.$pristine }">
+                                        <textarea class="form-control message-input" ng-model="parent.commentModalInput[process.id]" required ng-maxlength="5000"
+                                            style="resize: none; width:100%;box-sizing: border-box;" name="message" placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}"
+                                        />
+                                        <p ng-show="commentform.message.$error.maxlength && !commentform.message.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}5000{{ 'COMMON_VALIDATE_MAX_END' | translate
+                                            }}</p>
+                                    </div>
+                                    <button style="width:40%; margin-top: 10px;" class="btn btn-success" ng-disabled="commentform.message.$invalid" ng-click="parent.addComment(process.id,parent.commentModalInput)">
                                     <i class="fa fa-comment-o"></i>&nbsp; {{ 'COMMON_COMMENTS_ADD' | translate }}
                                 </button>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

@@ -13,15 +13,12 @@
  *******************************************************************************/
 package dash.tenantmanagement.business;
 
-import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.CREATING_SUBDOMAIN;
 import static dash.Constants.TENANT_ALREADY_EXISTS;
-import static dash.Constants.TENANT_NOT_FOUND;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 import javax.sql.DataSource;
 
@@ -43,7 +40,6 @@ import com.amazonaws.services.route53.model.RRType;
 import com.amazonaws.services.route53.model.ResourceRecord;
 import com.amazonaws.services.route53.model.ResourceRecordSet;
 
-import dash.exceptions.NotFoundException;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.registration.domain.Validation;
 
@@ -52,6 +48,7 @@ public class TenantService implements ITenantService {
 
 	private static final String SPRING_PROFILE_PRODUCTION = "production";
 	private static final String SPRING_PROFILE_DEVELOPMENT = "development";
+	private static final String SPRING_PROFILE_TEST = "test";
 	private static final String RESOURCE_RECORD_SET_CNAME = "CNAME";
 	private static final String WWW = "www";
 
@@ -76,24 +73,23 @@ public class TenantService implements ITenantService {
 	private AmazonRoute53 r53;
 
 	@Override
-	public Tenant getTenantByName(final String name) throws NotFoundException {
-		if (Optional.ofNullable(name).isPresent()) {
-			return tenantRepository.findByTenantKey(name);
-		} else {
-			NotFoundException cnfex = new NotFoundException(TENANT_NOT_FOUND);
-			logger.error(TENANT_NOT_FOUND + TenantService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
-			throw cnfex;
-		}
+	public Tenant getTenantByName(final String name) throws IllegalArgumentException {
+		if (name == null)
+			throw new IllegalArgumentException("Cannot getTenantByName because parameter name is null");
+		return tenantRepository.findByTenantKeyIgnoreCase(name);
 	}
 
 	@Override
 	public Tenant createNewTenant(final Tenant tenant) {
 		try {
 			tenant.setEnabled(true);
-			tenant.getLicense().getTerm().add(Calendar.YEAR, 1);
+			Calendar oneYearLater = Calendar.getInstance();
+			oneYearLater.add(Calendar.YEAR, 1);
+			tenant.getLicense().setTerm(oneYearLater);
 			Validation tenantNotExists = uniqueTenantKey(tenant);
 			if (tenantNotExists.isValidation()) {
-				if (springProfileActive.equals(SPRING_PROFILE_DEVELOPMENT)) {
+				if (springProfileActive.equals(SPRING_PROFILE_DEVELOPMENT)
+						|| springProfileActive.equals(SPRING_PROFILE_TEST)) {
 					createSchema(tenant);
 					tenantRepository.save(tenant);
 					logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
@@ -104,6 +100,7 @@ public class TenantService implements ITenantService {
 					logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
 				}
 			}
+
 		} catch (Exception ex) {
 			logger.error(TENANT_ALREADY_EXISTS + tenant.getTenantKey(), ex);
 		}
@@ -190,6 +187,12 @@ public class TenantService implements ITenantService {
 	@Override
 	public Validation uniqueTenantKey(Tenant tenant) {
 		final Validation validation = new Validation();
+		if ("www".contains(tenant.getTenantKey().toLowerCase())
+				|| "leadplus".contains(tenant.getTenantKey().toLowerCase())) {
+			validation.setValidation(false);
+			return validation;
+		}
+
 		final Tenant validateTenant;
 
 		boolean proofUniquenessLocal = true;
@@ -199,9 +202,9 @@ public class TenantService implements ITenantService {
 			validateTenant = getTenantByName(tenant.getTenantKey());
 			if (validateTenant != null)
 				proofUniquenessLocal = false;
-		} catch (NotFoundException nfex) {
+		} catch (IllegalArgumentException ilax) {
 			proofUniquenessLocal = false;
-			logger.error("Validate uniqueness of Tenant: " + TenantService.class.getSimpleName(), nfex);
+			logger.error("Validate uniqueness of Tenant: " + TenantService.class.getSimpleName(), ilax);
 		}
 
 		if (springProfileActive.equals(SPRING_PROFILE_PRODUCTION))

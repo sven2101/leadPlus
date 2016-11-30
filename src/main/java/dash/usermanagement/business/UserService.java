@@ -25,6 +25,7 @@ import static dash.Constants.USER_NOT_FOUND;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ import dash.exceptions.UsernameAlreadyExistsException;
 import dash.fileuploadmanagement.business.IFileUploadService;
 import dash.smtpmanagement.business.ISmtpService;
 import dash.smtpmanagement.domain.Smtp;
+import dash.tenantmanagement.business.TenantContext;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
@@ -75,7 +77,9 @@ public class UserService implements IUserService {
 
 	@Override
 	public List<User> getAll() {
-		return userRepository.findAll();
+		return userRepository.findAll().stream().filter(it -> !"superadmin@eviarc.com".equals(it.getUsername()))
+				.collect(Collectors.toList());
+
 	}
 
 	@Override
@@ -109,9 +113,6 @@ public class UserService implements IUserService {
 	@Override
 	public User save(final User user) throws SaveFailedException {
 		if (Optional.ofNullable(user).isPresent()) {
-			// TODO - needs to be enabled. Otherwise redirect after Tenant
-			// Registration would fail.
-			user.setEnabled(true);
 			return userRepository.save(user);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
@@ -142,6 +143,7 @@ public class UserService implements IUserService {
 					updateUser.setSkype(user.getSkype());
 					updateUser.setFax(user.getFax());
 					updateUser.setJob(user.getJob());
+					updateUser.setDefaultVat(user.getDefaultVat());
 					return save(updateUser);
 
 				} else {
@@ -159,10 +161,6 @@ public class UserService implements IUserService {
 			logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
 			throw ufex;
 		}
-	}
-
-	private void validateEmail(String email) throws NotFoundException {
-		User user = getUserByEmail(email);
 	}
 
 	@Override
@@ -300,13 +298,22 @@ public class UserService implements IUserService {
 					throw new EmailAlreadyExistsException(EMAIL_EXISTS);
 				}
 
+				Role role = Role.USER;
+				boolean enabled = false;
+				if (this.getAll().isEmpty()) {
+					role = Role.SUPERADMIN;
+					enabled = true;
+				}
+
 				final User user = new User();
 				user.setEmail(registration.getEmail());
 				user.setFirstname(registration.getFirstname());
 				user.setLastname(registration.getLastname());
 				user.setPassword(passwordEncoder.encode(registration.getPassword()));
-				user.setRole(Role.USER);
-				user.setLanguage(Language.DE);
+				user.setRole(role);
+				user.setEnabled(enabled);
+				user.setLanguage(Language.EN);
+				user.setDefaultVat(19.00);
 
 				return save(user);
 			} catch (SaveFailedException ex) {
@@ -334,6 +341,34 @@ public class UserService implements IUserService {
 		User user = getById(id);
 		user.setProfilPicture(fileUploadService.save(file));
 		return update(user);
+	}
+	
+	public void createInitialUsers(String apiPassword) throws SaveFailedException{
+		User superadmin = new User();
+		superadmin.setEmail("superadmin@eviarc.com");
+		superadmin.setUsername("superadmin@eviarc.com");
+		superadmin.setFirstname("Superadmin");
+		superadmin.setLastname("Eviarc");
+		
+		superadmin.setPassword("$2a$10$V7c4F8TMpN6zUPC4llkuM.tvGp.HuHdoEmu2CqMS1IEHGyGEOUAWW");
+		superadmin.setRole(Role.SUPERADMIN);
+		superadmin.setEnabled(true);
+		superadmin.setLanguage(Language.EN);
+		superadmin.setDefaultVat(19.00);
+		this.save(superadmin);
+		
+		User api = new User();
+		api.setEmail("api@"+TenantContext.getTenant());
+		api.setUsername("api@"+TenantContext.getTenant());
+		api.setFirstname("Api");
+		api.setLastname(TenantContext.getTenant());
+		api.setPassword(
+				passwordEncoder.encode(apiPassword));
+		api.setRole(Role.API);
+		api.setEnabled(true);
+		api.setLanguage(Language.EN);
+		api.setDefaultVat(19.00);
+		this.save(api);
 	}
 
 }

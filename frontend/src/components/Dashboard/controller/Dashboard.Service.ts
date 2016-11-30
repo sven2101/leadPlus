@@ -37,17 +37,26 @@ class DashboardService {
     openLeads: Array<Process> = [];
     inContacts: Array<Process> = [];
     openOffers: Array<Process> = [];
+    doneOffers: Array<Process> = [];
     closedSales: Array<Process> = [];
+    elementToDelete: Array<Process> = [];
+    delementDropzoneVisibility: string = "hidden";
 
     openLeadsValue: number = 0;
     inContactsValue: number = 0;
     openOffersValue: number = 0;
+    doneOffersValue: number = 0;
     closedSalesValue: number = 0;
     SweetAlert: any;
     uibModal;
-
-    user: User;
     todos: Array<Process> = [];
+    dropzoneClass = {
+        lead: "none",
+        contact: "none",
+        offer: "none",
+        done: "none",
+        sale: "none",
+    };
 
     constructor(ProcessResource, toaster, $rootScope, $translate, WorkflowService, $uibModal, $q, SweetAlert) {
         this.processResource = ProcessResource.resource;
@@ -57,7 +66,6 @@ class DashboardService {
         this.translate = $translate;
         this.q = $q;
         this.SweetAlert = SweetAlert;
-        this.user = $rootScope.user;
         this.uibModal = $uibModal;
         this.initDashboard();
         this.refreshTodos();
@@ -91,8 +99,20 @@ class DashboardService {
             self.sumInContacts();
         });
         this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
-            self.openOffers = self.orderProcessByTimestamp(result, "offer");
+            let open: Array<Process> = new Array<Process>();
+            let done: Array<Process> = new Array<Process>();
+            for (let i = 0; i < result.length; i++) {
+                if (result[i].status === "OFFER" || result[i].status === "FOLLOWUP") {
+                    open.push(result[i]);
+                }
+                else if (result[i].status === "DONE") {
+                    done.push(result[i]);
+                }
+            }
+            self.openOffers = self.orderProcessByTimestamp(open, "offer");
             self.sumOffers();
+            self.doneOffers = self.orderProcessByTimestamp(done, "offer");
+            self.sumDoneOffers();
         });
         this.processResource.getLatestSales().$promise.then(function (result) {
             self.closedSales = result;
@@ -115,9 +135,17 @@ class DashboardService {
     sumOffers(): void {
         this.openOffersValue = 0;
         for (let i = 0; i < this.openOffers.length; i++) {
-            this.openOffersValue += this.openOffers[i].offer.offerPrice;
+            this.openOffersValue += this.openOffers[i].offer.netPrice;
         }
     }
+
+    sumDoneOffers(): void {
+        this.doneOffersValue = 0;
+        for (let i = 0; i < this.doneOffers.length; i++) {
+            this.doneOffersValue += this.doneOffers[i].offer.netPrice;
+        }
+    }
+
     sumSales(): void {
         this.closedSalesValue = 0;
         for (let i = 0; i < this.closedSales.length; i++) {
@@ -125,19 +153,46 @@ class DashboardService {
         }
     }
 
-    setSortableOptions(): any {
+    setSortableOptions(scope: any): any {
         let self: DashboardService = this;
         let sortableList = {
+            start: function (e, ui) {
+                let source = ui.item.sortable.sourceModel;
+                self.delementDropzoneVisibility = "show";
+                if (source === self.openLeads) {
+                    self.dropzoneClass.contact = "2px dashed grey";
+                    self.dropzoneClass.offer = "2px dashed grey";
+                }
+                else if (source === self.inContacts) {
+                    self.dropzoneClass.offer = "2px dashed grey";
+                }
+                else if (source === self.openOffers) {
+                    self.dropzoneClass.done = "2px dashed grey";
+                    self.dropzoneClass.sale = "2px dashed grey";
+                }
+                else if (source === self.doneOffers) {
+                    self.dropzoneClass.offer = "2px dashed grey";
+                    self.dropzoneClass.sale = "2px dashed grey";
+                }
+                else if (source === self.closedSales) {
+                    self.dropzoneClass.sale = "2px dashed grey";
+                }
+                scope.$apply();
+            },
             update: function (e, ui) {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
                 if ((self.openLeads === target && self.openOffers === source) ||
                     (self.openLeads === target && self.inContacts === source) ||
-                    (self.openLeads === source && self.closedSales === target) ||
+                    (self.openLeads === target && self.doneOffers === source) ||
                     (self.inContacts === target && self.openOffers === source) ||
+                    (self.inContacts === target && self.doneOffers === source) ||
                     (self.inContacts === target && self.closedSales === source) ||
+                    (self.doneOffers === target && self.openLeads === source) ||
+                    (self.doneOffers === target && self.inContacts === source) ||
                     (self.closedSales === target && self.inContacts === source) ||
+                    (self.closedSales === target && self.openLeads === source) ||
                     target === source) {
 
                     ui.item.sortable.cancel();
@@ -147,14 +202,29 @@ class DashboardService {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
-                if (self.closedSales === target && self.openOffers === source) {
+
+                self.delementDropzoneVisibility = "hidden";
+
+                self.dropzoneClass.lead = "none";
+                self.dropzoneClass.contact = "none";
+                self.dropzoneClass.offer = "none";
+                self.dropzoneClass.done = "none";
+                self.dropzoneClass.sale = "none";
+
+                if (self.closedSales === target && self.openOffers === source
+                    || self.closedSales === target && self.doneOffers === source) {
                     self.startSaleTransformation(item).then(function (result) {
-                        if (result === false) {
+                        if (result === undefined) {
+                            item.sale = undefined;
                             target.splice(target.indexOf(item), 1);
                             source.push(item);
+                        } else {
+                            let index = target.indexOf(item);
+                            target[index] = result;
                         }
                         self.updateDashboard("sale");
                     }, function (result) {
+                        item.sale = undefined;
                         target.splice(target.indexOf(item), 1);
                         source.push(item);
                         self.updateDashboard("sale");
@@ -163,12 +233,17 @@ class DashboardService {
                 else if (self.openOffers === target && self.openLeads === source
                     || self.openOffers === target && self.inContacts === source) {
                     self.startOfferTransformation(item).then(function (result) {
-                        if (result === false) {
+                        if (result === undefined) {
+                            item.offer = undefined;
                             target.splice(target.indexOf(item), 1);
                             source.push(item);
+                        } else {
+                            let index = target.indexOf(item);
+                            target[index] = result;
                         }
                         self.updateDashboard("offer");
                     }, function (result) {
+                        item.offer = undefined;
                         target.splice(target.indexOf(item), 1);
                         source.push(item);
                         self.updateDashboard("offer");
@@ -176,14 +251,26 @@ class DashboardService {
                 }
                 else if (self.inContacts === target && self.openLeads === source) {
                     self.inContact(item);
+                    item.processor = self.rootScope.user;
                     self.updateDashboard("lead");
-                } else if (isNullOrUndefined(target)) {
+                }
+                else if (self.doneOffers === target && self.openOffers === source) {
+                    self.doneOffer(item);
+                    item.processor = null;
+                    self.updateDashboard("offer");
+                }
+                else if (self.openOffers === target && self.doneOffers === source) {
+                    self.doneOffer(item);
+                    item.processor = self.rootScope.user;
+                    self.updateDashboard("offer");
+                }
+                else if (target === self.elementToDelete) {
                     let title = "";
                     let text = "";
                     if (source === self.openLeads || source === self.inContacts) {
                         title = self.translate.instant("LEAD_CLOSE_LEAD");
                         text = self.translate.instant("LEAD_CLOSE_LEAD_REALLY");
-                    } else if (source === self.openOffers) {
+                    } else if (source === self.openOffers || source === self.doneOffers) {
                         title = self.translate.instant("OFFER_CLOSE_OFFER");
                         text = self.translate.instant("OFFER_CLOSE_OFFER_REALLY");
                     }
@@ -198,12 +285,16 @@ class DashboardService {
                     }, function (isConfirm) {
                         if (isConfirm) {
                             self.closeProcess(item, source);
-                            source.splice(source.indexOf(item), 1);
+                            target.splice(source.indexOf(item), 1);
                             let todoElement: Process = findElementById(self.todos, item.id) as Process;
                             if (!isNullOrUndefined(todoElement)) {
                                 self.todos.splice(self.todos.indexOf(todoElement), 1);
                                 self.rootScope.$broadcast("todosChanged", self.todos);
                             }
+                        }
+                        else {
+                            target.splice(target.indexOf(item), 1);
+                            source.push(item);
                         }
                     });
                 }
@@ -223,50 +314,49 @@ class DashboardService {
         }
         else if (type === "offer") {
             this.openOffers = this.orderProcessByTimestamp(this.openOffers, "offer");
+            this.doneOffers = this.orderProcessByTimestamp(this.doneOffers, "offer");
             this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead");
             this.inContacts = this.orderProcessByTimestamp(this.inContacts, "lead");
             this.sumLeads();
             this.sumInContacts();
+            this.sumDoneOffers();
             this.sumOffers();
         } else if (type === "sale") {
-            this.closedSales = this.orderProcessByTimestamp(this.closedSales, "sale");
+            this.closedSales = this.orderProcessByTimestamp(this.closedSales, "sale").reverse();
+            this.doneOffers = this.orderProcessByTimestamp(this.doneOffers, "offer");
             this.openOffers = this.orderProcessByTimestamp(this.openOffers, "offer");
             this.sumOffers();
+            this.sumDoneOffers();
             this.sumSales();
         }
     }
 
-    startOfferTransformation(process: Process): IPromise<boolean> {
-        let defer = this.q.defer();
-        this.workflowService.startOfferTransformation(process).then(function (result) {
+    startOfferTransformation(process: Process): IPromise<Process> {
+        let defer: IDefer<Process> = this.q.defer();
+        this.workflowService.startOfferTransformation(process).then(function (result: Process) {
             defer.resolve(result);
-        }, function () {
-            defer.reject(false);
+        }, function (error) {
+            defer.reject(error);
         });
         return defer.promise;
     }
 
-    startSaleTransformation(process: Process): IPromise<boolean> {
+    startSaleTransformation(process: Process): IPromise<Process> {
         let defer = this.q.defer();
         this.workflowService.startSaleTransformation(process).then(function (result) {
             defer.resolve(result);
         }, function () {
-            defer.reject(false);
+            defer.reject(undefined);
         });
         return defer.promise;
     }
 
     inContact(process: Process) {
-        let self = this;
-        this.processResource.setStatus({
-            id: process.id
-        }, "INCONTACT").$promise.then(function () {
-            self.toaster.pop("success", "", self.translate
-                .instant("COMMON_TOAST_SUCCESS_INCONTACT"));
-            process.status = "INCONTACT";
-            self.sumLeads();
-            self.sumInContacts();
-        });
+        this.workflowService.inContact(process);
+    }
+
+    doneOffer(process: Process) {
+        this.workflowService.doneOffer(process);
     }
 
     closeProcess(process: Process, source: any) {
@@ -290,6 +380,11 @@ class DashboardService {
                 self.sumOffers();
                 message = self.translate.instant("COMMON_TOAST_SUCCESS_CLOSE_OFFER");
             }
+            else if (source === self.doneOffers) {
+                self.rootScope.offersCount -= 1;
+                self.sumDoneOffers();
+                message = self.translate.instant("COMMON_TOAST_SUCCESS_CLOSE_OFFER");
+            }
             self.toaster.pop("success", "", message);
             process.status = "CLOSED";
         });
@@ -303,6 +398,9 @@ class DashboardService {
     }
     getOpenOffers(): Array<Process> {
         return this.openOffers;
+    }
+    getDoneOffers(): Array<Process> {
+        return this.doneOffers;
     }
     getClosedSales(): Array<Process> {
         return this.closedSales;

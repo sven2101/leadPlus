@@ -3,7 +3,7 @@
 		<div class="ibox float-e-margins">
 			<div class="ibox-title">
 				<span class="label label-success pull-right">{{ daterange | translate }}</span>
-				<h1>{{ 'DETAIL_STATISTIC_USERSTATISTIC' | translate }} {{userobj.username}}</h1>
+				<h5>{{ 'DETAIL_STATISTIC_USERSTATISTIC' | translate }} {{getNameOfUser(userobj)}}</h5>
 			</div>
 			<div class="ibox-content" id="ibox-content">
 				<highchart id="SingleProductColumnChart" config="chart.chartConfig"></highchart>
@@ -14,6 +14,39 @@
 		<div class="ibox float-e-margins">
 			<div class="ibox-title">
 				<span class="label label-success pull-right">{{ daterange | translate }}</span>
+				<h5>{{ 'DETAIL_STATISTIC_SUCCESS_INDICATOR' | translate }}</h5>
+			</div>
+			<div class="ibox-content">
+				<ul class="stat-list m-t-lg">
+					<li>
+						<h2 class="no-margins">{{calculateRate(userStatistic.succeededLeads,userStatistic.countLead)| number:2}}%</h2>
+						<small>{{ 'STATISTIC_SALES_OF_LEADS' | translate }} ({{userStatistic.succeededLeads}}/{{userStatistic.countLead}})</small>
+						<div class="progress progress-mini">
+							<div ng-style="{'width':calculateRate(userStatistic.succeededLeads,userStatistic.countLead)+'%'}" class="progress-bar progress-bar-danger"></div>
+						</div>
+					</li>
+					<li>
+						<h2 class="no-margins">{{calculateRate(userStatistic.succeededOffers,userStatistic.countOffer)| number:2}}%</h2>
+						<small>{{ 'STATISTIC_SALES_OF_OFFERS' | translate }} ({{userStatistic.succeededOffers}}/{{userStatistic.countOffer}})</small>
+						<div class="progress progress-mini">
+							<div ng-style="{'width':calculateRate(userStatistic.succeededOffers,userStatistic.countOffer)+'%'}" class="progress-bar progress-bar-warning"></div>
+						</div>
+					</li>
+					<li>
+						<h2 class="no-margins">{{calculateRate(userStatistic.completedProcess,userStatistic.countProcess)| number:2}}%</h2>
+						<small>{{ 'STATISTIC_EARNING_RATE_PROCESS' | translate }} ({{userStatistic.completedProcess}}/{{userStatistic.countProcess}})</small>
+						<div class="progress progress-mini">
+							<div ng-style="{'width':calculateRate(userStatistic.completedProcess,userStatistic.countProcess)+'%'}" class="progress-bar progress-bar-success"></div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3">
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<span class="label label-success pull-right">{{ daterange | translate }}</span>
 				<h5>{{ 'DETAIL_STATISTIC_REALISED_PROFIT' | translate }}</h5>
 			</div>
 			<div class="ibox-content">
@@ -21,19 +54,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-lg-6">
-		<div class="ibox float-e-margins">
-			<div class="ibox-title">
-				<span class="label label-success pull-right">{{ daterange | translate }}</span>
-				<h5>{{ 'DETAIL_STATISTIC_PROFIT_PER_LEAD' | translate }}</h5>
-			</div>
-			<div class="ibox-content">
-				<h1 class="no-margins" ng-if="userStatistic.countLead>0">{{userStatistic.profit/userStatistic.countLead | currency:'\u20AC'}}</h1>
-				<h1 class="no-margins" ng-if="userStatistic.countLead<=0">{{0 | currency:'\u20AC'}}</h1>
-			</div>
-		</div>
-	</div>
-	<div class="col-lg-6">
+	<div class="col-lg-3">
 		<div class="ibox float-e-margins">
 			<div class="ibox-title">
 				<span class="label label-success pull-right">{{ daterange | translate }}</span>
@@ -44,32 +65,61 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-lg-6">
-		<div class="ibox float-e-margins">
-			<div class="ibox-title">
-				<span class="label label-success pull-right">{{ daterange | translate }}</span>
-				<h5>{{ 'DETAIL_STATISTIC_TURNOVER_PER_LEAD' | translate }}</h5>
-			</div>
-			<div class="ibox-content">
-				<h1 class="no-margins" ng-if="userStatistic.countLead>0">{{userStatistic.turnover/userStatistic.countLead | currency:'\u20AC'}}</h1>
-				<h1 class="no-margins" ng-if="userStatistic.countLead<=0">{{0 | currency:'\u20AC'}}</h1>
-			</div>
-		</div>
-	</div>
 </div>
 <div class="row animated fadeInRight">
 	<div class="col-lg-6">
 		<div class="ibox float-e-margins">
 			<div class="ibox-title">
 				<span class="label label-success pull-right">{{ daterange | translate }}</span>
-				<h5>{{ 'STATISTIC_CONVERSIONRATE' | translate }}</h5>
+				<h5>{{ 'DETAIL_STATISTIC_PROFIT_PER_LEAD' | translate }} & {{ 'OFFER_OFFER' | translate }}</h5>
 			</div>
 			<div class="ibox-content">
-				<h1 class="no-margins" ng-if="userStatistic.countLead>0">{{(userStatistic.countSale/userStatistic.countLead)*100 | number:2}}%</h1>
-				<h1 class="no-margins" ng-if="userStatistic.countLead<=0">{{0 | number:2}}%</h1>
+				<div class="row">
+					<div class="col-md-12">
+						<h1 class="no-margins" ng-if="userStatistic.countLead>0">{{userStatistic.profit/userStatistic.countLead | currency:'\u20AC'}}</h1>
+						<h1 class="no-margins" ng-if="userStatistic.countLead<=0">{{0 | currency:'\u20AC'}}</h1>
+						<small>{{ 'PROFIT_PER_LEAD' | translate }}</small>
+					</div>
+				</div>
+				<br/>
+				<div class="row">
+					<div class="col-md-12">
+						<h1 class="no-margins" ng-if="userStatistic.countOffer>0">{{userStatistic.profit/userStatistic.countOffer | currency:'\u20AC'}}</h1>
+						<h1 class="no-margins" ng-if="userStatistic.countOffer<=0">{{0 | currency:'\u20AC'}}</h1>
+						<small>{{ 'PROFIT_PER_OFFER' | translate }}</small>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
+	<div class="col-lg-6">
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<span class="label label-success pull-right">{{ daterange | translate }}</span>
+				<h5>{{ 'DETAIL_STATISTIC_TURNOVER_PER_LEAD' | translate }} & {{ 'OFFER_OFFER' | translate }}</h5>
+			</div>
+			<div class="ibox-content">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 class="no-margins" ng-if="userStatistic.countLead>0">{{userStatistic.turnover/userStatistic.countLead | currency:'\u20AC'}}</h1>
+						<h1 class="no-margins" ng-if="userStatistic.countLead<=0">{{0 | currency:'\u20AC'}}</h1>
+						<small>{{ 'TURNOVER_PER_LEAD' | translate }}</small>
+					</div>
+				</div>
+				<br/>
+				<div class="row">
+					<div class="col-md-12">
+						<h1 class="no-margins" ng-if="userStatistic.countOffer>0">{{userStatistic.turnover/userStatistic.countOffer | currency:'\u20AC'}}</h1>
+						<h1 class="no-margins" ng-if="userStatistic.countOffer<=0">{{0 | currency:'\u20AC'}}</h1>
+						<small>{{ 'TURNOVER_PER_OFFER' | translate }}</small>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--
+<div class="row animated fadeInRight">
 	<div class="col-lg-6">
 		<div class="ibox float-e-margins">
 			<div class="ibox-title">
@@ -82,3 +132,4 @@
 		</div>
 	</div>
 </div>
+-->

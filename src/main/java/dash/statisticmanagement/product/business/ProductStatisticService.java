@@ -14,9 +14,6 @@
 
 package dash.statisticmanagement.product.business;
 
-import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
-import static dash.Constants.STATISTIC_NOT_FOUND;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +22,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import dash.exceptions.NotFoundException;
-import dash.processmanagement.request.Request;
+import dash.common.AbstractWorkflow;
+import dash.common.CommonUtils;
+import dash.processmanagement.domain.Process;
 import dash.productmanagement.domain.OrderPosition;
 import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.DateRange;
@@ -38,42 +36,61 @@ public class ProductStatisticService extends AbstractStatisticService {
 
 	private static final Logger logger = Logger.getLogger(ProductStatisticService.class);
 
-	@Override
-	public List<Double> buildStatistic(Map<String, Double> calendarMap, List<Request> requests, Long elementId, StatisticHelper statisticHelper) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<ProductStatistic> getTopProductStatstic(Workflow workflow, DateRange dateRange, Long elementId)
-			throws NotFoundException {
-		Map<Long, ProductStatistic> productMap = new HashMap<>();
+	public Map<String, List<ProductStatistic>> getTopProductStatstic(Workflow workflow, DateRange dateRange,
+			Long elementId) {
+		Map<String, Map<Long, ProductStatistic>> productMap = new HashMap<>();
+		productMap.put(ALL_STATISTIC_KEY, new HashMap<Long, ProductStatistic>());
 		if (workflow == null || dateRange == null) {
-			NotFoundException pnfex = new NotFoundException(STATISTIC_NOT_FOUND);
-			logger.error(STATISTIC_NOT_FOUND + this.getClass().getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
-			throw pnfex;
+			IllegalArgumentException ex = new IllegalArgumentException(
+					"Workflow parameter or daterange parmeter is null");
+			logger.error("Statistic cannot be created in " + this.getClass().getSimpleName() + " because of "
+					+ ex.getMessage(), ex);
+			throw ex;
 		}
 		StatisticHelper statisticHelper = new StatisticHelper(dateRange);
-		final List<Request> requests = getStatisticBetween(this.getRepositoryByWorkflow(workflow),
-				statisticHelper.getFrom(), statisticHelper.getUntil());
+		final List<Process> processes = processService.getProcessesBetweenTimestamp(statisticHelper.getFrom(),
+				statisticHelper.getUntil(), getAttributeByWorkflow(workflow));
 
-		for (Request request : requests) {
-			for (OrderPosition orderPosition : request.getOrderPositions()) {
-				if (elementId != null && !orderPosition.getProduct().getId().equals(elementId))
-					continue;
-				if (!productMap.containsKey(orderPosition.getProduct().getId())) {
-					ProductStatistic productStatistic = new ProductStatistic();
-					productStatistic.setProduct(orderPosition.getProduct());
-					productMap.put(orderPosition.getProduct().getId(), productStatistic);
+		for (Process process : processes) {
+			AbstractWorkflow workflowUnit = getWorkflowUnitByWorkflow(workflow, process);
+			if (workflowUnit != null)
+				for (OrderPosition orderPosition : workflowUnit.getOrderPositions()) {
+					if (elementId != null && !orderPosition.getProduct().getId().equals(elementId))
+						continue;
+					addToMapKey(ALL_STATISTIC_KEY, orderPosition, productMap);
+					if (process.getSource() != null && !CommonUtils.isNullOrEmpty(process.getSource().getName())) {
+						addToMapKey(process.getSource().getName(), orderPosition, productMap);
+					}
 				}
-				productMap.get(orderPosition.getProduct().getId()).addCount(orderPosition.getAmount());
-				productMap.get(orderPosition.getProduct().getId())
-						.addTurnover(orderPosition.getPrice() * orderPosition.getAmount());
-				productMap.get(orderPosition.getProduct().getId())
-						.addDiscount(orderPosition.getDiscount() * orderPosition.getAmount());
-				productMap.get(orderPosition.getProduct().getId()).addOrderPosition();
-			}
 		}
-		return new ArrayList<>(productMap.values());
+		Map<String, List<ProductStatistic>> returnMap = new HashMap<>();
+		for (Map.Entry<String, Map<Long, ProductStatistic>> entry : productMap.entrySet())
+			returnMap.put(entry.getKey(), new ArrayList<>(entry.getValue().values()));
+		return returnMap;
 	}
 
+	private void addToMapKey(String sourceKey, OrderPosition orderPosition,
+			Map<String, Map<Long, ProductStatistic>> productMap) {
+		if (!productMap.containsKey(sourceKey)) {
+			productMap.put(sourceKey, new HashMap<>());
+		}
+
+		if (!productMap.get(sourceKey).containsKey(orderPosition.getProduct().getId())) {
+			ProductStatistic productStatistic = new ProductStatistic();
+			productStatistic.setProduct(orderPosition.getProduct());
+			productMap.get(sourceKey).put(orderPosition.getProduct().getId(), productStatistic);
+		}
+		productMap.get(sourceKey).get(orderPosition.getProduct().getId()).addCount(orderPosition.getAmount());
+		productMap.get(sourceKey).get(orderPosition.getProduct().getId())
+				.addTurnover(orderPosition.getNetPrice() * orderPosition.getAmount());
+		productMap.get(sourceKey).get(orderPosition.getProduct().getId())
+				.addDiscount(orderPosition.getDiscount() * orderPosition.getAmount());
+		productMap.get(sourceKey).get(orderPosition.getProduct().getId()).addOrderPosition();
+	}
+
+	@Override
+	public Map<String, List<Double>> buildStatistic(Map<String, Double> calendarMap, List<Process> processes,
+			Long elementId, StatisticHelper statisticHelper, Workflow workflow) {
+		return null;
+	}
 }

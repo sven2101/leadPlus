@@ -68,7 +68,7 @@ class AppController {
         if (todo.status === "OPEN" || todo.status === "INCONTACT") {
             this.location.path("/leads/" + todo.id);
         }
-        else if (todo.status === "OFFER" || todo.status === "FOLLOWUP") {
+        else if (todo.status === "OFFER" || todo.status === "FOLLOWUP" || todo.status === "DONE") {
             this.location.path("/offers/" + todo.id);
         }
     }
@@ -167,8 +167,8 @@ class AppController {
             let temp = array[i];
             if (!isNullOrUndefined(temp) && !isNaN(temp.amount)
                 && !isNullOrUndefined(temp.product)
-                && !isNaN(temp.product.priceNetto)) {
-                sum += temp.amount * temp.product.priceNetto;
+                && !isNaN(temp.product.netPrice)) {
+                sum += temp.amount * temp.product.netPrice;
             }
         }
         return sum;

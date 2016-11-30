@@ -15,7 +15,7 @@
 "use strict";
 
 angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
-    function($routeProvider, $httpProvider) {
+    function ($routeProvider, $httpProvider) {
         $routeProvider
             .when("/",
             {
@@ -63,7 +63,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controller: "StatisticController",
                 controllerAs: "statisticCtrl",
                 authenticated: true,
-                package: "pro"
+                package: "basic"
             })
             .when("/settings",
             {
@@ -105,7 +105,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             })
             .when("/tenants/registration",
             {
-                templateUrl: "components/Tenant/Registration/view/Registration.html",
+                templateUrl: "components/Tenant/registration/view/Registration.html",
                 controller: "RegistrationController",
                 controllerAs: "registrationCtrl"
             })
@@ -158,10 +158,10 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
-        $httpProvider.interceptors.push(function($q, $location, $rootScope) {
+        $httpProvider.interceptors.push(function ($q, $location, $rootScope) {
 
             return {
-                "responseError": function(rejection) {
+                "responseError": function (rejection) {
                     let defer = $q.defer();
                     if (rejection.status < 300) {
                         defer.resolve(rejection);
@@ -185,9 +185,8 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
         });
 
     }])
-    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId,
-        function($location, $http, $rootScope, Auth, $cookies) {
-
+    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId,
+        function ($location, $http, $rootScope, Auth, $cookies, $injector) {
             try {
                 $rootScope.user = $cookies.getObject("user");
                 $rootScope.tenant = $cookies.getObject("tenant");
@@ -200,12 +199,17 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             if (!isNullOrUndefined($rootScope.user) && !isNullOrUndefined($rootScope.tenant)) {
                 $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
                 $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
+                let dashboardService: DashboardService = $injector.get("DashboardService");
+                dashboardService.refreshTodos();
             }
 
-            $rootScope.$on("$routeChangeStart", function(event, next, current) {
+            $rootScope.$on("$routeChangeStart", function (event, next, current) {
                 try {
-                    $rootScope.user = $cookies.getObject("user");
-                    $rootScope.tenant = $cookies.getObject("tenant");
+                    if (isNullOrUndefined($rootScope.user) || isNullOrUndefined($rootScope.tenant)) {
+                        $rootScope.user = $cookies.getObject("user");
+                        $rootScope.tenant = $cookies.getObject("tenant");
+                    }
+
                 } catch (error) {
                     $cookies.remove("user");
                     $cookies.remove("tenant");
@@ -232,7 +236,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                     }
                 }
             });
-            $rootScope.logout = function() {
+            $rootScope.logout = function () {
                 Auth.logout();
             };
         }]);

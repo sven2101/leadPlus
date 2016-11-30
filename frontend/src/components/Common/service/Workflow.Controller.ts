@@ -34,8 +34,7 @@ class WorkflowController extends AbstractWorkflow {
 
     uibModalInstance;
 
-    editWorkflowUnit: any;
-    process: Process;
+    editWorkflowUnit: Offer | Sale;
     template: Template = new Template();
 
     templates: Array<Template> = [];
@@ -49,15 +48,14 @@ class WorkflowController extends AbstractWorkflow {
     dashboardService: DashboardService;
     fileService: FileService;
 
-    currentOrderPositions: Array<OrderPosition>;
     currentProductId = "-1";
     currentProductAmount = 1;
     currentNotification: Notification;
 
     editProcess: Process;
     edit: boolean;
-    editEmail: boolean;
-    editable: boolean;
+    editEmail: boolean = true;
+    editable: boolean = true;
 
     leadService: LeadService;
     offerService: OfferService;
@@ -76,29 +74,15 @@ class WorkflowController extends AbstractWorkflow {
 
     window;
 
-    constructor(process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService,
+    constructor(process: Process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService,
         WorkflowService, LeadService, OfferService, SaleService, DashboardService, FileService, $rootScope, $sce, $window, $scope) {
         super(WorkflowService, $sce, FileService, $scope);
+
         let self = this;
         this.rootScope = $rootScope;
         this.scope = $scope;
-        this.process = process;
+
         this.type = type;
-        if (this.type === "offer") {
-            this.editWorkflowUnit = new Offer();
-            this.editWorkflowUnit = this.process.offer;
-            this.currentNotification = new Notification();
-            this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
-            this.editEmail = false;
-            this.editable = true;
-        }
-        else if (this.type === "sale") {
-            this.wizardOnClick(6);
-            this.editWorkflowUnit = new Sale();
-            this.editWorkflowUnit = this.process.sale;
-            this.editEmail = true;
-            this.editable = false;
-        }
         this.uibModalInstance = $uibModalInstance;
         this.notificationService = NotificationService;
 
@@ -141,27 +125,26 @@ class WorkflowController extends AbstractWorkflow {
         if (!isNullOrUndefined(this.saleEditForm)) {
             this.saleEditForm.$setPristine();
         }
-
-        this.edit = true;
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
         this.editProcess = process;
-
         if (this.type === "offer") {
-            this.currentOrderPositions = deepCopy(this.editProcess.offer.orderPositions);
             this.customerSelected = this.editProcess.offer.customer.id > 0;
             this.selectedCustomer = this.editProcess.offer.customer;
-            this.editWorkflowUnit = deepCopy(this.editProcess.offer);
+            this.editWorkflowUnit = this.editProcess.offer;
+            this.currentNotification = new Notification();
+            this.currentNotification.recipients = this.editWorkflowUnit.customer.email;
         } else if (this.type === "sale") {
-            this.currentOrderPositions = deepCopy(this.editProcess.sale.orderPositions);
             this.customerSelected = this.editProcess.sale.customer.id > 0;
             this.selectedCustomer = this.editProcess.sale.customer;
-            this.editWorkflowUnit = deepCopy(this.editProcess.sale);
+            this.editWorkflowUnit = this.editProcess.sale;
+            this.wizardOnClick(6);
+            this.editEmail = false;
         }
     }
 
-    close(result: boolean) {
-        this.uibModalInstance.close(result);
+    close(result: boolean, process: Process) {
+        this.uibModalInstance.close(process);
         if (!result && (this.editProcess.status === Status.OPEN || this.editProcess.status === Status.INCONTACT)) {
             this.editProcess.offer = undefined;
         } else if (!result && (this.editProcess.status === Status.OFFER || this.editProcess.status === Status.FOLLOWUP)) {
@@ -170,17 +153,18 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     calculateProfit() {
-        this.editWorkflowUnit.saleProfit = this.editWorkflowUnit.saleTurnover - this.editWorkflowUnit.saleCost;
+        if (!isNullOrUndefined(this.editWorkflowUnit["saleTurnover"]) && !isNullOrUndefined(this.editWorkflowUnit["saleCost"])) {
+            let tempSale = this.editWorkflowUnit as Sale;
+            tempSale.saleProfit = tempSale.saleTurnover - tempSale.saleCost;
+            this.editWorkflowUnit = tempSale;
+        }
     }
-
     generate(templateId: string, offer: Offer) {
         if (Number(templateId) === -1) {
             this.currentNotification.content = "";
             this.currentNotification.id = null;
         } else {
-            offer.orderPositions = this.currentOrderPositions;
-            let self = this;
-            this.templateService.generate(templateId, offer, this.currentNotification).then((result) => self.currentNotification.content = result.content, (error) => handleError(error));
+            this.templateService.generate(templateId, offer, this.currentNotification).then((result) => this.currentNotification = result, (error) => handleError(error));
         }
     }
 
@@ -207,73 +191,68 @@ class WorkflowController extends AbstractWorkflow {
     }
 
     existsInvoiceNumber() {
-        let self = this;
-        this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function (result: Sale) {
-            if (!isNullOrUndefined(result)) {
-                self.invoiceNumberAlreadyExists = true;
-            } else {
-                self.invoiceNumberAlreadyExists = false;
-            }
-        });
+        if (this.editWorkflowUnit instanceof Sale) {
+            let self = this;
+            this.saleService.getSaleByInvoiceNumber(this.editWorkflowUnit.invoiceNumber).then(function (result: Sale) {
+                if (!isNullOrUndefined(result)) {
+                    self.invoiceNumberAlreadyExists = true;
+                } else {
+                    self.invoiceNumberAlreadyExists = false;
+                }
+            });
+        }
+
     }
 
-    send() {
+    async send() {
         let self = this;
-        this.process.offer = this.editWorkflowUnit;
-        this.process.offer.orderPositions = this.currentOrderPositions;
-        let process = this.process;
-        this.currentNotification.notificationType = NotificationType.OFFER;
-        let notification = this.currentNotification;
-        this.notificationService.sendNotification(notification).then(() => {
-            self.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
-                self.notificationService.saveFileUpload(notification.attachment).then((resultFileUpload) => {
-                    notification.attachment = resultFileUpload;
-                    if (isNullOrUndefined(process.notifications)) {
-                        process.notifications = [];
-                    }
-                    process.notifications.push(notification);
-                    self.workflowService.saveProcess(process).then((resultProcess) => {
-                        self.process.notifications = resultProcess.notifications;
-                        self.rootScope.$broadcast("deleteRow", resultProcess);
-                        self.close(true);
-                    });
-                });
+        let process = this.editProcess;
+        process.notifications = process.notifications ? process.notifications : [];
 
-            });
-        });
+        let notification: Notification = deepCopy(this.currentNotification);
+        notification.attachments = notification.attachments ? notification.attachments : [];
+        notification.notificationType = NotificationType.OFFER;
+        notification.id = undefined;
+        await this.workflowService.addLeadToOffer(process);
+        let promises: Array<Promise<void>> = notification.attachments ?
+            notification.attachments
+                .filter(a => isNullOrUndefined(a.id))
+                .map(a => self.fileService.saveAttachment(a)) : [];
+        for (let p of promises) {
+            await p;
+        }
+        try {
+            await this.notificationService.sendNotification(notification);
+        } catch (error) {
+            notification.notificationType = NotificationType.ERROR;
+        }
+        notification.attachments.forEach(a => a.id = undefined);
+        process.notifications.push(notification);
+        let resultProcess = await this.workflowService.saveProcess(process);
+        self.rootScope.$broadcast("deleteRow", process);
+        self.close(true, resultProcess);
     }
 
     save() {
+        let process = this.editProcess;
         if (this.type === "offer") {
             let self = this;
-            this.process.offer = this.editWorkflowUnit;
-            this.process.offer.orderPositions = this.currentOrderPositions;
-            let process = this.process;
-            this.workflowService.addLeadToOffer(process).then(function (tmpprocess: Process) {
-                self.rootScope.$broadcast("deleteRow", tmpprocess);
-                self.close(true);
+
+            let process = this.editProcess;
+            this.workflowService.addLeadToOffer(process).then((resultProcess) => {
+                self.rootScope.$broadcast("deleteRow", resultProcess);
+                self.close(true, resultProcess);
             });
         } else if (this.type === "sale") {
-            this.process.sale = this.editWorkflowUnit;
-            this.process.sale.orderPositions = this.currentOrderPositions;
+            let process = this.editProcess;
             let self = this;
-            this.workflowService.addOfferToSale(this.process).then(function (tmpprocess: Process) {
-                self.rootScope.$broadcast("deleteRow", self.process);
-                self.close(true);
+            this.workflowService.addOfferToSale(process).then((resultProcess) => {
+                self.rootScope.$broadcast("deleteRow", resultProcess);
+                self.close(true, resultProcess);
             });
         }
     }
 
-    getTheFiles($files) {
-        let self = this;
-        this.notificationService.setAttachmentToNotification($files, this.currentNotification).then(() => {
-            try {
-                self.scope.$digest();
-            } catch (error) {
-                handleError(error);
-            }
-        });
-    }
 
     setFormerNotification(notificationId: number) {
         if (Number(notificationId) === -1) {

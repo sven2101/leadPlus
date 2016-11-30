@@ -215,25 +215,25 @@ class StatisticResource {
     constructor($resource) {
         this.resource = $resource("/api/rest/processes/statistics", {}, {
             getWorkflowStatistic: {
-                url: "/api/rest/processes/statistics/workflow/:workflow/daterange/:dateRange", method: "GET"
+                url: "/api/rest/processes/statistics/workflow/:workflow/daterange/:dateRange/source/:source", method: "GET", isArray: true
             },
             getProfitStatistic: {
-                url: "/api/rest/processes/statistics/profit/:workflow/daterange/:dateRange", method: "GET"
+                url: "/api/rest/processes/statistics/profit/:workflow/daterange/:dateRange/source/:source", method: "GET", isArray: true
             },
             getTurnoverStatistic: {
-                url: "/api/rest/processes/statistics/turnover/:workflow/daterange/:dateRange", method: "GET"
+                url: "/api/rest/processes/statistics/turnover/:workflow/daterange/:dateRange/source/:source", method: "GET", isArray: true
             },
             getProductStatistic: {
-                url: "/api/rest/processes/statistics/product/:workflow/daterange/:dateRange", method: "GET", isArray: true
+                url: "/api/rest/processes/statistics/product/:workflow/daterange/:dateRange/source/:source", method: "GET", isArray: true
             },
             getSingleProductStatistic: {
-                url: "/api/rest/processes/statistics/product/:workflow/daterange/:dateRange/id/:id", method: "GET"
+                url: "/api/rest/processes/statistics/product/:workflow/daterange/:dateRange/source/:source/id/:id", method: "GET"
             },
             getUserStatistic: {
-                url: "/api/rest/processes/statistics/user/daterange/:dateRange", method: "GET", isArray: true
+                url: "/api/rest/processes/statistics/user/daterange/:dateRange/source/:source", method: "GET", isArray: true
             },
             getSingleUserStatistic: {
-                url: "/api/rest/processes/statistics/user/daterange/:dateRange/id/:id", method: "GET"
+                url: "/api/rest/processes/statistics/user/daterange/:dateRange/source/:source/id/:id", method: "GET"
             }
         });
     }
@@ -310,9 +310,10 @@ class SignupResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/registrations", {}, {
-            signup: { url: "/api/rest/registrations", method: "POST" },
+            signup: { url: "/api/rest/registrations", method: "POST", headers: { "Content-Type": "application/json" } },
             uniqueUsername: { url: "/api/rest/registrations/unique/username", method: "POST", headers: { "Content-Type": "application/json" } },
-            uniqueEmail: { url: "/api/rest/registrations/unique/email", method: "POST", headers: { "Content-Type": "application/json" } }
+            uniqueEmail: { url: "/api/rest/registrations/unique/email", method: "POST", headers: { "Content-Type": "application/json" } },
+            init: { url: "/api/rest/registrations/init", method: "POST", headers: { "Content-Type": "application/json" } }
         });
     }
 }
@@ -331,7 +332,7 @@ class FileResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/files", {}, {
-            createFileUpload: { url: "/api/rest/files", method: "POST" },
+            save: { url: "/api/rest/files", method: "POST" },
             getFileUploadById: { url: "/api/rest/files/:id", method: "GET" },
             getContentByFileUploadId: { url: "/api/rest/files/content/:id", method: "GET", responseType: "arraybuffer" }
         });
@@ -431,5 +432,27 @@ class TenantResource {
         });
     }
 }
-
 angular.module(moduleTenantResource, [ngResourceId]).service(TenantResourceId, TenantResource);
+// ----------------------------------------------------------------------------------------
+const SourceResourceId: string = "SourceResource";
+
+class SourceResource {
+
+    private $inject = [$resourceId];
+
+    resource: any;
+
+    constructor($resource) {
+        this.resource = $resource("/api/rest/source", {}, {
+            getSourceById: { url: "/api/rest/source/:id", method: "GET" },
+            getAllSources: { url: "/api/rest/source", method: "GET", isArray: true },
+            createSource: { url: "/api/rest/source", method: "POST" },
+            updateSource: { url: "/api/rest/source", method: "PUT" },
+            deleteSource: { url: "/api/rest/source", method: "DELETE" }
+        });
+    }
+}
+
+angular.module(moduleSourceResource, [ngResourceId]).service(SourceResourceId, SourceResource);
+
+

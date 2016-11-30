@@ -21,9 +21,10 @@ const UserDetailControllerId: string = "UserDetailController";
 
 class UserDetailController {
 
-    $inject = [$routeParamsId, UserResourceId, StatisticServiceId, $scopeId, $translateId];
+    $inject = [$routeParamsId, UserResourceId, StatisticServiceId, SourceServiceId, $scopeId, $translateId];
 
     statisticService: StatisticService;
+    sourceService: SourceService;
     userResource;
     routeParams;
     currentUser: User;
@@ -32,12 +33,15 @@ class UserDetailController {
     userStatisticColumnChart: ColumnChart;
     translate;
     dateRange: string;
+    source: string;
 
 
-    constructor($routeParams, UserResource, StatisticService, $scope, $translate) {
+    constructor($routeParams, UserResource, StatisticService, SourceService, $scope, $translate) {
         this.statisticService = StatisticService;
+        this.sourceService = SourceService;
         this.userResource = UserResource.resource;
         this.dateRange = "ALL";
+        this.source = "ALL";
         this.routeParams = $routeParams;
         this.currentUserId = this.routeParams.userId;
         this.translate = $translate;
@@ -49,12 +53,16 @@ class UserDetailController {
         this.userResource.getById({ id: this.currentUserId }).$promise.then(function (result: User) {
             self.currentUser = result;
             if (!isNullOrUndefined(self.currentUser.id)) {
-                self.userStatisticColumnChart = new ColumnChart(self.translate, "SPCLOS", self.currentUser.email, ""
+                self.userStatisticColumnChart = new ColumnChart(self.translate, "SPCLOS", getNameOfUser(self.currentUser), ""
                     , self.translate.instant("DETAIL_STATISTIC_USER_TOOLTIP", { username: "{series.name}", count: "{point.y}", workflow: "{point.name}" })
                     , [self.translate.instant("LEAD_LEADS"), self.translate.instant("OFFER_OFFERS"), self.translate.instant("SALE_SALES")]);
                 self.userFound = true;
             }
         });
+    }
+
+    getNameOfUser(user: User): string {
+        return getNameOfUser(user);
     }
 }
 angular.module(moduleUserDetail, [ngResourceId]).controller(UserDetailControllerId, UserDetailController);

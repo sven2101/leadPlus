@@ -13,7 +13,9 @@
  *******************************************************************************/
 package dash.messagemanagement.domain;
 
-import dash.fileuploadmanagement.domain.FileUpload;
+import java.util.List;
+
+import dash.notificationmanagement.domain.Attachment;
 import dash.notificationmanagement.domain.NotificationType;
 
 public class OfferMessage extends AbstractMessage {
@@ -28,8 +30,7 @@ public class OfferMessage extends AbstractMessage {
 	 * @param attachment
 	 *            - attachment of this specific Message
 	 */
-	public OfferMessage(String recipient, String subject, String content, FileUpload attachment,
-			NotificationType notificationType) {
-		super(recipient, subject, content, attachment, notificationType);
+	public OfferMessage(String recipient, String subject, String content, List<Attachment> attachments, NotificationType notificationType) {
+		super(recipient, subject, content, attachments, notificationType);
 	}
 }

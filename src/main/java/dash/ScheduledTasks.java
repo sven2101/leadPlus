@@ -1,8 +1,8 @@
 package dash;
 
 import java.util.List;
-import org.apache.log4j.Logger;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -40,36 +40,42 @@ public class ScheduledTasks {
 	}
 
 	public void generateStatistics() {
-		ThreadPoolTaskExecutor pool = new ThreadPoolTaskExecutor();
-		TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
-		List<Tenant> tenants = tenantService.getAllTenants();
-		int threadAmount = THREAD_MIN;
-		if (tenants.size() >= 30)
-			threadAmount = tenants.size() / 5;
-		pool.setCorePoolSize(threadAmount);
-		pool.setWaitForTasksToCompleteOnShutdown(true);
-		pool.initialize();
+		try {
+			ThreadPoolTaskExecutor pool = new ThreadPoolTaskExecutor();
+			TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
+			List<Tenant> tenants = tenantService.getAllTenants();
+			int threadAmount = THREAD_MIN;
+			if (tenants.size() >= 30)
+				threadAmount = tenants.size() / 5;
+			pool.setCorePoolSize(threadAmount);
+			pool.setWaitForTasksToCompleteOnShutdown(true);
+			pool.initialize();
 
-		for (Tenant tenant : tenants) {
-			if (tenant == null || tenant.getTenantKey() == null)
-				continue;
-			String tenantKey = tenant.getTenantKey();
-			pool.execute(new Runnable() {
-				@Override
-				public void run() {
-					TenantContext.setTenant(tenantKey);
-					try {
-						logger.info("Generate Statistics for " + tenantKey);
-						olapStatisticService.generateOlapStatistics();
-						logger.info("Statistics generated for " + tenantKey);
-					} catch (NotFoundException ex) {
-						logger.error("Something went wrong when trying to generate olap statistics for" + tenantKey,
-								ex);
+			for (Tenant tenant : tenants) {
+				if (tenant == null || tenant.getTenantKey() == null)
+					continue;
+				String tenantKey = tenant.getTenantKey();
+				pool.execute(new Runnable() {
+					@Override
+					public void run() {
+						TenantContext.setTenant(tenantKey);
+						try {
+							logger.info("Generate Statistics for " + tenantKey);
+							olapStatisticService.generateOlapStatistics();
+							logger.info("Statistics generated for " + tenantKey);
+						} catch (NotFoundException ex) {
+							logger.error("Something went wrong when trying to generate olap statistics for" + tenantKey,
+									ex);
+						}
 					}
-				}
-			});
+				});
+			}
+			pool.shutdown();
+		} catch (Exception ex) {
+			logger.error("Something went wrong when trying to generate olap statistics", ex);
+			logger.warn("Deleting old olap data. Maybe invalid bytestream in olap.");
+			olapStatisticService.deleteOldData(0);
 		}
-		pool.shutdown();
 	}
 
 }

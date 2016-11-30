@@ -4,6 +4,8 @@
 /// <reference path="../../User/Model/User.Model.ts" />
 /// <reference path="../../Common/model/OrderPosition.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
+/// <reference path="../../common/model/Activity.enum.ts" />
+/// <reference path="../../common/model/Processor.Model.ts" />
 /// <reference path="../../Lead/model/Lead.Model.ts" />
 /// <reference path="../../common/service/Workflow.Service.ts" />
 /// <reference path="../../Customer/Controller/Customer.Service.ts" />
@@ -24,28 +26,26 @@ const LeadServiceId: string = "LeadService";
 
 class LeadService {
 
-    $inject = [$rootScopeId, $translateId, $filterId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, LeadResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId];
+    $inject = [$qId, $rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, LeadResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId, SourceServiceId];
     processResource;
     customerResource;
     leadResource;
     workflowService: WorkflowService;
     customerService: CustomerService;
     productService: ProductService;
+    sourceService: SourceService;
     translate;
     rootScope;
-    filter;
     toaster;
     compile;
     templateService;
 
     rows: { [key: number]: any } = {};
-    user: User;
 
-    constructor($rootScope, $translate, $filter, toaster, $compile, ProcessResource, CustomerResource, LeadResource, WorkflowService, CustomerService, ProductService, TemplateService) {
+    constructor(private $q, $rootScope, $translate, toaster, $compile, ProcessResource, CustomerResource, LeadResource, WorkflowService, CustomerService, ProductService, TemplateService, SourceService) {
         this.templateService = TemplateService;
         this.translate = $translate;
         this.rootScope = $rootScope;
-        this.filter = $filter;
         this.toaster = toaster;
         this.compile = $compile;
         this.processResource = ProcessResource.resource;
@@ -54,10 +54,11 @@ class LeadService {
         this.workflowService = WorkflowService;
         this.customerService = CustomerService;
         this.productService = ProductService;
-        this.user = $rootScope.user;
+        this.sourceService = SourceService;
     }
 
-    saveLead(dtInstance: any, newLead: Lead, currentOrderPositions: Array<OrderPosition>) {
+    saveLead(dtInstance: any, newLead: Lead, source: Source): Promise<Process> {
+        let defer: IDefer<Process> = this.$q.defer();
         let self = this;
         if (angular.isUndefined(newLead.customer)) {
             newLead.customer = new Customer();
@@ -67,31 +68,35 @@ class LeadService {
         newLead.vendor = {
             name: "***REMOVED***"
         };
-        newLead.orderPositions = currentOrderPositions;
-        let process = {
+
+        let process: any = {
             lead: newLead,
-            status: "OPEN"
+            status: "OPEN",
+            source: source
         };
         let tempLead: Lead = newLead;
         if (isNullOrUndefined(tempLead.customer.id) || isNaN(Number(tempLead.customer.id)) || Number(tempLead.customer.id) <= 0) {
             tempLead.customer.timestamp = newTimestamp();
             this.customerResource.createCustomer(tempLead.customer).$promise.then(function (customer) {
                 tempLead.customer = customer;
+                process.formerProcessors = [new Processor(self.rootScope.user, Activity.OPEN)];
                 self.processResource.save(process).$promise.then(function (result) {
                     self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
                     self.rootScope.leadsCount += 1;
                     dtInstance.DataTable.row.add(result).draw();
+                    defer.resolve(result);
                 });
             });
-            return;
+            return defer.promise;
         }
-
+        process.formerProcessors = [new Processor(self.rootScope.user, Activity.OPEN)];
         this.processResource.save(process).$promise.then(function (result) {
             self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_ADD_LEAD"));
             self.rootScope.leadsCount += 1;
             dtInstance.DataTable.row.add(result).draw();
+            defer.resolve(result);
         });
-
+        return defer.promise;
     }
 
     inContact(process: Process, dtInstance: any, scope: any) {
@@ -161,11 +166,9 @@ class LeadService {
         }
     }
 
-    saveEditedRow(editLead: Lead, editProcess: Process, currentOrderPositions: Array<OrderPosition>, dtInstance: any, scope: any) {
+    saveEditedRow(editLead: Lead, editProcess: Process, dtInstance: any, scope: any): Promise<Process> {
+        let defer: IDefer<Process> = this.$q.defer();
         let self = this;
-        shallowCopy(editLead, editProcess.lead);
-        editProcess.lead.orderPositions = currentOrderPositions;
-
         let temp: any = editProcess.lead;
         if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
             temp.customer.timestamp = newTimestamp();
@@ -179,17 +182,20 @@ class LeadService {
                     if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                         self.rootScope.$broadcast("onTodosChange");
                     }
-                }, (error) => handleError(error));
-            }, (error) => handleError(error));
-            return;
+                    defer.resolve(result);
+                }, (error) => { handleError(error); defer.reject(error); });
+            }, (error) => { handleError(error); defer.reject(error); });
+            return defer.promise;
         }
         this.processResource.save(editProcess).$promise.then(function (result) {
-            self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD")); self.rootScope.leadsCount += 1;
+            self.toaster.pop("success", "", self.translate.instant("COMMON_TOAST_SUCCESS_UPDATE_LEAD"));
             self.updateRow(editProcess, dtInstance, scope);
             if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
                 self.rootScope.$broadcast("onTodosChange");
             }
-        }, (error) => handleError(error));
+            defer.resolve(result);
+        }, (error) => { handleError(error); defer.reject(error); });
+        return defer.promise;
     }
 
     setRow(id: number, row: any) {

@@ -32,9 +32,6 @@ class SaleDataTableService {
     compile;
     rootScope;
 
-    user: any;
-    tenant: any;
-
     constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
@@ -43,8 +40,6 @@ class SaleDataTableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
-        this.user = $rootScope.user;
-        this.tenant = $rootScope.tenant;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
@@ -57,8 +52,8 @@ class SaleDataTableService {
                 },
                 type: "GET",
                 "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.tenant.tenantKey);
+                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
+                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
                 }
             })
             .withOption("stateSave", false)
@@ -95,7 +90,7 @@ class SaleDataTableService {
             this.DTColumnBuilder.newColumn("sale.timestamp").withTitle(
                 this.translate("COMMON_DATE")).renderWith(
                 function (data, type, full) {
-                    return toLocalDate(data);
+                    return toLocalDate(data, "DD.MM.YYYY HH:mm");
                 }).withOption("type", "date-euro")
                 .withClass("text-center"),
             this.DTColumnBuilder.newColumn("sale.customer.phone").withTitle(

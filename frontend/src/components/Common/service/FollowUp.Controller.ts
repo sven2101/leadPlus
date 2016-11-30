@@ -35,7 +35,6 @@ class FollowUpController {
     templates: Array<Template> = [];
 
     notificationService: NotificationService;
-    currentNotification: Notification;
     templateService: TemplateService;
     workflowService: WorkflowService;
     fileService: FileService;
@@ -44,24 +43,24 @@ class FollowUpController {
     translate;
     rootScope;
     scope;
-
+    currentNotification: Notification;
     emailEditForm: any;
 
-    process: Process;
     editProcess: Process;
-    edit: boolean;
+    originProcess: Process;
+    editEmail: boolean = true;
 
     constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService, FileService, ProcessResource, toaster, $translate, $rootScope, $scope) {
-        this.process = process;
-        this.editProcess = process;
-        this.editWorkflowUnit = process.offer;
+        this.originProcess = process;
+        this.editProcess = deepCopy(process);
+        this.editWorkflowUnit = this.editProcess.offer;
         this.processResource = ProcessResource.resource;
         this.toaster = toaster;
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.scope = $scope;
         this.currentNotification = new Notification();
-        this.currentNotification.recipient = this.editWorkflowUnit.customer.email;
+        this.currentNotification.recipients = this.editWorkflowUnit.customer.email;
         this.uibModalInstance = $uibModalInstance;
         this.notificationService = NotificationService;
         this.templateService = TemplateService;
@@ -75,61 +74,55 @@ class FollowUpController {
     }
 
     close() {
-        this.emailEditForm.$setPristine();
+        if (!isNullOrUndefined(this.emailEditForm)) {
+            this.emailEditForm.$setPristine();
+        }
+
         this.uibModalInstance.close();
     }
 
-    generate(templateId: string, offer: Offer) {
-        let self = this;
-        this.templateService.generate(templateId, offer, this.currentNotification).then((result) => self.currentNotification.content = result.content, (error) => handleError(error));
+    async generate(templateId: string, offer: Offer) {
+        this.currentNotification = await this.templateService.generate(templateId, offer, this.currentNotification);
     }
 
-    getAllActiveTemplates() {
-        this.templateService.getAll().then((result) => this.templates = result, (error) => handleError(error));
+    async getAllActiveTemplates() {
+        this.templates = await this.templateService.getAll();
     }
 
     openAttachment(id: number) {
         this.fileService.getContentFileById(id);
     }
 
-    send() {
-        this.process.offer = this.editWorkflowUnit;
+    async send() {
         let self = this;
-        let process = deepCopy(this.process);
-        this.currentNotification.notificationType = NotificationType.FOLLOWUP;
-        let notification = this.currentNotification;
+        let process = this.editProcess;
+        process.notifications = process.notifications ? process.notifications : [];
+        let notification: Notification = deepCopy(this.currentNotification);
+        notification.attachments = notification.attachments ? notification.attachments : [];
+        notification.notificationType = NotificationType.FOLLOWUP;
         notification.id = undefined;
-
-
-        this.notificationService.sendNotification(notification).then(() => {
-            self.notificationService.saveFileUpload(notification.attachment).then((resultFileUpload) => {
-
-                notification.attachment = resultFileUpload;
-                if (isNullOrUndefined(process.notifications)) {
-                    process.notifications = [];
-                }
-
-                process.notifications.push(notification);
-                self.workflowService.saveProcess(process).then((resultProcess) => {
-                    self.process.notifications = resultProcess.notifications;
-                    self.process.followUpAmount = resultProcess.followUpAmount;
-                    self.followUp();
-                    self.close();
-                });
-            });
-        });
+        let promises: Array<Promise<void>> = notification.attachments ?
+            notification.attachments
+                .filter(a => isNullOrUndefined(a.id))
+                .map(a => self.fileService.saveAttachment(a)) : [];
+        for (let p of promises) {
+            await p;
+        }
+        try {
+            await this.notificationService.sendNotification(notification);
+        } catch (error) {
+            notification.notificationType = NotificationType.ERROR;
+        }
+        notification.attachments.forEach(a => a.id = undefined);
+        process.notifications.push(notification);
+        let resultProcess = await this.workflowService.saveProcess(process);
+        self.originProcess.notifications = resultProcess.notifications;
+        self.originProcess.followUpAmount = resultProcess.followUpAmount;
+        self.editProcess = resultProcess;
+        self.followUp();
+        self.close();
     }
 
-    getTheFiles($files) {
-        let self = this;
-        this.notificationService.setAttachmentToNotification($files, this.currentNotification).then(() => {
-            try {
-                self.scope.$digest();
-            } catch (error) {
-                handleError(error);
-            }
-        });
-    }
 
     setFormerNotification(notificationId: number) {
         if (Number(notificationId) === -1) {
@@ -144,17 +137,17 @@ class FollowUpController {
 
     followUp() {
         let self = this;
-        if (this.process.status === Status.FOLLOWUP) {
-            self.rootScope.$broadcast("updateRow", this.process);
+        if (this.editProcess.status === Status.FOLLOWUP) {
+            self.rootScope.$broadcast("updateRow", this.editProcess);
             return;
         }
         this.processResource.setStatus({
-            id: this.process.id
+            id: this.editProcess.id
         }, "FOLLOWUP").$promise.then(function () {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_FOLLOW_UP"));
-            self.process.status = "FOLLOWUP";
-            self.rootScope.$broadcast("updateRow", self.process);
+            self.editProcess.status = "FOLLOWUP";
+            self.rootScope.$broadcast("updateRow", self.editProcess);
             self.rootScope.$broadcast("onTodosChange");
             self.close();
         });

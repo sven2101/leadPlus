@@ -40,7 +40,7 @@
 						<span class="pull-right" style=" font-size: 1.5em;">{{ 'CUSTOMER_INCL' | translate }} &nbsp;
 							<input type="checkbox" ng-model="customerCtrl.loadAllCustomers" ng-change="customerCtrl.searchCustomer('noSearchText')" 
 							class="js-switch" ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<input  type="text" placeholder="{{ 'CUSTOMER_SELECT' | translate }}" class="input-sm form-control" ng-model="customerCtrl.searchText" ng-model-options="{debounce: 600}">
+							<input  type="text" placeholder="{{ 'COMMON_SEARCH' | translate }}" class="input-sm form-control" ng-model="customerCtrl.searchText" ng-model-options="{debounce: 600}">
 						</span>
 					</form>
 					<div class="project-list">
@@ -53,7 +53,10 @@
 									</td>
 									<td ng-click="customerCtrl.goToCustomerDetail(customer.id)" style="cursor: pointer;">
 										<a ng-href="#/customer/detail/{{customer.id}} " class="btn btn-xs btn-success btn-circle
-                                            " type="button "><i style="color:white; " class="fa fa-user "></i></a></td>
+                                            " type="button ">
+											<i style="color:white; " class="fa fa-user "></i>
+										</a>
+									</td>
 									<td ng-click="customerCtrl.goToCustomerDetail(customer.id)" style="cursor: pointer;" class="project-title col-md-2">
 
 										<a>{{customer.firstname}} {{customer.lastname}}</a>
@@ -61,6 +64,7 @@
 										<small>{{ 'CUSTOMER_CREATED' | translate }} {{customerCtrl.getLocalTimestamp(customer)}}</small>
 
 									</td>
+									<td>
 									{{customer.email}}
 									</td>
 									<td style="white-space: nowrap;">

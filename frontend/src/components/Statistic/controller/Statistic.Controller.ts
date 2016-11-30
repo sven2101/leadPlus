@@ -1,4 +1,6 @@
 /// <reference path="../../Statistic/controller/Statistic.Service.ts" />
+/// <reference path="../../Setting/controller/Setting.Source.Service.ts" />
+
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Common.ts" />
 /*******************************************************************************
@@ -20,15 +22,18 @@ const StatisticControllerId: string = "StatisticController";
 
 class StatisticController {
 
-    $inject = [StatisticServiceId];
+    $inject = [StatisticServiceId, SourceServiceId];
 
     statisticService: StatisticService;
+    sourceService: SourceService;
     currentTab: number = 1;
     dateRange: string = "DAILY";
+    source: string = "ALL";
 
-    constructor(StatisticService) {
+    constructor(StatisticService, SourceService) {
         this.statisticService = StatisticService;
-        this.onPeriodChange(this.dateRange);
+        this.sourceService = SourceService;
+        this.onStatisticChange(this.dateRange, this.source);
     }
 
     tabOnClick(tab: number) {
@@ -39,12 +44,12 @@ class StatisticController {
         return this.statisticService.getChartModelById(id);
     }
 
-    onPeriodChange(dateRange: string) {
+    onStatisticChange(dateRange: string, source: string) {
         this.statisticService.setPromises(false);
         this.statisticService.clearAllModelsData();
         this.dateRange = dateRange;
         this.statisticService.setTimeSegmentByDateRange(dateRange);
-        this.statisticService.loadAllResourcesByDateRange(dateRange);
+        this.statisticService.loadAllResourcesByDateRange(dateRange, source);
     }
 
     getProductStatistic(): Array<any> {

@@ -14,8 +14,10 @@
 
 package dash.statisticmanagement.user.rest;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -28,7 +30,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.common.ByteSearializer;
+import dash.common.CommonUtils;
 import dash.exceptions.NotFoundException;
+import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.olap.business.OlapRepository;
 import dash.statisticmanagement.olap.domain.Olap;
@@ -42,7 +47,7 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/api/rest/processes/statistics/user")
 @Api(value = "Statistic Profit API")
 public class UserStatisticResource {
-	
+
 	private static final Logger logger = Logger.getLogger(UserStatisticResource.class);
 
 	@Autowired
@@ -51,28 +56,51 @@ public class UserStatisticResource {
 	@Autowired
 	private UserStatisticService userStatisticService;
 
-	@RequestMapping(value = "/daterange/{dateRange}", method = { RequestMethod.GET, RequestMethod.POST })
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/daterange/{dateRange}/source/{source}", method = { RequestMethod.GET,
+			RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Get Statistic by dateRange", notes = "")
+	@ApiOperation(value = "Get Statistic by dateRange and source", notes = "")
 	public List<UserStatistic> getProductStatisticByDateRange(
-			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
+			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
+			@ApiParam(required = true) @PathVariable @Valid String source)
+			throws NotFoundException, ClassNotFoundException, IOException {
+		if (CommonUtils.isNullOrEmpty(source))
+			source = AbstractStatisticService.ALL_STATISTIC_KEY;
+
 		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
 		if (olap != null && olap.getUsers() != null) {
 			logger.info("Information from OLAP.");
-			return Arrays.asList(olap.getUsers());
+			Object obj = ByteSearializer.deserialize(olap.getUsers());
+			if (!(obj instanceof Map<?, ?>))
+				return new ArrayList<>();
+			Map<String, List<UserStatistic>> sourceMap = (Map<String, List<UserStatistic>>) obj;
+			if (!sourceMap.containsKey(source))
+				return new ArrayList<>();
+			return sourceMap.get(source);
 		} else {
 			logger.info("Information directly calculating.");
-			return userStatisticService.getTopSalesMen(dateRange);
+			Map<String, List<UserStatistic>> sourceMap = userStatisticService.getTopSalesMen(dateRange);
+			if (!sourceMap.containsKey(source))
+				return new ArrayList<>();
+			return sourceMap.get(source);
 		}
 	}
 
-	@RequestMapping(value = "/daterange/{dateRange}/id/{id}", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/daterange/{dateRange}/source/{source}/id/{id}", method = { RequestMethod.GET,
+			RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Get Statistic by dateRange and processor", notes = "")
+	@ApiOperation(value = "Get Statistic by dateRange, source and processor", notes = "")
 	public UserStatistic getSingleProductStatistic(
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
+			@ApiParam(required = true) @PathVariable @Valid String source,
 			@ApiParam(required = true) @PathVariable @Valid final Long id) throws NotFoundException {
-		return userStatisticService.getUserStatisticByIdAndDateRange(dateRange, id);
+		if (CommonUtils.isNullOrEmpty(source))
+			source = AbstractStatisticService.ALL_STATISTIC_KEY;
+		Map<String, UserStatistic> sourceMap = userStatisticService.getUserStatisticByIdAndDateRange(dateRange, id);
+		if (!sourceMap.containsKey(source))
+			return new UserStatistic();
+		return sourceMap.get(source);
 	}
 
 }

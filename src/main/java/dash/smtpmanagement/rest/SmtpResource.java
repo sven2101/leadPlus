@@ -62,8 +62,8 @@ public class SmtpResource {
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get by UserId.", notes = "Provide a valid user ID.")
 	public Smtp getByUserId(@PathVariable final long id) throws NotFoundException {
-		Smtp x = smtpService.findByUser(id);
-		return x;
+		return smtpService.findByUser(id);
+
 	}
 
 }

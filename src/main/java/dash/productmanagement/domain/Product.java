@@ -64,12 +64,13 @@ public class Product implements Serializable {
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
+	@Size(max = 100)
 	@Column(name = "name", nullable = false)
 	private String name;
 
 	@ApiModelProperty(hidden = true)
-	@Size(max = 255)
-	@Column(name = "description", length = 255, nullable = true)
+	@Size(max = 3000)
+	@Column(name = "description", length = 3000, nullable = true)
 	private String description;
 
 	@Enumerated(EnumType.STRING)
@@ -92,8 +93,8 @@ public class Product implements Serializable {
 	@ApiModelProperty(hidden = true)
 	@NotNull
 	@Digits(integer = 10, fraction = 4)
-	@Column(name = "pricenetto", nullable = false)
-	private Double priceNetto;
+	@Column(name = "net_price", nullable = false)
+	private Double netPrice;
 
 	@ApiModelProperty(hidden = true)
 	@OneToOne(cascade = CascadeType.ALL)
@@ -168,12 +169,12 @@ public class Product implements Serializable {
 		this.description = description;
 	}
 
-	public Double getPriceNetto() {
-		return priceNetto;
+	public Double getNetPrice() {
+		return netPrice;
 	}
 
-	public void setPriceNetto(Double priceNetto) {
-		this.priceNetto = priceNetto;
+	public void setNetPrice(Double priceNetto) {
+		this.netPrice = priceNetto;
 	}
 
 	public String getProductNumber() {
@@ -198,7 +199,7 @@ public class Product implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
-		result = prime * result + ((priceNetto == null) ? 0 : priceNetto.hashCode());
+		result = prime * result + ((netPrice == null) ? 0 : netPrice.hashCode());
 		result = prime * result + ((productNumber == null) ? 0 : productNumber.hashCode());
 		result = prime * result + ((productState == null) ? 0 : productState.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
@@ -238,10 +239,10 @@ public class Product implements Serializable {
 				return false;
 		} else if (!picture.equals(other.picture))
 			return false;
-		if (priceNetto == null) {
-			if (other.priceNetto != null)
+		if (netPrice == null) {
+			if (other.netPrice != null)
 				return false;
-		} else if (!priceNetto.equals(other.priceNetto))
+		} else if (!netPrice.equals(other.netPrice))
 			return false;
 		if (productNumber == null) {
 			if (other.productNumber != null)
@@ -260,9 +261,9 @@ public class Product implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", description=" + description
-				+ ", productState=" + productState + ", timestamp=" + timestamp + ", deactivated=" + deactivated
-				+ ", priceNetto=" + priceNetto + ", picture=" + picture + "]";
+		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", productState=" + productState
+				+ ", timestamp=" + timestamp + ", deactivated=" + deactivated + ", priceNetto=" + netPrice
+				+ ", picture=" + picture + "]";
 	}
 
 }

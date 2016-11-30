@@ -1,8 +1,19 @@
 <style>
-a.profileLink:link {color: #DFE4ED;}
-a.profileLink:active {color: #DFE4ED;}
-a.profileLink:visited {color: #DFE4ED;}
-a.profileLink:hover {color: #DFE4ED;}
+	a.profileLink:link {
+		color: #DFE4ED;
+	}
+	
+	a.profileLink:active {
+		color: #DFE4ED;
+	}
+	
+	a.profileLink:visited {
+		color: #DFE4ED;
+	}
+	
+	a.profileLink:hover {
+		color: #DFE4ED;
+	}
 </style>
 
 <nav class="navbar-default navbar-static-side" role="navigation" style="position: fixed; height: 100%;">
@@ -13,13 +24,13 @@ a.profileLink:hover {color: #DFE4ED;}
 					<div style="margin-top:-20px" class="row">
 						<div class="col-md-2"></div>
 						<div id="profilePictureDiv" class="col-md-6">
-							<img id="profilePicture" style="margin-left:-40px; width: 100px; height:100px;border-radius: 10%;" pictureId="{{user.picture.id}}"
+							<img id="profilePicture" style="margin-left:-40px; width: 100px; height:100px;border-radius: 10%;" pictureid="{{user.picture.id}}"
 								httpsrc="/api/rest/files/content/" alt="">
-						</div>					
+						</div>
 					</div>
 					<br>
-					<div> 
-						<a class="profileLink" href="#/profile" >
+					<div>
+						<a class="profileLink" href="#/profile">
 							<i class="fa fa-user" aria-hidden="true"></i>
 							<strong class="font-bold" ng-if="(user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname=='')">
 										{{user.username}}
@@ -52,7 +63,7 @@ a.profileLink:hover {color: #DFE4ED;}
                         class="nav-label">{{ 'SALES_MENU' | translate }}</span></a>
 
 			</li>
-			<li ng-if="appCtrl.hasLicense(tenant.license,'pro')">
+			<li>
 				<a href="#/statistic"><i class="fa fa-line-chart"></i> <span class="nav-label">{{ 'STATISTIC_MENU' | translate }}</span></a>
 			</li>
 			<li>
@@ -101,7 +112,7 @@ a.profileLink:hover {color: #DFE4ED;}
 						<span ng-if="appCtrl.todos.length>0" class="label label-danger">{{ appCtrl.todos.length}}</span>
 
 					</a>
-					<ul style="min-width:400px" class="dropdown-menu dropdown-messages">
+					<ul style="min-width:480px" class="dropdown-menu dropdown-messages">
 						<li>
 							<div class="dropdown-messages-box">
 
@@ -115,21 +126,20 @@ a.profileLink:hover {color: #DFE4ED;}
 							<table class="table table-hover">
 								<tbody>
 									<tr style="cursor:pointer" ng-click="appCtrl.navigateTo(todo)" ng-repeat="todo in appCtrl.todos | limitTo:5 | orderBy:'timestamp'">
-										<td class="project-status">
-											<span ng-if="::todo.status=='OPEN'" class="label label-danger">{{ 'LEAD' | translate }}</span>
-											<span ng-if="::todo.status=='OFFER'" class="label label-warning">{{ 'COMMON_STATUS_OFFER' | translate }}</span>
-											<span ng-if="::todo.status=='FOLLOWUP'" class="label">{{ 'COMMON_STATUS_FOLLOW_UP' | translate }}</span>
-											<span ng-if="::todo.status=='INCONTACT'" class="label label-primary">{{ 'COMMON_STATUS_INCONTACT' | translate }}</span>
+												<td class="project-status">
+											<span ng-if="todo.status=='OPEN'" class="label label-danger">{{ 'LEAD' | translate }}</span>
+											<span ng-if="todo.status=='OFFER'" class="label label-warning">{{ 'COMMON_STATUS_OFFER' | translate }}</span>
+											<span ng-if="todo.status=='FOLLOWUP'" class="label label-warning">{{ 'COMMON_STATUS_FOLLOW_UP' | translate }}</span>
+											<span ng-if="todo.status=='INCONTACT'" class="label label-danger">{{ 'COMMON_STATUS_INCONTACT' | translate }}</span>
+											<span ng-if="todo.status=='DONE'" class="label label-success">{{ 'COMMON_STATUS_DONE' | translate }}</span>
 										</td>
 										<td align="left" class="project-title">
-											<a ng-if="::(todo.status=='OPEN'||todo.status=='INCONTACT')">{{::todo.lead.customer.firstname}} {{::todo.lead.customer.lastname}}</a>
-											<a ng-if="::todo.status=='OFFER'">{{::todo.offer.customer.firstname}} {{::todo.offer.customer.lastname}}</a>
-											<a ng-if="::todo.status=='FOLLOWUP'">{{::todo.offer.customer.firstname}} {{::todo.offer.customer.lastname}}</a>
+											<a ng-if="todo.status=='OPEN'||todo.status=='INCONTACT'">{{::todo.lead.customer.firstname}} {{::todo.lead.customer.lastname}}</a>
+											<a ng-if="todo.status=='OFFER'||todo.status=='FOLLOWUP'||todo.status=='DONE'">{{::todo.offer.customer.firstname}} {{::todo.offer.customer.lastname}}</a>
 										</td>
 										<td class="project-completion">
-											<small ng-if="::(todo.status=='OPEN'||todo.status=='INCONTACT')">{{::appCtrl.sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</small>
-											<small ng-if="::todo.status=='OFFER'">{{::todo.offer.offerPrice| currency:'\u20AC'}}</small>
-											<small ng-if="::todo.status=='FOLLOWUP'">{{::todo.offer.offerPrice| currency:'\u20AC'}}</small>
+											<strong ng-if="todo.status=='OPEN'||todo.status=='INCONTACT'">{{::appCtrl.sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</strong>
+											<strong ng-if="todo.status=='OFFER'||todo.status=='FOLLOWUP'||todo.status=='DONE'">{{::todo.offer.netPrice| currency:'\u20AC'}}</strong>
 										</td>
 									</tr>
 								</tbody>

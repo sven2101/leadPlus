@@ -14,8 +14,10 @@
 
 package dash.statisticmanagement.product.rest;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -28,7 +30,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.common.ByteSearializer;
+import dash.common.CommonUtils;
 import dash.exceptions.NotFoundException;
+import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.olap.business.OlapRepository;
 import dash.statisticmanagement.olap.domain.Olap;
@@ -42,9 +47,9 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/api/rest/processes/statistics/product")
 @Api(value = "Statistic Profit API")
-public class ProductResource {
-	
-	private static final Logger logger = Logger.getLogger(ProductResource.class);
+public class ProductStatisticResource {
+
+	private static final Logger logger = Logger.getLogger(ProductStatisticResource.class);
 
 	@Autowired
 	private OlapRepository olapRepository;
@@ -52,35 +57,57 @@ public class ProductResource {
 	@Autowired
 	private ProductStatisticService productStatisticService;
 
-	@RequestMapping(value = "/{workflow}/daterange/{dateRange}", method = { RequestMethod.GET, RequestMethod.POST })
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/{workflow}/daterange/{dateRange}/source/{source}", method = { RequestMethod.GET,
+			RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Get Statistic by dateRange and workflow", notes = "")
+	@ApiOperation(value = "Get Statistic by workflow, dateRange and source", notes = "")
 	public List<ProductStatistic> getProductStatisticByDateRange(
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
-			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) throws NotFoundException {
+			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
+			@ApiParam(required = true) @PathVariable @Valid String source)
+			throws NotFoundException, ClassNotFoundException, IOException {
+		if (CommonUtils.isNullOrEmpty(source))
+			source = AbstractStatisticService.ALL_STATISTIC_KEY;
+
 		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
 		if (olap != null && olap.getProducts() != null) {
 			logger.info("Infromation from OLAP.");
-			return Arrays.asList(olap.getProducts());
+			Object obj = ByteSearializer.deserialize(olap.getProducts());
+			if (!(obj instanceof Map<?, ?>))
+				return new ArrayList<>();
+			Map<String, List<ProductStatistic>> sourceMap = (Map<String, List<ProductStatistic>>) obj;
+			if (!sourceMap.containsKey(source))
+				return new ArrayList<>();
+			return sourceMap.get(source);
 		} else {
 			logger.info("Infromation directly calculating.");
-			return productStatisticService.getTopProductStatstic(workflow, dateRange, null);
+			Map<String, List<ProductStatistic>> sourceMap = productStatisticService.getTopProductStatstic(workflow,
+					dateRange, null);
+			if (!sourceMap.containsKey(source))
+				return new ArrayList<>();
+			return sourceMap.get(source);
 		}
 	}
 
-	@RequestMapping(value = "/{workflow}/daterange/{dateRange}/id/{id}", method = { RequestMethod.GET,
+	@RequestMapping(value = "/{workflow}/daterange/{dateRange}/source/{source}/id/{id}", method = { RequestMethod.GET,
 			RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get Statistic by dateRange and workflow", notes = "")
 	public ProductStatistic getSingleProductStatistic(
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
+			@ApiParam(required = true) @PathVariable @Valid String source,
 			@ApiParam(required = true) @PathVariable @Valid final Long id) throws NotFoundException {
-		ProductStatistic productStatistic = null;
-		List<ProductStatistic> productStatisticList = productStatisticService.getTopProductStatstic(workflow, dateRange,
-				id);
-		if (productStatisticList.size() > 0)
-			productStatistic = productStatisticList.get(0);
+		if (CommonUtils.isNullOrEmpty(source))
+			source = AbstractStatisticService.ALL_STATISTIC_KEY;
+		ProductStatistic productStatistic = new ProductStatistic();
+		Map<String, List<ProductStatistic>> sourceMap = productStatisticService.getTopProductStatstic(workflow,
+				dateRange, id);
+		if (!sourceMap.containsKey(source))
+			return productStatistic;
+		if (sourceMap.get(source).size() > 0)
+			productStatistic = sourceMap.get(source).get(0);
 		return productStatistic;
 	}
 }

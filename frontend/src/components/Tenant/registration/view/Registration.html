@@ -1,3 +1,10 @@
+<style>
+	/* Tooltip */
+	
+	.tooltipstyle + .tooltip > .tooltip-inner {
+		background-color: #1dc5a3;
+	}
+</style>
 <div class="loginscreen animated fadeInDown">
 	<form name="validation" novalidate class="m-t middle-box" role="form">
 		<div class="text-center" stlye="margin-bottom: 30px;">
@@ -5,39 +12,28 @@
 		</div>
 
 		<div class="text-center">
-			<h3>{{ 'SIGNUP_REGISTER_WELCOME' | translate }}</h3>
-			<label>{{ 'SIGNUP_CREATE_ACCOUNT' | translate }}</label>
-			<h2><i class="fa fa-question-circle" data-toggle="tooltip" title="You can access this application afterwards via your choosen sitename 'yourcompany.leadplus.io' for example. You can only use letters."></i></h2>
+			<h3>Get your free trial Account for lead+</h3>
+			<h2><i class="tooltipstyle fa fa-question-circle" data-toggle="tooltip" title="You can access this application afterwards via your choosen sitename 'yourcompany.leadplus.me' for example. You can only use letters."></i></h2>
 			<label stlye="color: #ffffff;">Reserve your Company name as subdomain</label>
 		</div>
-
 		<!-- Sitename -->
-		<div class="form-group">
+		<div class="form-group" ng-class="{'has-error': validation.tenantKey.$error.$invalid
+											|| registrationCtrl.registrationService.tenantKeyExist }">
 			<label class="sr-only" for="tenantKey">yoursitename</label>
 			<div class="input-group">
-				<input autofocus type="text" class="form-control" id="tenantKey" name="tenantKey" placeholder="yoursitename" required ng-pattern="/^[a-zA-Z]*$/"
-					ng-minlength="2" ng-maxlength="20" ng-model="registrationCtrl.tenant.tenantKey" ng-blur="registrationCtrl.uniqueTenantKey()"
-					ng-class="{ 'has-success': 	!validation.tenantKey.$error.required &&
-												!validation.tenantKey.$error.minlength &&
-												!validation.tenantKey.$error.maxlength &&
-												!registrationCtrl.registrationService.tenantKeyExist&&  
-												!validation.tenantKey.$pristine,														
-								'has-error': 	validation.tenantKey.$error.required ||
-												validation.tenantKey.$error.minlength ||
-												validation.tenantKey.$error.maxlength ||
-												registrationCtrl.registrationService.tenantKeyExist  &&  
-												!validation.tenantKey.$pristine		 }">
-				<div class="input-group-addon">.leadplus.io</div>
+				<input autofocus type="text" class="form-control" name="tenantKey" placeholder="yoursitename" required ng-pattern="/^[a-zA-Z]*$/"
+					ng-minlength="2" ng-maxlength="20" ng-model="registrationCtrl.tenant.tenantKey" ng-blur="registrationCtrl.uniqueTenantKey()">
+				<div class="input-group-addon">.leadplus.me</div>
 			</div>
 
 			<span ng-show="registrationCtrl.registrationService.tenantKeyExist&&!validation.tenantKey.$pristine" class="help-block">{{ 'REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE' | translate }}</span>
-			<span ng-show="validation.tenantKey.$error.tenantKeyExist&&!validation.tenantKey.$pristine" class="help-block">{{ 'REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE' | translate }}</span>
-			<span ng-show="validation.tenantKey.$error.required &&!validation.tenantKey.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+			<span ng-show="validation.tenantKey.$error.required&&!validation.tenantKey.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
 			<span ng-show="validation.tenantKey.$error.minlength&&!validation.tenantKey.$pristine" class="help-block">{{ 'REGISTRATION_VALIDATE_PASSWORD_TOO_SHORT' | translate }}</span>
-			<span ng-show="validation.tenantKey.$error.maxlength&&!validation.tenantKey.$pristine" class="help-block">{{ 'REGISTRATION_VALIDATE_PASSWORD_TOO_LONG' | translate }}</span>
+			<span ng-show="validation.tenantKey.$error.maxlength" class="help-block">{{ 'REGISTRATION_VALIDATE_PASSWORD_TOO_LONG' | translate }}</span>
 		</div>
 
 		<!-- Package -->
+		<!--
 		<div class="text-center">
 			<h2><i class="fa fa-suitcase" data-toggle="tooltip" data-placement="top" data-html="true" title="<b>Basic:</b> Basic functionallity!; <b>Pro:</b> See Statistics!; <b>Ultimate:</b> Get special support!'"></i></h2>
 			<label stlye="color: #ffffff;">Choose your package</label>
@@ -60,9 +56,10 @@
 			</div>
 			<span ng-show="validation.license.$error.required &&!validation.license.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
 		</div>
+		-->
 
 		<div class="text-center">
-			<h2><i class="fa fa-user" data-toggle="tooltip" title="You can access this application afterwards via your choosen sitename 'yourcompany.leadplus.io' for example. You can only use letters. '"></i></h2>
+			<h2><i class="tooltipstyle fa fa-user" data-toggle="tooltip" title="You can login this application afterwards via your choosen email and password. '"></i></h2>
 			<label stlye="color: #ffffff;">Create your initial User</label>
 		</div>
 
@@ -71,7 +68,7 @@
 		<div class="row">
 			<div class="col-xs-6 col-sm-6 col-md-6">
 				<div class="form-group" ng-class="{ 'has-error': validation.firstname.$invalid && !validation.firstname.$pristine }">
-					<input required ng-minlength="2" ng-maxlength="20" type="text" name="firstname" id="firstname" class="form-control" placeholder="First Name"
+					<input required ng-minlength="2" ng-maxlength="20" type="text" name="firstname" id="firstname" class="form-control" placeholder="{{ 'COMMON_FIRSTNAME' | translate }}"
 						ng-model="registrationCtrl.user.firstname">
 				</div>
 				<span ng-show="validation.firstname.$error.required &&!validation.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
@@ -80,7 +77,7 @@
 			</div>
 			<div class="col-xs-6 col-sm-6 col-md-6">
 				<div class="form-group" ng-class="{ 'has-error': validation.lastname.$invalid && !validation.lastname.$pristine }">
-					<input required ng-minlength="2" ng-maxlength="20" type="text" name="lastname" id="lastname" class="form-control" placeholder="Last Name"
+					<input required ng-minlength="2" ng-maxlength="20" type="text" name="lastname" id="lastname" class="form-control" placeholder="{{ 'COMMON_LASTNAME' | translate }}"
 						ng-model="registrationCtrl.user.lastname">
 				</div>
 				<span ng-show="validation.lastname.$error.required&&!validation.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
@@ -125,13 +122,13 @@
 
 		<div class="form-group text-center" ng-class="{ 'has-error': validation.contract.$invalid && !validation.contract.$pristine }">
 			<label>
-				<input required type="checkbox" value="true" name="contract" ng-model="registrationCtrl.terms"/> Ich habe die <a href="components/Licence/view/AGB.html" target="_blank">AGBs</a> und die <a href="components/Licence/view/Data.Protection.Statement.html" target="_blank">Datenschutzerklärung</a> gelesen und akzeptiere diese.
+				<input required type="checkbox" value="true" name="contract" ng-model="registrationCtrl.terms"/> I agree the <a href="components/Licence/view/AGB.html" target="_blank">terms of use</a> and <a href="components/Licence/view/Data.Protection.Statement.html" target="_blank">privacy policy</a>.
 			</label>
 			<span ng-show="validation.contract.$error.required&&!validation.contract.$pristine" class="help-block">You need to accept our Terms and Conditions.</span>
 			<br/>
 			<br/>
 			<button type="button" ng-click="registrationCtrl.register();" class="btn btn-primary block full-width m-b" ng-disabled="validation.$invalid || vm.dataLoading || registrationCtrl.registrationService.tenantKeyExist">
-				<strong>START NOW</strong>
+				<strong>GET TRIAL ACCOUNT NOW</strong>
 			</button>
 		</div>
 	</form>

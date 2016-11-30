@@ -1,7 +1,7 @@
 <style>
-	#ngdatatable tr td {
-		height: 62px;
-	}
+    #ngdatatable tr td {
+        height: 62px;
+    }
 </style>
 <meta charset="utf-8">
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -38,11 +38,11 @@
                             ng-change="saleCtrl.changeDataInput()"
                             class="js-switch"
                             ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
-                    </br>
-                    </br>
+                    <br/>
+                    <br/>
                     <div class="table-responsive text-center">
-                        <table id="ngdatatable" datatable="" dt-options="saleCtrl.dtOptions" dt-columns="saleCtrl.dtColumns" dt-instance="saleCtrl.dtInstanceCallback" class="table table-bordered table-hover table-condensed text-center"
-                            style="width:100%;"></table>
+                        <table id="ngdatatable" datatable="" dt-options="saleCtrl.dtOptions" dt-columns="saleCtrl.dtColumns" dt-instance="saleCtrl.dtInstanceCallback"
+                            class="table table-bordered table-hover table-condensed text-center" style="width:100%;"></table>
                     </div>
                 </div>
             </div>
@@ -54,6 +54,7 @@
     submittext="{{'COMMON_DELETE'| translate}}"></div>
 <div confirmationmodal modalid="rollbackConfirmationModal" parent="saleCtrl" title="{{'SALE_ROLLBACK'| translate}}" body="{{'SALE_ROLLBACK_BODY'| translate}}"
     submittext="{{'COMMON_RESET'| translate}}"></div>
+<div hidden ng-include="'components/Common/view/Workflow.Send.Modal.html'"></div>
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {

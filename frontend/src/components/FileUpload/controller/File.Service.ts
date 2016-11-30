@@ -31,9 +31,8 @@ class FileService {
     translate;
     sce;
 
-    constructor(FileResource, $q, $http, $window, toaster, $translate, $sce) {
+    constructor(FileResource, private $q, $http, $window, toaster, $translate, $sce) {
         this.fileResource = FileResource.resource;
-        this.q = $q;
         this.http = $http;
         this.window = $window;
         this.toaster = toaster;
@@ -52,6 +51,14 @@ class FileService {
             }).error(function (data, status) {
                 self.toaster.pop("error", "", self.translate.instant("COMMON_TOAST_FAILURE_DELETE_LEAD"));
             });
+    }
+
+    save(fileUpload: FileUpload): Promise<FileUpload> {
+        return this.fileResource.save(fileUpload).$promise;
+    }
+
+    async saveAttachment(attachment: Attachment): Promise<void> {
+        attachment.fileUpload = await this.save(attachment.fileUpload);
     }
 }
 

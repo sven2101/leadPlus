@@ -70,6 +70,10 @@ class SignupService {
         });
         return defer.promise;
     }
+
+    init(apiPassword: string, tenantKey: string) {
+        this.signupResource.init(hashPasswordPbkdf2(apiPassword, "api@" + tenantKey));
+    }
 }
 
 angular.module(moduleSignupService, [ngResourceId]).service(SignupServiceId, SignupService);

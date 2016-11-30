@@ -20,7 +20,7 @@ import dash.tenantmanagement.domain.Tenant;
 
 @Repository
 public interface TenantRepository extends JpaRepository<Tenant, Long> {
-	
-	Tenant findByTenantKey(String name);
+
+	Tenant findByTenantKeyIgnoreCase(String name);
 
 }

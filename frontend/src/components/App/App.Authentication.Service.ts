@@ -67,6 +67,7 @@ class AuthService {
             this.http.get("user").then(function (response) {
                 let data = response.data;
                 if (data) {
+
                     self.rootScope.user = {
                         id: data.id,
                         role: data.role,
@@ -76,6 +77,7 @@ class AuthService {
                         lastname: data.lastname,
                         phone: data.phone,
                         language: data.language,
+                        defaultVat: data.defaultVat,
                         smtpKey: encodeURIComponent(hashPasswordPbkdf2(hashedPassword, salt)),
                         authorization: authorization,
                         picture: data.picture,
@@ -84,8 +86,8 @@ class AuthService {
                     self.rootScope.tenant = {
                         tenantKey: credentials.tenant,
                         license: {
-                            package: ["basic", "pro"],
-                            term: "09.12.2017",
+                            package: ["basic", "pro", "ultimate"],
+                            term: "09.12.2020",
                             trial: false
                         }
                     };
@@ -105,8 +107,6 @@ class AuthService {
                         self.cookies.putObject("user", self.rootScope.user, { domain: credentials.tenant, path: "/", expires: date });
                         self.cookies.putObject("tenant", self.rootScope.tenant, { domain: credentials.tenant, path: "/", expires: date });
 
-                        self.rootScope.user.picture = data.profilePicture;
-                        self.injector.get("DashboardService");
                         self.rootScope.$broadcast("onTodosChange");
                         defer.resolve(true);
                     }

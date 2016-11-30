@@ -33,10 +33,6 @@ class LeadDataTableService {
     compile;
     rootScope;
 
-
-    user: any;
-    tenant: any;
-
     constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
@@ -45,8 +41,6 @@ class LeadDataTableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
-        this.user = $rootScope.user;
-        this.tenant = $rootScope.tenant;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
@@ -59,8 +53,8 @@ class LeadDataTableService {
                 },
                 type: "GET",
                 "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.tenant.tenantKey);
+                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
+                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
                 }
             })
             .withOption("stateSave", false)
@@ -107,7 +101,7 @@ class LeadDataTableService {
             this.DTColumnBuilder.newColumn("lead.timestamp").withTitle(
                 this.translate("COMMON_DATE")).renderWith(
                 function (data, type, full) {
-                    return toLocalDate(data);
+                    return toLocalDate(data, "DD.MM.YYYY HH:mm");
                 }).withOption("type", "date-euro")
                 .withClass("text-center"),
             this.DTColumnBuilder.newColumn("lead.customer.phone").withTitle(
@@ -156,9 +150,9 @@ class LeadDataTableService {
         user.role = Role.SUPERADMIN;
 
         let config = new ActionButtonConfigBuilder();
-        config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("LEAD_FOLLOW_UP");
+        config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setVisible().setTitle("LEAD_FOLLOW_UP").setIcon("fa fa-level-up");
         if (process.status === Status.OPEN || process.status === Status.INCONTACT) {
-            config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled();
+            config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled().setIcon("fa fa-level-up");
         }
         if (user.role === Role.ADMIN || user.role === Role.SUPERADMIN) {
             config.get(ActionButtonType.PIN_DROPDOWN).setEnabled().setTitle("LEAD_PIN");
@@ -217,7 +211,13 @@ class LeadDataTableService {
             return "<span style='color: #f79d3c;'>"
                 + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>"
                 + hasProcessor;
-        } else if (data.status === "SALE") {
+        }
+        else if (data.status === "DONE") {
+            return "<span style='color: #f79d3c;'>"
+                + this.translate.instant("COMMON_STATUS_DONE") + "</span>"
+                + hasProcessor;
+        }
+        else if (data.status === "SALE") {
             return "<span style='color: #1872ab;'>"
                 + this.translate.instant("COMMON_STATUS_SALE") + "</span>";
         } else if (data.status === "CLOSED") {

@@ -71,7 +71,7 @@
 									{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}
 								</td>
 								<td>
-									{{dashboardCtrl.workflowModalData.offerPrice| currency:'\u20AC'}}
+									{{dashboardCtrl.workflowModalData.netPrice| currency:'\u20AC'}}
 								</td>
 							</tr>
 							<tr ng-if="dashboardCtrl.workflowModalType == 'sale'">
@@ -98,6 +98,14 @@
 									{{dashboardCtrl.workflowModalData.saleProfit| currency:'\u20AC'}}
 								</td>
 							</tr>
+							<tr>
+								<td>
+									{{ 'SOURCE_SOURCE' | translate }}
+								</td>
+								<td>
+									{{dashboardCtrl.workflowModalProcess.source.name}}
+								</td>
+							</tr>
 
 						</table>
 					</div>
@@ -110,7 +118,7 @@
 				<div class="row">
 
 					<div class="text-left">
-						<span style="cursor:pointer" ng-click="showComments=showComments!==true?true:false" class="pull-left" style="font-size: 1.5em;">
+						<span ng-click="showComments=showComments!==true?true:false" class="pull-left" style="font-size: 1.5em;cursor:pointer">
                         <h4>{{ 'COMMON_COMMENTS' | translate }}
                             <i ng-if="showComments===true" class="fa fa-caret-up" aria-hidden="true"></i>
                             <i ng-if="showComments!==true" class="fa fa-caret-down" aria-hidden="true"></i>
@@ -132,10 +140,10 @@
 										<div style="max-height:250px" class="chat-discussion" ng-model="dashboardCtrl.workflowModalProcess.comments">
 											<div ng-repeat="comment in dashboardCtrl.workflowModalProcess.comments | orderBy: '-timestamp'">
 												<div ng-if="$index%2==0" class="chat-message left">
-													<img class="message-avatar" pictureId="{{comment.creator.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+													<img class="message-avatar" pictureid="{{comment.creator.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
 													<div class="message">
-														<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-														<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+														<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onclick="return false;"> {{comment.creator.username}} </a>
+														<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onclick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
 														<span class="message-date"> {{dashboardCtrl.toLocalDate(comment.timestamp)}} </span>
 														<span class="message-content">
                                                 {{comment.commentText}}
@@ -143,10 +151,10 @@
 													</div>
 												</div>
 												<div ng-if="$index%2!=0" class="chat-message right">
-													<img class="message-avatar" pictureId="{{comment.creator.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
+													<img class="message-avatar" pictureid="{{comment.creator.thumbnail.id}}" httpsrc="/api/rest/files/content/" alt="">
 													<div class="message">
-														<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onClick="return false;"> {{comment.creator.username}} </a>
-														<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onClick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+														<a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" href="#" onclick="return false;"> {{comment.creator.username}} </a>
+														<a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" href="#" onclick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
 														<span class="message-date"> {{dashboardCtrl.toLocalDate(comment.timestamp )}} </span>
 														<span class="message-content">
                                                 {{comment.commentText}}
@@ -159,24 +167,24 @@
 								</div>
 								<div class="row">
 									<div class="col-lg-12">
-										<div class="chat-message-form" style="width:100%">
-
-											<div class="form-group" style="width:100%">
-												<textarea class="form-control message-input" ng-model="dashboardCtrl.commentModalInput" style="resize: none; width:100%;box-sizing: border-box;"
-													name="message" placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}" />
+										<form name="commentform">
+											<div class="chat-message-form" style="width:100%">
+												<div class="form-group" style="width:100%" ng-class="{ 'has-error' : commentform.message.$error.maxlength && !commentform.message.$pristine }">
+													<textarea class="form-control message-input" ng-model="dashboardCtrl.commentModalInput" required ng-maxlength="5000" style="resize: none; width:100%;box-sizing: border-box;"
+														name="message" placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}" />
+													<p ng-show="commentform.message.$error.maxlength && !commentform.message.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}5000{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+												</div>
+												<button style="width:35%; margin-top: 10px;" class="btn btn-success" ng-disabled="commentform.message.$invalid" ng-click="dashboardCtrl.addComment(dashboardCtrl.workflowModalProcess)">
+                                      		  <i class="fa fa-comment-o"></i>&nbsp;{{ 'COMMON_COMMENTS_ADD' | translate }}
+                                    			</button>
 											</div>
-											<button style="width:35%; margin-top: 10px;" class="btn btn-success" ng-click="dashboardCtrl.addComment(dashboardCtrl.workflowModalProcess)">
-                                        <i class="fa fa-comment-o"></i>&nbsp;{{ 'COMMON_COMMENTS_ADD' | translate }}
-                                    </button>
-										</div>
+										</form>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-
 				</div>
-
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-white" data-dismiss="modal">{{ 'COMMON_CANCEL' | translate }}

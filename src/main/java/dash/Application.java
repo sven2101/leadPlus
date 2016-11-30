@@ -80,11 +80,12 @@ public class Application {
 
 	@Value("${aws.key.secret}")
 	private String awsKeySecret;
-
+	
 	public static void main(String[] args) {
 		TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 		SpringApplication.run(Application.class, args);
+		SchemaMigration.migrate();
 	}
 
 	@Configuration
@@ -96,7 +97,6 @@ public class Application {
 					.apis(RequestHandlerSelectors.basePackage("dash.publicapi")).paths(PathSelectors.any()).build()
 					.apiInfo(apiInfo());
 		}
-
 	}
 
 	private static ApiInfo apiInfo() {

@@ -46,7 +46,7 @@
                         </button>
                             -->
 						<span class="pull-right ">
-                            <input  type="text" placeholder="Search" class="input-sm form-control" ng-model="searchText">
+                            <input  type="text" placeholder="{{ 'COMMON_SEARCH' | translate }}" class="input-sm form-control" ng-model="searchText">
                         </span>
 					</form>
 
@@ -59,18 +59,20 @@
 										<span ng-show="product.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 									</td>
 									<td><a ng-href="#/product/detail/{{product.id}} " class="btn btn-xs btn-success btn-circle
-                                            " type="button "><i style="color:white; " class="fa fa-line-chart"></i></a></td>
+                                            " type="button "><i style="color:white; " class="fa fa-line-chart"></i></a>
 									</td>
 									<td class="project-title col-md-2">
 										<a>{{product.name}}</a>
 										<br>
 										<small>{{ 'PRODUCT_CREATED' | translate }} {{productCtrl.getLocalTimestamp(product)}}</small>
 									</td>
-									<td class="project-completion col-md-7" max>
-										<small style="word-wrap: break-word; word-break: break-all;">{{product.description}}</small>
+									<td class="project-completion col-md-7">
+										<small style="word-wrap: break-word; word-break: break-all;">
+											<p style="max-height: 120px;overflow:hidden">{{product.description}}</p>
+										</small>
 									</td>
 									<td>
-										<img ng-if="product.picture!=null" style="width: 60px; height:60px;border-radius: 10%" pictureId="{{product.picture.id}}"
+										<img ng-if="product.picture!=null" style="width: 60px; height:60px;border-radius: 10%" pictureid="{{product.picture.id}}"
 											httpsrc="/api/rest/files/content/" alt="">
 									</td>
 									<td class="project-actions col-md-1">
