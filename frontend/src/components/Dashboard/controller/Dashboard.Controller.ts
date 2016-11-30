@@ -205,7 +205,7 @@ class DashboardController {
                 max = element;
             }
         }
-        if (max > 7) {
+        if (max >= 7) {
             return 7 * 85;
         }
         return (max * 85) + 100;
