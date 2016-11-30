@@ -1,4 +1,4 @@
-<form name="form">
+<form id="scopeStuff" name="form">
 
 	<div>
 
@@ -63,14 +63,15 @@
 			<div ng-if="!disabled" style="white-space: nowrap;float:left;margin-right:7px" class="fileinput fileinput-new" data-provides="fileinput">
 				<span class="btn btn-default btn-file">
 					<span class="fileinput-new">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }}</span>
-					<span class="fileinput-exists">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }} </span>
-					<input name="attachement" multiple required type="file" ng-files="setAttachments($files);" accept="application/pdf,image/*,.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.csv,application/vnd.ms-excel,text/plain,application/vnd.ms-powerpoint, application/msword,.pps,.xlsx,.xls,.doc,.docx,.ppt,.pptx,.txt,.zip,.rar">
+				<span class="fileinput-exists">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }} </span>
+				<input id="fileInput" name="attachement" multiple required type="file" onchange="javascriptToAngular();" accept="application/pdf,image/*,.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.csv,application/vnd.ms-excel,text/plain,application/vnd.ms-powerpoint, application/msword,.pps,.xlsx,.xls,.doc,.docx,.ppt,.pptx,.txt,.zip,.rar">
 				</span>
 			</div>
-			<div style="white-space: nowrap;float:left;margin-right:5px" ng-repeat="attachment in notification.attachments">
+			<span ng-repeat="attachment in notification.attachments">
 				<a ng-click="openAttachment(attachment.fileUpload)">{{attachment.fileUpload.filename}}</a>
 				<a ng-click="deleteAttachment($index)" href="" class="close" style="float: none">x</a>
-			</div>
+			</span>
+			
 		</div>
 	</div>
 	<div style="clear: left;" class="form-group" ng-class="{ 'has-error' : form.message.$invalid&&!form.message.$pristine}">
@@ -84,3 +85,9 @@
 		</div>
 	</div>
 </form>
+<script>
+	function javascriptToAngular() {
+		var files = document.getElementById('fileInput').files;	
+		angular.element(document.getElementById('scopeStuff')).scope().setAttachments(files);	
+	}
+</script>
