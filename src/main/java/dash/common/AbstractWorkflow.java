@@ -235,7 +235,7 @@ public abstract class AbstractWorkflow implements Request {
 	public String toString() {
 		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress
 				+ ", deleted=" + deleted + ", deliveryCosts=" + deliveryCosts + ", orderPositions=" + orderPositions
-				+ ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + "]";
+				+ ", timestamp=" + timestamp + ", vendor=" + vendor + "]";
 	}
 
 }
