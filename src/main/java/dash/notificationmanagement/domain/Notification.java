@@ -257,8 +257,8 @@ public class Notification {
 	@Override
 	public String toString() {
 		return "Notification [id=" + id + ", recipientsCC=" + recipientsCC + ", recipientsBCC=" + recipientsBCC
-				+ ", recipients=" + recipients + ", subject=" + subject + ", deleted=" + deleted + ", content="
-				+ content + ", attachments=" + attachments + ", notificationType=" + notificationType + "]";
+				+ ", recipients=" + recipients + ", subject=" + subject + ", deleted=" + deleted + ", attachments="
+				+ attachments + ", notificationType=" + notificationType + "]";
 	}
 
 	private String formatEmails(String emails) {

@@ -13,11 +13,11 @@ var opts = {
     comments: false
 };
 
-gulp.task('html', ['minify-index', 'minify-main', 'minify-logout', 'minify-components-view'], function() {
+gulp.task('html', ['minify-index', 'minify-main', 'minify-logout', 'minify-components-view'], function () {
     return null;
 });
 
-gulp.task('minify-index', ['validate-single-view'], function() {
+gulp.task('minify-index', ['validate-single-view'], function () {
     return gulp.src(path.index.src)
 
         .pipe(minifyHTML(opts))
@@ -25,7 +25,7 @@ gulp.task('minify-index', ['validate-single-view'], function() {
         .pipe(gulp.dest(path.index.dst));
 });
 
-gulp.task('minify-main', ['validate-single-view'], function() {
+gulp.task('minify-main', ['validate-single-view'], function () {
     return gulp.src(path.main.src)
 
         .pipe(minifyHTML(opts))
@@ -33,15 +33,15 @@ gulp.task('minify-main', ['validate-single-view'], function() {
         .pipe(gulp.dest(path.main.dst));
 });
 
-gulp.task('minify-logout', ['validate-single-view'], function() {
-    return gulp.src(path.logout.src)
+gulp.task('minify-logout', ['validate-single-view'], function () {
+    return gulp.src(path.staticHtml.src)
 
         .pipe(minifyHTML(opts))
         .pipe(htmlhint.reporter())
-        .pipe(gulp.dest(path.logout.dst));
+        .pipe(gulp.dest(path.staticHtml.dst));
 });
 
-gulp.task('minify-components-view', ['validate-components-view'], function() {
+gulp.task('minify-components-view', ['validate-components-view'], function () {
     return gulp.src(path.componentViews.src)
 
         .pipe(minifyHTML(opts))
@@ -50,7 +50,7 @@ gulp.task('minify-components-view', ['validate-components-view'], function() {
 
 });
 
-gulp.task('validate-components-view', function() {
+gulp.task('validate-components-view', function () {
     return gulp.src([
         path.componentViews.src
     ])
@@ -58,11 +58,11 @@ gulp.task('validate-components-view', function() {
         .pipe(htmlhint.reporter());
 })
 
-gulp.task('validate-single-view', function() {
+gulp.task('validate-single-view', function () {
     return gulp.src([
         path.index.src,
         path.main.src,
-        path.logout.src,
+
     ])
         .pipe(htmlhint('.htmlhintrc'))
         .pipe(htmlhint.reporter());
