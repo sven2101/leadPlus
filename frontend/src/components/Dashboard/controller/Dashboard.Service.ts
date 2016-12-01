@@ -33,6 +33,8 @@ class DashboardService {
     translate: any;
     rootScope: any;
     q: any;
+    dragging: Boolean = false;
+    inModal: Boolean = false;
 
     openLeads: Array<Process> = [];
     inContacts: Array<Process> = [];
@@ -41,6 +43,12 @@ class DashboardService {
     closedSales: Array<Process> = [];
     elementToDelete: Array<Process> = [];
     delementDropzoneVisibility: string = "hidden";
+
+    allOpenLeads: Array<Process> = [];
+    allInContacts: Array<Process> = [];
+    allOpenOffers: Array<Process> = [];
+    allDoneOffers: Array<Process> = [];
+    allClosedSales: Array<Process> = [];
 
     openLeadsValue: number = 0;
     inContactsValue: number = 0;
@@ -76,7 +84,7 @@ class DashboardService {
         let self = this;
         setInterval(function () {
             self.refreshTodos();
-        }, 5 * 60 * 1000);
+        }, 10 * 60 * 1000);
     }
 
     initDashboard() {
@@ -93,8 +101,10 @@ class DashboardService {
                 }
             }
             self.openLeads = self.orderProcessByTimestamp(open, "lead");
+            self.allOpenLeads = self.openLeads;
             self.sumLeads();
             self.inContacts = self.orderProcessByTimestamp(contact, "lead");
+            self.allInContacts = self.inContacts;
             self.sumInContacts();
         });
         this.processResource.getWorkflowByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
@@ -109,12 +119,15 @@ class DashboardService {
                 }
             }
             self.openOffers = self.orderProcessByTimestamp(open, "offer");
+            self.allOpenOffers = self.openOffers;
             self.sumOffers();
             self.doneOffers = self.orderProcessByTimestamp(done, "offer");
+            self.allDoneOffers = self.doneOffers;
             self.sumDoneOffers();
         });
         this.processResource.getLatestSales().$promise.then(function (result) {
             self.closedSales = result;
+            self.allClosedSales = self.closedSales;
             self.sumSales();
         });
     }
@@ -158,6 +171,7 @@ class DashboardService {
             start: function (e, ui) {
                 let source = ui.item.sortable.sourceModel;
                 self.delementDropzoneVisibility = "show";
+                self.dragging = true;
                 if (source === self.openLeads) {
                     self.dropzoneClass.contact = "2px dashed grey";
                     self.dropzoneClass.offer = "2px dashed grey";
@@ -203,7 +217,7 @@ class DashboardService {
                 let item = ui.item.sortable.model;
 
                 self.delementDropzoneVisibility = "hidden";
-
+                self.dragging = false;
                 self.dropzoneClass.lead = "none";
                 self.dropzoneClass.contact = "none";
                 self.dropzoneClass.offer = "none";
@@ -212,55 +226,70 @@ class DashboardService {
 
                 if (self.closedSales === target && self.openOffers === source
                     || self.closedSales === target && self.doneOffers === source) {
-                    self.startSaleTransformation(item).then(function (result) {
+                    self.inModal = true;
+                    self.startSaleTransformation(item).then(function (result: Process) {
                         if (result === undefined) {
                             item.sale = undefined;
                             target.splice(target.indexOf(item), 1);
                             source.push(item);
+                            self.inModal = false;
                         } else {
                             let index = target.indexOf(item);
                             target[index] = result;
+                            self.removeFromSourceAndAddToTarget(self.allClosedSales, self.allOpenOffers, item, result);
+                            self.removeFromSourceAndAddToTarget(self.allClosedSales, self.allDoneOffers, item, result);
+                            self.inModal = false;
                         }
                         self.updateDashboard("sale");
                     }, function (result) {
                         item.sale = undefined;
                         target.splice(target.indexOf(item), 1);
                         source.push(item);
+                        self.inModal = false;
                         self.updateDashboard("sale");
                     });
                 }
                 else if (self.openOffers === target && self.openLeads === source
                     || self.openOffers === target && self.inContacts === source) {
-                    self.startOfferTransformation(item).then(function (result) {
+                    self.inModal = true;
+                    self.startOfferTransformation(item).then(function (result: Process) {
                         if (result === undefined) {
                             item.offer = undefined;
                             target.splice(target.indexOf(item), 1);
                             source.push(item);
+                            self.inModal = false;
                         } else {
                             let index = target.indexOf(item);
                             target[index] = result;
+                            self.removeFromSourceAndAddToTarget(self.allOpenOffers, self.allOpenLeads, item, result);
+                            self.removeFromSourceAndAddToTarget(self.allOpenOffers, self.allInContacts, item, result);
+                            self.inModal = false;
                         }
                         self.updateDashboard("offer");
                     }, function (result) {
                         item.offer = undefined;
                         target.splice(target.indexOf(item), 1);
                         source.push(item);
+                        self.inModal = false;
                         self.updateDashboard("offer");
                     });
                 }
                 else if (self.inContacts === target && self.openLeads === source) {
                     self.inContact(item);
                     item.processor = self.rootScope.user;
+                    self.removeFromSourceAndAddToTarget(self.allInContacts, self.allOpenLeads, item, item);
                     self.updateDashboard("lead");
                 }
                 else if (self.doneOffers === target && self.openOffers === source) {
                     self.doneOffer(item);
                     item.processor = null;
+                    self.removeFromSourceAndAddToTarget(self.allDoneOffers, self.allOpenOffers, item, item);
                     self.updateDashboard("offer");
                 }
                 else if (self.openOffers === target && self.doneOffers === source) {
                     self.doneOffer(item);
                     item.processor = self.rootScope.user;
+                    self.removeFromSourceAndAddToTarget(self.allOpenOffers, self.allDoneOffers, item, item);
                     self.updateDashboard("offer");
                 }
                 else if (target === self.elementToDelete) {
@@ -273,6 +302,7 @@ class DashboardService {
                         title = self.translate.instant("OFFER_CLOSE_OFFER");
                         text = self.translate.instant("OFFER_CLOSE_OFFER_REALLY");
                     }
+                    self.inModal = true;
                     self.SweetAlert.swal({
                         title: title,
                         text: text,
@@ -285,15 +315,21 @@ class DashboardService {
                         if (isConfirm) {
                             self.closeProcess(item, source);
                             target.splice(source.indexOf(item), 1);
+                            self.sliceElementFromArray(self.allOpenLeads, item);
+                            self.sliceElementFromArray(self.allInContacts, item);
+                            self.sliceElementFromArray(self.allOpenOffers, item);
+                            self.sliceElementFromArray(self.allDoneOffers, item);
                             let todoElement: Process = findElementById(self.todos, item.id) as Process;
                             if (!isNullOrUndefined(todoElement)) {
                                 self.todos.splice(self.todos.indexOf(todoElement), 1);
                                 self.rootScope.$broadcast("todosChanged", self.todos);
                             }
+                            self.inModal = false;
                         }
                         else {
                             target.splice(target.indexOf(item), 1);
                             source.push(item);
+                            self.inModal = false;
                         }
                     });
                 }
@@ -302,6 +338,19 @@ class DashboardService {
             items: "li:not(.not-sortable)"
         };
         return sortableList;
+    }
+
+    removeFromSourceAndAddToTarget(target: Array<Process>, source: Array<Process>, item: Process, replaceItem) {
+        if (source.indexOf(item) > -1) {
+            target.push(replaceItem);
+            source.splice(source.indexOf(item), 1);
+        }
+    }
+
+    sliceElementFromArray(arr: Array<Process>, item: Process) {
+        if (arr.indexOf(item) > -1) {
+            arr.splice(arr.indexOf(item), 1);
+        }
     }
 
     updateDashboard(type: string) {
@@ -401,15 +450,70 @@ class DashboardService {
     getDoneOffers(): Array<Process> {
         return this.doneOffers;
     }
+
     getClosedSales(): Array<Process> {
         return this.closedSales;
+    }
+
+    filterMytasks(showMytasks: boolean) {
+        let self = this;
+        if (showMytasks) {
+            this.openLeads = this.openLeads.filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
+            this.inContacts = this.inContacts.filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
+            this.openOffers = this.openOffers.filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
+            this.doneOffers = this.doneOffers.filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
+            this.closedSales = this.closedSales.filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
+        } else {
+            this.openLeads = this.allOpenLeads;
+            this.inContacts = this.allInContacts;
+            this.openOffers = this.allOpenOffers;
+            this.doneOffers = this.allDoneOffers;
+            this.closedSales = this.allClosedSales;
+        }
+        this.updateDashboard("lead");
+        this.updateDashboard("offer");
+        this.updateDashboard("sale");
+    }
+
+    filterBySearch(searchText: string, showMyTasks: boolean) {
+        let self = this;
+        if (!stringIsNullorEmpty(searchText)) {
+            this.openLeads = this.allOpenLeads.filter(process => (!isNullOrUndefined(process.lead.customer.firstname) && process.lead.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.lead.customer.lastname) && process.lead.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.lead.customer.company) && process.lead.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+            this.inContacts = this.allInContacts.filter(process => (!isNullOrUndefined(process.lead.customer.firstname) && process.lead.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.lead.customer.lastname) && process.lead.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.lead.customer.company) && process.lead.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+            this.openOffers = this.allOpenOffers.filter(process => (!isNullOrUndefined(process.offer.customer.firstname) && process.offer.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.offer.customer.lastname) && process.offer.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.offer.customer.company) && process.offer.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+            this.doneOffers = this.allDoneOffers.filter(process => (!isNullOrUndefined(process.offer.customer.firstname) && process.offer.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.offer.customer.lastname) && process.offer.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.offer.customer.company) && process.offer.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+            this.closedSales = this.allClosedSales.filter(process => (!isNullOrUndefined(process.sale.customer.firstname) && process.sale.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.sale.customer.lastname) && process.sale.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.sale.customer.company) && process.sale.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+        } else {
+            this.openLeads = this.allOpenLeads;
+            this.inContacts = this.allInContacts;
+            this.openOffers = this.allOpenOffers;
+            this.doneOffers = this.allDoneOffers;
+            this.closedSales = this.allClosedSales;
+        }
+
+        if (showMyTasks) {
+            self.filterMytasks(showMyTasks);
+        }
+
+        this.updateDashboard("lead");
+        this.updateDashboard("offer");
+        this.updateDashboard("sale");
     }
 
     refreshTodos(): void {
         if (isNullOrUndefined(this.rootScope.user)) {
             return;
         }
-
         this.processResource.getTodos({ processorId: this.rootScope.user.id }).$promise.then((data) => {
             this.todos = this.orderByTimestamp(data);
             this.rootScope.$broadcast("todosChanged", this.todos);

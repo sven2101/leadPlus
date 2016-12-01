@@ -136,7 +136,6 @@ class AppController {
                     workflow: "LEAD",
                     status: "OPEN"
                 }).$promise.then(function (result) {
-                    console.log("call form intervall");
                     self.rootScope.leadsCount = result.value;
                 });
                 self.processResource.getCountWorkflowByStatus({

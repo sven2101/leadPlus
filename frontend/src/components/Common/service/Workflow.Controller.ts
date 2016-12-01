@@ -104,6 +104,9 @@ class WorkflowController extends AbstractWorkflow {
         this.loadDataToModal(process);
 
         this.window = $window;
+        if (type === "sale") {
+            this.editable = false;
+        }
     }
 
     loadDataToModal(process: Process) {

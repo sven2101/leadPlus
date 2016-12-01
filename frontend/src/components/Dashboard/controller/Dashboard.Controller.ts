@@ -47,7 +47,7 @@ class DashboardController {
     workflowModalProcess: Process;
     sortableOptions: any;
     currentUser: User;
-    showMyTasks: Boolean = false;
+    showMyTasks: boolean = false;
     todoAmountLimit: number = 10;
 
     rootScope;
@@ -70,9 +70,25 @@ class DashboardController {
         this.statisticService.loadAllResourcesByDateRange("MONTHLY", "ALL");
         this.sortableOptions = this.dashboardService.setSortableOptions(this.scope);
         this.currentUser = this.rootScope.user;
+        this.registerIntervall();
 
         this.refreshData();
         this.refreshTodos();
+        let self = this;
+        $scope.$watch("dashboardCtrl.cardSearchText", function (newValue) {
+            self.dashboardService.filterBySearch(newValue, self.showMyTasks);
+        });
+    }
+    registerIntervall() {
+        let self = this;
+        let intervall = setInterval(function () {
+            if (!self.dashboardService.dragging && !self.dashboardService.inModal) {
+                self.refreshData();
+            }
+        }, 10 * 60 * 1000);
+        self.scope.$on("$destroy", function () {
+            clearInterval(intervall);
+        });
     }
 
     refreshTodos(): void {
@@ -105,45 +121,21 @@ class DashboardController {
     }
 
     getOpenLeads(): Array<Process> {
-        let self = this;
-        if (this.showMyTasks) {
-            return this.dashboardService.getOpenLeads().filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
-        } else {
-            return this.dashboardService.getOpenLeads();
-        }
+        return this.dashboardService.getOpenLeads();
     }
 
     getInContacts(): Array<Process> {
-        let self = this;
-        if (this.showMyTasks) {
-            return this.dashboardService.getInContacts().filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
-        } else {
-            return this.dashboardService.getInContacts();
-        }
+        return this.dashboardService.getInContacts();
     }
     getOpenOffers(): Array<Process> {
-        let self = this;
-        if (this.showMyTasks) {
-            return this.dashboardService.getOpenOffers().filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
-        } else {
-            return this.dashboardService.getOpenOffers();
-        }
+
+        return this.dashboardService.getOpenOffers();
     }
     getDoneOffers(): Array<Process> {
-        let self = this;
-        if (this.showMyTasks) {
-            return this.dashboardService.getDoneOffers().filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
-        } else {
-            return this.dashboardService.getDoneOffers();
-        }
+        return this.dashboardService.getDoneOffers();
     }
     getClosedSales(): Array<Process> {
-        let self = this;
-        if (this.showMyTasks) {
-            return this.dashboardService.getClosedSales().filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
-        } else {
-            return this.dashboardService.getClosedSales();
-        }
+        return this.dashboardService.getClosedSales();
     }
     getProfit(): number {
         return this.statisticService.getProfitTotal();

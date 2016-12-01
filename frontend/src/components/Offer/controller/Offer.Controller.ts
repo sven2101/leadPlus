@@ -163,7 +163,17 @@ class OfferController extends AbstractWorkflow {
             loadDataToModal();
             self.destroyAllScopes();
         });
+        this.registerIntervall();
+    }
 
+    registerIntervall() {
+        let self = this;
+        let intervall = setInterval(function () {
+            self.refreshData();
+        }, 10 * 60 * 1000);
+        self.scope.$on("$destroy", function () {
+            clearInterval(intervall);
+        });
     }
 
     refreshData() {
@@ -229,10 +239,6 @@ class OfferController extends AbstractWorkflow {
         this.getScopeByKey("childRowScope" + process.id).workflowUnit = process.offer;
         this.getScopeByKey("childRowScope" + process.id).process = process;
         this.getScopeByKey("childRowScope" + process.id).$apply();
-    }
-
-    createNextWorkflowUnit(process: Process) {
-        this.workflowService.startSaleTransformation(process);
     }
 
     closeOrOpen(process: Process) {
