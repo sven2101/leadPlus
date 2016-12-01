@@ -47,6 +47,8 @@ class DashboardController {
     workflowModalProcess: Process;
     sortableOptions: any;
     currentUser: User;
+    showMyTasks: Boolean = false;
+    todoAmountLimit: number = 10;
 
     rootScope;
     scope;
@@ -103,19 +105,45 @@ class DashboardController {
     }
 
     getOpenLeads(): Array<Process> {
-        return this.dashboardService.getOpenLeads();
+        let self = this;
+        if (this.showMyTasks) {
+            return this.dashboardService.getOpenLeads().filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
+        } else {
+            return this.dashboardService.getOpenLeads();
+        }
     }
+
     getInContacts(): Array<Process> {
-        return this.dashboardService.getInContacts();
+        let self = this;
+        if (this.showMyTasks) {
+            return this.dashboardService.getInContacts().filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
+        } else {
+            return this.dashboardService.getInContacts();
+        }
     }
     getOpenOffers(): Array<Process> {
-        return this.dashboardService.getOpenOffers();
+        let self = this;
+        if (this.showMyTasks) {
+            return this.dashboardService.getOpenOffers().filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
+        } else {
+            return this.dashboardService.getOpenOffers();
+        }
     }
     getDoneOffers(): Array<Process> {
-        return this.dashboardService.getDoneOffers();
+        let self = this;
+        if (this.showMyTasks) {
+            return this.dashboardService.getDoneOffers().filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
+        } else {
+            return this.dashboardService.getDoneOffers();
+        }
     }
     getClosedSales(): Array<Process> {
-        return this.dashboardService.getClosedSales();
+        let self = this;
+        if (this.showMyTasks) {
+            return this.dashboardService.getClosedSales().filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
+        } else {
+            return this.dashboardService.getClosedSales();
+        }
     }
     getProfit(): number {
         return this.statisticService.getProfitTotal();

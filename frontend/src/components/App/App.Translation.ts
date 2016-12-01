@@ -489,6 +489,7 @@ function config($translateProvider) {
             CUSTOMER_NUMBER: "Kundennummer",
 
             TODO_TODOS: "Aufgaben",
+            SHOW_MY_TASKS: "Zeige meine Aufgaben",
             TODO_NO_TODOS: "Keine Aufgaben vorhanden",
 
             // Define calculation elements 
@@ -980,6 +981,7 @@ function config($translateProvider) {
 
 
             TODO_TODOS: "Tasks",
+            SHOW_MY_TASKS: "Show my tasks",
             TODO_NO_TODOS: "No tasks existing",
 
             // Define calculation elements 
