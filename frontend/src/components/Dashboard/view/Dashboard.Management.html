@@ -123,7 +123,7 @@
 									</div>
 									<div ng-style="{'height':dashboardCtrl.getHeight()+'px','border':dashboardCtrl.dashboardService.dropzoneClass.done}">
 										<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="sale" ng-model="dashboardCtrl.dashboardService.doneOffers">
-											<li class="warning-element draggable dragItem" ng-repeat="process in dashboardCtrl.getDoneOffers() | limitTo:7">
+											<li class="dragItem" ng-class="dashboardCtrl.getClassToDrag(process, 'warning')" ng-repeat="process in dashboardCtrl.getDoneOffers() | limitTo:7">
 												<dashboardmanagamentcard process="process" workflowunittype="offer" />
 											</li>
 										</ul>

@@ -16,6 +16,7 @@ package dash.processmanagement.rest;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -82,6 +83,15 @@ public class ProcessResource {
 	public List<Process> getElementsByStatus(@ApiParam(required = true) @PathVariable final Workflow workflow,
 			@ApiParam(required = true) @PathVariable final Status status) {
 		return processService.getElementsByStatus(workflow, status);
+
+	}
+
+	@ApiOperation(value = "Returns count processes with a certain state", notes = "")
+	@RequestMapping(value = "/count/workflow/{workflow}/state/{status}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public Map<String, Integer> getCountElementsByStatus(@ApiParam(required = true) @PathVariable final Workflow workflow,
+			@ApiParam(required = true) @PathVariable final Status status) {
+		return processService.getCountElementsByStatus(workflow, status);
 
 	}
 

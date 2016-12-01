@@ -82,17 +82,17 @@ class AppController {
         self.rootScope.loadLabels = function () {
             if (!angular
                 .isUndefined(self.rootScope.user)) {
-                self.processResource.getLeadsByStatus({
+                self.processResource.getCountWorkflowByStatus({
                     workflow: "LEAD",
                     status: "OPEN"
                 }).$promise.then(function (result) {
-                    self.rootScope.leadsCount = result.length;
+                    self.rootScope.leadsCount = result.value;
                 });
-                self.processResource.getOffersByStatus({
+                self.processResource.getCountWorkflowByStatus({
                     workflow: "OFFER",
                     status: "OFFER"
                 }).$promise.then(function (result) {
-                    self.rootScope.offersCount = result.length;
+                    self.rootScope.offersCount = result.value;
                 });
             }
         };
@@ -132,17 +132,18 @@ class AppController {
         self.stop = self.interval(function () {
             if (!angular
                 .isUndefined(self.rootScope.user)) {
-                self.processResource.getLeadsByStatus({
+                self.processResource.getCountWorkflowByStatus({
                     workflow: "LEAD",
                     status: "OPEN"
                 }).$promise.then(function (result) {
-                    self.rootScope.leadsCount = result.length;
+                    console.log("call form intervall");
+                    self.rootScope.leadsCount = result.value;
                 });
-                self.processResource.getOffersByStatus({
+                self.processResource.getCountWorkflowByStatus({
                     workflow: "OFFER",
                     status: "OFFER"
                 }).$promise.then(function (result) {
-                    self.rootScope.offersCount = result.length;
+                    self.rootScope.offersCount = result.value;
                 });
             }
         }.bind(this), 300000);

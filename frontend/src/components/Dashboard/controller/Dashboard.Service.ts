@@ -67,7 +67,6 @@ class DashboardService {
         this.q = $q;
         this.SweetAlert = SweetAlert;
         this.uibModal = $uibModal;
-        this.initDashboard();
         this.refreshTodos();
 
         $rootScope.$on("onTodosChange", (event) => {
@@ -82,7 +81,7 @@ class DashboardService {
 
     initDashboard() {
         let self = this;
-        this.processResource.getLeadsByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function (result) {
+        this.processResource.getWorkflowByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function (result) {
             let open: Array<Process> = new Array<Process>();
             let contact: Array<Process> = new Array<Process>();
             for (let i = 0; i < result.length; i++) {
@@ -98,7 +97,7 @@ class DashboardService {
             self.inContacts = self.orderProcessByTimestamp(contact, "lead");
             self.sumInContacts();
         });
-        this.processResource.getOffersByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
+        this.processResource.getWorkflowByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
             let open: Array<Process> = new Array<Process>();
             let done: Array<Process> = new Array<Process>();
             for (let i = 0; i < result.length; i++) {
