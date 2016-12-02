@@ -76,7 +76,7 @@
 									</div>
 									<div ng-style="{'height':dashboardCtrl.getHeight()+'px','border':dashboardCtrl.dashboardService.dropzoneClass.lead}">
 										<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="lead" ng-model="dashboardCtrl.dashboardService.openLeads">
-											<li class="dragItem" ng-class="dashboardCtrl.getClassToDrag(process, 'danger')" ng-repeat="process in dashboardCtrl.getOpenLeads() | limitTo:7">
+											<li class="dragItem" ng-class="::dashboardCtrl.getClassToDrag(process, 'danger')" ng-repeat="process in dashboardCtrl.getOpenLeads() | limitTo:7">
 												<dashboardmanagamentcard process="process" workflowunittype="lead" />
 											</li>
 										</ul>
@@ -93,7 +93,7 @@
 									</div>
 									<div id="contactDropzone" ng-style="{'height':dashboardCtrl.getHeight()+'px','border':dashboardCtrl.dashboardService.dropzoneClass.contact}">
 										<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="lead" ng-model="dashboardCtrl.dashboardService.inContacts">
-											<li class="dragItem" ng-class="dashboardCtrl.getClassToDrag(process, 'danger')" ng-repeat="process in dashboardCtrl.getInContacts()| limitTo:7">
+											<li class="dragItem" ng-class="::dashboardCtrl.getClassToDrag(process, 'danger')" ng-repeat="process in dashboardCtrl.getInContacts()| limitTo:7">
 												<dashboardmanagamentcard process="process" workflowunittype="lead" />
 											</li>
 										</ul>
@@ -111,7 +111,7 @@
 									</div>
 									<div ng-style="{'height':dashboardCtrl.getHeight()+'px','border':dashboardCtrl.dashboardService.dropzoneClass.offer}">
 										<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="offer" ng-model="dashboardCtrl.dashboardService.openOffers">
-											<li class="dragItem" ng-class="dashboardCtrl.getClassToDrag(process, 'warning')" ng-repeat="process in dashboardCtrl.getOpenOffers() | limitTo:7">
+											<li class="dragItem" ng-class="::dashboardCtrl.getClassToDrag(process, 'warning')" ng-repeat="process in dashboardCtrl.getOpenOffers() | limitTo:7">
 												<dashboardmanagamentcard process="process" workflowunittype="offer" />
 											</li>
 										</ul>
@@ -127,7 +127,7 @@
 									</div>
 									<div ng-style="{'height':dashboardCtrl.getHeight()+'px','border':dashboardCtrl.dashboardService.dropzoneClass.done}">
 										<ul ui-sortable="dashboardCtrl.sortableOptions" class="sortable-list connectList agile-list" id="sale" ng-model="dashboardCtrl.dashboardService.doneOffers">
-											<li class="dragItem" ng-class="dashboardCtrl.getClassToDrag(process, 'warning')" ng-repeat="process in dashboardCtrl.getDoneOffers() | limitTo:7">
+											<li class="dragItem" ng-class="::dashboardCtrl.getClassToDrag(process, 'warning')" ng-repeat="process in dashboardCtrl.getDoneOffers() | limitTo:7">
 												<dashboardmanagamentcard process="process" workflowunittype="offer" />
 											</li>
 										</ul>
