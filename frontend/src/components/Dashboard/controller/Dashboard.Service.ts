@@ -107,6 +107,7 @@ class DashboardService {
             self.allInContacts = self.inContacts;
             self.sumInContacts();
         });
+
         this.processResource.getWorkflowByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
             let open: Array<Process> = new Array<Process>();
             let done: Array<Process> = new Array<Process>();
@@ -125,6 +126,7 @@ class DashboardService {
             self.allDoneOffers = self.doneOffers;
             self.sumDoneOffers();
         });
+
         this.processResource.getLatestSales().$promise.then(function (result) {
             self.closedSales = result;
             self.allClosedSales = self.closedSales;

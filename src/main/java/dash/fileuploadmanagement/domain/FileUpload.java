@@ -14,13 +14,16 @@
 package dash.fileuploadmanagement.domain;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -57,9 +60,9 @@ public class FileUpload implements Serializable {
 	@Column(name = "size", nullable = false)
 	private Long size;
 
-	@Column(name = "content", nullable = false)
-	@JsonProperty(access = Access.WRITE_ONLY)
-	private byte[] content;
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "content_fk", nullable = false)
+	private FileContent content;
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
@@ -95,11 +98,18 @@ public class FileUpload implements Serializable {
 	}
 
 	public byte[] getContent() {
-		return content;
+		return content.getContent();
 	}
 
+	@JsonProperty(access = Access.WRITE_ONLY)
 	public void setContent(byte[] content) {
-		this.content = content;
+		if (content == null) {
+			this.content = null;
+			return;
+		}
+		FileContent fileContent = new FileContent();
+		fileContent.setContent(content);
+		this.content = fileContent;
 	}
 
 	public boolean isDeleted() {
@@ -118,7 +128,7 @@ public class FileUpload implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(content);
+		result = prime * result + ((content == null) ? 0 : content.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((filename == null) ? 0 : filename.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -136,7 +146,10 @@ public class FileUpload implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		FileUpload other = (FileUpload) obj;
-		if (!Arrays.equals(content, other.content))
+		if (content == null) {
+			if (other.content != null)
+				return false;
+		} else if (!content.equals(other.content))
 			return false;
 		if (deleted != other.deleted)
 			return false;
