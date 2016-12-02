@@ -47,7 +47,7 @@ class ToDoTableRowDirective implements IDirective {
             case Status.OFFER: return "label label-warning";
             case Status.FOLLOWUP: return "label label-warning";
             case Status.INCONTACT: return "label label-danger";
-            case Status.DONE: return "label label-sucess";
+            case Status.DONE: return "label label-success";
         }
     }
     sumOrderPositions(array: Array<OrderPosition>): number {

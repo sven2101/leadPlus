@@ -20,9 +20,6 @@ public class ProductStatistic implements Serializable {
 
 	public void setProduct(Product product) {
 		this.product = product;
-		if (this.product.getPicture() != null) {
-			this.product.getPicture().setContent(null);
-		}
 	}
 
 	public int getOrderPositions() {

@@ -34,7 +34,7 @@ class DashboardManagmentCardDirective implements IDirective {
         scope.onInfoClick = (editWorkflowUnit, workflowunittype, process) => scope.$parent.$parent.$parent.dashboardCtrl.saveDataToModal(editWorkflowUnit, workflowunittype, process);
         scope.openFollowUpModal = (process) => this.WorkflowService.openFollowUpModal(process);
         scope.pin = (process) => this.WorkflowService.togglePin(process, this.$rootScope.user);
-        scope.goToLink = "#/" + scope.workflowunittype + "s" + scope.process.id;
+        scope.goToLink = "#/" + scope.workflowunittype + "s/" + scope.process.id;
         if (scope.editWorkflowUnit) {
             scope.text = scope.text = scope.editWorkflowUnit.customer.company ? scope.editWorkflowUnit.customer.company : scope.editWorkflowUnit.customer.firstname + " " + scope.editWorkflowUnit.customer.lastname;
         }

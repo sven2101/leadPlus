@@ -85,12 +85,6 @@ public class UserStatistic implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
-		if (this.user.getPicture() != null) {
-			this.user.getPicture().setContent(null);
-		}
-		if (this.user.getThumbnail() != null) {
-			this.user.getThumbnail().setContent(null);
-		}
 	}
 
 	public double getProfit() {
