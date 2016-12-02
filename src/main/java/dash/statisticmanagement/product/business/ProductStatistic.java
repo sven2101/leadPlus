@@ -19,7 +19,14 @@ public class ProductStatistic implements Serializable {
 	}
 
 	public void setProduct(Product product) {
-		this.product = product;
+		Product newProduct = new Product();
+		newProduct.setName(product.getName());
+		newProduct.setNetPrice(product.getNetPrice());
+		newProduct.setProductNumber(product.getProductNumber());
+		newProduct.setDescription(product.getDescription());
+		newProduct.setProductState(product.getProductState());
+		newProduct.setDeactivated(product.isDeactivated());
+		this.product = newProduct;
 	}
 
 	public int getOrderPositions() {
