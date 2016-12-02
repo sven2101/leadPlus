@@ -44,12 +44,12 @@
         <div class="fluid-column">
             <div style="margin-left:3px;overflow:hidden;line-height:95%; word-wrap: break-word;">
                 <div style="height:54px;" ng-if="(editWorkflowUnit.customer.company!=null&&editWorkflowUnit.customer.company!='')">
-                    {{editWorkflowUnit.customer.company}}
+                    {{::editWorkflowUnit.customer.company}}
                 </div>
                 <div style="height:54px;" ng-if="(editWorkflowUnit.customer.company==null||editWorkflowUnit.customer.company=='')">
-                    {{editWorkflowUnit.customer.firstname}} {{editWorkflowUnit.customer.lastname}}
+                    {{::editWorkflowUnit.customer.firstname}} {{::editWorkflowUnit.customer.lastname}}
                 </div>
-                <span><small><i class="fa fa-clock-o"></i> {{toLocalDate(editWorkflowUnit.timestamp)}}</small></span>
+                <span><small><i class="fa fa-clock-o"></i> {{::toLocalDate(editWorkflowUnit.timestamp)}}</small></span>
                 <small class="pull-right">
                     <span ng-if="process.status== 'FOLLOWUP'" ng-click="openFollowUpModal(process)">
                         <i  title="{{'OFFER_FOLLOW_UP'| translate }}" class="fa fa-eye" aria-hidden="true" ></i>

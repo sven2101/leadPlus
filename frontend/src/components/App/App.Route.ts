@@ -165,7 +165,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                     if (rejection.status < 300) {
                         defer.resolve(rejection);
                     } else {
-                        if (rejection.config.url.includes(".html")) {
+                        if (rejection.config && rejection.config.url.includes(".html")) {
                             switch (rejection.status) {
                                 case 401: $location.path("/401"); break;
                                 case 403: $location.path("/403"); break;

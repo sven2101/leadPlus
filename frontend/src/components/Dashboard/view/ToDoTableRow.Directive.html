@@ -1,0 +1,14 @@
+<td class="project-status">
+    <span class="{{::badgeClass}}">{{ ::statusTranslation | translate }}</span>
+</td>
+<td align="left" class="project-title">
+    <a >{{::text}}</a>
+    <br>
+    <small>{{'COMMON_CREATED' | translate }} {{::toLocalDate(editWorkflowUnit.timestamp)}}</small>   
+</td>
+<td class="project-completion">
+    <strong >{{::price| currency:'\u20AC'}}</strong>
+</td>
+<td class="project-actions">
+    <a class="btn btn-white btn-sm" href="{{::goToLink}}"><i class="fa fa-globe fa-lg"></i> Go to </a> 
+</td>
