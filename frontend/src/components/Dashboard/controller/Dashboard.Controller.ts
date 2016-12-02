@@ -49,6 +49,8 @@ class DashboardController {
     currentUser: User;
     showMyTasks: boolean = false;
     todoAmountLimit: number = 10;
+    height: number;
+    cardSearchText: string;
 
     rootScope;
     scope;
@@ -218,6 +220,9 @@ class DashboardController {
     }
 
     getHeight(): number {
+        if (!stringIsNullorEmpty(this.cardSearchText) || this.showMyTasks) {
+            return this.height;
+        }
         let max = 0;
         let array: Array<number> = new Array<number>(this.getOpenLeads().length, this.getInContacts().length, this.getOpenOffers().length, this.getDoneOffers().length, this.getClosedSales().length);
         for (let element of array) {
@@ -226,9 +231,11 @@ class DashboardController {
             }
         }
         if (max >= 7) {
-            return 7 * 85;
+            this.height = 7 * 85;
+            return this.height;
         }
-        return (max * 85) + 100;
+        this.height = (max * 85) + 100;
+        return this.height;
     }
 }
 
