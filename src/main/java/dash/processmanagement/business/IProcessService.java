@@ -39,7 +39,7 @@ import dash.workflowmanagement.domain.Workflow;
 public interface IProcessService {
 
 	public List<Process> getElementsByStatus(final Workflow workflow, final Status status);
-	
+
 	public Map<String, Integer> getCountElementsByStatus(final Workflow workflow, final Status status);
 
 	public Process getById(final long id) throws NotFoundException;
@@ -71,7 +71,8 @@ public interface IProcessService {
 
 	public List<Process> getProcessesByProcessor(final long processorId);
 
-	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId, Calendar from, Calendar until);
+	public List<Process> getProcessesByProcessorAndBetweenTimestampAndWorkflow(long processorId, Calendar from,
+			Calendar until, SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute);
 
 	public List<Process> getProcessesBetweenTimestamp(Calendar from, Calendar until,
 			SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute);

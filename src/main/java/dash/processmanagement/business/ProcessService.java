@@ -60,7 +60,6 @@ import dash.offermanagement.business.IOfferService;
 import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.domain.Process_;
 import dash.processmanagement.domain.Processor;
 import dash.productmanagement.domain.OrderPosition;
 import dash.salemanagement.business.ISaleService;
@@ -348,9 +347,10 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId, Calendar from, Calendar until) {
-		return processRepository.findAll(
-				where(hasProcessorInDistinct(processorId)).and(isBetweenTimestamp(from, until, Process_.lead)));
+	public List<Process> getProcessesByProcessorAndBetweenTimestampAndWorkflow(long processorId, Calendar from,
+			Calendar until, SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute) {
+		return processRepository.findAll(where(hasProcessorInDistinct(processorId))
+				.and(isBetweenTimestamp(from, until, abstractWorkflowAttribute)).and(isDeleted(false)));
 	}
 
 	@Override
@@ -361,7 +361,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Map<String,Integer> getCountElementsByStatus(Workflow workflow, Status status) {
+	public Map<String, Integer> getCountElementsByStatus(Workflow workflow, Status status) {
 		int count = 0;
 		if (workflow.equals(Workflow.LEAD)) {
 			count = processRepository.countByStatusAndLeadIsNotNull(status);
@@ -377,8 +377,8 @@ public class ProcessService implements IProcessService {
 		} else if (workflow.equals(Workflow.SALE)) {
 			count = processRepository.countByStatusAndSaleIsNotNull(status);
 		}
-		Map<String,Integer> returnMap = new HashMap<String, Integer>();
+		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		returnMap.put("value", count);
-		return returnMap; 
+		return returnMap;
 	}
 }

@@ -15,6 +15,7 @@
 package dash.statisticmanagement.user.business;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -63,15 +64,24 @@ public class UserStatisticService extends AbstractStatisticService {
 		}
 
 		StatisticHelper statisticHelper = new StatisticHelper(dateRange);
-		final List<Process> processes = ProcessService.getProcessesBetweenTimestamp(statisticHelper.getFrom(),
+
+		final HashSet<Process> processes = new HashSet<>();
+		List<Process> leads = ProcessService.getProcessesBetweenTimestamp(statisticHelper.getFrom(),
 				statisticHelper.getUntil(), Process_.lead);
+		List<Process> offers = ProcessService.getProcessesBetweenTimestamp(statisticHelper.getFrom(),
+				statisticHelper.getUntil(), Process_.offer);
+		List<Process> sales = ProcessService.getProcessesBetweenTimestamp(statisticHelper.getFrom(),
+				statisticHelper.getUntil(), Process_.sale);
+		processes.addAll(leads);
+		processes.addAll(offers);
+		processes.addAll(sales);
 
 		for (Process process : processes) {
 			if (process.getFormerProcessors().size() == 0)
 				continue;
-			addToMapKey(ALL_STATISTIC_KEY, process, userMap);
+			addToMapKey(ALL_STATISTIC_KEY, process, userMap, statisticHelper.getFrom());
 			if (process.getSource() != null && !CommonUtils.isNullOrEmpty(process.getSource().getName())) {
-				addToMapKey(process.getSource().getName(), process, userMap);
+				addToMapKey(process.getSource().getName(), process, userMap, statisticHelper.getFrom());
 			}
 
 		}
@@ -81,7 +91,8 @@ public class UserStatisticService extends AbstractStatisticService {
 		return returnMap;
 	}
 
-	private void addToMapKey(String sourceKey, Process process, Map<String, Map<Long, UserStatistic>> userMap) {
+	private void addToMapKey(String sourceKey, Process process, Map<String, Map<Long, UserStatistic>> userMap,
+			Calendar from) {
 		List<Processor> offerProcessors = process.getFormerProcessors().stream()
 				.filter(it -> Activity.OFFER.equals(it.getActivity())).collect(Collectors.toList());
 		Set<Long> hasCountProcess = new HashSet<>();
@@ -104,23 +115,27 @@ public class UserStatisticService extends AbstractStatisticService {
 				hasCountProcess.add(userIdKey);
 			}
 			if (process.getLead() != null && !process.getLead().isDeleted()
+					&& process.getLead().getTimestamp().after(from)
 					&& (Activity.OPEN.equals(activity) || Activity.INCONTACT.equals(activity))) {
 				userMap.get(sourceKey).get(userIdKey).addCountLead();
 				if (process.getSale() != null && !process.getSale().isDeleted()
-						&& !hasCountSucceededLead.contains(userIdKey)) {
+						&& process.getSale().getTimestamp().after(from) && !hasCountSucceededLead.contains(userIdKey)) {
 					userMap.get(sourceKey).get(userIdKey).addSucceededLeads();
 					hasCountSucceededLead.add(userIdKey);
 				}
 			} else {
-				if (process.getOffer() != null && !process.getOffer().isDeleted() && Activity.OFFER.equals(activity)) {
+				if (process.getOffer() != null && !process.getOffer().isDeleted()
+						&& process.getOffer().getTimestamp().after(from) && Activity.OFFER.equals(activity)) {
 					userMap.get(sourceKey).get(userIdKey).addCountOffer();
 					if (process.getSale() != null && !process.getSale().isDeleted()
+							&& process.getSale().getTimestamp().after(from)
 							&& !hasCountSucceededOffer.contains(userIdKey)) {
 						userMap.get(sourceKey).get(userIdKey).addSucceededOffers();
 						hasCountSucceededOffer.add(userIdKey);
 					}
 				}
-				if (process.getSale() != null && !process.getSale().isDeleted()) {
+				if (process.getSale() != null && !process.getSale().isDeleted()
+						&& process.getSale().getTimestamp().after(from)) {
 					if (Activity.SALE.equals(activity)) {
 						userMap.get(sourceKey).get(userIdKey).addCountSale();
 					} else if (Activity.OFFER.equals(activity)) {
@@ -135,7 +150,7 @@ public class UserStatisticService extends AbstractStatisticService {
 				}
 			}
 			if (process.getSale() != null && !process.getSale().isDeleted()
-					&& !hasCountCompletedProcess.contains(userIdKey)) {
+					&& process.getSale().getTimestamp().after(from) && !hasCountCompletedProcess.contains(userIdKey)) {
 				userMap.get(sourceKey).get(userIdKey).addCompletedProcess();
 				hasCountCompletedProcess.add(userIdKey);
 
@@ -154,23 +169,31 @@ public class UserStatisticService extends AbstractStatisticService {
 		}
 		Map<String, UserStatistic> userMap = new HashMap<>();
 		StatisticHelper statisticHelper = new StatisticHelper(dateRange);
-		final List<Process> processes = ProcessService.getProcessesByProcessorAndBetweenTimestamp(userId,
-				statisticHelper.getFrom(), statisticHelper.getUntil());
-
+		final HashSet<Process> processes = new HashSet<>();
+		List<Process> leads = ProcessService.getProcessesByProcessorAndBetweenTimestampAndWorkflow(userId,
+				statisticHelper.getFrom(), statisticHelper.getUntil(), Process_.lead);
+		List<Process> offers = ProcessService.getProcessesByProcessorAndBetweenTimestampAndWorkflow(userId,
+				statisticHelper.getFrom(), statisticHelper.getUntil(), Process_.offer);
+		List<Process> sales = ProcessService.getProcessesByProcessorAndBetweenTimestampAndWorkflow(userId,
+				statisticHelper.getFrom(), statisticHelper.getUntil(), Process_.sale);
+		processes.addAll(leads);
+		processes.addAll(offers);
+		processes.addAll(sales);
 		User user = userService.getById(userId);
 		if (user == null)
 			return userMap;
 		for (Process process : processes) {
-			addMapToKeySingleUserStatistic(ALL_STATISTIC_KEY, process, user, userMap);
+			addMapToKeySingleUserStatistic(ALL_STATISTIC_KEY, process, user, userMap, statisticHelper.getFrom());
 			if (process.getSource() != null && !CommonUtils.isNullOrEmpty(process.getSource().getName())) {
-				addMapToKeySingleUserStatistic(process.getSource().getName(), process, user, userMap);
+				addMapToKeySingleUserStatistic(process.getSource().getName(), process, user, userMap,
+						statisticHelper.getFrom());
 			}
 		}
 		return userMap;
 	}
 
 	private void addMapToKeySingleUserStatistic(String sourceKey, Process process, User user,
-			Map<String, UserStatistic> userMap) {
+			Map<String, UserStatistic> userMap, Calendar from) {
 		if (!userMap.containsKey(sourceKey)) {
 			UserStatistic userStatistic = new UserStatistic();
 			userStatistic.setUser(user);
@@ -183,6 +206,7 @@ public class UserStatisticService extends AbstractStatisticService {
 				.collect(Collectors.toList())) {
 			Activity activity = processor.getActivity();
 			if (process.getLead() != null && !process.getLead().isDeleted()
+					&& process.getLead().getTimestamp().after(from)
 					&& (Activity.OPEN.equals(activity) || Activity.INCONTACT.equals(activity))) {
 				userMap.get(sourceKey).addCountLead();
 				if (process.getSale() != null && !process.getSale().isDeleted()) {
@@ -190,13 +214,15 @@ public class UserStatisticService extends AbstractStatisticService {
 				}
 
 			} else {
-				if (process.getOffer() != null && !process.getOffer().isDeleted() && Activity.OFFER.equals(activity)) {
+				if (process.getOffer() != null && !process.getOffer().isDeleted()
+						&& process.getOffer().getTimestamp().after(from) && Activity.OFFER.equals(activity)) {
 					userMap.get(sourceKey).addCountOffer();
 					if (process.getSale() != null && !process.getSale().isDeleted()) {
 						userMap.get(sourceKey).addSucceededOffers();
 					}
 				}
-				if (process.getSale() != null && !process.getSale().isDeleted()) {
+				if (process.getSale() != null && !process.getSale().isDeleted()
+						&& process.getSale().getTimestamp().after(from)) {
 					if (Activity.SALE.equals(activity)) {
 						userMap.get(sourceKey).addCountSale();
 					} else if (Activity.OFFER.equals(activity)) {
@@ -211,7 +237,8 @@ public class UserStatisticService extends AbstractStatisticService {
 				}
 			}
 		}
-		if (process.getSale() != null && !process.getSale().isDeleted()) {
+		if (process.getSale() != null && !process.getSale().isDeleted()
+				&& process.getSale().getTimestamp().after(from)) {
 			userMap.get(sourceKey).addCompletedProcess();
 		}
 
