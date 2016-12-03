@@ -35,7 +35,7 @@
 					<div ng-if="dashboardCtrl.dashboardService.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
 						<p style="margin-top:7px">{{ 'TODO_NO_TODOS' | translate }}</p>
 					</div>
-					<div ng-if="dashboardCtrl.todoAmountLimit<=dashboardCtrl.dashboardService.todos.length" class="row" style="text-align: center;">
+					<div ng-if="dashboardCtrl.todoAmountLimit<dashboardCtrl.dashboardService.todos.length" class="row" style="text-align: center;">
 						<a href="" ng-click="dashboardCtrl.todoAmountLimit=dashboardCtrl.todoAmountLimit+10">10 {{ 'COMMON_LOAD_MORE' | translate }}</a>
 					</div>
 				</div>

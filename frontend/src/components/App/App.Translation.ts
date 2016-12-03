@@ -487,6 +487,8 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_TIMELINE: "Kunden Timeline",
             CUSTOMER_DETAIL_CREATED: "wurde erstellt",
             CUSTOMER_NUMBER: "Kundennummer",
+            CUSTOMER_TOAST_SAVE: "Der Kunde wurde erfolgreich angelegt/aktualisiert",
+            CUSTOMER_TOAST_ERROR: "Der Kunde konnte nicht angelegt/aktualisiert werden",
 
             TODO_TODOS: "Aufgaben",
             SHOW_MY_TASKS: "Zeige meine Aufgaben",
@@ -978,6 +980,8 @@ function config($translateProvider) {
             CUSTOMER_DETAIL_TIMELINE: "Customer Timeline",
             CUSTOMER_DETAIL_CREATED: "has been created",
             CUSTOMER_NUMBER: "Customer number",
+            CUSTOMER_TOAST_SAVE: "Creating/Editing Customer was successful",
+            CUSTOMER_TOAST_ERROR: "Creating/Editing Customer was unsuccessful",
 
 
             TODO_TODOS: "Tasks",

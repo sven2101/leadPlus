@@ -18,33 +18,44 @@ const CustomerServiceId: string = "CustomerService";
 
 class CustomerService {
 
-    private $inject = [CustomerResourceId, $httpId];
+    private $inject = [CustomerResourceId, $httpId, toasterId, $translateId];
 
     customerResource: any;
     pagingCustomers: Array<Customer> = new Array<Customer>();
     searchCustomers: Array<Customer> = new Array<Customer>();
     page: any;
     http: any;
+    toaster: any;
+    translate: any;
 
-    constructor(CustomerResource: CustomerResource, $http) {
+    constructor(CustomerResource: CustomerResource, $http, toaster, $translate) {
         this.customerResource = CustomerResource.resource;
         this.http = $http;
+        this.toaster = toaster;
+        this.translate = $translate;
         this.getAllCustomerByPage(1, 20, "noSearchText", false);
     }
 
-    saveCustomer(customer: Customer, insert: boolean = true) {
+    async saveCustomer(customer: Customer, insert: boolean = true): Promise<Customer> {
         let self = this;
         if (insert) {
             customer.timestamp = newTimestamp();
             customer.realCustomer = true;
             this.customerResource.createCustomer(customer).$promise.then(function (result: Customer) {
-                self.pagingCustomers.push(result);
+                self.toaster.pop("success", "", self.translate.instant("CUSTOMER_TOAST_SAVE"));
+                customer = result;
+            }, function (result) {
+                self.toaster.pop("success", "", self.translate.instant("CUSTOMER_TOAST_ERROR"));
             });
         } else {
             this.customerResource.updateCustomer(customer).$promise.then(function (result: Customer) {
+                self.toaster.pop("success", "", self.translate.instant("CUSTOMER_TOAST_SAVE"));
                 customer = result;
+            }, function (result) {
+                self.toaster.pop("success", "", self.translate.instant("CUSTOMER_TOAST_ERROR"));
             });
         }
+        return customer;
     }
 
     insertCustomer(customer: Customer) {

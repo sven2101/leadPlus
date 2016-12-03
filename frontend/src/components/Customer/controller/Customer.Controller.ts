@@ -62,9 +62,10 @@ class CustomerController {
     }
 
     searchCustomer(searchText: string) {
-        this.pageStart = 0;
+        this.pageStart = 1;
         this.customerService.pagingCustomers = new Array<Customer>();
         this.customerService.getAllCustomerByPage(this.pageStart, 20, searchText, this.loadAllCustomers);
+        this.pageStart += 20;
     }
 
     loadNextCustomers() {
@@ -81,6 +82,7 @@ class CustomerController {
             shallowCopy(this.currentCustomer, this.currentEditCustomer);
         }
         this.customerService.saveCustomer(this.currentCustomer, this.isCurrentCustomerNew);
+        this.searchText = "";
     }
 
     getLocalTimestamp: any = function (customer: Customer) {
