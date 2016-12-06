@@ -85,7 +85,6 @@ class CustomerController {
             shallowCopy(this.currentCustomer, this.currentEditCustomer);
         }
         await this.customerService.saveCustomer(this.currentCustomer, this.isCurrentCustomerNew);
-        console.log(this.searchText);
         if (!isNullOrUndefined(this.searchText) && this.searchText.length > 0) {
             this.searchText = "";
         } else {
