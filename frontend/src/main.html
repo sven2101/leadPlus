@@ -118,7 +118,7 @@
 
 								<div class="media-body">
 									<strong>  {{ 'TODO_TODOS' | translate }}</strong> <br>
-
+									<br>
 								</div>
 							</div>
 						</li>
@@ -126,7 +126,7 @@
 							<table class="table table-hover">
 								<tbody>
 									<tr style="cursor:pointer" ng-click="appCtrl.navigateTo(todo)" ng-repeat="todo in appCtrl.todos | limitTo:5 | orderBy:'timestamp'">
-												<td class="project-status">
+										<td class="project-status">
 											<span ng-if="todo.status=='OPEN'" class="label label-danger">{{ 'LEAD' | translate }}</span>
 											<span ng-if="todo.status=='OFFER'" class="label label-warning">{{ 'COMMON_STATUS_OFFER' | translate }}</span>
 											<span ng-if="todo.status=='FOLLOWUP'" class="label label-warning">{{ 'COMMON_STATUS_FOLLOW_UP' | translate }}</span>
@@ -144,10 +144,12 @@
 									</tr>
 								</tbody>
 							</table>
-							<p ng-if="appCtrl.todos.length>5" style="margin-left:160px">...</p>
 							<div ng-if="appCtrl.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
 								<p style="margin-top:7px">{{ 'TODO_NO_TODOS' | translate }}</p>
 							</div>
+						</li>
+						<li>
+							<p ng-if="appCtrl.todos.length>5" class="text-center">...</p>
 						</li>
 					</ul>
 				</li>

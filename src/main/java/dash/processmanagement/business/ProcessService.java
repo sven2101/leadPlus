@@ -32,7 +32,9 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.persistence.metamodel.SingularAttribute;
@@ -58,7 +60,6 @@ import dash.offermanagement.business.IOfferService;
 import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.domain.Process_;
 import dash.processmanagement.domain.Processor;
 import dash.productmanagement.domain.OrderPosition;
 import dash.salemanagement.business.ISaleService;
@@ -346,9 +347,10 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public List<Process> getProcessesByProcessorAndBetweenTimestamp(long processorId, Calendar from, Calendar until) {
-		return processRepository.findAll(
-				where(hasProcessorInDistinct(processorId)).and(isBetweenTimestamp(from, until, Process_.lead)));
+	public List<Process> getProcessesByProcessorAndBetweenTimestampAndWorkflow(long processorId, Calendar from,
+			Calendar until, SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute) {
+		return processRepository.findAll(where(hasProcessorInDistinct(processorId))
+				.and(isBetweenTimestamp(from, until, abstractWorkflowAttribute)).and(isDeleted(false)));
 	}
 
 	@Override
@@ -356,5 +358,27 @@ public class ProcessService implements IProcessService {
 			SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute) {
 		return processRepository
 				.findAll(where(isBetweenTimestamp(from, until, abstractWorkflowAttribute)).and(isDeleted(false)));
+	}
+
+	@Override
+	public Map<String, Integer> getCountElementsByStatus(Workflow workflow, Status status) {
+		int count = 0;
+		if (workflow.equals(Workflow.LEAD)) {
+			count = processRepository.countByStatusAndLeadIsNotNull(status);
+			// TODO Workaround to get inContacts - function should accept an
+			// array
+			count += processRepository.countByStatusAndLeadIsNotNull(Status.INCONTACT);
+		} else if (workflow.equals(Workflow.OFFER)) {
+			count = processRepository.countByStatusAndOfferIsNotNull(status);
+			// TODO Workaround to get followups - function should accept an
+			// array
+			count += processRepository.countByStatusAndOfferIsNotNull(Status.FOLLOWUP);
+			count += processRepository.countByStatusAndOfferIsNotNull(Status.DONE);
+		} else if (workflow.equals(Workflow.SALE)) {
+			count = processRepository.countByStatusAndSaleIsNotNull(status);
+		}
+		Map<String, Integer> returnMap = new HashMap<String, Integer>();
+		returnMap.put("value", count);
+		return returnMap;
 	}
 }

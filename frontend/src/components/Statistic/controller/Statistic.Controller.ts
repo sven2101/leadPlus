@@ -27,7 +27,7 @@ class StatisticController {
     statisticService: StatisticService;
     sourceService: SourceService;
     currentTab: number = 1;
-    dateRange: string = "DAILY";
+    dateRange: string = "MONTHLY";
     source: string = "ALL";
 
     constructor(StatisticService, SourceService) {

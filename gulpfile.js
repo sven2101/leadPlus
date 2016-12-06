@@ -28,7 +28,6 @@ gulp.task('watch', [
 	'watch-minify-components-view',
 	'watch-minify-main',
 	'watch-minify-index',
-	'watch-minify-logout',
 	'watch-scripts',
 	'watch-typescript/angular'
 	//'watch-browserSync'

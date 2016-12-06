@@ -62,9 +62,13 @@ class CustomerController {
     }
 
     searchCustomer(searchText: string) {
-        this.pageStart = 0;
+        if (isNullOrUndefined(searchText) || searchText.length === 0) {
+            searchText = "noSearchText";
+        }
+        this.pageStart = 1;
         this.customerService.pagingCustomers = new Array<Customer>();
         this.customerService.getAllCustomerByPage(this.pageStart, 20, searchText, this.loadAllCustomers);
+        this.pageStart += 20;
     }
 
     loadNextCustomers() {
@@ -76,11 +80,16 @@ class CustomerController {
         this.pageStart += 20;
     }
 
-    saveCustomer() {
+    async saveCustomer() {
         if (!this.isCurrentCustomerNew) {
             shallowCopy(this.currentCustomer, this.currentEditCustomer);
         }
-        this.customerService.saveCustomer(this.currentCustomer, this.isCurrentCustomerNew);
+        await this.customerService.saveCustomer(this.currentCustomer, this.isCurrentCustomerNew);
+        if (!isNullOrUndefined(this.searchText) && this.searchText.length > 0) {
+            this.searchText = "";
+        } else {
+            this.searchCustomer("noSearchText");
+        }
     }
 
     getLocalTimestamp: any = function (customer: Customer) {

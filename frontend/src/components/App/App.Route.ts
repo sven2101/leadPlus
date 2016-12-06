@@ -159,14 +159,13 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
         $httpProvider.interceptors.push(function ($q, $location, $rootScope) {
-
             return {
                 "responseError": function (rejection) {
                     let defer = $q.defer();
                     if (rejection.status < 300) {
                         defer.resolve(rejection);
                     } else {
-                        if (rejection.config.url.includes(".html")) {
+                        if (rejection.config && rejection.config.url.includes(".html")) {
                             switch (rejection.status) {
                                 case 401: $location.path("/401"); break;
                                 case 403: $location.path("/403"); break;

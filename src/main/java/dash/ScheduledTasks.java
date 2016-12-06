@@ -34,6 +34,7 @@ public class ScheduledTasks {
 	}
 
 	@Scheduled(cron = "0 0 6-22/2 * * SAT,SUN")
+	// @Scheduled(cron = "0 0/1 5-23 * * SAT,SUN")
 	private void generateStatisticsSchedulerSatToSun() {
 		logger.info("Do cronejob for SAT,SUN");
 		generateStatistics();

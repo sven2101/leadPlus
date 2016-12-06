@@ -84,7 +84,12 @@ public class UserStatistic implements Serializable {
 	}
 
 	public void setUser(User user) {
-		this.user = user;
+		User newUser = new User();
+		newUser.setUsername(user.getUsername());
+		newUser.setEmail(user.getEmail());
+		newUser.setFirstname(user.getFirstname());
+		newUser.setLastname(user.getLastname());
+		this.user = newUser;
 	}
 
 	public double getProfit() {

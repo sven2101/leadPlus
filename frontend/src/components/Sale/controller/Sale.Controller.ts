@@ -161,6 +161,17 @@ class SaleController extends AbstractWorkflow {
             loadDataToModal();
             self.destroyAllScopes();
         });
+        this.registerIntervall();
+    }
+
+    registerIntervall() {
+        let self = this;
+        let intervall = setInterval(function () {
+            self.refreshData();
+        }, 10 * 60 * 1000);
+        self.scope.$on("$destroy", function () {
+            clearInterval(intervall);
+        });
     }
 
     refreshData() {

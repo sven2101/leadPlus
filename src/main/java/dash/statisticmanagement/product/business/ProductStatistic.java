@@ -7,7 +7,7 @@ import dash.productmanagement.domain.Product;
 public class ProductStatistic implements Serializable {
 
 	private static final long serialVersionUID = -6224846432017168337L;
-	
+
 	private double count;
 	private double turnover;
 	private double discount;
@@ -19,7 +19,14 @@ public class ProductStatistic implements Serializable {
 	}
 
 	public void setProduct(Product product) {
-		this.product = product;
+		Product newProduct = new Product();
+		newProduct.setName(product.getName());
+		newProduct.setNetPrice(product.getNetPrice());
+		newProduct.setProductNumber(product.getProductNumber());
+		newProduct.setDescription(product.getDescription());
+		newProduct.setProductState(product.getProductState());
+		newProduct.setDeactivated(product.isDeactivated());
+		this.product = newProduct;
 	}
 
 	public int getOrderPositions() {

@@ -98,9 +98,14 @@ public class SmtpService implements ISmtpService {
 
 		props.put("mail.smtp.host", smtp.getHost());
 		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.dsn.notify", "SUCCESS, FAILURE, DELAY");
-		props.put("mail.smtp.dsn.ret", "FULL");
-		props.put("mail.smtp.connectiontimeout", "3000");
+		// props.put("mail.smtp.dsn.notify", "SUCCESS, FAILURE, DELAY");
+
+		// props.put("mail.smtp.dsn.notify", "SUCCESS,FAILURE ORCPT=rfc822;" +
+		// smtp.getEmail());
+		// props.put("mail.smtp.dsn.ret", "HDRS");
+
+		// props.put("mail.smtp.dsn.ret", "FULL");
+		props.put("mail.smtp.connectiontimeout", "10000");
 		props.put("mail.smtp.timeout", "10000");
 		props.put("mail.smtp.sendpartial", "true");
 

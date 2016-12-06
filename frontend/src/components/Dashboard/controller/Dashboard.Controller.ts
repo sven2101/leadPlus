@@ -47,6 +47,10 @@ class DashboardController {
     workflowModalProcess: Process;
     sortableOptions: any;
     currentUser: User;
+    showMyTasks: boolean = false;
+    todoAmountLimit: number = 10;
+    height: number;
+    cardSearchText: string;
 
     rootScope;
     scope;
@@ -68,9 +72,25 @@ class DashboardController {
         this.statisticService.loadAllResourcesByDateRange("MONTHLY", "ALL");
         this.sortableOptions = this.dashboardService.setSortableOptions(this.scope);
         this.currentUser = this.rootScope.user;
+        this.registerIntervall();
 
         this.refreshData();
         this.refreshTodos();
+        let self = this;
+        $scope.$watch("dashboardCtrl.cardSearchText", function (newValue) {
+            self.dashboardService.filterBySearch(newValue, self.showMyTasks);
+        });
+    }
+    registerIntervall() {
+        let self = this;
+        let intervall = setInterval(function () {
+            if (!self.dashboardService.dragging && !self.dashboardService.inModal) {
+                self.refreshData();
+            }
+        }, 10 * 60 * 1000);
+        self.scope.$on("$destroy", function () {
+            clearInterval(intervall);
+        });
     }
 
     refreshTodos(): void {
@@ -105,10 +125,12 @@ class DashboardController {
     getOpenLeads(): Array<Process> {
         return this.dashboardService.getOpenLeads();
     }
+
     getInContacts(): Array<Process> {
         return this.dashboardService.getInContacts();
     }
     getOpenOffers(): Array<Process> {
+
         return this.dashboardService.getOpenOffers();
     }
     getDoneOffers(): Array<Process> {
@@ -198,6 +220,9 @@ class DashboardController {
     }
 
     getHeight(): number {
+        if (!stringIsNullorEmpty(this.cardSearchText) || this.showMyTasks) {
+            return this.height;
+        }
         let max = 0;
         let array: Array<number> = new Array<number>(this.getOpenLeads().length, this.getInContacts().length, this.getOpenOffers().length, this.getDoneOffers().length, this.getClosedSales().length);
         for (let element of array) {
@@ -206,9 +231,11 @@ class DashboardController {
             }
         }
         if (max >= 7) {
-            return 7 * 85;
+            this.height = 7 * 85;
+            return this.height;
         }
-        return (max * 85) + 100;
+        this.height = (max * 85) + 100;
+        return this.height;
     }
 }
 
