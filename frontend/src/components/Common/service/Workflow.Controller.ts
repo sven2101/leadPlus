@@ -270,4 +270,4 @@ class WorkflowController extends AbstractWorkflow {
 
 }
 
-angular.module(moduleWorkflow, [moduleSummernote]).service(WorkflowControllerId, WorkflowController);
+angular.module(moduleWorkflow, [moduleSummernote]).controller(WorkflowControllerId, WorkflowController);

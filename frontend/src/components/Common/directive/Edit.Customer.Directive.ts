@@ -18,7 +18,7 @@ angular.module(moduleApp)
     .directive("edit", function () {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
         directive = { restrict: null, scope: null, templateUrl: null, transclude: null, link: null };
-        directive.restrict = "A";
+        directive.restrict = "E";
         directive.scope = {
             form: "=",
             parent: "=",

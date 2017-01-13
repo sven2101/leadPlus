@@ -1,4 +1,4 @@
-<div class="col-lg-12">
+<div class="col-lg-6">
 	<div class="ibox chat-view">
 		<div class="ibox-title text-left">
 			{{ 'COMMON_COMMENTS' | translate }}
@@ -47,11 +47,11 @@
 
 							<div class="form-group" style="width:100%" ng-class="{ 'has-error' : commentform.message.$error.maxlength && !commentform.message.$pristine }">
 								<textarea class="form-control message-input" ng-model="parent.commentInput[process.id]" required ng-maxlength="5000"
-									style="resize: none; width:100%;box-sizing: border-box;" name="message" placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}"
+									style="resize: none; width:100%;box-sizing: border-box;height: 70px !important" name="message" placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}"
 								/>
 								<p ng-show="commentform.message.$error.maxlength && !commentform.message.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}5000{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
 							</div>
-							<button style="width:200px; margin-top: 10px;" class="btn btn-success" ng-disabled="commentform.message.$invalid" ng-click="parent.addComment(process.id,parent.commentInput)">
+							<button style="width:200px; margin-top: 8px;margin-left: 8px;" class="btn btn-success" ng-disabled="commentform.message.$invalid" ng-click="parent.addComment(process.id,parent.commentInput)">
                             <i class="fa fa-comment-o"></i>&nbsp;{{ 'COMMON_COMMENTS_ADD' | translate }}
                         </button>
 						</div>

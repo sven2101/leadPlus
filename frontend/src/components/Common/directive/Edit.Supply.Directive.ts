@@ -22,13 +22,16 @@ angular.module(moduleApp)
             form: "=",
             parent: "=",
             type: "=",
+            process: "="
         };
-        directive.restrict = "A";
+        directive.restrict = "E";
         directive.templateUrl = function (elem, attr) {
             return "components/Common/view/Workflow.Edit.Supply.html";
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs, controller) {
+            console.log(scope.process);
+
             if (scope.type === "lead") {
                 scope.service = scope.parent.leadService;
             }

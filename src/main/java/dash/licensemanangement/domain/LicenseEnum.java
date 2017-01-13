@@ -25,7 +25,7 @@ public enum LicenseEnum {
 									"/components/Offer/view/**", "/components/Product/view/**",
 									"/components/Profile/view/**", "/components/Sale/view/**",
 									"/components/Setting/view/**", "/components/Template/view/**", "/main.html",
-									"/api/rest/**", "/components/Statistic/view/**")),
+									"/api/rest/**", "/components/Statistic/view/**", "/components/Modal/view/**")),
 							2), PRO("pro", new HashSet<String>(Arrays.asList("")),
 									3), ULTIMATE("ultimate", new HashSet<String>(Arrays.asList("")), 4);
 

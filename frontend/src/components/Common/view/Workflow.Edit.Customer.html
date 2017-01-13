@@ -13,7 +13,7 @@
 				<label>{{ 'CUSTOMER_MENU' | translate }}</label><i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'TOOLTIP_CUSTOMER_LOOKUP' | translate }}"></i>
 				<div class="input-group" id="typeahead-autocompletion">
 					<input type="text" class="form-control" ng-model="parent.selectedCustomer" placeholder="{{ 'CUSTOMER_SELECT' | translate }}"
-						uib-typeahead="customer as (customer.firstname +' '+ customer.lastname +' '+ (customer.company==null?'':customer.company)) for customer in service.customerService.getCustomerBySearchText($viewValue)"
+						uib-typeahead="customer as (customer.firstname +' '+ customer.lastname +' '+ (customer.company==null?'':customer.company)) for customer in workflowService.customerService.getCustomerBySearchText($viewValue)"
 						typeahead-editable="false" typeahead-on-select="parent.selectCustomer(parent.editWorkflowUnit,$model)" typeahead-no-results="noResults"
 						typeahead-show-hint="true" typeahead-min-length="3" typeahead-wait-ms="600" ng-blur="(noResults) ? parent.selectCustomer(parent.editWorkflowUnit,$model):'doNothing'"
 						ng-disabled="!parent.editable">
@@ -70,7 +70,7 @@
 			<!-- SOURCE -->
 			<div class="form-group">
 				<label>{{ 'SOURCE_SOURCE' | translate }}</label>
-				<select name="source" class="form-control" ng-model="parent.editProcess.source" ng-disabled="!parent.editable" ng-options="s.name for s in service.sourceService.getActiveSources() track by s.id">
+				<select name="source" class="form-control" ng-model="parent.editProcess.source" ng-disabled="!parent.editable" ng-options="s.name for s in workflowService.sourceService.getActiveSources() track by s.id">
 					<option></option></select>
 			</div>
 			<!-- MESSAGE -->

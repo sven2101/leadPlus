@@ -210,9 +210,13 @@ class WorkflowService {
         }
 
         this.uibModal.open({
-            template: " <div sendworkflow parent='workflowCtrl' type='offer'></div>",
-            controller: WorkflowController,
-            controllerAs: "workflowCtrl",
+            template: "<transition edit-process='transitionCtrl.editProcess' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig'>" +
+            "<edit form='transitionCtrl.customerEditForm'/>" +
+            "<lead/>" +
+            "<supply process='transitionCtrl.editProcess'/>" +
+            "</transition>",
+            controller: ModalTransitionController,
+            controllerAs: "transitionCtrl",
             backdrop: "static",
             size: "lg",
             resolve: {
@@ -255,7 +259,7 @@ class WorkflowService {
         }
 
         this.uibModal.open({
-            template: " <div sendworkflow parent='workflowCtrl' type='sale'></div>",
+            template: " <transition type='sale' service='this'><span>test</span></transition>",
             controller: WorkflowController,
             controllerAs: "workflowCtrl",
             backdrop: "static",

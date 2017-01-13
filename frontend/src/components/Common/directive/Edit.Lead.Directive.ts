@@ -23,7 +23,7 @@ angular.module(moduleApp)
             parent: "=",
             type: "=",
         };
-        directive.restrict = "A";
+        directive.restrict = "E";
         directive.templateUrl = function (elem, attr) {
             return "components/Common/view/Workflow.Edit.Lead.html";
         };

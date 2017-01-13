@@ -76,6 +76,7 @@ angular.module(moduleApp,
         moduleSource,
         moduleSourceService,
         moduleSourceResource,
+        moduleTransition,
 
         moduleTranslate,
         moduleNgResource,
