@@ -41,29 +41,21 @@ class CustomerService {
         if (insert) {
             customer.timestamp = newTimestamp();
             customer.realCustomer = true;
-            this.customerResource.createCustomer(customer).$promise.then(function (result: Customer) {
-                self.toaster.pop("success", "", self.translate.instant("CUSTOMER_TOAST_SAVE"));
-                customer = result;
-            }, function (result) {
-                self.toaster.pop("success", "", self.translate.instant("CUSTOMER_TOAST_ERROR"));
-            });
+            customer = await this.customerResource.createCustomer(customer).$promise.catch(error => handleError(error)) as Customer;
         } else {
-            this.customerResource.updateCustomer(customer).$promise.then(function (result: Customer) {
-                self.toaster.pop("success", "", self.translate.instant("CUSTOMER_TOAST_SAVE"));
-                customer = result;
-            }, function (result) {
-                self.toaster.pop("success", "", self.translate.instant("CUSTOMER_TOAST_ERROR"));
-            });
+            customer = await this.customerResource.updateCustomer(customer).$promise.catch(error => handleError(error)) as Customer;
         }
         return customer;
     }
 
-    insertCustomer(customer: Customer) {
-        return this.customerResource.createCustomer(customer).$promise;
+    async insertCustomer(customer: Customer): Promise<Customer> {
+        return await this.customerResource.createCustomer(customer).$promise.catch(error => handleError(error)) as Customer;
     }
+
     async updateCustomer(customer: Customer): Promise<Customer> {
-        return await this.customerResource.updateCustomer(customer);
+        return await this.customerResource.updateCustomer(customer).$promise.catch(error => handleError(error)) as Customer;
     }
+
 
     getAllCustomerByPage(start: number, length: number, searchtext: string, allCustomers: boolean) {
         let self = this;
@@ -74,6 +66,7 @@ class CustomerService {
             }
         });
     }
+
 
     getCustomerBySearchText(searchtext: string): any {
         if (!isNullOrUndefined(searchtext) && searchtext.length > 0) {

@@ -1,0 +1,119 @@
+<style>
+	#typeahead-autocompletion .dropdown-menu {
+		max-height: 225px;
+		max-width: 400px;
+		overflow-y: auto;
+		overflow-x: hidden;
+	}
+</style>
+<form name="tform" novalidate>
+	<div class="row">
+		<div class="col-sm-6 b-r">
+			<div class="form-group">
+				<label>{{ 'CUSTOMER_MENU' | translate }}</label><i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'TOOLTIP_CUSTOMER_LOOKUP' | translate }}"></i>
+				<div class="input-group" id="typeahead-autocompletion">
+					<input type="text" class="form-control" ng-model="selectedCustomer" placeholder="{{ 'CUSTOMER_SELECT' | translate }}"
+						uib-typeahead="customer as (customer.firstname +' '+ customer.lastname +' '+ (customer.company==null?'':customer.company)) for customer in customerService.getCustomerBySearchText($viewValue)"
+						typeahead-editable="false" typeahead-on-select="selectCustomer(editWorkflowUnit,$model)" typeahead-no-results="noResults"
+						typeahead-show-hint="true" typeahead-min-length="3" typeahead-wait-ms="600" ng-blur="(noResults) ? selectCustomer(editWorkflowUnit,$model):'doNothing'"
+						ng-disabled="!editable">
+					<span class="input-group-btn">
+       				 <button style="height: 34px;" class="btn btn-secondary btn btn-white" type="button" ng-disabled="!editable" ng-click="selectCustomer(editWorkflowUnit,undefined)">&nbsp;<i class="fa fa-times"></i>&nbsp;</button>
+      				</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label>{{ 'COMMON_TITLE' | translate }}</label>
+				<select name="title" class="form-control" ng-model="editWorkflowUnit.customer.title" ng-disabled="customerSelected">
+                    <option value="MR">{{ 'COMMON_TITLE_MR' | translate }}</option>
+                    <option value="MS">{{ 'COMMON_TITLE_MS' | translate }}</option>
+                </select>
+			</div>
+			<!-- FIRSTNAME -->
+			<div class="form-group" ng-class="{ 'has-error' : tform.firstname.$invalid}">
+				<label>{{ 'COMMON_FIRSTNAME' | translate }}
+					<span style="color:red">*</span>
+					<span style="color:red" ng-show="tform.firstname.$error.maxlength">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+					<span style="color:red" ng-show="tform.firstname.$error.required && !tform.firstname.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+					</label>
+				<input required type="text" name="firstname" class="form-control" ng-model="editWorkflowUnit.customer.firstname" ng-maxlength="30"
+					ng-disabled="customerSelected">
+			</div>
+			<!-- LASTNAME -->
+			<div class="form-group" ng-class="{ 'has-error' : tform.lastname.$invalid}">
+				<label>{{ 'COMMON_LASTNAME' | translate }}
+					<span style="color:red">*</span>
+					<span style="color:red" ng-show="tform.lastname.$error.maxlength">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+					<span style="color:red" ng-show="tform.lastname.$error.required && !tform.lastname.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+				</label>
+				<input required type="text" name="lastname" class="form-control" ng-model="editWorkflowUnit.customer.lastname" ng-maxlength="30"
+					ng-disabled="customerSelected">
+			</div>
+			<!-- COMPANY -->
+			<div class="form-group" ng-class="{ 'has-error' : tform.company.$invalid && !tform.company.$pristine }">
+				<label>{{ 'COMMON_COMPANY' | translate }}
+						<span style="color:red" ng-show="tform.company.$invalid && !tform.company.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+				</label>
+				<input type="text" name="company" class="form-control" ng-model="editWorkflowUnit.customer.company" ng-maxlength="50"
+					ng-disabled="customerSelected">
+			</div>
+			<!-- EMAIL -->
+			<div class="form-group" ng-class="{ 'has-error' : tform.email.$invalid && !tform.email.$pristine }">
+				<label>{{ 'COMMON_EMAIL' | translate }}
+					<span style="color:red" ng-show="tform.email.$invalid && !tform.email.$pristine">{{ 'COMMON_VALIDATE_EMAIL'| translate }}</span>
+				</label>
+				<input type="email" name="email" class="form-control" ng-model="editWorkflowUnit.customer.email" ng-disabled="customerSelected">
+			</div>
+			<!-- PHONE -->
+			<div class="form-group" ng-class="{ 'has-error' : tform.phone.$invalid && !tform.phone.$pristine }">
+				<label>{{ 'COMMON_PHONE' | translate }}
+					<span style="color:red" ng-show="tform.phone.$invalid && !tform.phone.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+				</label>
+				<input type="text" name="phone" class="form-control" ng-model="editWorkflowUnit.customer.phone" ng-maxlength="50"
+					ng-disabled="customerSelected">
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<!-- SOURCE -->
+			<div class="form-group">
+				<label>{{ 'SOURCE_SOURCE' | translate }}</label>
+				<select name="source" class="form-control" ng-model="editProcess.source" ng-disabled="!editable" ng-options="s.name for s in sourceService.getActiveSources() track by s.id">
+					<option></option></select>
+			</div>
+			<!-- MESSAGE -->
+			<div class="form-group">
+				<label>{{ 'COMMON_NOTE' | translate }}</label>
+				<summernote ng-if="editable" name="content " class="form-control" ng-model="editWorkflowUnit.message" height="300px"></summernote>
+				<div ng-if="!editable" style="border: 1px solid gray;  padding: 15px;">
+					<div ng-bind-html="getAsHtml(editWorkflowUnit.message)"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+<style>
+	.btn-toolbar {
+		margin-left: 0px;
+	}
+	
+	.note-editor .dropdown-menu {
+		min-width: 90px;
+		left: -300px;
+	}
+	
+	.note-editor .note-color-palette {
+		line-height: 1;
+	}
+	
+	.note-editor .note-color-palette div .note-color-btn {
+		width: 17px;
+		height: 17px;
+		padding: 0px;
+		margin: 0px;
+		border: 1px solid rgb(255, 255, 255);
+	}
+	
+	.note-editor .note-color-palette div .note-color-btn:hover {
+		border: 1px solid rgb(0, 0, 0);
+	}
+</style>

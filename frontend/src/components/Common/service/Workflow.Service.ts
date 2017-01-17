@@ -205,13 +205,15 @@ class WorkflowService {
             deliveryCosts: process.lead.deliveryCosts,
             message: process.lead.message
         };
+
         for (let i = 0; i < process.offer.orderPositions.length; i++) {
             process.offer.orderPositions[i].id = 0;
         }
 
         this.uibModal.open({
-            template: "<transition edit-process='transitionCtrl.editProcess' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig'>" +
-            "<edit form='transitionCtrl.customerEditForm'/>" +
+            template: "<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.offer' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig'>" +
+            "<customer-edit form='transitionCtrl.customerEditForm' edit-workflow-unit='transitionCtrl.editProcess.offer' edit-process='transitionCtrl.editProcess' editable='true'/>" +
+            "<email disabled='false' notification='null' process='transitionCtrl.editProcess' form='transitionCtrl.emailEditForm'></email>" +
             "<lead/>" +
             "<supply process='transitionCtrl.editProcess'/>" +
             "</transition>",
@@ -568,7 +570,8 @@ class WorkflowService {
         let resultProcess = await this.processResource.save(process) as Process;
         this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_INCONTACT"));
         this.rootScope.$broadcast("onTodosChange");
-        this.rootScope.$broadcast("updateRow", process);
+        // TODO process vs resultProcess
+        this.rootScope.$broadcast("updateRow", resultProcess);
         return resultProcess;
     }
 

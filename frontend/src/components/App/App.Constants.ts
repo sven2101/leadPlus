@@ -59,6 +59,7 @@ const moduleSaleResource: string = moduleSale + ".resource";
 const moduleSaleService: string = moduleSale + ".service";
 const moduleSaleDataTableService: string = moduleSale + ".dataTableService";
 const moduleProcess: string = moduleApp + ".process";
+const moduleProcessService: string = moduleProcess + ".service";
 const moduleProcessResource: string = moduleProcess + ".resource";
 const moduleUser: string = moduleApp + ".user";
 const moduleUserDetail: string = moduleUser + ".detail";
@@ -107,6 +108,7 @@ const moduleSource: string = moduleApp + ".source";
 const moduleSourceResource: string = moduleSource + ".resource";
 const moduleSourceService: string = moduleSource + ".service";
 const moduleTransition: string = moduleApp + ".transition";
+
 
 const moduleTranslate: string = "pascalprecht.translate";
 const moduleNgResource: string = "ngResource";

@@ -28,7 +28,7 @@ const LeadControllerId: string = "LeadController";
 
 class LeadController extends AbstractWorkflow {
 
-    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, FileServiceId, $routeParamsId, $sceId];
+    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, FileServiceId, $routeParamsId, $sceId, $uibModalId];
 
     type: string = "lead";
 
@@ -38,6 +38,8 @@ class LeadController extends AbstractWorkflow {
     leadDataTableService: LeadDataTableService;
     leadService: LeadService;
     fileService: FileService;
+
+    uibModal: any;
 
     scope;
 
@@ -67,12 +69,14 @@ class LeadController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($rootScope, $compile, $scope, WorkflowService, LeadDataTableService, LeadService, FileService, $routeParams, $sce) {
+    constructor($rootScope, $compile, $scope, WorkflowService, LeadDataTableService, LeadService, FileService, $routeParams, $sce, $uibModal) {
         super(WorkflowService, $sce, FileService, $scope);
         this.workflowService = WorkflowService;
         this.leadDataTableService = LeadDataTableService;
         this.leadService = LeadService;
         this.fileService = FileService;
+
+        this.uibModal = $uibModal;
 
         this.scope = $scope;
 
@@ -144,6 +148,9 @@ class LeadController extends AbstractWorkflow {
                 self.destroyAllScopes();
             }
             self.leadService.updateRow(data, self.dtInstance, self.dropCreateScope("compileScope"));
+            this.getScopeByKey("childRowScope" + data.id).workflowUnit = data.lead;
+            this.getScopeByKey("childRowScope" + data.id).process = data;
+            this.getScopeByKey("childRowScope" + data.id).$apply();
         });
 
         let loadDataToModal = $rootScope.$on("loadDataToModal", (event, data: Process) => {
@@ -211,15 +218,25 @@ class LeadController extends AbstractWorkflow {
     }
 
     loadDataToModal(process: Process) {
-        this.setFormsPristine();
-        this.currentWizard = 1;
-        this.edit = true;
+        // this.setFormsPristine();
         this.currentProductId = "-1";
         this.currentProductAmount = 1;
-        this.editProcess = deepCopy(process);
-        this.customerSelected = this.editProcess.lead.customer.id > 0;
-        this.selectedCustomer = this.editProcess.lead.customer;
-        this.editWorkflowUnit = this.editProcess.lead;
+
+        this.uibModal.open({
+            template: `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.lead' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig'>
+            <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}").form' edit-workflow-unit='transitionCtrl.editProcess.lead' edit-process='transitionCtrl.editProcess' editable='true'/>
+            <email disabled='false' notification='transitionCtrl.notification' process='transitionCtrl.editProcess' form='transitionCtrl.emailEditForm'></email>
+            </transition>`,
+            controller: ModalTransitionController,
+            controllerAs: "transitionCtrl",
+            backdrop: "static",
+            size: "lg",
+            resolve: {
+                process: function () {
+                    return process;
+                }
+            }
+        });
     }
 
 

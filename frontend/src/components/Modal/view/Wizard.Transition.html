@@ -36,6 +36,15 @@
     color: #e0e0e0 !important;
 }
 
+.error {
+    color: red !important;
+    border-color: red !important;
+}
+
+.errorAfter:after {
+    border-bottom-color:red !important;
+}
+
 .wizard .nav-tabs > li.active > a, .wizard .nav-tabs > li.active > a:hover, .wizard .nav-tabs > li.active > a:focus {
     color: #555555;
     cursor: default;
@@ -164,13 +173,12 @@ span.round-tab i{
 <div class="wizard">
     <div class="wizard-inner">
         <ul class="nav nav-tabs" role="tablist">
-            <li ng-repeat="wizardElement in wizardElements | orderBy : 'position' track by $index" role="presentation" ng-class="{active:step===$index+1, disabled:wizardElement.isDisabled}"
+            <li ng-repeat="wizardElement in wizardElements | orderBy : 'position' track by $index" role="presentation" ng-class="{active:step===$index+1, disabled:wizardElement.isDisabled,errorAfter:wizardElement.form.$invalid}"
                 ng-style="{'width':100/wizardElements.length+'%'}">
                 <label ng-class="{iconWizardDisabled:wizardElement.isDisabled}">{{::wizardElement.title}}</label>
-                <a ng-click="wizardElement.isDisabled || ($parent.step=$index+1)" aria-controls="step{{$index+1}}" role="tab"
-                    title="Step {{$index+1}}">
-                    <span class="round-tab" ng-class="{roundTabHover:!wizardElement.isDisabled}">
-                                <i class="icon-wizard {{::wizardElement.icon}}" ng-class="{iconWizardDisabled:wizardElement.isDisabled}"></i>
+                <a ng-click="wizardElement.isDisabled || ($parent.step=$index+1)" aria-controls="step{{$index+1}}" role="tab" title="Step {{$index+1}}">
+                    <span class="round-tab" ng-class="{roundTabHover:!wizardElement.isDisabled,error:wizardElement.form.$invalid}">
+                                <i class="icon-wizard {{::wizardElement.icon}}" ng-class="{iconWizardDisabled:wizardElement.isDisabled,error:wizardElement.form.$invalid}"></i>
                         </span>
                 </a>
                 <div ng-if="$index+1 < wizardElements.length" class="connecting-line"></div>
@@ -181,20 +189,18 @@ span.round-tab i{
 </div>
 
 <div class="modal-body content-height">
-    <form role="form">
-        <div class="tab-content">
-            <div ng-repeat="wizardElement in wizardElements | orderBy : 'position' track by $index" role="tabpanel" id="step{{$index+1}}"
-                class="tab-pane" ng-class="{active:step===$index+1}">
-                <div ng-transclude="{{::wizardElement.directiveType}}">
-                </div>
+    <div class="tab-content">
+        <div ng-repeat="wizardElement in wizardElements | orderBy : 'position' track by $index" role="tabpanel" id="step{{$index+1}}"
+            class="tab-pane" ng-class="{active:step===$index+1}">
+            <div ng-transclude="{{::wizardElement.directiveType}}">
             </div>
-            <div class="clearfix"></div>
         </div>
-    </form>
+        <div class="clearfix"></div>
+    </div>
 </div>
 <div class="modal-footer ">
     <button type="button " class="btn btn-white " ng-click="close(false)">{{ 'COMMON_CANCEL'| translate }}</button>
-    <button type="button " class="btn btn-success " ng-disabled="customerEditForm.$invalid || leadEditForm.$invalid || supplyEditForm.$invalid ||  saleEditForm.$invalid"
+    <button type="button " class="btn btn-success " ng-disabled="isAnyFormInvalid()"
         ng-click="save() ">{{ 'COMMON_SAVE'| translate }}</button>
     <button ng-show="currentWizard==5 && type == 'offer'" type="button " class="btn btn-warning ladda-button" data-style="zoom-in"
         ng-disabled="customerEditForm.$invalid || leadEditForm.$invalid || supplyEditForm.$invalid || emailEditForm.$invalid"

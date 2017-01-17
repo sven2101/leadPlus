@@ -1,10 +1,12 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../Common/model/Process.Model.ts" />
+/// <reference path="../../Modal/model/WizardButtonConfig.Model.ts" />
+/// <reference path="../../Modal/model/Wizard.Form.Enum.Model.ts" />
 const ModalTransitionControllerId: string = "ModalTransitionController";
 
 class ModalTransitionController {
 
-    $inject = ["process", "$uibModalInstance"];
+    $inject = ["process", $uibModalId];
 
     type: string;
     uibModalInstance;
@@ -12,14 +14,10 @@ class ModalTransitionController {
     wizardEditConfig: Array<WizardButtonConfig>;
     wizardTransitionConfig: Array<WizardButtonConfig>;
 
-    customerEditForm: any;
-    productEditForm: any;
-    supplyEditForm: any;
-    emailEditForm: any;
-    saleEditForm: any;
+    notification = new Notification();
 
 
-    constructor(process: Process, type, $uibModalInstance) {
+    constructor(process: Process, $uibModalInstance) {
         this.uibModalInstance = $uibModalInstance;
         this.editProcess = deepCopy(process);
         this.wizardEditConfig = this.getWizardEditConfig();
@@ -30,16 +28,20 @@ class ModalTransitionController {
         let wizardConfig: Array<WizardButtonConfig> = new Array<WizardButtonConfig>();
 
         let customerEditStep = new WizardButtonConfig(WizardForm.CUSTOMER);
-        customerEditStep.setTitle("Kunde").setIcon("fa fa-user").setForm(this.customerEditForm).setPosition(1);
+        customerEditStep.setTitle("Kunde").setIcon("fa fa-user").setPosition(1);
         wizardConfig.push(customerEditStep);
 
         let productEditStep = new WizardButtonConfig(WizardForm.PRODUCT);
-        productEditStep.setTitle("Produkt").setIcon("fa fa-table").setForm(this.productEditForm).setPosition(2);
+        productEditStep.setTitle("Produkt").setIcon("fa fa-table").setPosition(2);
         wizardConfig.push(productEditStep);
 
         let supplyEditStep = new WizardButtonConfig(WizardForm.SUPPLY);
-        supplyEditStep.setTitle("Lieferung").setIcon("fa fa-truck").setForm(this.supplyEditForm).setPosition(3).disable();
+        supplyEditStep.setTitle("Lieferung").setIcon("fa fa-truck").setPosition(3).disable();
         wizardConfig.push(supplyEditStep);
+
+        let emailEditStep = new WizardButtonConfig(WizardForm.EMAIL);
+        emailEditStep.setTitle("Email").setIcon("fa fa-envelope").setPosition(4);
+        wizardConfig.push(emailEditStep);
 
         return wizardConfig;
     }
@@ -48,18 +50,27 @@ class ModalTransitionController {
         let wizardConfig: Array<WizardButtonConfig> = new Array<WizardButtonConfig>();
 
         let customerEditStep = new WizardButtonConfig(WizardForm.CUSTOMER);
-        customerEditStep.setTitle("Kunde").setIcon("fa fa-user").setForm(this.customerEditForm).setPosition(1);
+        customerEditStep.setTitle("Kunde").setIcon("fa fa-user").setPosition(1);
         wizardConfig.push(customerEditStep);
 
         let productEditStep = new WizardButtonConfig(WizardForm.PRODUCT);
-        productEditStep.setTitle("Produkt").setIcon("fa fa-table").setForm(this.productEditForm).setPosition(2);
+        productEditStep.setTitle("Produkt").setIcon("fa fa-table").setPosition(2);
         wizardConfig.push(productEditStep);
 
         let supplyEditStep = new WizardButtonConfig(WizardForm.SUPPLY);
-        supplyEditStep.setTitle("Lieferung").setIcon("fa fa-truck").setForm(this.supplyEditForm).setPosition(3).disable();
+        supplyEditStep.setTitle("Lieferung").setIcon("fa fa-truck").setPosition(3).disable();
         wizardConfig.push(supplyEditStep);
 
         return wizardConfig;
+    }
+
+    getWizardConfigByDirectiveType(wizardConfig: Array<WizardButtonConfig>, directiveType: WizardForm): WizardButtonConfig {
+        for (let buttonConfig of wizardConfig) {
+            if (buttonConfig.directiveType === directiveType) {
+                return buttonConfig;
+            }
+        }
+        return null;
     }
 }
 

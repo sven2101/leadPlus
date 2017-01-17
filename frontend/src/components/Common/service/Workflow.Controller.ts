@@ -240,14 +240,11 @@ class WorkflowController extends AbstractWorkflow {
         let process = this.editProcess;
         if (this.type === "offer") {
             let self = this;
-
-            let process = this.editProcess;
             this.workflowService.addLeadToOffer(process).then((resultProcess) => {
                 self.rootScope.$broadcast("deleteRow", resultProcess);
                 self.close(true, resultProcess);
             });
         } else if (this.type === "sale") {
-            let process = this.editProcess;
             let self = this;
             this.workflowService.addOfferToSale(process).then((resultProcess) => {
                 self.rootScope.$broadcast("deleteRow", resultProcess);

@@ -11,7 +11,7 @@ class EditEmailDirective implements IDirective {
 
     templateUrl = () => { return "components/Common/view/Workflow.Edit.Email.html"; };
     transclude = false;
-    restrict = "A";
+    restrict = "E";
 
     scope = {
         form: "=",

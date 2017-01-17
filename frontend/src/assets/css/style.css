@@ -114,7 +114,7 @@ h5 {
 .dropdown-menu > .active > a:hover {
   color: #fff;
   text-decoration: none;
-  background-color: #1ab394;
+  background-color: #1c84c6;
   outline: 0;
 }
 .dropdown-menu.right { left: auto; right: 0;}
@@ -511,7 +511,7 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
 }
 .top-navigation .navbar-nav .dropdown-menu > .active > a {
   background: white;
-  color: #1ab394;
+  color: #1c84c6;
   font-weight: bold;
 }
 .white-bg .navbar-fixed-top,

@@ -53,7 +53,7 @@
 			<li ng-if="::config[ 'DETAILS_TOGGLE_CLOSE_OR_OPEN'].visible " role="separator " class="divider "></li>
 			<li ng-class="{ 'disabled': config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled } " ng-if="::config[ 'DETAILS_OPEN_EDIT_MODAL'].visible "
 				ng-click="loadDataToModal(process) " data-toggle="{{::!config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled ? 'modal' : ''}} "
-				data-backdrop="static" data-target="#editModal ">
+				data-backdrop="static">
 				<a><i class="fa fa-edit "></i>&nbsp;{{config['DETAILS_OPEN_EDIT_MODAL'].title| translate }}</a></li>
 			<li ng-if="::config[ 'DETAILS_OPEN_EDIT_MODAL'].visible " role="separator " class="divider "></li>
 			<li ng-if="::config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].visible " ng-class="{ 'disabled': config[
