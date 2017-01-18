@@ -1,0 +1,155 @@
+<form name="pform">
+	<div class="row">
+		<div class="col-sm-4 text-left">
+			<!-- Delivery Address -->
+			<div class="form-group " ng-class="{ 'has-error' : pform.deliveryAddress.$invalid && !pform.deliveryAddress.$pristine
+                                } ">
+				<label>{{ 'COMMON_PRODUCT_DESTINATION' | translate }}
+					<span style="color:red" ng-show="pform.deliveryAddress.$invalid && !pform.deliveryAddress.$pristine">
+						{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+				</label>
+				<input type="text " name="deliveryAddress " class="form-control " ng-model="editWorkflowUnit.deliveryAddress
+                                " ng-maxlength="50 " ng-disabled="!editable">
+			</div>
+		</div>
+		<div class="col-sm-4 text-left">
+			<!-- DeliveryCosts -->
+			<div class="form-group " ng-class="{ 'has-error' : pform.deliveryCosts.$invalid && !pform.deliveryCosts.$pristine} ">
+				<label>{{ 'COMMON_PRODUCT_DELIVERYCOSTS'| translate }}
+						<span style="color:red" ng-show="pform.deliveryCosts.$invalid && !pform.deliveryCosts.$pristine">
+							{{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }}</span>
+				</label>
+				<div class="input-group ">
+					<span class="input-group-addon ">{{ 'COMMON_CURRENCY'| translate }}</span>
+					<input name="deliveryCosts " type="number " ng-model="editWorkflowUnit.deliveryCosts
+                                " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " ng-keyup="workflowService.reCalculateOffer(editWorkflowUnit,editWorkflowUnit.orderPositions) "
+						min="0 " step="0.01 " data-number-to-fixed="2 " data-number-stepfactor="100 " class="form-control currency
+                                " id="c2 " ng-disabled="!editable"/>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4 text-left">
+			<!-- DELIVERY DATE -->
+			<div ng-show="isOffer()" class="form-group " id="editOfferDatepicker ">
+				<label>{{ 'COMMON_DELIVERY_TIME' | translate }}</label>
+				<div ng-show="$root.language=='DE' " class="input-group date " data-date-language="de " data-date-format="dd.mm.yyyy ">
+					<span class="input-group-addon "><i class="fa fa-calendar "></i></span>
+					<input type="text " class="form-control " name="deliveryDate " ng-model="editWorkflowUnit.deliveryDate ">
+				</div>
+				<div ng-show="$root.language=='EN' " class="input-group date " data-date-language="en " data-date-format="dd.mm.yyyy ">
+					<span class="input-group-addon "><i class="fa fa-calendar "></i></span>
+					<input type="text " class="form-control " name="deliveryDate " ng-model="editWorkflowUnit.deliveryDate ">
+				</div>
+			</div>
+		</div>
+	</div>
+	<hr style="border-top: 1px dashed #8c8b8b;" />
+	<div class="row">
+		<div class="col-sm-12">
+			<!-- <h2>{{ 'PRODUCT_MENU' | translate }}</h2> -->
+			<table class="table">
+				<thead>
+					<tr>
+						<th class="col-md-5">
+							<select class="form-control" ng-model="currentProductId" ng-disabled="!editable">
+                            <option value="-1" selected disabled hidden>{{ 'LEAD_EDIT_SELECT_PRODUCT' | translate }}</option>                                     
+                            <option value="{{product.id}}" ng-repeat="product in productService.getActiveProducts()">{{product.name}} {{product.netPrice | currency:'\u20AC'}}</option>                                          
+                        </select>
+						</th>
+						<th class="col-md-2"></th>
+						<th class="col-md-2"></th>
+						<th class="col-md-2">
+							<div style="text-align:right">
+								{{ 'COMMON_PRODUCT_AMOUNT'| translate }}:
+							</div>
+						</th>
+						<th class="col-md-2">
+							<input min="1" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" name="addOrderPosition" type="number" class="input-sm form-control"
+								ng-model="currentProductAmount" required ng-disabled="!editable">
+						</th>
+						<th class="col-md-1">
+							<button ng-disabled="pform.addOrderPosition.$invalid||currentProductId==-1" type="button" class="btn btn-white btn-sm"
+								ng-click="[addProduct(editWorkflowUnit.orderPositions, currentProductId, currentProductAmount),workflowService.reCalculateOffer(editWorkflowUnit,editWorkflowUnit.orderPositions)]">
+                                     <i class="fa fa-plus"></i>&nbsp;</button>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<th>{{ 'PRODUCT_PRODUCTNAME' | translate }}</th>
+					<th class="text-center">{{ 'PRODUCT_DISCOUNT' | translate }}</th>
+					<th class="text-center">{{ 'COMMON_PRODUCT_SINGLE_PRICE' | translate }}</th>
+					<th class="text-center">{{ 'COMMON_PRODUCT_AMOUNT'| translate }}</th>
+					<th class="text-center">{{ 'PRODUCT_PRICE' | translate }}</th>
+					<tr ng-repeat="orderPosition in editWorkflowUnit.orderPositions">
+						<td class="col-md-3">
+							{{orderPosition.product.name}} ({{orderPosition.product.netPrice| currency:'\u20AC'}})
+						</td>
+						<td class="col-md-2 text-center ">
+							<div class="input-group " ng-class="{ 'has-error' : pform[
+                                    'orderPositionDiscount'+$index].$invalid && !pform[ 'orderPositionDiscount'+$index].$pristine } ">
+								<span class="input-group-addon ">%</span>
+								<input type="number " name="{{ 'orderPositionDiscount'+$index}}"
+                                     ng-model="orderPosition.discount " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " min="0 "
+									max="100 " step="0.1 " data-number-to-fixed="2 " data-number-stepfactor="100
+                                    " class="form-control currency " ng-keyup="[workflowService.setPrice(orderPosition),workflowService.reCalculateOffer(editWorkflowUnit,editWorkflowUnit.orderPositions)]"
+									id="c3 " required ng-disabled="!editable">
+							</div>
+						</td>
+						<td class="col-md-2 text-center">
+							<div class="input-group" ng-class="{ 'has-error' : pform['orderPosition'+$index].$invalid && !pform['orderPosition'+$index].$pristine  }">
+								<span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
+								<input type="number" name="{{'orderPosition'+$index}}" ng-model="orderPosition.netPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ "
+									min="0 " step="0.01 " data-number-to-fixed="2 " data-number-stepfactor="100" class="form-control currency " ng-keyup="[workflowService.setDiscount(orderPosition),workflowService.reCalculateOffer(editWorkflowUnit,editWorkflowUnit.orderPositions)] "
+									id="c2 " required ng-disabled="!editable">
+							</div>
+						</td>
+						<td class="col-md-2 text-center ">{{orderPosition.amount}}</td>
+						<td class="col-md-2 text-center ">{{orderPosition.netPrice*orderPosition.amount| currency:'\u20AC'}}
+						</td>
+						<td class=" col-md-1 ">
+							<button type="button " class="btn btn-white btn-sm " ng-click="[deleteProduct(editWorkflowUnit.orderPositions,$index),workflowService.reCalculateOffer(editWorkflowUnit,editWorkflowUnit.orderPositions)] "
+								ng-disabled="!editable">
+                                <i class="fa fa-trash " ></i>&nbsp;
+                            </button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4 text-left">
+			<label ng-if="isOffer()">
+				{{ 'CALCULATION_VAT'| translate }}
+				<span style="color:red">*</span>
+				<span style="color:red" ng-show="pform.vat.$invalid && !pform.vat.$pristine">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+			</label>
+			<div ng-if="isOffer()" class="input-group "  ng-class="{'has-error' : pform.vat.$invalid && !pform.vat.$pristine } ">
+				<span class="input-group-addon ">%</span>
+				<input class="form-control currency" focus-me="inputfield" name="vat" type="number " ng-model="editWorkflowUnit.vat "
+													ng-blur="inputfield = !(inputfield && !(pform.vat.$invalid && !pform.vat.$pristine))"
+				ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " max="100 " required style="width:50px;"></div>
+		</div>
+		<div class="col-sm-6 text-right">
+			<h3><b>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}:</b></h3>
+		</div>
+		<div class="col-sm-2 text-left">
+			<h3  ng-if="isLead()"><b>{{sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</b></h3>
+			<div ng-if="isOffer()" class="form-group" ng-class="{ 'has-error' : pform.netPrice.$invalid&& !pform.netPrice.$pristine } ">
+				<div class="input-group ">
+				<span class="input-group-addon ">{{ 'COMMON_CURRENCY'| translate }}</span>
+				<input type="number " name="netPrice " class="form-control currency" ng-model="editWorkflowUnit.netPrice
+										" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " data-number-to-fixed="2 "
+										data-number-stepfactor="100 " id="c2 " required>
+			   	</div>
+				<p ng-show="pform.netPrice.$invalid && !pform.netPrice.$pristine " class="help-block ">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
+			</div>
+		</div>
+	</div>
+	<div class="row" ng-if="isOffer() || isSale()">
+		<div class="col-sm-2 text-left"></div>
+		<div class="col-sm-8 text-right"><h3><b>{{ 'PRODUCT_GROSS_PRICE' | translate }}:</b></h3></div>
+		<div class="col-sm-2 text-left"><h3><b>{{editProcess.offer.netPrice*(1+(editProcess.offer.vat/100))|currency:'\u20AC'}}</b>&nbsp;<i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'TOOLTIP_CUSTOMER_LOOKUP' | translate }}"></i></h3></div>
+	</div>
+</form>
+

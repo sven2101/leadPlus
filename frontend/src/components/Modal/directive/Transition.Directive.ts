@@ -26,8 +26,8 @@ class TransitionDirective implements IDirective {
     templateUrl = () => { return "components/Modal/view/Wizard.Transition.html"; };
     transclude = {
         "customerEdit": "?customerEdit",
-        "productEdit": "?lead",
-        "supplyEdit": "?supply",
+        "productEdit": "?productEdit",
+        "supplyEdit": "?supplyEdit",
         "emailEdit": "?email"
     };
 

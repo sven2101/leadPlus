@@ -6,6 +6,8 @@
 /// <reference path="../../Product/model/Product.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../Lead/model/Lead.Model.ts" />
+/// <reference path="../../Modal/controller/Modal.Transition.Controller.ts" />
+/// <reference path="../../Modal/model/Wizard.Form.Enum.Model.ts" />
 /// <reference path="../../Lead/controller/Lead.DataTableService.ts" />
 /// <reference path="../../Lead/controller/Lead.Service.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
@@ -224,8 +226,8 @@ class LeadController extends AbstractWorkflow {
 
         this.uibModal.open({
             template: `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.lead' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig'>
-            <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}").form' edit-workflow-unit='transitionCtrl.editProcess.lead' edit-process='transitionCtrl.editProcess' editable='true'/>
-            <email disabled='false' notification='transitionCtrl.notification' process='transitionCtrl.editProcess' form='transitionCtrl.emailEditForm'></email>
+            <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess.lead' edit-process='transitionCtrl.editProcess' editable='true'/>
+            <product-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.PRODUCT}")' edit-workflow-unit='transitionCtrl.editProcess.lead' edit-process='transitionCtrl.editProcess' editable='true'/>
             </transition>`,
             controller: ModalTransitionController,
             controllerAs: "transitionCtrl",

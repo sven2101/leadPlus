@@ -36,18 +36,6 @@ class AbstractWorkflow {
         return this.sce.trustAsHtml(html);
     }
 
-    addProduct(array: Array<OrderPosition>, currentProductId: string, currentProductAmount: number) {
-        this.workflowService.addProduct(array, currentProductId, currentProductAmount);
-    }
-
-    deleteProduct(array: Array<OrderPosition>, index: number) {
-        this.workflowService.deleteProduct(array, index);
-    }
-
-    sumOrderPositions(array: Array<OrderPosition>): number {
-        return this.workflowService.sumOrderPositions(array);
-    }
-
     sumBasicPriceOrderPositions(array: Array<OrderPosition>): number {
         return this.workflowService.sumBasicPriceOrderPositions(array);
     }

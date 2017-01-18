@@ -43,7 +43,12 @@ class CustomerEditDirective implements IDirective {
         scope.sourceService = this.SourceService;
         scope.rootScope = this.$rootScope;
         scope.sce = this.$sce;
-        scope.form = scope.tform;
+        if (scope.form instanceof WizardButtonConfig) {
+            scope.form.setForm(scope.cform);
+        }
+        else {
+            scope.cform = scope.form;
+        }
 
         scope.customerSelected = scope.editWorkflowUnit.customer.id > 0;
         scope.selectedCustomer = scope.editWorkflowUnit.customer;

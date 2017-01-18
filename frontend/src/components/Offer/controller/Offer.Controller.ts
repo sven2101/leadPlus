@@ -30,7 +30,7 @@ const OfferControllerId: string = "OfferController";
 
 class OfferController extends AbstractWorkflow {
 
-    $inject = [$rootScopeId, $compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, TemplateServiceId, FileServiceId, $routeParamsId, $sceId];
+    $inject = [$rootScopeId, $compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, TemplateServiceId, FileServiceId, $routeParamsId, $sceId, $uibModalId];
 
     type: string = "offer";
 
@@ -43,6 +43,7 @@ class OfferController extends AbstractWorkflow {
     scope;
     compile;
     window;
+    uibModal;
 
     dtOptions;
     dtColumns;
@@ -74,7 +75,7 @@ class OfferController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService, FileService, $routeParams, $sce) {
+    constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService, FileService, $routeParams, $sce, $uibModal) {
         super(WorkflowService, $sce, FileService, $scope);
         this.workflowService = WorkflowService;
         this.offerDataTableService = OfferDataTableService;
@@ -86,6 +87,7 @@ class OfferController extends AbstractWorkflow {
         this.window = $window;
         this.templateService = TemplateService;
         this.currentWizard = 1;
+        this.uibModal = $uibModal;
 
         let self = this;
         function createdRow(row, data: Process, dataIndex) {
@@ -214,13 +216,21 @@ class OfferController extends AbstractWorkflow {
             this.saleEditForm.$setPristine();
         }
 
-        this.edit = true;
-        this.currentProductId = "-1";
-        this.currentProductAmount = 1;
-        this.editProcess = deepCopy(process);
-        this.customerSelected = this.editProcess.offer.customer.id > 0;
-        this.selectedCustomer = this.editProcess.offer.customer;
-        this.editWorkflowUnit = this.editProcess.offer;
+        this.uibModal.open({
+            template: `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.offer' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig'>
+            <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess.offer' edit-process='transitionCtrl.editProcess' editable='true'/>
+            <product-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.PRODUCT}")' edit-workflow-unit='transitionCtrl.editProcess.offer' edit-process='transitionCtrl.editProcess' editable='true'/>
+            </transition>`,
+            controller: ModalTransitionController,
+            controllerAs: "transitionCtrl",
+            backdrop: "static",
+            size: "lg",
+            resolve: {
+                process: function () {
+                    return process;
+                }
+            }
+        });
     }
 
 
