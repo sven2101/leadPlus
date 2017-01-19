@@ -27,8 +27,7 @@ class TransitionDirective implements IDirective {
     transclude = {
         "customerEdit": "?customerEdit",
         "productEdit": "?productEdit",
-        "supplyEdit": "?supplyEdit",
-        "emailEdit": "?email"
+        "emailEdit": "?emailEdit"
     };
 
     restrict = "E";
@@ -37,15 +36,16 @@ class TransitionDirective implements IDirective {
         editProcess: "=",
         editWorkflowUnit: "=",
         modalInstance: "=",
-        wizardConfig: "="
+        wizardConfig: "=",
+        currentNotification: "="
     };
 
-    constructor(private WorkflowService: WorkflowService, private CustomerService: CustomerService, private ProcessService: ProcessService, private $rootScope) {
+    constructor(private WorkflowService: WorkflowService, private CustomerService: CustomerService, private ProcessService: ProcessService, private FileService: FileService, private NotificationService: NotificationService, private $rootScope) {
     }
 
     static directiveFactory(): TransitionDirective {
-        let directive: any = (WorkflowService: WorkflowService, CustomerService: CustomerService, ProcessService: ProcessService, $rootScope) => new TransitionDirective(WorkflowService, CustomerService, ProcessService, $rootScope);
-        directive.$inject = [WorkflowServiceId, CustomerServiceId, ProcessServiceId, $rootScopeId];
+        let directive: any = (WorkflowService: WorkflowService, CustomerService: CustomerService, ProcessService: ProcessService, FileService: FileService, NotificationService: NotificationService, $rootScope) => new TransitionDirective(WorkflowService, CustomerService, ProcessService, FileService, NotificationService, $rootScope);
+        directive.$inject = [WorkflowServiceId, CustomerServiceId, ProcessServiceId, FileServiceId, NotificationServiceId, $rootScopeId];
         return directive;
     }
 
@@ -53,13 +53,26 @@ class TransitionDirective implements IDirective {
         scope.workflowService = this.WorkflowService;
         scope.customerService = this.CustomerService;
         scope.processService = this.ProcessService;
+        scope.fileService = this.FileService;
+        scope.notificationService = this.NotificationService;
         scope.rootScope = this.$rootScope;
         scope.wizardElements = new Array<WizardButtonConfig>();
         scope.step = 1;
+        scope.currentWizard;
+
+        if (!isNullOrUndefined(scope.currentNotification)) {
+            scope.currentNotification.recipients = scope.editWorkflowUnit.customer.email;
+            scope.$watch("editWorkflowUnit.customer.email", function (newValue, oldValue) {
+                if (newValue !== oldValue) {
+                    scope.currentNotification.recipients = scope.editWorkflowUnit.customer.email;
+                }
+            }, true);
+        }
 
         scope.close = (result: boolean, process: Process) => this.close(result, process, scope);
         scope.transform = () => this.transform(scope);
         scope.save = () => this.save(scope);
+        scope.send = () => this.send(scope);
         scope.isAnyFormInvalid = () => this.isAnyFormInvalid(scope);
         scope.getWizardConfigByTransclusion = (wizardConfig: Array<WizardButtonConfig>, transclusion: any) => this.getWizardConfigByTransclusion(wizardConfig, transclusion);
         let wizardConfig: Array<WizardButtonConfig> = scope.wizardConfig;
@@ -73,6 +86,7 @@ class TransitionDirective implements IDirective {
 
             }, null, transclusion);
         }
+        scope.currentWizard = scope.wizardElements[0];
     };
 
     getWizardConfigByTransclusion(wizardConfig: Array<WizardButtonConfig>, transclusion: any): WizardButtonConfig {
@@ -111,14 +125,41 @@ class TransitionDirective implements IDirective {
             temp.customer.timestamp = newTimestamp();
             temp.customer = await scope.customerService.insertCustomer(temp.customer) as Customer;
         }
-        let resultProcess = await scope.processService.save(scope.editProcess) as Process;
+        let resultProcess = await scope.processService.save(scope.editProcess, true, false) as Process;
         scope.close(true, resultProcess);
         return resultProcess;
     }
 
+    async send(scope: any) {
+        let process = scope.editProcess;
+        process.notifications = process.notifications ? process.notifications : [];
+
+        let notification: Notification = deepCopy(scope.currentNotification);
+        notification.attachments = notification.attachments ? notification.attachments : [];
+        notification.notificationType = NotificationType.OFFER;
+        notification.id = undefined;
+        await scope.workflowService.addLeadToOffer(process);
+        let promises: Array<Promise<void>> = notification.attachments ?
+            notification.attachments
+                .filter(a => isNullOrUndefined(a.id))
+                .map(a => scope.fileService.saveAttachment(a)) : [];
+        for (let p of promises) {
+            await p;
+        }
+        try {
+            await scope.notificationService.sendNotification(notification);
+        } catch (error) {
+            notification.notificationType = NotificationType.ERROR;
+        }
+        notification.attachments.forEach(a => a.id = undefined);
+        process.notifications.push(notification);
+        let resultProcess = await scope.processService.save(process, false, true) as Process;
+        scope.close(true, resultProcess);
+    }
+
     isAnyFormInvalid(scope: any): boolean {
         for (let buttonConfig of scope.wizardConfig) {
-            if (!isNullOrUndefined(buttonConfig.form) && buttonConfig.form.$invalid) {
+            if (!isNullOrUndefined(buttonConfig.form) && buttonConfig.form.$invalid && buttonConfig.validation) {
                 return true;
             }
         }

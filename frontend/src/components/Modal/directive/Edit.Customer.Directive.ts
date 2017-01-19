@@ -1,7 +1,6 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../Common/directive/Directive.Interface.ts" />
 /// <reference path="../../Common/service/Workflow.Service.ts" />
-/// <reference path="../../Common/directive/Directive.Interface.ts" />
 /// <reference path="../../Setting/controller/Setting.Source.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.

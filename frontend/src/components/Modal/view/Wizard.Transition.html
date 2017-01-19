@@ -173,12 +173,12 @@ span.round-tab i{
 <div class="wizard">
     <div class="wizard-inner">
         <ul class="nav nav-tabs" role="tablist">
-            <li ng-repeat="wizardElement in wizardElements | orderBy : 'position' track by $index" role="presentation" ng-class="{active:step===$index+1, disabled:wizardElement.isDisabled,errorAfter:wizardElement.form.$invalid}"
+            <li ng-repeat="wizardElement in wizardElements | orderBy : 'position' track by $index" role="presentation" ng-class="{active:step===$index+1, disabled:wizardElement.isDisabled,errorAfter:wizardElement.form.$invalid && wizardElement.validation}"
                 ng-style="{'width':100/wizardElements.length+'%'}">
                 <label ng-class="{iconWizardDisabled:wizardElement.isDisabled}">{{::wizardElement.title}}</label>
-                <a ng-click="wizardElement.isDisabled || ($parent.step=$index+1)" aria-controls="step{{$index+1}}" role="tab" title="Step {{$index+1}}">
-                    <span class="round-tab" ng-class="{roundTabHover:!wizardElement.isDisabled,error:wizardElement.form.$invalid}">
-                                <i class="icon-wizard {{::wizardElement.icon}}" ng-class="{iconWizardDisabled:wizardElement.isDisabled,error:wizardElement.form.$invalid}"></i>
+                <a ng-click="wizardElement.isDisabled || ($parent.step=$index+1);($parent.currentWizard=wizardElement)" aria-controls="step{{$index+1}}" role="tab">
+                    <span class="round-tab" ng-class="{roundTabHover:!wizardElement.isDisabled,error:wizardElement.form.$invalid && wizardElement.validation}">
+                                <i class="icon-wizard {{::wizardElement.icon}}" ng-class="{iconWizardDisabled:wizardElement.isDisabled,error:wizardElement.form.$invalid && wizardElement.validation}"></i>
                         </span>
                 </a>
                 <div ng-if="$index+1 < wizardElements.length" class="connecting-line"></div>
@@ -202,9 +202,9 @@ span.round-tab i{
     <button type="button " class="btn btn-white " ng-click="close(false)">{{ 'COMMON_CANCEL'| translate }}</button>
     <button type="button " class="btn btn-success " ng-disabled="isAnyFormInvalid()"
         ng-click="save() ">{{ 'COMMON_SAVE'| translate }}</button>
-    <button ng-show="currentWizard==5 && type == 'offer'" type="button " class="btn btn-warning ladda-button" data-style="zoom-in"
-        ng-disabled="customerEditForm.$invalid || leadEditForm.$invalid || supplyEditForm.$invalid || emailEditForm.$invalid"
+    <button ng-if="currentWizard.isEmail" type="button " class="btn btn-warning ladda-button" data-style="zoom-in"
+        ng-disabled="isAnyFormInvalid() || currentWizard.form.$invalid"
         ng-click="send() ">
-		<span class="ladda-label">{{ 'COMMON_CONTINUE_AND_SENDING'| translate }}</span>
+		<span class="ladda-label">Angebot senden und Speichern</span>
 		</button>
 </div>

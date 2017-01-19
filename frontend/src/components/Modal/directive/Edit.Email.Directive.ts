@@ -5,11 +5,11 @@
 declare var Ladda;
 
 
-const EditEmailDirectiveId: string = "email";
+const EditEmailDirectiveId: string = "emailEdit";
 
 class EditEmailDirective implements IDirective {
 
-    templateUrl = () => { return "components/Common/view/Workflow.Edit.Email.html"; };
+    templateUrl = () => { return "components/Modal/view/Edit.Email.html"; };
     transclude = false;
     restrict = "E";
 
@@ -38,6 +38,12 @@ class EditEmailDirective implements IDirective {
         scope.onNotificationSelected = () => this.onNotificationSelected(scope);
         scope.openAttachment = (fileUpload: FileUpload) => this.openAttachment(fileUpload, scope);
         scope.showCC_BCC = scope.disabled;
+        if (scope.form instanceof WizardButtonConfig) {
+            scope.form.setForm(scope.eform);
+        }
+        else {
+            scope.eform = scope.form;
+        }
         if (scope.disabled) {
             return;
         }
@@ -108,7 +114,6 @@ class EditEmailDirective implements IDirective {
 
     generateContent(templateId: string, offer: Offer, currentNotification: Notification, scope: any): void {
         if (Number(templateId) === -1) {
-            scope.notification = new Notification();
             scope.notification.recipient = scope.process.offer.customer.email;
             return;
         }
@@ -139,6 +144,7 @@ class EditEmailDirective implements IDirective {
         this.reloadHtmlString(scope);
         scope.sizeInvalid = this.isFileSizeInvalid(scope.notification, scope);
     }
+
 }
 
 angular.module(moduleApp).directive(EditEmailDirectiveId, EditEmailDirective.directiveFactory());

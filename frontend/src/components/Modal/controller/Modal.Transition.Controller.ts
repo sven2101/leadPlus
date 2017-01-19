@@ -35,12 +35,8 @@ class ModalTransitionController {
         productEditStep.setTitle("Anfrage").setIcon("fa fa-inbox").setPosition(2);
         wizardConfig.push(productEditStep);
 
-        let supplyEditStep = new WizardButtonConfig(WizardForm.SUPPLY);
-        supplyEditStep.setTitle("Lieferung & Abschluss").setIcon("fa fa-truck").setPosition(3);
-        wizardConfig.push(supplyEditStep);
-
         let emailEditStep = new WizardButtonConfig(WizardForm.EMAIL);
-        emailEditStep.setTitle("Email").setIcon("fa fa-envelope").setPosition(4);
+        emailEditStep.setTitle("Angebot versenden").setIcon("fa fa-envelope").setPosition(3).setValidation(false).setEmail(true);
         wizardConfig.push(emailEditStep);
 
         return wizardConfig;

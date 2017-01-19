@@ -62,7 +62,7 @@
 				<label>{{ 'COMMON_EMAIL' | translate }}
 					<span style="color:red" ng-show="cform.email.$invalid && !cform.email.$pristine">{{ 'COMMON_VALIDATE_EMAIL'| translate }}</span>
 				</label>
-				<input type="email" name="email" class="form-control" ng-model="editWorkflowUnit.customer.email" ng-disabled="customerSelected">
+				<input type="email" name="email" class="form-control" ng-model="editWorkflowUnit.customer.email" ng-disabled="customerSelected" ng-model-options="{debounce: 300}">
 			</div>
 			<!-- PHONE -->
 			<div class="form-group" ng-class="{ 'has-error' : cform.phone.$invalid && !cform.phone.$pristine }">

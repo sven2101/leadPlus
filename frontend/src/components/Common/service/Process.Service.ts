@@ -28,10 +28,15 @@ class ProcessService {
         this.translate = $translate;
     }
 
-    async save(editProcess: Process): Promise<Process> {
+    async save(editProcess: Process, updateRow: boolean, deleteRow: boolean): Promise<Process> {
         let self = this;
         let resultProcess = await this.processResource.save(editProcess).$promise.catch(error => handleError(error)) as Process;
-        self.rootScope.$broadcast("updateRow", resultProcess);
+        if (updateRow === true) {
+            self.rootScope.$broadcast("updateRow", resultProcess);
+        }
+        if (deleteRow === true) {
+            self.rootScope.$broadcast("deleteRow", resultProcess);
+        }
         if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(self.rootScope.user.id)) {
             self.rootScope.$broadcast("onTodosChange");
         }

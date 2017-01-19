@@ -217,9 +217,10 @@ class OfferController extends AbstractWorkflow {
         }
 
         this.uibModal.open({
-            template: `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.offer' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig'>
+            template: `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.offer' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig' current-notification='transitionCtrl.notification'>
             <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess.offer' edit-process='transitionCtrl.editProcess' editable='true'/>
             <product-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.PRODUCT}")' edit-workflow-unit='transitionCtrl.editProcess.offer' edit-process='transitionCtrl.editProcess' editable='true'/>
+            <email-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.EMAIL}")' process='transitionCtrl.editProcess' disabled='false' notification='transitionCtrl.notification'/>
             </transition>`,
             controller: ModalTransitionController,
             controllerAs: "transitionCtrl",

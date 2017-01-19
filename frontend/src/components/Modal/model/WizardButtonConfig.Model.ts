@@ -6,12 +6,16 @@ class WizardButtonConfig {
     position: number;
     isVisible: boolean;
     isDisabled: boolean;
+    isEmail: boolean;
     isFirstActiveElement: boolean;
+    validation: boolean;
     constructor(directiveType: WizardForm) {
         this.directiveType = directiveType;
         this.isVisible = true;
         this.isDisabled = false;
         this.isFirstActiveElement = false;
+        this.validation = true;
+        this.isEmail = false;
     }
 
     setTitle(title: string): WizardButtonConfig {
@@ -39,6 +43,11 @@ class WizardButtonConfig {
         return this;
     }
 
+    setEmail(isEmail: boolean): WizardButtonConfig {
+        this.isEmail = isEmail;
+        return this;
+    }
+
     disable(): WizardButtonConfig {
         this.isDisabled = true;
         return this;
@@ -46,6 +55,11 @@ class WizardButtonConfig {
 
     enable(): WizardButtonConfig {
         this.isDisabled = false;
+        return this;
+    }
+
+    setValidation(validation: boolean): WizardButtonConfig {
+        this.validation = validation;
         return this;
     }
 
