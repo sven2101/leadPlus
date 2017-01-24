@@ -5,7 +5,7 @@
 /// <reference path="../../Common/model/OrderPosition.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../Offer/model/Offer.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Customer/Controller/Customer.Service.ts" />
 /// <reference path="../../Product/Controller/Product.Service.ts" />
 /*******************************************************************************
@@ -22,7 +22,7 @@
 
 const OfferServiceId: string = "OfferService";
 
-class OfferService {
+class OfferService implements IWorkflowService {
 
     $inject = [$qId, $rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, OfferResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, DashboardServiceId, TemplateServiceId, SourceServiceId];
     processResource;

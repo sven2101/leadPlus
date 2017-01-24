@@ -49,12 +49,13 @@
         </div>
     </div>
 </div>
-<div editworkflow parent="saleCtrl" type="sale" modaltitle="{{'SALE_EDIT_SALE_MODAL'| translate}}"></div>
+
+<div hidden ng-include="'components/Modal/view/Wizard.Transition.html'"></div>
+
 <div confirmationmodal modalid="deleteConfirmationModal" parent="saleCtrl" title="{{'SALE_DELETE_SALE'| translate}}" body="{{'SALE_DELETE_SALE_BODY'| translate}}"
     submittext="{{'COMMON_DELETE'| translate}}"></div>
 <div confirmationmodal modalid="rollbackConfirmationModal" parent="saleCtrl" title="{{'SALE_ROLLBACK'| translate}}" body="{{'SALE_ROLLBACK_BODY'| translate}}"
     submittext="{{'COMMON_RESET'| translate}}"></div>
-<div hidden ng-include="'components/Common/view/Workflow.Send.Modal.html'"></div>
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {

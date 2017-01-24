@@ -1,3 +1,5 @@
+/*
+
 /// <reference path="../../Offer/model/Offer.Model.ts" />
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Resource.ts" />
@@ -7,7 +9,7 @@
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../Template/controller/Template.Service.ts" />
-/// <reference path="../../Common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Common/model/Process.Model.ts" />
 /// <reference path="../../FileUpload/controller/File.Service.ts" />
 
@@ -21,11 +23,12 @@
  * reproduction of this material is strictly forbidden unless prior written
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
+/*
 "use strict";
 
 const WorkflowControllerId: string = "WorkflowController";
 
-class WorkflowController extends AbstractWorkflow {
+class WorkflowController {
 
     $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, CustomerServiceId, ProductServiceId,
         WorkflowServiceId, LeadServiceId, OfferServiceId, SaleServiceId, DashboardServiceId, FileServiceId, $rootScopeId, $sceId, $windowId, $scopeId];
@@ -76,7 +79,7 @@ class WorkflowController extends AbstractWorkflow {
 
     constructor(process: Process, type, $uibModalInstance, NotificationService, TemplateService, CustomerService, ProductService,
         WorkflowService, LeadService, OfferService, SaleService, DashboardService, FileService, $rootScope, $sce, $window, $scope) {
-        super(WorkflowService, $sce, FileService, $scope);
+        // super(WorkflowService, $sce, $scope);
 
         let self = this;
         this.rootScope = $rootScope;
@@ -101,7 +104,7 @@ class WorkflowController extends AbstractWorkflow {
         this.offerService = OfferService;
         this.saleService = SaleService;
 
-        this.loadDataToModal(process);
+        this.openEditModal(process);
 
         this.window = $window;
         if (type === "sale") {
@@ -109,7 +112,7 @@ class WorkflowController extends AbstractWorkflow {
         }
     }
 
-    loadDataToModal(process: Process) {
+    openEditModal(process: Process) {
         if (!isNullOrUndefined(this.customerEditForm)) {
             this.customerEditForm.$setPristine();
         }
@@ -132,16 +135,11 @@ class WorkflowController extends AbstractWorkflow {
         this.currentProductAmount = 1;
         this.editProcess = process;
         if (this.type === "offer") {
-            this.customerSelected = this.editProcess.offer.customer.id > 0;
-            this.selectedCustomer = this.editProcess.offer.customer;
             this.editWorkflowUnit = this.editProcess.offer;
             this.currentNotification = new Notification();
             this.currentNotification.recipients = this.editWorkflowUnit.customer.email;
         } else if (this.type === "sale") {
-            this.customerSelected = this.editProcess.sale.customer.id > 0;
-            this.selectedCustomer = this.editProcess.sale.customer;
             this.editWorkflowUnit = this.editProcess.sale;
-            this.wizardOnClick(6);
             this.editEmail = false;
         }
     }
@@ -253,18 +251,7 @@ class WorkflowController extends AbstractWorkflow {
         }
     }
 
-
-    setFormerNotification(notificationId: number) {
-        if (Number(notificationId) === -1) {
-            this.currentNotification = new Notification();
-        }
-        let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
-        if (!isNullOrUndefined(notification)) {
-            this.currentNotification = deepCopy(notification);
-            this.currentNotification.id = null;
-        }
-    }
-
 }
 
 angular.module(moduleWorkflow, [moduleSummernote]).controller(WorkflowControllerId, WorkflowController);
+*/

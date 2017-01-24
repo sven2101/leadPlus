@@ -1,7 +1,7 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../User/Model/User.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -18,7 +18,7 @@ const SaleDataTableServiceId: string = "SaleDataTableService";
 const allDataSaleRoute: string = "/api/rest/processes/sales";
 const openDataSaleRoute: string = "/api/rest/processes/sales/latest/50";
 
-class SaleDataTableService {
+class SaleDataTableService implements IDatatableService {
 
     $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId];
 
@@ -162,6 +162,9 @@ class SaleDataTableService {
 
         }
         return config.build();
+    }
+
+    configRow(row: any, data: Process) {
     }
 
     getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {

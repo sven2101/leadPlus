@@ -10,16 +10,16 @@
 /// <reference path="../../Common/model/Status.Model.ts" />
 /// <reference path="../../Common/model/Promise.Interface.ts" />
 /// <reference path="../../Common/model/Defer.Interface.ts" />
-/// <reference path="../../Common/model/Workflow.Model.ts" />
-/// <reference path="../../Common/service/AbstractWorkflow.ts" />
-/// <reference path="../../Common/service/Workflow.Controller.ts" />
+/// <reference path="../../Workflow/model/Workflow.Model.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Controller.ts" />
 /// <reference path="../../Lead/controller/Lead.Controller.ts" />
 /// <reference path="../../Offer/controller/Offer.Controller.ts" />
 /// <reference path="../../Sale/controller/Sale.Controller.ts" />
 /// <reference path="../../Dashboard/controller/Dashboard.Controller.ts" />
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
-/// <reference path="./FollowUp.Controller.ts" />
-
+/// <reference path="../../Common/service/FollowUp.Controller.ts" />
+/// <reference path="../../FileUpload/controller/File.Service.ts" />
+/// <reference path="../../Modal/controller/Modal.Transition.Controller.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -260,6 +260,7 @@ class WorkflowService {
             process.sale.orderPositions[i].id = 0;
         }
 
+        /*
         this.uibModal.open({
             template: " <transition type='sale' service='this'><span>test</span></transition>",
             controller: WorkflowController,
@@ -278,6 +279,7 @@ class WorkflowService {
         }, function () {
             defer.resolve(undefined);
         });
+        */
         return defer.promise;
     }
 
@@ -425,7 +427,7 @@ class WorkflowService {
         }
     }
 
-    appendChildRow(childScope: any, process: Process, workflowUnit: IWorkflow, dtInstance: any, parent: AbstractWorkflow, type: string) {
+    appendChildRow(childScope: any, process: Process, workflowUnit: IWorkflow, dtInstance: any, parent: WorkflowController, type: string) {
         childScope.workflowUnit = workflowUnit;
         childScope.process = process;
         childScope.parent = parent;
@@ -452,21 +454,17 @@ class WorkflowService {
         }
     }
 
-    selectCustomer(workflow: any, currentCustomerId: string): boolean {
-        if (isNullOrUndefined(Number(currentCustomerId)) || Number(currentCustomerId) <= 0) {
-            workflow.customer = new Customer();
-            workflow.customer.id = 0;
-            return false;
+    selectCustomer(customer: Customer): Customer {
+        if (isNullOrUndefined(customer) || isNullOrUndefined(Number(customer.id))) {
+            return new Customer();
         }
-        let temp: Customer = findElementById(this.customerService.searchCustomers, Number(currentCustomerId)) as Customer;
-        if (isNullOrUndefined(temp)) {
-            workflow.customer = new Customer();
-            workflow.customer.id = 0;
-            return false;
+        let temp: Customer = findElementById(this.customerService.searchCustomers, Number(customer.id)) as Customer;
+        if (isNullOrUndefined(temp) || isNullOrUndefined(Number(temp.id))) {
+            return new Customer();
         }
-        workflow.customer = deepCopy(temp);
-        return true;
+        return deepCopy(temp);
     }
+
     refreshUsers(): void {
         this.userResource.getAll().$promise.then((data) => {
             this.users = data;

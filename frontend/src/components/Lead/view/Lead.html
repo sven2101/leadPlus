@@ -33,8 +33,7 @@
 					<h5>{{ 'LEAD_MANAGE_LEADS' | translate }}</h5>
 				</div>
 				<div class="ibox-content">
-					<button type="button" class="btn btn-success" ng-click="leadCtrl.clearNewLead()" data-backdrop="static" data-toggle="modal"
-						data-target="#editModal">
+					<button type="button" class="btn btn-success" ng-click="leadCtrl.openNewLeadModal()">
                         <i class="fa fa-plus"></i>&nbsp;{{ 'LEAD_ADD_LEAD' | translate }}
                     </button>
 					<!--<button ng-click="leadCtrl.refreshData()" type="button" class="btn btn-success">

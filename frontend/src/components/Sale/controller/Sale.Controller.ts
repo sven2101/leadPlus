@@ -1,4 +1,4 @@
-/// <reference path="../../../typeDefinitions/moment.d.ts" />
+/*/// <reference path="../../../typeDefinitions/moment.d.ts" />
 /// <reference path="../../../typeDefinitions/moment-node.d.ts" />
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../app/App.Constants.ts" />
@@ -9,7 +9,7 @@
 /// <reference path="../../Sale/controller/Sale.DataTableService.ts" />
 /// <reference path="../../Sale/controller/Sale.Service.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../common/service/AbstractWorkflow.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -21,14 +21,14 @@
  * reproduction of this material is strictly forbidden unless prior written
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
-
+/*
 "use strict";
 
 const SaleControllerId: string = "SaleController";
 
 class SaleController extends AbstractWorkflow {
 
-    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId, TemplateServiceId, FileServiceId, $routeParamsId, $sceId, $windowId];
+    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, SaleDataTableServiceId, SaleServiceId, TemplateServiceId, FileServiceId, $routeParamsId, $sceId, $windowId, $uibModalId];
 
     type: string = "sale";
 
@@ -71,8 +71,8 @@ class SaleController extends AbstractWorkflow {
     emailEditForm: any;
     saleEditForm: any;
 
-    constructor($rootScope, $compile, $scope, WorkflowService, SaleDataTableService, SaleService, TemplateService, FileService, $routeParams, $sce, $window) {
-        super(WorkflowService, $sce, FileService, $scope);
+    constructor($rootScope, $compile, $scope, WorkflowService, SaleDataTableService, SaleService, TemplateService, FileService, $routeParams, $sce, $window, $uibModal) {
+        super(WorkflowService, $sce, $scope, $rootScope, $compile, $routeParams, $uibModal, WorkflowService, LeadDataTableService, LeadService);
         this.workflowService = WorkflowService;
         this.saleDataTableService = SaleDataTableService;
         this.saleService = SaleService;
@@ -82,7 +82,6 @@ class SaleController extends AbstractWorkflow {
         this.window = $window;
         this.compile = $compile;
         this.templateService = TemplateService;
-        this.currentWizard = 1;
 
         let self = this;
 
@@ -151,14 +150,14 @@ class SaleController extends AbstractWorkflow {
             self.saleService.updateRow(data, self.dtInstance, self.dropCreateScope("compileScope"));
         });
 
-        let loadDataToModal = $rootScope.$on("loadDataToModal", (event, data) => {
-            self.loadDataToModal(data);
+        let openEditModal = $rootScope.$on("openEditModal", (event, data) => {
+            self.openEditModal(data);
         });
 
         $scope.$on("$destroy", function handler() {
             deleteRow();
             updateRow();
-            loadDataToModal();
+            openEditModal();
             self.destroyAllScopes();
         });
         this.registerIntervall();
@@ -191,7 +190,7 @@ class SaleController extends AbstractWorkflow {
         this.workflowService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process.sale, this.dtInstance, this, "sale");
     }
 
-    loadDataToModal(process: Process) {
+    openEditModal(process: Process) {
         if (!isNullOrUndefined(this.customerEditForm)) {
             this.customerEditForm.$setPristine();
         }
@@ -216,8 +215,6 @@ class SaleController extends AbstractWorkflow {
         this.currentProductAmount = 1;
         this.editProcess = process;
         this.editProcess = deepCopy(process);
-        this.customerSelected = this.editProcess.sale.customer.id > 0;
-        this.selectedCustomer = this.editProcess.sale.customer;
         this.editWorkflowUnit = this.editProcess.sale;
         // this.editWorkflowUnit.saleTurnover = this.editProcess.offer.netPrice;
     }
@@ -267,20 +264,11 @@ class SaleController extends AbstractWorkflow {
         this.templateService.getAll().then((result) => this.templates = result, (error) => handleError(error));
     }
 
-    setFormerNotification(notificationId: number) {
-        if (Number(notificationId) === -1) {
-            this.currentNotification = null;
-        }
-        let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
-        if (!isNullOrUndefined(notification)) {
-            this.currentNotification = deepCopy(notification);
-        }
-    }
     getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
         return this.saleDataTableService.getActionButtonConfig(process);
     }
 }
 angular.module(moduleSale, [ngResourceId]).controller(SaleControllerId, SaleController);
-
+*/
 
 

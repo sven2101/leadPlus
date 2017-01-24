@@ -1,6 +1,6 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Resource.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../statistic/controller/Statistic.Service.ts" />
 /// <reference path="../../dashboard/controller/Dashboard.Service.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />

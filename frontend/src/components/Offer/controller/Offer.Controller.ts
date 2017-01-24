@@ -1,3 +1,4 @@
+/*
 /// <reference path="../../../typeDefinitions/moment.d.ts" />
 /// <reference path="../../../typeDefinitions/moment-node.d.ts" />
 /// <reference path="../../app/App.Common.ts" />
@@ -9,40 +10,22 @@
 /// <reference path="../../Offer/controller/Offer.DataTableService.ts" />
 /// <reference path="../../Offer/controller/Offer.Service.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../common/service/AbstractWorkflow.ts" />
 /// <reference path="../../FileUpload/controller/File.Service.ts" />
-
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-
-"use strict";
-
+/*
 const OfferControllerId: string = "OfferController";
 
-class OfferController extends AbstractWorkflow {
+class OfferController {
 
-    $inject = [$rootScopeId, $compileId, $scopeId, $windowId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, TemplateServiceId, FileServiceId, $routeParamsId, $sceId, $uibModalId];
-
-    type: string = "offer";
+    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, OfferDataTableServiceId, OfferServiceId, $routeParamsId, $sceId, $uibModalId];
 
     workflowService: WorkflowService;
     offerDataTableService: OfferDataTableService;
     offerService: OfferService;
-    templateService: TemplateService;
-    fileService: FileService;
 
     scope;
     compile;
-    window;
     uibModal;
 
     dtOptions;
@@ -54,39 +37,14 @@ class OfferController extends AbstractWorkflow {
     commentModalInput: string;
     loadAllData: boolean = false;
     processes: { [key: number]: Process } = {};
-    editProcess: Process;
-    editWorkflowUnit: Offer = new Offer();
-    edit: boolean;
-    editEmail: boolean = false;
-    editable: boolean = true;
 
-    templates: Array<Template> = [];
-
-    currentProductId = "-1";
-    currentProductAmount = 1;
-
-    otherCurrentTab: number = 1;
-    currentNotification: Notification;
-
-    customerEditForm: any;
-    leadEditForm: any;
-    supplyEditForm: any;
-    priceEditForm: any;
-    emailEditForm: any;
-    saleEditForm: any;
-
-    constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, TemplateService, FileService, $routeParams, $sce, $uibModal) {
-        super(WorkflowService, $sce, FileService, $scope);
+    constructor($rootScope, $compile, $scope, $window, WorkflowService, OfferDataTableService, OfferService, $routeParams, $sce, $uibModal) {
         this.workflowService = WorkflowService;
         this.offerDataTableService = OfferDataTableService;
         this.offerService = OfferService;
-        this.fileService = FileService;
 
         this.scope = $scope;
         this.compile = $compile;
-        this.window = $window;
-        this.templateService = TemplateService;
-        this.currentWizard = 1;
         this.uibModal = $uibModal;
 
         let self = this;
@@ -139,7 +97,6 @@ class OfferController extends AbstractWorkflow {
 
         this.dtOptions = this.offerDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.offerDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
-        this.getAllActiveTemplates();
 
         let deleteRow = $rootScope.$on("deleteRow", (event, data) => {
             if (self.loadAllData) {
@@ -155,14 +112,14 @@ class OfferController extends AbstractWorkflow {
             self.offerService.updateRow(data, self.dtInstance, self.dropCreateScope("compileScope"));
         });
 
-        let loadDataToModal = $rootScope.$on("loadDataToModal", (event, data) => {
-            self.loadDataToModal(data);
+        let openEditModal = $rootScope.$on("openEditModal", (event, data) => {
+            self.openEditModal(data);
         });
 
         $scope.$on("$destroy", function handler() {
             deleteRow();
             updateRow();
-            loadDataToModal();
+            openEditModal();
             self.destroyAllScopes();
         });
         this.registerIntervall();
@@ -188,34 +145,12 @@ class OfferController extends AbstractWorkflow {
         this.workflowService.changeDataInput(this.loadAllData, this.dtOptions, allDataOfferRoute, openDataOfferRoute);
     }
 
-    otherTabOnClick(tab: number) {
-        this.otherCurrentTab = tab;
-    }
-
     appendChildRow(process: Process) {
         this.workflowService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process.offer, this.dtInstance, this, "offer");
     }
 
-    loadDataToModal(process: Process) {
-        if (!isNullOrUndefined(this.customerEditForm)) {
-            this.customerEditForm.$setPristine();
-        }
-        if (!isNullOrUndefined(this.leadEditForm)) {
-            this.leadEditForm.$setPristine();
-        }
-        if (!isNullOrUndefined(this.supplyEditForm)) {
-            this.supplyEditForm.$setPristine();
-        }
-        if (!isNullOrUndefined(this.priceEditForm)) {
-            this.priceEditForm.$setPristine();
-        }
-        if (!isNullOrUndefined(this.emailEditForm)) {
-            this.emailEditForm.$setPristine();
-        }
-        if (!isNullOrUndefined(this.saleEditForm)) {
-            this.saleEditForm.$setPristine();
-        }
-
+    openEditModal(process: Process) {
+        let self = this;
         this.uibModal.open({
             template: `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.offer' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig' current-notification='transitionCtrl.notification'>
             <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess.offer' edit-process='transitionCtrl.editProcess' editable='true'/>
@@ -231,10 +166,15 @@ class OfferController extends AbstractWorkflow {
                     return process;
                 }
             }
+        }).result.then(function (result: Process) {
+            if (!isNullOrUndefined(result)) {
+                self.getScopeByKey("childRowScope" + result.id).workflowUnit = result.offer;
+                self.getScopeByKey("childRowScope" + result.id).process = result;
+            }
         });
     }
 
-
+    // TODO In Directive überführen
     addComment(id: number, input: Array<string>, process: Process = null) {
         if (isNullOrUndefined(process)) {
             process = this.processes[id];
@@ -244,61 +184,25 @@ class OfferController extends AbstractWorkflow {
         });
     }
 
-
-    async save(edit: boolean) {
-        let process = await this.offerService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.dtInstance, this.dropCreateScope("compileScope"));
-        this.getScopeByKey("childRowScope" + process.id).workflowUnit = process.offer;
-        this.getScopeByKey("childRowScope" + process.id).process = process;
-        this.getScopeByKey("childRowScope" + process.id).$apply();
-    }
-
-    closeOrOpen(process: Process) {
-        this.offerService.closeOrOpenOffer(process, this.dtInstance, this.dropCreateScope("compileScope"), this.loadAllData);
-    }
-
+    // TODO In Directive überführen
     deleteRow(process: Process) {
         this.offerService.deleteRow(process, this.dtInstance);
     }
 
+    // TODO In Directive überführen
     getOrderPositions(process: Process): Array<OrderPosition> {
         if (!isNullOrUndefined(process.offer)) {
             return process.offer.orderPositions;
         }
     }
 
-    pin(process: Process, user: User) {
-        this.offerService.pin(process, this.dtInstance, this.dropCreateScope("compileScope"), user);
-    }
-
+    // TODO In Directive überführen
     rollBack(process: Process): void {
         this.offerService.rollBack(process, this.dtInstance, this.dropCreateScope("compileScope"));
-    }
-
-    getAllActiveTemplates() {
-        let self = this;
-        this.templateService.getAll().then((result) => self.templates = result, (error) => handleError(error));
-    }
-
-    setFormerNotification(notificationId: number) {
-        if (Number(notificationId) === -1) {
-            this.currentNotification = null;
-        }
-        let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
-        if (!isNullOrUndefined(notification)) {
-            this.currentNotification = deepCopy(notification);
-        }
-    }
-
-    openFollowUpModal(process: Process) {
-        this.workflowService.openFollowUpModal(process);
-    }
-
-    getActionButtonConfig(process: Process): { [key: string]: ActionButtonConfig } {
-        return this.offerDataTableService.getActionButtonConfig(process);
     }
 }
 
 angular.module(moduleOffer, [ngResourceId]).controller(OfferControllerId, OfferController);
-
+*/
 
 

@@ -36,8 +36,12 @@ class ModalTransitionController {
         wizardConfig.push(productEditStep);
 
         let emailEditStep = new WizardButtonConfig(WizardForm.EMAIL);
-        emailEditStep.setTitle("Angebot versenden").setIcon("fa fa-envelope").setPosition(3).setValidation(false).setEmail(true);
+        emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(3).setValidation(false).setEmail(true);
         wizardConfig.push(emailEditStep);
+
+        let SaleEditStep = new WizardButtonConfig(WizardForm.SALE);
+        SaleEditStep.setTitle("Verkauf").setIcon("fa fa-usd").setPosition(4);
+        wizardConfig.push(SaleEditStep);
 
         return wizardConfig;
     }
@@ -52,10 +56,6 @@ class ModalTransitionController {
         let productEditStep = new WizardButtonConfig(WizardForm.PRODUCT);
         productEditStep.setTitle("Produkt").setIcon("fa fa-table").setPosition(2);
         wizardConfig.push(productEditStep);
-
-        let supplyEditStep = new WizardButtonConfig(WizardForm.SUPPLY);
-        supplyEditStep.setTitle("Lieferung & Abschluss").setIcon("fa fa-truck").setPosition(3).disable();
-        wizardConfig.push(supplyEditStep);
 
         return wizardConfig;
     }

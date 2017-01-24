@@ -1,6 +1,6 @@
 /// <reference path="../../Statistic/model/ColumnChart.Model.ts" />" />
 /// <reference path="../../Statistic/controller/Statistic.Service.ts" />
-/// <reference path="../../Common/Model/Workflow.Model.ts" />
+/// <reference path="../../Workflow/Model/Workflow.Model.ts" />
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Common.ts" />
 

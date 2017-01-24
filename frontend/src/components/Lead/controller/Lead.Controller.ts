@@ -1,4 +1,4 @@
-/// <reference path="../../../typeDefinitions/moment.d.ts" />
+/*/// <reference path="../../../typeDefinitions/moment.d.ts" />
 /// <reference path="../../../typeDefinitions/moment-node.d.ts" />
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../app/App.Constants.ts" />
@@ -11,79 +11,24 @@
 /// <reference path="../../Lead/controller/Lead.DataTableService.ts" />
 /// <reference path="../../Lead/controller/Lead.Service.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../common/service/AbstractWorkflow.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-
-"use strict";
-
+/*
 const LeadControllerId: string = "LeadController";
 
 class LeadController extends AbstractWorkflow {
 
-    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, FileServiceId, $routeParamsId, $sceId, $uibModalId];
+    $inject = [$rootScopeId, $compileId, $scopeId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, $routeParamsId, $sceId, $uibModalId, "$route"];
 
-    type: string = "lead";
-
-    uibModalInstance;
-
-    workflowService: WorkflowService;
     leadDataTableService: LeadDataTableService;
-    leadService: LeadService;
-    fileService: FileService;
+    leadService: IWorkflowService;
 
-    uibModal: any;
-
-    scope;
-
-    compile;
-    dtOptions;
-    dtColumns;
-    dtInstance: any = { DataTable: null };
-    dtInstanceCallback: any;
-
-    commentInput: string;
-    commentModalInput: string;
-    loadAllData: boolean = false;
-    processes: { [key: number]: Process } = {};
-    editProcess: Process;
-    editWorkflowUnit: Lead = new Lead();
-    edit: boolean;
-    editable: boolean = true;
-
-
-    currentProductId = "-1";
-    currentProductAmount = 1;
-
-    customerEditForm: any;
-    leadEditForm: any;
-    supplyEditForm: any;
-    priceEditForm: any;
-    emailEditForm: any;
-    saleEditForm: any;
-
-    constructor($rootScope, $compile, $scope, WorkflowService, LeadDataTableService, LeadService, FileService, $routeParams, $sce, $uibModal) {
-        super(WorkflowService, $sce, FileService, $scope);
-        this.workflowService = WorkflowService;
+    constructor($rootScope, $compile, $scope, WorkflowService, LeadDataTableService, LeadService, $routeParams, $sce, $uibModal, $route) {
+        super(WorkflowService, $sce, $scope, $rootScope, $compile, $routeParams, $uibModal, $route, LeadDataTableService, LeadService);
+        let paramValue = $route.current.$$route.type;
+        console.log(paramValue);
         this.leadDataTableService = LeadDataTableService;
         this.leadService = LeadService;
-        this.fileService = FileService;
-
-        this.uibModal = $uibModal;
-
-        this.scope = $scope;
-
-        this.compile = $compile;
-        this.currentWizard = 1;
 
         let self = this;
 
@@ -104,37 +49,6 @@ class LeadController extends AbstractWorkflow {
             return self.leadDataTableService.getDetailHTML(data.id);
         }
 
-        this.dtInstanceCallback = function dtInstanceCallback(dtInstance) {
-            self.dtInstance = dtInstance;
-            dtInstance.DataTable.on("page.dt", function () {
-                if (self.loadAllData) {
-                    self.destroyAllScopes();
-                }
-            });
-            dtInstance.DataTable.on("length.dt", function () {
-                if (self.loadAllData) {
-                    self.destroyAllScopes();
-                }
-            });
-
-            let searchLink = "";
-            let processId = $routeParams.processId;
-            if (!isNullOrUndefined(processId) && processId !== "") {
-                searchLink = "#id:" + processId + "#";
-                self.dtInstance.DataTable.search(searchLink).draw;
-                let intervall = setInterval(function () {
-                    if (!isNullOrUndefined(angular.element("#id_" + processId)) && !isNullOrUndefined(self.processes[processId])) {
-                        self.appendChildRow(self.processes[processId]);
-                        clearInterval(intervall);
-                    }
-                }, 100);
-
-                setTimeout(function () {
-                    clearInterval(intervall);
-                }, 10000);
-            }
-        };
-
         this.dtOptions = this.leadDataTableService.getDTOptionsConfiguration(createdRow);
         this.dtColumns = this.leadDataTableService.getDTColumnConfiguration(addDetailButton, addStatusStyle, addActionsButtons);
 
@@ -150,37 +64,19 @@ class LeadController extends AbstractWorkflow {
                 self.destroyAllScopes();
             }
             self.leadService.updateRow(data, self.dtInstance, self.dropCreateScope("compileScope"));
-            this.getScopeByKey("childRowScope" + data.id).workflowUnit = data.lead;
-            this.getScopeByKey("childRowScope" + data.id).process = data;
-            this.getScopeByKey("childRowScope" + data.id).$apply();
         });
 
-        let loadDataToModal = $rootScope.$on("loadDataToModal", (event, data: Process) => {
-            self.loadDataToModal(data);
+        let openEditModal = $rootScope.$on("openEditModal", (event, data: Process) => {
+            self.openEditModal(data);
         });
 
         $scope.$on("$destroy", function handler() {
             deleteRow();
             updateRow();
-            loadDataToModal();
+            openEditModal();
             self.destroyAllScopes();
         });
         this.registerIntervall();
-    }
-
-    close() {
-        this.clearNewLead();
-        this.uibModalInstance.close();
-    }
-
-    registerIntervall() {
-        let self = this;
-        let intervall = setInterval(function () {
-            self.refreshData();
-        }, 10 * 60 * 1000);
-        self.scope.$on("$destroy", function () {
-            clearInterval(intervall);
-        });
     }
 
     changeDataInput() {
@@ -188,42 +84,9 @@ class LeadController extends AbstractWorkflow {
         this.workflowService.changeDataInput(this.loadAllData, this.dtOptions, allDataLeadRoute, openDataLeadRoute);
     }
 
-    refreshData() {
-        let resetPaging = false;
-        this.dtInstance.reloadData(resetPaging);
-    }
 
-    appendChildRow(process: Process) {
-
-        this.workflowService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process.lead, this.dtInstance, this, "lead");
-    }
-
-    setFormsPristine() {
-        if (!isNullOrUndefined(this.customerEditForm)) {
-            this.customerEditForm.$setPristine();
-        }
-        if (!isNullOrUndefined(this.leadEditForm)) {
-            this.leadEditForm.$setPristine();
-        }
-        if (!isNullOrUndefined(this.supplyEditForm)) {
-            this.supplyEditForm.$setPristine();
-        }
-        if (!isNullOrUndefined(this.priceEditForm)) {
-            this.priceEditForm.$setPristine();
-        }
-        if (!isNullOrUndefined(this.emailEditForm)) {
-            this.emailEditForm.$setPristine();
-        }
-        if (!isNullOrUndefined(this.saleEditForm)) {
-            this.saleEditForm.$setPristine();
-        }
-    }
-
-    loadDataToModal(process: Process) {
-        // this.setFormsPristine();
-        this.currentProductId = "-1";
-        this.currentProductAmount = 1;
-
+    openEditModal(process: Process) {
+        let self = this;
         this.uibModal.open({
             template: `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.lead' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig'>
             <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess.lead' edit-process='transitionCtrl.editProcess' editable='true'/>
@@ -238,67 +101,50 @@ class LeadController extends AbstractWorkflow {
                     return process;
                 }
             }
+        }).result.then(function (result: Process) {
+            if (!isNullOrUndefined(result)) {
+                self.getScopeByKey("childRowScope" + result.id).workflowUnit = result.lead;
+                self.getScopeByKey("childRowScope" + result.id).process = result;
+            }
         });
     }
 
+    openNewLeadModal() {
+        let self = this;
+        let process = new Process();
 
-    addComment(id: number, input: Array<string>, process: Process = null) {
-        if (isNullOrUndefined(process)) {
-            process = this.processes[id];
-        }
-        this.workflowService.addComment(process, input[id]).then(function () {
-            input[id] = "";
+        process.status = Status.OPEN;
+        process.formerProcessors = [new Processor(self.rootScope.user, Activity.OPEN)];
+        process.lead = new Lead();
+        process.lead.orderPositions = new Array<OrderPosition>();
+        process.lead.timestamp = newTimestamp();
+        process.lead.customer = new Customer();
+
+        console.log(process);
+        this.uibModal.open({
+            template: `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.lead' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig'>
+            <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess.lead' edit-process='transitionCtrl.editProcess' editable='true'/>
+            <product-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.PRODUCT}")' edit-workflow-unit='transitionCtrl.editProcess.lead' edit-process='transitionCtrl.editProcess' editable='true'/>
+            </transition>`,
+            controller: ModalTransitionController,
+            controllerAs: "transitionCtrl",
+            backdrop: "static",
+            size: "lg",
+            resolve: {
+                process: function () {
+                    return process;
+                }
+            }
+        }).result.then(function (result: Process) {
+            if (!isNullOrUndefined(result)) {
+                self.rootScope.leadsCount += 1;
+                self.dtInstance.DataTable.row.add(result).draw();
+            }
         });
-    }
-
-    inContact(process: Process) {
-        this.leadService.inContact(process, this.dtInstance, this.dropCreateScope("compileScope"));
-    }
-
-
-    async save(edit: boolean) {
-
-        if (edit === true) {
-            let process = await this.leadService.saveEditedRow(this.editWorkflowUnit, this.editProcess, this.dtInstance, this.dropCreateScope("compileScope"));
-            this.getScopeByKey("childRowScope" + process.id).workflowUnit = process.lead;
-            this.getScopeByKey("childRowScope" + process.id).process = process;
-            this.getScopeByKey("childRowScope" + process.id).$apply();
-        }
-        else {
-            let process = await this.leadService.saveLead(this.dtInstance, this.editWorkflowUnit, this.editProcess.source);
-            this.getScopeByKey("childRowScope" + process.id).workflowUnit = process.lead;
-            this.getScopeByKey("childRowScope" + process.id).process = process;
-            this.getScopeByKey("childRowScope" + process.id).$apply();
-        }
-    }
-
-    clearNewLead() {
-        this.setFormsPristine();
-        this.currentWizard = 1;
-        this.edit = false;
-        this.editWorkflowUnit = new Lead();
-        this.editProcess = new Process();
-        this.editWorkflowUnit.orderPositions = new Array<OrderPosition>();
-        this.currentProductId = "-1";
-        this.selectedCustomer = null;
-        this.currentProductAmount = 1;
-        this.customerSelected = false;
-    }
-
-    pin(process: Process, user: User) {
-        this.leadService.pin(process, this.dtInstance, this.dropCreateScope("compileScope"), user);
-    }
-
-    closeOrOpen(process: Process) {
-        this.leadService.closeOrOpenInquiry(process, this.dtInstance, this.dropCreateScope("compileScope"), this.loadAllData);
     }
 
     deleteRow(process: Process) {
         this.leadService.deleteRow(process, this.dtInstance);
-    }
-
-    preventPropagation($event) {
-        $event.stopPropagation();
     }
 
     getOrderPositions(process: Process): Array<OrderPosition> {
@@ -311,11 +157,8 @@ class LeadController extends AbstractWorkflow {
         return this.leadDataTableService.getActionButtonConfig(process);
     }
 
-
-
 }
 angular.module(moduleLead, [ngResourceId]).controller(LeadControllerId, LeadController);
-
-
+*/
 
 

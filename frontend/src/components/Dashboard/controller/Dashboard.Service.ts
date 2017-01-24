@@ -3,10 +3,10 @@
 /// <reference path="../../lead/model/Lead.Model.ts" />
 /// <reference path="../../offer/model/Offer.Model.ts" />
 /// <reference path="../../sale/model/Sale.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../common/model/Promise.interface.ts" />
-/// <reference path="../../common/service/Workflow.Controller.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Controller.ts" />
 
 
 /*******************************************************************************

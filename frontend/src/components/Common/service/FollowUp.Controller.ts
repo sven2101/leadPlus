@@ -8,7 +8,7 @@
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../Template/controller/Template.Service.ts" />
-/// <reference path="../../Common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -123,17 +123,6 @@ class FollowUpController {
         self.close();
     }
 
-
-    setFormerNotification(notificationId: number) {
-        if (Number(notificationId) === -1) {
-            this.currentNotification = new Notification();
-        }
-        let notification: Notification = findElementById(this.editProcess.notifications, Number(notificationId)) as Notification;
-        if (!isNullOrUndefined(notification)) {
-            this.currentNotification = deepCopy(notification);
-            this.currentNotification.id = null;
-        }
-    }
 
     followUp() {
         let self = this;

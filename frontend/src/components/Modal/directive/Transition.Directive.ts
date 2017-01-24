@@ -1,6 +1,6 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Constants.ts" />
-/// <reference path="../../Common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Modal/model/WizardButtonConfig.Model.ts" />
 /// <reference path="../../Common/directive/Directive.Interface.ts" />
 /// <reference path="../../Common/service/Process.Service.ts" />
@@ -27,7 +27,8 @@ class TransitionDirective implements IDirective {
     transclude = {
         "customerEdit": "?customerEdit",
         "productEdit": "?productEdit",
-        "emailEdit": "?emailEdit"
+        "emailEdit": "?emailEdit",
+        "saleEdit": "?saleEdit"
     };
 
     restrict = "E";
@@ -74,6 +75,7 @@ class TransitionDirective implements IDirective {
         scope.save = () => this.save(scope);
         scope.send = () => this.send(scope);
         scope.isAnyFormInvalid = () => this.isAnyFormInvalid(scope);
+        scope.isLead = () => this.isLead(scope);
         scope.getWizardConfigByTransclusion = (wizardConfig: Array<WizardButtonConfig>, transclusion: any) => this.getWizardConfigByTransclusion(wizardConfig, transclusion);
         let wizardConfig: Array<WizardButtonConfig> = scope.wizardConfig;
 
@@ -110,7 +112,7 @@ class TransitionDirective implements IDirective {
     async transform(scope: any) {
         let process = scope.editProcess;
         let resultProcess = null;
-        if (process.status === Status.OPEN || process.status === Status.INCONTACT) {
+        if (scope.isLead()) {
             let resultProcess: Process = await scope.workflowService.addLeadToOffer(process) as Process;
         } else if (process.status === Status.OFFER || process.status === Status.FOLLOWUP || process.status === Status.DONE) {
             let resultProcess: Process = await scope.workflowService.addOfferToSale(process) as Process;
@@ -120,12 +122,13 @@ class TransitionDirective implements IDirective {
     }
 
     async save(scope: any): Promise<Process> {
-        let temp: IWorkflow = scope.editWorkflowUnit;
-        if (isNullOrUndefined(temp.customer.id) || isNaN(Number(temp.customer.id)) || Number(temp.customer.id) <= 0) {
-            temp.customer.timestamp = newTimestamp();
-            temp.customer = await scope.customerService.insertCustomer(temp.customer) as Customer;
+        if (isNullOrUndefined(scope.editWorkflowUnit.customer.timestamp)) {
+            scope.editWorkflowUnit.customer.timestamp = newTimestamp();
         }
-        let resultProcess = await scope.processService.save(scope.editProcess, true, false) as Process;
+        let isNewProcess: boolean = isNullOrUndefined(scope.editProcess.id);
+        console.log(scope.editProcess);
+        let resultProcess = await scope.processService.save(scope.editProcess, !isNewProcess, false) as Process;
+        console.log(resultProcess);
         scope.close(true, resultProcess);
         return resultProcess;
     }
@@ -138,7 +141,11 @@ class TransitionDirective implements IDirective {
         notification.attachments = notification.attachments ? notification.attachments : [];
         notification.notificationType = NotificationType.OFFER;
         notification.id = undefined;
-        await scope.workflowService.addLeadToOffer(process);
+        let deleteRow = false;
+        if (scope.isLead()) {
+            deleteRow = true;
+            await scope.workflowService.addLeadToOffer(process);
+        }
         let promises: Array<Promise<void>> = notification.attachments ?
             notification.attachments
                 .filter(a => isNullOrUndefined(a.id))
@@ -146,15 +153,25 @@ class TransitionDirective implements IDirective {
         for (let p of promises) {
             await p;
         }
+        notification.attachments.forEach(a => a.id = undefined);
+        process.notifications.push(notification);
+
+        let resultProcess = await scope.processService.save(process, !deleteRow, deleteRow) as Process;
+        scope.close(true, resultProcess);
         try {
             await scope.notificationService.sendNotification(notification);
         } catch (error) {
+            // TODO Set Notification to Error            
+            console.log("Set Notification to Error....");
             notification.notificationType = NotificationType.ERROR;
         }
-        notification.attachments.forEach(a => a.id = undefined);
-        process.notifications.push(notification);
-        let resultProcess = await scope.processService.save(process, false, true) as Process;
-        scope.close(true, resultProcess);
+    }
+
+    isLead(scope: any): boolean {
+        if (scope.editProcess.status === Status.OPEN || scope.editProcess.status === Status.INCONTACT) {
+            return true;
+        }
+        return false;
     }
 
     isAnyFormInvalid(scope: any): boolean {

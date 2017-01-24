@@ -1,5 +1,5 @@
 /// <reference path="../../app/App.Constants.ts" />
-/// <reference path="../../Common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="./Directive.Interface.ts" />
 /// <reference path="../../../typeDefinitions/angular.d.ts" />
 
@@ -29,8 +29,8 @@ class ActionButtonDirective implements IDirective {
         scope.workflowService = this.WorkflowService;
         scope.rootScope = this.$rootScope;
         scope.config = scope.actionbuttonconfig;
-        scope.loadDataToModal = (process: Process): void => {
-            this.$rootScope.$broadcast("loadDataToModal", process);
+        scope.openEditModal = (process: Process): void => {
+            this.$rootScope.$broadcast("openEditModal", process);
         };
         scope.openModal = (payload: any, method: any): void => {
             this.$rootScope.$broadcast("confirmationModalFunction", { "payload": payload, "method": method });

@@ -202,9 +202,9 @@ span.round-tab i{
     <button type="button " class="btn btn-white " ng-click="close(false)">{{ 'COMMON_CANCEL'| translate }}</button>
     <button type="button " class="btn btn-success " ng-disabled="isAnyFormInvalid()"
         ng-click="save() ">{{ 'COMMON_SAVE'| translate }}</button>
-    <button ng-if="currentWizard.isEmail" type="button " class="btn btn-warning ladda-button" data-style="zoom-in"
+    <button ng-if="currentWizard.isEmail" type="button " class="btn btn-warning" data-style="zoom-in"
         ng-disabled="isAnyFormInvalid() || currentWizard.form.$invalid"
         ng-click="send() ">
-		<span class="ladda-label">Angebot senden und Speichern</span>
+		<span class="ladda-label">Angebot senden</span>
 		</button>
 </div>

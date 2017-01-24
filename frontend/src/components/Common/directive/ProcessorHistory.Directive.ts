@@ -1,5 +1,5 @@
 /// <reference path="../../app/App.Constants.ts" />
-/// <reference path="../../Common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="./Directive.Interface.ts" />
 /// <reference path="../../../typeDefinitions/angular.d.ts" />
 

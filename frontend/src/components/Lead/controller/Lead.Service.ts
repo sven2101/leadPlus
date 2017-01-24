@@ -7,7 +7,7 @@
 /// <reference path="../../common/model/Activity.enum.ts" />
 /// <reference path="../../common/model/Processor.Model.ts" />
 /// <reference path="../../Lead/model/Lead.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Customer/Controller/Customer.Service.ts" />
 /// <reference path="../../Product/Controller/Product.Service.ts" />
 /*******************************************************************************
@@ -24,7 +24,7 @@
 
 const LeadServiceId: string = "LeadService";
 
-class LeadService {
+class LeadService implements IWorkflowService {
 
     $inject = [$qId, $rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, LeadResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId, SourceServiceId];
     processResource;

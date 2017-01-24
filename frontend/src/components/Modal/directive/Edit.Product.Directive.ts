@@ -1,6 +1,6 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../Common/directive/Directive.Interface.ts" />
-/// <reference path="../../Common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -41,12 +41,7 @@ class ProductEditDirective implements IDirective {
         scope.workflowService = this.WorkflowService;
         scope.productService = this.ProductService;
         scope.rootScope = this.$rootScope;
-        if (scope.form instanceof WizardButtonConfig) {
-            scope.form.setForm(scope.pform);
-        }
-        else {
-            scope.pform = scope.form;
-        }
+        scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.pform) : scope.pform = scope.form;
 
         scope.currentProductId = "-1";
         scope.currentProductAmount = 1;

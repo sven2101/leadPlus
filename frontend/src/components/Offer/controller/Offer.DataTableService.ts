@@ -1,7 +1,7 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../User/Model/User.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -18,7 +18,7 @@ const OfferDataTableServiceId: string = "OfferDataTableService";
 const allDataOfferRoute: string = "/api/rest/processes/offers";
 const openDataOfferRoute: string = "/api/rest/processes/workflow/OFFER/state/OFFER";
 
-class OfferDataTableService {
+class OfferDataTableService implements IDatatableService {
 
     $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId];
 

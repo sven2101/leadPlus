@@ -1,6 +1,6 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../Common/directive/Directive.Interface.ts" />
-/// <reference path="../../Common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 
 const PriceCalculationDirectiveId: string = "priceCalculation";
 

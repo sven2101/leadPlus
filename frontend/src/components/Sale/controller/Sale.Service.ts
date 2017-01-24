@@ -5,7 +5,7 @@
 /// <reference path="../../Common/model/OrderPosition.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../Sale/model/Sale.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Customer/Controller/Customer.Service.ts" />
 /// <reference path="../../Product/Controller/Product.Service.ts" />
 /*******************************************************************************
@@ -22,7 +22,7 @@
 
 const SaleServiceId: string = "SaleService";
 
-class SaleService {
+class SaleService implements IWorkflowService {
 
     $inject = [$qId, $rootScopeId, $translateId, toasterId, $compileId, ProcessResourceId, CustomerResourceId, SaleResourceId, WorkflowServiceId, CustomerServiceId, ProductServiceId, TemplateServiceId, $qId, SourceServiceId];
     processResource;
@@ -103,17 +103,8 @@ class SaleService {
         }
     }
 
-    getSaleByInvoiceNumber(invoiceNumber: string): IPromise<Sale> {
-        let defer = this.$q.defer();
-        this.saleResource.getByinvoiceNumber({}, invoiceNumber).$promise.then(function (result) {
-            if (isNullOrUndefined(result.id)) {
-                defer.resolve(null);
-            }
-            else {
-                defer.resolve(result);
-            }
-        });
-        return defer.promise;
+    async getSaleByInvoiceNumber(invoiceNumber: string): Promise<Sale> {
+        return await this.saleResource.getByinvoiceNumber({}, invoiceNumber).$promise.catch(error => handleError(error)) as Sale;
     }
 
     setRow(id: number, row: any) {

@@ -14,11 +14,11 @@
 				<div class="input-group" id="typeahead-autocompletion">
 					<input type="text" class="form-control" ng-model="selectedCustomer" placeholder="{{ 'CUSTOMER_SELECT' | translate }}"
 						uib-typeahead="customer as (customer.firstname +' '+ customer.lastname +' '+ (customer.company==null?'':customer.company)) for customer in customerService.getCustomerBySearchText($viewValue)"
-						typeahead-editable="false" typeahead-on-select="selectCustomer(editWorkflowUnit,$model)" typeahead-no-results="noResults"
-						typeahead-show-hint="true" typeahead-min-length="3" typeahead-wait-ms="600" ng-blur="(noResults) ? selectCustomer(editWorkflowUnit,$model):'doNothing'"
+						typeahead-editable="false" typeahead-on-select="selectCustomer($model)" typeahead-no-results="noResults"
+						typeahead-show-hint="true" typeahead-min-length="3" typeahead-wait-ms="600" ng-blur="(noResults) ? selectCustomer($model):'doNothing'"
 						ng-disabled="!editable">
 					<span class="input-group-btn">
-       				 <button style="height: 34px;" class="btn btn-secondary btn btn-white" type="button" ng-disabled="!editable" ng-click="selectCustomer(editWorkflowUnit,undefined)">&nbsp;<i class="fa fa-times"></i>&nbsp;</button>
+       				 <button style="height: 34px;" class="btn btn-secondary btn btn-white" type="button" ng-disabled="!editable" ng-click="selectCustomer(null)">&nbsp;<i class="fa fa-times"></i>&nbsp;</button>
       				</span>
 				</div>
 			</div>

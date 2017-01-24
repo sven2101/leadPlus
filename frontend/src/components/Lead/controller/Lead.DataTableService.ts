@@ -2,7 +2,7 @@
 /// <reference path="../../User/Model/User.Model.ts" />
 /// <reference path="../../common/model/Process.Model.ts" />
 /// <reference path="../../common/model/ActionButtonConfigBuilder.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -19,7 +19,7 @@ const LeadDataTableServiceId: string = "LeadDataTableService";
 const allDataLeadRoute = "/api/rest/processes/leads";
 const openDataLeadRoute = "/api/rest/processes/workflow/LEAD/state/OPEN";
 
-class LeadDataTableService {
+class LeadDataTableService implements IDatatableService {
 
     $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId];
 

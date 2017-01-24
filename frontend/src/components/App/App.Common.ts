@@ -51,6 +51,9 @@ let getNameOfUser = function (user: User): string {
 };
 
 let deepCopy = function (old: Object): any {
+    if (isNullOrUndefined(old)) {
+        return old;
+    }
     return JSON.parse(JSON.stringify(old));
 };
 

@@ -1,6 +1,6 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../Common/directive/Directive.Interface.ts" />
-/// <reference path="../../Common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Setting/controller/Setting.Source.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -42,29 +42,21 @@ class CustomerEditDirective implements IDirective {
         scope.sourceService = this.SourceService;
         scope.rootScope = this.$rootScope;
         scope.sce = this.$sce;
-        if (scope.form instanceof WizardButtonConfig) {
-            scope.form.setForm(scope.cform);
-        }
-        else {
-            scope.cform = scope.form;
-        }
+        scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.cform) : scope.cform = scope.form;
 
-        scope.customerSelected = scope.editWorkflowUnit.customer.id > 0;
-        scope.selectedCustomer = scope.editWorkflowUnit.customer;
+        scope.customerSelected = !isNullOrUndefined(scope.editWorkflowUnit.customer.id);
+        scope.selectedCustomer = scope.customerSelected ? scope.editWorkflowUnit.customer : null;
 
-        scope.selectCustomer = (workflow: IWorkflow, customer: Customer) => this.selectCustomer(workflow, customer, scope);
+        scope.selectCustomer = (customer: Customer) => this.selectCustomer(customer, scope);
         scope.getAsHtml = (html: string) => this.getAsHtml(html, scope);
     };
 
-    selectCustomer(workflow: IWorkflow, customer: Customer, scope: any) {
-        let customerId = "-1";
-        if (!isNullOrUndefined(customer)) {
-            customerId = customer.id.toString();
-        }
-        else {
+    selectCustomer(customer: Customer, scope: any) {
+        if (isNullOrUndefined(customer)) {
             scope.selectedCustomer = null;
         }
-        scope.customerSelected = scope.workflowService.selectCustomer(workflow, customerId);
+        scope.editWorkflowUnit.customer = scope.workflowService.selectCustomer(customer);
+        scope.customerSelected = !isNullOrUndefined(scope.editWorkflowUnit.customer.id);
     }
 
     getAsHtml(html: string, scope: any) {

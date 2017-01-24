@@ -9,7 +9,7 @@
 /// <reference path="../../Sale/model/Sale.Model.ts" />
 /// <reference path="../../Offer/model/Offer.Model.ts" />
 /// <reference path="../../common/model/IWorkflow.Interface.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.

@@ -1,5 +1,5 @@
 /// <reference path="../../App/App.Constants.ts" />
-/// <reference path="../../Common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Template/controller/Template.Service.ts" />
 
 declare var Ladda;
@@ -38,15 +38,12 @@ class EditEmailDirective implements IDirective {
         scope.onNotificationSelected = () => this.onNotificationSelected(scope);
         scope.openAttachment = (fileUpload: FileUpload) => this.openAttachment(fileUpload, scope);
         scope.showCC_BCC = scope.disabled;
-        if (scope.form instanceof WizardButtonConfig) {
-            scope.form.setForm(scope.eform);
-        }
-        else {
-            scope.eform = scope.form;
-        }
+        scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.eform) : scope.eform = scope.form;
+
         if (scope.disabled) {
             return;
         }
+
         scope.sizeInvalid = false;
         let l = $(".ladda-button").ladda();
         let button = $(".ladda-button");

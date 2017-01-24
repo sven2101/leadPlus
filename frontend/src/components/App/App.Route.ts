@@ -36,26 +36,29 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             .when("/leads/:processId?",
             {
                 templateUrl: "components/Lead/view/Lead.html",
-                controller: "LeadController",
+                controller: "WorkflowController",
                 controllerAs: "leadCtrl",
                 authenticated: true,
-                package: "basic"
+                package: "basic",
+                type: Workflow.LEAD
             })
             .when("/offers/:processId?",
             {
                 templateUrl: "components/Offer/view/Offer.html",
-                controller: "OfferController",
+                controller: "WorkflowController",
                 controllerAs: "offerCtrl",
                 authenticated: true,
-                package: "basic"
+                package: "basic",
+                type: Workflow.OFFER
             })
             .when("/sales/:processId?",
             {
                 templateUrl: "components/Sale/view/Sale.html",
-                controller: "SaleController",
+                controller: "WorkflowController",
                 controllerAs: "saleCtrl",
                 authenticated: true,
-                package: "basic"
+                package: "basic",
+                type: Workflow.SALE
             })
             .when("/statistic",
             {
