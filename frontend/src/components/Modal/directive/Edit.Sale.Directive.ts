@@ -12,7 +12,7 @@ class SaleEditDirective implements IDirective {
         form: "=",
         editWorkflowUnit: "=",
         editProcess: "=",
-        editable: "="
+        editable: "<"
     };
 
     constructor(private WorkflowService: WorkflowService, private SaleService: SaleService, private $rootScope) {
@@ -37,8 +37,11 @@ class SaleEditDirective implements IDirective {
     };
 
     async existsInvoiceNumber(scope: any) {
-        let sale: Sale = await scope.saleService.getSaleByInvoiceNumber(scope.editWorkflowUnit.invoiceNumber).$promise.catch(error => handleError(error)) as Sale;
-        scope.invoiceNumberAlreadyExists = !isNullOrUndefined(sale);
+        if (!isNullOrUndefined(scope.editWorkflowUnit.invoiceNumber) && scope.editWorkflowUnit.invoiceNumber.length > 0) {
+            let sale = await scope.saleService.getSaleByInvoiceNumber(scope.editWorkflowUnit.invoiceNumber).catch(error => handleError(error));
+            scope.invoiceNumberAlreadyExists = !isNullOrUndefined(sale.invoiceNumber);
+            scope.$apply();
+        }
     }
 
     calculateProfit(scope: any) {

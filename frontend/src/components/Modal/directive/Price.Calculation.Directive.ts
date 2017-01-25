@@ -32,6 +32,8 @@ class PriceCalculationDirective implements IDirective {
         scope.isLead = () => this.isLead(scope);
         scope.isOffer = () => this.isOffer(scope);
         scope.isSale = () => this.isSale(scope);
+        scope.isInOfferTransformation = () => this.isInOfferTransformation(scope);
+        scope.isInSaleTransformation = () => this.isInSaleTransformation(scope);
     };
 
     sumOrderPositions(array: Array<OrderPosition>, scope: any): number {
@@ -65,6 +67,14 @@ class PriceCalculationDirective implements IDirective {
             return true;
         }
         return false;
+    }
+
+    isInOfferTransformation(scope: any): boolean {
+        return scope.isLead() && !isNullOrUndefined(scope.editProcess.offer);
+    }
+
+    isInSaleTransformation(scope: any): boolean {
+        return scope.isOffer() && !isNullOrUndefined(scope.editProcess.sale);
     }
 }
 angular.module(moduleApp).directive(PriceCalculationDirectiveId, PriceCalculationDirective.directiveFactory());

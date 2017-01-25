@@ -21,7 +21,6 @@ class Sale extends AbstractModel implements IWorkflow {
     vendor: any;
     deliveryAddress: any;
     deliveryDate: any;
-    transport: any;
     saleTurnover: number;
     saleProfit: number;
     saleCost: number;

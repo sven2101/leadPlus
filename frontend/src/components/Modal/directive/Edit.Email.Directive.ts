@@ -16,7 +16,7 @@ class EditEmailDirective implements IDirective {
     scope = {
         form: "=",
         process: "=",
-        disabled: "=",
+        disabled: "<",
         notification: "="
     };
 

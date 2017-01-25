@@ -38,12 +38,13 @@ class WorkflowService {
 
     private $inject = [CommentResourceId, ProcessResourceId, toasterId, $rootScopeId,
         $translateId, $compileId, $qId, ProductServiceId, CustomerServiceId, $uibModalId,
-        UserResourceId, TemplateServiceId, NotificationServiceId, FileServiceId];
+        UserResourceId, TemplateServiceId, NotificationServiceId, FileServiceId, ProcessServiceId];
 
     commentResource;
     processResource;
     userResource;
     templateService;
+    processService: ProcessService;
 
     toaster;
     rootScope;
@@ -55,12 +56,13 @@ class WorkflowService {
     uibModal;
     users: Array<User> = [];
 
-    constructor(CommentResource, ProcessResource, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService, private NotificationService, private FileService) {
+    constructor(CommentResource, ProcessResource, toaster, $rootScope, $translate, $compile, $q, ProductService, CustomerService, $uibModal, UserResource, TemplateService, private NotificationService, private FileService, ProcessService) {
         this.commentResource = CommentResource.resource;
         this.processResource = ProcessResource.resource;
         this.userResource = UserResource.resource;
         this.templateService = TemplateService;
         this.toaster = toaster;
+        this.processService = ProcessService;
         this.rootScope = $rootScope;
         this.translate = $translate;
         this.compile = $compile;
@@ -189,43 +191,43 @@ class WorkflowService {
     }
 
 
+
+    getOfferTransformationWizardTemplate(): string {
+        let wizardSteps = `
+        <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardOfferTransitionConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess.offer' edit-process='transitionCtrl.editProcess' editable='true' small='true'/>`;
+        wizardSteps += `<email-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardOfferTransitionConfig,"${WizardForm.EMAIL}")' process='transitionCtrl.editProcess' disabled='false' notification='transitionCtrl.notification'/>`;
+        wizardSteps += `<sale-edit />`;
+
+        return `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.offer' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardOfferTransitionConfig' current-notification='transitionCtrl.notification' transform='true'>
+            ` + wizardSteps + `</transition>`;
+    }
+
+    getSaleTransformationWizardTemplate(): string {
+        let wizardSteps = `
+        <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardSaleTransitionConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess.sale' edit-process='transitionCtrl.editProcess' editable='false' small='true'/>`;
+        wizardSteps += `<email-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardSaleTransitionConfig,"${WizardForm.EMAIL}")' process='transitionCtrl.editProcess' disabled='false' notification='transitionCtrl.notification'/>`;
+        wizardSteps += `<sale-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardSaleTransitionConfig,"${WizardForm.SALE}")' edit-workflow-unit='transitionCtrl.editProcess.sale' edit-process='transitionCtrl.editProcess' editable='true'/>`;
+
+        return `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.sale' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardSaleTransitionConfig' current-notification='transitionCtrl.notification' transform='true'>
+            ` + wizardSteps + `</transition>`;
+    }
+
     startOfferTransformation(process: Process): IPromise<Process> {
         let defer = this.$q.defer();
-        let self = this;
-        process.offer = {
-            id: null,
-            orderPositions: deepCopy(process.lead.orderPositions),
-            deliveryAddress: process.lead.deliveryAddress,
-            deliveryDate: null,
-            netPrice: self.sumOrderPositions(process.lead.orderPositions) + process.lead.deliveryCosts,
-            customer: process.lead.customer,
-            vat: self.rootScope.user.defaultVat,
-            timestamp: newTimestamp(),
-            vendor: process.lead.vendor,
-            deliveryCosts: process.lead.deliveryCosts,
-            message: process.lead.message
-        };
 
-        for (let i = 0; i < process.offer.orderPositions.length; i++) {
-            process.offer.orderPositions[i].id = 0;
-        }
-
+        let wizardTemplate = this.getOfferTransformationWizardTemplate();
         this.uibModal.open({
-            template: "<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.offer' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig'>" +
-            "<customer-edit form='transitionCtrl.customerEditForm' edit-workflow-unit='transitionCtrl.editProcess.offer' edit-process='transitionCtrl.editProcess' editable='true'/>" +
-            "<email disabled='false' notification='null' process='transitionCtrl.editProcess' form='transitionCtrl.emailEditForm'></email>" +
-            "<lead/>" +
-            "<supply process='transitionCtrl.editProcess'/>" +
-            "</transition>",
+            template: wizardTemplate,
             controller: ModalTransitionController,
             controllerAs: "transitionCtrl",
             backdrop: "static",
             size: "lg",
             resolve: {
-                process: function () {
+                process: function (): Process {
                     return process;
-                }, type: function (): string {
-                    return "offer";
+                },
+                transformation: function (): Workflow {
+                    return Workflow.OFFER;
                 }
             }
         }).result.then(function (result) {
@@ -239,39 +241,19 @@ class WorkflowService {
 
     startSaleTransformation(process: Process): IPromise<Process> {
         let defer = this.$q.defer();
-        let self = this;
-        process.sale = {
-            id: null,
-            deliveryAddress: process.offer.deliveryAddress,
-            deliveryDate: process.offer.deliveryDate,
-            orderPositions: deepCopy(process.offer.orderPositions),
-            transport: process.offer.deliveryAddress,
-            customer: process.offer.customer,
-            saleProfit: process.offer.netPrice,
-            saleCost: 0,
-            saleTurnover: process.offer.netPrice,
-            invoiceNumber: "",
-            timestamp: newTimestamp(),
-            vendor: process.offer.vendor,
-            deliveryCosts: process.offer.deliveryCosts,
-            message: process.offer.message
-        };
-        for (let i = 0; i < process.sale.orderPositions.length; i++) {
-            process.sale.orderPositions[i].id = 0;
-        }
 
-        /*
+        let wizardTemplate = this.getSaleTransformationWizardTemplate();
         this.uibModal.open({
-            template: " <transition type='sale' service='this'><span>test</span></transition>",
-            controller: WorkflowController,
-            controllerAs: "workflowCtrl",
+            template: wizardTemplate,
+            controller: ModalTransitionController,
+            controllerAs: "transitionCtrl",
             backdrop: "static",
             size: "lg",
             resolve: {
                 process: function (): Process {
                     return process;
-                }, type: function (): string {
-                    return "sale";
+                }, transformation: function (): Workflow {
+                    return Workflow.SALE;
                 }
             }
         }).result.then(function (result) {
@@ -279,7 +261,7 @@ class WorkflowService {
         }, function () {
             defer.resolve(undefined);
         });
-        */
+
         return defer.promise;
     }
 
@@ -290,12 +272,12 @@ class WorkflowService {
         }
         tempProcess.status = Status.OFFER;
         tempProcess.processor = this.rootScope.user;
-        let process = await this.processResource.save(tempProcess);
+        let resultProcess = await this.processService.save(tempProcess, tempProcess.offer, false, true).then().catch(error => handleError(error)) as Process;
+        console.log(resultProcess);
         this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
         this.rootScope.leadsCount -= 1;
         this.rootScope.offersCount += 1;
-        this.rootScope.$broadcast("onTodosChange");
-        return process;
+        return resultProcess;
     }
 
     async addOfferToSale(tempProcess: Process): Promise<Process> {
@@ -305,17 +287,16 @@ class WorkflowService {
         }
         tempProcess.status = Status.SALE;
         tempProcess.processor = this.rootScope.user;
-        let process: Process = await this.processResource.save(tempProcess);
-        let customer: Customer = process.offer.customer;
+        let resultProcess = await this.processService.save(tempProcess, tempProcess.sale, false, true).then().catch(error => handleError(error)) as Process;
+        let customer: Customer = resultProcess.offer.customer;
         if (!customer.realCustomer) {
             customer.realCustomer = true;
             let updatedCustomer: Customer = await this.customerService.updateCustomer(customer);
-            process.offer.customer = updatedCustomer;
+            resultProcess.offer.customer = updatedCustomer;
         }
         this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
         this.rootScope.offersCount -= 1;
-        this.rootScope.$broadcast("onTodosChange");
-        return process;
+        return resultProcess;
     }
 
     getButtons(title: string, columns: Array<number>): Array<any> {

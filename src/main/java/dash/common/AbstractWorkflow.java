@@ -25,7 +25,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Where;
-import org.springframework.data.domain.Persistable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -46,7 +45,7 @@ public abstract class AbstractWorkflow implements Request {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH })
+	@ManyToOne
 	@JoinColumn(name = "customer_fk", nullable = true)
 	@Where(clause = "deleted <> '1'")
 	private Customer customer;

@@ -38,7 +38,8 @@ class TransitionDirective implements IDirective {
         editWorkflowUnit: "=",
         modalInstance: "=",
         wizardConfig: "=",
-        currentNotification: "="
+        currentNotification: "=",
+        transform: "<"
     };
 
     constructor(private WorkflowService: WorkflowService, private CustomerService: CustomerService, private ProcessService: ProcessService, private FileService: FileService, private NotificationService: NotificationService, private $rootScope) {
@@ -60,6 +61,10 @@ class TransitionDirective implements IDirective {
         scope.wizardElements = new Array<WizardButtonConfig>();
         scope.step = 1;
         scope.currentWizard;
+        console.log(scope.transform);
+        if (scope.transform === true) {
+            console.log("Bin true");
+        }
 
         if (!isNullOrUndefined(scope.currentNotification)) {
             scope.currentNotification.recipients = scope.editWorkflowUnit.customer.email;
@@ -71,24 +76,32 @@ class TransitionDirective implements IDirective {
         }
 
         scope.close = (result: boolean, process: Process) => this.close(result, process, scope);
-        scope.transform = () => this.transform(scope);
+        scope.transformWorkflow = () => this.transformWorkflow(scope);
         scope.save = () => this.save(scope);
+        scope.saveOrTransform = () => this.saveOrTransform(scope);
         scope.send = () => this.send(scope);
         scope.isAnyFormInvalid = () => this.isAnyFormInvalid(scope);
         scope.isLead = () => this.isLead(scope);
+        scope.isOffer = () => this.isOffer(scope);
+        scope.isInOfferTransformation = () => this.isInOfferTransformation(scope);
         scope.getWizardConfigByTransclusion = (wizardConfig: Array<WizardButtonConfig>, transclusion: any) => this.getWizardConfigByTransclusion(wizardConfig, transclusion);
         let wizardConfig: Array<WizardButtonConfig> = scope.wizardConfig;
+        let firstActiveElement = null;
 
         for (let transclusion in this.transclude) {
             transclude(function (content) {
                 let wizardButtonConfig: WizardButtonConfig = scope.getWizardConfigByTransclusion(wizardConfig, transclusion);
                 if (!isNullOrUndefined(wizardButtonConfig)) {
                     scope.wizardElements.push(wizardButtonConfig);
+                    if (wizardButtonConfig.isFirstActiveElement) {
+                        firstActiveElement = wizardButtonConfig;
+                        scope.step = scope.wizardElements.indexOf(wizardButtonConfig) + 1;
+                    }
                 }
 
             }, null, transclusion);
         }
-        scope.currentWizard = scope.wizardElements[0];
+        isNullOrUndefined(firstActiveElement) ? scope.currentWizard = scope.wizardElements[0] : scope.currentWizard = firstActiveElement;
     };
 
     getWizardConfigByTransclusion(wizardConfig: Array<WizardButtonConfig>, transclusion: any): WizardButtonConfig {
@@ -101,34 +114,44 @@ class TransitionDirective implements IDirective {
     }
 
     close(result: boolean, process: Process, scope: any) {
+        console.log(process);
         scope.modalInstance.close(process);
-        if (!result && (scope.editProcess.status === Status.OPEN || scope.editProcess.status === Status.INCONTACT)) {
+        if (!result && scope.isLead()) {
             scope.editProcess.offer = undefined;
-        } else if (!result && (scope.editProcess.status === Status.OFFER || scope.editProcess.status === Status.FOLLOWUP || scope.editProcess.status === Status.DONE)) {
+        } else if (!result && scope.isOffer()) {
             scope.editProcess.sale = undefined;
         }
     }
 
-    async transform(scope: any) {
+    saveOrTransform(scope: any) {
+        console.log(scope.transform);
+        if (scope.transform) {
+            scope.transformWorkflow();
+        }
+        else {
+            scope.save();
+        }
+    }
+
+    async transformWorkflow(scope: any) {
+        console.log("I Can transform ya");
         let process = scope.editProcess;
         let resultProcess = null;
         if (scope.isLead()) {
-            let resultProcess: Process = await scope.workflowService.addLeadToOffer(process) as Process;
-        } else if (process.status === Status.OFFER || process.status === Status.FOLLOWUP || process.status === Status.DONE) {
-            let resultProcess: Process = await scope.workflowService.addOfferToSale(process) as Process;
+            console.log(process);
+            let resultProcess: Process = await scope.workflowService.addLeadToOffer(process).then().catch(error => handleError(error)) as Process;
+            scope.close(true, resultProcess);
+            console.log("Get Result Process", resultProcess);
+        } else if (scope.isOffer()) {
+            let resultProcess: Process = await scope.workflowService.addOfferToSale(process).then().catch(error => handleError(error)) as Process;
+            scope.close(true, resultProcess);
         }
-        scope.rootScope.$broadcast("deleteRow", resultProcess);
-        scope.close(true, resultProcess);
+
     }
 
     async save(scope: any): Promise<Process> {
-        if (isNullOrUndefined(scope.editWorkflowUnit.customer.timestamp)) {
-            scope.editWorkflowUnit.customer.timestamp = newTimestamp();
-        }
         let isNewProcess: boolean = isNullOrUndefined(scope.editProcess.id);
-        console.log(scope.editProcess);
-        let resultProcess = await scope.processService.save(scope.editProcess, !isNewProcess, false) as Process;
-        console.log(resultProcess);
+        let resultProcess = await scope.processService.save(scope.editProcess, scope.editWorkflowUnit, !isNewProcess, false).then().catch(error => handleError(error)) as Process;
         scope.close(true, resultProcess);
         return resultProcess;
     }
@@ -142,8 +165,9 @@ class TransitionDirective implements IDirective {
         notification.notificationType = NotificationType.OFFER;
         notification.id = undefined;
         let deleteRow = false;
-        if (scope.isLead()) {
+        if (scope.isInOfferTransformation()) {
             deleteRow = true;
+            console.log("ADD LEAD TO OFFER");
             await scope.workflowService.addLeadToOffer(process);
         }
         let promises: Array<Promise<void>> = notification.attachments ?
@@ -156,7 +180,7 @@ class TransitionDirective implements IDirective {
         notification.attachments.forEach(a => a.id = undefined);
         process.notifications.push(notification);
 
-        let resultProcess = await scope.processService.save(process, !deleteRow, deleteRow) as Process;
+        let resultProcess = await scope.processService.save(process, scope.editWorkflowUnit, !deleteRow, deleteRow) as Process;
         scope.close(true, resultProcess);
         try {
             await scope.notificationService.sendNotification(notification);
@@ -172,6 +196,17 @@ class TransitionDirective implements IDirective {
             return true;
         }
         return false;
+    }
+
+    isOffer(scope: any): boolean {
+        if (scope.editProcess.status === Status.OFFER || scope.editProcess.status === Status.FOLLOWUP || scope.editProcess.status === Status.DONE) {
+            return true;
+        }
+        return false;
+    }
+
+    isInOfferTransformation(scope: any): boolean {
+        return scope.isLead() && !isNullOrUndefined(scope.editProcess.offer);
     }
 
     isAnyFormInvalid(scope: any): boolean {

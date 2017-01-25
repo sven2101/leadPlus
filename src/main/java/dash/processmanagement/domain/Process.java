@@ -36,7 +36,6 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.data.domain.Persistable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -54,13 +53,7 @@ import dash.usermanagement.domain.User;
 @SQLDelete(sql = "UPDATE process SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
 @Table(name = "process")
-public class Process implements Persistable<Long> {
-
-	
-	@Override
-	public boolean isNew() {
-		return this.getId() == null && this.lead.getCustomer().getId() == null;
-	}
+public class Process {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "process_auto_gen")

@@ -18,14 +18,21 @@
 const CustomerEditDirectiveId: string = "customerEdit";
 
 class CustomerEditDirective implements IDirective {
-    templateUrl = () => { return "components/Modal/view/Edit.Customer.html"; };
+    templateUrl = (ele, attr) => {
+        if (attr.small === "true") {
+            return "components/Modal/view/Edit.Customer.Small.html";
+        } else {
+            return "components/Modal/view/Edit.Customer.html";
+        }
+    };
     transclude = false;
     restrict = "E";
     scope = {
         form: "=",
         editWorkflowUnit: "=",
         editProcess: "=",
-        editable: "="
+        editable: "<",
+        small: "<"
     };
 
     constructor(private WorkflowService: WorkflowService, private SourceService: SourceService, private CustomerService: CustomerService, private $rootScope, private $sce) {
@@ -36,6 +43,7 @@ class CustomerEditDirective implements IDirective {
         directive.$inject = [WorkflowServiceId, SourceServiceId, CustomerServiceId, $rootScopeId, $sceId];
         return directive;
     }
+
     link(scope, element, attrs, ctrl, transclude): void {
         scope.workflowService = this.WorkflowService;
         scope.customerService = this.CustomerService;

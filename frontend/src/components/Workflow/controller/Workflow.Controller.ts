@@ -161,7 +161,7 @@ class WorkflowController {
     getWizardTemplate(controllerTyp: Workflow): string {
         let editable = controllerTyp !== Workflow.SALE;
         let wizardSteps = `
-        <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' edit-process='transitionCtrl.editProcess' editable='${editable}'/>
+        <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' edit-process='transitionCtrl.editProcess' editable='${editable}' small='false'/>
         <product-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.PRODUCT}")' edit-workflow-unit='transitionCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' edit-process='transitionCtrl.editProcess' editable='${editable}'/>`;
 
         switch (controllerTyp) {
@@ -175,7 +175,7 @@ class WorkflowController {
                 wizardSteps += `<sale-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.SALE}")' edit-workflow-unit='transitionCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' edit-process='transitionCtrl.editProcess' editable='true'/>`;
                 break;
         };
-        return `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig' current-notification='transitionCtrl.notification'>
+        return `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig' current-notification='transitionCtrl.notification' transform='false'>
             ` + wizardSteps + `</transition>`;
     }
 
@@ -192,6 +192,9 @@ class WorkflowController {
             resolve: {
                 process: function () {
                     return process;
+                },
+                transformation: function () {
+                    return null;
                 }
             }
         }).result.then(function (result: Process) {
@@ -223,6 +226,9 @@ class WorkflowController {
             resolve: {
                 process: function () {
                     return process;
+                },
+                transformation: function () {
+                    return null;
                 }
             }
         }).result.then(function (result: Process) {

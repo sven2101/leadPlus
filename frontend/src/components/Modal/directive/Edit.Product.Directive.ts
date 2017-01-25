@@ -25,7 +25,7 @@ class ProductEditDirective implements IDirective {
         form: "=",
         editWorkflowUnit: "=",
         editProcess: "=",
-        editable: "="
+        editable: "<"
     };
 
     constructor(private WorkflowService: WorkflowService, private ProductService: ProductService, private $rootScope) {
@@ -52,6 +52,9 @@ class ProductEditDirective implements IDirective {
         scope.isLead = () => this.isLead(scope);
         scope.isOffer = () => this.isOffer(scope);
         scope.isSale = () => this.isSale(scope);
+        scope.isInOfferTransformation = () => this.isInOfferTransformation(scope);
+        scope.isInSaleTransformation = () => this.isInSaleTransformation(scope);
+
         this.initDatepicker();
     };
 
@@ -86,6 +89,14 @@ class ProductEditDirective implements IDirective {
             return true;
         }
         return false;
+    }
+
+    isInOfferTransformation(scope: any): boolean {
+        return scope.isLead() && !isNullOrUndefined(scope.editProcess.offer);
+    }
+
+    isInSaleTransformation(scope: any): boolean {
+        return scope.isOffer() && !isNullOrUndefined(scope.editProcess.sale);
     }
 
     initDatepicker() {
