@@ -1,11 +1,17 @@
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
+/// <reference path="../../Lead/controller/Lead.DataTableService.ts" />
+/// <reference path="../../Lead/controller/Lead.Service.ts" />
 /// <reference path="../../Offer/controller/Offer.DataTableService.ts" />
 /// <reference path="../../Offer/controller/Offer.Service.ts" />
+/// <reference path="../../Sale/controller/Sale.DataTableService.ts" />
+/// <reference path="../../Sale/controller/Sale.Service.ts" />
 
 const WorkflowControllerId: string = "WorkflowController";
 
 class WorkflowController {
     workflowService: WorkflowService;
+    workflowDatatableService: WorkflowDatatableService;
+    workflowDatatableRowService: WorkflowDatatableRowService;
 
     sce;
     actionButtonConfig: { [key: number]: any } = {};
@@ -29,38 +35,36 @@ class WorkflowController {
 
     controllerType: Workflow;
     IDatatableService: IDatatableService;
-    IWorkflowService: IWorkflowService;
 
     allDataRoute: string;
     openDataRoute: string;
 
-    $inject = [$rootScopeId, $scopeId, $compileId, $routeParamsId, "$route", $sceId, $uibModalId, WorkflowServiceId, LeadDataTableServiceId, LeadServiceId, OfferDataTableServiceId, OfferServiceId, SaleDataTableServiceId, SaleServiceId];
+    $inject = [$rootScopeId, $scopeId, $compileId, $routeParamsId, "$route", $sceId, $uibModalId, WorkflowServiceId, WorkflowDatatableServiceId, WorkflowDatatableRowServiceId, LeadDataTableServiceId, , OfferDataTableServiceId, SaleDataTableServiceId];
 
-    constructor($rootScope, $scope, $compile, $routeParams, $route, $sce, $uibModal, WorkflowService, LeadDataTableService, LeadService, OfferDataTableService, OfferService, SaleDataTableService, SaleService) {
+    constructor($rootScope, $scope, $compile, $routeParams, $route, $sce, $uibModal, WorkflowService, WorkflowDatatableService, WorkflowDatatableRowService, LeadDataTableService, OfferDataTableService, SaleDataTableService) {
 
         this.controllerType = $route.current.$$route.type;
         switch (this.controllerType) {
             case Workflow.LEAD:
                 this.IDatatableService = LeadDataTableService;
-                this.IWorkflowService = LeadService;
                 this.allDataRoute = allDataLeadRoute;
                 this.openDataRoute = openDataLeadRoute;
                 break;
             case Workflow.OFFER:
                 this.IDatatableService = OfferDataTableService;
-                this.IWorkflowService = OfferService;
                 this.allDataRoute = allDataOfferRoute;
                 this.openDataRoute = openDataOfferRoute;
                 break;
             case Workflow.SALE:
                 this.IDatatableService = SaleDataTableService;
-                this.IWorkflowService = SaleService;
                 this.allDataRoute = allDataSaleRoute;
                 this.openDataRoute = openDataSaleRoute;
                 break;
         };
 
         this.workflowService = WorkflowService;
+        this.workflowDatatableService = WorkflowDatatableService;
+        this.workflowDatatableRowService = WorkflowDatatableRowService;
         this.sce = $sce;
         this.scope = $scope;
         this.compile = $compile;
@@ -71,7 +75,7 @@ class WorkflowController {
         let self = this;
 
         function createdRow(row, data: Process, dataIndex) {
-            self.IWorkflowService.setRow(data.id, row);
+            self.workflowDatatableRowService.setRow(data.id, self.controllerType, row);
             self.IDatatableService.configRow(row, data);
             self.compile(angular.element(row).contents())(self.getScopeByKey("actionButtonScope" + data.id));
         }
@@ -122,12 +126,12 @@ class WorkflowController {
 
         let deleteRow = $rootScope.$on("deleteRow", (event, data) => {
             clearWatchers(self.loadAllData);
-            self.IWorkflowService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.dropCreateScope("compileScope"));
+            self.workflowDatatableRowService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope"));
         });
 
         let updateRow = $rootScope.$on("updateRow", (event, data) => {
             clearWatchers(self.loadAllData);
-            self.IWorkflowService.updateRow(data, self.dtInstance, self.dropCreateScope("compileScope"));
+            self.workflowDatatableRowService.updateRow(data, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope"));
         });
 
         let openEditModal = $rootScope.$on("openEditModal", (event, data: Process) => {
@@ -240,7 +244,7 @@ class WorkflowController {
     }
 
     deleteRow(process: Process) {
-        this.IWorkflowService.deleteRow(process, this.dtInstance);
+        this.workflowDatatableRowService.deleteRow(process, this.dtInstance, this.controllerType);
     }
 
     getOrderPositions(process: Process): Array<OrderPosition> {
@@ -255,11 +259,11 @@ class WorkflowController {
 
     changeDataInput() {
         this.destroyAllScopes();
-        this.workflowService.changeDataInput(this.loadAllData, this.dtOptions, this.allDataRoute, this.openDataRoute);
+        this.workflowDatatableService.changeDataInput(this.loadAllData, this.dtOptions, this.allDataRoute, this.openDataRoute);
     }
 
     appendChildRow(process: Process) {
-        this.workflowService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process[this.controllerType.toString().toLowerCase()], this.dtInstance, this, this.controllerType.toString().toLowerCase());
+        this.workflowDatatableService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process[this.controllerType.toString().toLowerCase()], this.dtInstance, this, this.controllerType.toString().toLowerCase());
     }
 
     getAsHtml(html: string) {

@@ -27,6 +27,7 @@ class TransitionDirective implements IDirective {
     transclude = {
         "customerEdit": "?customerEdit",
         "productEdit": "?productEdit",
+        "customerProductEdit": "?customerProductEdit",
         "emailEdit": "?emailEdit",
         "saleEdit": "?saleEdit"
     };
@@ -138,20 +139,16 @@ class TransitionDirective implements IDirective {
         let process = scope.editProcess;
         let resultProcess = null;
         if (scope.isLead()) {
-            console.log(process);
-            let resultProcess: Process = await scope.workflowService.addLeadToOffer(process).then().catch(error => handleError(error)) as Process;
-            scope.close(true, resultProcess);
-            console.log("Get Result Process", resultProcess);
+            resultProcess = await scope.workflowService.addLeadToOffer(process).catch(error => handleError(error));
         } else if (scope.isOffer()) {
-            let resultProcess: Process = await scope.workflowService.addOfferToSale(process).then().catch(error => handleError(error)) as Process;
-            scope.close(true, resultProcess);
+            resultProcess = await scope.workflowService.addOfferToSale(process).catch(error => handleError(error));
         }
-
+        scope.close(true, resultProcess);
     }
 
     async save(scope: any): Promise<Process> {
         let isNewProcess: boolean = isNullOrUndefined(scope.editProcess.id);
-        let resultProcess = await scope.processService.save(scope.editProcess, scope.editWorkflowUnit, !isNewProcess, false).then().catch(error => handleError(error)) as Process;
+        let resultProcess = await scope.processService.save(scope.editProcess, scope.editWorkflowUnit, !isNewProcess, false).catch(error => handleError(error)) as Process;
         scope.close(true, resultProcess);
         return resultProcess;
     }

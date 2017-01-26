@@ -20,9 +20,10 @@ const openDataSaleRoute: string = "/api/rest/processes/sales/latest/50";
 
 class SaleDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId];
 
     workflowService: WorkflowService;
+    workflowDatatableService: WorkflowDatatableService;
     translate;
     dtOptions;
     dtColumns;
@@ -32,7 +33,7 @@ class SaleDataTableService implements IDatatableService {
     compile;
     rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -40,6 +41,7 @@ class SaleDataTableService implements IDatatableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
+        this.workflowDatatableService = WorkflowDatatableService;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
@@ -57,16 +59,16 @@ class SaleDataTableService implements IDatatableService {
                 }
             })
             .withOption("stateSave", false)
-            .withDOM(this.workflowService.getDomString())
+            .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowService.getButtons(this.translate("SALE_SALES"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 12]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("SALE_SALES"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 12]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("deferRender", true)
             .withOption("lengthMenu", [10, 20, 50])
             .withOption("order", [4, "desc"])
             .withOption("search", { "search": defaultSearch })
-            .withLanguageSource(this.workflowService.getLanguageSource(this.rootScope.language));
+            .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
     }
 
     getDetailHTML(id: number): string {

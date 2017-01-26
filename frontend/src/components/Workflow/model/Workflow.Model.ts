@@ -16,6 +16,5 @@
 enum Workflow {
     LEAD = <any>"LEAD",
     OFFER = <any>"OFFER",
-    CONTACT = <any>"CONTACT",
     SALE = <any>"SALE"
 }

@@ -41,7 +41,9 @@ class ProductEditDirective implements IDirective {
         scope.workflowService = this.WorkflowService;
         scope.productService = this.ProductService;
         scope.rootScope = this.$rootScope;
-        scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.pform) : scope.pform = scope.form;
+        if (!isNullOrUndefined(scope.form)) {
+            scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.pform) : scope.pform = scope.form;
+        }
 
         scope.currentProductId = "-1";
         scope.currentProductAmount = 1;
@@ -59,11 +61,37 @@ class ProductEditDirective implements IDirective {
     };
 
     addProduct(array: Array<OrderPosition>, currentProductId: string, currentProductAmount: number, scope: any) {
-        scope.workflowService.addProduct(array, currentProductId, currentProductAmount);
+        if (isNullOrUndefined(array)) {
+            array = [];
+        }
+        if (!isNaN(Number(currentProductId))
+            && Number(currentProductId) > 0) {
+            let tempProduct = findElementById(scope.productService.products,
+                Number(currentProductId));
+            let tempOrderPosition = new OrderPosition();
+            tempOrderPosition.product = tempProduct as Product;
+            tempOrderPosition.amount = currentProductAmount;
+            tempOrderPosition.discount = 0;
+            tempOrderPosition.netPrice = tempOrderPosition.product.netPrice;
+            array.push(tempOrderPosition);
+        }
     }
 
     deleteProduct(array: Array<OrderPosition>, index: number, scope: any) {
-        scope.workflowService.deleteProduct(array, index);
+        array.splice(index, 1);
+    }
+
+    reCalculateOffer(offer: Offer, array: Array<OrderPosition>, scope: any) {
+        offer.netPrice = Math.round((offer.deliveryCosts + scope.workflowService.sumOrderPositions(array)) * 100) / 100;
+    }
+
+    setPrice(orderPosition: OrderPosition, scope: any) {
+        orderPosition.netPrice = scope.workflowService.calculatePrice(orderPosition.product.netPrice, orderPosition.discount);
+    }
+
+
+    setDiscount(orderPosition: OrderPosition, scope: any) {
+        orderPosition.discount = scope.workflowService.calculateDiscount(orderPosition.product.netPrice, orderPosition.netPrice);
     }
 
     sumOrderPositions(array: Array<OrderPosition>, scope: any): number {

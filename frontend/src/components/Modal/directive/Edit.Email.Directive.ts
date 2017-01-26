@@ -38,7 +38,9 @@ class EditEmailDirective implements IDirective {
         scope.onNotificationSelected = () => this.onNotificationSelected(scope);
         scope.openAttachment = (fileUpload: FileUpload) => this.openAttachment(fileUpload, scope);
         scope.showCC_BCC = scope.disabled;
-        scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.eform) : scope.eform = scope.form;
+        if (!isNullOrUndefined(scope.form)) {
+            scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.eform) : scope.eform = scope.form;
+        }
 
         if (scope.disabled) {
             return;

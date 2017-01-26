@@ -15,20 +15,21 @@ class SaleEditDirective implements IDirective {
         editable: "<"
     };
 
-    constructor(private WorkflowService: WorkflowService, private SaleService: SaleService, private $rootScope) {
+    constructor(private WorkflowService: WorkflowService, private $rootScope) {
     }
 
     static directiveFactory(): SaleEditDirective {
-        let directive: any = (WorkflowService: WorkflowService, SaleService: SaleService, $rootScope) => new SaleEditDirective(WorkflowService, SaleService, $rootScope);
-        directive.$inject = [WorkflowServiceId, SaleServiceId, $rootScopeId];
+        let directive: any = (WorkflowService: WorkflowService, $rootScope) => new SaleEditDirective(WorkflowService, $rootScope);
+        directive.$inject = [WorkflowServiceId, $rootScopeId];
         return directive;
     }
 
     link(scope, element, attrs, ctrl, transclude): void {
         scope.workflowService = this.WorkflowService;
-        scope.saleService = this.SaleService;
         scope.rootScope = this.$rootScope;
-        scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.sform) : scope.sform = scope.form;
+        if (!isNullOrUndefined(scope.form)) {
+            scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.sform) : scope.sform = scope.form;
+        }
         scope.invoiceNumberAlreadyExists = false;
 
 
@@ -38,7 +39,7 @@ class SaleEditDirective implements IDirective {
 
     async existsInvoiceNumber(scope: any) {
         if (!isNullOrUndefined(scope.editWorkflowUnit.invoiceNumber) && scope.editWorkflowUnit.invoiceNumber.length > 0) {
-            let sale = await scope.saleService.getSaleByInvoiceNumber(scope.editWorkflowUnit.invoiceNumber).catch(error => handleError(error));
+            let sale = await scope.workflowService.getSaleByInvoiceNumber(scope.editWorkflowUnit.invoiceNumber).catch(error => handleError(error));
             scope.invoiceNumberAlreadyExists = !isNullOrUndefined(sale.invoiceNumber);
             scope.$apply();
         }

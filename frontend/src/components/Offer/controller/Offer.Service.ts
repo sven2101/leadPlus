@@ -1,4 +1,4 @@
-/// <reference path="../../app/App.Common.ts" />
+/*/// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../User/Model/User.Model.ts" />
@@ -18,6 +18,7 @@
  * reproduction of this material is strictly forbidden unless prior written
  * permission is obtained from Eviarc GmbH.
  ******************************************************************************/
+/*
 "use strict";
 
 const OfferServiceId: string = "OfferService";
@@ -204,3 +205,4 @@ class OfferService implements IWorkflowService {
 }
 
 angular.module(moduleOfferService, [ngResourceId]).service(OfferServiceId, OfferService);
+*/

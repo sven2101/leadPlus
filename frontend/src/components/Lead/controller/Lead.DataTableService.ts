@@ -21,9 +21,10 @@ const openDataLeadRoute = "/api/rest/processes/workflow/LEAD/state/OPEN";
 
 class LeadDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId];
 
     workflowService: WorkflowService;
+    workflowDatatableService: WorkflowDatatableService;
     translate;
     dtOptions;
     dtColumns;
@@ -33,7 +34,7 @@ class LeadDataTableService implements IDatatableService {
     compile;
     rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -41,6 +42,7 @@ class LeadDataTableService implements IDatatableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
+        this.workflowDatatableService = WorkflowDatatableService;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
@@ -58,16 +60,16 @@ class LeadDataTableService implements IDatatableService {
                 }
             })
             .withOption("stateSave", false)
-            .withDOM(this.workflowService.getDomString())
+            .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowService.getButtons(this.translate("LEAD_LEADS"), [6, 1, 2, 3, 4, 5, 7, 9, 8, 10]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("LEAD_LEADS"), [6, 1, 2, 3, 4, 5, 7, 9, 8, 10]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("deferRender", true)
             .withOption("order", [4, "desc"])
             .withOption("lengthMenu", [10, 20, 50])
             .withOption("search", { "search": defaultSearch })
-            .withLanguageSource(this.workflowService.getLanguageSource(this.rootScope.language));
+            .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
     }
 
     configRow(row: any, data: Process) {

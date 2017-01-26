@@ -56,9 +56,9 @@ class ModalTransitionController {
     getOfferWizardTransitionConfig(): Array<WizardButtonConfig> {
         let wizardConfig: Array<WizardButtonConfig> = new Array<WizardButtonConfig>();
 
-        let customerEditStep = new WizardButtonConfig(WizardForm.CUSTOMER);
-        customerEditStep.setTitle("Anfrage").setIcon("fa fa-inbox").setPosition(1);
-        wizardConfig.push(customerEditStep);
+        let customerProductEditStep = new WizardButtonConfig(WizardForm.CUSTOMER_PRODUCT);
+        customerProductEditStep.setTitle("Anfrage").setIcon("fa fa-inbox").setPosition(1);
+        wizardConfig.push(customerProductEditStep);
 
         let emailEditStep = new WizardButtonConfig(WizardForm.EMAIL);
         emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(2).setValidation(false).setEmail(true);
@@ -74,9 +74,9 @@ class ModalTransitionController {
     getSaleWizardTransitionConfig(): Array<WizardButtonConfig> {
         let wizardConfig: Array<WizardButtonConfig> = new Array<WizardButtonConfig>();
 
-        let customerEditStep = new WizardButtonConfig(WizardForm.CUSTOMER);
-        customerEditStep.setTitle("Anfrage").setIcon("fa fa-inbox").setPosition(1);
-        wizardConfig.push(customerEditStep);
+        let customerProductEditStep = new WizardButtonConfig(WizardForm.CUSTOMER_PRODUCT);
+        customerProductEditStep.setTitle("Anfrage").setIcon("fa fa-inbox").setPosition(1);
+        wizardConfig.push(customerProductEditStep);
 
         let emailEditStep = new WizardButtonConfig(WizardForm.EMAIL);
         emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(2).setValidation(false).setEmail(true);

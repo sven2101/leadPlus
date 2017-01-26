@@ -26,7 +26,7 @@ const FollowUpControllerId: string = "FollowUpController";
 
 class FollowUpController {
 
-    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, WorkflowServiceId, FileServiceId, ProcessResourceId, toasterId, $translateId, $rootScopeId, $scopeId];
+    $inject = ["process", "$uibModalInstance", NotificationServiceId, TemplateServiceId, WorkflowServiceId, FileServiceId, ProcessServiceId, toasterId, $translateId, $rootScopeId, $scopeId];
 
     uibModalInstance;
 
@@ -38,7 +38,7 @@ class FollowUpController {
     templateService: TemplateService;
     workflowService: WorkflowService;
     fileService: FileService;
-    processResource;
+    processService: ProcessService;
     toaster;
     translate;
     rootScope;
@@ -50,11 +50,11 @@ class FollowUpController {
     originProcess: Process;
     editEmail: boolean = true;
 
-    constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService, FileService, ProcessResource, toaster, $translate, $rootScope, $scope) {
+    constructor(process, $uibModalInstance, NotificationService, TemplateService, WorkflowService, FileService, ProcessService, toaster, $translate, $rootScope, $scope) {
         this.originProcess = process;
         this.editProcess = deepCopy(process);
         this.editWorkflowUnit = this.editProcess.offer;
-        this.processResource = ProcessResource.resource;
+        this.processService = ProcessService;
         this.toaster = toaster;
         this.translate = $translate;
         this.rootScope = $rootScope;
@@ -115,7 +115,7 @@ class FollowUpController {
         }
         notification.attachments.forEach(a => a.id = undefined);
         process.notifications.push(notification);
-        let resultProcess = await this.workflowService.saveProcess(process);
+        let resultProcess = await this.processService.save(process, null, false, false).catch(error => handleError(error)) as Process;
         self.originProcess.notifications = resultProcess.notifications;
         self.originProcess.followUpAmount = resultProcess.followUpAmount;
         self.editProcess = resultProcess;
@@ -130,16 +130,14 @@ class FollowUpController {
             self.rootScope.$broadcast("updateRow", this.editProcess);
             return;
         }
-        this.processResource.setStatus({
-            id: this.editProcess.id
-        }, "FOLLOWUP").$promise.then(function () {
+        this.processService.setStatus(this.editProcess, Status.FOLLOWUP).then(function () {
             self.toaster.pop("success", "", self.translate
                 .instant("COMMON_TOAST_SUCCESS_FOLLOW_UP"));
             self.editProcess.status = "FOLLOWUP";
             self.rootScope.$broadcast("updateRow", self.editProcess);
             self.rootScope.$broadcast("onTodosChange");
             self.close();
-        });
+        }).catch(error => handleError(error));
     }
 
 }

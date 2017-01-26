@@ -20,6 +20,7 @@ const CustomerEditDirectiveId: string = "customerEdit";
 class CustomerEditDirective implements IDirective {
     templateUrl = (ele, attr) => {
         if (attr.small === "true") {
+            console.log("set Small");
             return "components/Modal/view/Edit.Customer.Small.html";
         } else {
             return "components/Modal/view/Edit.Customer.html";
@@ -50,7 +51,9 @@ class CustomerEditDirective implements IDirective {
         scope.sourceService = this.SourceService;
         scope.rootScope = this.$rootScope;
         scope.sce = this.$sce;
-        scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.cform) : scope.cform = scope.form;
+        if (!isNullOrUndefined(scope.form)) {
+            scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.cform) : scope.cform = scope.form;
+        }
 
         scope.customerSelected = !isNullOrUndefined(scope.editWorkflowUnit.customer.id);
         scope.selectedCustomer = scope.customerSelected ? scope.editWorkflowUnit.customer : null;
