@@ -1,6 +1,6 @@
 /// <reference path="../../Statistic/model/ColumnChart.Model.ts" />" />
 /// <reference path="../../Statistic/controller/Statistic.Service.ts" />
-/// <reference path="../../Workflow/Model/Workflow.Model.ts" />
+/// <reference path="../../Workflow/Model/WorkflowType.ts" />
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Common.ts" />
 
@@ -68,7 +68,7 @@ angular.module(moduleApp)
                 productLeadPromise = false;
                 productOfferPromise = false;
                 productSalePromise = false;
-                StatisticService.getProductStatisticById(Workflow[Workflow.LEAD], dateRange, source, scope.productobj.id).then(function (resultLeads) {
+                StatisticService.getProductStatisticById(WorkflowType[WorkflowType.LEAD], dateRange, source, scope.productobj.id).then(function (resultLeads) {
                     scope.productLeads = resultLeads;
                     if (isNullOrUndefined(resultLeads.product)) {
                         scope.productLeads = emptyProduct;
@@ -76,7 +76,7 @@ angular.module(moduleApp)
                     productLeadPromise = true;
                     checkPromise();
                 });
-                StatisticService.getProductStatisticById(Workflow[Workflow.OFFER], dateRange, source, scope.productobj.id).then(function (resultOffers) {
+                StatisticService.getProductStatisticById(WorkflowType[WorkflowType.OFFER], dateRange, source, scope.productobj.id).then(function (resultOffers) {
                     scope.productOffers = resultOffers;
                     if (isNullOrUndefined(resultOffers.product)) {
                         scope.productOffers = emptyProduct;
@@ -84,7 +84,7 @@ angular.module(moduleApp)
                     productOfferPromise = true;
                     checkPromise();
                 });
-                StatisticService.getProductStatisticById(Workflow[Workflow.SALE], dateRange, source, scope.productobj.id).then(function (resultSales) {
+                StatisticService.getProductStatisticById(WorkflowType[WorkflowType.SALE], dateRange, source, scope.productobj.id).then(function (resultSales) {
                     scope.productSales = resultSales;
                     if (isNullOrUndefined(resultSales.product)) {
                         scope.productSales = emptyProduct;

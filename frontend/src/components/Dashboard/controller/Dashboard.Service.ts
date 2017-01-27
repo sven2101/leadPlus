@@ -4,8 +4,7 @@
 /// <reference path="../../offer/model/Offer.Model.ts" />
 /// <reference path="../../sale/model/Sale.Model.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
-/// <reference path="../../common/model/Promise.interface.ts" />
+/// <reference path="../../Process/model/Process.Model.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Controller.ts" />
 
 
@@ -381,8 +380,8 @@ class DashboardService {
         }
     }
 
-    startOfferTransformation(process: Process): IPromise<Process> {
-        let defer: IDefer<Process> = this.q.defer();
+    startOfferTransformation(process: Process): Promise<Process> {
+        let defer = this.q.defer();
         this.workflowService.startOfferTransformation(process).then(function (result: Process) {
             defer.resolve(result);
         }, function (error) {
@@ -391,7 +390,7 @@ class DashboardService {
         return defer.promise;
     }
 
-    startSaleTransformation(process: Process): IPromise<Process> {
+    startSaleTransformation(process: Process): Promise<Process> {
         let defer = this.q.defer();
         this.workflowService.startSaleTransformation(process).then(function (result) {
             defer.resolve(result);

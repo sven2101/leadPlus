@@ -3,7 +3,6 @@
 /// <reference path="../../Offer/model/Offer.Model.ts" />
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 /// <reference path="../../Template/controller/Template.Controller.ts" />
-/// <reference path="../../Common/model/Promise.Interface.ts" />
 /// <reference path="../../Template/model/OfferMessageContext.Model.ts" />
 
 /*******************************************************************************
@@ -77,7 +76,7 @@ class TemplateService {
         });
     }
 
-    save(template: Template): IPromise<Template> {
+    save(template: Template): Promise<Template> {
         let defer = this.q.defer();
         let self = this;
         this.templateResource.save(template).$promise.then(function (result: Template) {
@@ -91,7 +90,7 @@ class TemplateService {
         return defer.promise;
     }
 
-    update(template: Template): IPromise<Template> {
+    update(template: Template): Promise<Template> {
         let defer = this.q.defer();
         let self = this;
         this.templateResource.update(template).$promise.then(function (result: Template) {
@@ -115,7 +114,7 @@ class TemplateService {
         });
     }
 
-    generate(templateId: string, offer: Offer, notification: Notification): IPromise<Notification> {
+    generate(templateId: string, offer: Offer, notification: Notification): Promise<Notification> {
         let defer = this.q.defer();
         let self = this;
         let offerMessageContext: OfferMessageContext = new OfferMessageContext();
@@ -146,7 +145,7 @@ class TemplateService {
     }
 
     getAll(): Promise<Array<Template>> {
-        let defer: IDefer<Array<Template>> = this.q.defer();
+        let defer = this.q.defer();
         let self = this;
         this.templateResource.getAll().$promise.then(function (result: Array<Template>) {
             self.templates = result;

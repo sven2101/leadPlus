@@ -1,6 +1,6 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../User/Model/User.Model.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
+/// <reference path="../../Process/model/Process.Model.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
@@ -216,8 +216,6 @@ class OfferDataTableService implements IDatatableService {
     getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {
         actionButtonConfig[process.id] = this.getActionButtonConfig(process);
         return "<div actionbuttons actionbuttonconfig=offerCtrl.actionButtonConfig[" + process.id + "]  process='offerCtrl.processes[" + process.id + "]'></div>";
-
-
     }
 
     getStatusStyleHTML(data: Process): string {

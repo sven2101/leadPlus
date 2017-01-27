@@ -1,7 +1,6 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Signup/model/Signup.Model.ts" />
 /// <reference path="../../app/App.Common.ts" />
-/// <reference path="../../Common/model/Promise.Interface.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -53,7 +52,7 @@ class SignupService {
         });
     }
 
-    signup(user: Signup): IPromise<User> {
+    signup(user: Signup): Promise<User> {
         let defer = this.q.defer();
         let self = this;
         user.email = user.email.toLowerCase();

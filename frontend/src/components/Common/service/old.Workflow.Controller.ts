@@ -10,7 +10,7 @@
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../Template/controller/Template.Service.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
-/// <reference path="../../Common/model/Process.Model.ts" />
+/// <reference path="../../Process/model/Process.Model.ts" />
 /// <reference path="../../FileUpload/controller/File.Service.ts" />
 
 /*******************************************************************************

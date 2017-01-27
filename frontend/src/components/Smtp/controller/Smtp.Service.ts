@@ -1,6 +1,5 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Smtp/model/Smtp.Model.ts" />
-/// <reference path="../../Common/model/Promise.Interface.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -43,7 +42,7 @@ class SmtpService {
         this.getSMtp();
     }
 
-    test(): IPromise<any> {
+    test(): Promise<any> {
         let self = this;
         let defer = this.q.defer();
         this.save().then(function () {
@@ -68,7 +67,7 @@ class SmtpService {
             }
         }, (error) => handleError(error));
     }
-    save(): IPromise<any> {
+    save(): Promise<any> {
         this.currentPasswordLength = this.currentSmtp.stringPassword !== null ? this.currentSmtp.stringPassword.length : this.currentPasswordLength;
         if (this.currentSmtp.stringPassword.replace(/x/g, "") === "") {
             this.currentSmtp.stringPassword = null;

@@ -3,14 +3,12 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
-/// <reference path="../../common/model/OrderPosition.Model.ts" />
-/// <reference path="../../common/model/Commentary.Model.ts" />
+/// <reference path="../../Product/model/OrderPosition.Model.ts" />
+/// <reference path="../../Commentary/model/Commentary.Model.ts" />
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../app/App.Common.ts" />
-/// <reference path="../../Common/model/Status.Model.ts" />
-/// <reference path="../../Common/model/Promise.Interface.ts" />
-/// <reference path="../../Common/model/Defer.Interface.ts" />
-/// <reference path="../../Workflow/model/Workflow.Model.ts" />
+/// <reference path="../../Process/model/Status.Model.ts" />
+/// <reference path="../../Workflow/model/WorkflowType.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Controller.ts" />
 /// <reference path="../../Lead/controller/Lead.Controller.ts" />
 /// <reference path="../../Offer/controller/Offer.Controller.ts" />
@@ -19,7 +17,7 @@
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 /// <reference path="../../Common/service/FollowUp.Controller.ts" />
 /// <reference path="../../FileUpload/controller/File.Service.ts" />
-/// <reference path="../../Modal/controller/Modal.Transition.Controller.ts" />
+/// <reference path="../../Wizard/controller/Wizard.Modal.Controller.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 

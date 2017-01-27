@@ -1,7 +1,6 @@
 /// <reference path="../../Product/model/Product.Model.ts" />
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Common.ts" />
-/// <reference path="../../Common/model/Promise.Interface.ts" />
 /// <reference path="../../app/App.Resource.ts" />
 
 /*******************************************************************************
@@ -62,7 +61,7 @@ class ProductService {
         }
     }
 
-    getAllProducts(): IPromise<Array<Product>> {
+    getAllProducts(): Promise<Array<Product>> {
         let defer = this.q.defer();
         let self = this;
         this.productResource.getAllProducts().$promise.then(function (result: Array<Product>) {

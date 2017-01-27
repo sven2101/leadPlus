@@ -2,9 +2,9 @@
 /// <reference path="../../../typeDefinitions/moment-node.d.ts" />
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../app/App.Constants.ts" />
-/// <reference path="../../Common/model/OrderPosition.Model.ts" />
+/// <reference path="../../Product/model/OrderPosition.Model.ts" />
 /// <reference path="../../Product/model/Product.Model.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
+/// <reference path="../../Process/model/Process.Model.ts" />
 /// <reference path="../../Lead/model/Lead.Model.ts" />
 /// <reference path="../../Modal/controller/Modal.Transition.Controller.ts" />
 /// <reference path="../../Modal/model/Wizard.Form.Enum.Model.ts" />
@@ -88,12 +88,12 @@ class LeadController extends AbstractWorkflow {
     openEditModal(process: Process) {
         let self = this;
         this.uibModal.open({
-            template: `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.lead' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig'>
-            <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess.lead' edit-process='transitionCtrl.editProcess' editable='true'/>
-            <product-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.PRODUCT}")' edit-workflow-unit='transitionCtrl.editProcess.lead' edit-process='transitionCtrl.editProcess' editable='true'/>
-            </transition>`,
-            controller: ModalTransitionController,
-            controllerAs: "transitionCtrl",
+            template: `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess.lead' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardEditConfig'>
+            <customer-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.CUSTOMER}")' edit-workflow-unit='wizardCtrl.editProcess.lead' edit-process='wizardCtrl.editProcess' editable='true'/>
+            <product-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.PRODUCT}")' edit-workflow-unit='wizardCtrl.editProcess.lead' edit-process='wizardCtrl.editProcess' editable='true'/>
+            </wizard>`,
+            controller: WizardModalController,
+            controllerAs: "wizardCtrl",
             backdrop: "static",
             size: "lg",
             resolve: {
@@ -122,12 +122,12 @@ class LeadController extends AbstractWorkflow {
 
         console.log(process);
         this.uibModal.open({
-            template: `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.lead' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig'>
-            <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess.lead' edit-process='transitionCtrl.editProcess' editable='true'/>
-            <product-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.PRODUCT}")' edit-workflow-unit='transitionCtrl.editProcess.lead' edit-process='transitionCtrl.editProcess' editable='true'/>
-            </transition>`,
-            controller: ModalTransitionController,
-            controllerAs: "transitionCtrl",
+            template: `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess.lead' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardEditConfig'>
+            <customer-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.CUSTOMER}")' edit-workflow-unit='wizardCtrl.editProcess.lead' edit-process='wizardCtrl.editProcess' editable='true'/>
+            <product-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.PRODUCT}")' edit-workflow-unit='wizardCtrl.editProcess.lead' edit-process='wizardCtrl.editProcess' editable='true'/>
+            </wizard>`,
+            controller: WizardModalController,
+            controllerAs: "wizardCtrl",
             backdrop: "static",
             size: "lg",
             resolve: {

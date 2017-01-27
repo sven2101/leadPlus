@@ -3,14 +3,13 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
-/// <reference path="../../common/model/OrderPosition.Model.ts" />
-/// <reference path="../../common/model/Commentary.Model.ts" />
+/// <reference path="../../Product/model/OrderPosition.Model.ts" />
+/// <reference path="../../Commentary/model/Commentary.Model.ts" />
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../app/App.Common.ts" />
-/// <reference path="../../Common/model/Status.Model.ts" />
-/// <reference path="../../Common/model/Promise.Interface.ts" />
-/// <reference path="../../Common/model/Defer.Interface.ts" />
-/// <reference path="../../Workflow/model/Workflow.Model.ts" />
+/// <reference path="../../Process/model/Status.Model.ts" />
+/// <reference path="../../Process/controller/Process.Service.ts" />
+/// <reference path="../../Workflow/model/WorkflowType.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Controller.ts" />
 /// <reference path="../../Lead/controller/Lead.Controller.ts" />
 /// <reference path="../../Offer/controller/Offer.Controller.ts" />
@@ -19,7 +18,7 @@
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 /// <reference path="../../Common/service/FollowUp.Controller.ts" />
 /// <reference path="../../FileUpload/controller/File.Service.ts" />
-/// <reference path="../../Modal/controller/Modal.Transition.Controller.ts" />
+/// <reference path="../../Wizard/controller/Wizard.Modal.Controller.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -36,10 +35,11 @@ const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [CommentResourceId, SaleResourceId, toasterId, $rootScopeId, $translateId, $qId, CustomerServiceId, $uibModalId, UserResourceId, ProcessServiceId];
+    private $inject = [CommentResourceId, SaleResourceId, OfferResourceId, toasterId, $rootScopeId, $translateId, $qId, CustomerServiceId, $uibModalId, UserResourceId, ProcessServiceId];
 
     commentResource;
     saleResource;
+    offerResource;
     userResource;
     processService: ProcessService;
     customerService: CustomerService;
@@ -50,10 +50,11 @@ class WorkflowService {
     uibModal;
     users: Array<User> = [];
 
-    constructor(CommentResource, SaleResource, toaster, $rootScope, $translate, $q, CustomerService, $uibModal, UserResource, ProcessService) {
+    constructor(CommentResource, SaleResource, OfferResource, toaster, $rootScope, $translate, $q, CustomerService, $uibModal, UserResource, ProcessService) {
         this.commentResource = CommentResource.resource;
         this.saleResource = SaleResource.resource;
         this.userResource = UserResource.resource;
+        this.offerResource = OfferResource.resource;
         this.toaster = toaster;
         this.processService = ProcessService;
         this.rootScope = $rootScope;
@@ -64,7 +65,7 @@ class WorkflowService {
         this.refreshUsers();
     }
 
-    addComment(process: Process, commentText: string): IPromise<boolean> {
+    addComment(process: Process, commentText: string): Promise<boolean> {
         let defer = this.$q.defer();
         if (angular.isUndefined(commentText) || commentText === "") {
             defer.reject(false);
@@ -150,40 +151,40 @@ class WorkflowService {
 
     getOfferTransformationWizardTemplate(): string {
         let wizardSteps = `
-        <customer-product-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardOfferTransitionConfig,"${WizardForm.CUSTOMER_PRODUCT}")' edit-workflow-unit='transitionCtrl.editProcess.offer' edit-process='transitionCtrl.editProcess' editable='true'/>`;
-        wizardSteps += `<email-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardOfferTransitionConfig,"${WizardForm.EMAIL}")' process='transitionCtrl.editProcess' disabled='false' notification='transitionCtrl.notification'/>`;
+        <customer-product-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardOfferTransitionConfig,"${WizardType.CUSTOMER_PRODUCT}")' edit-workflow-unit='wizardCtrl.editProcess.offer' edit-process='wizardCtrl.editProcess' editable='true'/>`;
+        wizardSteps += `<email-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardOfferTransitionConfig,"${WizardType.EMAIL}")' process='wizardCtrl.editProcess' disabled='false' notification='wizardCtrl.notification'/>`;
         wizardSteps += `<sale-edit />`;
 
-        return `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.offer' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardOfferTransitionConfig' current-notification='transitionCtrl.notification' transform='true'>
-            ` + wizardSteps + `</transition>`;
+        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess.offer' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardOfferTransitionConfig' current-notification='wizardCtrl.notification' transform='true'>
+            ` + wizardSteps + `</wizard>`;
     }
 
     getSaleTransformationWizardTemplate(): string {
         let wizardSteps = `
-        <customer-product-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardSaleTransitionConfig,"${WizardForm.CUSTOMER_PRODUCT}")' edit-workflow-unit='transitionCtrl.editProcess.sale' edit-process='transitionCtrl.editProcess' editable='false'/>`;
-        wizardSteps += `<email-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardSaleTransitionConfig,"${WizardForm.EMAIL}")' process='transitionCtrl.editProcess' disabled='false' notification='transitionCtrl.notification'/>`;
-        wizardSteps += `<sale-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardSaleTransitionConfig,"${WizardForm.SALE}")' edit-workflow-unit='transitionCtrl.editProcess.sale' edit-process='transitionCtrl.editProcess' editable='true'/>`;
+        <customer-product-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardSaleTransitionConfig,"${WizardType.CUSTOMER_PRODUCT}")' edit-workflow-unit='wizardCtrl.editProcess.sale' edit-process='wizardCtrl.editProcess' editable='false'/>`;
+        wizardSteps += `<email-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardSaleTransitionConfig,"${WizardType.EMAIL}")' process='wizardCtrl.editProcess' disabled='false' notification='wizardCtrl.notification'/>`;
+        wizardSteps += `<sale-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardSaleTransitionConfig,"${WizardType.SALE}")' edit-workflow-unit='wizardCtrl.editProcess.sale' edit-process='wizardCtrl.editProcess' editable='true'/>`;
 
-        return `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.sale' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardSaleTransitionConfig' current-notification='transitionCtrl.notification' transform='true'>
-            ` + wizardSteps + `</transition>`;
+        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess.sale' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardSaleTransitionConfig' current-notification='wizardCtrl.notification' transform='true'>
+            ` + wizardSteps + `</wizard>`;
     }
 
-    startOfferTransformation(process: Process): IPromise<Process> {
+    startOfferTransformation(process: Process): Promise<Process> {
         let defer = this.$q.defer();
 
         let wizardTemplate = this.getOfferTransformationWizardTemplate();
         this.uibModal.open({
             template: wizardTemplate,
-            controller: ModalTransitionController,
-            controllerAs: "transitionCtrl",
+            controller: WizardModalController,
+            controllerAs: "wizardCtrl",
             backdrop: "static",
             size: "lg",
             resolve: {
                 process: function (): Process {
                     return process;
                 },
-                transformation: function (): Workflow {
-                    return Workflow.OFFER;
+                transformation: function (): WorkflowType {
+                    return WorkflowType.OFFER;
                 }
             }
         }).result.then(function (result) {
@@ -195,21 +196,21 @@ class WorkflowService {
     }
 
 
-    startSaleTransformation(process: Process): IPromise<Process> {
+    startSaleTransformation(process: Process): Promise<Process> {
         let defer = this.$q.defer();
 
         let wizardTemplate = this.getSaleTransformationWizardTemplate();
         this.uibModal.open({
             template: wizardTemplate,
-            controller: ModalTransitionController,
-            controllerAs: "transitionCtrl",
+            controller: WizardModalController,
+            controllerAs: "wizardCtrl",
             backdrop: "static",
             size: "lg",
             resolve: {
                 process: function (): Process {
                     return process;
-                }, transformation: function (): Workflow {
-                    return Workflow.SALE;
+                }, transformation: function (): WorkflowType {
+                    return WorkflowType.SALE;
                 }
             }
         }).result.then(function (result) {
@@ -272,6 +273,24 @@ class WorkflowService {
             resolve: {
                 process: function () {
                     return process;
+                }
+            }
+        });
+    }
+
+    openConfirmationModal(process: Process, actionButtonType: ActionButtonType) {
+        this.uibModal.open({
+            template: "<confirmation-modal modal-instance='confirmationCtrl.uibModalInstance' title='confirmationCtrl.title' body='confirmationCtrl.body' submit-text='confirmationCtrl.submitText' submit-function='confirmationCtrl.submitFunction()'></confirmation-modal>",
+            controller: ConfirmationModalController,
+            controllerAs: "confirmationCtrl",
+            backdrop: "static",
+            size: "lg",
+            resolve: {
+                process: function (): Process {
+                    return process;
+                },
+                functionType: function (): ActionButtonType {
+                    return ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL;
                 }
             }
         });
@@ -364,6 +383,23 @@ class WorkflowService {
                 process.status = Status.OFFER;
                 self.rootScope.$broadcast("updateRow", process);
             });
+        }
+    }
+
+    async rollBackOffer(process: Process): Promise<Process> {
+        if (isNullOrUndefined(process)) {
+            return;
+        }
+        let offerId = process.offer.id;
+        process.offer = null;
+        process.status = Status.OPEN;
+        try {
+            let resultProcess = await this.processService.save(process, null, false, true) as Process;
+            this.offerResource.drop({ id: offerId });
+            this.rootScope.leadsCount += 1; this.rootScope.offersCount -= 1;
+            return resultProcess;
+        } catch (error) {
+            handleError(error);
         }
     }
 

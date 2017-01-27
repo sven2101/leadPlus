@@ -2,18 +2,6 @@
 /// <reference path="../app/App.Authentication.Service.ts" />
 /// <reference path="../Profile/controller/Profile.Service.ts" />
 
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-"use strict";
-
 angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
     function ($routeProvider, $httpProvider) {
         $routeProvider
@@ -40,7 +28,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controllerAs: "leadCtrl",
                 authenticated: true,
                 package: "basic",
-                type: Workflow.LEAD
+                type: WorkflowType.LEAD
             })
             .when("/offers/:processId?",
             {
@@ -49,7 +37,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controllerAs: "offerCtrl",
                 authenticated: true,
                 package: "basic",
-                type: Workflow.OFFER
+                type: WorkflowType.OFFER
             })
             .when("/sales/:processId?",
             {
@@ -58,7 +46,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controllerAs: "saleCtrl",
                 authenticated: true,
                 package: "basic",
-                type: Workflow.SALE
+                type: WorkflowType.SALE
             })
             .when("/statistic",
             {

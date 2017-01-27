@@ -1,7 +1,7 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../User/Model/User.Model.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
-/// <reference path="../../common/model/ActionButtonConfigBuilder.Model.ts" />
+/// <reference path="../../Process/model/Process.Model.ts" />
+/// <reference path="../../ActionButtons/model/ActionButtonConfigBuilder.Model.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.

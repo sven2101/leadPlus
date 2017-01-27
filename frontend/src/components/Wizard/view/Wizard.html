@@ -1,0 +1,209 @@
+<style>
+.wizard {
+    margin: 0px auto;
+}
+
+    .wizard .nav-tabs {
+        position: relative;
+        margin: 50px auto;
+        margin-bottom: 0;
+        border-bottom-color:transparent;
+    }
+
+    .wizard > div.wizard-inner {
+        position: relative;
+        margin-top: -50px;
+    }
+
+.connecting-line {
+    height: 2px;
+    background: #e0e0e0;
+    position: absolute;
+    margin: 0 auto;
+    right: 0;
+    top: 50%;
+    left:50%;
+    width: 100%;
+    z-index: 1;
+}
+
+.icon-wizard {
+        margin-top:15px;
+        margin-right: 0px !important;
+}
+
+.iconWizardDisabled {
+    color: #e0e0e0 !important;
+}
+
+.error {
+    color: red !important;
+    border-color: red !important;
+}
+
+.errorAfter:after {
+    border-bottom-color:red !important;
+}
+
+.wizard .nav-tabs > li.active > a, .wizard .nav-tabs > li.active > a:hover, .wizard .nav-tabs > li.active > a:focus {
+    color: #555555;
+    cursor: default;
+    border: 0;
+    border-bottom-color: transparent;
+}
+
+span.round-tab {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    display: inline-block;
+    border-radius: 100px;
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    z-index: 2;
+    position: absolute;
+    left: 0;
+    text-align: center;
+    font-size: 16px;
+}
+span.round-tab i{
+    color:#555555;
+}
+.wizard li.active span.round-tab {
+    background: #fff;
+    border: 2px solid #1c84c6;
+    
+}
+.wizard li.active span.round-tab i{
+    color: #1c84c6;
+}
+
+.roundTabHover:hover {
+    color: #333;
+    border: 2px solid #333;
+}
+
+.wizard .nav-tabs > li {
+    text-align: center;
+}
+
+.wizard li:after {
+    content: " ";
+    position: absolute;
+    left: calc(50% - 10px);
+    opacity: 0;
+    margin: 0 auto;
+    bottom: 0px;
+    border: 5px solid transparent;
+    border-bottom-color: #1c84c6;
+    transition: 0.1s ease-in-out;
+}
+
+.wizard li.active:after {
+    content: " ";
+    position: absolute;  
+    left: calc(50% - 10px);
+    opacity: 1;
+    margin: 0 auto;
+    bottom: 0px;
+    border: 10px solid transparent;
+    border-bottom-color: #1c84c6;
+}
+
+.wizard .nav-tabs > li a {
+    width: 50px;
+    height: 50px;
+    margin-top: 0px;
+    margin-right: auto;
+    margin-bottom: 20px;
+    margin-left: auto;
+    border-radius: 100%;
+    padding: 0;
+}
+
+    .wizard .nav-tabs > li a:hover {
+        background: transparent;
+    }
+
+.wizard .tab-pane {
+    position: relative;
+    padding-top: 25px;
+}
+
+.wizard h3 {
+    margin-top: 0;
+}
+
+.content-height {
+    background-color: #f8fafb; 
+    min-height: 70%;
+}
+
+@media( max-width : 585px ) {
+
+    .wizard {
+        width: 90%;
+        height: auto !important;
+    }
+
+    span.round-tab {
+        font-size: 16px;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+    }
+
+    .wizard .nav-tabs > li a {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+    }
+
+    .wizard li.active:after {
+        content: " ";
+        position: absolute;
+        left: calc(50% - 10px);
+    }
+}
+</style>
+<div class="modal-header" style="padding-bottom: 0px">
+<button type="button" class="close" ng-click="close(false)">
+        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+<div class="wizard">
+    <div class="wizard-inner">
+        <ul class="nav nav-tabs" role="tablist">
+            <li ng-repeat="wizardElement in wizardElements | orderBy : 'position' track by $index" role="presentation" ng-class="{active:step===$index+1, disabled:wizardElement.isDisabled,errorAfter:wizardElement.form.$invalid && wizardElement.validation}"
+                ng-style="{'width':100/wizardElements.length+'%'}">
+                <label ng-class="{iconWizardDisabled:wizardElement.isDisabled}">{{::wizardElement.title}}</label>
+                <a ng-click="wizardElement.isDisabled || ($parent.step=$index+1);($parent.currentWizard=wizardElement)" aria-controls="step{{$index+1}}" role="tab">
+                    <span class="round-tab" ng-class="{roundTabHover:!wizardElement.isDisabled,error:wizardElement.form.$invalid && wizardElement.validation}">
+                                <i class="icon-wizard {{::wizardElement.icon}}" ng-class="{iconWizardDisabled:wizardElement.isDisabled,error:wizardElement.form.$invalid && wizardElement.validation}"></i>
+                        </span>
+                </a>
+                <div ng-if="$index+1 < wizardElements.length" class="connecting-line"></div>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>
+
+<div class="modal-body content-height">
+    <div class="tab-content">
+        <div ng-repeat="wizardElement in wizardElements | orderBy : 'position' track by $index" role="tabpanel" id="step{{$index+1}}"
+            class="tab-pane" ng-class="{active:step===$index+1}">
+            <div ng-transclude="{{::wizardElement.directiveType}}">
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="modal-footer ">
+    <button type="button " class="btn btn-white " ng-click="close(false)">{{ 'COMMON_CANCEL'| translate }}</button>
+    <button type="button " class="btn btn-success " ng-disabled="isAnyFormInvalid()"
+        ng-click="saveOrTransform()">{{ 'COMMON_SAVE'| translate }}</button>
+    <button ng-if="currentWizard.isEmail" type="button " class="btn btn-warning" data-style="zoom-in"
+        ng-disabled="isAnyFormInvalid() || currentWizard.form.$invalid"
+        ng-click="send()">
+		<span class="ladda-label">Angebot senden</span>
+		</button>
+</div>

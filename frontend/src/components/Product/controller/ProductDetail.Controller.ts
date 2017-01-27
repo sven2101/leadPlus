@@ -1,7 +1,7 @@
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../Statistic/controller/Statistic.Service.ts" />
 /// <reference path="../../Setting/controller/Setting.Source.Service.ts" />
-/// <reference path="../../Workflow/Model/Workflow.Model.ts" />
+/// <reference path="../../Workflow/Model/WorkflowType.ts"/>
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../Product/model/Product.Model.ts" />
 /// <reference path="../../App/App.Resource.ts" />

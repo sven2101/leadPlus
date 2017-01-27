@@ -1,6 +1,5 @@
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Lead/controller/Lead.DataTableService.ts" />
-/// <reference path="../../Lead/controller/Lead.Service.ts" />
 /// <reference path="../../Offer/controller/Offer.DataTableService.ts" />
 /// <reference path="../../Offer/controller/Offer.Service.ts" />
 /// <reference path="../../Sale/controller/Sale.DataTableService.ts" />
@@ -33,7 +32,7 @@ class WorkflowController {
 
     loadAllData: boolean = false;
 
-    controllerType: Workflow;
+    controllerType: WorkflowType;
     IDatatableService: IDatatableService;
 
     allDataRoute: string;
@@ -45,17 +44,17 @@ class WorkflowController {
 
         this.controllerType = $route.current.$$route.type;
         switch (this.controllerType) {
-            case Workflow.LEAD:
+            case WorkflowType.LEAD:
                 this.IDatatableService = LeadDataTableService;
                 this.allDataRoute = allDataLeadRoute;
                 this.openDataRoute = openDataLeadRoute;
                 break;
-            case Workflow.OFFER:
+            case WorkflowType.OFFER:
                 this.IDatatableService = OfferDataTableService;
                 this.allDataRoute = allDataOfferRoute;
                 this.openDataRoute = openDataOfferRoute;
                 break;
-            case Workflow.SALE:
+            case WorkflowType.SALE:
                 this.IDatatableService = SaleDataTableService;
                 this.allDataRoute = allDataSaleRoute;
                 this.openDataRoute = openDataSaleRoute;
@@ -162,25 +161,25 @@ class WorkflowController {
         this.dtInstance.reloadData(resetPaging);
     }
 
-    getWizardTemplate(controllerTyp: Workflow): string {
-        let editable = controllerTyp !== Workflow.SALE;
+    getWizardTemplate(controllerTyp: WorkflowType): string {
+        let editable = controllerTyp !== WorkflowType.SALE;
         let wizardSteps = `
-        <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' edit-process='transitionCtrl.editProcess' editable='${editable}' small='false'/>
-        <product-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.PRODUCT}")' edit-workflow-unit='transitionCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' edit-process='transitionCtrl.editProcess' editable='${editable}'/>`;
+        <customer-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.CUSTOMER}")' edit-workflow-unit='wizardCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' edit-process='wizardCtrl.editProcess' editable='${editable}' small='false'/>
+        <product-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.PRODUCT}")' edit-workflow-unit='wizardCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' edit-process='wizardCtrl.editProcess' editable='${editable}'/>`;
 
         switch (controllerTyp) {
-            case Workflow.LEAD:
+            case WorkflowType.LEAD:
                 break;
-            case Workflow.OFFER:
-                wizardSteps += `<email-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.EMAIL}")' process='transitionCtrl.editProcess' disabled='false' notification='transitionCtrl.notification'/>`;
+            case WorkflowType.OFFER:
+                wizardSteps += `<email-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.EMAIL}")' process='wizardCtrl.editProcess' disabled='false' notification='wizardCtrl.notification'/>`;
                 break;
-            case Workflow.SALE:
-                wizardSteps += `<email-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.EMAIL}")' process='transitionCtrl.editProcess' disabled='false' notification='transitionCtrl.notification'/>`;
-                wizardSteps += `<sale-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.SALE}")' edit-workflow-unit='transitionCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' edit-process='transitionCtrl.editProcess' editable='true'/>`;
+            case WorkflowType.SALE:
+                wizardSteps += `<email-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.EMAIL}")' process='wizardCtrl.editProcess' disabled='false' notification='wizardCtrl.notification'/>`;
+                wizardSteps += `<sale-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.SALE}")' edit-workflow-unit='wizardCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' edit-process='wizardCtrl.editProcess' editable='true'/>`;
                 break;
         };
-        return `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig' current-notification='transitionCtrl.notification' transform='false'>
-            ` + wizardSteps + `</transition>`;
+        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardEditConfig' current-notification='wizardCtrl.notification' transform='false'>
+            ` + wizardSteps + `</wizard>`;
     }
 
     openEditModal(process: Process) {
@@ -189,8 +188,8 @@ class WorkflowController {
 
         this.uibModal.open({
             template: wizardTemplate,
-            controller: ModalTransitionController,
-            controllerAs: "transitionCtrl",
+            controller: WizardModalController,
+            controllerAs: "wizardCtrl",
             backdrop: "static",
             size: "lg",
             resolve: {
@@ -220,11 +219,11 @@ class WorkflowController {
         process.lead.timestamp = newTimestamp();
         process.lead.customer = new Customer();
 
-        let wizardTemplate = this.getWizardTemplate(Workflow.LEAD);
+        let wizardTemplate = this.getWizardTemplate(WorkflowType.LEAD);
         this.uibModal.open({
             template: wizardTemplate,
-            controller: ModalTransitionController,
-            controllerAs: "transitionCtrl",
+            controller: WizardModalController,
+            controllerAs: "wizardCtrl",
             backdrop: "static",
             size: "lg",
             resolve: {

@@ -3,9 +3,9 @@
 /// <reference path="../../../typeDefinitions/moment-node.d.ts" />
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../app/App.Constants.ts" />
-/// <reference path="../../Common/model/OrderPosition.Model.ts" />
+/// <reference path="../../Product/model/OrderPosition.Model.ts" />
 /// <reference path="../../Product/model/Product.Model.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
+/// <reference path="../../Process/model/Process.Model.ts" />
 /// <reference path="../../Offer/model/Offer.Model.ts" />
 /// <reference path="../../Offer/controller/Offer.DataTableService.ts" />
 /// <reference path="../../Offer/controller/Offer.Service.ts" />
@@ -152,13 +152,13 @@ class OfferController {
     openEditModal(process: Process) {
         let self = this;
         this.uibModal.open({
-            template: `<transition edit-process='transitionCtrl.editProcess' edit-workflow-unit='transitionCtrl.editProcess.offer' modal-instance='transitionCtrl.uibModalInstance' wizard-config='transitionCtrl.wizardEditConfig' current-notification='transitionCtrl.notification'>
-            <customer-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.CUSTOMER}")' edit-workflow-unit='transitionCtrl.editProcess.offer' edit-process='transitionCtrl.editProcess' editable='true'/>
-            <product-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.PRODUCT}")' edit-workflow-unit='transitionCtrl.editProcess.offer' edit-process='transitionCtrl.editProcess' editable='true'/>
-            <email-edit form='transitionCtrl.getWizardConfigByDirectiveType(transitionCtrl.wizardEditConfig,"${WizardForm.EMAIL}")' process='transitionCtrl.editProcess' disabled='false' notification='transitionCtrl.notification'/>
-            </transition>`,
-            controller: ModalTransitionController,
-            controllerAs: "transitionCtrl",
+            template: `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess.offer' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardEditConfig' current-notification='wizardCtrl.notification'>
+            <customer-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.CUSTOMER}")' edit-workflow-unit='wizardCtrl.editProcess.offer' edit-process='wizardCtrl.editProcess' editable='true'/>
+            <product-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.PRODUCT}")' edit-workflow-unit='wizardCtrl.editProcess.offer' edit-process='wizardCtrl.editProcess' editable='true'/>
+            <email-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.EMAIL}")' process='wizardCtrl.editProcess' disabled='false' notification='wizardCtrl.notification'/>
+            </wizard>`,
+            controller: WizardModalController,
+            controllerAs: "wizardCtrl",
             backdrop: "static",
             size: "lg",
             resolve: {

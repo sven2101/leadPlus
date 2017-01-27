@@ -1,15 +1,11 @@
-/// <reference path="../../common/model/AbstractModel.Model.ts" />
+class FileUpload {
 
-"use strict";
-
-class FileUpload extends AbstractModel {
-
+    id: number;
     filename: string;
     mimeType: string;
     size: number;
     content: any;
 
     constructor() {
-        super();
     }
 }
