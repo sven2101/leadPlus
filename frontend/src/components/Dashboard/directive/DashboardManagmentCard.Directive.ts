@@ -1,5 +1,6 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Modal.Service.ts" />
 /// <reference path="../../Common/directive/Directive.Interface.ts" />
 /// <reference path="../../../typeDefinitions/angular.d.ts" />
 
@@ -31,8 +32,9 @@ class DashboardManagmentCardDirective implements IDirective {
         }
         scope.editWorkflowUnit = scope.process[scope.workflowunittype];
         scope.toLocalDate = this.toLocalDate;
+        scope.workflowService = this.WorkflowService;
         scope.onInfoClick = (editWorkflowUnit, workflowunittype, process) => scope.$parent.$parent.$parent.dashboardCtrl.saveDataToModal(editWorkflowUnit, workflowunittype, process);
-        scope.openFollowUpModal = (process) => this.WorkflowService.openFollowUpModal(process);
+        scope.openQuickEmailModal = (process) => scope.workflowService.openQuickEmailModal(process);
         scope.pin = (process) => this.WorkflowService.togglePin(process, this.$rootScope.user);
         scope.goToLink = "#/" + scope.workflowunittype + "s/" + scope.process.id;
         if (scope.editWorkflowUnit) {

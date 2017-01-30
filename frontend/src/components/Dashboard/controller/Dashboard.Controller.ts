@@ -31,9 +31,10 @@ const DashboardControllerId: string = "DashboardController";
 
 class DashboardController {
 
-    $inject = [WorkflowServiceId, StatisticServiceId, DashboardServiceId, $rootScopeId, TemplateServiceId, NotificationServiceId, $sceId, $scopeId];
+    $inject = [WorkflowServiceId, WorkflowModalServiceId, StatisticServiceId, DashboardServiceId, $rootScopeId, TemplateServiceId, NotificationServiceId, $sceId, $scopeId];
 
     workflowService: WorkflowService;
+    workflowModalService: WorkflowModalService;
     statisticService: StatisticService;
     dashboardService: DashboardService;
     templateService: TemplateService;
@@ -58,8 +59,9 @@ class DashboardController {
     template: Template = new Template();
     templates: Array<Template> = [];
 
-    constructor(WorkflowService, StatisticService, DashboardService, $rootScope, TemplateService, NotificationService, $sce, $scope) {
+    constructor(WorkflowService, WorkflowModalService, StatisticService, DashboardService, $rootScope, TemplateService, NotificationService, $sce, $scope) {
         this.workflowService = WorkflowService;
+        this.workflowModalService = WorkflowModalService;
         this.statisticService = StatisticService;
         this.dashboardService = DashboardService;
         this.templateService = TemplateService;
@@ -90,6 +92,14 @@ class DashboardController {
         self.scope.$on("$destroy", function () {
             clearInterval(intervall);
         });
+    }
+
+    async openNewLeadModal() {
+        let resultProcess: Process = await this.workflowModalService.openNewLeadModal();
+        if (!isNullOrUndefined(resultProcess)) {
+            this.rootScope.leadsCount += 1;
+            this.dashboardService.addNewLead(resultProcess);
+        }
     }
 
     refreshTodos(): void {
@@ -175,8 +185,8 @@ class DashboardController {
         return this.workflowService.sumOrderPositions(array);
     }
 
-    openFollowUpModal(process: Process) {
-        this.workflowService.openFollowUpModal(process);
+    openQuickEmailModal(process: Process) {
+        this.workflowService.openQuickEmailModal(process);
     }
 
     getOrderPositionList(workflow: any): string {

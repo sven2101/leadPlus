@@ -70,7 +70,7 @@ class WizardDirective implements IDirective {
         if (!isNullOrUndefined(scope.currentNotification)) {
             scope.currentNotification.recipients = scope.editWorkflowUnit.customer.email;
             scope.$watch("editWorkflowUnit.customer.email", function (newValue, oldValue) {
-                if (newValue !== oldValue) {
+                if (newValue !== oldValue && !isNullOrUndefined(scope.editWorkflowUnit)) {
                     scope.currentNotification.recipients = scope.editWorkflowUnit.customer.email;
                 }
             }, true);
@@ -82,9 +82,13 @@ class WizardDirective implements IDirective {
         scope.saveOrTransform = () => this.saveOrTransform(scope);
         scope.send = () => this.send(scope);
         scope.isAnyFormInvalid = () => this.isAnyFormInvalid(scope);
+        scope.getNotificationType = () => this.getNotificationType(scope);
+        scope.followUp = (process: Process) => this.followUp(process, scope);
         scope.isLead = () => this.isLead(scope);
         scope.isOffer = () => this.isOffer(scope);
+        scope.isSale = () => this.isSale(scope);
         scope.isInOfferTransformation = () => this.isInOfferTransformation(scope);
+        scope.isInSaleTransformation = () => this.isInSaleTransformation(scope);
         scope.getWizardConfigByTransclusion = (wizardConfig: Array<WizardButtonConfig>, transclusion: any) => this.getWizardConfigByTransclusion(wizardConfig, transclusion);
         let wizardConfig: Array<WizardButtonConfig> = scope.wizardConfig;
         let firstActiveElement = null;
@@ -153,19 +157,40 @@ class WizardDirective implements IDirective {
         return resultProcess;
     }
 
+    getNotificationType(scope: any): NotificationType {
+        if (scope.transform && scope.isInOfferTransformation()) {
+            return NotificationType.OFFER;
+        } else if (scope.transform && scope.isInSaleTransformation()) {
+            return NotificationType.SALE;
+        } else if (!scope.transform && scope.isLead()) {
+            return NotificationType.LEAD;
+        } else if (!scope.transform && scope.isOffer() && !scope.currentWizard.isFollowUp) {
+            return NotificationType.OFFER;
+        } else if (!scope.transform && scope.isOffer() && scope.currentWizard.isFollowUp) {
+            return NotificationType.FOLLOWUP;
+        } else if (!scope.transform && scope.isSale()) {
+            return NotificationType.SALE;
+        }
+    }
+
     async send(scope: any) {
-        let process = scope.editProcess;
+        let notificationType: NotificationType = scope.getNotificationType();
+        let process: Process = scope.editProcess;
         process.notifications = process.notifications ? process.notifications : [];
 
         let notification: Notification = deepCopy(scope.currentNotification);
         notification.attachments = notification.attachments ? notification.attachments : [];
-        notification.notificationType = NotificationType.OFFER;
+        notification.notificationType = notificationType;
         notification.id = undefined;
         let deleteRow = false;
         if (scope.isInOfferTransformation()) {
             deleteRow = true;
             console.log("ADD LEAD TO OFFER");
             await scope.workflowService.addLeadToOffer(process);
+        } else if (scope.isInSaleTransformation()) {
+            deleteRow = true;
+            console.log("ADD OFFER TO SALE");
+            await scope.workflowService.addOfferToSale(process);
         }
         let promises: Array<Promise<void>> = notification.attachments ?
             notification.attachments
@@ -177,6 +202,12 @@ class WizardDirective implements IDirective {
         notification.attachments.forEach(a => a.id = undefined);
         process.notifications.push(notification);
 
+        if (notificationType === NotificationType.FOLLOWUP) {
+            if (process.status !== Status.FOLLOWUP && process.status !== Status.DONE) {
+                process.status = Status.FOLLOWUP;
+            }
+        }
+        console.log(process);
         let resultProcess = await scope.processService.save(process, scope.editWorkflowUnit, !deleteRow, deleteRow) as Process;
         scope.close(true, resultProcess);
         try {
@@ -188,22 +219,31 @@ class WizardDirective implements IDirective {
         }
     }
 
-    isLead(scope: any): boolean {
-        if (scope.editProcess.status === Status.OPEN || scope.editProcess.status === Status.INCONTACT) {
-            return true;
+    async followUp(process, scope) {
+        if (process.status !== Status.FOLLOWUP && process.status !== Status.DONE) {
+            let resultProcess = await scope.processService.setStatus(process, Status.FOLLOWUP) as Process;
+            scope.close(true, resultProcess);
         }
-        return false;
+    }
+
+    isLead(scope: any): boolean {
+        return scope.workflowService.isLead(scope.editProcess);
     }
 
     isOffer(scope: any): boolean {
-        if (scope.editProcess.status === Status.OFFER || scope.editProcess.status === Status.FOLLOWUP || scope.editProcess.status === Status.DONE) {
-            return true;
-        }
-        return false;
+        return scope.workflowService.isOffer(scope.editProcess);
+    }
+
+    isSale(scope: any): boolean {
+        return scope.workflowService.isSale(scope.editProcess);
     }
 
     isInOfferTransformation(scope: any): boolean {
         return scope.isLead() && !isNullOrUndefined(scope.editProcess.offer);
+    }
+
+    isInSaleTransformation(scope: any): boolean {
+        return scope.isOffer() && !isNullOrUndefined(scope.editProcess.sale);
     }
 
     isAnyFormInvalid(scope: any): boolean {

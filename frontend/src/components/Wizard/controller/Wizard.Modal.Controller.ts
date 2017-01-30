@@ -7,7 +7,7 @@ const WizardModalControllerId: string = "WizardModalController";
 
 class WizardModalController {
 
-    $inject = ["process", "transformation", $uibModalId, $rootScopeId, WorkflowServiceId];
+    $inject = ["process", "workflowType", "transformation", $uibModalId, $rootScopeId, WorkflowServiceId];
 
     uibModalInstance;
     rootScope;
@@ -15,19 +15,21 @@ class WizardModalController {
 
     editProcess: Process;
     wizardEditConfig: Array<WizardButtonConfig>;
+    wizardQuickEmailConfig: Array<WizardButtonConfig>;
     wizardOfferTransitionConfig: Array<WizardButtonConfig>;
     wizardSaleTransitionConfig: Array<WizardButtonConfig>;
 
     notification = new Notification();
 
 
-    constructor(process: Process, transformation: WorkflowType, $uibModalInstance, $rootScope, WorkflowService) {
+    constructor(process: Process, workflowType: WorkflowType, transformation: boolean, $uibModalInstance, $rootScope, WorkflowService) {
         this.uibModalInstance = $uibModalInstance;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
         this.editProcess = deepCopy(process);
-        this.appendTransformation(transformation);
+        this.appendTransformation(transformation, workflowType);
         this.wizardEditConfig = this.getWizardEditConfig();
+        this.wizardQuickEmailConfig = this.getQuickEmailWizardConfig(workflowType);
         this.wizardOfferTransitionConfig = this.getOfferWizardTransitionConfig();
         this.wizardSaleTransitionConfig = this.getSaleWizardTransitionConfig();
     }
@@ -44,12 +46,31 @@ class WizardModalController {
         wizardConfig.push(productEditStep);
 
         let emailEditStep = new WizardButtonConfig(WizardType.EMAIL);
-        emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(3).setValidation(false).setEmail(true);
+        emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(3).setValidation(false).setEmail(true, "Angebot Versenden");
         wizardConfig.push(emailEditStep);
 
         let SaleEditStep = new WizardButtonConfig(WizardType.SALE);
         SaleEditStep.setTitle("Verkauf").setIcon("fa fa-usd").setPosition(4).setAsFirstElement();
         wizardConfig.push(SaleEditStep);
+
+        return wizardConfig;
+    }
+
+    getQuickEmailWizardConfig(workflowType: WorkflowType): Array<WizardButtonConfig> {
+        let wizardConfig: Array<WizardButtonConfig> = new Array<WizardButtonConfig>();
+
+        let emailEditStep = new WizardButtonConfig(WizardType.EMAIL);
+        emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(1).setEmail(true, "E-Mail versenden").setShowSaveButton(false);
+        switch (workflowType) {
+            case WorkflowType.LEAD:
+                break;
+            case WorkflowType.OFFER:
+                emailEditStep.setFollowUp(true);
+                break;
+            case WorkflowType.SALE:
+                break;
+        };
+        wizardConfig.push(emailEditStep);
 
         return wizardConfig;
     }
@@ -62,7 +83,7 @@ class WizardModalController {
         wizardConfig.push(customerProductEditStep);
 
         let emailEditStep = new WizardButtonConfig(WizardType.EMAIL);
-        emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(2).setValidation(false).setEmail(true);
+        emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(2).setValidation(false).setEmail(true, "Angebot versenden");
         wizardConfig.push(emailEditStep);
 
         let SaleEditStep = new WizardButtonConfig(WizardType.SALE);
@@ -80,7 +101,7 @@ class WizardModalController {
         wizardConfig.push(customerProductEditStep);
 
         let emailEditStep = new WizardButtonConfig(WizardType.EMAIL);
-        emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(2).setValidation(false).setEmail(true);
+        emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(2).setValidation(false).setEmail(true, "Angebot versenden");
         wizardConfig.push(emailEditStep);
 
         let SaleEditStep = new WizardButtonConfig(WizardType.SALE);
@@ -99,12 +120,12 @@ class WizardModalController {
         return null;
     }
 
-    appendTransformation(transformation: WorkflowType): void {
-        if (isNullOrUndefined(transformation)) {
+    appendTransformation(transformation: boolean, workflowType: WorkflowType): void {
+        if (!transformation || isNullOrUndefined(workflowType)) {
             return;
         }
         let self = this;
-        if (transformation === WorkflowType.OFFER) {
+        if (workflowType === WorkflowType.OFFER) {
             this.editProcess.offer = {
                 id: null,
                 orderPositions: deepCopy(self.editProcess.lead.orderPositions),
@@ -123,7 +144,7 @@ class WizardModalController {
                 this.editProcess.offer.orderPositions[i].id = 0;
             }
         }
-        else if (transformation === WorkflowType.SALE) {
+        else if (workflowType === WorkflowType.SALE) {
             this.editProcess.sale = {
                 id: null,
                 deliveryAddress: self.editProcess.offer.deliveryAddress,

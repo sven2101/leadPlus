@@ -190,7 +190,7 @@ class OfferDataTableService implements IDatatableService {
             config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id);
 
         }
-        config.get(ActionButtonType.OPEN_FOLLOWUP_MODAL).setEnabled().setTitle("COMMON_STATUS_FOLLOW_UP");
+        config.get(ActionButtonType.QUICK_MAIL).setEnabled().setTitle("COMMON_STATUS_FOLLOW_UP");
         config.get(ActionButtonType.SET_OFFER_DONE).setEnabled().setTitle("COMMON_STATUS_SET_DONE").setIcon("fa fa-check");
         config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("OFFER_CLOSE_OFFER").setIcon("fa fa-lock");
         config.get(ActionButtonType.DETAILS_OPEN_EDIT_MODAL).setEnabled().setTitle("OFFER_EDIT_OFFER");
@@ -201,7 +201,7 @@ class OfferDataTableService implements IDatatableService {
         }
         else if (process.status === Status.DONE) {
             config.get(ActionButtonType.SET_OFFER_DONE).setEnabled().setTitle("COMMON_STATUS_SET_OPEN").setIcon("fa fa-undo");
-            config.get(ActionButtonType.OPEN_FOLLOWUP_MODAL).setEnabled(false);
+            config.get(ActionButtonType.QUICK_MAIL).setEnabled(false);
         } else if (process.status === Status.CLOSED) {
             config.disableAll();
             config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("OFFER_OPEN_OFFER").setIcon("fa fa-unlock");

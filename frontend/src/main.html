@@ -107,7 +107,7 @@
 				</li>
 				<li class="dropdown">
 					<a class="dropdown-toggle count-info" data-toggle="dropdown">
-						<i class="fa fa-envelope fa-lg"></i>
+						<i class="fa fa-tasks fa-lg"></i>
 
 						<span ng-if="appCtrl.todos.length>0" class="label label-danger">{{ appCtrl.todos.length}}</span>
 
@@ -153,7 +153,32 @@
 						</li>
 					</ul>
 				</li>
-				<!-- TODO should usesd for comments or mails
+				 <li class="dropdown">
+                    <a class="dropdown-toggle count-info" data-toggle="dropdown">
+                        <i class="fa fa-envelope fa-lg"></i>
+						<span class="label label-danger">!</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts">
+                        <li>
+                            <a>
+                                <div>
+                                    <i class="fa fa-envelope fa-fw"></i> Coming soon
+                                    <span class="pull-right text-muted small">Coming soon</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <div class="text-center link-block">
+                                <a>
+                                    <strong>Coming soon</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+				<!-- TODO should used for comments or events
                 <li class="dropdown">
                     <a class="dropdown-toggle count-info" data-toggle="dropdown">
                         <i class="fa fa-bell"></i>

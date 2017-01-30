@@ -26,14 +26,14 @@
 			<h3>{{sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</h3>
 		</td>
 	</tr>
-	<tr ng-if="isOffer() || isInOfferTransformation()">
+	<tr ng-if="(isOffer() && !isInSaleTransformation()) || isInOfferTransformation()">
 		<td><b>-</b></td>
 		<td>{{ 'PRODUCT_DISCOUNT' | translate }}</td>
 		<td>{{(sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts)-editWorkflowUnit.netPrice|
 			currency:'\u20AC'}} ({{calculateDiscount(sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts,editWorkflowUnit.netPrice)}}%)
 		</td>
 	</tr>
-	<tr ng-if="isOffer() || isInOfferTransformation()">
+	<tr ng-if="(isOffer() && !isInSaleTransformation()) || isInOfferTransformation()">
 		<td><b>=</b></td>
 		<td>
 			<h3>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</h3>
@@ -66,7 +66,7 @@
 		<td ng-if="isSale() || isInSaleTransformation()">{{editProcess.offer.netPrice*(editProcess.offer.vat/100)|currency:'\u20AC'}}</td>
 		<td ng-if="isOffer() || isInOfferTransformation()">{{editWorkflowUnit.netPrice*(editWorkflowUnit.vat/100)|currency:'\u20AC'}}</td>
 	</tr>
-	<tr ng-if="isOffer() || isInOfferTransformation()">
+	<tr ng-if="(isOffer() && !isInSaleTransformation()) || isInOfferTransformation()">
 		<td><b>=</b></td>
 		<td>
 			<h3>{{ 'PRODUCT_GROSS_PRICE' | translate }}</h3>

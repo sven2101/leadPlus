@@ -51,7 +51,6 @@ class WorkflowDatatableRowService {
     updateRow(process: Process, dtInstance: any, workflowType: WorkflowType, scope: any) {
         dtInstance.DataTable.row(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).data(process).draw(
             false);
-
         this.compile(angular.element(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).contents())(scope);
     }
 
@@ -59,22 +58,12 @@ class WorkflowDatatableRowService {
         if (loadAllData === true) {
             this.updateRow(process, dtInstance, workflowType, scope);
         } else if (loadAllData === false) {
-            dtInstance.DataTable.row(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).remove()
-                .draw();
+            this.deleteRow(process, dtInstance, workflowType);
         }
     }
-    deleteRow(process: Process, dtInstance: any, workflowType: WorkflowType, ): void {
-        let self = this;
-        this.processService.delete(process).then((data) => {
-            self.toaster.pop("success", "", self.translate
-                .instant("COMMON_TOAST_SUCCESS_DELETE_LEAD"));
-            self.rootScope.leadsCount -= 1;
-            dtInstance.DataTable.row(self.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).remove().draw();
-            self.rootScope.$broadcast("onTodosChange");
-        }, (error) => {
-            self.toaster.pop("error", "", self.translate
-                .instant("COMMON_TOAST_FAILURE_DELETE_LEAD"));
-        });
+
+    deleteRow(process: Process, dtInstance: any, workflowType: WorkflowType): void {
+        dtInstance.DataTable.row(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).remove().draw();
     }
 }
 

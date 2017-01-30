@@ -27,13 +27,13 @@
 			'PIN_BUTTON'].title| translate }} ">
          <i class="fa fa-thumb-tack "></i>
     </button>
+	<button style="min-height:34px" ng-if="::config[ 'QUICK_MAIL'].visible" class="btn btn-white " ng-disabled="config['QUICK_MAIL'].disabled"
+		ng-click="workflowService.openQuickEmailModal(process) " title="{{config['QUICK_MAIL'].title| translate }} ">
+         <i  class="fa fa-envelope "></i>
+    </button>
 	<button style="min-height:34px " ng-if="::config[ 'SET_INCONTACT'].visible " class="btn btn-white " ng-disabled="config[
 			'SET_INCONTACT'].disabled " ng-click="workflowService.inContact(process) " title="{{config[ 'SET_INCONTACT'].title| translate }} ">
          <i  class="fa fa-address-card-o "></i>
-    </button>
-	<button style="min-height:34px" ng-if="::config[ 'OPEN_FOLLOWUP_MODAL'].visible" class="btn btn-white " ng-disabled="config['OPEN_FOLLOWUP_MODAL'].disabled"
-		ng-click="workflowService.openFollowUpModal(process) " title="{{config['OPEN_FOLLOWUP_MODAL'].title| translate }} ">
-         <i  class="fa fa-eye "></i>
     </button>
 	<button style="min-height:34px" ng-if="::config[ 'SET_OFFER_DONE'].visible" class="btn btn-white " ng-disabled="config['SET_OFFER_DONE'].disabled"
 		ng-click="workflowService.doneOffer(process) " title="{{config['SET_OFFER_DONE'].title| translate }} ">
@@ -57,13 +57,13 @@
 				<a><i class="fa fa-edit "></i>&nbsp;{{config['DETAILS_OPEN_EDIT_MODAL'].title| translate }}</a></li>
 			<li ng-if="::config[ 'DETAILS_OPEN_EDIT_MODAL'].visible " role="separator " class="divider "></li>
 			<li ng-if="::config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].visible " ng-class="{ 'disabled': config[
-		'DETAILS_OPEN_ROLLBACK_MODAL'].disabled } " ng-click="workflowService.openConfirmationModal(process)" data-toggle="{{::!config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].disabled ?
+		'DETAILS_OPEN_ROLLBACK_MODAL'].disabled } " ng-click="workflowModalService.openConfirmationModal(process,ConfirmationFunctionType.ROLLBACK)" data-toggle="{{::!config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].disabled ?
 		'modal' : ''}} " data-backdrop="static" >
 				<a><i class="fa fa-reply "></i>&nbsp;{{config['DETAILS_OPEN_ROLLBACK_MODAL'].title| translate }}</a>
 			</li>
 			<li ng-if="::config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].visible " role="separator " class="divider "></li>
 			<li ng-if="::config[ 'DETAILS_OPEN_DELETE_MODAL'].visible " ng-class="{ 'disabled': config[
-		'DETAILS_OPEN_DELETE_MODAL'].disabled } " ng-click="openModal(process, 'deleteRow') " data-toggle="{{::!config[ 'DETAILS_OPEN_DELETE_MODAL'].disabled ? 'modal'
+		'DETAILS_OPEN_DELETE_MODAL'].disabled } " ng-click="workflowModalService.openConfirmationModal(process,ConfirmationFunctionType.DELETE)" data-toggle="{{::!config[ 'DETAILS_OPEN_DELETE_MODAL'].disabled ? 'modal'
 		: ''}} " data-backdrop="static" data-target="#deleteConfirmationModal ">
 				<a><i class="fa fa-trash-o "></i>&nbsp;{{config['DETAILS_OPEN_DELETE_MODAL'].title| translate }}</a>
 			</li>

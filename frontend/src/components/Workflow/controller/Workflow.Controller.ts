@@ -9,6 +9,7 @@ const WorkflowControllerId: string = "WorkflowController";
 
 class WorkflowController {
     workflowService: WorkflowService;
+    workflowModalService: WorkflowModalService;
     workflowDatatableService: WorkflowDatatableService;
     workflowDatatableRowService: WorkflowDatatableRowService;
 
@@ -38,9 +39,9 @@ class WorkflowController {
     allDataRoute: string;
     openDataRoute: string;
 
-    $inject = [$rootScopeId, $scopeId, $compileId, $routeParamsId, "$route", $sceId, $uibModalId, WorkflowServiceId, WorkflowDatatableServiceId, WorkflowDatatableRowServiceId, LeadDataTableServiceId, , OfferDataTableServiceId, SaleDataTableServiceId];
+    $inject = [$rootScopeId, $scopeId, $compileId, $routeParamsId, "$route", $sceId, $uibModalId, WorkflowServiceId, WorkflowModalServiceId, WorkflowDatatableServiceId, WorkflowDatatableRowServiceId, LeadDataTableServiceId, , OfferDataTableServiceId, SaleDataTableServiceId];
 
-    constructor($rootScope, $scope, $compile, $routeParams, $route, $sce, $uibModal, WorkflowService, WorkflowDatatableService, WorkflowDatatableRowService, LeadDataTableService, OfferDataTableService, SaleDataTableService) {
+    constructor($rootScope, $scope, $compile, $routeParams, $route, $sce, $uibModal, WorkflowService, WorkflowModalService, WorkflowDatatableService, WorkflowDatatableRowService, LeadDataTableService, OfferDataTableService, SaleDataTableService) {
 
         this.controllerType = $route.current.$$route.type;
         switch (this.controllerType) {
@@ -62,6 +63,7 @@ class WorkflowController {
         };
 
         this.workflowService = WorkflowService;
+        this.workflowModalService = WorkflowModalService;
         this.workflowDatatableService = WorkflowDatatableService;
         this.workflowDatatableRowService = WorkflowDatatableRowService;
         this.sce = $sce;
@@ -123,7 +125,12 @@ class WorkflowController {
             }
         };
 
-        let deleteRow = $rootScope.$on("deleteRow", (event, data) => {
+        let deleteRow = $rootScope.$on("removeRow", (event, data) => {
+            clearWatchers(self.loadAllData);
+            self.workflowDatatableRowService.deleteRow(data, self.dtInstance, self.controllerType);
+        });
+
+        let updateOrRemove = $rootScope.$on("updateOrRemoveRow", (event, data) => {
             clearWatchers(self.loadAllData);
             self.workflowDatatableRowService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope"));
         });
@@ -139,6 +146,7 @@ class WorkflowController {
 
         $scope.$on("$destroy", function handler() {
             deleteRow();
+            updateOrRemove();
             updateRow();
             openEditModal();
             self.destroyAllScopes();
@@ -161,85 +169,20 @@ class WorkflowController {
         this.dtInstance.reloadData(resetPaging);
     }
 
-    getWizardTemplate(controllerTyp: WorkflowType): string {
-        let editable = controllerTyp !== WorkflowType.SALE;
-        let wizardSteps = `
-        <customer-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.CUSTOMER}")' edit-workflow-unit='wizardCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' edit-process='wizardCtrl.editProcess' editable='${editable}' small='false'/>
-        <product-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.PRODUCT}")' edit-workflow-unit='wizardCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' edit-process='wizardCtrl.editProcess' editable='${editable}'/>`;
-
-        switch (controllerTyp) {
-            case WorkflowType.LEAD:
-                break;
-            case WorkflowType.OFFER:
-                wizardSteps += `<email-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.EMAIL}")' process='wizardCtrl.editProcess' disabled='false' notification='wizardCtrl.notification'/>`;
-                break;
-            case WorkflowType.SALE:
-                wizardSteps += `<email-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.EMAIL}")' process='wizardCtrl.editProcess' disabled='false' notification='wizardCtrl.notification'/>`;
-                wizardSteps += `<sale-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.SALE}")' edit-workflow-unit='wizardCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' edit-process='wizardCtrl.editProcess' editable='true'/>`;
-                break;
-        };
-        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess["${this.controllerType.toString().toLowerCase()}"]' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardEditConfig' current-notification='wizardCtrl.notification' transform='false'>
-            ` + wizardSteps + `</wizard>`;
+    async openEditModal(process: Process) {
+        let resultProcess: Process = await this.workflowModalService.openEditModal(process, this.controllerType);
+        if (!isNullOrUndefined(resultProcess)) {
+            this.getScopeByKey("childRowScope" + resultProcess.id).workflowUnit = resultProcess[this.controllerType.toString().toLowerCase()];
+            this.getScopeByKey("childRowScope" + resultProcess.id).process = resultProcess;
+        }
     }
 
-    openEditModal(process: Process) {
-        let self = this;
-        let wizardTemplate = this.getWizardTemplate(this.controllerType);
-
-        this.uibModal.open({
-            template: wizardTemplate,
-            controller: WizardModalController,
-            controllerAs: "wizardCtrl",
-            backdrop: "static",
-            size: "lg",
-            resolve: {
-                process: function () {
-                    return process;
-                },
-                transformation: function () {
-                    return null;
-                }
-            }
-        }).result.then(function (result: Process) {
-            if (!isNullOrUndefined(result)) {
-                self.getScopeByKey("childRowScope" + result.id).workflowUnit = result[self.controllerType.toString().toLowerCase()];
-                self.getScopeByKey("childRowScope" + result.id).process = result;
-            }
-        });
-    }
-
-    openNewLeadModal() {
-        let self = this;
-        let process = new Process();
-
-        process.status = Status.OPEN;
-        process.formerProcessors = [new Processor(self.rootScope.user, Activity.OPEN)];
-        process.lead = new Lead();
-        process.lead.orderPositions = new Array<OrderPosition>();
-        process.lead.timestamp = newTimestamp();
-        process.lead.customer = new Customer();
-
-        let wizardTemplate = this.getWizardTemplate(WorkflowType.LEAD);
-        this.uibModal.open({
-            template: wizardTemplate,
-            controller: WizardModalController,
-            controllerAs: "wizardCtrl",
-            backdrop: "static",
-            size: "lg",
-            resolve: {
-                process: function () {
-                    return process;
-                },
-                transformation: function () {
-                    return null;
-                }
-            }
-        }).result.then(function (result: Process) {
-            if (!isNullOrUndefined(result)) {
-                self.rootScope.leadsCount += 1;
-                self.dtInstance.DataTable.row.add(result).draw();
-            }
-        });
+    async openNewLeadModal() {
+        let resultProcess: Process = await this.workflowModalService.openNewLeadModal();
+        if (!isNullOrUndefined(resultProcess)) {
+            this.rootScope.leadsCount += 1;
+            this.dtInstance.DataTable.row.add(resultProcess).draw();
+        }
     }
 
     deleteRow(process: Process) {

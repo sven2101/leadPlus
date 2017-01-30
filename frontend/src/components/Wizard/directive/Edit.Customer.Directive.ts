@@ -59,6 +59,7 @@ class CustomerEditDirective implements IDirective {
         scope.selectedCustomer = scope.customerSelected ? scope.editWorkflowUnit.customer : null;
 
         scope.selectCustomer = (customer: Customer) => this.selectCustomer(customer, scope);
+        scope.getNewOrSelectedCustomer = (customer: Customer) => this.getNewOrSelectedCustomer(customer, scope);
         scope.getAsHtml = (html: string) => this.getAsHtml(html, scope);
     };
 
@@ -66,8 +67,19 @@ class CustomerEditDirective implements IDirective {
         if (isNullOrUndefined(customer)) {
             scope.selectedCustomer = null;
         }
-        scope.editWorkflowUnit.customer = scope.workflowService.selectCustomer(customer);
+        scope.editWorkflowUnit.customer = scope.getNewOrSelectedCustomer(customer);
         scope.customerSelected = !isNullOrUndefined(scope.editWorkflowUnit.customer.id);
+    }
+
+    getNewOrSelectedCustomer(customer: Customer, scope: any): Customer {
+        if (isNullOrUndefined(customer) || isNullOrUndefined(Number(customer.id))) {
+            return new Customer();
+        }
+        let temp: Customer = findElementById(scope.customerService.searchCustomers, Number(customer.id)) as Customer;
+        if (isNullOrUndefined(temp) || isNullOrUndefined(Number(temp.id))) {
+            return new Customer();
+        }
+        return deepCopy(temp);
     }
 
     getAsHtml(html: string, scope: any) {

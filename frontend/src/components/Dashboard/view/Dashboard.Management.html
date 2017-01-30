@@ -61,6 +61,11 @@
 				<div style="margin-left:-5px;margin-right:-5px">
 					<div class="row" style="overflow-x:auto">
 						<div class="checkbox">
+							<span class="pull-left" style="padding-left:15px;">
+								<button type="button" class="btn btn-success" ng-click="dashboardCtrl.openNewLeadModal()">
+									<i class="fa fa-plus"></i>
+								</button>
+							</span>
 							<span class="pull-right" style="padding-right:15px;"><input  type="text" placeholder="{{ 'COMMON_SEARCH' | translate }}" class="input-sm form-control" ng-model="dashboardCtrl.cardSearchText" ng-model-options="{debounce: 600}"></span>
 							<span class="pull-right" style="padding-right:15px;"><label><input type="checkbox" ng-click= "dashboardCtrl.dashboardService.filterMytasks(dashboardCtrl.showMyTasks); dashboardCtrl.cardSearchText = ''" ng-model="dashboardCtrl.showMyTasks">{{ 'SHOW_MY_TASKS' | translate }}</label>  </span>
 						</div>

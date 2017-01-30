@@ -86,7 +86,7 @@
 						<span class="input-group-addon ">%</span>
 						<input type="number " name="{{ 'orderPositionDiscount'+$index}}" ng-model="orderPosition.discount " ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ "
 							min="0 " max="100 " step="0.1 " data-number-to-fixed="2 " data-number-stepfactor="100
-											" class="form-control currency " ng-keyup="[setPrice(orderPosition),reCalculateOffer(editWorkflowUnit,editWorkflowUnit.orderPositions)]"
+											" class="form-control currency " ng-keyup="[$parent.setPrice(orderPosition),$parent.reCalculateOffer(editProcess.offer,editWorkflowUnit.orderPositions)]"
 							id="c3 " required ng-disabled="!editable">
 					</div>
 				</td>
@@ -94,7 +94,7 @@
 					<div class="input-group" ng-class="{ 'has-error' : pform['orderPosition'+$index].$invalid && !pform['orderPosition'+$index].$pristine  }">
 						<span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
 						<input type="number" name="{{'orderPosition'+$index}}" ng-model="orderPosition.netPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ "
-							min="0 " step="0.01 " data-number-to-fixed="2 " data-number-stepfactor="100" class="form-control currency " ng-keyup="[setDiscount(orderPosition),reCalculateOffer(editWorkflowUnit,editWorkflowUnit.orderPositions)] "
+							min="0 " step="0.01 " data-number-to-fixed="2 " data-number-stepfactor="100" class="form-control currency " ng-keyup="[$parent.setDiscount(orderPosition),$parent.reCalculateOffer(editProcess.offer,editWorkflowUnit.orderPositions)] "
 							id="c2 " required ng-disabled="!editable">
 					</div>
 				</td>
@@ -102,7 +102,7 @@
 				<td class="col-md-2 text-center ">{{orderPosition.netPrice*orderPosition.amount| currency:'\u20AC'}}
 				</td>
 				<td class=" col-md-1 ">
-					<button type="button " class="btn btn-white btn-sm " ng-click="[deleteProduct(editWorkflowUnit.orderPositions,$index),reCalculateOffer(editWorkflowUnit,editWorkflowUnit.orderPositions)] "
+					<button type="button " class="btn btn-white btn-sm " ng-click="[$parent.deleteProduct(editWorkflowUnit.orderPositions,$index),$parent.reCalculateOffer(editProcess.offer,editWorkflowUnit.orderPositions)] "
 						ng-disabled="!editable">
 										<i class="fa fa-trash " ></i>&nbsp;
 									</button>

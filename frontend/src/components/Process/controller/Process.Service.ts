@@ -34,17 +34,17 @@ class ProcessService {
 
         if (!isNullOrUndefined(editWorkflowUnit) && isNullOrUndefined(editWorkflowUnit.customer.id)) {
             editWorkflowUnit.customer.timestamp = newTimestamp();
-            editWorkflowUnit.customer = await this.customerService.insertCustomer(editWorkflowUnit.customer).catch(error => handleError(error)) as Customer;
+            editWorkflowUnit.customer = await this.customerService.insertCustomer(editWorkflowUnit.customer) as Customer;
         }
 
-        let resultProcess: Process = await this.processResource.save(editProcess).$promise.catch(error => handleError(error)) as Process;
+        let resultProcess: Process = await this.processResource.save(editProcess).$promise as Process;
         if (updateRow === true) {
             this.rootScope.$broadcast("updateRow", resultProcess);
         }
         if (deleteRow === true) {
-            this.rootScope.$broadcast("deleteRow", resultProcess);
+            this.rootScope.$broadcast("removeRow", resultProcess);
         }
-        if (!isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(this.rootScope.user.id)) {
+        if (!isNullOrUndefined(editProcess) && !isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(this.rootScope.user.id)) {
             this.rootScope.$broadcast("onTodosChange");
         }
         return resultProcess;
@@ -54,28 +54,28 @@ class ProcessService {
         if (isNullOrUndefined(process)) {
             return;
         }
-        return await this.processResource.drop({ id: process.id }).$promise.catch(error => handleError(error)) as Process;
+        return await this.processResource.drop({ id: process.id }).$promise as Process;
     }
 
     async setStatus(process: Process, status: Status): Promise<Process> {
         if (isNullOrUndefined(process) || isNullOrUndefined(status)) {
             return;
         }
-        return await this.processResource.setStatus({ id: process.id }, status).$promise.catch(error => handleError(error)) as Process;
+        return await this.processResource.setStatus({ id: process.id }, status).$promise as Process;
     }
 
     async setProcessor(process: Process, user: User): Promise<Process> {
         if (isNullOrUndefined(process) || isNullOrUndefined(user)) {
             return;
         }
-        return await this.processResource.setProcessor({ id: process.id }, user.id).$promise.catch(error => handleError(error)) as Process;
+        return await this.processResource.setProcessor({ id: process.id }, user.id).$promise as Process;
     }
 
     async removeProcessor(process: Process): Promise<Process> {
         if (isNullOrUndefined(process)) {
             return;
         }
-        return await this.processResource.removeProcessor({ id: process.id }).$promise.catch(error => handleError(error)) as Process;
+        return await this.processResource.removeProcessor({ id: process.id }).$promise as Process;
     }
 }
 angular.module(moduleProcessService, [ngResourceId]).service(ProcessServiceId, ProcessService);

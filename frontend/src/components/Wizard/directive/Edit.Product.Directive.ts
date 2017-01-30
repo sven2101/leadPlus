@@ -51,6 +51,9 @@ class ProductEditDirective implements IDirective {
         scope.addProduct = (array: Array<OrderPosition>, currentProductId: string, currentProductAmount: number) => this.addProduct(array, currentProductId, currentProductAmount, scope);
         scope.deleteProduct = (array: Array<OrderPosition>, index: number) => this.deleteProduct(array, index, scope);
         scope.sumOrderPositions = (array: Array<OrderPosition>) => this.sumOrderPositions(array, scope);
+        scope.reCalculateOffer = (offer: Offer, array: Array<OrderPosition>) => this.reCalculateOffer(offer, array, scope);
+        scope.setPrice = (orderPosition: OrderPosition) => this.setPrice(orderPosition, scope);
+        scope.setDiscount = (orderPosition: OrderPosition) => this.setDiscount(orderPosition, scope);
         scope.isLead = () => this.isLead(scope);
         scope.isOffer = () => this.isOffer(scope);
         scope.isSale = () => this.isSale(scope);
@@ -82,7 +85,9 @@ class ProductEditDirective implements IDirective {
     }
 
     reCalculateOffer(offer: Offer, array: Array<OrderPosition>, scope: any) {
-        offer.netPrice = Math.round((offer.deliveryCosts + scope.workflowService.sumOrderPositions(array)) * 100) / 100;
+        if (!isNullOrUndefined(offer)) {
+            offer.netPrice = Math.round((offer.deliveryCosts + scope.workflowService.sumOrderPositions(array)) * 100) / 100;
+        }
     }
 
     setPrice(orderPosition: OrderPosition, scope: any) {
@@ -99,24 +104,15 @@ class ProductEditDirective implements IDirective {
     }
 
     isLead(scope: any): boolean {
-        if (scope.editProcess.status === Status.OPEN || scope.editProcess.status === Status.INCONTACT) {
-            return true;
-        }
-        return false;
+        return scope.workflowService.isLead(scope.editProcess);
     }
 
     isOffer(scope: any): boolean {
-        if (scope.editProcess.status === Status.OFFER || scope.editProcess.status === Status.FOLLOWUP || scope.editProcess.status === Status.DONE) {
-            return true;
-        }
-        return false;
+        return scope.workflowService.isOffer(scope.editProcess);
     }
 
     isSale(scope: any): boolean {
-        if (scope.editProcess.status === Status.SALE) {
-            return true;
-        }
-        return false;
+        return scope.workflowService.isSale(scope.editProcess);
     }
 
     isInOfferTransformation(scope: any): boolean {

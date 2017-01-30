@@ -11,12 +11,10 @@
 /// <reference path="../../Process/controller/Process.Service.ts" />
 /// <reference path="../../Workflow/model/WorkflowType.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Controller.ts" />
-/// <reference path="../../Lead/controller/Lead.Controller.ts" />
 /// <reference path="../../Offer/controller/Offer.Controller.ts" />
 /// <reference path="../../Sale/controller/Sale.Controller.ts" />
 /// <reference path="../../Dashboard/controller/Dashboard.Controller.ts" />
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
-/// <reference path="../../Common/service/FollowUp.Controller.ts" />
 /// <reference path="../../FileUpload/controller/File.Service.ts" />
 /// <reference path="../../Wizard/controller/Wizard.Modal.Controller.ts" />
 /*******************************************************************************
@@ -35,7 +33,7 @@ const WorkflowServiceId: string = "WorkflowService";
 
 class WorkflowService {
 
-    private $inject = [CommentResourceId, SaleResourceId, OfferResourceId, toasterId, $rootScopeId, $translateId, $qId, CustomerServiceId, $uibModalId, UserResourceId, ProcessServiceId];
+    private $inject = [CommentResourceId, SaleResourceId, OfferResourceId, toasterId, $rootScopeId, $translateId, $qId, CustomerServiceId, UserResourceId, ProcessServiceId, WorkflowModalServiceId];
 
     commentResource;
     saleResource;
@@ -43,25 +41,25 @@ class WorkflowService {
     userResource;
     processService: ProcessService;
     customerService: CustomerService;
+    workflowModalService: WorkflowModalService;
     toaster;
     rootScope;
     translate;
     $q;
-    uibModal;
     users: Array<User> = [];
 
-    constructor(CommentResource, SaleResource, OfferResource, toaster, $rootScope, $translate, $q, CustomerService, $uibModal, UserResource, ProcessService) {
+    constructor(CommentResource, SaleResource, OfferResource, toaster, $rootScope, $translate, $q, CustomerService, UserResource, ProcessService, WorkflowModalService) {
         this.commentResource = CommentResource.resource;
         this.saleResource = SaleResource.resource;
         this.userResource = UserResource.resource;
         this.offerResource = OfferResource.resource;
         this.toaster = toaster;
         this.processService = ProcessService;
+        this.workflowModalService = WorkflowModalService;
         this.rootScope = $rootScope;
         this.translate = $translate;
         this.$q = $q;
         this.customerService = CustomerService;
-        this.uibModal = $uibModal;
         this.refreshUsers();
     }
 
@@ -149,77 +147,12 @@ class WorkflowService {
         return isNaN(temp) ? 0 : temp;
     }
 
-    getOfferTransformationWizardTemplate(): string {
-        let wizardSteps = `
-        <customer-product-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardOfferTransitionConfig,"${WizardType.CUSTOMER_PRODUCT}")' edit-workflow-unit='wizardCtrl.editProcess.offer' edit-process='wizardCtrl.editProcess' editable='true'/>`;
-        wizardSteps += `<email-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardOfferTransitionConfig,"${WizardType.EMAIL}")' process='wizardCtrl.editProcess' disabled='false' notification='wizardCtrl.notification'/>`;
-        wizardSteps += `<sale-edit />`;
-
-        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess.offer' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardOfferTransitionConfig' current-notification='wizardCtrl.notification' transform='true'>
-            ` + wizardSteps + `</wizard>`;
+    async startOfferTransformation(process: Process): Promise<Process> {
+        return await this.workflowModalService.openOfferTransformationModal(process);
     }
 
-    getSaleTransformationWizardTemplate(): string {
-        let wizardSteps = `
-        <customer-product-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardSaleTransitionConfig,"${WizardType.CUSTOMER_PRODUCT}")' edit-workflow-unit='wizardCtrl.editProcess.sale' edit-process='wizardCtrl.editProcess' editable='false'/>`;
-        wizardSteps += `<email-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardSaleTransitionConfig,"${WizardType.EMAIL}")' process='wizardCtrl.editProcess' disabled='false' notification='wizardCtrl.notification'/>`;
-        wizardSteps += `<sale-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardSaleTransitionConfig,"${WizardType.SALE}")' edit-workflow-unit='wizardCtrl.editProcess.sale' edit-process='wizardCtrl.editProcess' editable='true'/>`;
-
-        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess.sale' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardSaleTransitionConfig' current-notification='wizardCtrl.notification' transform='true'>
-            ` + wizardSteps + `</wizard>`;
-    }
-
-    startOfferTransformation(process: Process): Promise<Process> {
-        let defer = this.$q.defer();
-
-        let wizardTemplate = this.getOfferTransformationWizardTemplate();
-        this.uibModal.open({
-            template: wizardTemplate,
-            controller: WizardModalController,
-            controllerAs: "wizardCtrl",
-            backdrop: "static",
-            size: "lg",
-            resolve: {
-                process: function (): Process {
-                    return process;
-                },
-                transformation: function (): WorkflowType {
-                    return WorkflowType.OFFER;
-                }
-            }
-        }).result.then(function (result) {
-            defer.resolve(result);
-        }, function () {
-            defer.resolve(undefined);
-        });
-        return defer.promise;
-    }
-
-
-    startSaleTransformation(process: Process): Promise<Process> {
-        let defer = this.$q.defer();
-
-        let wizardTemplate = this.getSaleTransformationWizardTemplate();
-        this.uibModal.open({
-            template: wizardTemplate,
-            controller: WizardModalController,
-            controllerAs: "wizardCtrl",
-            backdrop: "static",
-            size: "lg",
-            resolve: {
-                process: function (): Process {
-                    return process;
-                }, transformation: function (): WorkflowType {
-                    return WorkflowType.SALE;
-                }
-            }
-        }).result.then(function (result) {
-            defer.resolve(result);
-        }, function () {
-            defer.resolve(undefined);
-        });
-
-        return defer.promise;
+    async startSaleTransformation(process: Process): Promise<Process> {
+        return await this.workflowModalService.openSaleTransformationModal(process);
     }
 
     async addLeadToOffer(tempProcess: Process): Promise<Process> {
@@ -263,39 +196,6 @@ class WorkflowService {
 
     }
 
-    openFollowUpModal(process: Process) {
-        this.uibModal.open({
-            template: " <div sendfollowup parent='followUpCtrl' form='parent.emailEditForm' type='offer'></div>",
-            controller: FollowUpController,
-            controllerAs: "followUpCtrl",
-            backdrop: "static",
-            size: "lg",
-            resolve: {
-                process: function () {
-                    return process;
-                }
-            }
-        });
-    }
-
-    openConfirmationModal(process: Process, actionButtonType: ActionButtonType) {
-        this.uibModal.open({
-            template: "<confirmation-modal modal-instance='confirmationCtrl.uibModalInstance' title='confirmationCtrl.title' body='confirmationCtrl.body' submit-text='confirmationCtrl.submitText' submit-function='confirmationCtrl.submitFunction()'></confirmation-modal>",
-            controller: ConfirmationModalController,
-            controllerAs: "confirmationCtrl",
-            backdrop: "static",
-            size: "lg",
-            resolve: {
-                process: function (): Process {
-                    return process;
-                },
-                functionType: function (): ActionButtonType {
-                    return ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL;
-                }
-            }
-        });
-    }
-
     createNextWorkflowUnit(process: Process): void {
         switch (process.status) {
             case Status.OPEN: this.startOfferTransformation(process);
@@ -311,6 +211,24 @@ class WorkflowService {
             default: ;
                 break;
         }
+    }
+
+    getWorkflowTypeByProcess(process: Process): WorkflowType {
+        if (this.isLead(process)) {
+            return WorkflowType.LEAD;
+        } else if (this.isOffer(process)) {
+            return WorkflowType.OFFER;
+        } else if (this.isSale(process)) {
+            return WorkflowType.SALE;
+        }
+        else {
+            return null;
+        }
+    }
+
+    openQuickEmailModal(process: Process) {
+        let workflowType: WorkflowType = this.getWorkflowTypeByProcess(process);
+        this.workflowModalService.openQuickEmailModal(process, workflowType);
     }
 
     togglePin(process: Process, user: User): void {
@@ -369,7 +287,7 @@ class WorkflowService {
             this.processService.setStatus(process, Status.CLOSED).then((process: Process) => {
                 self.rootScope.offersCount -= 1;
                 process.status = Status.CLOSED;
-                self.rootScope.$broadcast("deleteRow", process);
+                self.rootScope.$broadcast("removeOrUpdateRow", process);
             });
         } else if (isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
             this.processService.setStatus(process, Status.OPEN).then((process: Process) => {
@@ -393,14 +311,40 @@ class WorkflowService {
         let offerId = process.offer.id;
         process.offer = null;
         process.status = Status.OPEN;
-        try {
-            let resultProcess = await this.processService.save(process, null, false, true) as Process;
-            this.offerResource.drop({ id: offerId });
-            this.rootScope.leadsCount += 1; this.rootScope.offersCount -= 1;
-            return resultProcess;
-        } catch (error) {
-            handleError(error);
+
+        let resultProcess = await this.processService.save(process, null, false, true) as Process;
+        this.offerResource.drop({ id: offerId });
+        this.rootScope.leadsCount += 1; this.rootScope.offersCount -= 1;
+        return resultProcess;
+    }
+
+    async rollBackSale(process: Process): Promise<Process> {
+        if (isNullOrUndefined(process)) {
+            return;
         }
+        let saleId = process.sale.id;
+        process.sale = null;
+        process.status = Status.OFFER;
+        let self = this;
+        let resultProcess = await this.processService.save(process, null, false, true) as Process;
+        self.saleResource.drop({ id: saleId });
+        this.rootScope.offersCount += 1; this.rootScope.salesCount -= 1;
+        return resultProcess;
+    }
+
+    async deleteProcess(process: Process): Promise<Process> {
+        let resultProcess = await this.processService.delete(process) as Process;
+        this.toaster.pop("success", "", this.translate
+            .instant("COMMON_TOAST_SUCCESS_DELETE_LEAD"));
+        if (this.isLead(process)) {
+            this.rootScope.leadsCount -= 1;
+        }
+        else if (this.isOffer(process)) {
+            this.rootScope.offersCount -= 1;
+        }
+        this.rootScope.$broadcast("onTodosChange");
+        this.rootScope.$broadcast("removeRow", process);
+        return resultProcess;
     }
 
     checkForDupsInFormerProcessors(formerProcessors: Array<Processor>, user: User, activity: Activity): boolean {
@@ -413,5 +357,18 @@ class WorkflowService {
     async getSaleByInvoiceNumber(invoiceNumber: string): Promise<Sale> {
         return await this.saleResource.getByinvoiceNumber({}, invoiceNumber).$promise.catch(error => handleError(error)) as Sale;
     }
+
+    isLead(process: Process): boolean {
+        return process.status === Status.OPEN || process.status === Status.INCONTACT;
+    }
+
+    isOffer(process: Process): boolean {
+        return process.status === Status.OFFER || process.status === Status.FOLLOWUP || process.status === Status.DONE;
+    }
+
+    isSale(process: Process): boolean {
+        return process.status === Status.SALE;
+    }
+
 }
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);

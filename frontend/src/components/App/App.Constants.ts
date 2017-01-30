@@ -72,6 +72,7 @@ const moduleWorkflow: string = moduleApp + ".workflow";
 const moduleWorkflowService: string = moduleWorkflow + ".service";
 const moduleWorkflowDatatableService: string = moduleWorkflow + ".datatableService";
 const moduleWorkflowDatatableRowService: string = moduleWorkflow + ".datatableRowService";
+const moduleWorkflowModalService: string = moduleWorkflow + ".modalService";
 const moduleFollowUp: string = moduleApp + ".followUp";
 const moduleFile: string = moduleApp + ".file";
 const moduleFileResource: string = moduleFile + ".resource";

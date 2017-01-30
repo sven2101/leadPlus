@@ -48,9 +48,9 @@
                 </div>              
                 <span><small><i class="fa fa-clock-o"></i> {{::toLocalDate(editWorkflowUnit.timestamp)}}</small></span>
                 <small class="pull-right">
-                    <span ng-if="::process.status== 'FOLLOWUP'" ng-click="openFollowUpModal(process)">
-                        <i  title="{{'OFFER_FOLLOW_UP'| translate }}" class="fa fa-eye" aria-hidden="true" ></i>
-                        {{process.followUpAmount}}
+                    <span style="cursor:pointer" ng-click="openQuickEmailModal(process)">
+                        <i  title="{{'EMAIL_SEND'| translate }}" class="fa fa-envelope" aria-hidden="true" ></i>
+                       <span ng-if="::workflowService.isOffer(process)"> {{process.followUpAmount}}</span>
                     </span>
                 </small>
             </div>

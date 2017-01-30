@@ -199,11 +199,15 @@ span.round-tab i{
 </div>
 <div class="modal-footer ">
     <button type="button " class="btn btn-white " ng-click="close(false)">{{ 'COMMON_CANCEL'| translate }}</button>
-    <button type="button " class="btn btn-success " ng-disabled="isAnyFormInvalid()"
+    <button ng-if="currentWizard.showSaveButton" type="button " class="btn btn-success " ng-disabled="isAnyFormInvalid()"
         ng-click="saveOrTransform()">{{ 'COMMON_SAVE'| translate }}</button>
+    <button ng-if="currentWizard.isFollowUp" type="button " class="btn btn-success" data-style="zoom-in"
+        ng-click="followUp()">
+		<span class="ladda-label">FollowUp ohne Email</span>
+		</button>
     <button ng-if="currentWizard.isEmail" type="button " class="btn btn-warning" data-style="zoom-in"
         ng-disabled="isAnyFormInvalid() || currentWizard.form.$invalid"
         ng-click="send()">
-		<span class="ladda-label">Angebot senden</span>
+		<span class="ladda-label">{{currentWizard.sendButtonName}}</span>
 		</button>
 </div>

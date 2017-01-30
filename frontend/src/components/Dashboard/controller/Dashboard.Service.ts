@@ -354,6 +354,12 @@ class DashboardService {
         }
     }
 
+    addNewLead(process: Process) {
+        this.openLeads.push(process);
+        this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead");
+        this.sumLeads();
+    }
+
     updateDashboard(type: string) {
         if (type === "lead") {
             this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead");

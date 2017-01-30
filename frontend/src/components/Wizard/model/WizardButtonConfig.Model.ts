@@ -5,17 +5,22 @@ class WizardButtonConfig {
     form: any;
     position: number;
     isVisible: boolean;
+    showSaveButton: boolean;
     isDisabled: boolean;
     isEmail: boolean;
+    isFollowUp: boolean;
     isFirstActiveElement: boolean;
     validation: boolean;
+    sendButtonName: string;
     constructor(directiveType: WizardType) {
         this.directiveType = directiveType;
         this.isVisible = true;
+        this.showSaveButton = true;
         this.isDisabled = false;
         this.isFirstActiveElement = false;
         this.validation = true;
         this.isEmail = false;
+        this.isFollowUp = false;
     }
 
     setTitle(title: string): WizardButtonConfig {
@@ -43,8 +48,19 @@ class WizardButtonConfig {
         return this;
     }
 
-    setEmail(isEmail: boolean): WizardButtonConfig {
+    setEmail(isEmail: boolean, sendButtonName: string = ""): WizardButtonConfig {
         this.isEmail = isEmail;
+        this.sendButtonName = sendButtonName;
+        return this;
+    }
+
+    setFollowUp(isFollowUp: boolean): WizardButtonConfig {
+        this.isFollowUp = isFollowUp;
+        return this;
+    }
+
+    setShowSaveButton(showSaveButton: boolean): WizardButtonConfig {
+        this.showSaveButton = showSaveButton;
         return this;
     }
 

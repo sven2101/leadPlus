@@ -11,7 +11,7 @@ class ActionButtonConfigBuilder {
         this.actionButtons[ActionButtonType.PIN_DROPDOWN_EMPTY_PROCESSOR] = new ActionButtonConfig(ActionButtonType.PIN_DROPDOWN_EMPTY_PROCESSOR);
         this.actionButtons[ActionButtonType.PIN_BUTTON] = new ActionButtonConfig(ActionButtonType.PIN_BUTTON);
         this.actionButtons[ActionButtonType.SET_INCONTACT] = new ActionButtonConfig(ActionButtonType.SET_INCONTACT);
-        this.actionButtons[ActionButtonType.OPEN_FOLLOWUP_MODAL] = new ActionButtonConfig(ActionButtonType.OPEN_FOLLOWUP_MODAL);
+        this.actionButtons[ActionButtonType.QUICK_MAIL] = new ActionButtonConfig(ActionButtonType.QUICK_MAIL);
         this.actionButtons[ActionButtonType.SET_OFFER_DONE] = new ActionButtonConfig(ActionButtonType.SET_OFFER_DONE);
         this.actionButtons[ActionButtonType.DETAILS_DROPDOWN] = new ActionButtonConfig(ActionButtonType.DETAILS_DROPDOWN);
         this.actionButtons[ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN] = new ActionButtonConfig(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN);
