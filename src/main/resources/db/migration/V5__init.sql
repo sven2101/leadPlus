@@ -9,20 +9,15 @@ CREATE SEQUENCE attachment_id_seq
 -- Table: attachment
 CREATE TABLE IF NOT EXISTS attachment
 (
-  id bigint NOT NULL DEFAULT nextval('attachment_id_seq'::regclass),
+  id bigint NOT NULL DEFAULT nextval('attachment_id_seq'),
   fileUpload_fk bigint NOT NULL,
   notification_fk bigint NOT NULL,
   deleted boolean NOT NULL,
   CONSTRAINT attachment_pkey PRIMARY KEY (id),
   CONSTRAINT attachment_fileUpload_fk FOREIGN KEY (fileUpload_fk)
-      REFERENCES fileupload (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
+      REFERENCES fileupload (id) ,
   CONSTRAINT attachment_notification_fk FOREIGN KEY (notification_fk)
-      REFERENCES notification (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
+      REFERENCES notification (id)
 );
 
 ALTER TABLE notification RENAME COLUMN recipient TO recipients;
@@ -38,21 +33,19 @@ CREATE SEQUENCE processor_id_seq
   START 1
   CACHE 1;
 
-  CREATE TABLE processor
+CREATE TABLE processor
 (
-  id bigint NOT NULL DEFAULT nextval('processor_id_seq'::regclass),
+  id bigint NOT NULL DEFAULT nextval('processor_id_seq'),
   deleted boolean NOT NULL,
   activity character varying(255),
-  "timestamp" timestamp without time zone,
+  "timestamp" timestamp,
   user_fk bigint,
   process_fk bigint,
   CONSTRAINT processor_pkey PRIMARY KEY (id),
   CONSTRAINT processor_user FOREIGN KEY (user_fk)
-      REFERENCES "user" (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
+      REFERENCES "user" (id),
    CONSTRAINT processor_processor FOREIGN KEY (process_fk)
-      REFERENCES process (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+      REFERENCES process (id)
 );
 
 ALTER TABLE offer

@@ -1,4 +1,5 @@
 CREATE SCHEMA IF NOT EXISTS public;
+CREATE SCHEMA IF NOT EXISTS demo;
 
 -- Sequence: tenant_id_seq
 CREATE SEQUENCE IF NOT EXISTS public.tenant_id_seq
@@ -20,21 +21,18 @@ CREATE SEQUENCE IF NOT EXISTS public.license_id_seq
 
 CREATE TABLE IF NOT EXISTS public.license
 (
-  id bigint NOT NULL DEFAULT nextval('public.license_id_seq'::regclass),
+  id bigint NOT NULL DEFAULT nextval('public.license_id_seq'),
   licenseType character varying(255) NOT NULL,
   trial boolean NOT NULL,
-  "term" timestamp without time zone,
+  term timestamp,
   CONSTRAINT license_pkey PRIMARY KEY (id)
-)
-WITH (
-  OIDS=FALSE
 );
 
 -- Table: tenant
 
 CREATE TABLE IF NOT EXISTS public.tenant
 (
-  id bigint NOT NULL DEFAULT nextval('public.tenant_id_seq'::regclass),
+  id bigint NOT NULL DEFAULT nextval('public.tenant_id_seq'),
   address character varying(255),
   description character varying(255),
   enabled boolean NOT NULL,
@@ -43,10 +41,7 @@ CREATE TABLE IF NOT EXISTS public.tenant
   CONSTRAINT tenant_unique UNIQUE (tenantkey),
   CONSTRAINT tenant_pkey PRIMARY KEY (id),
   CONSTRAINT tenantLicenceForeignKey FOREIGN KEY (license_fk)
-      REFERENCES public.license(id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
+      REFERENCES public.license(id)
+
 );
         

@@ -19,8 +19,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.domain.User;
 
-//@Repository
-//@Transactional
 public interface SmtpRepository extends JpaRepository<Smtp, Long> {
-	Smtp findByUser(User user);
+
+	public Smtp findByUser(User user);
+
+	public Smtp findByUserId(Long id);
 }

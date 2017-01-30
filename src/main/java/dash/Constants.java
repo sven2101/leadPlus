@@ -20,6 +20,7 @@ public final class Constants {
 	public static final String PRODUCT_NOT_FOUND = "Product not found. ";
 	public static final String COMMENT_NOT_FOUND = "Comment not found. ";
 	public static final String USER_NOT_FOUND = "User not found. ";
+	public static final String SMTP_NOT_FOUND = "Smtp not found";
 	public static final String STATISTIC_NOT_FOUND = "Statistic not found. ";
 	public static final String EMAIL_NOT_FOUND = "Email not found. ";
 	public static final String DONT_MATCH = "Password does not match. ";

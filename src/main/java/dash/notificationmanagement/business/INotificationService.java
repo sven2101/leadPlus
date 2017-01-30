@@ -20,10 +20,11 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SMTPdoesntExistsException;
 import dash.exceptions.SaveFailedException;
 import dash.notificationmanagement.domain.Notification;
+import dash.smtpmanagement.domain.Smtp;
 
 public interface INotificationService {
 
-	void sendNotification(final long userId, final Notification notification, String smtpKey)
+	public void sendNotification(final Smtp smtp, final Notification notification, final String smtpKey)
 			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException, Exception;
 
 }
