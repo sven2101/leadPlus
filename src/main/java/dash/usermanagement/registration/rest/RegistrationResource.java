@@ -17,6 +17,7 @@ package dash.usermanagement.registration.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,23 +28,26 @@ import dash.exceptions.EmailAlreadyExistsException;
 import dash.exceptions.RegisterFailedException;
 import dash.exceptions.SaveFailedException;
 import dash.usermanagement.business.UserService;
-import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
 import dash.usermanagement.registration.domain.Validation;
 
 @RestController
 @RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
-		MediaType.ALL_VALUE })
+		MediaType.APPLICATION_JSON_VALUE })
 public class RegistrationResource {
 
 	@Autowired
 	private UserService userService;
 
 	@RequestMapping(method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.CREATED)
-	public User register(@RequestBody final Registration registration)
-			throws EmailAlreadyExistsException, RegisterFailedException {
-		return userService.register(registration);
+	public ResponseEntity<Object> register(@RequestBody final Registration registration) {
+		try {
+			return new ResponseEntity<Object>(userService.register(registration), HttpStatus.CREATED);
+		} catch (EmailAlreadyExistsException eaeex) {
+			return new ResponseEntity<Object>(eaeex.getMessage(), HttpStatus.CONFLICT);
+		} catch (RegisterFailedException rfex) {
+			return new ResponseEntity<Object>(rfex.getMessage(), HttpStatus.CONFLICT);
+		}
 	}
 
 	@RequestMapping(value = "/unique/email", method = RequestMethod.POST)

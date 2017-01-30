@@ -14,52 +14,22 @@ Copyright (c) 2016 Eviarc GmbH.
 
 package dash;
 
-import java.io.IOException;
 import java.util.TimeZone;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.h2.server.web.WebServlet;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cloud.aws.context.config.annotation.EnableContextRegion;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.route53.AmazonRoute53;
-import com.amazonaws.services.route53.AmazonRoute53Client;
-
-import dash.licensemanangement.domain.LicenseEnum;
-import dash.security.AngularCsrfHeaderFilter;
-import dash.security.LicenseFilter;
-import dash.security.TenantAuthenticationFilter;
-import dash.security.TenantAuthenticationProvider;
-import dash.security.listener.RESTAuthenticationEntryPoint;
 import dash.tenantmanagement.business.TenantContext;
 import dash.usermanagement.registration.domain.Validation;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -75,12 +45,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableContextRegion(region = "eu-central-1")
 public class Application {
 
-	@Value("${aws.key.access}")
-	private String awsKeyAccess;
+	@Bean
+	public ServletRegistrationBean h2servletRegistration() {
+		ServletRegistrationBean registration = new ServletRegistrationBean(new WebServlet());
+		registration.addUrlMappings("/console/*");
+		return registration;
+	}
 
-	@Value("${aws.key.secret}")
-	private String awsKeySecret;
-	
 	public static void main(String[] args) {
 		TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
@@ -110,83 +81,9 @@ public class Application {
 	}
 
 	@Bean
-	public AmazonRoute53 getAmazonRoute53() {
-		AWSCredentials awsCredentials = new BasicAWSCredentials(awsKeyAccess, awsKeySecret);
-		return new AmazonRoute53Client(awsCredentials);
-	}
-
-	@Bean
-	public freemarker.template.Configuration cfg() {
-		return new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_25);
-	}
-
-	@Bean
-	public FreeMarkerConfigurer freeMarkerConfigurer(WebApplicationContext applicationContext)
-			throws IOException, TemplateException {
-		FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
-		freemarker.template.Configuration configuration = configurer.createConfiguration();
-		configuration.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
-		configuration.setDefaultEncoding("UTF-8");
-		configuration.setOutputEncoding("UTF-8");
-		configuration.setURLEscapingCharset("UTF-8");
-		configurer.setConfiguration(configuration);
-		return configurer;
-	}
-
-	@Bean
 	public Validation validation() {
 		return new Validation();
 
 	}
 
-	@Configuration
-	@EnableWebSecurity
-	@EnableGlobalMethodSecurity(prePostEnabled = true)
-	@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-	public static class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-		@Autowired
-		private UserDetailsService userDetailsService;
-
-		@Autowired
-		private TenantAuthenticationProvider tenantAuthenticationProvider;
-
-		@Autowired
-		private RESTAuthenticationEntryPoint authenticationEntryPoint;
-
-		@Autowired
-		private PasswordEncoder passwordEncoder;
-
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-
-			http.httpBasic().and().authorizeRequests()
-					.antMatchers(LicenseEnum.FREE.getAllowedRoutes()
-							.toArray(new String[LicenseEnum.FREE.getAllowedRoutes().size()]))
-					.permitAll().antMatchers("/api/rest/public/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER,API")
-					.antMatchers("/**").hasAnyAuthority("SUPERADMIN,ADMIN,USER").anyRequest().authenticated().and()
-					.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-					.addFilterBefore(new TenantAuthenticationFilter(this.tenantAuthenticationProvider),
-							BasicAuthenticationFilter.class)
-					.addFilterAfter(new LicenseFilter(), TenantAuthenticationFilter.class).authorizeRequests()
-					.anyRequest().authenticated().and().addFilterAfter(new AngularCsrfHeaderFilter(), CsrfFilter.class)
-					.csrf().csrfTokenRepository(csrfTokenRepository()).and().csrf().disable().headers().frameOptions()
-					.sameOrigin().httpStrictTransportSecurity().disable().and().logout()
-					.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"));
-
-			http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
-		}
-
-		private CsrfTokenRepository csrfTokenRepository() {
-			HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-			repository.setHeaderName("X-XSRF-TOKEN");
-			return repository;
-		}
-
-		@Autowired
-		public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-			auth.authenticationProvider(tenantAuthenticationProvider);
-			auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-		}
-	}
 }

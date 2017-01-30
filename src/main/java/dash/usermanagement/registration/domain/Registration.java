@@ -138,8 +138,8 @@ public class Registration {
 
 	@Override
 	public String toString() {
-		return "Registration [email=" + email + ", firstname=" + firstname + ", lastname=" + lastname + ", password=" + password + ", password2=" + password2
-				+ "]";
+		return "Registration [email=" + email + ", firstname=" + firstname + ", lastname=" + lastname + ", password="
+				+ password + ", password2=" + password2 + "]";
 	}
 
 }

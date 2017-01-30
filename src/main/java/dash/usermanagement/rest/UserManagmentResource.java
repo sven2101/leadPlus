@@ -38,6 +38,8 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
 import dash.fileuploadmanagement.domain.FileUpload;
+import dash.smtpmanagement.business.ISmtpService;
+import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
@@ -51,6 +53,9 @@ public class UserManagmentResource {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private ISmtpService smtpService;
+
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get all user.", notes = "All users.")
@@ -60,7 +65,7 @@ public class UserManagmentResource {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
+	@ApiOperation(value = "Get a single user.", notes = "Provide a valid user ID.")
 	public User getById(@PathVariable final long id) throws NotFoundException {
 		return userService.getById(id);
 	}
@@ -136,22 +141,23 @@ public class UserManagmentResource {
 		throw new NotFoundException(USER_NOT_FOUND);
 	}
 
-	// @RequestMapping(value = "/{id}/profile/picture", method =
-	// RequestMethod.POST)
-	// @ResponseStatus(HttpStatus.OK)
-	// @ApiOperation(value = "Post a file. ", notes = "")
-	// public User setProfilePicture(@PathVariable final long id,
-	// @RequestParam("file") MultipartFile file)
-	// throws SaveFailedException, NotFoundException, UpdateFailedException,
-	// UsernameAlreadyExistsException, EmailAlreadyExistsException {
-	// return userService.setProfilePicture(id, file);
-	// }
-
 	@RequestMapping(value = "/profile/picture", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update a single user.", notes = "Provide a valid user ID.")
 	public User setProfilePicture(@RequestBody final User user) throws UpdateFailedException {
 		return userService.updateProfilPicture(user);
+	}
+
+	@RequestMapping(value = "/{id}/smtps", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get Smtp by UserId.", notes = "Provide a valid user ID.")
+	public ResponseEntity<Object> getSmtpByUserId(@PathVariable final long id) throws NotFoundException {
+		Smtp smtp = smtpService.findByUser(userService.getById(id));
+		if (smtp != null)
+			return new ResponseEntity<Object>(smtp, HttpStatus.OK);
+		else
+			return new ResponseEntity<Object>(null, HttpStatus.NOT_FOUND);
+
 	}
 
 }

@@ -9,12 +9,12 @@ CREATE SEQUENCE file_content_id_seq
   START 1
   CACHE 1;
 
-  CREATE TABLE file_content
+CREATE TABLE file_content
 (
-  id bigint NOT NULL DEFAULT nextval('file_content_id_seq'::regclass),
+  id bigint NOT NULL DEFAULT nextval('file_content_id_seq'),
   content bytea,
   fileupload_fk bigint
-  );
+);
   
 INSERT INTO file_content
 (content,fileupload_fk)

@@ -28,7 +28,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -60,20 +59,18 @@ public class UserService implements IUserService {
 
 	private static final Logger logger = Logger.getLogger(UserService.class);
 
-	@Autowired
 	private UserRepository userRepository;
-
-	@Autowired
 	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private Validation validation;
-
-	@Autowired
 	private IFileUploadService fileUploadService;
-
-	@Autowired
 	private ISmtpService smtpService;
+
+	public UserService(IFileUploadService fileUploadService, ISmtpService smtpService, PasswordEncoder passwordEncoder,
+			UserRepository userRepository) {
+		this.fileUploadService = fileUploadService;
+		this.smtpService = smtpService;
+		this.passwordEncoder = passwordEncoder;
+		this.userRepository = userRepository;
+	}
 
 	@Override
 	public List<User> getAll() {
@@ -104,7 +101,7 @@ public class UserService implements IUserService {
 	}
 
 	public User checkEmailExists(final String email) {
-		if (Optional.ofNullable(email).isPresent()) {
+		if (email != null) {
 			return userRepository.findByEmailIgnoreCase(email);
 		}
 		return null;
@@ -112,7 +109,7 @@ public class UserService implements IUserService {
 
 	@Override
 	public User save(final User user) throws SaveFailedException {
-		if (Optional.ofNullable(user).isPresent()) {
+		if (user != null) {
 			return userRepository.save(user);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
@@ -214,7 +211,7 @@ public class UserService implements IUserService {
 						user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
 						Smtp smtp = null;
 						try {
-							smtp = smtpService.findByUser(id);
+							smtp = smtpService.findByUser(user);
 						} catch (NotFoundException ex) {
 							smtp = null;
 						}
@@ -329,10 +326,11 @@ public class UserService implements IUserService {
 	}
 
 	public Validation emailAlreadyExists(String email) {
-		this.validation.setValidation(false);
+		final Validation validation = new Validation();
+		validation.setValidation(false);
 		if (checkEmailExists(email) != null)
-			this.validation.setValidation(true);
-		return this.validation;
+			validation.setValidation(true);
+		return validation;
 	}
 
 	@Override
@@ -342,28 +340,27 @@ public class UserService implements IUserService {
 		user.setProfilPicture(fileUploadService.save(file));
 		return update(user);
 	}
-	
-	public void createInitialUsers(String apiPassword) throws SaveFailedException{
+
+	public void createInitialUsers(String apiPassword) throws SaveFailedException {
 		User superadmin = new User();
 		superadmin.setEmail("superadmin@eviarc.com");
 		superadmin.setUsername("superadmin@eviarc.com");
 		superadmin.setFirstname("Superadmin");
 		superadmin.setLastname("Eviarc");
-		
+
 		superadmin.setPassword("$2a$10$V7c4F8TMpN6zUPC4llkuM.tvGp.HuHdoEmu2CqMS1IEHGyGEOUAWW");
 		superadmin.setRole(Role.SUPERADMIN);
 		superadmin.setEnabled(true);
 		superadmin.setLanguage(Language.EN);
 		superadmin.setDefaultVat(19.00);
 		this.save(superadmin);
-		
+
 		User api = new User();
-		api.setEmail("api@"+TenantContext.getTenant());
-		api.setUsername("api@"+TenantContext.getTenant());
+		api.setEmail("api@" + TenantContext.getTenant());
+		api.setUsername("api@" + TenantContext.getTenant());
 		api.setFirstname("Api");
 		api.setLastname(TenantContext.getTenant());
-		api.setPassword(
-				passwordEncoder.encode(apiPassword));
+		api.setPassword(passwordEncoder.encode(apiPassword));
 		api.setRole(Role.API);
 		api.setEnabled(true);
 		api.setLanguage(Language.EN);
