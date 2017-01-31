@@ -49,24 +49,15 @@ class PriceCalculationDirective implements IDirective {
     }
 
     isLead(scope: any): boolean {
-        if (scope.editProcess.status === Status.OPEN || scope.editProcess.status === Status.INCONTACT) {
-            return true;
-        }
-        return false;
+        return scope.workflowService.isLead(scope.editProcess);
     }
 
     isOffer(scope: any): boolean {
-        if (scope.editProcess.status === Status.OFFER || scope.editProcess.status === Status.FOLLOWUP || scope.editProcess.status === Status.DONE) {
-            return true;
-        }
-        return false;
+        return scope.workflowService.isOffer(scope.editProcess);
     }
 
     isSale(scope: any): boolean {
-        if (scope.editProcess.status === Status.SALE) {
-            return true;
-        }
-        return false;
+        return scope.workflowService.isSale(scope.editProcess);
     }
 
     isInOfferTransformation(scope: any): boolean {

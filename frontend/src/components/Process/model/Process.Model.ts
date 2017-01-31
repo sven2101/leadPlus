@@ -4,6 +4,7 @@
 /// <reference path="../../Commentary/model/Commentary.Model.ts" />
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 /// <reference path="../../Setting/model/Source.Model.ts" />
+/// <reference path="../../Process/model/Processor.Model.ts" />
 
 class Process {
     id: number;

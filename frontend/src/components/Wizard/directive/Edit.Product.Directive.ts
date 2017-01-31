@@ -2,19 +2,7 @@
 /// <reference path="../../Common/directive/Directive.Interface.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
+
 const ProductEditDirectiveId: string = "productEdit";
 
 class ProductEditDirective implements IDirective {
@@ -60,7 +48,7 @@ class ProductEditDirective implements IDirective {
         scope.isInOfferTransformation = () => this.isInOfferTransformation(scope);
         scope.isInSaleTransformation = () => this.isInSaleTransformation(scope);
 
-        this.initDatepicker();
+        this.initDatepicker(scope);
     };
 
     addProduct(array: Array<OrderPosition>, currentProductId: string, currentProductAmount: number, scope: any) {
@@ -123,15 +111,17 @@ class ProductEditDirective implements IDirective {
         return scope.isOffer() && !isNullOrUndefined(scope.editProcess.sale);
     }
 
-    initDatepicker() {
-        let jqElement: any = $("#editOfferDatepicker .input-group.date");
-        jqElement.datepicker({
-            todayBtn: "linked ",
-            keyboardNavigation: false,
-            forceParse: false,
-            calendarWeeks: true,
-            autoclose: true
-        });
+    initDatepicker(scope: any) {
+        if (scope.editable) {
+            let jqElement: any = $("#editOfferDatepicker .input-group.date");
+            jqElement.datepicker({
+                todayBtn: "linked ",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true
+            });
+        }
     }
 }
 angular.module(moduleApp).directive(ProductEditDirectiveId, ProductEditDirective.directiveFactory());

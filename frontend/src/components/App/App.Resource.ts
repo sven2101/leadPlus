@@ -57,7 +57,7 @@ class SaleResource {
             getAll: { url: "/api/rest/sales", method: "GET" },
             getById: { url: "/api/rest/sales/:id", method: "GET" },
             getByCustomerId: { url: "/api/rest/sales/customer/:id", method: "GET", isArray: true },
-            getByinvoiceNumber: { url: "/api/rest/sales/invoice", method: "POST" },
+            getByinvoiceNumber: { url: "/api/rest/sales/invoice", method: "POST" , isArray: true },
             drop: { url: "/api/rest/sales/:id", method: "DELETE" },
         });
     }

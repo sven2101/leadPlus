@@ -3,6 +3,7 @@
 /// <reference path="../../Wizard/model/WizardButtonConfig.Model.ts" />
 /// <reference path="../../Wizard/model/WizardType.Enum.ts" />
 /// <reference path="../../Workflow/model/WorkflowType.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 const WizardModalControllerId: string = "WizardModalController";
 
 class WizardModalController {
@@ -38,19 +39,19 @@ class WizardModalController {
         let wizardConfig: Array<WizardButtonConfig> = new Array<WizardButtonConfig>();
 
         let customerEditStep = new WizardButtonConfig(WizardType.CUSTOMER);
-        customerEditStep.setTitle("Kunde").setIcon("fa fa-user").setPosition(1);
+        customerEditStep.setTitle("CUSTOMER").setIcon("fa fa-user").setPosition(1);
         wizardConfig.push(customerEditStep);
 
         let productEditStep = new WizardButtonConfig(WizardType.PRODUCT);
-        productEditStep.setTitle("Anfrage").setIcon("fa fa-inbox").setPosition(2);
+        productEditStep.setTitle("LEAD").setIcon("fa fa-inbox").setPosition(2);
         wizardConfig.push(productEditStep);
 
         let emailEditStep = new WizardButtonConfig(WizardType.EMAIL);
-        emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(3).setValidation(false).setEmail(true, "Angebot Versenden");
+        emailEditStep.setTitle("COMMON_EMAIL").setIcon("fa fa-envelope").setPosition(3).setValidation(false).setEmail(true, "COMMON_CONTINUE_AND_SENDING");
         wizardConfig.push(emailEditStep);
 
         let SaleEditStep = new WizardButtonConfig(WizardType.SALE);
-        SaleEditStep.setTitle("Verkauf").setIcon("fa fa-usd").setPosition(4).setAsFirstElement();
+        SaleEditStep.setTitle("SALE").setIcon("fa fa-usd").setPosition(4).setAsFirstElement();
         wizardConfig.push(SaleEditStep);
 
         return wizardConfig;
@@ -60,7 +61,7 @@ class WizardModalController {
         let wizardConfig: Array<WizardButtonConfig> = new Array<WizardButtonConfig>();
 
         let emailEditStep = new WizardButtonConfig(WizardType.EMAIL);
-        emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(1).setEmail(true, "E-Mail versenden").setShowSaveButton(false);
+        emailEditStep.setTitle("COMMON_EMAIL").setIcon("fa fa-envelope").setPosition(1).setEmail(true, "COMMON_SEND").setShowSaveButton(false);
         switch (workflowType) {
             case WorkflowType.LEAD:
                 break;
@@ -79,15 +80,15 @@ class WizardModalController {
         let wizardConfig: Array<WizardButtonConfig> = new Array<WizardButtonConfig>();
 
         let customerProductEditStep = new WizardButtonConfig(WizardType.CUSTOMER_PRODUCT);
-        customerProductEditStep.setTitle("Anfrage").setIcon("fa fa-inbox").setPosition(1);
+        customerProductEditStep.setTitle("LEAD").setIcon("fa fa-inbox").setPosition(1);
         wizardConfig.push(customerProductEditStep);
 
         let emailEditStep = new WizardButtonConfig(WizardType.EMAIL);
-        emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(2).setValidation(false).setEmail(true, "Angebot versenden");
+        emailEditStep.setTitle("COMMON_EMAIL").setIcon("fa fa-envelope").setPosition(2).setValidation(false).setEmail(true, "COMMON_CONTINUE_AND_SENDING");
         wizardConfig.push(emailEditStep);
 
         let SaleEditStep = new WizardButtonConfig(WizardType.SALE);
-        SaleEditStep.setTitle("Verkauf").setIcon("fa fa-usd").setPosition(3).disable().setValidation(false);
+        SaleEditStep.setTitle("SALE").setIcon("fa fa-usd").setPosition(3).disable().setValidation(false);
         wizardConfig.push(SaleEditStep);
 
         return wizardConfig;
@@ -97,15 +98,15 @@ class WizardModalController {
         let wizardConfig: Array<WizardButtonConfig> = new Array<WizardButtonConfig>();
 
         let customerProductEditStep = new WizardButtonConfig(WizardType.CUSTOMER_PRODUCT);
-        customerProductEditStep.setTitle("Anfrage").setIcon("fa fa-inbox").setPosition(1);
+        customerProductEditStep.setTitle("LEAD").setIcon("fa fa-inbox").setPosition(1);
         wizardConfig.push(customerProductEditStep);
 
         let emailEditStep = new WizardButtonConfig(WizardType.EMAIL);
-        emailEditStep.setTitle("E-Mail versenden").setIcon("fa fa-envelope").setPosition(2).setValidation(false).setEmail(true, "Angebot versenden");
+        emailEditStep.setTitle("COMMON_EMAIL").setIcon("fa fa-envelope").setPosition(2).setValidation(false).setEmail(true, "COMMON_CONTINUE_AND_SENDING");
         wizardConfig.push(emailEditStep);
 
         let SaleEditStep = new WizardButtonConfig(WizardType.SALE);
-        SaleEditStep.setTitle("Verkauf").setIcon("fa fa-usd").setPosition(3).setAsFirstElement();
+        SaleEditStep.setTitle("SALE").setIcon("fa fa-usd").setPosition(3).setAsFirstElement();
         wizardConfig.push(SaleEditStep);
 
         return wizardConfig;

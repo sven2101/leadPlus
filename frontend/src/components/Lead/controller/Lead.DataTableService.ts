@@ -3,6 +3,8 @@
 /// <reference path="../../Process/model/Process.Model.ts" />
 /// <reference path="../../ActionButtons/model/ActionButtonConfigBuilder.Model.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Datatable.Service.ts" />
+/// <reference path="../../Workflow/model/Datatable.Service.Interface.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 

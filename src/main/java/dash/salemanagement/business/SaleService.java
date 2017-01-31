@@ -136,7 +136,7 @@ public class SaleService implements ISaleService {
 	}
 
 	@Override
-	public Sale getByInvoiceNumber(String invoiceNumber) {
+	public List<Sale> getByInvoiceNumber(String invoiceNumber) {
 		return saleRepository.findByInvoiceNumber(invoiceNumber);
 	}
 }

@@ -22,7 +22,7 @@ const $httpProviderId: string = "$httpProvider";
 const $uibModalId: string = "$uibModal";
 const $injectorId: string = "$injector";
 const $sceId: string = "$sce";
-const $route: string = "$route";
+const $routeId: string = "$route";
 
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";

@@ -39,9 +39,10 @@ class SaleEditDirective implements IDirective {
 
     async existsInvoiceNumber(scope: any) {
         if (!isNullOrUndefined(scope.editWorkflowUnit.invoiceNumber) && scope.editWorkflowUnit.invoiceNumber.length > 0) {
-            let sale = await scope.workflowService.getSaleByInvoiceNumber(scope.editWorkflowUnit.invoiceNumber).catch(error => handleError(error));
-            scope.invoiceNumberAlreadyExists = !isNullOrUndefined(sale.invoiceNumber);
-            scope.$apply();
+            let sales: Array<Sale> = await scope.workflowService.getSaleByInvoiceNumber(scope.editWorkflowUnit.invoiceNumber) as Array<Sale>;
+            scope.invoiceNumberAlreadyExists = !isNullOrUndefined(sales) && sales.length > 0;
+        } else {
+            scope.invoiceNumberAlreadyExists = false;
         }
     }
 

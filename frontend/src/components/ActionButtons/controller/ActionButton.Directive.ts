@@ -17,18 +17,17 @@ class ActionButtonDirective implements IDirective {
         minwidth: "@"
     };
 
-    constructor(private WorkflowService: WorkflowService, private WorkflowModalService: WorkflowModalService, private $rootScope) { }
+    constructor(private WorkflowService: WorkflowService, private $rootScope) { }
 
     static directiveFactory(): ActionButtonDirective {
-        let directive: any = (WorkflowService: WorkflowService, WorkflowModalService: WorkflowModalService, $rootScope) => new ActionButtonDirective(WorkflowService, WorkflowModalService, $rootScope);
-        directive.$inject = [WorkflowServiceId, WorkflowModalServiceId, $rootScopeId];
+        let directive: any = (WorkflowService: WorkflowService, $rootScope) => new ActionButtonDirective(WorkflowService, $rootScope);
+        directive.$inject = [WorkflowServiceId, $rootScopeId];
         return directive;
     }
 
     link(scope, element, attrs, ctrl, transclude): void {
         scope.minwidth = isNullOrUndefined(scope.minwidth) ? 180 : scope.minwidth;
         scope.workflowService = this.WorkflowService;
-        scope.workflowModalService = this.WorkflowModalService;
         scope.rootScope = this.$rootScope;
         scope.config = scope.actionbuttonconfig;
         scope.ConfirmationFunctionType = ConfirmationFunctionType;

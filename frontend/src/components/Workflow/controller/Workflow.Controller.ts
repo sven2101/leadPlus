@@ -1,15 +1,13 @@
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Lead/controller/Lead.DataTableService.ts" />
 /// <reference path="../../Offer/controller/Offer.DataTableService.ts" />
-/// <reference path="../../Offer/controller/Offer.Service.ts" />
 /// <reference path="../../Sale/controller/Sale.DataTableService.ts" />
-/// <reference path="../../Sale/controller/Sale.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Datatable.Row.Service.ts" />
 
 const WorkflowControllerId: string = "WorkflowController";
 
 class WorkflowController {
     workflowService: WorkflowService;
-    workflowModalService: WorkflowModalService;
     workflowDatatableService: WorkflowDatatableService;
     workflowDatatableRowService: WorkflowDatatableRowService;
 
@@ -39,9 +37,9 @@ class WorkflowController {
     allDataRoute: string;
     openDataRoute: string;
 
-    $inject = [$rootScopeId, $scopeId, $compileId, $routeParamsId, "$route", $sceId, $uibModalId, WorkflowServiceId, WorkflowModalServiceId, WorkflowDatatableServiceId, WorkflowDatatableRowServiceId, LeadDataTableServiceId, , OfferDataTableServiceId, SaleDataTableServiceId];
+    $inject = [$rootScopeId, $scopeId, $compileId, $routeParamsId, $routeId, $sceId, $uibModalId, WorkflowServiceId, WorkflowDatatableServiceId, WorkflowDatatableRowServiceId, LeadDataTableServiceId, , OfferDataTableServiceId, SaleDataTableServiceId];
 
-    constructor($rootScope, $scope, $compile, $routeParams, $route, $sce, $uibModal, WorkflowService, WorkflowModalService, WorkflowDatatableService, WorkflowDatatableRowService, LeadDataTableService, OfferDataTableService, SaleDataTableService) {
+    constructor($rootScope, $scope, $compile, $routeParams, $route, $sce, $uibModal, WorkflowService, WorkflowDatatableService, WorkflowDatatableRowService, LeadDataTableService, OfferDataTableService, SaleDataTableService) {
 
         this.controllerType = $route.current.$$route.type;
         switch (this.controllerType) {
@@ -63,7 +61,6 @@ class WorkflowController {
         };
 
         this.workflowService = WorkflowService;
-        this.workflowModalService = WorkflowModalService;
         this.workflowDatatableService = WorkflowDatatableService;
         this.workflowDatatableRowService = WorkflowDatatableRowService;
         this.sce = $sce;
@@ -130,7 +127,7 @@ class WorkflowController {
             self.workflowDatatableRowService.deleteRow(data, self.dtInstance, self.controllerType);
         });
 
-        let updateOrRemove = $rootScope.$on("updateOrRemoveRow", (event, data) => {
+        let updateOrRemove = $rootScope.$on("removeOrUpdateRow", (event, data) => {
             clearWatchers(self.loadAllData);
             self.workflowDatatableRowService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope"));
         });
@@ -170,7 +167,7 @@ class WorkflowController {
     }
 
     async openEditModal(process: Process) {
-        let resultProcess: Process = await this.workflowModalService.openEditModal(process, this.controllerType);
+        let resultProcess: Process = await this.workflowService.openEditModal(process, this.controllerType);
         if (!isNullOrUndefined(resultProcess)) {
             this.getScopeByKey("childRowScope" + resultProcess.id).workflowUnit = resultProcess[this.controllerType.toString().toLowerCase()];
             this.getScopeByKey("childRowScope" + resultProcess.id).process = resultProcess;
@@ -178,7 +175,7 @@ class WorkflowController {
     }
 
     async openNewLeadModal() {
-        let resultProcess: Process = await this.workflowModalService.openNewLeadModal();
+        let resultProcess: Process = await this.workflowService.openNewLeadModal();
         if (!isNullOrUndefined(resultProcess)) {
             this.rootScope.leadsCount += 1;
             this.dtInstance.DataTable.row.add(resultProcess).draw();

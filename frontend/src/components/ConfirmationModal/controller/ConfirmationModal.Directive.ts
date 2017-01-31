@@ -13,7 +13,8 @@ class ConfirmationModalDirective implements IDirective {
         title: "<",
         body: "<",
         submitText: "<",
-        submitFunction: "&"
+        submitFunction: "&",
+        submitButtonClass: "@"
     };
 
     constructor(private WorkflowService: WorkflowService, private $rootScope) {

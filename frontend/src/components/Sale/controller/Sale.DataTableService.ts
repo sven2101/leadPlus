@@ -150,12 +150,12 @@ class SaleDataTableService implements IDatatableService {
         let config = new ActionButtonConfigBuilder();
         if (user.role === Role.ADMIN || user.role === Role.SUPERADMIN) {
             config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setEnabled().setTitle("SALE_DELETE_SALE");
-            config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setEnabled().setTitle("SALE_ROLLBACK");
+            config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setEnabled().setTitle("SALE_ROLLBACK_TITLE");
         } else {
             config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible()
                 .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("SALE_DELETE_SALE");
             config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setVisible()
-                .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("SALE_ROLLBACK");
+                .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("SALE_ROLLBACK_TITLE");
         }
         config.get(ActionButtonType.QUICK_MAIL).setEnabled().setTitle("EMAIL_SEND");
         config.get(ActionButtonType.DETAILS_OPEN_EDIT_MODAL).setEnabled().setTitle("SALE_EDIT_SALE");

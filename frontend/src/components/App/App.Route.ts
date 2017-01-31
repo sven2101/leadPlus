@@ -175,8 +175,10 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
         });
 
     }])
-    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId,
-        function ($location, $http, $rootScope, Auth, $cookies, $injector) {
+    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId, $windowId, $qId,
+        function ($location, $http, $rootScope, Auth, $cookies, $injector, $window, $q) {
+            // TODO Workaround for native promises!!!
+            $window.Promise = $q;
             try {
                 $rootScope.user = $cookies.getObject("user");
                 $rootScope.tenant = $cookies.getObject("tenant");

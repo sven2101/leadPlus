@@ -41,19 +41,19 @@ class CustomerService {
         if (insert) {
             customer.timestamp = newTimestamp();
             customer.realCustomer = true;
-            customer = await this.customerResource.createCustomer(customer).$promise.catch(error => handleError(error)) as Customer;
+            customer = await this.customerResource.createCustomer(customer).$promise as Customer;
         } else {
-            customer = await this.customerResource.updateCustomer(customer).$promise.catch(error => handleError(error)) as Customer;
+            customer = await this.customerResource.updateCustomer(customer).$promise as Customer;
         }
         return customer;
     }
 
     async insertCustomer(customer: Customer): Promise<Customer> {
-        return await this.customerResource.createCustomer(customer).$promise.catch(error => handleError(error)) as Customer;
+        return await this.customerResource.createCustomer(customer).$promise as Customer;
     }
 
     async updateCustomer(customer: Customer): Promise<Customer> {
-        return await this.customerResource.updateCustomer(customer).$promise.catch(error => handleError(error)) as Customer;
+        return await this.customerResource.updateCustomer(customer).$promise as Customer;
     }
 
 

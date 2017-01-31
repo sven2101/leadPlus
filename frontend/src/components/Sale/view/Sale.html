@@ -29,9 +29,6 @@
                     <h5>{{ 'SALE_MANAGE_SALES' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
-                    <!--<button ng-click="saleCtrl.refreshData()" type="button" class="btn btn-success">
-                        <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
-                    </button>-->
                     <span class="pull-right" style=" font-size: 1.5em;">{{ 'SALE_SHOW_ALL_SALES' | translate }} &nbsp;<input
                             type="checkbox"
                             ng-model="saleCtrl.loadAllData"
@@ -50,6 +47,12 @@
     </div>
 </div>
 <div hidden ng-include="'components/Wizard/view/Wizard.html'"></div>
+<div hidden ng-include="'components/Wizard/view/Edit.Customer.html'"></div>
+<div hidden ng-include="'components/Wizard/view/Edit.Email.html'"></div>
+<div hidden ng-include="'components/Wizard/view/Edit.Customer.Small.html'"></div>
+<div hidden ng-include="'components/Wizard/view/Edit.Product.html'"></div>
+<div hidden ng-include="'components/Wizard/view/Edit.Sale.html'"></div>
+
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {

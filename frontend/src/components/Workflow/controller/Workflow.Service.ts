@@ -11,8 +11,7 @@
 /// <reference path="../../Process/controller/Process.Service.ts" />
 /// <reference path="../../Workflow/model/WorkflowType.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Controller.ts" />
-/// <reference path="../../Offer/controller/Offer.Controller.ts" />
-/// <reference path="../../Sale/controller/Sale.Controller.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Modal.Service.ts" />
 /// <reference path="../../Dashboard/controller/Dashboard.Controller.ts" />
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 /// <reference path="../../FileUpload/controller/File.Service.ts" />
@@ -147,12 +146,42 @@ class WorkflowService {
         return isNaN(temp) ? 0 : temp;
     }
 
+    getWorkflowTypeByProcess(process: Process): WorkflowType {
+        if (this.isLead(process)) {
+            return WorkflowType.LEAD;
+        } else if (this.isOffer(process)) {
+            return WorkflowType.OFFER;
+        } else if (this.isSale(process)) {
+            return WorkflowType.SALE;
+        }
+        else {
+            return null;
+        }
+    }
+
     async startOfferTransformation(process: Process): Promise<Process> {
         return await this.workflowModalService.openOfferTransformationModal(process);
     }
 
     async startSaleTransformation(process: Process): Promise<Process> {
         return await this.workflowModalService.openSaleTransformationModal(process);
+    }
+
+    async openQuickEmailModal(process: Process): Promise<Process> {
+        let workflowType: WorkflowType = this.getWorkflowTypeByProcess(process);
+        return await this.workflowModalService.openQuickEmailModal(process, workflowType);
+    }
+
+    async openNewLeadModal(): Promise<Process> {
+        return await this.workflowModalService.openNewLeadModal();
+    }
+
+    async openEditModal(process: Process, workflowType: WorkflowType): Promise<Process> {
+        return await this.workflowModalService.openEditModal(process, workflowType);
+    }
+
+    async openConfirmationModal(process: Process, confirmationFunctionType: ConfirmationFunctionType): Promise<Process> {
+        return await this.workflowModalService.openConfirmationModal(process, confirmationFunctionType);
     }
 
     async addLeadToOffer(tempProcess: Process): Promise<Process> {
@@ -162,8 +191,7 @@ class WorkflowService {
         }
         tempProcess.status = Status.OFFER;
         tempProcess.processor = this.rootScope.user;
-        let resultProcess: Process = await this.processService.save(tempProcess, tempProcess.offer, false, true).catch(error => handleError(error)) as Process;
-        console.log(resultProcess);
+        let resultProcess: Process = await this.processService.save(tempProcess, tempProcess.offer, false, true) as Process;
         this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_NEW_OFFER"));
         this.rootScope.leadsCount -= 1;
         this.rootScope.offersCount += 1;
@@ -177,7 +205,7 @@ class WorkflowService {
         }
         tempProcess.status = Status.SALE;
         tempProcess.processor = this.rootScope.user;
-        let resultProcess = await this.processService.save(tempProcess, tempProcess.sale, false, true).catch(error => handleError(error)) as Process;
+        let resultProcess = await this.processService.save(tempProcess, tempProcess.sale, false, true) as Process;
         let customer: Customer = resultProcess.offer.customer;
         if (!customer.realCustomer) {
             customer.realCustomer = true;
@@ -213,24 +241,6 @@ class WorkflowService {
         }
     }
 
-    getWorkflowTypeByProcess(process: Process): WorkflowType {
-        if (this.isLead(process)) {
-            return WorkflowType.LEAD;
-        } else if (this.isOffer(process)) {
-            return WorkflowType.OFFER;
-        } else if (this.isSale(process)) {
-            return WorkflowType.SALE;
-        }
-        else {
-            return null;
-        }
-    }
-
-    openQuickEmailModal(process: Process) {
-        let workflowType: WorkflowType = this.getWorkflowTypeByProcess(process);
-        this.workflowModalService.openQuickEmailModal(process, workflowType);
-    }
-
     togglePin(process: Process, user: User): void {
         let self = this;
         if (user !== null) {
@@ -238,13 +248,13 @@ class WorkflowService {
                 process.processor = user;
                 self.rootScope.$broadcast("updateRow", process);
                 self.rootScope.$broadcast("onTodosChange");
-            }, (error) => handleError(error)).catch(error => handleError(error));
+            }, (error) => handleError(error));
         } else if (process.processor !== null) {
             this.processService.removeProcessor(process).then(function () {
                 process.processor = null;
                 self.rootScope.$broadcast("updateRow", process);
                 self.rootScope.$broadcast("onTodosChange");
-            }, (error) => handleError(error)).catch(error => handleError(error));
+            }, (error) => handleError(error));
         }
     }
     async inContact(process: Process): Promise<Process> {
@@ -256,7 +266,7 @@ class WorkflowService {
         if (!this.checkForDupsInFormerProcessors(process.formerProcessors, this.rootScope.user, Activity.INCONTACT)) {
             process.formerProcessors.push(new Processor(process.processor, Activity.INCONTACT));
         }
-        let resultProcess = await this.processService.save(process, null, true, false).catch(error => handleError(error)) as Process;
+        let resultProcess = await this.processService.save(process, null, true, false) as Process;
         this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_INCONTACT"));
         return resultProcess;
     }
@@ -281,26 +291,24 @@ class WorkflowService {
         return resultProcess;
     }
 
-    toggleClosedOrOpenState(process: Process): void {
-        let self = this;
+    async toggleClosedOrOpenState(process: Process): Promise<void> {
+        let resultProcess: Process;
         if (process.status !== Status.CLOSED) {
-            this.processService.setStatus(process, Status.CLOSED).then((process: Process) => {
-                self.rootScope.offersCount -= 1;
-                process.status = Status.CLOSED;
-                self.rootScope.$broadcast("removeOrUpdateRow", process);
-            });
+            resultProcess = await this.$q.when(this.processService.setStatus(process, Status.CLOSED));
+            if (isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
+                this.rootScope.leadsCount -= 1;
+            } else if (!isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
+                this.rootScope.offersCount -= 1;
+            }
+            this.rootScope.$broadcast("removeOrUpdateRow", resultProcess);
         } else if (isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
-            this.processService.setStatus(process, Status.OPEN).then((process: Process) => {
-                self.rootScope.leadsCount += 1;
-                process.status = Status.OPEN;
-                self.rootScope.$broadcast("updateRow", process);
-            });
+            resultProcess = await this.processService.setStatus(process, Status.OPEN);
+            this.rootScope.leadsCount += 1;
+            this.rootScope.$broadcast("updateRow", resultProcess);
         } else if (!isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
-            this.processService.setStatus(process, Status.OFFER).then((process: Process) => {
-                self.rootScope.offersCount += 1;
-                process.status = Status.OFFER;
-                self.rootScope.$broadcast("updateRow", process);
-            });
+            resultProcess = await this.processService.setStatus(process, Status.OFFER);
+            this.rootScope.offersCount += 1;
+            this.rootScope.$broadcast("updateRow", resultProcess);
         }
     }
 
@@ -354,20 +362,20 @@ class WorkflowService {
         return formerProcessors.filter(fp => fp.user.id === user.id && fp.activity === activity).length > 0;
     }
 
-    async getSaleByInvoiceNumber(invoiceNumber: string): Promise<Sale> {
-        return await this.saleResource.getByinvoiceNumber({}, invoiceNumber).$promise.catch(error => handleError(error)) as Sale;
+    async getSaleByInvoiceNumber(invoiceNumber: string): Promise<Array<Sale>> {
+        return await this.saleResource.getByinvoiceNumber({}, invoiceNumber).$promise as Array<Sale>;
     }
 
     isLead(process: Process): boolean {
-        return process.status === Status.OPEN || process.status === Status.INCONTACT;
+        return !isNullOrUndefined(process) && (process.status === Status.OPEN || process.status === Status.INCONTACT);
     }
 
     isOffer(process: Process): boolean {
-        return process.status === Status.OFFER || process.status === Status.FOLLOWUP || process.status === Status.DONE;
+        return !isNullOrUndefined(process) && (process.status === Status.OFFER || process.status === Status.FOLLOWUP || process.status === Status.DONE);
     }
 
     isSale(process: Process): boolean {
-        return process.status === Status.SALE;
+        return !isNullOrUndefined(process) && (process.status === Status.SALE);
     }
 
 }

@@ -31,7 +31,6 @@ class ProcessService {
     }
 
     async save(editProcess: Process, editWorkflowUnit: IWorkflow, updateRow: boolean, deleteRow: boolean): Promise<Process> {
-
         if (!isNullOrUndefined(editWorkflowUnit) && isNullOrUndefined(editWorkflowUnit.customer.id)) {
             editWorkflowUnit.customer.timestamp = newTimestamp();
             editWorkflowUnit.customer = await this.customerService.insertCustomer(editWorkflowUnit.customer) as Customer;

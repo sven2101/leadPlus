@@ -23,7 +23,7 @@
 					<i ng-if="showCustomerDetails!==true" class="fa fa-caret-down" aria-hidden="true"></i>
 				</h4> 
 			</span>		
-			<a style="font-size: 1.5em" tooltip-class="customMessage" uib-tooltip-template="'components/Wizard/view/Message.Template.html'" tooltip-placement="bottom-left"><i class="fa fa-envelope"></i></a>     	
+			<a ng-if="editWorkflowUnit.message.length > 0" style="font-size: 1.5em" tooltip-class="customMessage" uib-tooltip-template="'components/Wizard/view/Message.Template.html'" tooltip-placement="bottom-left"><i class="fa fa-envelope"></i></a>     	
 		</div>
 		<div class="col-sm-4">
 			<!-- SOURCE -->

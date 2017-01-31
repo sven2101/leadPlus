@@ -20,7 +20,6 @@ const CustomerEditDirectiveId: string = "customerEdit";
 class CustomerEditDirective implements IDirective {
     templateUrl = (ele, attr) => {
         if (attr.small === "true") {
-            console.log("set Small");
             return "components/Wizard/view/Edit.Customer.Small.html";
         } else {
             return "components/Wizard/view/Edit.Customer.html";

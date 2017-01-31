@@ -62,10 +62,6 @@ class WizardDirective implements IDirective {
         scope.wizardElements = new Array<WizardButtonConfig>();
         scope.step = 1;
         scope.currentWizard;
-        console.log(scope.transform);
-        if (scope.transform === true) {
-            console.log("Bin true");
-        }
 
         if (!isNullOrUndefined(scope.currentNotification)) {
             scope.currentNotification.recipients = scope.editWorkflowUnit.customer.email;
@@ -83,7 +79,7 @@ class WizardDirective implements IDirective {
         scope.send = () => this.send(scope);
         scope.isAnyFormInvalid = () => this.isAnyFormInvalid(scope);
         scope.getNotificationType = () => this.getNotificationType(scope);
-        scope.followUp = (process: Process) => this.followUp(process, scope);
+        scope.followUp = () => this.followUp(scope);
         scope.isLead = () => this.isLead(scope);
         scope.isOffer = () => this.isOffer(scope);
         scope.isSale = () => this.isSale(scope);
@@ -119,7 +115,6 @@ class WizardDirective implements IDirective {
     }
 
     close(result: boolean, process: Process, scope: any) {
-        console.log(process);
         scope.modalInstance.close(process);
         if (!result && scope.isLead()) {
             scope.editProcess.offer = undefined;
@@ -129,30 +124,27 @@ class WizardDirective implements IDirective {
     }
 
     saveOrTransform(scope: any) {
-        console.log(scope.transform);
         if (scope.transform) {
             scope.transformWorkflow();
-        }
-        else {
+        } else {
             scope.save();
         }
     }
 
     async transformWorkflow(scope: any) {
-        console.log("I Can transform ya");
         let process = scope.editProcess;
         let resultProcess = null;
         if (scope.isLead()) {
-            resultProcess = await scope.workflowService.addLeadToOffer(process).catch(error => handleError(error));
+            resultProcess = await scope.workflowService.addLeadToOffer(process);
         } else if (scope.isOffer()) {
-            resultProcess = await scope.workflowService.addOfferToSale(process).catch(error => handleError(error));
+            resultProcess = await scope.workflowService.addOfferToSale(process);
         }
         scope.close(true, resultProcess);
     }
 
     async save(scope: any): Promise<Process> {
         let isNewProcess: boolean = isNullOrUndefined(scope.editProcess.id);
-        let resultProcess = await scope.processService.save(scope.editProcess, scope.editWorkflowUnit, !isNewProcess, false).catch(error => handleError(error)) as Process;
+        let resultProcess = await scope.processService.save(scope.editProcess, scope.editWorkflowUnit, !isNewProcess, false) as Process;
         scope.close(true, resultProcess);
         return resultProcess;
     }
@@ -185,11 +177,9 @@ class WizardDirective implements IDirective {
         let deleteRow = false;
         if (scope.isInOfferTransformation()) {
             deleteRow = true;
-            console.log("ADD LEAD TO OFFER");
             await scope.workflowService.addLeadToOffer(process);
         } else if (scope.isInSaleTransformation()) {
             deleteRow = true;
-            console.log("ADD OFFER TO SALE");
             await scope.workflowService.addOfferToSale(process);
         }
         let promises: Array<Promise<void>> = notification.attachments ?
@@ -206,22 +196,25 @@ class WizardDirective implements IDirective {
             if (process.status !== Status.FOLLOWUP && process.status !== Status.DONE) {
                 process.status = Status.FOLLOWUP;
             }
+        } else if (notificationType === NotificationType.LEAD) {
+            if (process.status !== Status.INCONTACT) {
+                process.status = Status.INCONTACT;
+            }
         }
-        console.log(process);
         let resultProcess = await scope.processService.save(process, scope.editWorkflowUnit, !deleteRow, deleteRow) as Process;
         scope.close(true, resultProcess);
         try {
             await scope.notificationService.sendNotification(notification);
         } catch (error) {
             // TODO Set Notification to Error            
-            console.log("Set Notification to Error....");
             notification.notificationType = NotificationType.ERROR;
         }
     }
 
-    async followUp(process, scope) {
-        if (process.status !== Status.FOLLOWUP && process.status !== Status.DONE) {
-            let resultProcess = await scope.processService.setStatus(process, Status.FOLLOWUP) as Process;
+    async followUp(scope) {
+        if (scope.editProcess.status !== Status.FOLLOWUP && scope.editProcess.status !== Status.DONE) {
+            let resultProcess = await scope.processService.setStatus(scope.editProcess, Status.FOLLOWUP) as Process;
+            scope.rootScope.$broadcast("updateRow", resultProcess);
             scope.close(true, resultProcess);
         }
     }

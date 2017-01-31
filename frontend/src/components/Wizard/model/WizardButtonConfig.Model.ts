@@ -1,4 +1,5 @@
 class WizardButtonConfig {
+
     title: string;
     icon: string;
     directiveType: WizardType;
@@ -12,6 +13,7 @@ class WizardButtonConfig {
     isFirstActiveElement: boolean;
     validation: boolean;
     sendButtonName: string;
+
     constructor(directiveType: WizardType) {
         this.directiveType = directiveType;
         this.isVisible = true;
@@ -48,7 +50,7 @@ class WizardButtonConfig {
         return this;
     }
 
-    setEmail(isEmail: boolean, sendButtonName: string = ""): WizardButtonConfig {
+    setEmail(isEmail: boolean, sendButtonName: string = "EMAIL_SEND"): WizardButtonConfig {
         this.isEmail = isEmail;
         this.sendButtonName = sendButtonName;
         return this;

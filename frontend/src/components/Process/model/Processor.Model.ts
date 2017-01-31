@@ -1,3 +1,5 @@
+/// <reference path="../../Process/model/Activity.Enum.ts" />
+
 class Processor {
     user: User;
     activity: Activity;

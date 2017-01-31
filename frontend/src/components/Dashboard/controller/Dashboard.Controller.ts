@@ -6,8 +6,6 @@
 /// <reference path="../../Process/model/Process.Model.ts" />
 /// <reference path="../../Commentary/model/Commentary.Model.ts" />
 /// <reference path="../../Workflow/model/IWorkflow.Interface.ts" />
-/// <reference path="../../Offer/controller/Offer.Service.ts" />
-/// <reference path="../../Sale/controller/Sale.Service.ts" />
 /// <reference path="../../Template/model/Template.Model.ts" />
 /// <reference path="../../Template/controller/Template.Service.ts" />
 /// <reference path="../../Notification/controller/Notification.Service.ts" />
@@ -31,10 +29,9 @@ const DashboardControllerId: string = "DashboardController";
 
 class DashboardController {
 
-    $inject = [WorkflowServiceId, WorkflowModalServiceId, StatisticServiceId, DashboardServiceId, $rootScopeId, TemplateServiceId, NotificationServiceId, $sceId, $scopeId];
+    $inject = [WorkflowServiceId, StatisticServiceId, DashboardServiceId, $rootScopeId, TemplateServiceId, NotificationServiceId, $sceId, $scopeId];
 
     workflowService: WorkflowService;
-    workflowModalService: WorkflowModalService;
     statisticService: StatisticService;
     dashboardService: DashboardService;
     templateService: TemplateService;
@@ -59,9 +56,8 @@ class DashboardController {
     template: Template = new Template();
     templates: Array<Template> = [];
 
-    constructor(WorkflowService, WorkflowModalService, StatisticService, DashboardService, $rootScope, TemplateService, NotificationService, $sce, $scope) {
+    constructor(WorkflowService, StatisticService, DashboardService, $rootScope, TemplateService, NotificationService, $sce, $scope) {
         this.workflowService = WorkflowService;
-        this.workflowModalService = WorkflowModalService;
         this.statisticService = StatisticService;
         this.dashboardService = DashboardService;
         this.templateService = TemplateService;
@@ -95,7 +91,7 @@ class DashboardController {
     }
 
     async openNewLeadModal() {
-        let resultProcess: Process = await this.workflowModalService.openNewLeadModal();
+        let resultProcess: Process = await this.workflowService.openNewLeadModal();
         if (!isNullOrUndefined(resultProcess)) {
             this.rootScope.leadsCount += 1;
             this.dashboardService.addNewLead(resultProcess);

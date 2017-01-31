@@ -124,6 +124,7 @@ class WorkflowModalService {
     }
 
     openQuickEmailModal(process: Process, workflowType: WorkflowType) {
+        let defer = this.$q.defer();
         let self = this;
         if (isNullOrUndefined(workflowType)) {
             return;
@@ -146,12 +147,12 @@ class WorkflowModalService {
                     return false;
                 }
             }
-        }).result.then(function (result: Process) {
-            if (!isNullOrUndefined(result)) {
-                self.rootScope.$broadcast("updateRow", result);
-                self.rootScope.$broadcast("onTodosChange");
-            }
+        }).result.then(function (result) {
+            defer.resolve(result);
+        }, function () {
+            defer.resolve(undefined);
         });
+        return defer.promise;
     }
 
     getOfferTransformationWizardTemplate(): string {
@@ -231,14 +232,13 @@ class WorkflowModalService {
         return defer.promise;
     }
 
-    openConfirmationModal(process: Process, confirmationFunctionType: ConfirmationFunctionType) {
-        console.log(confirmationFunctionType);
+    openConfirmationModal(process: Process, confirmationFunctionType: ConfirmationFunctionType, submitButtonClass: string = "danger") {
+        let defer = this.$q.defer();
         this.uibModal.open({
-            template: "<confirmation-modal modal-instance='confirmationCtrl.uibModalInstance' title='confirmationCtrl.title' body='confirmationCtrl.body' submit-text='confirmationCtrl.submitText' submit-function='confirmationCtrl.submitFunction()'></confirmation-modal>",
+            template: `<confirmation-modal modal-instance='confirmationCtrl.uibModalInstance' title='confirmationCtrl.title' body='confirmationCtrl.body' submit-text='confirmationCtrl.submitText' submit-function='confirmationCtrl.submitFunction()' submit-button-class='${submitButtonClass}'></confirmation-modal>`,
             controller: ConfirmationModalController,
             controllerAs: "confirmationCtrl",
             backdrop: "static",
-            size: "lg",
             resolve: {
                 process: function (): Process {
                     return process;
@@ -247,7 +247,12 @@ class WorkflowModalService {
                     return confirmationFunctionType;
                 }
             }
+        }).result.then(function (result) {
+            defer.resolve(result);
+        }, function () {
+            defer.resolve(undefined);
         });
+        return defer.promise;
     }
 }
 
