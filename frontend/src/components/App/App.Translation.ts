@@ -244,6 +244,9 @@ function config($translateProvider) {
             PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS: "Passwort wurde geändert",
             PROFILE_TOAST_PASSWORD_CHANGE_ERROR: "Passwort konnte nicht geändert werden",
             PROFILE_PICTURE_MANAGEMENT: "Profilbildverwaltung",
+            PROFILE_SMTP_TAB: "SMTP",
+            PROFILE_PASSWORD_TAB: "Passwort und Profilbild",
+            PROFILE_ACCOUNT_TAB: "Profilinformationen",
 
             // Define all process elements
             PROCESS_DELETE_PROCESS_TITLE: "Prozess löschen",
@@ -308,7 +311,7 @@ function config($translateProvider) {
             // Define setting elements
             SETTING_USER: "Benutzer",
             SETTING_USER_MANAGEMENT: "Benutzer Einstellungen",
-            SETTING_EMAIL: "Email",
+            SETTING_EMAIL: "Email Templates",
             SETTING_EMAIL_MANAGEMENT: "Email Einstellungen",
             SETTING_EMAIL_MANAGEMENT_SENDER: "Absendername",
             SETTING_EMAIL_MANAGEMENT_EMAIL: "Email",
@@ -325,7 +328,7 @@ function config($translateProvider) {
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE_ERROR: "Speichern der SMTP Server Verbindung fehlgeschlagen. ",
             SETTING_EMAIL_TEMPLATES_MANAGEMENT: "Email Templates",
             SETTING_EMAIL_NEW_TEMPLATE: "Neues Template",
-            SETTING_ACCESS_MANAGEMENT: "Benutzer freischalten",
+            SETTING_ACCESS_MANAGEMENT: "Benutzer verwalten",
             SETTING_ACTIVATE_USER: "Freischalten",
             SETTING_DEACTIVATE_USER: "Deaktivieren",
             SETTING_ROLE_MANAGEMENT: "Benutzerrollen verwalten",
@@ -745,6 +748,9 @@ function config($translateProvider) {
             PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS: "Password changed",
             PROFILE_TOAST_PASSWORD_CHANGE_ERROR: "Password cannot be saved",
             PROFILE_PICTURE_MANAGEMENT: "Profile picture management",
+            PROFILE_SMTP_TAB: "SMTP",
+            PROFILE_PASSWORD_TAB: "Password and Picture",
+            PROFILE_ACCOUNT_TAB: "Profile information",
 
             // Define all process elements
             PROCESS_DELETE_PROCESS_TITLE: "Delete process",
@@ -807,7 +813,7 @@ function config($translateProvider) {
             // Define setting elements
             SETTING_USER: "Users",
             SETTING_USER_MANAGEMENT: "User Management",
-            SETTING_EMAIL: "Email",
+            SETTING_EMAIL: "Email Templates",
             SETTING_EMAIL_MANAGEMENT: "Email Management",
             SETTING_EMAIL_MANAGEMENT_SENDER: "Sender-Name",
             SETTING_EMAIL_MANAGEMENT_EMAIL: "Email",
@@ -824,7 +830,7 @@ function config($translateProvider) {
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST_ERROR: "Connection to SMTP Server failed. ",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE: "Successfully saved SMTP Server Connection. ",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE_ERROR: "Error saving SMTP Server Connection. ",
-            SETTING_ACCESS_MANAGEMENT: "Activate user",
+            SETTING_ACCESS_MANAGEMENT: "Manage user",
             SETTING_ACTIVATE_USER: "Activate",
             SETTING_DEACTIVATE_USER: "Deactivate",
             SETTING_ROLE_MANAGEMENT: "Manage user roles",

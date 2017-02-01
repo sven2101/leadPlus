@@ -29,10 +29,10 @@
 </div>
 <div ng-controller="SourceController as sourceCtrl">
 	<div class="wrapper wrapper-content animated fadeInRight">
-		<ul class="nav nav-tabs">
-			<li ng-click="settingCtrl.tabOnClick(1)" class="active"><a data-toggle="tab" aria-expanded="true">{{ 'SETTING_EMAIL' | translate}}</a></li>
-			<li ng-if="user.role!='USER'" ng-click="settingCtrl.tabOnClick(2)"><a data-toggle="tab" aria-expanded="true">{{'SETTING_USER' | translate }}</a></li>
-			<li ng-if="user.role!='USER'" ng-click="settingCtrl.tabOnClick(3)"><a data-toggle="tab" aria-expanded="true">{{'SOURCE_SOURCES' | translate }}</a></li>
+		<ul class="nav nav-tabs">			
+			<li ng-if="user.role!='USER'" ng-click="settingCtrl.tabOnClick(1)" class="active"><a data-toggle="tab" aria-expanded="true">{{'SETTING_USER' | translate }}</a></li>
+			<li ng-if="user.role!='USER'" ng-click="settingCtrl.tabOnClick(2)"><a data-toggle="tab" aria-expanded="true">{{'SOURCE_SOURCES' | translate }}</a></li>
+			<li ng-click="settingCtrl.tabOnClick(3)" ><a data-toggle="tab" aria-expanded="true">{{ 'SETTING_EMAIL' | translate}}</a></li>
 		</ul>
 		<br/>
 		<div ng-include="'components/Setting/view/Setting.Users.html'"></div>

@@ -3,21 +3,9 @@
 /// <reference path="../../Profile/controller/Profile.Service.ts" />
 /// <reference path="../../FileUpload/model/FileUpload.Model.ts" />
 /// <reference path="../../App/App.Common.ts" />
+/// <reference path="../../Smtp/controller/Smtp.Service.ts" />
+/// <reference path="../../Smtp/model/SmtpEncryptionType.ts" />
 
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
 
 const ProfileControllerId: string = "ProfileController";
 
@@ -36,8 +24,11 @@ class ProfileController {
     oldPassword: string;
     newPassword1: string;
     newPassword2: string;
+    currentTab: number = 1;
+    smtpForm;
+    SmtpEncryptionType: Object = SmtpEncryptionType;
 
-    constructor(ProfileService: ProfileService, $rootScope, $scope) {
+    constructor(ProfileService: ProfileService, $rootScope, $scope, private SmtpService: SmtpService) {
         this.profileService = ProfileService;
         this.rootscope = $rootScope;
         this.currentUser = deepCopy(this.rootscope.user);

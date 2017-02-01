@@ -72,7 +72,7 @@
 			<li>
 				<a href="#/customer"><i class="fa fa-users"></i> <span class="nav-label">{{ 'CUSTOMER_MENU' | translate }}</span></a>
 			</li>
-			<li>
+			<li ng-if="user.role==='SUPERADMIN'||user.role==='ADMIN'">
 				<a href="#/settings"><i class="fa fa-cogs"></i> <span class="nav-label">{{ 'SETTINGS_MENU' | translate }}</span></a>
 			</li>
 		</ul>

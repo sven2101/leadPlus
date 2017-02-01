@@ -74,7 +74,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             })
             .when("/profile",
             {
-                templateUrl: "components/Profile/view/Profile.html",
+                templateUrl: "components/Profile/view/ProfileMain.html",
                 controller: "ProfileController",
                 controllerAs: "profileCtrl",
                 authenticated: true,
