@@ -124,16 +124,6 @@ class OfferDataTableService implements IDatatableService {
                         "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
-                this.translate("COMMON_PRODUCT_ENTIRE_PRICE"))
-                .renderWith(
-                function (data, type, full) {
-                    if (isNullOrUndefined(data.offer.netPrice)) {
-                        return self.filter("currency")(0, "€", 2);
-                    }
-                    return self.filter("currency")(data.offer.netPrice,
-                        "€", 2);
-                }).notVisible(),
-            this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_PRODUCT_OFFER_PRICE"))
                 .renderWith(
                 function (data, type, full) {

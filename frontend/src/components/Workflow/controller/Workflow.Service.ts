@@ -236,6 +236,7 @@ class WorkflowService {
             this.processService.setProcessor(process, user).then((result) => {
                 self.rootScope.$broadcast(broadcastOnTodosChanged);
                 self.rootScope.$broadcast(broadcastUpdate, result);
+                self.rootScope.$broadcast(broadcastUpdateChildrow, result);
             }, (error) => handleError(error));
         } else if (process.processor !== null) {
             this.processService.removeProcessor(process).then(function () {
@@ -255,7 +256,9 @@ class WorkflowService {
             process.formerProcessors.push(new Processor(process.processor, Activity.INCONTACT));
         }
         let resultProcess = await this.processService.save(process, null, false, false) as Process;
-        this.rootScope.$broadcast(broadcastUpdate, process);
+        this.rootScope.$broadcast(broadcastOnTodosChanged);
+        this.rootScope.$broadcast(broadcastUpdate, resultProcess);
+        this.rootScope.$broadcast(broadcastUpdateChildrow, resultProcess);
         this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_INCONTACT"));
         return resultProcess;
     }
@@ -284,7 +287,8 @@ class WorkflowService {
         let resultProcess: Process;
         if (process.status !== Status.CLOSED) {
             resultProcess = await this.processService.setStatus(process, Status.CLOSED);
-            resultProcess = await this.processService.removeProcessor(resultProcess);
+            await this.processService.removeProcessor(resultProcess);
+            resultProcess.processor = null;
             if (isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
                 this.rootScope.leadsCount -= 1;
             } else if (!isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {

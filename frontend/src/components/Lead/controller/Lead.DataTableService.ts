@@ -117,11 +117,8 @@ class LeadDataTableService implements IDatatableService {
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_PRODUCT_ENTIRE_PRICE"))
                 .renderWith(
-                function (data, type, full) {
-                    if (isNullOrUndefined(data.lead.price)) {
-                        return self.filter("currency")(0, "€", 2);
-                    }
-                    return self.filter("currency")(data.lead.price,
+                function (data: Process, type, full) {
+                    return self.filter("currency")(self.workflowService.sumOrderPositions(data.lead.orderPositions) + data.lead.deliveryCosts,
                         "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
