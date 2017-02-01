@@ -3,7 +3,7 @@
 		<div class="form-inline">
 			<div class="form-group" style="width:45%">
 				<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>
-				<select style="width:100%" ng-disabled="disabled" class="form-control" ng-model="templateId" ng-change="generate(templateId, process.offer,notification)">
+				<select id="templateSelectBox" style="width:100%" ng-disabled="disabled" class="form-control" ng-model="templateId" ng-change="generate(templateId, process.offer,notification)">
                 <option value="-1" selected> - {{ 'EMAIL_TEMPLATE_SELECT' | translate }} - </option>                                                                     
                 <option value="{{template.id}}" ng-repeat="template in templates">{{template.name}}</option>                                           
             	</select>

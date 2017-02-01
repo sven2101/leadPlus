@@ -161,3 +161,13 @@ let b64toBlob = function (b64Data: string, contentType: string, sliceSize: numbe
     return blob;
 };
 
+let contains = function <T>(array: Array<T>, obj: T) {
+    let i = array.length;
+    while (i--) {
+        if (array[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+};
+

@@ -31,7 +31,7 @@ class TemplateController {
     currentSelectedNotificationTypes: Array<string> = [];
     currentSelectedSource: Array<string> = [];
     availableNotificationTypes: Array<string> = ["ALL"].concat((<any>NotificationType).getAll());
-    availablesourceNames = ["ALL"];
+    availablesourceNames = ["ALL", "NONE"];
     constructor(TemplateService, $uibModalInstance, template, private SourceService: SourceService) {
         this.templateService = TemplateService;
         this.uibModalInstance = $uibModalInstance;

@@ -1,6 +1,7 @@
 /// <reference path="../../App/App.Constants.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Template/controller/Template.Service.ts" />
+/// <reference path="../../App/App.Common.ts" />
 
 declare var Ladda;
 
@@ -30,7 +31,7 @@ class EditEmailDirective implements IDirective {
         return directive;
     }
 
-    link(scope, element, attrs, ctrl, transclude): void {
+    async link(scope, element, attrs, ctrl, transclude): Promise<void> {
         scope.$sce = this.$sce;
         scope.$window = this.$window;
         scope.$http = this.$http;
@@ -54,10 +55,13 @@ class EditEmailDirective implements IDirective {
         });
         scope.templateId = "-1";
         scope.TemplateService = this.TemplateService;
-        this.TemplateService.getAll().then((templates) => scope.templates = templates);
+
         scope.generate = (templateId, offer, currentNotification) => this.generateContent(templateId, offer, currentNotification, scope);
         scope.setAttachments = (files) => this.setAttachments(files, scope.notification, scope);
         scope.deleteAttachment = (index) => this.deleteAttachment(index, scope);
+
+        scope.templates = await this.TemplateService.getAll();
+        this.setDefaultTemplate(scope);
     };
 
     setAttachments(files, notification: Notification, scope): void {
@@ -142,6 +146,37 @@ class EditEmailDirective implements IDirective {
         }
         this.reloadHtmlString(scope);
         scope.sizeInvalid = this.isFileSizeInvalid(scope.notification, scope);
+    }
+
+    setDefaultTemplate(scope: any): void {
+        let notificationType = scope.notification.notificationType;
+        let sourceName = scope.process.source == null ? "NONE" : scope.process.source.name;
+        let templates: Array<Template> = scope.templates;
+
+        for (let t of templates) {
+            let containsNotificationType = contains<string>(t.notificationTypeString.split(","), notificationType);
+            let containsSourceName = contains<string>(t.sourceString.split(","), sourceName);
+            if (containsNotificationType === true && containsSourceName === true) {
+                scope.templateId = t.id;
+                scope.generate(t.id, scope.process.offer, scope.notification);
+                return;
+            }
+        }
+        for (let t of templates.filter(t => contains<string>(t.notificationTypeString.split(","), "ALL"))) {
+            if (contains<string>(t.sourceString.split(","), sourceName)) {
+                scope.templateId = t.id;
+                scope.generate(t.id, scope.process.offer, scope.notification);
+                return;
+            }
+        }
+        for (let t of templates.filter(t => contains<string>(t.sourceString.split(","), "ALL"))) {
+            if (contains<string>(t.notificationTypeString.split(","), notificationType)) {
+                scope.templateId = t.id;
+                scope.generate(t.id, scope.process.offer, scope.notification);
+                return;
+            }
+        }
+        console.log("nix");
     }
 
 }

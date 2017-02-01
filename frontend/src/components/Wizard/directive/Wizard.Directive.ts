@@ -63,14 +63,7 @@ class WizardDirective implements IDirective {
         scope.step = 1;
         scope.currentWizard;
 
-        if (!isNullOrUndefined(scope.currentNotification)) {
-            scope.currentNotification.recipients = scope.editWorkflowUnit.customer.email;
-            scope.$watch("editWorkflowUnit.customer.email", function (newValue, oldValue) {
-                if (newValue !== oldValue && !isNullOrUndefined(scope.editWorkflowUnit)) {
-                    scope.currentNotification.recipients = scope.editWorkflowUnit.customer.email;
-                }
-            }, true);
-        }
+
 
         scope.close = (result: boolean, process: Process) => this.close(result, process, scope);
         scope.transformWorkflow = () => this.transformWorkflow(scope);
@@ -103,6 +96,16 @@ class WizardDirective implements IDirective {
             }, null, transclusion);
         }
         isNullOrUndefined(firstActiveElement) ? scope.currentWizard = scope.wizardElements[0] : scope.currentWizard = firstActiveElement;
+
+        if (!isNullOrUndefined(scope.currentNotification)) {
+            scope.currentNotification.recipients = scope.editWorkflowUnit.customer.email;
+            scope.$watch("editWorkflowUnit.customer.email", function (newValue, oldValue) {
+                if (newValue !== oldValue && !isNullOrUndefined(scope.editWorkflowUnit)) {
+                    scope.currentNotification.recipients = scope.editWorkflowUnit.customer.email;
+                }
+            }, true);
+            scope.currentNotification.notificationType = scope.getNotificationType();
+        }
     };
 
     getWizardConfigByTransclusion(wizardConfig: Array<WizardButtonConfig>, transclusion: any): WizardButtonConfig {
