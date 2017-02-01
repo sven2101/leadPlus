@@ -22,14 +22,15 @@
 		</div>
 		<!--<hr style="border-top: 1px dashed #8c8b8b;" />-->
 		<br>
-		<label>{{ 'EMAIL_RECIPIENT' | translate }} {{ 'EMAIL_RECIPIENT_COMMA' | translate }}</label>
-		<span style="color:red">*</span>
+		{{eform.recipients.$error}}
+		<label>{{ 'EMAIL_RECIPIENT' | translate }} {{ 'EMAIL_RECIPIENT_COMMA' | translate }}<span style="color:red">*</span></label>
 		<span style="color:red" ng-show="eform.recipients.$error.required&&!disabled&&!eform.recipients.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
 		<span style="color:red" ng-show="eform.recipients.$error.email&&!disabled&&!eform.recipients.$pristine">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
+		<span style="color:red" ng-show="eform.recipients.$error.maxlength&&!disabled&&!eform.recipients.$pristine">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
 		<div class="form-inline">
 			<div class="form-group" style="width:90%" ng-class="{ 'has-error' : eform.recipients.$invalid&&!disabled&&!eform.recipients.$pristine}">
 				<input style="width:100%" ng-disabled="disabled" multipleemails form="eform" emails="notification.recipients" name="recipients"
-					required class="form-control" ng-model="notification.recipients">
+					required class="form-control" ng-model="notification.recipients" ng-maxlength="255">
 
 			</div>
 			<a ng-disabled="disabled" style="width:9%;height:34px" class="btn btn-default pull-right" ng-click="showCC_BCC=!showCC_BCC">CC/BCC</a>

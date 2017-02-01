@@ -133,7 +133,7 @@ class SaleDataTableService implements IDatatableService {
                 this.translate("COMMON_PRODUCT_SALE_INVOICE_NUMBER")).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").withOption("width", "80px").notSortable().renderWith(addActionsButtons),
+                "text-center").withOption("width", "90px").notSortable().renderWith(addActionsButtons),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {
@@ -172,7 +172,7 @@ class SaleDataTableService implements IDatatableService {
 
     getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {
         actionButtonConfig[process.id] = this.getActionButtonConfig(process);
-        return "<div actionbuttons minwidth='50' actionbuttonconfig=saleCtrl.actionButtonConfig[" + process.id + "]  process='saleCtrl.processes[" + process.id + "]'></div>";
+        return "<div actionbuttons minwidth='90' actionbuttonconfig=saleCtrl.actionButtonConfig[" + process.id + "]  process='saleCtrl.processes[" + process.id + "]'></div>";
     }
 
     getStatusStyleHTML(data: Process): string {

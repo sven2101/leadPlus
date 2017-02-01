@@ -26,7 +26,7 @@ class ActionButtonDirective implements IDirective {
     }
 
     link(scope, element, attrs, ctrl, transclude): void {
-        scope.minwidth = isNullOrUndefined(scope.minwidth) ? 180 : scope.minwidth;
+        scope.minwidth = isNullOrUndefined(scope.minwidth) ? 210 : scope.minwidth;
         scope.workflowService = this.WorkflowService;
         scope.rootScope = this.$rootScope;
         scope.config = scope.actionbuttonconfig;

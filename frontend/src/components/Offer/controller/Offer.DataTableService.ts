@@ -157,7 +157,7 @@ class OfferDataTableService implements IDatatableService {
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").withOption("width", "200px").notSortable().renderWith(addActionsButtons),
+                "text-center").withOption("width", "210px").notSortable().renderWith(addActionsButtons),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {
