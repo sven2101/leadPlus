@@ -2,18 +2,6 @@
 /// <reference path="../app/App.Authentication.Service.ts" />
 /// <reference path="../Profile/controller/Profile.Service.ts" />
 
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-"use strict";
-
 angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
     function ($routeProvider, $httpProvider) {
         $routeProvider
@@ -36,26 +24,29 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             .when("/leads/:processId?",
             {
                 templateUrl: "components/Lead/view/Lead.html",
-                controller: "LeadController",
+                controller: "WorkflowController",
                 controllerAs: "leadCtrl",
                 authenticated: true,
-                package: "basic"
+                package: "basic",
+                type: WorkflowType.LEAD
             })
             .when("/offers/:processId?",
             {
                 templateUrl: "components/Offer/view/Offer.html",
-                controller: "OfferController",
+                controller: "WorkflowController",
                 controllerAs: "offerCtrl",
                 authenticated: true,
-                package: "basic"
+                package: "basic",
+                type: WorkflowType.OFFER
             })
             .when("/sales/:processId?",
             {
                 templateUrl: "components/Sale/view/Sale.html",
-                controller: "SaleController",
+                controller: "WorkflowController",
                 controllerAs: "saleCtrl",
                 authenticated: true,
-                package: "basic"
+                package: "basic",
+                type: WorkflowType.SALE
             })
             .when("/statistic",
             {
@@ -184,8 +175,10 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
         });
 
     }])
-    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId,
-        function ($location, $http, $rootScope, Auth, $cookies, $injector) {
+    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId, $windowId, $qId,
+        function ($location, $http, $rootScope, Auth, $cookies, $injector, $window, $q) {
+            // TODO Workaround for native promises!!!
+            $window.Promise = $q;
             try {
                 $rootScope.user = $cookies.getObject("user");
                 $rootScope.tenant = $cookies.getObject("tenant");

@@ -1,8 +1,10 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../User/Model/User.Model.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
-/// <reference path="../../common/model/ActionButtonConfigBuilder.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Process/model/Process.Model.ts" />
+/// <reference path="../../ActionButtons/model/ActionButtonConfigBuilder.Model.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Datatable.Service.ts" />
+/// <reference path="../../Workflow/model/Datatable.Service.Interface.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -19,11 +21,12 @@ const LeadDataTableServiceId: string = "LeadDataTableService";
 const allDataLeadRoute = "/api/rest/processes/leads";
 const openDataLeadRoute = "/api/rest/processes/workflow/LEAD/state/OPEN";
 
-class LeadDataTableService {
+class LeadDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId];
 
     workflowService: WorkflowService;
+    workflowDatatableService: WorkflowDatatableService;
     translate;
     dtOptions;
     dtColumns;
@@ -33,7 +36,7 @@ class LeadDataTableService {
     compile;
     rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -41,6 +44,7 @@ class LeadDataTableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
+        this.workflowDatatableService = WorkflowDatatableService;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
@@ -58,16 +62,16 @@ class LeadDataTableService {
                 }
             })
             .withOption("stateSave", false)
-            .withDOM(this.workflowService.getDomString())
+            .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowService.getButtons(this.translate("LEAD_LEADS"), [6, 1, 2, 3, 4, 5, 7, 9, 8, 10]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("LEAD_LEADS"), [6, 1, 2, 3, 4, 5, 7, 9, 8, 10]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("deferRender", true)
             .withOption("order", [4, "desc"])
             .withOption("lengthMenu", [10, 20, 50])
             .withOption("search", { "search": defaultSearch })
-            .withLanguageSource(this.workflowService.getLanguageSource(this.rootScope.language));
+            .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
     }
 
     configRow(row: any, data: Process) {
@@ -135,7 +139,7 @@ class LeadDataTableService {
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").withOption("width", "180px").notSortable().renderWith(addActionsButtons),
+                "text-center").withOption("width", "200px").notSortable().renderWith(addActionsButtons),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {
@@ -164,6 +168,7 @@ class LeadDataTableService {
                 .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("LEAD_DELETE_LEAD");
             config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id);
         }
+        config.get(ActionButtonType.QUICK_MAIL).setEnabled().setTitle("EMAIL_SEND");
         config.get(ActionButtonType.SET_INCONTACT).setVisible().setTitle("COMMON_STATUS_INCONTACT");
         if (process.status === Status.OPEN) {
             config.get(ActionButtonType.SET_INCONTACT).setEnabled();

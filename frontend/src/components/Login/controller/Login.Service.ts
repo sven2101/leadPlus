@@ -1,7 +1,7 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Authentication.Service.ts" />
 /// <reference path="../../Login/model/Credentials.Model.ts" />
-/// <reference path="../../Common/service/Subdomain.Service.ts" />
+/// <reference path="../../Tenant/controller/Subdomain.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.

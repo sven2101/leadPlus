@@ -2,14 +2,14 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../Product/controller/Product.Service.ts" />
 /// <reference path="../../Product/model/Product.Model.ts" />
-/// <reference path="../../common/model/OrderPosition.Model.ts" />
+/// <reference path="../../Product/model/OrderPosition.Model.ts" />
 /// <reference path="../../App/App.Resource.ts" />
 /// <reference path="../../App/App.Constants.ts" />
 /// <reference path="../../Lead/model/Lead.Model.ts" />
 /// <reference path="../../Sale/model/Sale.Model.ts" />
 /// <reference path="../../Offer/model/Offer.Model.ts" />
-/// <reference path="../../common/model/IWorkflow.Interface.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/model/IWorkflow.Interface.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.

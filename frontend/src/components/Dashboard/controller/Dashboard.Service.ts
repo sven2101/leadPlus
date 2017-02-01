@@ -3,10 +3,9 @@
 /// <reference path="../../lead/model/Lead.Model.ts" />
 /// <reference path="../../offer/model/Offer.Model.ts" />
 /// <reference path="../../sale/model/Sale.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
-/// <reference path="../../common/model/Promise.interface.ts" />
-/// <reference path="../../common/service/Workflow.Controller.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
+/// <reference path="../../Process/model/Process.Model.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Controller.ts" />
 
 
 /*******************************************************************************
@@ -355,6 +354,12 @@ class DashboardService {
         }
     }
 
+    addNewLead(process: Process) {
+        this.openLeads.push(process);
+        this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead");
+        this.sumLeads();
+    }
+
     updateDashboard(type: string) {
         if (type === "lead") {
             this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead");
@@ -381,8 +386,8 @@ class DashboardService {
         }
     }
 
-    startOfferTransformation(process: Process): IPromise<Process> {
-        let defer: IDefer<Process> = this.q.defer();
+    startOfferTransformation(process: Process): Promise<Process> {
+        let defer = this.q.defer();
         this.workflowService.startOfferTransformation(process).then(function (result: Process) {
             defer.resolve(result);
         }, function (error) {
@@ -391,7 +396,7 @@ class DashboardService {
         return defer.promise;
     }
 
-    startSaleTransformation(process: Process): IPromise<Process> {
+    startSaleTransformation(process: Process): Promise<Process> {
         let defer = this.q.defer();
         this.workflowService.startSaleTransformation(process).then(function (result) {
             defer.resolve(result);

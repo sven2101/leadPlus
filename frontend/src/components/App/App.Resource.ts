@@ -1,18 +1,4 @@
 /// <reference path="../app/App.Constants.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
 
 const LeadResourceId: string = "LeadResource";
 
@@ -71,7 +57,7 @@ class SaleResource {
             getAll: { url: "/api/rest/sales", method: "GET" },
             getById: { url: "/api/rest/sales/:id", method: "GET" },
             getByCustomerId: { url: "/api/rest/sales/customer/:id", method: "GET", isArray: true },
-            getByinvoiceNumber: { url: "/api/rest/sales/invoice", method: "POST" },
+            getByinvoiceNumber: { url: "/api/rest/sales/invoice", method: "POST" , isArray: true },
             drop: { url: "/api/rest/sales/:id", method: "DELETE" },
         });
     }

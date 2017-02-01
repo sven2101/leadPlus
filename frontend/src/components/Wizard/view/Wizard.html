@@ -1,0 +1,45 @@
+<div class="modal-header" style="padding-bottom: 0px">
+<button type="button" class="close" ng-click="close(false)">
+        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+<div class="wizard">
+    <div class="wizard-inner">
+        <ul class="nav nav-tabs" role="tablist">
+            <li ng-repeat="wizardElement in wizardElements | orderBy : 'position' track by $index" role="presentation" ng-class="{active:step===$index+1, disabled:wizardElement.isDisabled,errorAfter:wizardElement.form.$invalid && wizardElement.validation}"
+                ng-style="{'width':100/wizardElements.length+'%'}">
+                <label ng-class="{iconWizardDisabled:wizardElement.isDisabled}">{{ ::wizardElement.title | translate }}</label>
+                <a ng-click="wizardElement.isDisabled || ($parent.step=$index+1); wizardElement.isDisabled || ($parent.currentWizard=wizardElement)" aria-controls="step{{$index+1}}" role="tab">
+                    <span class="round-tab" ng-class="{roundTabHover:!wizardElement.isDisabled,error:wizardElement.form.$invalid && wizardElement.validation}">
+                                <i class="icon-wizard {{::wizardElement.icon}}" ng-class="{iconWizardDisabled:wizardElement.isDisabled,error:wizardElement.form.$invalid && wizardElement.validation}"></i>
+                        </span>
+                </a>
+                <div ng-if="$index+1 < wizardElements.length" class="connecting-line"></div>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>
+
+<div class="modal-body content-height">
+    <div class="tab-content">
+        <div ng-repeat="wizardElement in wizardElements | orderBy : 'position' track by $index" role="tabpanel" id="step{{$index+1}}"
+            class="tab-pane" ng-class="{active:step===$index+1}">
+            <div ng-transclude="{{::wizardElement.directiveType}}">
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="modal-footer ">
+    <button type="button " class="btn btn-white " ng-click="close(false)">{{ 'COMMON_CANCEL'| translate }}</button>
+    <button ng-if="currentWizard.showSaveButton" type="button " class="btn btn-success " ng-disabled="isAnyFormInvalid()"
+        ng-click="saveOrTransform()">{{ 'COMMON_SAVE'| translate }}</button>
+    <button ng-if="currentWizard.isFollowUp" type="button " class="btn btn-success" data-style="zoom-in"
+        ng-click="followUp()">
+		<span class="ladda-label">{{ 'EMAIL_ONLY_FOLLOWUP'| translate }}</span>
+		</button>
+    <button ng-if="currentWizard.isEmail" type="button " class="btn btn-warning" data-style="zoom-in"
+        ng-disabled="isAnyFormInvalid() || currentWizard.form.$invalid"
+        ng-click="send()">
+		<span class="ladda-label">{{ ::currentWizard.sendButtonName | translate }}</span>
+		</button>
+</div>

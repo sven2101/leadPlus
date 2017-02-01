@@ -1,7 +1,6 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 /// <reference path="../model/Attachment.Model.ts" />
-/// <reference path="../../Common/model/Promise.Interface.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -46,7 +45,7 @@ class NotificationService {
         this.notification = new Notification();
     }
 
-    sendNotification(notification: Notification): IPromise<boolean> {
+    sendNotification(notification: Notification): Promise<boolean> {
         let self = this;
         let defer = this.q.defer();
         this.notificationResource.sendNotification({ userId: this.rootScope.user.id, smtpKey: this.rootScope.user.smtpKey }, notification).$promise.then(function () {

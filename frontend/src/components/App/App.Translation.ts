@@ -1,18 +1,4 @@
 /// <reference path="../User/Model/Language.Model.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
 
 function config($translateProvider) {
     let pageTitle = "lead";
@@ -107,6 +93,8 @@ function config($translateProvider) {
             EMAIL_ATTACHMENT_SELECT: "Datei auswählen",
             EMAIL_ATTACHMENT_CHANGE: "Ändern",
             EMAIL_MESSAGE: "Nachricht",
+            EMAIL_SEND: "E-Mail senden",
+            EMAIL_ONLY_FOLLOWUP: "Nur FollowUp setzen",
             EMAIL_NOTIFICATION_HISTORY: "Bisher gesendete Nachrichten",
             EMAIL_NOTIFICATION_SELECT: "Nachricht auswählen",
             TEMPLATE_VARIABLES_INFO: "Sie können all die unten aufgelisteten Variablen innerhalb Ihres Templates verwenden.",
@@ -182,7 +170,7 @@ function config($translateProvider) {
             COMMON_VALIDATE_MIN: "Das Feld muss mindestens {{number}} Zeichen lang sein",
             COMMON_VALIDATE_MAX_END: " Zeichen gültig!",
             COMMON_VALIDATE_REQ: "Feld benötigt ",
-            COMMON_VALIDATE_REQ_NUMBER: "Eingabe darf nicht negativ sein oder ungültige Zeichen enthalten",
+            COMMON_VALIDATE_REQ_NUMBER: "Eingabe darf nicht negativ sein",
             COMMON_VALIDATE_ALPHANUMERIC: "Es sind nur Alphanumerische Zeichen erlaubt. Z.b. A-Z und 0-9",
             COMMON_VALIDATE_EMAIL: "E-Mail ungültig!",
             COMMON_NEW_PASSWORD: "Neues Passwort",
@@ -257,6 +245,10 @@ function config($translateProvider) {
             PROFILE_TOAST_PASSWORD_CHANGE_ERROR: "Passwort konnte nicht geändert werden",
             PROFILE_PICTURE_MANAGEMENT: "Profilbildverwaltung",
 
+            // Define all process elements
+            PROCESS_DELETE_PROCESS_TITLE: "Prozess löschen",
+            PROCESS_DELETE_PROCESS_BODY: "Möchten Sie den Prozess wirklich löschen?",
+
             // Define all lead elements
             LEAD_LEADS: "Anfragen",
             LEAD_MANAGE_LEADS: "Anfragen verwalten",
@@ -296,7 +288,7 @@ function config($translateProvider) {
             OFFER_TAB_FILES: "Angebote - Dateien",
             OFFER_TAB_TEMPLATES: "Angebote - Vorlagen",
             OFFER_GENERATION_AND_SENDING: "Angebot generieren und versenden",
-            OFFER_ROLLBACK: "Zurücksetzen zu Anfrage",
+            OFFER_ROLLBACK_TITLE: "Angebot zurücksetzen",
             OFFER_ROLLBACK_BODY: "Möchten Sie das Angebot wirklich zurücksetzen?",
 
 
@@ -310,7 +302,7 @@ function config($translateProvider) {
             SALE_SHOW_ALL_SALES: "Alle Verkäufe",
             SALE_DELETE_SALE: "Verkauf löschen",
             SALE_DELETE_SALE_BODY: "Möchten Sie den Verkauf wirklich löschen?",
-            SALE_ROLLBACK: "Zurücksetzen zu Angebot",
+            SALE_ROLLBACK_TITLE: "Verkauf zurücksetzen",
             SALE_ROLLBACK_BODY: "Möchten Sie den Verkauf wirklich zurücksetzen?",
 
             // Define setting elements
@@ -601,6 +593,8 @@ function config($translateProvider) {
             EMAIL_ATTACHMENT_SELECT: "Select file",
             EMAIL_ATTACHMENT_CHANGE: "Change",
             EMAIL_MESSAGE: "Message",
+            EMAIL_SEND: "Send E-Mail",
+            EMAIL_ONLY_FOLLOWUP: "Only set FollowUp",
             EMAIL_NOTIFICATION_HISTORY: "Previous send notifications",
             EMAIL_NOTIFICATION_SELECT: "Select notification",
             TEMPLATE_VARIABLES_INFO: "Within your Template you can use each Variable listed below.",
@@ -676,7 +670,7 @@ function config($translateProvider) {
             COMMON_VALIDATE_MIN: "The field have to be {{number}} characters long",
             COMMON_VALIDATE_MAX_END: " letters are allowed",
             COMMON_VALIDATE_REQ: "Field required ",
-            COMMON_VALIDATE_REQ_NUMBER: "Negative numbers and invalid characters are restricted",
+            COMMON_VALIDATE_REQ_NUMBER: "Negative numbers are restricted",
             COMMON_VALIDATE_ALPHANUMERIC: "Only alphanumeric characters are allowed. E.g. A-z and 0-9",
             COMMON_VALIDATE_EMAIL: "Enter a valid email",
             COMMON_VALIDATE_NEW_PASSWORD: "New password",
@@ -752,6 +746,10 @@ function config($translateProvider) {
             PROFILE_TOAST_PASSWORD_CHANGE_ERROR: "Password cannot be saved",
             PROFILE_PICTURE_MANAGEMENT: "Profile picture management",
 
+            // Define all process elements
+            PROCESS_DELETE_PROCESS_TITLE: "Delete process",
+            PROCESS_DELETE_PROCESS_BODY: "Are you sure to delete this process?",
+
             // Define all lead elements
             LEAD_LEADS: "Leads",
             LEAD_MANAGE_LEADS: "Manage leads",
@@ -790,7 +788,7 @@ function config($translateProvider) {
             OFFER_TAB_FILES: "Offer - Files",
             OFFER_TAB_TEMPLATES: "Offer - Templates",
             OFFER_GENERATION_AND_SENDING: "Generate and Send Offer",
-            OFFER_ROLLBACK: "Reset to lead",
+            OFFER_ROLLBACK_TITLE: "Reset offer",
             OFFER_ROLLBACK_BODY: "Are you sure to reset this offer?",
 
             // Define all sale elements
@@ -803,7 +801,7 @@ function config($translateProvider) {
             SALE_SHOW_ALL_SALES: "Total sales",
             SALE_DELETE_SALE: "Delete sale",
             SALE_DELETE_SALE_BODY: "Are you sure to delete this sale?",
-            SALE_ROLLBACK: "Reset to Offer",
+            SALE_ROLLBACK_TITLE: "Reset sale",
             SALE_ROLLBACK_BODY: "Are you sure to reset this sale?",
 
             // Define setting elements

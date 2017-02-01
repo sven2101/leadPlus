@@ -160,19 +160,19 @@ class StatisticService {
 
     loadWorkflowResourcesByDateRange(dateRange: string, source: string) {
         let self: StatisticService = this;
-        this.statisticResource.getWorkflowStatistic({ workflow: workflowLead, dateRange: dateRange, source: source }).$promise.then(function (result) {
+        this.statisticResource.getWorkflowStatistic({ workflow: WorkflowType.LEAD, dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.leadResultArr = result;
             self.leadAmount = self.getTotalSumOf(self.leadResultArr);
             self.isLeadPromise = true;
             self.checkPromises();
         });
-        this.statisticResource.getWorkflowStatistic({ workflow: workflowOffer, dateRange: dateRange, source: source }).$promise.then(function (result) {
+        this.statisticResource.getWorkflowStatistic({ workflow: WorkflowType.OFFER, dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.offerResultArr = result;
             self.offerAmount = self.getTotalSumOf(self.offerResultArr);
             self.isOfferPromise = true;
             self.checkPromises();
         });
-        this.statisticResource.getWorkflowStatistic({ workflow: workflowSale, dateRange: dateRange, source: source }).$promise.then(function (result) {
+        this.statisticResource.getWorkflowStatistic({ workflow: WorkflowType.SALE, dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.saleResultArr = result;
             self.saleAmount = self.getTotalSumOf(self.saleResultArr);
             self.isSalePromise = true;
@@ -182,7 +182,7 @@ class StatisticService {
 
     loadProfitResourcesByDateRange(dateRange: string, source: string) {
         let self: StatisticService = this;
-        this.statisticResource.getProfitStatistic({ workflow: workflowSale, dateRange: dateRange, source: source }).$promise.then(function (result) {
+        this.statisticResource.getProfitStatistic({ workflow: WorkflowType.SALE, dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.profitResultArr = result;
             self.profitTotal = self.getTotalSumOf(self.profitResultArr);
             self.isProfitPromise = true;
@@ -192,7 +192,7 @@ class StatisticService {
 
     loadTurnoverResourcesByDateRange(dateRange: string, source: string) {
         let self: StatisticService = this;
-        this.statisticResource.getTurnoverStatistic({ workflow: workflowSale, dateRange: dateRange, source: source }).$promise.then(function (result) {
+        this.statisticResource.getTurnoverStatistic({ workflow: WorkflowType.SALE, dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.turnoverResultArr = result;
             self.turnoverTotal = self.getTotalSumOf(self.turnoverResultArr);
             self.isTurnoverPromise = true;
@@ -202,7 +202,7 @@ class StatisticService {
 
     loadProductResourcesByDateRange(dateRange: string, source: string) {
         let self: StatisticService = this;
-        this.statisticResource.getProductStatistic({ workflow: workflowSale, dateRange: dateRange, source: source }).$promise.then(function (result) {
+        this.statisticResource.getProductStatistic({ workflow: WorkflowType.SALE, dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.productStatisticArr = result;
         });
     }

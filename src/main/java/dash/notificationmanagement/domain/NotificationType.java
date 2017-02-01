@@ -14,6 +14,6 @@
 package dash.notificationmanagement.domain;
 
 public enum NotificationType {
-	INFO, NEWSLETTER, FOLLOWUP, OFFER, ERROR
+	INFO, NEWSLETTER, LEAD, FOLLOWUP, OFFER, SALE, ERROR
 
 }

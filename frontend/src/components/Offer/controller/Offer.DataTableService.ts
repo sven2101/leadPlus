@@ -1,7 +1,7 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../User/Model/User.Model.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Process/model/Process.Model.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -18,11 +18,12 @@ const OfferDataTableServiceId: string = "OfferDataTableService";
 const allDataOfferRoute: string = "/api/rest/processes/offers";
 const openDataOfferRoute: string = "/api/rest/processes/workflow/OFFER/state/OFFER";
 
-class OfferDataTableService {
+class OfferDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId];
 
     workflowService: WorkflowService;
+    workflowDatatableService: WorkflowDatatableService;
     translate;
     dtOptions;
     dtColumns;
@@ -32,7 +33,7 @@ class OfferDataTableService {
     compile;
     rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -40,6 +41,7 @@ class OfferDataTableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
+        this.workflowDatatableService = WorkflowDatatableService;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
@@ -57,16 +59,16 @@ class OfferDataTableService {
                 }
             })
             .withOption("stateSave", false)
-            .withDOM(this.workflowService.getDomString())
+            .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowService.getButtons(this.translate("OFFER_OFFERS"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("OFFER_OFFERS"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("deferRender", true)
             .withOption("lengthMenu", [10, 20, 50])
             .withOption("order", [4, "desc"])
             .withOption("search", { "search": defaultSearch })
-            .withLanguageSource(this.workflowService.getLanguageSource(this.rootScope.language));
+            .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
     }
 
     configRow(row: any, data: Process) {
@@ -178,17 +180,17 @@ class OfferDataTableService {
             config.get(ActionButtonType.PIN_DROPDOWN).setEnabled().setTitle("LEAD_PIN");
             config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setEnabled().setTitle("OFFER_DELETE_OFFER");
             config.get(ActionButtonType.PIN_DROPDOWN_EMPTY_PROCESSOR).setEnabled();
-            config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setEnabled().setTitle("OFFER_ROLLBACK");
+            config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setEnabled().setTitle("OFFER_ROLLBACK_TITLE");
         } else {
             config.get(ActionButtonType.PIN_BUTTON).setVisible().setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("LEAD_PIN");
             config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible()
                 .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("LEAD_DELETE_LEAD");
             config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setVisible()
-                .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("OFFER_ROLLBACK");
+                .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("OFFER_ROLLBACK_TITLE");
             config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id);
 
         }
-        config.get(ActionButtonType.OPEN_FOLLOWUP_MODAL).setEnabled().setTitle("COMMON_STATUS_FOLLOW_UP");
+        config.get(ActionButtonType.QUICK_MAIL).setEnabled().setTitle("EMAIL_SEND");
         config.get(ActionButtonType.SET_OFFER_DONE).setEnabled().setTitle("COMMON_STATUS_SET_DONE").setIcon("fa fa-check");
         config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("OFFER_CLOSE_OFFER").setIcon("fa fa-lock");
         config.get(ActionButtonType.DETAILS_OPEN_EDIT_MODAL).setEnabled().setTitle("OFFER_EDIT_OFFER");
@@ -199,7 +201,7 @@ class OfferDataTableService {
         }
         else if (process.status === Status.DONE) {
             config.get(ActionButtonType.SET_OFFER_DONE).setEnabled().setTitle("COMMON_STATUS_SET_OPEN").setIcon("fa fa-undo");
-            config.get(ActionButtonType.OPEN_FOLLOWUP_MODAL).setEnabled(false);
+            config.get(ActionButtonType.QUICK_MAIL).setEnabled(false);
         } else if (process.status === Status.CLOSED) {
             config.disableAll();
             config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("OFFER_OPEN_OFFER").setIcon("fa fa-unlock");
@@ -214,8 +216,6 @@ class OfferDataTableService {
     getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {
         actionButtonConfig[process.id] = this.getActionButtonConfig(process);
         return "<div actionbuttons actionbuttonconfig=offerCtrl.actionButtonConfig[" + process.id + "]  process='offerCtrl.processes[" + process.id + "]'></div>";
-
-
     }
 
     getStatusStyleHTML(data: Process): string {

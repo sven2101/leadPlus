@@ -1,5 +1,4 @@
 /// <reference path="../../app/App.Resource.ts" />
-/// <reference path="../../Common/model/Promise.Interface.ts" />
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 
 /*******************************************************************************

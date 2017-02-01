@@ -1,15 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-"use strict";
-
 const $translateId: string = "$translate";
 const toasterId: string = "toaster";
 const DTOptionsBuilderId: string = "DTOptionsBuilder";
@@ -34,6 +22,7 @@ const $httpProviderId: string = "$httpProvider";
 const $uibModalId: string = "$uibModal";
 const $injectorId: string = "$injector";
 const $sceId: string = "$sce";
+const $routeId: string = "$route";
 
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";
@@ -48,17 +37,15 @@ const moduleSignupResource: string = moduleSignup + ".resource";
 const moduleSignupService: string = moduleSignup + ".service";
 const moduleLead: string = moduleApp + ".lead";
 const moduleLeadResource: string = moduleLead + ".resource";
-const moduleLeadService: string = moduleLead + ".service";
 const moduleLeadDataTableService: string = moduleLead + ".dataTableService";
 const moduleOffer: string = moduleApp + ".offer";
 const moduleOfferResource: string = moduleOffer + ".resource";
-const moduleOfferService: string = moduleOffer + ".service";
 const moduleOfferDataTableService: string = moduleOffer + ".dataTableService";
 const moduleSale: string = moduleApp + ".sale";
 const moduleSaleResource: string = moduleSale + ".resource";
-const moduleSaleService: string = moduleSale + ".service";
 const moduleSaleDataTableService: string = moduleSale + ".dataTableService";
 const moduleProcess: string = moduleApp + ".process";
+const moduleProcessService: string = moduleProcess + ".service";
 const moduleProcessResource: string = moduleProcess + ".resource";
 const moduleUser: string = moduleApp + ".user";
 const moduleUserDetail: string = moduleUser + ".detail";
@@ -83,6 +70,9 @@ const moduleCustomerResource: string = moduleCustomer + ".resource";
 const moduleCustomerService: string = moduleCustomer + ".service";
 const moduleWorkflow: string = moduleApp + ".workflow";
 const moduleWorkflowService: string = moduleWorkflow + ".service";
+const moduleWorkflowDatatableService: string = moduleWorkflow + ".datatableService";
+const moduleWorkflowDatatableRowService: string = moduleWorkflow + ".datatableRowService";
+const moduleWorkflowModalService: string = moduleWorkflow + ".modalService";
 const moduleFollowUp: string = moduleApp + ".followUp";
 const moduleFile: string = moduleApp + ".file";
 const moduleFileResource: string = moduleFile + ".resource";
@@ -106,6 +96,9 @@ const moduleSubdomainService: string = moduleSubdomain + ".service";
 const moduleSource: string = moduleApp + ".source";
 const moduleSourceResource: string = moduleSource + ".resource";
 const moduleSourceService: string = moduleSource + ".service";
+const moduleWizard: string = moduleApp + ".wizard";
+const moduleConfirmation: string = moduleApp + ".confirmationModal";
+
 
 const moduleTranslate: string = "pascalprecht.translate";
 const moduleNgResource: string = "ngResource";
@@ -125,9 +118,3 @@ const moduleSummernote: string = "summernote";
 const moduleFootable: string = "ui.footable";
 const moduleSanitize: string = "ngSanitize";
 const moduleSweetAlert: string = "oitozero.ngSweetAlert";
-
-const workflowLead: string = "LEAD";
-const workflowOffer: string = "OFFER";
-const workflowSale: string = "SALE";
-
-

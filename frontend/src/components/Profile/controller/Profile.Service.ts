@@ -52,7 +52,7 @@ class ProfileService {
         this.location = $location;
     }
 
-    updateProfilInfo(user: User): IPromise<User> {
+    updateProfilInfo(user: User): Promise<User> {
         let defer = this.q.defer();
         let self = this;
 
@@ -87,7 +87,7 @@ class ProfileService {
         });
     }
 
-    updatePassword(oldPassword, newPassword1, newPassword2): IPromise<boolean> {
+    updatePassword(oldPassword, newPassword1, newPassword2): Promise<boolean> {
         let salt: string = this.rootScope.user.email;
         oldPassword = hashPasswordPbkdf2(oldPassword, salt);
         newPassword1 = hashPasswordPbkdf2(newPassword1, salt);
@@ -128,7 +128,7 @@ class ProfileService {
         });
     }
 
-    getById(): IPromise<User> {
+    getById(): Promise<User> {
         let defer = this.q.defer();
         let self = this;
         this.userResource.getById({ id: this.rootScope.user.id }).$promise.then(function (resultUser: User) {

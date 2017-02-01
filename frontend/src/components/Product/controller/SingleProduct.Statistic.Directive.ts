@@ -1,23 +1,7 @@
-/// <reference path="../../Statistic/model/ColumnChart.Model.ts" />" />
 /// <reference path="../../Statistic/controller/Statistic.Service.ts" />
-/// <reference path="../../Common/Model/Workflow.Model.ts" />
+/// <reference path="../../Workflow/Model/WorkflowType.ts" />
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Common.ts" />
-
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
 
 angular.module(moduleApp)
     .directive("product", [$translateId, StatisticServiceId, function ($translate, StatisticService) {
@@ -68,7 +52,7 @@ angular.module(moduleApp)
                 productLeadPromise = false;
                 productOfferPromise = false;
                 productSalePromise = false;
-                StatisticService.getProductStatisticById(Workflow[Workflow.LEAD], dateRange, source, scope.productobj.id).then(function (resultLeads) {
+                StatisticService.getProductStatisticById(WorkflowType[WorkflowType.LEAD], dateRange, source, scope.productobj.id).then(function (resultLeads) {
                     scope.productLeads = resultLeads;
                     if (isNullOrUndefined(resultLeads.product)) {
                         scope.productLeads = emptyProduct;
@@ -76,7 +60,7 @@ angular.module(moduleApp)
                     productLeadPromise = true;
                     checkPromise();
                 });
-                StatisticService.getProductStatisticById(Workflow[Workflow.OFFER], dateRange, source, scope.productobj.id).then(function (resultOffers) {
+                StatisticService.getProductStatisticById(WorkflowType[WorkflowType.OFFER], dateRange, source, scope.productobj.id).then(function (resultOffers) {
                     scope.productOffers = resultOffers;
                     if (isNullOrUndefined(resultOffers.product)) {
                         scope.productOffers = emptyProduct;
@@ -84,7 +68,7 @@ angular.module(moduleApp)
                     productOfferPromise = true;
                     checkPromise();
                 });
-                StatisticService.getProductStatisticById(Workflow[Workflow.SALE], dateRange, source, scope.productobj.id).then(function (resultSales) {
+                StatisticService.getProductStatisticById(WorkflowType[WorkflowType.SALE], dateRange, source, scope.productobj.id).then(function (resultSales) {
                     scope.productSales = resultSales;
                     if (isNullOrUndefined(resultSales.product)) {
                         scope.productSales = emptyProduct;
@@ -101,7 +85,6 @@ angular.module(moduleApp)
                     scope.chart.pushData($translate.instant("SALE_SALES"), [scope.productSales.count], "#1a7bb9");
                 }
             }
-
 
         };
         return directive;

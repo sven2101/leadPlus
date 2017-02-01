@@ -28,24 +28,49 @@
 </div>
 
 <div class="wrapper wrapper-content animated fadeInRight">
-	<!-- <ul class="nav nav-tabs">
-        <li class="active" ng-click="offerCtrl.otherTabOnClick(1)"><a data-toggle="tab" aria-expanded="true">{{
-				'OFFER_TAB_OFFERS' | translate }}</a></li>
-        <li ng-click="offerCtrl.otherTabOnClick(2)"><a data-toggle="tab" aria-expanded="true">{{ 'OFFER_TAB_FILES' | translate
-				}}</a></li>
-        <li ng-click="offerCtrl.otherTabOnClick(3)"><a data-toggle="tab" aria-expanded="true">{{ 'OFFER_TAB_TEMPLATES' | translate
-				}}</a></li>
-    </ul>
-    </br>-->
-	<div ng-include="'components/Offer/view/Offer.Offers.html'"></div>
-	<!-- <div ng-include="'components/Offer/view/Offer.Files.html'"></div>
-    <div ng-include="'components/Offer/view/Offer.Templates.html'"></div>
-    -->
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>{{ 'OFFER_MANAGE_OFFERS' | translate }}</h5>
+				</div>
+				<div class="ibox-content">
+					<span class="pull-right" style=" font-size: 1.5em;">{{ 'OFFER_SHOW_ALL_OFFERS' | translate }} &nbsp;<input type="checkbox"
+                                                                                               ng-model="offerCtrl.loadAllData"
+                                                                                               ng-change="offerCtrl.changeDataInput()"
+                                                                                               class="js-switch"
+                                                                                               ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
+					<br/>
+					<br/>
+					<div class="table-responsive text-center">
+						<table id="ngdatatable" datatable="" dt-options="offerCtrl.dtOptions" dt-columns="offerCtrl.dtColumns" dt-disable-deep-watchers="true" dt-instance="offerCtrl.dtInstanceCallback"
+							class="table table-bordered table-hover table-condensed text-center" style="width:100%;"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-<div hidden ng-include="'components/Common/view/Workflow.Send.Modal.html'"></div>
+<div hidden ng-include="'components/Wizard/view/Wizard.html'"></div>
+<div hidden ng-include="'components/Wizard/view/Edit.Customer.html'"></div>
+<div hidden ng-include="'components/Wizard/view/Edit.Email.html'"></div>
+<div hidden ng-include="'components/Wizard/view/Edit.Customer.Small.html'"></div>
+<div hidden ng-include="'components/Wizard/view/Edit.Product.html'"></div>
+<div hidden ng-include="'components/Wizard/view/Edit.Sale.html'"></div>
 
-<div editworkflow parent="offerCtrl" type="offer" modaltitle="{{'OFFER_EDIT_OFFER_MODAL'| translate}}"></div>
-<div confirmationmodal modalid="deleteConfirmationModal" parent="offerCtrl" title="{{'OFFER_DELETE_OFFER'| translate}}" body="{{'OFFER_DELETE_OFFER_BODY'| translate}}"
-	submittext="{{'COMMON_DELETE'| translate}}"></div>
-<div confirmationmodal modalid="rollbackConfirmationModal" parent="offerCtrl" title="{{'OFFER_ROLLBACK'| translate}}" body="{{'OFFER_ROLLBACK_BODY'| translate}}"
-	submittext="{{'COMMON_RESET'| translate}}"></div>
+<!--Page level script-->
+<script>
+    jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+        "date-euro-pre": function (date) {
+            return moment(date, 'DD.MM.YYYY HH:mm');
+        },
+
+        "date-euro-asc": function (a, b) {
+            return (a.isBefore(b) ? -1 : (a.isAfter(b) ? 1 : 0));
+        },
+
+        "date-euro-desc": function (a, b) {
+            return (a.isBefore(b) ? 1 : (a.isAfter(b) ? -1 : 0));
+        }
+    });
+</script>

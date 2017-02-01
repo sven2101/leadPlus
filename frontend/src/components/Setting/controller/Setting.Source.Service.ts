@@ -1,6 +1,5 @@
 /// <reference path="../../Setting/model/Source.Model.ts" />
 /// <reference path="../../app/App.Constants.ts" />
-/// <reference path="../../Common/model/Promise.Interface.ts" />
 /// <reference path="../../app/App.Resource.ts" />
 
 /*******************************************************************************
@@ -50,7 +49,7 @@ class SourceService {
 
     }
 
-    getAllSources(): IPromise<Array<Source>> {
+    getAllSources(): Promise<Array<Source>> {
         let defer = this.q.defer();
         let self = this;
         this.SourceResource.getAllSources().$promise.then(function (result: Array<Source>) {
