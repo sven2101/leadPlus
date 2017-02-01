@@ -30,11 +30,11 @@
 				<label>{{ 'COMMON_DELIVERY_TIME' | translate }}</label>
 				<div ng-show="$root.language=='DE' " class="input-group date " data-date-language="de " data-date-format="dd.mm.yyyy ">
 					<span class="input-group-addon "><i class="fa fa-calendar "></i></span>
-					<input type="text " class="form-control " name="deliveryDate " model="editWorkflowUnit.deliveryDate " ng-maxlength="5" ng-disabled="!editable">
+					<input ng-readonly="true" type="text " class="form-control " name="deliveryDate " model="editWorkflowUnit.deliveryDate " ng-maxlength="5" ng-disabled="!editable">
 				</div>
 				<div ng-show="$root.language=='EN' " class="input-group date " data-date-language="en " data-date-format="dd.mm.yyyy ">
 					<span class="input-group-addon "><i class="fa fa-calendar "></i></span>
-					<input type="text " class="form-control " name="deliveryDate " ng-model="editWorkflowUnit.deliveryDate "  ng-disabled="!editable">
+					<input ng-readonly="true" type="text " class="form-control " name="deliveryDate " ng-model="editWorkflowUnit.deliveryDate "  ng-disabled="!editable">
 				</div>
 			</div>
 		</div>

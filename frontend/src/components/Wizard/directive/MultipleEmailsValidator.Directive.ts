@@ -36,26 +36,23 @@ class MultipleEmailsValidatorDirective implements IDirective {
                 return;
             }
             scope.pristine = false;
-            let valid = scope.checkEmail();
-            scope.form[scope.name] = {
-                $error: {
-                    email: !valid
-                },
-                $invalid: !valid
+            let isEmail = scope.checkEmail();
+            scope.form[scope.name].$error.email = !isEmail;
 
-            };
-            if (!isNullOrUndefined(scope.required) && (isNullOrUndefined(scope.emails) || scope.emails === "")) {
-                scope.form[scope.name].$error.required = true;
-            } else {
-                scope.form[scope.name].$error.required = undefined;
+            if (scope.form[scope.name].$valid === false && isEmail) {
+                scope.form[scope.name].$valid = true;
+                scope.form[scope.name].$invalid = false;
+            } else if (scope.form[scope.name].$valid === true && !isEmail) {
+                scope.form[scope.name].$valid = false;
+                scope.form[scope.name].$invalid = true;
             }
 
-            if (scope.form.$valid === true && !valid) {
-                scope.form.$valid = undefined;
-                scope.form.$invalid = true;
-            } else if (scope.form.$valid === true && valid) {
-                scope.form.$valid = true;
-                scope.form.$invalid = undefined;
+            if (!isNullOrUndefined(scope.required) && (isNullOrUndefined(scope.emails) || scope.emails === "")) {
+                scope.form[scope.name].$error.required = true;
+                scope.form[scope.name].$valid = false;
+                scope.form[scope.name].$invalid = true;
+            } else {
+                scope.form[scope.name].$error.required = false;
             }
         }, true);
 

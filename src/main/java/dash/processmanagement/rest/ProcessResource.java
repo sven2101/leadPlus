@@ -132,7 +132,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Puts processor to process", notes = "")
 	@RequestMapping(value = "/{id}/processors", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public User setProcessor(@ApiParam(required = true) @PathVariable final Long id, @RequestBody final long userId)
+	public Process setProcessor(@ApiParam(required = true) @PathVariable final Long id, @RequestBody final long userId)
 			throws Exception {
 		return processService.setProcessor(id, userId);
 	}

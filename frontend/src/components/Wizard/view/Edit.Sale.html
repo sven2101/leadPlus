@@ -4,22 +4,24 @@
 			<!-- SALE TURNOVER -->
 			<div class="form-group" ng-class="{ 'has-error' : sform.saleTurnover.$invalid && !sform.saleTurnover.$pristine }">
 				<label>{{ 'COMMON_PRODUCT_SALE_TURNOVER'| translate }}<span style="color:red">*</span></label>
+				<span style="color:red" ng-show="sform.saleTurnover.$error.required && !sform.saleTurnover.$pristine">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</span>
+				<span style="color:red" ng-show="sform.saleTurnover.$error.max && !sform.saleTurnover.$pristine">{{ 'COMMON_VALIDATE_TOO_BIG'| translate }}</span>
 				<div class="input-group">
 					<span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
 					<input type="number" name="saleTurnover" ng-model="editWorkflowUnit.saleTurnover" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
 						step="0.01" min="0" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency"  required
-						ng-keyup="calculateProfit()">
+						ng-keyup="calculateProfit()" max="1000000000">
 				</div>
-				<p ng-show="sform.saleTurnover.$invalid && !sform.saleTurnover.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
 			</div>
 		</div>
 		<div class="col-sm-6 text-left">
 			<!-- SALE INVOICE NUMBER -->
 			<div class="form-group" ng-class="{ 'has-error' : sform.saleInvoiceNumber.$invalid }">
 				<label>{{ 'COMMON_PRODUCT_SALE_INVOICE_NUMBER'| translate }}</label>
+				<span style="color:#FFCC00" ng-show="invoiceNumberAlreadyExists">{{ 'COMMON_VALIDATE_INVOICE_NUMBER_ALREADY_EXISTS'| translate }}</span>
+				<span style="color:red" ng-show="sform.saleInvoiceNumber.$error.maxlength && !sform.saleInvoiceNumber.$pristine">{{ 'COMMON_VALIDATE_TOO_LONG'| translate }}</span>
 				<input type="text" name="saleInvoiceNumber" class="form-control" ng-model="editWorkflowUnit.invoiceNumber"
-					ng-blur="existsInvoiceNumber()">
-				<p ng-show="invoiceNumberAlreadyExists" class="help-block" style="color:#FFCC00"> {{ 'COMMON_VALIDATE_INVOICE_NUMBER_ALREADY_EXISTS'| translate }}</p>
+					ng-blur="existsInvoiceNumber()" ng-maxlength="255">
 			</div>
 		</div>
 	</div>
@@ -28,13 +30,14 @@
 			<!-- SALE COST -->
 			<div class="form-group" ng-class="{ 'has-error' : sform.saleCost.$invalid && !sform.saleCost.$pristine }">
 				<label>{{ 'COMMON_PRODUCT_SALE_COST'| translate }}<span style="color:red">*</span></label>
+				<span style="color:red" ng-show="sform.saleCost.$error.required && !sform.saleCost.$pristine">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</span>
+				<span style="color:red" ng-show="sform.saleCost.$error.max && !sform.saleCost.$pristine">{{ 'COMMON_VALIDATE_TOO_BIG'| translate }}</span>
 				<div class="input-group">
 					<span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
 					<input type="number" name="saleCost" ng-model="editWorkflowUnit.saleCost" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
 						step="0.01" min="0" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency"  required
-						ng-keyup="calculateProfit()">
+						ng-keyup="calculateProfit()" max="1000000000">
 				</div>
-				<p ng-show="sform.saleCost.$invalid && !sform.saleCost.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
 			</div>
 		</div>
 	</div>
@@ -43,12 +46,13 @@
 			<!-- SALE PROFIT -->
 			<div class="form-group" ng-class="{ 'has-error' : sform.saleProfit.$invalid && !sform.saleProfit.$pristine }">
 				<label>{{ 'COMMON_PRODUCT_SALE_PROFIT'| translate }}<span style="color:red">*</span></label>
+				<span style="color:red" ng-show="sform.saleProfit.$error.required && !sform.saleProfit.$pristine">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</span>
+				<span style="color:red" ng-show="sform.saleProfit.$error.max && !sform.saleProfit.$pristine">{{ 'COMMON_VALIDATE_TOO_BIG'| translate }}</span>
 				<div class="input-group">
 					<span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
 					<input type="number" name="saleProfit" ng-disabled="true"  ng-model="editWorkflowUnit.saleProfit"
-						step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" required>
+						step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" required max="1000000000">
 				</div>
-				<p ng-show="sform.saleProfit.$invalid && !sform.saleProfit.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}({{ 'COMMON_VALIDATE_REQ_NUMBER'| translate }})</p>
 			</div>
 		</div>
 	</div>

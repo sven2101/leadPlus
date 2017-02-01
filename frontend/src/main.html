@@ -222,6 +222,13 @@
 	<!--/row border-bottom -->
 	<div ng-view class="md-skin"></div>
 </div>
+<div ng-if="appCtrl.rendered===false" hidden ng-include="'components/Wizard/view/Wizard.html'"></div>
+<div ng-if="appCtrl.rendered===false" hidden ng-include="'components/Wizard/view/Edit.Customer.html'"></div>
+<div ng-if="appCtrl.rendered===false" hidden ng-include="'components/Wizard/view/Edit.Email.html'"></div>
+<div ng-if="appCtrl.rendered===false" hidden ng-include="'components/Wizard/view/Edit.Customer.Small.html'"></div>
+<div ng-if="appCtrl.rendered===false" hidden ng-include="'components/Wizard/view/Edit.Product.html'"></div>
+<div ng-if="appCtrl.rendered===false" hidden ng-include="'components/Wizard/view/Edit.Sale.html'"></div>
+{{appCtrl.rendered = true;}}
 <!--/page-wrapper -->
 <!-- page level javascript -->
 <script>

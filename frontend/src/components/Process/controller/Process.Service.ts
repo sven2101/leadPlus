@@ -44,7 +44,7 @@ class ProcessService {
             this.rootScope.$broadcast(broadcastRemove, resultProcess);
         }
         if (!isNullOrUndefined(editProcess) && !isNullOrUndefined(editProcess.processor) && editProcess.processor.id === Number(this.rootScope.user.id)) {
-            this.rootScope.$broadcast("onTodosChange");
+            this.rootScope.$broadcast(broadcastOnTodosChanged);
         }
         return resultProcess;
     }

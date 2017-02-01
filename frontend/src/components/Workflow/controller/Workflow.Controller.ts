@@ -135,12 +135,13 @@ class WorkflowController {
 
         let updateOrRemove = $rootScope.$on(broadcastRemoveOrUpdate, (event, data) => {
             clearWatchers(self.loadAllData);
-            self.workflowDatatableRowService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope"));
+            self.workflowDatatableRowService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope" + data.id));
         });
 
         let updateRow = $rootScope.$on(broadcastUpdate, (event, data) => {
             clearWatchers(self.loadAllData);
-            self.workflowDatatableRowService.updateRow(data, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope"));
+            console.log(data.id);
+            self.workflowDatatableRowService.updateRow(data, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope" + data.id));
         });
 
         let openEditModal = $rootScope.$on(broadcastOpenEditModal, (event, data: Process) => {

@@ -1,4 +1,4 @@
-<form id="scopeStuff" name="eform">
+<form id="scopeStuff" name="eform" novalidate>
 	<div>
 		<div class="form-inline">
 			<div class="form-group" style="width:45%">
@@ -22,15 +22,14 @@
 		</div>
 		<!--<hr style="border-top: 1px dashed #8c8b8b;" />-->
 		<br>
-		{{eform.recipients.$error}}
 		<label>{{ 'EMAIL_RECIPIENT' | translate }} {{ 'EMAIL_RECIPIENT_COMMA' | translate }}<span style="color:red">*</span></label>
-		<span style="color:red" ng-show="eform.recipients.$error.required&&!disabled&&!eform.recipients.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+		<span style="color:red" ng-show="eform.recipients.$error.required&&!eform.recipients.$error.maxlength&&!disabled&&!eform.recipients.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
 		<span style="color:red" ng-show="eform.recipients.$error.email&&!disabled&&!eform.recipients.$pristine">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
 		<span style="color:red" ng-show="eform.recipients.$error.maxlength&&!disabled&&!eform.recipients.$pristine">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
 		<div class="form-inline">
-			<div class="form-group" style="width:90%" ng-class="{ 'has-error' : eform.recipients.$invalid&&!disabled&&!eform.recipients.$pristine}">
+			<div class="form-group" style="width:90%" ng-class="{ 'has-error' : eform.recipients.$invalid&&!disabled}">
 				<input style="width:100%" ng-disabled="disabled" multipleemails form="eform" emails="notification.recipients" name="recipients"
-					required class="form-control" ng-model="notification.recipients" ng-maxlength="255">
+					required class="form-control" ng-model="notification.recipients" ng-model-options="{debounce: 350}" ng-maxlength="255">
 
 			</div>
 			<a ng-disabled="disabled" style="width:9%;height:34px" class="btn btn-default pull-right" ng-click="showCC_BCC=!showCC_BCC">CC/BCC</a>
@@ -40,26 +39,28 @@
 			<div style="width:49%" class="form-group" ng-class="{ 'has-error' : eform.recipientsCC.$invalid&&!disabled&&!eform.recipientsCC.$pristine}">
 				<label>{{ 'EMAIL_RECIPIENT' | translate }} - CC</label>
 				<span style="color:red" ng-show="eform.recipientsCC.$error.email&&!disabled">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
+				<span style="color:red" ng-show="eform.recipientsCC.$error.maxlength&&!disabled">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
 				<input style="width:100%" ng-disabled="disabled" multipleemails form="eform" emails="notification.recipientsCC" name="recipientsCC"
-					class="form-control" ng-model="notification.recipientsCC">
+					class="form-control" ng-model="notification.recipientsCC" ng-model-options="{debounce: 350}" ng-maxlength="255">
 			</div>
 			<div style="width:49%;float:right" class="form-group" ng-class="{ 'has-error' : eform.recipientsBCC.$invalid&&!disabled&&!eform.recipientsBCC.$pristine}">
 				<label>{{ 'EMAIL_RECIPIENT' | translate }} - BCC</label>
 				<span style="color:red" ng-show="eform.recipientsBCC.$error.email&&!disabled">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
+				<span style="color:red" ng-show="eform.recipientsBCC.$error.maxlength&&!disabled">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
 				<input style="width:100%" ng-disabled="disabled" multipleemails form="eform" emails="notification.recipientsBCC" name="recipientsBCC"
-					class="form-control" ng-model="notification.recipientsBCC">
+					class="form-control" ng-model="notification.recipientsBCC" ng-model-options="{debounce: 350}" ng-maxlength="255">
 			</div>
 		</div>
 		<br ng-show="showCC_BCC" />
 		<div class="form-inline">
-			<div style="width:82%" class="form-group" ng-class="{ 'has-error' : eform.subject.$invalid&&!disabled&&!eform.subject.$pristine}">
-				<label>{{ 'EMAIL_SUBJECT' | translate }}</label>
-				<span style="color:red">*</span>
+			<div style="width:82%" class="form-group" ng-class="{ 'has-error' : eform.subject.$invalid&&!disabled}">
+				<label>{{ 'EMAIL_SUBJECT' | translate }} <span style="color:red">*</span></label>
 				<span style="color:red" ng-show="eform.subject.$error.minlength&&!disabled">{{ 'COMMON_VALIDATE_MIN' | translate:'{ number: "3" }'}}</span>
+				<span style="color:red" ng-show="eform.subject.$error.maxlength&&!disabled">{{ 'COMMON_VALIDATE_TOO_LONG' | translate}}</span>
 				<span style="color:red" ng-show="eform.subject.$error.required&&!disabled&&!eform.subject.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
 				<br>
 				<input style="width:100%" ng-disabled="disabled" name="subject" required type="text" class="form-control" ng-model="notification.subject"
-					ng-minlength="3">
+					ng-minlength="3" ng-maxlength="255">
 			</div>
 			<div style="width:18%;float:right;" ng-if="!disabled||(disabled&&notification.attachments.length>0)" class="form-group" ng-class="{ 'has-error' : parent.emailEditeform.attachement.$invalid}">
 				<label style="margin-left:15px;">{{ 'EMAIL_ATTACHMENT' | translate }}</label>
@@ -84,12 +85,13 @@
 			</span>
 		</div>
 	</div>
-	<div style="clear: left;" class="form-group" ng-class="{ 'has-error' : eform.message.$invalid&&!eform.message.$pristine}">
-		<label>{{ 'EMAIL_MESSAGE' | translate }}</label>
-		<span style="color:red">*</span>
+	<div style="clear: left;" class="form-group">
+		<label>{{ 'EMAIL_MESSAGE' | translate }}<span style="color:red">*</span></label>
 		<span style="color:red" ng-show="eform.message.$error.required&&!eform.message.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
 		<br/>
-		<summernote ng-if="!disabled" name="message" class="form-control" required ng-model="notification.content" height="300px">{{notification.content}}</summernote>
+		<div ng-if="!disabled" style="border: 1px solid #a9a9a9" ng-style="eform.message.$invalid?{ 'border-color': 'red'}:{ 'border-color': '#a9a9a9'}">
+			<summernote name="message" class="form-control" required ng-model="notification.content" height="300px">{{notification.content}}</summernote>
+		</div>
 		<div ng-if="disabled" style="border: 1px solid gray;  padding: 15px;">
 			<div ng-bind-html="htmlString"></div>
 		</div>

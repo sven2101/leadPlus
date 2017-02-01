@@ -63,7 +63,7 @@ public interface IProcessService {
 
 	public Sale createSale(final long processId, final Sale sale) throws SaveFailedException;
 
-	public User setProcessor(final long processId, final long userId) throws Exception;
+	public Process setProcessor(final long processId, final long userId) throws Exception;
 
 	public List<Process> getProcessWithLatestSales(final int amount);
 
