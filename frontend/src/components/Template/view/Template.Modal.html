@@ -7,23 +7,39 @@
 	<form name="createTemplate">
 		<div class="row">
 			<!-- Name -->
-			<div class="form-group">
-				<label>{{ 'COMMON_NAME' | translate }}<span style="color:red">*</span></label>
-				<input required type="text" name="name" class="form-control" ng-model="templateCtrl.template.name" ng-maxlength="30">
-				<p ng-show="createTemplate.name.$error.maxlength && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-				<p ng-show="createTemplate.name.$error.required  && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+			<div class="col-lg-6">
+				<div class="form-group">
+					<label>{{ 'COMMON_NAME' | translate }}<span style="color:red">*</span></label>
+					<input required type="text" name="name" class="form-control" ng-model="templateCtrl.template.name" ng-maxlength="30">
+					<p ng-show="createTemplate.name.$error.maxlength && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+					<p ng-show="createTemplate.name.$error.required  && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+				</div>
+				<!-- Description -->
+				<div class="form-group" ng-class="{ 'has-error' : createTemplate.description.$invalid && !createTemplate.description.$pristine }">
+					<label>{{ 'COMMON_DESCRIPTION' | translate }}</label>
+					<input type="text" name="description" class="form-control" ng-model="templateCtrl.template.description" ng-maxlength="255">
+					<p ng-show="createTemplate.description.$error.maxlength && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
+					<p ng-show="createTemplate.description.$error.required  && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
+				</div>
+				<!-- Deactivated -->
+				<div class="form-group">
+					<label class="checkbox-inline "> <input type="checkbox " ng-model="templateCtrl.template.deactivated">{{ 'COMMON_DEACTIVATED' | translate }}</label>
+				</div>
 			</div>
-			<!-- Description -->
-			<div class="form-group" ng-class="{ 'has-error' : createTemplate.description.$invalid && !createTemplate.description.$pristine }">
-				<label>{{ 'COMMON_DESCRIPTION' | translate }}</label>
-				<input type="text" name="description" class="form-control" ng-model="templateCtrl.template.description" ng-maxlength="255">
-				<p ng-show="createTemplate.description.$error.maxlength && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-				<p ng-show="createTemplate.description.$error.required  && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
-			</div>
-			<!-- Deactivated -->
-			<div class="form-group">
-				<label class="checkbox-inline "> <input type="checkbox " ng-model="templateCtrl.template.deactivated">{{ 'COMMON_DEACTIVATED' | translate }}</label>
-			</div>
+			<div class="col-lg-6">
+				<div class="form-group">
+					<label>{{ 'SETTING_TEMPLATE_NOTIFICATION_TYPE' | translate }}</label>
+					<select ng-model="templateCtrl.currentSelectedNotificationTypes" data-placeholder-text-single="'SETTING_TEMPLATE_NOTIFICATION_TYPE_SELECT'" 
+						chosen multiple ng-options="s for s in templateCtrl.availableNotificationTypes"></select>
+				</div>
+				<div class="form-group">
+					<label>{{ 'SETTING_TEMPLATE_SOURCE' | translate }}</label>
+					<select ng-model="templateCtrl.currentSelectedSource" data-placeholder-text-single="'SETTING_TEMPLATE_SOURCE_SELECT'" 
+						chosen multiple id="states" ng-options="s for s in templateCtrl.availablesourceNames"></select>	
+				</div>
+											
+			</div>		
+		
 			<!-- Template -->
 			<div class="form-group " ng-class="{ 'has-error' : createTemplate.content.$invalid && !createTemplate.content.$pristine
                 } ">
@@ -48,4 +64,18 @@
 	.note-editor .note-color-palette { line-height: 1; }
 	.note-editor .note-color-palette div .note-color-btn { width: 17px; height: 17px; padding: 0px; margin: 0px; border: 1px solid rgb(255, 255, 255); }
 	.note-editor .note-color-palette div .note-color-btn:hover { border: 1px solid rgb(0, 0, 0); }
+
+	.chosen-container, .default,.chosen-drop {
+    width: 100% !important;
+}
 </style>
+
+<script>
+  $(document).ready(function(){
+		$( '.chosen-select').chosen();	
+		$('.chosen-select').on('change', function(evt, params) {
+			var selectedValue = params;
+			console.log(selectedValue);
+		});
+  })
+</script>
