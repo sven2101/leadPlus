@@ -6,6 +6,12 @@
 
 const WorkflowControllerId: string = "WorkflowController";
 
+const broadcastUpdate: string = "updateRow";
+const broadcastRemoveOrUpdate: string = "removeOrUpdateRow";
+const broadcastRemove: string = "removeRow";
+const broadcastOpenEditModal: string = "openEditModal";
+
+
 class WorkflowController {
     workflowService: WorkflowService;
     workflowDatatableService: WorkflowDatatableService;
@@ -122,22 +128,22 @@ class WorkflowController {
             }
         };
 
-        let deleteRow = $rootScope.$on("removeRow", (event, data) => {
+        let deleteRow = $rootScope.$on(broadcastRemove, (event, data) => {
             clearWatchers(self.loadAllData);
             self.workflowDatatableRowService.deleteRow(data, self.dtInstance, self.controllerType);
         });
 
-        let updateOrRemove = $rootScope.$on("removeOrUpdateRow", (event, data) => {
+        let updateOrRemove = $rootScope.$on(broadcastRemoveOrUpdate, (event, data) => {
             clearWatchers(self.loadAllData);
             self.workflowDatatableRowService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope"));
         });
 
-        let updateRow = $rootScope.$on("updateRow", (event, data) => {
+        let updateRow = $rootScope.$on(broadcastUpdate, (event, data) => {
             clearWatchers(self.loadAllData);
             self.workflowDatatableRowService.updateRow(data, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope"));
         });
 
-        let openEditModal = $rootScope.$on("openEditModal", (event, data: Process) => {
+        let openEditModal = $rootScope.$on(broadcastOpenEditModal, (event, data: Process) => {
             self.openEditModal(data);
         });
 

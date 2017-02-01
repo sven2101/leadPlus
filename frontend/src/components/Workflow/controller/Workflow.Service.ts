@@ -246,13 +246,13 @@ class WorkflowService {
         if (user !== null) {
             this.processService.setProcessor(process, user).then(() => {
                 process.processor = user;
-                self.rootScope.$broadcast("updateRow", process);
+                self.rootScope.$broadcast(broadcastUpdate, process);
                 self.rootScope.$broadcast("onTodosChange");
             }, (error) => handleError(error));
         } else if (process.processor !== null) {
             this.processService.removeProcessor(process).then(function () {
                 process.processor = null;
-                self.rootScope.$broadcast("updateRow", process);
+                self.rootScope.$broadcast(broadcastUpdate, process);
                 self.rootScope.$broadcast("onTodosChange");
             }, (error) => handleError(error));
         }
@@ -300,15 +300,15 @@ class WorkflowService {
             } else if (!isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
                 this.rootScope.offersCount -= 1;
             }
-            this.rootScope.$broadcast("removeOrUpdateRow", resultProcess);
+            this.rootScope.$broadcast(broadcastRemoveOrUpdate, resultProcess);
         } else if (isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
             resultProcess = await this.processService.setStatus(process, Status.OPEN);
             this.rootScope.leadsCount += 1;
-            this.rootScope.$broadcast("updateRow", resultProcess);
+            this.rootScope.$broadcast(broadcastUpdate, resultProcess);
         } else if (!isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
             resultProcess = await this.processService.setStatus(process, Status.OFFER);
             this.rootScope.offersCount += 1;
-            this.rootScope.$broadcast("updateRow", resultProcess);
+            this.rootScope.$broadcast(broadcastUpdate, resultProcess);
         }
     }
 
@@ -351,7 +351,7 @@ class WorkflowService {
             this.rootScope.offersCount -= 1;
         }
         this.rootScope.$broadcast("onTodosChange");
-        this.rootScope.$broadcast("removeRow", process);
+        this.rootScope.$broadcast(broadcastRemove, process);
         return resultProcess;
     }
 

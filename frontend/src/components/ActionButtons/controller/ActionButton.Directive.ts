@@ -32,7 +32,7 @@ class ActionButtonDirective implements IDirective {
         scope.config = scope.actionbuttonconfig;
         scope.ConfirmationFunctionType = ConfirmationFunctionType;
         scope.openEditModal = (process: Process): void => {
-            this.$rootScope.$broadcast("openEditModal", process);
+            this.$rootScope.$broadcast(broadcastOpenEditModal, process);
         };
     };
 }

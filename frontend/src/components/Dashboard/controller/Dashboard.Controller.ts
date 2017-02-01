@@ -98,6 +98,11 @@ class DashboardController {
         }
     }
 
+    openQuickEmailModal(process: Process) {
+        this.workflowService.openQuickEmailModal(process);
+    }
+
+
     refreshTodos(): void {
         this.dashboardService.refreshTodos();
     }
@@ -177,12 +182,9 @@ class DashboardController {
         }
         return toLocalDate(timestamp, "DD.MM.YYYY HH:mm");
     }
+
     sumOrderPositions(array: Array<OrderPosition>): number {
         return this.workflowService.sumOrderPositions(array);
-    }
-
-    openQuickEmailModal(process: Process) {
-        this.workflowService.openQuickEmailModal(process);
     }
 
     getOrderPositionList(workflow: any): string {
