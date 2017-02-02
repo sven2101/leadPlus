@@ -131,7 +131,7 @@ class WorkflowService {
     }
 
     calculatePrice(oldPrice: number, discount: number): number {
-        let temp = Math.round(oldPrice * (1 - (discount / 100)));
+        let temp = Math.round((oldPrice * (1 - (discount / 100))) * 100) / 100;
         return isNaN(temp) ? 0 : temp;
     }
 
