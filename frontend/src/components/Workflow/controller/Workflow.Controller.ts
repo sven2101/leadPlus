@@ -224,6 +224,10 @@ class WorkflowController {
         return this.sce.trustAsHtml(html);
     }
 
+    getNameOfUser(user: User): string {
+        return getNameOfUser(user);
+    }
+
     addComment(id: number, input: Array<string>, process: Process = null) {
         if (isNullOrUndefined(process)) {
             process = this.processes[id];

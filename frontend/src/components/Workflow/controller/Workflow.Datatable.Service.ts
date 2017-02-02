@@ -157,11 +157,14 @@ class WorkflowDatatableService {
         } else {
             icon.removeClass("glyphicon-plus-sign")
                 .addClass("glyphicon-minus-sign");
-            row.child(
+            let childRow = row.child(
                 this.compile(
-                    "<div childrow type='" + type + "' class='clearfix'></div>")(
-                    childScope)).show();
+                    "<div childrow id='childRow" + process.id + "' type='" + type + "' class='clearfix'></div>")(
+                    childScope));
+            childRow.show();
             tr.addClass("shown");
+            let newChildRow = angular.element("#childRow" + process.id).parent().parent();
+            newChildRow.addClass("childstyle");
         }
     }
 }

@@ -107,6 +107,10 @@ class DashboardController {
         this.dashboardService.refreshTodos();
     }
 
+    getNameOfUser(user: User): string {
+        return getNameOfUser(user);
+    }
+
     getAllActiveTemplates() {
         this.templateService.getAll().then((result) => this.templates = result, (error) => handleError(error));
     }

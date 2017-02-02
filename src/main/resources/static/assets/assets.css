@@ -4041,6 +4041,26 @@ span.CodeMirror-selectedtext { background: none; }
 .cropper-disabled .cropper-point {
   cursor: not-allowed;
 }
+#ngdatatable tr td {
+		height: 62px;
+		vertical-align: middle;
+	}
+	#ngdatatable_wrapper {
+		width: 99%;
+		margin-left: 0.5%;
+	}
+	#ngdatatable_filter label{
+		margin-right: 0px;
+	}
+	#ngdatatable_info{
+		float:left;
+	}
+    .childstyle{
+        background-color:whitesmoke;
+    }
+    .b-l {
+         border-left: 1px solid #e7eaec;
+}
 /*
  * The MIT License
  * Copyright (c) 2012 Matias Meno <m@tias.me>
