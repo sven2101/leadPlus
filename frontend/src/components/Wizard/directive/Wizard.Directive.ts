@@ -216,6 +216,8 @@ class WizardDirective implements IDirective {
             let resultProcess = await scope.processService.setStatus(scope.editProcess, Status.FOLLOWUP) as Process;
             scope.rootScope.$broadcast(broadcastUpdate, resultProcess);
             scope.close(true, resultProcess);
+        } else {
+            scope.close(true);
         }
     }
 

@@ -46,11 +46,6 @@ class EditEmailDirective implements IDirective {
             return;
         }
         scope.sizeInvalid = false;
-        let l = $(".ladda-button").ladda();
-        let button = $(".ladda-button");
-        button.click(function () {
-            l.ladda("start");
-        });
         scope.templateId = "-1";
         scope.TemplateService = this.TemplateService;
         this.TemplateService.getAll().then((templates) => scope.templates = templates);

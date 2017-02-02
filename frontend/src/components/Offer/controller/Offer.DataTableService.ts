@@ -191,16 +191,12 @@ class OfferDataTableService implements IDatatableService {
         }
         else if (process.status === Status.DONE) {
             config.get(ActionButtonType.SET_OFFER_DONE).setEnabled().setTitle("COMMON_STATUS_SET_OPEN").setIcon("fa fa-undo");
-            config.get(ActionButtonType.QUICK_MAIL).setEnabled(false);
         } else if (process.status === Status.CLOSED) {
             config.disableAll();
             config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("OFFER_OPEN_OFFER").setIcon("fa fa-unlock");
             config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
         }
-
-
         return config.build();
-
     }
 
     getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {
