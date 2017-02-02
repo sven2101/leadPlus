@@ -48,7 +48,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 package: "basic",
                 type: WorkflowType.SALE
             })
-            .when("/statistic",
+            .when("/statistic/:tab?",
             {
                 templateUrl: "components/Statistic/view/Statistic.html",
                 controller: "StatisticController",
@@ -64,9 +64,9 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 authenticated: true,
                 package: "basic"
             })
-            .when("/settings/detail/:userId",
+            .when("/statistic/user/detail/:userId",
             {
-                templateUrl: "components/Setting/view/UserDetail.html",
+                templateUrl: "components/Statistic/view/UserDetail.html",
                 controller: "UserDetailController",
                 controllerAs: "UserDetailCtrl",
                 authenticated: true,
@@ -112,9 +112,9 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controllerAs: "productCtrl",
                 authenticated: true,
                 package: "basic"
-            }).when("/product/detail/:productId",
+            }).when("/statistic/product/detail/:productId",
             {
-                templateUrl: "components/Product/view/ProductDetail.html",
+                templateUrl: "components/Statistic/view/ProductDetail.html",
                 controller: "ProductDetailController",
                 controllerAs: "ProductDetailCtrl",
                 authenticated: true,

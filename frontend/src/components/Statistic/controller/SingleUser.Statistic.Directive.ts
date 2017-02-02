@@ -30,12 +30,13 @@ angular.module(moduleApp)
             userobj: "="
         };
         directive.templateUrl = function (elem, attr) {
-            return "components/Setting/view/UserStatistic.Directive.html";
+            return "components/Statistic/view/UserStatistic.Directive.html";
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {
             scope.userStatistic;
 
+            scope.chart.clearData();
             loadData(scope.daterange, scope.source);
             scope.$watch("daterange", function (newValue, oldValue) {
                 if (newValue !== oldValue) {

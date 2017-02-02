@@ -15,7 +15,7 @@ angular.module(moduleApp)
             productobj: "="
         };
         directive.templateUrl = function (elem, attr) {
-            return "components/Product/view/ProductStatistic.Directive.html";
+            return "components/Statistic/view/ProductStatistic.Directive.html";
         };
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {

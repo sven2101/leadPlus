@@ -1,9 +1,10 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Resource.ts" />
-/// <reference path="../../Statistic/model/AbstractStatisticModel.Model.ts" />" />
-/// <reference path="../../Statistic/model/PieChart.Model.ts" />" />
-/// <reference path="../../Statistic/model/AreaChart.Model.ts" />" />
-/// <reference path="../../Statistic/model/SplineChart.Model.ts" />" />
+/// <reference path="../../Statistic/model/AbstractStatisticModel.Model.ts" />
+/// <reference path="../../Statistic/model/PieChart.Model.ts" />
+/// <reference path="../../Statistic/model/AreaChart.Model.ts" />
+/// <reference path="../../Statistic/model/ColumnChart.Model.ts" />
+/// <reference path="../../Statistic/model/SplineChart.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -32,6 +33,7 @@ class StatisticService {
     EntireStatisticWorkflowAmountSplineChart: SplineChart;
     EntireStatisticLeadConversionRateSplineChart: SplineChart;
     EntireStatisticOfferConversionRateSplineChart: SplineChart;
+    MyUserStatisticColumnChart: ColumnChart;
     statisticModelMap: { [key: string]: AbstractStatisticModel } = {};
 
     leadResultArr: Array<number> = new Array<number>();
@@ -83,6 +85,14 @@ class StatisticService {
         this.statisticModelMap[this.EntireStatisticProfitTurnoverAreaChart.getId()] = this.EntireStatisticProfitTurnoverAreaChart;
         this.statisticModelMap[this.EntireStatisticLeadConversionRateSplineChart.getId()] = this.EntireStatisticLeadConversionRateSplineChart;
         this.statisticModelMap[this.EntireStatisticOfferConversionRateSplineChart.getId()] = this.EntireStatisticOfferConversionRateSplineChart;
+    }
+
+    generateMyStatistic(user: User): void {
+        if (!isNullOrUndefined(user.id)) {
+            this.MyUserStatisticColumnChart = new ColumnChart(this.translate, "SPCLOS", getNameOfUser(user), ""
+                , this.translate.instant("DETAIL_STATISTIC_USER_TOOLTIP", { username: "{series.name}", count: "{point.y}", workflow: "{point.name}" })
+                , [this.translate.instant("LEAD_LEADS"), this.translate.instant("OFFER_OFFERS"), this.translate.instant("SALE_SALES")]);
+        }
     }
 
     getChartModelById(id: string): AbstractStatisticModel {

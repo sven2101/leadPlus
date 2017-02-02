@@ -22,19 +22,28 @@ const StatisticControllerId: string = "StatisticController";
 
 class StatisticController {
 
-    $inject = [StatisticServiceId, SourceServiceId];
+    $inject = [StatisticServiceId, SourceServiceId, $routeParamsId, $rootScopeId];
 
     statisticService: StatisticService;
     sourceService: SourceService;
     currentTab: number = 1;
     dateRange: string = "MONTHLY";
     source: string = "ALL";
+    currentUser: User;
 
-    constructor(StatisticService, SourceService) {
+    constructor(StatisticService, SourceService, $routeParams, $rootScope) {
         this.statisticService = StatisticService;
         this.sourceService = SourceService;
+        let paramTab = $routeParams.tab;
+        this.currentUser = $rootScope.user;
+        if (!isNullOrUndefined(paramTab)) {
+            this.currentTab = Number(paramTab);
+        }
         this.onStatisticChange(this.dateRange, this.source);
+        this.statisticService.generateMyStatistic(this.currentUser);
     }
+
+
 
     tabOnClick(tab: number) {
         this.currentTab = tab;

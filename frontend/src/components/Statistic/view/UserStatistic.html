@@ -24,7 +24,8 @@
                             <tr ng-repeat="userStatistic in  statisticCtrl.getUserStatistic() | orderBy:'-turnover' | limitTo:10" foo-repeat-done>
                                 <td></td>
                                 <td class="text-center">{{$index+1}}</td>
-                                <td class="text-center">{{statisticCtrl.getUserString(userStatistic.user)}}</td>
+                                <td class="text-center"><a ng-href="#/statistic/user/detail/{{userStatistic.user.id}}">{{statisticCtrl.getUserString(userStatistic.user)}} <i class="fa fa-line-chart"></i></a>
+								</td>
                                 <td>
                                     <table>
                                         <tr>

@@ -1,4 +1,5 @@
 /// <reference path="../../Statistic/controller/Statistic.Service.ts" />
+/// <reference path="../../Setting/controller/Setting.Source.Service.ts" />
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../User/model/User.Model.ts" />
 /// <reference path="../../App/App.Resource.ts" />

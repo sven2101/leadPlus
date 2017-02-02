@@ -20,6 +20,7 @@ public class ProductStatistic implements Serializable {
 
 	public void setProduct(Product product) {
 		Product newProduct = new Product();
+		newProduct.setId(product.getId());
 		newProduct.setName(product.getName());
 		newProduct.setNetPrice(product.getNetPrice());
 		newProduct.setProductNumber(product.getProductNumber());
