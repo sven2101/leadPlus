@@ -2,6 +2,9 @@
 		height: 62px;
 		vertical-align: middle;
 	}
+    #ngdatatable .shown{
+        background-color: whitesmoke;
+	}
 	#ngdatatable_wrapper {
 		width: 99%;
 		margin-left: 0.5%;
