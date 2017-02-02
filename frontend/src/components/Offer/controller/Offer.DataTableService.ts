@@ -124,16 +124,6 @@ class OfferDataTableService implements IDatatableService {
                         "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
-                this.translate("COMMON_PRODUCT_ENTIRE_PRICE"))
-                .renderWith(
-                function (data, type, full) {
-                    if (isNullOrUndefined(data.offer.netPrice)) {
-                        return self.filter("currency")(0, "€", 2);
-                    }
-                    return self.filter("currency")(data.offer.netPrice,
-                        "€", 2);
-                }).notVisible(),
-            this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_PRODUCT_OFFER_PRICE"))
                 .renderWith(
                 function (data, type, full) {
@@ -157,7 +147,7 @@ class OfferDataTableService implements IDatatableService {
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").withOption("width", "200px").notSortable().renderWith(addActionsButtons),
+                "text-center").withOption("width", "210px").notSortable().renderWith(addActionsButtons),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {

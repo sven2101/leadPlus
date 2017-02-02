@@ -10,6 +10,7 @@ const broadcastUpdate: string = "updateRow";
 const broadcastRemoveOrUpdate: string = "removeOrUpdateRow";
 const broadcastRemove: string = "removeRow";
 const broadcastOpenEditModal: string = "openEditModal";
+const broadcastUpdateChildrow: string = "updateChildrow";
 
 
 class WorkflowController {
@@ -135,12 +136,16 @@ class WorkflowController {
 
         let updateOrRemove = $rootScope.$on(broadcastRemoveOrUpdate, (event, data) => {
             clearWatchers(self.loadAllData);
-            self.workflowDatatableRowService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope"));
+            self.workflowDatatableRowService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope" + data.id));
         });
 
         let updateRow = $rootScope.$on(broadcastUpdate, (event, data) => {
             clearWatchers(self.loadAllData);
-            self.workflowDatatableRowService.updateRow(data, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope"));
+            self.workflowDatatableRowService.updateRow(data, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope" + data.id));
+        });
+
+        let updateChildRow = $rootScope.$on(broadcastUpdateChildrow, (event, data) => {
+            this.updateChildRow(data);
         });
 
         let openEditModal = $rootScope.$on(broadcastOpenEditModal, (event, data: Process) => {
@@ -174,6 +179,10 @@ class WorkflowController {
 
     async openEditModal(process: Process) {
         let resultProcess: Process = await this.workflowService.openEditModal(process, this.controllerType);
+        this.updateChildRow(resultProcess);
+    }
+
+    updateChildRow(resultProcess: Process) {
         if (!isNullOrUndefined(resultProcess)) {
             this.getScopeByKey("childRowScope" + resultProcess.id).workflowUnit = resultProcess[this.controllerType.toString().toLowerCase()];
             this.getScopeByKey("childRowScope" + resultProcess.id).process = resultProcess;

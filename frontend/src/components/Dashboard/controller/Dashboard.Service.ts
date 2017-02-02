@@ -21,6 +21,7 @@
 "use strict";
 
 const DashboardServiceId: string = "DashboardService";
+const broadcastOnTodosChanged: string = "onTodosChange";
 
 class DashboardService {
 
@@ -76,7 +77,7 @@ class DashboardService {
         this.uibModal = $uibModal;
         this.refreshTodos();
 
-        $rootScope.$on("onTodosChange", (event) => {
+        $rootScope.$on(broadcastOnTodosChanged, (event) => {
             this.refreshTodos();
         });
 

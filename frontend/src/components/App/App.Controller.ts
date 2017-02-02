@@ -19,6 +19,7 @@ class AppController {
     todos: Array<Process> = [];
 
     profileService: ProfileService;
+    rendered: boolean = false;
 
     constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope) {
         this.translate = $translate;

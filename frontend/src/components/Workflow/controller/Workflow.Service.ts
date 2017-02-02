@@ -16,17 +16,6 @@
 /// <reference path="../../Customer/controller/Customer.Service.ts" />
 /// <reference path="../../FileUpload/controller/File.Service.ts" />
 /// <reference path="../../Wizard/controller/Wizard.Modal.Controller.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-"use strict";
 
 const WorkflowServiceId: string = "WorkflowService";
 
@@ -241,24 +230,26 @@ class WorkflowService {
         }
     }
 
-    togglePin(process: Process, user: User): void {
+    togglePin(process: Process, user: User) {
         let self = this;
         if (user !== null) {
-            this.processService.setProcessor(process, user).then(() => {
+            this.processService.setProcessor(process, user).then((result) => {
                 process.processor = user;
-                self.rootScope.$broadcast(broadcastUpdate, process);
-                self.rootScope.$broadcast("onTodosChange");
+                self.rootScope.$broadcast(broadcastOnTodosChanged);
+                self.rootScope.$broadcast(broadcastUpdate, result);
+                self.rootScope.$broadcast(broadcastUpdateChildrow, result);
             }, (error) => handleError(error));
         } else if (process.processor !== null) {
             this.processService.removeProcessor(process).then(function () {
                 process.processor = null;
                 self.rootScope.$broadcast(broadcastUpdate, process);
-                self.rootScope.$broadcast("onTodosChange");
+                self.rootScope.$broadcast(broadcastOnTodosChanged);
             }, (error) => handleError(error));
         }
     }
+
     async inContact(process: Process): Promise<Process> {
-        process.status = "INCONTACT";
+        process.status = Status.INCONTACT;
         process.processor = this.rootScope.user;
         if (isNullOrUndefined(process.formerProcessors)) {
             process.formerProcessors = [];
@@ -266,7 +257,10 @@ class WorkflowService {
         if (!this.checkForDupsInFormerProcessors(process.formerProcessors, this.rootScope.user, Activity.INCONTACT)) {
             process.formerProcessors.push(new Processor(process.processor, Activity.INCONTACT));
         }
-        let resultProcess = await this.processService.save(process, null, true, false) as Process;
+        let resultProcess = await this.processService.save(process, null, false, false) as Process;
+        this.rootScope.$broadcast(broadcastOnTodosChanged);
+        this.rootScope.$broadcast(broadcastUpdate, resultProcess);
+        this.rootScope.$broadcast(broadcastUpdateChildrow, resultProcess);
         this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_INCONTACT"));
         return resultProcess;
     }
@@ -274,19 +268,20 @@ class WorkflowService {
     async doneOffer(process: Process): Promise<Process> {
         let toastMsg: string = "";
         if (process.status === Status.OFFER || process.status === Status.FOLLOWUP) {
-            process.status = "DONE";
+            process.status = Status.DONE;
             toastMsg = "COMMON_TOAST_SUCCESS_DONE_OFFER";
             process.processor = null;
         } else if (process.status === Status.DONE) {
             if (process.followUpAmount > 0) {
-                process.status = "FOLLOWUP";
+                process.status = Status.FOLLOWUP;
             } else {
-                process.status = "OFFER";
+                process.status = Status.OFFER;
             }
             toastMsg = "COMMON_TOAST_SUCCESS_REVERT_DONE_OFFER";
             process.processor = this.rootScope.user;
         }
         let resultProcess = await this.processService.save(process, null, true, false) as Process;
+        this.rootScope.$broadcast(broadcastOnTodosChanged);
         this.toaster.pop("success", "", this.translate.instant(toastMsg));
         return resultProcess;
     }
@@ -294,13 +289,16 @@ class WorkflowService {
     async toggleClosedOrOpenState(process: Process): Promise<void> {
         let resultProcess: Process;
         if (process.status !== Status.CLOSED) {
-            resultProcess = await this.$q.when(this.processService.setStatus(process, Status.CLOSED));
+            resultProcess = await this.processService.setStatus(process, Status.CLOSED);
+            await this.processService.removeProcessor(resultProcess);
+            resultProcess.processor = null;
             if (isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
                 this.rootScope.leadsCount -= 1;
             } else if (!isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
                 this.rootScope.offersCount -= 1;
             }
             this.rootScope.$broadcast(broadcastRemoveOrUpdate, resultProcess);
+            this.rootScope.$broadcast(broadcastOnTodosChanged, resultProcess);
         } else if (isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
             resultProcess = await this.processService.setStatus(process, Status.OPEN);
             this.rootScope.leadsCount += 1;
@@ -350,7 +348,7 @@ class WorkflowService {
         else if (this.isOffer(process)) {
             this.rootScope.offersCount -= 1;
         }
-        this.rootScope.$broadcast("onTodosChange");
+        this.rootScope.$broadcast(broadcastOnTodosChanged);
         this.rootScope.$broadcast(broadcastRemove, process);
         return resultProcess;
     }

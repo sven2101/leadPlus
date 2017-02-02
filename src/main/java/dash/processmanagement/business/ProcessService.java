@@ -189,7 +189,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public User setProcessor(final long processId, final long userId) throws NotFoundException, SaveFailedException {
+	public Process setProcessor(final long processId, final long userId) throws NotFoundException, SaveFailedException {
 		Process process = processRepository.findOne(processId);
 		final User processor = userService.getById(userId);
 		if (!Optional.ofNullable(process).isPresent())
@@ -197,8 +197,8 @@ public class ProcessService implements IProcessService {
 		if (!Optional.ofNullable(processor).isPresent())
 			throw new NotFoundException(USER_NOT_FOUND);
 		process.setProcessor(processor);
-		save(process);
-		return processor;
+		Process resultProcess = save(process);
+		return resultProcess;
 	}
 
 	@Override

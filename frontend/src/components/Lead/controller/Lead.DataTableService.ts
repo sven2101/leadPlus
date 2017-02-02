@@ -117,11 +117,8 @@ class LeadDataTableService implements IDatatableService {
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_PRODUCT_ENTIRE_PRICE"))
                 .renderWith(
-                function (data, type, full) {
-                    if (isNullOrUndefined(data.lead.price)) {
-                        return self.filter("currency")(0, "€", 2);
-                    }
-                    return self.filter("currency")(data.lead.price,
+                function (data: Process, type, full) {
+                    return self.filter("currency")(self.workflowService.sumOrderPositions(data.lead.orderPositions) + data.lead.deliveryCosts,
                         "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
@@ -139,7 +136,7 @@ class LeadDataTableService implements IDatatableService {
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").withOption("width", "200px").notSortable().renderWith(addActionsButtons),
+                "text-center").withOption("width", "210px").notSortable().renderWith(addActionsButtons),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {

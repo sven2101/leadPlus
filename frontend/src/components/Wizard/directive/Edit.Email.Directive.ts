@@ -45,7 +45,6 @@ class EditEmailDirective implements IDirective {
         if (scope.disabled) {
             return;
         }
-
         scope.sizeInvalid = false;
         let l = $(".ladda-button").ladda();
         let button = $(".ladda-button");
@@ -117,7 +116,12 @@ class EditEmailDirective implements IDirective {
             return;
         }
         let self = this;
-        scope.TemplateService.generate(templateId, offer, currentNotification).then((notification: Notification) => scope.notification.content = notification.content,
+        let tempAttachments: Array<Attachment> = currentNotification.attachments;
+        currentNotification.attachments = null;
+        scope.TemplateService.generate(templateId, offer, currentNotification).then((notification: Notification) => {
+            scope.notification.content = notification.content;
+            scope.notification.attachments = tempAttachments;
+        },
             (error) => {
                 self.toaster.pop("error", "", self.$translate
                     .instant("EMAIL_TEMPLATE_ERROR"));
