@@ -230,10 +230,11 @@ class WorkflowService {
         }
     }
 
-    togglePin(process: Process, user: User): void {
+    togglePin(process: Process, user: User) {
         let self = this;
         if (user !== null) {
             this.processService.setProcessor(process, user).then((result) => {
+                process.processor = user;
                 self.rootScope.$broadcast(broadcastOnTodosChanged);
                 self.rootScope.$broadcast(broadcastUpdate, result);
                 self.rootScope.$broadcast(broadcastUpdateChildrow, result);
@@ -246,6 +247,7 @@ class WorkflowService {
             }, (error) => handleError(error));
         }
     }
+
     async inContact(process: Process): Promise<Process> {
         process.status = Status.INCONTACT;
         process.processor = this.rootScope.user;
@@ -279,6 +281,7 @@ class WorkflowService {
             process.processor = this.rootScope.user;
         }
         let resultProcess = await this.processService.save(process, null, true, false) as Process;
+        this.rootScope.$broadcast(broadcastOnTodosChanged);
         this.toaster.pop("success", "", this.translate.instant(toastMsg));
         return resultProcess;
     }

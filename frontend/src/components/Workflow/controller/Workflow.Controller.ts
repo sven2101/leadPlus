@@ -179,7 +179,7 @@ class WorkflowController {
 
     async openEditModal(process: Process) {
         let resultProcess: Process = await this.workflowService.openEditModal(process, this.controllerType);
-        this.updateChildRow(process);
+        this.updateChildRow(resultProcess);
     }
 
     updateChildRow(resultProcess: Process) {
