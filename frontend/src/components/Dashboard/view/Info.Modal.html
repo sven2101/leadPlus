@@ -3,8 +3,14 @@
 		word-break: break-all;
 	}
 	.customerdetails div{
-			min-height: 70px;
-			font-size: 1.1em
+			min-height: 80px;
+			font-size: 1.1em;
+	}
+
+	.customerdetails span{
+		text-overflow: ellipsis;
+		display: block;
+		overflow: hidden
 	}
 </style>
 <div class="modal inmodal" id="infoModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -36,18 +42,20 @@
 							</div>
 							<div class="col-md-3 b-r ">
 								<div>
+									<label><i class="fa fa-at " aria-hidden="true "></i> {{ 'COMMON_EMAIL' | translate }}</label>
+									<br>
+									<span class="elipsis" title="{{dashboardCtrl.workflowModalData.customer.email}}">{{dashboardCtrl.workflowModalData.customer.email}}</span>
+								</div>
+							</div>
+							<div class="col-md-3 b-r ">
+								<div>
 									<label><i class="fa fa-phone " aria-hidden="true "></i> {{ 'COMMON_PHONE' | translate }}</label>
 									<br>
 									<span>{{dashboardCtrl.workflowModalData.customer.phone}}</span>
 								</div>
 							</div>
-							<div class="col-md-3 b-r ">
-								<div>
-									<label><i class="fa fa-rss " aria-hidden="true "></i> {{ 'SOURCE_SOURCE' | translate }}</label>
-									<br>
-									<span>{{dashboardCtrl.workflowModalProcess.source.name}}</span>
-								</div>
-							</div>
+						</div>
+						<div class="row customerdetails">
 							<div class="col-md-3 b-r ">
 								<div>
 									<label><i class="fa fa-truck " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_DESTINATION' | translate }}</label>
@@ -85,13 +93,6 @@
 							</div>
 							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'sale'">
 								<div>
-									<label><i class="fa fa-university " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_SALE_INVOICE_NUMBER_SHORT' | translate }}</label>
-									<br>
-									<span>{{dashboardCtrl.workflowModalData.invoiceNumber}}</span>
-								</div>
-							</div>
-							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'sale'">
-								<div>
 									<label><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_SALE_TURNOVER' | translate }}</label>
 									<br>
 									<span>{{dashboardCtrl.workflowModalData.saleTurnover| currency:'\u20AC'}}</span>
@@ -102,6 +103,20 @@
 									<label><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_SALE_PROFIT' | translate }}</label>
 									<br>
 									<span>{{dashboardCtrl.workflowModalData.saleProfit| currency:'\u20AC'}}</span>
+								</div>
+							</div>
+							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'sale'">
+								<div>
+									<label><i class="fa fa-university " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_SALE_INVOICE_NUMBER_SHORT' | translate }}</label>
+									<br>
+									<span>{{dashboardCtrl.workflowModalData.invoiceNumber}}</span>
+								</div>
+							</div>
+							<div class="col-md-3 b-r ">
+								<div>
+									<label><i class="fa fa-rss " aria-hidden="true "></i> {{ 'SOURCE_SOURCE' | translate }}</label>
+									<br>
+									<span>{{dashboardCtrl.workflowModalProcess.source.name}}</span>
 								</div>
 							</div>
 							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalProcess.processor != null">
