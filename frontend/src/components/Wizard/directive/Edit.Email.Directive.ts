@@ -5,7 +5,6 @@
 
 declare var Ladda;
 
-
 const EditEmailDirectiveId: string = "emailEdit";
 
 class EditEmailDirective implements IDirective {
@@ -21,13 +20,13 @@ class EditEmailDirective implements IDirective {
         notification: "="
     };
 
-    constructor(private WorkflowService: WorkflowService, private $rootScope, private TemplateService: TemplateService,
+    constructor(private WorkflowService: WorkflowService, private $rootScope, private TemplateService: TemplateService, private SummernoteService: SummernoteService,
         private $sce, private $http, private $window, private $translate, private toaster) { }
 
     static directiveFactory(): EditEmailDirective {
-        let directive: any = (WorkflowService: WorkflowService, $rootScope, TemplateService: TemplateService, $sce, $http, $window, $translate, toaster) =>
-            new EditEmailDirective(WorkflowService, $rootScope, TemplateService, $sce, $http, $window, $translate, toaster);
-        directive.$inject = [WorkflowServiceId, $rootScopeId, TemplateServiceId, $sceId, $httpId, $windowId, $translateId, toasterId];
+        let directive: any = (WorkflowService: WorkflowService, $rootScope, TemplateService: TemplateService, SummernoteService: SummernoteService, $sce, $http, $window, $translate, toaster) =>
+            new EditEmailDirective(WorkflowService, $rootScope, TemplateService, SummernoteService, $sce, $http, $window, $translate, toaster);
+        directive.$inject = [WorkflowServiceId, $rootScopeId, TemplateServiceId, SummernoteServiceId, $sceId, $httpId, $windowId, $translateId, toasterId];
         return directive;
     }
 
@@ -49,6 +48,7 @@ class EditEmailDirective implements IDirective {
         }
         scope.sizeInvalid = false;
         scope.TemplateService = this.TemplateService;
+        scope.summernoteOptions = this.SummernoteService.getDefaultOptions();
         scope.workflow = scope.process.offer == null ? scope.process.lead : scope.process.offer;
         scope.workflow = scope.process.sale != null ? scope.process.sale : scope.workflow;
         scope.notification.recipient = scope.workflow.customer.email;
@@ -155,9 +155,7 @@ class EditEmailDirective implements IDirective {
         let notificationType = scope.notification.notificationType;
         let sourceName = scope.process.source == null ? "NONE" : scope.process.source.name;
         let templates: Array<Template> = scope.templates;
-        console.log("default");
-
-
+        
         for (let t of templates) {
             let containsNotificationType = t.notificationTypeString == null ? false : contains<string>(t.notificationTypeString.split(","), notificationType);
             let containsSourceName = t.sourceString == null ? false : contains<string>(t.sourceString.split(","), sourceName);

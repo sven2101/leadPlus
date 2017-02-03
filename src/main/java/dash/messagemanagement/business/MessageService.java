@@ -63,7 +63,7 @@ public class MessageService implements IMessageService {
 
 		Map<String, Object> mapping = new HashMap<>();
 
-		mapping.put("offer", workflowTemplateObject);
+		mapping.put("workflow", workflowTemplateObject);
 		mapping.put("customer", workflowTemplateObject.getCustomer());
 		mapping.put("orderPositions", workflowTemplateObject.getOrderPositions());
 

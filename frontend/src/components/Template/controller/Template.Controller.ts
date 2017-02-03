@@ -3,7 +3,7 @@
 /// <reference path="../../Template/model/Template.Model.ts" />
 /// <reference path="../../Notification/model/NotificationType.ts" />
 /// <reference path="../../Setting/controller/Setting.Source.Service.ts" />
-
+/// <reference path="../../Common/service/SummernoteService.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
  * All rights reserved.  
@@ -23,7 +23,9 @@ const TemplateControllerId: string = "TemplateController";
 
 class TemplateController {
 
-    private $inject = [TemplateServiceId, "$uibModalInstance", "template", SourceServiceId, $translateId];
+
+    private $inject = [TemplateServiceId, $uibModalId, "template"];
+
 
     uibModalInstance;
     templateService: TemplateService;
@@ -32,13 +34,15 @@ class TemplateController {
     currentSelectedSource: Array<string> = [];
     availableNotificationTypes: Array<string> = (<any>NotificationType).getAll();
     availablesourceNames = [];
-    constructor(TemplateService, $uibModalInstance, template, private SourceService: SourceService, private $translate, private toaster) {
+    summernoteOptions: any;
+    constructor(TemplateService, $uibModalInstance, template, private SummernoteService: SummernoteService, private SourceService: SourceService, private $translate, private toaster) {
         this.templateService = TemplateService;
         this.uibModalInstance = $uibModalInstance;
         this.template = template;
         this.currentSelectedNotificationTypes = this.template.notificationTypeString == null ? [] : this.template.notificationTypeString.split(",");
         this.currentSelectedSource = this.template.sourceString == null ? [] : this.template.sourceString.split(",");
         this.SetAvailablesourceNames();
+        this.summernoteOptions = SummernoteService.getTemplateOptions();
     }
 
     async SetAvailablesourceNames(): Promise<void> {

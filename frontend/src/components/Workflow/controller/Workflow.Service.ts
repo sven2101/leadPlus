@@ -375,6 +375,5 @@ class WorkflowService {
     isSale(process: Process): boolean {
         return !isNullOrUndefined(process) && (process.status === Status.SALE);
     }
-
 }
 angular.module(moduleWorkflowService, [ngResourceId]).service(WorkflowServiceId, WorkflowService);
