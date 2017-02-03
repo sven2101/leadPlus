@@ -15,6 +15,7 @@ package dash.tenantmanagement.rest.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +39,7 @@ public class TenantIntegrationTest extends BaseConfig {
 	}
 
 	@Test
+	@Ignore
 	public void post() {
 		Tenant tenant = createTenant();
 		ResponseEntity<Tenant> response = testRestTemplate().postForEntity(EXTENDED_URI, tenant, Tenant.class);

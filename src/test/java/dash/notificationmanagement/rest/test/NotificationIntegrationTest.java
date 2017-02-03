@@ -11,6 +11,7 @@ import java.net.URISyntaxException;
 
 import javax.mail.MessagingException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +39,7 @@ public class NotificationIntegrationTest extends BaseConfig {
 	}
 
 	@Test
+	@Ignore
 	public void sendNotification() throws URISyntaxException, IOException, InterruptedException, MessagingException {
 
 		UriComponents uri = UriComponentsBuilder.fromHttpUrl(EXTENDED_URI_NOTIFICATIONS).buildAndExpand("2");

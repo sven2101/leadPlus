@@ -2,6 +2,7 @@ package dash.usermanagement.registration.rest.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,7 @@ public class UserIntegrationTest extends BaseConfig {
 	}
 
 	@Test
+	@Ignore
 	public void post() {
 		RegistrationWrapper userRegistration = createRegistration();
 
@@ -42,6 +44,7 @@ public class UserIntegrationTest extends BaseConfig {
 	}
 
 	@Test
+	@Ignore
 	public void postEmailAlreadyExists() {
 		RegistrationWrapper userRegistration = createRegistration();
 
