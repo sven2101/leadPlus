@@ -1,28 +1,3 @@
-.note-editor .btn-toolbar {
-		margin-left: 0px;
+.note-editor .note-btn{
+height: 30px;
 	}
-	
-.note-editor .dropdown-menu {
-    min-width: 90px;
-    left: -300px;
-}
-
-.note-editor .note-color-palette {
-    line-height: 1;
-}
-
-.note-editor .note-editable {
-    background-color: white;
-}
-
-.note-editor .note-color-palette div .note-color-btn {
-    width: 17px;
-    height: 17px;
-    padding: 0px;
-    margin: 0px;
-    border: 1px solid rgb(255, 255, 255);
-}
-
-.note-editor .note-color-palette div .note-color-btn:hover {
-    border: 1px solid rgb(0, 0, 0);
-}

@@ -4,7 +4,6 @@
 
 declare var Ladda;
 
-
 const EditEmailDirectiveId: string = "emailEdit";
 
 class EditEmailDirective implements IDirective {
@@ -41,6 +40,44 @@ class EditEmailDirective implements IDirective {
         if (!isNullOrUndefined(scope.form)) {
             scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.eform) : scope.eform = scope.form;
         }
+
+        let HelloButton = function (context) {
+            let ui = (<any>$).summernote.ui;
+
+            // create button
+            let button = ui.button({
+                contents: "<i class='fa fa- usd'/> Hello",
+                tooltip: "hello",
+                click: function () {
+                    // invoke insertText method with "hello" on editor module.
+                    context.invoke("editor.insertText", "${offer.netPrice}");
+                }
+            });
+
+            return button.render();   // return button as jquery object
+        };
+
+        this.loadSummerNoteGerman();
+        scope.options = {
+            lang: "de-DE",
+            toolbar: [
+                ["edit", ["undo", "redo"]],
+                ["headline", ["style"]],
+                ["style", ["bold", "italic", "underline", "superscript", "subscript", "strikethrough", "clear"]],
+                ["fontface", ["fontname"]],
+                ["textsize", ["fontsize"]],
+                ["fontclr", ["color"]],
+                ["alignment", ["ul", "ol", "paragraph", "lineheight"]],
+                ["height", ["height"]],
+                ["table", ["table"]],
+                ["insert", ["link", "picture", "video", "hr"]],
+                ["view", ["fullscreen", "codeview"]],
+                ["mybutton", ["hello"]]
+            ],
+            buttons: {
+                hello: HelloButton
+            }
+        };
 
         if (scope.disabled) {
             return;
@@ -80,6 +117,11 @@ class EditEmailDirective implements IDirective {
 
         }
 
+    }
+
+    loadSummerNoteGerman() {
+        console.log("extend Summernote");
+        (<any>$).extend((<any>$).summernote.lang, this.WorkflowService.getGermanSummernoteTranslation());
     }
 
     isFileSizeInvalid(notification: Notification, scope: any): void {
