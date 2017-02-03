@@ -59,7 +59,10 @@ class AuthService {
         if (credentials) {
             let salt: string = credentials.email;
             let hashedPassword = hashPasswordPbkdf2(credentials.password, salt);
+            console.log("Hashed:", hashedPassword);
+             console.log("Hashed:", hashedPassword.length);
             let authorization = btoa(credentials.email + ":" + hashedPassword);
+            console.log("Authorization: ", authorization);
             let header = credentials ? { Authorization: "Basic " + authorization } : {};
             this.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
             this.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
@@ -83,6 +86,8 @@ class AuthService {
                         picture: data.picture,
                         thumbnail: data.thumbnail
                     };
+                    console.log("SMTP:", hashPasswordPbkdf2(hashedPassword, salt));
+                    console.log("USER: ", self.rootScope.user);
                     self.rootScope.tenant = {
                         tenantKey: credentials.tenant,
                         license: {

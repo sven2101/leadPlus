@@ -276,5 +276,4 @@ public class Notification {
 		}
 		return result.substring(0, result.length() - 1);
 	}
-
 }

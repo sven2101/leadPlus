@@ -24,7 +24,7 @@ import dash.smtpmanagement.domain.Smtp;
 
 public interface INotificationService {
 
-	public void sendNotification(final Smtp smtp, final Notification notification, final String smtpKey)
+	public Notification sendNotification(final Smtp smtp, final Notification notification, final String smtpKey)
 			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException, Exception;
 
 }

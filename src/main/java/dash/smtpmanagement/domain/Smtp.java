@@ -69,7 +69,7 @@ public class Smtp {
 
 	@NotNull
 	@Column(name = "encryption", length = 255, nullable = false)
-	private Encryption encryption;
+	private SmtpEncryptionType encryption;
 
 	@NotNull
 	@Column(name = "port", nullable = false)
@@ -96,6 +96,10 @@ public class Smtp {
 
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getSender() {
@@ -138,11 +142,11 @@ public class Smtp {
 		this.password = password;
 	}
 
-	public Encryption getEncryption() {
+	public SmtpEncryptionType getEncryption() {
 		return encryption;
 	}
 
-	public void setEncryption(Encryption encryption) {
+	public void setEncryption(SmtpEncryptionType encryption) {
 		this.encryption = encryption;
 	}
 
@@ -264,9 +268,9 @@ public class Smtp {
 
 	@Override
 	public String toString() {
-		return "Smtp [id=" + id + ", sender=" + sender + ", host=" + host + ", username=" + username + ", password=" + Arrays.toString(password) + ", email="
-				+ email + ", encryption=" + encryption + ", port=" + port + ", connection=" + connection + ", salt=" + Arrays.toString(salt) + ", iv="
-				+ Arrays.toString(iv) + ", user=" + user + "]";
+		return "Smtp [id=" + id + ", sender=" + sender + ", host=" + host + ", username=" + username + ", password="
+				+ Arrays.toString(password) + ", email=" + email + ", encryption=" + encryption + ", port=" + port
+				+ ", connection=" + connection + ", salt=" + Arrays.toString(salt) + ", iv=" + Arrays.toString(iv)
+				+ ", user=" + user + "]";
 	}
-
 }
