@@ -3,7 +3,6 @@
 /// <reference path="../../Offer/model/Offer.Model.ts" />
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 /// <reference path="../../Template/controller/Template.Controller.ts" />
-/// <reference path="../../Template/model/OfferMessageContext.Model.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -114,19 +113,8 @@ class TemplateService {
         });
     }
 
-    generate(templateId: string, offer: Offer, notification: Notification): Promise<Notification> {
-        let defer = this.q.defer();
-        let self = this;
-        let offerMessageContext: OfferMessageContext = new OfferMessageContext();
-        offerMessageContext.offer = offer;
-        offerMessageContext.notification = notification;
-        this.templateResource.generate({ templateId: templateId }, offerMessageContext).$promise.then(function (resultMessage: Notification) {
-
-            defer.resolve(resultMessage);
-        }, function (error: any) {
-            defer.reject(error);
-        });
-        return defer.promise;
+    async generate(templateId: number, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
+        return this.templateResource.generate({ templateId: templateId }, { workflowTemplateObject: workflow, notification: notification }).$promise;
     }
 
     generatePDF(templateId: string, offer: Offer) {

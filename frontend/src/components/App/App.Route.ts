@@ -2,8 +2,8 @@
 /// <reference path="../app/App.Authentication.Service.ts" />
 /// <reference path="../Profile/controller/Profile.Service.ts" />
 
-angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
-    function ($routeProvider, $httpProvider) {
+angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationProviderId, $compileProviderId,
+    function ($routeProvider, $httpProvider, $locationProvider, $compileProvider) {
         $routeProvider
             .when("/",
             {
@@ -146,6 +146,8 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 redirectTo: "/404"
             });
 
+        $locationProvider.hashPrefix("");
+        $compileProvider.preAssignBindingsEnabled(true);
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 

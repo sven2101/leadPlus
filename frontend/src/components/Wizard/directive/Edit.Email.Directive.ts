@@ -1,6 +1,7 @@
 /// <reference path="../../App/App.Constants.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Template/controller/Template.Service.ts" />
+/// <reference path="../../App/App.Common.ts" />
 
 declare var Ladda;
 
@@ -30,7 +31,7 @@ class EditEmailDirective implements IDirective {
         return directive;
     }
 
-    link(scope, element, attrs, ctrl, transclude): void {
+    async link(scope, element, attrs, ctrl, transclude): Promise<void> {
         scope.$sce = this.$sce;
         scope.$window = this.$window;
         scope.$http = this.$http;
@@ -38,6 +39,7 @@ class EditEmailDirective implements IDirective {
         scope.onNotificationSelected = () => this.onNotificationSelected(scope);
         scope.openAttachment = (fileUpload: FileUpload) => this.openAttachment(fileUpload, scope);
         scope.showCC_BCC = scope.disabled;
+        scope.currentTemplate = null;
         if (!isNullOrUndefined(scope.form)) {
             scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.eform) : scope.eform = scope.form;
         }
@@ -46,12 +48,15 @@ class EditEmailDirective implements IDirective {
             return;
         }
         scope.sizeInvalid = false;
-        scope.templateId = "-1";
         scope.TemplateService = this.TemplateService;
-        this.TemplateService.getAll().then((templates) => scope.templates = templates);
-        scope.generate = (templateId, offer, currentNotification) => this.generateContent(templateId, offer, currentNotification, scope);
+        scope.workflow = scope.process.offer == null ? scope.process.lead : scope.process.offer;
+        scope.notification.recipient = scope.workflow.customer.email;
+        scope.generate = (template, workflow, currentNotification) => this.generateContent(template, workflow, currentNotification, scope);
         scope.setAttachments = (files) => this.setAttachments(files, scope.notification, scope);
         scope.deleteAttachment = (index) => this.deleteAttachment(index, scope);
+
+        scope.templates = await this.TemplateService.getAll();
+        this.setDefaultTemplate(scope);
     };
 
     setAttachments(files, notification: Notification, scope): void {
@@ -105,22 +110,24 @@ class EditEmailDirective implements IDirective {
             });
     }
 
-    generateContent(templateId: string, offer: Offer, currentNotification: Notification, scope: any): void {
-        if (Number(templateId) === -1) {
-            scope.notification.recipient = scope.process.offer.customer.email;
+    async generateContent(template: Template | null, workflow: Lead | Offer, currentNotification: Notification, scope: any): Promise<void> {
+        if (template == null) {
             return;
         }
-        let self = this;
-        let tempAttachments: Array<Attachment> = currentNotification.attachments;
-        currentNotification.attachments = null;
-        scope.TemplateService.generate(templateId, offer, currentNotification).then((notification: Notification) => {
+        let id = isNumeric(template) ? template : template.id;
+        try {
+            let notification = await scope.TemplateService.generate(id, workflow, currentNotification);
             scope.notification.content = notification.content;
-            scope.notification.attachments = tempAttachments;
-        },
-            (error) => {
-                self.toaster.pop("error", "", self.$translate
-                    .instant("EMAIL_TEMPLATE_ERROR"));
-            });
+        }
+        catch (error) {
+            let errorMessage = error == null || error.data == null ? "" : ": " + error.data.message;
+            if (error != null && error.data != null && error.data.message != null && error.data.message.substring(0, 6) !== "Syntax") {
+                this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR") + errorMessage);
+                return;
+            }
+            errorMessage = error == null || error.data == null ? "" : ": " + error.data.message.substring(36);
+            this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR") + errorMessage);
+        }
     };
 
     reloadHtmlString(scope: any): void {
@@ -141,6 +148,40 @@ class EditEmailDirective implements IDirective {
         }
         this.reloadHtmlString(scope);
         scope.sizeInvalid = this.isFileSizeInvalid(scope.notification, scope);
+    }
+
+    setDefaultTemplate(scope: any): void {
+        let notificationType = scope.notification.notificationType;
+        let sourceName = scope.process.source == null ? "NONE" : scope.process.source.name;
+        let templates: Array<Template> = scope.templates;
+        console.log("default");
+
+
+        for (let t of templates) {
+            let containsNotificationType = t.notificationTypeString == null ? false : contains<string>(t.notificationTypeString.split(","), notificationType);
+            let containsSourceName = t.sourceString == null ? false : contains<string>(t.sourceString.split(","), sourceName);
+            if (containsNotificationType === true && containsSourceName === true) {
+                this.setTemplate(scope, t);
+                return;
+            }
+        }
+        for (let t of templates.filter(t => t.notificationTypeString != null && contains<string>(t.notificationTypeString.split(","), "ALL"))) {
+            if (contains<string>(t.sourceString.split(","), sourceName)) {
+                this.setTemplate(scope, t);
+                return;
+            }
+        }
+        for (let t of templates.filter(t => t.sourceString != null && contains<string>(t.sourceString.split(","), "ALL"))) {
+            if (contains<string>(t.notificationTypeString.split(","), notificationType)) {
+                this.setTemplate(scope, t);
+                return;
+            }
+        }
+    }
+    setTemplate(scope: any, t: Template): void {
+        scope.currentTemplate = t;
+        scope.notification.subject = t.subject;
+        scope.generate(t.id, scope.workflow, scope.notification);
     }
 
 }

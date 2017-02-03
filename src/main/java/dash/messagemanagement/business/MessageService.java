@@ -23,12 +23,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import dash.exceptions.NotFoundException;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.messagemanagement.domain.OfferMessage;
 import dash.notificationmanagement.domain.Notification;
 import dash.notificationmanagement.domain.NotificationType;
-import dash.offermanagement.domain.Offer;
+import dash.templatemanagement.domain.WorkflowTemplateObject;
 import dash.usermanagement.domain.User;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
@@ -52,8 +51,9 @@ public class MessageService implements IMessageService {
 	}
 
 	@Override
-	public AbstractMessage getOfferContent(final Offer offer, final String templateWithPlaceholders,
-			final Notification notification) throws IOException, NotFoundException, TemplateException {
+	public AbstractMessage getMessageContent(final WorkflowTemplateObject workflowTemplateObject,
+			final String templateWithPlaceholders, final Notification notification)
+			throws IOException, TemplateException {
 
 		final StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
 		cfg.setTemplateLoader(stringTemplateLoader);
@@ -63,9 +63,10 @@ public class MessageService implements IMessageService {
 
 		Map<String, Object> mapping = new HashMap<>();
 
-		mapping.put("offer", offer);
-		mapping.put("customer", offer.getCustomer());
-		mapping.put("orderPositions", offer.getOrderPositions());
+		mapping.put("offer", workflowTemplateObject);
+		mapping.put("customer", workflowTemplateObject.getCustomer());
+		mapping.put("orderPositions", workflowTemplateObject.getOrderPositions());
+
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (user != null) {
 			user.setPassword(null);

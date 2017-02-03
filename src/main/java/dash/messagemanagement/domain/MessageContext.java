@@ -16,25 +16,25 @@ package dash.messagemanagement.domain;
 import javax.validation.constraints.NotNull;
 
 import dash.notificationmanagement.domain.Notification;
-import dash.offermanagement.domain.Offer;
+import dash.templatemanagement.domain.WorkflowTemplateObject;
 
-public class OfferMessageContext {
+public class MessageContext {
 
 	@NotNull
-	private Offer offer;
+	private WorkflowTemplateObject workflowTemplateObject;
 
 	@NotNull
 	private Notification notification;
 
-	public OfferMessageContext() {
+	public MessageContext() {
 	}
 
-	public Offer getOffer() {
-		return offer;
+	public WorkflowTemplateObject getWorkflowTemplateObject() {
+		return workflowTemplateObject;
 	}
 
-	public void setOffer(Offer offer) {
-		this.offer = offer;
+	public void setWorkflowTemplateObject(WorkflowTemplateObject workflowTemplateObject) {
+		this.workflowTemplateObject = workflowTemplateObject;
 	}
 
 	public Notification getNotification() {

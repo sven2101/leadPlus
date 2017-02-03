@@ -39,9 +39,10 @@ import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.messagemanagement.domain.AbstractMessage;
-import dash.messagemanagement.domain.OfferMessageContext;
+import dash.messagemanagement.domain.MessageContext;
 import dash.processmanagement.domain.Process;
 import dash.templatemanagement.business.ITemplateService;
+import dash.templatemanagement.business.TemplateCompilationException;
 import dash.templatemanagement.domain.Template;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -96,12 +97,12 @@ public class TemplateResource {
 
 	@RequestMapping(value = "/{templateId}/offers/generate", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	@ApiOperation(value = "Generate a email content based on a template and an offer.", notes = "")
+	@ApiOperation(value = "Generate a email content based on a template and an AbstractWorkflow.", notes = "")
 	public AbstractMessage generate(@ApiParam(required = true) @PathVariable final Long templateId,
-			@ApiParam(required = true) @RequestBody @Valid final OfferMessageContext offerMessageContext)
-			throws NotFoundException {
-		return templateService.generateOfferContent(templateId, offerMessageContext.getOffer(),
-				offerMessageContext.getNotification());
+			@ApiParam(required = true) @RequestBody @Valid final MessageContext messageContext)
+			throws NotFoundException, IOException, TemplateCompilationException {
+		return templateService.getMessageContent(templateId, messageContext.getWorkflowTemplateObject(),
+				messageContext.getNotification());
 	}
 
 	@RequestMapping(value = "/{templateId}/offers/pdf/generate", method = RequestMethod.POST, produces = "application/pdf")

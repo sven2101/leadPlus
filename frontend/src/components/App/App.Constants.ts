@@ -14,7 +14,6 @@ const $cookiesId: string = "$cookies";
 const $windowId: string = "$window";
 const $intervalId: string = "$interval";
 const $qId: string = "$q";
-const FileUploaderId: string = "FileUploader";
 const $routeParamsId: string = "$routeParams";
 const ngImgCropId: string = "ngImgCrop";
 const $routeProviderId: string = "$routeProvider";
@@ -23,6 +22,9 @@ const $uibModalId: string = "$uibModal";
 const $injectorId: string = "$injector";
 const $sceId: string = "$sce";
 const $routeId: string = "$route";
+const $locationProviderId = "$locationProvider";
+const $compileProviderId = "$compileProvider";
+
 
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";
@@ -118,3 +120,4 @@ const moduleSummernote: string = "summernote";
 const moduleFootable: string = "ui.footable";
 const moduleSanitize: string = "ngSanitize";
 const moduleSweetAlert: string = "oitozero.ngSweetAlert";
+const moduleAngularChosen: string = "localytics.directives";

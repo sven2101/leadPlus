@@ -8,6 +8,10 @@ class Template {
     content: string;
     deactivated: boolean;
 
+    notificationTypeString: string;
+    sourceString: string;
+    subject: string;
+
     constructor() {
     }
 }

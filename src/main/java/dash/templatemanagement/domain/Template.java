@@ -42,10 +42,22 @@ public class Template {
 	@Column(name = "description", length = 255, nullable = true)
 	private String description;
 
+	@Size(max = 255)
+	@Column(name = "subject", length = 255, nullable = true)
+	private String subject;
+
 	@NotNull
 	@Size(max = 30000)
 	@Column(name = "content", length = 30000, nullable = false)
 	private String content;
+
+	@Size(max = 500)
+	@Column(name = "notification_type_string", length = 500, nullable = true)
+	private String notificationTypeString;
+
+	@Size(max = 500)
+	@Column(name = "source_string", length = 500, nullable = true)
+	private String sourceString;
 
 	@NotNull
 	@Column(name = "deactivated", nullable = false)
@@ -90,6 +102,34 @@ public class Template {
 		this.deactivated = deactivated;
 	}
 
+	public String getNotificationTypeString() {
+		return notificationTypeString;
+	}
+
+	public void setNotificationTypeString(String notificationTypeString) {
+		this.notificationTypeString = notificationTypeString;
+	}
+
+	public String getSourceString() {
+		return sourceString;
+	}
+
+	public void setSourceString(String sourceString) {
+		this.sourceString = sourceString;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -99,6 +139,9 @@ public class Template {
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((notificationTypeString == null) ? 0 : notificationTypeString.hashCode());
+		result = prime * result + ((sourceString == null) ? 0 : sourceString.hashCode());
+		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
 		return result;
 	}
 
@@ -133,13 +176,22 @@ public class Template {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (notificationTypeString == null) {
+			if (other.notificationTypeString != null)
+				return false;
+		} else if (!notificationTypeString.equals(other.notificationTypeString))
+			return false;
+		if (sourceString == null) {
+			if (other.sourceString != null)
+				return false;
+		} else if (!sourceString.equals(other.sourceString))
+			return false;
+		if (subject == null) {
+			if (other.subject != null)
+				return false;
+		} else if (!subject.equals(other.subject))
+			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Template [id=" + id + ", name=" + name + ", description=" + description + ", content=" + content
-				+ ", deactivated=" + deactivated + "]";
 	}
 
 }

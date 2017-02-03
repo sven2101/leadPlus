@@ -19,7 +19,7 @@ import java.io.IOException;
 import dash.exceptions.NotFoundException;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.notificationmanagement.domain.Notification;
-import dash.offermanagement.domain.Offer;
+import dash.templatemanagement.domain.WorkflowTemplateObject;
 import freemarker.template.TemplateException;
 
 public interface IMessageService {
@@ -28,6 +28,8 @@ public interface IMessageService {
 
 	String getSubject();
 
-	AbstractMessage getOfferContent(final Offer offer, String templateWithPlaceholders, final Notification notification)
+	AbstractMessage getMessageContent(final WorkflowTemplateObject workflowTemplateObject,
+			String templateWithPlaceholders, final Notification notification)
 			throws IOException, NotFoundException, TemplateException;
+
 }
