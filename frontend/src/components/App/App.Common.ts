@@ -172,6 +172,12 @@ let contains = function <T>(array: Array<T>, obj: T) {
 };
 
 function isNumeric(n) {
-  return !isNaN(parseFloat(n)) && isFinite(n);
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+async function sleep(ms: Number = 1000): Promise<void> {
+    await setTimeout(function () {
+
+    }, ms);
 }
 

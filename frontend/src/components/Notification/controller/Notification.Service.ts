@@ -45,17 +45,20 @@ class NotificationService {
         this.notification = new Notification();
     }
 
-    sendNotification(notification: Notification): Promise<boolean> {
-        let self = this;
-        let defer = this.q.defer();
-        this.notificationResource.sendNotification({ userId: this.rootScope.user.id, smtpKey: this.rootScope.user.smtpKey }, notification).$promise.then(function () {
-            self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
-            defer.resolve(true);
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));
-            defer.reject(false);
+    async sendNotification(notification: Notification): Promise<void> {
+        this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SENDING);
+        await this.notificationResource.sendNotification({ userId: this.rootScope.user.id, smtpKey: this.rootScope.user.smtpKey }, notification).$promise.catch(error => {
+            this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.ERROR);
+            notification.notificationType = NotificationType.ERROR;
+            this.rootScope.$broadcast(broadcastAddNotification, notification);
+            this.toaster.pop("error", "", this.translate.instant("NOTIICATION_SEND_ERROR"));
+            throw error;
         });
-        return defer.promise;
+        this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SUCCESS);
+        this.rootScope.$broadcast(broadcastAddNotification, notification);
+        let x = setTimeout(() => {
+            this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.DEFAULT);
+        }, 10000);
     }
 
 }

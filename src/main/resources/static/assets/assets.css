@@ -4041,6 +4041,19 @@ span.CodeMirror-selectedtext { background: none; }
 .cropper-disabled .cropper-point {
   cursor: not-allowed;
 }
+.spinner {
+     height: 15px;
+    width: 15px;
+    animation: rotate 0.8s infinite linear;
+    border: 3px solid #1ab394;
+    border-right-color: transparent;
+    border-radius: 50%;
+}
+
+@keyframes rotate {
+  0%    { transform: rotate(0deg); }
+  100%  { transform: rotate(360deg); }
+}
 #ngdatatable tr td {
 		height: 62px;
 		vertical-align: middle;
@@ -13208,7 +13221,6 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>td.child,table.dataTable.dtr-inlin
 
 
 
-img-crop{width:100%;height:100%;display:block;position:relative;overflow:hidden}img-crop canvas{display:block;position:absolute;top:50%;left:50%;outline:0;-webkit-tap-highlight-color:transparent}
 /* iCheck plugin Square skin, green
 ----------------------------------- */
 .icheckbox_square-green,
@@ -13268,6 +13280,7 @@ img-crop{width:100%;height:100%;display:block;position:relative;overflow:hidden}
         background-size: 240px 24px;
     }
 }
+img-crop{width:100%;height:100%;display:block;position:relative;overflow:hidden}img-crop canvas{display:block;position:absolute;top:50%;left:50%;outline:0;-webkit-tap-highlight-color:transparent}
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
