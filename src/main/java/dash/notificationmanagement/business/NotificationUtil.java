@@ -42,7 +42,6 @@ public class NotificationUtil {
 			String host, int port, String username, String password)
 			throws UnsupportedEncodingException, MessagingException {
 		SMTPTransport smtpTransport = null;
-
 		try {
 			smtpTransport = (SMTPTransport) session.getTransport();
 			smtpTransport.connect(host, port, username, password);
