@@ -35,12 +35,12 @@ class CustomerEditDirective implements IDirective {
         small: "<"
     };
 
-    constructor(private WorkflowService: WorkflowService, private SourceService: SourceService, private CustomerService: CustomerService, private $rootScope, private $sce) {
+    constructor(private WorkflowService: WorkflowService, private SourceService: SourceService, private CustomerService: CustomerService, private SummernoteService: SummernoteService, private $rootScope, private $sce) {
     }
 
     static directiveFactory(): CustomerEditDirective {
-        let directive: any = (WorkflowService: WorkflowService, SourceService: SourceService, CustomerService: CustomerService, $rootScope, $sce) => new CustomerEditDirective(WorkflowService, SourceService, CustomerService, $rootScope, $sce);
-        directive.$inject = [WorkflowServiceId, SourceServiceId, CustomerServiceId, $rootScopeId, $sceId];
+        let directive: any = (WorkflowService: WorkflowService, SourceService: SourceService, CustomerService: CustomerService, SummernoteService: SummernoteService, $rootScope, $sce) => new CustomerEditDirective(WorkflowService, SourceService, CustomerService, SummernoteService, $rootScope, $sce);
+        directive.$inject = [WorkflowServiceId, SourceServiceId, CustomerServiceId, SummernoteServiceId, $rootScopeId, $sceId];
         return directive;
     }
 
@@ -50,6 +50,7 @@ class CustomerEditDirective implements IDirective {
         scope.sourceService = this.SourceService;
         scope.rootScope = this.$rootScope;
         scope.sce = this.$sce;
+        scope.summernoteOptions = this.SummernoteService.getDefaultOptions();
         if (!isNullOrUndefined(scope.form)) {
             scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.cform) : scope.cform = scope.form;
         }

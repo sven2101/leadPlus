@@ -21,16 +21,19 @@ const TemplateControllerId: string = "TemplateController";
 
 class TemplateController {
 
-    private $inject = [TemplateServiceId, "$uibModalInstance", "template"];
+    private $inject = [TemplateServiceId, $uibModalId, "template", SummernoteServiceId];
 
     uibModalInstance;
     templateService;
     template: Template;
+    summernoteOptions: any;
 
-    constructor(TemplateService, $uibModalInstance, template) {
+
+    constructor(TemplateService, $uibModalInstance, template, SummernoteService: SummernoteService) {
         this.templateService = TemplateService;
         this.uibModalInstance = $uibModalInstance;
         this.template = template;
+        this.summernoteOptions = SummernoteService.getTemplateOptions();
     }
 
     save() {

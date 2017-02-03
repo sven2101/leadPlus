@@ -82,6 +82,7 @@ angular.module(moduleApp,
         moduleNgImgCrop,
         moduleUIBootstrap,
         moduleSummernote,
+        moduleSummernoteService,
         moduleFootable,
         moduleSanitize,
         moduleSweetAlert

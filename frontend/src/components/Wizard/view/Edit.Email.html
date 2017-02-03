@@ -91,7 +91,7 @@
 			<span style="color:red" ng-show="eform.message.$error.required&&!eform.message.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
 			<br/>
 			<div ng-if="!disabled" style="border: 1px solid #a9a9a9" ng-style="eform.message.$invalid?{ 'border-color': 'red'}:{ 'border-color': '#a9a9a9'}">
-				<summernote name="message" class="form-control" config="options" required ng-model="notification.content" height="300">{{notification.content}}</summernote>
+				<summernote name="message" class="form-control" config="summernoteOptions" required ng-model="notification.content" height="300">{{notification.content}}</summernote>
 			</div>
 			<div ng-if="disabled" style="border: 1px solid gray;  padding: 15px;">
 				<div ng-bind-html="htmlString"></div>

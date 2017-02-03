@@ -115,6 +115,7 @@ const moduleNgImgCrop: string = "ngImgCrop";
 const moduleHighchartsNg: string = "highcharts-ng";
 const moduleUIBootstrap: string = "ui.bootstrap";
 const moduleSummernote: string = "summernote";
+const moduleSummernoteService: string = moduleSummernote + ".service";
 const moduleFootable: string = "ui.footable";
 const moduleSanitize: string = "ngSanitize";
 const moduleSweetAlert: string = "oitozero.ngSweetAlert";

@@ -118,6 +118,7 @@ function config($translateProvider) {
             COMMON_DEACTIVATE: "Deaktivieren",
             COMMON_CREATED: "Erstellt",
             COMMON_TITLE: "Anrede",
+            COMMON_FORM_OF_ADDRESS: "Anrede",
             COMMON_TITLE_MR: "Herr",
             COMMON_TITLE_MS: "Frau",
             COMMON_FIRSTNAME: "Vorname",
@@ -135,6 +136,7 @@ function config($translateProvider) {
             COMMON_STATUS: "Status",
             COMMON_COMPANY: "Firma",
             COMMON_EMAIL: "E-Mail",
+            COMMON_ADDRESS: "Adresse",
             COMMON_PHONE: "Telefon",
             COMMON_CANCEL: "Abbrechen",
             COMMON_SAVE: "Speichern",
@@ -457,6 +459,7 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE: "Produkt wurde erfolgreich aktuallisiert",
             PRODUCT_TOAST_UPDATE_ERROR: "Produkt konnte nicht aktuallisiert werden",
             PRODUCT_NUMBER: "Produktnummer",
+            PRODUCT_ORIGINAL_PRICE: "Originalpreis",
 
             // Define source elements
             SOURCE_SOURCES: "Quellen",
@@ -512,6 +515,11 @@ function config($translateProvider) {
             FORMER_PROCESSOR_TIMESTAMP: "Datum",
             FORMER_PROCESSOR_SELECT_ACTIVITY: "Tätigkeit auswählen",
 
+            SUMMERNOTE_WORKFLOW_TEMPLATE_BUTTON: "Auftragsvariablen",
+            SUMMERNOTE_CUSTOMER_TEMPLATE_BUTTON: "Kundenvariablen",
+            SUMMERNOTE_ORDER_TEMPLATE_BUTTON: "Bestellvariablen",
+            SUMMERNOTE_USER_TEMPLATE_BUTTON: "Benutzervariablen",
+            SUMMERNOTE_ORDER_LIST: "Bestell liste"
 
         })
         .translations(Language[Language.EN], {
@@ -626,6 +634,7 @@ function config($translateProvider) {
             COMMON_DEACTIVATE: "Deactivate",
             COMMON_CREATED: "Created",
             COMMON_TITLE: "Title",
+            COMMON_FORM_OF_ADDRESS: "Form of address",
             COMMON_TITLE_MR: "Mr",
             COMMON_TITLE_MS: "Ms",
             COMMON_FIRSTNAME: "Firstname",
@@ -644,6 +653,7 @@ function config($translateProvider) {
             COMMON_COMPANY: "Company",
             COMMON_EMAIL: "E-Mail",
             COMMON_PHONE: "Phone",
+            COMMON_ADDRESS: "Address",
             COMMON_CANCEL: "Cancel",
             COMMON_SAVE: "Save",
             COMMON_REFRESH: "Refresh",
@@ -964,6 +974,7 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE: "Updating product was successful",
             PRODUCT_TOAST_UPDATE_ERROR: "Updating product was unsuccessful",
             PRODUCT_NUMBER: "Product number",
+            PRODUCT_ORIGINAL_PRICE: "Original price",
 
             // Define source elements
             SOURCE_SOURCES: "Sources",
@@ -1020,6 +1031,11 @@ function config($translateProvider) {
             FORMER_PROCESSOR_TIMESTAMP: "Date",
             FORMER_PROCESSOR_SELECT_ACTIVITY: "Select activity",
 
+            SUMMERNOTE_WORKFLOW_TEMPLATE_BUTTON: "Mandate values",
+            SUMMERNOTE_CUSTOMER_TEMPLATE_BUTTON: "Customer values",
+            SUMMERNOTE_ORDER_TEMPLATE_BUTTON: "Order values",
+            SUMMERNOTE_USER_TEMPLATE_BUTTON: "User values",
+            SUMMERNOTE_ORDER_LIST: "Order list"
         });
 
     $translateProvider.preferredLanguage(Language[Language.EN]);

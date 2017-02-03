@@ -19,13 +19,13 @@ class EditEmailDirective implements IDirective {
         notification: "="
     };
 
-    constructor(private WorkflowService: WorkflowService, private $rootScope, private TemplateService: TemplateService,
+    constructor(private WorkflowService: WorkflowService, private $rootScope, private TemplateService: TemplateService, private SummernoteService: SummernoteService,
         private $sce, private $http, private $window, private $translate, private toaster) { }
 
     static directiveFactory(): EditEmailDirective {
-        let directive: any = (WorkflowService: WorkflowService, $rootScope, TemplateService: TemplateService, $sce, $http, $window, $translate, toaster) =>
-            new EditEmailDirective(WorkflowService, $rootScope, TemplateService, $sce, $http, $window, $translate, toaster);
-        directive.$inject = [WorkflowServiceId, $rootScopeId, TemplateServiceId, $sceId, $httpId, $windowId, $translateId, toasterId];
+        let directive: any = (WorkflowService: WorkflowService, $rootScope, TemplateService: TemplateService, SummernoteService: SummernoteService, $sce, $http, $window, $translate, toaster) =>
+            new EditEmailDirective(WorkflowService, $rootScope, TemplateService, SummernoteService, $sce, $http, $window, $translate, toaster);
+        directive.$inject = [WorkflowServiceId, $rootScopeId, TemplateServiceId, SummernoteServiceId, $sceId, $httpId, $windowId, $translateId, toasterId];
         return directive;
     }
 
@@ -41,50 +41,13 @@ class EditEmailDirective implements IDirective {
             scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.eform) : scope.eform = scope.form;
         }
 
-        let HelloButton = function (context) {
-            let ui = (<any>$).summernote.ui;
-
-            // create button
-            let button = ui.button({
-                contents: "<i class='fa fa- usd'/> Hello",
-                tooltip: "hello",
-                click: function () {
-                    // invoke insertText method with "hello" on editor module.
-                    context.invoke("editor.insertText", "${offer.netPrice}");
-                }
-            });
-
-            return button.render();   // return button as jquery object
-        };
-
-        this.loadSummerNoteGerman();
-        scope.options = {
-            lang: "de-DE",
-            toolbar: [
-                ["edit", ["undo", "redo"]],
-                ["headline", ["style"]],
-                ["style", ["bold", "italic", "underline", "superscript", "subscript", "strikethrough", "clear"]],
-                ["fontface", ["fontname"]],
-                ["textsize", ["fontsize"]],
-                ["fontclr", ["color"]],
-                ["alignment", ["ul", "ol", "paragraph", "lineheight"]],
-                ["height", ["height"]],
-                ["table", ["table"]],
-                ["insert", ["link", "picture", "video", "hr"]],
-                ["view", ["fullscreen", "codeview"]],
-                ["mybutton", ["hello"]]
-            ],
-            buttons: {
-                hello: HelloButton
-            }
-        };
-
         if (scope.disabled) {
             return;
         }
         scope.sizeInvalid = false;
         scope.templateId = "-1";
         scope.TemplateService = this.TemplateService;
+        scope.summernoteOptions = this.SummernoteService.getDefaultOptions();
         this.TemplateService.getAll().then((templates) => scope.templates = templates);
         scope.generate = (templateId, offer, currentNotification) => this.generateContent(templateId, offer, currentNotification, scope);
         scope.setAttachments = (files) => this.setAttachments(files, scope.notification, scope);
@@ -117,11 +80,6 @@ class EditEmailDirective implements IDirective {
 
         }
 
-    }
-
-    loadSummerNoteGerman() {
-        console.log("extend Summernote");
-        (<any>$).extend((<any>$).summernote.lang, this.WorkflowService.getGermanSummernoteTranslation());
     }
 
     isFileSizeInvalid(notification: Notification, scope: any): void {
