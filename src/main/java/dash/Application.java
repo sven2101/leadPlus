@@ -16,10 +16,8 @@ package dash;
 
 import java.util.TimeZone;
 
-import org.h2.server.web.WebServlet;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cloud.aws.context.config.annotation.EnableContextRegion;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,13 +42,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 		"dash" }, entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "entityTransactionManager")
 @EnableContextRegion(region = "eu-central-1")
 public class Application {
-
-	@Bean
-	public ServletRegistrationBean h2servletRegistration() {
-		ServletRegistrationBean registration = new ServletRegistrationBean(new WebServlet());
-		registration.addUrlMappings("/console/*");
-		return registration;
-	}
 
 	public static void main(String[] args) {
 		TenantContext.setTenant(TenantContext.PUBLIC_TENANT);

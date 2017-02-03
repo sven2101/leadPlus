@@ -2,9 +2,9 @@ package dash.notificationmanagement.business.ssl.test;
 
 import dash.notificationmanagement.domain.Notification;
 import dash.notificationmanagement.domain.NotificationType;
-import dash.test.BaseConfig;
+import dash.test.Provider;
 
-public class SSLNotificationProvider extends BaseConfig {
+public class SSLNotificationProvider extends Provider {
 
 	public static Notification createNotificationSSL() {
 		Notification notification = new Notification();

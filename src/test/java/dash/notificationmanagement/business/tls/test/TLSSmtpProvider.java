@@ -4,9 +4,9 @@ import dash.common.EncryptionWrapper;
 import dash.common.Encryptor;
 import dash.smtpmanagement.domain.Smtp;
 import dash.smtpmanagement.domain.SmtpEncryptionType;
-import dash.test.BaseConfig;
+import dash.test.Provider;
 
-public class TLSSmtpProvider extends BaseConfig {
+public class TLSSmtpProvider extends Provider {
 
 	public static Smtp createGmailTLSSmtp() throws Exception {
 		Smtp smtp = new Smtp();

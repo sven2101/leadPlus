@@ -2,9 +2,9 @@ package dash.notificationmanagement.business.starttls.test;
 
 import dash.notificationmanagement.domain.Notification;
 import dash.notificationmanagement.domain.NotificationType;
-import dash.test.BaseConfig;
+import dash.test.Provider;
 
-public class STARTTLSNotificationProvider extends BaseConfig {
+public class STARTTLSNotificationProvider extends Provider {
 
 	public static Notification createNotificationSTARTTLS() {
 		Notification notification = new Notification();

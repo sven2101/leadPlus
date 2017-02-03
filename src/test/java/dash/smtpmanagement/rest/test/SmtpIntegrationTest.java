@@ -1,22 +1,20 @@
 package dash.smtpmanagement.rest.test;
 
+import static dash.test.Provider.GMAIL_EMAIL;
+import static dash.test.Provider.GMAIL_PASSWORD;
+import static dash.test.Provider.GMAIL_SMTP_SERVER;
+import static dash.test.Provider.SENDER;
+import static dash.test.Provider.SMTP_KEY;
+import static dash.test.Provider.USERNAME;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -24,11 +22,6 @@ import dash.smtpmanagement.domain.Smtp;
 import dash.smtpmanagement.domain.SmtpEncryptionType;
 import dash.test.BaseConfig;
 
-@RunWith(SpringRunner.class)
-@ActiveProfiles("test")
-@Order(value = 3)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public class SmtpIntegrationTest extends BaseConfig {
 
 	private final static String REST_SMTP = "/api/rest/smtps";

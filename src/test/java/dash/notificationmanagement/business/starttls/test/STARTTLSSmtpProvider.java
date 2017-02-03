@@ -4,9 +4,9 @@ import dash.common.EncryptionWrapper;
 import dash.common.Encryptor;
 import dash.smtpmanagement.domain.Smtp;
 import dash.smtpmanagement.domain.SmtpEncryptionType;
-import dash.test.BaseConfig;
+import dash.test.Provider;
 
-public class STARTTLSSmtpProvider extends BaseConfig {
+public class STARTTLSSmtpProvider extends Provider {
 
 	public static Smtp createAlfahostingSTARTTLSSmtp() throws Exception {
 		Smtp smtp = new Smtp();

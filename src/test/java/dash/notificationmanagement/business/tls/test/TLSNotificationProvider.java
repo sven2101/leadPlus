@@ -2,9 +2,9 @@ package dash.notificationmanagement.business.tls.test;
 
 import dash.notificationmanagement.domain.Notification;
 import dash.notificationmanagement.domain.NotificationType;
-import dash.test.BaseConfig;
+import dash.test.Provider;
 
-public class TLSNotificationProvider extends BaseConfig {
+public class TLSNotificationProvider extends Provider {
 
 	public static Notification createNotificationTLS() {
 		Notification notification = new Notification();
