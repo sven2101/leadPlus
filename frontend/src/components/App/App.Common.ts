@@ -171,3 +171,7 @@ let contains = function <T>(array: Array<T>, obj: T) {
     return false;
 };
 
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
+

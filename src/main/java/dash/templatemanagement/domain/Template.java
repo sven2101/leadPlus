@@ -42,6 +42,10 @@ public class Template {
 	@Column(name = "description", length = 255, nullable = true)
 	private String description;
 
+	@Size(max = 255)
+	@Column(name = "subject", length = 255, nullable = true)
+	private String subject;
+
 	@NotNull
 	@Size(max = 30000)
 	@Column(name = "content", length = 30000, nullable = false)
@@ -118,6 +122,14 @@ public class Template {
 		this.id = id;
 	}
 
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -129,6 +141,7 @@ public class Template {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((notificationTypeString == null) ? 0 : notificationTypeString.hashCode());
 		result = prime * result + ((sourceString == null) ? 0 : sourceString.hashCode());
+		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
 		return result;
 	}
 
@@ -172,6 +185,11 @@ public class Template {
 			if (other.sourceString != null)
 				return false;
 		} else if (!sourceString.equals(other.sourceString))
+			return false;
+		if (subject == null) {
+			if (other.subject != null)
+				return false;
+		} else if (!subject.equals(other.subject))
 			return false;
 		return true;
 	}

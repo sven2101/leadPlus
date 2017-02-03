@@ -34,9 +34,9 @@ class ImageLoaderDirective implements IDirective {
         attrs.$set("src", "assets/img/placeholder_person.png");
         let self = this;
         this.$http(requestConfig)
-            .success(function (data) {
+            .then(data => {
 
-                let arr = new Uint8Array(data);
+                let arr = new Uint8Array(data.data);
                 let raw = "";
                 let i, j, subArray, chunk = 5000;
                 for (i = 0, j = arr.length; i < j; i += chunk) {

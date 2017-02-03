@@ -2,15 +2,15 @@
 	<div>
 		<div class="form-inline">
 			<div class="form-group" style="width:45%">
-				<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>
-				<select id="templateSelectBox" style="width:100%" ng-disabled="disabled" class="form-control" ng-model="templateId" ng-change="generate(templateId, process.offer,notification)">
-                <option value="-1" selected> - {{ 'EMAIL_TEMPLATE_SELECT' | translate }} - </option>                                                                     
-                <option value="{{template.id}}" ng-repeat="template in templates">{{template.name}}</option>                                           
-            	</select>
+				<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>		
+				<select ng-model="currentTemplate" style="width:100%" ng-disabled="disabled" class="form-control" ng-change="generate(currentTemplate,workflow,notification)"> 
+					<option ng-value="null">- {{ 'EMAIL_TEMPLATE_SELECT' | translate }} -</option>
+					<option ng-repeat="template in templates" ng-value="template">{{template.name}}</option>
+				</select>
 			</div>
 			<div class="form-group" style="width:9%;">
 				<label>&nbsp;</label>
-				<a ng-disabled="disabled" style="width:100%;height:34px" class="btn btn-default pull-right" ng-click="generate(templateId, process.offer,notification)"><i class="fa fa-refresh" aria-hidden="true"></i></a>
+				<a ng-disabled="disabled" style="width:100%;height:34px" class="btn btn-default pull-right" ng-click="alert();generate(currentTemplate, workflow,notification)"><i class="fa fa-refresh" aria-hidden="true"></i></a>
 			</div>
 			<div class="form-group" style="width:45%; float:right">
 				<label>{{ 'EMAIL_NOTIFICATION_HISTORY' | translate }}</label>

@@ -10,6 +10,7 @@ class Template {
 
     notificationTypeString: string;
     sourceString: string;
+    subject: string;
 
     constructor() {
     }
