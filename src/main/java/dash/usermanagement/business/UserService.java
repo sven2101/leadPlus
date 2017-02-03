@@ -211,7 +211,7 @@ public class UserService implements IUserService {
 						user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
 						Smtp smtp = null;
 						try {
-							smtp = smtpService.findByUser(user);
+							smtp = smtpService.findByUserId(user.getId());
 						} catch (NotFoundException ex) {
 							smtp = null;
 						}

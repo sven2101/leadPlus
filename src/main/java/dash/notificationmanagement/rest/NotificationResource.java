@@ -28,20 +28,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.exceptions.NotFoundException;
 import dash.notificationmanagement.business.INotificationService;
-import dash.notificationmanagement.domain.Notification;
+import dash.notificationmanagement.domain.NotificationContext;
 import dash.smtpmanagement.business.ISmtpService;
-import dash.smtpmanagement.domain.Smtp;
-import dash.usermanagement.business.UserService;
-import dash.usermanagement.domain.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping(value = "/api/rest/notifications", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
-		MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/users/{userId}/notifications/", produces = {
+		MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Notifications API")
 public class NotificationResource {
 
@@ -53,47 +49,22 @@ public class NotificationResource {
 	@Autowired
 	private ISmtpService smtpService;
 
-	@Autowired
-	private UserService userService;
-
 	@ApiOperation(value = "Send a single Notification.", notes = "")
-	@RequestMapping(value = "/users/{userId}/notifications/send/{smtpKey}", method = RequestMethod.POST)
+	@RequestMapping(value = "/send", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Object> sendNotification(
 			@ApiParam(required = true) @PathVariable(required = true) final Long userId,
-			@ApiParam(required = true) @PathVariable(required = true) final String smtpKey,
-			@ApiParam(required = true) @RequestBody @Valid final Notification notification) {
-
-		if (userId == null)
-			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-
-		User user = null;
-		try {
-			user = this.userService.getById(userId);
-		} catch (NotFoundException nfex) {
-			logger.error(NotificationResource.class.getSimpleName() + nfex.getMessage(), nfex);
-			return new ResponseEntity<>(nfex.getMessage(), HttpStatus.CONFLICT);
-		}
-
-		if (smtpKey == null)
-			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
-
-		Smtp smtp;
-		try {
-			smtp = smtpService.findByUser(user);
-		} catch (NotFoundException nfex) {
-			logger.error(NotificationResource.class.getSimpleName() + nfex.getMessage(), nfex);
-			return new ResponseEntity<>(nfex.getMessage(), HttpStatus.CONFLICT);
-		}
+			@ApiParam(required = true) @RequestBody @Valid final NotificationContext notificationContext) {
 
 		try {
-			notificationService.sendNotification(smtp, notification, smtpKey);
+			notificationService.sendNotification(smtpService.findByUserId(userId),
+					notificationContext.getNotification(), notificationContext.getSmtpKey());
 		} catch (Exception e) {
 			logger.error(NotificationResource.class.getSimpleName() + e.getMessage(), e);
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 
-		return new ResponseEntity<>(notification, HttpStatus.CREATED);
+		return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 
 }

@@ -24,4 +24,6 @@ public interface SmtpRepository extends JpaRepository<Smtp, Long> {
 	public Smtp findByUser(User user);
 
 	public Smtp findByUserId(Long id);
+
+	public Smtp findByUserUsername(String username);
 }

@@ -152,7 +152,7 @@ public class UserManagmentResource {
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get Smtp by UserId.", notes = "Provide a valid user ID.")
 	public ResponseEntity<Object> getSmtpByUserId(@PathVariable final long id) throws NotFoundException {
-		Smtp smtp = smtpService.findByUser(userService.getById(id));
+		Smtp smtp = smtpService.findByUserId(id);
 		if (smtp != null)
 			return new ResponseEntity<Object>(smtp, HttpStatus.OK);
 		else

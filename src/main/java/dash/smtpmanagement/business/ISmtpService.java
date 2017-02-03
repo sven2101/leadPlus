@@ -16,18 +16,25 @@ package dash.smtpmanagement.business;
 
 import java.io.UnsupportedEncodingException;
 
+import javax.mail.MessagingException;
+
 import org.springframework.stereotype.Service;
 
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.smtpmanagement.domain.Smtp;
-import dash.usermanagement.domain.User;
 
 @Service
 public interface ISmtpService {
 
-	Smtp save(final Smtp smtp, String smtpKey) throws SaveFailedException, UnsupportedEncodingException, Exception;
+	public Smtp save(final Smtp smtp, final String smtpKey)
+			throws SaveFailedException, UnsupportedEncodingException, Exception;
 
-	Smtp findByUser(final User user) throws NotFoundException;
+	public Smtp test(final Long smtpId, final String smtpKey)
+			throws UnsupportedEncodingException, MessagingException, NotFoundException;
+
+	public Smtp findByUserId(final long userId) throws NotFoundException;
+
+	public Smtp findByAuthenticatedUser() throws NotFoundException;
 
 }

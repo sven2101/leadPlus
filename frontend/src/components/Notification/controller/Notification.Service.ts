@@ -49,6 +49,7 @@ class NotificationService {
     sendNotification(notification: Notification): IPromise<boolean> {
         let self = this;
         let defer = this.q.defer();
+        console.log("SMTP KEY: ", this.rootScope.user.smtpKey);
         this.notificationResource.sendNotification({ userId: this.rootScope.user.id, smtpKey: this.rootScope.user.smtpKey }, notification).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
             defer.resolve(true);
