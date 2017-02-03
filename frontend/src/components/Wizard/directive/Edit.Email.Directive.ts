@@ -50,6 +50,7 @@ class EditEmailDirective implements IDirective {
         scope.sizeInvalid = false;
         scope.TemplateService = this.TemplateService;
         scope.workflow = scope.process.offer == null ? scope.process.lead : scope.process.offer;
+        scope.workflow = scope.process.sale != null ? scope.process.sale : scope.workflow;
         scope.notification.recipient = scope.workflow.customer.email;
         scope.generate = (template, workflow, currentNotification) => this.generateContent(template, workflow, currentNotification, scope);
         scope.setAttachments = (files) => this.setAttachments(files, scope.notification, scope);

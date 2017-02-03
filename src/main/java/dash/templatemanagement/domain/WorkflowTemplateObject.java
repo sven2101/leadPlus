@@ -38,6 +38,46 @@ public class WorkflowTemplateObject {
 
 	private Double vat;
 
+	private Double saleTurnover;
+
+	private Double saleProfit;
+
+	private Double saleCost;
+
+	private String invoiceNumber;
+
+	public Double getSaleTurnover() {
+		return saleTurnover;
+	}
+
+	public void setSaleTurnover(Double saleTurnover) {
+		this.saleTurnover = saleTurnover;
+	}
+
+	public Double getSaleProfit() {
+		return saleProfit;
+	}
+
+	public void setSaleProfit(Double saleProfit) {
+		this.saleProfit = saleProfit;
+	}
+
+	public Double getSaleCost() {
+		return saleCost;
+	}
+
+	public void setSaleCost(Double saleCost) {
+		this.saleCost = saleCost;
+	}
+
+	public String getInvoiceNumber() {
+		return invoiceNumber;
+	}
+
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
+	}
+
 	public WorkflowTemplateObject() {
 	}
 
