@@ -4,13 +4,9 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="ibox float-e-margins">
-				<a >
+				<a>
 					<div class="ibox-title">
 						<h5>{{ 'SETTING_EMAIL_TEMPLATES_MANAGEMENT' | translate }}</h5>
-						<div class="ibox-tools">
-							<i class="fa fa-question-circle" data-toggle="modal" data-target="#templateVariablesModal"></i>
-					
-						</div>
 					</div>
 				</a>
 				<div class="ibox-content" id="templates">
@@ -31,8 +27,14 @@
 									<td class="project-title col-md-2">
 										<small>{{template.name}}</small>
 									</td>
-									<td class="project-completion col-md-7" max>
+									<td class="project-completion col-md-3" max>
 										<small style="word-wrap: break-word; word-break: break-all;">{{template.description}}</small>
+									</td>
+									<td class="project-title col-md-2">
+										<small>{{template.subject}}</small>
+									</td>
+									<td class="project-title col-md-2">
+										<small>{{template.notificationTypeString}} in {{template.sourceString}}</small>
 									</td>
 									<td class="project-actions col-md-3">
 										<button type="button" class="btn btn-white btn-sm" ng-click="settingCtrl.openEditEmailTemplateModal(template)" title="{{ 'SETTING_EMAIL_TEMPLATE_EDIT' | translate }}">
@@ -54,13 +56,14 @@
 
 <script>
 	// Collapse iBox Contents
-    $('.collapse').on('shown.bs.collapse', function(){
-        $(this).parent().find(".fa-chevron-down").removeClass("fa-chevron-down").addClass("fa-chevron-up");
-    }).on('hidden.bs.collapse', function(){
-        $(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
-    });
-
-	$(document).ready(function(){
-		$('[data-toggle="tooltip"]').tooltip({ placement: 'left'});
+	$('.collapse').on('shown.bs.collapse', function () {
+		$(this).parent().find(".fa-chevron-down").removeClass("fa-chevron-down").addClass("fa-chevron-up");
+	}).on('hidden.bs.collapse', function () {
+		$(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
 	});
+
+	$(document).ready(function () {
+		$('[data-toggle="tooltip"]').tooltip({ placement: 'left' });
+	});
+
 </script>

@@ -31,7 +31,7 @@ class UserDetailController {
     currentUser: User;
     currentUserId: number;
     userFound: boolean = false;
-    userStatisticColumnChart: ColumnChart;
+    userStatisticColumnChart: PieChart;
     translate;
     dateRange: string;
     source: string;
@@ -54,9 +54,8 @@ class UserDetailController {
         this.userResource.getById({ id: this.currentUserId }).$promise.then(function (result: User) {
             self.currentUser = result;
             if (!isNullOrUndefined(self.currentUser.id)) {
-                self.userStatisticColumnChart = new ColumnChart(self.translate, "SPCLOS", getNameOfUser(self.currentUser), ""
-                    , self.translate.instant("DETAIL_STATISTIC_USER_TOOLTIP", { username: "{series.name}", count: "{point.y}", workflow: "{point.name}" })
-                    , [self.translate.instant("LEAD_LEADS"), self.translate.instant("OFFER_OFFERS"), self.translate.instant("SALE_SALES")]);
+                self.userStatisticColumnChart = new PieChart(self.translate, "SPCLOS", getNameOfUser(self.currentUser),
+                    self.translate.instant("DETAIL_STATISTIC_USER_TOOLTIP", { username: "{series.name}", count: "{point.y}", workflow: "{point.name}" }) + "<br>" + self.translate.instant("STATISTIC_PARTS") + ": <b>{point.percentage:.1f}%</b>");
                 self.userFound = true;
             }
         });

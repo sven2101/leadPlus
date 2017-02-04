@@ -22,7 +22,7 @@ class ProductDetailController {
     currentProduct: Product;
     currentProductId: number;
     productFound: boolean = false;
-    productStatisticColumnChart: ColumnChart;
+    productStatisticColumnChart: PieChart;
     translate;
     dateRange: string;
     source: string;
@@ -46,9 +46,8 @@ class ProductDetailController {
         this.productResource.getProductById({ id: this.currentProductId }).$promise.then(function (result: Product) {
             self.currentProduct = result;
             if (!isNullOrUndefined(self.currentProduct.id)) {
-                self.productStatisticColumnChart = new ColumnChart(self.translate, "SPCLOS", self.currentProduct.name, ""
-                    , self.translate.instant("DETAIL_STATISTIC_TOOLTIP", { productname: "{series.name}", count: "{point.y}", workflow: "{point.name}" })
-                    , [self.translate.instant("LEAD_LEADS"), self.translate.instant("OFFER_OFFERS"), self.translate.instant("SALE_SALES")]);
+                self.productStatisticColumnChart = new PieChart(self.translate, "SPCLOS", self.currentProduct.name,
+                    self.translate.instant("DETAIL_STATISTIC_TOOLTIP", { productname: "{series.name}", count: "{point.y}", workflow: "{point.name}" }) + "<br>" + self.translate.instant("STATISTIC_PARTS") + ": <b>{point.percentage:.1f}%</b>");
                 self.productFound = true;
             }
         });

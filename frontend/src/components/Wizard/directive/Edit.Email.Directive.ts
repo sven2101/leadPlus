@@ -155,7 +155,7 @@ class EditEmailDirective implements IDirective {
         let notificationType = scope.notification.notificationType;
         let sourceName = scope.process.source == null ? "NONE" : scope.process.source.name;
         let templates: Array<Template> = scope.templates;
-        
+
         for (let t of templates) {
             let containsNotificationType = t.notificationTypeString == null ? false : contains<string>(t.notificationTypeString.split(","), notificationType);
             let containsSourceName = t.sourceString == null ? false : contains<string>(t.sourceString.split(","), sourceName);

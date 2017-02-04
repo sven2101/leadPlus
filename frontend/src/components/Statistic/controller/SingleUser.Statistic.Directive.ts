@@ -56,7 +56,7 @@ angular.module(moduleApp)
                     scope.userStatistic = resultUserStatistic;
                     scope.chart.pushData($translate.instant("LEAD_LEADS"), [scope.userStatistic.countLead], "#ed5565");
                     scope.chart.pushData($translate.instant("OFFER_OFFERS"), [scope.userStatistic.countOffer], "#f8ac59");
-                    scope.chart.pushData($translate.instant("SALE_SALES"), [scope.userStatistic.countSale], "#1a7bb9");
+                    scope.chart.pushData($translate.instant("SALE_SALES"), [scope.userStatistic.countSale], "#1a7bb9", true, true);
                 });
             }
 

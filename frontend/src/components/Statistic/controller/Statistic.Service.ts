@@ -75,7 +75,7 @@ class StatisticService {
     }
 
     setAllModels() {
-        this.SingleStatisticWorkflowPieChart = new PieChart(this.translate, "SPLOS", "STATISTIC_PARTS");
+        this.SingleStatisticWorkflowPieChart = new PieChart(this.translate, "SPLOS", "STATISTIC_PARTS", "{series.name}: <b>{point.percentage:.1f}%</b>");
         this.EntireStatisticProfitTurnoverAreaChart = new AreaChart(this.translate, "EATAP", "STATISTIC_PROFIT_AND_RETURN_Y_AXIS", " €");
         this.EntireStatisticWorkflowAmountSplineChart = new SplineChart(this.translate, "ESLOS", "STATISTIC_LEADS_OFFERS_SALES_Y_AXIS", "");
         this.EntireStatisticLeadConversionRateSplineChart = new SplineChart(this.translate, "ESLSCR", "STATISTIC_SALES_OF_LEADS_Y_AXIS", " %");
@@ -89,9 +89,8 @@ class StatisticService {
 
     generateMyStatistic(user: User): void {
         if (!isNullOrUndefined(user.id)) {
-            this.MyUserStatisticColumnChart = new ColumnChart(this.translate, "SPCLOS", getNameOfUser(user), ""
-                , this.translate.instant("DETAIL_STATISTIC_USER_TOOLTIP", { username: "{series.name}", count: "{point.y}", workflow: "{point.name}" })
-                , [this.translate.instant("LEAD_LEADS"), this.translate.instant("OFFER_OFFERS"), this.translate.instant("SALE_SALES")]);
+            this.MyUserStatisticColumnChart = new PieChart(this.translate, "SPCLOS", getNameOfUser(user),
+                this.translate.instant("DETAIL_STATISTIC_USER_TOOLTIP", { username: "{series.name}", count: "{point.y}", workflow: "{point.name}" }) + "<br>" + this.translate.instant("STATISTIC_PARTS") + ": <b>{point.percentage:.1f}%</b>");
         }
     }
 
@@ -293,7 +292,7 @@ class StatisticService {
     pushToWorkflowPieChart() {
         this.SingleStatisticWorkflowPieChart.pushData("LEADS_MENU", [this.leadAmount], "#ed5565");
         this.SingleStatisticWorkflowPieChart.pushData("OFFERS_MENU", [this.offerAmount], "#f8ac59");
-        this.SingleStatisticWorkflowPieChart.pushData("SALES_MENU", [this.saleAmount], "#1a7bb9");
+        this.SingleStatisticWorkflowPieChart.pushData("SALES_MENU", [this.saleAmount], "#1a7bb9", true, true);
     }
 
     pushToWorkflowAmountSplineChart() {

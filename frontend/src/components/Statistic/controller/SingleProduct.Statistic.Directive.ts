@@ -82,7 +82,7 @@ angular.module(moduleApp)
                 if (productLeadPromise && productOfferPromise && productSalePromise) {
                     scope.chart.pushData($translate.instant("LEAD_LEADS"), [scope.productLeads.count], "#ed5565");
                     scope.chart.pushData($translate.instant("OFFER_OFFERS"), [scope.productOffers.count], "#f8ac59");
-                    scope.chart.pushData($translate.instant("SALE_SALES"), [scope.productSales.count], "#1a7bb9");
+                    scope.chart.pushData($translate.instant("SALE_SALES"), [scope.productSales.count], "#1a7bb9", true, true);
                 }
             }
 

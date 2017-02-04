@@ -35,17 +35,16 @@
 					<form role="form" class="form-inline">
 						<button type="button" class="btn btn-success btn-sm btn-primary" ng-click="productCtrl.clearProduct()" data-toggle="modal"
 							data-target="#createProductModal" data-backdrop="static">
-                                <i class="fa fa-plus"></i>
-                                &nbsp;{{ 'PRODUCT_CREATE' | translate }}
-                        </button>
+							<i class="fa fa-plus"></i> &nbsp;{{ 'PRODUCT_CREATE' | translate }}
+							</button>
 
-						<!--
+							<!--
                         <button type="button" ng-click="productCtrl.refreshData()" type="button" class="btn btn-success btn-sm btn-primary">
                             <i class="fa fa-refresh"></i>
                             &nbsp;{{ 'COMMON_REFRESH' | translate }}
                         </button>
                             -->
-						<span class="pull-right ">
+							<span class="pull-right ">
                             <input  type="text" placeholder="{{ 'COMMON_SEARCH' | translate }}" class="input-sm form-control" ng-model="searchText">
                         </span>
 					</form>
@@ -63,9 +62,20 @@
 										<br>
 										<small>{{ 'PRODUCT_CREATED' | translate }} {{productCtrl.getLocalTimestamp(product)}}</small>
 									</td>
-									<td class="project-completion col-md-7">
+									<td class="project-completion col-md-3">
 										<small style="word-wrap: break-word; word-break: break-all;">
 											<p style="max-height: 120px;overflow:hidden">{{product.description}}</p>
+										</small>
+									</td>
+									<td class="project-completion col-md-2">
+										<small style="word-wrap: break-word; word-break: break-all;">
+											<p style="max-height: 120px;overflow:hidden">{{product.netPrice | currency:'\u20AC'}}</p>
+										</small>
+									</td>
+									<td class="project-completion col-md-2">
+										<small style="word-wrap: break-word; word-break: break-all;">
+											<p style="max-height: 120px;overflow:hidden">{{ 'PRODUCT_NUMBER' | translate }}</p>
+											<p style="max-height: 120px;overflow:hidden">{{product.productNumber}}</p>
 										</small>
 									</td>
 									<td>
@@ -75,7 +85,7 @@
 									<td class="project-actions col-md-1">
 										<button type="button" class="btn btn-white btn-sm" ng-click="productCtrl.editProduct(product)" data-toggle="modal" data-target="#createProductModal"
 											data-backdrop="static">
-                                     <i class="fa fa-pencil"></i>&nbsp;Edit</button>
+											<i class="fa fa-pencil"></i>&nbsp;Edit</button>
 									</td>
 								</tr>
 							</tbody>
