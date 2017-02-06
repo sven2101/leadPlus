@@ -51,17 +51,19 @@ public class NotificationResource {
 
 	private static final Logger logger = Logger.getLogger(NotificationResource.class);
 
-	@Autowired
-	private INotificationService notificationService;
-
-	@Autowired
-	private ISmtpService smtpService;
-
-	@Autowired
+	private final INotificationService notificationService;
+	private final ISmtpService smtpService;
 	private IProcessService processService;
+	private UserService userService;
 
 	@Autowired
-	private UserService userService;
+	public NotificationResource(INotificationService notificationService, ISmtpService smtpService,
+			IProcessService processService, UserService userService) {
+		this.notificationService = notificationService;
+		this.smtpService = smtpService;
+		this.processService = processService;
+		this.userService = userService;
+	}
 
 	@ApiOperation(value = "Send a single Notification.", notes = "")
 	@RequestMapping(value = "/proccesses/{processId}/users/{userId}/send", method = RequestMethod.POST)
