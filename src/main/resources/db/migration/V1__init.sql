@@ -49,4 +49,3 @@ CREATE TABLE IF NOT EXISTS public.tenant
 WITH (
   OIDS=FALSE
 );
-        

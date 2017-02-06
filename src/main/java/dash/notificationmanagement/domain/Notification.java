@@ -27,6 +27,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -39,6 +40,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.common.HtmlCleaner;
 import dash.processmanagement.domain.Process;
+import dash.usermanagement.domain.User;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
@@ -70,6 +72,11 @@ public class Notification {
 	@Size(max = 255)
 	@Column(name = "subject", length = 255, nullable = false)
 	private String subject;
+
+	@NotNull
+	@OneToOne
+	@JoinColumn(name = "user_fk", nullable = false)
+	private User user;
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
@@ -187,6 +194,30 @@ public class Notification {
 		this.recipients = formatEmails(recipients);
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	private String formatEmails(String emails) {
+		if (emails == null || "".equals(emails)) {
+			return null;
+		}
+		String result = "";
+		for (String email : emails.split(",")) {
+			if (email.trim().length() > 0) {
+				result += email.trim() + ",";
+			}
+		}
+		if ("".equals(result)) {
+			return null;
+		}
+		return result.substring(0, result.length() - 1);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -196,10 +227,12 @@ public class Notification {
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((notificationType == null) ? 0 : notificationType.hashCode());
+		result = prime * result + ((process == null) ? 0 : process.hashCode());
 		result = prime * result + ((recipients == null) ? 0 : recipients.hashCode());
 		result = prime * result + ((recipientsBCC == null) ? 0 : recipientsBCC.hashCode());
 		result = prime * result + ((recipientsCC == null) ? 0 : recipientsCC.hashCode());
 		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -231,6 +264,11 @@ public class Notification {
 			return false;
 		if (notificationType != other.notificationType)
 			return false;
+		if (process == null) {
+			if (other.process != null)
+				return false;
+		} else if (!process.equals(other.process))
+			return false;
 		if (recipients == null) {
 			if (other.recipients != null)
 				return false;
@@ -251,30 +289,20 @@ public class Notification {
 				return false;
 		} else if (!subject.equals(other.subject))
 			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Notification [id=" + id + ", recipientsCC=" + recipientsCC + ", recipientsBCC=" + recipientsBCC
-				+ ", recipients=" + recipients + ", subject=" + subject + ", deleted=" + deleted + ", attachments="
-				+ attachments + ", notificationType=" + notificationType + "]";
-	}
-
-	private String formatEmails(String emails) {
-		if (emails == null || "".equals(emails)) {
-			return null;
-		}
-		String result = "";
-		for (String email : emails.split(",")) {
-			if (email.trim().length() > 0) {
-				result += email.trim() + ",";
-			}
-		}
-		if ("".equals(result)) {
-			return null;
-		}
-		return result.substring(0, result.length() - 1);
+		return "Notification [id=" + id + ", recipients=" + recipients + ", recipientsCC=" + recipientsCC
+				+ ", recipientsBCC=" + recipientsBCC + ", subject=" + subject + ", user=" + user + ", deleted="
+				+ deleted + ", content=" + content + ", attachments=" + attachments + ", process=" + process
+				+ ", notificationType=" + notificationType + "]";
 	}
 
 }

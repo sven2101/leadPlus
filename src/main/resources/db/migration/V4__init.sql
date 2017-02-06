@@ -14,4 +14,3 @@ INSERT INTO demo."user"(email, enabled, firstname, language, lastname, password,
 INSERT INTO demo."user"(email, enabled, firstname, language, lastname, password, role, username)
     VALUES ('api@eviarc', true, 'api', 'DE', 'user', '$2a$10$2giR01Zq6.stHfGGg.uocuUgvgP2xzzLmoFMkwx0M1RtL74Pnqi3y', 'API', 'api@eviarc')
     ON CONFLICT DO NOTHING;
-    
