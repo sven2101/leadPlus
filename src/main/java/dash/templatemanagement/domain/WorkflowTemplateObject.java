@@ -1,5 +1,6 @@
 package dash.templatemanagement.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -32,6 +33,7 @@ public class WorkflowTemplateObject {
 
 	private String message;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
 	private Calendar deliveryDate;
 
 	private Double netPrice;
@@ -89,8 +91,9 @@ public class WorkflowTemplateObject {
 		this.netPrice = price;
 	}
 
-	public Calendar getDeliveryDate() {
-		return deliveryDate;
+	public String getDeliveryDate() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+		return dateFormat.format(deliveryDate.getTime());
 	}
 
 	public void setDeliveryDate(Calendar deliveryDate) {
