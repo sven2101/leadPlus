@@ -70,6 +70,14 @@ dependencies {
     testCompile("junit:junit")
 }
 
+flyway {
+    url = "jdbc:postgresql://localhost:5432/applica"
+    user = "postgres"
+    password = "***REMOVED***"
+    placeholderPrefix = "\$&{"
+    placeholderSuffix = "}&\$"
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.7'
 }

@@ -54,9 +54,11 @@
 					<p ng-show="createTemplate.subject.$error.required  && !createTemplate.subject.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
 				</div>
 				<!-- Template -->
-				<div class="form-group " style="border: 1px solid #a9a9a9"  ng-class="{ 'has-error' : createTemplate.content.$invalid && !createTemplate.content.$pristine } ">
+				<div class="form-group ">
 					<label>{{ 'SETTING_EMAIL_TEMPLATE_TEXT' | translate }}<span style="color:red">*</span></label>
-					<summernote required type="text " config="templateCtrl.summernoteOptions" name="content " class="form-control" height="300" ng-model="templateCtrl.template.content "></summernote>
+					<div style="border: 1px solid #a9a9a9" ng-style="createTemplate.content.$invalid  && !createTemplate.content.$pristine ?{ 'border-color': 'red'}:{ 'border-color': '#a9a9a9'}"> 
+						<summernote required type="text " config="templateCtrl.summernoteOptions" name="content " class="form-control" height="300" ng-model="templateCtrl.template.content "></summernote>
+					</div>
 				</div>
 											
 			</div>		
