@@ -127,10 +127,16 @@ public class TemplateService implements ITemplateService {
 	@Override
 	public AbstractMessage getMessageContent(final long templateId, final WorkflowTemplateObject workflowTemplateObject,
 			final Notification notification) throws NotFoundException, IOException, TemplateCompilationException {
-		if (workflowTemplateObject != null) {
+		return getMessageContentByTemplate(getById(templateId), workflowTemplateObject, notification);
+	}
+
+	@Override
+	public AbstractMessage getMessageContentByTemplate(final Template template,
+			final WorkflowTemplateObject workflowTemplateObject, final Notification notification)
+			throws NotFoundException, IOException, TemplateCompilationException {
+		if (workflowTemplateObject != null && template != null) {
 			try {
-				return messageService.getMessageContent(workflowTemplateObject, getById(templateId).getContent(),
-						notification);
+				return messageService.getMessageContent(workflowTemplateObject, template.getContent(), notification);
 			} catch (NotFoundException ex) {
 				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw ex;

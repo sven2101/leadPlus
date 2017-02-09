@@ -57,7 +57,7 @@ class SaleResource {
             getAll: { url: "/api/rest/sales", method: "GET" },
             getById: { url: "/api/rest/sales/:id", method: "GET" },
             getByCustomerId: { url: "/api/rest/sales/customer/:id", method: "GET", isArray: true },
-            getByinvoiceNumber: { url: "/api/rest/sales/invoice", method: "POST" , isArray: true },
+            getByinvoiceNumber: { url: "/api/rest/sales/invoice", method: "POST", isArray: true },
             drop: { url: "/api/rest/sales/:id", method: "DELETE" },
         });
     }
@@ -99,7 +99,7 @@ class ProcessResource {
             getProcessBySale: { url: "/api/rest/processes/sales", method: "GET", isArray: true },
 
             getWorkflowByStatus: { url: "/api/rest/processes/workflow/:workflow/state/:status", method: "GET", isArray: true },
-            getCountWorkflowByStatus: { url: "/api/rest/processes/count/workflow/:workflow/state/:status", method: "GET"},
+            getCountWorkflowByStatus: { url: "/api/rest/processes/count/workflow/:workflow/state/:status", method: "GET" },
             getLatestSales: { url: "/api/rest/processes/sales/latest/10", method: "GET", isArray: true },
             getLatest100Sales: { url: "/api/rest/processes/sales/latest/100", method: "GET", isArray: true },
             getTodos: { url: "api/rest/processes/processor/:processorId", method: "GET", isArray: true },
@@ -347,6 +347,7 @@ class TemplateResource {
                     offerId: "@offerId"
                 }
             },
+            test: { url: "/api/rest/templates/test", method: "POST" },
             generatePDF: {
                 url: "/api/rest/templates/:templateId/offers/pdf/generate", method: "POST", params: {
                     templateId: "@templateId",

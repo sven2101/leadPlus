@@ -117,6 +117,10 @@ class TemplateService {
         return this.templateResource.generate({ templateId: templateId }, { workflowTemplateObject: workflow, notification: notification }).$promise;
     }
 
+    async testTemplate(template: Template, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
+        return this.templateResource.test({ workflowTemplateObject: workflow, notification: notification, template: template }).$promise;
+    }
+
     generatePDF(templateId: string, offer: Offer) {
         let defer = this.q.defer();
         let self = this;

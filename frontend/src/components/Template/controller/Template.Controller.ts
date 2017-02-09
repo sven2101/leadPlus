@@ -87,18 +87,22 @@ class TemplateController {
 
     async testSyntax(): Promise<void> {
         try {
-            await this.templateService.generate(this.template.id, new Lead(), new Notification());
+            await this.templateService.testTemplate(this.template, new WorkflowTemplateObject(), new Notification());
             this.toaster.pop("success", "", this.$translate.instant("EMAIL_TEMPLATE_SYNTAX_SUCCESS"));
 
         } catch (error) {
+            if (error.data != null && error.data.exception !== "dash.templatemanagement.business.TemplateCompilationException") {
+                return this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR"));
+            }
+            let errorMessage = error == null || error.data == null ? "" : ": " + error.data.message;
             if (error != null && error.data != null && error.data.message != null && error.data.message.substring(0, 6) !== "Syntax") {
-                this.toaster.pop("success", "", this.$translate.instant("EMAIL_TEMPLATE_SYNTAX_SUCCESS"));
+                this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR") + errorMessage);
                 return;
             }
-            let errorMessage = error == null || error.data == null ? "" : ": " + error.data.message.substring(36);
-
+            errorMessage = error == null || error.data == null ? "" : ": " + error.data.message.substring(36);
             this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR") + errorMessage);
         }
+
     }
 
 

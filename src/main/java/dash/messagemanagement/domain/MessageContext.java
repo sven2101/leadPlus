@@ -16,6 +16,7 @@ package dash.messagemanagement.domain;
 import javax.validation.constraints.NotNull;
 
 import dash.notificationmanagement.domain.Notification;
+import dash.templatemanagement.domain.Template;
 import dash.templatemanagement.domain.WorkflowTemplateObject;
 
 public class MessageContext {
@@ -25,6 +26,8 @@ public class MessageContext {
 
 	@NotNull
 	private Notification notification;
+
+	private Template template;
 
 	public MessageContext() {
 	}
@@ -43,6 +46,14 @@ public class MessageContext {
 
 	public void setNotification(Notification notification) {
 		this.notification = notification;
+	}
+
+	public Template getTemplate() {
+		return template;
+	}
+
+	public void setTemplate(Template template) {
+		this.template = template;
 	}
 
 }

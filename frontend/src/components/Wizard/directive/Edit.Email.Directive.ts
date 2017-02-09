@@ -115,12 +115,19 @@ class EditEmailDirective implements IDirective {
         if (template == null) {
             return;
         }
+        console.log(template);
         let id = isNumeric(template) ? template : template.id;
         try {
-            let notification = await scope.TemplateService.generate(id, workflow, currentNotification);
+            console.log(template);
+            let notification: Notification = await scope.TemplateService.generate(id, workflow, currentNotification);
+            notification.subject = !isNumeric(template) ? template.subject : currentNotification.subject;
             scope.notification.content = notification.content;
+            scope.notification.subject = notification.subject;
         }
         catch (error) {
+            if (error.data != null && error.data.exception !== "dash.templatemanagement.business.TemplateCompilationException") {
+                return this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR"));
+            }
             let errorMessage = error == null || error.data == null ? "" : ": " + error.data.message;
             if (error != null && error.data != null && error.data.message != null && error.data.message.substring(0, 6) !== "Syntax") {
                 this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR") + errorMessage);

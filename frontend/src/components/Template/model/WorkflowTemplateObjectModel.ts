@@ -1,0 +1,63 @@
+class WorkflowTemplateObject {
+    id: number;
+    orderPositions: Array<OrderPosition>;
+    customer: Customer;
+    timestamp: any;
+    vendor: any;
+    deliveryAddress: any;
+    deliveryDate: any;
+    saleTurnover: number;
+    saleProfit: number;
+    saleCost: number;
+    deliveryCosts: number;
+    invoiceNumber: string;
+    message: string;
+    netPrice: number;
+    vat: number;
+
+    constructor() {
+        this.id = 0;
+        let p = new Product();
+        p.description = "test";
+        p.id = 0;
+        p.name = "test";
+        p.netPrice = 0;
+        p.productNumber = "test";
+        p.productState = ProductState.NEW;
+        p.timestamp = "01.01.1900 00:00:00:000";
+        p.deactivated = false;
+        p.description = "test";
+        let op = new OrderPosition();
+        op.id = 0;
+        op.amount = 0;
+        op.discount = 0;
+        op.netPrice = 0;
+        op.product = p;
+        this.orderPositions = [op];
+        let c = new Customer();
+        c.id = 0;
+        c.address = "test";
+        c.company = "test";
+        c.customerNumber = "test";
+        c.deactivated = false;
+        c.email = "test@test.de";
+        c.firstname = "test";
+        c.lastname = "test";
+        c.phone = "test";
+        c.realCustomer = true;
+        c.timestamp = "01.01.1900 00:00:00:000";
+        c.title = "MR";
+        this.customer = c;
+        this.timestamp = "01.01.1900  00:00:00:000";
+        this.vendor = null;
+        this.deliveryAddress = "test";
+        this.deliveryDate = "01.01.1900";
+        this.saleProfit = 0;
+        this.saleCost = 0;
+        this.deliveryCosts = 0;
+        this.invoiceNumber = "test";
+        this.message = "test";
+        this.netPrice = 0;
+        this.vat = 0;
+    }
+}

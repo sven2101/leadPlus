@@ -46,4 +46,7 @@ public interface ITemplateService {
 	public AbstractMessage getMessageContent(long templateId, WorkflowTemplateObject workflowTemplateObject,
 			final Notification notification) throws NotFoundException, IOException, TemplateCompilationException;
 
+	AbstractMessage getMessageContentByTemplate(Template template, WorkflowTemplateObject workflowTemplateObject,
+			Notification notification) throws NotFoundException, IOException, TemplateCompilationException;
+
 }

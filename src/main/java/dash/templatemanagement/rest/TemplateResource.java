@@ -105,6 +105,15 @@ public class TemplateResource {
 				messageContext.getNotification());
 	}
 
+	@RequestMapping(value = "/test", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Generate a email content based on a template and an AbstractWorkflow.", notes = "")
+	public AbstractMessage generate(@ApiParam(required = true) @RequestBody @Valid final MessageContext messageContext)
+			throws NotFoundException, IOException, TemplateCompilationException {
+		return templateService.getMessageContentByTemplate(messageContext.getTemplate(),
+				messageContext.getWorkflowTemplateObject(), messageContext.getNotification());
+	}
+
 	@RequestMapping(value = "/{templateId}/offers/pdf/generate", method = RequestMethod.POST, produces = "application/pdf")
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Generate a pdf based on a template and an offer.", notes = "")
