@@ -101,6 +101,10 @@ class ProfileController {
     getTheFiles($files) {
         this.profileService.getTheFiles($files);
     }
+
+    saveSmtpConnection() {
+        this.SmtpService.save();
+    }
 }
 
 angular.module(moduleProfile, [ngResourceId]).controller(ProfileControllerId, ProfileController);

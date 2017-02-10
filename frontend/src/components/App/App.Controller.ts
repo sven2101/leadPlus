@@ -1,9 +1,13 @@
 /// <reference path="../app/App.Constants.ts" />
+/// <reference path="../app/App.Common.ts" />
 /// <reference path="../app/App.Resource.ts" />
 /// <reference path="../dashboard/controller/Dashboard.Service.ts" />
 /// <reference path="../Profile/controller/Profile.Service.ts" />
+/// <reference path="../Notification/model/NotificationSendState.ts" />
 
 const AppControllerId: string = "AppController";
+const broadcastSetNotificationSendState: string = "setNotificationSendState";
+const broadcastAddNotification: string = "AddNotification";
 
 class AppController {
 
@@ -17,6 +21,8 @@ class AppController {
     userResource;
     stop;
     todos: Array<Process> = [];
+    userNotifications: Array<Notification> = [];
+    notificationSendState: NotificationSendState = NotificationSendState.DEFAULT;
 
     profileService: ProfileService;
     rendered: boolean = false;
@@ -51,7 +57,20 @@ class AppController {
         $scope.$on("$destroy", function handler() {
             todosChanged();
         });
+
+        $scope.$on(broadcastAddNotification, (event, notification: Notification) => {
+            this.userNotifications.push(notification);
+        });
+
+        $scope.$on(broadcastSetNotificationSendState, (event, notificationSendState: NotificationSendState) => {
+            this.notificationSendState = notificationSendState;
+            if ($scope.$$phase == null) {
+                $scope.$apply();
+            }
+        });
     }
+
+
 
     navigateTo(todo: Process) {
         if (todo.status === "OPEN" || todo.status === "INCONTACT") {

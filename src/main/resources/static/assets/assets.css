@@ -4041,6 +4041,19 @@ span.CodeMirror-selectedtext { background: none; }
 .cropper-disabled .cropper-point {
   cursor: not-allowed;
 }
+.spinner {
+     height: 15px;
+    width: 15px;
+    animation: rotate 0.8s infinite linear;
+    border: 3px solid #1ab394;
+    border-right-color: transparent;
+    border-radius: 50%;
+}
+
+@keyframes rotate {
+  0%    { transform: rotate(0deg); }
+  100%  { transform: rotate(360deg); }
+}
 #ngdatatable tr td {
 		height: 62px;
 		vertical-align: middle;

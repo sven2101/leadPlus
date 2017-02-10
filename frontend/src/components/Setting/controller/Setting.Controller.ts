@@ -93,9 +93,7 @@ class SettingController {
         this.smtpService.test();
     }
 
-    saveSmtpConnection() {
-        this.smtpService.save();
-    }
+
 }
 angular.module(moduleSetting, [ngResourceId]).controller(SettingControllerId, SettingController);
 
