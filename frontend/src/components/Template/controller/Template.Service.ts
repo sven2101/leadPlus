@@ -136,16 +136,9 @@ class TemplateService {
         return defer.promise;
     }
 
-    getAll(): Promise<Array<Template>> {
-        let defer = this.q.defer();
-        let self = this;
-        this.templateResource.getAll().$promise.then(function (result: Array<Template>) {
-            self.templates = result;
-            defer.resolve(self.templates);
-        }, function (error: any) {
-            defer.reject(error);
-        });
-        return defer.promise;
+    async getAll(): Promise<Array<Template>> {
+        this.templates = await this.templateResource.getAll().$promise;
+        return this.templates;
     }
 }
 

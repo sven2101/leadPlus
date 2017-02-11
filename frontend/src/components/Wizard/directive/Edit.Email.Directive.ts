@@ -115,10 +115,8 @@ class EditEmailDirective implements IDirective {
         if (template == null) {
             return;
         }
-        console.log(template);
         let id = isNumeric(template) ? template : template.id;
         try {
-            console.log(template);
             let notification: Notification = await scope.TemplateService.generate(id, workflow, currentNotification);
             notification.subject = !isNumeric(template) ? template.subject : currentNotification.subject;
             scope.notification.content = notification.content;
@@ -187,7 +185,7 @@ class EditEmailDirective implements IDirective {
     setTemplate(scope: any, t: Template): void {
         scope.currentTemplate = t;
         scope.notification.subject = t.subject;
-        scope.generate(t.id, scope.workflow, scope.notification);
+        scope.generate(t, scope.workflow, scope.notification);
     }
 
 }

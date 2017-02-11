@@ -14,17 +14,21 @@
 
 package dash.notificationmanagement.business;
 
-import javax.mail.MessagingException;
+import java.util.List;
 
 import dash.exceptions.NotFoundException;
-import dash.exceptions.SMTPdoesntExistsException;
 import dash.exceptions.SaveFailedException;
 import dash.notificationmanagement.domain.Notification;
+import dash.notificationmanagement.domain.NotificationContext;
 import dash.smtpmanagement.domain.Smtp;
 
 public interface INotificationService {
 
-	public Notification sendNotification(final Smtp smtp, final Notification notification, final String smtpKey)
-			throws SMTPdoesntExistsException, MessagingException, SaveFailedException, NotFoundException, Exception;
+	List<Notification> getNotificationsBySenderId(final Long userId);
+
+	Notification sendNotification(Long processId, Long userId, NotificationContext notificationContext)
+			throws NotFoundException, SaveFailedException, EmailSendFailedException;
+
+	Notification sendNotificationBySmtp(Smtp smtp, Notification notification, String smtpKey) throws Exception;
 
 }

@@ -182,7 +182,7 @@
 						<li>
 							<table class="table table-hover">
 								<tbody>
-									<tr class="row" style="cursor:pointer" ng-repeat="notification in appCtrl.userNotifications | limitTo:5 | orderBy:'timestamp'">
+									<tr class="row" style="cursor:pointer" ng-repeat="notification in appCtrl.NotificationService.userNotifications | limitTo:5 | orderBy:'timestamp'">
 										<td >
 											
 											<span ng-if="notification.notificationType=='ERROR'" class="label  label-danger" style="margin-top: 50%">

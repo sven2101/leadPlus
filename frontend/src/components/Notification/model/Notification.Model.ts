@@ -12,6 +12,7 @@ class Notification {
     content: string;
     attachments: Attachment[];
     notificationType: NotificationType;
+    sender: User;
 
     constructor() {
     }

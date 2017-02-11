@@ -8,8 +8,10 @@ ADD source_string character varying(500);
 ALTER TABLE  template
 ADD subject character varying(255);
 
-ALTER TABLE notification ADD COLUMN user_fk bigint;
+ALTER TABLE notification ADD COLUMN sender_fk bigint;
 
 ALTER TABLE notification
-ADD CONSTRAINT user_foreignkey FOREIGN KEY (user_fk)
+ADD CONSTRAINT sender_foreignkey FOREIGN KEY (sender_fk)
 REFERENCES "user" (id);
+
+ALTER TABLE notification ADD COLUMN "timestamp" timestamp without time zone;

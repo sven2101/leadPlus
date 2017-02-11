@@ -11,7 +11,7 @@ const broadcastAddNotification: string = "AddNotification";
 
 class AppController {
 
-    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId];
+    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId];
 
     translate;
     rootScope;
@@ -27,7 +27,7 @@ class AppController {
     profileService: ProfileService;
     rendered: boolean = false;
 
-    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope) {
+    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService) {
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.interval = $interval;
