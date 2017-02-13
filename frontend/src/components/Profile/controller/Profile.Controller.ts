@@ -47,6 +47,15 @@ class ProfileController {
         });
     }
 
+
+    testSmtpConnection() {
+        this.SmtpService.test();
+    }
+
+    saveSmtpConnection() {
+        this.SmtpService.save();
+    }
+
     saveProfileImage() {
         this.rootscope.$broadcast("saveCroppedImage");
     }

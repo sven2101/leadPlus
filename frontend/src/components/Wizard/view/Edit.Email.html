@@ -15,7 +15,7 @@
 			<div class="form-group" style="width:45%; float:right">
 				<label>{{ 'EMAIL_NOTIFICATION_HISTORY' | translate }}</label>
 				<select ng-change="onNotificationSelected()" class="form-control" ng-disabled="process.notifications==null||process.notifications.length==0" style="width:100%"
-					ng-model="notification" ng-options="(notification.notificationType.toLowerCase()+' - '+notification.subject) for notification in process.notifications track by notification.id">
+					ng-model="notification" ng-options="(translate.instant(notification.notificationType) +' - '+notification.subject) for notification in process.notifications track by notification.id">
 				<option></option>                                         
 				</select>
 			</div>

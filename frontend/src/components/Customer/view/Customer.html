@@ -30,7 +30,7 @@
 					<h5>{{ 'CUSTOMER_MANAGE_CUSTOMER' | translate }} - <strong>{{customerCtrl.customerService.page.totalElements}}</strong>&nbsp;{{
 						'CUSTOMER_MENU' | translate }}</h5>
 				</div>
-				<div class="ibox-content">
+				<div class="ibox-content" style="overflow-x: auto">
 					<form role="form" class="form-inline">
 						<button type="button" class="btn btn-success btn-sm btn-primary" ng-click="customerCtrl.clearCustomer()" data-toggle="modal"
 							data-target="#createCustomerModal" data-backdrop="static">
@@ -45,41 +45,38 @@
 					</form>
 					<div class="project-list">
 						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th></th>
+									<th class="text-center">{{ 'COMMON_NAME' | translate }}</th>
+									<th class="text-center">{{ 'COMMON_EMAIL' | translate }}</th>
+									<th class="text-center">{{ 'COMMON_PHONE' | translate }}</th>
+									<th class="text-center">{{ 'COMMON_COMPANY' | translate }}</th>
+									<th class="text-center"><i class="fa fa-cog"></i></th>
+								</tr>
+							</thead>
 							<tbody>
 								<tr ng-repeat="customer in customerCtrl.customerService.pagingCustomers">
-									<td class="project-status col-md-1">
+									<td class="project-status col-md-1 text-center" >
 										<span ng-show="!customer.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
 										<span ng-show="customer.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 									</td>
-									<td ng-click="customerCtrl.goToCustomerDetail(customer.id)" style="cursor: pointer;">
-										<a ng-href="#/customer/detail/{{customer.id}} " class="btn btn-xs btn-success btn-circle
-                                            " type="button ">
-											<i style="color:white; " class="fa fa-user "></i>
-										</a>
-									</td>
-									<td ng-click="customerCtrl.goToCustomerDetail(customer.id)" style="cursor: pointer;" class="project-title col-md-2">
-
-										<a>{{customer.firstname}} {{customer.lastname}}</a>
+									<td ng-click="customerCtrl.goToCustomerDetail(customer.id)" style="cursor: pointer;" class="project-title col-md-3 text-center">
+										<span style="color: #337ab7">{{customer.firstname}} {{customer.lastname}}</span>
 										<br>
 										<small>{{ 'CUSTOMER_CREATED' | translate }} {{customerCtrl.getLocalTimestamp(customer)}}</small>
-
 									</td>
-									<td>
-									{{customer.email}}
-									</td>
-									<td style="white-space: nowrap;">
-										{{customer.phone}}
-									</td>
-									<td style="white-space: nowrap;">
+									<td style="white-space: nowrap;" class="project-title col-md-3 text-center">
 										{{customer.email}}
 									</td>
-									<td class="project-completion col-md-7 " max>
+									<td style="white-space: nowrap;" class="project-title col-md-2 text-center">
+										{{customer.phone}}
+									</td>
+									<td class="project-completion col-md-3 text-center" max>
 										<small style="word-wrap: break-word; word-break: break-all; ">{{customer.company}}</small>
 									</td>
-									<td class="project-people col-md-1 ">
-
-									</td>
-									<td class="project-actions col-md-1 ">
+			
+									<td class="project-actions col-md-1 text-center">
 										<button type="button " class="btn btn-white btn-sm " ng-click="customerCtrl.editCustomer(customer)
                                             " data-toggle="modal " data-target="#createCustomerModal " data-backdrop="static">
                                      <i class="fa fa-pencil "></i>&nbsp;Edit</button>

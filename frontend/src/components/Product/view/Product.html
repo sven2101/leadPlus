@@ -2,6 +2,10 @@
 	.important {
 		background: #FFEBEB;
 	}
+	.grayfilter {
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+}
 </style>
 <meta charset="utf-8">
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -31,7 +35,7 @@
 					<h5>{{ 'PRODUCT_MANAGE_PRODUCTS' | translate }} - <strong>{{productCtrl.productService.products.length}}</strong> {{ 'PRODUCT_PRODUCTS'
 						| translate }}</h5>
 				</div>
-				<div class="ibox-content">
+				<div class="ibox-content" style="overflow-x: auto">
 					<form role="form" class="form-inline">
 						<button type="button" class="btn btn-success btn-sm btn-primary" ng-click="productCtrl.clearProduct()" data-toggle="modal"
 							data-target="#createProductModal" data-backdrop="static">
@@ -51,38 +55,45 @@
 
 					<div class="project-list">
 						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th></th>
+									<th class="text-center">{{ 'COMMON_NAME' | translate }}</th>
+									<th class="text-center">{{ 'COMMON_DESCRIPTION' | translate }}</th>
+									<th class="text-center">{{ 'PRODUCT_PRICE' | translate }}</th>
+									<th class="text-center">{{ 'PRODUCT_PRODUCT_STATE' | translate }}</th>
+									<th class="text-center">{{ 'PRODUCT_NUMBER' | translate }}</th>
+									<th class="text-center"><i class="fa fa-cog"></i></th>
+								</tr>
+							</thead>
 							<tbody>
 								<tr ng-repeat="product in productCtrl.productService.products| filter:searchText |orderBy:'name' | limitTo:productCtrl.productAmountLimit ">
-									<td class="project-status col-md-1">
-										<span ng-show="!product.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
-										<span ng-show="product.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
+									<td class="project-status col-md-1 text-center">
+										<div ng-if="product.picture!=null">
+											<img ng-class="{'grayfilter':product.deactivated}" ng-if="product.picture!=null" style="width: 60px; height:60px;border-radius: 10%" pictureid="{{product.picture.id}}"
+												httpsrc="/api/rest/files/content/" alt=""> <br>
+										</div>
+										<span ng-if="product.picture==null" ng-show="!product.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
+										<span ng-if="product.picture==null" ng-show="product.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 									</td>
-									<td class="project-title col-md-2">
-										<a>{{product.name}}</a>
+									<td class="project-title col-md-2 text-center">
+										{{product.name}}
 										<br>
 										<small>{{ 'PRODUCT_CREATED' | translate }} {{productCtrl.getLocalTimestamp(product)}}</small>
 									</td>
-									<td class="project-completion col-md-3">
-										<small style="word-wrap: break-word; word-break: break-all;">
-											<p style="max-height: 120px;overflow:hidden">{{product.description}}</p>
-										</small>
+									<td class="project-completion col-md-3 text-center" style="word-wrap: break-word;">
+										{{product.description}}
 									</td>
-									<td class="project-completion col-md-2">
-										<small style="word-wrap: break-word; word-break: break-all;">
-											<p style="max-height: 120px;overflow:hidden">{{product.netPrice | currency:'\u20AC'}}</p>
-										</small>
+									<td class="project-completion col-md-1 text-center" style="word-wrap: break-word;">
+										{{product.netPrice | currency:'\u20AC'}}
 									</td>
-									<td class="project-completion col-md-2">
-										<small style="word-wrap: break-word; word-break: break-all;">
-											<p style="max-height: 120px;overflow:hidden">{{ 'PRODUCT_NUMBER' | translate }}</p>
-											<p style="max-height: 120px;overflow:hidden">{{product.productNumber}}</p>
-										</small>
+									<td class="project-completion col-md-2 text-center" style="word-wrap: break-word;">
+										{{ product.productState | translate }}
 									</td>
-									<td>
-										<img ng-if="product.picture!=null" style="width: 60px; height:60px;border-radius: 10%" pictureid="{{product.picture.id}}"
-											httpsrc="/api/rest/files/content/" alt="">
+									<td class="project-completion col-md-2 text-center" style="word-wrap: break-word;">
+										{{product.productNumber}}
 									</td>
-									<td class="project-actions col-md-1">
+									<td class="project-actions col-md-1 text-center">
 										<button type="button" class="btn btn-white btn-sm" ng-click="productCtrl.editProduct(product)" data-toggle="modal" data-target="#createProductModal"
 											data-backdrop="static">
 											<i class="fa fa-pencil"></i>&nbsp;Edit</button>

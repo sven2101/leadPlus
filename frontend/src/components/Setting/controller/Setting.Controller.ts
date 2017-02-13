@@ -6,26 +6,11 @@
 /// <reference path="../../Template/model/Template.Model.ts" />
 /// <reference path="../../Template/controller/Template.Service.ts" />
 
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
-
 const SettingControllerId: string = "SettingController";
 
 class SettingController {
 
-    private $inject = [SettingServiceId, SmtpServiceId, TemplateServiceId, $rootScopeId];
+    private $inject = [SettingServiceId, SmtpServiceId, TemplateServiceId, $rootScopeId, $translateId];
 
     createTemplateForm;
 
@@ -43,9 +28,10 @@ class SettingController {
     smtpForm;
 
     rootScope;
+    translate;
     currentUser: User;
 
-    constructor(SettingService, SmtpService, TemplateService, $rootScope) {
+    constructor(SettingService, SmtpService, TemplateService, $rootScope, $translate) {
         this.smtp = new Smtp();
         this.template = new Template();
 
@@ -53,6 +39,7 @@ class SettingController {
         this.templateService = TemplateService;
         this.smtpService = SmtpService;
         this.rootScope = $rootScope;
+        this.translate = $translate;
         this.currentUser = this.rootScope.user;
         this.settingService.loadUsers();
     }
@@ -89,13 +76,27 @@ class SettingController {
         this.templateService.openEmailTemplateDeleteModal(template);
     }
 
-    testSmtpConnection() {
-        this.smtpService.test();
+    translateStringArray(str: string, from: string): string {
+        let returnString = "";
+        if (!isNullOrUndefined(str)) {
+            let array: Array<String> = str.split(",");
+            for (let entry of array) {
+                if (entry === "ALL" && from === "SOURCE") {
+                    returnString += this.translate.instant("SETTING_TEMPLATE_ALL_SOURCES") + ", ";
+                    continue;
+                } else if (entry === "NONE" && from === "SOURCE") {
+                    returnString += this.translate.instant("SETTING_TEMPLATE_NO_SOURCES") + ", ";
+                    continue;
+                }
+                returnString += this.translate.instant(entry) + ", ";
+            }
+        }
+        if (returnString.length > 1) {
+            returnString = returnString.slice(0, -2);
+        }
+        return returnString;
     }
 
-    saveSmtpConnection() {
-        this.smtpService.save();
-    }
 }
 angular.module(moduleSetting, [ngResourceId]).controller(SettingControllerId, SettingController);
 

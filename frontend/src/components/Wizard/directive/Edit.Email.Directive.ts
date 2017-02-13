@@ -33,6 +33,7 @@ class EditEmailDirective implements IDirective {
     async link(scope, element, attrs, ctrl, transclude): Promise<void> {
         scope.$sce = this.$sce;
         scope.$window = this.$window;
+        scope.translate = this.$translate;
         scope.$http = this.$http;
         scope.htmlString = "";
         scope.onNotificationSelected = () => this.onNotificationSelected(scope);

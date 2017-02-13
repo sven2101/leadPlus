@@ -75,9 +75,13 @@ function config($translateProvider) {
             ALL: "Alle",
 
             LEAD: "Anfrage",
+            OFFER: "Angebot",
+            FOLLOWUP: "FollowUp",
+            ERROR: "Fehler",
             SUPPLY: "Lieferung",
             EMAIL: "Email",
             SALE: "Verkauf",
+
 
             YES: "Ja",
             NO: "Nein",
@@ -469,6 +473,11 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE_ERROR: "Produkt konnte nicht aktuallisiert werden",
             PRODUCT_NUMBER: "Produktnummer",
             PRODUCT_ORIGINAL_PRICE: "Originalpreis",
+            NEW: "Neu",
+            USED_A: "Gebraucht A",
+            USED_B: "Gebraucht B",
+            USED_C: "Gebraucht C",
+            USED_D: "Gebraucht D",
 
             // Define source elements
             SOURCE_SOURCES: "Quellen",
@@ -600,9 +609,14 @@ function config($translateProvider) {
             ALL: "All",
 
             LEAD: "Lead",
+            OFFER: "Offer",
+            FOLLOWUP: "FollowUp",
+            ERROR: "Error",
             SUPPLY: "Supply",
             EMAIL: "Email",
             SALE: "Sale",
+
+
 
             YES: "Yes",
             NO: "No",
@@ -993,6 +1007,11 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE_ERROR: "Updating product was unsuccessful",
             PRODUCT_NUMBER: "Product number",
             PRODUCT_ORIGINAL_PRICE: "Original price",
+            NEW: "New",
+            USED_A: "Used A",
+            USED_B: "Used B",
+            USED_C: "Used C",
+            USED_D: "Used D",
 
             // Define source elements
             SOURCE_SOURCES: "Sources",

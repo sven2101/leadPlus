@@ -16,7 +16,7 @@
 						<h5>{{ 'SETTING_EMAIL_TEMPLATES_MANAGEMENT' | translate }}</h5>
 					</div>
 				</a>
-				<div class="ibox-content" id="templates">
+				<div class="ibox-content" id="templates" style="overflow-x: auto">
 					<button type="button" class="btn btn-success" ng-click="settingCtrl.openEmailTemplateModal()" data-toggle="modal">
                             <i class="fa fa-plus"></i>&nbsp; {{ 'SETTING_EMAIL_NEW_TEMPLATE' | translate }}
                         </button>
@@ -43,19 +43,19 @@
 										<span ng-show="template.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 									</td>
 									<td class="project-title col-md-2 text-center">
-										<small>{{template.name}}</small>
+										{{template.name}}
 									</td>
-									<td class="project-completion col-md-3 text-center" max>
-										<small style="word-wrap: break-word; word-break: break-all;">{{template.description}}</small>
-									</td>
-									<td class="project-title col-md-2 text-center">
-										<small>{{template.subject}}</small>
+									<td class="project-completion col-md-3 text-center" max style="word-wrap: break-word;">
+										{{template.description}}
 									</td>
 									<td class="project-title col-md-2 text-center">
-										<small>{{template.notificationTypeString}}</small>
+										{{template.subject}}
 									</td>
 									<td class="project-title col-md-2 text-center">
-										<small>{{template.sourceString}}</small>
+										{{settingCtrl.translateStringArray(template.notificationTypeString,'NOTIFICATION')}}
+									</td>
+									<td class="project-title col-md-2 text-center">
+										{{settingCtrl.translateStringArray(template.sourceString,'SOURCE')}}
 									</td>
 									<td class="project-actions col-md-1 text-center" style="white-space: nowrap">
 										<button type="button" class="btn btn-white btn-sm" ng-click="settingCtrl.openEditEmailTemplateModal(template)" title="{{ 'SETTING_EMAIL_TEMPLATE_EDIT' | translate }}">

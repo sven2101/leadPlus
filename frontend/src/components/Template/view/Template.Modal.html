@@ -32,7 +32,7 @@
 					<select ng-model="templateCtrl.currentSelectedNotificationTypes" data-placeholder-text-multiple="templateCtrl.getTranslationByKey('SETTING_TEMPLATE_NOTIFICATION_TYPE_SELECT')" 
 						chosen multiple>
 						<option value="ALL">{{'SETTING_TEMPLATE_ALL_TYPES'|translate}}</option>
-						<option ng-value="t" ng-repeat="t in templateCtrl.availableNotificationTypes">{{t}}</option>	
+						<option ng-value="t" ng-repeat="t in templateCtrl.availableNotificationTypes">{{ t | translate }}</option>	
 					</select>
 				</div>				
 				<div class="form-group">
