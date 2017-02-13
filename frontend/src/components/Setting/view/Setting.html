@@ -7,7 +7,12 @@
 	a:hover {
 		color: inherit;
 	}
+
+	.nav.nav-tabs li{
+	margin-left: -1px;
+	}	
 </style>
+
 
 <meta charset="utf-8">
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -29,15 +34,20 @@
 </div>
 <div ng-controller="SourceController as sourceCtrl">
 	<div class="wrapper wrapper-content animated fadeInRight">
-		<ul class="nav nav-tabs">			
-			<li ng-if="user.role!='USER'" ng-click="settingCtrl.tabOnClick(1)" class="active"><a data-toggle="tab" aria-expanded="true">{{'SETTING_USER' | translate }}</a></li>
-			<li ng-if="user.role!='USER'" ng-click="settingCtrl.tabOnClick(2)"><a data-toggle="tab" aria-expanded="true">{{'SOURCE_SOURCES' | translate }}</a></li>
-			<li ng-click="settingCtrl.tabOnClick(3)" ><a data-toggle="tab" aria-expanded="true">{{ 'SETTING_EMAIL' | translate}}</a></li>
-		</ul>
-		<br/>
-		<div ng-include="'components/Setting/view/Setting.Users.html'"></div>
-		<div ng-include="'components/Setting/view/Setting.Email.html'"></div>
-		<div ng-include="'components/Setting/view/Setting.Source.html'"></div>
+		<div class="row">
+                <div class="col-lg-12">
+                    <div class="tabs-container">
+						<ul class="nav nav-tabs">			
+							<li ng-if="user.role!='USER'" ng-click="settingCtrl.tabOnClick(1)" class="active"><a data-toggle="tab" aria-expanded="true">{{'SETTING_USER' | translate }}</a></li>
+							<li ng-if="user.role!='USER'" ng-click="settingCtrl.tabOnClick(2)"><a data-toggle="tab" aria-expanded="true">{{'SOURCE_SOURCES' | translate }}</a></li>
+							<li ng-click="settingCtrl.tabOnClick(3)" ><a data-toggle="tab" aria-expanded="true">{{ 'SETTING_EMAIL' | translate}}</a></li>
+						</ul>
+						<div ng-include="'components/Setting/view/Setting.Users.html'"></div>
+						<div ng-include="'components/Setting/view/Setting.Email.html'"></div>
+						<div ng-include="'components/Setting/view/Setting.Source.html'"></div>
+					</div>
+                </div>
+		</div>
 	</div>
 	<div ng-include="'components/Setting/view/Setting.Source.Modal.html'"></div>
 </div>
