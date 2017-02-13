@@ -43,13 +43,28 @@ page.paperSize = {
 // This will fix some things that I'll talk about in a second
 page.settings.dpi = "96";
 
+var header ='<!DOCTYPE html>'+
+			'<html lang="en">'+
+			'<head>'+
+				'<title>The title is irrelevant</title>'+
+				'<meta http-equiv="content-type" content="text/html; charset=UTF-8">'+
+				'<meta name="viewport" content="width=device-width, initial-scale=1.0">'+
+				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/bootstrap.min.css" />'+
+				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/assets.css" />'+
+				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/style.css" />'+
+				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/font-awesome.min.css" />'+
+			'</head>'+
+			'<body>'+
+				'<div style="padding:30px">';
 
-
-page.content = fs.read(system.args[1]);
+page.content = header+fs.read(system.args[1])+'</div></body>';
 
 var output = system.args[2];
 
-window.setTimeout(function () {  
-    page.render("output.pdf", {format: 'pdf'});
-    phantom.exit(0);
-}, 1000);
+page.onLoadFinished = function(status) {
+  console.log('Status: ' + status);
+  // Do other things here...
+	page.render(output,{format:"pdf"});
+ phantom.exit(0);
+};
+
