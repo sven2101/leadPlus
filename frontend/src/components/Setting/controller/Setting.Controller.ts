@@ -65,7 +65,9 @@ class SettingController {
     }
 
     openEmailTemplateModal() {
-        this.templateService.openEmailTemplateModal(new Template());
+        let tempTemplate = new Template();
+        tempTemplate.sourceString = "NONE,ALL";
+        this.templateService.openEmailTemplateModal(tempTemplate);
     }
 
     openEditEmailTemplateModal(template: Template) {
