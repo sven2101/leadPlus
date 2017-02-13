@@ -170,14 +170,14 @@ class EditEmailDirective implements IDirective {
                 return;
             }
         }
-        for (let t of templates.filter(t => t.sourceString != null && contains<string>(t.sourceString.split(","), "ALL"))) {
-            if (contains<string>(t.sourceString.split(","), sourceName) || contains<string>(t.sourceString.split(","), "ALL")) {
+        for (let t of templates.filter(t => t.notificationTypeString != null && t.sourceString != null && contains<string>(t.notificationTypeString.split(","), "ALL"))) {
+            if (contains<string>(t.sourceString.split(","), sourceName)) {
                 this.setTemplate(scope, t);
                 return;
             }
         }
-        for (let t of templates.filter(t => t.notificationTypeString != null && contains<string>(t.notificationTypeString.split(","), "ALL"))) {
-            if (contains<string>(t.notificationTypeString.split(","), notificationType) || contains<string>(t.notificationTypeString.split(","), "ALL")) {
+        for (let t of templates.filter(t => t.notificationTypeString != null && t.sourceString != null && contains<string>(t.sourceString.split(","), "ALL"))) {
+            if (contains<string>(t.notificationTypeString.split(","), notificationType)) {
                 this.setTemplate(scope, t);
                 return;
             }
