@@ -56,7 +56,7 @@ class SummernoteService {
                 ["templateButtonGroup", ["workflowDropdown", "customerDropdown", "orderDropdown", "userDropdown"]]
             ],
             buttons: {
-                orderList: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ORDER_LIST"), "<#list orderPositions as orderPosition> <br> Item: ${orderPosition.product.name} / ${orderPosition.price} <br> &lt;/#list&gt;",
+                orderList: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ORDER_LIST"), "<#list orderPositions as orderPosition> <br> Item: ${(orderPosition.product.name)!} / ${(orderPosition.netPrice)!} <br> &lt;/#list&gt;",
                     "fa fa-truck", true),
                 workflowDropdown: this.getWorkflowDropdown(),
                 customerDropdown: this.getCustomerDropdown(),
@@ -168,44 +168,44 @@ class SummernoteService {
     }
 
     getWorkflowTemplateVar(): string {
-        return "<li><a template-value='${workflow.netPrice}'>" + this.translate.instant("PRODUCT_PRICE") + "</a></li>" +
-            "<li><a template-value='${workflow.vat}'>" + this.translate.instant("CALCULATION_VAT") + "</a></li>" +
-            " <li><a template-value='${workflow.deliverycosts}'>" + this.translate.instant("COMMON_PRODUCT_DELIVERYCOSTS") + "</a></li>" +
-            "<li><a template-value='${workflow.deliveryaddress}'>" + this.translate.instant("COMMON_PRODUCT_DESTINATION") + "</a></li>" +
-            "<li><a template-value='${workflow.deliverydate}'>" + this.translate.instant("COMMON_DELIVERY_TIME") + "</a></li>" +
-            "<li><a template-value='${workflow.message}'>" + this.translate.instant("EMAIL_MESSAGE") + "</a></li>";
+        return "<li><a template-value='${(workflow.netPrice)!}'>" + this.translate.instant("PRODUCT_PRICE") + "</a></li>" +
+            "<li><a template-value='${(workflow.vat)!}'>" + this.translate.instant("CALCULATION_VAT") + "</a></li>" +
+            " <li><a template-value='${(workflow.deliveryCosts)!}'>" + this.translate.instant("COMMON_PRODUCT_DELIVERYCOSTS") + "</a></li>" +
+            "<li><a template-value='${(workflow.deliveryAddress)!}'>" + this.translate.instant("COMMON_PRODUCT_DESTINATION") + "</a></li>" +
+            "<li><a template-value='${(workflow.deliveryDate)!}'>" + this.translate.instant("COMMON_DELIVERY_TIME") + "</a></li>" +
+            "<li><a template-value='${(workflow.message)!}'>" + this.translate.instant("EMAIL_MESSAGE") + "</a></li>";
     }
 
     getCustomerTemplateVar(): string {
-        return "<li><a template-value='${customer.title}'>" + this.translate.instant("COMMON_TITLE") + "</a></li>" +
-            "<li><a template-value='${customer.firstname}'>" + this.translate.instant("Vorname") + "</a></li>" +
-            " <li><a template-value='${customer.lastname}'>" + this.translate.instant("Nachname") + "</a></li>" +
-            "<li><a template-value='${customer.company}'>" + this.translate.instant("COMMON_COMPANY") + "</a></li>" +
-            "<li><a template-value='${customer.email}'>" + this.translate.instant("COMMON_EMAIL") + "</a></li>" +
-            "<li><a template-value='${customer.phone}'>" + this.translate.instant("COMMON_PHONE") + "</a></li>" +
-            "<li><a template-value='${customer.address}'>" + this.translate.instant("COMMON_ADDRESS") + "</a></li>" +
-            "<li><a template-value='${customer.customerNumber}'>" + this.translate.instant("CUSTOMER_NUMBER") + "</a></li>";
+        return "<li><a template-value='${(customer.title)!}'>" + this.translate.instant("COMMON_TITLE") + "</a></li>" +
+            "<li><a template-value='${(customer.firstname)!}'>" + this.translate.instant("Vorname") + "</a></li>" +
+            " <li><a template-value='${(customer.lastname)!}'>" + this.translate.instant("Nachname") + "</a></li>" +
+            "<li><a template-value='${(customer.company)!}'>" + this.translate.instant("COMMON_COMPANY") + "</a></li>" +
+            "<li><a template-value='${(customer.email)!}'>" + this.translate.instant("COMMON_EMAIL") + "</a></li>" +
+            "<li><a template-value='${(customer.phone)!}'>" + this.translate.instant("COMMON_PHONE") + "</a></li>" +
+            "<li><a template-value='${(customer.address)!}'>" + this.translate.instant("COMMON_ADDRESS") + "</a></li>" +
+            "<li><a template-value='${(customer.customerNumber)!}'>" + this.translate.instant("CUSTOMER_NUMBER") + "</a></li>";
     }
 
     getOrderTemplateVar(): string {
-        return "<li><a template-value='${orderPosition.product.name}'>" + this.translate.instant("PRODUCT_PRODUCTNAME") + "</a></li>" +
-            "<li><a template-value='${orderPosition.product.description}'>" + this.translate.instant("PRODUCT_DESCRIPTION") + "</a></li>" +
-            " <li><a template-value='${orderPosition.netPrice}'>" + this.translate.instant("PRODUCT_PRICE") + "</a></li>" +
-            "<li><a template-value='${orderPosition.discount}'>" + this.translate.instant("PRODUCT_DISCOUNT") + "</a></li>" +
-            "<li><a template-value='${orderPosition.amount}'>" + this.translate.instant("COMMON_PRODUCT_AMOUNT") + "</a></li>" +
-            "<li><a template-value='${orderPosition.product.netPrice}'> " + this.translate.instant("Originalpreis") + "</a></li>" +
-            "<li><a template-value='${orderPosition.product.productstate}'>" + this.translate.instant("PRODUCT_PRODUCT_STATE") + "</a></li>" +
-            "<li><a template-value='${orderPosition.product.productnumber}'>" + this.translate.instant("PRODUCT_NUMBER") + "</a></li>";
+        return "<li><a template-value='${(orderPosition.product.name)!}'>" + this.translate.instant("PRODUCT_PRODUCTNAME") + "</a></li>" +
+            "<li><a template-value='${(orderPosition.product.description)!}'>" + this.translate.instant("PRODUCT_DESCRIPTION") + "</a></li>" +
+            " <li><a template-value='${(orderPosition.netPrice)!}'>" + this.translate.instant("PRODUCT_PRICE") + "</a></li>" +
+            "<li><a template-value='${(orderPosition.discount)!}'>" + this.translate.instant("PRODUCT_DISCOUNT") + "</a></li>" +
+            "<li><a template-value='${(orderPosition.amount)!}'>" + this.translate.instant("COMMON_PRODUCT_AMOUNT") + "</a></li>" +
+            "<li><a template-value='${(orderPosition.product.netPrice)!}'> " + this.translate.instant("Originalpreis") + "</a></li>" +
+            "<li><a template-value='${(orderPosition.product.productState)!}'>" + this.translate.instant("PRODUCT_PRODUCT_STATE") + "</a></li>" +
+            "<li><a template-value='${(orderPosition.product.productNumber)!}'>" + this.translate.instant("PRODUCT_NUMBER") + "</a></li>";
     }
 
     getUserTemplateVar(): string {
-        return "<li><a template-value='${user.firstname}'>" + this.translate.instant("COMMON_FIRSTNAME") + "</a></li>" +
-            "<li><a template-value='${user.lastname}'>" + this.translate.instant("COMMON_LASTNAME") + "</a></li>" +
-            " <li><a template-value='${user.email}'>" + this.translate.instant("COMMON_EMAIL") + "</a></li>" +
-            "<li><a template-value='${user.phone}'>" + this.translate.instant("COMMON_PHONE") + "</a></li>" +
-            "<li><a template-value='${user.fax}'>" + this.translate.instant("COMMON_FAX") + "</a></li>" +
-            "<li><a template-value='${user.skype}'>" + this.translate.instant("COMMON_SKYPE") + "</a></li>" +
-            "<li><a template-value='${user.job}'>" + this.translate.instant("COMMON_JOB") + "</a></li>";
+        return "<li><a template-value='${(user.firstname)!}'>" + this.translate.instant("COMMON_FIRSTNAME") + "</a></li>" +
+            "<li><a template-value='${(user.lastname)!}'>" + this.translate.instant("COMMON_LASTNAME") + "</a></li>" +
+            " <li><a template-value='${(user.email)!}'>" + this.translate.instant("COMMON_EMAIL") + "</a></li>" +
+            "<li><a template-value='${(user.phone)!}'>" + this.translate.instant("COMMON_PHONE") + "</a></li>" +
+            "<li><a template-value='${(user.fax)!}'>" + this.translate.instant("COMMON_FAX") + "</a></li>" +
+            "<li><a template-value='${(user.skype)!}'>" + this.translate.instant("COMMON_SKYPE") + "</a></li>" +
+            "<li><a template-value='${(user.job)!}'>" + this.translate.instant("COMMON_JOB") + "</a></li>";
     }
 
     loadSummernoteGerman() {
