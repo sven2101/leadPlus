@@ -243,6 +243,8 @@ function config($translateProvider) {
             // Define notification elements
             NOTIICATION_SEND: "Nachricht erfolgreich versendet",
             NOTIICATION_SEND_ERROR: "Fehler beim Senden. Bitte überprüfen sie ihre SMTP Einstellungen",
+            NOTIFICATION_NO_NOTIFICATIONS: "Keine versendeten Nachrichten vorhanden",
+            NOTIFICATION_SEND_NOTIFICATIONS: "Versendete Nachrichten",
 
             // Define profile elements
             PROFILE_PROFILE_INFORMATION: "Profilinformationen",
@@ -779,6 +781,8 @@ function config($translateProvider) {
             // Define notification elements
             NOTIICATION_SEND: "Notification successfully send",
             NOTIICATION_SEND_ERROR: "Error sending Notification. Please check your SMTP settings",
+            NOTIFICATION_NO_NOTIFICATIONS: "No sent notifications available",
+            NOTIFICATION_SEND_NOTIFICATIONS: "Sent notifications",
 
             // Define profile elements
             PROFILE_PROFILE_INFORMATION: "Profile information",
@@ -1048,7 +1052,7 @@ function config($translateProvider) {
 
             TODO_TODOS: "Tasks",
             SHOW_MY_TASKS: "Show my tasks",
-            TODO_NO_TODOS: "No tasks existing",
+            TODO_NO_TODOS: "No tasks available",
 
             // Define calculation elements 
             CALCULATION_NET: "Net",

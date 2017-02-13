@@ -33,7 +33,8 @@ public class NotificationServiceTest extends BaseConfig {
 	private NotificationService notificationService;
 
 	public NotificationServiceTest() throws Exception {
-		this.notificationService = new NotificationService(fileUploadService);
+		// this.notificationService = new
+		// NotificationService(fileUploadService);
 	}
 
 	/*
@@ -42,7 +43,7 @@ public class NotificationServiceTest extends BaseConfig {
 	@Test
 	@Ignore
 	public void sendNotificationTestAlfahostingSTARTTLS() throws Exception {
-		Notification message = notificationService.sendNotification(
+		Notification message = notificationService.sendNotificationBySmtp(
 				STARTTLSSmtpProvider.createAlfahostingSTARTTLSSmtp(),
 				STARTTLSNotificationProvider.createNotificationSTARTTLS(), SMTP_KEY);
 		assertThat(message).isNotNull();
@@ -51,7 +52,7 @@ public class NotificationServiceTest extends BaseConfig {
 	@Test
 	@Ignore
 	public void sendNotificationTestLivePort587STARTTLS() throws Exception {
-		Notification message = notificationService.sendNotification(
+		Notification message = notificationService.sendNotificationBySmtp(
 				STARTTLSSmtpProvider.createLiveSTARTTLSSmtpPort587(),
 				STARTTLSNotificationProvider.createNotificationSTARTTLS(), SMTP_KEY);
 		assertThat(message).isNotNull();
@@ -60,7 +61,8 @@ public class NotificationServiceTest extends BaseConfig {
 	@Test
 	@Ignore
 	public void sendNotificationTestLivePort25STARTTLS() throws Exception {
-		Notification message = notificationService.sendNotification(STARTTLSSmtpProvider.createLiveSTARTTLSSmtpPort25(),
+		Notification message = notificationService.sendNotificationBySmtp(
+				STARTTLSSmtpProvider.createLiveSTARTTLSSmtpPort25(),
 				STARTTLSNotificationProvider.createNotificationSTARTTLS(), SMTP_KEY);
 		assertThat(message).isNotNull();
 	}
@@ -68,7 +70,7 @@ public class NotificationServiceTest extends BaseConfig {
 	@Test
 	@Ignore
 	public void sendNotificationTestWebSTARTTLS() throws Exception {
-		Notification message = notificationService.sendNotification(STARTTLSSmtpProvider.createWebSTARTTLSSmtp(),
+		Notification message = notificationService.sendNotificationBySmtp(STARTTLSSmtpProvider.createWebSTARTTLSSmtp(),
 				STARTTLSNotificationProvider.createNotificationSTARTTLS(), SMTP_KEY);
 		assertThat(message).isNotNull();
 	}
@@ -76,7 +78,7 @@ public class NotificationServiceTest extends BaseConfig {
 	@Test
 	@Ignore
 	public void sendNotificationTestGmxSTARTTLS() throws Exception {
-		Notification message = notificationService.sendNotification(STARTTLSSmtpProvider.createGmxSTARTTLSSmtp(),
+		Notification message = notificationService.sendNotificationBySmtp(STARTTLSSmtpProvider.createGmxSTARTTLSSmtp(),
 				SSLNotificationProvider.createNotificationSSL(), SMTP_KEY);
 		assertThat(message).isNotNull();
 	}
@@ -87,7 +89,7 @@ public class NotificationServiceTest extends BaseConfig {
 	@Test
 	@Ignore
 	public void sendNotificationTestGmailTLS() throws Exception {
-		Notification message = notificationService.sendNotification(TLSSmtpProvider.createGmailTLSSmtp(),
+		Notification message = notificationService.sendNotificationBySmtp(TLSSmtpProvider.createGmailTLSSmtp(),
 				TLSNotificationProvider.createNotificationTLS(), SMTP_KEY);
 		assertThat(message).isNotNull();
 	}
@@ -95,7 +97,7 @@ public class NotificationServiceTest extends BaseConfig {
 	@Test
 	@Ignore
 	public void sendNotificationTestAlfahostingTLS() throws Exception {
-		Notification message = notificationService.sendNotification(TLSSmtpProvider.createAlfahostingTLSSmtp(),
+		Notification message = notificationService.sendNotificationBySmtp(TLSSmtpProvider.createAlfahostingTLSSmtp(),
 				TLSNotificationProvider.createNotificationTLS(), SMTP_KEY);
 		assertThat(message).isNotNull();
 	}
@@ -103,7 +105,7 @@ public class NotificationServiceTest extends BaseConfig {
 	@Test
 	@Ignore
 	public void sendNotificationWebTLS() throws Exception {
-		Notification message = notificationService.sendNotification(TLSSmtpProvider.createWebTLSSmtp(),
+		Notification message = notificationService.sendNotificationBySmtp(TLSSmtpProvider.createWebTLSSmtp(),
 				TLSNotificationProvider.createNotificationTLS(), SMTP_KEY);
 		assertThat(message).isNotNull();
 	}
@@ -111,7 +113,7 @@ public class NotificationServiceTest extends BaseConfig {
 	@Test
 	@Ignore
 	public void sendNotificationTestNetcupTLS() throws Exception {
-		Notification message = notificationService.sendNotification(SSLSmtpProvider.createNetcupSmtpSSL(),
+		Notification message = notificationService.sendNotificationBySmtp(SSLSmtpProvider.createNetcupSmtpSSL(),
 				SSLNotificationProvider.createNotificationSSL(), SMTP_KEY);
 		assertThat(message).isNotNull();
 	}
@@ -122,7 +124,7 @@ public class NotificationServiceTest extends BaseConfig {
 	@Test
 	@Ignore
 	public void sendNotificationTestGmailSSL() throws Exception {
-		Notification message = notificationService.sendNotification(SSLSmtpProvider.createGmailSSLSmtp(),
+		Notification message = notificationService.sendNotificationBySmtp(SSLSmtpProvider.createGmailSSLSmtp(),
 				SSLNotificationProvider.createNotificationSSL(), SMTP_KEY);
 		assertThat(message).isNotNull();
 	}
@@ -130,7 +132,7 @@ public class NotificationServiceTest extends BaseConfig {
 	@Test
 	@Ignore
 	public void sendNotificationTestNetcupSSL() throws Exception {
-		Notification message = notificationService.sendNotification(SSLSmtpProvider.createNetcupSmtpSSL(),
+		Notification message = notificationService.sendNotificationBySmtp(SSLSmtpProvider.createNetcupSmtpSSL(),
 				SSLNotificationProvider.createNotificationSSL(), SMTP_KEY);
 		assertThat(message).isNotNull();
 	}
@@ -138,7 +140,7 @@ public class NotificationServiceTest extends BaseConfig {
 	@Test
 	@Ignore
 	public void sendNotificationTestAlfahostingSSL() throws Exception {
-		Notification message = notificationService.sendNotification(SSLSmtpProvider.createAlfahostingSmtpSSL(),
+		Notification message = notificationService.sendNotificationBySmtp(SSLSmtpProvider.createAlfahostingSmtpSSL(),
 				SSLNotificationProvider.createNotificationSSL(), SMTP_KEY);
 		assertThat(message).isNotNull();
 	}
@@ -146,7 +148,7 @@ public class NotificationServiceTest extends BaseConfig {
 	@Test
 	@Ignore
 	public void sendNotificationTestGmxSSL() throws Exception {
-		Notification message = notificationService.sendNotification(SSLSmtpProvider.createGmxSSLSmtp(),
+		Notification message = notificationService.sendNotificationBySmtp(SSLSmtpProvider.createGmxSSLSmtp(),
 				SSLNotificationProvider.createNotificationSSL(), SMTP_KEY);
 		assertThat(message).isNotNull();
 	}

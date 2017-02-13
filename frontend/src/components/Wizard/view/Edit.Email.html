@@ -1,8 +1,9 @@
 <form id="scopeStuff" name="eform" novalidate>
+	
 	<div>
 		<div class="form-inline">
 			<div class="form-group" style="width:45%">
-				<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>		
+				<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>
 				<select ng-model="currentTemplate" style="width:100%" ng-disabled="disabled" class="form-control" ng-change="generate(currentTemplate,workflow,notification)"> 
 					<option ng-value="null">- {{ 'EMAIL_TEMPLATE_SELECT' | translate }} -</option>
 					<option ng-repeat="template in templates" ng-value="template">{{template.name}}</option>
@@ -73,8 +74,9 @@
 						<span class="btn btn-default btn-file">
 						<span class="fileinput-new">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }}</span>
 						<span class="fileinput-exists">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }} </span>
-						<input id="fileInput" name="attachement" multiple required type="file" onchange="angular.element(document.getElementById('scopeStuff')).scope().setAttachments(files);" accept="application/pdf,image/*,.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.csv,application/vnd.ms-excel,text/plain,application/vnd.ms-powerpoint, application/msword,.pps,.xlsx,.xls,.doc,.docx,.ppt,.pptx,.txt,.zip,.rar">
-						</span>
+						<input id="fileInput" name="attachement" multiple required type="file" onchange="angular.element(document.getElementById('scopeStuff')).scope().setAttachments(files);"
+							accept="application/pdf,image/*,.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.csv,application/vnd.ms-excel,text/plain,application/vnd.ms-powerpoint, application/msword,.pps,.xlsx,.xls,.doc,.docx,.ppt,.pptx,.txt,.zip,.rar">
+							</span>
 					</div>
 				</div>
 			</div>

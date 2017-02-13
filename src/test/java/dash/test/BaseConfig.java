@@ -25,7 +25,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
-import org.h2.server.web.WebServlet;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -54,9 +53,11 @@ public abstract class BaseConfig {
 
 	@Bean
 	public ServletRegistrationBean h2servletRegistration() {
-		ServletRegistrationBean registration = new ServletRegistrationBean(new WebServlet());
-		registration.addUrlMappings("/console/*");
-		return registration;
+		// ServletRegistrationBean registration = new
+		// ServletRegistrationBean(new WebServlet());
+		// registration.addUrlMappings("/console/*");
+		// return registration;
+		return null;
 	}
 
 	// REST-API Endpoints

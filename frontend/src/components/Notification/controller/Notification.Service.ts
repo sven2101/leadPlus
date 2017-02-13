@@ -18,6 +18,7 @@ class NotificationService {
     fileReader;
     notification: Notification;
     q;
+    userNotifications: Array<Notification> = [];
 
     constructor(toaster, $translate, $rootScope, NotificationResource, $q) {
         this.notificationResource = NotificationResource.resource;
@@ -34,14 +35,23 @@ class NotificationService {
         let self = this;
         let defer = this.q.defer();
         console.log("SMTP KEY: ", this.rootScope.user.smtpKey);
-        this.notificationResource.sendNotification({ userId: this.rootScope.user.id, smtpKey: this.rootScope.user.smtpKey }, notification).$promise.then(function () {
+        this.notificationResource.sendNotification({ senderId: this.rootScope.user.id, smtpKey: this.rootScope.user.smtpKey }, notification).$promise.then(function () {
             self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
             defer.resolve(true);
+            self.refreshUserNotifications();
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));
             defer.reject(false);
         });
         return defer.promise;
+    }
+
+    async getNotificationsBySenderId(senderId: number): Promise<Array<Notification>> {
+        return this.notificationResource.getNotificationsBySenderId({ senderId: this.rootScope.user.id }).$promise;
+    }
+
+    async refreshUserNotifications(): Promise<void> {
+        this.userNotifications = await this.getNotificationsBySenderId(this.rootScope.user.id);
     }
 
 }

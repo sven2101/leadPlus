@@ -96,7 +96,6 @@ class SettingController {
         }
         return returnString;
     }
-
 }
 angular.module(moduleSetting, [ngResourceId]).controller(SettingControllerId, SettingController);
 

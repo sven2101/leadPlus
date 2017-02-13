@@ -14,6 +14,7 @@
 package dash.notificationmanagement.domain;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -27,15 +28,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.common.HtmlCleaner;
@@ -55,6 +58,12 @@ public class Notification {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss:SSS")
+	@ApiModelProperty(hidden = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "timestamp", nullable = true)
+	private Calendar timestamp;
+
 	@NotNull
 	@Size(max = 255)
 	@Column(name = "recipients", length = 255, nullable = false)
@@ -73,10 +82,9 @@ public class Notification {
 	@Column(name = "subject", length = 255, nullable = false)
 	private String subject;
 
-	@NotNull
-	@OneToOne
-	@JoinColumn(name = "user_fk", nullable = false)
-	private User user;
+	@ManyToOne
+	@JoinColumn(name = "sender_fk", nullable = false)
+	private User sender;
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
@@ -194,12 +202,20 @@ public class Notification {
 		this.recipients = formatEmails(recipients);
 	}
 
-	public User getUser() {
-		return user;
+	public User getSender() {
+		return sender;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setSender(User sender) {
+		this.sender = sender;
+	}
+
+	public Calendar getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Calendar timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	private String formatEmails(String emails) {
@@ -227,12 +243,12 @@ public class Notification {
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((notificationType == null) ? 0 : notificationType.hashCode());
-		result = prime * result + ((process == null) ? 0 : process.hashCode());
 		result = prime * result + ((recipients == null) ? 0 : recipients.hashCode());
 		result = prime * result + ((recipientsBCC == null) ? 0 : recipientsBCC.hashCode());
 		result = prime * result + ((recipientsCC == null) ? 0 : recipientsCC.hashCode());
+		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
 		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		return result;
 	}
 
@@ -264,11 +280,6 @@ public class Notification {
 			return false;
 		if (notificationType != other.notificationType)
 			return false;
-		if (process == null) {
-			if (other.process != null)
-				return false;
-		} else if (!process.equals(other.process))
-			return false;
 		if (recipients == null) {
 			if (other.recipients != null)
 				return false;
@@ -284,25 +295,22 @@ public class Notification {
 				return false;
 		} else if (!recipientsCC.equals(other.recipientsCC))
 			return false;
+		if (sender == null) {
+			if (other.sender != null)
+				return false;
+		} else if (!sender.equals(other.sender))
+			return false;
 		if (subject == null) {
 			if (other.subject != null)
 				return false;
 		} else if (!subject.equals(other.subject))
 			return false;
-		if (user == null) {
-			if (other.user != null)
+		if (timestamp == null) {
+			if (other.timestamp != null)
 				return false;
-		} else if (!user.equals(other.user))
+		} else if (!timestamp.equals(other.timestamp))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Notification [id=" + id + ", recipients=" + recipients + ", recipientsCC=" + recipientsCC
-				+ ", recipientsBCC=" + recipientsBCC + ", subject=" + subject + ", user=" + user + ", deleted="
-				+ deleted + ", content=" + content + ", attachments=" + attachments + ", process=" + process
-				+ ", notificationType=" + notificationType + "]";
 	}
 
 }

@@ -29,7 +29,8 @@ gulp.task('watch', [
 	'watch-minify-main',
 	'watch-minify-index',
 	'watch-scripts',
-	'watch-typescript/angular'
+	'watch-typescript/angular',
+	'watch-css'
 	//'watch-browserSync'
 ], function () {
 	return;

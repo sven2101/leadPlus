@@ -71,5 +71,11 @@ gulp.task('complete', ['typescript/angular-task'], function () {
     console.log("Compilation complete!");
 });
 
+gulp.task('watch-css', ['default'], function () {
+    watch(path.assetsCss.src, function () {
+        gulp.start('concat-assetsCss');
+    });
+});
+
 
 

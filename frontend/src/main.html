@@ -14,6 +14,8 @@
 	a.profileLink:hover {
 		color: #DFE4ED;
 	}
+	
+
 </style>
 
 <nav class="navbar-default navbar-static-side" role="navigation" style="position: fixed; height: 100%;">
@@ -87,7 +89,7 @@
 			<div class="navbar-header">
 				<a class="navbar-minimalize minimalize-styl-2 btn btn-success "><i class="fa fa-bars"></i> </a>
 			</div>
-			<ul class="nav navbar-top-links navbar-right">
+			<ul class="nav navbar-top-links navbar-right">		
 				<li class="dropdown">
 					<a class="dropdown-toggle count-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<span>{{ 'LANGUAGE' | translate }}<b class="caret"></b></span>
@@ -152,31 +154,66 @@
 							<p ng-if="appCtrl.todos.length>5" class="text-center">...</p>
 						</li>
 					</ul>
-				</li>
-				 <li class="dropdown">
-                    <a class="dropdown-toggle count-info" data-toggle="dropdown">
-                        <i class="fa fa-envelope fa-lg"></i>
-						<span class="label label-danger">!</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-alerts">
-                        <li>
-                            <a>
-                                <div>
-                                    <i class="fa fa-envelope fa-fw"></i> Coming soon
-                                    <span class="pull-right text-muted small">Coming soon</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <div class="text-center link-block">
-                                <a>
-                                    <strong>Coming soon</strong>
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
+				</li>				
+				 <li class="dropdown" >                   	
+					<a class="dropdown-toggle count-info"  data-toggle="dropdown">
+						<i ng-if="appCtrl.notificationSendState!='SENDING'" class="fa fa-envelope fa-lg"></i>
+						<i ng-if="appCtrl.notificationSendState=='SENDING'" class="fa fa-send fa-lg"></i>
+						<span ng-if="appCtrl.notificationSendState=='SENDING'" class="label" style="background-color: transparent;margin-right: -3px;margin-top: -3px;">
+							<div class="spinner"></div>
+						</span>
+						<span ng-if="appCtrl.notificationSendState=='SUCCESS'"  class="label label-primary">
+							<i style="margin-right: -2;margin-left: -2;margin-top: 1;" class="fa fa-check"></i>
+						</span>
+						<span ng-if="appCtrl.notificationSendState=='ERROR'" class="label  label-danger">
+							<i style="margin-right: -2;margin-left: -2;margin-top: 1;" class="fa fa-exclamation-triangle"></i>
+						</span>
+					</a>
+                    <ul style="min-width:480px" class="dropdown-menu dropdown-messages">
+						<li>
+							<div class="dropdown-messages-box">
+
+								<div class="media-body">
+									<strong>  {{ 'NOTIFICATION_SEND_NOTIFICATIONS' | translate }}</strong> <br>
+									<br>
+								</div>
+							</div>
+						</li>
+						<li>
+							<table class="table table-hover">
+								<tbody>
+									<tr class="row" style="cursor:pointer" ng-repeat="notification in appCtrl.NotificationService.userNotifications | limitTo:5 | orderBy:'timestamp'">
+										<td >
+											
+											<span ng-if="notification.notificationType=='ERROR'" class="label  label-danger" style="margin-top: 50%">
+												<i style="margin-right: -2;margin-left: -2;margin-top: 1;" class="fa fa-exclamation-triangle"></i>
+											</span>	
+											<span ng-if="notification.notificationType!='ERROR'"  class="label label-primary" style="margin-top: 50%">
+												<i style="margin-right: -2;margin-left: -2;margin-top: 1;" class="fa fa-check"></i>
+											</span>	
+																
+										</td>
+										<td >
+											<div >
+												<span style="text-overflow: ellipsis;display: block;overflow: hidden;word-wrap: break-word;width: 190px;height: 42;">{{notification.subject}}</span>
+											</div>											
+										</td>
+										<td  >
+											<div >
+												<span style="text-overflow: ellipsis;display: block;overflow: hidden;word-wrap: break-word;width: 190px;height: 42;">{{notification.recipients}}</span>
+											</div>											
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<div ng-if="appCtrl.userNotifications==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
+								<p style="margin-top:7px">{{ 'NOTIFICATION_NO_NOTIFICATIONS' | translate }}</p>
+							</div>
+						</li>
+						<li>
+							<p ng-if="appCtrl.todos.length>5" class="text-center">...</p>
+						</li>
+					</ul>
                 </li>
 				<!-- TODO should used for comments or events
                 <li class="dropdown">
