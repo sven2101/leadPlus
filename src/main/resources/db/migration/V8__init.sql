@@ -31,3 +31,4 @@ DROP COLUMN fileupload_fk;
 
 ALTER TABLE fileupload
 DROP COLUMN content;
+

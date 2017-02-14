@@ -1,3 +1,4 @@
+
 CREATE SEQUENCE attachment_id_seq
  INCREMENT 1
   MINVALUE 1
@@ -61,3 +62,4 @@ ALTER TABLE "user"
 ADD default_vat double precision NOT NULL DEFAULT (19);
  
 DELETE FROM olap;
+
