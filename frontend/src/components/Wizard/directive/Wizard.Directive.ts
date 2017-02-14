@@ -193,7 +193,7 @@ class WizardDirective implements IDirective {
         let resultProcess = await scope.processService.save(process, scope.editWorkflowUnit, !deleteRow, deleteRow) as Process;
         scope.close(true, resultProcess);
         try {
-            await scope.notificationService.sendNotification(notification);
+            await scope.notificationService.sendNotification(notification, scope.editProcess);
         } catch (error) {
             // TODO Set Notification to Error            
             notification.notificationType = NotificationType.ERROR;

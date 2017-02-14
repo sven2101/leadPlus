@@ -59,6 +59,7 @@ class EditEmailDirective implements IDirective {
 
         scope.templates = await this.TemplateService.getAll();
         this.setDefaultTemplate(scope);
+        console.log(scope.process);
     };
 
     setAttachments(files, notification: Notification, scope): void {

@@ -37,8 +37,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import dash.commentmanagement.domain.Comment;
 import dash.leadmanagement.domain.Lead;
 import dash.notificationmanagement.domain.Notification;
@@ -80,7 +78,7 @@ public class Process {
 	@Where(clause = "deleted <> '1'")
 	private Sale sale;
 
-	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
+	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.EAGER)
 	@Where(clause = "deleted <> '1'")
 	private List<Comment> comments;
 
@@ -89,13 +87,12 @@ public class Process {
 	@Column(name = "status", length = 255)
 	private Status status;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne
 	@JoinColumn(name = "processor_fk", nullable = true)
 	@Where(clause = "deleted <> '1'")
 	private User processor;
 
-	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
-	@JsonProperty("notifications")
+	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.EAGER)
 	@Where(clause = "deleted <> '1'")
 	private List<Notification> notifications;
 
@@ -104,7 +101,7 @@ public class Process {
 	@Where(clause = "deleted <> '1'")
 	private Source source;
 
-	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
+	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.EAGER)
 	@Where(clause = "deleted <> '1'")
 	private List<Processor> formerProcessors;
 

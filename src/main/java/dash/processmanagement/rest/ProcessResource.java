@@ -89,7 +89,8 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns count processes with a certain state", notes = "")
 	@RequestMapping(value = "/count/workflow/{workflow}/state/{status}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Map<String, Integer> getCountElementsByStatus(@ApiParam(required = true) @PathVariable final Workflow workflow,
+	public Map<String, Integer> getCountElementsByStatus(
+			@ApiParam(required = true) @PathVariable final Workflow workflow,
 			@ApiParam(required = true) @PathVariable final Status status) {
 		return processService.getCountElementsByStatus(workflow, status);
 

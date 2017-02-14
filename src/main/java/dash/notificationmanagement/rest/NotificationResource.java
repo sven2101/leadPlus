@@ -56,14 +56,14 @@ public class NotificationResource {
 	}
 
 	@ApiOperation(value = "Send a single Notification.", notes = "")
-	@RequestMapping(value = "/proccesses/{processId}/users/{userId}/send", method = RequestMethod.POST)
+	@RequestMapping(value = "/proccess/{processId}/user/{senderId}/send", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	public Notification sendNotification(@ApiParam(required = true) @PathVariable(required = true) final Long processId,
-			@ApiParam(required = true) @PathVariable(required = true) final Long userId,
+			@ApiParam(required = true) @PathVariable(required = true) final Long senderId,
 			@ApiParam(required = true) @RequestBody @Valid final NotificationContext notificationContext)
 			throws NotFoundException, SaveFailedException, EmailSendFailedException {
 
-		return notificationService.sendNotification(processId, userId, notificationContext);
+		return notificationService.sendNotification(processId, senderId, notificationContext);
 
 	}
 

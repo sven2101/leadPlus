@@ -31,19 +31,21 @@ class NotificationService {
         this.notification = new Notification();
     }
 
-    sendNotification(notification: Notification): Promise<boolean> {
-        let self = this;
-        let defer = this.q.defer();
-        console.log("SMTP KEY: ", this.rootScope.user.smtpKey);
-        this.notificationResource.sendNotification({ senderId: this.rootScope.user.id, smtpKey: this.rootScope.user.smtpKey }, notification).$promise.then(function () {
-            self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
-            defer.resolve(true);
-            self.refreshUserNotifications();
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));
-            defer.reject(false);
-        });
-        return defer.promise;
+    async sendNotification(notification: Notification, process: Process): Promise<Notification> {
+
+
+        try {
+            let sendNotification: Notification = await this.notificationResource.sendNotification({ processId: process.id, senderId: this.rootScope.user.id }, { smtpKey: this.rootScope.user.smtpKey, notification: notification }).$promise;
+            this.toaster.pop("success", "", this.translate.instant("NOTIICATION_SEND"));
+            return sendNotification;
+        } catch (error) {
+            console.log(error);
+            this.toaster.pop("error", "", this.translate.instant("NOTIICATION_SEND_ERROR"));
+            throw error;
+        }
+
+
+
     }
 
     async getNotificationsBySenderId(senderId: number): Promise<Array<Notification>> {

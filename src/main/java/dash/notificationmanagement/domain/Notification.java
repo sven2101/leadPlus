@@ -103,7 +103,6 @@ public class Notification {
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "process_fk", nullable = false)
-	@Where(clause = "deleted <> '1'")
 	private Process process;
 
 	@Enumerated(EnumType.STRING)
