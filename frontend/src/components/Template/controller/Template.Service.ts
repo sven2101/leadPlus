@@ -4,21 +4,6 @@
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 /// <reference path="../../Template/controller/Template.Controller.ts" />
 
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
-
 const TemplateServiceId: string = "TemplateService";
 
 class TemplateService {
@@ -47,15 +32,17 @@ class TemplateService {
     }
 
     openEmailTemplateModal(template: Template) {
+        let editTemplate = deepCopy(template);
         this.uibModal.open({
             templateUrl: "components/Template/view/Template.Modal.html",
             controller: "TemplateController",
             controllerAs: "templateCtrl",
+            windowClass: "inmodal",
             size: "lg",
             backdrop: "static",
             resolve: {
                 template: function () {
-                    return template;
+                    return editTemplate;
                 }
             }
         });
@@ -66,7 +53,6 @@ class TemplateService {
             templateUrl: "components/Template/view/Template.Delete.Modal.html",
             controller: "TemplateController",
             controllerAs: "templateCtrl",
-            size: "sm",
             resolve: {
                 template: function () {
                     return template;
@@ -94,6 +80,9 @@ class TemplateService {
         let self = this;
         this.templateResource.update(template).$promise.then(function (result: Template) {
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_TEMPLATE_UPDATE"));
+            let oldTemplate: Template = findElementById(self.templates, template.id);
+            let index = self.templates.indexOf(oldTemplate);
+            self.templates[index] = template;
             defer.resolve(result);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_TEMPLATE_UPDATE_ERROR"));

@@ -5,20 +5,6 @@
 /// <reference path="../../Common/directive/Directive.Interface.ts" />
 /// <reference path="../../Process/controller/Process.Service.ts" />
 /// <reference path="../../../typeDefinitions/angular.d.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-
 
 const WizardDirectiveId: string = "wizard";
 
@@ -245,7 +231,7 @@ class WizardDirective implements IDirective {
     }
 
     isAnyFormInvalid(scope: any): boolean {
-        for (let buttonConfig of scope.wizardConfig) {
+        for (let buttonConfig of scope.wizardElements) {
             if (!isNullOrUndefined(buttonConfig.form) && buttonConfig.form.$invalid && buttonConfig.validation) {
                 return true;
             }

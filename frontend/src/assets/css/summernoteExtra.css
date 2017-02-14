@@ -20,3 +20,8 @@ height: 30px;
 		font-weight: bold !important;
 		cursor: pointer;
 	}
+
+	body > div.tooltip.fade.bottom.in{
+		display: none;
+		z-index: 2500;
+	}

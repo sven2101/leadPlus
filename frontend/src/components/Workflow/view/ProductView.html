@@ -1,25 +1,33 @@
+ <style>
+ .ellipsis{
+		white-space: nowrap;
+		text-overflow: ellipsis; 
+		display: block;
+		overflow: hidden;
+	}
+</style>
 <div class="col-lg-8">
 	<div class="ibox">
-		<div class="ibox-content text-left">
+		<div class="ibox-content text-left" style="display: inline-block">
 			<label><i class="fa fa-table " aria-hidden="true "></i>  {{ 'PRODUCT_MENU' | translate }}</label>
-			<table class="table table-bordered text-left">
+			<table class="table table-bordered table-responsive text-left" style="table-layout: fixed">
 				<thead>
 					<tr>
-						<th>{{ 'PRODUCT_PRODUCTNAME' | translate }}</th>
-						<th>{{ 'PRODUCT_DISCOUNT' | translate }}</th>
-						<th>{{ 'COMMON_PRODUCT_SINGLE_PRICE' | translate }}</th>
-						<th>{{ 'COMMON_PRODUCT_AMOUNT' | translate }}</th>
-						<th>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</th>
+						<th style="width: 32%">{{ 'PRODUCT_PRODUCTNAME' | translate }}</th>
+						<th style="width: 17.5%">{{ 'PRODUCT_DISCOUNT' | translate }}</th>
+						<th style="width: 17.5%">{{ 'COMMON_PRODUCT_SINGLE_PRICE' | translate }}</th>
+						<th style="width: 13%">{{ 'COMMON_PRODUCT_AMOUNT' | translate }}</th>
+						<th style="width: 20%">{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="orderPosition in parent.getOrderPositions(process)">
-						<td>{{orderPosition.product.name}} ({{orderPosition.product.netPrice| currency:'\u20AC'}})</td>
+						<td><span title="{{orderPosition.product.name}} ({{orderPosition.product.netPrice| currency:'\u20AC'}})" class="ellipsis">{{orderPosition.product.name}} ({{orderPosition.product.netPrice| currency:'\u20AC'}})</span></td>
 						<td>{{orderPosition.product.netPrice-parent.workflowService.calculatePrice(orderPosition.product.netPrice,orderPosition.discount)|
 							currency:'\u20AC'}} ({{orderPosition.discount}}%)
 						</td>
 						<td>{{orderPosition.netPrice| currency:'\u20AC'}}</td>
-						<td>{{orderPosition.amount}}</td>
+						<td class="text-center">{{orderPosition.amount}}</td>
 						<td>{{orderPosition.netPrice*orderPosition.amount| currency:'\u20AC'}}</td>
 					</tr>
 				</tbody>
