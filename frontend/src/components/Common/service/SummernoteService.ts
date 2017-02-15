@@ -52,11 +52,13 @@ class SummernoteService {
                 ["table", ["table"]],
                 ["insert", ["link", "picture", "hr"]],
                 ["view", ["fullscreen", "codeview"]],
-                ["orderListButton", ["orderList"]],
+                ["templateDefault", ["formOfAddress", "ending", "orderList"]],
                 ["templateButtonGroup", ["workflowDropdown", "customerDropdown", "orderDropdown", "userDropdown"]]
             ],
             buttons: {
-                orderList: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ORDER_LIST"), "<#list orderPositions as orderPosition> <br> Item: ${(orderPosition.product.name)!} / ${(orderPosition.netPrice)!} <br> &lt;/#list&gt;",
+                formOfAddress: this.getSingleTemplateButton(self.translate.instant("COMMON_FORM_OF_ADDRESS"), self.translate.instant("SUMMERNOTE_DEAR") + " <#if customer.title?has_content &amp;&amp; customer.title == 'MR' &amp;&amp; customer.lastname?has_content> " + self.translate.instant("SUMMERNOTE_MR") + " ${customer.lastname}<#elseif customer.title?has_content &amp;&amp; customer.title == 'MS' &amp;&amp; customer.lastname?has_content> " + self.translate.instant("SUMMERNOTE_MS") + " ${customer.lastname}<#else> " + self.translate.instant("SUMMERNOTE_SIR_OR_MADAM") + "&lt;/#if>,", "fa fa-user", true),
+                ending: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ENDING"), self.translate.instant("SUMMERNOTE_REGARDS") + "<br><br><#if user.firstname?has_content&amp;&amp;user.lastname?has_content>${user.firstname} ${user.lastname}<#if user.job?has_content><br>${user.job}&lt;/#if&gt;<#else>" + self.translate.instant("SUMMERNOTE_SALESTEAM") + "&lt;/#if&gt;<br><br><br><#if user.email?has_content>E-Mail.:  ${user.email}<br>&lt;/#if&gt;<#if user.phone?has_content>Tel.:  ${user.phone}<br>&lt;/#if&gt;<#if user.fax?has_content>Fax.: ${user.fax}<br>&lt;/#if&gt;<#if user.skype?has_content>Skype.: ${user.skype}&lt;/#if&gt;", "fa fa-handshake-o", true),
+                orderList: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ORDER_LIST"), "<#list orderPositions as orderPosition> <br> ${(orderPosition.product.name)!} / ${(orderPosition.netPrice)!} " + self.translate.instant("COMMON_CURRENCY") + " &lt;/#list&gt;",
                     "fa fa-truck", true),
                 workflowDropdown: this.getWorkflowDropdown(),
                 customerDropdown: this.getCustomerDropdown(),
@@ -70,6 +72,8 @@ class SummernoteService {
         }
         return options;
     }
+
+
 
     getSingleTemplateButton(buttonName: string, insertText: string, fa: string, asHtml: boolean = false): any {
         let editorInvoke = "editor.insertText";

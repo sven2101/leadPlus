@@ -5,20 +5,6 @@
 /// <reference path="../../Common/directive/Directive.Interface.ts" />
 /// <reference path="../../Process/controller/Process.Service.ts" />
 /// <reference path="../../../typeDefinitions/angular.d.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-
 
 const WizardDirectiveId: string = "wizard";
 
@@ -207,20 +193,15 @@ class WizardDirective implements IDirective {
                 process.status = Status.INCONTACT;
             }
         }
-        console.log("save");
         let resultProcess = await scope.processService.save(process, scope.editWorkflowUnit, !deleteRow, deleteRow) as Process;
-        console.log("save exit");
         scope.close(true, resultProcess);
         try {
             notification.timestamp = newTimestamp();
-            console.log("send");
             let resultNotification = await scope.notificationService.sendNotification(notification, scope.editProcess);
             process.notifications.push(resultNotification);
         } catch (error) {
             let savedProcess: Process = await scope.processService.getById(process.id);
-            console.log(savedProcess);
             let tempNotifications = savedProcess.notifications.filter(n => n.timestamp === notification.timestamp);
-            console.log(tempNotifications);
             if (tempNotifications.length !== 1) {
                 throw Error("Inconsistent Client Data");
             }
@@ -260,7 +241,7 @@ class WizardDirective implements IDirective {
     }
 
     isAnyFormInvalid(scope: any): boolean {
-        for (let buttonConfig of scope.wizardConfig) {
+        for (let buttonConfig of scope.wizardElements) {
             if (!isNullOrUndefined(buttonConfig.form) && buttonConfig.form.$invalid && buttonConfig.validation) {
                 return true;
             }

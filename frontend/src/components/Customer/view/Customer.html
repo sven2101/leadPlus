@@ -72,14 +72,14 @@
 									<td style="white-space: nowrap;" class="project-title col-md-2 text-center">
 										{{customer.phone}}
 									</td>
-									<td class="project-completion col-md-3 text-center" max>
-										<small style="word-wrap: break-word; word-break: break-all; ">{{customer.company}}</small>
+									<td style="white-space: nowrap;" class="project-completion col-md-3 text-center" max>
+										{{customer.company}}
 									</td>
 			
 									<td class="project-actions col-md-1 text-center">
 										<button type="button " class="btn btn-white btn-sm " ng-click="customerCtrl.editCustomer(customer)
                                             " data-toggle="modal " data-target="#createCustomerModal " data-backdrop="static">
-                                     <i class="fa fa-pencil "></i>&nbsp;Edit</button>
+                                     <i class="fa fa-pencil "></i></button>
 									</td>
 								</tr>
 							</tbody>

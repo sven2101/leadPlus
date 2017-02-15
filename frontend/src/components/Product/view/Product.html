@@ -5,7 +5,26 @@
 	.grayfilter {
     -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
     filter: grayscale(100%);
-}
+	}
+	.frontlayer {
+    position: relative;
+    width: 100px;
+    height: 28px;
+    bottom: -45px;
+	color: white;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+    z-index: 1;
+	font-size: 13pt;
+	 -webkit-transform: rotate(315deg);
+    -moz-transform: rotate(315deg);
+    -o-transform: rotate(315deg);
+    -ms-transform: rotate(315deg);
+    transform: rotate(315deg);
+	}
 </style>
 <meta charset="utf-8">
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -59,7 +78,6 @@
 								<tr>
 									<th></th>
 									<th class="text-center">{{ 'COMMON_NAME' | translate }}</th>
-									<th class="text-center">{{ 'COMMON_DESCRIPTION' | translate }}</th>
 									<th class="text-center">{{ 'PRODUCT_PRICE' | translate }}</th>
 									<th class="text-center">{{ 'PRODUCT_PRODUCT_STATE' | translate }}</th>
 									<th class="text-center">{{ 'PRODUCT_NUMBER' | translate }}</th>
@@ -69,22 +87,20 @@
 							<tbody>
 								<tr ng-repeat="product in productCtrl.productService.products| filter:searchText |orderBy:'name' | limitTo:productCtrl.productAmountLimit ">
 									<td class="project-status col-md-1 text-center">
-										<div ng-if="product.picture!=null">
-											<img ng-class="{'grayfilter':product.deactivated}" ng-if="product.picture!=null" style="width: 60px; height:60px;border-radius: 10%" pictureid="{{product.picture.id}}"
+										<div ng-if="product.picture!=null" ng-style="product.deactivated === true?{ 'margin-top': '-28px'}:{}">
+											<div ng-if="product.deactivated === true" class="frontlayer">{{ 'COMMON_DEACTIVATED' | translate }}</div>
+											<img ng-class="{'grayfilter':product.deactivated}" style="width: 60px; height:60px;border-radius: 10%" pictureid="{{product.picture.id}}"
 												httpsrc="/api/rest/files/content/" alt=""> <br>
 										</div>
 										<span ng-if="product.picture==null" ng-show="!product.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
 										<span ng-if="product.picture==null" ng-show="product.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 									</td>
-									<td class="project-title col-md-2 text-center">
+									<td class="project-title col-md-4 text-center">
 										{{product.name}}
 										<br>
 										<small>{{ 'PRODUCT_CREATED' | translate }} {{productCtrl.getLocalTimestamp(product)}}</small>
 									</td>
-									<td class="project-completion col-md-3 text-center" style="word-wrap: break-word;">
-										{{product.description}}
-									</td>
-									<td class="project-completion col-md-1 text-center" style="word-wrap: break-word;">
+									<td class="project-completion col-md-2 text-center" style="word-wrap: break-word;">
 										{{product.netPrice | currency:'\u20AC'}}
 									</td>
 									<td class="project-completion col-md-2 text-center" style="word-wrap: break-word;">
@@ -96,7 +112,7 @@
 									<td class="project-actions col-md-1 text-center">
 										<button type="button" class="btn btn-white btn-sm" ng-click="productCtrl.editProduct(product)" data-toggle="modal" data-target="#createProductModal"
 											data-backdrop="static">
-											<i class="fa fa-pencil"></i>&nbsp;Edit</button>
+											<i class="fa fa-pencil"></i></button>
 									</td>
 								</tr>
 							</tbody>

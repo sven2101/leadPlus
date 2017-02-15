@@ -24,7 +24,6 @@
 						<tr>
 							<th></th>
 							<th class="text-center">{{ 'COMMON_NAME' | translate }}</th>
-							<th class="text-center">{{ 'COMMON_DESCRIPTION' | translate }}</th>
 							<th class="text-center">{{ 'EMAIL_SUBJECT' | translate }}</th>
 							<th class="text-center">{{ 'SETTING_TEMPLATE_NOTIFICATION_TYPE' | translate }}</th>
 							<th class="text-center">{{ 'SETTING_TEMPLATE_SOURCE' | translate }}</th>
@@ -37,13 +36,10 @@
 								<span ng-show="!template.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
 								<span ng-show="template.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 							</td>
-							<td class="project-title col-md-2 text-center">
+							<td class="project-title col-md-3 text-center">
 								{{template.name}}
 							</td>
-							<td class="project-completion col-md-3 text-center" max style="word-wrap: break-word;">
-								{{template.description}}
-							</td>
-							<td class="project-title col-md-2 text-center">
+							<td class="project-title col-md-3 text-center">
 								{{template.subject}}
 							</td>
 							<td class="project-title col-md-2 text-center">

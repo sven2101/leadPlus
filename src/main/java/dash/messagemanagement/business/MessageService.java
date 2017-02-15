@@ -81,7 +81,7 @@ public class MessageService implements IMessageService {
 	}
 
 	private String unescapeString(String escapedString) {
-		return escapedString.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
+		return escapedString.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;", "&");
 	}
 
 }
