@@ -33,8 +33,8 @@ public interface ISmtpService {
 	public Smtp test(final Long smtpId, final String smtpKey)
 			throws UnsupportedEncodingException, MessagingException, NotFoundException;
 
-	public Smtp findByUserId(final long userId) throws NotFoundException;
-
 	public Smtp findByAuthenticatedUser() throws NotFoundException;
+
+	Smtp findByUserId(long userId) throws NotFoundException;
 
 }

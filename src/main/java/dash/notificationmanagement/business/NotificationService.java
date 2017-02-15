@@ -75,9 +75,12 @@ public class NotificationService implements INotificationService {
 		notification.setSender(user);
 		Notification sendNotification = notification;
 		try {
+			Smtp smtp = smtpService.findByUserId(userId);
+			if (smtp == null) {
+				throw new InvalidSmtpServerException("Smtp server is null");
+			}
 
-			sendNotification = sendNotificationBySmtp(smtpService.findByUserId(userId), notification,
-					notificationContext.getSmtpKey());
+			sendNotification = sendNotificationBySmtp(smtp, notification, notificationContext.getSmtpKey());
 
 		} catch (Exception e) {
 			sendNotification.setNotificationType(NotificationType.ERROR);

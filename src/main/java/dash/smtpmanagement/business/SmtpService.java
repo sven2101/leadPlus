@@ -100,8 +100,12 @@ public class SmtpService implements ISmtpService {
 	}
 
 	@Override
-	public Smtp findByUserId(final long userId) throws NotFoundException {
-		return smtpRepository.findByUserId(userId);
+	public Smtp findByUserId(final long userId) {
+		try {
+			return smtpRepository.findByUserId(userId);
+		} catch (NotFoundException e) {
+			return null;
+		}
 	}
 
 	@Override

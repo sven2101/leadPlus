@@ -148,15 +148,11 @@ public class UserManagmentResource {
 		return userService.updateProfilPicture(user);
 	}
 
-	@RequestMapping(value = "/{id}/smtps", method = RequestMethod.GET)
+	@RequestMapping(value = "smtp/user/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get Smtp by UserId.", notes = "Provide a valid user ID.")
-	public ResponseEntity<Object> getSmtpByUserId(@PathVariable final long id) throws NotFoundException {
-		Smtp smtp = smtpService.findByUserId(id);
-		if (smtp != null)
-			return new ResponseEntity<Object>(smtp, HttpStatus.OK);
-		else
-			return new ResponseEntity<Object>(null, HttpStatus.NOT_FOUND);
+	public Smtp getSmtpByUserId(@PathVariable final long id) {
+		return smtpService.findByUserId(id);
 
 	}
 
