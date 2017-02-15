@@ -73,17 +73,22 @@ public class NotificationService implements INotificationService {
 		Process process = processService.getById(processId);
 		User user = userService.getById(userId);
 		notification.setSender(user);
+		Notification sendNotification = notification;
 		try {
-			return sendNotificationBySmtp(smtpService.findByUserId(userId), notification,
+
+			sendNotification = sendNotificationBySmtp(smtpService.findByUserId(userId), notification,
 					notificationContext.getSmtpKey());
 
 		} catch (Exception e) {
-			notification.setNotificationType(NotificationType.ERROR);
+			sendNotification.setNotificationType(NotificationType.ERROR);
 			throw new EmailSendFailedException("Failed to send");
+
 		} finally {
-			process.getNotifications().add(notification);
-			processService.save(process);
+			sendNotification.setProcess(process);
+			sendNotification = save(sendNotification);
+
 		}
+		return sendNotification;
 	}
 
 	@Override
@@ -135,6 +140,11 @@ public class NotificationService implements INotificationService {
 			logger.error("Couldn't find referenced Attachment.", e);
 			throw new NotFoundException("Couldn't find referenced Attachment.");
 		}
+	}
+
+	public Notification save(Notification notification) {
+		notification.getAttachments().forEach(atachment -> atachment.setNotification(notification));
+		return notificationRepository.save(notification);
 	}
 
 }

@@ -76,6 +76,9 @@ class WorkflowModalService {
                 ,
                 transformation: function (): boolean {
                     return false;
+                },
+                notification: function (): Notification {
+                    return null;
                 }
             }
         }).result.then(function (result) {
@@ -105,6 +108,9 @@ class WorkflowModalService {
                 },
                 transformation: function (): boolean {
                     return false;
+                },
+                notification: function (): Notification {
+                    return null;
                 }
             }
         }).result.then(function (result) {
@@ -123,7 +129,7 @@ class WorkflowModalService {
             ` + wizardSteps + `</wizard>`;
     }
 
-    openQuickEmailModal(process: Process, workflowType: WorkflowType) {
+    openQuickEmailModal(process: Process, workflowType: WorkflowType, notification) {
         let defer = this.$q.defer();
         let self = this;
         if (isNullOrUndefined(workflowType)) {
@@ -145,6 +151,9 @@ class WorkflowModalService {
                 },
                 transformation: function (): boolean {
                     return false;
+                },
+                notification: function (): Notification {
+                    return notification;
                 }
             }
         }).result.then(function (result) {
@@ -185,6 +194,9 @@ class WorkflowModalService {
                 ,
                 transformation: function (): boolean {
                     return true;
+                },
+                notification: function (): Notification {
+                    return null;
                 }
             }
         }).result.then(function (result) {
@@ -222,6 +234,9 @@ class WorkflowModalService {
                 },
                 transformation: function (): boolean {
                     return true;
+                },
+                notification: function (): Notification {
+                    return null;
                 }
             }
         }).result.then(function (result) {

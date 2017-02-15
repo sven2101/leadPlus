@@ -193,8 +193,11 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
             if (!isNullOrUndefined($rootScope.user) && !isNullOrUndefined($rootScope.tenant)) {
                 $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
                 $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
-                let dashboardService: DashboardService = $injector.get("DashboardService");
+                let dashboardService: DashboardService = $injector.get(DashboardServiceId);
                 dashboardService.refreshTodos();
+                let notificationService: NotificationService = $injector.get(NotificationServiceId);
+                notificationService.refreshUserNotifications();
+
             }
 
             $rootScope.$on("$routeChangeStart", function (event, next, current) {

@@ -13,7 +13,7 @@
  *******************************************************************************/
 package dash.messagemanagement.domain;
 
-import java.util.List;
+import java.util.Set;
 
 import dash.notificationmanagement.domain.Attachment;
 import dash.notificationmanagement.domain.NotificationType;
@@ -23,10 +23,10 @@ public abstract class AbstractMessage {
 	protected String recipients;
 	protected String subject;
 	protected String content;
-	protected List<Attachment> attachments;
+	protected Set<Attachment> attachments;
 	protected NotificationType notificationType;
 
-	public AbstractMessage(String recipients, String subject, String content, List<Attachment> attachments,
+	public AbstractMessage(String recipients, String subject, String content, Set<Attachment> attachments,
 			NotificationType notificationType) {
 		this.recipients = recipients;
 		this.subject = subject;
@@ -47,7 +47,7 @@ public abstract class AbstractMessage {
 		return content;
 	}
 
-	public List<Attachment> getAttachments() {
+	public Set<Attachment> getAttachments() {
 		return attachments;
 	}
 

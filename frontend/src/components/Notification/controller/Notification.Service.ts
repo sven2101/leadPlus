@@ -5,6 +5,7 @@
 declare var Ladda;
 
 const NotificationServiceId: string = "NotificationService";
+const broadcastUserNotificationShouldChange: string = "userNotificationShouldChange";
 
 class NotificationService {
 
@@ -29,31 +30,40 @@ class NotificationService {
         this.formdata = new FormData();
         this.fileReader = new FileReader();
         this.notification = new Notification();
+        let broadcastUserNotificationShouldChangeListener = $rootScope.$on(broadcastUserNotificationShouldChange, (event, result) => {
+            this.refreshUserNotifications();
+        });
     }
 
     async sendNotification(notification: Notification, process: Process): Promise<Notification> {
-
-
         try {
+            this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SENDING);
             let sendNotification: Notification = await this.notificationResource.sendNotification({ processId: process.id, senderId: this.rootScope.user.id }, { smtpKey: this.rootScope.user.smtpKey, notification: notification }).$promise;
-            this.toaster.pop("success", "", this.translate.instant("NOTIICATION_SEND"));
+
+            this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SUCCESS);
+            setTimeout(() => {
+                this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.DEFAULT);
+            }, 1000 * 60);
+            // this.toaster.pop("success", "", this.translate.instant("NOTIICATION_SEND"));
             return sendNotification;
         } catch (error) {
-            console.log(error);
             this.toaster.pop("error", "", this.translate.instant("NOTIICATION_SEND_ERROR"));
+            this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.ERROR);
             throw error;
+        } finally {
+            this.rootScope.$broadcast(broadcastUserNotificationShouldChange);
         }
-
-
 
     }
 
     async getNotificationsBySenderId(senderId: number): Promise<Array<Notification>> {
-        return this.notificationResource.getNotificationsBySenderId({ senderId: this.rootScope.user.id }).$promise;
+        return this.notificationResource.getNotificationsBySenderId({ senderId: senderId }).$promise;
     }
 
     async refreshUserNotifications(): Promise<void> {
         this.userNotifications = await this.getNotificationsBySenderId(this.rootScope.user.id);
+        this.rootScope.$broadcast(broadcastUserNotificationChanged, [this.userNotifications]);
+
     }
 
 }

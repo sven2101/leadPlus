@@ -62,6 +62,7 @@ public class FileUpload implements Serializable {
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "content_fk", nullable = false)
+	@NotNull
 	private FileContent content;
 
 	@ApiModelProperty(hidden = true)

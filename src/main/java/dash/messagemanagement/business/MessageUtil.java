@@ -2,7 +2,7 @@ package dash.messagemanagement.business;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import javax.activation.DataHandler;
 import javax.mail.Message;
@@ -84,8 +84,7 @@ public class MessageUtil {
 		return textBodyPart;
 	}
 
-	private static Multipart createMultipart(MimeBodyPart textBodyPart, List<Attachment> attachments)
-			throws MessagingException {
+	private static Multipart createMultipart(MimeBodyPart textBodyPart, Set<Attachment> set) throws MessagingException {
 
 		Multipart multipart = new MimeMultipart();
 		try {
@@ -95,8 +94,8 @@ public class MessageUtil {
 			throw new MessagingException("Couldn't add Body Part to Email-Content.");
 		}
 
-		if (attachments != null && !attachments.isEmpty()) {
-			for (Attachment attachment : attachments) {
+		if (set != null && !set.isEmpty()) {
+			for (Attachment attachment : set) {
 				if (attachment.getFileUpload().getContent() != null) {
 					MimeBodyPart attachmentBodyPart = new MimeBodyPart();
 					ByteArrayDataSource ds = new ByteArrayDataSource(attachment.getFileUpload().getContent(),

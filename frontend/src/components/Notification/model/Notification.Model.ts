@@ -13,6 +13,7 @@ class Notification {
     attachments: Attachment[];
     notificationType: NotificationType;
     sender: User;
+    timestamp: any;
 
     constructor() {
     }

@@ -53,6 +53,10 @@ class FileService {
     }
 
     save(fileUpload: FileUpload): Promise<FileUpload> {
+        if (fileUpload.size === 0) {
+
+        }
+
         return this.fileResource.save(fileUpload).$promise;
     }
 

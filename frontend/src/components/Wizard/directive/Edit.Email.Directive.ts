@@ -59,7 +59,6 @@ class EditEmailDirective implements IDirective {
 
         scope.templates = await this.TemplateService.getAll();
         this.setDefaultTemplate(scope);
-        console.log(scope.process);
     };
 
     setAttachments(files, notification: Notification, scope): void {
@@ -76,7 +75,12 @@ class EditEmailDirective implements IDirective {
             fileUpload.size = file.size;
             fileReader.readAsDataURL(file);
             fileReader.onload = function () {
+
                 fileUpload.content = this.result.split(",")[1];
+                if (fileUpload.content == null) {
+                    fileUpload.content = "";
+                }
+                console.log("loaded", fileUpload.content);
                 attachment.fileUpload = fileUpload;
                 notification.attachments.push(attachment);
                 self.isFileSizeInvalid(notification, scope);

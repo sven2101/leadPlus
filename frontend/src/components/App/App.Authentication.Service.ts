@@ -94,6 +94,7 @@ class AuthService {
                         self.cookies.putObject("tenant", self.rootScope.tenant, { domain: credentials.tenant, path: "/", expires: date });
 
                         self.rootScope.$broadcast(broadcastOnTodosChanged);
+                         self.rootScope.$broadcast(broadcastUserNotificationShouldChange);
                         defer.resolve(true);
                     }
 

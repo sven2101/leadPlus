@@ -228,7 +228,8 @@ public class ProcessService implements IProcessService {
 	public Process getById(final long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
-				return processRepository.findOne(id);
+				Process x = processRepository.findOne(id);
+				return x;
 			} catch (Exception ex) {
 				logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + ex.getMessage(), ex);
 				throw new NotFoundException(PROCESS_NOT_FOUND);
