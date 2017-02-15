@@ -539,7 +539,14 @@ function config($translateProvider) {
             SUMMERNOTE_CUSTOMER_TEMPLATE_BUTTON: "Kundenvariablen",
             SUMMERNOTE_ORDER_TEMPLATE_BUTTON: "Bestellvariablen",
             SUMMERNOTE_USER_TEMPLATE_BUTTON: "Benutzervariablen",
-            SUMMERNOTE_ORDER_LIST: "Bestell liste"
+            SUMMERNOTE_ORDER_LIST: "Bestell liste",
+            SUMMERNOTE_REGARDS: "Mit freundlichen Grüßen",
+            SUMMERNOTE_SALESTEAM: "Ihr Salesteam",
+            SUMMERNOTE_ENDING: "Schlussformel",
+            SUMMERNOTE_DEAR: "Sehr",
+            SUMMERNOTE_MR: "geehrter Herr",
+            SUMMERNOTE_MS: "geehrte Frau",
+            SUMMERNOTE_SIR_OR_MADAM: "geehrte Damen und Herren",
 
         })
         .translations(Language[Language.EN], {
@@ -1076,7 +1083,14 @@ function config($translateProvider) {
             SUMMERNOTE_CUSTOMER_TEMPLATE_BUTTON: "Customer values",
             SUMMERNOTE_ORDER_TEMPLATE_BUTTON: "Order values",
             SUMMERNOTE_USER_TEMPLATE_BUTTON: "User values",
-            SUMMERNOTE_ORDER_LIST: "Order list"
+            SUMMERNOTE_ORDER_LIST: "Order list",
+            SUMMERNOTE_REGARDS: "Best regards",
+            SUMMERNOTE_SALESTEAM: "Your Salesteam",
+            SUMMERNOTE_ENDING: "Ending",
+            SUMMERNOTE_DEAR: "Dear",
+            SUMMERNOTE_MR: "Mr.",
+            SUMMERNOTE_MS: "Ms.",
+            SUMMERNOTE_SIR_OR_MADAM: "Sir or Madam",
         });
 
     $translateProvider.preferredLanguage(Language[Language.EN]);

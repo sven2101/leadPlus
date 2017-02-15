@@ -22,6 +22,6 @@ height: 30px;
 	}
 
 	body > div.tooltip.fade.bottom.in{
-		display: none;
+		display: none !important;
 		z-index: 2500;
 	}
