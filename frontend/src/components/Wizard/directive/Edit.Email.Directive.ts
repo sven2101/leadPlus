@@ -116,9 +116,11 @@ class EditEmailDirective implements IDirective {
             return;
         }
         scope.$http.get("/api/rest/files/content/" + fileUpload.id, { method: "GET", responseType: "arraybuffer" }).
-            success(function (data, status, headers, config, statusText) {
-                let contentType = headers("content-type");
-                let file = new Blob([data], { type: contentType });
+            then(function (response) {
+                console.log(response);
+                let contentType = response.headers("content-type");
+                console.log(contentType);
+                let file = new Blob([response.data], { type: contentType });
                 let fileURL = URL.createObjectURL(file);
                 window.open(scope.$sce.trustAsResourceUrl(fileURL), "_blank");
             });
