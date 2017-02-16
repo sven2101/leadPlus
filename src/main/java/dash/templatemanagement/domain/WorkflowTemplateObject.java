@@ -93,7 +93,10 @@ public class WorkflowTemplateObject {
 
 	public String getDeliveryDate() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-		return dateFormat.format(deliveryDate.getTime());
+		if (deliveryDate != null)
+			return dateFormat.format(deliveryDate.getTime());
+		else
+			return null;
 	}
 
 	public void setDeliveryDate(Calendar deliveryDate) {

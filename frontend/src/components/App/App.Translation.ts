@@ -150,9 +150,12 @@ function config($translateProvider) {
             COMMON_PROCESSOR: "Bearbeiter",
             COMMON_CHILDROW_ADDITONAL_TITLE: "Zusätzliche Informationen",
             COMMON_PRODUCT_AMOUNT: "Menge",
+            COMMON_PRODUCT_DESCRIPTION: "Bezeichnung",
             COMMON_PRODUCT_SINGLE_PRICE: "Einzelpreis",
             COMMON_PRODUCT_BASE_PRICE: "Grundpreis",
             COMMON_PRODUCT_ENTIRE_PRICE: "Gesamtpreis",
+            COMMON_PRODUCT_ENTIRE_PRICE_INKL: "Gesamtpreis zzgl.",
+            COMMON_PRODUCT_VAT: "Mwst",
             COMMON_PRODUCT_INCL_DELIVERY_COSTS: "inkl. Lieferkosten",
             COMMON_PRODUCT_OFFER_PRICE: "Nettopreis",
             COMMON_PRODUCT_DESTINATION: "Lieferort",
@@ -547,6 +550,9 @@ function config($translateProvider) {
             SUMMERNOTE_MR: "geehrter Herr",
             SUMMERNOTE_MS: "geehrte Frau",
             SUMMERNOTE_SIR_OR_MADAM: "geehrte Damen und Herren",
+            SUMMERNOTE_DELIVERY: "Sie erhalten Ihre Lieferung",
+            SUMMERNOTE_DELIVERY_TO: "nach",
+            SUMMERNOTE_DELIVERY_AT: "am"
 
         })
         .translations(Language[Language.EN], {
@@ -694,9 +700,12 @@ function config($translateProvider) {
             COMMON_PROCESSOR: "Processor",
             COMMON_CHILDROW_ADDITONAL_TITLE: "Additional informationen",
             COMMON_PRODUCT_AMOUNT: "Amount",
+            COMMON_PRODUCT_DESCRIPTION: "Description",
             COMMON_PRODUCT_SINGLE_PRICE: "Unit price",
             COMMON_PRODUCT_BASE_PRICE: "Base price",
             COMMON_PRODUCT_ENTIRE_PRICE: "Entire price",
+            COMMON_PRODUCT_ENTIRE_PRICE_INKL: "Entire prie incl.",
+            COMMON_PRODUCT_VAT: "VAT",
             COMMON_PRODUCT_INCL_DELIVERY_COSTS: "incl. delivery costs",
             COMMON_PRODUCT_OFFER_PRICE: "Net price",
             COMMON_PRODUCT_DESTINATION: "Place of delivery",
@@ -1091,6 +1100,9 @@ function config($translateProvider) {
             SUMMERNOTE_MR: "Mr.",
             SUMMERNOTE_MS: "Ms.",
             SUMMERNOTE_SIR_OR_MADAM: "Sir or Madam",
+            SUMMERNOTE_DELIVERY: "You get your delivery",
+            SUMMERNOTE_DELIVERY_TO: "to",
+            SUMMERNOTE_DELIVERY_AT: "at"
         });
 
     $translateProvider.preferredLanguage(Language[Language.EN]);
