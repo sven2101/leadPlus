@@ -1,13 +1,9 @@
 package dash.smtpmanagement.domain;
 
-import javax.validation.constraints.NotNull;
-
 public class SmtpContext {
 
-	@NotNull
 	private String smtpKey;
 
-	@NotNull
 	private Smtp smtp;
 
 	public String getSmtpKey() {

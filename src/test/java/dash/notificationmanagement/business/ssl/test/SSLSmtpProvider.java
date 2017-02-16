@@ -17,7 +17,7 @@ public class SSLSmtpProvider extends Provider {
 		smtp.setEmail(NETCUP_EMAIL);
 		smtp.setEncryption(SmtpEncryptionType.SSL);
 		smtp.setPort(465);
-		smtp.setConnection(true);
+		smtp.setVerified(true);
 		smtp.setSalt(USERNAME.getBytes());
 
 		EncryptionWrapper encryptionWrapper = Encryptor.encrypt(smtp.getPassword(), SMTP_KEY);
@@ -36,7 +36,7 @@ public class SSLSmtpProvider extends Provider {
 		smtp.setEmail(ALFAHOSTING_EMAIL);
 		smtp.setEncryption(SmtpEncryptionType.SSL);
 		smtp.setPort(465);
-		smtp.setConnection(true);
+		smtp.setVerified(true);
 		smtp.setSalt(USERNAME.getBytes());
 
 		EncryptionWrapper encryptionWrapper = Encryptor.encrypt(smtp.getPassword(), SMTP_KEY);
@@ -55,7 +55,7 @@ public class SSLSmtpProvider extends Provider {
 		smtp.setEmail(GMAIL_EMAIL);
 		smtp.setEncryption(SmtpEncryptionType.SSL);
 		smtp.setPort(465);
-		smtp.setConnection(true);
+		smtp.setVerified(true);
 		smtp.setSalt(USERNAME.getBytes());
 
 		EncryptionWrapper encryptionWrapper = Encryptor.encrypt(smtp.getPassword(), SMTP_KEY);
@@ -74,7 +74,7 @@ public class SSLSmtpProvider extends Provider {
 		smtp.setEmail(GMX_EMAIL);
 		smtp.setEncryption(SmtpEncryptionType.SSL);
 		smtp.setPort(465);
-		smtp.setConnection(true);
+		smtp.setVerified(true);
 		smtp.setSalt(USERNAME.getBytes());
 
 		EncryptionWrapper encryptionWrapper = Encryptor.encrypt(smtp.getPassword(), SMTP_KEY);

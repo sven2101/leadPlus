@@ -14,9 +14,6 @@
 
 package dash.smtpmanagement.business;
 
-import java.io.UnsupportedEncodingException;
-
-import javax.mail.MessagingException;
 import javax.mail.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +41,13 @@ public class SmtpService implements ISmtpService {
 	}
 
 	@Override
-	public Smtp test(final Long smtpId, final String smtpKey)
-			throws UnsupportedEncodingException, MessagingException, NotFoundException {
+	public Smtp test(final Long smtpId, final String smtpKey) throws Exception {
+
 		Smtp smtp = this.smtpRepository.findOne(smtpId);
 		if (smtp == null)
 			throw new NotFoundException("There is no SMTP-Server Configuration for specified id.");
 
+		smtp.setVerified(false);
 		// SMTP-Access
 		String username = smtp.getUsername();
 		String emailFrom = smtp.getEmail();
@@ -69,16 +67,23 @@ public class SmtpService implements ISmtpService {
 		password = SmtpUtil.decryptPasswordForSmtp(smtp, smtpKey);
 		session = SmtpUtil.createSessionWithAuthentication(host, port, smtpEncryptionType, username, password);
 		notification = NotificationUtil.createTestNotification(smtp.getEmail(), smtp.getSender());
+		Smtp tempSmtp = null;
+		try {
+			if (smtpEncryptionType == SmtpEncryptionType.PLAIN) {
+				NotificationUtil.plainTransport(session, notification, emailFrom, senderName, host, port, username,
+						password);
+			} else if (smtpEncryptionType == SmtpEncryptionType.TLS || smtpEncryptionType == SmtpEncryptionType.SSL
+					|| smtpEncryptionType == SmtpEncryptionType.STARTTLS) {
+				NotificationUtil.secureTransport(session, notification, emailFrom, senderName, host, port, username,
+						password);
+			}
+			smtp.setVerified(true);
 
-		if (smtpEncryptionType == SmtpEncryptionType.PLAIN)
-			NotificationUtil.plainTransport(session, notification, emailFrom, senderName, host, port, username,
-					password);
-		else if (smtpEncryptionType == SmtpEncryptionType.TLS || smtpEncryptionType == SmtpEncryptionType.SSL
-				|| smtpEncryptionType == SmtpEncryptionType.STARTTLS)
-			NotificationUtil.secureTransport(session, notification, emailFrom, senderName, host, port, username,
-					password);
+		} finally {
 
-		return smtp;
+			tempSmtp = save(smtp, smtpKey);
+		}
+		return tempSmtp;
 	}
 
 	@Override

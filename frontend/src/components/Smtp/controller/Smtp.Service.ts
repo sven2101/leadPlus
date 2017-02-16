@@ -42,32 +42,29 @@ class SmtpService {
         this.getSMtp();
     }
 
-    test(): Promise<any> {
-        let self = this;
-        let defer = this.q.defer();
-        this.save().then(function () {
-            self.smtpResource.testSmtp({ id: self.currentSmtp.id, smtpKey: self.rootScope.user.smtpKey }).$promise.then(function () {
-                defer.resolve(null);
-                self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST"));
-            }, function (error) {
-                self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST_ERROR"));
-                defer.reject(error);
-            });
-        });
-        return defer.promise;
+    async test(): Promise<any> {
+        try {
+            await this.save();
+            let tempSmtp: Smtp = await this.smtpResource.testSmtp({ id: this.currentSmtp.id }, { smtpKey: this.rootScope.user.smtpKey }).$promise;
+            this.currentSmtp.verified = tempSmtp.verified;
+            this.toaster.pop("success", "", this.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST"));
+        } catch (error) {
+            this.currentSmtp.verified = false;
+            this.toaster.pop("error", "", this.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST_ERROR"));
+            throw error;
+        }
     }
 
-    getSMtp() {
-        let self = this;
-        this.smtpResource.getByUserId({ id: this.rootScope.user.id }).$promise.then((data) => {
-            self.currentSmtp = data;
-            self.currentSmtp.stringPassword = "";
-            for (let i = 0; i < self.currentPasswordLength; i++) {
-                self.currentSmtp.stringPassword += "x";
-            }
-        }, (error) => handleError(error));
+    async getSMtp() {
+        this.currentSmtp = await this.smtpResource.getByUserId({ id: this.rootScope.user.id }).$promise;
+        if (this.currentSmtp.id == null) { return; }
+        this.currentSmtp.stringPassword = "";
+        for (let i = 0; i < this.currentPasswordLength; i++) {
+            this.currentSmtp.stringPassword += "x";
+        }
+
     }
-    save(): Promise<any> {
+    async save(): Promise<any> {
         this.currentPasswordLength = this.currentSmtp.stringPassword !== null ? this.currentSmtp.stringPassword.length : this.currentPasswordLength;
         if (this.currentSmtp.stringPassword.replace(/x/g, "") === "") {
             this.currentSmtp.stringPassword = null;
@@ -75,20 +72,12 @@ class SmtpService {
         let defer = this.q.defer();
         this.currentSmtp.user = this.rootScope.user;
         this.currentSmtp.password = this.currentSmtp.stringPassword !== null ? btoa(this.currentSmtp.stringPassword) : null;
-        let self = this;
-        this.smtpResource.createSmtp({ smtpKey: self.rootScope.user.smtpKey }, this.currentSmtp).$promise.then(function (data) {
-            self.currentSmtp = data;
-            self.currentSmtp.stringPassword = "";
-            for (let i = 0; i < self.currentPasswordLength; i++) {
-                self.currentSmtp.stringPassword += "x";
-            }
-            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE"));
-            defer.resolve(self.currentSmtp);
-        }, function (error) {
-            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE_ERROR"));
-            defer.reject(error);
-        });
-        return defer.promise;
+
+        this.currentSmtp = await this.smtpResource.createSmtp({ smtpKey: this.rootScope.user.smtpKey, smtp: this.currentSmtp }).$promise;
+        this.currentSmtp.stringPassword = "";
+        for (let i = 0; i < this.currentPasswordLength; i++) {
+            this.currentSmtp.stringPassword += "x";
+        }
     }
 }
 

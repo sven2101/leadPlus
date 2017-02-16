@@ -75,8 +75,8 @@ public class Smtp {
 	@Column(name = "port", nullable = false)
 	private Integer port;
 
-	@Column(name = "connection", nullable = false)
-	private boolean connection;
+	@Column(name = "verified", nullable = false)
+	private boolean verified;
 
 	@JsonIgnore
 	@Column(name = "salt", nullable = false)
@@ -158,12 +158,12 @@ public class Smtp {
 		this.port = port;
 	}
 
-	public boolean isConnection() {
-		return connection;
+	public boolean isVerified() {
+		return verified;
 	}
 
-	public void setConnection(boolean connection) {
-		this.connection = connection;
+	public void setVerified(boolean connection) {
+		this.verified = connection;
 	}
 
 	public User getUser() {
@@ -194,7 +194,7 @@ public class Smtp {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (connection ? 1231 : 1237);
+		result = prime * result + (verified ? 1231 : 1237);
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((encryption == null) ? 0 : encryption.hashCode());
 		result = prime * result + ((host == null) ? 0 : host.hashCode());
@@ -218,7 +218,7 @@ public class Smtp {
 		if (getClass() != obj.getClass())
 			return false;
 		Smtp other = (Smtp) obj;
-		if (connection != other.connection)
+		if (verified != other.verified)
 			return false;
 		if (email == null) {
 			if (other.email != null)
@@ -270,7 +270,7 @@ public class Smtp {
 	public String toString() {
 		return "Smtp [id=" + id + ", sender=" + sender + ", host=" + host + ", username=" + username + ", password="
 				+ Arrays.toString(password) + ", email=" + email + ", encryption=" + encryption + ", port=" + port
-				+ ", connection=" + connection + ", salt=" + Arrays.toString(salt) + ", iv=" + Arrays.toString(iv)
+				+ ", connection=" + verified + ", salt=" + Arrays.toString(salt) + ", iv=" + Arrays.toString(iv)
 				+ ", user=" + user + "]";
 	}
 }

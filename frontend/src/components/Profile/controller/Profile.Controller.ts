@@ -11,7 +11,7 @@ const ProfileControllerId: string = "ProfileController";
 
 class ProfileController {
 
-    private $inject = [ProfileServiceId, $rootScopeId, $scopeId];
+    private $inject = [ProfileServiceId, $rootScopeId, $scopeId, toasterId, $translateId];
 
     myImage = "";
     myCroppedImage = "";
@@ -27,8 +27,9 @@ class ProfileController {
     currentTab: number = 1;
     smtpForm;
     SmtpEncryptionType: Object = SmtpEncryptionType;
+    testingSmtp: boolean = false;
 
-    constructor(ProfileService: ProfileService, $rootScope, $scope, private SmtpService: SmtpService) {
+    constructor(ProfileService: ProfileService, $rootScope, $scope, private SmtpService: SmtpService, private toaster, private $translate) {
         this.profileService = ProfileService;
         this.rootscope = $rootScope;
         this.currentUser = deepCopy(this.rootscope.user);
@@ -48,12 +49,26 @@ class ProfileController {
     }
 
 
-    testSmtpConnection() {
-        this.SmtpService.test();
+    async testSmtpConnection() {
+        this.testingSmtp = true;
+        console.log("show", this.testingSmtp);
+        try {
+            await this.SmtpService.test();
+        } finally {
+            this.testingSmtp = false;
+        }
+
     }
 
     saveSmtpConnection() {
-        this.SmtpService.save();
+        try {
+            this.SmtpService.save();
+            this.toaster.pop("success", "", this.$translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE"));
+        } catch (error) {
+            this.toaster.pop("error", "", this.$translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE_ERROR"));
+            throw error;
+        }
+
     }
 
     saveProfileImage() {

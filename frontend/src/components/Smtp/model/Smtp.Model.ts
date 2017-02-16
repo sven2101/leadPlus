@@ -16,6 +16,7 @@ class Smtp {
     port: number;
     connection: boolean;
     user: User;
+    verified: boolean;
 
     constructor() {
     }

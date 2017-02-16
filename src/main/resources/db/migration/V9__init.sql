@@ -15,3 +15,6 @@ ADD CONSTRAINT sender_foreignkey FOREIGN KEY (sender_fk)
 REFERENCES "user" (id);
 
 ALTER TABLE notification ADD COLUMN "timestamp" timestamp without time zone;
+
+ALTER TABLE SMTP
+RENAME COLUMN connection TO verified;

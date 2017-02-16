@@ -374,6 +374,8 @@ function config($translateProvider) {
             SETTING_TOAST_EMAIL_TEMPLATE_UPDATE_ERROR: "Fehler beim Verändern des Email Templates",
             SETTING_TOAST_EMAIL_TEMPLATE_DELETE: "Email Template wurde erfolgreich gelöscht",
             SETTING_TOAST_EMAIL_TEMPLATE_DELETE_ERROR: "Fehler beim Löschen des Email Templates",
+            SETTING_SMTP_NOT_YET_VERIFIED: "SMTP-Server nicht erfolgreich verifiziert",
+            SETTING_SMTP_ALREADY_VERIFIED: "SMTP-Server erfolgreich verifiziert",
 
             // Define statistic elements
             STATISTIC_PERIOD: "Zeitraum",
@@ -923,6 +925,8 @@ function config($translateProvider) {
             SETTING_TOAST_EMAIL_TEMPLATE_UPDATE_ERROR: "Error updating Email Template",
             SETTING_TOAST_EMAIL_TEMPLATE_DELETE: "Email Template successfully deleted",
             SETTING_TOAST_EMAIL_TEMPLATE_DELETE_ERROR: "Error deleting Email Template",
+            SETTING_SMTP_NOT_YET_VERIFIED: "SMTP-Server not verified",
+            SETTING_SMTP_ALREADY_VERIFIED: "SMTP-Server is verified",
 
             // Define statistic elements
             STATISTIC_PERIOD: "Period",

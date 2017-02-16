@@ -31,7 +31,7 @@ public interface ISmtpService {
 			throws SaveFailedException, UnsupportedEncodingException, Exception;
 
 	public Smtp test(final Long smtpId, final String smtpKey)
-			throws UnsupportedEncodingException, MessagingException, NotFoundException;
+			throws UnsupportedEncodingException, MessagingException, NotFoundException, Exception;
 
 	public Smtp findByAuthenticatedUser() throws NotFoundException;
 
