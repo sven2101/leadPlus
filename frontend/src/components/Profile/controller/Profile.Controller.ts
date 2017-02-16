@@ -51,7 +51,6 @@ class ProfileController {
 
     async testSmtpConnection() {
         this.testingSmtp = true;
-        console.log("show", this.testingSmtp);
         try {
             await this.SmtpService.test();
         } finally {
