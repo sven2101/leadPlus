@@ -29,8 +29,15 @@ class EditEmailDirective implements IDirective {
         directive.$inject = [WorkflowServiceId, $rootScopeId, TemplateServiceId, SummernoteServiceId, $sceId, $httpId, $windowId, $translateId, toasterId];
         return directive;
     }
+    static init: boolean = false;
 
     async link(scope, element, attrs, ctrl, transclude): Promise<void> {
+        // TODO find better solution
+        if (EditEmailDirective.init === false) {
+            EditEmailDirective.init = true;
+            return;
+        }
+
         scope.$sce = this.$sce;
         scope.$window = this.$window;
         scope.translate = this.$translate;
@@ -59,6 +66,7 @@ class EditEmailDirective implements IDirective {
 
         scope.templates = await this.TemplateService.getAll();
         this.setDefaultTemplate(scope);
+        EditEmailDirective.init = false;
     };
 
     setAttachments(files, notification: Notification, scope): void {
