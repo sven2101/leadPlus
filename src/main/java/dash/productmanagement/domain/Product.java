@@ -97,7 +97,7 @@ public class Product implements Serializable {
 	private Double netPrice;
 
 	@ApiModelProperty(hidden = true)
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "picture_fk", nullable = true)
 	private FileUpload picture;
 

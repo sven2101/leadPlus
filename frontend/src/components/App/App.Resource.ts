@@ -158,7 +158,7 @@ class UserResource {
                 url: "/users/:id/profile/picture/object", method: "GET"
             },
             getAll: { url: "/users/all", method: "GET", isArray: true },
-            setSmtpConnection: { url: "/users/:id/smtps", method: "POST" }
+            // setSmtpConnection: { url: "/users/:id/smtps", method: "POST" }
         });
     }
 }
@@ -374,7 +374,7 @@ class SmtpResource {
         this.resource = $resource("/api/rest/smtp", {}, {
             createSmtp: { url: "/api/rest/smtp/:smtpKey", method: "POST" },
             testSmtp: { url: "/api/rest/smtp/test/:id/:smtpKey", method: "GET" },
-            getByUserId: { url: "/api/rest/smtp/user/:id", method: "GET" },
+            getByUserId: { url: "/users/smtp/user/:id", method: "GET" },
         });
     }
 }
@@ -394,7 +394,7 @@ class NotificationResource {
     constructor($resource) {
         this.resource = $resource("/api/rest/notifications", {}, {
             sendNotification: { url: "/api/rest/notifications/proccess/:processId/user/:senderId/send", method: "POST" },
-            getNotificationsBySenderId: { url: "/api/rest/notifications/sender/:senderId", method: "GET" }
+            getNotificationsBySenderId: { url: "/api/rest/notifications/sender/:senderId", method: "GET", isArray: true }
         });
     }
 }

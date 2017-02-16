@@ -175,9 +175,9 @@ function isNumeric(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-async function sleep(ms: Number = 1000): Promise<void> {
-    await setTimeout(function () {
-
-    }, ms);
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+
 

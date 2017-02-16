@@ -8,7 +8,7 @@ const WizardModalControllerId: string = "WizardModalController";
 
 class WizardModalController {
 
-    $inject = ["process", "workflowType", "transformation", $uibModalId, $rootScopeId, WorkflowServiceId];
+    $inject = ["process", "workflowType", "transformation", "notification", $uibModalId, $rootScopeId, WorkflowServiceId];
 
     uibModalInstance;
     rootScope;
@@ -20,10 +20,10 @@ class WizardModalController {
     wizardOfferTransitionConfig: Array<WizardButtonConfig>;
     wizardSaleTransitionConfig: Array<WizardButtonConfig>;
 
-    notification = new Notification();
+    notification: Notification;
 
 
-    constructor(process: Process, workflowType: WorkflowType, transformation: boolean, $uibModalInstance, $rootScope, WorkflowService) {
+    constructor(process: Process, workflowType: WorkflowType, transformation: boolean, notification: Notification, $uibModalInstance, $rootScope, WorkflowService) {
         this.uibModalInstance = $uibModalInstance;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
@@ -33,6 +33,7 @@ class WizardModalController {
         this.wizardQuickEmailConfig = this.getQuickEmailWizardConfig(workflowType);
         this.wizardOfferTransitionConfig = this.getOfferWizardTransitionConfig();
         this.wizardSaleTransitionConfig = this.getSaleWizardTransitionConfig();
+        this.notification = notification == null ? new Notification() : notification;
     }
 
     getWizardEditConfig(): Array<WizardButtonConfig> {

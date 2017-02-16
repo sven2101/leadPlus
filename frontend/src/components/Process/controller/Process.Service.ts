@@ -62,5 +62,8 @@ class ProcessService {
         }
         return await this.processResource.removeProcessor({ id: process.id }).$promise as Process;
     }
+    async getById(processId): Promise<Process> {
+        return this.processResource.getById({ id: processId }).$promise;
+    }
 }
 angular.module(moduleProcessService, [ngResourceId]).service(ProcessServiceId, ProcessService);

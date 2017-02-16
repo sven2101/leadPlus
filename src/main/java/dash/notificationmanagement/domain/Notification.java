@@ -13,9 +13,9 @@
  *******************************************************************************/
 package dash.notificationmanagement.domain;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -98,7 +98,7 @@ public class Notification {
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "notification")
 	@Where(clause = "deleted <> '1'")
-	private List<Attachment> attachments;
+	private Set<Attachment> attachments;
 
 	@JsonIgnore
 	@ManyToOne
@@ -141,13 +141,13 @@ public class Notification {
 		this.content = HtmlCleaner.cleanHtml(content);
 	}
 
-	public List<Attachment> getAttachments() {
+	public Set<Attachment> getAttachments() {
 		return attachments;
 	}
 
-	public void setAttachments(List<Attachment> attachments) {
+	public void setAttachments(Set<Attachment> attachments) {
 		if (attachments == null) {
-			this.attachments = new ArrayList<>();
+			this.attachments = new HashSet<>();
 			return;
 		}
 		this.attachments = attachments;
@@ -215,6 +215,10 @@ public class Notification {
 
 	public void setTimestamp(Calendar timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public Long getProcessId() {
+		return this.process.getId();
 	}
 
 	private String formatEmails(String emails) {

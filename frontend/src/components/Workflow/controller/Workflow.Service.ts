@@ -19,6 +19,8 @@
 
 const WorkflowServiceId: string = "WorkflowService";
 
+const openQuickEmailModal: string = "openQuickEmailModal";
+
 class WorkflowService {
 
     private $inject = [CommentResourceId, SaleResourceId, OfferResourceId, toasterId, $rootScopeId, $translateId, $qId, CustomerServiceId, UserResourceId, ProcessServiceId, WorkflowModalServiceId];
@@ -49,6 +51,10 @@ class WorkflowService {
         this.$q = $q;
         this.customerService = CustomerService;
         this.refreshUsers();
+        this.rootScope.$on(openQuickEmailModal, (event, data: { notification: Notification, processId: number }) => {
+            this.openQuickEmailModal(data.processId, data.notification);
+        });
+
     }
 
     addComment(process: Process, commentText: string): Promise<boolean> {
@@ -156,9 +162,12 @@ class WorkflowService {
         return await this.workflowModalService.openSaleTransformationModal(process);
     }
 
-    async openQuickEmailModal(process: Process): Promise<Process> {
-        let workflowType: WorkflowType = this.getWorkflowTypeByProcess(process);
-        return await this.workflowModalService.openQuickEmailModal(process, workflowType);
+    async openQuickEmailModal(process: Process | number, notification: Notification = null): Promise<Process> {
+        if (isNumeric(process)) {
+            process = await this.processService.getById(process);
+        }
+        let workflowType: WorkflowType = this.getWorkflowTypeByProcess(process as Process);
+        return await this.workflowModalService.openQuickEmailModal(process as Process, workflowType, notification);
     }
 
     async openNewLeadModal(): Promise<Process> {

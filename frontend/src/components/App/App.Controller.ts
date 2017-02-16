@@ -8,6 +8,7 @@
 const AppControllerId: string = "AppController";
 const broadcastSetNotificationSendState: string = "setNotificationSendState";
 const broadcastAddNotification: string = "AddNotification";
+const broadcastUserNotificationChanged: string = "userNotificationChanged";
 
 class AppController {
 
@@ -54,20 +55,31 @@ class AppController {
             this.todos = result;
         });
 
-        $scope.$on("$destroy", function handler() {
-            todosChanged();
-        });
 
-        $scope.$on(broadcastAddNotification, (event, notification: Notification) => {
+
+        let broadcastAddNotificationListener = $scope.$on(broadcastAddNotification, (event, notification: Notification) => {
             this.userNotifications.push(notification);
         });
 
-        $scope.$on(broadcastSetNotificationSendState, (event, notificationSendState: NotificationSendState) => {
+        let broadcastSetNotificationSendStateListener = $scope.$on(broadcastSetNotificationSendState, (event, notificationSendState: NotificationSendState) => {
             this.notificationSendState = notificationSendState;
             if ($scope.$$phase == null) {
                 $scope.$apply();
             }
         });
+        let broadcastUserNotificationChangedListener = $rootScope.$on(broadcastUserNotificationChanged, (event, result) => {
+            this.userNotifications = result;
+        });
+
+        $scope.$on("$destroy", function handler() {
+            todosChanged();
+            broadcastAddNotificationListener();
+            broadcastSetNotificationSendStateListener();
+            broadcastUserNotificationChangedListener();
+        });
+
+
+
     }
 
 
@@ -180,6 +192,10 @@ class AppController {
             }
         }
         return sum;
+    }
+
+    openEmailDirective(notification: Notification, processId: number): void {
+        this.rootScope.$emit(openQuickEmailModal, { notification: notification, processId: processId });
     }
 }
 

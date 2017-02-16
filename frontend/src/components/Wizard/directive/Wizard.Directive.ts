@@ -83,7 +83,10 @@ class WizardDirective implements IDirective {
         }
         isNullOrUndefined(firstActiveElement) ? scope.currentWizard = scope.wizardElements[0] : scope.currentWizard = firstActiveElement;
 
-        if (!isNullOrUndefined(scope.currentNotification)) {
+        if (!isNullOrUndefined(scope.currentNotification) && !isNullOrUndefined(scope.currentNotification.id)) {
+            scope.currentNotification.notificationType = scope.getNotificationType();
+            return;
+        } else if (!isNullOrUndefined(scope.currentNotification)) {
             scope.currentNotification.recipients = scope.editWorkflowUnit.customer.email;
             scope.$watch("editWorkflowUnit.customer.email", function (newValue, oldValue) {
                 if (newValue !== oldValue && !isNullOrUndefined(scope.editWorkflowUnit)) {
@@ -179,7 +182,7 @@ class WizardDirective implements IDirective {
             await p;
         }
         notification.attachments.forEach(a => a.id = undefined);
-        process.notifications.push(notification);
+        // process.notifications.push(notification);
 
         if (notificationType === NotificationType.FOLLOWUP) {
             if (process.status !== Status.FOLLOWUP && process.status !== Status.DONE) {
@@ -193,10 +196,17 @@ class WizardDirective implements IDirective {
         let resultProcess = await scope.processService.save(process, scope.editWorkflowUnit, !deleteRow, deleteRow) as Process;
         scope.close(true, resultProcess);
         try {
-            await scope.notificationService.sendNotification(notification, scope.editProcess);
+            notification.timestamp = newTimestamp();
+            let resultNotification = await scope.notificationService.sendNotification(notification, scope.editProcess);
+            process.notifications.push(resultNotification);
         } catch (error) {
-            // TODO Set Notification to Error            
-            notification.notificationType = NotificationType.ERROR;
+            let savedProcess: Process = await scope.processService.getById(process.id);
+            let tempNotifications = savedProcess.notifications.filter(n => n.timestamp === notification.timestamp);
+            if (tempNotifications.length !== 1) {
+                throw Error("Inconsistent Client Data");
+            }
+            resultProcess.notifications.push(tempNotifications[0]);
+
         }
     }
 

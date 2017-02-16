@@ -41,7 +41,7 @@ import io.swagger.annotations.ApiParam;
 
 @RestController
 @RequestMapping(value = "/api/rest/notifications", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = {
-		MediaType.APPLICATION_JSON_VALUE })
+		MediaType.ALL_VALUE })
 @Api(value = "Notifications API")
 public class NotificationResource {
 
@@ -70,7 +70,7 @@ public class NotificationResource {
 	@ApiOperation(value = "Return notifications by sender.", notes = "")
 	@RequestMapping(value = "/sender/{senderId}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Notification> getNotificationsBySenderId(@PathVariable final long senderId) throws NotFoundException {
+	public List<Notification> getNotificationsBySenderId(@PathVariable final Long senderId) throws NotFoundException {
 		return notificationService.getNotificationsBySenderId(senderId);
 	}
 

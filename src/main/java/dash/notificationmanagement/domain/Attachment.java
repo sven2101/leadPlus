@@ -84,6 +84,7 @@ public class Attachment {
 	}
 
 	public void setFileUpload(FileUpload fileUpload) {
+
 		this.fileUpload = fileUpload;
 	}
 

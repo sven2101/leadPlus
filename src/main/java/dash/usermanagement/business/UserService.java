@@ -210,11 +210,7 @@ public class UserService implements IUserService {
 					if (passwordEncoder.matches(passwordChange.getOldPassword(), user.getPassword())) {
 						user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
 						Smtp smtp = null;
-						try {
-							smtp = smtpService.findByUserId(user.getId());
-						} catch (NotFoundException ex) {
-							smtp = null;
-						}
+						smtp = smtpService.findByUserId(user.getId());
 						if (smtp != null) {
 							smtp.setPassword(Encryptor.decrypt(
 									new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()),

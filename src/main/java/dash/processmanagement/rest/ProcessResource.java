@@ -74,7 +74,8 @@ public class ProcessResource {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public Process getById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
-		return processService.getById(id);
+		Process x = processService.getById(id);
+		return x;
 	}
 
 	@ApiOperation(value = "Returns processes with a certain state", notes = "")
