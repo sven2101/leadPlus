@@ -706,7 +706,7 @@ function config($translateProvider) {
             COMMON_PRODUCT_SINGLE_PRICE: "Unit price",
             COMMON_PRODUCT_BASE_PRICE: "Base price",
             COMMON_PRODUCT_ENTIRE_PRICE: "Entire price",
-            COMMON_PRODUCT_ENTIRE_PRICE_INKL: "Entire prie incl.",
+            COMMON_PRODUCT_ENTIRE_PRICE_INKL: "Entire price incl.",
             COMMON_PRODUCT_VAT: "VAT",
             COMMON_PRODUCT_INCL_DELIVERY_COSTS: "incl. delivery costs",
             COMMON_PRODUCT_OFFER_PRICE: "Net price",

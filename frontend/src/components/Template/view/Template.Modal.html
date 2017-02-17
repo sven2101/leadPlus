@@ -17,13 +17,14 @@
 				<!-- Deactivated -->
 				<div class="form-group">
 					<label class="checkbox-inline "> <input type="checkbox " ng-model="templateCtrl.template.deactivated">{{ 'COMMON_DEACTIVATED' | translate }}</label>
-				</div>				
+				</div>
 			</div>
 			<div class="col-lg-6">
 				<!-- Description -->
 				<div class="form-group" ng-class="{ 'has-error' : createTemplate.description.$invalid && !createTemplate.description.$pristine }">
 					<label>{{ 'COMMON_DESCRIPTION' | translate }}</label>
-					<textarea type="text" name="description" style="resize: none; width:100%;box-sizing: border-box;height: 70px !important" class="form-control" ng-model="templateCtrl.template.description" ng-maxlength="255"/>
+					<textarea type="text" name="description" style="resize: none; width:100%;box-sizing: border-box;height: 70px !important"
+						class="form-control" ng-model="templateCtrl.template.description" ng-maxlength="255" />
 					<p ng-show="createTemplate.description.$error.maxlength && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
 					<p ng-show="createTemplate.description.$error.required  && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
 				</div>
@@ -33,23 +34,23 @@
 			<div class="col-lg-6">
 				<div class="form-group">
 					<label>{{ 'SETTING_TEMPLATE_NOTIFICATION_TYPE' | translate }}</label>
-					<select ng-model="templateCtrl.currentSelectedNotificationTypes" data-placeholder-text-multiple="templateCtrl.getTranslationByKey('SETTING_TEMPLATE_NOTIFICATION_TYPE_SELECT')" 
+					<select ng-model="templateCtrl.currentSelectedNotificationTypes" data-placeholder-text-multiple="templateCtrl.getTranslationByKey('SETTING_TEMPLATE_NOTIFICATION_TYPE_SELECT')"
 						chosen multiple>
 						<option value="ALL">{{'SETTING_TEMPLATE_ALL_TYPES'|translate}}</option>
-						<option ng-value="t" ng-repeat="t in templateCtrl.availableNotificationTypes">{{ t | translate }}</option>	
-					</select>
-				</div>	
+						<option ng-value="t" ng-repeat="t in templateCtrl.availableNotificationTypes">{{ t | translate }}</option>
+						</select>
+				</div>
 			</div>
 			<div class="col-lg-6">
 				<div class="form-group">
 					<label>{{ 'SETTING_TEMPLATE_SOURCE' | translate }}</label>
-					<select ng-model="templateCtrl.currentSelectedSource" data-placeholder-text-multiple="templateCtrl.getTranslationByKey('SETTING_TEMPLATE_SOURCE_SELECT')" 
-						chosen multiple  >
+					<select ng-model="templateCtrl.currentSelectedSource" data-placeholder-text-multiple="templateCtrl.getTranslationByKey('SETTING_TEMPLATE_SOURCE_SELECT')"
+						chosen multiple>
 						<option value="ALL">{{'SETTING_TEMPLATE_ALL_SOURCES'|translate}}</option>
 						<option value="NONE">{{'SETTING_TEMPLATE_NO_SOURCES'|translate}}</option>
-						<option ng-value="s" ng-repeat="s in templateCtrl.availablesourceNames">{{s}}</option>	
-					</select>				
-				</div>	
+						<option ng-value="s" ng-repeat="s in templateCtrl.availablesourceNames">{{s}}</option>
+						</select>
+				</div>
 			</div>
 		</div>
 		<div class="row">
@@ -64,13 +65,14 @@
 				<!-- Template -->
 				<div class="form-group ">
 					<label>{{ 'SETTING_EMAIL_TEMPLATE_TEXT' | translate }}<span style="color:red">*</span></label>
-					<div style="border: 1px solid #a9a9a9" ng-style="createTemplate.content.$invalid  && !createTemplate.content.$pristine ?{ 'border-color': 'red'}:{ 'border-color': '#a9a9a9'}"> 
-						<summernote required type="text " config="templateCtrl.summernoteOptions" name="content " class="form-control" height="300" ng-model="templateCtrl.template.content "></summernote>
+					<div style="border: 1px solid #a9a9a9" ng-style="createTemplate.content.$invalid  && !createTemplate.content.$pristine ?{ 'border-color': 'red'}:{ 'border-color': '#a9a9a9'}">
+						<summernote required type="text " config="templateCtrl.summernoteOptions" name="content " class="form-control"
+							height="300" ng-model="templateCtrl.template.content "></summernote>
 					</div>
 				</div>
-											
-			</div>		
-		</div>	
+
+			</div>
+		</div>
 	</div>
 	<div class="modal-footer ">
 		<button type="button " class="btn btn-white " data-dismiss="modal " ng-click="templateCtrl.close()">{{ 'COMMON_CANCEL'| translate }}
@@ -83,9 +85,9 @@
 </form>
 
 <style>
-	.chosen-container, .default,.chosen-drop {
-    width: 100% !important;
-}
+	.chosen-container,
+	.default,
+	.chosen-drop {
+		width: 100% !important;
+	}
 </style>
-
-
