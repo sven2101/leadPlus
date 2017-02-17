@@ -195,7 +195,7 @@ class AppController {
     }
 
     openEmailDirective(notification: Notification, processId: number): void {
-        this.rootScope.$emit(openQuickEmailModal, { notification: notification, processId: processId });
+        this.rootScope.$emit(openQuickEmailModal, { notification: deepCopy(notification), processId: processId });
     }
 }
 
