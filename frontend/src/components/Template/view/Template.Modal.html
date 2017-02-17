@@ -10,9 +10,9 @@
 			<div class="col-lg-6">
 				<div class="form-group">
 					<label>{{ 'COMMON_NAME' | translate }}<span style="color:red">*</span></label>
+					<span style="color:red" ng-show="createTemplate.name.$error.maxlength && !createTemplate.description.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+					<span style="color:red" ng-show="createTemplate.name.$error.required  && !createTemplate.description.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
 					<input required type="text" name="name" class="form-control" ng-model="templateCtrl.template.name" ng-maxlength="30">
-					<p ng-show="createTemplate.name.$error.maxlength && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-					<p ng-show="createTemplate.name.$error.required  && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
 				</div>
 				<!-- Deactivated -->
 				<div class="form-group">
@@ -23,10 +23,10 @@
 				<!-- Description -->
 				<div class="form-group" ng-class="{ 'has-error' : createTemplate.description.$invalid && !createTemplate.description.$pristine }">
 					<label>{{ 'COMMON_DESCRIPTION' | translate }}</label>
+					<span style="color:red" ng-show="createTemplate.description.$error.maxlength && !createTemplate.description.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+					<span style="color:red" ng-show="createTemplate.description.$error.required  && !createTemplate.description.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
 					<textarea type="text" name="description" style="resize: none; width:100%;box-sizing: border-box;height: 70px !important"
 						class="form-control" ng-model="templateCtrl.template.description" ng-maxlength="255" />
-					<p ng-show="createTemplate.description.$error.maxlength && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-					<p ng-show="createTemplate.description.$error.required  && !createTemplate.description.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
 				</div>
 			</div>
 		</div>
@@ -58,16 +58,16 @@
 				<!-- Subject -->
 				<div class="form-group" ng-class="{ 'has-error' : createTemplate.subject.$invalid && !createTemplate.subject.$pristine }">
 					<label>{{ 'EMAIL_SUBJECT' | translate }}</label>
+					<span style="color:red" ng-show="createTemplate.subject.$error.maxlength && !createTemplate.subject.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+					<span style="color:red" ng-show="createTemplate.subject.$error.required  && !createTemplate.subject.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
 					<input type="text" name="subject" class="form-control" ng-model="templateCtrl.template.subject" ng-maxlength="255">
-					<p ng-show="createTemplate.subject.$error.maxlength && !createTemplate.subject.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-					<p ng-show="createTemplate.subject.$error.required  && !createTemplate.subject.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
 				</div>
 				<!-- Template -->
 				<div class="form-group ">
 					<label>{{ 'SETTING_EMAIL_TEMPLATE_TEXT' | translate }}<span style="color:red">*</span></label>
 					<div style="border: 1px solid #a9a9a9" ng-style="createTemplate.content.$invalid  && !createTemplate.content.$pristine ?{ 'border-color': 'red'}:{ 'border-color': '#a9a9a9'}">
-						<summernote required type="text " config="templateCtrl.summernoteOptions" name="content " class="form-control"
-							height="300" ng-model="templateCtrl.template.content "></summernote>
+						<summernote required type="text " config="templateCtrl.summernoteOptions" name="content " class="form-control" height="300"
+							ng-model="templateCtrl.template.content "></summernote>
 					</div>
 				</div>
 

@@ -6,7 +6,7 @@
                         aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 ng-show="sourceCtrl.isCurrentSourceNew" class="modal-title">{{ 'SOURCE_CREATE' | translate }}</h4>
                 <h4 ng-show="!sourceCtrl.isCurrentSourceNew" class="modal-title">{{ 'SOURCE_EDIT' | translate }}</h4>
-            </div> 
+            </div>
             <div class="modal-body">
                 <form name="sourceCtrl.createSourceForm" novalidate>
                     <div class="row">
@@ -14,19 +14,19 @@
                         <div class="col-sm-12">
                             <div class="form-group" ng-class="{ 'has-error' : (sourceCtrl.createSourceForm.name.$invalid && !sourceCtrl.createSourceForm.name.$pristine) || sourceCtrl.nameExists}">
                                 <label>{{ 'SOURCE_SOURCENAME' | translate }}<span style="color:red">*</span></label>
+                                <span style="color:red" ng-show="sourceCtrl.nameExists">{{ 'SOURCE_NAME_EXISTS' | translate }}</span>
+                                <span style="color:red" ng-show="sourceCtrl.createSourceForm.name.$error.maxlength">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+                                <span style="color:red" ng-show="sourceCtrl.createSourceForm.name.$error.required && !sourceCtrl.createSourceForm.name.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+                                <span style="color:red" ng-show="sourceCtrl.createSourceForm.name.$error.pattern">{{ 'COMMON_VALIDATE_ALPHANUMERIC' | translate }}</span>
                                 <input type=" text " name="name " class="form-control " ng-model="sourceCtrl.currentSource.name" ng-maxlength="30" ng-keyup="sourceCtrl.checkSourceName()"
                                     ng-pattern="/^[a-zA-Z0-9]*$/" required>
-                                <p ng-show="sourceCtrl.nameExists" class="help-block">{{ 'SOURCE_NAME_EXISTS' | translate }}</p>
-                                <p ng-show="sourceCtrl.createSourceForm.name.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
-                                <p ng-show="sourceCtrl.createSourceForm.name.$error.required && !sourceCtrl.createSourceForm.name.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ' | translate }}</p>
-                                <p ng-show="sourceCtrl.createSourceForm.name.$error.pattern" class="help-block">{{ 'COMMON_VALIDATE_ALPHANUMERIC' | translate }}</p>
                             </div>
                             <!--DESCRIPTION -->
                             <div class="form-group" ng-class="{ 'has-error' : sourceCtrl.createSourceForm.description.$invalid && !sourceCtrl.createSourceForm.description.$pristine }">
                                 <label>{{ 'SOURCE_DESCRIPTION' | translate }}</label>
+                                <span style="color:red" ng-show="sourceCtrl.createSourceForm.description.$error.maxlength">{{ 'COMMON_VALIDATE_MAX' | translate }}500{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
                                 <textarea style="resize: none" rows="7" type="text " name="description " class="form-control " ng-model="sourceCtrl.currentSource.description"
                                     ng-maxlength="500"></textarea>
-                                <p ng-show="sourceCtrl.createSourceForm.description.$error.maxlength" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}500{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
                             </div>
                             <!--DEACTIVATED -->
                             <!-- <div class="form-group" ng-show="!sourceCtrl.isCurrentSourceNew">
