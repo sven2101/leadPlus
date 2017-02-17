@@ -49,16 +49,17 @@ public class SmtpUtil {
 	}
 
 	public static String decryptPasswordForSmtp(Smtp smtp, String smtpKey) throws UnsupportedEncodingException {
-		Smtp decrypted = smtp;
+		byte[] smtpPassword = null;
 		try {
-			decrypted.setPassword(Encryptor
-					.decrypt(new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()), smtpKey));
+			smtpPassword = Encryptor.decrypt(
+					new EncryptionWrapper(smtp.getPassword().clone(), smtp.getSalt().clone(), smtp.getIv().clone()),
+					smtpKey);
 		} catch (Exception e) {
 			logger.error("Couldn't decrypt password.", e);
 			throw new UnsupportedEncodingException("Couldn't decrypt password.");
 		}
 
-		return new String(decrypted.getPassword(), UTF_8);
+		return new String(smtpPassword, UTF_8);
 	}
 
 	public static Session createSessionWithAuthentication(String host, int port, SmtpEncryptionType encryption,

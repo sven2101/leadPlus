@@ -24,6 +24,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -90,6 +91,10 @@ public class Smtp {
 	@OneToOne
 	@JoinColumn(name = "user_fk", nullable = false)
 	private User user;
+
+	@Transient
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private boolean decrypted;
 
 	public Smtp() {
 	}
@@ -190,6 +195,14 @@ public class Smtp {
 		this.iv = iv;
 	}
 
+	public boolean isDecrypted() {
+		return decrypted;
+	}
+
+	public void setDecrypted(boolean decrypted) {
+		this.decrypted = decrypted;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -266,11 +279,4 @@ public class Smtp {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "Smtp [id=" + id + ", sender=" + sender + ", host=" + host + ", username=" + username + ", password="
-				+ Arrays.toString(password) + ", email=" + email + ", encryption=" + encryption + ", port=" + port
-				+ ", connection=" + verified + ", salt=" + Arrays.toString(salt) + ", iv=" + Arrays.toString(iv)
-				+ ", user=" + user + "]";
-	}
 }
