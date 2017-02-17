@@ -554,7 +554,8 @@ function config($translateProvider) {
             SUMMERNOTE_SIR_OR_MADAM: "geehrte Damen und Herren",
             SUMMERNOTE_DELIVERY: "Sie erhalten Ihre Lieferung",
             SUMMERNOTE_DELIVERY_TO: "nach",
-            SUMMERNOTE_DELIVERY_AT: "am"
+            SUMMERNOTE_DELIVERY_AT: "am",
+            SUMMERNOTE_TEMPLATE_LANGUAGE: "Templatesprache"
 
         })
         .translations(Language[Language.EN], {
@@ -1106,9 +1107,10 @@ function config($translateProvider) {
             SUMMERNOTE_SIR_OR_MADAM: "Sir or Madam",
             SUMMERNOTE_DELIVERY: "You get your delivery",
             SUMMERNOTE_DELIVERY_TO: "to",
-            SUMMERNOTE_DELIVERY_AT: "at"
+            SUMMERNOTE_DELIVERY_AT: "at",
+            SUMMERNOTE_TEMPLATE_LANGUAGE: "Template language"
         });
-
+    $translateProvider.useSanitizeValueStrategy(null);
     $translateProvider.preferredLanguage(Language[Language.EN]);
     $translateProvider.fallbackLanguage(Language[Language.EN]);
 
