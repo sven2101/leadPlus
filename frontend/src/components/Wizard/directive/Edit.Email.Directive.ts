@@ -29,8 +29,15 @@ class EditEmailDirective implements IDirective {
         directive.$inject = [WorkflowServiceId, $rootScopeId, TemplateServiceId, SummernoteServiceId, $sceId, $httpId, $windowId, $translateId, toasterId];
         return directive;
     }
+    static init: boolean = false;
 
     async link(scope, element, attrs, ctrl, transclude): Promise<void> {
+        // TODO find better solution
+        if (EditEmailDirective.init === false) {
+            EditEmailDirective.init = true;
+            return;
+        }
+
         scope.$sce = this.$sce;
         scope.$window = this.$window;
         scope.translate = this.$translate;
@@ -59,6 +66,7 @@ class EditEmailDirective implements IDirective {
 
         scope.templates = await this.TemplateService.getAll();
         this.setDefaultTemplate(scope);
+        EditEmailDirective.init = false;
     };
 
     setAttachments(files, notification: Notification, scope): void {
@@ -108,9 +116,11 @@ class EditEmailDirective implements IDirective {
             return;
         }
         scope.$http.get("/api/rest/files/content/" + fileUpload.id, { method: "GET", responseType: "arraybuffer" }).
-            success(function (data, status, headers, config, statusText) {
-                let contentType = headers("content-type");
-                let file = new Blob([data], { type: contentType });
+            then(function (response) {
+                console.log(response);
+                let contentType = response.headers("content-type");
+                console.log(contentType);
+                let file = new Blob([response.data], { type: contentType });
                 let fileURL = URL.createObjectURL(file);
                 window.open(scope.$sce.trustAsResourceUrl(fileURL), "_blank");
             });
