@@ -175,7 +175,6 @@ class EditEmailDirective implements IDirective {
         let notificationType = scope.notification.notificationType;
         let sourceName = scope.process.source == null ? "NONE" : scope.process.source.name;
         let templates: Array<Template> = scope.templates;
-
         for (let t of templates) {
             let containsNotificationType = t.notificationTypeString == null ? false : contains<string>(t.notificationTypeString.split(","), notificationType);
             let containsSourceName = t.sourceString == null ? false : contains<string>(t.sourceString.split(","), sourceName);
@@ -185,17 +184,18 @@ class EditEmailDirective implements IDirective {
             }
         }
         for (let t of templates.filter(t => t.notificationTypeString != null && t.sourceString != null && contains<string>(t.notificationTypeString.split(","), "ALL"))) {
-            if (contains<string>(t.sourceString.split(","), sourceName)) {
+            if (contains<string>(t.sourceString.split(","), sourceName) || contains<string>(t.sourceString.split(","), "ALL")) {
                 this.setTemplate(scope, t);
                 return;
             }
         }
         for (let t of templates.filter(t => t.notificationTypeString != null && t.sourceString != null && contains<string>(t.sourceString.split(","), "ALL"))) {
-            if (contains<string>(t.notificationTypeString.split(","), notificationType)) {
+            if (contains<string>(t.notificationTypeString.split(","), notificationType) || contains<string>(t.notificationTypeString.split(","), "ALL")) {
                 this.setTemplate(scope, t);
                 return;
             }
         }
+
     }
     setTemplate(scope: any, t: Template): void {
         scope.currentTemplate = t;
