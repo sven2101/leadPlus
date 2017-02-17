@@ -17,6 +17,7 @@ class Smtp {
     connection: boolean;
     user: User;
     verified: boolean;
+    decrypted: boolean;
 
     constructor() {
     }

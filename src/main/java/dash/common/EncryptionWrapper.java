@@ -6,8 +6,7 @@ public class EncryptionWrapper {
 	private byte[] salt;
 	private byte[] iv;
 
-	public EncryptionWrapper(byte[] ciphertext, byte[] salt, byte[] iv) {
-		super();
+	public EncryptionWrapper(final byte[] ciphertext, final byte[] salt, final byte[] iv) {
 		this.ciphertext = ciphertext;
 		this.salt = salt;
 		this.iv = iv;
