@@ -23,8 +23,8 @@
 				<div class="profile-element">
 					<div style="margin-top:-20px" class="row">
 						<div id="profilePictureDiv" class="col-md-6">
-							<img id="profilePicture" style="width: 100px; height:100px;border-radius: 10%;" pictureid="{{user.picture.id}}"
-								httpsrc="/api/rest/files/content/" alt="">
+							<img id="profilePicture" style="width: 100px; height:100px;border-radius: 10%;" pictureid="{{user.picture.id}}" httpsrc="/api/rest/files/content/"
+								alt="">
 						</div>
 					</div>
 					<br>
@@ -125,7 +125,7 @@
 							<table class="table table-hover">
 								<tbody>
 									<tr style="cursor:pointer" ng-click="appCtrl.navigateTo(todo)" ng-repeat="todo in appCtrl.todos | limitTo:5 | orderBy:'timestamp'">
-										<td class="project-status">
+										<td class="project-status" style="padding: 13px 20px !important">
 											<span ng-if="todo.status=='OPEN'" class="label label-danger">{{ 'LEAD' | translate }}</span>
 											<span ng-if="todo.status=='OFFER'" class="label label-warning">{{ 'COMMON_STATUS_OFFER' | translate }}</span>
 											<span ng-if="todo.status=='FOLLOWUP'" class="label label-warning">{{ 'COMMON_STATUS_FOLLOW_UP' | translate }}</span>
@@ -152,7 +152,7 @@
 						</li>
 					</ul>
 				</li>
-				<li class="dropdown" >
+				<li class="dropdown">
 					<a class="dropdown-toggle count-info" data-toggle="dropdown" ng-click="appCtrl.notificationSendState='DEFAULT'">
 						<i ng-if="appCtrl.notificationSendState!='SENDING'" class="fa fa-envelope fa-lg"></i>
 						<i ng-if="appCtrl.notificationSendState=='SENDING'" class="fa fa-send fa-lg"></i>
@@ -166,7 +166,7 @@
 							<i style="margin-right: -2;margin-left: -2;margin-top: 1;" class="fa fa-exclamation-triangle"></i>
 						</span>
 					</a>
-					<ul style="min-width:480px" class="dropdown-menu dropdown-messages">
+					<ul style="min-width:600px" class="dropdown-menu dropdown-messages">
 						<li>
 							<div class="dropdown-messages-box">
 
@@ -177,26 +177,27 @@
 							</div>
 						</li>
 						<li>
-							<table class="table table-hover">
+							<table class="table table-hover" style="table-layout: fixed">
 								<tbody>
-									<tr class="row" style="cursor:pointer" ng-click="appCtrl.openEmailDirective(notification,notification.processId)" ng-repeat="notification in appCtrl.NotificationService.userNotifications | limitTo:5 ">
-										<td>
-											<span ng-if="notification.notificationType=='ERROR'" class="label  label-danger">
-												<i class="fa fa-exclamation-triangle"></i>
-											</span>
-											<span ng-if="notification.notificationType!='ERROR'" class="label label-primary">
+									<tr class="row" style="cursor:pointer; height: 50;" ng-click="appCtrl.openEmailDirective(notification,notification.processId)" ng-repeat="notification in appCtrl.NotificationService.userNotifications | limitTo:5 ">
+										<td ng-if="notification.notificationType!='ERROR'" style="vertical-align: middle; width: 10%">
+											<span class="label label-primary">
 												<i  class="fa fa-check"></i>
 											</span>
-
 										</td>
-										<td>
+										<td ng-if="notification.notificationType=='ERROR'" style="vertical-align: middle; width: 10%">
+											<span class="label label-danger">
+												<i class="fa fa-exclamation-triangle"></i>
+											</span>
+										</td>
+										<td style="vertical-align: middle; width: 40%">
 											<div>
-												<span style="text-overflow: ellipsis;display: block;overflow: hidden;word-wrap: break-word;width: 190px;height: 42;">{{notification.subject}}</span>
+												<span style="text-overflow: ellipsis;display: block;overflow: hidden;" title="{{notification.subject}}">{{notification.subject}}</span>
 											</div>
 										</td>
-										<td>
+										<td style="vertical-align: middle; width: 50%">
 											<div>
-												<span style="text-overflow: ellipsis;display: block;overflow: hidden;word-wrap: break-word;width: 190px;height: 42;">{{notification.recipients}}</span>
+												<span style="text-overflow: ellipsis;display: block;overflow: hidden;" title="{{notification.recipients}}">{{notification.recipients}}</span>
 											</div>
 										</td>
 									</tr>
