@@ -1110,7 +1110,7 @@ function config($translateProvider) {
             SUMMERNOTE_DELIVERY_AT: "at",
             SUMMERNOTE_TEMPLATE_LANGUAGE: "Template language"
         });
-    $translateProvider.useSanitizeValueStrategy("sanitize");
+    $translateProvider.useSanitizeValueStrategy(null);
     $translateProvider.preferredLanguage(Language[Language.EN]);
     $translateProvider.fallbackLanguage(Language[Language.EN]);
 
