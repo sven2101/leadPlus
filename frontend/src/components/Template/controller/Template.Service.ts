@@ -19,6 +19,7 @@ class TemplateService {
     window;
     content: any;
     templates: Array<Template>;
+    currentEditTemplate: Template;
     sce;
 
     constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q, $window, $sce) {
@@ -31,8 +32,13 @@ class TemplateService {
         this.sce = $sce;
     }
 
+    getCurrentEditTemplate(): Template {
+        return this.currentEditTemplate;
+    }
+
     openEmailTemplateModal(template: Template) {
         let editTemplate = deepCopy(template);
+        this.currentEditTemplate = editTemplate;
         this.uibModal.open({
             templateUrl: "components/Template/view/Template.Modal.html",
             controller: "TemplateController",

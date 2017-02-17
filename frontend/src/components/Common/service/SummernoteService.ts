@@ -2,14 +2,18 @@ const SummernoteServiceId: string = "SummernoteService";
 
 class SummernoteService {
 
-    private $inject = [$rootScopeId, $translateId];
+    private $inject = [$rootScopeId, $translateId, TemplateServiceId];
     rootScope;
     translate;
-    summernoteLanguage;
+    templateService: TemplateService;
+    summernoteLanguage: string;
+    summernoteBeforePreviewContent: string;
+    previewMode: boolean = false;
 
-    constructor($rootScope, $translate, ) {
+    constructor($rootScope, $translate, TemplateService) {
         this.rootScope = $rootScope;
         this.translate = $translate;
+        this.templateService = TemplateService;
         this.summernoteLanguage = $rootScope.language;
     }
 
@@ -55,13 +59,15 @@ class SummernoteService {
                 ["insert", ["link", "picture", "hr"]],
                 ["view", ["fullscreen", "codeview"]],
                 ["templateDefault", ["languageDropdown", "formOfAddress", "orderList", "delivery", "ending"]],
-                ["templateButtonGroup", ["workflowDropdown", "customerDropdown", "orderDropdown", "userDropdown"]]
+                ["templateButtonGroup", ["workflowDropdown", "customerDropdown", "orderDropdown", "userDropdown"]],
+                ["generateTemplate", ["preview"]]
             ],
             buttons: {
                 formOfAddress: this.getSingleTemplateButton(self.translate.instant("COMMON_FORM_OF_ADDRESS"), self.getFormOfAddressTemplate, "fa fa-user", true),
                 ending: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ENDING"), self.getEndingTemplate, "fa fa-handshake-o", true),
                 orderList: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ORDER_LIST"), self.getOrderListTemplate, "fa fa-shopping-cart", true),
                 delivery: this.getSingleTemplateButton(self.translate.instant("SUPPLY"), self.getDeliveryTemplate, "fa fa-truck", true),
+                preview: this.getPreviewContentButton(self.translate.instant("SUMMERNOTE_TEMPLATE_PREVIEW"), "fa fa-cogs"),
                 languageDropdown: this.getLanguageDropdown(),
                 workflowDropdown: this.getWorkflowDropdown(),
                 customerDropdown: this.getCustomerDropdown(),
@@ -114,6 +120,40 @@ class SummernoteService {
                 contents: "<i class='" + fa + "'/> " + buttonName,
                 click: function () {
                     context.invoke(editorInvoke, insertText(self));
+                }
+            });
+            return button.render();
+        };
+        return templateButton;
+    }
+
+    getPreviewContentButton(buttonName: string, fa: string): any {
+        let self = this;
+        let templateButton = function (context) {
+            let ui = (<any>$).summernote.ui;
+            let button = ui.button({
+                contents: "<i class='" + fa + "'/> " + buttonName,
+                click: function () {
+                    if (self.previewMode === false) {
+                        $($(this).parent().parent()[0]).find("button.note-btn").each(function () {
+                            $(this).addClass("disabled");
+                            $(this).attr("disabled", "disabled");
+                        });
+                        $(this).removeClass("disabled");
+                        $(this).attr("disabled", null);
+                        self.previewMode = true;
+                        self.summernoteBeforePreviewContent = context.code();
+                        self.templateService.testTemplate(self.templateService.getCurrentEditTemplate(), new WorkflowTemplateObject(), new Notification()).then(function (result: Notification) {
+                            context.code(result.content);
+                        });
+                    } else if (self.previewMode === true) {
+                        $($(this).parent().parent()[0]).find("button.note-btn").each(function () {
+                            $(this).removeClass("disabled");
+                            $(this).attr("disabled", null);
+                        });
+                        self.previewMode = false;
+                        context.code(self.summernoteBeforePreviewContent);
+                    }
                 }
             });
             return button.render();
