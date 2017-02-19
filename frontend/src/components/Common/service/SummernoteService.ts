@@ -152,7 +152,9 @@ class SummernoteService {
                         self.addPreviewMode(buttonSelf);
                         self.templateService.testTemplate(self.templateService.getCurrentEditTemplate(), new WorkflowTemplateObject(), new Notification()).then(function (result: Notification) {
                             setTimeout(() => {
-                                context.code(result.content);
+                                if (self.previewMode === true) {
+                                    context.code(result.content);
+                                }
                             }, 600);
                         }).catch(function (error) {
                             setTimeout(() => {
