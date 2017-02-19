@@ -26,3 +26,46 @@ height: 30px;
 		z-index: 2500;
 	}
 
+
+.fa-spin.fa-spin-reverse {
+  -moz-animation-direction: reverse;
+  -o-animation-direction: reverse;
+  -webkit-animation-direction: reverse;
+  animation-direction: reverse;
+}
+
+.cog-loader {
+  width: 5%;
+  height: 9em;
+  font-size: 1em;
+  position: relative;
+  left: calc(50% - 4.5em);
+  top:10%;
+}
+.cog-loader i {
+  color: gray;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  font-size: 3.3em;
+  text-align: center;
+  position: absolute;
+  top: 0.45em;
+  left: 0.18em;
+  -moz-animation-duration: 5s;
+  -o-animation-duration: 5s;
+  -webkit-animation-duration: 5s;
+  animation-duration: 5s;
+}
+.cog-loader i:nth-child(2) {
+  color: gray;
+  font-size: 4em;
+  top: 0.7em;
+  left: 0.7em;
+}
+.cog-loader i:nth-child(3) {
+  color: gray;
+  font-size: 2.7em;
+  top: 0.39em;
+  left: 1.85em;
+}

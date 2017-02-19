@@ -558,7 +558,7 @@ function config($translateProvider) {
             SUMMERNOTE_DELIVERY_AT: "am",
             SUMMERNOTE_TEMPLATE_LANGUAGE: "Templatesprache",
             SUMMERNOTE_TEMPLATE_PREVIEW: "Templatevorschau",
-
+            SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE: "Erstelle Templatevorschau..."
         })
         .translations(Language[Language.EN], {
             // GENERAL
@@ -1113,6 +1113,7 @@ function config($translateProvider) {
             SUMMERNOTE_DELIVERY_AT: "at",
             SUMMERNOTE_TEMPLATE_LANGUAGE: "Template language",
             SUMMERNOTE_TEMPLATE_PREVIEW: "Template preview",
+            SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE: "Generate template preview..."
         });
     $translateProvider.useSanitizeValueStrategy(null);
     $translateProvider.preferredLanguage(Language[Language.EN]);

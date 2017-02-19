@@ -2,19 +2,27 @@ const SummernoteServiceId: string = "SummernoteService";
 
 class SummernoteService {
 
-    private $inject = [$rootScopeId, $translateId, TemplateServiceId];
+    private $inject = [$rootScopeId, $translateId, toasterId, TemplateServiceId];
     rootScope;
     translate;
+    toaster;
     templateService: TemplateService;
     summernoteLanguage: string;
     summernoteBeforePreviewContent: string;
     previewMode: boolean = false;
 
-    constructor($rootScope, $translate, TemplateService) {
+    constructor($rootScope, $translate, toaster, TemplateService) {
         this.rootScope = $rootScope;
         this.translate = $translate;
+        this.toaster = toaster;
         this.templateService = TemplateService;
         this.summernoteLanguage = $rootScope.language;
+    }
+
+    resetSummernoteConfiguration() {
+        this.previewMode = false;
+        this.summernoteBeforePreviewContent = "";
+        this.summernoteLanguage = this.rootScope.language;
     }
 
     getDefaultOptions(): any {
@@ -134,24 +142,27 @@ class SummernoteService {
             let button = ui.button({
                 contents: "<i class='" + fa + "'/> " + buttonName,
                 click: function () {
+                    let buttonSelf = this;
                     if (self.previewMode === false) {
-                        $($(this).parent().parent()[0]).find("button.note-btn").each(function () {
-                            $(this).addClass("disabled");
-                            $(this).attr("disabled", "disabled");
-                        });
-                        $(this).removeClass("disabled");
-                        $(this).attr("disabled", null);
-                        self.previewMode = true;
                         self.summernoteBeforePreviewContent = context.code();
+                        context.code("<div class='cog-loader'>"
+                            + "<i class='fa-spin fa fa-cog'></i>"
+                            + "<i class='fa-spin fa-spin-reverse fa fa-cog'></i>"
+                            + "<i class='fa-spin fa fa-cog'></i></div><div class='text-center' style='font-size: 1.5em;color: gray; font-weight: bold'>" + self.translate.instant("SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE") + "</div>");
+                        self.addPreviewMode(buttonSelf);
                         self.templateService.testTemplate(self.templateService.getCurrentEditTemplate(), new WorkflowTemplateObject(), new Notification()).then(function (result: Notification) {
-                            context.code(result.content);
+                            setTimeout(() => {
+                                context.code(result.content);
+                            }, 600);
+                        }).catch(function (error) {
+                            setTimeout(() => {
+                                context.code(self.summernoteBeforePreviewContent);
+                                self.removePreviewMode(buttonSelf);
+                                self.showTemplateErrorMessage(error);
+                            }, 600);
                         });
                     } else if (self.previewMode === true) {
-                        $($(this).parent().parent()[0]).find("button.note-btn").each(function () {
-                            $(this).removeClass("disabled");
-                            $(this).attr("disabled", null);
-                        });
-                        self.previewMode = false;
+                        self.removePreviewMode(buttonSelf);
                         context.code(self.summernoteBeforePreviewContent);
                     }
                 }
@@ -159,6 +170,45 @@ class SummernoteService {
             return button.render();
         };
         return templateButton;
+    }
+
+    isInPreviewMode(): boolean {
+        return this.previewMode;
+    }
+
+    removePreviewMode(buttonSelf) {
+        $($(buttonSelf).parent().parent()[0]).find("button.note-btn").each(function () {
+            $(this).removeClass("disabled active");
+            $(this).attr("disabled", null);
+        });
+        $(buttonSelf).css("background-color", "white");
+        $(buttonSelf).css("border-color", "#e7eaec");
+        this.previewMode = false;
+    }
+
+    addPreviewMode(buttonSelf) {
+        $($(buttonSelf).parent().parent()[0]).find("button.note-btn").each(function () {
+            $(this).addClass("disabled");
+            $(this).attr("disabled", "disabled");
+        });
+        $(buttonSelf).removeClass("disabled");
+        $(buttonSelf).addClass("active");
+        $(buttonSelf).css("background-color", "#d4d4d4");
+        $(buttonSelf).attr("disabled", null);
+        this.previewMode = true;
+    }
+
+    showTemplateErrorMessage(error) {
+        if (error.data != null && error.data.exception !== "dash.templatemanagement.business.TemplateCompilationException") {
+            return this.toaster.pop("error", "", this.translate.instant("EMAIL_TEMPLATE_ERROR"));
+        }
+        let errorMessage = error == null || error.data == null ? "" : ": " + error.data.message;
+        if (error != null && error.data != null && error.data.message != null && error.data.message.substring(0, 6) !== "Syntax") {
+            this.toaster.pop("error", "", this.translate.instant("EMAIL_TEMPLATE_ERROR") + errorMessage);
+            return;
+        }
+        errorMessage = error == null || error.data == null ? "" : ": " + error.data.message.substring(36);
+        this.toaster.pop("error", "", this.translate.instant("EMAIL_TEMPLATE_ERROR") + errorMessage);
     }
 
     getLanguageDropdown(): any {

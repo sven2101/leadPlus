@@ -31,6 +31,10 @@ class TemplateController {
         this.summernoteOptions = SummernoteService.getTemplateOptions();
     }
 
+    isTemplateInPreviewMode(): boolean {
+        return this.SummernoteService.isInPreviewMode();
+    }
+
     async SetAvailablesourceNames(): Promise<void> {
         let temp = await this.SourceService.getActiveSources().map(s => s.name);
         this.availablesourceNames = this.availablesourceNames.concat(temp);
@@ -68,6 +72,7 @@ class TemplateController {
     }
 
     close() {
+        this.SummernoteService.resetSummernoteConfiguration();
         this.uibModalInstance.close();
     }
 

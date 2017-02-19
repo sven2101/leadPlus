@@ -31,10 +31,9 @@ class SettingController {
     translate;
     currentUser: User;
 
-    constructor(SettingService, SmtpService, TemplateService, $rootScope, $translate) {
+    constructor(SettingService, SmtpService, TemplateService, private SummernoteService: SummernoteService, $rootScope, $translate) {
         this.smtp = new Smtp();
         this.template = new Template();
-
         this.settingService = SettingService;
         this.templateService = TemplateService;
         this.smtpService = SmtpService;
@@ -67,10 +66,12 @@ class SettingController {
     openEmailTemplateModal() {
         let tempTemplate = new Template();
         tempTemplate.sourceString = "NONE,ALL";
+        this.SummernoteService.resetSummernoteConfiguration();
         this.templateService.openEmailTemplateModal(tempTemplate);
     }
 
     openEditEmailTemplateModal(template: Template) {
+        this.SummernoteService.resetSummernoteConfiguration();
         this.templateService.openEmailTemplateModal(template);
     }
 
