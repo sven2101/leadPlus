@@ -1,5 +1,6 @@
 package dash.smtpmanagement.business;
 
+import static dash.Constants.FALSE;
 import static dash.Constants.MAIL_DEBUG;
 import static dash.Constants.MAIL_DEBUG_VALUE;
 import static dash.Constants.MAIL_SMTP_AUTH;
@@ -25,6 +26,7 @@ import static dash.Constants.MAIL_SMTP_SSL_TRUST;
 import static dash.Constants.MAIL_SMTP_STARTTLS_ENABLE;
 import static dash.Constants.MAIL_SMTP_TIMEOUT;
 import static dash.Constants.MAIL_TRANSPORT_PROTOCOL;
+import static dash.Constants.TRUE;
 import static dash.Constants.UTF_8;
 
 import java.io.UnsupportedEncodingException;
@@ -92,13 +94,13 @@ public class SmtpUtil {
 		properties.put(MAIL_DEBUG, MAIL_DEBUG_VALUE);
 		properties.put(MAIL_TRANSPORT_PROTOCOL, "smtp");
 		properties.put(MAIL_SMTP_HOST, host);
-		properties.put(MAIL_SMTP_AUTH, "true");
+		properties.put(MAIL_SMTP_AUTH, TRUE);
 		properties.put(MAIL_SMTP_PORT, String.valueOf(port));
 		properties.put(MAIL_SMTP_CONNECTION_TIMEOUT, "10000");
 		properties.put(MAIL_SMTP_TIMEOUT, "10000");
-		properties.put(MAIL_SMTP_DSN_NOTIFY, "NEVER");
-		properties.put(MAIL_SMTP_SEND_PARTIAL, "true");
-		properties.put(MAIL_SMTP_REPORTSUCCESS, "false");
+		properties.put(MAIL_SMTP_DSN_NOTIFY, "FAILURE,DELAY");
+		properties.put(MAIL_SMTP_SEND_PARTIAL, TRUE);
+		properties.put(MAIL_SMTP_REPORTSUCCESS, FALSE);
 
 		return properties;
 	}
@@ -107,14 +109,14 @@ public class SmtpUtil {
 		Properties properties = new Properties();
 		properties.put(MAIL_DEBUG, MAIL_DEBUG_VALUE);
 		properties.put(MAIL_SMTP_HOST, host);
-		properties.put(MAIL_SMTP_AUTH, "true");
+		properties.put(MAIL_SMTP_AUTH, TRUE);
 		properties.put(MAIL_SMTP_PORT, String.valueOf(port));
 		properties.put(MAIL_SMTP_CONNECTION_TIMEOUT, "10000");
 		properties.put(MAIL_SMTP_TIMEOUT, "10000");
-		properties.put(MAIL_SMTP_SEND_PARTIAL, "true");
-		properties.put(MAIL_SMTP_DSN_NOTIFY, "NEVER");
-		properties.put(MAIL_SMTP_STARTTLS_ENABLE, "true");
-		properties.put(MAIL_SMTP_REPORTSUCCESS, "false");
+		properties.put(MAIL_SMTP_SEND_PARTIAL, TRUE);
+		properties.put(MAIL_SMTP_DSN_NOTIFY, "FAILURE,DELAY");
+		properties.put(MAIL_SMTP_STARTTLS_ENABLE, TRUE);
+		properties.put(MAIL_SMTP_REPORTSUCCESS, FALSE);
 
 		return properties;
 	}
@@ -123,14 +125,14 @@ public class SmtpUtil {
 		Properties properties = new Properties();
 		properties.put(MAIL_DEBUG, MAIL_DEBUG_VALUE);
 		properties.put(MAIL_SMTP_HOST, host);
-		properties.put(MAIL_SMTP_AUTH, "true");
+		properties.put(MAIL_SMTP_AUTH, TRUE);
 		properties.put(MAIL_SMTP_PORT, String.valueOf(port));
 		properties.put(MAIL_SMTP_CONNECTION_TIMEOUT, "10000");
 		properties.put(MAIL_SMTP_TIMEOUT, "10000");
-		properties.put(MAIL_SMTP_SEND_PARTIAL, "true");
-		properties.put(MAIL_SMTP_DSN_NOTIFY, "NEVER");
-		properties.put(MAIL_SMTP_STARTTLS_ENABLE, "true");
-		properties.put(MAIL_SMTP_REPORTSUCCESS, "false");
+		properties.put(MAIL_SMTP_SEND_PARTIAL, TRUE);
+		properties.put(MAIL_SMTP_DSN_NOTIFY, "FAILURE,DELAY");
+		properties.put(MAIL_SMTP_STARTTLS_ENABLE, TRUE);
+		properties.put(MAIL_SMTP_REPORTSUCCESS, FALSE);
 
 		return properties;
 	}
@@ -139,19 +141,19 @@ public class SmtpUtil {
 		Properties properties = new Properties();
 		properties.put(MAIL_DEBUG, MAIL_DEBUG_VALUE);
 		properties.put(MAIL_TRANSPORT_PROTOCOL, "smtps");
-		properties.put(MAIL_SMTP_SSL_ENABLE, "true");
-		properties.put(MAIL_SMTP_SSL_QUITWAIT, "false");
+		properties.put(MAIL_SMTP_SSL_ENABLE, TRUE);
+		properties.put(MAIL_SMTP_SSL_QUITWAIT, FALSE);
 		properties.put(MAIL_SMTP_SSL_SOCKET_FACTORY_PORT, port);
 		properties.put(MAIL_SMTP_SSL_SOCKET_FACTORY_CLASS, "javax.net.ssl.SSLSocketFactory");
 		properties.put(MAIL_SMTP_SSL_PORT, String.valueOf(port));
 		properties.put(MAIL_SMTP_SSL_HOST, host);
-		properties.put(MAIL_SMTP_SSL_AUTH, "true");
+		properties.put(MAIL_SMTP_SSL_AUTH, TRUE);
 		properties.put(MAIL_SMTP_SSL_CONNECTION_TIMEOUT, "10000");
 		properties.put(MAIL_SMTP_SSL_TIMEOUT, "10000");
-		properties.put(MAIL_SMTP_SSL_SEND_PARTIAL, "true");
-		properties.put(MAIL_SMTP_SSL_DSN_NOTIFY, "NEVER");
+		properties.put(MAIL_SMTP_SSL_SEND_PARTIAL, TRUE);
+		properties.put(MAIL_SMTP_SSL_DSN_NOTIFY, "FAILURE,DELAY");
 		properties.put(MAIL_SMTP_SSL_TRUST, host);
-		properties.put(MAIL_SMTP_SSL_REPORTSUCCESS, "false");
+		properties.put(MAIL_SMTP_SSL_REPORTSUCCESS, FALSE);
 
 		return properties;
 	}
