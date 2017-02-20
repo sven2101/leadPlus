@@ -65,7 +65,9 @@ class EditEmailDirective implements IDirective {
         scope.deleteAttachment = (index) => this.deleteAttachment(index, scope);
 
         scope.templates = await this.TemplateService.getAll();
-        this.setDefaultTemplate(scope);
+        if (scope.notification.id == null) {
+            this.setDefaultTemplate(scope);
+        }
         EditEmailDirective.init = false;
     };
 
