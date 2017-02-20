@@ -26,12 +26,14 @@ class SummernoteService {
         this.previewMode = false;
         this.summernoteBeforePreviewContent = "";
         this.summernoteLanguage = this.rootScope.language;
+        this.timeout.cancel(this.currentTimeout);
     }
 
     getDefaultOptions(): any {
         let options = {
             lang: "en-US",
             maximumImageFileSize: "512000",
+            prettifyHtml: true,
             toolbar: [
                 ["edit", ["undo", "redo"]],
                 ["headline", ["style"]],
@@ -59,6 +61,7 @@ class SummernoteService {
         let options = {
             lang: "en-US",
             maximumImageFileSize: "512000",
+            prettifyHtml: true,
             toolbar: [
                 ["edit", ["undo", "redo"]],
                 ["headline", ["style"]],
