@@ -7,6 +7,7 @@ const $scopeId: string = "$scope";
 const $compileId: string = "$compile";
 const $resourceId: string = "$resource";
 const $rootScopeId: string = "$rootScope";
+const $timeoutId: string = "$timeout";
 const ngResourceId: string = "ngResource";
 const $locationId: string = "$location";
 const $httpId: string = "$http";

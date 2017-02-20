@@ -2,7 +2,7 @@ const SummernoteServiceId: string = "SummernoteService";
 
 class SummernoteService {
 
-    private $inject = [$rootScopeId, $translateId, toasterId, TemplateServiceId];
+    private $inject = [$rootScopeId, $translateId, toasterId, TemplateServiceId, $timeoutId];
     rootScope;
     translate;
     toaster;
@@ -10,13 +10,16 @@ class SummernoteService {
     summernoteLanguage: string;
     summernoteBeforePreviewContent: string;
     previewMode: boolean = false;
+    timeout;
+    currentTimeout;
 
-    constructor($rootScope, $translate, toaster, TemplateService) {
+    constructor($rootScope, $translate, toaster, TemplateService, $timeout) {
         this.rootScope = $rootScope;
         this.translate = $translate;
         this.toaster = toaster;
         this.templateService = TemplateService;
         this.summernoteLanguage = $rootScope.language;
+        this.timeout = $timeout;
     }
 
     resetSummernoteConfiguration() {
@@ -149,22 +152,23 @@ class SummernoteService {
                             + "<i class='fa-spin fa fa-cog'></i>"
                             + "<i class='fa-spin fa-spin-reverse fa fa-cog'></i>"
                             + "<i class='fa-spin fa fa-cog'></i></div><div class='text-center' style='font-size: 1.5em;color: gray; font-weight: bold'>" + self.translate.instant("SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE") + "</div>");
-                        self.addPreviewMode(buttonSelf);
+                        self.addPreviewMode(buttonSelf, context);
                         self.templateService.testTemplate(self.templateService.getCurrentEditTemplate(), new WorkflowTemplateObject(), new Notification()).then(function (result: Notification) {
-                            setTimeout(() => {
+                            self.currentTimeout = self.timeout(function () {
                                 if (self.previewMode === true) {
                                     context.code(result.content);
                                 }
                             }, 600);
                         }).catch(function (error) {
-                            setTimeout(() => {
+                            self.currentTimeout = self.timeout(function () {
                                 context.code(self.summernoteBeforePreviewContent);
-                                self.removePreviewMode(buttonSelf);
+                                self.removePreviewMode(buttonSelf, context);
                                 self.showTemplateErrorMessage(error);
                             }, 600);
                         });
                     } else if (self.previewMode === true) {
-                        self.removePreviewMode(buttonSelf);
+                        self.timeout.cancel(self.currentTimeout);
+                        self.removePreviewMode(buttonSelf, context);
                         context.code(self.summernoteBeforePreviewContent);
                     }
                 }
@@ -178,7 +182,8 @@ class SummernoteService {
         return this.previewMode;
     }
 
-    removePreviewMode(buttonSelf) {
+    removePreviewMode(buttonSelf, context) {
+        context.enable();
         $($(buttonSelf).parent().parent()[0]).find("button.note-btn").each(function () {
             $(this).removeClass("disabled active");
             $(this).attr("disabled", null);
@@ -188,7 +193,8 @@ class SummernoteService {
         this.previewMode = false;
     }
 
-    addPreviewMode(buttonSelf) {
+    addPreviewMode(buttonSelf, context) {
+        context.disable();
         $($(buttonSelf).parent().parent()[0]).find("button.note-btn").each(function () {
             $(this).addClass("disabled");
             $(this).attr("disabled", "disabled");

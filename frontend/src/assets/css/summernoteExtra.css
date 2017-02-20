@@ -13,6 +13,10 @@ height: 30px;
 	min-width: 170px;
 	}
 
+  .note-editable{
+    background-color: white !important;
+  }
+
 	.note-editor .template-dropdown li a:hover{
 		color: #262626;
 		text-decoration: none;
