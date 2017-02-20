@@ -545,7 +545,7 @@ function config($translateProvider) {
             SUMMERNOTE_CUSTOMER_TEMPLATE_BUTTON: "Kundenvariablen",
             SUMMERNOTE_ORDER_TEMPLATE_BUTTON: "Bestellvariablen",
             SUMMERNOTE_USER_TEMPLATE_BUTTON: "Benutzervariablen",
-            SUMMERNOTE_ORDER_LIST: "Bestell liste",
+            SUMMERNOTE_ORDER_LIST: "Bestellliste",
             SUMMERNOTE_REGARDS: "Mit freundlichen Grüßen",
             SUMMERNOTE_SALESTEAM: "Ihr Salesteam",
             SUMMERNOTE_ENDING: "Schlussformel",
