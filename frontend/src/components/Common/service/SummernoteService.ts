@@ -31,6 +31,7 @@ class SummernoteService {
     getDefaultOptions(): any {
         let options = {
             lang: "en-US",
+            maximumImageFileSize: "512000",
             toolbar: [
                 ["edit", ["undo", "redo"]],
                 ["headline", ["style"]],
@@ -57,6 +58,7 @@ class SummernoteService {
         let self = this;
         let options = {
             lang: "en-US",
+            maximumImageFileSize: "512000",
             toolbar: [
                 ["edit", ["undo", "redo"]],
                 ["headline", ["style"]],
@@ -146,6 +148,7 @@ class SummernoteService {
                 contents: "<i class='" + fa + "'/> " + buttonName,
                 click: function () {
                     let buttonSelf = this;
+                    let plainText = $(context.code()).text();
                     if (self.previewMode === false) {
                         self.summernoteBeforePreviewContent = context.code();
                         context.code("<div class='cog-loader'>"
@@ -153,19 +156,27 @@ class SummernoteService {
                             + "<i class='fa-spin fa-spin-reverse fa fa-cog'></i>"
                             + "<i class='fa-spin fa fa-cog'></i></div><div class='text-center' style='font-size: 1.5em;color: gray; font-weight: bold'>" + self.translate.instant("SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE") + "</div>");
                         self.addPreviewMode(buttonSelf, context);
-                        self.templateService.testTemplate(self.templateService.getCurrentEditTemplate(), new WorkflowTemplateObject(), new Notification()).then(function (result: Notification) {
+                        if (plainText !== null && plainText !== undefined && plainText !== "") {
+                            self.templateService.testTemplate(self.templateService.getCurrentEditTemplate(), new WorkflowTemplateObject(), new Notification()).then(function (result: Notification) {
+                                self.currentTimeout = self.timeout(function () {
+                                    if (self.previewMode === true) {
+                                        context.code(result.content);
+                                    }
+                                }, 600);
+                            }).catch(function (error) {
+                                self.currentTimeout = self.timeout(function () {
+                                    context.code(self.summernoteBeforePreviewContent);
+                                    self.removePreviewMode(buttonSelf, context);
+                                    self.showTemplateErrorMessage(error);
+                                }, 600);
+                            });
+                        } else {
                             self.currentTimeout = self.timeout(function () {
                                 if (self.previewMode === true) {
-                                    context.code(result.content);
+                                    context.code(self.summernoteBeforePreviewContent);
                                 }
                             }, 600);
-                        }).catch(function (error) {
-                            self.currentTimeout = self.timeout(function () {
-                                context.code(self.summernoteBeforePreviewContent);
-                                self.removePreviewMode(buttonSelf, context);
-                                self.showTemplateErrorMessage(error);
-                            }, 600);
-                        });
+                        }
                     } else if (self.previewMode === true) {
                         self.timeout.cancel(self.currentTimeout);
                         self.removePreviewMode(buttonSelf, context);
