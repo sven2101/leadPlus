@@ -57,8 +57,8 @@ public class MessageService implements IMessageService {
 
 		final StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
 		cfg.setTemplateLoader(stringTemplateLoader);
+		cfg.setLocale(java.util.Locale.GERMANY);
 		stringTemplateLoader.putTemplate("template", unescapeString(templateWithPlaceholders));
-
 		Template template = cfg.getTemplate("template");
 
 		Map<String, Object> mapping = new HashMap<>();
