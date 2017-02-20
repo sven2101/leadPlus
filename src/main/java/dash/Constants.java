@@ -115,6 +115,9 @@ public final class Constants {
 	public static final String MAIL_SMTP_SSL_TRUST = "mail.smtps.ssl.trust";
 	public static final String MAIL_SMTP_SSL_REPORTSUCCESS = "mail.smtps.reportsuccess";
 
+	public static final String TRUE = "true";
+	public static final String FALSE = "false";
+
 	@Value("${mail.debug}")
 	public void setMailDebug(String debug) {
 		if (debug.equals("true") || debug.equals("false"))
