@@ -133,7 +133,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 controllerAs: "customerDetailCtrl",
                 authenticated: true,
                 package: "basic"
-            }).when("/licences/AGB",
+            }).when("/licences/agb",
             {
                 templateUrl: "components/Licence/view/AGB.html",
                 authenticated: false
