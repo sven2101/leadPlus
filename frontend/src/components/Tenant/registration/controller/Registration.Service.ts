@@ -47,8 +47,6 @@ class RegistrationService {
         let self = this;
         this.tenantResource.uniqueTenantKey(tenant).$promise.then(function (data, headersGetter, status) {
             self.tenantKeyExist = !data.validation;
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
         });
     }
 }

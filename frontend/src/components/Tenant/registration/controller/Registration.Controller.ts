@@ -53,7 +53,9 @@ class RegistrationController {
 
     uniqueTenantKey(): void {
         this.http.defaults.headers.common["X-TenantID"] = this.location.host();
-        this.registrationService.uniqueTenantKey(this.tenant);
+        if (!isNullOrUndefined(this.tenant) && !isNullOrUndefined(this.tenant.tenantKey) && this.tenant.tenantKey.length > 0) {
+            this.registrationService.uniqueTenantKey(this.tenant);
+        }
     }
 
     uniqueEmail(): void {

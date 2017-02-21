@@ -48,7 +48,7 @@ function config($translateProvider) {
             SIGNUP_VALIDATE_USER_TO_SHORT: "Benutzername muss mindestens 2 Zeichen enthalten",
             SIGNUP_VALIDATE_USER_TO_LONG: "Benutzername darf höchstens 20 Zeichen enthalten",
             SIGNUP_VALIDATE_EMAIL_IN_USE: "E-Mail schon vergeben",
-            SIGNUP_VALIDATE_PASSWORD_TO_LONG: "Passwort darf höchstens 20 Zeichen enthalten",
+            SIGNUP_VALIDATE_PASSWORD_TO_LONG: "Passwort darf höchstens 30 Zeichen enthalten",
 
             PROFIL_VALIDATE_PHONE_TO_SHORT: "Telefonnummer muss mindestens 2 Zeichen enthalten",
             PROFIL_VALIDATE_SKYPE_TO_SHORT: "Skype muss mindestens 2 Zeichen enthalten",
@@ -63,6 +63,13 @@ function config($translateProvider) {
             REGISTRATION_VALIDATE_TENANT_EMAIL: "Email",
             REGISTRATION_VALIDATE_PASSWORD_TOO_SHORT: "Subdomain ist zu kurz",
             REGISTRATION_VALIDATE_PASSWORD_TOO_LONG: "Subdomain ist zu lang",
+            REGISTRATION_SUBDOMAIN_GET_FREE_TRIAL: "Holen Sie sich die kostenlose Testversion für lead+",
+            REGISTRATION_SUBDOMAIN_SITE: "Seitenname",
+            REGISTRATION_SUBDOMAIN_YOUR_SITENAME: "Dein Seitenname",
+            REGISTRATION_SUBDOMAIN_AGREEMENT: "Ich stimme den <a href='components/Licence/view/AGB.html' target='_blank'>Nutztungsbedingungen</a> und der <a href='components/Licence/view/Data.Protection.Statement.html' target='_blank'>Datenschutzerklärung</a> zu",
+            REGISTRATION_SUBDOMAIN_AGREEMENT_ACCEPT: "Sie müssen den Nutztungsbedingungen und der Datenschutzerklärung zustimmen",
+            REGISTRATION_SUBDOMAIN_GET_TRIAL_NOW: "JETZT KOSTENLOS TESTEN",
+            REGISTRATION_SUBDOMAIN_TOOLTIP: "Du kannst lead+ nach der Registrierung unter 'deineFirma.leadplus.me' verwenden. Es sind nur Buchstaben für den Seitennamen erlaubt.",
 
 
             // Define common elements
@@ -189,8 +196,8 @@ function config($translateProvider) {
             COMMON_VALIDATE_ALPHANUMERIC: "Es sind nur alphanumerische Zeichen erlaubt",
             COMMON_VALIDATE_EMAIL: "E-Mail ungültig!",
             COMMON_NEW_PASSWORD: "Neues Passwort",
-            COMMON_VALIDATE_PASSWORD_MIN: "Passwort muss mindestens 6 Zeichen lang sein",
-            COMMON_VALIDATE_PASSWORD_MAX: "Passwort darf höchstens 60 Zeichen lang sein",
+            COMMON_VALIDATE_PASSWORD_MIN: "Passwort zu kurz",
+            COMMON_VALIDATE_PASSWORD_MAX: "Passwort zu lang",
             COMMON_VALIDATE_PASSWORD_NOT_MATCH: "Passwörter stimmen nicht überein",
             COMMON_VALIDATE_INVOICE_NUMBER_ALREADY_EXISTS: "Rechnungsnummer existiert bereits",
             COMMON_TOAST_SUCCESS_ADD_LEAD: "Eine neue Anfrage wurde angelegt",
@@ -603,7 +610,7 @@ function config($translateProvider) {
             SIGNUP_VALIDATE_USER_TO_SHORT: "Username has to contain 2 or more characters",
             SIGNUP_VALIDATE_USER_TO_LONG: "Username has to contain 20 or less characters",
             SIGNUP_VALIDATE_EMAIL_IN_USE: "E-Mail already in use",
-            SIGNUP_VALIDATE_PASSWORD_TO_LONG: "Password have to contain 20 or less characters",
+            SIGNUP_VALIDATE_PASSWORD_TO_LONG: "Password have to contain 30 or less characters",
 
             PROFIL_VALIDATE_PHONE_TO_SHORT: "Telefonnummer has to contain 2 or more characters",
             PROFIL_VALIDATE_SKYPE_TO_SHORT: "Skype has to contain 2 or more characters",
@@ -618,6 +625,13 @@ function config($translateProvider) {
             REGISTRATION_VALIDATE_TENANT_EMAIL: "Email",
             REGISTRATION_VALIDATE_PASSWORD_TOO_SHORT: "Subdomain is too short",
             REGISTRATION_VALIDATE_PASSWORD_TOO_LONG: "Subdomain is too long",
+            REGISTRATION_SUBDOMAIN_GET_FREE_TRIAL: "Get your free trial Account for lead+",
+            REGISTRATION_SUBDOMAIN_SITE: "Sitename",
+            REGISTRATION_SUBDOMAIN_YOUR_SITENAME: "Your sitename",
+            REGISTRATION_SUBDOMAIN_AGREEMENT: "I aggree the <a href='components/Licence/view/AGB.html' target='_blank'>terms of use</a> and <a href='components/Licence/view/Data.Protection.Statement.html' target='_blank'>privacy policy</a>",
+            REGISTRATION_SUBDOMAIN_AGREEMENT_ACCEPT: "You need to accept our Terms and Conditions",
+            REGISTRATION_SUBDOMAIN_GET_TRIAL_NOW: "GET TRIAL ACCOUNT NOW",
+            REGISTRATION_SUBDOMAIN_TOOLTIP: "You can access this application afterwards via your choosen sitename 'yourcompany.leadplus.me' for example. You can only use letters.",
 
             // Define common elements
             MR: "Mr.",
@@ -744,8 +758,8 @@ function config($translateProvider) {
             COMMON_VALIDATE_ALPHANUMERIC: "Only alphanumeric characters are allowed",
             COMMON_VALIDATE_EMAIL: "Enter a valid email",
             COMMON_VALIDATE_NEW_PASSWORD: "New password",
-            COMMON_VALIDATE_PASSWORD_MIN: "Password has to be 6 characters long",
-            COMMON_VALIDATE_PASSWORD_MAX: "Password must not exceed 60 characters",
+            COMMON_VALIDATE_PASSWORD_MIN: "Password too short",
+            COMMON_VALIDATE_PASSWORD_MAX: "Password too long",
             COMMON_VALIDATE_PASSWORD_NOT_MATCH: "Password doesn\"t match",
             COMMON_NEW_PASSWORD: "New password",
             COMMON_VALIDATE_INVOICE_NUMBER_ALREADY_EXISTS: "Invoice number already exists",
@@ -1084,7 +1098,7 @@ function config($translateProvider) {
             CALCULATION_VAT: "Value-added tax",
 
             // Tooltip
-            TOOLTIP_SIGN_UP: "Sign up now under your unique tenant domain section to get full acces<br>s. After Sign up your administrator needs to enable your account.",
+            TOOLTIP_SIGN_UP: "Sign up now under your unique tenant domain section to get full access. After Sign up your administrator needs to enable your account.",
             TOOLTIP_TODO: "Via task you can keep all your processes in mind.",
             TOOLTIP_PROFIL_PICTURE: "Select your Profil Picture and press save to keep it. Afterwards it will present you within this Application.",
             TOOLTIP_CUSTOMER_LOOKUP: "From 3 characters the relevant customers will appear.\nYou can search for firstname, lastname, company, e-mail and customernumber.",
