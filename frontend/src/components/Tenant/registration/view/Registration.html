@@ -122,7 +122,7 @@
 
 		<div class="form-group text-center" ng-class="{ 'has-error': validation.contract.$invalid && !validation.contract.$pristine }">
 			<label>
-				<input required type="checkbox" value="true" name="contract" ng-model="registrationCtrl.terms"/> I agree the <a href="components/Licence/view/AGB.html" target="_blank">terms of use</a> and <a href="components/Licence/view/Data.Protection.Statement.html" target="_blank">privacy policy</a>.
+				<input required type="checkbox" value="true" name="contract" ng-model="registrationCtrl.terms"/> I agree to the <a href="#/licences/agb" target="_blank">General Terms and Conditions</a> and <a href="#/licences/DataProtection" target="_blank">privacy policy</a>.
 			</label>
 			<span ng-show="validation.contract.$error.required&&!validation.contract.$pristine" class="help-block">You need to accept our Terms and Conditions.</span>
 			<br/>
