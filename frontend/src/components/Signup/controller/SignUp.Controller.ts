@@ -9,6 +9,8 @@ class SignupController {
 
     signupService: SignupService;
     user: Signup;
+    password1: string;
+    password2: string;
 
     constructor(SignupService) {
         this.signupService = SignupService;
@@ -20,6 +22,8 @@ class SignupController {
     }
 
     signup(): void {
+        this.user.password = this.password1;
+        this.user.password2 = this.password2;
         this.signupService.signup(this.user);
     }
 }

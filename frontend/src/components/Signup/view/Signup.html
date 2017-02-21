@@ -63,7 +63,7 @@ div.loginscreen div.tooltip div.tooltip-inner {
 						<span style="color:red" ng-show="registration.password.$error.maxlength"> {{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
 
 						<input type="password" id="password" name="password" class="form-control" ng-model-options="{ debounce: 600 }" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-							required ng-model="signupCtrl.user.password" ng-minlength="6" ng-maxlength="30">
+							required ng-model="signupCtrl.password1" ng-minlength="6" ng-maxlength="30">
 					</div>
 				</div>
 				<div class="col-md-4">
@@ -75,7 +75,7 @@ div.loginscreen div.tooltip div.tooltip-inner {
 						<span style="color:red" ng-show="registration.password2.$error.maxlength"> {{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
 						<span style="color:red" ng-show="registration.password2.$error.pwmatch && !registration.password2.$pristine &&!registration.password2.$error.minlength &&!registration.password2.$error.maxlength"> {{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</span>
 						<input type="password" id="password2" name="password2" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-							required ng-model="signupCtrl.user.password2" ng-minlength="6" ng-model-options="{ debounce: 600 }" ng-maxlength="30" pw-check="password">
+							required ng-model="signupCtrl.password2" ng-minlength="6" ng-model-options="{ debounce: 600 }" ng-maxlength="30" pw-check="password">
 					</div>
 				</div>
 			</div>
