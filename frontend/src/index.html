@@ -37,6 +37,7 @@
 
 	<div id="wrapper">
 		<toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
+
 		<div id="loginscreen" ng-if="!user">
 			<span id="outer-language" style="visibility:hidden;">
 				<ul class="nav navbar-top-links" style="text-align: right; max-height: 60px;">
@@ -58,9 +59,9 @@
 						</ul>
 					</li>
 				</ul>
-			</span>
-			<div ng-view></div>
+			</span>	
 		</div>
+		<div ng-if="!user" ng-view></div>
 		<div ng-if="user">
 			<div ng-include="'main.html'"></div>
 		</div>
