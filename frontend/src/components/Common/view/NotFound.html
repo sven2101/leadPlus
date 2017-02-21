@@ -7,13 +7,13 @@
     <title>Leadplus+ | 404 Error</title>
 </head>
 <body class="gray-bg">
-    <div class="middle-box text-center animated fadeInDown">
+    <div class="middle-box text-center animated fadeInDown" ng-style="::(!user?{ 'color': 'whitesmoke'}:{ 'color': '#676a6c'} )">
         <h1>404</h1>
-        <h3 class="font-bold">Page Not Found</h3>
+        <h3 class="font-bold">{{'ERROR_PAGE_404_HEADLINE' | translate}}</h3>
 
         <div class="error-desc">
-            Sorry, but the page you are looking for has note been found. Try checking the URL for error, then hit the refresh button on your browser or try found something else in our app.
-             <br/><a href="/#/" class="btn btn-success m-t">Go Back</a>
+             {{'ERROR_PAGE_404_TEXT' | translate}}
+             <br/><a href="/#/" class="btn btn-success m-t">{{'ERROR_PAGE_GO_BACK' | translate}}</a>
         </div>
     </div>
 </body>

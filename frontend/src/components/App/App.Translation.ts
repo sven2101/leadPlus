@@ -565,7 +565,16 @@ function config($translateProvider) {
             SUMMERNOTE_DELIVERY_AT: "am",
             SUMMERNOTE_TEMPLATE_LANGUAGE: "Templatesprache",
             SUMMERNOTE_TEMPLATE_PREVIEW: "Templatevorschau",
-            SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE: "Erstelle Templatevorschau..."
+            SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE: "Erstelle Templatevorschau...",
+
+            // ERROR PAGES
+            ERROR_PAGE_404_HEADLINE: "Seite konnte nicht gefunden werden",
+            ERROR_PAGE_404_TEXT: "Es tut uns leid, aber die Seite konnte nicht gefunden werden. Überprüfe den URL bitte auf Rechtschreibfehler oder versuche eine andere URL.",
+            ERROR_PAGE_401_HEADLINE: "Nicht autorisiert",
+            ERROR_PAGE_401_TEXT: "Du bist nicht befugt diese Seite zu besuchen. Bei Fragen kontaktiere bitte den Administrator.",
+            ERROR_PAGE_403_HEADLINE: "Zugriff verboten",
+            ERROR_PAGE_403_TEXT: "Du bist nicht befugt diese Seite zu besuchen. Bei Fragen kontaktiere bitte den Administrator.",
+            ERROR_PAGE_GO_BACK: "Gehe zurück",
         })
         .translations(Language[Language.EN], {
             // GENERAL
@@ -1127,7 +1136,16 @@ function config($translateProvider) {
             SUMMERNOTE_DELIVERY_AT: "at",
             SUMMERNOTE_TEMPLATE_LANGUAGE: "Template language",
             SUMMERNOTE_TEMPLATE_PREVIEW: "Template preview",
-            SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE: "Generate template preview..."
+            SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE: "Generate template preview...",
+
+            // ERROR PAGES
+            ERROR_PAGE_404_HEADLINE: "Page not found",
+            ERROR_PAGE_404_TEXT: "Sorry, but the page you are looking for has not been found. Try checking the URL for error, then hit the refresh button on your browser or try something else in our app",
+            ERROR_PAGE_401_HEADLINE: "Unauthorized",
+            ERROR_PAGE_401_TEXT: "You are not allowed to visit this site. Please contact your administrator.",
+            ERROR_PAGE_403_HEADLINE: "Forbidden",
+            ERROR_PAGE_403_TEXT: "You are not allowed to visit this site. Please contact your administrator.",
+            ERROR_PAGE_GO_BACK: "Go back",
         });
     $translateProvider.useSanitizeValueStrategy(null);
     $translateProvider.preferredLanguage(Language[Language.EN]);
