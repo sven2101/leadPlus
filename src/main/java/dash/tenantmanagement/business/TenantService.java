@@ -48,6 +48,7 @@ public class TenantService implements ITenantService {
 
 	private static final String SPRING_PROFILE_PRODUCTION = "production";
 	private static final String SPRING_PROFILE_DEVELOPMENT = "development";
+	private static final String SPRING_PROFILE_LOCAL = "local";
 	private static final String SPRING_PROFILE_TEST = "test";
 	private static final String RESOURCE_RECORD_SET_CNAME = "CNAME";
 	private static final String WWW = "www";
@@ -89,7 +90,8 @@ public class TenantService implements ITenantService {
 			Validation tenantNotExists = uniqueTenantKey(tenant);
 			if (tenantNotExists.isValidation()) {
 				if (springProfileActive.equals(SPRING_PROFILE_DEVELOPMENT)
-						|| springProfileActive.equals(SPRING_PROFILE_TEST)) {
+						|| springProfileActive.equals(SPRING_PROFILE_TEST)
+						|| springProfileActive.equals(SPRING_PROFILE_LOCAL)) {
 					createSchema(tenant);
 					tenantRepository.save(tenant);
 					logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
