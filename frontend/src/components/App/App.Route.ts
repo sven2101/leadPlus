@@ -133,7 +133,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 controllerAs: "customerDetailCtrl",
                 authenticated: true,
                 package: "basic"
-            }).when("/licences/AGB",
+            }).when("/licences/agb",
             {
                 templateUrl: "components/Licence/view/AGB.html",
                 authenticated: false
@@ -141,9 +141,9 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
             {
                 templateUrl: "components/Licence/view/Licence.html",
                 authenticated: false
-            }).when("/licences/DataProtection",
+            }).when("/licences/PrivacyPolicy",
             {
-                templateUrl: "components/Licence/view/Data.Protection.Statement.html",
+                templateUrl: "components/Licence/view/Privacy.Policy.html",
                 authenticated: false
             })
             .when("/licences/SLA",

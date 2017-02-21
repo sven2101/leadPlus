@@ -101,9 +101,9 @@ div.loginscreen div.tooltip div.tooltip-inner {
 			<span style="color:red" ng-show="validation.password.$error.maxlength"> {{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
 			<div class="form-group" ng-class="{ 'has-error': validation.password.$invalid}">
 				<input type="password" id="password" name="password" ng-model-options="{ debounce: 600 }" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-					required ng-model="registrationCtrl.user.password" ng-minlength="6" ng-maxlength="20">
+					required ng-model="registrationCtrl.password1" ng-minlength="6" ng-maxlength="20">
 			</div>
-		</div>
+		</div> 
 	</div>
 
 	<!-- Password Confirm -->
@@ -116,7 +116,7 @@ div.loginscreen div.tooltip div.tooltip-inner {
 			<span style="color:red" ng-show="validation.password2.$error.pwmatch && !validation.password2.$pristine &&!validation.password2.$error.minlength &&!validation.password2.$error.maxlength"> {{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</span>
 			<div class="form-group" ng-class="{ 'has-error': validation.password2.$invalid}">
 				<input type="password" id="password2" name="password2" class="form-control" ng-model-options="{ debounce: 600 }" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-					required ng-model="registrationCtrl.user.password2" ng-minlength="6" ng-maxlength="20" pw-check="password">
+					required ng-model="registrationCtrl.password2" ng-minlength="6" ng-maxlength="20" pw-check="password">
 			</div>
 		</div>
 	</div>
