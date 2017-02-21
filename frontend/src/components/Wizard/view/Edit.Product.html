@@ -110,7 +110,7 @@
 		</div>
 		</div>
 		<div class="row">
-			<div class="col-sm-6 text-right">
+			<div class="col-sm-5 text-right">
 				<h3 ng-if="isOffer() || isSale() || isInOfferTransformation() "><b>	{{ 'CALCULATION_VAT'| translate }}:</b></h3>
 			</div>
 			<div class="col-sm-2 text-left">
@@ -122,7 +122,7 @@
 			<div class="col-sm-2 text-right">
 				<h3><b>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}:</b></h3>
 			</div>
-			<div class="col-sm-2 text-left">
+			<div class="col-sm-3 text-left">
 				<h3 ng-if="isLead() && !isInOfferTransformation()"><b>{{sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</b>&nbsp;<a tooltip-class="customClass"
 							uib-tooltip-template="'components/Wizard/view/Price.Calculation.Template.html'"><i class="fa fa-info-circle"></i></a></h3>
 				<div ng-if="isOffer() || isSale() || isInOfferTransformation() " class="form-group" ng-class="{ 'has-error' : pform.netPrice.$invalid&& !pform.netPrice.$pristine } ">
@@ -137,10 +137,10 @@
 		</div>
 		<div class="row" ng-if="isOffer() || isSale() || isInOfferTransformation() ">
 			<div class="col-sm-2 text-left"></div>
-			<div class="col-sm-8 text-right">
+			<div class="col-sm-7 text-right">
 				<h3><b>{{ 'PRODUCT_GROSS_PRICE' | translate }}:</b></h3>
 			</div>
-			<div class="col-sm-2 text-left">
+			<div class="col-sm-3 text-left">
 				<h3><b>{{editProcess.offer.netPrice*(1+(editProcess.offer.vat/100))|currency:'\u20AC'}}</b>&nbsp;<a tooltip-class="customClass"
 						uib-tooltip-template="'components/Wizard/view/Price.Calculation.Template.html'"><i class="fa fa-info-circle"></i></a></h3>
 			</div>

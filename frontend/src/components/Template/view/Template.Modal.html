@@ -76,9 +76,9 @@
 	<div class="modal-footer ">
 		<button type="button " class="btn btn-white " data-dismiss="modal " ng-click="templateCtrl.close()">{{ 'COMMON_CANCEL'| translate }}
 			</button>
-		<button type="button " class="btn btn-warning " ng-disabled="templateCtrl.isTemplateInPreviewMode()" ng-click="templateCtrl.testSyntax()">{{ 'SETTING_TEMPLATE_TEST_SYNTAX'| translate }}
+		<button type="button " class="btn btn-warning " ng-disabled="templateCtrl.isTemplateInPreviewMode() || createTemplate.$invalid" ng-click="templateCtrl.testSyntax()">{{ 'SETTING_TEMPLATE_TEST_SYNTAX'| translate }}
 			</button>
-		<button type="submit " class="btn btn-success " ng-disabled="templateCtrl.isTemplateInPreviewMode() || createTemplate.$invalid " ng-click="templateCtrl.save() " data-dismiss="modal ">{{ 'COMMON_SAVE'| translate }}
+		<button type="submit " class="btn btn-success " ng-disabled="templateCtrl.isTemplateInPreviewMode() || createTemplate.$invalid" ng-click="templateCtrl.save() " data-dismiss="modal ">{{ 'COMMON_SAVE'| translate }}
 			</button>
 	</div>
 </form>
