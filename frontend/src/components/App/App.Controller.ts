@@ -12,7 +12,7 @@ const broadcastUserNotificationChanged: string = "userNotificationChanged";
 
 class AppController {
 
-    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId];
+    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId, $windowId];
 
     translate;
     rootScope;
@@ -20,6 +20,7 @@ class AppController {
     location;
     processResource;
     userResource;
+    window;
     stop;
     todos: Array<Process> = [];
     userNotifications: Array<Notification> = [];
@@ -28,7 +29,7 @@ class AppController {
     profileService: ProfileService;
     rendered: boolean = false;
 
-    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService) {
+    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService, $window) {
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.interval = $interval;
@@ -37,13 +38,12 @@ class AppController {
         this.profileService = ProfileService;
         this.rootScope.leadsCount = 0;
         this.location = $location;
+        this.window = $window;
 
         this.rootScope.offersCount = 0;
         this.stop = undefined;
 
         this.setCurrentUserPicture();
-
-
         this.registerLoadLabels();
         this.rootScope.loadLabels();
         this.registerChangeLanguage();
@@ -137,6 +137,10 @@ class AppController {
                     }).$promise.then(function (result) {
                         self.rootScope.changeLanguage(result.language);
                     });
+            }
+            else {
+                let lang: string = self.window.navigator.language || self.window.navigator.userLanguage;
+                self.rootScope.changeLanguage(lang.toUpperCase());
             }
         };
     }

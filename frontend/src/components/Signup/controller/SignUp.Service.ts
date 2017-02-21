@@ -2,21 +2,6 @@
 /// <reference path="../../Signup/model/Signup.Model.ts" />
 /// <reference path="../../app/App.Common.ts" />
 
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
-
 const SignupServiceId: string = "SignupService";
 
 class SignupService {
@@ -63,6 +48,7 @@ class SignupService {
         this.signupResource.signup(user).$promise.then(function (createdUser: User) {
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
             defer.resolve(createdUser);
+            self.location.path("/login");
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
             defer.reject(null);

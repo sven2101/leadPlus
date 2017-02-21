@@ -27,16 +27,40 @@
 			-webkit-appearance: none;
 			margin: 0;
 		}
+		#outer-language ul.nav .open > a, ul.nav .open > a:hover, ul.nav .open > a:focus{
+			background: transparent !important;
+		}
 	</style>
-
-
 </head>
 
 <body ng-controller="AppController as appCtrl">
 
 	<div id="wrapper">
 		<toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
-		<div ng-if="!user" ng-view></div>
+		<div id="loginscreen" ng-if="!user">
+			<span id="outer-language" style="visibility:hidden;">
+				<ul class="nav navbar-top-links" style="text-align: right; max-height: 60px;">
+					<li class="dropdown">
+						<a class="dropdown-toggle count-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span style="color:whitesmoke;">{{ 'LANGUAGE' | translate }}<b class="caret"></b></span>
+						</a>
+						<ul class="dropdown-menu animated fadeInRight m-t-xs ng-scope" style="position:relative;">
+							<li>
+								<a ng-click="changeLanguage('DE')">
+									<img alt="image" class="img-thumbnail" src="assets/img/flags/16/Germany.png">&nbsp;&nbsp;Deutsch (de)
+								</a>
+							</li>
+							<li>
+								<a ng-click="changeLanguage('EN')">
+									<img alt="image" class="img-thumbnail" src="assets/img/flags/16/United-States.png">&nbsp;&nbsp;English (en)
+								</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</span>
+			<div ng-view></div>
+		</div>
 		<div ng-if="user">
 			<div ng-include="'main.html'"></div>
 		</div>
@@ -63,6 +87,12 @@
 	<!-- angular app -->
 	<script src="assets/angular.js"></script>
 
+	<script>
+	   $(document).ready(function () {
+        $('#outer-language').css("visibility","visible");
+    });
+	
+	</script>
 
 
 </body>
