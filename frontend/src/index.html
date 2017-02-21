@@ -34,7 +34,9 @@
 </head>
 
 <body ng-controller="AppController as appCtrl">
-
+	<div id="loading-pane-overlay">
+			<div class="loader"></div>
+	</div>
 	<div id="wrapper">
 		<toaster-container toaster-options="{'time-out': 3000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
 
@@ -87,15 +89,5 @@
 
 	<!-- angular app -->
 	<script src="assets/angular.js"></script>
-
-	<script>
-	   $(document).ready(function () {
-        $('#outer-language').css("visibility","visible");
-    });
-	
-	</script>
-
-
 </body>
-
 </html>
