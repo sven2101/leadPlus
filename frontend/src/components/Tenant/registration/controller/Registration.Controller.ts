@@ -34,6 +34,8 @@ class RegistrationController {
 
     credentials: Credentials;
     tenant: Tenant;
+    password1: string;
+    password2: string;
     user: Signup;
 
     http;
@@ -64,6 +66,10 @@ class RegistrationController {
 
     register(): void {
         let self = this;
+
+        this.user.password = this.password1;
+        this.user.password2 = this.password2;
+
         this.tenant.license.term = newTimestamp();
         this.tenant.license.trial = true;
         this.tenant.license.licenseType = "BASIC";
