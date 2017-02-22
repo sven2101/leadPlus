@@ -45,7 +45,6 @@ class TenantService {
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
             defer.resolve(tenant);
         }, function (error) {
-            console.log("ERRRPR: ", error);
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
             defer.reject(null);
         });
