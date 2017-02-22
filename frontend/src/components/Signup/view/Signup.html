@@ -1,19 +1,16 @@
 <style>
-div.loginscreen div.tooltip div.tooltip-inner {
+div.tooltip div.tooltip-inner {
 		width: 300px;
 		max-width: 300px;
         }
 </style>
-<div class="text-center loginscreen">
-	<div>
-		<h1 class="logo-name">{{ 'LOGO' | translate }}</h1>
-	</div>
+<div class="middle-box text-center" style="margin-top: -40px;">
+	<h1 class="logo-name animated fadeInDown" style="color:white">{{ 'LOGO' | translate }}</h1>
 	<h3 class="animated fadeInDown" style="color: white">{{ 'SIGNUP_REGISTER_WELCOME' | translate }}</h3>
 	<i class="fa fa-question-circle animated fadeInDown" style="font-size: 2em; color: white;" tooltip-placement="right" uib-tooltip="{{ 'TOOLTIP_SIGN_UP' | translate }}" ></i>
 	<br/>
 	<br/>
 </div>
-
 <div class="row animated fadeInDown">
 	<div class="col-md-6 col-md-offset-4">
 		<form name="registration">

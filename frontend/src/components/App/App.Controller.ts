@@ -55,8 +55,6 @@ class AppController {
             this.todos = result;
         });
 
-
-
         let broadcastAddNotificationListener = $scope.$on(broadcastAddNotification, (event, notification: Notification) => {
             this.userNotifications.push(notification);
         });
@@ -78,8 +76,17 @@ class AppController {
             broadcastUserNotificationChangedListener();
         });
 
-
-
+        angular.element(document).ready(function () {
+            $(document.getElementById("outer-language")).css("visibility", "visible");
+            setTimeout(function () {
+                $rootScope.documentLoaded = true;
+                $(window).trigger("resize");
+                $(document.getElementById("loading-pane-overlay")).addClass("loading-pane-fade-out");
+                setTimeout(function () {
+                    $(document.getElementById("loading-pane-overlay")).children().removeClass("loader");
+                }, 500);
+            }, 500);
+        });
     }
 
 
