@@ -5063,13 +5063,18 @@ div#loginscreen
     transition: visibility 0s 0.75s, opacity 0.75s linear;
     }
 
+    .loading-pane-show{
+    visibility: visible !important;
+    opacity: 1 !important;
+    }
+
 .loader {
   font-size: 6px;
   text-indent: -9999em;
   width: 11em;
   height: 11em;
   margin-top: 35vh;
-  margin-left: calc(50% - 5.5em);
+  margin-left: calc(50vw - 5.5em);
   border-radius: 50%;
   background: #1c84c6;
   background: -moz-linear-gradient(left, #1c84c6 10%, rgba(0,0,255, 0) 42%);

@@ -30,6 +30,10 @@
     </div>
 </div>
 <div class="modal-footer ">
+        <button ng-if="currentWizard.showSaveButton" type="button " class="btn btn-success " style="float:left;" ng-disabled="step==1"
+        ng-click="back()">{{ 'COMMON_BACK'| translate }}</button>
+            <button ng-if="currentWizard.showSaveButton" type="button " class="btn btn-success " style="float:left;" ng-disabled="!allowToContinue()"
+        ng-click="continue()">{{ 'COMMON_NEXT'| translate }}</button>
     <button type="button " class="btn btn-white " ng-click="close(false)">{{ 'COMMON_CANCEL'| translate }}</button>
     <button ng-if="currentWizard.showSaveButton" type="button " class="btn btn-success " ng-disabled="isAnyFormInvalid()"
         ng-click="saveOrTransform()">{{ 'COMMON_SAVE'| translate }}</button>

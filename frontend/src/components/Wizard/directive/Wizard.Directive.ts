@@ -49,8 +49,9 @@ class WizardDirective implements IDirective {
         scope.step = 1;
         scope.currentWizard;
 
-
-
+        scope.back = () => this.back(scope);
+        scope.continue = () => this.continue(scope);
+        scope.allowToContinue = () => this.allowToContinue(scope);
         scope.close = (result: boolean, process: Process) => this.close(result, process, scope);
         scope.transformWorkflow = () => this.transformWorkflow(scope);
         scope.save = () => this.save(scope);
@@ -96,6 +97,40 @@ class WizardDirective implements IDirective {
             scope.currentNotification.notificationType = scope.getNotificationType();
         }
     };
+
+    back(scope: any) {
+        if (scope.step > 1) {
+            let wizardELement = this.getWizardByPosition(scope.step - 1, scope.wizardElements);
+            if (wizardELement !== null && !wizardELement.isDisabled && wizardELement.isVisible) {
+                scope.step -= 1;
+                scope.currentWizard = this.getWizardByPosition(scope.step, scope.wizardElements);
+            }
+        }
+
+    }
+
+    continue(scope: any) {
+        let wizardELement = this.getWizardByPosition(scope.step + 1, scope.wizardElements);
+        if (wizardELement !== null && !wizardELement.isDisabled && wizardELement.isVisible) {
+            scope.step += 1;
+            scope.currentWizard = wizardELement;
+        }
+
+    }
+
+    getWizardByPosition(position: number, wizardElements: Array<WizardButtonConfig>): WizardButtonConfig {
+        for (let wizardElement of wizardElements) {
+            if (wizardElement.position === position) {
+                return wizardElement;
+            }
+        }
+        return null;
+    }
+
+    allowToContinue(scope: any) {
+        let wizardELement = this.getWizardByPosition(scope.step + 1, scope.wizardElements);
+        return wizardELement !== null && !wizardELement.isDisabled && wizardELement.isVisible;
+    }
 
     getWizardConfigByTransclusion(wizardConfig: Array<WizardButtonConfig>, transclusion: any): WizardButtonConfig {
         for (let buttonConfig of wizardConfig) {

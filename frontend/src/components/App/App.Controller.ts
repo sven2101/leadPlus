@@ -12,7 +12,7 @@ const broadcastUserNotificationChanged: string = "userNotificationChanged";
 
 class AppController {
 
-    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId, $windowId];
+    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId, $windowId, $timeoutId];
 
     translate;
     rootScope;
@@ -22,6 +22,7 @@ class AppController {
     userResource;
     window;
     stop;
+    timeout;
     todos: Array<Process> = [];
     userNotifications: Array<Notification> = [];
     notificationSendState: NotificationSendState = NotificationSendState.DEFAULT;
@@ -29,7 +30,7 @@ class AppController {
     profileService: ProfileService;
     rendered: boolean = false;
 
-    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService, $window) {
+    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService, $window, $timeout) {
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.interval = $interval;
@@ -39,6 +40,7 @@ class AppController {
         this.rootScope.leadsCount = 0;
         this.location = $location;
         this.window = $window;
+        this.timeout = $timeout;
 
         this.rootScope.offersCount = 0;
         this.stop = undefined;
@@ -87,6 +89,12 @@ class AppController {
                 }, 750);
             }, 1000);
         });
+    }
+
+    setTopbarNotificationState(state: NotificationSendState) {
+        this.timeout(() => {
+            this.notificationSendState = state;
+        }, 200);
     }
 
     navigateTo(todo: Process) {
