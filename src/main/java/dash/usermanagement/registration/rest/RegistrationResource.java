@@ -14,6 +14,8 @@
 
 package dash.usermanagement.registration.rest;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +32,7 @@ import dash.exceptions.SaveFailedException;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.registration.domain.Registration;
 import dash.usermanagement.registration.domain.Validation;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
@@ -40,13 +43,14 @@ public class RegistrationResource {
 	private UserService userService;
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Object> register(@RequestBody final Registration registration) {
+	@ApiOperation(value = "Post a User. ", notes = "")
+	public ResponseEntity<?> register(@RequestBody @Valid final Registration registration) {
 		try {
 			return new ResponseEntity<Object>(userService.register(registration), HttpStatus.CREATED);
 		} catch (EmailAlreadyExistsException eaeex) {
-			return new ResponseEntity<Object>(eaeex.getMessage(), HttpStatus.CONFLICT);
+			return new ResponseEntity<>(eaeex.getMessage(), HttpStatus.CONFLICT);
 		} catch (RegisterFailedException rfex) {
-			return new ResponseEntity<Object>(rfex.getMessage(), HttpStatus.CONFLICT);
+			return new ResponseEntity<>(rfex.getMessage(), HttpStatus.CONFLICT);
 		}
 	}
 

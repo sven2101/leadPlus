@@ -54,7 +54,6 @@ class RegistrationController {
     }
 
     uniqueTenantKey(): void {
-        this.http.defaults.headers.common["X-TenantID"] = this.location.host();
         if (!isNullOrUndefined(this.tenant) && !isNullOrUndefined(this.tenant.tenantKey) && this.tenant.tenantKey.length > 0) {
             this.registrationService.uniqueTenantKey(this.tenant);
         }
@@ -79,7 +78,6 @@ class RegistrationController {
         this.credentials.password = this.user.password;
         this.credentials.tenant = this.tenant.tenantKey + "." + this.location.host();
 
-        self.http.defaults.headers.common["X-TenantID"] = this.location.host();
         this.tenantService.save(this.tenant).then(function (createdTenant: Tenant) {
             self.http.defaults.headers.common["X-TenantID"] = self.credentials.tenant;
             self.signupService.signup(self.user).then(function (createdUser: User) {

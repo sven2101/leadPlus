@@ -24,7 +24,7 @@ public class License {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "license_auto_gen")
 	@SequenceGenerator(name = "license_auto_gen", sequenceName = "public.license_id_seq", allocationSize = 1)
 	@Column(name = "id", nullable = false)
-	private long id;
+	private Long id;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -41,11 +41,11 @@ public class License {
 
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -111,6 +111,5 @@ public class License {
 	public String toString() {
 		return "License [id=" + id + ", licenseType=" + licenseType + ", term=" + term + ", trial=" + trial + "]";
 	}
-	
-	
+
 }

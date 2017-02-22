@@ -11,22 +11,22 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.tenantmanagement.business;
+package dash.exceptions;
 
-import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import dash.exceptions.NotFoundException;
-import dash.exceptions.TenantAlreadyExistsException;
-import dash.tenantmanagement.domain.Tenant;
-import dash.usermanagement.registration.domain.Validation;
+@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Tenant already Exists")
+public class TenantAlreadyExistsException extends Exception {
 
-public interface ITenantService {
+	private static final long serialVersionUID = 3201696999550610713L;
 
-	public Tenant createNewTenant(final Tenant tenant) throws TenantAlreadyExistsException;
+	public TenantAlreadyExistsException(String msg, Throwable t) {
+		super(msg, t);
+	}
 
-	public Tenant getTenantByName(final String name) throws NotFoundException;
+	public TenantAlreadyExistsException(String msg) {
+		super(msg);
+	}
 
-	public Validation uniqueTenantKey(final Tenant tenant);
-
-	public List<Tenant> getAllTenants();
 }
