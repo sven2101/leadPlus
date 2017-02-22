@@ -76,20 +76,18 @@ class AppController {
             broadcastUserNotificationChangedListener();
         });
 
-        angular.element(document).ready(function () {
+        $scope.$on("$viewContentLoaded", function () {
             $(document.getElementById("outer-language")).css("visibility", "visible");
+            $rootScope.documentLoaded = true;
             setTimeout(function () {
-                $rootScope.documentLoaded = true;
                 $(window).trigger("resize");
                 $(document.getElementById("loading-pane-overlay")).addClass("loading-pane-fade-out");
                 setTimeout(function () {
                     $(document.getElementById("loading-pane-overlay")).children().removeClass("loader");
-                }, 500);
-            }, 500);
+                }, 750);
+            }, 1000);
         });
     }
-
-
 
     navigateTo(todo: Process) {
         if (todo.status === "OPEN" || todo.status === "INCONTACT") {
