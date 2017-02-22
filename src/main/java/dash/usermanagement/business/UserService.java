@@ -91,8 +91,8 @@ public class UserService implements IUserService {
 	}
 
 	public User getUserByEmail(final String email) throws NotFoundException {
-		if (Optional.ofNullable(email).isPresent()) {
-			return userRepository.findByEmailIgnoreCase(email);
+		if (email != null) {
+			return userRepository.findByEmailIgnoreCase(email).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 		} else {
 			NotFoundException cnfex = new NotFoundException(USER_NOT_FOUND);
 			logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
@@ -102,7 +102,7 @@ public class UserService implements IUserService {
 
 	public User checkEmailExists(final String email) {
 		if (email != null) {
-			return userRepository.findByEmailIgnoreCase(email);
+			return userRepository.findByEmailIgnoreCase(email).orElse(null);
 		}
 		return null;
 	}
@@ -362,6 +362,10 @@ public class UserService implements IUserService {
 		api.setLanguage(Language.EN);
 		api.setDefaultVat(19.00);
 		this.save(api);
+	}
+
+	public Optional<User> loadUserByEmail(String email) {
+		return userRepository.findByEmailIgnoreCase(email);
 	}
 
 }

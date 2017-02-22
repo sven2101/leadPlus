@@ -21,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,10 +31,11 @@ import dash.tenantmanagement.business.TenantContext;
 
 public class TenantAuthenticationFilter extends OncePerRequestFilter {
 
+	@Autowired
 	public TenantAuthenticationProvider authProvider;
 
-	public TenantAuthenticationFilter(TenantAuthenticationProvider authProvider) {
-		this.authProvider = authProvider;
+	public TenantAuthenticationFilter() {
+
 	}
 
 	@Override

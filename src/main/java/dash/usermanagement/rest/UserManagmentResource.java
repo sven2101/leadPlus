@@ -47,7 +47,8 @@ import dash.usermanagement.settings.password.PasswordChange;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/api/rest/user", consumes = { MediaType.ALL_VALUE }, produces = {
+		MediaType.APPLICATION_JSON_VALUE })
 public class UserManagmentResource {
 
 	@Autowired
@@ -153,6 +154,14 @@ public class UserManagmentResource {
 	@ApiOperation(value = "Get Smtp by UserId.", notes = "Provide a valid user ID.")
 	public Smtp getSmtpByUserId(@PathVariable final long id) {
 		return smtpService.findByUserId(id);
+
+	}
+
+	@RequestMapping(value = "/email", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get User by email.", notes = "Provide a valid user email.")
+	public User getSmtpByUserId(@RequestBody final String email) {
+		return userService.getUserByEmail(email);
 
 	}
 
