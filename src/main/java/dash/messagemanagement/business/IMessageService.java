@@ -20,6 +20,7 @@ import dash.exceptions.NotFoundException;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.notificationmanagement.domain.Notification;
 import dash.templatemanagement.domain.WorkflowTemplateObject;
+import dash.usermanagement.domain.User;
 import freemarker.template.TemplateException;
 
 public interface IMessageService {
@@ -29,7 +30,7 @@ public interface IMessageService {
 	String getSubject();
 
 	AbstractMessage getMessageContent(final WorkflowTemplateObject workflowTemplateObject,
-			String templateWithPlaceholders, final Notification notification)
+			String templateWithPlaceholders, final Notification notification, final User user)
 			throws IOException, NotFoundException, TemplateException;
 
 }

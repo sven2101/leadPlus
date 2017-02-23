@@ -143,23 +143,23 @@ class UserResource {
     resource: any;
 
     constructor($resource) {
-        this.resource = $resource("/users/:id", {}, {
-            getById: { url: "/users/:id", method: "GET" },
-            update: { url: "/users", method: "PUT" },
-            changePassword: { url: "/users/:id/pw", method: "POST" },
+        this.resource = $resource("/api/rest/users/:id", {}, {
+            getById: { url: "/api/rest/users/:id", method: "GET" },
+            update: { url: "/api/rest/users", method: "PUT" },
+            changePassword: { url: "/api/rest/users/:id/pw", method: "POST" },
             setProfilePicture2: {
-                url: "/users/:id/profile/picture", params: { file: "@file" }, method: "POST", transformRequest: angular.identity,
+                url: "/api/rest/users/:id/profile/picture", params: { file: "@file" }, method: "POST", transformRequest: angular.identity,
                 headers: { "Content-Type": undefined }
             },
             setProfilePicture: {
-                url: "/users/profile/picture", method: "POST"
+                url: "/api/rest/users/profile/picture", method: "POST"
             },
             getProfilePicture: {
-                url: "/users/:id/profile/picture/object", method: "GET"
+                url: "/api/rest/users/:id/profile/picture/object", method: "GET"
             },
-            getAll: { url: "/users/all", method: "GET", isArray: true },
-            // setSmtpConnection: { url: "/users/:id/smtps", method: "POST" }
-            getByEmail: { url: "/api/rest/user/email", method: "POST" }
+            getAll: { url: "/api/rest/users", method: "GET", isArray: true },
+            // setSmtpConnection: { url: "/api/rest/users/:id/smtps", method: "POST" }
+            getByEmail: { url: "/api/rest/users/email", method: "POST" }
         });
     }
 }

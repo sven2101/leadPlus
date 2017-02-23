@@ -6,6 +6,7 @@
 
 const AuthServiceId: string = "AuthService";
 
+
 class AuthService {
 
     $inject = [$httpId, $rootScopeId, $cookiesId, $locationId, $windowId, UserResourceId, $injectorId, $qId, TokenServiceId];
@@ -36,8 +37,6 @@ class AuthService {
         if (credentials) {
             let salt: string = credentials.email;
             let hashedPassword = hashPasswordPbkdf2(credentials.password, salt);
-            let authorization = btoa(credentials.email + ":" + hashedPassword);
-            let header = credentials ? { Authorization: "Basic " + authorization } : {};
             await this.TokenService.setTokenByCredentials({ username: credentials.email, password: hashedPassword });
             let user = await this.userResource.getByEmail(credentials.email).$promise;
             console.log(user);
@@ -53,7 +52,6 @@ class AuthService {
                     language: user.language,
                     defaultVat: user.defaultVat,
                     smtpKey: encodeURIComponent(hashPasswordPbkdf2(hashedPassword, salt)),
-                    authorization: authorization,
                     picture: user.picture,
                     thumbnail: user.thumbnail
                 };
@@ -65,6 +63,7 @@ class AuthService {
                         trial: false
                     }
                 };
+                localStorage.setItem(USER_STORAGE, JSON.stringify(this.rootScope.user));
 
                 if (!hasLicense(this.rootScope.tenant.license, "basic")) {
                     alert("Lizenz abgelaufen am: " + this.rootScope.tenant.license.term);
@@ -83,11 +82,14 @@ class AuthService {
         }
     }
 
-    logout() {
-        this.TokenService.logout();
+    logout(fullPageReload: boolean = true) {
+        this.TokenService.logout(fullPageReload);
     }
     isLoggedIn(): boolean {
         return this.TokenService.isLoggedIn();
+    }
+    async awaitInit(): Promise<void> {
+        await this.TokenService.awaitInit();
     }
 
 }

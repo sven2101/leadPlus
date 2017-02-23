@@ -40,6 +40,7 @@ import dash.notificationmanagement.domain.Notification;
 import dash.processmanagement.domain.Process;
 import dash.templatemanagement.domain.Template;
 import dash.templatemanagement.domain.WorkflowTemplateObject;
+import dash.usermanagement.domain.User;
 import freemarker.template.TemplateException;
 
 @Service
@@ -126,17 +127,19 @@ public class TemplateService implements ITemplateService {
 
 	@Override
 	public AbstractMessage getMessageContent(final long templateId, final WorkflowTemplateObject workflowTemplateObject,
-			final Notification notification) throws NotFoundException, IOException, TemplateCompilationException {
-		return getMessageContentByTemplate(getById(templateId), workflowTemplateObject, notification);
+			final Notification notification, final User user)
+			throws NotFoundException, IOException, TemplateCompilationException {
+		return getMessageContentByTemplate(getById(templateId), workflowTemplateObject, notification, user);
 	}
 
 	@Override
 	public AbstractMessage getMessageContentByTemplate(final Template template,
-			final WorkflowTemplateObject workflowTemplateObject, final Notification notification)
+			final WorkflowTemplateObject workflowTemplateObject, final Notification notification, final User user)
 			throws NotFoundException, IOException, TemplateCompilationException {
 		if (workflowTemplateObject != null && template != null) {
 			try {
-				return messageService.getMessageContent(workflowTemplateObject, template.getContent(), notification);
+				return messageService.getMessageContent(workflowTemplateObject, template.getContent(), notification,
+						user);
 			} catch (NotFoundException ex) {
 				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw ex;

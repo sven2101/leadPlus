@@ -19,12 +19,12 @@ const WorkflowDatatableServiceId: string = "WorkflowDatatableService";
 
 class WorkflowDatatableService {
 
-    private $inject = [$rootScopeId, $compileId];
+    private $inject = [$rootScopeId, $compileId, TokenServiceId];
 
     rootScope;
     compile;
 
-    constructor($rootScope, $compile) {
+    constructor($rootScope, $compile, private TokenService: TokenService) {
         this.rootScope = $rootScope;
         this.compile = $compile;
     }
@@ -119,8 +119,7 @@ class WorkflowDatatableService {
                     handleError(xhr);
                 },
                 "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
+                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
                 }
             };
         } else {
@@ -131,8 +130,7 @@ class WorkflowDatatableService {
                 },
                 type: "GET",
                 "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
+                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
                 }
             };
         }

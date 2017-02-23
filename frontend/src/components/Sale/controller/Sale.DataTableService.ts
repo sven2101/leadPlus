@@ -20,7 +20,7 @@ const openDataSaleRoute: string = "/api/rest/processes/sales/latest/50";
 
 class SaleDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId, TokenServiceId];
 
     workflowService: WorkflowService;
     workflowDatatableService: WorkflowDatatableService;
@@ -33,7 +33,7 @@ class SaleDataTableService implements IDatatableService {
     compile;
     rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService, private TokenService: TokenService) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -54,8 +54,7 @@ class SaleDataTableService implements IDatatableService {
                 },
                 type: "GET",
                 "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
+                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
                 }
             })
             .withOption("stateSave", false)

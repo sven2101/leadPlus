@@ -133,7 +133,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 controllerAs: "customerDetailCtrl",
                 authenticate: true,
                 package: "basic"
-            }).when("/licences/AGB",
+            }).when("/licences/agb",
             {
                 templateUrl: "components/Licence/view/AGB.html",
                 authenticate: false
@@ -141,9 +141,9 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
             {
                 templateUrl: "components/Licence/view/Licence.html",
                 authenticate: false
-            }).when("/licences/DataProtection",
+            }).when("/licences/PrivacyPolicy",
             {
-                templateUrl: "components/Licence/view/Data.Protection.Statement.html",
+                templateUrl: "components/Licence/view/Privacy.Policy.html",
                 authenticate: false
             })
             .when("/licences/SLA",
@@ -174,8 +174,6 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 "request": async (request) => {
                     if (request.url.substr(request.url.length - 5) !== ".html") {
                         request.headers["X-Authorization"] = "Bearer " + await TokenService.getAccessToken();
-
-                        // console.log(request);
                     }
                     return request;
                 },
@@ -205,10 +203,15 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
 
     }])
     .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId, $windowId, $qId,
-        function ($location, $http, $rootScope, AuthService: AuthService, $cookies, $injector, $window, $q) {
+        async function ($location, $http, $rootScope, AuthService: AuthService, $cookies, $injector, $window, $q) {
             // TODO Workaround for native promises!!!
             $window.Promise = $q;
-            if (!isNullOrUndefined($rootScope.user) && !isNullOrUndefined($rootScope.tenant)) {
+            await AuthService.awaitInit();
+            let localStorageUserString: string | undefined = localStorage.getItem(USER_STORAGE);
+            $rootScope.user = localStorageUserString == null ? null : JSON.parse(localStorageUserString);
+            console.log($rootScope.user);
+            if (AuthService.isLoggedIn() === true && AuthService.isLoggedIn() === false) {
+                console.log("inject Dashboard");
                 let dashboardService: DashboardService = $injector.get(DashboardServiceId);
                 dashboardService.refreshTodos();
                 let notificationService: NotificationService = $injector.get(NotificationServiceId);
@@ -219,7 +222,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
             $rootScope.$on("$routeChangeStart", function (event, next, current) {
                 if (next.authenticate === true) {
                     if (!AuthService.isLoggedIn()) {
-                        AuthService.logout();
+                        AuthService.logout(false);
                     }
                 }
             });

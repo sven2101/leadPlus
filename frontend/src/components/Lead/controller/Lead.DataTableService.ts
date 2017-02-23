@@ -23,7 +23,7 @@ const openDataLeadRoute = "/api/rest/processes/workflow/LEAD/state/OPEN";
 
 class LeadDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId, TokenServiceId, ProcessResourceId];
 
     workflowService: WorkflowService;
     workflowDatatableService: WorkflowDatatableService;
@@ -35,8 +35,9 @@ class LeadDataTableService implements IDatatableService {
     filter;
     compile;
     rootScope;
+    processResource;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService, private TokenService: TokenService, ProcessResource) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -45,7 +46,8 @@ class LeadDataTableService implements IDatatableService {
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
         this.workflowDatatableService = WorkflowDatatableService;
-    }
+        this.processResource = ProcessResource.resource;
+    } getWorkflowByStatus;
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
@@ -57,10 +59,10 @@ class LeadDataTableService implements IDatatableService {
                 },
                 type: "GET",
                 "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
+                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
                 }
             })
+
             .withOption("stateSave", false)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
