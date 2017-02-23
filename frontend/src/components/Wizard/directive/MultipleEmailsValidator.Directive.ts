@@ -1,5 +1,6 @@
 
 const MultipleEmailsValidatorDirectiveId: string = "multipleemails";
+const EMAIL_REGEXP = /^[\W]*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4}[\W]*,{1}[\W]*)*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4})[\W]*$/;
 
 class MultipleEmailsValidatorDirective implements IDirective {
 
@@ -21,7 +22,6 @@ class MultipleEmailsValidatorDirective implements IDirective {
     }
 
     link(scope, element, attrs) {
-        const EMAIL_REGEXP = /^[\W]*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4}[\W]*,{1}[\W]*)*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4})[\W]*$/;
         scope.form[scope.name].$validators.email = function (modelValue) {
             return scope.form[scope.name].$isEmpty(modelValue) || EMAIL_REGEXP.test(modelValue);
         };

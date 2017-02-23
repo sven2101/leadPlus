@@ -48,6 +48,7 @@ class WizardDirective implements IDirective {
         scope.wizardElements = new Array<WizardButtonConfig>();
         scope.step = 1;
         scope.currentWizard;
+        scope.disableSendingButton = false;
 
         scope.back = () => this.back(scope);
         scope.continue = () => this.continue(scope);
@@ -193,6 +194,7 @@ class WizardDirective implements IDirective {
     }
 
     async send(scope: any) {
+        scope.disableSendingButton = true;
         let notificationType: NotificationType = scope.getNotificationType();
         let process: Process = scope.editProcess;
         process.notifications = process.notifications ? process.notifications : [];
@@ -209,15 +211,6 @@ class WizardDirective implements IDirective {
             deleteRow = true;
             await scope.workflowService.addOfferToSale(process);
         }
-        let promises: Array<Promise<void>> = notification.attachments ?
-            notification.attachments
-                .filter(a => isNullOrUndefined(a.id))
-                .map(a => scope.fileService.saveAttachment(a)) : [];
-        for (let p of promises) {
-            await p;
-        }
-        notification.attachments.forEach(a => a.id = undefined);
-        // process.notifications.push(notification);
 
         if (notificationType === NotificationType.FOLLOWUP) {
             if (process.status !== Status.FOLLOWUP && process.status !== Status.DONE) {
@@ -228,12 +221,24 @@ class WizardDirective implements IDirective {
                 process.status = Status.INCONTACT;
             }
         }
+
         let resultProcess = await scope.processService.save(process, scope.editWorkflowUnit, !deleteRow, deleteRow) as Process;
         scope.close(true, resultProcess);
+
+        let promises: Array<Promise<void>> = notification.attachments ?
+            notification.attachments
+                .filter(a => isNullOrUndefined(a.id))
+                .map(a => scope.fileService.saveAttachment(a)) : [];
+        for (let p of promises) {
+            await p;
+        }
+        notification.attachments.forEach(a => a.id = undefined);
+
         try {
             notification.timestamp = newTimestamp();
-            let resultNotification = await scope.notificationService.sendNotification(notification, scope.editProcess);
-            process.notifications.push(resultNotification);
+            let resultNotification = await scope.notificationService.sendNotification(notification, process);
+            resultProcess.notifications.push(resultNotification);
+            resultProcess.followUpAmount++;
         } catch (error) {
             let savedProcess: Process = await scope.processService.getById(process.id);
             let tempNotifications = savedProcess.notifications.filter(n => n.timestamp === notification.timestamp);

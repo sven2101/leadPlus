@@ -39,11 +39,14 @@
         ng-click="saveOrTransform()">{{ 'COMMON_SAVE'| translate }}</button>
     <button ng-if="currentWizard.isFollowUp" type="button " class="btn btn-success" data-style="zoom-in"
         ng-click="followUp()">
-		<span class="ladda-label">{{ 'EMAIL_ONLY_FOLLOWUP'| translate }}</span>
+		<span>{{ 'EMAIL_ONLY_FOLLOWUP'| translate }}</span>
 		</button>
     <button ng-if="currentWizard.isEmail" type="button " class="btn btn-warning" data-style="zoom-in"
-        ng-disabled="isAnyFormInvalid() || currentWizard.form.$invalid"
+        ng-disabled="isAnyFormInvalid() || currentWizard.form.$invalid || disableSendingButton"
         ng-click="send()">
-		<span class="ladda-label">{{ ::currentWizard.sendButtonName | translate }}</span>
+         <span  ng-if="disableSendingButton==true" style="float: left;margin-left: -5px;padding-right:2px;padding-top: 2px ">
+             <div  class="spinner-white"></div>
+        </span>
+        <i ng-if="disableSendingButton==false" class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;{{ ::currentWizard.sendButtonName | translate }}
 		</button>
 </div>
