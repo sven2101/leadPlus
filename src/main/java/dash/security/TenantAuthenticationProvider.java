@@ -17,14 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.stereotype.Component;
 
 import dash.exceptions.TenantAuthentificationException;
 import dash.tenantmanagement.business.TenantContext;
 import dash.tenantmanagement.business.TenantRepository;
 import dash.tenantmanagement.domain.Tenant;
 
-@Component
+// @Component
 public class TenantAuthenticationProvider implements AuthenticationProvider {
 
 	private TenantRepository tenantRepository;

@@ -159,6 +159,7 @@ class UserResource {
             },
             getAll: { url: "/users/all", method: "GET", isArray: true },
             // setSmtpConnection: { url: "/users/:id/smtps", method: "POST" }
+            getByEmail: { url: "/api/rest/user/email", method: "POST" }
         });
     }
 }
