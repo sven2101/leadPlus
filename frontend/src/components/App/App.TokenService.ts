@@ -182,5 +182,9 @@ class TokenService {
         await this.initPromise;
     }
 
+    public getSmtpKey(): string {
+        return this.accessTokenJson.signature;
+    }
+
 }
 angular.module(moduleTokenService, []).service(TokenServiceId, TokenService);

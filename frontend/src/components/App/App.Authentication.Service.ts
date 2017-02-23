@@ -39,7 +39,7 @@ class AuthService {
             let hashedPassword = hashPasswordPbkdf2(credentials.password, salt);
             await this.TokenService.setTokenByCredentials({ username: credentials.email, password: hashedPassword });
             let user = await this.userResource.getByEmail(credentials.email).$promise;
-            console.log(user);
+            console.log(encodeURIComponent(hashPasswordPbkdf2(hashedPassword, salt)));
             if (user) {
                 this.rootScope.user = {
                     id: user.id,

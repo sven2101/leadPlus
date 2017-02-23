@@ -67,7 +67,7 @@ public class RefreshTokenEndpoint {
 				.orElseThrow(() -> new InvalidJwtToken());
 
 		String tenant = refreshToken.getClaims().getBody().get("tenant", String.class);
-
+		String smtpKey = refreshToken.getClaims().getBody().get("signature", String.class);
 		String jti = refreshToken.getJti();
 		if (!tokenVerifier.verify(jti)) {
 			throw new InvalidJwtToken();
@@ -82,7 +82,7 @@ public class RefreshTokenEndpoint {
 		List<GrantedAuthority> authorities = Arrays.asList(user.getRole()).stream()
 				.map(authority -> new SimpleGrantedAuthority(authority.authority())).collect(Collectors.toList());
 
-		UserContext userContext = UserContext.create(user.getUsername(), authorities);
+		UserContext userContext = UserContext.create(user.getUsername(), authorities, smtpKey);
 
 		return tokenFactory.createAccessJwtToken(userContext, tenant);
 	}
