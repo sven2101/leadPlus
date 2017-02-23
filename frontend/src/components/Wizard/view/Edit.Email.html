@@ -29,7 +29,7 @@
 			<span style="color:red" ng-show="eform.recipients.$error.maxlength&&!disabled&&!eform.recipients.$pristine">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
 			<div class="form-inline">
 				<div class="form-group" style="width:90%" ng-class="{ 'has-error' : eform.recipients.$invalid&&!disabled}">
-					<input style="width:100%" ng-disabled="disabled" multipleemails  form="eform" name="recipients"
+					<input autocomplete="off" style="width:100%" ng-disabled="disabled" multipleemails  form="eform" name="recipients"
 						required class="form-control" ng-model="notification.recipients" ng-model-options="{debounce: 350}" ng-maxlength="255">
 
 				</div>
@@ -41,14 +41,14 @@
 					<label>{{ 'EMAIL_RECIPIENT' | translate }} - CC</label>
 					<span style="color:red" ng-show="eform.recipientsCC.$error.email&&!disabled">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
 					<span style="color:red" ng-show="eform.recipientsCC.$error.maxlength&&!disabled">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
-					<input style="width:100%" ng-disabled="disabled" multipleemails form="eform" name="recipientsCC"
+					<input autocomplete="off" style="width:100%" ng-disabled="disabled" multipleemails form="eform" name="recipientsCC"
 						class="form-control" ng-model="notification.recipientsCC" ng-model-options="{debounce: 350}" ng-maxlength="255">
 				</div>
 				<div style="width:49%;float:right" class="form-group" ng-class="{ 'has-error' : eform.recipientsBCC.$invalid&&!disabled&&!eform.recipientsBCC.$pristine}">
 					<label>{{ 'EMAIL_RECIPIENT' | translate }} - BCC</label>
 					<span style="color:red" ng-show="eform.recipientsBCC.$error.email&&!disabled">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
 					<span style="color:red" ng-show="eform.recipientsBCC.$error.maxlength&&!disabled">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
-					<input style="width:100%" ng-disabled="disabled" multipleemails form="eform" name="recipientsBCC"
+					<input autocomplete="off" style="width:100%" ng-disabled="disabled" multipleemails form="eform" name="recipientsBCC"
 						class="form-control" ng-model="notification.recipientsBCC" ng-model-options="{debounce: 350}" ng-maxlength="255">
 				</div>
 			</div>
