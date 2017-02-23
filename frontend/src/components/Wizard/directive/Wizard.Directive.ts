@@ -48,9 +48,11 @@ class WizardDirective implements IDirective {
         scope.wizardElements = new Array<WizardButtonConfig>();
         scope.step = 1;
         scope.currentWizard;
+        scope.disableSendingButton = false;
 
-
-
+        scope.back = () => this.back(scope);
+        scope.continue = () => this.continue(scope);
+        scope.allowToContinue = () => this.allowToContinue(scope);
         scope.close = (result: boolean, process: Process) => this.close(result, process, scope);
         scope.transformWorkflow = () => this.transformWorkflow(scope);
         scope.save = () => this.save(scope);
@@ -96,6 +98,40 @@ class WizardDirective implements IDirective {
             scope.currentNotification.notificationType = scope.getNotificationType();
         }
     };
+
+    back(scope: any) {
+        if (scope.step > 1) {
+            let wizardELement = this.getWizardByPosition(scope.step - 1, scope.wizardElements);
+            if (wizardELement !== null && !wizardELement.isDisabled && wizardELement.isVisible) {
+                scope.step -= 1;
+                scope.currentWizard = this.getWizardByPosition(scope.step, scope.wizardElements);
+            }
+        }
+
+    }
+
+    continue(scope: any) {
+        let wizardELement = this.getWizardByPosition(scope.step + 1, scope.wizardElements);
+        if (wizardELement !== null && !wizardELement.isDisabled && wizardELement.isVisible) {
+            scope.step += 1;
+            scope.currentWizard = wizardELement;
+        }
+
+    }
+
+    getWizardByPosition(position: number, wizardElements: Array<WizardButtonConfig>): WizardButtonConfig {
+        for (let wizardElement of wizardElements) {
+            if (wizardElement.position === position) {
+                return wizardElement;
+            }
+        }
+        return null;
+    }
+
+    allowToContinue(scope: any) {
+        let wizardELement = this.getWizardByPosition(scope.step + 1, scope.wizardElements);
+        return wizardELement !== null && !wizardELement.isDisabled && wizardELement.isVisible;
+    }
 
     getWizardConfigByTransclusion(wizardConfig: Array<WizardButtonConfig>, transclusion: any): WizardButtonConfig {
         for (let buttonConfig of wizardConfig) {
@@ -158,6 +194,7 @@ class WizardDirective implements IDirective {
     }
 
     async send(scope: any) {
+        scope.disableSendingButton = true;
         let notificationType: NotificationType = scope.getNotificationType();
         let process: Process = scope.editProcess;
         process.notifications = process.notifications ? process.notifications : [];
@@ -174,15 +211,6 @@ class WizardDirective implements IDirective {
             deleteRow = true;
             await scope.workflowService.addOfferToSale(process);
         }
-        let promises: Array<Promise<void>> = notification.attachments ?
-            notification.attachments
-                .filter(a => isNullOrUndefined(a.id))
-                .map(a => scope.fileService.saveAttachment(a)) : [];
-        for (let p of promises) {
-            await p;
-        }
-        notification.attachments.forEach(a => a.id = undefined);
-        // process.notifications.push(notification);
 
         if (notificationType === NotificationType.FOLLOWUP) {
             if (process.status !== Status.FOLLOWUP && process.status !== Status.DONE) {
@@ -193,12 +221,24 @@ class WizardDirective implements IDirective {
                 process.status = Status.INCONTACT;
             }
         }
+
         let resultProcess = await scope.processService.save(process, scope.editWorkflowUnit, !deleteRow, deleteRow) as Process;
         scope.close(true, resultProcess);
+
+        let promises: Array<Promise<void>> = notification.attachments ?
+            notification.attachments
+                .filter(a => isNullOrUndefined(a.id))
+                .map(a => scope.fileService.saveAttachment(a)) : [];
+        for (let p of promises) {
+            await p;
+        }
+        notification.attachments.forEach(a => a.id = undefined);
+
         try {
             notification.timestamp = newTimestamp();
-            let resultNotification = await scope.notificationService.sendNotification(notification, scope.editProcess);
-            process.notifications.push(resultNotification);
+            let resultNotification = await scope.notificationService.sendNotification(notification, process);
+            resultProcess.notifications.push(resultNotification);
+            resultProcess.followUpAmount++;
         } catch (error) {
             let savedProcess: Process = await scope.processService.getById(process.id);
             let tempNotifications = savedProcess.notifications.filter(n => n.timestamp === notification.timestamp);

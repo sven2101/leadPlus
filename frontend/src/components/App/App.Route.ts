@@ -10,7 +10,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Dashboard/view/Dashboard.html",
                 controller: "DashboardController",
                 controllerAs: "dashboardCtrl",
-                authenticate: true,
+                authenticated: true,
                 package: "basic"
             })
             .when("/dashboard",
@@ -18,7 +18,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Dashboard/view/Dashboard.html",
                 controller: "DashboardController",
                 controllerAs: "dashboardCtrl",
-                authenticate: true,
+                authenticated: true,
                 package: "basic"
             })
             .when("/leads/:processId?",
@@ -26,7 +26,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Lead/view/Lead.html",
                 controller: "WorkflowController",
                 controllerAs: "leadCtrl",
-                authenticate: true,
+                authenticated: true,
                 package: "basic",
                 type: WorkflowType.LEAD
             })
@@ -35,7 +35,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Offer/view/Offer.html",
                 controller: "WorkflowController",
                 controllerAs: "offerCtrl",
-                authenticate: true,
+                authenticated: true,
                 package: "basic",
                 type: WorkflowType.OFFER
             })
@@ -44,7 +44,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Sale/view/Sale.html",
                 controller: "WorkflowController",
                 controllerAs: "saleCtrl",
-                authenticate: true,
+                authenticated: true,
                 package: "basic",
                 type: WorkflowType.SALE
             })
@@ -53,7 +53,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Statistic/view/Statistic.html",
                 controller: "StatisticController",
                 controllerAs: "statisticCtrl",
-                authenticate: true,
+                authenticated: true,
                 package: "basic"
             })
             .when("/settings",
@@ -61,7 +61,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Setting/view/Setting.html",
                 controller: "SettingController",
                 controllerAs: "settingCtrl",
-                authenticate: true,
+                authenticated: true,
                 package: "basic"
             })
             .when("/statistic/user/detail/:userId",
@@ -69,7 +69,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Statistic/view/UserDetail.html",
                 controller: "UserDetailController",
                 controllerAs: "UserDetailCtrl",
-                authenticate: true,
+                authenticated: true,
                 package: "basic"
             })
             .when("/profile",
@@ -77,7 +77,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Profile/view/ProfileMain.html",
                 controller: "ProfileController",
                 controllerAs: "profileCtrl",
-                authenticate: true,
+                authenticated: true,
                 package: "basic"
             })
             .when("/licence",
@@ -110,46 +110,46 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Product/view/Product.html",
                 controller: "ProductController",
                 controllerAs: "productCtrl",
-                authenticate: true,
+                authenticated: true,
                 package: "basic"
             }).when("/statistic/product/detail/:productId",
             {
                 templateUrl: "components/Statistic/view/ProductDetail.html",
                 controller: "ProductDetailController",
                 controllerAs: "ProductDetailCtrl",
-                authenticate: true,
+                authenticated: true,
                 package: "basic"
             }).when("/customer",
             {
                 templateUrl: "components/Customer/view/Customer.html",
                 controller: "CustomerController",
                 controllerAs: "customerCtrl",
-                authenticate: true,
+                authenticated: true,
                 package: "basic"
             }).when("/customer/detail/:customerId",
             {
                 templateUrl: "components/Customer/view/CustomerDetail.html",
                 controller: "CustomerDetailController",
                 controllerAs: "customerDetailCtrl",
-                authenticate: true,
+                authenticated: true,
                 package: "basic"
-            }).when("/licences/AGB",
+            }).when("/licences/agb",
             {
                 templateUrl: "components/Licence/view/AGB.html",
-                authenticate: false
+                authenticated: false
             }).when("/licences/licence",
             {
                 templateUrl: "components/Licence/view/Licence.html",
-                authenticate: false
-            }).when("/licences/DataProtection",
+                authenticated: false
+            }).when("/licences/PrivacyPolicy",
             {
-                templateUrl: "components/Licence/view/Data.Protection.Statement.html",
-                authenticate: false
+                templateUrl: "components/Licence/view/Privacy.Policy.html",
+                authenticated: false
             })
             .when("/licences/SLA",
             {
                 templateUrl: "components/Licence/view/Service.Level.Agreement.html",
-                authenticate: false
+                authenticated: false
             })
             .when("/401",
             {
@@ -169,17 +169,8 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
-        $httpProvider.interceptors.push(function ($q, $location, $rootScope, TokenService: TokenService) {
+        $httpProvider.interceptors.push(function ($q, $location, $rootScope) {
             return {
-                "request": async (request) => {
-                    if (request.url.substr(request.url.length - 5) !== ".html") {
-                        request.headers["X-Authorization"] = "Bearer " + await TokenService.getAccessToken();
-
-                        // console.log(request);
-                    }
-                    return request;
-                },
-
                 "responseError": function (rejection) {
                     let defer = $q.defer();
                     if (rejection.status < 300) {
@@ -205,10 +196,21 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
 
     }])
     .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId, $windowId, $qId,
-        function ($location, $http, $rootScope, AuthService: AuthService, $cookies, $injector, $window, $q) {
+        function ($location, $http, $rootScope, Auth, $cookies, $injector, $window, $q) {
             // TODO Workaround for native promises!!!
             $window.Promise = $q;
+            try {
+                $rootScope.user = $cookies.getObject("user");
+                $rootScope.tenant = $cookies.getObject("tenant");
+            } catch (error) {
+                $rootScope.user = undefined;
+                $rootScope.tenant = undefined;
+                Auth.logout();
+            }
+
             if (!isNullOrUndefined($rootScope.user) && !isNullOrUndefined($rootScope.tenant)) {
+                $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
+                $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
                 let dashboardService: DashboardService = $injector.get(DashboardServiceId);
                 dashboardService.refreshTodos();
                 let notificationService: NotificationService = $injector.get(NotificationServiceId);
@@ -217,13 +219,39 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
             }
 
             $rootScope.$on("$routeChangeStart", function (event, next, current) {
-                if (next.authenticate === true) {
-                    if (!AuthService.isLoggedIn()) {
-                        AuthService.logout();
+                try {
+                    if (isNullOrUndefined($rootScope.user) || isNullOrUndefined($rootScope.tenant)) {
+                        $rootScope.user = $cookies.getObject("user");
+                        $rootScope.tenant = $cookies.getObject("tenant");
+                    }
+
+                } catch (error) {
+                    $cookies.remove("user");
+                    $cookies.remove("tenant");
+                }
+
+                if (isNullOrUndefined($http.defaults.headers.common["X-TenantID"])) {
+                    if (!isNullOrUndefined($rootScope.tenant)) {
+                        $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
+                    } else {
+                        $http.defaults.headers.common["X-TenantID"] = $location.host();
+                    }
+                }
+
+                if (!isNullOrUndefined($rootScope.user)) {
+                    $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
+                }
+                if (!isNullOrUndefined($rootScope.tenant)) {
+                    $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
+                }
+
+                if (next.authenticated === true) {
+                    if (isNullOrUndefined($rootScope.user)) {
+                        $location.path("/login");
                     }
                 }
             });
             $rootScope.logout = function () {
-                AuthService.logout();
+                Auth.logout();
             };
         }]);

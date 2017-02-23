@@ -9,7 +9,7 @@ var gulp = require('gulp'),
     typescript = require('gulp-tsc');
 ts = require('gulp-typescript');
 
-gulp.task('copy',['copy-font-awesome','copy-assets','copy-datatablesTranslationFiles','copy-img','copy-patterns','copy-fonts'],function () {
+gulp.task('copy',['copy-font-awesome','copy-assets','copy-datatablesTranslationFiles','copy-img', 'copy-pdf', 'copy-patterns','copy-fonts'],function () {
     return null;
 });
 
@@ -26,6 +26,11 @@ gulp.task('copy-font-awesome',function () {
 gulp.task('copy-img',function () {
     return gulp.src(path.img.src)
         .pipe(gulp.dest(path.img.dest));
+});
+
+gulp.task('copy-pdf',function () {
+    return gulp.src(path.pdf.src)
+        .pipe(gulp.dest(path.pdf.dest));
 });
 
 gulp.task('copy-patterns',function () {

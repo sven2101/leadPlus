@@ -40,6 +40,7 @@ import com.amazonaws.services.route53.model.RRType;
 import com.amazonaws.services.route53.model.ResourceRecord;
 import com.amazonaws.services.route53.model.ResourceRecordSet;
 
+import dash.exceptions.TenantAlreadyExistsException;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.registration.domain.Validation;
 
@@ -81,30 +82,27 @@ public class TenantService implements ITenantService {
 	}
 
 	@Override
-	public Tenant createNewTenant(final Tenant tenant) {
-		try {
-			tenant.setEnabled(true);
-			Calendar oneYearLater = Calendar.getInstance();
-			oneYearLater.add(Calendar.YEAR, 1);
-			tenant.getLicense().setTerm(oneYearLater);
-			Validation tenantNotExists = uniqueTenantKey(tenant);
-			if (tenantNotExists.isValidation()) {
-				if (springProfileActive.equals(SPRING_PROFILE_TEST)
-						|| springProfileActive.equals(SPRING_PROFILE_LOCAL)) {
-					createSchema(tenant);
-					tenantRepository.save(tenant);
-					logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
-				} else if (springProfileActive.equals(SPRING_PROFILE_PRODUCTION)
-						|| springProfileActive.equals(SPRING_PROFILE_DEVELOPMENT)) {
-					createTenantSubdomain(tenant);
-					createSchema(tenant);
-					tenantRepository.save(tenant);
-					logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
-				}
+	public Tenant createNewTenant(final Tenant tenant) throws TenantAlreadyExistsException {
+		tenant.setEnabled(true);
+		Calendar oneYearLater = Calendar.getInstance();
+		oneYearLater.add(Calendar.YEAR, 1);
+		tenant.getLicense().setTerm(oneYearLater);
+		Validation tenantNotExists = uniqueTenantKey(tenant);
+		if (tenantNotExists.isValidation()) {
+			if (springProfileActive.equals(SPRING_PROFILE_TEST) || springProfileActive.equals(SPRING_PROFILE_LOCAL)) {
+				createSchema(tenant);
+				tenantRepository.save(tenant);
+				logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
+			} else if (springProfileActive.equals(SPRING_PROFILE_PRODUCTION)
+					|| springProfileActive.equals(SPRING_PROFILE_DEVELOPMENT)) {
+				createTenantSubdomain(tenant);
+				createSchema(tenant);
+				tenantRepository.save(tenant);
+				logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
 			}
-
-		} catch (Exception ex) {
-			logger.error(TENANT_ALREADY_EXISTS + tenant.getTenantKey(), ex);
+		} else {
+			logger.error(TENANT_ALREADY_EXISTS + tenant.getTenantKey());
+			throw new TenantAlreadyExistsException("Tenant " + tenant.getTenantKey() + " already Exists");
 		}
 		return tenant;
 	}

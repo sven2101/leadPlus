@@ -18,8 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dash.security.TenantAuthenticationProvider;
-
 /**
  * WebSecurityConfig
  * 
@@ -46,8 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private AjaxAuthenticationProvider ajaxAuthenticationProvider;
 	@Autowired
 	private JwtAuthenticationProvider jwtAuthenticationProvider;
-	@Autowired
-	private TenantAuthenticationProvider tenantAuthenticationProvider;
+	// @Autowired
+	// private TenantAuthenticationProvider tenantAuthenticationProvider;
 
 	@Autowired
 	private TokenExtractor tokenExtractor;

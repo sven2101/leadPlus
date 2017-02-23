@@ -12,7 +12,7 @@ const broadcastUserNotificationChanged: string = "userNotificationChanged";
 
 class AppController {
 
-    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId];
+    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId, $windowId, $timeoutId];
 
     translate;
     rootScope;
@@ -20,7 +20,9 @@ class AppController {
     location;
     processResource;
     userResource;
+    window;
     stop;
+    timeout;
     todos: Array<Process> = [];
     userNotifications: Array<Notification> = [];
     notificationSendState: NotificationSendState = NotificationSendState.DEFAULT;
@@ -28,7 +30,7 @@ class AppController {
     profileService: ProfileService;
     rendered: boolean = false;
 
-    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService) {
+    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService, $window, $timeout) {
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.interval = $interval;
@@ -37,13 +39,13 @@ class AppController {
         this.profileService = ProfileService;
         this.rootScope.leadsCount = 0;
         this.location = $location;
+        this.window = $window;
+        this.timeout = $timeout;
 
         this.rootScope.offersCount = 0;
         this.stop = undefined;
 
         this.setCurrentUserPicture();
-
-
         this.registerLoadLabels();
         this.rootScope.loadLabels();
         this.registerChangeLanguage();
@@ -54,8 +56,6 @@ class AppController {
         let todosChanged = $rootScope.$on("todosChanged", (event, result) => {
             this.todos = result;
         });
-
-
 
         let broadcastAddNotificationListener = $scope.$on(broadcastAddNotification, (event, notification: Notification) => {
             this.userNotifications.push(notification);
@@ -78,11 +78,24 @@ class AppController {
             broadcastUserNotificationChangedListener();
         });
 
-
-
+        $scope.$on("$viewContentLoaded", function () {
+            $(document.getElementById("outer-language")).css("visibility", "visible");
+            $rootScope.documentLoaded = true;
+            setTimeout(function () {
+                $(window).trigger("resize");
+                $(document.getElementById("loading-pane-overlay")).addClass("loading-pane-fade-out");
+                setTimeout(function () {
+                    $(document.getElementById("loading-pane-overlay")).children().removeClass("loader");
+                }, 750);
+            }, 1000);
+        });
     }
 
-
+    setTopbarNotificationState(state: NotificationSendState) {
+        this.timeout(() => {
+            this.notificationSendState = state;
+        }, 200);
+    }
 
     navigateTo(todo: Process) {
         if (todo.status === "OPEN" || todo.status === "INCONTACT") {
@@ -137,6 +150,10 @@ class AppController {
                     }).$promise.then(function (result) {
                         self.rootScope.changeLanguage(result.language);
                     });
+            }
+            else {
+                let lang: string = self.window.navigator.language || self.window.navigator.userLanguage;
+                self.rootScope.changeLanguage(lang.toUpperCase());
             }
         };
     }
