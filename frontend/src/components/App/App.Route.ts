@@ -146,9 +146,9 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Licence/view/Privacy.Policy.html",
                 authenticated: false
             })
-            .when("/licences/SLA",
+            .when("/licences/auftragsdatenverarbeitungsvertrag",
             {
-                templateUrl: "components/Licence/view/Service.Level.Agreement.html",
+                templateUrl: "components/Licence/view/Auftragsdatenverarbeitungsvertrag.html",
                 authenticated: false
             })
             .when("/401",

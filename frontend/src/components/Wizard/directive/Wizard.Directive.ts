@@ -223,6 +223,7 @@ class WizardDirective implements IDirective {
         }
 
         let resultProcess = await scope.processService.save(process, scope.editWorkflowUnit, !deleteRow, deleteRow) as Process;
+        scope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SENDING);
         scope.close(true, resultProcess);
 
         let promises: Array<Promise<void>> = notification.attachments ?
