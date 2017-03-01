@@ -47,8 +47,7 @@ public class Template {
 	private String subject;
 
 	@NotNull
-	@Size(max = 30000)
-	@Column(name = "content", length = 30000, nullable = false)
+	@Column(name = "content", columnDefinition = "text", nullable = false)
 	private String content;
 
 	@Size(max = 500)
