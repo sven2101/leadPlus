@@ -117,7 +117,7 @@ public class Customer {
 	private String customerNumber;
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
-	@JoinColumn(name = "address_fk", nullable = false)
+	@JoinColumn(name = "address_fk", nullable = true)
 	private Address addresses;
 
 	public Customer() {

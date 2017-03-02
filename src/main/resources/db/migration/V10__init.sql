@@ -1,5 +1,8 @@
 ALTER TABLE template 
 	ALTER COLUMN content TYPE text;
+	
+ALTER TABLE notification 
+	ALTER COLUMN content TYPE text;
 
 ALTER TABLE customer 
 	ADD COLUMN fax character varying(20);

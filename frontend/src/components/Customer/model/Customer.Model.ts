@@ -12,7 +12,6 @@ class Customer {
     phone: string;
     fax: string;
     mobile: string;
-    address: string;
     timestamp: any;
     deactivated: boolean;
     customerNumber: string;

@@ -50,7 +50,12 @@ class WorkflowTemplateObject {
         this.orderPositions = [op, op2];
         let c = new Customer();
         c.id = 0;
-        c.address = "Boston st. 48";
+        c.addresses.number = 48;
+        c.addresses.street = "Boston st.";
+        c.addresses.country = "United States";
+        c.addresses.zip = "289374";
+        c.addresses.state = "Seattle";
+        c.addresses.city = "Boston";
         c.company = "The Company";
         c.customerNumber = "C12345";
         c.deactivated = false;
