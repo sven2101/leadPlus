@@ -16,8 +16,9 @@ class Customer {
     deactivated: boolean;
     customerNumber: string;
     realCustomer: boolean;
-    addresses: Address;
+    address: Address;
 
     constructor() {
+       this.address = new Address();
     }
 }

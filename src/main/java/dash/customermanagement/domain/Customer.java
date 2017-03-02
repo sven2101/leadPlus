@@ -118,7 +118,7 @@ public class Customer {
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "address_fk", nullable = true)
-	private Address addresses;
+	private Address address;
 
 	public Customer() {
 	}
@@ -237,12 +237,12 @@ public class Customer {
 		this.realCustomer = realCustomer;
 	}
 
-	public Address getAddresses() {
-		return addresses;
+	public Address getAddress() {
+		return address;
 	}
 
-	public void setAddresses(Address addresses) {
-		this.addresses = addresses;
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 }

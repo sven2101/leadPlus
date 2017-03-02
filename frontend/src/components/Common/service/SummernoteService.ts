@@ -380,7 +380,14 @@ class SummernoteService {
             "<li><a template-value='${(customer.company)!}'>" + this.translate.instant("COMMON_COMPANY") + "</a></li>" +
             "<li><a template-value='${(customer.email)!}'>" + this.translate.instant("COMMON_EMAIL") + "</a></li>" +
             "<li><a template-value='${(customer.phone)!}'>" + this.translate.instant("COMMON_PHONE") + "</a></li>" +
-            "<li><a template-value='${(customer.address)!}'>" + this.translate.instant("COMMON_ADDRESS") + "</a></li>" +
+            "<li><a template-value='${(customer.phone)!}'>" + this.translate.instant("COMMON_FAX") + "</a></li>" +
+            "<li><a template-value='${(customer.phone)!}'>" + this.translate.instant("COMMON_MOBILE") + "</a></li>" +
+            "<li><a template-value='${(customer.address.number)!}'>" + this.translate.instant("COMMON_HOUSE_NUMBER") + "</a></li>" +
+            "<li><a template-value='${(customer.address.street)!}'>" + this.translate.instant("COMMON_STREET") + "</a></li>" +
+            "<li><a template-value='${(customer.address.zip)!}'>" + this.translate.instant("COMMON_ZIP") + "</a></li>" +
+            "<li><a template-value='${(customer.address.city)!}'>" + this.translate.instant("COMMON_CITY") + "</a></li>" +
+            "<li><a template-value='${(customer.address.state)!}'>" + this.translate.instant("COMMON_STATE") + "</a></li>" +
+            "<li><a template-value='${(customer.address.country)!}'>" + this.translate.instant("COMMON_COUNTRY") + "</a></li>" +
             "<li><a template-value='${(customer.customerNumber)!}'>" + this.translate.instant("CUSTOMER_NUMBER") + "</a></li>";
     }
 

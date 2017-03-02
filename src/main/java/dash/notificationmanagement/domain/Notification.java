@@ -92,8 +92,7 @@ public class Notification {
 	private boolean deleted;
 
 	@NotNull
-	@Size(max = 30000)
-	@Column(name = "content", length = 30000, nullable = false)
+	@Column(name = "content", columnDefinition = "text", nullable = false)
 	private String content;
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "notification")
