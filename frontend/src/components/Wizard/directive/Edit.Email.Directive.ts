@@ -90,6 +90,7 @@ class EditEmailDirective implements IDirective {
                 if (fileUpload.content == null) {
                     fileUpload.content = "";
                 }
+
                 attachment.fileUpload = fileUpload;
                 notification.attachments.push(attachment);
                 self.isFileSizeInvalid(notification, scope);

@@ -2,22 +2,23 @@ package dash.messagemanagement.business;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
-import javax.activation.DataHandler;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.log4j.Logger;
 
+import dash.fileuploadmanagement.domain.FileUpload;
 import dash.notificationmanagement.domain.Attachment;
 import dash.notificationmanagement.domain.Notification;
 
@@ -37,10 +38,60 @@ public class MessageUtil {
 		message.setSentDate(new Date());
 		message.setSubject(notification.getSubject());
 
-		MimeBodyPart mimeBodyPart = createMimeBodyPart(notification.getContent());
-		Multipart multipart = createMultipart(mimeBodyPart, notification.getAttachments());
-		message.setContent(multipart);
+		String oldContent = notification.getContent();
+		StringBuilder newContentBuilder = new StringBuilder();
+		Map<String, String[]> imageMap = new HashMap<String, String[]>();
+		boolean inImage = false;
+		StringBuilder currentBase64ImageStringBuilder = new StringBuilder();
+		StringBuilder currentBase64HeaderStringBuilder = new StringBuilder();
+		for (int i = 0; i < oldContent.length(); i++) {
+			char c = oldContent.charAt(i);
+			if (inImage) {
+				if (c != '"') {
+					currentBase64ImageStringBuilder.append(c);
+				} else {
+					UUID key = UUID.randomUUID();
+					String[] fileArray = new String[2];
+					fileArray[0] = currentBase64HeaderStringBuilder.toString();
+					fileArray[1] = currentBase64ImageStringBuilder.toString();
+					imageMap.put(key.toString(), fileArray);
+					currentBase64HeaderStringBuilder = new StringBuilder();
+					currentBase64ImageStringBuilder = new StringBuilder();
+					newContentBuilder.append("src=\"cid:" + key + "\"");
+					inImage = false;
+				}
+				continue;
+			}
+			if (i + 2 < oldContent.length() && c == 's' && oldContent.charAt(i + 1) == 'r'
+					&& oldContent.charAt(i + 2) == 'c') {
+				for (; i < oldContent.length() && oldContent.charAt(i) != ','; i++) {
+					c = oldContent.charAt(i);
+					currentBase64HeaderStringBuilder.append(c);
+				}
+				inImage = true;
+				continue;
+			}
+			if (!inImage) {
+				newContentBuilder.append(c);
+			}
 
+		}
+		Set<Attachment> attachments = new HashSet<>();
+		for (String key : imageMap.keySet()) {
+			String[] value = imageMap.get(key);
+			Attachment a = new Attachment();
+			FileUpload file = new FileUpload();
+			file.setFilename(key);
+			file.setMimeType("image/jpeg");
+			file.setContent(org.apache.commons.codec.binary.Base64.decodeBase64(value[1].getBytes()));
+			a.setFileUpload(file);
+			attachments.add(a);
+		}
+
+		MailContentBuilder builder = new MailContentBuilder();
+		Multipart multipart = builder.build("", newContentBuilder.toString(), attachments,
+				notification.getAttachments());
+		message.setContent(multipart);
 		return message;
 	}
 
@@ -72,41 +123,4 @@ public class MessageUtil {
 		return message;
 	}
 
-	private static MimeBodyPart createMimeBodyPart(String content) throws MessagingException {
-		MimeBodyPart textBodyPart = new MimeBodyPart();
-		if (content != null)
-			try {
-				textBodyPart.setContent(content, "text/html; charset=utf-8");
-			} catch (MessagingException e) {
-				logger.error("Couldn't create MimeBodyPart for Email javax.mail.internet.MimeBodyPart", e);
-				throw new MessagingException("Couldn't create Email-Content.");
-			}
-		return textBodyPart;
-	}
-
-	private static Multipart createMultipart(MimeBodyPart textBodyPart, Set<Attachment> set) throws MessagingException {
-
-		Multipart multipart = new MimeMultipart();
-		try {
-			multipart.addBodyPart(textBodyPart);
-		} catch (MessagingException e) {
-			logger.error("Couldn't add Body Part to Email-Content", e);
-			throw new MessagingException("Couldn't add Body Part to Email-Content.");
-		}
-
-		if (set != null && !set.isEmpty()) {
-			for (Attachment attachment : set) {
-				if (attachment.getFileUpload().getContent() != null) {
-					MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-					ByteArrayDataSource ds = new ByteArrayDataSource(attachment.getFileUpload().getContent(),
-							attachment.getFileUpload().getMimeType());
-					attachmentBodyPart.setDataHandler(new DataHandler(ds));
-					attachmentBodyPart.setFileName(attachment.getFileUpload().getFilename());
-					multipart.addBodyPart(attachmentBodyPart);
-				}
-			}
-		}
-
-		return multipart;
-	}
 }

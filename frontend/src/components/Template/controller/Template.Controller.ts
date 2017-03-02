@@ -82,6 +82,7 @@ class TemplateController {
             this.toaster.pop("success", "", this.$translate.instant("EMAIL_TEMPLATE_SYNTAX_SUCCESS"));
 
         } catch (error) {
+            console.log(error);
             if (error.data != null && error.data.exception !== "dash.templatemanagement.business.TemplateCompilationException") {
                 return this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR"));
             }
