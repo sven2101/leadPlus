@@ -6,6 +6,9 @@ ALTER TABLE customer
 	
 ALTER TABLE customer 
 	ADD COLUMN mobile character varying(20);
+	
+ALTER TABLE customer 
+	DROP COLUMN address;
 
 CREATE SEQUENCE "address_id_seq"
   INCREMENT 1
@@ -24,4 +27,12 @@ CREATE TABLE address
   zip character varying(255),
   country character varying(255),
   CONSTRAINT address_pkey PRIMARY KEY (id)
-)
+);
+
+ALTER TABLE customer 
+	ADD COLUMN address_fk bigint;
+
+ALTER TABLE customer
+ADD CONSTRAINT customer_address_fk FOREIGN KEY (address_fk)
+REFERENCES address (id) MATCH SIMPLE
+ON UPDATE NO ACTION ON DELETE NO ACTION;

@@ -242,6 +242,13 @@ function config($translateProvider) {
             COMMON_STATUS_SET_OPEN: "Als offen markieren",
             COMMON_SEARCH: "Suchen...",
 
+            COMMON_HOUSE_NUMBER: "Hausnummer",
+            COMMON_STREET: "Straße",
+            COMMON_CITY: "Stadt",
+            COMMON_STATE: "Staat",
+            COMMON_COUNTRY: "Land",
+            COMMON_ZIP: "PLZ",
+
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Anfragen verwalten",
             DASHBOARD_DRAG_INFO: "Ziehen Sie die Elemente per Drag\"n\"Drop",
@@ -816,6 +823,13 @@ function config($translateProvider) {
             COMMON_STATUS_SET_DONE: "Mark as done",
             COMMON_STATUS_SET_OPEN: "Mark as open",
             COMMON_SEARCH: "Search...",
+
+            COMMON_HOUSE_NUMBER: "Number",
+            COMMON_STREET: "Street",
+            COMMON_CITY: "City",
+            COMMON_STATE: "State",
+            COMMON_COUNTRY: "Country",
+            COMMON_ZIP: "Zip",
 
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Manage leads",

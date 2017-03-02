@@ -16,6 +16,7 @@ package dash.customermanagement.domain;
 
 import java.util.Calendar;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -23,6 +24,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -35,6 +38,7 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import dash.addressmanagement.domain.Address;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -90,10 +94,6 @@ public class Customer {
 	@Column(name = "mobile", length = 20, nullable = true)
 	private String mobile;
 
-	@Size(max = 255)
-	@Column(name = "address", length = 255, nullable = true)
-	private String address;
-
 	@ApiModelProperty(hidden = true)
 	@NotNull
 	@Column(name = "deactivated", nullable = false)
@@ -115,6 +115,10 @@ public class Customer {
 	@Size(max = 255)
 	@Column(name = "customernumber")
 	private String customerNumber;
+
+	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
+	@JoinColumn(name = "address_fk", nullable = false)
+	private Address addresses;
 
 	public Customer() {
 	}
@@ -201,14 +205,6 @@ public class Customer {
 		this.mobile = mobile;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
 	public Calendar getTimestamp() {
 		return timestamp;
 	}
@@ -241,110 +237,12 @@ public class Customer {
 		this.realCustomer = realCustomer;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((address == null) ? 0 : address.hashCode());
-		result = prime * result + ((company == null) ? 0 : company.hashCode());
-		result = prime * result + ((customerNumber == null) ? 0 : customerNumber.hashCode());
-		result = prime * result + (deactivated ? 1231 : 1237);
-		result = prime * result + (deleted ? 1231 : 1237);
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((fax == null) ? 0 : fax.hashCode());
-		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
-		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
-		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
-		result = prime * result + (realCustomer ? 1231 : 1237);
-		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		return result;
+	public Address getAddresses() {
+		return addresses;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Customer other = (Customer) obj;
-		if (address == null) {
-			if (other.address != null)
-				return false;
-		} else if (!address.equals(other.address))
-			return false;
-		if (company == null) {
-			if (other.company != null)
-				return false;
-		} else if (!company.equals(other.company))
-			return false;
-		if (customerNumber == null) {
-			if (other.customerNumber != null)
-				return false;
-		} else if (!customerNumber.equals(other.customerNumber))
-			return false;
-		if (deactivated != other.deactivated)
-			return false;
-		if (deleted != other.deleted)
-			return false;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (fax == null) {
-			if (other.fax != null)
-				return false;
-		} else if (!fax.equals(other.fax))
-			return false;
-		if (firstname == null) {
-			if (other.firstname != null)
-				return false;
-		} else if (!firstname.equals(other.firstname))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (lastname == null) {
-			if (other.lastname != null)
-				return false;
-		} else if (!lastname.equals(other.lastname))
-			return false;
-		if (mobile == null) {
-			if (other.mobile != null)
-				return false;
-		} else if (!mobile.equals(other.mobile))
-			return false;
-		if (phone == null) {
-			if (other.phone != null)
-				return false;
-		} else if (!phone.equals(other.phone))
-			return false;
-		if (realCustomer != other.realCustomer)
-			return false;
-		if (timestamp == null) {
-			if (other.timestamp != null)
-				return false;
-		} else if (!timestamp.equals(other.timestamp))
-			return false;
-		if (title != other.title)
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname
-				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone + ", fax="
-				+ fax + ", mobile=" + mobile + ", address=" + address + ", deactivated=" + deactivated
-				+ ", realCustomer=" + realCustomer + ", timestamp=" + timestamp + ", customerNumber=" + customerNumber
-				+ "]";
+	public void setAddresses(Address addresses) {
+		this.addresses = addresses;
 	}
 
 }

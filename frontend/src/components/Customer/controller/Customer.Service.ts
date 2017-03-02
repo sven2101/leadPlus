@@ -37,6 +37,7 @@ class CustomerService {
     }
 
     async saveCustomer(customer: Customer, insert: boolean = true): Promise<Customer> {
+        console.log("Customer: ", customer);
         let self = this;
         if (insert) {
             customer.timestamp = newTimestamp();

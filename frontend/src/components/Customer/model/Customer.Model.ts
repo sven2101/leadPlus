@@ -1,4 +1,5 @@
 /// <reference path="../../app/App.Common.ts" />
+/// <reference path="../../Workflow/model/Address.Model.ts" />
 
 class Customer {
 
@@ -16,6 +17,8 @@ class Customer {
     deactivated: boolean;
     customerNumber: string;
     realCustomer: boolean;
+    addresses: Address;
+
     constructor() {
     }
 }

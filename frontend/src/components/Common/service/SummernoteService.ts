@@ -375,8 +375,8 @@ class SummernoteService {
 
     getCustomerTemplateVar(): string {
         return "<li><a template-value='${(customer.title)!}'>" + this.translate.instant("COMMON_TITLE") + "</a></li>" +
-            "<li><a template-value='${(customer.firstname)!}'>" + this.translate.instant("Vorname") + "</a></li>" +
-            " <li><a template-value='${(customer.lastname)!}'>" + this.translate.instant("Nachname") + "</a></li>" +
+            "<li><a template-value='${(customer.firstname)!}'>" + this.translate.instant("COMMON_FIRSTNAME") + "</a></li>" +
+            " <li><a template-value='${(customer.lastname)!}'>" + this.translate.instant("COMMON_LASTNAME") + "</a></li>" +
             "<li><a template-value='${(customer.company)!}'>" + this.translate.instant("COMMON_COMPANY") + "</a></li>" +
             "<li><a template-value='${(customer.email)!}'>" + this.translate.instant("COMMON_EMAIL") + "</a></li>" +
             "<li><a template-value='${(customer.phone)!}'>" + this.translate.instant("COMMON_PHONE") + "</a></li>" +

@@ -81,6 +81,7 @@ class CustomerController {
     }
 
     async saveCustomer() {
+        console.log("new", this.currentEditCustomer);
         if (!this.isCurrentCustomerNew) {
             shallowCopy(this.currentCustomer, this.currentEditCustomer);
         }

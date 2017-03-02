@@ -215,6 +215,7 @@ public class UserService implements IUserService {
 							smtp.setPassword(Encryptor.decrypt(
 									new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()),
 									passwordChange.getOldSmtpKey()));
+							smtp.setDecrypted(true);
 							smtpService.save(smtp, passwordChange.getNewSmtpKey());
 						}
 						save(user);

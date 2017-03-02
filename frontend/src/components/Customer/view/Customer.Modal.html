@@ -80,7 +80,55 @@
                                 <label class="checkbox-inline"> <input type="checkbox"  ng-model="customerCtrl.currentCustomer.deactivated" id="inlineCheckbox1">{{ 'PRODUCT_DEACTIVATED' | translate }}</label>
                             </div>
                         </div>
-
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-sm-6 b-r">
+                            <!-- Number -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.addresses[1].number.$invalid && !customerCtrl.createCustomerForm.addresses[1].number.$pristine }">
+                                <label>{{ 'COMMON_HOUSE_NUMBER' | translate }}</label>
+                                <span style="color:red" ng-show="customerCtrl.createCustomerForm.addresses[1].number.$error.maxlength" >{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+                                <span style="color:red" ng-show="customerCtrl.createCustomerForm.addresses[1].number.$error.required && !customerCtrl.createCustomerForm.addresses[1].number.$pristine"
+                                    >{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+                                    <input type="number" name="number" class="form-control" ng-model="customerCtrl.currentCustomer.addresses[1].number" ng-maxlength="5">
+                            </div>
+                            <!-- Street -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.addresses[1].street.$invalid && !customerCtrl.createCustomerForm.addresses[1].street.$pristine }">
+                                <label>{{ 'COMMON_STREET' | translate }}</label>
+                                <span style="color:red" ng-show="customerCtrl.createCustomerForm.addresses[1].street.$error.maxlength" >{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+                                <span style="color:red" ng-show="customerCtrl.createCustomerForm.addresses[1].street.$error.required && !customerCtrl.createCustomerForm.addresses[1].street.$pristine"
+                                    >{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+                                    <input type="text" name="street" class="form-control" ng-model="customerCtrl.currentCustomer.addresses[1].street" ng-maxlength="30">
+                            </div>
+                            <!-- City -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.addresses[1].city.$invalid && !customerCtrl.createCustomerForm.addresses[1].city.$pristine }">
+                                <label>{{ 'COMMON_CITY' | translate }}</label>
+                                <span style="color:red" ng-show="customerCtrl.createCustomerForm.addresses[1].city.$error.maxlength" >{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+                                <span style="color:red" ng-show="customerCtrl.createCustomerForm.addresses[1].city.$error.required && !customerCtrl.createCustomerForm.addresses[1].city.$pristine"
+                                    >{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+                                    <input type="text" name="city" class="form-control" ng-model="customerCtrl.currentCustomer.addresses[1].city" ng-maxlength="30">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">  
+                            <!-- State -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.addresses[1].state.$invalid && !customerCtrl.createCustomerForm.addresses[1].state.$pristine }">
+                                <label>{{ 'COMMON_STATE' | translate }}</label>
+                                <span style="color:red" ng-show="customerCtrl.createCustomerForm.addresses[1].state.$invalid && !customerCtrl.createCustomerForm.addresses[1].state.$pristine" >{{ 'COMMON_VALIDATE_EMAIL'| translate }}</span>
+                                <input type="text" name="state" class="form-control" ng-model="customerCtrl.currentCustomer.addresses[1].state">
+                            </div>
+                            <!-- Country -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.addresses[1].country.$invalid && !customerCtrl.createCustomerForm.addresses[1].country.$pristine }">
+                                <label>{{ 'COMMON_COUNTRY' | translate }}</label>
+                                <span style="color:red" ng-show="customerCtrl.createCustomerForm.addresses[1].country.$invalid && !customerCtrl.createCustomerForm.addresses[1].country.$pristine" >{{ 'COMMON_VALIDATE_MAX' | translate }}20{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+                                <input type="text" name="country" class="form-control" ng-model="customerCtrl.currentCustomer.addresses[0].country" ng-maxlength="20">
+                            </div>
+                             <!-- Zip -->
+                            <div class="form-group" ng-class="{ 'has-error' : customerCtrl.createCustomerForm.addresses[1].zip.$invalid && !customerCtrl.createCustomerForm.addresses[1].zip.$pristine }">
+                                <label>{{ 'COMMON_ZIP' | translate }}</label>
+                                <span style="color:red" ng-show="customerCtrl.createCustomerForm.addresses[1].zip.$invalid && !customerCtrl.createCustomerForm.addresses[1].zip.$pristine" >{{ 'COMMON_VALIDATE_MAX' | translate }}10{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+                                <input type="text" name="zip" class="form-control" ng-model="customerCtrl.currentCustomer.addresses[1].zip" ng-maxlength="10">
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
