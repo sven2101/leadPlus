@@ -76,7 +76,7 @@ public class Tenant {
 	}
 
 	public void setTenantKey(String tenantKey) {
-		this.tenantKey = tenantKey;
+		this.tenantKey = tenantKey.toLowerCase();
 	}
 
 	public String getDescription() {
