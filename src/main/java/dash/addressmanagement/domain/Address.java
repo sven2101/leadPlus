@@ -10,12 +10,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-
 @Entity
-@SQLDelete(sql = "UPDATE address SET deleted = '1' WHERE id = ?")
-@Where(clause = "deleted <> '1'")
 @Table(name = "address")
 public class Address {
 
