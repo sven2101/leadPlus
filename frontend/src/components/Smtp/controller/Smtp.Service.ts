@@ -20,7 +20,7 @@ const SmtpServiceId: string = "SmtpService";
 
 class SmtpService {
 
-    private $inject = [toasterId, $translateId, $rootScopeId, SmtpResourceId, UserResourceId, $qId];
+    private $inject = [toasterId, $translateId, $rootScopeId, SmtpResourceId, UserResourceId, $qId, TokenServiceId];
 
     smtpResource;
     userResource;
@@ -32,7 +32,7 @@ class SmtpService {
     toaster;
     currentPasswordLength: number = 10;
 
-    constructor(toaster, $translate, $rootScope, SmtpResource, UserResource, $q) {
+    constructor(toaster, $translate, $rootScope, SmtpResource, UserResource, $q, private TokenService: TokenService) {
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
@@ -45,7 +45,7 @@ class SmtpService {
     async test(): Promise<any> {
         try {
             await this.save();
-            let tempSmtp: Smtp = await this.smtpResource.testSmtp({ id: this.currentSmtp.id }, { smtpKey: this.rootScope.user.smtpKey }).$promise;
+            let tempSmtp: Smtp = await this.smtpResource.testSmtp({ id: this.currentSmtp.id }, { smtpKey: this.TokenService.getSmtpKey() }).$promise;
             this.currentSmtp.verified = tempSmtp.verified;
             this.toaster.pop("success", "", this.translate.instant("SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST"));
         } catch (error) {
@@ -74,7 +74,7 @@ class SmtpService {
         this.currentSmtp.password = this.currentSmtp.stringPassword !== null ? btoa(this.currentSmtp.stringPassword) : null;
         this.currentSmtp.decrypted = true;
 
-        this.currentSmtp = await this.smtpResource.createSmtp({ smtpKey: this.rootScope.user.smtpKey, smtp: this.currentSmtp }).$promise;
+        this.currentSmtp = await this.smtpResource.createSmtp({ smtpKey: this.TokenService.getSmtpKey(), smtp: this.currentSmtp }).$promise;
         this.currentSmtp.stringPassword = "";
         for (let i = 0; i < this.currentPasswordLength; i++) {
             this.currentSmtp.stringPassword += "x";

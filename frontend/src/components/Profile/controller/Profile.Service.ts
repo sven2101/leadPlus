@@ -87,34 +87,21 @@ class ProfileService {
         });
     }
 
-    updatePassword(oldPassword, newPassword1, newPassword2): Promise<boolean> {
+    async updatePassword(oldPassword, newPassword1, newPassword2): Promise<void> {
         let salt: string = this.rootScope.user.email;
         oldPassword = hashPasswordPbkdf2(oldPassword, salt);
         newPassword1 = hashPasswordPbkdf2(newPassword1, salt);
-        newPassword2 = hashPasswordPbkdf2(newPassword2, salt);
-        let defer = this.q.defer();
-        let self = this;
-        this.userResource.changePassword({
-            id: this.rootScope.user.id
-        }, {
-                newPassword: newPassword1,
-                oldPassword: oldPassword,
-                oldSmtpKey: self.rootScope.user.smtpKey,
-                newSmtpKey: encodeURIComponent(hashPasswordPbkdf2(newPassword1, salt))
-            }).$promise.then(function () {
-                self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
-                let authorization = btoa(self.rootScope.user.email + ":" + newPassword1);
-                self.rootScope.user.authorization = authorization;
-                let date = new Date();
-                date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
-                self.cookies.putObject("user", self.rootScope.user, { domain: self.location.host(), path: "/", expires: date });
-                self.rootScope.user.smtpKey = encodeURIComponent(hashPasswordPbkdf2(newPassword1, salt));
-                defer.resolve(true);
-            }, function (error) {
-                self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
-                defer.reject(error);
-            });
-        return defer.promise;
+
+        try {
+            let token = await this.userResource.changePassword({ id: this.rootScope.user.id }, {
+                newPassword: newPassword1, oldPassword: oldPassword,
+            }).$promise;
+            console.log("token", token);
+            this.toaster.pop("success", "", this.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
+        } catch (error) {
+            this.toaster.pop("error", "", this.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
+            console.log("updatePassword", error);
+        }
     }
 
     uploadFiles() {

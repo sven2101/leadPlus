@@ -375,7 +375,7 @@ class SmtpResource {
         this.resource = $resource("/api/rest/smtp", {}, {
             createSmtp: { url: "/api/rest/smtp/", method: "POST" },
             testSmtp: { url: "/api/rest/smtp/:id/test", method: "POST" },
-            getByUserId: { url: "/users/smtp/user/:id", method: "GET" },
+            getByUserId: { url: "api/rest/users/smtp/user/:id", method: "GET" },
         });
     }
 }

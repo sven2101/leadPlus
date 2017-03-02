@@ -17,6 +17,7 @@ package dash.usermanagement.rest;
 import static dash.Constants.USER_NOT_FOUND;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -82,9 +83,9 @@ public class UserManagmentResource {
 	@RequestMapping(value = "/{id}/pw", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update password of a single user.", notes = "Provide a valid user ID.")
-	public void updatePassword(@PathVariable final long id, @RequestBody @Valid final PasswordChange passwordChange)
-			throws Exception {
-		userService.updatePassword(id, passwordChange);
+	public Map<String, String> updatePassword(@PathVariable final long id,
+			@RequestBody @Valid final PasswordChange passwordChange) throws Exception {
+		return userService.updatePassword(id, passwordChange);
 	}
 
 	@RequestMapping(value = "/{id}/activate", method = RequestMethod.PUT)

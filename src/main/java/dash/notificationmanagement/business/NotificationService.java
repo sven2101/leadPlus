@@ -114,7 +114,7 @@ public class NotificationService implements INotificationService {
 
 		this.setReferenceForAlreadyUploadFiles(notification);
 
-		password = SmtpUtil.decryptPasswordForSmtp(smtp, smtpKey);
+		password = SmtpUtil.decryptPasswordForSmtp(smtp);
 		session = SmtpUtil.createSessionWithAuthentication(host, port, smtpEncryptionType, username, password);
 
 		if (smtpEncryptionType == SmtpEncryptionType.PLAIN)

@@ -186,5 +186,6 @@ class TokenService {
         return this.accessTokenJson.signature;
     }
 
+
 }
 angular.module(moduleTokenService, []).service(TokenServiceId, TokenService);

@@ -15,6 +15,7 @@
 package dash.usermanagement.business;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +44,7 @@ public interface IUserService {
 
 	public void delete(final long id) throws DeleteFailedException;
 
-	public void updatePassword(final long id, final PasswordChange passwordChange)
+	public Map<String, String> updatePassword(final long id, final PasswordChange passwordChange)
 			throws UpdateFailedException, DontMatchException, Exception;
 
 	public User updateProfilPicture(final User user)
