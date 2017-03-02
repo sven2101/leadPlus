@@ -40,7 +40,7 @@ public class MessageUtil {
 
 		String oldContent = notification.getContent();
 		StringBuilder newContentBuilder = new StringBuilder();
-		Map<String, String[]> imageMap = new HashMap<String, String[]>();
+		Map<String, String[]> imageMap = new HashMap<>();
 		boolean inImage = false;
 		StringBuilder currentBase64ImageStringBuilder = new StringBuilder();
 		StringBuilder currentBase64HeaderStringBuilder = new StringBuilder();
@@ -74,25 +74,27 @@ public class MessageUtil {
 			if (!inImage) {
 				newContentBuilder.append(c);
 			}
-
 		}
+
+		Multipart multipart = MailBuilder.build("", newContentBuilder.toString(), getInlineAttachments(imageMap),
+				notification.getAttachments());
+		message.setContent(multipart, "text/html; charset=utf-8");
+		return message;
+	}
+
+	private static Set<Attachment> getInlineAttachments(Map<String, String[]> imageMap) {
 		Set<Attachment> attachments = new HashSet<>();
 		for (String key : imageMap.keySet()) {
 			String[] value = imageMap.get(key);
-			Attachment a = new Attachment();
+			Attachment attachment = new Attachment();
 			FileUpload file = new FileUpload();
 			file.setFilename(key);
 			file.setMimeType("image/jpeg");
 			file.setContent(org.apache.commons.codec.binary.Base64.decodeBase64(value[1].getBytes()));
-			a.setFileUpload(file);
-			attachments.add(a);
+			attachment.setFileUpload(file);
+			attachments.add(attachment);
 		}
-
-		MailContentBuilder builder = new MailContentBuilder();
-		Multipart multipart = builder.build("", newContentBuilder.toString(), attachments,
-				notification.getAttachments());
-		message.setContent(multipart);
-		return message;
+		return attachments;
 	}
 
 	private static Message setRecipients(String recipientsTO, String recipientsCC, String recipientsBCC,
