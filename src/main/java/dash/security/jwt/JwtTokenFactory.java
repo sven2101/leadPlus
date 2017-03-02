@@ -39,7 +39,7 @@ public class JwtTokenFactory {
 	 * @param roles
 	 * @return
 	 */
-	public AccessJwtToken createAccessJwtToken(UserContext userContext, String tenant) {
+	public AccessJwtToken createAccessJwtToken(UserContext userContext, String tenant, String smtpKey) {
 		if (userContext.getUsername() == null && userContext.getUsername() == "")
 			throw new IllegalArgumentException("Cannot create JWT Token without username");
 
@@ -48,7 +48,7 @@ public class JwtTokenFactory {
 
 		Claims claims = Jwts.claims().setSubject(userContext.getUsername());
 		claims.put("tenant", tenant);
-		claims.put("signature", userContext.getSmtpKey());
+		claims.put("signature", smtpKey == null ? userContext.getSmtpKey() : smtpKey);
 		claims.put("scopes", userContext.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
 
 		DateTime currentTime = new DateTime();
@@ -61,7 +61,7 @@ public class JwtTokenFactory {
 		return new AccessJwtToken(token, claims);
 	}
 
-	public JwtToken createRefreshToken(UserContext userContext, String tenant) {
+	public JwtToken createRefreshToken(UserContext userContext, String tenant, String smtpKey) {
 		if (userContext.getUsername() == null && userContext.getUsername() == "") {
 			throw new IllegalArgumentException("Cannot create JWT Token without username");
 		}
@@ -70,7 +70,7 @@ public class JwtTokenFactory {
 
 		Claims claims = Jwts.claims().setSubject(userContext.getUsername());
 		claims.put("tenant", tenant);
-
+		claims.put("signature", smtpKey == null ? userContext.getSmtpKey() : smtpKey);
 		claims.put("scopes", Arrays.asList(Scopes.REFRESH_TOKEN.authority()));
 
 		String token = Jwts.builder().setClaims(claims).setIssuer(settings.getTokenIssuer())

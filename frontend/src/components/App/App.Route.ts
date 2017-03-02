@@ -172,8 +172,9 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
         $httpProvider.interceptors.push(function ($q, $location, $rootScope, TokenService: TokenService) {
             return {
                 "request": async (request) => {
+                    await TokenService.awaitInit();
                     if (request.url.substr(request.url.length - 5) !== ".html") {
-                        request.headers["X-Authorization"] = "Bearer " + await TokenService.getAccessToken();
+                        request.headers["X-Authorization"] = "Bearer " + await TokenService.getAccessTokenPromise();
                     }
                     return request;
                 },
@@ -202,8 +203,8 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
         });
 
     }])
-    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId, $windowId, $qId,
-        async function ($location, $http, $rootScope, AuthService: AuthService, $cookies, $injector, $window, $q) {
+    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $injectorId, $windowId, $qId,
+        async function ($location, $http, $rootScope, AuthService: AuthService, $injector, $window, $q) {
             // TODO Workaround for native promises!!!
             $window.Promise = $q;
             await AuthService.awaitInit();

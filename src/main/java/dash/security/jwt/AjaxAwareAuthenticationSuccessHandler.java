@@ -47,8 +47,8 @@ public class AjaxAwareAuthenticationSuccessHandler implements AuthenticationSucc
 
 		SubdomainExtractor extractor = new SubdomainExtractor();
 		String subdomain = extractor.extract(request.getRequestURL().toString());
-		JwtToken accessToken = tokenFactory.createAccessJwtToken(userContext, subdomain);
-		JwtToken refreshToken = tokenFactory.createRefreshToken(userContext, subdomain);
+		JwtToken accessToken = tokenFactory.createAccessJwtToken(userContext, subdomain, null);
+		JwtToken refreshToken = tokenFactory.createRefreshToken(userContext, subdomain, null);
 
 		Map<String, String> tokenMap = new HashMap<String, String>();
 		tokenMap.put("token", accessToken.getToken());

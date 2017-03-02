@@ -84,6 +84,6 @@ public class RefreshTokenEndpoint {
 
 		UserContext userContext = UserContext.create(user.getUsername(), authorities, smtpKey);
 
-		return tokenFactory.createAccessJwtToken(userContext, tenant);
+		return tokenFactory.createAccessJwtToken(userContext, tenant, null);
 	}
 }

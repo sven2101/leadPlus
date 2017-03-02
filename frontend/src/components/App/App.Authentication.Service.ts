@@ -9,11 +9,10 @@ const AuthServiceId: string = "AuthService";
 
 class AuthService {
 
-    $inject = [$httpId, $rootScopeId, $cookiesId, $locationId, $windowId, UserResourceId, $injectorId, $qId, TokenServiceId];
+    $inject = [$httpId, $rootScopeId, $locationId, $windowId, UserResourceId, $injectorId, $qId, TokenServiceId];
 
     http;
     rootScope;
-    cookies;
     location;
     window;
     userResource;
@@ -21,12 +20,11 @@ class AuthService {
 
     $q;
 
-    constructor($http, $rootScope, $cookies, $location, $window, UserResource, $injector, $q, private TokenService: TokenService) {
+    constructor($http, $rootScope, $location, $window, UserResource, $injector, $q, private TokenService: TokenService) {
 
         this.http = $http;
         this.$q = $q;
         this.rootScope = $rootScope;
-        this.cookies = $cookies;
         this.location = $location;
         this.window = $window;
         this.userResource = UserResource.resource;

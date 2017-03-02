@@ -145,7 +145,7 @@ class UserResource {
     constructor($resource) {
         this.resource = $resource("/api/rest/users/:id", {}, {
             getById: { url: "/api/rest/users/:id", method: "GET" },
-            update: { url: "/api/rest/users", method: "PUT" },
+            update: { url: "/api/rest/users", method: "POST" },
             changePassword: { url: "/api/rest/users/:id/pw", method: "POST" },
             setProfilePicture2: {
                 url: "/api/rest/users/:id/profile/picture", params: { file: "@file" }, method: "POST", transformRequest: angular.identity,

@@ -16,6 +16,8 @@ class TokenService {
     private refreshTokenJson: any;
     private loggedIn: boolean = false;
     private initPromise: Promise<void>;
+    private tokenRefreshPromise: Promise<string>;
+    private tokenRefreshInProgress: boolean = false;
 
     constructor(private $q, private $rootScope, private $location) {
         this.init();
@@ -27,7 +29,7 @@ class TokenService {
 
     private async initToken(): Promise<void> {
         console.log("init start", this.loggedIn);
-        this.accessToken = localStorage.getItem(ACCESS_TOKEN);
+        // this.accessToken = localStorage.getItem(ACCESS_TOKEN);
         this.refreshToken = localStorage.getItem(REFRESH_TOKEN);
         this.accessTokenJson = this.accessToken == null ? null : jwt_decode(this.accessToken);
         this.refreshTokenJson = this.refreshToken == null ? null : jwt_decode(this.refreshToken);
@@ -39,14 +41,23 @@ class TokenService {
             this.loggedIn = true;
         } else {
             console.log("accessToken expired");
-            let temp: string = await this.getAccessToken();
-            console.log(temp);
-            this.accessToken = temp;
+            this.accessToken = await this.getAccessTokenPromise();
             localStorage.setItem(ACCESS_TOKEN, this.accessToken);
             this.accessTokenJson = jwt_decode(this.accessToken);
             this.loggedIn = true;
         }
-        console.log("init end", this.loggedIn);
+
+    }
+
+    public setToken(newToken: { token: string, refreshToken: string }): void {
+        this.accessToken = newToken.token;
+        this.refreshToken = newToken.refreshToken;
+        this.accessTokenJson = this.accessToken == null ? null : jwt_decode(this.accessToken);
+        this.refreshTokenJson = this.refreshToken == null ? null : jwt_decode(this.refreshToken);
+        // localStorage.setItem(ACCESS_TOKEN, this.accessToken);
+        localStorage.setItem(REFRESH_TOKEN, this.refreshToken);
+        console.log(newToken);
+        this.loggedIn = true;
     }
 
     private async getAccessTokenByRefreshToken(refreshToken: string): Promise<{ token: string }> {
@@ -76,14 +87,7 @@ class TokenService {
             data: JSON.stringify(credentials),
             contentType: "application/json; charset=utf-8",
             success: (response: { token: string, refreshToken: string }) => {
-                self.accessToken = response.token;
-                self.refreshToken = response.refreshToken;
-                self.accessTokenJson = this.accessToken == null ? null : jwt_decode(this.accessToken);
-                self.refreshTokenJson = this.refreshToken == null ? null : jwt_decode(this.refreshToken);
-                localStorage.setItem(ACCESS_TOKEN, self.accessToken);
-                localStorage.setItem(REFRESH_TOKEN, self.refreshToken);
-                console.log(response);
-                self.loggedIn = true;
+                self.setToken(response);
                 defer.resolve();
             },
             error: (error) => {
@@ -95,7 +99,17 @@ class TokenService {
         return defer.promise;
     }
 
-    public async getAccessToken(): Promise<string> {
+    public async getAccessTokenPromise(): Promise<string> {
+        if (this.tokenRefreshInProgress === true) { return this.tokenRefreshPromise; }
+        this.tokenRefreshInProgress = true;
+        this.tokenRefreshPromise = this.getAccessToken();
+        let temp = await this.tokenRefreshPromise;
+        this.tokenRefreshInProgress = false;
+        return temp;
+
+    }
+
+    private async getAccessToken(): Promise<string> {
         try {
             if (this.accessToken != null && !this.isExpired(this.accessTokenJson)) { return this.accessToken; }
             if (this.refreshToken == null || this.isExpired(this.refreshTokenJson)) { throw Error("Refresh token expired!"); }
@@ -104,7 +118,7 @@ class TokenService {
             let temp: { token: string } = await this.getAccessTokenByRefreshToken(this.refreshToken);
             console.log(temp);
             this.accessToken = temp.token;
-            localStorage.setItem(ACCESS_TOKEN, this.accessToken);
+            // localStorage.setItem(ACCESS_TOKEN, this.accessToken);
             this.accessTokenJson = jwt_decode(this.accessToken);
             console.log(this.accessToken);
             this.loggedIn = true;
@@ -115,7 +129,6 @@ class TokenService {
             console.log("getAccessToken", error);
             this.logout();
         }
-
     }
 
     public getAccessTokenInstant(): string {
@@ -137,7 +150,7 @@ class TokenService {
         try {
             let temp = await this.getAccessTokenByRefreshToken(this.refreshToken);
             this.accessToken = temp.token;
-            localStorage.setItem(ACCESS_TOKEN, this.accessToken);
+            // localStorage.setItem(ACCESS_TOKEN, this.accessToken);
             this.accessTokenJson = jwt_decode(this.accessToken);
             this.loggedIn = true;
         } catch (error) {
@@ -183,6 +196,7 @@ class TokenService {
     }
 
     public getSmtpKey(): string {
+        console.log(this.accessTokenJson.signature);
         return this.accessTokenJson.signature;
     }
 

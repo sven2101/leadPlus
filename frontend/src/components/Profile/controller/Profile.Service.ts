@@ -23,7 +23,7 @@ const ProfileServiceId: string = "ProfileService";
 
 class ProfileService {
 
-    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId, $cookiesId, $locationId];
+    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId, $locationId, TokenServiceId];
 
     userResource;
     translate;
@@ -33,14 +33,13 @@ class ProfileService {
     fileResource;
     formdata;
     q;
-    cookies;
 
     oldPassword: string;
     newPassword1: string;
     newPassword2: string;
     location;
 
-    constructor($rootScope, toaster, $translate, UserResource, FileResource, $q, $cookies, $location) {
+    constructor($rootScope, toaster, $translate, UserResource, FileResource, $q, $location, private TokenService: TokenService) {
         this.fileResource = FileResource.resource;
         this.userResource = UserResource.resource;
         this.translate = $translate;
@@ -48,7 +47,6 @@ class ProfileService {
         this.rootScope = $rootScope;
         this.formdata = new FormData();
         this.q = $q;
-        this.cookies = $cookies;
         this.location = $location;
     }
 
@@ -58,9 +56,7 @@ class ProfileService {
 
         this.userResource.update(user).$promise.then(function (updatedUser: User) {
             self.updateRootScope(updatedUser);
-            let date = new Date();
-            date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
-            self.cookies.putObject("user", self.rootScope.user, { domain: self.rootScope.tenant.tenantKey, path: "/", expires: date });
+            localStorage.setItem(USER_STORAGE, JSON.stringify(self.rootScope.user));
             self.rootScope.changeLanguage(self.rootScope.user.language);
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
             defer.resolve(updatedUser);
@@ -78,9 +74,7 @@ class ProfileService {
             data.authorization = self.rootScope.user.authorization;
             data.smtpKey = self.rootScope.user.smtpKey;
             self.rootScope.user = data;
-            let date = new Date();
-            date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
-            self.cookies.putObject("user", self.rootScope.user, { domain: self.rootScope.tenant.tenantKey, path: "/", expires: date });
+            localStorage.setItem(USER_STORAGE, JSON.stringify(self.rootScope.user));
             $("#profilePicture").prop("src", "data:image/jpeg;base64," + user.picture.content);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
@@ -97,6 +91,7 @@ class ProfileService {
                 newPassword: newPassword1, oldPassword: oldPassword,
             }).$promise;
             console.log("token", token);
+            this.TokenService.setToken(token);
             this.toaster.pop("success", "", this.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
         } catch (error) {
             this.toaster.pop("error", "", this.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));

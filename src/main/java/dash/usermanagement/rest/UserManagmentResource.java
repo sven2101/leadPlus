@@ -72,7 +72,7 @@ public class UserManagmentResource {
 		return userService.getById(id);
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update a single user.", notes = "Provide a valid user ID.")
 	public User update(@RequestBody final User user)

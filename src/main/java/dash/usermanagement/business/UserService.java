@@ -221,10 +221,10 @@ public class UserService implements IUserService {
 						user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
 						Smtp smtp = null;
 						smtp = smtpService.findByUserId(user.getId());
+						String newSmtpKey = null;
 						if (smtp != null) {
 							smtp.setPassword(SmtpUtil.decryptPasswordForSmtp(smtp).getBytes());
-							String newSmtpKey = Encryptor.hashTextPBKDF2(passwordChange.getNewPassword(),
-									user.getEmail());
+							newSmtpKey = Encryptor.hashTextPBKDF2(passwordChange.getNewPassword(), user.getEmail());
 							smtp.setDecrypted(true);
 							smtpService.save(smtp, newSmtpKey);
 						}
@@ -232,9 +232,10 @@ public class UserService implements IUserService {
 						Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 						UserContext userContext = (UserContext) authentication.getPrincipal();
 
-						JwtToken accessToken = tokenFactory.createAccessJwtToken(userContext,
-								TenantContext.getTenant());
-						JwtToken refreshToken = tokenFactory.createRefreshToken(userContext, TenantContext.getTenant());
+						JwtToken accessToken = tokenFactory.createAccessJwtToken(userContext, TenantContext.getTenant(),
+								newSmtpKey);
+						JwtToken refreshToken = tokenFactory.createRefreshToken(userContext, TenantContext.getTenant(),
+								newSmtpKey);
 
 						Map<String, String> tokenMap = new HashMap<String, String>();
 						tokenMap.put("token", accessToken.getToken());
