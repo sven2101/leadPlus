@@ -16,7 +16,6 @@ package dash.customermanagement.domain;
 
 import java.util.Calendar;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -24,8 +23,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -38,7 +35,6 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import dash.addressmanagement.domain.Address;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -86,21 +82,17 @@ public class Customer {
 	@Column(name = "phone", length = 255, nullable = true)
 	private String phone;
 
-	@Size(max = 255)
-	@Column(name = "fax", length = 255, nullable = true)
+	@Size(max = 20)
+	@Column(name = "fax", length = 20, nullable = true)
 	private String fax;
 
-	@Size(max = 255)
-	@Column(name = "mobile", length = 255, nullable = true)
+	@Size(max = 20)
+	@Column(name = "mobile", length = 20, nullable = true)
 	private String mobile;
 
 	@Size(max = 255)
 	@Column(name = "address", length = 255, nullable = true)
 	private String address;
-
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "address_fk", nullable = true)
-	private Address customerAddress;
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
@@ -193,6 +185,22 @@ public class Customer {
 		this.phone = phone;
 	}
 
+	public String getFax() {
+		return fax;
+	}
+
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
 	public String getAddress() {
 		return address;
 	}
@@ -243,9 +251,11 @@ public class Customer {
 		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((fax == null) ? 0 : fax.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
+		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + (realCustomer ? 1231 : 1237);
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
@@ -286,6 +296,11 @@ public class Customer {
 				return false;
 		} else if (!email.equals(other.email))
 			return false;
+		if (fax == null) {
+			if (other.fax != null)
+				return false;
+		} else if (!fax.equals(other.fax))
+			return false;
 		if (firstname == null) {
 			if (other.firstname != null)
 				return false;
@@ -300,6 +315,11 @@ public class Customer {
 			if (other.lastname != null)
 				return false;
 		} else if (!lastname.equals(other.lastname))
+			return false;
+		if (mobile == null) {
+			if (other.mobile != null)
+				return false;
+		} else if (!mobile.equals(other.mobile))
 			return false;
 		if (phone == null) {
 			if (other.phone != null)
@@ -321,9 +341,10 @@ public class Customer {
 	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname
-				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone
-				+ ", address=" + address + ", deactivated=" + deactivated + ", realCustomer=" + realCustomer
-				+ ", timestamp=" + timestamp + ", customerNumber=" + customerNumber + "]";
+				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone + ", fax="
+				+ fax + ", mobile=" + mobile + ", address=" + address + ", deactivated=" + deactivated
+				+ ", realCustomer=" + realCustomer + ", timestamp=" + timestamp + ", customerNumber=" + customerNumber
+				+ "]";
 	}
 
 }

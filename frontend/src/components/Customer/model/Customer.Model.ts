@@ -9,6 +9,8 @@ class Customer {
     company: string;
     email: string;
     phone: string;
+    fax: string;
+    mobile: string;
     address: string;
     timestamp: any;
     deactivated: boolean;

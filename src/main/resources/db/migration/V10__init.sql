@@ -2,10 +2,10 @@ ALTER TABLE template
 	ALTER COLUMN content TYPE text;
 
 ALTER TABLE customer 
-	ADD COLUMN fax character varying(255);
+	ADD COLUMN fax character varying(20);
 	
 ALTER TABLE customer 
-	ADD COLUMN mobile character varying(255);
+	ADD COLUMN mobile character varying(20);
 
 CREATE SEQUENCE "address_id_seq"
   INCREMENT 1

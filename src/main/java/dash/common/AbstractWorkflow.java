@@ -28,6 +28,7 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import dash.addressmanagement.domain.Address;
 import dash.customermanagement.domain.Customer;
 import dash.processmanagement.request.Request;
 import dash.productmanagement.domain.OrderPosition;
@@ -50,9 +51,9 @@ public abstract class AbstractWorkflow implements Request {
 	@Where(clause = "deleted <> '1'")
 	private Customer customer;
 
-	@Size(max = 255)
-	@Column(name = "deliveryaddress", length = 255, nullable = true)
-	private String deliveryAddress;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "address_fk", nullable = true)
+	private List<Address> addresses;
 
 	@NotNull
 	@ApiModelProperty(hidden = true)
