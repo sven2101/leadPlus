@@ -6,9 +6,6 @@ ALTER TABLE customer
 	
 ALTER TABLE customer 
 	ADD COLUMN mobile character varying(255);
-	
-ALTER TABLE customer 
-	ADD COLUMN fax character varying(255);
 
 CREATE SEQUENCE "address_id_seq"
   INCREMENT 1
@@ -28,10 +25,3 @@ CREATE TABLE address
   country character varying(255),
   CONSTRAINT address_pkey PRIMARY KEY (id)
 )
-
-ALTER TABLE customer 
-	ADD address_fk bigint;
-
-ALTER TABLE customer 
-	ADD CONSTRAINT address_foreignkey FOREIGN KEY (address_fk)
-	REFERENCES address (id);

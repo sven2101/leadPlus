@@ -23,7 +23,7 @@ div.tooltip div.tooltip-inner {
 				<div class="form-group" ng-class="{'has-error': validation.tenantKey.$invalid
 													|| registrationCtrl.registrationService.tenantKeyExist }">
 					<div class="input-group">
-						<input type="text" class="form-control" name="tenantKey" placeholder="{{ 'REGISTRATION_SUBDOMAIN_YOUR_SITENAME' | translate }}" required ng-pattern="/^[a-zA-Z]*$/"
+						<input type="text" class="form-control" name="tenantKey" placeholder="{{ 'REGISTRATION_SUBDOMAIN_YOUR_SITENAME' | translate }}" required ng-pattern="/^[a-z]/"
 							ng-minlength="3" ng-maxlength="20" ng-model="registrationCtrl.tenant.tenantKey" ng-model-options="{ debounce: 600 }" ng-change="registrationCtrl.uniqueTenantKey()">
 						<div class="input-group-addon">.leadplus.me</div>
 					</div>
