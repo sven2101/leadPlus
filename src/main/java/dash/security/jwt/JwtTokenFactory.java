@@ -1,6 +1,8 @@
 package dash.security.jwt;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -76,6 +78,30 @@ public class JwtTokenFactory {
 		String token = Jwts.builder().setClaims(claims).setIssuer(settings.getTokenIssuer())
 				.setId(UUID.randomUUID().toString()).setIssuedAt(currentTime.toDate())
 				.setExpiration(currentTime.plusMinutes(settings.getRefreshTokenExpTime()).toDate())
+				.signWith(SignatureAlgorithm.HS512, settings.getTokenSigningKey()).compact();
+
+		return new AccessJwtToken(token, claims);
+	}
+
+	public AccessJwtToken createApiJwtToken(UserContext userContext, String tenant, String smtpKey) {
+		if (userContext.getUsername() == null && userContext.getUsername() == "")
+			throw new IllegalArgumentException("Cannot create JWT Token without username");
+
+		if (userContext.getAuthorities() == null || userContext.getAuthorities().isEmpty())
+			throw new IllegalArgumentException("User doesn't have any privileges");
+
+		Claims claims = Jwts.claims().setSubject("");
+		claims.put("tenant", tenant);
+
+		List<String> scopes = new ArrayList<>();
+		scopes.add("ROLE_USER");
+		claims.put("scopes", scopes);
+
+		DateTime currentTime = new DateTime();
+
+		String token = Jwts.builder().setClaims(claims).setIssuer(settings.getTokenIssuer())
+				.setIssuedAt(currentTime.toDate())
+				.setExpiration(currentTime.plusMinutes(settings.getApiTokenExpirationTime()).toDate())
 				.signWith(SignatureAlgorithm.HS512, settings.getTokenSigningKey()).compact();
 
 		return new AccessJwtToken(token, claims);

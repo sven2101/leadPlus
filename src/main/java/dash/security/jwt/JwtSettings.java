@@ -28,6 +28,11 @@ public class JwtSettings {
 	 */
 	private Integer refreshTokenExpTime;
 
+	/**
+	 * {@link JwtToken} can be refreshed during this timeframe.
+	 */
+	private Integer apiTokenExpirationTime;
+
 	public Integer getRefreshTokenExpTime() {
 		return refreshTokenExpTime;
 	}
@@ -38,6 +43,10 @@ public class JwtSettings {
 
 	public Integer getTokenExpirationTime() {
 		return tokenExpirationTime;
+	}
+
+	public Integer getApiTokenExpirationTime() {
+		return apiTokenExpirationTime;
 	}
 
 	public void setTokenExpirationTime(Integer tokenExpirationTime) {
