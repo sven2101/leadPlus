@@ -41,7 +41,7 @@ public class Tenant {
 	private long id;
 
 	@NotNull
-	@Pattern(regexp = "^[a-z]", message = "Invalid Tenant Key")
+	@Pattern(regexp = "[a-z]*", message = "Invalid Tenant Key")
 	@Column(name = "tenantkey", unique = true, length = 50, nullable = false)
 	private String tenantKey;
 

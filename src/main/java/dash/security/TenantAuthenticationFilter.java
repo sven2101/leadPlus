@@ -62,7 +62,7 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 
 		if (tenant.length == 4 && tenant[0].equals("www"))
 			return tenant[1];
-		else if (tenant.length == 3)
+		else if (tenant.length == 3 || (tenant.length == 4 && !tenant[0].equals("www")))
 			return tenant[0];
 		else if (tenant.length == 2)
 			return TenantContext.NO_TENANT;
