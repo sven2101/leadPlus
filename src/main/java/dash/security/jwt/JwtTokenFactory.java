@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import dash.security.jwt.domain.AccessJwtToken;
+import dash.security.jwt.domain.ApiJwtToken;
 import dash.security.jwt.domain.JwtToken;
 import dash.security.jwt.domain.Scopes;
 import dash.security.jwt.domain.UserContext;
@@ -42,11 +43,15 @@ public class JwtTokenFactory {
 	 * @return
 	 */
 	public AccessJwtToken createAccessJwtToken(UserContext userContext, String tenant, String smtpKey) {
-		if (userContext.getUsername() == null && userContext.getUsername() == "")
+		if (userContext.getUsername() == null && userContext.getUsername() == "") {
 			throw new IllegalArgumentException("Cannot create JWT Token without username");
-
-		if (userContext.getAuthorities() == null || userContext.getAuthorities().isEmpty())
+		}
+		if (userContext.getAuthorities() == null || userContext.getAuthorities().isEmpty()) {
 			throw new IllegalArgumentException("User doesn't have any privileges");
+		}
+		if (tenant == null) {
+			throw new IllegalArgumentException("Cannot create JWT Token without tenant");
+		}
 
 		Claims claims = Jwts.claims().setSubject(userContext.getUsername());
 		claims.put("tenant", tenant);
@@ -67,6 +72,9 @@ public class JwtTokenFactory {
 		if (userContext.getUsername() == null && userContext.getUsername() == "") {
 			throw new IllegalArgumentException("Cannot create JWT Token without username");
 		}
+		if (tenant == null) {
+			throw new IllegalArgumentException("Cannot create JWT Token without tenant");
+		}
 
 		DateTime currentTime = new DateTime();
 
@@ -83,27 +91,25 @@ public class JwtTokenFactory {
 		return new AccessJwtToken(token, claims);
 	}
 
-	public AccessJwtToken createApiJwtToken(UserContext userContext, String tenant, String smtpKey) {
-		if (userContext.getUsername() == null && userContext.getUsername() == "")
+	public ApiJwtToken createApiJwtToken(String username, String tenant) {
+		if (username == null) {
 			throw new IllegalArgumentException("Cannot create JWT Token without username");
-
-		if (userContext.getAuthorities() == null || userContext.getAuthorities().isEmpty())
-			throw new IllegalArgumentException("User doesn't have any privileges");
-
-		Claims claims = Jwts.claims().setSubject("");
+		}
+		if (tenant == null) {
+			throw new IllegalArgumentException("Cannot create JWT Token without tenant");
+		}
+		Claims claims = Jwts.claims().setSubject(username);
 		claims.put("tenant", tenant);
-
 		List<String> scopes = new ArrayList<>();
-		scopes.add("ROLE_USER");
+		scopes.add("ROLE_API");
 		claims.put("scopes", scopes);
-
 		DateTime currentTime = new DateTime();
-
+		String apiTokenId = UUID.randomUUID().toString();
 		String token = Jwts.builder().setClaims(claims).setIssuer(settings.getTokenIssuer())
-				.setIssuedAt(currentTime.toDate())
+				.setIssuedAt(currentTime.toDate()).setId(apiTokenId)
 				.setExpiration(currentTime.plusMinutes(settings.getApiTokenExpirationTime()).toDate())
 				.signWith(SignatureAlgorithm.HS512, settings.getTokenSigningKey()).compact();
 
-		return new AccessJwtToken(token, claims);
+		return new ApiJwtToken(token, claims, apiTokenId);
 	}
 }

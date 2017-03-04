@@ -45,12 +45,16 @@ public class JwtSettings {
 		return tokenExpirationTime;
 	}
 
+	public void setTokenExpirationTime(Integer tokenExpirationTime) {
+		this.tokenExpirationTime = tokenExpirationTime;
+	}
+
 	public Integer getApiTokenExpirationTime() {
 		return apiTokenExpirationTime;
 	}
 
-	public void setTokenExpirationTime(Integer tokenExpirationTime) {
-		this.tokenExpirationTime = tokenExpirationTime;
+	public void setApiTokenExpirationTime(Integer apiTokenExpirationTime) {
+		this.apiTokenExpirationTime = apiTokenExpirationTime;
 	}
 
 	public String getTokenIssuer() {

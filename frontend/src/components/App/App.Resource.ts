@@ -435,7 +435,8 @@ class SourceResource {
             getAllSources: { url: "/api/rest/source", method: "GET", isArray: true },
             createSource: { url: "/api/rest/source", method: "POST" },
             updateSource: { url: "/api/rest/source", method: "PUT" },
-            deleteSource: { url: "/api/rest/source", method: "DELETE" }
+            deleteSource: { url: "/api/rest/source", method: "DELETE" },
+            generateApiToken: { url: "/api/rest/source/apitoken/:id", method: "GET" },
         });
     }
 }

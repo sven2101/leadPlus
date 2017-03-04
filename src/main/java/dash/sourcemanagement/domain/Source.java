@@ -42,6 +42,10 @@ public class Source {
 	@Column(name = "description", length = 500, nullable = true)
 	private String description;
 
+	@Size(max = 50)
+	@Column(name = "token_id", length = 50, nullable = true)
+	private String tokenId;
+
 	public Source() {
 
 	}
@@ -84,6 +88,14 @@ public class Source {
 
 	public void setDeactivated(boolean deactivated) {
 		this.deactivated = deactivated;
+	}
+
+	public String getTokenId() {
+		return tokenId;
+	}
+
+	public void setTokenId(String tokenId) {
+		this.tokenId = tokenId;
 	}
 
 	@Override

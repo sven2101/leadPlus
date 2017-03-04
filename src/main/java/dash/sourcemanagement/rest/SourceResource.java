@@ -32,6 +32,7 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.security.jwt.domain.ApiJwtToken;
 import dash.sourcemanagement.business.ISourceService;
 import dash.sourcemanagement.domain.Source;
 import io.swagger.annotations.Api;
@@ -46,7 +47,7 @@ public class SourceResource {
 
 	@Autowired
 	private ISourceService sourceService;
-	
+
 	@ApiOperation(value = "Get all Sources.", notes = "")
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -71,7 +72,8 @@ public class SourceResource {
 	@ApiOperation(value = "Update a single source.", notes = "")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Source update(@ApiParam(required = true) @RequestBody @Valid final Source source) throws UpdateFailedException {
+	public Source update(@ApiParam(required = true) @RequestBody @Valid final Source source)
+			throws UpdateFailedException {
 		return sourceService.update(source);
 	}
 
@@ -80,5 +82,13 @@ public class SourceResource {
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
 		sourceService.delete(id);
+	}
+
+	@ApiOperation(value = "Generate Apitoken", notes = "You have to provide a valid source ID.")
+	@RequestMapping(value = "/apitoken/{id}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public ApiJwtToken generateApiTokenBySourceId(@ApiParam(required = true) @PathVariable final Long id)
+			throws NotFoundException {
+		return sourceService.generateApiTokenBySourceId(id);
 	}
 }

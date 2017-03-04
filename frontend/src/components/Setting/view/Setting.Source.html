@@ -53,6 +53,9 @@
 								<small style="word-wrap: break-word; word-break: break-all;">{{source.description}}</small>
 							</td>
 							<td class="project-actions col-md-1">
+								<button type="button" class="btn btn-white btn-sm" ng-click="sourceCtrl.generateApiToken(source)">
+									<i class="fa fa-recycle"></i>
+								</button>
 								<button type="button" class="btn btn-white btn-sm" ng-click="sourceCtrl.editSource(source)" data-toggle="modal" data-target="#createSourceModal"
 									data-backdrop="static">
 								<i class="fa fa-pencil"></i></button>

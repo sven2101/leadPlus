@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public static final String FORM_BASED_LOGIN_ENTRY_POINT = "/api/rest/auth/login";
 	public static final String TOKEN_BASED_AUTH_ENTRY_POINT = "/api/rest/**";
 	public static final String TOKEN_REFRESH_ENTRY_POINT = "/api/rest/auth/token";
-	public static final String EXPORT_API = "/api/rest/workouts/currentWorkouts";
+	public static final String PUBLIC_API = "api/rest/public/**";
 
 	@Autowired
 	private RestAuthenticationEntryPoint authenticationEntryPoint;
@@ -64,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	protected JwtTokenAuthenticationProcessingFilter buildJwtTokenAuthenticationProcessingFilter() throws Exception {
-		List<String> pathsToSkip = Arrays.asList(TOKEN_REFRESH_ENTRY_POINT, FORM_BASED_LOGIN_ENTRY_POINT, EXPORT_API);
+		List<String> pathsToSkip = Arrays.asList(TOKEN_REFRESH_ENTRY_POINT, FORM_BASED_LOGIN_ENTRY_POINT);
 		SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);
 		JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(failureHandler,
 				tokenExtractor, matcher);
@@ -93,12 +93,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				.and().authorizeRequests().antMatchers(FORM_BASED_LOGIN_ENTRY_POINT).permitAll() // Login
 																									// end-point
-				.antMatchers(TOKEN_REFRESH_ENTRY_POINT, EXPORT_API).permitAll() // Token
+				.antMatchers(TOKEN_REFRESH_ENTRY_POINT).permitAll() // Token
 				// refresh
 				// end-point
 				.and().authorizeRequests().antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT).authenticated().and()
-				// .addFilterBefore(new TenantAuthenticationFilter(),
-				// UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(buildAjaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(),
 						UsernamePasswordAuthenticationFilter.class);
