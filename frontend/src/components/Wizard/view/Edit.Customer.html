@@ -30,32 +30,31 @@
                     <option value="MS">{{ 'COMMON_TITLE_MS' | translate }}</option>
                 </select>
 			</div>
-			<!-- FIRSTNAME -->
-			<div class="form-group" ng-class="{ 'has-error' : cform.firstname.$invalid}">
-				<label>{{ 'COMMON_FIRSTNAME' | translate }}
-					<span style="color:red">*</span>
-				</label>
-				<span style="color:red" ng-show="cform.firstname.$error.maxlength">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
-				<span style="color:red" ng-show="cform.firstname.$error.required && !cform.firstname.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
-				<input required type="text" name="firstname" class="form-control" ng-model="editWorkflowUnit.customer.firstname" ng-maxlength="30"
-					ng-disabled="customerSelected">
-			</div>
-			<!-- LASTNAME -->
-			<div class="form-group" ng-class="{ 'has-error' : cform.lastname.$invalid}">
-				<label>{{ 'COMMON_LASTNAME' | translate }}
-					<span style="color:red">*</span>
-				</label>
-				<span style="color:red" ng-show="cform.lastname.$error.maxlength">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
-				<span style="color:red" ng-show="cform.lastname.$error.required && !cform.lastname.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
-				<input required type="text" name="lastname" class="form-control" ng-model="editWorkflowUnit.customer.lastname" ng-maxlength="30"
-					ng-disabled="customerSelected">
-			</div>
-			<!-- COMPANY -->
-			<div class="form-group" ng-class="{ 'has-error' : cform.company.$invalid && !cform.company.$pristine }">
-				<label>{{ 'COMMON_COMPANY' | translate }}</label>
-				<span style="color:red" ng-show="cform.company.$invalid && !cform.company.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
-				<input type="text" name="company" class="form-control" ng-model="editWorkflowUnit.customer.company" ng-maxlength="50"
-					ng-disabled="customerSelected">
+			<div class="row">
+				<div class="col-xs-6">
+					<!-- FIRSTNAME -->
+					<div class="form-group" ng-class="{ 'has-error' : cform.firstname.$invalid}">
+						<label>{{ 'COMMON_FIRSTNAME' | translate }}
+							<span style="color:red">*</span>
+						</label>
+						<span style="color:red" ng-show="cform.firstname.$error.maxlength">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+						<span style="color:red" ng-show="cform.firstname.$error.required && !cform.firstname.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+						<input required type="text" name="firstname" class="form-control" ng-model="editWorkflowUnit.customer.firstname" ng-maxlength="30"
+							ng-disabled="customerSelected">
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<!-- LASTNAME -->
+					<div class="form-group" ng-class="{ 'has-error' : cform.lastname.$invalid}">
+						<label>{{ 'COMMON_LASTNAME' | translate }}
+							<span style="color:red">*</span>
+						</label>
+						<span style="color:red" ng-show="cform.lastname.$error.maxlength">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+						<span style="color:red" ng-show="cform.lastname.$error.required && !cform.lastname.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+						<input required type="text" name="lastname" class="form-control" ng-model="editWorkflowUnit.customer.lastname" ng-maxlength="30"
+							ng-disabled="customerSelected">
+					</div>
+				</div>
 			</div>
 			<!-- EMAIL -->
 			<div class="form-group" ng-class="{ 'has-error' : cform.email.$invalid && !cform.email.$pristine }">
@@ -63,12 +62,106 @@
 				<span style="color:red" ng-show="cform.email.$invalid && !cform.email.$pristine">{{ 'COMMON_VALIDATE_EMAIL'| translate }}</span>
 				<input type="email" name="email" class="form-control" ng-model="editWorkflowUnit.customer.email" ng-disabled="customerSelected" ng-model-options="{debounce: 300}" ng-maxlength="255">
 			</div>
-			<!-- PHONE -->
-			<div class="form-group" ng-class="{ 'has-error' : cform.phone.$invalid && !cform.phone.$pristine }">
-				<label>{{ 'COMMON_PHONE' | translate }}</label>
-				<span style="color:red" ng-show="cform.phone.$invalid && !cform.phone.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
-				<input type="text" name="phone" class="form-control" ng-model="editWorkflowUnit.customer.phone" ng-maxlength="50"
-					ng-disabled="customerSelected">
+			<div class="row">
+			<!-- COMPANY -->
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{ 'has-error' : cform.company.$invalid && !cform.company.$pristine }">
+						<label>{{ 'COMMON_COMPANY' | translate }}</label>
+						<span style="color:red" ng-show="cform.company.$invalid && !cform.company.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+						<input type="text" name="company" class="form-control" ng-model="editWorkflowUnit.customer.company" ng-maxlength="50"
+							ng-disabled="customerSelected">
+					</div>
+				</div>
+				<!-- PHONE -->
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{ 'has-error' : cform.phone.$invalid && !cform.phone.$pristine }">
+						<label>{{ 'COMMON_PHONE' | translate }}</label>
+						<span style="color:red" ng-show="cform.phone.$invalid && !cform.phone.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+						<input type="text" name="phone" class="form-control" ng-model="editWorkflowUnit.customer.phone" ng-maxlength="50"
+							ng-disabled="customerSelected">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<!-- FAX -->
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{ 'has-error' : cform.fax.$invalid && !cform.fax.$pristine }">
+						<label>{{ 'COMMON_FAX' | translate }}</label>
+						<span style="color:red" ng-show="cform.fax.$invalid && !cform.fax.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}20{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+						<input type="text" name="fax" class="form-control" ng-model="editWorkflowUnit.customer.fax" ng-maxlength="20"
+							ng-disabled="customerSelected">
+					</div>
+				</div>
+				<!-- MOBILE -->
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{ 'has-error' : cform.mobile.$invalid && !cform.mobile.$pristine }">
+						<label>{{ 'COMMON_MOBILE' | translate }}</label>
+						<span style="color:red" ng-show="cform.mobile.$invalid && !cform.mobile.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}20{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+						<input type="text" name="mobile" class="form-control" ng-model="editWorkflowUnit.customer.mobile" ng-maxlength="20"
+							ng-disabled="customerSelected">
+					</div>
+				</div>
+			</div>
+			<hr/>
+			<div class="row">
+				<!-- STREET -->
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{ 'has-error' : cform.address.street.$invalid && !cform.address.street.$pristine }">
+						<label>{{ 'COMMON_STREET' | translate }}</label>
+						<span style="color:red" ng-show="cform.address.street.$invalid && !cform.address.street.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+						<input type="text" name="street" class="form-control" ng-model="editWorkflowUnit.customer.address.street" ng-maxlength="30"
+							ng-disabled="customerSelected">
+					</div>
+				</div>
+				<!-- NUMBER -->
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{ 'has-error' : cform.address.number.$invalid && !cform.address.number.$pristine }">
+						<label>{{ 'COMMON_HOUSE_NUMBER' | translate }}</label>
+						<span style="color:red" ng-show="cform.address.number.$invalid && !cform.address.number.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}5{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+						<input type="text" name="number" class="form-control" ng-model="editWorkflowUnit.customer.address.number" ng-maxlength="5"
+							ng-disabled="customerSelected">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<!-- ZIP -->
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{ 'has-error' : cform.address.zip.$invalid && !cform.address.zip.$pristine }">
+						<label>{{ 'COMMON_ZIP' | translate }}</label>
+						<span style="color:red" ng-show="cform.address.zip.$invalid && !cform.address.zip.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}10{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+						<input type="text" name="zip" class="form-control" ng-model="editWorkflowUnit.customer.address.zip" ng-maxlength="10"
+							ng-disabled="customerSelected">
+					</div>
+				</div>
+				<!-- CITY -->
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{ 'has-error' : cform.address.city.$invalid && !cform.address.city.$pristine }">
+						<label>{{ 'COMMON_CITY' | translate }}</label>
+						<span style="color:red" ng-show="cform.address.city.$invalid && !cform.address.city.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+						<input type="text" name="city" class="form-control" ng-model="editWorkflowUnit.customer.address.city" ng-maxlength="30"
+							ng-disabled="customerSelected">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<!-- STATE -->
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{ 'has-error' : cform.address.state.$invalid && !cform.address.state.$pristine }">
+						<label>{{ 'COMMON_STATE' | translate }}</label>
+						<span style="color:red" ng-show="cform.address.state.$invalid && !cform.address.state.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+						<input type="text" name="state" class="form-control" ng-model="editWorkflowUnit.customer.address.state" ng-maxlength="30"
+							ng-disabled="customerSelected">
+					</div>
+				</div>
+				<!-- COUNTRY -->
+				<div class="col-xs-6">
+					<div class="form-group" ng-class="{ 'has-error' : cform.address.country.$invalid && !cform.address.country.$pristine }">
+						<label>{{ 'COMMON_COUNTRY' | translate }}</label>
+						<span style="color:red" ng-show="cform.address.country.$invalid && !cform.address.country.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}20{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+						<input type="text" name="country" class="form-control" ng-model="editWorkflowUnit.customer.address.country" ng-maxlength="20"
+							ng-disabled="customerSelected">
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="col-sm-6">
