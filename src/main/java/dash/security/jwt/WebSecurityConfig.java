@@ -18,6 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dash.licensemanangement.domain.LicenseEnum;
+
 /**
  * WebSecurityConfig
  * 
@@ -91,14 +93,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-				.and().authorizeRequests().antMatchers(FORM_BASED_LOGIN_ENTRY_POINT).permitAll() // Login
-																									// end-point
-				.antMatchers(TOKEN_REFRESH_ENTRY_POINT).permitAll() // Token
+				.and().authorizeRequests()
+				.antMatchers(LicenseEnum.FREE.getAllowedRoutes()
+						.toArray(new String[LicenseEnum.FREE.getAllowedRoutes().size()]))
+				.permitAll() // Login
+								// end-point
+				.antMatchers(FORM_BASED_LOGIN_ENTRY_POINT).permitAll().antMatchers(TOKEN_REFRESH_ENTRY_POINT)
+				.permitAll() // Token
 				// refresh
 				// end-point
-				.and().authorizeRequests().antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT).authenticated().and()
+				.and().authorizeRequests().antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT)
+				.hasAnyAuthority("ROLE_SUPERADMIN,ROLE_ADMIN,ROLE_USER,ROLE_API").anyRequest().authenticated().and()
 				.addFilterBefore(buildAjaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(),
 						UsernamePasswordAuthenticationFilter.class);
 	}
+
 }

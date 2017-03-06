@@ -14,6 +14,7 @@ import dash.security.jwt.domain.AccessJwtToken;
 import dash.security.jwt.domain.ApiJwtToken;
 import dash.security.jwt.domain.JwtToken;
 import dash.security.jwt.domain.Scopes;
+import dash.security.jwt.domain.TokenType;
 import dash.security.jwt.domain.UserContext;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -57,11 +58,12 @@ public class JwtTokenFactory {
 		claims.put("tenant", tenant);
 		claims.put("signature", smtpKey == null ? userContext.getSmtpKey() : smtpKey);
 		claims.put("scopes", userContext.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
+		claims.put("tokenType", TokenType.ACCESS);
 
 		DateTime currentTime = new DateTime();
 
 		String token = Jwts.builder().setClaims(claims).setIssuer(settings.getTokenIssuer())
-				.setIssuedAt(currentTime.toDate())
+				.setId(UUID.randomUUID().toString()).setIssuedAt(currentTime.toDate())
 				.setExpiration(currentTime.plusMinutes(settings.getTokenExpirationTime()).toDate())
 				.signWith(SignatureAlgorithm.HS512, settings.getTokenSigningKey()).compact();
 
@@ -82,6 +84,7 @@ public class JwtTokenFactory {
 		claims.put("tenant", tenant);
 		claims.put("signature", smtpKey == null ? userContext.getSmtpKey() : smtpKey);
 		claims.put("scopes", Arrays.asList(Scopes.REFRESH_TOKEN.authority()));
+		claims.put("tokenType", TokenType.REFRESH);
 
 		String token = Jwts.builder().setClaims(claims).setIssuer(settings.getTokenIssuer())
 				.setId(UUID.randomUUID().toString()).setIssuedAt(currentTime.toDate())
@@ -103,6 +106,7 @@ public class JwtTokenFactory {
 		List<String> scopes = new ArrayList<>();
 		scopes.add("ROLE_API");
 		claims.put("scopes", scopes);
+		claims.put("tokenType", TokenType.API);
 		DateTime currentTime = new DateTime();
 		String apiTokenId = UUID.randomUUID().toString();
 		String token = Jwts.builder().setClaims(claims).setIssuer(settings.getTokenIssuer())
