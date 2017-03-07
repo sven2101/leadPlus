@@ -152,7 +152,11 @@ class AppController {
                     });
             }
             else {
+                // TODO remove after Safari testing
+                console.log(self.window.navigator.language);
+                console.log(self.window.navigator.userLanguage);
                 let lang: string = self.window.navigator.language || self.window.navigator.userLanguage;
+                console.log(lang);
                 self.rootScope.changeLanguage(lang.toUpperCase());
             }
         };

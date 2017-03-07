@@ -43,12 +43,17 @@ class CustomerEditDirective implements IDirective {
             scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.cform) : scope.cform = scope.form;
         }
 
+        scope.customerEditLocked = true;
+        scope.showMainData = true;
+        scope.showInvoiceAddress = false;
+        scope.showDeliveryAddress = false;
         scope.customerSelected = !isNullOrUndefined(scope.editWorkflowUnit.customer.id);
         scope.selectedCustomer = scope.customerSelected ? scope.editWorkflowUnit.customer : null;
 
         scope.selectCustomer = (customer: Customer) => this.selectCustomer(customer, scope);
         scope.getNewOrSelectedCustomer = (customer: Customer) => this.getNewOrSelectedCustomer(customer, scope);
         scope.getAsHtml = (html: string) => this.getAsHtml(html, scope);
+        scope.setCustomerDetails = (elementToChange: string, changeValue: boolean) => this.setCustomerDetails(scope, elementToChange, changeValue);
     };
 
     selectCustomer(customer: Customer, scope: any) {
@@ -72,6 +77,13 @@ class CustomerEditDirective implements IDirective {
 
     getAsHtml(html: string, scope: any) {
         return scope.sce.trustAsHtml(html);
+    }
+
+    setCustomerDetails(scope: any, elementToChange: string, changeValue: boolean) {
+        scope.showMainData = false;
+        scope.showInvoiceAddress = false;
+        scope.showDeliveryAddress = false;
+        scope[elementToChange] = changeValue;
     }
 
 }

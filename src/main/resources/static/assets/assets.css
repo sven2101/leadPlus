@@ -5132,6 +5132,11 @@ div#loginscreen
     transform: rotate(360deg);
   }
 }
+@media (min-width: 1200px) {
+  .modal-lg {
+    width: 1100px !important;
+  }
+}
 
 
 /*!
@@ -5160,7 +5165,7 @@ height: 30px;
     text-align: left;
 	font-size: 14px;
     font-weight: normal;
-	min-width: 170px;
+	min-width: 220px;
 	}
 
   .note-editable{
@@ -6295,7 +6300,7 @@ span.round-tab i{
 
 .content-height {
     background-color: #f8fafb; 
-    min-height: 70%;
+    min-height: 72%;
 }
 
 @media( max-width : 585px ) {

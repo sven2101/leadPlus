@@ -117,8 +117,13 @@ public class Customer {
 	private String customerNumber;
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
-	@JoinColumn(name = "address_fk", nullable = true)
-	private Address address;
+	@JoinColumn(name = "billing_address_fk", nullable = true)
+	private Address billingAddress;
+	
+	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
+	@JoinColumn(name = "delivery_address_fk", nullable = true)
+	private Address deliveryAddress;
+
 
 	public Customer() {
 	}
@@ -237,12 +242,21 @@ public class Customer {
 		this.realCustomer = realCustomer;
 	}
 
-	public Address getAddress() {
-		return address;
+	public Address getBillingAddress() {
+		return billingAddress;
 	}
 
-	public void setAddress(Address address) {
-		this.address = address;
+	public void setBillingAddress(Address billingAddress) {
+		this.billingAddress = billingAddress;
 	}
+
+	public Address getDeliveryAddress() {
+		return deliveryAddress;
+	}
+
+	public void setDeliveryAddress(Address deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
+	}
+
 
 }

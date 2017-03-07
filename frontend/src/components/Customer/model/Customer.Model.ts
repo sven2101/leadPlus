@@ -16,9 +16,11 @@ class Customer {
     deactivated: boolean;
     customerNumber: string;
     realCustomer: boolean;
-    address: Address;
+    billingAddress: Address;
+    deliveryAddress: Address;
 
     constructor() {
-       this.address = new Address();
+        this.billingAddress = new Address();
+        this.deliveryAddress = new Address();
     }
 }
