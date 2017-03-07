@@ -173,9 +173,12 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
             return {
                 "request": async (request) => {
                     await TokenService.awaitInit();
-                    if (request.url.substr(request.url.length - 5) !== ".html") {
-                        request.headers["X-Authorization"] = "Bearer " + await TokenService.getAccessTokenPromise();
+                    if (request.url.substr(request.url.length - 5) === ".html"
+                        || request.url.substring(0, 9) !== "/api/rest") {
+                        return request;
                     }
+                    request.headers["X-Authorization"] = "Bearer " + await TokenService.getAccessTokenPromise();
+
                     return request;
                 },
 
@@ -203,14 +206,15 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
         });
 
     }])
-    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $injectorId, $windowId, $qId,
-        async function ($location, $http, $rootScope, AuthService: AuthService, $injector, $window, $q) {
+    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $injectorId, $windowId, $qId, "TokenService",
+        async function ($location, $http, $rootScope, AuthService: AuthService, $injector, $window, $q, TokenService: TokenService) {
             // TODO Workaround for native promises!!!
             $window.Promise = $q;
             await AuthService.awaitInit();
-            let localStorageUserString: string | undefined = localStorage.getItem(USER_STORAGE);
-            $rootScope.user = localStorageUserString == null ? null : JSON.parse(localStorageUserString);
-            console.log($rootScope.user);
+            $rootScope.user = TokenService.getItemFromLocalStorage(USER_STORAGE);
+            if (AuthService.isLoggedIn() === true && $rootScope.user == null) {
+                AuthService.logout();
+            }
             if (AuthService.isLoggedIn() === true && AuthService.isLoggedIn() === false) {
                 console.log("inject Dashboard");
                 let dashboardService: DashboardService = $injector.get(DashboardServiceId);

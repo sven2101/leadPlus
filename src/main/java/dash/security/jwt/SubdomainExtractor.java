@@ -34,6 +34,9 @@ public class SubdomainExtractor {
 		}
 		String[] prefixSplit = urlSplit[0].split("//");
 		String subdomain = prefixSplit[prefixSplit.length - 1];
+		if ("www.".equals(subdomain.substring(0, 4))) {
+			subdomain = subdomain.split("www.")[1];
+		}
 		return subdomain;
 	}
 }

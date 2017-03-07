@@ -102,7 +102,7 @@ class ProcessResource {
             getCountWorkflowByStatus: { url: "/api/rest/processes/count/workflow/:workflow/state/:status", method: "GET" },
             getLatestSales: { url: "/api/rest/processes/sales/latest/10", method: "GET", isArray: true },
             getLatest100Sales: { url: "/api/rest/processes/sales/latest/100", method: "GET", isArray: true },
-            getTodos: { url: "api/rest/processes/processor/:processorId", method: "GET", isArray: true },
+            getTodos: { url: "/api/rest/processes/processor/:processorId", method: "GET", isArray: true },
         });
     }
 }
@@ -178,9 +178,9 @@ class SettingResource {
 
     constructor($resource) {
         this.resource = $resource("/users/:id", {}, {
-            getAll: { url: "/users/all", method: "GET", isArray: true },
-            activate: { url: "/users/:id/activate", method: "PUT" },
-            changeRole: { url: "/users/:id/role/:role/update", method: "GET" }
+            getAll: { url: "/api/rest/users", method: "GET", isArray: true },
+            activate: { url: "/api/rest/users/:id/activate", method: "PUT" },
+            changeRole: { url: "/api/rest/users/:id/role/:role/update", method: "GET" }
         });
     }
 }
@@ -294,11 +294,10 @@ class SignupResource {
     resource: any;
 
     constructor($resource) {
-        this.resource = $resource("/api/rest/registrations", {}, {
-            signup: { url: "/api/rest/registrations", method: "POST", headers: { "Content-Type": "application/json" } },
-            uniqueUsername: { url: "/api/rest/registrations/unique/username", method: "POST", headers: { "Content-Type": "application/json" } },
-            uniqueEmail: { url: "/api/rest/registrations/unique/email", method: "POST", headers: { "Content-Type": "application/json" } },
-            init: { url: "/api/rest/registrations/init", method: "POST", headers: { "Content-Type": "application/json" } }
+        this.resource = $resource("registrations", {}, {
+            signup: { url: "registrations", method: "POST", headers: { "Content-Type": "application/json" } },
+            uniqueEmail: { url: "registrations/unique/email", method: "POST", headers: { "Content-Type": "application/json" } },
+            init: { url: "registrations/init", method: "POST", headers: { "Content-Type": "application/json" } }
         });
     }
 }
@@ -375,7 +374,7 @@ class SmtpResource {
         this.resource = $resource("/api/rest/smtp", {}, {
             createSmtp: { url: "/api/rest/smtp/", method: "POST" },
             testSmtp: { url: "/api/rest/smtp/:id/test", method: "POST" },
-            getByUserId: { url: "api/rest/users/smtp/user/:id", method: "GET" },
+            getByUserId: { url: "/api/rest/users/smtp/user/:id", method: "GET" },
         });
     }
 }
@@ -414,8 +413,8 @@ class TenantResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/tenants", {}, {
-            save: { url: "/api/rest/tenants", method: "POST" },
-            uniqueTenantKey: { url: "/api/rest/tenants/unique/key", method: "POST" }
+            save: { url: "tenants", method: "POST" },
+            uniqueTenantKey: { url: "tenants/unique/key", method: "POST" }
         });
     }
 }

@@ -35,7 +35,7 @@ import dash.usermanagement.registration.domain.Validation;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+@RequestMapping(value = "/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 		MediaType.APPLICATION_JSON_VALUE })
 public class RegistrationResource {
 

@@ -56,7 +56,7 @@ class ProfileService {
 
         this.userResource.update(user).$promise.then(function (updatedUser: User) {
             self.updateRootScope(updatedUser);
-            localStorage.setItem(USER_STORAGE, JSON.stringify(self.rootScope.user));
+            self.TokenService.saveItemToLocalStorage(USER_STORAGE, self.rootScope.user);
             self.rootScope.changeLanguage(self.rootScope.user.language);
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
             defer.resolve(updatedUser);
@@ -74,7 +74,7 @@ class ProfileService {
             data.authorization = self.rootScope.user.authorization;
             data.smtpKey = self.rootScope.user.smtpKey;
             self.rootScope.user = data;
-            localStorage.setItem(USER_STORAGE, JSON.stringify(self.rootScope.user));
+            self.TokenService.saveItemToLocalStorage(USER_STORAGE, self.rootScope.user);
             $("#profilePicture").prop("src", "data:image/jpeg;base64," + user.picture.content);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));

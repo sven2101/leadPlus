@@ -34,7 +34,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Tenant Resource")
-@RequestMapping(value = "/api/rest/tenants", consumes = { MediaType.ALL_VALUE })
+@RequestMapping(value = "/tenants", consumes = { MediaType.ALL_VALUE })
 @Api(value = "Tenant API")
 public class TenantResource {
 

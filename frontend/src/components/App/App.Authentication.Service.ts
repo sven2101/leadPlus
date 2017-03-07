@@ -62,7 +62,7 @@ class AuthService {
                         trial: false
                     }
                 };
-                localStorage.setItem(USER_STORAGE, JSON.stringify(this.rootScope.user));
+                this.TokenService.saveItemToLocalStorage(USER_STORAGE, this.rootScope.user);
 
                 if (!hasLicense(this.rootScope.tenant.license, "basic")) {
                     alert("Lizenz abgelaufen am: " + this.rootScope.tenant.license.term);

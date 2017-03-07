@@ -55,7 +55,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
 			throw new BadCredentialsException("Authentication Failed. Username or Password not valid.");
 		}
 
-		if (user.getRole() == null)
+		if (user.getRole() == null || !user.isEnabled())
 			throw new InsufficientAuthenticationException("User has no roles assigned");
 
 		List<GrantedAuthority> authorities = Arrays.asList(user.getRole()).stream()
