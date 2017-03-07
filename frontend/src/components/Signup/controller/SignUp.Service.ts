@@ -6,8 +6,9 @@ const SignupServiceId: string = "SignupService";
 
 class SignupService {
 
-    private $inject = [$locationId, toasterId, $translateId, $qId, SignupResourceId];
+    private $inject = [$locationId, toasterId, $translateId, $qId, SignupResourceId, $rootScopeId];
 
+    rootScope;
     signupResource;
     location;
     toaster;
@@ -16,7 +17,8 @@ class SignupService {
     usernameExist: boolean;
     emailExist: boolean;
 
-    constructor($location, toaster, $translate, $q, SignupResource) {
+    constructor($location, toaster, $translate, $q, SignupResource, $rootScope) {
+        this.rootScope = $rootScope;
         this.location = $location;
         this.toaster = toaster;
         this.translate = $translate;
@@ -44,6 +46,7 @@ class SignupService {
         let salt: string = user.email;
         user.password = hashPasswordPbkdf2(user.password, salt);
         user.password2 = hashPasswordPbkdf2(user.password2, salt);
+        user.language = this.rootScope.language;
 
         this.signupResource.signup(user).$promise.then(function (createdUser: User) {
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
@@ -58,6 +61,7 @@ class SignupService {
 
     init(apiPassword: string, tenantKey: string) {
         this.signupResource.init(hashPasswordPbkdf2(apiPassword, "api@" + tenantKey));
+
     }
 }
 

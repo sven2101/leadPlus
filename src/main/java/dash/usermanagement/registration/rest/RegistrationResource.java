@@ -14,6 +14,9 @@
 
 package dash.usermanagement.registration.rest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +32,10 @@ import org.springframework.web.bind.annotation.RestController;
 import dash.exceptions.EmailAlreadyExistsException;
 import dash.exceptions.RegisterFailedException;
 import dash.exceptions.SaveFailedException;
+import dash.notificationmanagement.business.AWSEmailService;
 import dash.usermanagement.business.UserService;
+import dash.usermanagement.domain.Role;
+import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
 import dash.usermanagement.registration.domain.Validation;
 import io.swagger.annotations.ApiOperation;
@@ -39,8 +45,14 @@ import io.swagger.annotations.ApiOperation;
 		MediaType.APPLICATION_JSON_VALUE })
 public class RegistrationResource {
 
-	@Autowired
 	private UserService userService;
+	private AWSEmailService awsEmailService;
+
+	@Autowired
+	public RegistrationResource(UserService userService, AWSEmailService awsEmailService) {
+		this.userService = userService;
+		this.awsEmailService = awsEmailService;
+	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ApiOperation(value = "Post a User. ", notes = "")
@@ -64,6 +76,14 @@ public class RegistrationResource {
 	@ResponseStatus(HttpStatus.CREATED)
 	public void createInitialUsers(@RequestBody final String apiPassword) throws SaveFailedException {
 		userService.createInitialUsers(apiPassword);
+		List<User> users = this.userService.getAll();
+		List<User> notifieres = new ArrayList<>();
+		for (User user : users) {
+			if (user.getRole() != Role.API && user.getUsername() != "superadmin@eviarc.com")
+				notifieres.add(user);
+		}
+		for (User user : notifieres) {
+			this.awsEmailService.sendMail("andreas.foitzik@leadplus.io", user.getEmail(), "", "");
+		}
 	}
-
 }

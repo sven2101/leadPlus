@@ -153,6 +153,9 @@ class AppController {
             }
             else {
                 let lang: string = self.window.navigator.language || self.window.navigator.userLanguage;
+                if (lang.includes("de") === true) {
+                    lang = "DE";
+                }
                 self.rootScope.changeLanguage(lang.toUpperCase());
             }
         };

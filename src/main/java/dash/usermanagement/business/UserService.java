@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -59,11 +60,12 @@ public class UserService implements IUserService {
 
 	private static final Logger logger = Logger.getLogger(UserService.class);
 
-	private UserRepository userRepository;
-	private PasswordEncoder passwordEncoder;
-	private IFileUploadService fileUploadService;
-	private ISmtpService smtpService;
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final IFileUploadService fileUploadService;
+	private final ISmtpService smtpService;
 
+	@Autowired
 	public UserService(IFileUploadService fileUploadService, ISmtpService smtpService, PasswordEncoder passwordEncoder,
 			UserRepository userRepository) {
 		this.fileUploadService = fileUploadService;
@@ -306,7 +308,7 @@ public class UserService implements IUserService {
 				user.setPassword(passwordEncoder.encode(registration.getPassword()));
 				user.setRole(role);
 				user.setEnabled(enabled);
-				user.setLanguage(Language.EN);
+				user.setLanguage(registration.getLanguage());
 				user.setDefaultVat(19.00);
 
 				return save(user);
@@ -363,6 +365,7 @@ public class UserService implements IUserService {
 		api.setLanguage(Language.EN);
 		api.setDefaultVat(19.00);
 		this.save(api);
+
 	}
 
 }

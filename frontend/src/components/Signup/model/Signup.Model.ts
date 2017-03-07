@@ -7,6 +7,7 @@ class Signup {
     password2: string;
     firstname: string = "";
     lastname: string = "";
+    language: string;
 
     constructor() {
         this.email = "";
