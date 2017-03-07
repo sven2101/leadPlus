@@ -2,11 +2,13 @@ package dash.security.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import dash.security.jwt.domain.JwtToken;
 
 @Configuration
 @ConfigurationProperties(prefix = "security.jwt")
+@Component
 public class JwtSettings {
 	/**
 	 * {@link JwtToken} will expire after this time.

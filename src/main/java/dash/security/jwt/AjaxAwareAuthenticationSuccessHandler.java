@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dash.security.jwt.domain.JwtToken;
 import dash.security.jwt.domain.UserContext;
+import dash.tenantmanagement.business.TenantContext;
 
 /**
  * AjaxAwareAuthenticationSuccessHandler
@@ -45,10 +46,10 @@ public class AjaxAwareAuthenticationSuccessHandler implements AuthenticationSucc
 			Authentication authentication) throws IOException, ServletException {
 		UserContext userContext = (UserContext) authentication.getPrincipal();
 
-		SubdomainExtractor extractor = new SubdomainExtractor();
-		String subdomain = extractor.extract(request.getRequestURL().toString());
-		JwtToken accessToken = tokenFactory.createAccessJwtToken(userContext, subdomain, null);
-		JwtToken refreshToken = tokenFactory.createRefreshToken(userContext, subdomain, null);
+		String tenant = TenantContext.getTenant();
+
+		JwtToken accessToken = tokenFactory.createAccessJwtToken(userContext, tenant, null);
+		JwtToken refreshToken = tokenFactory.createRefreshToken(userContext, tenant, null);
 
 		Map<String, String> tokenMap = new HashMap<String, String>();
 		tokenMap.put("token", accessToken.getToken());

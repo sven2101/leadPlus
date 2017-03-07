@@ -58,7 +58,9 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
 			}
 			throw new AuthMethodNotSupportedException("Authentication method not supported");
 		}
-		TenantContext.setTenant("demo");
+		SubdomainExtractor extractor = new SubdomainExtractor();
+		String subdomain = extractor.extract(request.getRequestURL().toString());
+		TenantContext.setTenant(subdomain);
 
 		LoginRequest loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);
 

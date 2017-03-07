@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dash.licensemanangement.domain.LicenseEnum;
+import dash.sourcemanagement.business.SourceService;
 
 /**
  * WebSecurityConfig
@@ -34,7 +35,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public static final String FORM_BASED_LOGIN_ENTRY_POINT = "/api/rest/auth/login";
 	public static final String TOKEN_BASED_AUTH_ENTRY_POINT = "/api/rest/**";
 	public static final String TOKEN_REFRESH_ENTRY_POINT = "/api/rest/auth/token";
-	public static final String PUBLIC_API = "api/rest/public/**";
+	public static final String PUBLIC_API = "/api/rest/public/**";
+	public static final String DUMMY_PATH = "/dummy/**";
 
 	@Autowired
 	private RestAuthenticationEntryPoint authenticationEntryPoint;
@@ -53,10 +55,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private TokenExtractor tokenExtractor;
 
 	@Autowired
+	private JwtSettings jwtSettings;
+
+	@Autowired
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@Autowired
+	private SourceService sourceService;
 
 	protected AjaxLoginProcessingFilter buildAjaxLoginProcessingFilter() throws Exception {
 		AjaxLoginProcessingFilter filter = new AjaxLoginProcessingFilter(FORM_BASED_LOGIN_ENTRY_POINT, successHandler,
@@ -70,6 +78,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);
 		JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(failureHandler,
 				tokenExtractor, matcher);
+		filter.setAuthenticationManager(this.authenticationManager);
+		return filter;
+	}
+
+	protected ApiProcessingFilter buildApiProcessingFilter() throws Exception {
+		List<String> pathsToSkip = Arrays.asList(DUMMY_PATH);
+		SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, PUBLIC_API);
+		ApiProcessingFilter filter = new ApiProcessingFilter(failureHandler, tokenExtractor, matcher, jwtSettings,
+				sourceService);
 		filter.setAuthenticationManager(this.authenticationManager);
 		return filter;
 	}
@@ -102,11 +119,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll() // Token
 				// refresh
 				// end-point
-				.and().authorizeRequests().antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT)
-				.hasAnyAuthority("ROLE_SUPERADMIN,ROLE_ADMIN,ROLE_USER,ROLE_API").anyRequest().authenticated().and()
+				.and().authorizeRequests().antMatchers(PUBLIC_API)
+				.hasAnyAuthority("ROLE_SUPERADMIN,ROLE_ADMIN,ROLE_USER,ROLE_API")
+				.antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT).hasAnyAuthority("ROLE_SUPERADMIN,ROLE_ADMIN,ROLE_USER")
+				.anyRequest().authenticated().and()
 				.addFilterBefore(buildAjaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(),
-						UsernamePasswordAuthenticationFilter.class);
+						UsernamePasswordAuthenticationFilter.class)
+				.addFilterAfter(buildApiProcessingFilter(), JwtTokenAuthenticationProcessingFilter.class);
 	}
 
 }
