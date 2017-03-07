@@ -10,11 +10,11 @@ const SettingControllerId: string = "SettingController";
 
 class SettingController {
 
-    private $inject = [SettingServiceId, SmtpServiceId, TemplateServiceId, $rootScopeId, $translateId];
+    private $inject = [SettingServiceId, SmtpServiceId, TemplateServiceId, $rootScopeId, $translateId, $routeId, $scopeId];
 
     createTemplateForm;
 
-    currentTab: number = 1;
+    currentTab: string;
 
     settingService: SettingService;
     smtpService: SmtpService;
@@ -29,21 +29,52 @@ class SettingController {
 
     rootScope;
     translate;
+    scope;
+    route;
     currentUser: User;
+    lastRoute;
 
-    constructor(SettingService, SmtpService, TemplateService, private SummernoteService: SummernoteService, $rootScope, $translate) {
+    constructor(SettingService, SmtpService, TemplateService, private SummernoteService: SummernoteService, $rootScope, $translate, $route, $scope) {
         this.smtp = new Smtp();
         this.template = new Template();
         this.settingService = SettingService;
         this.templateService = TemplateService;
         this.smtpService = SmtpService;
         this.rootScope = $rootScope;
+        this.scope = $scope;
+        this.route = $route;
         this.translate = $translate;
         this.currentUser = this.rootScope.user;
         this.settingService.loadUsers();
+        this.internalRouting($route);
     }
 
-    tabOnClick(tab: number) {
+    internalRouting(route: any) {
+        let paramTab = route.current.params.tab;
+        if (!isNullOrUndefined(paramTab)) {
+            this.currentTab = paramTab;
+        } else {
+            this.tabOnClick("users");
+            route.updateParams({
+                tab: this.currentTab
+            });
+        }
+        let self = this;
+        self.lastRoute = route.current;
+        self.scope.$on("$locationChangeSuccess", function (event) {
+            if (self.lastRoute.$$route.originalPath === route.current.$$route.originalPath) {
+                if (route.current.params && isNullOrUndefined(route.current.params.tab)) {
+                    route.updateParams({
+                        tab: self.currentTab
+                    });
+                }
+                route.current = self.lastRoute;
+            }
+        });
+    }
+
+    tabOnClick(tab: string) {
+        this.lastRoute = this.route.current;
         this.currentTab = tab;
     }
 

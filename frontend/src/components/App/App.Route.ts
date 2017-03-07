@@ -56,7 +56,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 authenticated: true,
                 package: "basic"
             })
-            .when("/settings",
+            .when("/settings/:tab?",
             {
                 templateUrl: "components/Setting/view/Setting.html",
                 controller: "SettingController",
