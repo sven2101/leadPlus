@@ -93,13 +93,24 @@ public class MessageService implements IMessageService {
 
 	@Override
 	public AbstractMessage getWelcomeMessage(String templateName, Tenant tenant, User user) throws TemplateException {
-		InputStream inputStream = this.getClass().getResourceAsStream("/email/images/Andreas_Foitzik.png");
-		String imgAsBase64 = null;
+		InputStream inputStreamEmployee = this.getClass().getResourceAsStream("/email/images/Andreas_Foitzik.png");
+		InputStream inputStreamLogo = this.getClass().getResourceAsStream("/email/images/logo.png");
+
+		String imgAsBase64Employee = null;
+		String imgAsBase64Logo = null;
+
 		try {
-			byte[] imgBytes = IOUtils.toByteArray(inputStream);
-			byte[] imgBytesAsBase64 = Base64.encodeBase64(imgBytes);
-			String imgDataAsBase64 = new String(imgBytesAsBase64);
-			imgAsBase64 = "data:image/png;base64," + imgDataAsBase64;
+			byte[] imgBytesEmployee = IOUtils.toByteArray(inputStreamEmployee);
+			byte[] imgBytesLogo = IOUtils.toByteArray(inputStreamLogo);
+
+			byte[] imgBytesAsBase64Employee = Base64.encodeBase64(imgBytesEmployee);
+			byte[] imgBytesAsBase64Logo = Base64.encodeBase64(imgBytesLogo);
+
+			String imgDataAsBase64Employee = new String(imgBytesAsBase64Employee);
+			String imgDataAsBase64Logo = new String(imgBytesAsBase64Logo);
+
+			imgAsBase64Employee = "data:image/png;base64," + imgDataAsBase64Employee;
+			imgAsBase64Logo = "data:image/png;base64," + imgDataAsBase64Logo;
 		} catch (IOException e) {
 			logger.error(MessageService.class.getSimpleName(), e);
 		}
@@ -112,8 +123,10 @@ public class MessageService implements IMessageService {
 			user.setPassword(null);
 			mapping.put("tenant", tenant);
 			mapping.put("user", user);
-			if (imgAsBase64 != null)
-				mapping.put("imgAsBase64", imgAsBase64);
+			if (imgAsBase64Employee != null)
+				mapping.put("imgAsBase64Employee", imgAsBase64Employee);
+			if (imgAsBase64Logo != null)
+				mapping.put("imgAsBase64Logo", imgAsBase64Logo);
 
 			Writer writer = new StringWriter();
 			template.process(mapping, writer);

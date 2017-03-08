@@ -3,6 +3,11 @@
 <html lang="en">
 
 <style type= text/css>
+.head{
+	text-align: right;
+	margin-right:20px;
+	margin-left:auto;
+}
 .content{
     color:#202020 !important; 
     display:block;
@@ -12,7 +17,7 @@
     font-weight:normal; 
     line-height:100%;
     text-align:left; 
-    width:60%;
+    width:70%;
     margin:auto;
     margin-top:50px;
 }
@@ -29,40 +34,45 @@
 }
 </style>
 <body >
-	
-    <div class="content">
-        <h3 class="heading">Hi ${user.firstname} ${user.lastname},</h3>
 
+	<div class="head">
+		<img alt="lead+" src="${imgAsBase64Logo}" />
+	</div>
+    <div class="content">
+        <h3 class="heading">Hallo ${user.firstname} ${user.lastname},</h3>
         <p>
-        Welcome to lead+! 
+        Willkommen bei lead+! 
         <br/>
         <br/>
-        My name is Andreas, I'm one of the co-founders of lead+.
-        We are looking forward to add value to your daily Sales Process.
-        Here is some important information about your new account. You should save this email, so you can refer to it later. 
+        Mein Name ist Andreas und ich bin einer der Gründer von lead+.
+        Wir freuen uns darauf, Dich und Dein Team im täglichen Vertrieb zu untersützen.
+        <br/> 
+        Hier sind ein paar Informationen für Deinen Account. 
+        Am besten speicherst Du diese Email, damit Du die Informationen später noch besitzt. 
         </p>
         
         <div class="information">
-            <h4>Your lead+ entry point <a href="">https://${tenant.tenantKey}.leadplus.me</a></h4>
-            <h4>Login with your username ${user.email}</h4>
+            Dein Link für Deinen lead+ Account <h4><a href="https://${tenant.tenantKey}.leadplus.me">https://${tenant.tenantKey}.leadplus.me</a></h4>
+            Melde Dich mit Deinem Benutzernamen an <h4>${user.email}</h4>
         </div>
 
         <p>
-        <b>We're here to help!</b>
+        <b>Wir sind hier um Dir zur helfen!</b>
         <br/>
-        If there's ever anything I can do to help just let me know and our support team will make sure you get the data you need!
+        Falls Du Hilfe benötigst, oder Fragen hast, sind wir stets zur Stelle.
+        Melde Dich einfach bei mir und unser Support Team unterstütz Dich! 
         <br/>
         <br/>
-        We'll be in touch periodically with additional resources, important updates and best practices to help you
-        get the most out of lead+.
+        Regelmäßig stellen wir Dir zusätzliche Materialien, wichtige Neuerung und Best Practice Szenarien bereit, damit Du das meiste
+        aus lead+ machst.
         </p>
         <br/>
-        Cheers,
+        Beste Grüße,
         <br/>
         Andreas
         <br/>
         <br/>
-        <img alt="My image" src="${imgAsBase64}" />
+        <img alt="Andreas Foitzik" src="${imgAsBase64Employee}" />
         <br/>
         <br/>
         <div class="footer">

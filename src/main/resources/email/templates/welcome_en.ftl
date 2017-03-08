@@ -3,6 +3,11 @@
 <html lang="en">
 
 <style type= text/css>
+.head{
+	text-align: right;
+	margin-right:20px;
+	margin-left:auto;
+}
 .content{
     color:#202020 !important; 
     display:block;
@@ -12,7 +17,7 @@
     font-weight:normal; 
     line-height:100%;
     text-align:left; 
-    width:60%;
+    width:70%;
     margin:auto;
     margin-top:50px;
 }
@@ -29,6 +34,10 @@
 }
 </style>
 <body >
+
+	<div class="head">
+		<img alt="lead+" src="${imgAsBase64Logo}" />
+	</div>
 	
     <div class="content">
         <h3 class="heading">Hi ${user.firstname} ${user.lastname},</h3>
@@ -39,11 +48,12 @@
         <br/>
         My name is Andreas, I'm one of the co-founders of lead+.
         We are looking forward to add value to your daily Sales Process.
+        <br/>
         Here is some important information about your new account. You should save this email, so you can refer to it later. 
         </p>
         
         <div class="information">
-            <h4>Your lead+ entry point <a href="">https://${tenant.tenantKey}.leadplus.me</a></h4>
+            <h4>Your lead+ entry point <a href="https://${tenant.tenantKey}.leadplus.me">https://${tenant.tenantKey}.leadplus.me</a></h4>
             <h4>Login with your username ${user.email}</h4>
         </div>
 
@@ -62,7 +72,7 @@
         Andreas
         <br/>
         <br/>
-        <img alt="My image" src="${imgAsBase64}" />
+        <img alt="Andreas Foitzik" src="${imgAsBase64Employee}" />
         <br/>
         <br/>
         <div class="footer">
