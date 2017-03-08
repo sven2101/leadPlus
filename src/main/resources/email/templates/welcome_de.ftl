@@ -62,6 +62,9 @@
         Andreas
         <br/>
         <br/>
+        <img alt="My image" src="${imgAsBase64}" />
+        <br/>
+        <br/>
         <div class="footer">
             Andreas Foitzik 
             <br/>

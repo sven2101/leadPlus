@@ -68,11 +68,14 @@ public class TenantService implements ITenantService {
 	@Autowired
 	private TenantRepository tenantRepository;
 
-	@Autowired
 	private DataSource dataSource;
+	private AmazonRoute53 r53;
 
 	@Autowired
-	private AmazonRoute53 r53;
+	public TenantService(DataSource dataSource, AmazonRoute53 r53) {
+		this.dataSource = dataSource;
+		this.r53 = r53;
+	}
 
 	@Override
 	public Tenant getTenantByName(final String name) throws IllegalArgumentException {

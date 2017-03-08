@@ -14,21 +14,26 @@
 package dash.messagemanagement.business;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
+import org.apache.pdfbox.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import dash.exceptions.NotFoundException;
 import dash.messagemanagement.domain.AbstractMessage;
+import dash.messagemanagement.domain.EmailMessage;
 import dash.messagemanagement.domain.OfferMessage;
 import dash.notificationmanagement.domain.Notification;
 import dash.notificationmanagement.domain.NotificationType;
 import dash.templatemanagement.domain.WorkflowTemplateObject;
+import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.domain.User;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
@@ -37,6 +42,8 @@ import freemarker.template.TemplateException;
 
 @Service
 public class MessageService implements IMessageService {
+
+	private static final Logger logger = Logger.getLogger(MessageService.class);
 
 	@Autowired
 	private Configuration cfg;
@@ -54,11 +61,10 @@ public class MessageService implements IMessageService {
 	@Override
 	public AbstractMessage getMessageContent(final WorkflowTemplateObject workflowTemplateObject,
 			final String templateWithPlaceholders, final Notification notification)
-			throws IOException, TemplateException {
+			throws TemplateException, IOException {
 
 		final StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
 		cfg.setTemplateLoader(stringTemplateLoader);
-		cfg.setLocale(java.util.Locale.GERMANY);
 		stringTemplateLoader.putTemplate("template", unescapeString(templateWithPlaceholders));
 		Template template = cfg.getTemplate("template");
 
@@ -86,25 +92,37 @@ public class MessageService implements IMessageService {
 	}
 
 	@Override
-	public AbstractMessage getMessage(Template template) throws IOException, NotFoundException, TemplateException {
-		Map<String, Object> mapping = new HashMap<>();
-
-		mapping.put("workflow", workflowTemplateObject);
-		mapping.put("customer", workflowTemplateObject.getCustomer());
-		mapping.put("orderPositions", workflowTemplateObject.getOrderPositions());
-
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (user != null) {
-			user.setPassword(null);
-			mapping.put("user", user);
+	public AbstractMessage getWelcomeMessage(String templateName, Tenant tenant, User user) throws TemplateException {
+		InputStream inputStream = this.getClass().getResourceAsStream("/email/images/Andreas_Foitzik.png");
+		String imgAsBase64 = null;
+		try {
+			byte[] imgBytes = IOUtils.toByteArray(inputStream);
+			byte[] imgBytesAsBase64 = Base64.encodeBase64(imgBytes);
+			String imgDataAsBase64 = new String(imgBytesAsBase64);
+			imgAsBase64 = "data:image/png;base64," + imgDataAsBase64;
+		} catch (IOException e) {
+			logger.error(MessageService.class.getSimpleName(), e);
 		}
 
-		Writer writer = new StringWriter();
-		template.process(mapping, writer);
+		Template template;
+		String message = "";
+		try {
+			template = cfg.getTemplate(templateName);
+			Map<String, Object> mapping = new HashMap<>();
+			user.setPassword(null);
+			mapping.put("tenant", tenant);
+			mapping.put("user", user);
+			if (imgAsBase64 != null)
+				mapping.put("imgAsBase64", imgAsBase64);
 
-		return new OfferMessage(notification.getRecipients(), notification.getSubject(), writer.toString(),
-				notification.getAttachments(), NotificationType.OFFER);
-		return null;
+			Writer writer = new StringWriter();
+			template.process(mapping, writer);
+			message = writer.toString();
+		} catch (IOException e) {
+			logger.error(MessageService.class.getSimpleName(), e);
+		}
+
+		return new EmailMessage(user.getEmail(), "Welcome to lead+", message, null, NotificationType.WELCOME);
 	}
 
 }

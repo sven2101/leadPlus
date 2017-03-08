@@ -14,11 +14,11 @@
 
 package dash.usermanagement.registration.rest;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,15 +29,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.exceptions.EmailAlreadyExistsException;
-import dash.exceptions.RegisterFailedException;
-import dash.exceptions.SaveFailedException;
-import dash.notificationmanagement.business.AWSEmailService;
+import dash.tenantmanagement.business.TenantService;
 import dash.usermanagement.business.UserService;
-import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
 import dash.usermanagement.registration.domain.Validation;
+import freemarker.template.TemplateException;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
@@ -45,24 +42,28 @@ import io.swagger.annotations.ApiOperation;
 		MediaType.APPLICATION_JSON_VALUE })
 public class RegistrationResource {
 
+	private static final Logger logger = Logger.getLogger(RegistrationResource.class);
+
 	private UserService userService;
-	private AWSEmailService awsEmailService;
+	private TenantService tenantService;
 
 	@Autowired
-	public RegistrationResource(UserService userService, AWSEmailService awsEmailService) {
+	public RegistrationResource(UserService userService, TenantService tenantService) {
 		this.userService = userService;
-		this.awsEmailService = awsEmailService;
+		this.tenantService = tenantService;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ApiOperation(value = "Post a User. ", notes = "")
-	public ResponseEntity<?> register(@RequestBody @Valid final Registration registration) {
+	public ResponseEntity<Object> register(@RequestBody @Valid final Registration registration) {
 		try {
-			return new ResponseEntity<Object>(userService.register(registration), HttpStatus.CREATED);
-		} catch (EmailAlreadyExistsException eaeex) {
-			return new ResponseEntity<>(eaeex.getMessage(), HttpStatus.CONFLICT);
-		} catch (RegisterFailedException rfex) {
-			return new ResponseEntity<>(rfex.getMessage(), HttpStatus.CONFLICT);
+			final User user = this.userService.register(registration);
+			user.setPassword(null);
+			this.userService.notifyUser(user);
+			return new ResponseEntity<>(user, HttpStatus.CREATED);
+		} catch (Exception ex) {
+			logger.error(RegistrationResource.class.getSimpleName(), ex);
+			return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
 		}
 	}
 
@@ -74,16 +75,7 @@ public class RegistrationResource {
 
 	@RequestMapping(value = "/init", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public void createInitialUsers(@RequestBody final String apiPassword) throws SaveFailedException {
-		userService.createInitialUsers(apiPassword);
-		List<User> users = this.userService.getAll();
-		List<User> notifieres = new ArrayList<>();
-		for (User user : users) {
-			if (user.getRole() != Role.API && user.getUsername() != "superadmin@eviarc.com")
-				notifieres.add(user);
-		}
-		for (User user : notifieres) {
-			this.awsEmailService.sendMail("andreas.foitzik@leadplus.io", user.getEmail(), "", "");
-		}
+	public void createInitialUsers(@RequestBody final String apiPassword) throws IOException, TemplateException {
+		this.userService.createInitialUsers(apiPassword);
 	}
 }

@@ -23,6 +23,7 @@ import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_NOT_FOUND;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,15 +46,21 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
 import dash.fileuploadmanagement.business.IFileUploadService;
+import dash.messagemanagement.business.MessageService;
+import dash.messagemanagement.domain.AbstractMessage;
+import dash.notificationmanagement.business.AWSEmailService;
 import dash.smtpmanagement.business.ISmtpService;
 import dash.smtpmanagement.domain.Smtp;
 import dash.tenantmanagement.business.TenantContext;
+import dash.tenantmanagement.business.TenantService;
+import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
 import dash.usermanagement.registration.domain.Validation;
 import dash.usermanagement.settings.language.Language;
 import dash.usermanagement.settings.password.PasswordChange;
+import freemarker.template.TemplateException;
 
 @Service
 public class UserService implements IUserService {
@@ -64,14 +71,21 @@ public class UserService implements IUserService {
 	private final PasswordEncoder passwordEncoder;
 	private final IFileUploadService fileUploadService;
 	private final ISmtpService smtpService;
+	private MessageService messageService;
+	private AWSEmailService awsEmailService;
+	private TenantService tenantService;
 
 	@Autowired
 	public UserService(IFileUploadService fileUploadService, ISmtpService smtpService, PasswordEncoder passwordEncoder,
-			UserRepository userRepository) {
+			UserRepository userRepository, MessageService messageService, AWSEmailService awsEmailService,
+			TenantService tenantService) {
 		this.fileUploadService = fileUploadService;
 		this.smtpService = smtpService;
 		this.passwordEncoder = passwordEncoder;
 		this.userRepository = userRepository;
+		this.messageService = messageService;
+		this.awsEmailService = awsEmailService;
+		this.tenantService = tenantService;
 	}
 
 	@Override
@@ -365,7 +379,18 @@ public class UserService implements IUserService {
 		api.setLanguage(Language.EN);
 		api.setDefaultVat(19.00);
 		this.save(api);
-
 	}
 
+	public void notifyUser(User user) throws TemplateException, IOException {
+		Tenant tenant = this.tenantService.getTenantByName(TenantContext.getTenant());
+
+		String templateName = "welcome_en.ftl";
+		if (user.getLanguage().equals(Language.DE))
+			templateName = "welcome_de.ftl";
+
+		AbstractMessage welcomeMessage = this.messageService.getWelcomeMessage(templateName, tenant, user);
+		this.awsEmailService.sendMail("andreas.foitzik@leadplus.io", welcomeMessage.getRecipients(),
+				welcomeMessage.getSubject(), welcomeMessage.getContent());
+
+	}
 }
