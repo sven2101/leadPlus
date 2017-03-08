@@ -85,5 +85,6 @@ angular.module(moduleApp,
         moduleSummernoteService,
         moduleFootable,
         moduleSanitize,
-        moduleSweetAlert
+        moduleSweetAlert,
+        moduleNgMap
     ]);

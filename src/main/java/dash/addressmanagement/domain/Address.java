@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -20,9 +19,9 @@ public class Address {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Digits(integer = 10, fraction = 0)
+	@Size(max = 10)
 	@Column(name = "number", nullable = false)
-	private Integer number;
+	private String number;
 
 	@Size(max = 255)
 	@Column(name = "street", length = 255, nullable = true)
@@ -55,11 +54,11 @@ public class Address {
 		this.id = id;
 	}
 
-	public Integer getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(Integer number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 

@@ -84,6 +84,7 @@ class WizardDirective implements IDirective {
             }, null, transclusion);
         }
         isNullOrUndefined(firstActiveElement) ? scope.currentWizard = scope.wizardElements[0] : scope.currentWizard = firstActiveElement;
+        scope.currentWizard.visit();
 
         if (!isNullOrUndefined(scope.currentNotification) && !isNullOrUndefined(scope.currentNotification.id)) {
             scope.currentNotification.notificationType = scope.getNotificationType();
@@ -104,19 +105,19 @@ class WizardDirective implements IDirective {
             let wizardELement = this.getWizardByPosition(scope.step - 1, scope.wizardElements);
             if (wizardELement !== null && !wizardELement.isDisabled && wizardELement.isVisible) {
                 scope.step -= 1;
+                wizardELement.visit();
                 scope.currentWizard = this.getWizardByPosition(scope.step, scope.wizardElements);
             }
         }
-
     }
 
     continue(scope: any) {
         let wizardELement = this.getWizardByPosition(scope.step + 1, scope.wizardElements);
         if (wizardELement !== null && !wizardELement.isDisabled && wizardELement.isVisible) {
             scope.step += 1;
+            wizardELement.visit();
             scope.currentWizard = wizardELement;
         }
-
     }
 
     getWizardByPosition(position: number, wizardElements: Array<WizardButtonConfig>): WizardButtonConfig {

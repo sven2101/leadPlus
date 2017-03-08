@@ -25,6 +25,7 @@ const $sceId: string = "$sce";
 const $routeId: string = "$route";
 const $locationProviderId = "$locationProvider";
 const $compileProviderId = "$compileProvider";
+const ngMapId = "NgMap";
 
 
 const moduleApp: string = "app";
@@ -123,3 +124,4 @@ const moduleFootable: string = "ui.footable";
 const moduleSanitize: string = "ngSanitize";
 const moduleSweetAlert: string = "oitozero.ngSweetAlert";
 const moduleAngularChosen: string = "localytics.directives";
+const moduleNgMap: string = "ngMap";

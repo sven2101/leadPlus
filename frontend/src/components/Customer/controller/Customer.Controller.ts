@@ -20,7 +20,7 @@ const CustomerControllerId: string = "CustomerController";
 
 class CustomerController {
 
-    $inject = [CustomerServiceId, $locationId, $scopeId];
+    $inject = [CustomerServiceId, $locationId, $scopeId, ngMapId];
 
     createCustomerForm;
     currentCustomer: Customer;
@@ -28,17 +28,25 @@ class CustomerController {
     isCurrentCustomerNew;
     customerService: CustomerService;
     location;
+    scope;
 
     customers: Array<Customer>;
     pageStart: number = 20;
     searchText: string;
     loadAllCustomers: boolean = false;
+    searchTypes = ["address"];
+    billingAddressGoogleSearch: string;
+    deliveryAddressGoogleSearch: string;
+    billingAddressPlaceChanged: any;
+    deliveryAddressPlaceChanged: any;
 
-    constructor(CustomerService: CustomerService, $location, $scope) {
+
+    constructor(CustomerService: CustomerService, $location, $scope, NgMap) {
         this.customerService = CustomerService;
         this.location = $location;
         this.searchCustomer("noSearchText");
         let self = this;
+        this.scope = $scope;
         $scope.$watch("customerCtrl.searchText", function (searchText) {
             if (!isNullOrUndefined(searchText) && searchText.length !== 0) {
                 self.searchCustomer(searchText);
@@ -46,12 +54,34 @@ class CustomerController {
                 self.searchCustomer("noSearchText");
             }
         });
+        this.initPlaceChanged(self);
+    }
+
+    initPlaceChanged(self) {
+        this.billingAddressPlaceChanged = function () {
+            let place = this.getPlace();
+            if (!isNullOrUndefined(place)) {
+                self.customerService.matchAddressCompoenents(place.address_components, self.currentCustomer.billingAddress);
+            }
+        };
+        this.deliveryAddressPlaceChanged = function () {
+            let place = this.getPlace();
+            if (!isNullOrUndefined(place)) {
+                self.customerService.matchAddressCompoenents(place.address_components, self.currentCustomer.deliveryAddress);
+            }
+        };
+    }
+
+    copyBillingAddress() {
+        this.currentCustomer.deliveryAddress = deepCopy(this.currentCustomer.billingAddress);
     }
 
     clearCustomer(): void {
         this.createCustomerForm.$setPristine();
         this.currentCustomer = new Customer();
         this.isCurrentCustomerNew = true;
+        this.billingAddressGoogleSearch = "";
+        this.deliveryAddressGoogleSearch = "";
     }
 
     editCustomer(customer: Customer): void {

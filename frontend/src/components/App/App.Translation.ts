@@ -20,7 +20,7 @@ function config($translateProvider) {
             PROFILE_MENU: "Profil",
             PRODUCT_MENU: "Produkte",
             CUSTOMER_MENU: "Kontakte",
-            CUSTOMER_DETAIL_MENU: "Kontaktedetails",
+            CUSTOMER_DETAIL_MENU: "Kontaktdetails",
 
             LOGIN: "Anmelden",
             LOGOUT: "Abmelden",
@@ -152,6 +152,7 @@ function config($translateProvider) {
             COMMON_COMPANY: "Firma",
             COMMON_EMAIL: "E-Mail",
             COMMON_ADDRESS: "Adresse",
+            COMMON_BILLING_ADDRESS_AS_DELIVERYADDRESS: "Rechnungsadresse als Lieferaddresse verwenden",
             COMMON_BILLING_ADDRESS: "Rechnungsadresse",
             COMMON_DELIVERY_ADDRESS: "Lieferadresse",
             COMMON_MASTER_DATA: "Stammdaten",
@@ -248,7 +249,7 @@ function config($translateProvider) {
             COMMON_HOUSE_NUMBER: "Hausnummer",
             COMMON_STREET: "Straße",
             COMMON_CITY: "Stadt",
-            COMMON_STATE: "Staat",
+            COMMON_STATE: "Bundesland/Staat",
             COMMON_COUNTRY: "Land",
             COMMON_ZIP: "PLZ",
 
@@ -744,6 +745,7 @@ function config($translateProvider) {
             COMMON_PHONE: "Phone",
             COMMON_MOBILE: "Mobile",
             COMMON_ADDRESS: "Address",
+            COMMON_BILLING_ADDRESS_AS_DELIVERYADDRESS: "Use billing address as delivery address",
             COMMON_BILLING_ADDRESS: "Billing address",
             COMMON_DELIVERY_ADDRESS: "Delivery address",
             COMMON_MASTER_DATA: "Master data",

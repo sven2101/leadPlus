@@ -22,6 +22,8 @@ class ProcessService {
         if (!isNullOrUndefined(editWorkflowUnit) && isNullOrUndefined(editWorkflowUnit.customer.id)) {
             editWorkflowUnit.customer.timestamp = newTimestamp();
             editWorkflowUnit.customer = await this.customerService.insertCustomer(editWorkflowUnit.customer) as Customer;
+        } else if (!isNullOrUndefined(editWorkflowUnit)) {
+            editWorkflowUnit.customer = await this.customerService.updateCustomer(editWorkflowUnit.customer) as Customer;
         }
 
         let resultProcess: Process = await this.processResource.save(editProcess).$promise as Process;

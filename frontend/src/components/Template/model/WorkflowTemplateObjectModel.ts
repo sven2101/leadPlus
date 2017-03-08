@@ -50,13 +50,13 @@ class WorkflowTemplateObject {
         this.orderPositions = [op, op2];
         let c = new Customer();
         c.id = 0;
-        c.billingAddress.number = 48;
+        c.billingAddress.number = "48";
         c.billingAddress.street = "Boston st.";
         c.billingAddress.country = "United States";
         c.billingAddress.zip = "289374";
         c.billingAddress.state = "Seattle";
         c.billingAddress.city = "Boston";
-        c.deliveryAddress.number = 22;
+        c.deliveryAddress.number = "22";
         c.deliveryAddress.street = "Times Square";
         c.deliveryAddress.country = "United States";
         c.deliveryAddress.zip = "10036";

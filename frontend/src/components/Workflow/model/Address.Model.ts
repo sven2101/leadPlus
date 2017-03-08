@@ -1,6 +1,6 @@
 class Address {
 
-    number: number;
+    number: string;
     street: string;
     city: string;
     state: string;

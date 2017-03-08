@@ -220,4 +220,4 @@ class AppController {
     }
 }
 
-angular.module(moduleAppController, [ngResourceId, moduleSanitize]).controller(AppControllerId, AppController);
+angular.module(moduleAppController, [ngResourceId, moduleSanitize, moduleNgMap]).controller(AppControllerId, AppController);
