@@ -153,6 +153,8 @@ function config($translateProvider) {
             COMMON_EMAIL: "E-Mail",
             COMMON_ADDRESS: "Adresse",
             COMMON_BILLING_ADDRESS_AS_DELIVERYADDRESS: "Rechnungsadresse als Lieferaddresse verwenden",
+            COMMON_DELIVERYADDRESS_FROM_CUSTOMER: "Lieferadresse des Kontakts verwenden",
+            COMMON_BILLINGADDRESS_FROM_CUSTOMER: "Rechnungsadresse des Kontakts verwenden",
             COMMON_BILLING_ADDRESS: "Rechnungsadresse",
             COMMON_DELIVERY_ADDRESS: "Lieferadresse",
             COMMON_MASTER_DATA: "Stammdaten",
@@ -252,6 +254,11 @@ function config($translateProvider) {
             COMMON_STATE: "Bundesland/Staat",
             COMMON_COUNTRY: "Land",
             COMMON_ZIP: "PLZ",
+
+            // Define Supply elemements
+            COMMON_SUPPLY_DELIVERY_TERM: "Lieferbedingungen",
+            COMMON_SUPPLY_PAYMENT_TERM: "Zahlungsbedingungen",
+            COMMON_SUPPLY_SKONTO: "Skonto",
 
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Anfragen verwalten",
@@ -746,6 +753,8 @@ function config($translateProvider) {
             COMMON_MOBILE: "Mobile",
             COMMON_ADDRESS: "Address",
             COMMON_BILLING_ADDRESS_AS_DELIVERYADDRESS: "Use billing address as delivery address",
+            COMMON_DELIVERYADDRESS_FROM_CUSTOMER: "Use delivery address from contact",
+            COMMON_BILLINGADDRESS_FROM_CUSTOMER: "Use billing address from contact",
             COMMON_BILLING_ADDRESS: "Billing address",
             COMMON_DELIVERY_ADDRESS: "Delivery address",
             COMMON_MASTER_DATA: "Master data",
@@ -844,6 +853,11 @@ function config($translateProvider) {
             COMMON_STATE: "State",
             COMMON_COUNTRY: "Country",
             COMMON_ZIP: "Zip",
+
+            // Define Supply elemements
+            COMMON_SUPPLY_DELIVERY_TERM: "Term of delivery",
+            COMMON_SUPPLY_PAYMENT_TERM: "Term of Payment",
+            COMMON_SUPPLY_SKONTO: "Skonto",
 
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Manage leads",

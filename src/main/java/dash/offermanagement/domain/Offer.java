@@ -14,19 +14,13 @@
 
 package dash.offermanagement.domain;
 
-import java.util.Calendar;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.common.AbstractWorkflow;
 
@@ -34,11 +28,6 @@ import dash.common.AbstractWorkflow;
 @SQLDelete(sql = "UPDATE offer SET deleted = '1'WHERE id = ?")
 @Where(clause = "deleted <> '1'")
 public class Offer extends AbstractWorkflow {
-
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "deliverydate", nullable = true)
-	private Calendar deliveryDate;
 
 	@NotNull
 	@Digits(integer = 10, fraction = 4)
@@ -60,15 +49,7 @@ public class Offer extends AbstractWorkflow {
 	public void setNetPrice(Double price) {
 		this.netPrice = price;
 	}
-
-	public Calendar getDeliveryDate() {
-		return deliveryDate;
-	}
-
-	public void setDeliveryDate(Calendar deliveryDate) {
-		this.deliveryDate = deliveryDate;
-	}
-
+	
 	public Double getVat() {
 		return vat;
 	}
@@ -85,7 +66,6 @@ public class Offer extends AbstractWorkflow {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((deliveryDate == null) ? 0 : deliveryDate.hashCode());
 		result = prime * result + ((netPrice == null) ? 0 : netPrice.hashCode());
 		result = prime * result + ((vat == null) ? 0 : vat.hashCode());
 		return result;
@@ -100,11 +80,6 @@ public class Offer extends AbstractWorkflow {
 		if (getClass() != obj.getClass())
 			return false;
 		Offer other = (Offer) obj;
-		if (deliveryDate == null) {
-			if (other.deliveryDate != null)
-				return false;
-		} else if (!deliveryDate.equals(other.deliveryDate))
-			return false;
 		if (netPrice == null) {
 			if (other.netPrice != null)
 				return false;
@@ -120,7 +95,7 @@ public class Offer extends AbstractWorkflow {
 
 	@Override
 	public String toString() {
-		return "Offer [deliveryDate=" + deliveryDate + ", offerPrice=" + netPrice + ", vat=" + vat + "]";
+		return "Offer [netPrice=" + netPrice + ", vat=" + vat + "]";
 	}
 
 }

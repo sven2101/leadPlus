@@ -1,7 +1,7 @@
 <form name="cform" novalidate>
 	<div class="row">
 		<div class="col-sm-6">
-			<div class="form-group">
+			<div class="form-group" ng-class="{ 'has-error' : cform.$invalid}">
 				<label>{{ 'CUSTOMER_MENU' | translate }}</label><i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'TOOLTIP_CUSTOMER_LOOKUP' | translate }}"></i>
 				<span style="color:red" ng-show="customerSelected && !customerEditLocked">{{'CUSTOMER_MASTER_FILE_DATA_EDIT_WARNING' | translate}}</span>
 				<div class="input-group" id="typeahead-autocompletion">
@@ -13,27 +13,13 @@
 					<span class="input-group-btn">
        				 <button style="height: 34px;" class="btn btn-secondary btn btn-white" type="button" ng-disabled="!editable" ng-click="selectCustomer(null);showCustomerDetails=true">&nbsp;<i class="fa fa-times"></i>&nbsp;</button>
       				 <button style="height: 34px;" class="btn btn-secondary btn btn-white" type="button" title="{{'CUSTOMER_MASTER_FILE_DATA_EDIT_TITLE' | translate}}" ng-disabled="!editable || !customerSelected" ng-click="customerEditLocked=!customerEditLocked">&nbsp;<i ng-class="customerEditLocked?'fa fa-lock':'fa fa-unlock'"></i>&nbsp;</button>
-					  </span>
+					 <button style="height: 34px;" class="btn btn-secondary btn btn-white" type="button" title="{{ 'CUSTOMER_DETAIL_MENU' | translate }}" ng-click="showCustomerDetails=!showCustomerDetails">&nbsp;<i class="fa" ng-class="{'fa-caret-up':showCustomerDetails,'fa-caret-down':!showCustomerDetails}"></i>&nbsp;</button>
+					</span>
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-3" style="width:20%">
-			<br>
-			<div>
-				<span ng-click="showCustomerDetails=showCustomerDetails!==true?true:false" class="pull-left" style="font-size: 1.5em;cursor:pointer">
-					<h4 ng-style="{color: {true:'red'}[cform.$invalid]}">{{ 'CUSTOMER_DETAIL_MENU' | translate }}
-						<i ng-if="showCustomerDetails===true" class="fa fa-caret-up" aria-hidden="true"></i>
-						<i ng-if="showCustomerDetails!==true" class="fa fa-caret-down" aria-hidden="true"></i>
-					</h4> 
-				</span>	
-			</div>	
-			<br>
-			<br>
-			<div>
-				<a ng-if="editWorkflowUnit.message.length > 0" style="font-size: 1.5em" tooltip-class="customMessage" uib-tooltip-template="'components/Wizard/view/Message.Template.html'" tooltip-placement="bottom-left"><i style="margin-top:-12px;" class="fa fa-envelope"></i></a>     	
-			</div>
-		</div>
-		<div class="col-sm-3" style="width:30%">
+		<div class="col-sm-1" style="width: 5%;margin-top:30px;"><a ng-if="editWorkflowUnit.message.length > 0" style="font-size: 1.5em" tooltip-class="customMessage" uib-tooltip-template="'components/Wizard/view/Message.Template.html'" tooltip-placement="bottom-left"><i class="fa fa-envelope"></i></a></div>
+		<div class="col-sm-5" style="width: 45%">
 			<!-- SOURCE -->
 			<div class="form-group">
 				<label>{{ 'SOURCE_SOURCE' | translate }}</label>
@@ -42,7 +28,8 @@
 			</div>
 		</div>
 	</div>
-	<div ng-show="showCustomerDetails" class="closeMenu" ng-class="{openMenu:showCustomerDetails}">
+	<div class="closeMenu" ng-class="{openMenu:showCustomerDetails}">
+	<div ng-if="showCustomerDetails"> 
 		<div class="row">
 			<div class="col-sm-3">
 				<div class="form-group">
@@ -147,8 +134,6 @@
 				<br/>
 				<br/>
 				<div ng-show="showInvoiceAddress" class="closeMenu" ng-class="{openMenu:showInvoiceAddress}">
-					<input class="form-control" places-auto-complete style="width:100%;" ng-model="billingAddressGoogleSearch" types="{{searchTypes}}" on-place-changed="billingAddressPlaceChanged()" ng-disabled="customerSelected && customerEditLocked"/> 
-					<br/>
 					<div class="row">
 						<!-- BILLING STREET -->
 						<div class="col-xs-6">
@@ -224,8 +209,6 @@
 				<br/>
 				<br/>
 				<div ng-show="showDeliveryAddress" class="closeMenu" ng-class="{openMenu:showDeliveryAddress}">
-					<input class="form-control" places-auto-complete style="width:100%;" ng-model="deliveryAddressGoogleSearch" types="{{searchTypes}}" on-place-changed="deliveryAddressPlaceChanged()" ng-disabled="customerSelected && customerEditLocked"/> 
-					<br/>
 					<div class="row">
 						<!-- DELIVERY STREET -->
 						<div class="col-xs-6">
@@ -290,6 +273,10 @@
 			</div>
 		</div>
 	</div>
+	</div>
+	<!-- Fake Hidden Inputfields for NG-IF validation-->
+	<input required type="hidden" name="firstnameFake" ng-model="editWorkflowUnit.customer.firstname">
+	<input required type="hidden" name="lastnameFake" ng-model="editWorkflowUnit.customer.lastname">
 </form>
 <style>
 .tooltip.customMessage .tooltip-inner {

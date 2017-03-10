@@ -1,6 +1,7 @@
 <form name="cpform" novalidate>
     <customer-edit form="null" edit-workflow-unit="editWorkflowUnit" edit-process="editProcess" editable="editable" small="true" show-customer-details="showCustomerData"></customer-edit>
     <div style="margin-top: -30px">
+    <hr style="border-top: 1px dashed #8c8b8b;" />
     <span ng-click="setShowDetails('showDeliveryData',!showDeliveryData)" class="pull-left" style="font-size: 1.5em;cursor:pointer">
             <h4 ng-style="{color: {true:'red'}[cpform.pform.$invalid]}">{{'SUPPLY' | translate}}
                 <i ng-if="showDeliveryData===true" class="fa fa-caret-up" aria-hidden="true"></i>

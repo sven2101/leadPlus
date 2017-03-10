@@ -4,7 +4,6 @@ class WorkflowTemplateObject {
     customer: Customer;
     timestamp: any;
     vendor: any;
-    deliveryAddress: any;
     deliveryDate: any;
     saleTurnover: number;
     saleProfit: number;
@@ -14,6 +13,12 @@ class WorkflowTemplateObject {
     message: string;
     netPrice: number;
     vat: number;
+    deliveryAddressLine: string;
+    deliveryTerm: string;
+    paymentTerm: string;
+    skonto: number;
+    deliveryAddress: Address;
+    billingAddress: Address;
 
     constructor() {
         this.id = 0;
@@ -75,7 +80,7 @@ class WorkflowTemplateObject {
         this.customer = c;
         this.timestamp = "01.01.1900  00:00:00:000";
         this.vendor = null;
-        this.deliveryAddress = "New York";
+        this.deliveryAddressLine = "New York";
         this.deliveryDate = "01.01.2017";
         this.saleProfit = 0;
         this.saleCost = 0;
@@ -84,5 +89,22 @@ class WorkflowTemplateObject {
         this.message = "Test";
         this.netPrice = 1920;
         this.vat = 19;
+        this.skonto = 3;
+        this.paymentTerm = "30 days";
+        this.deliveryTerm = "free";
+        this.billingAddress = new Address();
+        this.billingAddress.number = "48";
+        this.billingAddress.street = "Boston st.";
+        this.billingAddress.country = "United States";
+        this.billingAddress.zip = "289374";
+        this.billingAddress.state = "Seattle";
+        this.billingAddress.city = "Boston";
+        this.deliveryAddress = new Address();
+        this.deliveryAddress.number = "48";
+        this.deliveryAddress.street = "Boston st.";
+        this.deliveryAddress.country = "United States";
+        this.deliveryAddress.zip = "289374";
+        this.deliveryAddress.state = "Seattle";
+        this.deliveryAddress.city = "Boston";
     }
 }

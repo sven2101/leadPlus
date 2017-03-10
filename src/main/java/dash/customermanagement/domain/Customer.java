@@ -258,5 +258,116 @@ public class Customer {
 		this.deliveryAddress = deliveryAddress;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((billingAddress == null) ? 0 : billingAddress.hashCode());
+		result = prime * result + ((company == null) ? 0 : company.hashCode());
+		result = prime * result + ((customerNumber == null) ? 0 : customerNumber.hashCode());
+		result = prime * result + (deactivated ? 1231 : 1237);
+		result = prime * result + (deleted ? 1231 : 1237);
+		result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((fax == null) ? 0 : fax.hashCode());
+		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
+		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
+		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
+		result = prime * result + (realCustomer ? 1231 : 1237);
+		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		return result;
+	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Customer other = (Customer) obj;
+		if (billingAddress == null) {
+			if (other.billingAddress != null)
+				return false;
+		} else if (!billingAddress.equals(other.billingAddress))
+			return false;
+		if (company == null) {
+			if (other.company != null)
+				return false;
+		} else if (!company.equals(other.company))
+			return false;
+		if (customerNumber == null) {
+			if (other.customerNumber != null)
+				return false;
+		} else if (!customerNumber.equals(other.customerNumber))
+			return false;
+		if (deactivated != other.deactivated)
+			return false;
+		if (deleted != other.deleted)
+			return false;
+		if (deliveryAddress == null) {
+			if (other.deliveryAddress != null)
+				return false;
+		} else if (!deliveryAddress.equals(other.deliveryAddress))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (fax == null) {
+			if (other.fax != null)
+				return false;
+		} else if (!fax.equals(other.fax))
+			return false;
+		if (firstname == null) {
+			if (other.firstname != null)
+				return false;
+		} else if (!firstname.equals(other.firstname))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (lastname == null) {
+			if (other.lastname != null)
+				return false;
+		} else if (!lastname.equals(other.lastname))
+			return false;
+		if (mobile == null) {
+			if (other.mobile != null)
+				return false;
+		} else if (!mobile.equals(other.mobile))
+			return false;
+		if (phone == null) {
+			if (other.phone != null)
+				return false;
+		} else if (!phone.equals(other.phone))
+			return false;
+		if (realCustomer != other.realCustomer)
+			return false;
+		if (timestamp == null) {
+			if (other.timestamp != null)
+				return false;
+		} else if (!timestamp.equals(other.timestamp))
+			return false;
+		if (title != other.title)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname
+				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone + ", fax="
+				+ fax + ", mobile=" + mobile + ", deactivated=" + deactivated + ", realCustomer=" + realCustomer
+				+ ", timestamp=" + timestamp + ", customerNumber=" + customerNumber + ", billingAddress="
+				+ billingAddress + ", deliveryAddress=" + deliveryAddress + "]";
+	}
+	
 }

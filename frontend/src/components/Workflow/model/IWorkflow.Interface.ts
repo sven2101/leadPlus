@@ -4,8 +4,15 @@
 interface IWorkflow {
     id: number;
     customer: Customer;
-    deliveryAddress: string;
+    deliveryAddressLine: string;
     orderPositions: Array<OrderPosition>;
     timestamp;
     vendor;
+    deliveryDate;
+    deliveryAddress: Address;
+    deliveryCosts: number;
+    billingAddress: Address;
+    deliveryTerm: string;
+    paymentTerm: string;
+    skonto: number;
 }

@@ -43,11 +43,6 @@ class CustomerEditDirective implements IDirective {
         if (!isNullOrUndefined(scope.form)) {
             scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.cform) : scope.cform = scope.form;
         }
-
-        scope.searchTypes = ["address"];
-        scope.billingAddressGoogleSearch;
-        scope.deliveryAddressGoogleSearch;
-
         scope.customerEditLocked = true;
         scope.showMainData = true;
         scope.showInvoiceAddress = false;
@@ -60,20 +55,7 @@ class CustomerEditDirective implements IDirective {
         scope.getAsHtml = (html: string) => this.getAsHtml(html, scope);
         scope.setCustomerDetails = (elementToChange: string, changeValue: boolean) => this.setCustomerDetails(scope, elementToChange, changeValue);
         scope.copyBillingAddress = () => this.copyBillingAddress(scope);
-        scope.billingAddressPlaceChanged = function () {
-            let place = this.getPlace();
-            if (!isNullOrUndefined(place)) {
-                scope.customerService.matchAddressCompoenents(place.address_components, scope.editWorkflowUnit.customer.billingAddress);
-            }
-        };
-        scope.deliveryAddressPlaceChanged = function () {
-            let place = this.getPlace();
-            if (!isNullOrUndefined(place)) {
-                scope.customerService.matchAddressCompoenents(place.address_components, scope.editWorkflowUnit.customer.deliveryAddress);
-            }
-        };
     };
-
 
     selectCustomer(customer: Customer, scope: any) {
         if (isNullOrUndefined(customer)) {
@@ -81,8 +63,6 @@ class CustomerEditDirective implements IDirective {
         }
         scope.editWorkflowUnit.customer = scope.getNewOrSelectedCustomer(customer);
         scope.customerSelected = !isNullOrUndefined(scope.editWorkflowUnit.customer.id);
-        scope.billingAddressGoogleSearch = "";
-        scope.deliveryAddressGoogleSearch = "";
     }
 
     getNewOrSelectedCustomer(customer: Customer, scope: any): Customer {
@@ -108,7 +88,11 @@ class CustomerEditDirective implements IDirective {
     }
 
     copyBillingAddress(scope: any) {
-        scope.editWorkflowUnit.customer.deliveryAddress = deepCopy(scope.editWorkflowUnit.customer.billingAddress);
+        if (!isNullOrUndefined(scope.editWorkflowUnit.customer.deliveryAddress) && !isNullOrUndefined(scope.editWorkflowUnit.customer.billingAddress)) {
+            let oldId = scope.editWorkflowUnit.customer.deliveryAddress.id;
+            shallowCopy(scope.editWorkflowUnit.customer.billingAddress, scope.editWorkflowUnit.customer.deliveryAddress);
+            scope.editWorkflowUnit.customer.deliveryAddress.id = oldId;
+        }
     }
 
 }

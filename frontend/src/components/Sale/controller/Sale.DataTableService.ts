@@ -99,7 +99,7 @@ class SaleDataTableService implements IDatatableService {
                 this.translate("COMMON_PHONE")).notVisible(),
             this.DTColumnBuilder.newColumn("sale.customer.firstname").withTitle(
                 this.translate("COMMON_FIRSTNAME")).notVisible(),
-            this.DTColumnBuilder.newColumn("sale.deliveryAddress").withTitle(
+            this.DTColumnBuilder.newColumn("sale.deliveryAddressLine").withTitle(
                 this.translate("COMMON_PRODUCT_DESTINATION")).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_PRODUCT_SALE_TURNOVER")).renderWith(

@@ -56,6 +56,7 @@ class CustomerService {
         return await this.customerResource.updateCustomer(customer).$promise as Customer;
     }
 
+    // TODO change to mapzen api
     matchAddressCompoenents(addressCompoenentArray: Array<any>, address: Address) {
         if (isNullOrUndefined(addressCompoenentArray)) {
             return;

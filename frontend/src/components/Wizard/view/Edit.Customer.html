@@ -137,8 +137,6 @@
 			<br/>
 			<br/>
 			<div ng-show="showInvoiceAddress" class="closeMenu" ng-class="{openMenu:showInvoiceAddress}">
-				<input class="form-control" places-auto-complete style="width:100%;" ng-model="billingAddressGoogleSearch" types="{{searchTypes}}" on-place-changed="billingAddressPlaceChanged()" ng-disabled="customerSelected && customerEditLocked"/> 
-				<br/>
 				<div class="row">
 					<!-- BILLING STREET -->
 					<div class="col-xs-6">
@@ -214,9 +212,7 @@
 				<span ng-show="!customerSelected || (customerSelected && !customerEditLocked) "><a ng-click="copyBillingAddress()">{{'COMMON_BILLING_ADDRESS_AS_DELIVERYADDRESS' | translate}}</a> 	
 				<br/>
 				<br/>
-				</span>
-				<input class="form-control" places-auto-complete style="width:100%;" ng-model="deliveryAddressGoogleSearch" types="{{searchTypes}}" on-place-changed="deliveryAddressPlaceChanged()" ng-disabled="customerSelected && customerEditLocked"/> 
-				<br/>
+				</span>		
 				<div class="row">
 					<!-- DELIVERY STREET -->
 					<div class="col-xs-6">

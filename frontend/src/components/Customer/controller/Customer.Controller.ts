@@ -20,7 +20,7 @@ const CustomerControllerId: string = "CustomerController";
 
 class CustomerController {
 
-    $inject = [CustomerServiceId, $locationId, $scopeId, ngMapId];
+    $inject = [CustomerServiceId, $locationId, $scopeId];
 
     createCustomerForm;
     currentCustomer: Customer;
@@ -34,14 +34,8 @@ class CustomerController {
     pageStart: number = 20;
     searchText: string;
     loadAllCustomers: boolean = false;
-    searchTypes = ["address"];
-    billingAddressGoogleSearch: string;
-    deliveryAddressGoogleSearch: string;
-    billingAddressPlaceChanged: any;
-    deliveryAddressPlaceChanged: any;
 
-
-    constructor(CustomerService: CustomerService, $location, $scope, NgMap) {
+    constructor(CustomerService: CustomerService, $location, $scope) {
         this.customerService = CustomerService;
         this.location = $location;
         this.searchCustomer("noSearchText");
@@ -54,34 +48,21 @@ class CustomerController {
                 self.searchCustomer("noSearchText");
             }
         });
-        this.initPlaceChanged(self);
-    }
 
-    initPlaceChanged(self) {
-        this.billingAddressPlaceChanged = function () {
-            let place = this.getPlace();
-            if (!isNullOrUndefined(place)) {
-                self.customerService.matchAddressCompoenents(place.address_components, self.currentCustomer.billingAddress);
-            }
-        };
-        this.deliveryAddressPlaceChanged = function () {
-            let place = this.getPlace();
-            if (!isNullOrUndefined(place)) {
-                self.customerService.matchAddressCompoenents(place.address_components, self.currentCustomer.deliveryAddress);
-            }
-        };
     }
 
     copyBillingAddress() {
-        this.currentCustomer.deliveryAddress = deepCopy(this.currentCustomer.billingAddress);
+        if (!isNullOrUndefined(this.currentCustomer.deliveryAddress) && !isNullOrUndefined(this.currentCustomer.billingAddress)) {
+            let oldId = this.currentCustomer.deliveryAddress.id;
+            shallowCopy(this.currentCustomer.billingAddress, this.currentCustomer.deliveryAddress);
+            this.currentCustomer.deliveryAddress.id = oldId;
+        }
     }
 
     clearCustomer(): void {
         this.createCustomerForm.$setPristine();
         this.currentCustomer = new Customer();
         this.isCurrentCustomerNew = true;
-        this.billingAddressGoogleSearch = "";
-        this.deliveryAddressGoogleSearch = "";
     }
 
     editCustomer(customer: Customer): void {

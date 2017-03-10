@@ -1,5 +1,5 @@
 class Address {
-
+    id: number;
     number: string;
     street: string;
     city: string;
