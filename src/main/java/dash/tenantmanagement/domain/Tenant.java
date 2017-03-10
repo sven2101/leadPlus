@@ -23,11 +23,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import dash.licensemanangement.domain.License;
+import dash.usermanagement.registration.domain.Registration;
 
 @Entity
 @Table(name = "tenant", schema = "public")
@@ -56,6 +61,10 @@ public class Tenant {
 	@JoinColumn(name = "license_fk", nullable = false)
 	@Where(clause = "deleted <> '1'")
 	private License license;
+
+	@Transient
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private Registration registration;
 
 	public Tenant() {
 
@@ -109,6 +118,14 @@ public class Tenant {
 		this.license = license;
 	}
 
+	public Registration getRegistration() {
+		return registration;
+	}
+
+	public void setRegistration(Registration registration) {
+		this.registration = registration;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -118,6 +135,7 @@ public class Tenant {
 		result = prime * result + (enabled ? 1231 : 1237);
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((license == null) ? 0 : license.hashCode());
+		result = prime * result + ((registration == null) ? 0 : registration.hashCode());
 		result = prime * result + ((tenantKey == null) ? 0 : tenantKey.hashCode());
 		return result;
 	}
@@ -150,18 +168,17 @@ public class Tenant {
 				return false;
 		} else if (!license.equals(other.license))
 			return false;
+		if (registration == null) {
+			if (other.registration != null)
+				return false;
+		} else if (!registration.equals(other.registration))
+			return false;
 		if (tenantKey == null) {
 			if (other.tenantKey != null)
 				return false;
 		} else if (!tenantKey.equals(other.tenantKey))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Tenant [id=" + id + ", tenantKey=" + tenantKey + ", description=" + description + ", address=" + address + ", enabled=" + enabled + ", license="
-				+ license + "]";
 	}
 
 }

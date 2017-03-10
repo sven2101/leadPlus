@@ -19,7 +19,7 @@ public enum LicenseEnum {
 					"/components/Common/view/Forbidden.html", "/swagger-ui.html", "/webjars/springfox-swagger-ui/**",
 					"/configuration/ui", "/swagger-resources", "/v2/api-docs/**", "/configuration/security",
 					"/components/**", "/main.html", "/registrations", "/registrations/**", "/tenants", "/tenants/**",
-					"/api/rest/auth/login", "/api/rest/auth/token")),
+					"/api/rest/auth/login", "/api/rest/auth/token", "/subdomainiframe.html")),
 					1), BASIC("basic",
 							new HashSet<String>(Arrays.asList("/user", "/users/all", "/components/Common/view/**",
 									"/components/Customer/view/**", "/components/Dashboard/view/**",

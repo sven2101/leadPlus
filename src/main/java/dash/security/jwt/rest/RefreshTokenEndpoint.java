@@ -76,6 +76,9 @@ public class RefreshTokenEndpoint {
 		String subject = refreshToken.getSubject();
 		User user = userService.loadUserByEmail(subject)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found: " + subject));
+		if (user.getEnabled() == false) {
+			throw new InsufficientAuthenticationException("User is not enabled");
+		}
 
 		if (user.getRole() == null)
 			throw new InsufficientAuthenticationException("User has no roles assigned");

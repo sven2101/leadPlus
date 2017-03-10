@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
-import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.olap.business.OlapStatisticService;
 import dash.tenantmanagement.business.ITenantService;
 import dash.tenantmanagement.business.TenantContext;
@@ -61,12 +60,14 @@ public class ScheduledTasks {
 					public void run() {
 						TenantContext.setTenant(tenantKey);
 						try {
-							logger.info("Generate Statistics for " + tenantKey);
+							// logger.info("Generate Statistics for " +
+							// tenantKey);
 							olapStatisticService.generateOlapStatistics();
-							logger.info("Statistics generated for " + tenantKey);
-						} catch (NotFoundException ex) {
-							logger.error("Something went wrong when trying to generate olap statistics for" + tenantKey,
-									ex);
+							// logger.info("Statistics generated for " +
+							// tenantKey);
+						} catch (Exception ex) {
+							logger.error("Something went wrong when trying to generate olap statistics for " + tenantKey
+									+ " | " + ex.getMessage(), ex);
 						}
 					}
 				});

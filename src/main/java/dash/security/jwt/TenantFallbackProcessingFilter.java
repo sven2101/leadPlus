@@ -16,6 +16,7 @@ public class TenantFallbackProcessingFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+		String x = TenantContext.getTenant();
 		if (TenantContext.getTenant() == null) {
 			SubdomainExtractor extractor = new SubdomainExtractor();
 			String url = request.getRequestURL().toString();

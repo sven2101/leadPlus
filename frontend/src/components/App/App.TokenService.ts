@@ -6,9 +6,11 @@ const TokenServiceId: string = "TokenService";
 const REFRESH_TOKEN: string = "refreshToken";
 const USER_STORAGE: string = "user";
 
+const FREE_ROUTES = ["/tenants/registration"];
+
 class TokenService {
 
-    $inject = [$qId, $rootScopeId, $locationId];
+    $inject = [$qId, $rootScopeId, $locationId, $injectorId];
 
     private accessToken: string | null;
     private accessTokenJson: any;
@@ -21,7 +23,7 @@ class TokenService {
     private tenant: String;
     private localStorageMap: {} = {};
 
-    constructor(private $q, private $rootScope, private $location) {
+    constructor(private $q, private $rootScope, private $location, private $injector) {
         this.setTenant();
         this.init();
     }
@@ -44,6 +46,9 @@ class TokenService {
     }
 
     private async initToken(): Promise<void> {
+        // this.openLoginModal();
+        let currentPath = this.$location.path();
+        if (FREE_ROUTES.indexOf(currentPath) !== -1) { return; }
         console.log("init start", this.loggedIn);
         this.refreshToken = this.getItemFromLocalStorage(REFRESH_TOKEN);
         this.accessTokenJson = this.accessToken == null ? null : jwt_decode(this.accessToken);
@@ -63,7 +68,7 @@ class TokenService {
 
     }
 
-    public setToken(newToken: { token: string, refreshToken: string }): void {
+    public setToken(newToken: { token: string, refreshToken: string }): string {
         this.accessToken = newToken.token;
         this.refreshToken = newToken.refreshToken;
         this.accessTokenJson = this.accessToken == null ? null : jwt_decode(this.accessToken);
@@ -71,6 +76,7 @@ class TokenService {
         this.saveItemToLocalStorage(REFRESH_TOKEN, this.refreshToken);
         console.log(newToken);
         this.loggedIn = true;
+        return this.refreshToken;
     }
 
     private async getAccessTokenByRefreshToken(refreshToken: string): Promise<{ token: string }> {
@@ -90,7 +96,7 @@ class TokenService {
         return defer.promise;
     }
 
-    public setTokenByCredentials(credentials: { username: string, password: string }): Promise<void> {
+    public setTokenByCredentials(credentials: { username: string, password: string }): Promise<string> {
         let self = this;
         let defer = this.$q.defer();
         console.log(credentials);
@@ -100,8 +106,8 @@ class TokenService {
             data: JSON.stringify(credentials),
             contentType: "application/json; charset=utf-8",
             success: (response: { token: string, refreshToken: string }) => {
-                self.setToken(response);
-                defer.resolve();
+                let token = self.setToken(response);
+                defer.resolve(token);
             },
             error: (error) => {
                 self.loggedIn = false;
@@ -186,16 +192,15 @@ class TokenService {
         if (port !== ":8080") {
             port = "";
         }
-        alert();
-        /*
         console.log(this.$location.path());
         if (fullPageReload === true) {
+            // alert();
             window.open("https://" + this.$location.host() + port + "/", "_self");
         } else if (fullPageReload === false) {
             this.$location.path("/login");
         }
         console.log("exit");
-        */
+
     }
 
     public isLoggedIn(): boolean {
@@ -238,6 +243,41 @@ class TokenService {
         }
         localStorage.removeItem(this.tenant + "_" + USER_STORAGE);
         localStorage.removeItem(this.tenant + "_" + REFRESH_TOKEN);
+    }
+
+    private openLoginModal(): Promise<void> {
+        let defer = this.$q.defer();
+        let $uibModal = <any>new Object(); // = this.$injector.get("$uibModal");
+        $uibModal.open({
+            template: `<div class="modal-header">
+                            <button type="button" class="close" ng-click="close()">
+                                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                            </button>
+                            <h4 class="modal-title">das ist ein Titel</h4>
+                        </div>
+                        <div class="modal-body" style="background-color: #f8fafb">test</div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" ng-click="close()">{{ 'COMMON_CANCEL'| translate }}</button>
+                            <button type="button" class="btn btn-info" ng-click="submitFunction()">Login</button>
+                        </div>`,
+            controller: LoginModalController,
+            controllerAs: "loginModalCtrl",
+            backdrop: "static",
+            size: "lg",
+            resolve: {
+
+            }
+        }).result.then(function (result) {
+            console.log("1");
+            defer.resolve(result);
+        }, function () {
+            console.log("2");
+            defer.resolve(undefined);
+        }).catch(error => {
+            console.log("3");
+            defer.reject(error);
+        });
+        return defer.promise;
     }
 
 

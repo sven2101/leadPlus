@@ -307,6 +307,7 @@ public class UserService implements IUserService {
 	}
 
 	public User register(final Registration registration) throws EmailAlreadyExistsException, RegisterFailedException {
+
 		if (registration != null && registration.getEmail() != null && registration.getPassword() != null) {
 
 			try {
@@ -358,33 +359,6 @@ public class UserService implements IUserService {
 		User user = getById(id);
 		user.setProfilPicture(fileUploadService.save(file));
 		return update(user);
-	}
-
-	public void createInitialUsers(String apiPassword) throws SaveFailedException {
-		User superadmin = new User();
-		superadmin.setEmail("superadmin@eviarc.com");
-		superadmin.setUsername("superadmin@eviarc.com");
-		superadmin.setFirstname("Superadmin");
-		superadmin.setLastname("Eviarc");
-
-		superadmin.setPassword("$2a$10$V7c4F8TMpN6zUPC4llkuM.tvGp.HuHdoEmu2CqMS1IEHGyGEOUAWW");
-		superadmin.setRole(Role.SUPERADMIN);
-		superadmin.setEnabled(true);
-		superadmin.setLanguage(Language.EN);
-		superadmin.setDefaultVat(19.00);
-		this.save(superadmin);
-
-		User api = new User();
-		api.setEmail("api@" + TenantContext.getTenant());
-		api.setUsername("api@" + TenantContext.getTenant());
-		api.setFirstname("Api");
-		api.setLastname(TenantContext.getTenant());
-		api.setPassword(passwordEncoder.encode(apiPassword));
-		api.setRole(Role.API);
-		api.setEnabled(true);
-		api.setLanguage(Language.EN);
-		api.setDefaultVat(19.00);
-		this.save(api);
 	}
 
 	public Optional<User> loadUserByEmail(String email) {
