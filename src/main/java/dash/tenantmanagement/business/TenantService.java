@@ -19,6 +19,7 @@ import static dash.Constants.TENANT_ALREADY_EXISTS;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 import javax.sql.DataSource;
 
@@ -94,6 +95,7 @@ public class TenantService implements ITenantService {
 	public Tenant createNewTenant(final Tenant tenant) throws TenantAlreadyExistsException, InterruptedException {
 		tenant.setTenantKey(tenant.getTenantKey().toLowerCase());
 		tenant.setEnabled(true);
+		tenant.setJwtTokenVersion(UUID.randomUUID().toString());
 		Calendar oneYearLater = Calendar.getInstance();
 		oneYearLater.add(Calendar.YEAR, 1);
 		tenant.getLicense().setTerm(oneYearLater);

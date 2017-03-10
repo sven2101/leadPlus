@@ -194,8 +194,8 @@ class TokenService {
         }
         console.log(this.$location.path());
         if (fullPageReload === true) {
-            // alert();
-            window.open("https://" + this.$location.host() + port + "/", "_self");
+             alert();
+           // window.open("https://" + this.$location.host() + port + "/", "_self");
         } else if (fullPageReload === false) {
             this.$location.path("/login");
         }
@@ -245,40 +245,7 @@ class TokenService {
         localStorage.removeItem(this.tenant + "_" + REFRESH_TOKEN);
     }
 
-    private openLoginModal(): Promise<void> {
-        let defer = this.$q.defer();
-        let $uibModal = <any>new Object(); // = this.$injector.get("$uibModal");
-        $uibModal.open({
-            template: `<div class="modal-header">
-                            <button type="button" class="close" ng-click="close()">
-                                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-                            </button>
-                            <h4 class="modal-title">das ist ein Titel</h4>
-                        </div>
-                        <div class="modal-body" style="background-color: #f8fafb">test</div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-white" ng-click="close()">{{ 'COMMON_CANCEL'| translate }}</button>
-                            <button type="button" class="btn btn-info" ng-click="submitFunction()">Login</button>
-                        </div>`,
-            controller: LoginModalController,
-            controllerAs: "loginModalCtrl",
-            backdrop: "static",
-            size: "lg",
-            resolve: {
 
-            }
-        }).result.then(function (result) {
-            console.log("1");
-            defer.resolve(result);
-        }, function () {
-            console.log("2");
-            defer.resolve(undefined);
-        }).catch(error => {
-            console.log("3");
-            defer.reject(error);
-        });
-        return defer.promise;
-    }
 
 
 }

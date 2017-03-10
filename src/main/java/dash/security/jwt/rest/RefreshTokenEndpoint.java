@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.common.Encryptor;
 import dash.security.jwt.InvalidJwtToken;
 import dash.security.jwt.JwtSettings;
 import dash.security.jwt.JwtTokenFactory;
@@ -32,6 +33,8 @@ import dash.security.jwt.domain.RawAccessJwtToken;
 import dash.security.jwt.domain.RefreshToken;
 import dash.security.jwt.domain.UserContext;
 import dash.tenantmanagement.business.TenantContext;
+import dash.tenantmanagement.business.TenantService;
+import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 
@@ -51,6 +54,8 @@ public class RefreshTokenEndpoint {
 	@Autowired
 	private UserService userService;
 	@Autowired
+	private TenantService tenantService;
+	@Autowired
 	private TokenVerifier tokenVerifier;
 	@Autowired
 	@Qualifier("jwtHeaderTokenExtractor")
@@ -66,16 +71,28 @@ public class RefreshTokenEndpoint {
 		RefreshToken refreshToken = RefreshToken.create(rawToken, jwtSettings.getTokenSigningKey())
 				.orElseThrow(() -> new InvalidJwtToken());
 
-		String tenant = refreshToken.getClaims().getBody().get("tenant", String.class);
+		String tenantKey = refreshToken.getClaims().getBody().get("tenant", String.class);
 		String smtpKey = refreshToken.getClaims().getBody().get("signature", String.class);
 		String jti = refreshToken.getJti();
 		if (!tokenVerifier.verify(jti)) {
 			throw new InvalidJwtToken();
 		}
-		TenantContext.setTenant(tenant);
+		String xxx = TenantContext.getTenant();
+		TenantContext.setTenant(tenantKey);
 		String subject = refreshToken.getSubject();
 		User user = userService.loadUserByEmail(subject)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found: " + subject));
+
+		String userSignature = refreshToken.getClaims().getBody().get("userSignature", String.class);
+		Tenant tenant = tenantService.getTenantByName(tenantKey);
+		String currentUserSignature = Encryptor.hashTextPBKDF2(
+				tenant.getJwtTokenVersion() + user.getPassword().substring(user.getPassword().length() / 2),
+				user.getEmail(), 300);
+
+		if (userSignature == null || !userSignature.equals(currentUserSignature)) {
+			throw new InsufficientAuthenticationException("Token has expired");
+		}
+
 		if (user.getEnabled() == false) {
 			throw new InsufficientAuthenticationException("User is not enabled");
 		}
@@ -87,6 +104,6 @@ public class RefreshTokenEndpoint {
 
 		UserContext userContext = UserContext.create(user.getUsername(), authorities, smtpKey);
 
-		return tokenFactory.createAccessJwtToken(userContext, tenant, null);
+		return tokenFactory.createAccessJwtToken(userContext, tenantKey, null);
 	}
 }

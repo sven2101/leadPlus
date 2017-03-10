@@ -79,8 +79,11 @@ public class Encryptor {
 		}
 	}
 
-	public static String hashTextPBKDF2(String text, String salt) {
-		byte b[] = hashPassword(text.toCharArray(), salt.getBytes(), 10000, 100);
+	public static String hashTextPBKDF2(String text, String salt, int length) {
+		if (length < 100) {
+			length = 100;
+		}
+		byte b[] = hashPassword(text.toCharArray(), salt.getBytes(), 10000, length);
 		byte[] base64CredsBytes = Base64.encodeBase64(b);
 		return new String(base64CredsBytes);
 	}

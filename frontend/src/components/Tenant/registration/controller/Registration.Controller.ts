@@ -98,6 +98,7 @@ class RegistrationController {
             if (port !== ":8080") {
                 port = "";
             }
+            console.log("redirect");
             window.open("https://" + self.tenant.tenantKey + "." + self.location.host() + port + "/", "_self");
             // self.signupService.init(self.user.password, self.tenant.tenantKey);
         }, function (error) {

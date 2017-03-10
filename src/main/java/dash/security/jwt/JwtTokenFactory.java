@@ -10,12 +10,17 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import dash.common.Encryptor;
 import dash.security.jwt.domain.AccessJwtToken;
 import dash.security.jwt.domain.ApiJwtToken;
 import dash.security.jwt.domain.JwtToken;
 import dash.security.jwt.domain.Scopes;
 import dash.security.jwt.domain.TokenType;
 import dash.security.jwt.domain.UserContext;
+import dash.tenantmanagement.business.TenantService;
+import dash.tenantmanagement.domain.Tenant;
+import dash.usermanagement.business.UserService;
+import dash.usermanagement.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -35,6 +40,12 @@ public class JwtTokenFactory {
 	public JwtTokenFactory(JwtSettings settings) {
 		this.settings = settings;
 	}
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private TenantService tenantService;
 
 	/**
 	 * Factory method for issuing new JWT Tokens.
@@ -70,21 +81,28 @@ public class JwtTokenFactory {
 		return new AccessJwtToken(token, claims);
 	}
 
-	public JwtToken createRefreshToken(UserContext userContext, String tenant, String smtpKey) {
+	public JwtToken createRefreshToken(UserContext userContext, String tenantKey, String smtpKey) {
 		if (userContext.getUsername() == null && userContext.getUsername() == "") {
 			throw new IllegalArgumentException("Cannot create JWT Token without username");
 		}
-		if (tenant == null) {
+		if (tenantKey == null) {
 			throw new IllegalArgumentException("Cannot create JWT Token without tenant");
 		}
 
 		DateTime currentTime = new DateTime();
 
 		Claims claims = Jwts.claims().setSubject(userContext.getUsername());
-		claims.put("tenant", tenant);
+		claims.put("tenant", tenantKey);
 		claims.put("signature", smtpKey == null ? userContext.getSmtpKey() : smtpKey);
 		claims.put("scopes", Arrays.asList(Scopes.REFRESH_TOKEN.authority()));
 		claims.put("tokenType", TokenType.REFRESH);
+
+		User user = userService.getUserByEmail(userContext.getUsername());
+		Tenant tenant = tenantService.getTenantByName(tenantKey);
+		claims.put("userSignature",
+				Encryptor.hashTextPBKDF2(
+						tenant.getJwtTokenVersion() + user.getPassword().substring(user.getPassword().length() / 2),
+						user.getEmail(), 300));
 
 		String token = Jwts.builder().setClaims(claims).setIssuer(settings.getTokenIssuer())
 				.setId(UUID.randomUUID().toString()).setIssuedAt(currentTime.toDate())

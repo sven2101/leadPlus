@@ -54,6 +54,9 @@ public class Tenant {
 	@Column(name = "address", length = 255)
 	private String address;
 
+	@Column(name = "jwt_token_version", length = 50)
+	private String jwtTokenVersion;
+
 	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
 
@@ -126,6 +129,14 @@ public class Tenant {
 		this.registration = registration;
 	}
 
+	public String getJwtTokenVersion() {
+		return jwtTokenVersion;
+	}
+
+	public void setJwtTokenVersion(String jwtTokenVersion) {
+		this.jwtTokenVersion = jwtTokenVersion;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -134,6 +145,7 @@ public class Tenant {
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + (enabled ? 1231 : 1237);
 		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((jwtTokenVersion == null) ? 0 : jwtTokenVersion.hashCode());
 		result = prime * result + ((license == null) ? 0 : license.hashCode());
 		result = prime * result + ((registration == null) ? 0 : registration.hashCode());
 		result = prime * result + ((tenantKey == null) ? 0 : tenantKey.hashCode());
@@ -162,6 +174,11 @@ public class Tenant {
 		if (enabled != other.enabled)
 			return false;
 		if (id != other.id)
+			return false;
+		if (jwtTokenVersion == null) {
+			if (other.jwtTokenVersion != null)
+				return false;
+		} else if (!jwtTokenVersion.equals(other.jwtTokenVersion))
 			return false;
 		if (license == null) {
 			if (other.license != null)
