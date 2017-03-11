@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -381,7 +383,7 @@ public class UserService implements IUserService {
 		this.save(api);
 	}
 
-	public void notifyUser(User user) throws TemplateException, IOException {
+	public void notifyUser(User user) throws TemplateException, IOException, MessagingException {
 		Tenant tenant = this.tenantService.getTenantByName(TenantContext.getTenant());
 
 		String templateName = "welcome_en.ftl";

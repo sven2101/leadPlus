@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.tenantmanagement.business.TenantService;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
@@ -45,12 +44,10 @@ public class RegistrationResource {
 	private static final Logger logger = Logger.getLogger(RegistrationResource.class);
 
 	private UserService userService;
-	private TenantService tenantService;
 
 	@Autowired
-	public RegistrationResource(UserService userService, TenantService tenantService) {
+	public RegistrationResource(UserService userService) {
 		this.userService = userService;
-		this.tenantService = tenantService;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
