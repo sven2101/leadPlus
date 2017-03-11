@@ -3,10 +3,16 @@
 <html lang="en">
 
 <style type= text/css>
+.top{
+	width:100%;
+	height:70px;
+	background-color:#1A92E2;
+}
 .head{
 	text-align: right;
 	margin-right:20px;
 	margin-left:auto;
+	vertical-align:middle;
 }
 .content{
     color:#202020 !important; 
@@ -36,8 +42,9 @@
 <body >
 
 	<div class="head">
-		<img alt="lead+" src="${imgAsBase64Logo}" />
+		<img src="cid:logo" alt="lead+"/>
 	</div>
+	
     <div class="content">
         <h3 class="heading">Hallo ${user.firstname} ${user.lastname},</h3>
         <p>
@@ -52,7 +59,7 @@
         </p>
         
         <div class="information">
-            Dein Link für Deinen lead+ Account <h4><a href="https://${tenant.tenantKey}.leadplus.me">https://${tenant.tenantKey}.leadplus.me</a></h4>
+            Dein Link für Deinen lead+ Account <h4><a href="https://${tenant.tenantKey}.leadplus.io">https://${tenant.tenantKey}.leadplus.io</a></h4>
             Melde Dich mit Deinem Benutzernamen an <h4>${user.email}</h4>
         </div>
 
@@ -72,7 +79,7 @@
         Andreas
         <br/>
         <br/>
-        <img alt="Andreas Foitzik" src="${imgAsBase64Employee}" />
+		<img src="cid:employee" alt="Andreas Foitzik"/>
         <br/>
         <br/>
         <div class="footer">

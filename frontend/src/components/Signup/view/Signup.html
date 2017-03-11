@@ -1,13 +1,13 @@
 <style>
-div.tooltip div.tooltip-inner {
+	div.tooltip div.tooltip-inner {
 		width: 300px;
 		max-width: 300px;
-        }
+	}
 </style>
 <div class="middle-box text-center" style="margin-top: -40px;">
 	<h1 class="logo-name animated fadeInDown" style="color:white">{{ 'LOGO' | translate }}</h1>
 	<h3 class="animated fadeInDown" style="color: white">{{ 'SIGNUP_REGISTER_WELCOME' | translate }}</h3>
-	<i class="fa fa-question-circle animated fadeInDown" style="font-size: 2em; color: white;" tooltip-placement="right" uib-tooltip="{{ 'TOOLTIP_SIGN_UP' | translate }}" ></i>
+	<i class="fa fa-question-circle animated fadeInDown" style="font-size: 2em; color: white;" tooltip-placement="right" uib-tooltip="{{ 'TOOLTIP_SIGN_UP' | translate }}"></i>
 	<br/>
 	<br/>
 </div>
@@ -18,21 +18,21 @@ div.tooltip div.tooltip-inner {
 				<div class="col-md-4">
 					<div class="form-group" ng-class="{  'has-success': !registration.firstname.$invalid,													
 													'has-error': registration.firstname.$invalid}">
-						<label style="color: whitesmoke">{{ 'COMMON_FIRSTNAME' | translate }}</label><span style="color:red" > *</span>
+						<label style="color: whitesmoke">{{ 'COMMON_FIRSTNAME' | translate }}</label><span style="color:red"> *</span>
 						<span style="color:red" ng-show="registration.firstname.$error.required&&!registration.firstname.$pristine"> {{ 'COMMON_VALIDATE_REQ'| translate }}</span>
 						<span style="color:red" ng-show="registration.firstname.$error.maxlength&&!registration.firstname.$pristine"> {{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
 						<input type="text" id="firstname" name="firstname" class="form-control" placeholder="{{ 'COMMON_FIRSTNAME' | translate }}"
-							required ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/" ng-model="signupCtrl.user.firstname" ng-minlength="2" ng-maxlength="50">
+						 required ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/" ng-model="signupCtrl.user.firstname" ng-minlength="2" ng-maxlength="50">
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="form-group" ng-class="{  'has-success': 	!registration.lastname.$invalid,														
 														'has-error': 		registration.lastname.$invalid	 }">
-						<label style="color: whitesmoke">{{ 'COMMON_LASTNAME' | translate }}</label><span style="color:red" > *</span>
+						<label style="color: whitesmoke">{{ 'COMMON_LASTNAME' | translate }}</label><span style="color:red"> *</span>
 						<span style="color:red" ng-show="registration.lastname.$error.required&&!registration.lastname.$pristine"> {{ 'COMMON_VALIDATE_REQ'| translate }}</span>
 						<span style="color:red" ng-show="registration.lastname.$error.maxlength&&!registration.lastname.$pristine"> {{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
 						<input type="text" id="lastname" name="lastname" class="form-control" placeholder="{{ 'COMMON_LASTNAME' | translate }}" required
-							ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/" ng-model="signupCtrl.user.lastname" ng-minlength="2" ng-maxlength="50">
+						 ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/" ng-model="signupCtrl.user.lastname" ng-minlength="2" ng-maxlength="50">
 					</div>
 				</div>
 			</div>
@@ -40,12 +40,12 @@ div.tooltip div.tooltip-inner {
 				<div class="col-md-8">
 					<div class="form-group" ng-class="{ 'has-success': 	!registration.email.$invalid,
 														'has-error': 	registration.email.$invalid	|| registration.email.$error.emailExist || signupCtrl.signupService.emailExist }">
-						<label style="color: whitesmoke">{{ 'COMMON_EMAIL' | translate }}</label><span style="color:red" > *</span>
+						<label style="color: whitesmoke">{{ 'COMMON_EMAIL' | translate }}</label><span style="color:red"> *</span>
 						<span style="color:red" ng-show="registration.email.$error.required&&!registration.email.$pristine"> {{ 'COMMON_VALIDATE_REQ'| translate }}</span>
 						<span style="color:red" ng-show="signupCtrl.signupService.emailExist || registration.email.$error.emailExist"> {{ 'SIGNUP_VALIDATE_EMAIL_IN_USE' | translate }}</span>
 						<span style="color:red" ng-show="registration.email.$error.email"> {{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
-						<input type="email" id="email" name="email" class="form-control" ng-model-options="{ debounce: 600 }" placeholder="{{ 'COMMON_EMAIL' | translate }}" required
-							ng-model="signupCtrl.user.email" ng-blur="signupCtrl.uniqueEmail()">
+						<input type="email" id="email" name="email" class="form-control" ng-model-options="{ debounce: 600 }" placeholder="{{ 'COMMON_EMAIL' | translate }}"
+						 required ng-model="signupCtrl.user.email" ng-blur="signupCtrl.uniqueEmail()">
 					</div>
 				</div>
 			</div>
@@ -54,32 +54,41 @@ div.tooltip div.tooltip-inner {
 					<div class="form-group" ng-class="{ 'has-success has-feedback': 	!registration.password.$invalid ,
 														'has-error has-feedback': 		registration.password.$invalid }">
 
-						<label style="color: whitesmoke">{{ 'COMMON_PASSWORD' | translate }}</label><span style="color:red" > *</span>
+						<label style="color: whitesmoke">{{ 'COMMON_PASSWORD' | translate }}</label><span style="color:red"> *</span>
 						<span style="color:red" ng-show="registration.password.$dirty && registration.password.$error.required&&!registration.password.$error.maxlength"> {{ 'COMMON_VALIDATE_REQ' | translate }}</span>
 						<span style="color:red" ng-show="registration.password.$error.minlength"> {{ 'COMMON_VALIDATE_PASSWORD_MIN' | translate }}</span>
 						<span style="color:red" ng-show="registration.password.$error.maxlength"> {{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
 
 						<input type="password" id="password" name="password" class="form-control" ng-model-options="{ debounce: 600 }" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-							required ng-model="signupCtrl.password1" ng-minlength="6" ng-maxlength="30">
+						 required ng-model="signupCtrl.password1" ng-minlength="6" ng-maxlength="30">
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="form-group" ng-class="{ 'has-success has-feedback': 	!registration.password2.$invalid && !registration.password2.$error.pwmatch,
 														'has-error has-feedback': 		registration.password2.$invalid || registration.password2.$error.pwmatch}">
-						<label style="color: whitesmoke">{{ 'COMMON_PASSWORD' | translate }}</label><span style="color:red" > *</span>
+						<label style="color: whitesmoke">{{ 'COMMON_PASSWORD' | translate }}</label><span style="color:red"> *</span>
 						<span style="color:red" ng-show="registration.password2.$dirty && registration.password2.$error.required&&!registration.password2.$error.maxlength"> {{ 'COMMON_VALIDATE_REQ' | translate }}</span>
 						<span style="color:red" ng-show="registration.password2.$error.minlength"> {{ 'COMMON_VALIDATE_PASSWORD_MIN' | translate }}</span>
 						<span style="color:red" ng-show="registration.password2.$error.maxlength"> {{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
 						<span style="color:red" ng-show="registration.password2.$error.pwmatch && !registration.password2.$pristine &&!registration.password2.$error.minlength &&!registration.password2.$error.maxlength"> {{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</span>
 						<input type="password" id="password2" name="password2" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-							required ng-model="signupCtrl.password2" ng-minlength="6" ng-model-options="{ debounce: 600 }" ng-maxlength="30" pw-check="password">
+						 required ng-model="signupCtrl.password2" ng-minlength="6" ng-model-options="{ debounce: 600 }" ng-maxlength="30" pw-check="password">
 					</div>
 				</div>
 			</div>
-			<div class="row ">
+			<div class="row" style="color:white;text-align:center;">
+				<div class="col-md-8">
+					<br/>
+					Mit Abschluss der Anmeldung stimmen Sie unseren AGB und Datenschutzbestimmungen zu. Es sind weder Zahlungsdaten noch eine
+					Kündigung in der Testphase erforderlich.
+					<br/>
+					<br/>
+				</div>
+			</div>
+			<div class="row">
 				<div class="col-md-8">
 					<button type="button" id="registration" ng-click="signupCtrl.signup();" class="btn btn-success block m-b btn-sm btn-block"
-						ng-disabled="registration.$invalid || vm.dataLoading">{{ 'LOGIN_CREATE_ACCOUNT' | translate }}
+					 ng-disabled="registration.$invalid || vm.dataLoading">{{ 'LOGIN_CREATE_ACCOUNT' | translate }}
 					</button>
 					<a class="btn btn-sm btn-white btn-block" href="#/login">{{ 'SIGNUP_TO_LOGIN' | translate }}</a>
 				</div>
@@ -87,4 +96,3 @@ div.tooltip div.tooltip-inner {
 		</form>
 	</div>
 </div>
-
