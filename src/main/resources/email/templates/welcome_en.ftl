@@ -82,6 +82,7 @@
             <br/>
             <br/>
             <a href="http://leadplus.io">www.leadplus.io</a> <br/>
+            eviarc UG (limited) i.G. <br/>
             Hauptstrasse 55 <br/>
             76133 Karlsruhe <br/>
             Germany <br/>
