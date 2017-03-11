@@ -118,10 +118,12 @@ public class Customer {
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "billing_address_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
 	private Address billingAddress;
 	
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "delivery_address_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
 	private Address deliveryAddress;
 
 

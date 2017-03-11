@@ -136,7 +136,7 @@
 			</div>
 			<br/>
 			<br/>
-			<div ng-show="showInvoiceAddress" class="closeMenu" ng-class="{openMenu:showInvoiceAddress}">
+			<div ng-if="showInvoiceAddress" class="animate-if">
 				<div class="row">
 					<!-- BILLING STREET -->
 					<div class="col-xs-6">
@@ -208,7 +208,7 @@
 			</div>
 			<br/>
 			<br/>
-			<div ng-show="showDeliveryAddress" class="closeMenu" ng-class="{openMenu:showDeliveryAddress}">
+			<div ng-if="showDeliveryAddress" class="animate-if">
 				<span ng-show="!customerSelected || (customerSelected && !customerEditLocked) "><a ng-click="copyBillingAddress()">{{'COMMON_BILLING_ADDRESS_AS_DELIVERYADDRESS' | translate}}</a> 	
 				<br/>
 				<br/>

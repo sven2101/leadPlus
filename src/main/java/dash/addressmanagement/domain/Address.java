@@ -7,10 +7,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name = "address")
+@SQLDelete(sql = "UPDATE address SET deleted = '1' WHERE id = ?")
+@Where(clause = "deleted <> '1'")
 public class Address {
 
 	@Id
@@ -42,6 +50,11 @@ public class Address {
 	@Size(max = 255)
 	@Column(name = "country", length = 255, nullable = true)
 	private String country;
+	
+	@NotNull
+	@ApiModelProperty(hidden = true)
+	@Column(name = "deleted", nullable = false)
+	private boolean deleted;
 
 	public Address() {
 	}
@@ -101,6 +114,15 @@ public class Address {
 	public void setCountry(String country) {
 		this.country = country;
 	}
+	
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 
 	@Override
 	public int hashCode() {
@@ -108,6 +130,7 @@ public class Address {
 		int result = 1;
 		result = prime * result + ((city == null) ? 0 : city.hashCode());
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
+		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((number == null) ? 0 : number.hashCode());
 		result = prime * result + ((state == null) ? 0 : state.hashCode());
@@ -134,6 +157,8 @@ public class Address {
 			if (other.country != null)
 				return false;
 		} else if (!country.equals(other.country))
+			return false;
+		if (deleted != other.deleted)
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -166,7 +191,7 @@ public class Address {
 	@Override
 	public String toString() {
 		return "Address [id=" + id + ", number=" + number + ", street=" + street + ", city=" + city + ", state=" + state
-				+ ", zip=" + zip + ", country=" + country + "]";
+				+ ", zip=" + zip + ", country=" + country + ", deleted=" + deleted + "]";
 	}
 	
 }

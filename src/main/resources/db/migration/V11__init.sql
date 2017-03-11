@@ -1,8 +1,11 @@
 ALTER TABLE customer 
-	ADD COLUMN delivery_address_fk bigint;
+ADD COLUMN delivery_address_fk bigint;
 
 ALTER TABLE address 
 ALTER COLUMN number TYPE character varying(10);
+
+ALTER TABLE address 
+ADD COLUMN deleted boolean NOT NULL;
 	
 ALTER TABLE customer
 ADD CONSTRAINT delivery_address_fk FOREIGN KEY (delivery_address_fk)

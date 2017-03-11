@@ -29,7 +29,7 @@
 		</div>
 	</div>
 	<div class="closeMenu" ng-class="{openMenu:showCustomerDetails}">
-	<div ng-if="showCustomerDetails"> 
+	<div ng-if="showCustomerDetails" class="animate-if"> 
 		<div class="row">
 			<div class="col-sm-3">
 				<div class="form-group">
@@ -133,7 +133,7 @@
 				</div>
 				<br/>
 				<br/>
-				<div ng-show="showInvoiceAddress" class="closeMenu" ng-class="{openMenu:showInvoiceAddress}">
+				<div ng-if="showInvoiceAddress" class="animate-if" >
 					<div class="row">
 						<!-- BILLING STREET -->
 						<div class="col-xs-6">
@@ -208,7 +208,7 @@
 				</div>
 				<br/>
 				<br/>
-				<div ng-show="showDeliveryAddress" class="closeMenu" ng-class="{openMenu:showDeliveryAddress}">
+				<div ng-if="showDeliveryAddress" class="animate-if">
 					<div class="row">
 						<!-- DELIVERY STREET -->
 						<div class="col-xs-6">
@@ -272,7 +272,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+		</div>
 	</div>
 	<!-- Fake Hidden Inputfields for NG-IF validation-->
 	<input required type="hidden" name="firstnameFake" ng-model="editWorkflowUnit.customer.firstname">
