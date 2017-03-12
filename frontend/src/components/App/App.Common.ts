@@ -4,7 +4,7 @@
 
 declare var jstz;
 
-let findElementById = function (array: Array<any>, id: Number): any {
+let findElementById = function (array: Array<any>, id: number): any {
     for (let i = 0; i < array.length; i++) {
         if (array[i].id === id) {
             return array[i];

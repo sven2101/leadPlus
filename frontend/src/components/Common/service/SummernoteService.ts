@@ -121,7 +121,7 @@ class SummernoteService {
     }
 
     getDeliveryTemplate(self) {
-        return self.translate.instant("SUMMERNOTE_DELIVERY", "", "", self.summernoteLanguage) + "<#if workflow.deliveryAddress?has_content> " + self.translate.instant("SUMMERNOTE_DELIVERY_TO", "", "", self.summernoteLanguage) + " ${(workflow.deliveryAddress)!}&lt;/#if&gt;<#if workflow.deliveryDate?has_content> " + self.translate.instant("SUMMERNOTE_DELIVERY_AT", "", "", self.summernoteLanguage) + " ${(workflow.deliveryDate)!}&lt;/#if&gt;.";
+        return self.translate.instant("SUMMERNOTE_DELIVERY", "", "", self.summernoteLanguage) + "<#if workflow.deliveryAddressLine?has_content> " + self.translate.instant("SUMMERNOTE_DELIVERY_TO", "", "", self.summernoteLanguage) + " ${(workflow.deliveryAddressLine)!}&lt;/#if&gt;<#if workflow.deliveryDate?has_content> " + self.translate.instant("SUMMERNOTE_DELIVERY_AT", "", "", self.summernoteLanguage) + " ${(workflow.deliveryDate)!}&lt;/#if&gt;.";
     }
 
     getSingleTemplateButton(buttonName: string, insertText, fa: string, asHtml: boolean = false): any {
@@ -157,7 +157,7 @@ class SummernoteService {
                         context.code("<div class='cog-loader'>"
                             + "<i class='fa-spin fa fa-cog'></i>"
                             + "<i class='fa-spin fa-spin-reverse fa fa-cog'></i>"
-                            + "<i class='fa-spin fa fa-cog'></i></div><div class='text-center' style='font-size: 1.5em;color: gray; font-weight: bold'>" + self.translate.instant("SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE") + "</div>");
+                            + "<i class='fa-spin fa fa-cog'></i></div><div class='text-center' style='font-size: 1.5em;color: gray; font-weight: bold;margin-top:30px;'>" + self.translate.instant("SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE") + "</div>");
                         self.addPreviewMode(buttonSelf, context);
                         if (plainText !== null && plainText !== undefined && plainText !== "") {
                             self.templateService.testTemplate(self.templateService.getCurrentEditTemplate(), new WorkflowTemplateObject(), new Notification()).then(function (result: Notification) {
@@ -365,10 +365,18 @@ class SummernoteService {
 
 
     getWorkflowTemplateVar(): string {
-        return "<li><a template-value='${(workflow.netPrice)!}'>" + this.translate.instant("PRODUCT_PRICE") + "</a></li>" +
+        return "<li><a template-value='${((workflow.netPrice)!)?string(&quot;#,##0.00&quot;)}'>" + this.translate.instant("PRODUCT_PRICE") + "</a></li>" +
             "<li><a template-value='${(workflow.vat)!}'>" + this.translate.instant("CALCULATION_VAT") + "</a></li>" +
-            " <li><a template-value='${(workflow.deliveryCosts)!}'>" + this.translate.instant("COMMON_PRODUCT_DELIVERYCOSTS") + "</a></li>" +
-            "<li><a template-value='${(workflow.deliveryAddress)!}'>" + this.translate.instant("COMMON_PRODUCT_DESTINATION") + "</a></li>" +
+            "<li><a template-value='${((workflow.grossPrice)!)?string(&quot;#,##0.00&quot;)}'>" + this.translate.instant("PRODUCT_GROSS_PRICE") + "</a></li>" +
+            "<li><a template-value='${(workflow.skonto)!}'>" + this.translate.instant("COMMON_SUPPLY_SKONTO") + "</a></li>" +
+            "<li><a template-value='${((workflow.grossPriceSkonto)!)?string(&quot;#,##0.00&quot;)}'>" + this.translate.instant("PRODUCT_GROSS_PRICE_SKONTO") + "</a></li>" +
+            "<li><a template-value='${(workflow.paymentTerm)!}'>" + this.translate.instant("COMMON_SUPPLY_PAYMENT_TERM") + "</a></li>" +
+            "<li><a template-value='${((workflow.deliveryCosts)!)?string(&quot;#,##0.00&quot;)}'>" + this.translate.instant("COMMON_PRODUCT_DELIVERYCOSTS") + "</a></li>" +
+            "<li><a template-value='${(workflow.deliveryTerm)!}'>" + this.translate.instant("COMMON_SUPPLY_DELIVERY_TERM") + "</a></li>" +
+            "<li><a template-value='<#if workflow.billingAddress.street?has_content>${(workflow.billingAddress.street)!} ${(workflow.billingAddress.number)!}<br>&lt;/#if&gt; <#if workflow.billingAddress.zip?has_content || workflow.billingAddress.city?has_content>${(workflow.billingAddress.zip)!} ${(workflow.billingAddress.city)!}<br>&lt;/#if&gt; <#if workflow.billingAddress.state?has_content>${(workflow.billingAddress.state)!}<br>&lt;/#if&gt; <#if workflow.billingAddress.country?has_content>${(workflow.billingAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_BILLING_ADDRESS_BLOCK") + "</a></li>" +
+            "<li><a template-value='<#if workflow.billingAddress.street?has_content>${(workflow.billingAddress.street)!} ${(workflow.billingAddress.number)!},&lt;/#if&gt; <#if workflow.billingAddress.zip?has_content || workflow.billingAddress.city?has_content>${(workflow.billingAddress.zip)!} ${(workflow.billingAddress.city)!},&lt;/#if&gt; <#if workflow.billingAddress.state?has_content>${(workflow.billingAddress.state)!},&lt;/#if&gt; <#if workflow.billingAddress.country?has_content>${(workflow.billingAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_BILLING_ADDRESS_LINE") + "</a></li>" +
+            "<li><a template-value='<#if workflow.deliveryAddress.street?has_content>${(workflow.deliveryAddress.street)!} ${(workflow.deliveryAddress.number)!}<br>&lt;/#if&gt; <#if workflow.deliveryAddress.zip?has_content || workflow.deliveryAddress.city?has_content>${(workflow.deliveryAddress.zip)!} ${(workflow.deliveryAddress.city)!}<br>&lt;/#if&gt; <#if workflow.deliveryAddress.state?has_content>${(workflow.deliveryAddress.state)!}<br>&lt;/#if&gt; <#if workflow.deliveryAddress.country?has_content>${(workflow.deliveryAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_DELIVERY_ADDRESS_BLOCK") + "</a></li>" +
+            "<li><a template-value='<#if workflow.deliveryAddress.street?has_content>${(workflow.deliveryAddress.street)!} ${(workflow.deliveryAddress.number)!},&lt;/#if&gt; <#if workflow.deliveryAddress.zip?has_content || workflow.deliveryAddress.city?has_content>${(workflow.deliveryAddress.zip)!} ${(workflow.deliveryAddress.city)!},&lt;/#if&gt; <#if workflow.deliveryAddress.state?has_content>${(workflow.deliveryAddress.state)!},&lt;/#if&gt; <#if workflow.deliveryAddress.country?has_content>${(workflow.deliveryAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_DELIVERY_ADDRESS_LINE") + "</a></li>" +
             "<li><a template-value='${(workflow.deliveryDate)!}'>" + this.translate.instant("COMMON_DELIVERY_TIME") + "</a></li>" +
             "<li><a template-value='${(workflow.message)!}'>" + this.translate.instant("EMAIL_MESSAGE") + "</a></li>";
     }

@@ -64,6 +64,14 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 authenticated: true,
                 package: "basic"
             })
+            .when("/settings/template/details/:templateId?",
+            {
+                templateUrl: "components/Template/view/Template.Detail.html",
+                controller: "TemplateController",
+                controllerAs: "templateCtrl",
+                authenticated: true,
+                package: "basic"
+            })
             .when("/statistic/user/detail/:userId",
             {
                 templateUrl: "components/Statistic/view/UserDetail.html",

@@ -24,9 +24,12 @@
 					<li>
 						<a href="#/dashboard">Home</a>
 					</li>
-					<li class="active">
-						<strong>{{ 'SETTINGS_MENU' | translate }}</strong>
+					<li ng-click="settingCtrl.tabOnClick('users')">
+						<a href="#/settings/users">{{ 'SETTINGS_MENU' | translate }}</a>
 					</li>
+					<li class="active">
+						<strong>{{ settingCtrl.currentTab | translate }}</strong> 
+                    </li>
 				</ol>
 			</div>
 		</div>

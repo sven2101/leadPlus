@@ -8,27 +8,46 @@
 const TemplateControllerId: string = "TemplateController";
 
 class TemplateController {
+    private $inject = [TemplateServiceId, $routeParamsId, $locationId];
 
-
-    private $inject = [TemplateServiceId, $uibModalId, "template"];
-
-
-    uibModalInstance;
     templateService: TemplateService;
     template: Template;
+    location: any;
     currentSelectedNotificationTypes: Array<string> = [];
     currentSelectedSource: Array<string> = [];
     availableNotificationTypes: Array<string> = (<any>NotificationType).getAll();
     availablesourceNames = [];
     summernoteOptions: any;
-    constructor(TemplateService, $uibModalInstance, template, private SummernoteService: SummernoteService, private SourceService: SourceService, private $translate, private toaster) {
+    templateFound: boolean;
+    templateTested: boolean = false;
+    templateHead: string;
+    constructor(TemplateService, private SummernoteService: SummernoteService, private SourceService: SourceService, private $translate, private toaster, $routeParams, $location) {
         this.templateService = TemplateService;
-        this.uibModalInstance = $uibModalInstance;
-        this.template = template;
-        this.currentSelectedNotificationTypes = this.template.notificationTypeString == null ? [] : this.template.notificationTypeString.split(",");
-        this.currentSelectedSource = this.template.sourceString == null ? [] : this.template.sourceString.split(",");
+        this.location = $location;
+        this.initTemplate($routeParams);
         this.SetAvailablesourceNames();
         this.summernoteOptions = SummernoteService.getTemplateOptions();
+        this.SummernoteService.resetSummernoteConfiguration();
+    }
+
+    async initTemplate($routeParams) {
+        let templateId = $routeParams.templateId;
+        if (!isNullOrUndefined(templateId) && templateId !== 0 && !isNaN(templateId) && angular.isNumber(+templateId)) {
+            this.template = await this.templateService.getTemplateById(Number(templateId));
+            this.templateHead = "SETTING_EMAIL_TEMPLATE_EDIT";
+            isNullOrUndefined(this.template) ? this.templateFound = false : this.templateFound = true;
+        } else if (!isNullOrUndefined(templateId) && templateId === "new") {
+            this.template = new Template();
+            this.templateService.currentEditTemplate = this.template;
+            this.template.sourceString = "NONE,ALL";
+            this.templateHead = "SETTING_EMAIL_NEW_TEMPLATE";
+            this.templateFound = true;
+        }
+        if (this.templateFound === true) {
+            this.currentSelectedNotificationTypes = this.template.notificationTypeString == null ? [] : this.template.notificationTypeString.split(",");
+            this.currentSelectedSource = this.template.sourceString == null ? [] : this.template.sourceString.split(",");
+            this.templateService.getAll();
+        }
     }
 
     isTemplateInPreviewMode(): boolean {
@@ -63,25 +82,22 @@ class TemplateController {
         }
 
         this.template = null;
-        this.close();
+        this.goBack();
     }
 
-    remove() {
-        this.templateService.remove(this.template);
-        this.close();
-    }
-
-    close() {
+    goBack() {
+        this.location.path("settings/template");
         this.SummernoteService.resetSummernoteConfiguration();
-        this.uibModalInstance.close();
     }
 
     async testSyntax(): Promise<void> {
         try {
             await this.templateService.testTemplate(this.template, new WorkflowTemplateObject(), new Notification());
+            this.templateTested = true;
             this.toaster.pop("success", "", this.$translate.instant("EMAIL_TEMPLATE_SYNTAX_SUCCESS"));
 
         } catch (error) {
+            this.templateTested = false;
             console.log(error);
             if (error.data != null && error.data.exception !== "dash.templatemanagement.business.TemplateCompilationException") {
                 return this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR"));

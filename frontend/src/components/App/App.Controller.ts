@@ -86,8 +86,8 @@ class AppController {
                 $(document.getElementById("loading-pane-overlay")).addClass("loading-pane-fade-out");
                 setTimeout(function () {
                     $(document.getElementById("loading-pane-overlay")).children().removeClass("loader");
-                }, 750);
-            }, 1000);
+                }, 1000);
+            }, 1250);
         });
     }
 

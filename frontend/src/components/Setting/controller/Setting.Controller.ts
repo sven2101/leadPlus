@@ -10,7 +10,7 @@ const SettingControllerId: string = "SettingController";
 
 class SettingController {
 
-    private $inject = [SettingServiceId, SmtpServiceId, TemplateServiceId, $rootScopeId, $translateId, $routeId, $scopeId];
+    private $inject = [SettingServiceId, SmtpServiceId, TemplateServiceId, $rootScopeId, $translateId, $routeId, $scopeId, $locationId];
 
     createTemplateForm;
 
@@ -30,11 +30,12 @@ class SettingController {
     rootScope;
     translate;
     scope;
+    location;
     route;
     currentUser: User;
     lastRoute;
 
-    constructor(SettingService, SmtpService, TemplateService, private SummernoteService: SummernoteService, $rootScope, $translate, $route, $scope) {
+    constructor(SettingService, SmtpService, TemplateService, private SummernoteService: SummernoteService, $rootScope, $translate, $route, $scope, $location) {
         this.smtp = new Smtp();
         this.template = new Template();
         this.settingService = SettingService;
@@ -43,6 +44,7 @@ class SettingController {
         this.rootScope = $rootScope;
         this.scope = $scope;
         this.route = $route;
+        this.location = $location;
         this.translate = $translate;
         this.currentUser = this.rootScope.user;
         this.settingService.loadUsers();
@@ -62,7 +64,7 @@ class SettingController {
         let self = this;
         self.lastRoute = route.current;
         self.scope.$on("$locationChangeSuccess", function (event) {
-            if (self.lastRoute.$$route.originalPath === route.current.$$route.originalPath) {
+            if (self.lastRoute.$$route && route.current.$$route && self.lastRoute.$$route.originalPath === route.current.$$route.originalPath) {
                 if (route.current.params && isNullOrUndefined(route.current.params.tab)) {
                     route.updateParams({
                         tab: self.currentTab
@@ -71,6 +73,14 @@ class SettingController {
                 route.current = self.lastRoute;
             }
         });
+    }
+
+    showTemplate(id: number) {
+        if (id === 0) {
+            this.location.path("settings/template/details/new");
+        } else {
+            this.location.path("settings/template/details/" + id);
+        }
     }
 
     tabOnClick(tab: string) {
@@ -92,18 +102,6 @@ class SettingController {
 
     changeRole(user: User) {
         this.settingService.changeRole(user);
-    }
-
-    openEmailTemplateModal() {
-        let tempTemplate = new Template();
-        tempTemplate.sourceString = "NONE,ALL";
-        this.SummernoteService.resetSummernoteConfiguration();
-        this.templateService.openEmailTemplateModal(tempTemplate);
-    }
-
-    openEditEmailTemplateModal(template: Template) {
-        this.SummernoteService.resetSummernoteConfiguration();
-        this.templateService.openEmailTemplateModal(template);
     }
 
     openEmailTemplateDeleteModal(template: Template) {

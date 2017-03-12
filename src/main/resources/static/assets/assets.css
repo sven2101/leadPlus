@@ -5202,6 +5202,9 @@ div#loginscreen
 .modal-lg.modal-dialog, .modal-dialog.modal-lg{
       max-height: 90vh;
 }
+body.modal-open {
+  overflow: inherit !important;
+}
 
 
 /*!

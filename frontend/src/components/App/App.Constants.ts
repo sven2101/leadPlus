@@ -83,6 +83,7 @@ const moduleSmtp: string = moduleApp + ".smtp";
 const moduleSmtpResource: string = moduleSmtp + ".resource";
 const moduleSmtpService: string = moduleSmtp + ".service";
 const moduleTemplate: string = moduleApp + ".template";
+const moduleDeleteTemplate: string = moduleTemplate + ".delete";
 const moduleTemplateResource: string = moduleTemplate + ".resource";
 const moduleTemplateService: string = moduleTemplate + ".service";
 const moduleNotification: string = moduleApp + ".notification";

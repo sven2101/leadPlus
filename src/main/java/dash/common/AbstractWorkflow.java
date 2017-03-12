@@ -100,7 +100,7 @@ public abstract class AbstractWorkflow implements Request {
 	
 	@Digits(integer = 4, fraction = 2)
 	@Column(name = "skonto", nullable = false)
-	private Double skonto;
+	protected Double skonto;
 	
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "billing_address_fk", nullable = true)

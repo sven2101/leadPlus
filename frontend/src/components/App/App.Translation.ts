@@ -99,6 +99,7 @@ function config($translateProvider) {
             EMAIL_TEMPLATE_SELECT: "Keine Vorlage",
             EMAIL_TEMPLATE_SYNTAX_SUCCESS: "Template ist valide",
             SETTING_TEMPLATE_TEST_SYNTAX: "Template testen",
+            SETTING_TEMPLATE_TEST_TEMPLATE: "Vor dem Speichern Template testen!",
             EMAIL_RECIPIENT_COMMA: "(mit Komma getrennt)",
             EMAIL_RECIPIENT: "Empfänger",
             EMAIL_SUBJECT: "Betreff",
@@ -355,6 +356,9 @@ function config($translateProvider) {
             SALE_ROLLBACK_BODY: "Möchten Sie den Verkauf wirklich zurücksetzen?",
 
             // Define setting elements
+            users: "Benutzer",
+            source: "Quellen",
+            template: "E-Mail Templates",
             SETTING_USER: "Benutzer",
             SETTING_USER_MANAGEMENT: "Benutzer Einstellungen",
             SETTING_EMAIL: "Email Templates",
@@ -388,7 +392,7 @@ function config($translateProvider) {
             SETTING_EMAIL_TEMPLATE_DELETE: "Email Template löschen",
             SETTING_EMAIL_TEMPLATE_DELETE_CONFIRMATION_1: "Möchten Sie sicher das Email Template ",
             SETTING_EMAIL_TEMPLATE_DELETE_CONFIRMATION_2: "löschen ",
-            SETTING_EMAIL_TEMPLATE_EDIT: "Email Template bearbeiten",
+            SETTING_EMAIL_TEMPLATE_EDIT: "Template bearbeiten",
             SETTING_EMAIL_TEMPLATE_TEXT: "Template",
             SETTING_TEMPLATE_NOTIFICATION_TYPE: "Nachrichtentypen",
             SETTING_TEMPLATE_ALL_TYPES: "Alle Typen",
@@ -698,6 +702,7 @@ function config($translateProvider) {
             EMAIL_TEMPLATE_SELECT: "No template",
             EMAIL_TEMPLATE_SYNTAX_SUCCESS: "Template is valid",
             SETTING_TEMPLATE_TEST_SYNTAX: "Test Template",
+            SETTING_TEMPLATE_TEST_TEMPLATE: "Test Template before saving",
             EMAIL_RECIPIENT_COMMA: "(seperated by comma)",
             EMAIL_RECIPIENT: "Recipient",
             EMAIL_SUBJECT: "Subject",
@@ -953,6 +958,9 @@ function config($translateProvider) {
             SALE_ROLLBACK_BODY: "Are you sure to reset this sale?",
 
             // Define setting elements
+            users: "Users",
+            source: "Sources",
+            template: "E-Mail Templates",
             SETTING_USER: "Users",
             SETTING_USER_MANAGEMENT: "User Management",
             SETTING_EMAIL: "Email Templates",
@@ -986,7 +994,7 @@ function config($translateProvider) {
             SETTING_EMAIL_TEMPLATE_DELETE: "Delete Email Template",
             SETTING_EMAIL_TEMPLATE_DELETE_CONFIRMATION_1: "Sure you want to delete Email Template ",
             SETTING_EMAIL_TEMPLATE_DELETE_CONFIRMATION_2: " ",
-            SETTING_EMAIL_TEMPLATE_EDIT: "Edit Email Template",
+            SETTING_EMAIL_TEMPLATE_EDIT: "Edit Template",
             SETTING_EMAIL_TEMPLATE_TEXT: "Template",
             SETTING_TEMPLATE_NOTIFICATION_TYPE: "Notification types",
             SETTING_TEMPLATE_ALL_TYPES: "All types",

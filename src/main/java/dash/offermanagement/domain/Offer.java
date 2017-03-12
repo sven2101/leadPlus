@@ -59,7 +59,15 @@ public class Offer extends AbstractWorkflow {
 	}
 
 	public Double getGrossPrice() {
-		return this.netPrice * (1 + this.vat / 100);
+		return (double) Math.round((this.netPrice * (1 + this.vat / 100)) * 100) / 100;
+	}
+
+	public Double getGrossPriceSkonto() {
+		return this.getGrossPrice() - this.getSkontoPrice();
+	}
+
+	public Double getSkontoPrice() {
+		return (double) Math.round((this.getGrossPrice() * (this.skonto / 100)) * 100) / 100;
 	}
 
 	@Override

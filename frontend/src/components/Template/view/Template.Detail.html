@@ -1,0 +1,126 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-10">
+                <h2>{{ 'SETTINGS_MENU' | translate }}</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#/dashboard">Home</a>
+                    </li>
+                    <li>
+                        <a href="#/settings">{{ 'SETTINGS_MENU' | translate }}</a>
+                    </li>
+					 <li>
+                        <a href="#/settings/template">{{ 'SETTING_EMAIL' | translate }}</a>
+                    </li>
+                    <li class="active">
+                        <strong>{{ templateCtrl.templateHead | translate }}</strong>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" ng-if="templateCtrl.templateFound===true">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>{{ templateCtrl.templateHead | translate }}</h5>
+				</div>
+				<div class="ibox-content">
+					<form name="createTemplate">
+							<div class="row">
+								<!-- Name -->
+								<div class="col-lg-6">
+									<div class="form-group">
+										<label>{{ 'COMMON_NAME' | translate }}<span style="color:red">*</span></label>
+										<span style="color:red" ng-show="createTemplate.name.$error.maxlength && !createTemplate.description.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}30{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+										<span style="color:red" ng-show="createTemplate.name.$error.required  && !createTemplate.description.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+										<input required type="text" name="name" class="form-control" ng-model="templateCtrl.template.name" ng-maxlength="30">
+									</div>
+									<!-- Deactivated -->
+									<div class="form-group">
+										<label class="checkbox-inline "> <input type="checkbox " ng-model="templateCtrl.template.deactivated">{{ 'COMMON_DEACTIVATED' | translate }}</label>
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<!-- Description -->
+									<div class="form-group" ng-class="{ 'has-error' : createTemplate.description.$invalid && !createTemplate.description.$pristine }">
+										<label>{{ 'COMMON_DESCRIPTION' | translate }}</label>
+										<span style="color:red" ng-show="createTemplate.description.$error.maxlength && !createTemplate.description.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+										<span style="color:red" ng-show="createTemplate.description.$error.required  && !createTemplate.description.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+										<textarea type="text" name="description" style="resize: none; width:100%;box-sizing: border-box;height: 70px !important"
+											class="form-control" ng-model="templateCtrl.template.description" ng-maxlength="255" />
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-lg-6">
+									<div class="form-group">
+										<label>{{ 'SETTING_TEMPLATE_NOTIFICATION_TYPE' | translate }}</label>
+										<select ng-model="templateCtrl.currentSelectedNotificationTypes" data-placeholder-text-multiple="templateCtrl.getTranslationByKey('SETTING_TEMPLATE_NOTIFICATION_TYPE_SELECT')"
+											chosen multiple>
+											<option value="ALL">{{'SETTING_TEMPLATE_ALL_TYPES'|translate}}</option>
+											<option ng-value="t" ng-repeat="t in templateCtrl.availableNotificationTypes">{{ t | translate }}</option>
+											</select>
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="form-group">
+										<label>{{ 'SETTING_TEMPLATE_SOURCE' | translate }}</label>
+										<select ng-model="templateCtrl.currentSelectedSource" data-placeholder-text-multiple="templateCtrl.getTranslationByKey('SETTING_TEMPLATE_SOURCE_SELECT')"
+											chosen multiple>
+											<option value="ALL">{{'SETTING_TEMPLATE_ALL_SOURCES'|translate}}</option>
+											<option value="NONE">{{'SETTING_TEMPLATE_NO_SOURCES'|translate}}</option>
+											<option ng-value="s" ng-repeat="s in templateCtrl.availablesourceNames">{{s}}</option>
+											</select>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-lg-12">
+									<!-- Subject -->
+									<div class="form-group" ng-class="{ 'has-error' : createTemplate.subject.$invalid && !createTemplate.subject.$pristine }">
+										<label>{{ 'EMAIL_SUBJECT' | translate }}</label>
+										<span style="color:red" ng-show="createTemplate.subject.$error.maxlength && !createTemplate.subject.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+										<span style="color:red" ng-show="createTemplate.subject.$error.required  && !createTemplate.subject.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+										<input type="text" name="subject" class="form-control" ng-model="templateCtrl.template.subject" ng-maxlength="255">
+									</div>
+									<!-- Template -->
+									<div class="form-group ">
+										<label>{{ 'SETTING_EMAIL_TEMPLATE_TEXT' | translate }}<span style="color:red">*</span></label>
+										<div style="border: 1px solid #a9a9a9;" ng-style="createTemplate.content.$invalid  && !createTemplate.content.$pristine ?{ 'border-color': 'red'}:{ 'border-color': '#a9a9a9'}">
+											<summernote required type="text " config="templateCtrl.summernoteOptions" name="content " class="form-control" height="500"
+												ng-model="templateCtrl.template.content " ng-change="templateCtrl.templateTested=false"></summernote>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div style="float:left; margin-left: 15px;">
+									<button type="button " class="btn btn-success " ng-click="templateCtrl.goBack()">{{ 'COMMON_BACK'| translate }}
+									</button>
+								</div>
+								<div style="float:right; margin-right: 15px;">
+								<span ng-if="!templateCtrl.templateTested"><a uib-tooltip="{{ 'SETTING_TEMPLATE_TEST_TEMPLATE'| translate }}"><i style="color:red; margin-right: 10px;font-size: 1.5em" class="fa fa-exclamation-triangle"></i></a></span> 
+								<button type="button " class="btn btn-warning " ng-disabled="templateCtrl.isTemplateInPreviewMode() || createTemplate.$invalid" ng-click="templateCtrl.testSyntax()">{{ 'SETTING_TEMPLATE_TEST_SYNTAX'| translate }}
+									</button>
+								<button type="submit " class="btn btn-success " ng-disabled="templateCtrl.isTemplateInPreviewMode() || createTemplate.$invalid || !templateCtrl.templateTested" ng-click="templateCtrl.save() ">{{ 'COMMON_SAVE'| translate }}
+									</button>
+								</div>
+							</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.chosen-container,
+	.default,
+	.chosen-drop {
+		width: 100% !important;
+	}
+</style>

@@ -12,7 +12,7 @@
 			</div>
 		</a>
 		<div class="ibox-content" id="templates" style="overflow-x: auto">
-			<button type="button" class="btn btn-success" ng-click="settingCtrl.openEmailTemplateModal()" data-toggle="modal">
+			<button type="button" class="btn btn-success" ng-click="settingCtrl.showTemplate(0)" data-toggle="modal">
 					<i class="fa fa-plus"></i>&nbsp; {{ 'SETTING_EMAIL_NEW_TEMPLATE' | translate }}
 				</button>
 
@@ -32,26 +32,23 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="template in settingCtrl.templateService.templates|orderBy:'name'">
-							<td class="project-status col-md-1 text-center">
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-status col-md-1 text-center">
 								<span ng-show="!template.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
 								<span ng-show="template.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 							</td>
-							<td class="project-title col-md-3 text-center">
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-3 text-center">
 								{{template.name}}
 							</td>
-							<td class="project-title col-md-3 text-center">
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-3 text-center">
 								{{template.subject}}
 							</td>
-							<td class="project-title col-md-2 text-center">
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
 								{{settingCtrl.translateStringArray(template.notificationTypeString,'NOTIFICATION')}}
 							</td>
-							<td class="project-title col-md-2 text-center">
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
 								{{settingCtrl.translateStringArray(template.sourceString,'SOURCE')}}
 							</td>
-							<td class="project-actions col-md-1 text-center" style="white-space: nowrap">
-								<button type="button" class="btn btn-white btn-sm" ng-click="settingCtrl.openEditEmailTemplateModal(template)" title="{{ 'SETTING_EMAIL_TEMPLATE_EDIT' | translate }}">
-									<i class="fa fa-pencil" aria-hidden="true"></i>
-								</button>
+							<td class="project-actions col-md-1 text-center" style="white-space: nowrap;text-align:center;" >
 								<button type="button" class="btn btn-white btn-sm" ng-click="settingCtrl.openEmailTemplateDeleteModal(template)" title="{{ 'SETTING_EMAIL_TEMPLATE_DELETE' | translate }}">
 									<i class="fa fa-trash" aria-hidden="true"></i>
 								</button>

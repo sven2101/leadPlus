@@ -26,13 +26,13 @@ public class WorkflowTemplateObject {
 	private double deliveryCosts;
 
 	private String deliveryTerm;
-	
+
 	private String paymentTerm;
-	
+
 	private Double skonto;
-	
+
 	private Address billingAddress;
-	
+
 	private Address deliveryAddress;
 
 	private List<OrderPosition> orderPositions;
@@ -109,8 +109,6 @@ public class WorkflowTemplateObject {
 		else
 			return null;
 	}
-	
-	
 
 	public void setDeliveryDate(Calendar deliveryDate) {
 		this.deliveryDate = deliveryDate;
@@ -125,7 +123,15 @@ public class WorkflowTemplateObject {
 	}
 
 	public Double getGrossPrice() {
-		return this.netPrice * (1 + this.vat / 100);
+		return (double) Math.round((this.netPrice * (1 + this.vat / 100)) * 100) / 100;
+	}
+
+	public Double getGrossPriceSkonto() {
+		return this.getGrossPrice() - this.getSkontoPrice();
+	}
+
+	public Double getSkontoPrice() {
+		return (double) Math.round((this.getGrossPrice() * (this.skonto / 100)) * 100) / 100;
 	}
 
 	public String getMessage() {
@@ -179,7 +185,6 @@ public class WorkflowTemplateObject {
 	public void setTimestamp(Calendar timestamp) {
 		this.timestamp = timestamp;
 	}
-
 
 	@Override
 	public String toString() {
