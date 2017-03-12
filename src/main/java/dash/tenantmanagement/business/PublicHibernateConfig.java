@@ -21,16 +21,14 @@ import javax.sql.DataSource;
 import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Configuration
-@EnableTransactionManagement
+// @Configuration
+// @EnableTransactionManagement
 public class PublicHibernateConfig {
 
 	@Autowired
@@ -53,7 +51,7 @@ public class PublicHibernateConfig {
 	public LocalContainerEntityManagerFactoryBean publicSchemaEntityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean emfBean = new LocalContainerEntityManagerFactoryBean();
 		emfBean.setDataSource(dataSource);
-		emfBean.setPackagesToScan("dash.tenantmanagement.domain","dash.licensemanangement.domain");
+		emfBean.setPackagesToScan("dash.tenantmanagement.domain", "dash.licensemanangement.domain");
 		emfBean.setJpaVendorAdapter(jpaVendorAdapter());
 
 		Map<String, Object> jpaProperties = new HashMap<>();

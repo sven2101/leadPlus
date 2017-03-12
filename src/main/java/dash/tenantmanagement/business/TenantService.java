@@ -28,6 +28,8 @@ import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.route53.model.Change;
@@ -71,6 +73,12 @@ public class TenantService implements ITenantService {
 	@Value("${spring.profiles.active}")
 	private String springProfileActive;
 
+	// @Value("${multitenant.tenantKey}")
+	String tenantKey = "tenant";
+
+	// @Value("${multitenant.defaultTenant}")
+	String defaultTenant = "public";
+
 	@Autowired
 	private TenantRepository tenantRepository;
 
@@ -88,7 +96,20 @@ public class TenantService implements ITenantService {
 		if (name == null)
 			throw new IllegalArgumentException("Cannot getTenantByName because parameter name is null");
 
-		return tenantRepository.findByTenantKeyIgnoreCase(name);
+		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+
+		Tenant tenant = null;
+		if (requestAttributes != null) {
+			String currentTenantId = (String) requestAttributes.getAttribute(tenantKey,
+					RequestAttributes.SCOPE_REQUEST);
+			RequestContextHolder.resetRequestAttributes();
+			requestAttributes.setAttribute(tenantKey, defaultTenant, RequestAttributes.SCOPE_REQUEST);
+			RequestContextHolder.setRequestAttributes(requestAttributes);
+			tenant = tenantRepository.findByTenantKeyIgnoreCase(name);
+			requestAttributes.setAttribute(tenantKey, currentTenantId, RequestAttributes.SCOPE_REQUEST);
+			RequestContextHolder.setRequestAttributes(requestAttributes);
+		}
+		return tenant;
 	}
 
 	@Override

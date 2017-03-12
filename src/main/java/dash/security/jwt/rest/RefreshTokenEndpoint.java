@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import dash.common.Encryptor;
 import dash.security.jwt.InvalidJwtToken;
@@ -78,8 +80,13 @@ public class RefreshTokenEndpoint {
 			throw new InvalidJwtToken();
 		}
 		String xxx = TenantContext.getTenant();
+
 		TenantContext.setTenant(tenantKey);
 		String subject = refreshToken.getSubject();
+
+		String yyy = TenantContext.getTenant();
+		RequestAttributes x = RequestContextHolder.getRequestAttributes();
+
 		User user = userService.loadUserByEmail(subject)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found: " + subject));
 

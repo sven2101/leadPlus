@@ -15,17 +15,29 @@ package dash.tenantmanagement.business;
 
 public class TenantContext {
 
-	private static final ThreadLocal<String> tenantThreadLocal = new ThreadLocal<>();
-
 	public static final String NO_TENANT = "NO_TENANT";
 	public static final String TENANT_NOT_FOUND = "TENANT_NOT_FOUND";
 	public static final String PUBLIC_TENANT = "public";
 
 	public static String getTenant() {
-		return tenantThreadLocal.get();
+		/*
+		 * RequestAttributes requestAttributes =
+		 * RequestContextHolder.getRequestAttributes(); if (requestAttributes !=
+		 * null) { String tenantId = (String)
+		 * requestAttributes.getAttribute("tenantKey",
+		 * RequestAttributes.SCOPE_REQUEST); if (tenantId != null) { return
+		 * tenantId; } }
+		 */
+		return PUBLIC_TENANT;
 	}
 
 	public static void setTenant(String tenantCode) {
-		tenantThreadLocal.set(tenantCode);
+		/*
+		 * RequestAttributes requestAttributes =
+		 * RequestContextHolder.getRequestAttributes(); if (requestAttributes !=
+		 * null) { requestAttributes.setAttribute("tenantKey", tenantCode,
+		 * RequestAttributes.SCOPE_REQUEST);
+		 * RequestContextHolder.setRequestAttributes(requestAttributes); }
+		 */
 	}
 }

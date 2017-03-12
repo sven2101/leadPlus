@@ -13,6 +13,12 @@ public class SubdomainExtractor {
 		SubdomainExtractor.springProfileActive = springProfileActive;
 	}
 
+	// @Value("${multitenant.tenantKey}")
+	String tenantKey = "tenant";
+
+	// @Value("${multitenant.defaultTenant}")
+	String defaultTenant = "public";
+
 	public String extract(String url) {
 		url = url.toLowerCase();
 		String[] urlSplit = null;
@@ -37,8 +43,8 @@ public class SubdomainExtractor {
 		if (subdomain.length() >= 4 && "www.".equals(subdomain.substring(0, 4))) {
 			subdomain = subdomain.split("www.")[1];
 		}
-		if ("https:/".equals(subdomain) || "http:/".equals(subdomain)) {
-			subdomain = null;
+		if (subdomain.contains(".") || subdomain.contains("/")) {
+			subdomain = defaultTenant;
 		}
 		return subdomain;
 	}
