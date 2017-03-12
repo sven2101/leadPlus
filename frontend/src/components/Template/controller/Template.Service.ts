@@ -101,8 +101,6 @@ class TemplateService {
     }
 
     async testTemplate(template: Template, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
-        console.log(template);
-        console.log(workflow);
         return this.templateResource.test({ workflowTemplateObject: workflow, notification: notification, template: template }).$promise;
     }
 

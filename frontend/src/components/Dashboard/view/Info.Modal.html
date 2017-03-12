@@ -37,28 +37,24 @@
 							<div class="col-md-3 b-r">
 								<div>
 									<label><i class="fa fa-address-book-o" aria-hidden="true "></i> {{ 'COMMON_NAME' | translate }}</label>
-									<br>
 									<span>{{dashboardCtrl.workflowModalData.customer.firstname}} {{dashboardCtrl.workflowModalData.customer.lastname}}</span>
 								</div>
 							</div>
 							<div class="col-md-3 b-r ">
 								<div>
 									<label><i class="fa fa-building-o " aria-hidden="true "></i> {{ 'COMMON_COMPANY' | translate }}</label>
-									<br>
 									<span>{{dashboardCtrl.workflowModalData.customer.company}}</span>
 								</div>
 							</div>
 							<div class="col-md-3 b-r ">
 								<div>
 									<label><i class="fa fa-at " aria-hidden="true "></i> {{ 'COMMON_EMAIL' | translate }}</label>
-									<br>
 									<span class="elipsis" title="{{dashboardCtrl.workflowModalData.customer.email}}">{{dashboardCtrl.workflowModalData.customer.email}}</span>
 								</div>
 							</div>
 							<div class="col-md-3 b-r ">
 								<div>
 									<label><i class="fa fa-phone " aria-hidden="true "></i> {{ 'COMMON_PHONE' | translate }}</label>
-									<br>
 									<span>{{dashboardCtrl.workflowModalData.customer.phone}}</span>
 								</div>
 							</div>
@@ -67,14 +63,12 @@
 							<div class="col-md-3 b-r ">
 								<div>
 									<label><i class="fa fa-truck " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_DESTINATION' | translate }}</label>
-									<br>
 									<span class="elipsis" title="{{dashboardCtrl.workflowModalData.deliveryAddressLine}}">{{dashboardCtrl.workflowModalData.deliveryAddressLine}}</span>
 								</div>
 							</div>
 							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'offer' || dashboardCtrl.workflowModalType == 'lead'">
 								<div>
 									<label><i class="fa fa-truck " aria-hidden="true "></i> {{ 'COMMON_DELIVERY_TIME' | translate }}</label>
-									<br>
 									<span>{{dashboardCtrl.workflowModalData.deliveryDate | date:'dd-MM-yyyy'}}</span>
 								</div>
 							</div>		
@@ -93,34 +87,30 @@
 							<div class="col-md-3 b-r ">
 								<div>
 									<label><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_DELIVERYCOSTS' | translate }}</label>
-									<br>
 									<span>{{dashboardCtrl.workflowModalData.deliveryCosts | currency:'\u20AC'}}</span>
 								</div>
 							</div>	
 							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'lead'">
 								<div>
 									<label><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</label>
-									<br>
 									<span>{{dashboardCtrl.workflowService.sumOrderPositions(dashboardCtrl.workflowModalData.orderPositions)| currency:'\u20AC'}}</span>
 								</div>
 							</div>
 							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'lead'">
 								<div>
-									<label><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</label>
-									<br>
+									<label title="{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}" class="ellipsis"><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}</label>
 									<span>{{dashboardCtrl.workflowService.sumOrderPositions(dashboardCtrl.workflowModalData.orderPositions) + dashboardCtrl.workflowModalData.deliveryCosts | currency:'\u20AC'}}</span>
 								</div>
 							</div>
 							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'offer'">
 								<div>
 									<label><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</label>
-									<br>
 									<span>{{dashboardCtrl.workflowModalData.netPrice - dashboardCtrl.workflowModalData.deliveryCosts| currency:'\u20AC'}}</span>
 								</div>
 							</div>	
 							<div class="col-sm-3 b-r " ng-if="dashboardCtrl.workflowModalType=='offer'">
 							<div>
-								<label title="{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }} {{ 'CALCULATION_NET' | translate }}"><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }} {{ 'CALCULATION_NET' | translate }}</label>
+								<label title="{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}" class="ellipsis"><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}</label>
 								<span>{{dashboardCtrl.workflowModalData.netPrice | currency:'\u20AC'}}</span>
 							</div>
 							</div>
@@ -139,35 +129,30 @@
 							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'sale'">
 								<div>
 									<label><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_SALE_TURNOVER' | translate }}</label>
-									<br>
 									<span>{{dashboardCtrl.workflowModalData.saleTurnover| currency:'\u20AC'}}</span>
 								</div>
 							</div>
 							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'sale'">
 								<div>
 									<label><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_SALE_PROFIT' | translate }}</label>
-									<br>
 									<span>{{dashboardCtrl.workflowModalData.saleProfit| currency:'\u20AC'}}</span>
 								</div>
 							</div>
 							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'sale'">
 								<div>
 									<label><i class="fa fa-university " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_SALE_INVOICE_NUMBER_SHORT' | translate }}</label>
-									<br>
 									<span>{{dashboardCtrl.workflowModalData.invoiceNumber}}</span>
 								</div>
 							</div>
 							<div class="col-md-3 b-r ">
 								<div>
 									<label><i class="fa fa-rss " aria-hidden="true "></i> {{ 'SOURCE_SOURCE' | translate }}</label>
-									<br>
 									<span>{{dashboardCtrl.workflowModalProcess.source.name}}</span>
 								</div>
 							</div>
 							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalProcess.processor != null">
 								<div>
 									<label><i class="fa fa-user " aria-hidden="true "></i> {{ 'COMMON_PROCESSOR' | translate }}</label>
-									<br>
 									<span>{{dashboardCtrl.getNameOfUser(dashboardCtrl.workflowModalProcess.processor)}}</span>
 								</div>
 							</div>

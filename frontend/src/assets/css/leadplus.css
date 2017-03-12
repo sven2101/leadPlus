@@ -174,4 +174,7 @@ div#loginscreen
 body.modal-open {
   overflow: inherit !important;
 }
+.b-l{
+  border-left: 1px solid #e7eaec
+}
 

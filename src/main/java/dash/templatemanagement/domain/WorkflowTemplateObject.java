@@ -122,8 +122,26 @@ public class WorkflowTemplateObject {
 		this.vat = vat;
 	}
 
+	public Double getSumOrderpositions() {
+		double sum = 0;
+		if (this.orderPositions != null) {
+			for (OrderPosition orderposition : this.orderPositions) {
+				sum += orderposition.getNetPrice();
+			}
+		}
+		return sum;
+	}
+
+	public Double getOrderpositionsAndDelivery() {
+		return this.getSumOrderpositions() + this.deliveryCosts;
+	}
+
+	public Double getNetPricesAndDelivery() {
+		return this.netPrice + this.deliveryCosts;
+	}
+
 	public Double getGrossPrice() {
-		return (double) Math.round((this.netPrice * (1 + this.vat / 100)) * 100) / 100;
+		return (double) Math.round((this.getNetPricesAndDelivery() * (1 + this.vat / 100)) * 100) / 100;
 	}
 
 	public Double getGrossPriceSkonto() {

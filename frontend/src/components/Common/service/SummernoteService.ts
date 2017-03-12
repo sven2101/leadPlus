@@ -366,6 +366,7 @@ class SummernoteService {
 
     getWorkflowTemplateVar(): string {
         return "<li><a template-value='${((workflow.netPrice)!)?string(&quot;#,##0.00&quot;)}'>" + this.translate.instant("PRODUCT_PRICE") + "</a></li>" +
+            "<li><a template-value='${((workflow.netPricesAndDelivery)!)?string(&quot;#,##0.00&quot;)}'>" + this.translate.instant("PRODUCT_PRICE") + " " + this.translate.instant("COMMON_PRODUCT_INCL_DELIVERY_COSTS") + "</a></li>" +
             "<li><a template-value='${(workflow.vat)!}'>" + this.translate.instant("CALCULATION_VAT") + "</a></li>" +
             "<li><a template-value='${((workflow.grossPrice)!)?string(&quot;#,##0.00&quot;)}'>" + this.translate.instant("PRODUCT_GROSS_PRICE") + "</a></li>" +
             "<li><a template-value='${(workflow.skonto)!}'>" + this.translate.instant("COMMON_SUPPLY_SKONTO") + "</a></li>" +
@@ -388,8 +389,8 @@ class SummernoteService {
             "<li><a template-value='${(customer.company)!}'>" + this.translate.instant("COMMON_COMPANY") + "</a></li>" +
             "<li><a template-value='${(customer.email)!}'>" + this.translate.instant("COMMON_EMAIL") + "</a></li>" +
             "<li><a template-value='${(customer.phone)!}'>" + this.translate.instant("COMMON_PHONE") + "</a></li>" +
-            "<li><a template-value='${(customer.phone)!}'>" + this.translate.instant("COMMON_FAX") + "</a></li>" +
-            "<li><a template-value='${(customer.phone)!}'>" + this.translate.instant("COMMON_MOBILE") + "</a></li>" +
+            "<li><a template-value='${(customer.fax)!}'>" + this.translate.instant("COMMON_FAX") + "</a></li>" +
+            "<li><a template-value='${(customer.mobile)!}'>" + this.translate.instant("COMMON_MOBILE") + "</a></li>" +
             "<li><a template-value='${(customer.customerNumber)!}'>" + this.translate.instant("CUSTOMER_NUMBER") + "</a></li>" +
             "<li><a template-value='<#if customer.billingAddress.street?has_content>${(customer.billingAddress.street)!} ${(customer.billingAddress.number)!}<br>&lt;/#if&gt; <#if customer.billingAddress.zip?has_content || customer.billingAddress.city?has_content>${(customer.billingAddress.zip)!} ${(customer.billingAddress.city)!}<br>&lt;/#if&gt; <#if customer.billingAddress.state?has_content>${(customer.billingAddress.state)!}<br>&lt;/#if&gt; <#if customer.billingAddress.country?has_content>${(customer.billingAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_BILLING_ADDRESS_BLOCK") + "</a></li>" +
             "<li><a template-value='<#if customer.billingAddress.street?has_content>${(customer.billingAddress.street)!} ${(customer.billingAddress.number)!},&lt;/#if&gt; <#if customer.billingAddress.zip?has_content || customer.billingAddress.city?has_content>${(customer.billingAddress.zip)!} ${(customer.billingAddress.city)!},&lt;/#if&gt; <#if customer.billingAddress.state?has_content>${(customer.billingAddress.state)!},&lt;/#if&gt; <#if customer.billingAddress.country?has_content>${(customer.billingAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_BILLING_ADDRESS_LINE") + "</a></li>" +

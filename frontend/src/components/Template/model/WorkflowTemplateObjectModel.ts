@@ -74,6 +74,8 @@ class WorkflowTemplateObject {
         c.firstname = "John";
         c.lastname = "Smith";
         c.phone = "0893458934234";
+        c.fax = "1111111";
+        c.mobile = "22222";
         c.realCustomer = true;
         c.timestamp = "01.01.1900 00:00:00:000";
         c.title = "MR";
@@ -86,12 +88,12 @@ class WorkflowTemplateObject {
         this.saleCost = 0;
         this.deliveryCosts = 120;
         this.invoiceNumber = "I12345";
-        this.message = "Test";
+        this.message = "This is a test message";
         this.netPrice = 1920;
         this.vat = 19;
         this.skonto = 3;
-        this.paymentTerm = "30 days";
-        this.deliveryTerm = "free";
+        this.paymentTerm = "Please pay the full amount within 30 days; Payments made within 10 days are eligible for a discount.";
+        this.deliveryTerm = "Free";
         this.billingAddress = new Address();
         this.billingAddress.number = "48";
         this.billingAddress.street = "Boston st.";

@@ -72,13 +72,13 @@
 						</div>
 						<div class="col-sm-3 b-r " ng-if="type ==='lead'">
 							<div>
-								<label><i class="fa fa-usd " aria-hidden="true "></i>  {{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</label>
+								<label><i class="fa fa-usd " aria-hidden="true "></i>  {{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</label>
 								<span>{{(parent.workflowService.sumOrderPositions(workflowUnit.orderPositions))| currency:'\u20AC'}}</span>
 							</div>
 						</div>
 						<div class="col-sm-3 b-r " ng-if="type ==='lead'">
-							<div>
-								<label><i class="fa fa-usd " aria-hidden="true "></i>  {{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</label>
+							<div> 
+								<label title="{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}"><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}</label>
 								<span>{{(parent.workflowService.sumOrderPositions(workflowUnit.orderPositions)+workflowUnit.deliveryCosts)| currency:'\u20AC'}}</span>
 							</div>
 						</div>
@@ -90,7 +90,7 @@
 						</div>
 						<div class="col-sm-3 b-r " ng-if="type=='offer'">
 							<div>
-								<label title="{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }} {{ 'CALCULATION_NET' | translate }}"><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }} {{ 'CALCULATION_NET' | translate }}</label>
+								<label title="{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}"><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}</label>
 								<span>{{workflowUnit.netPrice | currency:'\u20AC'}}</span>
 							</div>
 						</div>

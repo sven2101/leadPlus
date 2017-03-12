@@ -1,9 +1,9 @@
 <form name="pform">
 	<div class="row">
-		<div class="col-sm-6 text-left">
+		<div class="col-sm-6 text-left b-r">
 			<!-- Delivery Address -->
 			<div class="form-group " ng-class="{ 'has-error' : pform.deliveryAddress.$invalid && !pform.deliveryAddress.$pristine || pform.deliveryStreet.$invalid || pform.deliveryNumber.$invalid || pform.deliveryCity.$invalid || pform.deliveryZip.$invalid || pform.deliveryState.$invalid || pform.deliveryCountry.$invalid} ">
-				<label>{{ 'COMMON_PRODUCT_DESTINATION' | translate }}</label>
+				<label>{{ 'COMMON_PRODUCT_DESTINATION' | translate }}</label> <span ng-if="editable"><a ng-click="copyAddress(editWorkflowUnit.customer.deliveryAddress, editWorkflowUnit.deliveryAddress,'deliveryAddressLine')">{{'COMMON_DELIVERYADDRESS_FROM_CUSTOMER' | translate}}</a></span>	
 				<span style="color:red" ng-show="pform.deliveryAddress.$invalid && !pform.deliveryAddress.$pristine || pform.deliveryStreet.$invalid || pform.deliveryNumber.$invalid || pform.deliveryCity.$invalid || pform.deliveryZip.$invalid || pform.deliveryState.$invalid || pform.deliveryCountry.$invalid "> {{ 'COMMON_VALIDATE_INVALID' | translate }}</span>
 			<div class="input-group">
 				<input type="text " name="deliveryAddress " class="form-control " ng-model-options="{debounce: 200}" ng-model="editWorkflowUnit.deliveryAddressLine
@@ -14,10 +14,6 @@
 			</div>
 			</div>
 			<div ng-if="showDeliveryAddress" class="animate-if">
-				<span ng-if="editable"><a ng-click="copyAddress(editWorkflowUnit.customer.deliveryAddress, editWorkflowUnit.deliveryAddress,'deliveryAddressLine')">{{'COMMON_DELIVERYADDRESS_FROM_CUSTOMER' | translate}}</a> 	
-				<br/>
-				<br/>
-				</span>
 				<div class="row">
 					<!-- DELIVERY STREET -->
 					<div class="col-xs-6">
@@ -83,7 +79,7 @@
 		<div class="col-sm-6 text-left">
 			<!-- Billing Address -->
 			<div class="form-group " ng-class="{ 'has-error' : pform.billingAddress.$invalid && !pform.billingAddress.$pristine || pform.billingStreet.$invalid || pform.billingNumber.$invalid || pform.billingCity.$invalid || pform.billingZip.$invalid || pform.billingState.$invalid || pform.billingCountry.$invalid} ">
-				<label>{{ 'COMMON_BILLING_ADDRESS' | translate }}</label>
+				<label>{{ 'COMMON_BILLING_ADDRESS' | translate }}</label><span ng-if="editable"><a ng-click="copyAddress(editWorkflowUnit.customer.billingAddress, editWorkflowUnit.billingAddress,'billingAddressLine')">{{'COMMON_BILLINGADDRESS_FROM_CUSTOMER' | translate}}</a></span>
 				<span style="color:red" ng-show="pform.billingAddress.$invalid && !pform.billingAddress.$pristine || pform.billingStreet.$invalid || pform.billingNumber.$invalid || pform.billingCity.$invalid || pform.billingZip.$invalid || pform.billingState.$invalid || pform.billingCountry.$invalid"> {{ 'COMMON_VALIDATE_INVALID' | translate }}</span>
 			<div class="input-group">
 				<input type="text " name="billingAddress " class="form-control " ng-model-options="{debounce: 200}" ng-model="billingAddressLine
@@ -94,10 +90,6 @@
 			</div>
 			</div>
 				<div ng-if="showBillingAddress" class="animate-if">
-				<span ng-if="editable"><a ng-click="copyAddress(editWorkflowUnit.customer.billingAddress, editWorkflowUnit.billingAddress,'billingAddressLine')">{{'COMMON_BILLINGADDRESS_FROM_CUSTOMER' | translate}}</a> 	
-				<br/>
-				<br/>
-				</span>
 				<div class="row">
 					<!-- BILLING STREET -->
 					<div class="col-xs-6">

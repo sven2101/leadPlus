@@ -100,7 +100,7 @@ public abstract class AbstractWorkflow implements Request {
 	
 	@Digits(integer = 4, fraction = 2)
 	@Column(name = "skonto", nullable = false)
-	protected Double skonto;
+	private Double skonto;
 	
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "billing_address_fk", nullable = true)
@@ -205,7 +205,6 @@ public abstract class AbstractWorkflow implements Request {
 	public void setTimestamp(Calendar timestamp) {
 		this.timestamp = timestamp;
 	}
-
 
 	public String getDeliveryAddressLine() {
 		return deliveryAddressLine;

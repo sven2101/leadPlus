@@ -5205,6 +5205,9 @@ div#loginscreen
 body.modal-open {
   overflow: inherit !important;
 }
+.b-l{
+  border-left: 1px solid #e7eaec
+}
 
 
 /*!
@@ -5233,7 +5236,7 @@ height: 30px;
     text-align: left;
 	font-size: 14px;
     font-weight: normal;
-	min-width: 220px;
+	min-width: 250px;
 	}
 
   .note-editable{
@@ -5247,12 +5250,6 @@ height: 30px;
 		font-weight: bold !important;
 		cursor: pointer;
 	}
-
-	body > div.tooltip.fade.bottom.in{
-    visibility: hidden !important;
-		z-index: 2500;
-	}
-
 
 .fa-spin.fa-spin-reverse {
   -moz-animation-direction: reverse;
