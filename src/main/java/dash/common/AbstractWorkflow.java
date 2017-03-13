@@ -84,34 +84,34 @@ public abstract class AbstractWorkflow implements Request {
 	@Size(max = 4096)
 	@Column(length = 4096, nullable = true)
 	private String message;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "deliverydate", nullable = true)
 	private Calendar deliveryDate;
-	
+
 	@Size(max = 255)
 	@Column(name = "delivery_term", length = 255, nullable = true)
 	private String deliveryTerm;
-	
+
 	@Size(max = 255)
 	@Column(name = "payment_term", length = 255, nullable = true)
 	private String paymentTerm;
-	
+
 	@Digits(integer = 4, fraction = 2)
 	@Column(name = "skonto", nullable = false)
 	private Double skonto;
-	
+
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "billing_address_fk", nullable = true)
 	@Where(clause = "deleted <> '1'")
 	private Address billingAddress;
-	
+
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "delivery_address_fk", nullable = true)
 	@Where(clause = "deleted <> '1'")
 	private Address deliveryAddress;
-	
+
 	public Calendar getDeliveryDate() {
 		return deliveryDate;
 	}
@@ -195,6 +195,20 @@ public abstract class AbstractWorkflow implements Request {
 			return;
 		}
 		this.orderPositions = orderPositions;
+	}
+
+	public Double getSumOrderpositions() {
+		double sum = 0;
+		if (this.orderPositions != null) {
+			for (OrderPosition orderposition : this.orderPositions) {
+				sum += orderposition.getNetPrice() * orderposition.getAmount();
+			}
+		}
+		return sum;
+	}
+
+	public Double getOrderpositionsAndDelivery() {
+		return this.getSumOrderpositions() + this.deliveryCosts;
 	}
 
 	@Override

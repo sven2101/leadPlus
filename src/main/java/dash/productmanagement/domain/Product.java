@@ -122,11 +122,11 @@ public class Product implements Serializable {
 	}
 
 	public String getProductStateGermanTranslation() {
-		return productState.getGermanTranslation();
+		return productState == null ? null : productState.getGermanTranslation();
 	}
 
 	public String getProductStateEnglishTranslation() {
-		return productState.getEnglishTranslation();
+		return productState == null ? null : productState.getEnglishTranslation();
 	}
 
 	public void setProductState(ProductState productState) {

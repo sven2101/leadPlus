@@ -23,7 +23,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import dash.common.AbstractWorkflow;
-import dash.productmanagement.domain.OrderPosition;
 
 @Entity
 @SQLDelete(sql = "UPDATE offer SET deleted = '1'WHERE id = ?")
@@ -59,34 +58,32 @@ public class Offer extends AbstractWorkflow {
 		this.vat = vat;
 	}
 
-	public Double getSumOrderpositions() {
-		double sum = 0;
-		if (this.getOrderPositions() != null) {
-			for (OrderPosition orderposition : this.getOrderPositions()) {
-				sum += orderposition.getNetPrice();
-			}
-		}
-		return sum;
-	}
-
-	public Double getOrderpositionsAndDelivery() {
-		return this.getSumOrderpositions() + this.getDeliveryCosts();
-	}
-
 	public Double getNetPricesAndDelivery() {
-		return this.netPrice + this.getDeliveryCosts();
+		if (this.netPrice != null) {
+			return this.netPrice + this.getDeliveryCosts();
+		}
+		return null;
 	}
 
 	public Double getGrossPrice() {
-		return (double) Math.round((this.getNetPricesAndDelivery() * (1 + this.vat / 100)) * 100) / 100;
+		if (this.getNetPricesAndDelivery() != null && this.vat != null) {
+			return (double) Math.round((this.getNetPricesAndDelivery() * (1 + this.vat / 100)) * 100) / 100;
+		}
+		return null;
 	}
 
 	public Double getGrossPriceSkonto() {
-		return this.getGrossPrice() - this.getSkontoPrice();
+		if (this.getGrossPrice() != null && this.getSkontoPrice() != null) {
+			return this.getGrossPrice() - this.getSkontoPrice();
+		}
+		return null;
 	}
 
 	public Double getSkontoPrice() {
-		return (double) Math.round((this.getGrossPrice() * (this.getSkonto() / 100)) * 100) / 100;
+		if (this.getGrossPrice() != null && this.getSkonto() != null) {
+			return (double) Math.round((this.getGrossPrice() * (this.getSkonto() / 100)) * 100) / 100;
+		}
+		return null;
 	}
 
 	@Override

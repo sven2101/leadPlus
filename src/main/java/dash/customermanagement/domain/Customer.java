@@ -150,11 +150,11 @@ public class Customer {
 	}
 
 	public String getTitleGermanTranslation() {
-		return title.getGermanTranslation();
+		return title == null ? null : title.getGermanTranslation();
 	}
 
 	public String getTitleEnglishTranslation() {
-		return title.getEnglishTranslation();
+		return title == null ? null : title.getEnglishTranslation();
 	}
 
 	public void setTitle(Title title) {
