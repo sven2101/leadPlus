@@ -80,8 +80,10 @@ class AppController {
 
         $scope.$on("$viewContentLoaded", function () {
             $(document.getElementById("outer-language")).css("visibility", "visible");
+            $(document.body).css("overflow", "hidden");
             $rootScope.documentLoaded = true;
             setTimeout(function () {
+                $(document.body).css("overflow", "visible");
                 $(window).trigger("resize");
                 $(document.getElementById("loading-pane-overlay")).addClass("loading-pane-fade-out");
                 setTimeout(function () {

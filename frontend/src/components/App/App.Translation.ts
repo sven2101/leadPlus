@@ -599,6 +599,9 @@ function config($translateProvider) {
             SUMMERNOTE_BILLING_ADDRESS_LINE: "Rechnungsadresse Zeile",
             SUMMERNOTE_DELIVERY_ADDRESS_BLOCK: "Lieferadresse Block",
             SUMMERNOTE_DELIVERY_ADDRESS_LINE: "Lieferadresse Zeile",
+            SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION: "${(orderPosition.product.productStateGermanTranslation)!}",
+            SUMMERNOTE_TITLE_CODE_TRANSLATION: "${(customer.titleGermanTranslation)!}",
+            SUMMERNOTE_LANGUAGE: "DE",
 
             // ERROR PAGES
             ERROR_PAGE_404_HEADLINE: "Seite konnte nicht gefunden werden",
@@ -1203,6 +1206,9 @@ function config($translateProvider) {
             SUMMERNOTE_BILLING_ADDRESS_LINE: "Billing address line",
             SUMMERNOTE_DELIVERY_ADDRESS_BLOCK: "Delivery address block",
             SUMMERNOTE_DELIVERY_ADDRESS_LINE: "Delivery address line",
+            SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION: "${(orderPosition.product.productStateEnglishTranslation)!}",
+            SUMMERNOTE_TITLE_CODE_TRANSLATION: "${(customer.titleEnglishTranslation)!}",
+            SUMMERNOTE_LANGUAGE: "EN",
 
             // ERROR PAGES
             ERROR_PAGE_404_HEADLINE: "Page not found",
