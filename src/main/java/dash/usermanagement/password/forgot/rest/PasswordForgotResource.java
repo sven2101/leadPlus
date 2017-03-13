@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.node.TextNode;
 
+import dash.usermanagement.business.UserService;
+import dash.usermanagement.domain.User;
 import dash.usermanagement.password.forgot.business.PasswordForgotService;
 import dash.usermanagement.password.forgot.domain.PasswordForgot;
+import dash.usermanagement.settings.password.PasswordChange;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -28,10 +31,12 @@ public class PasswordForgotResource {
 
 	private static final Logger logger = Logger.getLogger(PasswordForgotResource.class);
 	private PasswordForgotService passwordForgotService;
+	private UserService userService;
 
 	@Autowired
-	public PasswordForgotResource(PasswordForgotService passwordForgotService) {
+	public PasswordForgotResource(PasswordForgotService passwordForgotService, UserService userService) {
 		this.passwordForgotService = passwordForgotService;
+		this.userService = userService;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -45,12 +50,22 @@ public class PasswordForgotResource {
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/api/rest/password/forgot/reset", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get password forgot. ", notes = "")
-	public PasswordForgot getById(
-			@ApiParam(required = true) @RequestParam(value = "ID", required = true) final String id) {
-		return passwordForgotService.getById(id);
+	public ResponseEntity<?> getById(
+			@ApiParam(required = true) @RequestParam(value = "ID", required = true) final String id,
+			@RequestBody(required = true) final TextNode password) {
+		PasswordForgot passwordForgot = passwordForgotService.getById(id);
+		if (passwordForgot == null)
+			return new ResponseEntity<>("Wrong ID.", HttpStatus.CONFLICT);
+
+		User user = this.userService.getUserByEmail(passwordForgot.getEmail());
+		PasswordChange passwordChange = new PasswordChange();
+		passwordChange.setNewPassword(password.asText());
+		passwordForgotService.getById(id);
+
+		return new ResponseEntity<>("Success", HttpStatus.OK);
 	}
 
 }
