@@ -28,6 +28,7 @@ class CustomerController {
     isCurrentCustomerNew;
     customerService: CustomerService;
     location;
+    scope;
 
     customers: Array<Customer>;
     pageStart: number = 20;
@@ -39,6 +40,7 @@ class CustomerController {
         this.location = $location;
         this.searchCustomer("noSearchText");
         let self = this;
+        this.scope = $scope;
         $scope.$watch("customerCtrl.searchText", function (searchText) {
             if (!isNullOrUndefined(searchText) && searchText.length !== 0) {
                 self.searchCustomer(searchText);
@@ -46,6 +48,15 @@ class CustomerController {
                 self.searchCustomer("noSearchText");
             }
         });
+
+    }
+
+    copyBillingAddress() {
+        if (!isNullOrUndefined(this.currentCustomer.deliveryAddress) && !isNullOrUndefined(this.currentCustomer.billingAddress)) {
+            let oldId = this.currentCustomer.deliveryAddress.id;
+            shallowCopy(this.currentCustomer.billingAddress, this.currentCustomer.deliveryAddress);
+            this.currentCustomer.deliveryAddress.id = oldId;
+        }
     }
 
     clearCustomer(): void {

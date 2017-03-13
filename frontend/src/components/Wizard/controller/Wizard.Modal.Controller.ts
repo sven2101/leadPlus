@@ -128,18 +128,27 @@ class WizardModalController {
         }
         let self = this;
         if (workflowType === WorkflowType.OFFER) {
+            let deliveryAddress: Address = deepCopy(self.editProcess.lead.deliveryAddress);
+            deliveryAddress.id = null;
+            let billingAddress: Address = deepCopy(self.editProcess.lead.billingAddress);
+            billingAddress.id = null;
             this.editProcess.offer = {
                 id: null,
                 orderPositions: deepCopy(self.editProcess.lead.orderPositions),
-                deliveryAddress: self.editProcess.lead.deliveryAddress,
-                deliveryDate: null,
-                netPrice: self.workflowService.sumOrderPositions(self.editProcess.lead.orderPositions) + self.editProcess.lead.deliveryCosts,
+                deliveryAddress: deliveryAddress,
+                deliveryDate: self.editProcess.lead.deliveryDate,
+                netPrice: self.workflowService.sumOrderPositions(self.editProcess.lead.orderPositions),
                 customer: self.editProcess.lead.customer,
                 vat: self.rootScope.user.defaultVat,
                 timestamp: newTimestamp(),
                 vendor: self.editProcess.lead.vendor,
                 deliveryCosts: self.editProcess.lead.deliveryCosts,
-                message: self.editProcess.lead.message
+                message: self.editProcess.lead.message,
+                billingAddress: billingAddress,
+                deliveryAddressLine: self.editProcess.lead.deliveryAddressLine,
+                deliveryTerm: null,
+                paymentTerm: null,
+                skonto: 0
             };
 
             for (let i = 0; i < this.editProcess.offer.orderPositions.length; i++) {
@@ -147,9 +156,13 @@ class WizardModalController {
             }
         }
         else if (workflowType === WorkflowType.SALE) {
+            let deliveryAddress: Address = deepCopy(self.editProcess.offer.deliveryAddress);
+            deliveryAddress.id = null;
+            let billingAddress: Address = deepCopy(self.editProcess.offer.billingAddress);
+            billingAddress.id = null;
             this.editProcess.sale = {
                 id: null,
-                deliveryAddress: self.editProcess.offer.deliveryAddress,
+                deliveryAddress: deliveryAddress,
                 deliveryDate: self.editProcess.offer.deliveryDate,
                 orderPositions: deepCopy(self.editProcess.offer.orderPositions),
                 customer: self.editProcess.offer.customer,
@@ -160,7 +173,12 @@ class WizardModalController {
                 timestamp: newTimestamp(),
                 vendor: self.editProcess.offer.vendor,
                 deliveryCosts: self.editProcess.offer.deliveryCosts,
-                message: self.editProcess.offer.message
+                message: self.editProcess.offer.message,
+                billingAddress: billingAddress,
+                deliveryAddressLine: self.editProcess.offer.deliveryAddressLine,
+                deliveryTerm: self.editProcess.offer.deliveryTerm,
+                paymentTerm: self.editProcess.offer.paymentTerm,
+                skonto: self.editProcess.offer.skonto
             };
             for (let i = 0; i < this.editProcess.sale.orderPositions.length; i++) {
                 this.editProcess.sale.orderPositions[i].id = 0;

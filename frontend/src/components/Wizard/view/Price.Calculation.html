@@ -1,16 +1,15 @@
-<table class="table ">
-	<tbody>
+<table class="table " style="margin-bottom: 0px;">
 		<tr>
 			<td style="border-top: none;"></td>
-			<td style="border-top: none;">{{ 'COMMON_PRODUCT_BASE_PRICE' | translate }}</td>
-			<td style="border-top: none;">{{sumBasicPriceOrderPositions(editWorkflowUnit.orderPositions)| currency:'\u20AC'}}
+			<td style="border-top: none;font-weight: bold;">{{ 'COMMON_PRODUCT_BASE_PRICE' | translate }}</td>
+			<td style="border-top: none; font-weight: bold;">{{sumBasicPriceOrderPositions(editWorkflowUnit.orderPositions)| currency:'\u20AC'}}
 			</td>
 		</tr>
 		<tr>
 			<td><b>-</b></td>
-			<td>{{ 'PRODUCT_DISCOUNT' | translate }}</td>
+			<td>{{ 'PRODUCT_DISCOUNT' | translate }}  &nbsp;<span>{{calculateDiscount(sumBasicPriceOrderPositions(editWorkflowUnit.orderPositions),sumOrderPositions(editWorkflowUnit.orderPositions))}}%</span></td>
 			<td>{{sumBasicPriceOrderPositions(editWorkflowUnit.orderPositions) - sumOrderPositions(editWorkflowUnit.orderPositions)|
-				currency:'\u20AC'}} ({{calculateDiscount(sumBasicPriceOrderPositions(editWorkflowUnit.orderPositions),sumOrderPositions(editWorkflowUnit.orderPositions))}}%)
+				currency:'\u20AC'}} 
 			</td>
 		</tr>
 		<tr>
@@ -18,45 +17,38 @@
 			<td>{{ 'COMMON_PRODUCT_DELIVERYCOSTS' | translate }}</td>
 			<td>{{editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</td>
 		</tr>
-		<tr>
+		<tr ng-if="isLead() && !isInOfferTransformation()">
 			<td><b>=</b></td>
 			<td>
-				<h3>{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }} ({{ 'CALCULATION_NET' | translate }})</h3>
+				<span style="font-weight: bold;">{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}</span>
 			</td>
 			<td>
-				<h3>{{sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</h3>
+				<span style="font-weight: bold;">{{sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</span>
 			</td>
 		</tr>
-		<tr ng-if="(isOffer() && !isInSaleTransformation()) || isInOfferTransformation()">
+		<!--<tr ng-if="(isOffer() && !isInSaleTransformation()) || isInOfferTransformation()">
 			<td><b>-</b></td>
-			<td>{{ 'PRODUCT_DISCOUNT' | translate }}</td>
+			<td>{{ 'PRODUCT_DISCOUNT' | translate }} &nbsp;<span>{{calculateDiscount(sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts,editWorkflowUnit.netPrice)}}%</span></td>
 			<td>{{(sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts)-editWorkflowUnit.netPrice|
-				currency:'\u20AC'}} ({{calculateDiscount(sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts,editWorkflowUnit.netPrice)}}%)
+				currency:'\u20AC'}} 
 			</td>
-		</tr>
+		</tr>-->
 		<tr ng-if="(isOffer() && !isInSaleTransformation()) || isInOfferTransformation()">
 			<td><b>=</b></td>
 			<td>
-				<h3>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</h3>
+				<span style="font-weight: bold;">{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</span>
 			</td>
 			<td>
-				<h3>{{editWorkflowUnit.netPrice|currency:'\u20AC'}}</h3>
-			</td>
-		</tr>
-		<tr ng-if="isSale() || isInSaleTransformation()">
-			<td><b>-</b></td>
-			<td>{{ 'PRODUCT_DISCOUNT' | translate }}</td>
-			<td>{{(sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts)-editProcess.offer.netPrice|
-				currency:'\u20AC'}} ({{calculateDiscount(sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts,editProcess.offer.netPrice)}}%)
+				<span style="font-weight: bold;">{{editWorkflowUnit.netPrice+editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</span>
 			</td>
 		</tr>
 		<tr ng-if="isSale() || isInSaleTransformation()">
 			<td><b>=</b></td>
 			<td>
-				<h3>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</h3>
+				<span style="font-weight: bold;">{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</span>
 			</td>
 			<td>
-				<h3>{{editProcess.offer.netPrice|currency:'\u20AC'}}</h3>
+				<span style="font-weight: bold;">{{editProcess.offer.netPrice+editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</span>
 			</td>
 		</tr>
 		<tr ng-if="isOffer()  || isInOfferTransformation() ||  isSale() || isInSaleTransformation()">
@@ -64,26 +56,43 @@
 			<td>
 				{{ 'CALCULATION_VAT' | translate }} &nbsp;<span>{{editProcess.offer.vat}}%</span>
 			</td>
-			<td ng-if="isSale() || isInSaleTransformation()">{{editProcess.offer.netPrice*(editProcess.offer.vat/100)|currency:'\u20AC'}}</td>
-			<td ng-if="isOffer() || isInOfferTransformation()">{{editWorkflowUnit.netPrice*(editWorkflowUnit.vat/100)|currency:'\u20AC'}}</td>
+			<td ng-if="isSale() || isInSaleTransformation()">{{(editProcess.offer.netPrice+editWorkflowUnit.deliveryCosts)*(editProcess.offer.vat/100)|currency:'\u20AC'}}</td>
+			<td ng-if="isOffer() || isInOfferTransformation()">{{(editWorkflowUnit.netPrice+editWorkflowUnit.deliveryCosts)*(editWorkflowUnit.vat/100)|currency:'\u20AC'}}</td>
 		</tr>
 		<tr ng-if="(isOffer() && !isInSaleTransformation()) || isInOfferTransformation()">
 			<td><b>=</b></td>
 			<td>
-				<h3>{{ 'PRODUCT_GROSS_PRICE' | translate }}</h3>
+				<span style="font-weight: bold;">{{ 'PRODUCT_GROSS_PRICE' | translate }}</span>
 			</td>
 			<td>
-				<h3>{{editWorkflowUnit.netPrice*(1+(editWorkflowUnit.vat/100))|currency:'\u20AC'}}</h3>
+				<span style="font-weight: bold;">{{(editWorkflowUnit.netPrice+editWorkflowUnit.deliveryCosts)*(1+(editWorkflowUnit.vat/100))|currency:'\u20AC'}}</span>
 			</td>
 		</tr>
 		<tr ng-if="isSale() || isInSaleTransformation()">
 			<td><b>=</b></td>
 			<td>
-				<h3>{{ 'PRODUCT_GROSS_PRICE' | translate }}</h3>
+				<span style="font-weight: bold;">{{ 'PRODUCT_GROSS_PRICE' | translate }}</span>
 			</td>
 			<td>
-				<h3>{{editProcess.offer.netPrice*(1+(editProcess.offer.vat/100))|currency:'\u20AC'}}</h3>
+				<span style="font-weight: bold;">{{(editProcess.offer.netPrice+editWorkflowUnit.deliveryCosts)*(1+(editProcess.offer.vat/100))|currency:'\u20AC'}}</span>
 			</td>
 		</tr>
-	</tbody>
+		<tr ng-if="(isOffer()  || isInOfferTransformation() ||  isSale() || isInSaleTransformation()) && editWorkflowUnit.skonto>0">
+			<td><b>-</b></td>
+			<td>
+				{{'COMMON_SUPPLY_SKONTO' | translate }} &nbsp;<span>{{editWorkflowUnit.skonto}}%</span>
+			</td>
+			<td>
+				{{((editProcess.offer.netPrice+editWorkflowUnit.deliveryCosts)*(1+(editProcess.offer.vat/100))*(editWorkflowUnit.skonto/100)) |currency:'\u20AC'}}
+			</td>
+		</tr>
+		<tr ng-if="(isOffer()  || isInOfferTransformation() ||  isSale() || isInSaleTransformation()) && editWorkflowUnit.skonto>0">
+			<td><b>=</b></td>
+			<td>
+				<span style="font-weight: bold;">{{'PRODUCT_GROSS_PRICE_SKONTO' | translate }}</span>
+			</td>
+			<td>
+				<span style="font-weight: bold;">{{(((editProcess.offer.netPrice+editWorkflowUnit.deliveryCosts)*(1+(editProcess.offer.vat/100)))-((editProcess.offer.netPrice+editWorkflowUnit.deliveryCosts)*(1+(editProcess.offer.vat/100))*(editWorkflowUnit.skonto/100)))|currency:'\u20AC'}}</span>
+			</td>
+		</tr>
 </table>

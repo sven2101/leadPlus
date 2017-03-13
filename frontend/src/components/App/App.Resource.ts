@@ -337,6 +337,7 @@ class TemplateResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/templates", {}, {
+            getById: { url: "/api/rest/templates/:id", method: "GET" },
             getAll: { url: "/api/rest/templates", method: "GET", isArray: true },
             save: { url: "/api/rest/templates", method: "POST" },
             update: { url: "/api/rest/templates", method: "PUT" },

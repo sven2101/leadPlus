@@ -56,6 +56,37 @@ class CustomerService {
         return await this.customerResource.updateCustomer(customer).$promise as Customer;
     }
 
+    // TODO change to mapzen api
+    matchAddressCompoenents(addressCompoenentArray: Array<any>, address: Address) {
+        if (isNullOrUndefined(addressCompoenentArray)) {
+            return;
+        }
+        address.street = "";
+        address.number = "";
+        address.city = "";
+        address.state = "";
+        address.country = "";
+        address.zip = "";
+        for (let addressComponent of addressCompoenentArray) {
+            if (!isNullOrUndefined(addressComponent.types)) {
+                for (let type of addressComponent.types) {
+                    if (type === "postal_code") {
+                        address.zip = addressComponent.long_name;
+                    } else if (type === "country") {
+                        address.country = addressComponent.long_name;
+                    } else if (type === "administrative_area_level_1") {
+                        address.state = addressComponent.long_name;
+                    } else if (type === "locality") {
+                        address.city = addressComponent.long_name;
+                    } else if (type === "route") {
+                        address.street = addressComponent.long_name;
+                    } else if (type === "street_number") {
+                        address.number = addressComponent.long_name;
+                    }
+                }
+            }
+        }
+    }
 
     getAllCustomerByPage(start: number, length: number, searchtext: string, allCustomers: boolean) {
         let self = this;

@@ -28,6 +28,7 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import dash.addressmanagement.domain.Address;
 import dash.customermanagement.domain.Customer;
 import dash.processmanagement.request.Request;
 import dash.productmanagement.domain.OrderPosition;
@@ -51,8 +52,8 @@ public abstract class AbstractWorkflow implements Request {
 	private Customer customer;
 
 	@Size(max = 255)
-	@Column(name = "deliveryaddress", length = 255, nullable = true)
-	private String deliveryAddress;
+	@Column(name = "deliveryaddress_line", length = 255, nullable = true)
+	private String deliveryAddressLine;
 
 	@NotNull
 	@ApiModelProperty(hidden = true)
@@ -83,6 +84,41 @@ public abstract class AbstractWorkflow implements Request {
 	@Size(max = 4096)
 	@Column(length = 4096, nullable = true)
 	private String message;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "deliverydate", nullable = true)
+	private Calendar deliveryDate;
+	
+	@Size(max = 255)
+	@Column(name = "delivery_term", length = 255, nullable = true)
+	private String deliveryTerm;
+	
+	@Size(max = 255)
+	@Column(name = "payment_term", length = 255, nullable = true)
+	private String paymentTerm;
+	
+	@Digits(integer = 4, fraction = 2)
+	@Column(name = "skonto", nullable = false)
+	private Double skonto;
+	
+	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
+	@JoinColumn(name = "billing_address_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
+	private Address billingAddress;
+	
+	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
+	@JoinColumn(name = "delivery_address_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
+	private Address deliveryAddress;
+	
+	public Calendar getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	public void setDeliveryDate(Calendar deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
 
 	public String getMessage() {
 		return message;
@@ -116,6 +152,38 @@ public abstract class AbstractWorkflow implements Request {
 		this.id = id;
 	}
 
+	public String getDeliveryTerm() {
+		return deliveryTerm;
+	}
+
+	public void setDeliveryTerm(String deliveryTerm) {
+		this.deliveryTerm = deliveryTerm;
+	}
+
+	public String getPaymentTerm() {
+		return paymentTerm;
+	}
+
+	public void setPaymentTerm(String paymentTerm) {
+		this.paymentTerm = paymentTerm;
+	}
+
+	public Double getSkonto() {
+		return skonto;
+	}
+
+	public void setSkonto(Double skonto) {
+		this.skonto = skonto;
+	}
+
+	public Address getBillingAddress() {
+		return billingAddress;
+	}
+
+	public void setBillingAddress(Address billingAddress) {
+		this.billingAddress = billingAddress;
+	}
+
 	@Override
 	public List<OrderPosition> getOrderPositions() {
 		return orderPositions;
@@ -138,11 +206,19 @@ public abstract class AbstractWorkflow implements Request {
 		this.timestamp = timestamp;
 	}
 
-	public String getDeliveryAddress() {
+	public String getDeliveryAddressLine() {
+		return deliveryAddressLine;
+	}
+
+	public void setDeliveryAddressLine(String deliveryAddressLine) {
+		this.deliveryAddressLine = deliveryAddressLine;
+	}
+
+	public Address getDeliveryAddress() {
 		return deliveryAddress;
 	}
 
-	public void setDeliveryAddress(String deliveryAddress) {
+	public void setDeliveryAddress(Address deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
 	}
 
@@ -166,15 +242,21 @@ public abstract class AbstractWorkflow implements Request {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((billingAddress == null) ? 0 : billingAddress.hashCode());
 		result = prime * result + ((customer == null) ? 0 : customer.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
+		result = prime * result + ((deliveryAddressLine == null) ? 0 : deliveryAddressLine.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(deliveryCosts);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((deliveryDate == null) ? 0 : deliveryDate.hashCode());
+		result = prime * result + ((deliveryTerm == null) ? 0 : deliveryTerm.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
 		result = prime * result + ((orderPositions == null) ? 0 : orderPositions.hashCode());
+		result = prime * result + ((paymentTerm == null) ? 0 : paymentTerm.hashCode());
+		result = prime * result + ((skonto == null) ? 0 : skonto.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		result = prime * result + ((vendor == null) ? 0 : vendor.hashCode());
 		return result;
@@ -189,6 +271,11 @@ public abstract class AbstractWorkflow implements Request {
 		if (getClass() != obj.getClass())
 			return false;
 		AbstractWorkflow other = (AbstractWorkflow) obj;
+		if (billingAddress == null) {
+			if (other.billingAddress != null)
+				return false;
+		} else if (!billingAddress.equals(other.billingAddress))
+			return false;
 		if (customer == null) {
 			if (other.customer != null)
 				return false;
@@ -201,7 +288,22 @@ public abstract class AbstractWorkflow implements Request {
 				return false;
 		} else if (!deliveryAddress.equals(other.deliveryAddress))
 			return false;
+		if (deliveryAddressLine == null) {
+			if (other.deliveryAddressLine != null)
+				return false;
+		} else if (!deliveryAddressLine.equals(other.deliveryAddressLine))
+			return false;
 		if (Double.doubleToLongBits(deliveryCosts) != Double.doubleToLongBits(other.deliveryCosts))
+			return false;
+		if (deliveryDate == null) {
+			if (other.deliveryDate != null)
+				return false;
+		} else if (!deliveryDate.equals(other.deliveryDate))
+			return false;
+		if (deliveryTerm == null) {
+			if (other.deliveryTerm != null)
+				return false;
+		} else if (!deliveryTerm.equals(other.deliveryTerm))
 			return false;
 		if (id == null) {
 			if (other.id != null)
@@ -218,6 +320,16 @@ public abstract class AbstractWorkflow implements Request {
 				return false;
 		} else if (!orderPositions.equals(other.orderPositions))
 			return false;
+		if (paymentTerm == null) {
+			if (other.paymentTerm != null)
+				return false;
+		} else if (!paymentTerm.equals(other.paymentTerm))
+			return false;
+		if (skonto == null) {
+			if (other.skonto != null)
+				return false;
+		} else if (!skonto.equals(other.skonto))
+			return false;
 		if (timestamp == null) {
 			if (other.timestamp != null)
 				return false;
@@ -233,9 +345,11 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Override
 	public String toString() {
-		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddress=" + deliveryAddress
+		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddressLine=" + deliveryAddressLine
 				+ ", deleted=" + deleted + ", deliveryCosts=" + deliveryCosts + ", orderPositions=" + orderPositions
-				+ ", timestamp=" + timestamp + ", vendor=" + vendor + "]";
+				+ ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + ", deliveryDate="
+				+ deliveryDate + ", deliveryTerm=" + deliveryTerm + ", paymentTerm=" + paymentTerm + ", skonto="
+				+ skonto + ", billingAddress=" + billingAddress + ", deliveryAddress=" + deliveryAddress + "]";
 	}
 
 }

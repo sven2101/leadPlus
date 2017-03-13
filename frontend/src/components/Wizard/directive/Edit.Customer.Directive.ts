@@ -20,7 +20,8 @@ class CustomerEditDirective implements IDirective {
         editWorkflowUnit: "=",
         editProcess: "=",
         editable: "<",
-        small: "<"
+        small: "<",
+        showCustomerDetails: "=?"
     };
 
     constructor(private WorkflowService: WorkflowService, private SourceService: SourceService, private CustomerService: CustomerService, private SummernoteService: SummernoteService, private $rootScope, private $sce) {
@@ -42,13 +43,18 @@ class CustomerEditDirective implements IDirective {
         if (!isNullOrUndefined(scope.form)) {
             scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.cform) : scope.cform = scope.form;
         }
-
+        scope.customerEditLocked = true;
+        scope.showMainData = true;
+        scope.showInvoiceAddress = false;
+        scope.showDeliveryAddress = false;
         scope.customerSelected = !isNullOrUndefined(scope.editWorkflowUnit.customer.id);
         scope.selectedCustomer = scope.customerSelected ? scope.editWorkflowUnit.customer : null;
 
         scope.selectCustomer = (customer: Customer) => this.selectCustomer(customer, scope);
         scope.getNewOrSelectedCustomer = (customer: Customer) => this.getNewOrSelectedCustomer(customer, scope);
         scope.getAsHtml = (html: string) => this.getAsHtml(html, scope);
+        scope.setCustomerDetails = (elementToChange: string, changeValue: boolean) => this.setCustomerDetails(scope, elementToChange, changeValue);
+        scope.copyBillingAddress = () => this.copyBillingAddress(scope);
     };
 
     selectCustomer(customer: Customer, scope: any) {
@@ -72,6 +78,21 @@ class CustomerEditDirective implements IDirective {
 
     getAsHtml(html: string, scope: any) {
         return scope.sce.trustAsHtml(html);
+    }
+
+    setCustomerDetails(scope: any, elementToChange: string, changeValue: boolean) {
+        scope.showMainData = false;
+        scope.showInvoiceAddress = false;
+        scope.showDeliveryAddress = false;
+        scope[elementToChange] = changeValue;
+    }
+
+    copyBillingAddress(scope: any) {
+        if (!isNullOrUndefined(scope.editWorkflowUnit.customer.deliveryAddress) && !isNullOrUndefined(scope.editWorkflowUnit.customer.billingAddress)) {
+            let oldId = scope.editWorkflowUnit.customer.deliveryAddress.id;
+            shallowCopy(scope.editWorkflowUnit.customer.billingAddress, scope.editWorkflowUnit.customer.deliveryAddress);
+            scope.editWorkflowUnit.customer.deliveryAddress.id = oldId;
+        }
     }
 
 }

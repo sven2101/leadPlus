@@ -109,7 +109,7 @@ class OfferDataTableService implements IDatatableService {
                 this.translate("COMMON_PHONE")).notVisible(),
             this.DTColumnBuilder.newColumn("offer.customer.firstname").withTitle(
                 this.translate("COMMON_FIRSTNAME")).notVisible(),
-            this.DTColumnBuilder.newColumn("offer.deliveryAddress").withTitle(
+            this.DTColumnBuilder.newColumn("offer.deliveryAddressLine").withTitle(
                 this.translate("COMMON_PRODUCT_DESTINATION")).notVisible(),
             this.DTColumnBuilder.newColumn("offer.deliveryDate").withTitle(
                 this.translate("COMMON_DELIVERY_TIME")).notVisible(),

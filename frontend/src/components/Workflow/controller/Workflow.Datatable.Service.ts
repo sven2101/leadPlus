@@ -149,22 +149,31 @@ class WorkflowDatatableService {
                 .row(tr);
 
         if (row.child.isShown()) {
-            icon.removeClass("glyphicon-minus-sign")
-                .addClass("glyphicon-plus-sign");
-            row.child.hide();
-            tr.removeClass("shown");
-            childScope.$destroy();
+            let newChildRow = $("#childRow" + process.id);
+            newChildRow.removeClass("openMenu");
+            newChildRow.parent().parent().children("td").css("height", "0px");
+            setTimeout(function () {
+                icon.removeClass("glyphicon-minus-sign")
+                    .addClass("glyphicon-plus-sign");
+                row.child.hide();
+                tr.removeClass("shown");
+                childScope.$destroy();
+            }, 300);
         } else {
             icon.removeClass("glyphicon-plus-sign")
                 .addClass("glyphicon-minus-sign");
             let childRow = row.child(
                 this.compile(
-                    "<div childrow id='childRow" + process.id + "' type='" + type + "' class='clearfix'></div>")(
+                    "<div childrow id='childRow" + process.id + "' type='" + type + "' class='clearfix closeMenuChildRow'></div>")(
                     childScope));
             childRow.show();
             tr.addClass("shown");
-            let newChildRow = angular.element("#childRow" + process.id).parent().parent();
-            newChildRow.addClass("childstyle");
+            let newChildRow = $("#childRow" + process.id);
+            newChildRow.parent().parent().children("td").css("height", "0px");
+            newChildRow.parent().parent().addClass("childstyle");
+            setTimeout(function () {
+                newChildRow.addClass("openMenu");
+            }, 100);
         }
     }
 }

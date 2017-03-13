@@ -13,6 +13,7 @@ class WizardButtonConfig {
     isFirstActiveElement: boolean;
     validation: boolean;
     sendButtonName: string;
+    isVisited: boolean;
 
     constructor(directiveType: WizardType) {
         this.directiveType = directiveType;
@@ -23,6 +24,7 @@ class WizardButtonConfig {
         this.validation = true;
         this.isEmail = false;
         this.isFollowUp = false;
+        this.isVisited = false;
     }
 
     setTitle(title: string): WizardButtonConfig {
@@ -66,6 +68,11 @@ class WizardButtonConfig {
         return this;
     }
 
+    visit(): WizardButtonConfig {
+        this.isVisited = true;
+        return this;
+    }
+
     disable(): WizardButtonConfig {
         this.isDisabled = true;
         return this;
@@ -83,6 +90,7 @@ class WizardButtonConfig {
 
     setAsFirstElement(): WizardButtonConfig {
         this.isFirstActiveElement = true;
+        this.isVisited = true;
         return this;
     }
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import dash.addressmanagement.domain.Address;
 import dash.common.HtmlCleaner;
 import dash.customermanagement.domain.Customer;
 import dash.productmanagement.domain.OrderPosition;
@@ -18,11 +19,21 @@ public class WorkflowTemplateObject {
 
 	private Customer customer;
 
-	private String deliveryAddress;
+	private String deliveryAddressLine;
 
 	private boolean deleted;
 
 	private double deliveryCosts;
+
+	private String deliveryTerm;
+
+	private String paymentTerm;
+
+	private Double skonto;
+
+	private Address billingAddress;
+
+	private Address deliveryAddress;
 
 	private List<OrderPosition> orderPositions;
 
@@ -111,8 +122,46 @@ public class WorkflowTemplateObject {
 		this.vat = vat;
 	}
 
+	public Double getSumOrderpositions() {
+		double sum = 0;
+		if (this.orderPositions != null) {
+			for (OrderPosition orderposition : this.orderPositions) {
+				sum += orderposition.getNetPrice() * orderposition.getAmount();
+			}
+		}
+		return sum;
+	}
+
+	public Double getOrderpositionsAndDelivery() {
+		return this.getSumOrderpositions() + this.deliveryCosts;
+	}
+
+	public Double getNetPricesAndDelivery() {
+		if (this.netPrice != null) {
+			return this.netPrice + this.deliveryCosts;
+		}
+		return null;
+	}
+
 	public Double getGrossPrice() {
-		return this.netPrice * (1 + this.vat / 100);
+		if (this.getNetPricesAndDelivery() != null && this.vat != null) {
+			return (double) Math.round((this.getNetPricesAndDelivery() * (1 + this.vat / 100)) * 100) / 100;
+		}
+		return null;
+	}
+
+	public Double getGrossPriceSkonto() {
+		if (this.getGrossPrice() != null && this.getSkontoPrice() != null) {
+			return this.getGrossPrice() - this.getSkontoPrice();
+		}
+		return null;
+	}
+
+	public Double getSkontoPrice() {
+		if (this.getGrossPrice() != null && this.skonto != null) {
+			return (double) Math.round((this.getGrossPrice() * (this.skonto / 100)) * 100) / 100;
+		}
+		return null;
 	}
 
 	public String getMessage() {
@@ -167,11 +216,62 @@ public class WorkflowTemplateObject {
 		this.timestamp = timestamp;
 	}
 
-	public String getDeliveryAddress() {
+	@Override
+	public String toString() {
+		return "WorkflowTemplateObject [id=" + id + ", customer=" + customer + ", deliveryAddressLine="
+				+ deliveryAddressLine + ", deleted=" + deleted + ", deliveryCosts=" + deliveryCosts + ", deliveryTerm="
+				+ deliveryTerm + ", paymentTerm=" + paymentTerm + ", skonto=" + skonto + ", billingAddress="
+				+ billingAddress + ", deliveryAddress=" + deliveryAddress + ", orderPositions=" + orderPositions
+				+ ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + ", deliveryDate="
+				+ deliveryDate + ", netPrice=" + netPrice + ", vat=" + vat + ", saleTurnover=" + saleTurnover
+				+ ", saleProfit=" + saleProfit + ", saleCost=" + saleCost + ", invoiceNumber=" + invoiceNumber + "]";
+	}
+
+	public String getDeliveryAddressLine() {
+		return deliveryAddressLine;
+	}
+
+	public void setDeliveryAddressLine(String deliveryAddressLine) {
+		this.deliveryAddressLine = deliveryAddressLine;
+	}
+
+	public String getDeliveryTerm() {
+		return deliveryTerm;
+	}
+
+	public void setDeliveryTerm(String deliveryTerm) {
+		this.deliveryTerm = deliveryTerm;
+	}
+
+	public String getPaymentTerm() {
+		return paymentTerm;
+	}
+
+	public void setPaymentTerm(String paymentTerm) {
+		this.paymentTerm = paymentTerm;
+	}
+
+	public Double getSkonto() {
+		return skonto;
+	}
+
+	public void setSkonto(Double skonto) {
+		this.skonto = skonto;
+	}
+
+	public Address getBillingAddress() {
+		return billingAddress;
+	}
+
+	public void setBillingAddress(Address billingAddress) {
+		this.billingAddress = billingAddress;
+	}
+
+	public Address getDeliveryAddress() {
 		return deliveryAddress;
 	}
 
-	public void setDeliveryAddress(String deliveryAddress) {
+	public void setDeliveryAddress(Address deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
 	}
 
@@ -195,17 +295,26 @@ public class WorkflowTemplateObject {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((billingAddress == null) ? 0 : billingAddress.hashCode());
 		result = prime * result + ((customer == null) ? 0 : customer.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
+		result = prime * result + ((deliveryAddressLine == null) ? 0 : deliveryAddressLine.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(deliveryCosts);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((deliveryDate == null) ? 0 : deliveryDate.hashCode());
+		result = prime * result + ((deliveryTerm == null) ? 0 : deliveryTerm.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((invoiceNumber == null) ? 0 : invoiceNumber.hashCode());
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
 		result = prime * result + ((netPrice == null) ? 0 : netPrice.hashCode());
 		result = prime * result + ((orderPositions == null) ? 0 : orderPositions.hashCode());
+		result = prime * result + ((paymentTerm == null) ? 0 : paymentTerm.hashCode());
+		result = prime * result + ((saleCost == null) ? 0 : saleCost.hashCode());
+		result = prime * result + ((saleProfit == null) ? 0 : saleProfit.hashCode());
+		result = prime * result + ((saleTurnover == null) ? 0 : saleTurnover.hashCode());
+		result = prime * result + ((skonto == null) ? 0 : skonto.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		result = prime * result + ((vat == null) ? 0 : vat.hashCode());
 		result = prime * result + ((vendor == null) ? 0 : vendor.hashCode());
@@ -221,6 +330,11 @@ public class WorkflowTemplateObject {
 		if (getClass() != obj.getClass())
 			return false;
 		WorkflowTemplateObject other = (WorkflowTemplateObject) obj;
+		if (billingAddress == null) {
+			if (other.billingAddress != null)
+				return false;
+		} else if (!billingAddress.equals(other.billingAddress))
+			return false;
 		if (customer == null) {
 			if (other.customer != null)
 				return false;
@@ -233,6 +347,11 @@ public class WorkflowTemplateObject {
 				return false;
 		} else if (!deliveryAddress.equals(other.deliveryAddress))
 			return false;
+		if (deliveryAddressLine == null) {
+			if (other.deliveryAddressLine != null)
+				return false;
+		} else if (!deliveryAddressLine.equals(other.deliveryAddressLine))
+			return false;
 		if (Double.doubleToLongBits(deliveryCosts) != Double.doubleToLongBits(other.deliveryCosts))
 			return false;
 		if (deliveryDate == null) {
@@ -240,10 +359,20 @@ public class WorkflowTemplateObject {
 				return false;
 		} else if (!deliveryDate.equals(other.deliveryDate))
 			return false;
+		if (deliveryTerm == null) {
+			if (other.deliveryTerm != null)
+				return false;
+		} else if (!deliveryTerm.equals(other.deliveryTerm))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
+			return false;
+		if (invoiceNumber == null) {
+			if (other.invoiceNumber != null)
+				return false;
+		} else if (!invoiceNumber.equals(other.invoiceNumber))
 			return false;
 		if (message == null) {
 			if (other.message != null)
@@ -259,6 +388,31 @@ public class WorkflowTemplateObject {
 			if (other.orderPositions != null)
 				return false;
 		} else if (!orderPositions.equals(other.orderPositions))
+			return false;
+		if (paymentTerm == null) {
+			if (other.paymentTerm != null)
+				return false;
+		} else if (!paymentTerm.equals(other.paymentTerm))
+			return false;
+		if (saleCost == null) {
+			if (other.saleCost != null)
+				return false;
+		} else if (!saleCost.equals(other.saleCost))
+			return false;
+		if (saleProfit == null) {
+			if (other.saleProfit != null)
+				return false;
+		} else if (!saleProfit.equals(other.saleProfit))
+			return false;
+		if (saleTurnover == null) {
+			if (other.saleTurnover != null)
+				return false;
+		} else if (!saleTurnover.equals(other.saleTurnover))
+			return false;
+		if (skonto == null) {
+			if (other.skonto != null)
+				return false;
+		} else if (!skonto.equals(other.skonto))
 			return false;
 		if (timestamp == null) {
 			if (other.timestamp != null)

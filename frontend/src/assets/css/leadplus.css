@@ -1,3 +1,60 @@
+.animate-if.ng-enter {
+	  -webkit-transition: max-height 0.3s ease-in;
+    -moz-transition: max-height 0.3s ease-in;
+    -ms-transition: max-height 0.3s ease-in;
+    -o-transition:max-height 0.3s ease-in;
+    transition: max-height 0.3s ease-in;
+    max-height: 0;
+    opacity: 0;
+}
+ .animate-if.ng-enter.ng-enter-active {
+    max-height: 1000px;
+	  overflow: hidden;
+    opacity:1;
+}
+ .animate-if.ng-leave {
+	-webkit-transition: max-height 0.15s ease-out;
+    -moz-transition: max-height 0.15s ease-out;
+    -ms-transition: max-height 0.15s ease-out;
+    -o-transition:max-height 0.15s ease-out;
+    transition: max-height 0.15s ease-out;
+	  overflow: hidden;
+    max-height: 1000px;
+    opacity:1;
+}
+ .animate-if.ng-leave.ng-leave-active {
+    max-height: 0;
+    opacity:1;
+}
+
+.closeMenu {
+    max-height: 0;
+	  -webkit-transition: max-height 0.15s ease-out;
+    -moz-transition: max-height 0.15s ease-out;
+    -ms-transition: max-height 0.15s ease-out;
+    -o-transition:max-height 0.15s ease-out;
+    transition: max-height 0.15s ease-out;
+    overflow: hidden;
+}
+
+.closeMenuChildRow {
+    max-height: 0;
+	  -webkit-transition: max-height 0.3s ease-out;
+    -moz-transition: max-height 0.3s ease-out;
+    -ms-transition: max-height 0.3s ease-out;
+    -o-transition:max-height 0.3s ease-out;
+    transition: max-height 0.3s ease-out;
+    overflow: hidden;
+}
+
+.openMenu{
+    max-height: 1000px;
+    -webkit-transition: max-height 0.3s ease-in;
+    -moz-transition: max-height 0.3s ease-in;
+    -ms-transition: max-height 0.3s ease-in;
+    -o-transition:max-height 0.3s ease-in;
+    transition: max-height 0.3s ease-in;
+}
 div#loginscreen
 {   content: ""; 
     display: block;
@@ -100,5 +157,24 @@ div#loginscreen
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
+}
+@media (min-width: 1200px) {
+  .modal-lg {
+    width: 1100px !important;
+  }
+}
+.modal-body, .modal-body.content-height{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 70vh;
+}
+.modal-lg.modal-dialog, .modal-dialog.modal-lg{
+      max-height: 90vh;
+}
+body.modal-open {
+  overflow: inherit !important;
+}
+.b-l{
+  border-left: 1px solid #e7eaec
 }
 

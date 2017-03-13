@@ -9,14 +9,22 @@ class Offer implements IWorkflow {
     customer: Customer;
     timestamp: any;
     vendor: any;
-    deliveryAddress: any;
-    deliveryDate: any;
     netPrice: number;
-    deliveryCosts: number;
-    message: string;
     vat: number;
+    deliveryAddressLine: string;
+    deliveryDate: any;
+    deliveryTerm: string;
+    paymentTerm: string;
+    skonto: number;
+    deliveryAddress: Address;
+    message: string;
+    deliveryCosts: number;
+    billingAddress: Address;
 
     constructor() {
+        this.skonto = 0;
+        this.deliveryAddress = new Address();
+        this.billingAddress = new Address();
         this.deliveryCosts = 0;
         this.netPrice = 0;
         this.vat = 0;

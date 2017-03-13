@@ -7,11 +7,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name = "address")
+@SQLDelete(sql = "UPDATE address SET deleted = '1' WHERE id = ?")
+@Where(clause = "deleted <> '1'")
 public class Address {
 
 	@Id
@@ -20,9 +27,9 @@ public class Address {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Digits(integer = 10, fraction = 0)
+	@Size(max = 10)
 	@Column(name = "number", nullable = false)
-	private Integer number;
+	private String number;
 
 	@Size(max = 255)
 	@Column(name = "street", length = 255, nullable = true)
@@ -43,6 +50,11 @@ public class Address {
 	@Size(max = 255)
 	@Column(name = "country", length = 255, nullable = true)
 	private String country;
+	
+	@NotNull
+	@ApiModelProperty(hidden = true)
+	@Column(name = "deleted", nullable = false)
+	private boolean deleted;
 
 	public Address() {
 	}
@@ -55,11 +67,11 @@ public class Address {
 		this.id = id;
 	}
 
-	public Integer getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(Integer number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 
@@ -102,5 +114,84 @@ public class Address {
 	public void setCountry(String country) {
 		this.country = country;
 	}
+	
+	
+	public boolean isDeleted() {
+		return deleted;
+	}
 
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((city == null) ? 0 : city.hashCode());
+		result = prime * result + ((country == null) ? 0 : country.hashCode());
+		result = prime * result + (deleted ? 1231 : 1237);
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((number == null) ? 0 : number.hashCode());
+		result = prime * result + ((state == null) ? 0 : state.hashCode());
+		result = prime * result + ((street == null) ? 0 : street.hashCode());
+		result = prime * result + ((zip == null) ? 0 : zip.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Address other = (Address) obj;
+		if (city == null) {
+			if (other.city != null)
+				return false;
+		} else if (!city.equals(other.city))
+			return false;
+		if (country == null) {
+			if (other.country != null)
+				return false;
+		} else if (!country.equals(other.country))
+			return false;
+		if (deleted != other.deleted)
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (number == null) {
+			if (other.number != null)
+				return false;
+		} else if (!number.equals(other.number))
+			return false;
+		if (state == null) {
+			if (other.state != null)
+				return false;
+		} else if (!state.equals(other.state))
+			return false;
+		if (street == null) {
+			if (other.street != null)
+				return false;
+		} else if (!street.equals(other.street))
+			return false;
+		if (zip == null) {
+			if (other.zip != null)
+				return false;
+		} else if (!zip.equals(other.zip))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Address [id=" + id + ", number=" + number + ", street=" + street + ", city=" + city + ", state=" + state
+				+ ", zip=" + zip + ", country=" + country + ", deleted=" + deleted + "]";
+	}
+	
 }

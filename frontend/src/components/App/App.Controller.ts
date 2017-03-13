@@ -80,14 +80,16 @@ class AppController {
 
         $scope.$on("$viewContentLoaded", function () {
             $(document.getElementById("outer-language")).css("visibility", "visible");
+            $(document.body).css("overflow", "hidden");
             $rootScope.documentLoaded = true;
             setTimeout(function () {
+                $(document.body).css("overflow", "visible");
                 $(window).trigger("resize");
                 $(document.getElementById("loading-pane-overlay")).addClass("loading-pane-fade-out");
                 setTimeout(function () {
                     $(document.getElementById("loading-pane-overlay")).children().removeClass("loader");
-                }, 750);
-            }, 1000);
+                }, 1000);
+            }, 1250);
         });
     }
 
@@ -152,10 +154,14 @@ class AppController {
                     });
             }
             else {
+                // TODO remove after Safari testing
+                console.log(self.window.navigator.language);
+                console.log(self.window.navigator.userLanguage);
                 let lang: string = self.window.navigator.language || self.window.navigator.userLanguage;
                 if (lang.includes("de") === true) {
                     lang = "DE";
                 }
+                console.log(lang);
                 self.rootScope.changeLanguage(lang.toUpperCase());
             }
         };

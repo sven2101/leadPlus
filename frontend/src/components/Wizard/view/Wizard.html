@@ -7,7 +7,7 @@
             <li ng-repeat="wizardElement in wizardElements | orderBy : 'position' track by $index" role="presentation" ng-class="{active:step===$index+1, disabled:wizardElement.isDisabled,errorAfter:wizardElement.form.$invalid && wizardElement.validation}"
                 ng-style="{'width':100/wizardElements.length+'%'}">
                 <label ng-class="{iconWizardDisabled:wizardElement.isDisabled}">{{ ::wizardElement.title | translate }}</label>
-                <a ng-click="wizardElement.isDisabled || ($parent.step=$index+1); wizardElement.isDisabled || ($parent.currentWizard=wizardElement)" aria-controls="step{{$index+1}}" role="tab">
+                <a ng-click="wizardElement.isDisabled || ($parent.step=$index+1); wizardElement.isDisabled || ($parent.currentWizard=wizardElement);wizardElement.isDisabled || (wizardElement.visit())" aria-controls="step{{$index+1}}" role="tab">
                     <span class="round-tab" ng-class="{roundTabHover:!wizardElement.isDisabled,error:wizardElement.form.$invalid && wizardElement.validation}">
                                 <i class="icon-wizard {{::wizardElement.icon}}" ng-class="{iconWizardDisabled:wizardElement.isDisabled,error:wizardElement.form.$invalid && wizardElement.validation}"></i>
                         </span>
@@ -23,7 +23,7 @@
     <div class="tab-content">
         <div ng-repeat="wizardElement in wizardElements | orderBy : 'position' track by $index" role="tabpanel" id="step{{$index+1}}"
             class="tab-pane" ng-class="{active:step===$index+1}">
-            <div ng-show="step===$index+1" ng-transclude="{{::wizardElement.directiveType}}">
+            <div ng-if="step===$index+1 || wizardElement.isVisited" ng-transclude="{{::wizardElement.directiveType}}">
             </div>
         </div>
         <div class="clearfix"></div>

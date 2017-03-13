@@ -4,7 +4,7 @@
 
 declare var jstz;
 
-let findElementById = function (array: Array<any>, id: Number): any {
+let findElementById = function (array: Array<any>, id: number): any {
     for (let i = 0; i < array.length; i++) {
         if (array[i].id === id) {
             return array[i];
@@ -53,7 +53,6 @@ let shallowCopy = function (oldObject: Object, newObject: Object) {
         newObject["id"] = oldObject["id"];
     }
 };
-
 
 let newTimestamp = function (): string {
     let pattern: string = "DD.MM.YYYY HH:mm:ss:SSS";

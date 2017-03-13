@@ -4,7 +4,6 @@ class WorkflowTemplateObject {
     customer: Customer;
     timestamp: any;
     vendor: any;
-    deliveryAddress: any;
     deliveryDate: any;
     saleTurnover: number;
     saleProfit: number;
@@ -14,6 +13,12 @@ class WorkflowTemplateObject {
     message: string;
     netPrice: number;
     vat: number;
+    deliveryAddressLine: string;
+    deliveryTerm: string;
+    paymentTerm: string;
+    skonto: number;
+    deliveryAddress: Address;
+    billingAddress: Address;
 
     constructor() {
         this.id = 0;
@@ -50,12 +55,18 @@ class WorkflowTemplateObject {
         this.orderPositions = [op, op2];
         let c = new Customer();
         c.id = 0;
-        c.address.number = 48;
-        c.address.street = "Boston st.";
-        c.address.country = "United States";
-        c.address.zip = "289374";
-        c.address.state = "Seattle";
-        c.address.city = "Boston";
+        c.billingAddress.number = "48";
+        c.billingAddress.street = "Boston st.";
+        c.billingAddress.country = "United States";
+        c.billingAddress.zip = "289374";
+        c.billingAddress.state = "Seattle";
+        c.billingAddress.city = "Boston";
+        c.deliveryAddress.number = "22";
+        c.deliveryAddress.street = "Times Square";
+        c.deliveryAddress.country = "United States";
+        c.deliveryAddress.zip = "10036";
+        c.deliveryAddress.state = "New York";
+        c.deliveryAddress.city = "New York City";
         c.company = "The Company";
         c.customerNumber = "C12345";
         c.deactivated = false;
@@ -63,20 +74,39 @@ class WorkflowTemplateObject {
         c.firstname = "John";
         c.lastname = "Smith";
         c.phone = "0893458934234";
+        c.fax = "1111111";
+        c.mobile = "22222";
         c.realCustomer = true;
         c.timestamp = "01.01.1900 00:00:00:000";
         c.title = "MR";
         this.customer = c;
         this.timestamp = "01.01.1900  00:00:00:000";
         this.vendor = null;
-        this.deliveryAddress = "New York";
+        this.deliveryAddressLine = "New York";
         this.deliveryDate = "01.01.2017";
         this.saleProfit = 0;
         this.saleCost = 0;
         this.deliveryCosts = 120;
         this.invoiceNumber = "I12345";
-        this.message = "Test";
-        this.netPrice = 1920;
+        this.message = "This is a test message";
+        this.netPrice = 1800;
         this.vat = 19;
+        this.skonto = 3;
+        this.paymentTerm = "Please pay the full amount within 30 days; Payments made within 10 days are eligible for a discount.";
+        this.deliveryTerm = "Free";
+        this.billingAddress = new Address();
+        this.billingAddress.number = "48";
+        this.billingAddress.street = "Boston st.";
+        this.billingAddress.country = "United States";
+        this.billingAddress.zip = "289374";
+        this.billingAddress.state = "Seattle";
+        this.billingAddress.city = "Boston";
+        this.deliveryAddress = new Address();
+        this.deliveryAddress.number = "48";
+        this.deliveryAddress.street = "Boston st.";
+        this.deliveryAddress.country = "United States";
+        this.deliveryAddress.zip = "289374";
+        this.deliveryAddress.state = "Seattle";
+        this.deliveryAddress.city = "Boston";
     }
 }
