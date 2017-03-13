@@ -120,12 +120,11 @@ public class Customer {
 	@JoinColumn(name = "billing_address_fk", nullable = true)
 	@Where(clause = "deleted <> '1'")
 	private Address billingAddress;
-	
+
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "delivery_address_fk", nullable = true)
 	@Where(clause = "deleted <> '1'")
 	private Address deliveryAddress;
-
 
 	public Customer() {
 	}
@@ -148,6 +147,14 @@ public class Customer {
 
 	public Title getTitle() {
 		return title;
+	}
+
+	public String getTitleGermanTranslation() {
+		return title.getGermanTranslation();
+	}
+
+	public String getTitleEnglishTranslation() {
+		return title.getEnglishTranslation();
 	}
 
 	public void setTitle(Title title) {
@@ -371,5 +378,5 @@ public class Customer {
 				+ ", timestamp=" + timestamp + ", customerNumber=" + customerNumber + ", billingAddress="
 				+ billingAddress + ", deliveryAddress=" + deliveryAddress + "]";
 	}
-	
+
 }
