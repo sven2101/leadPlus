@@ -120,9 +120,7 @@ public class TenantService implements ITenantService {
 		}
 		Thread t = new Thread(new Runnable() {
 			public void run() {
-				String t = TenantContext.getTenant();
 				TenantContext.setTenant(tenant.getTenantKey());
-				String t2 = TenantContext.getTenant();
 				userService.register(tenant.getRegistration());
 				createInitialUsers();
 			}

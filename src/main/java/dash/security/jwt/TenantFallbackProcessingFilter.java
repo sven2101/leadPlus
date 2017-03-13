@@ -19,16 +19,9 @@ public class TenantFallbackProcessingFilter extends OncePerRequestFilter {
 
 		if (TenantContext.PUBLIC_TENANT.equals(TenantContext.getTenant())) {
 			SubdomainExtractor extractor = new SubdomainExtractor();
-			String url = request.getRequestURL().toString();
 			String subdomain = extractor.extract(request.getRequestURL().toString());
-			HttpServletRequest req = (HttpServletRequest) request;
-			if (subdomain != null) {
-				req.setAttribute(TenantContext.TENANT_KEY, subdomain);
-			} else {
-				req.setAttribute(TenantContext.TENANT_KEY, TenantContext.PUBLIC_TENANT);
-			}
+			TenantContext.setTenant(subdomain);
 		}
-
 		filterChain.doFilter(request, response);
 
 	}

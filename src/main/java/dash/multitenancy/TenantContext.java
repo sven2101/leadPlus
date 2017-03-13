@@ -23,13 +23,18 @@ public class TenantContext {
 	public static final String PUBLIC_TENANT = "public";
 	public static final String TENANT_KEY = "tenant";
 
+	private static ThreadLocal<String> threadLocalTenantKey = new ThreadLocal<>();
+
 	public static String getTenant() {
 		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+		String tenantId = null;
 		if (requestAttributes != null) {
-			String tenantId = (String) requestAttributes.getAttribute(TENANT_KEY, RequestAttributes.SCOPE_REQUEST);
-			if (tenantId != null) {
-				return tenantId;
-			}
+			tenantId = (String) requestAttributes.getAttribute(TENANT_KEY, RequestAttributes.SCOPE_REQUEST);
+		}
+		if (tenantId != null) {
+			return tenantId;
+		} else if (threadLocalTenantKey.get() != null) {
+			return threadLocalTenantKey.get();
 		}
 		return PUBLIC_TENANT;
 	}
@@ -40,16 +45,10 @@ public class TenantContext {
 
 		if (requestAttributes != null) {
 			requestAttributes.setAttribute(TENANT_KEY, tenantCode, RequestAttributes.SCOPE_REQUEST);
-
 			RequestContextHolder.setRequestAttributes(requestAttributes);
 		} else {
-			RequestContextHolder.resetRequestAttributes();
-			requestAttributes = RequestContextHolder.getRequestAttributes();
-			requestAttributes.setAttribute(TENANT_KEY, tenantCode, RequestAttributes.SCOPE_REQUEST);
-
-			RequestContextHolder.setRequestAttributes(requestAttributes);
+			threadLocalTenantKey.set(tenantCode);
 		}
-		String x = getTenant();
 
 	}
 }

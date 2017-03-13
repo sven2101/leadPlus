@@ -47,7 +47,7 @@ class LeadDataTableService implements IDatatableService {
         this.workflowService = WorkflowService;
         this.workflowDatatableService = WorkflowDatatableService;
         this.processResource = ProcessResource.resource;
-    } getWorkflowByStatus;
+    }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
