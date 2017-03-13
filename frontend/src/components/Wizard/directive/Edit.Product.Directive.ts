@@ -123,7 +123,7 @@ class ProductEditDirective implements IDirective {
 
     reCalculateOffer(offer: Offer, array: Array<OrderPosition>, scope: any) {
         if (!isNullOrUndefined(offer)) {
-            offer.netPrice = Math.round((offer.deliveryCosts + scope.workflowService.sumOrderPositions(array)) * 100) / 100;
+            offer.netPrice = Math.round((scope.workflowService.sumOrderPositions(array)) * 100) / 100;
         }
     }
 

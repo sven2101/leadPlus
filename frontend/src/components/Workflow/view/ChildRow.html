@@ -85,25 +85,25 @@
 						<div class="col-sm-3 b-r " ng-if="type=='offer'">
 							<div>
 								<label><i class="fa fa-usd " aria-hidden="true "></i>  {{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}</label>
-								<span>{{workflowUnit.netPrice - workflowUnit.deliveryCosts | currency:'\u20AC'}}</span>
-							</div>
-						</div>
-						<div class="col-sm-3 b-r " ng-if="type=='offer'">
-							<div>
-								<label title="{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}"><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}</label>
 								<span>{{workflowUnit.netPrice | currency:'\u20AC'}}</span>
 							</div>
 						</div>
 						<div class="col-sm-3 b-r " ng-if="type=='offer'">
 							<div>
+								<label title="{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}"><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}</label>
+								<span>{{workflowUnit.netPrice + workflowUnit.deliveryCosts | currency:'\u20AC'}}</span>
+							</div>
+						</div>
+						<div class="col-sm-3 b-r " ng-if="type=='offer'">
+							<div>
 								<label><i class="fa fa-usd " aria-hidden="true "></i>  {{ 'PRODUCT_GROSS_PRICE' | translate }}</label>
-								<span>{{workflowUnit.netPrice*(1+(workflowUnit.vat/100))|currency:'\u20AC'}} ({{workflowUnit.vat}}% {{ 'COMMON_PRODUCT_VAT' | translate }})</span>
+								<span>{{(workflowUnit.netPrice+ workflowUnit.deliveryCosts)*(1+(workflowUnit.vat/100))|currency:'\u20AC'}} ({{workflowUnit.vat}}% {{ 'COMMON_PRODUCT_VAT' | translate }})</span>
 							</div>
 						</div>
 						<div class="col-sm-3 b-r " ng-if="type=='offer' && workflowUnit.skonto>0">
 							<div>
 								<label title="{{ 'PRODUCT_GROSS_PRICE_SKONTO' | translate }}"><i class="fa fa-usd " aria-hidden="true "></i> {{ 'PRODUCT_GROSS_PRICE_SKONTO' | translate }}</label>
-								<span>{{((workflowUnit.netPrice*(1+(workflowUnit.vat/100)))-(workflowUnit.netPrice*(1+(workflowUnit.vat/100))*(workflowUnit.skonto/100)))|currency:'\u20AC'}} ({{workflowUnit.skonto}}%)</span>
+								<span>{{(((workflowUnit.netPrice+ workflowUnit.deliveryCosts)*(1+(workflowUnit.vat/100)))-((workflowUnit.netPrice+ workflowUnit.deliveryCosts)*(1+(workflowUnit.vat/100))*(workflowUnit.skonto/100)))|currency:'\u20AC'}} ({{workflowUnit.skonto}}%)</span>
 							</div>
 						</div>
 						<div class="col-sm-3 b-r " ng-if="type=='sale'">

@@ -89,7 +89,7 @@ class WorkflowTemplateObject {
         this.deliveryCosts = 120;
         this.invoiceNumber = "I12345";
         this.message = "This is a test message";
-        this.netPrice = 1920;
+        this.netPrice = 1800;
         this.vat = 19;
         this.skonto = 3;
         this.paymentTerm = "Please pay the full amount within 30 days; Payments made within 10 days are eligible for a discount.";

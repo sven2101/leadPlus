@@ -137,7 +137,7 @@ class WizardModalController {
                 orderPositions: deepCopy(self.editProcess.lead.orderPositions),
                 deliveryAddress: deliveryAddress,
                 deliveryDate: self.editProcess.lead.deliveryDate,
-                netPrice: self.workflowService.sumOrderPositions(self.editProcess.lead.orderPositions) + self.editProcess.lead.deliveryCosts,
+                netPrice: self.workflowService.sumOrderPositions(self.editProcess.lead.orderPositions),
                 customer: self.editProcess.lead.customer,
                 vat: self.rootScope.user.defaultVat,
                 timestamp: newTimestamp(),

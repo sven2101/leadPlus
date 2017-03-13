@@ -126,7 +126,7 @@ public class WorkflowTemplateObject {
 		double sum = 0;
 		if (this.orderPositions != null) {
 			for (OrderPosition orderposition : this.orderPositions) {
-				sum += orderposition.getNetPrice();
+				sum += orderposition.getNetPrice() * orderposition.getAmount();
 			}
 		}
 		return sum;
@@ -137,19 +137,31 @@ public class WorkflowTemplateObject {
 	}
 
 	public Double getNetPricesAndDelivery() {
-		return this.netPrice + this.deliveryCosts;
+		if (this.netPrice != null) {
+			return this.netPrice + this.deliveryCosts;
+		}
+		return null;
 	}
 
 	public Double getGrossPrice() {
-		return (double) Math.round((this.getNetPricesAndDelivery() * (1 + this.vat / 100)) * 100) / 100;
+		if (this.getNetPricesAndDelivery() != null && this.vat != null) {
+			return (double) Math.round((this.getNetPricesAndDelivery() * (1 + this.vat / 100)) * 100) / 100;
+		}
+		return null;
 	}
 
 	public Double getGrossPriceSkonto() {
-		return this.getGrossPrice() - this.getSkontoPrice();
+		if (this.getGrossPrice() != null && this.getSkontoPrice() != null) {
+			return this.getGrossPrice() - this.getSkontoPrice();
+		}
+		return null;
 	}
 
 	public Double getSkontoPrice() {
-		return (double) Math.round((this.getGrossPrice() * (this.skonto / 100)) * 100) / 100;
+		if (this.getGrossPrice() != null && this.skonto != null) {
+			return (double) Math.round((this.getGrossPrice() * (this.skonto / 100)) * 100) / 100;
+		}
+		return null;
 	}
 
 	public String getMessage() {

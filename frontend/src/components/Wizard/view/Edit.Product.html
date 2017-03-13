@@ -280,7 +280,7 @@
 		</div>
 		</div>
 		<div class="row">
-			<div class="col-sm-5 text-right">
+			<div class="col-sm-6 text-right">
 				<h3 ng-if="isOffer() || isSale() || isInOfferTransformation() "><b>	{{ 'CALCULATION_VAT'| translate }}:</b></h3>
 			</div>
 			<div class="col-sm-2 text-left">
@@ -289,38 +289,33 @@
 					<input class="form-control currency" name="vat" type="number " ng-model="editProcess.offer.vat "
 						ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " max="100 " required style="width:70px;" ng-disabled="!editable"></div>
 			</div>
-			<div class="col-sm-2 text-right">
-				<h3><b>{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}:</b></h3>
-			</div>
-			<div class="col-sm-3 text-left">
-				<h3 ng-if="isLead() && !isInOfferTransformation()"><b>{{sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}</b>&nbsp;<a tooltip-class="customClass"
-							uib-tooltip-template="'components/Wizard/view/Price.Calculation.Template.html'" tooltip-placement="top-right"><i class="fa fa-info-circle"></i></a></h3>
-				<div ng-if="isOffer() || isSale() || isInOfferTransformation() " class="form-group" ng-class="{ 'has-error' : pform.netPrice.$invalid} ">
-					<div class="input-group ">
-						<span class="input-group-addon ">{{ 'COMMON_CURRENCY'| translate }}</span>
-						<input type="number " name="netPrice " class="form-control currency" ng-model="editProcess.offer.netPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " data-number-to-fixed="2 " data-number-stepfactor="100 "
-							id="c2 " required ng-disabled="!editable">
-					</div>
-				</div>
+			<div class="col-sm-4 text-right">
+				<h3 style="margin-right: 17px;"><b>
+					<span ng-if="isLead() && !isInOfferTransformation()">{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }}:&nbsp;{{sumOrderPositions(editWorkflowUnit.orderPositions)+editWorkflowUnit.deliveryCosts|currency:'\u20AC'}}&nbsp;<a tooltip-class="customClass"
+								uib-tooltip-template="'components/Wizard/view/Price.Calculation.Template.html'" tooltip-placement="top-right"><i class="fa fa-info-circle"></i></a></span>
+					<span ng-if="isOffer() || isSale() || isInOfferTransformation() ">
+						<!--<div class="input-group ">
+							<span class="input-group-addon ">{{ 'COMMON_CURRENCY'| translate }}</span>
+							<input type="number " name="netPrice " class="form-control currency" ng-model="editProcess.offer.netPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/ " step="0.01 " min="0 " data-number-to-fixed="2 " data-number-stepfactor="100 "
+								id="c2 " required ng-disabled="!editable"></div>-->
+					{{ 'COMMON_PRODUCT_OFFER_PRICE' | translate }}:&nbsp;{{editProcess.offer.netPrice+editProcess.offer.deliveryCosts|currency:'\u20AC'}}
+					</span>
+				</b></h3>
 			</div>
 		</div>
 		<div class="row" ng-if="isOffer() || isSale() || isInOfferTransformation() ">
 			<div class="col-sm-2 text-left"></div>
-			<div class="col-sm-7 text-right">
-				<h3><b>{{ 'PRODUCT_GROSS_PRICE' | translate }}:</b></h3>
-			</div>
-			<div class="col-sm-3 text-left">
-				<h3><b>{{editProcess.offer.netPrice*(1+(editProcess.offer.vat/100))|currency:'\u20AC'}}</b>&nbsp;<a tooltip-class="customClass"
+			<div class="col-sm-10 text-right">
+				<h3><b>{{ 'PRODUCT_GROSS_PRICE' | translate }}:&nbsp;
+				{{(editProcess.offer.netPrice+editProcess.offer.deliveryCosts)*(1+(editProcess.offer.vat/100))|currency:'\u20AC'}}</b>&nbsp;<a tooltip-class="customClass"
 						uib-tooltip-template="'components/Wizard/view/Price.Calculation.Template.html'" tooltip-placement="left-bottom"><i class="fa fa-info-circle"></i></a></h3>
 			</div>
 		</div>
 		<div class="row" ng-if="(isOffer() || isSale() || isInOfferTransformation()) && editWorkflowUnit.skonto>0 ">
 			<div class="col-sm-2 text-left"></div>
-			<div class="col-sm-7 text-right">
-				<h3><b>{{ 'PRODUCT_GROSS_PRICE_SKONTO' | translate }}:</b></h3>
-			</div>
-			<div class="col-sm-3 text-left">
-				<h3><b>{{((editProcess.offer.netPrice*(1+(editProcess.offer.vat/100)))-(editProcess.offer.netPrice*(1+(editProcess.offer.vat/100))*(editWorkflowUnit.skonto/100)))|currency:'\u20AC'}}</b></h3>
+			<div class="col-sm-10 text-right">
+				<h3 style="margin-right: 17px;"><b>{{ 'PRODUCT_GROSS_PRICE_SKONTO' | translate }}:&nbsp;
+				{{(((editProcess.offer.netPrice+editProcess.offer.deliveryCosts)*(1+(editProcess.offer.vat/100)))-((editProcess.offer.netPrice+editProcess.offer.deliveryCosts)*(1+(editProcess.offer.vat/100))*(editWorkflowUnit.skonto/100)))|currency:'\u20AC'}}</b></h3>
 			</div>
 		</div>
 </form>
