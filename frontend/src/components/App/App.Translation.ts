@@ -31,6 +31,7 @@ function config($translateProvider) {
             LOGIN_WELCOME_DESCRIPTION: pageLogo + " Lead Management System",
             LOGIN_NO_ACCOUNT: "Noch keinen Account?",
             LOGIN_CREATE_ACCOUNT: "Registrieren",
+            LOGIN_PASSWORD_FORGOTTEN: "Passwort vergessen?",
             LOGIN_ERROR: "Anmeldung fehlgeschlagen",
 
             // Define signup elements
@@ -612,6 +613,7 @@ function config($translateProvider) {
             LOGIN_WELCOME_DESCRIPTION: "Lead Management System",
             LOGIN_NO_ACCOUNT: "Do not have an account?",
             LOGIN_CREATE_ACCOUNT: "Register",
+            LOGIN_PASSWORD_FORGOTTEN: "Forgot Password?",
             LOGIN_ERROR: "Login failed",
 
             // Define signup elements

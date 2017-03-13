@@ -21,6 +21,7 @@ import dash.notificationmanagement.domain.Notification;
 import dash.templatemanagement.domain.WorkflowTemplateObject;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.domain.User;
+import dash.usermanagement.password.forgot.domain.PasswordForgot;
 import freemarker.template.TemplateException;
 
 public interface IMessageService {
@@ -33,5 +34,8 @@ public interface IMessageService {
 			String templateWithPlaceholders, final Notification notification) throws TemplateException, IOException;
 
 	AbstractMessage getWelcomeMessage(String template, Tenant tenant, User user) throws TemplateException, IOException;
+
+	AbstractMessage getForgotPasswordMessage(String template, Tenant tenant, User user, PasswordForgot passwordForgot)
+			throws TemplateException, IOException;
 
 }

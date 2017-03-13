@@ -11,8 +11,14 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.notificationmanagement.domain;
+package dash.usermanagement.password.forgot.business;
 
-public enum NotificationType {
-	INFO, NEWSLETTER, LEAD, FOLLOWUP, OFFER, SALE, ERROR, WELCOME, FORGOT_PASSWORD
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import dash.usermanagement.password.forgot.domain.PasswordForgot;
+
+@Repository
+public interface PasswordForgotRepository extends JpaRepository<PasswordForgot, Long> {
+
 }

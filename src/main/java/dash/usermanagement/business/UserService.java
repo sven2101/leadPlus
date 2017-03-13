@@ -94,7 +94,6 @@ public class UserService implements IUserService {
 	public List<User> getAll() {
 		return userRepository.findAll().stream().filter(it -> !"superadmin@eviarc.com".equals(it.getUsername()))
 				.collect(Collectors.toList());
-
 	}
 
 	@Override

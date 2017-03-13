@@ -32,6 +32,8 @@ import dash.notificationmanagement.domain.NotificationType;
 import dash.templatemanagement.domain.WorkflowTemplateObject;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.domain.User;
+import dash.usermanagement.password.forgot.domain.PasswordForgot;
+import dash.usermanagement.settings.language.Language;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -93,10 +95,14 @@ public class MessageService implements IMessageService {
 
 		Template template;
 		String message = "";
+		String subject = "Welcome to lead+";
+
 		try {
 			template = cfg.getTemplate(templateName);
 			Map<String, Object> mapping = new HashMap<>();
 			user.setPassword(null);
+			if (user.getLanguage() == Language.DE)
+				subject = "Willkommen bei lead+";
 			mapping.put("tenant", tenant);
 			mapping.put("user", user);
 
@@ -107,7 +113,33 @@ public class MessageService implements IMessageService {
 			logger.error(MessageService.class.getSimpleName(), e);
 		}
 
-		return new EmailMessage(user.getEmail(), "Welcome to lead+", message, null, NotificationType.WELCOME);
+		return new EmailMessage(user.getEmail(), subject, message, null, NotificationType.WELCOME);
+	}
+
+	@Override
+	public AbstractMessage getForgotPasswordMessage(String templateName, Tenant tenant, User user,
+			PasswordForgot passwordForgot) throws TemplateException {
+
+		Template template;
+		String message = "";
+		String subject = "lead+ Forgot Password";
+		try {
+			template = cfg.getTemplate(templateName);
+			Map<String, Object> mapping = new HashMap<>();
+			if (user.getLanguage() == Language.DE)
+				subject = "lead+ Passwort vergessen";
+			mapping.put("tenant", tenant);
+			mapping.put("passwordForgot", passwordForgot);
+			mapping.put("user", user);
+
+			Writer writer = new StringWriter();
+			template.process(mapping, writer);
+			message = writer.toString();
+		} catch (IOException e) {
+			logger.error(MessageService.class.getSimpleName(), e);
+		}
+
+		return new EmailMessage(user.getEmail(), subject, message, null, NotificationType.FORGOT_PASSWORD);
 	}
 
 }
