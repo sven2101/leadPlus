@@ -154,8 +154,8 @@ class TokenService {
             if (this.accessToken != null && !this.isExpired(this.accessTokenJson)) { return this.accessToken; }
             if (this.refreshToken == null || this.isExpired(this.refreshTokenJson)) { throw Error("Refresh token expired!"); }
 
-            this.refreshAccessToken();
-            return this.refreshToken;
+            this.getAccessTokenPromise();
+            return null;
 
         } catch (error) {
             this.loggedIn = false;
@@ -163,18 +163,6 @@ class TokenService {
             this.logout();
         }
 
-    }
-    private async refreshAccessToken(): Promise<void> {
-        try {
-            let temp = await this.getAccessTokenByRefreshToken(this.refreshToken);
-            this.accessToken = temp.token;
-            this.accessTokenJson = jwt_decode(this.accessToken);
-            this.loggedIn = true;
-        } catch (error) {
-            this.loggedIn = false;
-            console.log("refreshAccessToken", error);
-            this.logout();
-        }
     }
 
 

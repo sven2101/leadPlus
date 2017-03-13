@@ -23,7 +23,7 @@ const openDataLeadRoute = "/api/rest/processes/workflow/LEAD/state/OPEN";
 
 class LeadDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId, TokenServiceId, ProcessResourceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId, TokenServiceId, ProcessResourceId, $httpId];
 
     workflowService: WorkflowService;
     workflowDatatableService: WorkflowDatatableService;
@@ -37,7 +37,7 @@ class LeadDataTableService implements IDatatableService {
     rootScope;
     processResource;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService, private TokenService: TokenService, ProcessResource) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService, private TokenService: TokenService, ProcessResource, private $http) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -52,15 +52,24 @@ class LeadDataTableService implements IDatatableService {
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
-            .withOption("ajax", {
-                url: openDataLeadRoute,
-                error: function (xhr, error, thrown) {
-                    handleError(xhr);
-                },
-                type: "GET",
-                "beforeSend": function (request) {
-                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
-                }
+            /*
+                .withOption("ajax", {
+                    url: openDataLeadRoute,
+                    error: function (xhr, error, thrown) {
+                        handleError(xhr);
+                    },
+                    type: "GET",
+                    "beforeSend": function (request) {
+                        request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
+                    }
+                })
+            */
+            .withOption("ajax", function (data, callback, settings) {
+                self.$http.get(openDataLeadRoute).then(function (data) {
+                    console.log(data);
+                    console.log(callback);
+                    callback(data);
+                });
             })
 
             .withOption("stateSave", false)
