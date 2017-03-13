@@ -19,12 +19,12 @@ const WorkflowDatatableServiceId: string = "WorkflowDatatableService";
 
 class WorkflowDatatableService {
 
-    private $inject = [$rootScopeId, $compileId, TokenServiceId];
+    private $inject = [$rootScopeId, $compileId, TokenServiceId, $httpId];
 
     rootScope;
     compile;
 
-    constructor($rootScope, $compile, private TokenService: TokenService) {
+    constructor($rootScope, $compile, private TokenService: TokenService, private $http) {
         this.rootScope = $rootScope;
         this.compile = $compile;
     }
@@ -99,15 +99,24 @@ class WorkflowDatatableService {
 
     changeDataInput(loadAllData: boolean, dtOptions: any, allDataRoute: string, latestDataRoute: string) {
         let searchDelay: number = 0;
+        let self = this;
         if (loadAllData === true) {
             searchDelay = 600;
         }
         dtOptions.withOption("serverSide", loadAllData)
-            .withOption("ajax", this.getData(loadAllData, allDataRoute, latestDataRoute))
+            // .withOption("ajax", this.getData(loadAllData, allDataRoute, latestDataRoute))
+
+
+
+            .withOption("ajax", function (data, callback, settings) {
+
+                self.getData(loadAllData, allDataRoute, latestDataRoute, (response) => callback(response));
+
+            })
             .withOption("searchDelay", searchDelay);
     }
 
-    getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): any {
+    getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string, callback): any {
         let self = this;
         if (loadAllData === true) {
             return {
@@ -123,16 +132,11 @@ class WorkflowDatatableService {
                 }
             };
         } else {
-            return {
-                url: latestDataRoute,
-                error: function (xhr, error, thrown) {
-                    handleError(xhr);
-                },
-                type: "GET",
-                "beforeSend": function (request) {
-                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
-                }
-            };
+            self.$http.get(latestDataRoute).then(function (response) {
+                console.log(response);
+                console.log(callback);
+                callback(response.data);
+            });
         }
     }
 

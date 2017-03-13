@@ -65,10 +65,10 @@ class LeadDataTableService implements IDatatableService {
                 })
             */
             .withOption("ajax", function (data, callback, settings) {
-                self.$http.get(openDataLeadRoute).then(function (data) {
-                    console.log(data);
+                self.$http.get(openDataLeadRoute).then(function (response) {
+                    console.log(response);
                     console.log(callback);
-                    callback(data);
+                    callback(response.data);
                 });
             })
 

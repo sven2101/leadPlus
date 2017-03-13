@@ -177,6 +177,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                         || request.url.substring(0, 9) !== "/api/rest") {
                         return request;
                     }
+                    console.log(request.url);
                     request.headers["X-Authorization"] = "Bearer " + await TokenService.getAccessTokenPromise();
 
                     return request;

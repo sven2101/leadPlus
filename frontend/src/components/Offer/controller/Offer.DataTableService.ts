@@ -20,7 +20,7 @@ const openDataOfferRoute: string = "/api/rest/processes/workflow/OFFER/state/OFF
 
 class OfferDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId, TokenServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId, TokenServiceId, $httpId];
 
     workflowService: WorkflowService;
     workflowDatatableService: WorkflowDatatableService;
@@ -33,7 +33,7 @@ class OfferDataTableService implements IDatatableService {
     compile;
     rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService, private TokenService: TokenService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService, private TokenService: TokenService, private $http) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -47,15 +47,24 @@ class OfferDataTableService implements IDatatableService {
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
-            .withOption("ajax", {
-                url: openDataOfferRoute,
-                error: function (xhr, error, thrown) {
-                    handleError(xhr);
-                },
-                type: "GET",
-                "beforeSend": function (request) {
-                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
-                }
+            /*
+                .withOption("ajax", {
+                    url: openDataOfferRoute,
+                    error: function (xhr, error, thrown) {
+                        handleError(xhr);
+                    },
+                    type: "GET",
+                    "beforeSend": function (request) {
+                        request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
+                    }
+                })
+                */
+            .withOption("ajax", function (data, callback, settings) {
+                self.$http.get(openDataOfferRoute).then(function (response) {
+                    console.log(response);
+                    console.log(callback);
+                    callback(response.data);
+                });
             })
             .withOption("stateSave", false)
             .withDOM(this.workflowDatatableService.getDomString())
