@@ -36,7 +36,7 @@ class WorkflowTemplateObject {
         p2.name = "Product 2";
         p2.netPrice = 800;
         p2.productNumber = "A12346";
-        p2.productState = ProductState.NEW;
+        p2.productState = ProductState.USED_C;
         p2.timestamp = "01.01.1900 00:00:00:000";
         p2.deactivated = false;
         p2.description = "Product two";
