@@ -19,9 +19,9 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dash.multitenancy.TenantContext;
 import dash.security.jwt.domain.JwtToken;
 import dash.security.jwt.domain.UserContext;
-import dash.tenantmanagement.business.TenantContext;
 
 /**
  * AjaxAwareAuthenticationSuccessHandler

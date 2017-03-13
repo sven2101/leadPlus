@@ -8,9 +8,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
+import dash.multitenancy.TenantContext;
 import dash.statisticmanagement.olap.business.OlapStatisticService;
 import dash.tenantmanagement.business.ITenantService;
-import dash.tenantmanagement.business.TenantContext;
 import dash.tenantmanagement.domain.Tenant;
 
 @Component

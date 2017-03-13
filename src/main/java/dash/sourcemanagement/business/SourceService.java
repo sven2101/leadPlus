@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dash.multitenancy.TenantContext;
 import dash.security.jwt.JwtTokenFactory;
 import dash.security.jwt.domain.ApiJwtToken;
 import dash.sourcemanagement.domain.Source;
-import dash.tenantmanagement.business.TenantContext;
 
 @Service
 public class SourceService implements ISourceService {

@@ -19,7 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
 import dash.exceptions.TenantAuthentificationException;
-import dash.tenantmanagement.business.TenantContext;
+import dash.multitenancy.TenantContext;
 import dash.tenantmanagement.business.TenantRepository;
 import dash.tenantmanagement.domain.Tenant;
 

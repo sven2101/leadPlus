@@ -24,6 +24,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import dash.common.Encryptor;
+import dash.multitenancy.TenantContext;
 import dash.security.jwt.InvalidJwtToken;
 import dash.security.jwt.JwtSettings;
 import dash.security.jwt.JwtTokenFactory;
@@ -34,7 +35,6 @@ import dash.security.jwt.domain.JwtToken;
 import dash.security.jwt.domain.RawAccessJwtToken;
 import dash.security.jwt.domain.RefreshToken;
 import dash.security.jwt.domain.UserContext;
-import dash.tenantmanagement.business.TenantContext;
 import dash.tenantmanagement.business.TenantService;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.business.UserService;

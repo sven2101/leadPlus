@@ -11,11 +11,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import dash.multitenancy.TenantContext;
 import dash.security.jwt.domain.JwtAuthenticationToken;
 import dash.security.jwt.domain.JwtToken;
 import dash.security.jwt.domain.RawAccessJwtToken;
 import dash.security.jwt.domain.UserContext;
-import dash.tenantmanagement.business.TenantContext;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 

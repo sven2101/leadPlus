@@ -11,7 +11,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.tenantmanagement.business;
+package dash.multitenancy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,26 +19,29 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.hibernate.MultiTenancyStrategy;
+import org.hibernate.cfg.Environment;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-// @Configuration
-// @EnableTransactionManagement
+@Configuration
+@EnableTransactionManagement
 public class TenantHibernateConfig {
 
 	@Autowired
 	private DataSource dataSource;
 
 	@Autowired
-	private MultiTenantConnectionProvider tenantConnectionProvider;
+	private MultiTenantConnectionProvider multiTenantConnectionProvider;
 
 	@Autowired
 	private CurrentTenantIdentifierResolver tenantIdentifierResolver;
@@ -61,20 +64,20 @@ public class TenantHibernateConfig {
 	@Bean(name = "entityManagerFactory")
 	@Primary
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-		LocalContainerEntityManagerFactoryBean emfBean = new LocalContainerEntityManagerFactoryBean();
-		emfBean.setDataSource(dataSource);
-		emfBean.setPackagesToScan("dash");
-		emfBean.setJpaVendorAdapter(jpaVendorAdapter());
+		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+		em.setDataSource(dataSource);
+		em.setPackagesToScan("dash");
+
+		em.setJpaVendorAdapter(this.jpaVendorAdapter());
 
 		Map<String, Object> jpaProperties = new HashMap<>();
-		jpaProperties.put(org.hibernate.cfg.Environment.MULTI_TENANT, MultiTenancyStrategy.SCHEMA);
-		jpaProperties.put(org.hibernate.cfg.Environment.MULTI_TENANT_CONNECTION_PROVIDER, tenantConnectionProvider);
-		jpaProperties.put(org.hibernate.cfg.Environment.MULTI_TENANT_IDENTIFIER_RESOLVER, tenantIdentifierResolver);
-		jpaProperties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, "none");
+		jpaProperties.put(Environment.MULTI_TENANT, MultiTenancyStrategy.SCHEMA);
+		jpaProperties.put(Environment.MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProvider);
+		jpaProperties.put(Environment.MULTI_TENANT_IDENTIFIER_RESOLVER, tenantIdentifierResolver);
+		jpaProperties.put(Environment.FORMAT_SQL, true);
 
-		emfBean.setJpaPropertyMap(jpaProperties);
-
-		return emfBean;
+		em.setJpaPropertyMap(jpaProperties);
+		return em;
 	}
 
 }

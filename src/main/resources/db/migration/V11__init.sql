@@ -16,5 +16,9 @@ $func$  LANGUAGE plpgsql;
 
 SELECT f_add_col('public.tenant', 'jwt_token_version', 'character varying(50)');
 
+UPDATE public.tenant
+SET jwt_token_version='3ed4f054-ea35-4b62-b6e6-6e3b965d8ee0'
+WHERE tenantkey='demo';
+
 ALTER TABLE  source
 ADD token_id character varying(50);

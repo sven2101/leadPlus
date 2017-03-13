@@ -21,8 +21,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dash.multitenancy.TenantContext;
 import dash.security.jwt.domain.LoginRequest;
-import dash.tenantmanagement.business.TenantContext;
 
 /**
  * AjaxLoginProcessingFilter

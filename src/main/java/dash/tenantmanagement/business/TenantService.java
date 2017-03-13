@@ -28,8 +28,6 @@ import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import com.amazonaws.services.route53.AmazonRoute53;
 import com.amazonaws.services.route53.model.Change;
@@ -45,6 +43,7 @@ import com.amazonaws.services.route53.model.ResourceRecordSet;
 
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.TenantAlreadyExistsException;
+import dash.multitenancy.TenantContext;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.Role;
@@ -73,12 +72,6 @@ public class TenantService implements ITenantService {
 	@Value("${spring.profiles.active}")
 	private String springProfileActive;
 
-	// @Value("${multitenant.tenantKey}")
-	String tenantKey = "tenant";
-
-	// @Value("${multitenant.defaultTenant}")
-	String defaultTenant = "public";
-
 	@Autowired
 	private TenantRepository tenantRepository;
 
@@ -95,21 +88,7 @@ public class TenantService implements ITenantService {
 	public Tenant getTenantByName(final String name) throws IllegalArgumentException {
 		if (name == null)
 			throw new IllegalArgumentException("Cannot getTenantByName because parameter name is null");
-
-		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-
-		Tenant tenant = null;
-		if (requestAttributes != null) {
-			String currentTenantId = (String) requestAttributes.getAttribute(tenantKey,
-					RequestAttributes.SCOPE_REQUEST);
-			RequestContextHolder.resetRequestAttributes();
-			requestAttributes.setAttribute(tenantKey, defaultTenant, RequestAttributes.SCOPE_REQUEST);
-			RequestContextHolder.setRequestAttributes(requestAttributes);
-			tenant = tenantRepository.findByTenantKeyIgnoreCase(name);
-			requestAttributes.setAttribute(tenantKey, currentTenantId, RequestAttributes.SCOPE_REQUEST);
-			RequestContextHolder.setRequestAttributes(requestAttributes);
-		}
-		return tenant;
+		return tenantRepository.findByTenantKeyIgnoreCase(name);
 	}
 
 	@Override
@@ -121,6 +100,7 @@ public class TenantService implements ITenantService {
 		oneYearLater.add(Calendar.YEAR, 1);
 		tenant.getLicense().setTerm(oneYearLater);
 		Validation tenantNotExists = uniqueTenantKey(tenant);
+		TenantContext.setTenant(tenant.getTenantKey());
 		if (tenantNotExists.isValidation()) {
 			if (springProfileActive.equals(SPRING_PROFILE_TEST) || springProfileActive.equals(SPRING_PROFILE_LOCAL)) {
 				createSchema(tenant);
@@ -140,7 +120,9 @@ public class TenantService implements ITenantService {
 		}
 		Thread t = new Thread(new Runnable() {
 			public void run() {
+				String t = TenantContext.getTenant();
 				TenantContext.setTenant(tenant.getTenantKey());
+				String t2 = TenantContext.getTenant();
 				userService.register(tenant.getRegistration());
 				createInitialUsers();
 			}

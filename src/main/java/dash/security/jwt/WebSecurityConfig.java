@@ -127,7 +127,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(),
 						UsernamePasswordAuthenticationFilter.class)
 				.addFilterAfter(buildApiProcessingFilter(), JwtTokenAuthenticationProcessingFilter.class)
-				.addFilterBefore(new TenantFallbackProcessingFilter(), JwtTokenAuthenticationProcessingFilter.class);
+				.addFilterAfter(new TenantFallbackProcessingFilter(), JwtTokenAuthenticationProcessingFilter.class);
 
 	}
 

@@ -29,8 +29,8 @@ import org.springframework.stereotype.Service;
 
 import dash.exceptions.NotFoundException;
 import dash.exceptions.UserIsNotActivatedException;
+import dash.multitenancy.TenantContext;
 import dash.security.TenantAuthenticationToken;
-import dash.tenantmanagement.business.TenantContext;
 import dash.usermanagement.domain.User;
 
 @Service

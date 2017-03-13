@@ -27,7 +27,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import dash.licensemanangement.domain.License;
 import dash.licensemanangement.domain.LicenseEnum;
-import dash.tenantmanagement.business.TenantContext;
+import dash.multitenancy.TenantContext;
 
 public class LicenseFilter extends OncePerRequestFilter {
 

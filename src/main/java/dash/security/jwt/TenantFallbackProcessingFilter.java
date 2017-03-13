@@ -9,27 +9,26 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import dash.multitenancy.TenantContext;
+
 public class TenantFallbackProcessingFilter extends OncePerRequestFilter {
-
-	// @Value("${multitenant.tenantKey}")
-	String tenantKey = "tenant";
-
-	// @Value("${multitenant.defaultTenant}")
-	String defaultTenant = "public";
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
-		SubdomainExtractor extractor = new SubdomainExtractor();
-		String url = request.getRequestURL().toString();
-		String subdomain = extractor.extract(request.getRequestURL().toString());
-		HttpServletRequest req = (HttpServletRequest) request;
-		if (subdomain != null) {
-			req.setAttribute(tenantKey, subdomain);
-		} else {
-			req.setAttribute(tenantKey, defaultTenant);
+		if (TenantContext.PUBLIC_TENANT.equals(TenantContext.getTenant())) {
+			SubdomainExtractor extractor = new SubdomainExtractor();
+			String url = request.getRequestURL().toString();
+			String subdomain = extractor.extract(request.getRequestURL().toString());
+			HttpServletRequest req = (HttpServletRequest) request;
+			if (subdomain != null) {
+				req.setAttribute(TenantContext.TENANT_KEY, subdomain);
+			} else {
+				req.setAttribute(TenantContext.TENANT_KEY, TenantContext.PUBLIC_TENANT);
+			}
 		}
+
 		filterChain.doFilter(request, response);
 
 	}
