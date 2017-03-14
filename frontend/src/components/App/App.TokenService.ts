@@ -5,12 +5,13 @@ const TokenServiceId: string = "TokenService";
 // const ACCESS_TOKEN: string = "accessToken";
 const REFRESH_TOKEN: string = "refreshToken";
 const USER_STORAGE: string = "user";
+const ACCESS_TOKEN_COOKIE_KEY = "token";
 
 const FREE_ROUTES = ["/tenants/registration"];
 
 class TokenService {
 
-    $inject = [$qId, $rootScopeId, $locationId, $injectorId];
+    $inject = [$qId, $rootScopeId, $locationId, $injectorId, $cookiesId];
 
     private accessToken: string | null;
     private accessTokenJson: any;
@@ -23,7 +24,7 @@ class TokenService {
     private tenant: String;
     private localStorageMap: {} = {};
 
-    constructor(private $q, private $rootScope, private $location, private $injector) {
+    constructor(private $q, private $rootScope, private $location, private $injector, private $cookies) {
         this.setTenant();
         this.init();
     }
@@ -230,6 +231,12 @@ class TokenService {
         }
         localStorage.removeItem(this.tenant + "_" + USER_STORAGE);
         localStorage.removeItem(this.tenant + "_" + REFRESH_TOKEN);
+        this.$cookies.remove(ACCESS_TOKEN_COOKIE_KEY);
+    }
+
+    public async setAccessTokenCookie(): Promise<void> {
+        let tokenString = await this.getAccessTokenPromise();
+        this.$cookies.put(ACCESS_TOKEN_COOKIE_KEY, tokenString);
     }
 
 

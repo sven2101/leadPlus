@@ -36,6 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public static final String TOKEN_BASED_AUTH_ENTRY_POINT = "/api/rest/**";
 	public static final String TOKEN_REFRESH_ENTRY_POINT = "/api/rest/auth/token";
 	public static final String PUBLIC_API = "/api/rest/public/**";
+	public static final String FILE_API = "/api/rest/files/open/content/**";
 	public static final String DUMMY_PATH = "/dummy/**";
 
 	@Autowired
@@ -74,10 +75,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	protected JwtTokenAuthenticationProcessingFilter buildJwtTokenAuthenticationProcessingFilter() throws Exception {
-		List<String> pathsToSkip = Arrays.asList(TOKEN_REFRESH_ENTRY_POINT, FORM_BASED_LOGIN_ENTRY_POINT);
+		List<String> pathsToSkip = Arrays.asList(TOKEN_REFRESH_ENTRY_POINT, FORM_BASED_LOGIN_ENTRY_POINT, FILE_API);
 		SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);
 		JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(failureHandler,
 				tokenExtractor, matcher);
+		filter.setAuthenticationManager(this.authenticationManager);
+		return filter;
+	}
+
+	protected JwtCookieAuthenticationFilter buildJwtCookieAuthenticationFilter() throws Exception {
+		List<String> pathsToSkip = Arrays.asList(DUMMY_PATH);
+		SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, FILE_API);
+		JwtCookieAuthenticationFilter filter = new JwtCookieAuthenticationFilter(failureHandler, tokenExtractor,
+				matcher);
 		filter.setAuthenticationManager(this.authenticationManager);
 		return filter;
 	}
@@ -127,6 +137,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(),
 						UsernamePasswordAuthenticationFilter.class)
 				.addFilterAfter(buildApiProcessingFilter(), JwtTokenAuthenticationProcessingFilter.class)
+				.addFilterAfter(buildJwtCookieAuthenticationFilter(), JwtTokenAuthenticationProcessingFilter.class)
 				.addFilterAfter(new TenantFallbackProcessingFilter(), JwtTokenAuthenticationProcessingFilter.class);
 
 	}
