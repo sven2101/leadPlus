@@ -2,7 +2,6 @@
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 /// <reference path="../model/Attachment.Model.ts" />
 
-declare var Ladda;
 
 const NotificationServiceId: string = "NotificationService";
 const broadcastUserNotificationShouldChange: string = "userNotificationShouldChange";
