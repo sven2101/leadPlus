@@ -62,8 +62,8 @@
 					'STATISTIC_SINGLE_STATISTIC' | translate }}</a></li>
 				<li ng-class="{'active':statisticCtrl.currentTab === 2}" ng-click="statisticCtrl.tabOnClick(2)"><a data-toggle="tab" aria-expanded="true">{{ 'STATISTIC_GENERAL_STATISTIC' | translate
 					}}</a></li>
-				<li ng-class="{'active':statisticCtrl.currentTab === 4}" ng-click="statisticCtrl.tabOnClick(4)"><a data-toggle="tab" aria-expanded="true">{{ 'STATISTIC_MY_STATISTIC' | translate}}</a></li>
-				<li ng-if="statisticCtrl.currentUser.role==='SUPERADMIN'|| statisticCtrl.currentUser.role==='ADMIN'" ng-class="{'active':statisticCtrl.currentTab === 3}" ng-click="statisticCtrl.tabOnClick(3)"><a data-toggle="tab" aria-expanded="true">{{ 'STATISTIC_USER_STATISTIC' | translate }}</a>
+				<li ng-class="{'active':statisticCtrl.currentTab === 3}" ng-click="statisticCtrl.tabOnClick(3)"><a data-toggle="tab" aria-expanded="true">{{ 'STATISTIC_MY_STATISTIC' | translate}}</a></li>
+				<li ng-if="statisticCtrl.currentUser.role==='SUPERADMIN'|| statisticCtrl.currentUser.role==='ADMIN'" ng-class="{'active':statisticCtrl.currentTab === 4}" ng-click="statisticCtrl.tabOnClick(4)"><a data-toggle="tab" aria-expanded="true">{{ 'STATISTIC_USER_STATISTIC' | translate }}</a>
 				</li>
 			</ul>
 			</div>
@@ -71,10 +71,9 @@
 	</div>
 	<div ng-include="'components/Statistic/view/SingleStatistic.html'"></div>
 	<div ng-include="'components/Statistic/view/EntireStatistic.html'"></div>
-	<div ng-include="'components/Statistic/view/UserStatistic.html'"></div>
-	<div ng-if="statisticCtrl.currentTab==4">
-		<div userstatistic chart="statisticCtrl.statisticService.MyUserStatisticColumnChart" daterange="statisticCtrl.dateRange" source="statisticCtrl.source"
+	<div ng-show="statisticCtrl.currentTab==3">
+		<div userstatistic chart="statisticCtrl.statisticService.MyUserStatisticColumnChart" daterange="statisticCtrl.dateRange" animated="false" source="statisticCtrl.source"
         userobj="statisticCtrl.currentUser"></div>
 	</div>
-	
+	<div ng-include="'components/Statistic/view/UserStatistic.html'"></div>
 </div>

@@ -372,7 +372,7 @@ class SummernoteService {
     onChangeSummernoteLanguage(self, button) {
         let buttonName: string = button.innerText.slice(0, -5);
         buttonName += " (" + self.translate.instant("SUMMERNOTE_LANGUAGE", "", "", self.summernoteLanguage) + ")";
-        button.innerText = buttonName;
+        button.innerHtml = buttonName + "<span class'caret'></span>";
         $(button).parent().parent().parent().find("#customerTitleVar").attr({ "template-value": self.translate.instant("SUMMERNOTE_TITLE_CODE_TRANSLATION", "", "", self.summernoteLanguage) });
         $(button).parent().parent().parent().find("#orderpositionProductstateVar").attr({ "template-value": self.translate.instant("SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION", "", "", self.summernoteLanguage) });
     }
