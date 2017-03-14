@@ -162,11 +162,22 @@ div#loginscreen
   .modal-lg {
     width: 1100px !important;
   }
+  .modal-body, .modal-body.content-height{
+    max-height: 60vh !important;
+  }
+}
+@media (min-width: 1600px) {
+  .modal-lg {
+    width: 1300px !important;
+  }
+  .modal-body, .modal-body.content-height{
+    max-height: 70vh !important;
+  }
 }
 .modal-body, .modal-body.content-height{
     overflow-y: scroll;
     overflow-x: hidden;
-    max-height: 70vh;
+    max-height: 50vh;
 }
 .modal-lg.modal-dialog, .modal-dialog.modal-lg{
       max-height: 90vh;
