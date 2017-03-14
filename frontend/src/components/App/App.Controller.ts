@@ -158,7 +158,7 @@ class AppController {
                 console.log(self.window.navigator.language);
                 console.log(self.window.navigator.userLanguage);
                 let lang: string = self.window.navigator.language || self.window.navigator.userLanguage;
-                if (lang.includes("de") === true) {
+                if (lang.indexOf("de") !== -1) {
                     lang = "DE";
                 }
                 console.log(lang);

@@ -3,8 +3,6 @@
 /// <reference path="../../Template/controller/Template.Service.ts" />
 /// <reference path="../../App/App.Common.ts" />
 
-declare var Ladda;
-
 const EditEmailDirectiveId: string = "emailEdit";
 
 class EditEmailDirective implements IDirective {
@@ -123,7 +121,14 @@ class EditEmailDirective implements IDirective {
                 let contentType = response.headers("content-type");
                 let file = new Blob([response.data], { type: contentType });
                 let fileURL = URL.createObjectURL(file);
-                window.open(scope.$sce.trustAsResourceUrl(fileURL), "_blank");
+                // let win = window.open(scope.$sce.trustAsResourceUrl(fileURL), "_blank");
+
+                let reader = new FileReader();
+                let out = new Blob([response.data], { type: contentType });
+                reader.onload = function (e) {
+                    window.open(reader.result, "_blank");
+                };
+                reader.readAsDataURL(out);
             });
     }
 
