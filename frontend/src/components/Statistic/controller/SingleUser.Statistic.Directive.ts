@@ -24,7 +24,7 @@ angular.module(moduleApp)
             isNullOrUndefined(scope.animated) ? scope.isAnimated = true : scope.isAnimated = scope.animated;
             scope.chart.clearData();
             loadData(scope.daterange, scope.source);
-            
+
             scope.$watch("daterange", function (newValue, oldValue) {
                 if (newValue !== oldValue) {
                     scope.chart.clearData();

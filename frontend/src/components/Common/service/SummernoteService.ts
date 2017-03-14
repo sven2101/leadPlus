@@ -315,7 +315,7 @@ class SummernoteService {
     getTemplateButton(ui: any, context: any, buttonName: string): any {
         return ui.button({
             className: "dropdown-toggle",
-            contents: buttonName + " <span class='caret'</span>",
+            contents: buttonName + " <span class='caret'></span>",
             data: {
                 toggle: "dropdown"
             },
@@ -372,7 +372,8 @@ class SummernoteService {
     onChangeSummernoteLanguage(self, button) {
         let buttonName: string = button.innerText.slice(0, -5);
         buttonName += " (" + self.translate.instant("SUMMERNOTE_LANGUAGE", "", "", self.summernoteLanguage) + ")";
-        button.innerHtml = buttonName + "<span class'caret'></span>";
+        button.innerText = buttonName;
+        button.innerHTML = buttonName + " <span class='caret'></span>";
         $(button).parent().parent().parent().find("#customerTitleVar").attr({ "template-value": self.translate.instant("SUMMERNOTE_TITLE_CODE_TRANSLATION", "", "", self.summernoteLanguage) });
         $(button).parent().parent().parent().find("#orderpositionProductstateVar").attr({ "template-value": self.translate.instant("SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION", "", "", self.summernoteLanguage) });
     }
