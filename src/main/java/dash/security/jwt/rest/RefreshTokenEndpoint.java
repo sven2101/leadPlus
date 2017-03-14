@@ -70,8 +70,13 @@ public class RefreshTokenEndpoint {
 		String tokenPayload = tokenExtractor.extract(request.getHeader(WebSecurityConfig.JWT_TOKEN_HEADER_PARAM));
 
 		RawAccessJwtToken rawToken = new RawAccessJwtToken(tokenPayload);
-		RefreshToken refreshToken = RefreshToken.create(rawToken, jwtSettings.getTokenSigningKey())
-				.orElseThrow(() -> new InvalidJwtToken());
+		RefreshToken refreshToken;
+		try {
+			refreshToken = RefreshToken.create(rawToken, jwtSettings.getTokenSigningKey())
+					.orElseThrow(() -> new InvalidJwtToken());
+		} catch (Exception e) {
+			throw new InsufficientAuthenticationException("Token has expired");
+		}
 
 		String tenantKey = refreshToken.getClaims().getBody().get("tenant", String.class);
 		String smtpKey = refreshToken.getClaims().getBody().get("signature", String.class);

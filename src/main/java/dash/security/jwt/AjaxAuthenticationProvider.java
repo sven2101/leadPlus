@@ -46,7 +46,7 @@ public class AjaxAuthenticationProvider implements AuthenticationProvider {
 
 		String email = (String) authentication.getPrincipal();
 		String password = (String) authentication.getCredentials();
-		String smtpKey = Encryptor.hashTextPBKDF2(password, email, 0);
+		String smtpKey = Encryptor.hashTextPBKDF2(password, email, 300);
 
 		User user = userService.loadUserByEmail(email)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));

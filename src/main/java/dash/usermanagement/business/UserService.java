@@ -224,7 +224,8 @@ public class UserService implements IUserService {
 						String newSmtpKey = null;
 						if (smtp != null) {
 							smtp.setPassword(SmtpUtil.decryptPasswordForSmtp(smtp).getBytes());
-							newSmtpKey = Encryptor.hashTextPBKDF2(passwordChange.getNewPassword(), user.getEmail(), 0);
+							newSmtpKey = Encryptor.hashTextPBKDF2(passwordChange.getNewPassword(), user.getEmail(),
+									300);
 							smtp.setDecrypted(true);
 							smtpService.save(smtp, newSmtpKey);
 						}

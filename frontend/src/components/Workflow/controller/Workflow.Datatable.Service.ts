@@ -6,7 +6,7 @@
 /// <reference path="../../Product/model/OrderPosition.Model.ts" />
 /// <reference path="../../Commentary/model/Commentary.Model.ts" />
 /// <reference path="../../app/App.Common.ts" />
-/// <reference path="../../app/App.Common.ts" />
+/// <reference path="../../app/App.TokenService.ts" />
 /// <reference path="../../Process/model/Status.Model.ts" />
 /// <reference path="../../Workflow/model/WorkflowType.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Controller.ts" />
@@ -97,7 +97,7 @@ class WorkflowDatatableService {
         }
     }
 
-    changeDataInput(loadAllData: boolean, dtOptions: any, allDataRoute: string, latestDataRoute: string) {
+    async changeDataInput(loadAllData: boolean, dtOptions: any, allDataRoute: string, latestDataRoute: string) {
         let searchDelay: number = 0;
         let self = this;
         if (loadAllData === true) {
@@ -108,17 +108,20 @@ class WorkflowDatatableService {
 
 
 
-            .withOption("ajax", function (data, callback, settings) {
+            .withOption("ajax",
 
-                self.getData(loadAllData, allDataRoute, latestDataRoute, (response) => callback(response));
+            await self.getData(loadAllData, allDataRoute, latestDataRoute)
 
-            })
+            )
             .withOption("searchDelay", searchDelay);
     }
 
-    getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string, callback): any {
+    async getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): Promise<any> {
         let self = this;
+        console.log(loadAllData);
         if (loadAllData === true) {
+            let token = await self.TokenService.getAccessTokenPromise();
+            console.log("get stuff", token);
             return {
                 url: allDataRoute,
                 type: "GET",
@@ -127,16 +130,23 @@ class WorkflowDatatableService {
                 error: function (xhr, error, thrown) {
                     handleError(xhr);
                 },
-                "beforeSend": function (request) {
-                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
+                beforeSend: function (request) {
+                    request.setRequestHeader("X-Authorization", "Bearer " + token);
                 }
             };
+
+
+
         } else {
-            self.$http.get(latestDataRoute).then(function (response) {
-                console.log(response);
-                console.log(callback);
-                callback(response.data);
-            });
+            return (data, callback, settings) => {
+                console.log("test");
+                self.$http.get(latestDataRoute).then(function (response) {
+                    console.log(response);
+                    console.log(callback);
+                    callback(response.data);
+                });
+            };
+
         }
     }
 
