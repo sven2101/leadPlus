@@ -52,10 +52,10 @@ public class PasswordForgotService {
 		final String emailFrom = "support@leadplus.io";
 		String template = "forgot_password_en.ftl";
 
-		Long randomID;
+		String randomID;
 		boolean isUUIDinUse = false;
 		do {
-			randomID = Long.valueOf(UUID.randomUUID().toString().hashCode());
+			randomID = String.valueOf(UUID.randomUUID().toString().hashCode());
 			if (this.passwordForgotRepository.findOne(randomID) != null)
 				isUUIDinUse = true;
 		} while (isUUIDinUse);
@@ -86,7 +86,7 @@ public class PasswordForgotService {
 	}
 
 	public PasswordForgot getById(String id) {
-		final PasswordForgot passwordForgot = this.passwordForgotRepository.findOne(Long.valueOf(id));
+		final PasswordForgot passwordForgot = this.passwordForgotRepository.findOne(id);
 		if (passwordForgot != null) {
 			Calendar calendar = Calendar.getInstance();
 			calendar.add(Calendar.DAY_OF_YEAR, -2);

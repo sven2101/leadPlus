@@ -19,6 +19,6 @@ import org.springframework.stereotype.Repository;
 import dash.usermanagement.password.forgot.domain.PasswordForgot;
 
 @Repository
-public interface PasswordForgotRepository extends JpaRepository<PasswordForgot, Long> {
+public interface PasswordForgotRepository extends JpaRepository<PasswordForgot, String> {
 
 }

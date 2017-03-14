@@ -119,4 +119,7 @@ public class SmtpService implements ISmtpService {
 		return smtpRepository.findByUserUsername(this.securityService.getAuthenticatedUser());
 	}
 
+	public Smtp findByUserUsername(String username) throws NotFoundException {
+		return smtpRepository.findByUserUsername(username);
+	}
 }
