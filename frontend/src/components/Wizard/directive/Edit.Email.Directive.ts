@@ -56,7 +56,7 @@ class EditEmailDirective implements IDirective {
         }
         scope.sizeInvalid = false;
         scope.TemplateService = this.TemplateService;
-        scope.summernoteOptions = this.SummernoteService.getDefaultOptions();
+        scope.summernoteOptions = this.SummernoteService.getDefaultOptions(false);
         scope.workflow = scope.process.offer == null ? scope.process.lead : scope.process.offer;
         scope.workflow = scope.process.sale != null ? scope.process.sale : scope.workflow;
         scope.notification.recipient = scope.workflow.customer.email;

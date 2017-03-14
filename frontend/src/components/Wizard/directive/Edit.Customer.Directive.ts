@@ -39,7 +39,7 @@ class CustomerEditDirective implements IDirective {
         scope.sourceService = this.SourceService;
         scope.rootScope = this.$rootScope;
         scope.sce = this.$sce;
-        scope.summernoteOptions = this.SummernoteService.getDefaultOptions();
+        scope.summernoteOptions = this.SummernoteService.getDefaultOptions(false);
         if (!isNullOrUndefined(scope.form)) {
             scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.cform) : scope.cform = scope.form;
         }

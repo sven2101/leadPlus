@@ -26,7 +26,7 @@ class TemplateController {
         this.location = $location;
         this.initTemplate($routeParams);
         this.SetAvailablesourceNames();
-        this.summernoteOptions = SummernoteService.getTemplateOptions();
+        this.summernoteOptions = SummernoteService.getTemplateOptions(true);
         this.SummernoteService.resetSummernoteConfiguration();
     }
 

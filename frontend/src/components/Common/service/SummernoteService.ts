@@ -29,7 +29,7 @@ class SummernoteService {
         this.timeout.cancel(this.currentTimeout);
     }
 
-    getDefaultOptions(): any {
+    getDefaultOptions(withTooltips: boolean): any {
         let options = {
             lang: "en-US",
             maximumImageFileSize: "512000",
@@ -46,7 +46,16 @@ class SummernoteService {
                 ["table", ["table"]],
                 ["insert", ["link", "picture", "hr"]],
                 ["view", ["fullscreen", "codeview"]],
-            ]
+            ],
+            callbacks: {
+                onInit: function () {
+                    if (withTooltips !== true) {
+                        let noteEditor = $(this).parent().find(".note-editor");
+                        (<any>noteEditor).tooltip("disable");
+                        noteEditor.find(".note-btn.btn.btn-default.btn-sm").attr("data-original-title", "");
+                    }
+                }
+            }
         };
 
         if (this.rootScope.language === Language[Language.DE]) {
@@ -56,8 +65,9 @@ class SummernoteService {
         return options;
     }
 
-    getTemplateOptions(): any {
+    getTemplateOptions(withTooltips: boolean): any {
         let self = this;
+
         let options = {
             lang: "en-US",
             maximumImageFileSize: "512000",
@@ -89,6 +99,15 @@ class SummernoteService {
                 customerDropdown: this.getCustomerDropdown(),
                 orderDropdown: this.getOrderDropdown(),
                 userDropdown: this.getUserDropdown()
+            },
+            callbacks: {
+                onInit: function () {
+                    if (withTooltips !== true) {
+                        let noteEditor = $(this).parent().find(".note-editor");
+                        (<any>noteEditor).tooltip("disable");
+                        noteEditor.find(".note-btn.btn.btn-default.btn-sm").attr("data-original-title", "");
+                    }
+                }
             }
         };
         if (this.rootScope.language === Language[Language.DE]) {
@@ -316,7 +335,7 @@ class SummernoteService {
                     $(this).click(function () {
                         context.invoke("editor.restoreRange");
                         context.invoke("editor.focus");
-                        context.invoke("editor.insertText", $(this)[0].attributes[0].nodeValue);
+                        context.invoke("editor.insertText", $(this).attr("template-value"));
                     });
                 });
             }
@@ -333,13 +352,10 @@ class SummernoteService {
                     $(this).click(function () {
                         context.invoke("editor.restoreRange");
                         context.invoke("editor.focus");
-                        self.summernoteLanguage = $(this)[0].attributes[0].nodeValue;
-                        let buttonName: string = $($(this).parent().parent().parent()[0].firstChild)[0].innerText;
-                        buttonName = buttonName.slice(0, -5);
-                        buttonName += " (" + self.translate.instant("SUMMERNOTE_LANGUAGE", "", "", self.summernoteLanguage) + ")";
-                        $($(this).parent().parent().parent()[0].firstChild)[0].innerText = buttonName;
+                        self.summernoteLanguage = $(this).attr("template-value");
+                        self.onChangeSummernoteLanguage(self, $($(this).parent().parent().parent()[0].firstChild)[0]);
                         $dropdown.find("li a i").each(function () {
-                            let language = $(this).parent()[0].attributes[0].nodeValue;
+                            let language = $(this).parent().attr("template-value");
                             if (self.summernoteLanguage === language) {
                                 $(this).css("visibility", "visible");
                             }
@@ -351,6 +367,14 @@ class SummernoteService {
                 });
             }
         });
+    }
+
+    onChangeSummernoteLanguage(self, button) {
+        let buttonName: string = button.innerText.slice(0, -5);
+        buttonName += " (" + self.translate.instant("SUMMERNOTE_LANGUAGE", "", "", self.summernoteLanguage) + ")";
+        button.innerText = buttonName;
+        $(button).parent().parent().parent().find("#customerTitleVar").attr({ "template-value": self.translate.instant("SUMMERNOTE_TITLE_CODE_TRANSLATION", "", "", self.summernoteLanguage) });
+        $(button).parent().parent().parent().find("#orderpositionProductstateVar").attr({ "template-value": self.translate.instant("SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION", "", "", self.summernoteLanguage) });
     }
 
     getLanguageTemplateVar(): string {
@@ -387,7 +411,7 @@ class SummernoteService {
     }
 
     getCustomerTemplateVar(): string {
-        return "<li><a template-value='" + this.translate.instant("SUMMERNOTE_TITLE_CODE_TRANSLATION", "", "", this.summernoteLanguage) + "'>" + this.translate.instant("COMMON_TITLE") + "</a></li>" +
+        return "<li><a id='customerTitleVar' template-value='" + this.translate.instant("SUMMERNOTE_TITLE_CODE_TRANSLATION", "", "", this.summernoteLanguage) + "'>" + this.translate.instant("COMMON_TITLE") + "</a></li>" +
             "<li><a template-value='${(customer.firstname)!}'>" + this.translate.instant("COMMON_FIRSTNAME") + "</a></li>" +
             " <li><a template-value='${(customer.lastname)!}'>" + this.translate.instant("COMMON_LASTNAME") + "</a></li>" +
             "<li><a template-value='${(customer.company)!}'>" + this.translate.instant("COMMON_COMPANY") + "</a></li>" +
@@ -409,7 +433,7 @@ class SummernoteService {
             "<li><a template-value='${(orderPosition.discount)!}'>" + this.translate.instant("PRODUCT_DISCOUNT") + "</a></li>" +
             "<li><a template-value='${(orderPosition.amount)!}'>" + this.translate.instant("COMMON_PRODUCT_AMOUNT") + "</a></li>" +
             "<li><a template-value='<#if orderPosition.product.netPrice?has_content>${((orderPosition.product.netPrice)!)?string(&quot;#,##0.00&quot;)}&lt;/#if&gt;'> " + this.translate.instant("Originalpreis") + "</a></li>" +
-            "<li><a template-value='${(orderPosition.product.productState)!}'>" + this.translate.instant("PRODUCT_PRODUCT_STATE") + "</a></li>" +
+            "<li><a id='orderpositionProductstateVar' template-value='" + this.translate.instant("SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION", "", "", this.summernoteLanguage) + "'>" + this.translate.instant("PRODUCT_PRODUCT_STATE") + "</a></li>" +
             "<li><a template-value='${(orderPosition.product.productNumber)!}'>" + this.translate.instant("PRODUCT_NUMBER") + "</a></li>";
     }
 
