@@ -8,9 +8,9 @@
 /// <reference path="../../App/App.Constants.ts" />
 /// <reference path="../../Statistic/model/ColumnChart.Model.ts" />" />
 
-const ProductDetailControllerId: string = "ProductDetailController";
+const ProductStatisticDetailControllerId: string = "ProductStatisticDetailController";
 
-class ProductDetailController {
+class ProductStatisticDetailController {
 
     $inject = [ProductServiceId, $routeParamsId, ProductResourceId, StatisticServiceId, SourceServiceId, $scopeId, $translateId];
 
@@ -53,5 +53,5 @@ class ProductDetailController {
         });
     }
 }
-angular.module(moduleProductDetail, [ngResourceId]).controller(ProductDetailControllerId, ProductDetailController);
+angular.module(moduleStatisticProductDetail, [ngResourceId]).controller(ProductStatisticDetailControllerId, ProductStatisticDetailController);
 

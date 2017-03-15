@@ -48,6 +48,14 @@ class CustomerService {
         return customer;
     }
 
+    async getCustomerById(customerId: number) {
+        let customer = await this.customerResource.getCustomerById({ id: customerId }).$promise as Customer;
+        if (isNullOrUndefined(customer.id)) {
+            return null;
+        }
+        return customer;
+    }
+
     async insertCustomer(customer: Customer): Promise<Customer> {
         return await this.customerResource.createCustomer(customer).$promise as Customer;
     }

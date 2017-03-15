@@ -32,8 +32,7 @@
 				</div>
 				<div class="ibox-content" style="overflow-x: auto">
 					<form role="form" class="form-inline">
-						<button type="button" class="btn btn-success btn-sm btn-primary" ng-click="customerCtrl.clearCustomer()" data-toggle="modal"
-							data-target="#createCustomerModal" data-backdrop="static">
+						<button type="button" class="btn btn-success btn-primary" ng-click="customerCtrl.showCustomer(0)" >
                                 <i class="fa fa-plus"></i>
                                 &nbsp;{{ 'CUSTOMER_CREATE' | translate }}
                         </button>
@@ -52,35 +51,34 @@
 									<th class="text-center">{{ 'COMMON_EMAIL' | translate }}</th>
 									<th class="text-center">{{ 'COMMON_PHONE' | translate }}</th>
 									<th class="text-center">{{ 'COMMON_COMPANY' | translate }}</th>
-									<th class="text-center"><i class="fa fa-cog"></i></th>
+                                    <th class="text-center"><i class="fa fa-cog"></i></th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="customer in customerCtrl.customerService.pagingCustomers">
-									<td class="project-status col-md-1 text-center" >
+								<tr ng-repeat="customer in customerCtrl.customerService.pagingCustomers" >
+									<td class="project-status col-md-1 text-center" ng-click="customerCtrl.showCustomer(customer.id)" style="cursor: pointer">
 										<span ng-show="!customer.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
 										<span ng-show="customer.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 									</td>
-									<td ng-click="customerCtrl.goToCustomerDetail(customer.id)" style="cursor: pointer;" class="project-title col-md-3 text-center">
-										<span style="color: #337ab7">{{customer.firstname}} {{customer.lastname}}</span>
+									<td  class="project-title col-md-3 text-center"  ng-click="customerCtrl.showCustomer(customer.id)" style="cursor: pointer">
+										{{customer.firstname}} {{customer.lastname}}
 										<br>
 										<small>{{ 'CUSTOMER_CREATED' | translate }} {{customerCtrl.getLocalTimestamp(customer)}}</small>
 									</td>
-									<td style="white-space: nowrap;" class="project-title col-md-3 text-center">
+									<td style="white-space: nowrap;cursor: pointer" class="project-title col-md-3 text-center"  ng-click="customerCtrl.showCustomer(customer.id)" >
 										{{customer.email}}
 									</td>
-									<td style="white-space: nowrap;" class="project-title col-md-2 text-center">
+									<td style="white-space: nowrap;cursor: pointer" class="project-title col-md-2 text-center"  ng-click="customerCtrl.showCustomer(customer.id)" >
 										{{customer.phone}}
 									</td>
-									<td style="white-space: nowrap;" class="project-completion col-md-3 text-center" max>
+									<td style="white-space: nowrap;cursor: pointer" class="project-completion col-md-3 text-center"  ng-click="customerCtrl.showCustomer(customer.id)" >
 										{{customer.company}}
 									</td>
-			
-									<td class="project-actions col-md-1 text-center">
-										<button type="button " class="btn btn-white btn-sm " ng-click="customerCtrl.editCustomer(customer)
-                                            " data-toggle="modal " data-target="#createCustomerModal " data-backdrop="static">
-                                     <i class="fa fa-pencil "></i></button>
-									</td>
+									<td class="project-actions col-md-1 text-center" >
+                                        <button type="button " class="btn btn-white btn-sm " ng-click="customerCtrl.goToCustomerDetail(customer.id)">
+                                     <i class="fa fa-history "></i></button>
+                                    </td>
+
 								</tr>
 							</tbody>
 						</table>
@@ -93,7 +91,3 @@
 		</div>
 	</div>
 </div>
-<div ng-include=" 'components/Customer/view/Customer.Modal.html' "></div>
-<script>
-   $(".chosen-select ").chosen(); 
-  </script>

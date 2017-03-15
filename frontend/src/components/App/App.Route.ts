@@ -72,7 +72,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 authenticated: true,
                 package: "basic"
             })
-            .when("/statistic/user/detail/:userId",
+            .when("/statistic/users/detail/:userId",
             {
                 templateUrl: "components/Statistic/view/UserDetail.html",
                 controller: "UserDetailController",
@@ -80,7 +80,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 authenticated: true,
                 package: "basic"
             })
-            .when("/profile",
+            .when("/profile/:tab?",
             {
                 templateUrl: "components/Profile/view/ProfileMain.html",
                 controller: "ProfileController",
@@ -120,10 +120,17 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 controllerAs: "productCtrl",
                 authenticated: true,
                 package: "basic"
+            }).when("/product/detail/:productId?",
+            {
+                templateUrl: "components/Product/view/Product.Detail.html",
+                controller: "ProductDetailController",
+                controllerAs: "productDetailCtrl",
+                authenticated: true,
+                package: "basic"
             }).when("/statistic/product/detail/:productId",
             {
                 templateUrl: "components/Statistic/view/ProductDetail.html",
-                controller: "ProductDetailController",
+                controller: "ProductStatisticDetailController",
                 controllerAs: "ProductDetailCtrl",
                 authenticated: true,
                 package: "basic"
@@ -132,6 +139,13 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Customer/view/Customer.html",
                 controller: "CustomerController",
                 controllerAs: "customerCtrl",
+                authenticated: true,
+                package: "basic"
+            }).when("/customer/timeline/:customerId",
+            {
+                templateUrl: "components/Customer/view/CustomerTimeline.html",
+                controller: "CustomerTimelineController",
+                controllerAs: "customerTimelineCtrl",
                 authenticated: true,
                 package: "basic"
             }).when("/customer/detail/:customerId",

@@ -56,8 +56,7 @@
 				</div>
 				<div class="ibox-content" style="overflow-x: auto">
 					<form role="form" class="form-inline">
-						<button type="button" class="btn btn-success btn-sm btn-primary" ng-click="productCtrl.clearProduct()" data-toggle="modal"
-							data-target="#createProductModal" data-backdrop="static">
+						<button type="button" class="btn btn-success btn-primary" ng-click="productCtrl.showProduct(0)" >
 							<i class="fa fa-plus"></i> &nbsp;{{ 'PRODUCT_CREATE' | translate }}
 							</button>
 
@@ -81,11 +80,10 @@
 									<th class="text-center">{{ 'PRODUCT_PRICE' | translate }}</th>
 									<th class="text-center">{{ 'PRODUCT_PRODUCT_STATE' | translate }}</th>
 									<th class="text-center">{{ 'PRODUCT_NUMBER' | translate }}</th>
-									<th class="text-center"><i class="fa fa-cog"></i></th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="product in productCtrl.productService.products| filter:searchText |orderBy:'name' | limitTo:productCtrl.productAmountLimit ">
+								<tr ng-repeat="product in productCtrl.productService.products| filter:searchText |orderBy:'name' | limitTo:productCtrl.productAmountLimit " ng-click="productCtrl.showProduct(product.id)" style="cursor: pointer">
 									<td class="project-status col-md-1 text-center">
 										<div ng-if="product.picture!=null" ng-style="product.deactivated === true?{ 'margin-top': '-28px'}:{}">
 											<div ng-if="product.deactivated === true" class="frontlayer">{{ 'COMMON_DEACTIVATED' | translate }}</div>
@@ -109,11 +107,6 @@
 									<td class="project-completion col-md-2 text-center" style="word-wrap: break-word;">
 										{{product.productNumber}}
 									</td>
-									<td class="project-actions col-md-1 text-center" style="text-align: center;">
-										<button type="button" class="btn btn-white btn-sm" ng-click="productCtrl.editProduct(product)" data-toggle="modal" data-target="#createProductModal"
-											data-backdrop="static">
-											<i class="fa fa-pencil"></i></button>
-									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -126,5 +119,3 @@
 		</div>
 	</div>
 </div>
-
-<div ng-include=" 'components/Product/view/Product.Modal.html' "></div>

@@ -13,6 +13,7 @@ class ConfirmationModalDirective implements IDirective {
         title: "<",
         body: "<",
         submitText: "<",
+        icon: "<",
         submitFunction: "&",
         submitButtonClass: "@"
     };

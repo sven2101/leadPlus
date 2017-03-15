@@ -26,6 +26,7 @@ class TemplateController {
         this.location = $location;
         this.initTemplate($routeParams);
         this.SetAvailablesourceNames();
+        this.availableNotificationTypes.splice(this.availableNotificationTypes.indexOf(NotificationType.ERROR.toString()), 1);
         this.summernoteOptions = SummernoteService.getTemplateOptions(true);
         this.SummernoteService.resetSummernoteConfiguration();
     }
@@ -34,7 +35,7 @@ class TemplateController {
         let templateId = $routeParams.templateId;
         if (!isNullOrUndefined(templateId) && templateId !== 0 && !isNaN(templateId) && angular.isNumber(+templateId)) {
             this.template = await this.templateService.getTemplateById(Number(templateId));
-            this.templateHead = "SETTING_EMAIL_TEMPLATE_EDIT";
+            this.templateHead = this.template.name;
             isNullOrUndefined(this.template) ? this.templateFound = false : this.templateFound = true;
         } else if (!isNullOrUndefined(templateId) && templateId === "new") {
             this.template = new Template();
@@ -46,7 +47,10 @@ class TemplateController {
         if (this.templateFound === true) {
             this.currentSelectedNotificationTypes = this.template.notificationTypeString == null ? [] : this.template.notificationTypeString.split(",");
             this.currentSelectedSource = this.template.sourceString == null ? [] : this.template.sourceString.split(",");
-            this.templateService.getAll();
+            if (isNullOrUndefined(this.templateService.templates)) {
+                this.templateService.getAll();
+            }
+
         }
     }
 

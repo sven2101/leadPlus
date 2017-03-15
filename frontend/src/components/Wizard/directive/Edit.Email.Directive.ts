@@ -61,6 +61,7 @@ class EditEmailDirective implements IDirective {
         scope.generate = (template, workflow, currentNotification) => this.generateContent(template, workflow, currentNotification, scope);
         scope.setAttachments = (files) => this.setAttachments(files, scope.notification, scope);
         scope.deleteAttachment = (index) => this.deleteAttachment(index, scope);
+        scope.toLocalDate = (timestamp) => this.toLocalDate(timestamp, scope);
 
         scope.templates = await this.TemplateService.getAll();
         if (scope.notification.id == null) {
@@ -68,6 +69,10 @@ class EditEmailDirective implements IDirective {
         }
         EditEmailDirective.init = false;
     };
+
+    toLocalDate(timestamp, scope) {
+        return toLocalDate(timestamp, "DD.MM.YYYY HH:mm");
+    }
 
     setAttachments(files, notification: Notification, scope): void {
         if (isNullOrUndefined(notification.attachments)) {

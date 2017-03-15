@@ -250,7 +250,7 @@ class WorkflowModalService {
     openConfirmationModal(process: Process, confirmationFunctionType: ConfirmationFunctionType, submitButtonClass: string = "danger", modalSize: string = "") {
         let defer = this.$q.defer();
         this.uibModal.open({
-            template: `<confirmation-modal modal-instance='confirmationCtrl.uibModalInstance' title='confirmationCtrl.title' body='confirmationCtrl.body' submit-text='confirmationCtrl.submitText' submit-function='confirmationCtrl.submitFunction()' submit-button-class='${submitButtonClass}'></confirmation-modal>`,
+            template: `<confirmation-modal modal-instance='confirmationCtrl.uibModalInstance' title='confirmationCtrl.title' body='confirmationCtrl.body' icon='confirmationCtrl.icon' submit-text='confirmationCtrl.submitText' submit-function='confirmationCtrl.submitFunction()' submit-button-class='${submitButtonClass}'></confirmation-modal>`,
             controller: ConfirmationModalController,
             controllerAs: "confirmationCtrl",
             backdrop: "static",

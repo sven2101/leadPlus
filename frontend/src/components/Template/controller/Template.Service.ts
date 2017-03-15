@@ -126,10 +126,10 @@ class TemplateService {
 
     async getTemplateById(id: number): Promise<Template> {
         let template: Template = await this.templateResource.getById({ id: id }).$promise as Template;
-        this.currentEditTemplate = template;
         if (isNullOrUndefined(template.id)) {
             return null;
         }
+        this.currentEditTemplate = template;
         return template;
     }
 }

@@ -30,7 +30,7 @@
 				<h4 class="modal-title">{{ 'COMMON_DETAILS' | translate }}</h4>
 				<h2>{{dashboardCtrl.workflowModalData.container.name}}</h2>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body content-height">
 				<div class="ibox">
 					<div class="ibox-content">
 						<div class="row customerdetails">
@@ -241,7 +241,7 @@
 											<textarea class="form-control message-input" ng-model="dashboardCtrl.commentModalInput" required ng-maxlength="5000" style="resize: none; width:100%;box-sizing: border-box;" name="message" placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}" />
 											<p ng-show="commentform.message.$error.maxlength && !commentform.message.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}5000{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
 											</div>
-											<button style="width:35%; margin-top: 10px;" class="btn btn-success" ng-disabled="commentform.message.$invalid" ng-click="dashboardCtrl.addComment(dashboardCtrl.workflowModalProcess)">
+											<button style="width:200px; margin-top: 10px;" class="btn btn-success" ng-disabled="commentform.message.$invalid" ng-click="dashboardCtrl.addComment(dashboardCtrl.workflowModalProcess)">
 											<i class="fa fa-comment-o"></i>&nbsp;{{ 'COMMON_COMMENTS_ADD' | translate }}
 											</button>
 											</div>

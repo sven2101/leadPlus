@@ -56,7 +56,7 @@ class SettingController {
         if (!isNullOrUndefined(paramTab)) {
             this.currentTab = paramTab;
         } else {
-            this.tabOnClick("users");
+            this.tabOnClick("user");
             route.updateParams({
                 tab: this.currentTab
             });

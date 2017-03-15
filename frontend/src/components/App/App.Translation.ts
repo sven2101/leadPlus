@@ -281,6 +281,9 @@ function config($translateProvider) {
             NOTIFICATION_SEND_NOTIFICATIONS: "Versendete Nachrichten",
 
             // Define profile elements
+            information: "Profilinformationen",
+            password: "Passwort und Profilbild",
+            smtp: "SMTP Einstellungen",
             PROFILE_PROFILE_INFORMATION: "Profilinformationen",
             PROFILE_DEFAULT_LANGUAGE: "Standard Sprache",
             PROFILE_DEFAULT_VAT: "Standard Mehrwertsteuer",
@@ -292,7 +295,7 @@ function config($translateProvider) {
             PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS: "Passwort wurde geändert",
             PROFILE_TOAST_PASSWORD_CHANGE_ERROR: "Passwort konnte nicht geändert werden",
             PROFILE_PICTURE_MANAGEMENT: "Profilbildverwaltung",
-            PROFILE_SMTP_TAB: "SMTP",
+            PROFILE_SMTP_TAB: "SMTP Einstellungen",
             PROFILE_PASSWORD_TAB: "Passwort und Profilbild",
             PROFILE_ACCOUNT_TAB: "Profilinformationen",
 
@@ -357,13 +360,13 @@ function config($translateProvider) {
             SALE_ROLLBACK_BODY: "Möchten Sie den Verkauf wirklich zurücksetzen?",
 
             // Define setting elements
-            users: "Benutzer",
+            user: "Benutzer",
             source: "Quellen",
             template: "E-Mail Templates",
             SETTING_USER: "Benutzer",
             SETTING_USER_MANAGEMENT: "Benutzer Einstellungen",
             SETTING_EMAIL: "Email Templates",
-            SETTING_EMAIL_MANAGEMENT: "Email Einstellungen",
+            SETTING_EMAIL_MANAGEMENT: "SMTP Einstellungen",
             SETTING_EMAIL_MANAGEMENT_SENDER: "Absendername",
             SETTING_EMAIL_MANAGEMENT_EMAIL: "Email",
             SETTING_EMAIL_MANAGEMENT_SERVER: "Server",
@@ -412,6 +415,10 @@ function config($translateProvider) {
             SETTING_SMTP_ALREADY_VERIFIED: "SMTP-Server erfolgreich verifiziert",
 
             // Define statistic elements
+            single: "Einzelstatistik",
+            entire: "Gesamtstatistik",
+            my: "Meine Statistik",
+            users: "Benutzer Statistik",
             STATISTIC_PERIOD: "Zeitraum",
             STATISTIC_PERIOD_TODAY: "Heute",
             STATISTIC_PERIOD_WEEK: "Woche",
@@ -889,20 +896,23 @@ function config($translateProvider) {
             NOTIFICATION_SEND_NOTIFICATIONS: "Sent notifications",
 
             // Define profile elements
-            PROFILE_PROFILE_INFORMATION: "Profile information",
+            information: "Profile Information",
+            password: "Password and Profile Picture",
+            smtp: "SMTP Settings",
+            PROFILE_PROFILE_INFORMATION: "Profile Information",
             PROFILE_DEFAULT_LANGUAGE: "Default language",
             PROFILE_DEFAULT_VAT: "Default vat",
-            PROFILE_PASSWORD_MANAGEMENT: "Password management",
+            PROFILE_PASSWORD_MANAGEMENT: "Password Management",
             PROFILE_OLD_PASSWORD: "Old password",
             PROFILE_VALIDATE_OLD_PASSWORD: "Old password is required",
             PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS: "Profil changed",
             PROFILE_TOAST_PROFILE_INFORMATION_ERROR: "Profil cannot be saved",
             PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS: "Password changed",
             PROFILE_TOAST_PASSWORD_CHANGE_ERROR: "Password cannot be saved",
-            PROFILE_PICTURE_MANAGEMENT: "Profile picture management",
-            PROFILE_SMTP_TAB: "SMTP",
-            PROFILE_PASSWORD_TAB: "Password and Picture",
-            PROFILE_ACCOUNT_TAB: "Profile information",
+            PROFILE_PICTURE_MANAGEMENT: "Profile Picture Management",
+            PROFILE_SMTP_TAB: "SMTP Settings",
+            PROFILE_PASSWORD_TAB: "Password and Profile Picture",
+            PROFILE_ACCOUNT_TAB: "Profile Information",
 
             // Define all process elements
             PROCESS_DELETE_PROCESS_TITLE: "Delete process",
@@ -963,13 +973,13 @@ function config($translateProvider) {
             SALE_ROLLBACK_BODY: "Are you sure to reset this sale?",
 
             // Define setting elements
-            users: "Users",
+            user: "Users",
             source: "Sources",
             template: "E-Mail Templates",
             SETTING_USER: "Users",
             SETTING_USER_MANAGEMENT: "User Management",
             SETTING_EMAIL: "Email Templates",
-            SETTING_EMAIL_MANAGEMENT: "Email Management",
+            SETTING_EMAIL_MANAGEMENT: "SMTP Settings",
             SETTING_EMAIL_MANAGEMENT_SENDER: "Sender-Name",
             SETTING_EMAIL_MANAGEMENT_EMAIL: "Email",
             SETTING_EMAIL_MANAGEMENT_SERVER: "Server",
@@ -1018,6 +1028,10 @@ function config($translateProvider) {
             SETTING_SMTP_ALREADY_VERIFIED: "SMTP-Server is verified",
 
             // Define statistic elements
+            single: "Single Statistic",
+            entire: "General Statistic",
+            my: "My Statistic",
+            users: "User Statistic",
             STATISTIC_PERIOD: "Period",
             STATISTIC_PERIOD_TODAY: "Today",
             STATISTIC_PERIOD_WEEK: "Week",
