@@ -104,24 +104,14 @@ class WorkflowDatatableService {
             searchDelay = 600;
         }
         dtOptions.withOption("serverSide", loadAllData)
-            // .withOption("ajax", this.getData(loadAllData, allDataRoute, latestDataRoute))
-
-
-
-            .withOption("ajax",
-
-            await self.getData(loadAllData, allDataRoute, latestDataRoute)
-
-            )
+            .withOption("ajax", await self.getData(loadAllData, allDataRoute, latestDataRoute))
             .withOption("searchDelay", searchDelay);
     }
 
     async getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): Promise<any> {
         let self = this;
-        console.log(loadAllData);
         if (loadAllData === true) {
             let token = await self.TokenService.getAccessTokenPromise();
-            console.log("get stuff", token);
             return {
                 url: allDataRoute,
                 type: "GET",
@@ -139,10 +129,7 @@ class WorkflowDatatableService {
 
         } else {
             return (data, callback, settings) => {
-                console.log("test");
                 self.$http.get(latestDataRoute).then(function (response) {
-                    console.log(response);
-                    console.log(callback);
                     callback(response.data);
                 });
             };

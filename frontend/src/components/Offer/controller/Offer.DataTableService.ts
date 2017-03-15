@@ -47,22 +47,8 @@ class OfferDataTableService implements IDatatableService {
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
-            /*
-                .withOption("ajax", {
-                    url: openDataOfferRoute,
-                    error: function (xhr, error, thrown) {
-                        handleError(xhr);
-                    },
-                    type: "GET",
-                    "beforeSend": function (request) {
-                        request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
-                    }
-                })
-                */
             .withOption("ajax", function (data, callback, settings) {
                 self.$http.get(openDataOfferRoute).then(function (response) {
-                    console.log(response);
-                    console.log(callback);
                     callback(response.data);
                 });
             })

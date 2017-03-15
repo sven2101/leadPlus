@@ -63,7 +63,7 @@ class LoginService {
             this.rootScope.setUserDefaultLanguage();
             this.rootScope.loadLabels();
         } catch (error) {
-            console.log(error);
+            handleError(error);
             this.toaster.pop("error", "", this.translate.instant("LOGIN_ERROR"));
         }
 

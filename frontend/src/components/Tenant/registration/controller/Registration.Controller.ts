@@ -65,7 +65,6 @@ class RegistrationController {
             port = "";
         }
         let hostArray = host.split(".");
-        console.log(host, path);
         if (hostArray[1].toLocaleLowerCase() === "leadplus" || hostArray[1].toLocaleLowerCase() === "boexli") {
             window.open("https://" + hostArray[1].toLocaleLowerCase() + "." + hostArray[hostArray.length - 1] + port + "/#" + path, "_self");
         }
@@ -93,31 +92,17 @@ class RegistrationController {
         this.tenant.license.licenseType = "BASIC";
         this.tenant.registration = this.user;
         this.tenant.registration.password = hashPasswordPbkdf2(this.user.password, this.user.email);
-        console.log(this.tenant.registration.password);
+
         this.tenant.registration.password2 = hashPasswordPbkdf2(this.user.password, this.user.email);
         this.user.email = this.user.email.toLowerCase();
 
         this.tenantService.save(this.tenant).then(async function (createdTenant: Tenant) {
-            /*
-            self.iframeUrl = self.$sce.trustAsResourceUrl("http://" + self.tenant.tenantKey + ".leadplus.localhost:8080/subdomainiframe.html");
-
-            let x = await self.TokenService.setTokenByCredentials({ username: self.credentials.email, password: self.credentials.password });
-            console.log(x);
-            let win = document.getElementsByTagName("iframe")[0].contentWindow;
-            let obj = {
-                name: "Jack"
-            };
-            console.log(win);
-            win.postMessage(JSON.stringify({ key: "storage", data: obj }), "*");
-            */
             let port = self.location.port();
             port = ":" + port;
             if (port !== ":8080") {
                 port = "";
             }
-            console.log("redirect");
             window.open("https://" + self.tenant.tenantKey + "." + self.location.host() + port + "/", "_self");
-            // self.signupService.init(self.user.password, self.tenant.tenantKey);
         }, function (error) {
             handleError(error);
         });

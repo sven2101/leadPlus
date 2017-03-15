@@ -50,18 +50,18 @@ class TokenService {
         // this.openLoginModal();
         let currentPath = this.$location.path();
         if (FREE_ROUTES.indexOf(currentPath) !== -1) { return; }
-        console.log("init start", this.loggedIn);
+        // console.log("init start", this.loggedIn);
         this.refreshToken = this.getItemFromLocalStorage(REFRESH_TOKEN);
         this.accessTokenJson = this.accessToken == null ? null : jwt_decode(this.accessToken);
         this.refreshTokenJson = this.refreshToken == null ? null : jwt_decode(this.refreshToken);
         if (this.isExpired(this.refreshTokenJson)) {
             this.loggedIn = false;
-            console.log("refreshToken expired");
+            // // console.log("refreshToken expired");
             this.logout(false);
         } else if (!this.isExpired(this.accessTokenJson)) {
             this.loggedIn = true;
         } else {
-            console.log("accessToken expired");
+            // console.log("accessToken expired");
             this.accessToken = await this.getAccessTokenPromise();
             this.accessTokenJson = jwt_decode(this.accessToken);
             this.loggedIn = true;
@@ -75,7 +75,7 @@ class TokenService {
         this.accessTokenJson = this.accessToken == null ? null : jwt_decode(this.accessToken);
         this.refreshTokenJson = this.refreshToken == null ? null : jwt_decode(this.refreshToken);
         this.saveItemToLocalStorage(REFRESH_TOKEN, this.refreshToken);
-        console.log(newToken);
+        // console.log(newToken);
         this.loggedIn = true;
         return this.refreshToken;
     }
@@ -100,7 +100,7 @@ class TokenService {
     public setTokenByCredentials(credentials: { username: string, password: string }): Promise<string> {
         let self = this;
         let defer = this.$q.defer();
-        console.log(credentials);
+        // console.log(credentials);
         $.ajax({
             type: "POST",
             url: "/api/rest/auth/login",
@@ -112,7 +112,7 @@ class TokenService {
             },
             error: (error) => {
                 self.loggedIn = false;
-                console.log("setTokenByCredentials", error);
+                // console.log("setTokenByCredentials", error);
                 defer.reject(error);
             }
         });
@@ -134,18 +134,18 @@ class TokenService {
             if (this.accessToken != null && !this.isExpired(this.accessTokenJson)) { return this.accessToken; }
             if (this.refreshToken == null || this.isExpired(this.refreshTokenJson)) { throw Error("Refresh token expired!"); }
 
-            console.log("refresh");
+            // console.log("refresh");
             let temp: { token: string } = await this.getAccessTokenByRefreshToken(this.refreshToken);
-            console.log(temp);
+            // console.log(temp);
             this.accessToken = temp.token;
             this.accessTokenJson = jwt_decode(this.accessToken);
-            console.log(this.accessToken);
+            // console.log(this.accessToken);
             this.loggedIn = true;
             return this.accessToken;
 
         } catch (error) {
             this.loggedIn = false;
-            console.log("getAccessToken", error);
+            // console.log("getAccessToken", error);
             this.logout();
         }
     }
@@ -160,7 +160,7 @@ class TokenService {
 
         } catch (error) {
             this.loggedIn = false;
-            console.log("getAccessToken", error);
+            // console.log("getAccessToken", error);
             this.logout();
         }
 
@@ -168,11 +168,11 @@ class TokenService {
 
 
     private isExpired(token: any): boolean {
-        return token == null || token.exp * 1000 < new Date().getTime();
+        return token == null || token.exp * 1000 < new Date().getTime() + 1000 * 10;
     }
 
     public logout(fullPageReload: boolean = true) {
-        console.log("logout");
+        // console.log("logout");
         this.loggedIn = false;
         this.removeAllItemsFromLocalStorage();
         // this.$rootScope.user = undefined;
@@ -181,18 +181,18 @@ class TokenService {
         if (port !== ":8080") {
             port = "";
         }
-        console.log(this.$location.path());
+        // console.log(this.$location.path());
         if (fullPageReload === true) {
             window.open("https://" + this.$location.host() + port + "/", "_self");
         } else if (fullPageReload === false) {
             this.$location.path("/login");
         }
-        console.log("exit");
+        // console.log("exit");
 
     }
 
     public isLoggedIn(): boolean {
-        console.log(this.loggedIn);
+        // console.log(this.loggedIn);
         return this.loggedIn;
     }
 
@@ -201,7 +201,7 @@ class TokenService {
     }
 
     public getSmtpKey(): string {
-        console.log(this.accessTokenJson.signature);
+        // console.log(this.accessTokenJson.signature);
         return this.accessTokenJson.signature;
     }
 
@@ -224,9 +224,9 @@ class TokenService {
     }
 
     private removeAllItemsFromLocalStorage(): void {
-        console.log(this.localStorageMap);
+        // console.log(this.localStorageMap);
         for (let key in this.localStorageMap) {
-            console.log(key);
+            // console.log(key);
             localStorage.removeItem(this.tenant + "_" + key);
         }
         localStorage.removeItem(this.tenant + "_" + USER_STORAGE);

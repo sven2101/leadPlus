@@ -90,12 +90,12 @@ class ProfileService {
             let token = await this.userResource.changePassword({ id: this.rootScope.user.id }, {
                 newPassword: newPassword1, oldPassword: oldPassword,
             }).$promise;
-            console.log("token", token);
+
             this.TokenService.setToken(token);
             this.toaster.pop("success", "", this.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
         } catch (error) {
             this.toaster.pop("error", "", this.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
-            console.log("updatePassword", error);
+
         }
     }
 
