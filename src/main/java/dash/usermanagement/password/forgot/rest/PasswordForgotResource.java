@@ -47,7 +47,7 @@ public class PasswordForgotResource {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	@ApiOperation(value = "Post password forgot. ", notes = "")
+	@ApiOperation(value = "Save password forgot request. ", notes = "")
 	public ResponseEntity<?> save(@ApiParam(required = true) @RequestBody final TextNode email) {
 		try {
 			return new ResponseEntity<>(passwordForgotService.save(email.asText()), HttpStatus.CREATED);
@@ -59,7 +59,7 @@ public class PasswordForgotResource {
 
 	@RequestMapping(value = "/reset", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Get password forgot. ", notes = "")
+	@ApiOperation(value = "Create a new Password for a password forgot request. ", notes = "")
 	public ResponseEntity<?> getById(
 			@ApiParam(required = true) @RequestParam(value = "ID", required = true) final String id,
 			@RequestBody(required = true) final TextNode password) {
@@ -70,16 +70,43 @@ public class PasswordForgotResource {
 		User user = this.userService.getUserByEmail(passwordForgot.getEmail());
 		PasswordChange passwordChange = new PasswordChange();
 		passwordChange.setNewPassword(password.asText());
-		passwordForgotService.getById(id);
 
+		try {
+			this.userService.updatePassword(user.getId(), passwordChange);
+		} catch (Exception e) {
+			logger.error(PasswordForgotResource.class.getSimpleName(), e);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+		}
 		return new ResponseEntity<>("Success", HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/smtp", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get password forgot. ", notes = "")
+	public ResponseEntity<?> checkForSmtp(
+			@ApiParam(required = true) @RequestParam(value = "ID", required = true) final String id) {
+		final PasswordForgot passwordForgot;
+		final Smtp smtp;
+		boolean exists = false;
+		passwordForgot = this.passwordForgotService.getById(id);
+
+		if (passwordForgot == null)
+			return new ResponseEntity<>(RESET_ID_NOT_FOUND, HttpStatus.CONFLICT);
+
+		smtp = this.smtpService.findByUserUsername(passwordForgot.getEmail());
+
+		if (smtp != null)
+			exists = true;
+
+		return new ResponseEntity<>(exists, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/smtp/reset", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get password forgot. ", notes = "")
-	public ResponseEntity<?> checkForSmtp(
-			@ApiParam(required = true) @RequestParam(value = "ID", required = true) final String id) {
+	public ResponseEntity<?> resetSmtp(
+			@ApiParam(required = true) @RequestParam(value = "ID", required = true) final String id,
+			@RequestBody(required = true) final TextNode smtpPassword) {
 		final PasswordForgot passwordForgot;
 		final Smtp smtp;
 		boolean exists = false;

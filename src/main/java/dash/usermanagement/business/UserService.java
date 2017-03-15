@@ -256,6 +256,63 @@ public class UserService implements IUserService {
 		}
 	}
 
+	public void resetPassword(final long id, final String newPassword) throws Exception {
+		if (Optional.ofNullable(id).isPresent() && Optional.ofNullable(newPassword).isPresent()) {
+			try {
+				User user = getById(id);
+				if (user != null) {
+					user.setPassword(passwordEncoder.encode(newPassword));
+					save(user);
+
+				} else {
+					throw new NotFoundException(USER_NOT_FOUND);
+				}
+			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
+				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			} catch (DontMatchException dmex) {
+				logger.error(DONT_MATCH + UserService.class.getSimpleName(), dmex);
+				throw dmex;
+			}
+		} else {
+			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			throw ufex;
+		}
+	}
+
+	public void resetPasswordAndSmtp(final Long id, final String newPassword, String smtpPassword, String newSmtpKey)
+			throws Exception {
+		if (id != null && newPassword != null && newSmtpKey != null) {
+			try {
+				User user = getById(id);
+				if (user != null) {
+					user.setPassword(passwordEncoder.encode(newPassword));
+					Smtp smtp = smtpService.findByUserId(user.getId());
+					if (smtp != null) {
+						smtp.setPassword(smtpPassword.getBytes());
+						smtp.setDecrypted(true);
+						smtpService.save(smtp, newSmtpKey);
+					}
+					save(user);
+
+				} else {
+					throw new NotFoundException(USER_NOT_FOUND);
+				}
+			} catch (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
+				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			} catch (DontMatchException dmex) {
+				logger.error(DONT_MATCH + UserService.class.getSimpleName(), dmex);
+				throw dmex;
+			}
+		} else {
+			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
+			logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			throw ufex;
+		}
+	}
+
 	@Override
 	public User activate(final long id, final boolean enabled) throws UpdateFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
