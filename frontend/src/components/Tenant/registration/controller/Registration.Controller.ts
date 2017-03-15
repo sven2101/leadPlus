@@ -43,7 +43,7 @@ class RegistrationController {
     http;
     location;
 
-    constructor(RegistrationService, SignupService, TenantService, LoginService, $http, $location, private $sce, private TokenService: TokenService) {
+    constructor(RegistrationService, SignupService, TenantService, LoginService, $http, private $location, private $sce, private TokenService: TokenService) {
         this.registrationService = RegistrationService;
         this.signupService = SignupService;
         this.tenantService = TenantService;
@@ -52,7 +52,24 @@ class RegistrationController {
         this.user = new Signup();
         this.credentials = new Credentials();
         this.http = $http;
-        this.location = $location;
+        this.removeSubdomain();
+
+    }
+
+    removeSubdomain(): void {
+        let host: string = this.$location.host();
+        let path: string = this.$location.path();
+        let port = this.$location.port();
+        port = ":" + port;
+        if (port !== ":8080") {
+            port = "";
+        }
+        let hostArray = host.split(".");
+        console.log(host, path);
+        if (hostArray[1].toLocaleLowerCase() === "leadplus" || hostArray[1].toLocaleLowerCase() === "boexli") {
+            window.open("https://" + hostArray[1].toLocaleLowerCase() + "." + hostArray[hostArray.length - 1] + port + "/#" + path, "_self");
+        }
+
     }
 
     uniqueTenantKey(): void {

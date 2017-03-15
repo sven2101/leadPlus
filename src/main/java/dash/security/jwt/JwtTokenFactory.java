@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import dash.common.Encryptor;
+import dash.licensemanangement.domain.LicenseEnum;
 import dash.security.jwt.domain.AccessJwtToken;
 import dash.security.jwt.domain.ApiJwtToken;
 import dash.security.jwt.domain.JwtToken;
@@ -25,13 +26,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-/**
- * Factory class that should be always used to create {@link JwtToken}.
- * 
- * @author vladimir.stankovic
- *
- *         May 31, 2016
- */
 @Component
 public class JwtTokenFactory {
 	private final JwtSettings settings;
@@ -70,6 +64,7 @@ public class JwtTokenFactory {
 		claims.put("signature", smtpKey == null ? userContext.getSmtpKey() : smtpKey);
 		claims.put("scopes", userContext.getAuthorities().stream().map(s -> s.toString()).collect(Collectors.toList()));
 		claims.put("tokenType", TokenType.ACCESS);
+		claims.put("license", LicenseEnum.BASIC);
 
 		DateTime currentTime = new DateTime();
 
@@ -96,6 +91,7 @@ public class JwtTokenFactory {
 		claims.put("signature", smtpKey == null ? userContext.getSmtpKey() : smtpKey);
 		claims.put("scopes", Arrays.asList(Scopes.REFRESH_TOKEN.authority()));
 		claims.put("tokenType", TokenType.REFRESH);
+		claims.put("license", LicenseEnum.BASIC);
 
 		User user = userService.getUserByEmail(userContext.getUsername());
 		Tenant tenant = tenantService.getTenantByName(tenantKey);
@@ -125,6 +121,7 @@ public class JwtTokenFactory {
 		scopes.add("ROLE_API");
 		claims.put("scopes", scopes);
 		claims.put("tokenType", TokenType.API);
+		claims.put("license", LicenseEnum.BASIC);
 		DateTime currentTime = new DateTime();
 		String apiTokenId = UUID.randomUUID().toString();
 		String token = Jwts.builder().setClaims(claims).setIssuer(settings.getTokenIssuer())

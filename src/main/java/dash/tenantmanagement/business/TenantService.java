@@ -43,7 +43,7 @@ import com.amazonaws.services.route53.model.ResourceRecordSet;
 
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.TenantAlreadyExistsException;
-import dash.multitenancy.TenantContext;
+import dash.multitenancy.configuration.TenantContext;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.Role;

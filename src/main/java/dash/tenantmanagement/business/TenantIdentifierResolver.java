@@ -16,7 +16,7 @@ package dash.tenantmanagement.business;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.stereotype.Component;
 
-import dash.multitenancy.TenantContext;
+import dash.multitenancy.configuration.TenantContext;
 
 // @Component
 public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver {

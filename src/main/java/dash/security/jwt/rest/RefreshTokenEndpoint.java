@@ -24,7 +24,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import dash.common.Encryptor;
-import dash.multitenancy.TenantContext;
+import dash.multitenancy.configuration.TenantContext;
 import dash.security.jwt.InvalidJwtToken;
 import dash.security.jwt.JwtSettings;
 import dash.security.jwt.JwtTokenFactory;
@@ -40,13 +40,6 @@ import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 
-/**
- * RefreshTokenEndpoint
- * 
- * @author vladimir.stankovic
- *
- *         Aug 17, 2016
- */
 @RestController
 public class RefreshTokenEndpoint {
 	@Autowired

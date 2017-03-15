@@ -21,16 +21,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dash.multitenancy.TenantContext;
+import dash.multitenancy.configuration.TenantContext;
 import dash.security.jwt.domain.LoginRequest;
 
-/**
- * AjaxLoginProcessingFilter
- * 
- * @author vladimir.stankovic
- *
- *         Aug 3, 2016
- */
 public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
 	private static Logger logger = LoggerFactory.getLogger(AjaxLoginProcessingFilter.class);
 

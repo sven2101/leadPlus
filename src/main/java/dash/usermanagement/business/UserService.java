@@ -48,7 +48,7 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
 import dash.fileuploadmanagement.business.IFileUploadService;
-import dash.multitenancy.TenantContext;
+import dash.multitenancy.configuration.TenantContext;
 import dash.security.jwt.JwtTokenFactory;
 import dash.security.jwt.domain.JwtToken;
 import dash.security.jwt.domain.UserContext;

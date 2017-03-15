@@ -11,7 +11,7 @@
  * is strictly forbidden unless prior written permission is obtained
  * from Eviarc GmbH.
  *******************************************************************************/
-package dash.multitenancy;
+package dash.multitenancy.configuration;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -19,17 +19,10 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dash.multitenancy.TenantContext;
+import dash.multitenancy.configuration.TenantContext;
 import dash.security.jwt.domain.JwtToken;
 import dash.security.jwt.domain.UserContext;
 
-/**
- * AjaxAwareAuthenticationSuccessHandler
- * 
- * @author vladimir.stankovic
- *
- *         Aug 3, 2016
- */
 @Component
 public class AjaxAwareAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 	private final ObjectMapper mapper;

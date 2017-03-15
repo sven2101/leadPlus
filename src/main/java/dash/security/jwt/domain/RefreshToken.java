@@ -9,13 +9,6 @@ import dash.security.jwt.JwtExpiredTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 
-/**
- * RefreshToken
- * 
- * @author vladimir.stankovic
- *
- *         Aug 19, 2016
- */
 @SuppressWarnings("unchecked")
 public class RefreshToken implements JwtToken {
 	private Jws<Claims> claims;

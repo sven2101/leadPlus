@@ -16,12 +16,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * 
- * @author vladimir.stankovic
- *
- *         Aug 3, 2016
- */
 @Component
 public class AjaxAwareAuthenticationFailureHandler implements AuthenticationFailureHandler {
 	private final ObjectMapper mapper;

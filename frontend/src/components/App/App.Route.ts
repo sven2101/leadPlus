@@ -85,6 +85,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Licence/view/Licence.html",
                 controller: "RegistrationController",
                 controllerAs: "registrationCtrl",
+                authenticate: false,
                 package: "basic"
             })
             .when("/signup",
@@ -92,18 +93,21 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Signup/view/Signup.html",
                 controller: "SignupController",
                 controllerAs: "signupCtrl",
+                authenticate: false,
                 package: "basic"
             })
             .when("/tenants/registration",
             {
                 templateUrl: "components/Tenant/registration/view/Registration.html",
                 controller: "RegistrationController",
+                authenticate: false,
                 controllerAs: "registrationCtrl"
             })
             .when("/login",
             {
                 templateUrl: "components/Login/view/Login.html",
                 controller: "LoginController",
+                authenticate: false,
                 controllerAs: "loginCtrl",
             }).when("/product",
             {
@@ -151,8 +155,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 templateUrl: "components/Licence/view/Service.Level.Agreement.html",
                 authenticate: false
             })
-            .when("/401",
-            {
+            .when("/401", {
                 templateUrl: "components/Common/view/Unauthorized.html",
             }).when("/403",
             {
@@ -177,7 +180,6 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                         || request.url.substring(0, 9) !== "/api/rest") {
                         return request;
                     }
-                    console.log(request.url);
                     request.headers["X-Authorization"] = "Bearer " + await TokenService.getAccessTokenPromise();
 
                     return request;
@@ -226,11 +228,10 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
             }
 
             $rootScope.$on("$routeChangeStart", function (event, next, current) {
-                if (next.authenticate === true) {
-                    if (!AuthService.isLoggedIn()) {
-                        AuthService.logout(false);
-                    }
+                if ((next.authenticate === true && !AuthService.isLoggedIn()) || (next.authenticate === false && AuthService.isLoggedIn())) {
+                    AuthService.logout(!next.authenticate);
                 }
+
             });
             $rootScope.logout = function () {
                 AuthService.logout();

@@ -3,14 +3,6 @@ package dash.security.jwt;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Component;
 
-/**
- * An implementation of {@link TokenExtractor} extracts token from
- * Authorization: Bearer scheme.
- * 
- * @author vladimir.stankovic
- *
- *         Aug 5, 2016
- */
 @Component
 public class JwtHeaderTokenExtractor implements TokenExtractor {
 	public static String HEADER_PREFIX = "Bearer ";

@@ -23,12 +23,6 @@ import dash.security.jwt.domain.UserContext;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 
-/**
- * 
- * @author vladimir.stankovic
- *
- *         Aug 3, 2016
- */
 @Component
 public class AjaxAuthenticationProvider implements AuthenticationProvider {
 	private final BCryptPasswordEncoder encoder;

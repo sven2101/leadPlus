@@ -21,13 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dash.licensemanangement.domain.LicenseEnum;
 import dash.sourcemanagement.business.SourceService;
 
-/**
- * WebSecurityConfig
- * 
- * @author vladimir.stankovic
- *
- *         Aug 3, 2016
- */
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {

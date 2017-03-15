@@ -11,22 +11,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import dash.multitenancy.TenantContext;
+import dash.multitenancy.configuration.TenantContext;
 import dash.security.jwt.domain.JwtAuthenticationToken;
-import dash.security.jwt.domain.JwtToken;
 import dash.security.jwt.domain.RawAccessJwtToken;
 import dash.security.jwt.domain.UserContext;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 
-/**
- * An {@link AuthenticationProvider} implementation that will use provided
- * instance of {@link JwtToken} to perform authentication.
- * 
- * @author vladimir.stankovic
- *
- *         Aug 5, 2016
- */
 @Component
 @SuppressWarnings("unchecked")
 public class JwtAuthenticationProvider implements AuthenticationProvider {

@@ -21,13 +21,6 @@ import org.springframework.web.util.WebUtils;
 import dash.security.jwt.domain.JwtAuthenticationToken;
 import dash.security.jwt.domain.RawAccessJwtToken;
 
-/**
- * Performs validation of provided JWT Token.
- * 
- * @author vladimir.stankovic
- *
- *         Aug 5, 2016
- */
 public class JwtCookieAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 	private final AuthenticationFailureHandler failureHandler;
 	private final TokenExtractor tokenExtractor;

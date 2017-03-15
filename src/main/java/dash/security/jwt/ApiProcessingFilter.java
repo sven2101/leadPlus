@@ -24,13 +24,6 @@ import dash.sourcemanagement.domain.Source;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 
-/**
- * Performs validation of provided JWT Token.
- * 
- * @author vladimir.stankovic
- *
- *         Aug 5, 2016
- */
 public class ApiProcessingFilter extends AbstractAuthenticationProcessingFilter {
 	private final AuthenticationFailureHandler failureHandler;
 	private final TokenExtractor tokenExtractor;

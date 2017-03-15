@@ -1,4 +1,4 @@
-package dash.multitenancy;
+package dash.multitenancy.configuration;
 
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package dash.multitenancy;
+package dash.multitenancy.configuration;
 
 import java.sql.Connection;
 import java.sql.SQLException;

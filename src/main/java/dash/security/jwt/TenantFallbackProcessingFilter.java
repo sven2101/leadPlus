@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import dash.multitenancy.TenantContext;
+import dash.multitenancy.configuration.TenantContext;
 
 public class TenantFallbackProcessingFilter extends OncePerRequestFilter {
 
