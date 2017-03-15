@@ -104,14 +104,11 @@ class TemplateService {
         return this.templateResource.test({ workflowTemplateObject: workflow, notification: notification, template: template }).$promise;
     }
 
-    generatePDF(templateId: string, offer: Offer) {
+    generatePDF(html: string) {
         let defer = this.q.defer();
         let self = this;
-        this.templateResource.generatePDF({ templateId: templateId }, offer).$promise.then(function (result) {
-            let file = new Blob([result], { type: "application/pdf" });
-            let fileURL = URL.createObjectURL(file);
-            self.window.open(self.sce.trustAsResourceUrl(fileURL), "_blank");
-            self.window.open(fileURL);
+        this.templateResource.generatePDF({ htmlString: html }).$promise.then(function (result) {
+            console.log(result);
             defer.resolve(result);
         }, function (error: any) {
             defer.reject(error);

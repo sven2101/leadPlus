@@ -14,6 +14,7 @@
 package dash.fileuploadmanagement.rest;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -85,14 +86,13 @@ public class FileUploadResource {
 		fileService.delete(id);
 	}
 
-	@RequestMapping(value = "/pdf", method = RequestMethod.POST, consumes = { MediaType.TEXT_HTML_VALUE }, produces = {
-			MediaType.APPLICATION_PDF_VALUE })
+	@RequestMapping(value = "/pdf", method = RequestMethod.POST, produces = { MediaType.APPLICATION_PDF_VALUE })
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "generate PDF", notes = "")
-	public byte[] genereatePdfFromHtml(@RequestBody String htmlString)
+	public byte[] genereatePdfFromHtml(@RequestBody Map<String, String> json)
 			throws PdfGenerationFailedException, IOException {
 
-		return htmlToPdfService.genereatePdfFromHtml(htmlString);
+		return htmlToPdfService.genereatePdfFromHtml(json.get("htmlString"));
 
 	}
 

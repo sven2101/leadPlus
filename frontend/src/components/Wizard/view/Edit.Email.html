@@ -79,6 +79,9 @@
 							</span>
 					</div>
 				</div>
+				<div class="form-control">
+					<button class="btn btn-default pull-right" ng-click="generatePdf(notification)">PDF</button>
+				</div>
 			</div>
 			<div style="float:left" ng-if="!disabled||(disabled&&notification.attachments.length>0)" class="form-group" ng-class="{ 'has-error' : parent.emailEditeform.attachement.$invalid}">
 				<span ng-repeat="attachment in notification.attachments">

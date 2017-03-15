@@ -12,6 +12,8 @@ import java.nio.file.Paths;
 
 import org.springframework.stereotype.Service;
 
+import dash.common.HtmlCleaner;
+
 @Service
 public class HtmlToPdfService {
 
@@ -20,7 +22,8 @@ public class HtmlToPdfService {
 	public static final String PHANTOMJS_EXE = PHANTOMJS_ROOT_DIR + "/phantomjs.exe";
 	public static final String TEMP_DIR = PHANTOMJS_ROOT_DIR + "/temp";
 
-	public byte[] genereatePdfFromHtml(String htmlString) throws PdfGenerationFailedException, IOException {
+	public synchronized byte[] genereatePdfFromHtml(String htmlString)
+			throws PdfGenerationFailedException, IOException {
 
 		int exitCode = 0;
 		BufferedReader errorReader = null;
@@ -32,11 +35,15 @@ public class HtmlToPdfService {
 		Process phantom = null;
 
 		try {
-			String tempDirUrl = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()
-					+ TEMP_DIR;
+			// String tempDirUrl =
+			// this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()+
+			// TEMP_DIR;
+
+			String tempDirUrl = this.getClass().getResource(TEMP_DIR).getPath();
+
 			tempHtml = File.createTempFile("tempHtml", ".html", new File(tempDirUrl));
 			writer = new PrintWriter(tempHtml);
-			writer.print(htmlString);
+			writer.print(HtmlCleaner.cleanHtml(htmlString));
 			writer.close();
 
 			String configFileUrl = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()
@@ -52,14 +59,14 @@ public class HtmlToPdfService {
 			phantom = renderProcess.start();
 
 			long now = System.currentTimeMillis();
-			long timeoutInMillis = 1000L * 5;
+			long timeoutInMillis = 1000L * 10;
 			long finish = now + timeoutInMillis;
 			while (isAlive(phantom) && (System.currentTimeMillis() < finish)) {
 				Thread.sleep(100);
 			}
 			if (isAlive(phantom)) {
 				phantom.destroy();
-				throw new InterruptedException("Process timeout out ");
+				throw new InterruptedException("Process timeout");
 			}
 
 			exitCode = phantom.waitFor();
@@ -83,12 +90,15 @@ public class HtmlToPdfService {
 			errorConsoleOutput = errorBuilder.toString();
 
 			Path path = Paths.get(tempPdf.getAbsolutePath());
+			if (exitCode != 0) {
+				throw new InterruptedException("PhatomJS timeout");
+			}
 			return Files.readAllBytes(path);
 		} catch (Exception e) {
 			if (exitCode != 0) {
 				throw new PdfGenerationFailedException("PdfGenerator exited with Code " + exitCode);
 			}
-			throw new PdfGenerationFailedException("PdfGenerator exited" + errorConsoleOutput);
+			throw new PdfGenerationFailedException("PdfGenerator exited:" + e.getMessage() + errorConsoleOutput);
 		} finally {
 			if (inputStreamReader != null) {
 				inputStreamReader.close();

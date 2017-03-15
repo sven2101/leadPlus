@@ -62,8 +62,10 @@ class EditEmailDirective implements IDirective {
         scope.setAttachments = (files) => this.setAttachments(files, scope.notification, scope);
         scope.deleteAttachment = (index) => this.deleteAttachment(index, scope);
         scope.toLocalDate = (timestamp) => this.toLocalDate(timestamp, scope);
+        scope.generatePdf = (currentNotification) => this.generatePdf(scope, currentNotification);
 
         scope.templates = await this.TemplateService.getAll();
+
         if (scope.notification.id == null) {
             this.setDefaultTemplate(scope);
         }
@@ -212,6 +214,19 @@ class EditEmailDirective implements IDirective {
         scope.currentTemplate = t;
         scope.notification.subject = t.subject;
         scope.generate(t, scope.workflow, scope.notification);
+    }
+    async generatePdf(scope: any, currentNotification: Notification): Promise<void> {
+        let data = await scope.TemplateService.generatePDF(currentNotification.content);
+        let contentType = "application/pdf";
+        console.log(data);
+        let file = new Blob([data], { type: contentType });
+        let fileURL = URL.createObjectURL(file);
+        let reader = new FileReader();
+        reader.onload = function (e) {
+
+            window.open(reader.result, "_blank");
+        };
+        reader.readAsDataURL(file);
     }
 
 }

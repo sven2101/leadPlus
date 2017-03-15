@@ -350,10 +350,7 @@ class TemplateResource {
             },
             test: { url: "/api/rest/templates/test", method: "POST" },
             generatePDF: {
-                url: "/api/rest/templates/:templateId/offers/pdf/generate", method: "POST", params: {
-                    templateId: "@templateId",
-                    offerId: "@offerId"
-                }, responseType: "arraybuffer"
+                url: "/api/rest/files/pdf", method: "POST", responseType: "arraybuffer"
             }
         });
     }

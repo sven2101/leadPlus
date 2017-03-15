@@ -50,8 +50,8 @@ var header ='<!DOCTYPE html>'+
 				'<meta http-equiv="content-type" content="text/html; charset=UTF-8">'+
 				'<meta name="viewport" content="width=device-width, initial-scale=1.0">'+
 				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/bootstrap.min.css" />'+
-				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/assets.css" />'+
-				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/style.css" />'+
+				// '<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/assets.css" />'+
+				// '<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/style.css" />'+
 				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/font-awesome.min.css" />'+
 			'</head>'+
 			'<body>'+
@@ -61,10 +61,19 @@ page.content = header+fs.read(system.args[1])+'</div></body>';
 
 var output = system.args[2];
 
+
+
+page.onLoadStarted = function() {
+	var timeout = setTimeout(function(){
+		page.render(output,{format:"pdf"});
+				phantom.exit(1);
+			},1000*5);
+}			
+			
 page.onLoadFinished = function(status) {
   console.log('Status: ' + status);
   // Do other things here...
 	page.render(output,{format:"pdf"});
- phantom.exit(0);
+	phantom.exit(0);
 };
 
