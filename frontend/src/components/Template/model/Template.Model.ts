@@ -11,7 +11,7 @@ class Template {
     notificationTypeString: string;
     sourceString: string;
     subject: string;
-    templateType: TemplateType;
+    templateTypes: Array<TemplateType>;
 
     constructor() {
     }
