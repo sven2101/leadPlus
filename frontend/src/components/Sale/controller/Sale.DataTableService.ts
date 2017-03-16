@@ -50,7 +50,7 @@ class SaleDataTableService implements IDatatableService {
             .withOption("stateSave", false)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowDatatableService.getButtons(this.translate("SALE_SALES"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 12]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("SALE_SALES"), [7, 2, 1, 3, 4, 5, 9, 10, 11, 13, 12]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("deferRender", true)

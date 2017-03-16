@@ -50,7 +50,7 @@ class OfferDataTableService implements IDatatableService {
             .withOption("stateSave", false)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowDatatableService.getButtons(this.translate("OFFER_OFFERS"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("OFFER_OFFERS"), [7, 2, 1, 3, 5, 8, 9, 10, 11, 12, 13]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("deferRender", true)
