@@ -1,28 +1,18 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../User/Model/User.Model.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-"use strict";
+/// <reference path="../../Process/model/Process.Model.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 
 const OfferDataTableServiceId: string = "OfferDataTableService";
 const allDataOfferRoute: string = "/api/rest/processes/offers";
 const openDataOfferRoute: string = "/api/rest/processes/workflow/OFFER/state/OFFER";
 
-class OfferDataTableService {
+class OfferDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId];
 
     workflowService: WorkflowService;
+    workflowDatatableService: WorkflowDatatableService;
     translate;
     dtOptions;
     dtColumns;
@@ -32,7 +22,7 @@ class OfferDataTableService {
     compile;
     rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -40,6 +30,7 @@ class OfferDataTableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
+        this.workflowDatatableService = WorkflowDatatableService;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
@@ -57,16 +48,16 @@ class OfferDataTableService {
                 }
             })
             .withOption("stateSave", false)
-            .withDOM(this.workflowService.getDomString())
+            .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowService.getButtons(this.translate("OFFER_OFFERS"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("OFFER_OFFERS"), [7, 2, 1, 3, 5, 8, 9, 10, 11, 12, 13]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("deferRender", true)
             .withOption("lengthMenu", [10, 20, 50])
-            .withOption("order", [4, "desc"])
+            .withOption("order", [5, "desc"])
             .withOption("search", { "search": defaultSearch })
-            .withLanguageSource(this.workflowService.getLanguageSource(this.rootScope.language));
+            .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
     }
 
     configRow(row: any, data: Process) {
@@ -91,12 +82,22 @@ class OfferDataTableService {
         return [
             this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
                 .renderWith(addDetailButton),
-            this.DTColumnBuilder.newColumn("offer.customer.lastname").withTitle(
-                this.translate("COMMON_NAME")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("offer.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
+            this.DTColumnBuilder.newColumn("offer.customer.lastname").withTitle(
+                this.translate("COMMON_NAME")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("offer.customer.email").withTitle(
-                this.translate("COMMON_EMAIL")).withClass("text-center"),
+                this.translate("COMMON_EMAIL")).notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(
+                this.translate("COMMON_PRODUCT_DESTINATION")).withClass("text-center").renderWith(function (data, type, full) {
+                    let zip = "";
+                    let city = "";
+                    let country = "";
+                    !isNullOrUndefined(data.offer.deliveryAddress.zip) ? zip = data.offer.deliveryAddress.zip : angular.noop;
+                    !isNullOrUndefined(data.offer.deliveryAddress.city) ? city = data.offer.deliveryAddress.city : angular.noop;
+                    !isNullOrUndefined(data.offer.deliveryAddress.country) ? country = data.offer.deliveryAddress.country : angular.noop;
+                    return "<span class='text-ellipses' title='" + zip + " " + city + " " + country + "'>" + zip + " " + city + " " + country + "</span>";
+                }),
             this.DTColumnBuilder.newColumn("offer.timestamp").withTitle(
                 this.translate("COMMON_DATE")).renderWith(
                 function (data, type, full) {
@@ -107,7 +108,7 @@ class OfferDataTableService {
                 this.translate("COMMON_PHONE")).notVisible(),
             this.DTColumnBuilder.newColumn("offer.customer.firstname").withTitle(
                 this.translate("COMMON_FIRSTNAME")).notVisible(),
-            this.DTColumnBuilder.newColumn("offer.deliveryAddress").withTitle(
+            this.DTColumnBuilder.newColumn("offer.deliveryAddressLine").withTitle(
                 this.translate("COMMON_PRODUCT_DESTINATION")).notVisible(),
             this.DTColumnBuilder.newColumn("offer.deliveryDate").withTitle(
                 this.translate("COMMON_DELIVERY_TIME")).notVisible(),
@@ -119,16 +120,6 @@ class OfferDataTableService {
                         return self.filter("currency")(0, "€", 2);
                     }
                     return self.filter("currency")(data.lead.deliveryCosts,
-                        "€", 2);
-                }).notVisible(),
-            this.DTColumnBuilder.newColumn(null).withTitle(
-                this.translate("COMMON_PRODUCT_ENTIRE_PRICE"))
-                .renderWith(
-                function (data, type, full) {
-                    if (isNullOrUndefined(data.offer.netPrice)) {
-                        return self.filter("currency")(0, "€", 2);
-                    }
-                    return self.filter("currency")(data.offer.netPrice,
                         "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
@@ -155,7 +146,8 @@ class OfferDataTableService {
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").withOption("width", "200px").notSortable().renderWith(addActionsButtons),
+                "text-center").withOption("width", "210px").notSortable().renderWith(addActionsButtons),
+            this.DTColumnBuilder.newColumn("offer.deliveryAddressLine").notVisible(),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {
@@ -178,17 +170,17 @@ class OfferDataTableService {
             config.get(ActionButtonType.PIN_DROPDOWN).setEnabled().setTitle("LEAD_PIN");
             config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setEnabled().setTitle("OFFER_DELETE_OFFER");
             config.get(ActionButtonType.PIN_DROPDOWN_EMPTY_PROCESSOR).setEnabled();
-            config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setEnabled().setTitle("OFFER_ROLLBACK");
+            config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setEnabled().setTitle("OFFER_ROLLBACK_TITLE");
         } else {
             config.get(ActionButtonType.PIN_BUTTON).setVisible().setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("LEAD_PIN");
             config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible()
                 .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("LEAD_DELETE_LEAD");
             config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setVisible()
-                .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("OFFER_ROLLBACK");
+                .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("OFFER_ROLLBACK_TITLE");
             config.get(ActionButtonType.CREATE_NEXT_WORKFLOWUNIT).setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id);
 
         }
-        config.get(ActionButtonType.OPEN_FOLLOWUP_MODAL).setEnabled().setTitle("COMMON_STATUS_FOLLOW_UP");
+        config.get(ActionButtonType.QUICK_MAIL).setEnabled().setTitle("EMAIL_SEND");
         config.get(ActionButtonType.SET_OFFER_DONE).setEnabled().setTitle("COMMON_STATUS_SET_DONE").setIcon("fa fa-check");
         config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("OFFER_CLOSE_OFFER").setIcon("fa fa-lock");
         config.get(ActionButtonType.DETAILS_OPEN_EDIT_MODAL).setEnabled().setTitle("OFFER_EDIT_OFFER");
@@ -199,23 +191,17 @@ class OfferDataTableService {
         }
         else if (process.status === Status.DONE) {
             config.get(ActionButtonType.SET_OFFER_DONE).setEnabled().setTitle("COMMON_STATUS_SET_OPEN").setIcon("fa fa-undo");
-            config.get(ActionButtonType.OPEN_FOLLOWUP_MODAL).setEnabled(false);
         } else if (process.status === Status.CLOSED) {
             config.disableAll();
             config.get(ActionButtonType.DETAILS_TOGGLE_CLOSE_OR_OPEN).setEnabled().setTitle("OFFER_OPEN_OFFER").setIcon("fa fa-unlock");
             config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
         }
-
-
         return config.build();
-
     }
 
     getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {
         actionButtonConfig[process.id] = this.getActionButtonConfig(process);
         return "<div actionbuttons actionbuttonconfig=offerCtrl.actionButtonConfig[" + process.id + "]  process='offerCtrl.processes[" + process.id + "]'></div>";
-
-
     }
 
     getStatusStyleHTML(data: Process): string {

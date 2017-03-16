@@ -16,16 +16,15 @@
 	}
 </style>
 
-<nav class="navbar-default navbar-static-side" role="navigation" style="position: fixed; height: 100%;">
+<nav class="navbar-default navbar-static-side" role="navigation" style="position: fixed; height: 100%; background-color: #2f4050;">
 	<div class="sidebar-collapse">
 		<ul class="nav metismenu" id="side-menu">
 			<li class="nav-header">
 				<div class="profile-element">
 					<div style="margin-top:-20px" class="row">
-						<div class="col-md-2"></div>
 						<div id="profilePictureDiv" class="col-md-6">
-							<img id="profilePicture" style="margin-left:-40px; width: 100px; height:100px;border-radius: 10%;" pictureid="{{user.picture.id}}"
-								httpsrc="/api/rest/files/content/" alt="">
+							<img id="profilePicture" style="width: 100px; height:100px;border-radius: 10%;" pictureid="{{user.picture.id}}" httpsrc="/api/rest/files/content/"
+							 alt="">
 						</div>
 					</div>
 					<br>
@@ -72,7 +71,7 @@
 			<li>
 				<a href="#/customer"><i class="fa fa-users"></i> <span class="nav-label">{{ 'CUSTOMER_MENU' | translate }}</span></a>
 			</li>
-			<li>
+			<li ng-if="user.role==='SUPERADMIN'||user.role==='ADMIN'">
 				<a href="#/settings"><i class="fa fa-cogs"></i> <span class="nav-label">{{ 'SETTINGS_MENU' | translate }}</span></a>
 			</li>
 		</ul>
@@ -107,7 +106,7 @@
 				</li>
 				<li class="dropdown">
 					<a class="dropdown-toggle count-info" data-toggle="dropdown">
-						<i class="fa fa-envelope fa-lg"></i>
+						<i class="fa fa-tasks fa-lg"></i>
 
 						<span ng-if="appCtrl.todos.length>0" class="label label-danger">{{ appCtrl.todos.length}}</span>
 
@@ -126,16 +125,16 @@
 							<table class="table table-hover">
 								<tbody>
 									<tr style="cursor:pointer" ng-click="appCtrl.navigateTo(todo)" ng-repeat="todo in appCtrl.todos | limitTo:5 | orderBy:'timestamp'">
-										<td class="project-status">
+										<td class="project-status" style="padding: 13px 20px !important">
 											<span ng-if="todo.status=='OPEN'" class="label label-danger">{{ 'LEAD' | translate }}</span>
 											<span ng-if="todo.status=='OFFER'" class="label label-warning">{{ 'COMMON_STATUS_OFFER' | translate }}</span>
 											<span ng-if="todo.status=='FOLLOWUP'" class="label label-warning">{{ 'COMMON_STATUS_FOLLOW_UP' | translate }}</span>
 											<span ng-if="todo.status=='INCONTACT'" class="label label-danger">{{ 'COMMON_STATUS_INCONTACT' | translate }}</span>
 											<span ng-if="todo.status=='DONE'" class="label label-success">{{ 'COMMON_STATUS_DONE' | translate }}</span>
 										</td>
-										<td align="left" class="project-title">
-											<a ng-if="todo.status=='OPEN'||todo.status=='INCONTACT'">{{::todo.lead.customer.firstname}} {{::todo.lead.customer.lastname}}</a>
-											<a ng-if="todo.status=='OFFER'||todo.status=='FOLLOWUP'||todo.status=='DONE'">{{::todo.offer.customer.firstname}} {{::todo.offer.customer.lastname}}</a>
+										<td align="left" class="project-title text-left">
+											<span ng-if="todo.status=='OPEN'||todo.status=='INCONTACT'" class="text-left">{{::todo.lead.customer.firstname}} {{::todo.lead.customer.lastname}}</span>
+											<span ng-if="todo.status=='OFFER'||todo.status=='FOLLOWUP'||todo.status=='DONE'" class="text-left">{{::todo.offer.customer.firstname}} {{::todo.offer.customer.lastname}}</span>
 										</td>
 										<td class="project-completion">
 											<strong ng-if="todo.status=='OPEN'||todo.status=='INCONTACT'">{{::appCtrl.sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</strong>
@@ -153,7 +152,72 @@
 						</li>
 					</ul>
 				</li>
-				<!-- TODO should usesd for comments or mails
+				<li class="dropdown">
+					<a class="dropdown-toggle count-info" data-toggle="dropdown" ng-click="appCtrl.setTopbarNotificationState('DEFAULT')">
+						<i ng-if="appCtrl.notificationSendState!='SENDING'" class="fa fa-envelope fa-lg"></i>
+						<i ng-if="appCtrl.notificationSendState=='SENDING'" class="fa fa-send fa-lg"></i>
+						<span ng-if="appCtrl.notificationSendState=='SENDING'" class="label" style="background-color: transparent;margin-right: -3px;margin-top: -3px;">
+							<div class="spinner"></div>
+						</span>
+						<span ng-if="appCtrl.notificationSendState=='SUCCESS' && isSmptVerified" class="label label-primary">
+							<i style="margin-right: -2;margin-left: -2;margin-top: 1;" class="fa fa-check"></i>
+						</span>
+						<span ng-if="appCtrl.notificationSendState=='ERROR' && isSmptVerified" class="label  label-danger">
+							<i style="margin-right: -2;margin-left: -2;margin-top: 1;" class="fa fa-exclamation-triangle"></i>
+						</span>
+						<span ng-if="!isSmptVerified" class="label  label-danger">
+							<i style="margin-right: -2;margin-left: -2;margin-top: 1;" class="fa fa-exclamation-circle"></i>
+						</span>
+					</a>
+					<ul style="min-width:600px" class="dropdown-menu dropdown-messages">
+						<li>
+							<div class="dropdown-messages-box">
+
+								<div class="media-body">
+									<strong>  {{ 'NOTIFICATION_SEND_NOTIFICATIONS' | translate }}</strong> <br>
+									<br>
+								</div>
+							</div>
+						</li>
+						<li>
+							<span ng-if="!isSmptVerified" style="color:red; padding: 0px !important; font-size: 13px important;"><b><translate>EMAIL_SMTP_VALIDATION</translate></b></span>
+							<table class="table table-hover" style="table-layout: fixed">
+								<tbody>
+									<tr class="row" style="cursor:pointer; height: 50;" ng-click="appCtrl.openEmailDirective(notification,notification.processId)"
+									 ng-repeat="notification in appCtrl.NotificationService.userNotifications | limitTo:5 ">
+										<td ng-if="notification.notificationType!='ERROR'" style="vertical-align: middle; width: 10%">
+											<span class="label label-primary">
+												<i  class="fa fa-check"></i>
+											</span>
+										</td>
+										<td ng-if="notification.notificationType=='ERROR'" style="vertical-align: middle; width: 10%">
+											<span class="label label-danger">
+												<i class="fa fa-exclamation-triangle"></i>
+											</span>
+										</td>
+										<td style="vertical-align: middle; width: 40%">
+											<div>
+												<span style="text-overflow: ellipsis;display: block;overflow: hidden;" title="{{notification.subject}}">{{notification.subject}}</span>
+											</div>
+										</td>
+										<td style="vertical-align: middle; width: 50%">
+											<div>
+												<span style="text-overflow: ellipsis;display: block;overflow: hidden;" title="{{notification.recipients}}">{{notification.recipients}}</span>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<div ng-if="appCtrl.userNotifications==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
+								<p style="margin-top:7px">{{ 'NOTIFICATION_NO_NOTIFICATIONS' | translate }}</p>
+							</div>
+						</li>
+						<li>
+							<p ng-if="appCtrl.todos.length>5" class="text-center">...</p>
+						</li>
+					</ul>
+				</li>
+				<!-- TODO should used for comments or events
                 <li class="dropdown">
                     <a class="dropdown-toggle count-info" data-toggle="dropdown">
                         <i class="fa fa-bell"></i>
@@ -179,7 +243,11 @@
                     </ul>
                 </li>
                 -->
-
+				<li>
+					<a href="#/profile">
+						<i class="fa fa-user"></i> {{ 'COMMON_MY_PROFILE' | translate }}
+					</a>
+				</li>
 				<li>
 					<a ng-click="logout()">
 						<i class="fa fa-sign-out"></i> {{ 'LOGOUT' | translate }}
@@ -189,7 +257,7 @@
 		</nav>
 		<div class="footer">
 			<div class="pull-right">
-				<strong>Copyright</strong> &copy; Get-Net
+				<strong>Copyright</strong> &copy; eviarc UG
 			</div>
 		</div>
 		<!--/footer -->
@@ -197,46 +265,53 @@
 	<!--/row border-bottom -->
 	<div ng-view class="md-skin"></div>
 </div>
+<div ng-if="appCtrl.rendered===false" hidden ng-include="'components/Wizard/view/Wizard.html'"></div>
+<div ng-if="appCtrl.rendered===false" hidden ng-include="'components/Wizard/view/Edit.Customer.html'"></div>
+<div ng-if="appCtrl.rendered===false" hidden ng-include="'components/Wizard/view/Edit.Email.html'"></div>
+<div ng-if="appCtrl.rendered===false" hidden ng-include="'components/Wizard/view/Edit.Customer.Small.html'"></div>
+<div ng-if="appCtrl.rendered===false" hidden ng-include="'components/Wizard/view/Edit.Product.html'"></div>
+<div ng-if="appCtrl.rendered===false" hidden ng-include="'components/Wizard/view/Edit.Sale.html'"></div>
+<div hidden>{{appCtrl.rendered = true;}}</div>
 <!--/page-wrapper -->
 <!-- page level javascript -->
 <script>
-    $(document).ready(function () {
-        // Minimalize menu
-        $('.navbar-minimalize').click(function () {
-            $("body").toggleClass("mini-navbar");
-            SmoothlyMenu();
+	$(document).ready(function () {
+		// Minimalize menu
+		$('.navbar-minimalize').click(function () {
+			$("body").toggleClass("mini-navbar");
+			SmoothlyMenu();
 
-        });
+		});
 
-    });
+	});
 
-    // Collapse iBox Contents
-    $('.collapse').on('shown.bs.collapse', function(){
-        $(this).parent().find(".fa-chevron-down").removeClass("fa-chevron-down").addClass("fa-chevron-up");
-    }).on('hidden.bs.collapse', function(){
-        $(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
-    });
+	// Collapse iBox Contents
+	$('.collapse').on('shown.bs.collapse', function () {
+		$(this).parent().find(".fa-chevron-down").removeClass("fa-chevron-down").addClass("fa-chevron-up");
+	}).on('hidden.bs.collapse', function () {
+		$(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
+	});
 
 
-    function SmoothlyMenu() {
-        if (!$('body').hasClass('mini-navbar') || $('body').hasClass('body-small')) {
-            // Hide menu in order to smoothly turn on when maximize menu
-            $('#side-menu').hide();
-            // For smoothly turn on menu
-            setTimeout(
-                    function () {
-                        $('#side-menu').fadeIn(400);
-                    }, 200);
-        } else if ($('body').hasClass('fixed-sidebar')) {
-            $('#side-menu').hide();
-            setTimeout(
-                    function () {
-                        $('#side-menu').fadeIn(400);
-                    }, 100);
-        } else {
-            // Remove all inline style from jquery fadeIn function to reset menu state
-            $('#side-menu').removeAttr('style');
-        }
-    }
+	function SmoothlyMenu() {
+		if (!$('body').hasClass('mini-navbar') || $('body').hasClass('body-small')) {
+			// Hide menu in order to smoothly turn on when maximize menu
+			$('#side-menu').hide();
+			// For smoothly turn on menu
+			setTimeout(
+				function () {
+					$('#side-menu').fadeIn(400);
+				}, 200);
+		} else if ($('body').hasClass('fixed-sidebar')) {
+			$('#side-menu').hide();
+			setTimeout(
+				function () {
+					$('#side-menu').fadeIn(400);
+				}, 100);
+		} else {
+			// Remove all inline style from jquery fadeIn function to reset menu state
+			$('#side-menu').removeAttr('style');
+		}
+	}
 
 </script>

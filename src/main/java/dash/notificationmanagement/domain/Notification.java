@@ -13,8 +13,9 @@
  *******************************************************************************/
 package dash.notificationmanagement.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -29,16 +30,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.common.HtmlCleaner;
 import dash.processmanagement.domain.Process;
+import dash.usermanagement.domain.User;
 import io.swagger.annotations.ApiModelProperty;
 
 @Entity
@@ -52,6 +57,12 @@ public class Notification {
 	@SequenceGenerator(name = "notification_auto_gen", sequenceName = "notification_id_seq", allocationSize = 1)
 	@Column(name = "id", nullable = false)
 	private Long id;
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss:SSS")
+	@ApiModelProperty(hidden = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "timestamp", nullable = true)
+	private Calendar timestamp;
 
 	@NotNull
 	@Size(max = 255)
@@ -71,24 +82,26 @@ public class Notification {
 	@Column(name = "subject", length = 255, nullable = false)
 	private String subject;
 
+	@ManyToOne
+	@JoinColumn(name = "sender_fk", nullable = false)
+	private User sender;
+
 	@ApiModelProperty(hidden = true)
 	@NotNull
 	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
 	@NotNull
-	@Size(max = 30000)
-	@Column(name = "content", length = 30000, nullable = false)
+	@Column(name = "content", columnDefinition = "text", nullable = false)
 	private String content;
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "notification")
 	@Where(clause = "deleted <> '1'")
-	private List<Attachment> attachments;
+	private Set<Attachment> attachments;
 
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "process_fk", nullable = false)
-	@Where(clause = "deleted <> '1'")
 	private Process process;
 
 	@Enumerated(EnumType.STRING)
@@ -127,13 +140,13 @@ public class Notification {
 		this.content = HtmlCleaner.cleanHtml(content);
 	}
 
-	public List<Attachment> getAttachments() {
+	public Set<Attachment> getAttachments() {
 		return attachments;
 	}
 
-	public void setAttachments(List<Attachment> attachments) {
+	public void setAttachments(Set<Attachment> attachments) {
 		if (attachments == null) {
-			this.attachments = new ArrayList<>();
+			this.attachments = new HashSet<>();
 			return;
 		}
 		this.attachments = attachments;
@@ -187,6 +200,42 @@ public class Notification {
 		this.recipients = formatEmails(recipients);
 	}
 
+	public User getSender() {
+		return sender;
+	}
+
+	public void setSender(User sender) {
+		this.sender = sender;
+	}
+
+	public Calendar getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Calendar timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public Long getProcessId() {
+		return this.process.getId();
+	}
+
+	private String formatEmails(String emails) {
+		if (emails == null || "".equals(emails)) {
+			return null;
+		}
+		String result = "";
+		for (String email : emails.split(",")) {
+			if (email.trim().length() > 0) {
+				result += email.trim() + ",";
+			}
+		}
+		if ("".equals(result)) {
+			return null;
+		}
+		return result.substring(0, result.length() - 1);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -199,7 +248,9 @@ public class Notification {
 		result = prime * result + ((recipients == null) ? 0 : recipients.hashCode());
 		result = prime * result + ((recipientsBCC == null) ? 0 : recipientsBCC.hashCode());
 		result = prime * result + ((recipientsCC == null) ? 0 : recipientsCC.hashCode());
+		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
 		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		return result;
 	}
 
@@ -246,35 +297,22 @@ public class Notification {
 				return false;
 		} else if (!recipientsCC.equals(other.recipientsCC))
 			return false;
+		if (sender == null) {
+			if (other.sender != null)
+				return false;
+		} else if (!sender.equals(other.sender))
+			return false;
 		if (subject == null) {
 			if (other.subject != null)
 				return false;
 		} else if (!subject.equals(other.subject))
 			return false;
+		if (timestamp == null) {
+			if (other.timestamp != null)
+				return false;
+		} else if (!timestamp.equals(other.timestamp))
+			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Notification [id=" + id + ", recipientsCC=" + recipientsCC + ", recipientsBCC=" + recipientsBCC
-				+ ", recipients=" + recipients + ", subject=" + subject + ", deleted=" + deleted + ", attachments="
-				+ attachments + ", notificationType=" + notificationType + "]";
-	}
-
-	private String formatEmails(String emails) {
-		if (emails == null || "".equals(emails)) {
-			return null;
-		}
-		String result = "";
-		for (String email : emails.split(",")) {
-			if (email.trim().length() > 0) {
-				result += email.trim() + ",";
-			}
-		}
-		if ("".equals(result)) {
-			return null;
-		}
-		return result.substring(0, result.length() - 1);
 	}
 
 }

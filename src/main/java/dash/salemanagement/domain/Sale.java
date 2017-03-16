@@ -31,8 +31,8 @@ public class Sale extends AbstractWorkflow {
 	@Digits(integer = 10, fraction = 4)
 	@Column(name = "salecost", nullable = false)
 	private Double saleCost;
-	
-	@Column(name = "invoicenumber")
+
+	@Column(name = "invoicenumber", length = 255)
 	private String invoiceNumber;
 
 	public Sale() {

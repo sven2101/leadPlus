@@ -1,35 +1,30 @@
-/// <reference path="../../common/model/AbstractModel.Model.ts" />
-/// <reference path="../../common/model/OrderPosition.Model.ts" />
-/// <reference path="../../common/model/IWorkflow.Interface.ts" />
+/// <reference path="../../Product/model/OrderPosition.Model.ts" />
+/// <reference path="../../Workflow/model/IWorkflow.Interface.ts" />
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
+class Offer implements IWorkflow {
 
-"use strict";
-
-class Offer extends AbstractModel implements IWorkflow {
+    id: number;
     orderPositions: Array<OrderPosition>;
     customer: Customer;
     timestamp: any;
     vendor: any;
-    deliveryAddress: any;
-    deliveryDate: any;
     netPrice: number;
-    deliveryCosts: number;
-    message: string;
     vat: number;
+    deliveryAddressLine: string;
+    deliveryDate: any;
+    deliveryTerm: string;
+    paymentTerm: string;
+    skonto: number;
+    deliveryAddress: Address;
+    message: string;
+    deliveryCosts: number;
+    billingAddress: Address;
 
     constructor() {
-        super();
+        this.skonto = 0;
+        this.deliveryAddress = new Address();
+        this.billingAddress = new Address();
         this.deliveryCosts = 0;
         this.netPrice = 0;
         this.vat = 0;

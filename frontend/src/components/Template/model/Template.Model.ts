@@ -1,16 +1,17 @@
 /// <reference path="../../Setting/model/Encryption.Model.ts" />
-/// <reference path="../../Common/model/AbstractModel.Model.ts" />
 
-"use strict";
+class Template {
 
-class Template extends AbstractModel {
-
+    id: number;
     name: string;
     description: string;
     content: string;
     deactivated: boolean;
 
+    notificationTypeString: string;
+    sourceString: string;
+    subject: string;
+
     constructor() {
-        super();
     }
 }

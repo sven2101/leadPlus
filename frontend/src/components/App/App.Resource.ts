@@ -1,18 +1,4 @@
 /// <reference path="../app/App.Constants.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
 
 const LeadResourceId: string = "LeadResource";
 
@@ -71,7 +57,7 @@ class SaleResource {
             getAll: { url: "/api/rest/sales", method: "GET" },
             getById: { url: "/api/rest/sales/:id", method: "GET" },
             getByCustomerId: { url: "/api/rest/sales/customer/:id", method: "GET", isArray: true },
-            getByinvoiceNumber: { url: "/api/rest/sales/invoice", method: "POST" },
+            getByinvoiceNumber: { url: "/api/rest/sales/invoice", method: "POST", isArray: true },
             drop: { url: "/api/rest/sales/:id", method: "DELETE" },
         });
     }
@@ -113,7 +99,7 @@ class ProcessResource {
             getProcessBySale: { url: "/api/rest/processes/sales", method: "GET", isArray: true },
 
             getWorkflowByStatus: { url: "/api/rest/processes/workflow/:workflow/state/:status", method: "GET", isArray: true },
-            getCountWorkflowByStatus: { url: "/api/rest/processes/count/workflow/:workflow/state/:status", method: "GET"},
+            getCountWorkflowByStatus: { url: "/api/rest/processes/count/workflow/:workflow/state/:status", method: "GET" },
             getLatestSales: { url: "/api/rest/processes/sales/latest/10", method: "GET", isArray: true },
             getLatest100Sales: { url: "/api/rest/processes/sales/latest/100", method: "GET", isArray: true },
             getTodos: { url: "api/rest/processes/processor/:processorId", method: "GET", isArray: true },
@@ -172,7 +158,7 @@ class UserResource {
                 url: "/users/:id/profile/picture/object", method: "GET"
             },
             getAll: { url: "/users/all", method: "GET", isArray: true },
-            setSmtpConnection: { url: "/users/:id/smtps", method: "POST" }
+            // setSmtpConnection: { url: "/users/:id/smtps", method: "POST" }
         });
     }
 }
@@ -351,6 +337,7 @@ class TemplateResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/templates", {}, {
+            getById: { url: "/api/rest/templates/:id", method: "GET" },
             getAll: { url: "/api/rest/templates", method: "GET", isArray: true },
             save: { url: "/api/rest/templates", method: "POST" },
             update: { url: "/api/rest/templates", method: "PUT" },
@@ -361,6 +348,7 @@ class TemplateResource {
                     offerId: "@offerId"
                 }
             },
+            test: { url: "/api/rest/templates/test", method: "POST" },
             generatePDF: {
                 url: "/api/rest/templates/:templateId/offers/pdf/generate", method: "POST", params: {
                     templateId: "@templateId",
@@ -385,9 +373,9 @@ class SmtpResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/smtp", {}, {
-            createSmtp: { url: "/api/rest/smtp/:smtpKey", method: "POST" },
-            testSmtp: { url: "/api/rest/smtp/test/:id/:smtpKey", method: "GET" },
-            getByUserId: { url: "/api/rest/smtp/user/:id", method: "GET" },
+            createSmtp: { url: "/api/rest/smtp/", method: "POST" },
+            testSmtp: { url: "/api/rest/smtp/:id/test", method: "POST" },
+            getByUserId: { url: "/users/smtp/user/:id", method: "GET" },
         });
     }
 }
@@ -406,7 +394,8 @@ class NotificationResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/notifications", {}, {
-            sendNotification: { url: "/api/rest/notifications/users/:userId/notifications/send/:smtpKey", method: "POST" }
+            sendNotification: { url: "/api/rest/notifications/proccess/:processId/user/:senderId/send", method: "POST" },
+            getNotificationsBySenderId: { url: "/api/rest/notifications/sender/:senderId", method: "GET", isArray: true }
         });
     }
 }

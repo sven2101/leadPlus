@@ -16,6 +16,7 @@ package dash.customermanagement.domain;
 
 import java.util.Calendar;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -23,6 +24,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -35,6 +38,7 @@ import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import dash.addressmanagement.domain.Address;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -82,9 +86,13 @@ public class Customer {
 	@Column(name = "phone", length = 255, nullable = true)
 	private String phone;
 
-	@Size(max = 255)
-	@Column(name = "address", length = 255, nullable = true)
-	private String address;
+	@Size(max = 20)
+	@Column(name = "fax", length = 20, nullable = true)
+	private String fax;
+
+	@Size(max = 20)
+	@Column(name = "mobile", length = 20, nullable = true)
+	private String mobile;
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
@@ -108,6 +116,16 @@ public class Customer {
 	@Column(name = "customernumber")
 	private String customerNumber;
 
+	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
+	@JoinColumn(name = "billing_address_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
+	private Address billingAddress;
+
+	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
+	@JoinColumn(name = "delivery_address_fk", nullable = true)
+	@Where(clause = "deleted <> '1'")
+	private Address deliveryAddress;
+
 	public Customer() {
 	}
 
@@ -129,6 +147,14 @@ public class Customer {
 
 	public Title getTitle() {
 		return title;
+	}
+
+	public String getTitleGermanTranslation() {
+		return title == null ? null : title.getGermanTranslation();
+	}
+
+	public String getTitleEnglishTranslation() {
+		return title == null ? null : title.getEnglishTranslation();
 	}
 
 	public void setTitle(Title title) {
@@ -177,12 +203,20 @@ public class Customer {
 		this.phone = phone;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getFax() {
+		return fax;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 	public Calendar getTimestamp() {
@@ -217,19 +251,38 @@ public class Customer {
 		this.realCustomer = realCustomer;
 	}
 
+	public Address getBillingAddress() {
+		return billingAddress;
+	}
+
+	public void setBillingAddress(Address billingAddress) {
+		this.billingAddress = billingAddress;
+	}
+
+	public Address getDeliveryAddress() {
+		return deliveryAddress;
+	}
+
+	public void setDeliveryAddress(Address deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result + ((billingAddress == null) ? 0 : billingAddress.hashCode());
 		result = prime * result + ((company == null) ? 0 : company.hashCode());
 		result = prime * result + ((customerNumber == null) ? 0 : customerNumber.hashCode());
 		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + (deleted ? 1231 : 1237);
+		result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((fax == null) ? 0 : fax.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
+		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + (realCustomer ? 1231 : 1237);
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
@@ -246,10 +299,10 @@ public class Customer {
 		if (getClass() != obj.getClass())
 			return false;
 		Customer other = (Customer) obj;
-		if (address == null) {
-			if (other.address != null)
+		if (billingAddress == null) {
+			if (other.billingAddress != null)
 				return false;
-		} else if (!address.equals(other.address))
+		} else if (!billingAddress.equals(other.billingAddress))
 			return false;
 		if (company == null) {
 			if (other.company != null)
@@ -265,10 +318,20 @@ public class Customer {
 			return false;
 		if (deleted != other.deleted)
 			return false;
+		if (deliveryAddress == null) {
+			if (other.deliveryAddress != null)
+				return false;
+		} else if (!deliveryAddress.equals(other.deliveryAddress))
+			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
 		} else if (!email.equals(other.email))
+			return false;
+		if (fax == null) {
+			if (other.fax != null)
+				return false;
+		} else if (!fax.equals(other.fax))
 			return false;
 		if (firstname == null) {
 			if (other.firstname != null)
@@ -284,6 +347,11 @@ public class Customer {
 			if (other.lastname != null)
 				return false;
 		} else if (!lastname.equals(other.lastname))
+			return false;
+		if (mobile == null) {
+			if (other.mobile != null)
+				return false;
+		} else if (!mobile.equals(other.mobile))
 			return false;
 		if (phone == null) {
 			if (other.phone != null)
@@ -305,9 +373,10 @@ public class Customer {
 	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname
-				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone
-				+ ", address=" + address + ", deactivated=" + deactivated + ", realCustomer=" + realCustomer
-				+ ", timestamp=" + timestamp + ", customerNumber=" + customerNumber + "]";
+				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone + ", fax="
+				+ fax + ", mobile=" + mobile + ", deactivated=" + deactivated + ", realCustomer=" + realCustomer
+				+ ", timestamp=" + timestamp + ", customerNumber=" + customerNumber + ", billingAddress="
+				+ billingAddress + ", deliveryAddress=" + deliveryAddress + "]";
 	}
 
 }

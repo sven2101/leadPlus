@@ -1,42 +1,41 @@
 <style>
-	/* Tooltip */
-	
-	.tooltipstyle + .tooltip > .tooltip-inner {
-		background-color: #1dc5a3;
-	}
+div.tooltip div.tooltip-inner {
+		width: 300px;
+		max-width: 300px;
+        }
 </style>
-<div class="loginscreen animated fadeInDown">
-	<form name="validation" novalidate class="m-t middle-box" role="form">
-		<div class="text-center" stlye="margin-bottom: 30px;">
-			<h2 stlye="color: #e6e6e6; font-size: 30px; font-weight: 800; letter-spacing: -10px;">leadplus</h2>
-		</div>
-
-		<div class="text-center">
-			<h3>Get your free trial Account for lead+</h3>
-			<h2><i class="tooltipstyle fa fa-question-circle" data-toggle="tooltip" title="You can access this application afterwards via your choosen sitename 'yourcompany.leadplus.me' for example. You can only use letters."></i></h2>
-			<label stlye="color: #ffffff;">Reserve your Company name as subdomain</label>
-		</div>
-		<!-- Sitename -->
-		<div class="form-group" ng-class="{'has-error': validation.tenantKey.$error.$invalid
-											|| registrationCtrl.registrationService.tenantKeyExist }">
-			<label class="sr-only" for="tenantKey">yoursitename</label>
-			<div class="input-group">
-				<input autofocus type="text" class="form-control" name="tenantKey" placeholder="yoursitename" required ng-pattern="/^[a-zA-Z]*$/"
-					ng-minlength="2" ng-maxlength="20" ng-model="registrationCtrl.tenant.tenantKey" ng-blur="registrationCtrl.uniqueTenantKey()">
-				<div class="input-group-addon">.leadplus.me</div>
+<div class="middle-box text-center" style="margin-top: -40px;">
+	<h1 class="logo-name animated fadeInDown" style="color:white">{{ 'LOGO' | translate }}</h1>
+	<h3 class="animated fadeInDown" style="color: white">{{ 'REGISTRATION_SUBDOMAIN_GET_FREE_TRIAL' | translate }}</h3>
+	<i class="fa fa-question-circle animated fadeInDown" style="font-size: 2em; color: white;" tooltip-placement="right" uib-tooltip="{{'REGISTRATION_SUBDOMAIN_TOOLTIP' | translate}}" ></i>
+	<br/>
+	<br/>
+</div>	
+<div class=" animated fadeInDown">
+	<form name="validation" novalidate role="form" >
+		<div class="row">
+			<!-- Sitename -->
+			<div class="col-md-4 col-md-offset-4">
+				<label style="color: whitesmoke;">{{ 'REGISTRATION_SUBDOMAIN_SITE' | translate }}</label><span style="color:red" > *</span>
+				<span style="color:red" ng-show="registrationCtrl.registrationService.tenantKeyExist&&!validation.tenantKey.$pristine&&!validation.tenantKey.$error.maxlength&&!validation.tenantKey.$error.minlength&&!validation.tenantKey.$error.required"> {{ 'REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE'| translate }}</span>
+				<span style="color:red" ng-show="validation.tenantKey.$error.required&&!validation.tenantKey.$pristine"> {{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+				<span style="color:red" ng-show="validation.tenantKey.$error.maxlength"> {{ 'REGISTRATION_VALIDATE_PASSWORD_TOO_LONG' | translate }}</span>
+				<div class="form-group" ng-class="{'has-error': validation.tenantKey.$invalid
+													|| registrationCtrl.registrationService.tenantKeyExist }">
+					<div class="input-group">
+						<input type="text" class="form-control" name="tenantKey" placeholder="{{ 'REGISTRATION_SUBDOMAIN_YOUR_SITENAME' | translate }}" required ng-pattern="/^[a-z]*$/"
+							ng-minlength="3" ng-maxlength="20" ng-trim="false" ng-model="registrationCtrl.tenant.tenantKey" ng-model-options="{ debounce: 600 }" ng-change="registrationCtrl.uniqueTenantKey()">
+						<div class="input-group-addon">.leaplus.io</div>
+					</div>
+				</div>
 			</div>
-
-			<span ng-show="registrationCtrl.registrationService.tenantKeyExist&&!validation.tenantKey.$pristine" class="help-block">{{ 'REGISTRATION_VALIDATE_SUBDOMAIN_IN_USE' | translate }}</span>
-			<span ng-show="validation.tenantKey.$error.required&&!validation.tenantKey.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
-			<span ng-show="validation.tenantKey.$error.minlength&&!validation.tenantKey.$pristine" class="help-block">{{ 'REGISTRATION_VALIDATE_PASSWORD_TOO_SHORT' | translate }}</span>
-			<span ng-show="validation.tenantKey.$error.maxlength" class="help-block">{{ 'REGISTRATION_VALIDATE_PASSWORD_TOO_LONG' | translate }}</span>
 		</div>
 
 		<!-- Package -->
 		<!--
 		<div class="text-center">
 			<h2><i class="fa fa-suitcase" data-toggle="tooltip" data-placement="top" data-html="true" title="<b>Basic:</b> Basic functionallity!; <b>Pro:</b> See Statistics!; <b>Ultimate:</b> Get special support!'"></i></h2>
-			<label stlye="color: #ffffff;">Choose your package</label>
+			<label style="color: #ffffff;">Choose your package</label>
 		</div>
 		</br>
 		<div class="row">
@@ -58,84 +57,84 @@
 		</div>
 		-->
 
-		<div class="text-center">
-			<h2><i class="tooltipstyle fa fa-user" data-toggle="tooltip" title="You can login this application afterwards via your choosen email and password. '"></i></h2>
-			<label stlye="color: #ffffff;">Create your initial User</label>
-		</div>
-
 		<!-- fullname -->
-		<label style="text-align: left;">Fullname</label>
 		<div class="row">
-			<div class="col-xs-6 col-sm-6 col-md-6">
-				<div class="form-group" ng-class="{ 'has-error': validation.firstname.$invalid && !validation.firstname.$pristine }">
-					<input required ng-minlength="2" ng-maxlength="20" type="text" name="firstname" id="firstname" class="form-control" placeholder="{{ 'COMMON_FIRSTNAME' | translate }}"
+			<div class="col-md-2 col-md-offset-4">
+				<label style="text-align: left;color: whitesmoke;">{{ 'COMMON_FIRSTNAME' | translate }}</label><span style="color:red" > *</span>
+				<span style="color:red" ng-show="validation.firstname.$error.required &&!validation.firstname.$pristine"> {{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+				<span style="color:red" ng-show="validation.firstname.$error.maxlength &&!validation.firstname.$pristine"> {{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
+				<div class="form-group" ng-class="{ 'has-error': validation.firstname.$invalid}">
+					<input required ng-minlength="2" ng-maxlength="20" type="text" ng-model-options="{ debounce: 600 }" name="firstname" id="firstname" class="form-control" placeholder="{{ 'COMMON_FIRSTNAME' | translate }}"
 						ng-model="registrationCtrl.user.firstname">
 				</div>
-				<span ng-show="validation.firstname.$error.required &&!validation.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
-				<span ng-show="validation.firstname.$error.minlength &&!validation.firstname.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_LASTNAME_TO_SHORT' | translate }}</span>
-				<span ng-show="validation.firstname.$error.maxlength &&!validation.firstname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
 			</div>
-			<div class="col-xs-6 col-sm-6 col-md-6">
-				<div class="form-group" ng-class="{ 'has-error': validation.lastname.$invalid && !validation.lastname.$pristine }">
-					<input required ng-minlength="2" ng-maxlength="20" type="text" name="lastname" id="lastname" class="form-control" placeholder="{{ 'COMMON_LASTNAME' | translate }}"
+			<div class="col-md-2">
+				<label style="text-align: left;color: whitesmoke;">{{ 'COMMON_LASTNAME' | translate }}</label><span style="color:red" > *</span>
+				<span style="color:red" ng-show="validation.lastname.$error.required &&!validation.lastname.$pristine"> {{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+				<span style="color:red" ng-show="validation.lastname.$error.maxlength &&!validation.lastname.$pristine"> {{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
+				<div class="form-group" ng-class="{ 'has-error': validation.lastname.$invalid}">
+					<input required ng-minlength="2" ng-maxlength="20" type="text" ng-model-options="{ debounce: 600 }" name="lastname" id="lastname" class="form-control" placeholder="{{ 'COMMON_LASTNAME' | translate }}"
 						ng-model="registrationCtrl.user.lastname">
 				</div>
-				<span ng-show="validation.lastname.$error.required&&!validation.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
-				<span ng-show="validation.lastname.$error.minlength&&!validation.lastname.$pristine" class="help-block">{{ 'SIGNUP_VALIDATE_LASTNAME_TO_SHORT' | translate }}</span>
-				<span ng-show="validation.lastname.$error.maxlength&&!validation.lastname.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
 			</div>
 		</div>
 
 		<!-- Email -->
-		<label style="text-align: left;">Email</label>
-		<div class="form-group" ng-class="{ 'has-error': validation.email.$invalid && !validation.email.$pristine }">
-			<input type="email" id="email" name="email" class="form-control" placeholder="{{ 'REGISTRATION_VALIDATE_TENANT_EMAIL' | translate }}"
-				required ng-model="registrationCtrl.user.email">
-
-			<span ng-show="validation.email.$error.required&&!validation.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_REQ'| translate }}</span>
-			<span ng-show="validation.email.$error.email&&!validation.email.$pristine" class="help-block">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4">
+				<label style="text-align: left;color: whitesmoke;">{{ 'COMMON_EMAIL' | translate }}</label><span style="color:red" > *</span>
+				<span style="color:red" ng-show="validation.email.$error.required&&!validation.email.$pristine"> {{ 'COMMON_VALIDATE_REQ'| translate }}</span>
+				<span style="color:red" ng-show="validation.email.$error.email&&!validation.email.$pristine"> {{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
+				<div class="form-group" ng-class="{ 'has-error': validation.email.$invalid}">
+					<input type="email" id="email" name="email" class="form-control" ng-model-options="{ debounce: 600 }" placeholder="{{ 'REGISTRATION_VALIDATE_TENANT_EMAIL' | translate }}"
+						required ng-model="registrationCtrl.user.email">
+				</div>
+			</div>
 		</div>
 
 		<!-- Password -->
-		<label style="text-align: left;">Password</label>
-		<div class="form-group" ng-class="{ 'has-error': validation.password.$invalid && !validation.password.$pristine	}">
-			<input type="password" id="password" name="password" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-				required ng-model="registrationCtrl.user.password" ng-minlength="6" ng-maxlength="20">
-
-			<span ng-show="validation.password.$dirty && validation.password.$error.required" class="help-block">Password is required</span>
-			<span ng-show="validation.password.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
-			<span ng-show="validation.password.$error.maxlength" class="help-block">{{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4">
+				<label style="text-align: left;color: whitesmoke;">{{ 'COMMON_PASSWORD' | translate }}</label><span style="color:red" > *</span>
+				<span style="color:red" ng-show="validation.password.$dirty && validation.password.$error.required&&!validation.password.$error.maxlength"> {{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+				<span style="color:red" ng-show="validation.password.$error.minlength"> {{ 'COMMON_VALIDATE_PASSWORD_MIN' | translate }}</span>
+				<span style="color:red" ng-show="validation.password.$error.maxlength"> {{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
+				<div class="form-group" ng-class="{ 'has-error': validation.password.$invalid}">
+					<input type="password" id="password" name="password" ng-model-options="{ debounce: 600 }" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
+						required ng-model="registrationCtrl.password1" ng-minlength="6" ng-maxlength="20">
+				</div>
+			</div> 
 		</div>
 
-		<label style="text-align: left;">Confirm Password</label>
-		<div class="form-group" ng-class="{ 'has-error': 	validation.password2.$error.minlength ||
-															validation.password2.$error.maxlength	 ||
-															validation.password2.$error.pwmatch 	}">
-			<input type="password" id="password2" name="password2" class="form-control" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
-				required ng-model="registrationCtrl.user.password2" ng-minlength="6" ng-maxlength="20" pw-check="password">
-
-			<span ng-show="validation.password2.$dirty && validation.password2.$error.required" class="help-block">Password is required</span>
-			<span ng-show="validation.password2.$error.minlength" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD' | translate }}</span>
-			<span ng-show="validation.password2.$error.maxlength" class="help-block">{{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
-			<span ng-show="validation.password2.$error.pwmatch" class="help-block">{{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</span>
+		<!-- Password Confirm -->
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4">
+				<label style="text-align: left;color: whitesmoke;">{{ 'COMMON_PASSWORD' | translate }}</label><span style="color:red" > *</span>
+				<span style="color:red" ng-show="validation.password2.$dirty && validation.password2.$error.required&&!validation.password2.$error.maxlength"> {{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+				<span style="color:red" ng-show="validation.password2.$error.minlength"> {{ 'COMMON_VALIDATE_PASSWORD_MIN' | translate }}</span>
+				<span style="color:red" ng-show="validation.password2.$error.maxlength"> {{ 'SIGNUP_VALIDATE_PASSWORD_TO_LONG' | translate }}</span>
+				<span style="color:red" ng-show="validation.password2.$error.pwmatch && !validation.password2.$pristine &&!validation.password2.$error.minlength &&!validation.password2.$error.maxlength"> {{ 'COMMON_VALIDATE_PASSWORD_NOT_MATCH' | translate }}</span>
+				<div class="form-group" ng-class="{ 'has-error': validation.password2.$invalid}">
+					<input type="password" id="password2" name="password2" class="form-control" ng-model-options="{ debounce: 600 }" placeholder="{{ 'COMMON_PASSWORD' | translate }}"
+						required ng-model="registrationCtrl.password2" ng-minlength="6" ng-maxlength="20" pw-check="password">
+				</div>
+			</div>
 		</div>
-
-		<div class="form-group text-center" ng-class="{ 'has-error': validation.contract.$invalid && !validation.contract.$pristine }">
-			<label>
-				<input required type="checkbox" value="true" name="contract" ng-model="registrationCtrl.terms"/> I agree the <a href="components/Licence/view/AGB.html" target="_blank">terms of use</a> and <a href="components/Licence/view/Data.Protection.Statement.html" target="_blank">privacy policy</a>.
-			</label>
-			<span ng-show="validation.contract.$error.required&&!validation.contract.$pristine" class="help-block">You need to accept our Terms and Conditions.</span>
-			<br/>
-			<br/>
-			<button type="button" ng-click="registrationCtrl.register();" class="btn btn-primary block full-width m-b" ng-disabled="validation.$invalid || vm.dataLoading || registrationCtrl.registrationService.tenantKeyExist">
-				<strong>GET TRIAL ACCOUNT NOW</strong>
-			</button>
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4">
+				<div class="form-group" ng-class="{ 'has-error': validation.contract.$invalid}">
+					<label style="color: whitesmoke;">
+						<input style="margin-top: 5px;" required type="checkbox" value="true" name="contract" ng-model="registrationCtrl.terms"/> &nbsp;
+						<translate>REGISTRATION_SUBDOMAIN_AGREEMENT</translate>
+					</label>
+					<br/>
+					<br/>
+					<button type="button" ng-click="registrationCtrl.register();" class="btn btn-success block full-width m-b" ng-disabled="validation.$invalid || vm.dataLoading || registrationCtrl.registrationService.tenantKeyExist">
+						<strong>{{ 'REGISTRATION_SUBDOMAIN_GET_TRIAL_NOW' | translate }}</strong>
+					</button>
+					<span ng-show="validation.contract.$error.required" style="color:red">{{ 'REGISTRATION_SUBDOMAIN_AGREEMENT_ACCEPT' | translate }}</span>
+				</div>	
+			</div>
 		</div>
 	</form>
 </div>
-
-<script>
-$(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip({ placement: 'right'});
-});
-</script>

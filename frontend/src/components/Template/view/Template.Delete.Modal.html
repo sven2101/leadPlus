@@ -1,12 +1,12 @@
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" ng-click="templateCtrl.close()">
+    <button type="button" class="close" data-dismiss="modal" ng-click="TemplateDeleteCtrl.close()">
         <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
     <h4 class="modal-title">{{ 'SETTING_EMAIL_TEMPLATE_DELETE' | translate }}</h4>
 </div>
-<div class="modal-body">
-    <p> {{ 'SETTING_EMAIL_TEMPLATE_DELETE_CONFIRMATION_1' | translate }} <b> {{templateCtrl.template.name }} </b> {{ 'SETTING_EMAIL_TEMPLATE_DELETE_CONFIRMATION_2' | translate }}  ?</p>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-white" ng-click="templateCtrl.close()">{{ 'COMMON_CANCEL'| translate }}</button>
-        <button type="submit" class="btn btn-success" ng-click="templateCtrl.remove()">{{ 'COMMON_DELETE'| translate }}</button>
-    </div>
+<div class="modal-body" style="background-color: #f8fafb">
+    <p> {{ 'SETTING_EMAIL_TEMPLATE_DELETE_CONFIRMATION_1' | translate }} <b> {{TemplateDeleteCtrl.template.name }} </b> {{ 'SETTING_EMAIL_TEMPLATE_DELETE_CONFIRMATION_2' | translate }}  ?</p>
+</div>
+<div class="modal-footer">
+        <button type="button" class="btn btn-white" ng-click="TemplateDeleteCtrl.close()">{{ 'COMMON_CANCEL'| translate }}</button>
+        <button type="submit" class="btn btn-danger" ng-click="TemplateDeleteCtrl.remove()">{{ 'COMMON_DELETE'| translate }}</button>
 </div>

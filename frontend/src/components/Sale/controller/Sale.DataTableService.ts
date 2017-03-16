@@ -1,28 +1,18 @@
 /// <reference path="../../app/App.Common.ts" />
 /// <reference path="../../User/Model/User.Model.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-"use strict";
+/// <reference path="../../Process/model/Process.Model.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 
 const SaleDataTableServiceId: string = "SaleDataTableService";
 const allDataSaleRoute: string = "/api/rest/processes/sales";
 const openDataSaleRoute: string = "/api/rest/processes/sales/latest/50";
 
-class SaleDataTableService {
+class SaleDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId];
 
     workflowService: WorkflowService;
+    workflowDatatableService: WorkflowDatatableService;
     translate;
     dtOptions;
     dtColumns;
@@ -32,7 +22,7 @@ class SaleDataTableService {
     compile;
     rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -40,6 +30,7 @@ class SaleDataTableService {
         this.compile = $compile;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
+        this.workflowDatatableService = WorkflowDatatableService;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
@@ -57,16 +48,16 @@ class SaleDataTableService {
                 }
             })
             .withOption("stateSave", false)
-            .withDOM(this.workflowService.getDomString())
+            .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowService.getButtons(this.translate("SALE_SALES"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 12]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("SALE_SALES"), [7, 2, 1, 3, 4, 5, 9, 10, 11, 13, 12]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("deferRender", true)
             .withOption("lengthMenu", [10, 20, 50])
-            .withOption("order", [4, "desc"])
+            .withOption("order", [5, "desc"])
             .withOption("search", { "search": defaultSearch })
-            .withLanguageSource(this.workflowService.getLanguageSource(this.rootScope.language));
+            .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
     }
 
     getDetailHTML(id: number): string {
@@ -81,12 +72,22 @@ class SaleDataTableService {
         return [
             this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
                 .renderWith(addDetailButton),
-            this.DTColumnBuilder.newColumn("sale.customer.lastname").withTitle(
-                this.translate("COMMON_NAME")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("sale.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
+            this.DTColumnBuilder.newColumn("sale.customer.lastname").withTitle(
+                this.translate("COMMON_NAME")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("sale.customer.email").withTitle(
-                this.translate("COMMON_EMAIL")).withClass("text-center"),
+                this.translate("COMMON_EMAIL")).notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(
+                this.translate("COMMON_PRODUCT_DESTINATION")).withClass("text-center").renderWith(function (data, type, full) {
+                    let zip = "";
+                    let city = "";
+                    let country = "";
+                    !isNullOrUndefined(data.sale.deliveryAddress.zip) ? zip = data.sale.deliveryAddress.zip : angular.noop;
+                    !isNullOrUndefined(data.sale.deliveryAddress.city) ? city = data.sale.deliveryAddress.city : angular.noop;
+                    !isNullOrUndefined(data.sale.deliveryAddress.country) ? country = data.sale.deliveryAddress.country : angular.noop;
+                    return "<span class='text-ellipses' title='" + zip + " " + city + " " + country + "'>" + zip + " " + city + " " + country + "</span>";
+                }),
             this.DTColumnBuilder.newColumn("sale.timestamp").withTitle(
                 this.translate("COMMON_DATE")).renderWith(
                 function (data, type, full) {
@@ -97,7 +98,7 @@ class SaleDataTableService {
                 this.translate("COMMON_PHONE")).notVisible(),
             this.DTColumnBuilder.newColumn("sale.customer.firstname").withTitle(
                 this.translate("COMMON_FIRSTNAME")).notVisible(),
-            this.DTColumnBuilder.newColumn("sale.deliveryAddress").withTitle(
+            this.DTColumnBuilder.newColumn("sale.deliveryAddressLine").withTitle(
                 this.translate("COMMON_PRODUCT_DESTINATION")).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_PRODUCT_SALE_TURNOVER")).renderWith(
@@ -131,7 +132,8 @@ class SaleDataTableService {
                 this.translate("COMMON_PRODUCT_SALE_INVOICE_NUMBER")).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
-                "text-center").withOption("width", "50px").notSortable().renderWith(addActionsButtons),
+                "text-center").withOption("width", "90px").notSortable().renderWith(addActionsButtons),
+            this.DTColumnBuilder.newColumn("sale.deliveryAddressLine").notVisible(),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {
@@ -148,13 +150,14 @@ class SaleDataTableService {
         let config = new ActionButtonConfigBuilder();
         if (user.role === Role.ADMIN || user.role === Role.SUPERADMIN) {
             config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setEnabled().setTitle("SALE_DELETE_SALE");
-            config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setEnabled().setTitle("SALE_ROLLBACK");
+            config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setEnabled().setTitle("SALE_ROLLBACK_TITLE");
         } else {
             config.get(ActionButtonType.DETAILS_OPEN_DELETE_MODAL).setVisible()
                 .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("SALE_DELETE_SALE");
             config.get(ActionButtonType.DETAILS_OPEN_ROLLBACK_MODAL).setVisible()
-                .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("SALE_ROLLBACK");
+                .setEnabled(isNullOrUndefined(process.processor) || process.processor.id === user.id).setTitle("SALE_ROLLBACK_TITLE");
         }
+        config.get(ActionButtonType.QUICK_MAIL).setEnabled().setTitle("EMAIL_SEND");
         config.get(ActionButtonType.DETAILS_OPEN_EDIT_MODAL).setEnabled().setTitle("SALE_EDIT_SALE");
         config.get(ActionButtonType.DETAILS_DROPDOWN).setEnabled().setTitle("COMMON_DETAILS");
         if (!(user.role === Role.ADMIN || user.role === Role.SUPERADMIN) && (!isNullOrUndefined(process.processor) && process.processor.id !== user.id)) {
@@ -164,9 +167,12 @@ class SaleDataTableService {
         return config.build();
     }
 
+    configRow(row: any, data: Process) {
+    }
+
     getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {
         actionButtonConfig[process.id] = this.getActionButtonConfig(process);
-        return "<div actionbuttons minwidth='50' actionbuttonconfig=saleCtrl.actionButtonConfig[" + process.id + "]  process='saleCtrl.processes[" + process.id + "]'></div>";
+        return "<div actionbuttons minwidth='90' actionbuttonconfig=saleCtrl.actionButtonConfig[" + process.id + "]  process='saleCtrl.processes[" + process.id + "]'></div>";
     }
 
     getStatusStyleHTML(data: Process): string {

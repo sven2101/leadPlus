@@ -30,4 +30,5 @@ public class Lead extends AbstractWorkflow {
 
 	public Lead() {
 	}
+
 }

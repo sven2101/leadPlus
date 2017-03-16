@@ -59,6 +59,11 @@ module.exports = {
 			dest: baseDstPath + 'assets/img'
 
 		},
+		pdf: {
+			src: baseSrcPath + 'assets/pdf/**/*',
+			dest: baseDstPath + 'assets/pdf'
+
+		},
 		patterns: {
 			src: baseSrcPath + 'assets/css/patterns/**/*',
 			dest: baseDstPath + 'assets/patterns'

@@ -1,7 +1,6 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Signup/model/Signup.Model.ts" />
 /// <reference path="../../Tenant/model/Tenant.Model.ts" />
-/// <reference path="../../Common/model/Promise.Interface.ts" />
 
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH.
@@ -38,14 +37,14 @@ class TenantService {
         this.q = $q;
     }
 
-    save(tenant: Tenant): IPromise<Tenant> {
+    save(tenant: Tenant): Promise<Tenant> {
         let defer = this.q.defer();
         let self = this;
 
         this.tenantResource.save(tenant).$promise.then(function (tenant: Tenant) {
             self.toaster.pop("success", "", self.translate.instant("SIGNUP_SUCCESS"));
             defer.resolve(tenant);
-        }, function () {
+        }, function (error) {
             self.toaster.pop("error", "", self.translate.instant("SIGNUP_ERROR"));
             defer.reject(null);
         });

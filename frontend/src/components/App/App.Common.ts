@@ -1,22 +1,10 @@
-/// <reference path="../common/model/AbstractModel.Model.ts" />
 /// <reference path="../User/model/User.Model.ts" />
 /// <reference path="../../typeDefinitions/sjcl.d.ts" />
 /// <reference path="../../typeDefinitions/Moment.d.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-"use strict";
 
 declare var jstz;
 
-let findElementById = function (array: Array<AbstractModel>, id: Number): AbstractModel {
+let findElementById = function (array: Array<any>, id: number): any {
     for (let i = 0; i < array.length; i++) {
         if (array[i].id === id) {
             return array[i];
@@ -51,6 +39,9 @@ let getNameOfUser = function (user: User): string {
 };
 
 let deepCopy = function (old: Object): any {
+    if (isNullOrUndefined(old)) {
+        return old;
+    }
     return JSON.parse(JSON.stringify(old));
 };
 
@@ -62,7 +53,6 @@ let shallowCopy = function (oldObject: Object, newObject: Object) {
         newObject["id"] = oldObject["id"];
     }
 };
-
 
 let newTimestamp = function (): string {
     let pattern: string = "DD.MM.YYYY HH:mm:ss:SSS";
@@ -169,4 +159,24 @@ let b64toBlob = function (b64Data: string, contentType: string, sliceSize: numbe
     let blob = new Blob(byteArrays, { type: contentType });
     return blob;
 };
+
+let contains = function <T>(array: Array<T>, obj: T) {
+    let i = array.length;
+    while (i--) {
+        if (array[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+};
+
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
 

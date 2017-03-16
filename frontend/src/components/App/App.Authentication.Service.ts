@@ -2,30 +2,11 @@
 /// <reference path="../User/model/User.Model.ts" />
 /// <reference path="../app/App.Resource.ts" />
 /// <reference path="../app/App.Common.ts" />
-/// <reference path="../Common/model/Promise.Interface.ts" />
 /// <reference path="../Login/model/Credentials.Model.ts" />
-
-
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
 
 const AuthServiceId: string = "AuthService";
 
 class AuthService {
-
-
 
     $inject = [$httpId, $rootScopeId, $cookiesId, $locationId, $windowId, UserResourceId, $injectorId, $qId];
 
@@ -51,7 +32,7 @@ class AuthService {
         this.injector = $injector;
     }
 
-    login(credentials): IPromise<boolean> {
+    login(credentials): Promise<boolean> {
 
         let self = this;
 
@@ -63,7 +44,6 @@ class AuthService {
             let header = credentials ? { Authorization: "Basic " + authorization } : {};
             this.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
             this.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
-
             this.http.get("user").then(function (response) {
                 let data = response.data;
                 if (data) {
@@ -100,14 +80,16 @@ class AuthService {
                     } else {
                         self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
                         self.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
-
+                        let x = self.injector.get(SmtpServiceId);
                         let date = new Date();
                         date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
 
                         self.cookies.putObject("user", self.rootScope.user, { domain: credentials.tenant, path: "/", expires: date });
                         self.cookies.putObject("tenant", self.rootScope.tenant, { domain: credentials.tenant, path: "/", expires: date });
 
-                        self.rootScope.$broadcast("onTodosChange");
+                        self.rootScope.$broadcast(broadcastOnTodosChanged);
+                        self.rootScope.$broadcast(broadcastUserNotificationShouldChange);
+
                         defer.resolve(true);
                     }
 

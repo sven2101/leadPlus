@@ -16,10 +16,11 @@ package dash.messagemanagement.business;
 
 import java.io.IOException;
 
-import dash.exceptions.NotFoundException;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.notificationmanagement.domain.Notification;
-import dash.offermanagement.domain.Offer;
+import dash.templatemanagement.domain.WorkflowTemplateObject;
+import dash.tenantmanagement.domain.Tenant;
+import dash.usermanagement.domain.User;
 import freemarker.template.TemplateException;
 
 public interface IMessageService {
@@ -28,6 +29,9 @@ public interface IMessageService {
 
 	String getSubject();
 
-	AbstractMessage getOfferContent(final Offer offer, String templateWithPlaceholders, final Notification notification)
-			throws IOException, NotFoundException, TemplateException;
+	AbstractMessage getMessageContent(final WorkflowTemplateObject workflowTemplateObject,
+			String templateWithPlaceholders, final Notification notification) throws TemplateException, IOException;
+
+	AbstractMessage getWelcomeMessage(String template, Tenant tenant, User user) throws TemplateException, IOException;
+
 }

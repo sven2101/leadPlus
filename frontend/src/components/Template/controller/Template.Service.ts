@@ -3,23 +3,6 @@
 /// <reference path="../../Offer/model/Offer.Model.ts" />
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 /// <reference path="../../Template/controller/Template.Controller.ts" />
-/// <reference path="../../Common/model/Promise.Interface.ts" />
-/// <reference path="../../Template/model/OfferMessageContext.Model.ts" />
-
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
 
 const TemplateServiceId: string = "TemplateService";
 
@@ -36,6 +19,7 @@ class TemplateService {
     window;
     content: any;
     templates: Array<Template>;
+    currentEditTemplate: Template;
     sce;
 
     constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q, $window, $sce) {
@@ -48,27 +32,21 @@ class TemplateService {
         this.sce = $sce;
     }
 
-    openEmailTemplateModal(template: Template) {
-        this.uibModal.open({
-            templateUrl: "components/Template/view/Template.Modal.html",
-            controller: "TemplateController",
-            controllerAs: "templateCtrl",
-            size: "lg",
-            backdrop: "static",
-            resolve: {
-                template: function () {
-                    return template;
-                }
-            }
-        });
+    getCurrentEditTemplate(): Template {
+        return this.currentEditTemplate;
+    }
+
+    getTemplateFromTemplatesById(id: number): Template {
+        let editTemplate = deepCopy(findElementById(this.templates, id));
+        this.currentEditTemplate = editTemplate;
+        return editTemplate;
     }
 
     openEmailTemplateDeleteModal(template: Template) {
         this.uibModal.open({
             templateUrl: "components/Template/view/Template.Delete.Modal.html",
-            controller: "TemplateController",
-            controllerAs: "templateCtrl",
-            size: "sm",
+            controller: "TemplateDeleteController",
+            controllerAs: "TemplateDeleteCtrl",
             resolve: {
                 template: function () {
                     return template;
@@ -77,7 +55,7 @@ class TemplateService {
         });
     }
 
-    save(template: Template): IPromise<Template> {
+    save(template: Template): Promise<Template> {
         let defer = this.q.defer();
         let self = this;
         this.templateResource.save(template).$promise.then(function (result: Template) {
@@ -91,11 +69,14 @@ class TemplateService {
         return defer.promise;
     }
 
-    update(template: Template): IPromise<Template> {
+    update(template: Template): Promise<Template> {
         let defer = this.q.defer();
         let self = this;
         this.templateResource.update(template).$promise.then(function (result: Template) {
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_TEMPLATE_UPDATE"));
+            let oldTemplate: Template = findElementById(self.templates, template.id);
+            let index = self.templates.indexOf(oldTemplate);
+            self.templates[index] = template;
             defer.resolve(result);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_TEMPLATE_UPDATE_ERROR"));
@@ -115,19 +96,12 @@ class TemplateService {
         });
     }
 
-    generate(templateId: string, offer: Offer, notification: Notification): IPromise<Notification> {
-        let defer = this.q.defer();
-        let self = this;
-        let offerMessageContext: OfferMessageContext = new OfferMessageContext();
-        offerMessageContext.offer = offer;
-        offerMessageContext.notification = notification;
-        this.templateResource.generate({ templateId: templateId }, offerMessageContext).$promise.then(function (resultMessage: Notification) {
+    async generate(templateId: number, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
+        return this.templateResource.generate({ templateId: templateId }, { workflowTemplateObject: workflow, notification: notification }).$promise;
+    }
 
-            defer.resolve(resultMessage);
-        }, function (error: any) {
-            defer.reject(error);
-        });
-        return defer.promise;
+    async testTemplate(template: Template, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
+        return this.templateResource.test({ workflowTemplateObject: workflow, notification: notification, template: template }).$promise;
     }
 
     generatePDF(templateId: string, offer: Offer) {
@@ -145,16 +119,18 @@ class TemplateService {
         return defer.promise;
     }
 
-    getAll(): Promise<Array<Template>> {
-        let defer: IDefer<Array<Template>> = this.q.defer();
-        let self = this;
-        this.templateResource.getAll().$promise.then(function (result: Array<Template>) {
-            self.templates = result;
-            defer.resolve(self.templates);
-        }, function (error: any) {
-            defer.reject(error);
-        });
-        return defer.promise;
+    async getAll(): Promise<Array<Template>> {
+        this.templates = await this.templateResource.getAll().$promise;
+        return this.templates;
+    }
+
+    async getTemplateById(id: number): Promise<Template> {
+        let template: Template = await this.templateResource.getById({ id: id }).$promise as Template;
+        if (isNullOrUndefined(template.id)) {
+            return null;
+        }
+        this.currentEditTemplate = template;
+        return template;
     }
 }
 

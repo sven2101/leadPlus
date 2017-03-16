@@ -14,8 +14,8 @@
 
 package dash.processmanagement.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -36,8 +36,6 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import dash.commentmanagement.domain.Comment;
 import dash.leadmanagement.domain.Lead;
@@ -82,22 +80,21 @@ public class Process {
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
 	@Where(clause = "deleted <> '1'")
-	private List<Comment> comments;
+	private Set<Comment> comments;
 
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	@Column(name = "status", length = 255)
 	private Status status;
 
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne
 	@JoinColumn(name = "processor_fk", nullable = true)
 	@Where(clause = "deleted <> '1'")
 	private User processor;
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
-	@JsonProperty("notifications")
 	@Where(clause = "deleted <> '1'")
-	private List<Notification> notifications;
+	private Set<Notification> notifications;
 
 	@ManyToOne
 	@JoinColumn(name = "source_fk", nullable = true)
@@ -106,7 +103,7 @@ public class Process {
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
 	@Where(clause = "deleted <> '1'")
-	private List<Processor> formerProcessors;
+	private Set<Processor> formerProcessors;
 
 	public Process(Lead lead) {
 		this.lead = lead;
@@ -184,25 +181,25 @@ public class Process {
 		this.processor = processor;
 	}
 
-	public List<Comment> getComments() {
+	public Set<Comment> getComments() {
 		return comments;
 	}
 
-	public void setComments(List<Comment> comments) {
+	public void setComments(Set<Comment> comments) {
 		if (comments == null) {
-			this.comments = new ArrayList<>();
+			this.comments = new HashSet<>();
 			return;
 		}
 		this.comments = comments;
 	}
 
-	public List<Notification> getNotifications() {
+	public Set<Notification> getNotifications() {
 		return notifications;
 	}
 
-	public void setNotifications(List<Notification> notifications) {
+	public void setNotifications(Set<Notification> notifications) {
 		if (notifications == null) {
-			this.notifications = new ArrayList<>();
+			this.notifications = new HashSet<>();
 			return;
 		}
 		this.notifications = notifications;
@@ -220,11 +217,11 @@ public class Process {
 		this.source = source;
 	}
 
-	public List<Processor> getFormerProcessors() {
+	public Set<Processor> getFormerProcessors() {
 		return formerProcessors;
 	}
 
-	public void setFormerProcessors(List<Processor> formerProcessors) {
+	public void setFormerProcessors(Set<Processor> formerProcessors) {
 		this.formerProcessors = formerProcessors;
 	}
 

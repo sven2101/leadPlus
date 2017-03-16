@@ -13,6 +13,7 @@
  *******************************************************************************/
 package dash.templatemanagement.business;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -23,9 +24,9 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.notificationmanagement.domain.Notification;
-import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.templatemanagement.domain.Template;
+import dash.templatemanagement.domain.WorkflowTemplateObject;
 
 @Service
 public interface ITemplateService {
@@ -42,6 +43,10 @@ public interface ITemplateService {
 
 	public byte[] generatePdf(final long templateId, final Process process) throws NotFoundException;
 
-	public AbstractMessage generateOfferContent(long templateId, Offer offer, final Notification notification) throws NotFoundException;
+	public AbstractMessage getMessageContent(long templateId, WorkflowTemplateObject workflowTemplateObject,
+			final Notification notification) throws NotFoundException, IOException, TemplateCompilationException;
+
+	AbstractMessage getMessageContentByTemplate(Template template, WorkflowTemplateObject workflowTemplateObject,
+			Notification notification) throws NotFoundException, IOException, TemplateCompilationException;
 
 }

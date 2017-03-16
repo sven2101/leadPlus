@@ -3,10 +3,9 @@
 /// <reference path="../../lead/model/Lead.Model.ts" />
 /// <reference path="../../offer/model/Offer.Model.ts" />
 /// <reference path="../../sale/model/Sale.Model.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
-/// <reference path="../../common/model/Promise.interface.ts" />
-/// <reference path="../../common/service/Workflow.Controller.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
+/// <reference path="../../Process/model/Process.Model.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Controller.ts" />
 
 
 /*******************************************************************************
@@ -22,6 +21,7 @@
 "use strict";
 
 const DashboardServiceId: string = "DashboardService";
+const broadcastOnTodosChanged: string = "onTodosChange";
 
 class DashboardService {
 
@@ -77,7 +77,7 @@ class DashboardService {
         this.uibModal = $uibModal;
         this.refreshTodos();
 
-        $rootScope.$on("onTodosChange", (event) => {
+        $rootScope.$on(broadcastOnTodosChanged, (event) => {
             this.refreshTodos();
         });
 
@@ -355,6 +355,12 @@ class DashboardService {
         }
     }
 
+    addNewLead(process: Process) {
+        this.openLeads.push(process);
+        this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead");
+        this.sumLeads();
+    }
+
     updateDashboard(type: string) {
         if (type === "lead") {
             this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead");
@@ -381,8 +387,8 @@ class DashboardService {
         }
     }
 
-    startOfferTransformation(process: Process): IPromise<Process> {
-        let defer: IDefer<Process> = this.q.defer();
+    startOfferTransformation(process: Process): Promise<Process> {
+        let defer = this.q.defer();
         this.workflowService.startOfferTransformation(process).then(function (result: Process) {
             defer.resolve(result);
         }, function (error) {
@@ -391,7 +397,7 @@ class DashboardService {
         return defer.promise;
     }
 
-    startSaleTransformation(process: Process): IPromise<Process> {
+    startSaleTransformation(process: Process): Promise<Process> {
         let defer = this.q.defer();
         this.workflowService.startSaleTransformation(process).then(function (result) {
             defer.resolve(result);
@@ -482,19 +488,29 @@ class DashboardService {
         if (!stringIsNullorEmpty(searchText)) {
             this.openLeads = this.allOpenLeads.filter(process => (!isNullOrUndefined(process.lead.customer.firstname) && process.lead.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
                 || (!isNullOrUndefined(process.lead.customer.lastname) && process.lead.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.lead.customer.company) && process.lead.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+                || (!isNullOrUndefined(process.lead.customer.company) && process.lead.customer.company.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.lead.customer.email) && process.lead.customer.email.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.lead.deliveryAddressLine) && process.lead.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
             this.inContacts = this.allInContacts.filter(process => (!isNullOrUndefined(process.lead.customer.firstname) && process.lead.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
                 || (!isNullOrUndefined(process.lead.customer.lastname) && process.lead.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.lead.customer.company) && process.lead.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+                || (!isNullOrUndefined(process.lead.customer.company) && process.lead.customer.company.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.lead.customer.email) && process.lead.customer.email.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.lead.deliveryAddressLine) && process.lead.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
             this.openOffers = this.allOpenOffers.filter(process => (!isNullOrUndefined(process.offer.customer.firstname) && process.offer.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
                 || (!isNullOrUndefined(process.offer.customer.lastname) && process.offer.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.offer.customer.company) && process.offer.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+                || (!isNullOrUndefined(process.offer.customer.company) && process.offer.customer.company.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.offer.customer.email) && process.offer.customer.email.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.offer.deliveryAddressLine) && process.offer.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
             this.doneOffers = this.allDoneOffers.filter(process => (!isNullOrUndefined(process.offer.customer.firstname) && process.offer.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
                 || (!isNullOrUndefined(process.offer.customer.lastname) && process.offer.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.offer.customer.company) && process.offer.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+                || (!isNullOrUndefined(process.offer.customer.company) && process.offer.customer.company.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.offer.customer.email) && process.offer.customer.email.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.offer.deliveryAddressLine) && process.offer.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
             this.closedSales = this.allClosedSales.filter(process => (!isNullOrUndefined(process.sale.customer.firstname) && process.sale.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
                 || (!isNullOrUndefined(process.sale.customer.lastname) && process.sale.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.sale.customer.company) && process.sale.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+                || (!isNullOrUndefined(process.sale.customer.company) && process.sale.customer.company.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.sale.customer.email) && process.sale.customer.email.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.sale.deliveryAddressLine) && process.sale.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
         } else {
             this.openLeads = this.allOpenLeads;
             this.inContacts = this.allInContacts;

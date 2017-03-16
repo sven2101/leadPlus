@@ -37,7 +37,8 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 	}
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
 
 		Optional<String> tenant = Optional.ofNullable(request.getHeader("X-TenantID"));
 
@@ -47,6 +48,7 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 				TenantAuthenticationToken authRequest = new TenantAuthenticationToken(tenantKey);
 				Authentication authResult = this.authProvider.authenticate(authRequest);
 				SecurityContextHolder.getContext().setAuthentication(authResult);
+
 			} else if (TenantContext.NO_TENANT.equals(tenantKey)) {
 				TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
 			}
@@ -60,7 +62,7 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 
 		if (tenant.length == 4 && tenant[0].equals("www"))
 			return tenant[1];
-		else if (tenant.length == 3)
+		else if (tenant.length == 3 || (tenant.length == 4 && !tenant[0].equals("www")))
 			return tenant[0];
 		else if (tenant.length == 2)
 			return TenantContext.NO_TENANT;
@@ -75,7 +77,8 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 			return true;
 		}
 
-		if (existingAuth instanceof TenantAuthenticationToken && !((TenantAuthenticationToken) existingAuth).getTenant().equals(tenant)) {
+		if (existingAuth instanceof TenantAuthenticationToken
+				&& !((TenantAuthenticationToken) existingAuth).getTenant().equals(tenant)) {
 			return true;
 		}
 

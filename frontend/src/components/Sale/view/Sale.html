@@ -1,8 +1,3 @@
-<style>
-    #ngdatatable tr td {
-        height: 62px;
-    }
-</style>
 <meta charset="utf-8">
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-12">
@@ -29,9 +24,6 @@
                     <h5>{{ 'SALE_MANAGE_SALES' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
-                    <!--<button ng-click="saleCtrl.refreshData()" type="button" class="btn btn-success">
-                        <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
-                    </button>-->
                     <span class="pull-right" style=" font-size: 1.5em;">{{ 'SALE_SHOW_ALL_SALES' | translate }} &nbsp;<input
                             type="checkbox"
                             ng-model="saleCtrl.loadAllData"
@@ -49,12 +41,6 @@
         </div>
     </div>
 </div>
-<div editworkflow parent="saleCtrl" type="sale" modaltitle="{{'SALE_EDIT_SALE_MODAL'| translate}}"></div>
-<div confirmationmodal modalid="deleteConfirmationModal" parent="saleCtrl" title="{{'SALE_DELETE_SALE'| translate}}" body="{{'SALE_DELETE_SALE_BODY'| translate}}"
-    submittext="{{'COMMON_DELETE'| translate}}"></div>
-<div confirmationmodal modalid="rollbackConfirmationModal" parent="saleCtrl" title="{{'SALE_ROLLBACK'| translate}}" body="{{'SALE_ROLLBACK_BODY'| translate}}"
-    submittext="{{'COMMON_RESET'| translate}}"></div>
-<div hidden ng-include="'components/Common/view/Workflow.Send.Modal.html'"></div>
 <!--Page level script-->
 <script>
     jQuery.extend(jQuery.fn.dataTableExt.oSort, {

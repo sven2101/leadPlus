@@ -131,7 +131,6 @@ public class Comment {
 		result = prime * result + ((creator == null) ? 0 : creator.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((process == null) ? 0 : process.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
 		return result;
 	}
@@ -162,23 +161,12 @@ public class Comment {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (process == null) {
-			if (other.process != null)
-				return false;
-		} else if (!process.equals(other.process))
-			return false;
 		if (timestamp == null) {
 			if (other.timestamp != null)
 				return false;
 		} else if (!timestamp.equals(other.timestamp))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Comment [id=" + id + ", deleted=" + deleted + ", creator=" + creator + ", commentText=" + commentText
-				+ ", timestamp=" + timestamp + "]";
 	}
 
 }

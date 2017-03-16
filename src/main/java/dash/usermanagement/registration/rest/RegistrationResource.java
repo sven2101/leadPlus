@@ -14,36 +14,54 @@
 
 package dash.usermanagement.registration.rest;
 
+import java.io.IOException;
+
+import javax.validation.Valid;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.exceptions.EmailAlreadyExistsException;
-import dash.exceptions.RegisterFailedException;
-import dash.exceptions.SaveFailedException;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
 import dash.usermanagement.registration.domain.Validation;
+import freemarker.template.TemplateException;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
-		MediaType.ALL_VALUE })
+		MediaType.APPLICATION_JSON_VALUE })
 public class RegistrationResource {
 
-	@Autowired
+	private static final Logger logger = Logger.getLogger(RegistrationResource.class);
+
 	private UserService userService;
 
+	@Autowired
+	public RegistrationResource(UserService userService) {
+		this.userService = userService;
+	}
+
 	@RequestMapping(method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.CREATED)
-	public User register(@RequestBody final Registration registration)
-			throws EmailAlreadyExistsException, RegisterFailedException {
-		return userService.register(registration);
+	@ApiOperation(value = "Post a User. ", notes = "")
+	public ResponseEntity<Object> register(@RequestBody @Valid final Registration registration) {
+		try {
+			final User user = this.userService.register(registration);
+			user.setPassword(null);
+			this.userService.notifyUser(user);
+			return new ResponseEntity<>(user, HttpStatus.CREATED);
+		} catch (Exception ex) {
+			logger.error(RegistrationResource.class.getSimpleName(), ex);
+			return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+		}
 	}
 
 	@RequestMapping(value = "/unique/email", method = RequestMethod.POST)
@@ -54,8 +72,7 @@ public class RegistrationResource {
 
 	@RequestMapping(value = "/init", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public void createInitialUsers(@RequestBody final String apiPassword) throws SaveFailedException {
-		userService.createInitialUsers(apiPassword);
+	public void createInitialUsers(@RequestBody final String apiPassword) throws IOException, TemplateException {
+		this.userService.createInitialUsers(apiPassword);
 	}
-
 }

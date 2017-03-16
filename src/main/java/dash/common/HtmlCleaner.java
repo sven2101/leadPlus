@@ -9,6 +9,7 @@ public class HtmlCleaner {
 		if (html == null) {
 			return null;
 		}
-		return Jsoup.clean(html, Whitelist.relaxed().addAttributes(":all", "style"));
+		return Jsoup.clean(html, Whitelist.relaxed().addAttributes(":all", "style").addAttributes(":all", "class")
+				.addProtocols("img", "src", "data").addTags("style"));
 	}
 }

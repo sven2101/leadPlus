@@ -1,14 +1,11 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Resource.ts" />
-/// <reference path="../../common/service/Workflow.Service.ts" />
+/// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../statistic/controller/Statistic.Service.ts" />
 /// <reference path="../../dashboard/controller/Dashboard.Service.ts" />
-/// <reference path="../../common/model/Process.Model.ts" />
-/// <reference path="../../common/model/Commentary.Model.ts" />
-/// <reference path="../../common/model/IWorkflow.Interface.ts" />
-/// <reference path="../../Lead/controller/Lead.Service.ts" />
-/// <reference path="../../Offer/controller/Offer.Service.ts" />
-/// <reference path="../../Sale/controller/Sale.Service.ts" />
+/// <reference path="../../Process/model/Process.Model.ts" />
+/// <reference path="../../Commentary/model/Commentary.Model.ts" />
+/// <reference path="../../Workflow/model/IWorkflow.Interface.ts" />
 /// <reference path="../../Template/model/Template.Model.ts" />
 /// <reference path="../../Template/controller/Template.Service.ts" />
 /// <reference path="../../Notification/controller/Notification.Service.ts" />
@@ -93,8 +90,24 @@ class DashboardController {
         });
     }
 
+    async openNewLeadModal() {
+        let resultProcess: Process = await this.workflowService.openNewLeadModal();
+        if (!isNullOrUndefined(resultProcess)) {
+            this.rootScope.leadsCount += 1;
+            this.dashboardService.addNewLead(resultProcess);
+        }
+    }
+
+    openQuickEmailModal(process: Process) {
+        this.workflowService.openQuickEmailModal(process);
+    }
+
     refreshTodos(): void {
         this.dashboardService.refreshTodos();
+    }
+
+    getNameOfUser(user: User): string {
+        return getNameOfUser(user);
     }
 
     getAllActiveTemplates() {
@@ -172,12 +185,9 @@ class DashboardController {
         }
         return toLocalDate(timestamp, "DD.MM.YYYY HH:mm");
     }
+
     sumOrderPositions(array: Array<OrderPosition>): number {
         return this.workflowService.sumOrderPositions(array);
-    }
-
-    openFollowUpModal(process: Process) {
-        this.workflowService.openFollowUpModal(process);
     }
 
     getOrderPositionList(workflow: any): string {
