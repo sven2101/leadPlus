@@ -35,6 +35,7 @@ import dash.smtpmanagement.business.ISmtpService;
 import dash.smtpmanagement.business.SmtpUtil;
 import dash.smtpmanagement.domain.Smtp;
 import dash.smtpmanagement.domain.SmtpEncryptionType;
+import dash.statusmanagement.domain.Status;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 
@@ -61,7 +62,8 @@ public class NotificationService implements INotificationService {
 
 	@Override
 	public List<Notification> getNotificationsBySenderId(final Long userId) {
-		return this.notificationRepository.findTop5BySenderIdOrderByTimestampDesc(userId);
+		return this.notificationRepository.findTop5BySenderIdAndProcessStatusNotOrderByTimestampDesc(userId,
+				Status.CLOSED);
 	}
 
 	@Override
