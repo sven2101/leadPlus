@@ -117,8 +117,11 @@ class EditEmailDirective implements IDirective {
     openAttachment(fileUpload: FileUpload, scope: any): void {
         if (!isNullOrUndefined(fileUpload.content)) {
             let file = b64toBlob(fileUpload.content, fileUpload.mimeType);
-            let fileURL = URL.createObjectURL(file);
-            window.open(scope.$sce.trustAsResourceUrl(fileURL), "_blank");
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                window.open(reader.result, "_blank");
+            };
+            reader.readAsDataURL(file);
             return;
         }
         scope.$http.get("/api/rest/files/content/" + fileUpload.id, { method: "GET", responseType: "arraybuffer" }).
@@ -126,8 +129,6 @@ class EditEmailDirective implements IDirective {
                 let contentType = response.headers("content-type");
                 let file = new Blob([response.data], { type: contentType });
                 let fileURL = URL.createObjectURL(file);
-                // let win = window.open(scope.$sce.trustAsResourceUrl(fileURL), "_blank");
-
                 let reader = new FileReader();
                 let out = new Blob([response.data], { type: contentType });
                 reader.onload = function (e) {
