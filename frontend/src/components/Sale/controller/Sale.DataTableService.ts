@@ -2,17 +2,6 @@
 /// <reference path="../../User/Model/User.Model.ts" />
 /// <reference path="../../Process/model/Process.Model.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-"use strict";
 
 const SaleDataTableServiceId: string = "SaleDataTableService";
 const allDataSaleRoute: string = "/api/rest/processes/sales";
@@ -66,7 +55,7 @@ class SaleDataTableService implements IDatatableService {
             .withOption("createdRow", createdRow)
             .withOption("deferRender", true)
             .withOption("lengthMenu", [10, 20, 50])
-            .withOption("order", [4, "desc"])
+            .withOption("order", [5, "desc"])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
     }
@@ -83,12 +72,22 @@ class SaleDataTableService implements IDatatableService {
         return [
             this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
                 .renderWith(addDetailButton),
-            this.DTColumnBuilder.newColumn("sale.customer.lastname").withTitle(
-                this.translate("COMMON_NAME")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("sale.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
+            this.DTColumnBuilder.newColumn("sale.customer.lastname").withTitle(
+                this.translate("COMMON_NAME")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("sale.customer.email").withTitle(
-                this.translate("COMMON_EMAIL")).withClass("text-center"),
+                this.translate("COMMON_EMAIL")).notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(
+                this.translate("COMMON_PRODUCT_DESTINATION")).withClass("text-center").renderWith(function (data, type, full) {
+                    let zip = "";
+                    let city = "";
+                    let country = "";
+                    !isNullOrUndefined(data.sale.deliveryAddress.zip) ? zip = data.sale.deliveryAddress.zip : angular.noop;
+                    !isNullOrUndefined(data.sale.deliveryAddress.city) ? city = data.sale.deliveryAddress.city : angular.noop;
+                    !isNullOrUndefined(data.sale.deliveryAddress.country) ? country = data.sale.deliveryAddress.country : angular.noop;
+                    return "<span class='text-ellipses' title='" + zip + " " + city + " " + country + "'>" + zip + " " + city + " " + country + "</span>";
+                }),
             this.DTColumnBuilder.newColumn("sale.timestamp").withTitle(
                 this.translate("COMMON_DATE")).renderWith(
                 function (data, type, full) {
@@ -134,6 +133,7 @@ class SaleDataTableService implements IDatatableService {
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
                 "text-center").withOption("width", "90px").notSortable().renderWith(addActionsButtons),
+            this.DTColumnBuilder.newColumn("sale.deliveryAddressLine").notVisible(),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {

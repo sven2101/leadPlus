@@ -96,6 +96,38 @@ class CustomerService {
         }
     }
 
+    getAddressLine(address: Address) {
+        if (isNullOrUndefined(address)) {
+            return "";
+        }
+        let addressStr: string = "";
+        if (!isNullOrUndefined(address.street) && address.street !== "") {
+            addressStr += address.street;
+            if (!isNullOrUndefined(address.number)) {
+                addressStr += " " + address.number;
+            }
+            addressStr += ", ";
+        }
+        if (!isNullOrUndefined(address.city) && address.city !== "") {
+            if (!isNullOrUndefined(address.zip)) {
+                addressStr += address.zip + " ";
+            }
+            addressStr += address.city;
+            addressStr += ", ";
+        }
+        if (!isNullOrUndefined(address.state) && address.state !== "") {
+            addressStr += address.state;
+            addressStr += ", ";
+        }
+        if (!isNullOrUndefined(address.country)) {
+            addressStr += address.country;
+        }
+        if (addressStr.endsWith(", ")) {
+            addressStr = addressStr.slice(0, -2);
+        }
+        return addressStr;
+    }
+
     getAllCustomerByPage(start: number, length: number, searchtext: string, allCustomers: boolean) {
         let self = this;
         this.customerResource.getAllCustomerByPage({ start: start, length: length, searchtext: searchtext, allCustomers: allCustomers }).$promise.then(function (result: any) {
