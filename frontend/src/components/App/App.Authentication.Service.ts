@@ -44,7 +44,6 @@ class AuthService {
             let header = credentials ? { Authorization: "Basic " + authorization } : {};
             this.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
             this.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
-
             this.http.get("user").then(function (response) {
                 let data = response.data;
                 if (data) {
@@ -81,7 +80,7 @@ class AuthService {
                     } else {
                         self.http.defaults.headers.common["Authorization"] = "Basic " + authorization;
                         self.http.defaults.headers.common["X-TenantID"] = credentials.tenant;
-
+                        let x = self.injector.get(SmtpServiceId);
                         let date = new Date();
                         date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
 
@@ -90,6 +89,7 @@ class AuthService {
 
                         self.rootScope.$broadcast(broadcastOnTodosChanged);
                         self.rootScope.$broadcast(broadcastUserNotificationShouldChange);
+
                         defer.resolve(true);
                     }
 

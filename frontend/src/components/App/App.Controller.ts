@@ -30,7 +30,7 @@ class AppController {
     profileService: ProfileService;
     rendered: boolean = false;
 
-    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService, $window, $timeout, private SmtpService: SmtpService) {
+    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService, $window, $timeout) {
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.interval = $interval;
