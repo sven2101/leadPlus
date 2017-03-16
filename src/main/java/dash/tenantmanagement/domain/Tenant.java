@@ -24,6 +24,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.Where;
 
@@ -40,6 +41,7 @@ public class Tenant {
 	private long id;
 
 	@NotNull
+	@Pattern(regexp = "[a-z]*", message = "Invalid Tenant Key")
 	@Column(name = "tenantkey", unique = true, length = 50, nullable = false)
 	private String tenantKey;
 
@@ -74,7 +76,7 @@ public class Tenant {
 	}
 
 	public void setTenantKey(String tenantKey) {
-		this.tenantKey = tenantKey;
+		this.tenantKey = tenantKey.toLowerCase();
 	}
 
 	public String getDescription() {
@@ -160,8 +162,8 @@ public class Tenant {
 
 	@Override
 	public String toString() {
-		return "Tenant [id=" + id + ", tenantKey=" + tenantKey + ", description=" + description + ", address=" + address + ", enabled=" + enabled + ", license="
-				+ license + "]";
+		return "Tenant [id=" + id + ", tenantKey=" + tenantKey + ", description=" + description + ", address=" + address
+				+ ", enabled=" + enabled + ", license=" + license + "]";
 	}
 
 }

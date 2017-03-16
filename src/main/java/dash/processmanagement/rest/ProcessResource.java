@@ -74,7 +74,8 @@ public class ProcessResource {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public Process getById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
-		return processService.getById(id);
+		Process x = processService.getById(id);
+		return x;
 	}
 
 	@ApiOperation(value = "Returns processes with a certain state", notes = "")
@@ -89,7 +90,8 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns count processes with a certain state", notes = "")
 	@RequestMapping(value = "/count/workflow/{workflow}/state/{status}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public Map<String, Integer> getCountElementsByStatus(@ApiParam(required = true) @PathVariable final Workflow workflow,
+	public Map<String, Integer> getCountElementsByStatus(
+			@ApiParam(required = true) @PathVariable final Workflow workflow,
 			@ApiParam(required = true) @PathVariable final Status status) {
 		return processService.getCountElementsByStatus(workflow, status);
 
@@ -132,7 +134,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Puts processor to process", notes = "")
 	@RequestMapping(value = "/{id}/processors", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public User setProcessor(@ApiParam(required = true) @PathVariable final Long id, @RequestBody final long userId)
+	public Process setProcessor(@ApiParam(required = true) @PathVariable final Long id, @RequestBody final long userId)
 			throws Exception {
 		return processService.setProcessor(id, userId);
 	}
@@ -198,7 +200,7 @@ public class ProcessResource {
 					.findByLeadIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
 		} else {
 			page = processRepository
-					.findByLeadCustomerFirstnameContainingOrLeadCustomerLastnameContainingOrLeadCustomerEmailContainingOrLeadCustomerCompanyContainingOrLeadCustomerPhoneContainingOrLeadDeliveryAddressContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
+					.findByLeadCustomerFirstnameContainingOrLeadCustomerLastnameContainingOrLeadCustomerEmailContainingOrLeadCustomerCompanyContainingOrLeadCustomerPhoneContainingOrLeadDeliveryAddressLineContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
 							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
 							searchText, new PageRequest(start / length, length, sortDirection, sortColumn));
 		}
@@ -254,7 +256,7 @@ public class ProcessResource {
 					.findByOfferIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
 		else
 			page = processRepository
-					.findByOfferCustomerFirstnameContainingOrOfferCustomerLastnameContainingOrOfferCustomerEmailContainingOrOfferCustomerCompanyContainingOrOfferCustomerPhoneContainingOrOfferDeliveryAddressContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(
+					.findByOfferCustomerFirstnameContainingOrOfferCustomerLastnameContainingOrOfferCustomerEmailContainingOrOfferCustomerCompanyContainingOrOfferCustomerPhoneContainingOrOfferDeliveryAddressLineContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(
 							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
 							new PageRequest(start / length, length, sortDirection, sortColumn));
 
@@ -309,8 +311,8 @@ public class ProcessResource {
 					.findBySaleIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
 		else
 			page = processRepository
-					.findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
-							searchText, searchText, searchText, searchText, searchText, searchText,
+					.findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleDeliveryAddressLineContainingOrSaleCustomerPhoneContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
+							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
 							new PageRequest(start / length, length, sortDirection, sortColumn));
 
 		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),

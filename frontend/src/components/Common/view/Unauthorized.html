@@ -8,14 +8,12 @@
 </head>
 
 <body class="gray-bg">
-
-
-    <div class="middle-box text-center animated fadeInDown">
+    <div class="middle-box text-center animated fadeInDown" ng-style="::(!user?{ 'color': 'whitesmoke'}:{ 'color': '#676a6c'} )">
         <h1>401</h1>
-        <h3 class="font-bold">Unauthorized</h3>
+        <h3 class="font-bold">{{'ERROR_PAGE_401_HEADLINE' | translate}}</h3>
 
-        <div class="error-desc">You are not allowed to visit this site. Please contact your administrator.
-            <br/><a href="/#/" class="btn btn-success m-t">Go Back</a>
+        <div class="error-desc">{{'ERROR_PAGE_401_TEXT' | translate}}
+            <br/><a href="/#/" class="btn btn-success m-t">{{'ERROR_PAGE_GO_BACK' | translate}}</a>
         </div>
     </div>
 </body>

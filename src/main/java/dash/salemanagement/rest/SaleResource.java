@@ -74,7 +74,7 @@ public class SaleResource {
 	@ApiOperation(value = "Return sale by invoice.", notes = "")
 	@RequestMapping(value = "/invoice", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
-	public Sale getByInvoiceNumber(@RequestBody final String invoiceNumber) {
+	public List<Sale> getByInvoiceNumber(@RequestBody final String invoiceNumber) {
 		return saleService.getByInvoiceNumber(invoiceNumber);
 	}
 

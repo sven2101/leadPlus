@@ -24,6 +24,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -69,14 +70,14 @@ public class Smtp {
 
 	@NotNull
 	@Column(name = "encryption", length = 255, nullable = false)
-	private Encryption encryption;
+	private SmtpEncryptionType encryption;
 
 	@NotNull
 	@Column(name = "port", nullable = false)
 	private Integer port;
 
-	@Column(name = "connection", nullable = false)
-	private boolean connection;
+	@Column(name = "verified", nullable = false)
+	private boolean verified;
 
 	@JsonIgnore
 	@Column(name = "salt", nullable = false)
@@ -91,11 +92,19 @@ public class Smtp {
 	@JoinColumn(name = "user_fk", nullable = false)
 	private User user;
 
+	@Transient
+	@JsonProperty(access = Access.WRITE_ONLY)
+	private boolean decrypted;
+
 	public Smtp() {
 	}
 
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getSender() {
@@ -138,11 +147,11 @@ public class Smtp {
 		this.password = password;
 	}
 
-	public Encryption getEncryption() {
+	public SmtpEncryptionType getEncryption() {
 		return encryption;
 	}
 
-	public void setEncryption(Encryption encryption) {
+	public void setEncryption(SmtpEncryptionType encryption) {
 		this.encryption = encryption;
 	}
 
@@ -154,12 +163,12 @@ public class Smtp {
 		this.port = port;
 	}
 
-	public boolean isConnection() {
-		return connection;
+	public boolean isVerified() {
+		return verified;
 	}
 
-	public void setConnection(boolean connection) {
-		this.connection = connection;
+	public void setVerified(boolean connection) {
+		this.verified = connection;
 	}
 
 	public User getUser() {
@@ -186,11 +195,19 @@ public class Smtp {
 		this.iv = iv;
 	}
 
+	public boolean isDecrypted() {
+		return decrypted;
+	}
+
+	public void setDecrypted(boolean decrypted) {
+		this.decrypted = decrypted;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (connection ? 1231 : 1237);
+		result = prime * result + (verified ? 1231 : 1237);
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((encryption == null) ? 0 : encryption.hashCode());
 		result = prime * result + ((host == null) ? 0 : host.hashCode());
@@ -214,7 +231,7 @@ public class Smtp {
 		if (getClass() != obj.getClass())
 			return false;
 		Smtp other = (Smtp) obj;
-		if (connection != other.connection)
+		if (verified != other.verified)
 			return false;
 		if (email == null) {
 			if (other.email != null)
@@ -260,13 +277,6 @@ public class Smtp {
 		} else if (!username.equals(other.username))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Smtp [id=" + id + ", sender=" + sender + ", host=" + host + ", username=" + username + ", password=" + Arrays.toString(password) + ", email="
-				+ email + ", encryption=" + encryption + ", port=" + port + ", connection=" + connection + ", salt=" + Arrays.toString(salt) + ", iv="
-				+ Arrays.toString(iv) + ", user=" + user + "]";
 	}
 
 }

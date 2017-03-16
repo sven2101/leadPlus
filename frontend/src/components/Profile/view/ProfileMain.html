@@ -1,0 +1,45 @@
+<style>
+    .nav.nav-tabs li {
+        margin-left: -1px;
+        z-index: 100;
+    }
+</style>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-10">
+                <h2>{{ 'PROFILE_MENU' | translate }}</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#/dashboard">Home</a>
+                    </li>
+                    <li ng-click="profileCtrl.tabOnClick('information')">
+                        <a href="#/profile/information">{{ 'PROFILE_MENU' | translate }}</a>
+                    </li>
+                    <li class="active">
+                        <strong>{{ profileCtrl.currentTab | translate }}</strong>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li ng-click="profileCtrl.currentTab='information'" ng-class="profileCtrl.currentTab==='information'?'active':''"><a href="/#/profile/information" aria-expanded="true">{{ 'PROFILE_ACCOUNT_TAB' | translate}}</a></li>
+                        <li ng-click="profileCtrl.currentTab='password'" ng-class="profileCtrl.currentTab==='password'?'active':''"><a href="/#/profile/password" aria-expanded="true">{{'PROFILE_PASSWORD_TAB' | translate }}</a></li>
+                        <li ng-click="profileCtrl.currentTab='smtp'" ng-class="profileCtrl.currentTab==='smtp'?'active':''"><a href="/#/profile/smtp" aria-expanded="true">{{'PROFILE_SMTP_TAB' | translate }}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div ng-show="profileCtrl.currentTab==='information'" ng-include="'components/Profile/view/ProfileAccountTab.html'"></div>
+        <div ng-show="profileCtrl.currentTab==='password'" ng-include="'components/Profile/view/ProfilePasswordTab.html'"></div>
+        <div ng-show="profileCtrl.currentTab==='smtp'" ng-include="'components/Profile/view/ProfileSmtpTab.html'"></div>
+    </div>
+</div>

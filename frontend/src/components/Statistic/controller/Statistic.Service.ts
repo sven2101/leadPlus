@@ -1,9 +1,10 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Resource.ts" />
-/// <reference path="../../Statistic/model/AbstractStatisticModel.Model.ts" />" />
-/// <reference path="../../Statistic/model/PieChart.Model.ts" />" />
-/// <reference path="../../Statistic/model/AreaChart.Model.ts" />" />
-/// <reference path="../../Statistic/model/SplineChart.Model.ts" />" />
+/// <reference path="../../Statistic/model/AbstractStatisticModel.Model.ts" />
+/// <reference path="../../Statistic/model/PieChart.Model.ts" />
+/// <reference path="../../Statistic/model/AreaChart.Model.ts" />
+/// <reference path="../../Statistic/model/ColumnChart.Model.ts" />
+/// <reference path="../../Statistic/model/SplineChart.Model.ts" />
 /*******************************************************************************
  * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
  * 
@@ -32,6 +33,7 @@ class StatisticService {
     EntireStatisticWorkflowAmountSplineChart: SplineChart;
     EntireStatisticLeadConversionRateSplineChart: SplineChart;
     EntireStatisticOfferConversionRateSplineChart: SplineChart;
+    MyUserStatisticColumnChart: ColumnChart;
     statisticModelMap: { [key: string]: AbstractStatisticModel } = {};
 
     leadResultArr: Array<number> = new Array<number>();
@@ -73,7 +75,7 @@ class StatisticService {
     }
 
     setAllModels() {
-        this.SingleStatisticWorkflowPieChart = new PieChart(this.translate, "SPLOS", "STATISTIC_PARTS");
+        this.SingleStatisticWorkflowPieChart = new PieChart(this.translate, "SPLOS", "STATISTIC_PARTS", "{series.name}: <b>{point.percentage:.1f}%</b>");
         this.EntireStatisticProfitTurnoverAreaChart = new AreaChart(this.translate, "EATAP", "STATISTIC_PROFIT_AND_RETURN_Y_AXIS", " €");
         this.EntireStatisticWorkflowAmountSplineChart = new SplineChart(this.translate, "ESLOS", "STATISTIC_LEADS_OFFERS_SALES_Y_AXIS", "");
         this.EntireStatisticLeadConversionRateSplineChart = new SplineChart(this.translate, "ESLSCR", "STATISTIC_SALES_OF_LEADS_Y_AXIS", " %");
@@ -83,6 +85,13 @@ class StatisticService {
         this.statisticModelMap[this.EntireStatisticProfitTurnoverAreaChart.getId()] = this.EntireStatisticProfitTurnoverAreaChart;
         this.statisticModelMap[this.EntireStatisticLeadConversionRateSplineChart.getId()] = this.EntireStatisticLeadConversionRateSplineChart;
         this.statisticModelMap[this.EntireStatisticOfferConversionRateSplineChart.getId()] = this.EntireStatisticOfferConversionRateSplineChart;
+    }
+
+    generateMyStatistic(user: User): void {
+        if (!isNullOrUndefined(user.id)) {
+            this.MyUserStatisticColumnChart = new PieChart(this.translate, "SPCLOS", getNameOfUser(user),
+                this.translate.instant("DETAIL_STATISTIC_USER_TOOLTIP", { username: "{series.name}", count: "{point.y}", workflow: "{point.name}" }) + "<br>" + this.translate.instant("STATISTIC_PARTS") + ": <b>{point.percentage:.1f}%</b>");
+        }
     }
 
     getChartModelById(id: string): AbstractStatisticModel {
@@ -160,19 +169,19 @@ class StatisticService {
 
     loadWorkflowResourcesByDateRange(dateRange: string, source: string) {
         let self: StatisticService = this;
-        this.statisticResource.getWorkflowStatistic({ workflow: workflowLead, dateRange: dateRange, source: source }).$promise.then(function (result) {
+        this.statisticResource.getWorkflowStatistic({ workflow: WorkflowType.LEAD, dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.leadResultArr = result;
             self.leadAmount = self.getTotalSumOf(self.leadResultArr);
             self.isLeadPromise = true;
             self.checkPromises();
         });
-        this.statisticResource.getWorkflowStatistic({ workflow: workflowOffer, dateRange: dateRange, source: source }).$promise.then(function (result) {
+        this.statisticResource.getWorkflowStatistic({ workflow: WorkflowType.OFFER, dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.offerResultArr = result;
             self.offerAmount = self.getTotalSumOf(self.offerResultArr);
             self.isOfferPromise = true;
             self.checkPromises();
         });
-        this.statisticResource.getWorkflowStatistic({ workflow: workflowSale, dateRange: dateRange, source: source }).$promise.then(function (result) {
+        this.statisticResource.getWorkflowStatistic({ workflow: WorkflowType.SALE, dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.saleResultArr = result;
             self.saleAmount = self.getTotalSumOf(self.saleResultArr);
             self.isSalePromise = true;
@@ -182,7 +191,7 @@ class StatisticService {
 
     loadProfitResourcesByDateRange(dateRange: string, source: string) {
         let self: StatisticService = this;
-        this.statisticResource.getProfitStatistic({ workflow: workflowSale, dateRange: dateRange, source: source }).$promise.then(function (result) {
+        this.statisticResource.getProfitStatistic({ workflow: WorkflowType.SALE, dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.profitResultArr = result;
             self.profitTotal = self.getTotalSumOf(self.profitResultArr);
             self.isProfitPromise = true;
@@ -192,7 +201,7 @@ class StatisticService {
 
     loadTurnoverResourcesByDateRange(dateRange: string, source: string) {
         let self: StatisticService = this;
-        this.statisticResource.getTurnoverStatistic({ workflow: workflowSale, dateRange: dateRange, source: source }).$promise.then(function (result) {
+        this.statisticResource.getTurnoverStatistic({ workflow: WorkflowType.SALE, dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.turnoverResultArr = result;
             self.turnoverTotal = self.getTotalSumOf(self.turnoverResultArr);
             self.isTurnoverPromise = true;
@@ -202,7 +211,7 @@ class StatisticService {
 
     loadProductResourcesByDateRange(dateRange: string, source: string) {
         let self: StatisticService = this;
-        this.statisticResource.getProductStatistic({ workflow: workflowSale, dateRange: dateRange, source: source }).$promise.then(function (result) {
+        this.statisticResource.getProductStatistic({ workflow: WorkflowType.SALE, dateRange: dateRange, source: source }).$promise.then(function (result) {
             self.productStatisticArr = result;
         });
     }
@@ -283,7 +292,7 @@ class StatisticService {
     pushToWorkflowPieChart() {
         this.SingleStatisticWorkflowPieChart.pushData("LEADS_MENU", [this.leadAmount], "#ed5565");
         this.SingleStatisticWorkflowPieChart.pushData("OFFERS_MENU", [this.offerAmount], "#f8ac59");
-        this.SingleStatisticWorkflowPieChart.pushData("SALES_MENU", [this.saleAmount], "#1a7bb9");
+        this.SingleStatisticWorkflowPieChart.pushData("SALES_MENU", [this.saleAmount], "#1a7bb9", true, true);
     }
 
     pushToWorkflowAmountSplineChart() {

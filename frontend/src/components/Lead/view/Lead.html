@@ -2,10 +2,6 @@
 	.important {
 		background: #FFEBEB;
 	}
-	
-	#ngdatatable tr td {
-		height: 62px;
-	}
 </style>
 <meta charset="utf-8">
 <div class="row wrapper border-bottom white-bg page-heading">
@@ -33,47 +29,35 @@
 					<h5>{{ 'LEAD_MANAGE_LEADS' | translate }}</h5>
 				</div>
 				<div class="ibox-content">
-					<button type="button" class="btn btn-success" ng-click="leadCtrl.clearNewLead()" data-backdrop="static" data-toggle="modal"
-						data-target="#editModal">
+					<button type="button" class="btn btn-success" ng-click="leadCtrl.openNewLeadModal()">
                         <i class="fa fa-plus"></i>&nbsp;{{ 'LEAD_ADD_LEAD' | translate }}
                     </button>
-					<!--<button ng-click="leadCtrl.refreshData()" type="button" class="btn btn-success">
-                        <i class="fa fa-refresh"></i>&nbsp;{{ 'COMMON_REFRESH' | translate }}
-                    </button>-->
-					<span class="pull-right" style=" font-size: 1.5em;">{{ 'LEAD_SHOW_ALL_LEADS' | translate }} &nbsp;<input
-                            type="checkbox"
-                            ng-model="leadCtrl.loadAllData"
-                            ng-change="leadCtrl.changeDataInput()"
-                            class="js-switch"
-                            ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
-					<br/>
-					<br/>
-					<div class="table-responsive text-center">
-						<table id="ngdatatable" datatable="" dt-options="leadCtrl.dtOptions" dt-columns="leadCtrl.dtColumns" dt-disable-deep-watchers="true" dt-instance="leadCtrl.dtInstanceCallback"
-							class="table table-bordered table-hover table-condensed text-center" style="width:100%;"></table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+					<span class="pull-right" style=" font-size: 1.5em;">{{ 'LEAD_SHOW_ALL_LEADS' | translate }} &nbsp;<input type="checkbox" ng-model="leadCtrl.loadAllData" ng-change="leadCtrl.changeDataInput()"
+	class="js-switch" ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}" /></span>
+<br/>
+<br/>
+<div class="table-responsive text-center">
+	<table id="ngdatatable" datatable="" dt-options="leadCtrl.dtOptions" dt-columns="leadCtrl.dtColumns" dt-disable-deep-watchers="true"
+		dt-instance="leadCtrl.dtInstanceCallback" class="table table-bordered table-hover table-condensed text-center" style="width:100%;"></table>
 </div>
-<div editworkflow parent="leadCtrl" type="lead" modaltitle="{{'LEAD_EDIT_LEAD_MODAL'| translate}}"></div>
-<div confirmationmodal modalid="deleteConfirmationModal" parent="leadCtrl" title="{{'LEAD_DELETE_LEAD'| translate}}" body="{{'LEAD_DELETE_LEAD_BODY'| translate}}"
-	submittext="{{'COMMON_DELETE'| translate}}"></div>
-<div hidden ng-include="'components/Common/view/Workflow.Send.Modal.html'"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 <!--Page level script-->
 <script>
-    jQuery.extend(jQuery.fn.dataTableExt.oSort, {
-        "date-euro-pre": function (date) {
-            return moment(date, 'DD.MM.YYYY HH:mm');
-        },
+	jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+		"date-euro-pre": function (date) {
+			return moment(date, 'DD.MM.YYYY HH:mm');
+		},
 
-        "date-euro-asc": function (a, b) {
-            return (a.isBefore(b) ? -1 : (a.isAfter(b) ? 1 : 0));
-        },
+		"date-euro-asc": function (a, b) {
+			return (a.isBefore(b) ? -1 : (a.isAfter(b) ? 1 : 0));
+		},
 
-        "date-euro-desc": function (a, b) {
-            return (a.isBefore(b) ? 1 : (a.isAfter(b) ? -1 : 0));
-        }
-    });
+		"date-euro-desc": function (a, b) {
+			return (a.isBefore(b) ? 1 : (a.isAfter(b) ? -1 : 0));
+		}
+	});
 </script>

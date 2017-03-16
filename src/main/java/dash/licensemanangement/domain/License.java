@@ -24,7 +24,7 @@ public class License {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "license_auto_gen")
 	@SequenceGenerator(name = "license_auto_gen", sequenceName = "public.license_id_seq", allocationSize = 1)
 	@Column(name = "id", nullable = false)
-	private long id;
+	private Long id;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -41,11 +41,11 @@ public class License {
 
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -77,10 +77,10 @@ public class License {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + (trial ? 1231 : 1237);
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((licenseType == null) ? 0 : licenseType.hashCode());
 		result = prime * result + ((term == null) ? 0 : term.hashCode());
+		result = prime * result + (trial ? 1231 : 1237);
 		return result;
 	}
 
@@ -93,9 +93,10 @@ public class License {
 		if (getClass() != obj.getClass())
 			return false;
 		License other = (License) obj;
-		if (id != other.id)
-			return false;
-		if (trial != other.trial)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (licenseType != other.licenseType)
 			return false;
@@ -104,6 +105,8 @@ public class License {
 				return false;
 		} else if (!term.equals(other.term))
 			return false;
+		if (trial != other.trial)
+			return false;
 		return true;
 	}
 
@@ -111,6 +114,5 @@ public class License {
 	public String toString() {
 		return "License [id=" + id + ", licenseType=" + licenseType + ", term=" + term + ", trial=" + trial + "]";
 	}
-	
-	
+
 }

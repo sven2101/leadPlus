@@ -4,7 +4,7 @@
 			<div class="ibox-title">
 				<h5>{{ 'TODO_TODOS' | translate }}</h5>
 				<div class="ibox-tools">
-					<i class="fa fa-question-circle" data-toggle="tooltip" title="{{ 'TOOLTIP_TODO' | translate }}"></i>
+					<i class="fa fa-question-circle" uib-tooltip="{{ 'TOOLTIP_TODO' | translate }}" ></i>
 				</div>
 			</div>
 			<div class="ibox-content">
@@ -43,9 +43,3 @@
 		</div>
 	</div>
 </div>
-
-<script>
-	$(document).ready(function(){
-		$('[data-toggle="tooltip"]').tooltip({ placement: 'left'});
-	});
-</script>

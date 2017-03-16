@@ -1,3 +1,10 @@
+<style>
+.nav.nav-tabs li{
+	margin-left: -1px;
+	z-index: 100;
+}
+</style>
+
 <meta charset="utf-8">
 <div class="row wrapper border-bottom white-bg page-heading">
 	<div class="col-lg-12">
@@ -6,8 +13,12 @@
 				<h2>{{ 'STATISTIC_MENU' | translate }}</h2>
 				<ol class="breadcrumb">
 					<li><a href="#/dashboard">Home</a></li>
-					<li class="active"><strong>{{ 'STATISTIC_MENU' |
-							translate }}</strong></li>
+					<li ng-click="statisticCtrl.tabOnClick('single')">
+						<a href="#/statistic/single">{{ 'STATISTIC_MENU' | translate }}</a>
+					</li>
+					<li class="active">
+						<strong>{{ statisticCtrl.currentTab | translate }}</strong> 
+                    </li>
 				</ol>
 			</div>
 			<div class="col-lg-2">
@@ -15,8 +26,8 @@
 					<br/>
 					<h3>{{ 'SOURCE_SOURCE' | translate }}</h3>
 				</div>
-				<div class="row">
-									<select class="form-control" style="width: 200px;" ng-model="statisticCtrl.source" ng-change="statisticCtrl.onStatisticChange(statisticCtrl.dateRange,statisticCtrl.source)">
+				<div class="row" style="margin-right:10px">
+									<select class="form-control" style="width: 100%" ng-model="statisticCtrl.source" ng-change="statisticCtrl.onStatisticChange(statisticCtrl.dateRange,statisticCtrl.source)">
 						<option value="ALL">{{ 'STATISTIC_PERIOD_ALL' | translate
 							}}</option>
                         <option ng-repeat="source in statisticCtrl.sourceService.sources| orderBy:'name'" value="{{source.name}}">{{source.name}}</option>
@@ -28,8 +39,8 @@
 					<br/>
 					<h3>{{ 'STATISTIC_PERIOD' | translate }}</h3>
 				</div>
-				<div class="row">
-					<select class="form-control" style="width: 140px;" ng-model="statisticCtrl.dateRange" ng-change="statisticCtrl.onStatisticChange(statisticCtrl.dateRange,statisticCtrl.source)">
+				<div class="row" style="margin-right:10px">
+					<select class="form-control" style="width: 100%" ng-model="statisticCtrl.dateRange" ng-change="statisticCtrl.onStatisticChange(statisticCtrl.dateRange,statisticCtrl.source)">
 						<option value="DAILY">{{ 'STATISTIC_PERIOD_TODAY' |
 							translate }}</option>
 						<option value="WEEKLY">{{ 'STATISTIC_PERIOD_WEEK' |
@@ -47,16 +58,26 @@
 	</div>
 </div>
 <div class="wrapper wrapper-content animated fadeInRight">
-	<ul class="nav nav-tabs">
-		<li class="active" ng-click="statisticCtrl.tabOnClick(1)"><a data-toggle="tab" aria-expanded="true">{{
-				'STATISTIC_SINGLE_STATISTIC' | translate }}</a></li>
-		<li ng-click="statisticCtrl.tabOnClick(2)"><a data-toggle="tab" aria-expanded="true">{{ 'STATISTIC_GENERAL_STATISTIC' | translate
-				}}</a></li>
-		<li ng-click="statisticCtrl.tabOnClick(3)"><a data-toggle="tab" aria-expanded="true">{{ 'STATISTIC_USER_STATISTIC' | translate }}</a>
-		</li>
-	</ul>
-	<br/>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="tabs-container">
+			<ul class="nav nav-tabs">
+				<li ng-class="{'active':statisticCtrl.currentTab === 'single'}" ng-click="statisticCtrl.tabOnClick('single')"><a href="/#/statistic/single" aria-expanded="true">{{
+					'STATISTIC_SINGLE_STATISTIC' | translate }}</a></li>
+				<li ng-class="{'active':statisticCtrl.currentTab === 'entire'}" ng-click="statisticCtrl.tabOnClick('entire')"><a href="/#/statistic/entire" aria-expanded="true">{{ 'STATISTIC_GENERAL_STATISTIC' | translate
+					}}</a></li>
+				<li ng-class="{'active':statisticCtrl.currentTab === 'my'}" ng-click="statisticCtrl.tabOnClick('my')"><a href="/#/statistic/my" aria-expanded="true">{{ 'STATISTIC_MY_STATISTIC' | translate}}</a></li>
+				<li ng-if="statisticCtrl.currentUser.role==='SUPERADMIN'|| statisticCtrl.currentUser.role==='ADMIN'" ng-class="{'active':statisticCtrl.currentTab === 'users'}" ng-click="statisticCtrl.tabOnClick('users')"><a href="/#/statistic/users" aria-expanded="true">{{ 'STATISTIC_USER_STATISTIC' | translate }}</a>
+				</li>
+			</ul>
+			</div>
+		</div>
+	</div>
 	<div ng-include="'components/Statistic/view/SingleStatistic.html'"></div>
 	<div ng-include="'components/Statistic/view/EntireStatistic.html'"></div>
+	<div ng-show="statisticCtrl.currentTab==='my'">
+		<div userstatistic chart="statisticCtrl.statisticService.MyUserStatisticColumnChart" daterange="statisticCtrl.dateRange" animated="false" source="statisticCtrl.source"
+        userobj="statisticCtrl.currentUser"></div>
+	</div>
 	<div ng-include="'components/Statistic/view/UserStatistic.html'"></div>
 </div>

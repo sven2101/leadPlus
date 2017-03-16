@@ -41,28 +41,91 @@ class CustomerService {
         if (insert) {
             customer.timestamp = newTimestamp();
             customer.realCustomer = true;
-            this.customerResource.createCustomer(customer).$promise.then(function (result: Customer) {
-                self.toaster.pop("success", "", self.translate.instant("CUSTOMER_TOAST_SAVE"));
-                customer = result;
-            }, function (result) {
-                self.toaster.pop("success", "", self.translate.instant("CUSTOMER_TOAST_ERROR"));
-            });
+            customer = await this.customerResource.createCustomer(customer).$promise as Customer;
         } else {
-            this.customerResource.updateCustomer(customer).$promise.then(function (result: Customer) {
-                self.toaster.pop("success", "", self.translate.instant("CUSTOMER_TOAST_SAVE"));
-                customer = result;
-            }, function (result) {
-                self.toaster.pop("success", "", self.translate.instant("CUSTOMER_TOAST_ERROR"));
-            });
+            customer = await this.customerResource.updateCustomer(customer).$promise as Customer;
         }
         return customer;
     }
 
-    insertCustomer(customer: Customer) {
-        return this.customerResource.createCustomer(customer).$promise;
+    async getCustomerById(customerId: number) {
+        let customer = await this.customerResource.getCustomerById({ id: customerId }).$promise as Customer;
+        if (isNullOrUndefined(customer.id)) {
+            return null;
+        }
+        return customer;
     }
+
+    async insertCustomer(customer: Customer): Promise<Customer> {
+        return await this.customerResource.createCustomer(customer).$promise as Customer;
+    }
+
     async updateCustomer(customer: Customer): Promise<Customer> {
-        return await this.customerResource.updateCustomer(customer);
+        return await this.customerResource.updateCustomer(customer).$promise as Customer;
+    }
+
+    // TODO change to mapzen api
+    matchAddressCompoenents(addressCompoenentArray: Array<any>, address: Address) {
+        if (isNullOrUndefined(addressCompoenentArray)) {
+            return;
+        }
+        address.street = "";
+        address.number = "";
+        address.city = "";
+        address.state = "";
+        address.country = "";
+        address.zip = "";
+        for (let addressComponent of addressCompoenentArray) {
+            if (!isNullOrUndefined(addressComponent.types)) {
+                for (let type of addressComponent.types) {
+                    if (type === "postal_code") {
+                        address.zip = addressComponent.long_name;
+                    } else if (type === "country") {
+                        address.country = addressComponent.long_name;
+                    } else if (type === "administrative_area_level_1") {
+                        address.state = addressComponent.long_name;
+                    } else if (type === "locality") {
+                        address.city = addressComponent.long_name;
+                    } else if (type === "route") {
+                        address.street = addressComponent.long_name;
+                    } else if (type === "street_number") {
+                        address.number = addressComponent.long_name;
+                    }
+                }
+            }
+        }
+    }
+
+    getAddressLine(address: Address) {
+        if (isNullOrUndefined(address)) {
+            return "";
+        }
+        let addressStr: string = "";
+        if (!isNullOrUndefined(address.street) && address.street !== "") {
+            addressStr += address.street;
+            if (!isNullOrUndefined(address.number)) {
+                addressStr += " " + address.number;
+            }
+            addressStr += ", ";
+        }
+        if (!isNullOrUndefined(address.city) && address.city !== "") {
+            if (!isNullOrUndefined(address.zip)) {
+                addressStr += address.zip + " ";
+            }
+            addressStr += address.city;
+            addressStr += ", ";
+        }
+        if (!isNullOrUndefined(address.state) && address.state !== "") {
+            addressStr += address.state;
+            addressStr += ", ";
+        }
+        if (!isNullOrUndefined(address.country)) {
+            addressStr += address.country;
+        }
+        if (addressStr.endsWith(", ")) {
+            addressStr = addressStr.slice(0, -2);
+        }
+        return addressStr;
     }
 
     getAllCustomerByPage(start: number, length: number, searchtext: string, allCustomers: boolean) {
@@ -74,6 +137,7 @@ class CustomerService {
             }
         });
     }
+
 
     getCustomerBySearchText(searchtext: string): any {
         if (!isNullOrUndefined(searchtext) && searchtext.length > 0) {

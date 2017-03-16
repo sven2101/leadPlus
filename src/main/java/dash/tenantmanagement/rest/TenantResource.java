@@ -18,13 +18,14 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.exceptions.SaveFailedException;
+import dash.exceptions.TenantAlreadyExistsException;
 import dash.tenantmanagement.business.ITenantService;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.registration.domain.Validation;
@@ -33,18 +34,21 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Tenant Resource")
-@RequestMapping(value = "/api/rest/tenants", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.ALL_VALUE })
+@RequestMapping(value = "/api/rest/tenants", consumes = { MediaType.ALL_VALUE })
 @Api(value = "Tenant API")
 public class TenantResource {
 
 	@Autowired
 	private ITenantService tenantService;
 
-	@RequestMapping(method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-	@ResponseStatus(HttpStatus.CREATED)
+	@RequestMapping(method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@ApiOperation(value = "Post a tenant. ", notes = "")
-	public Tenant save(@ApiParam(required = true) @RequestBody @Valid final Tenant tenant) throws SaveFailedException {
-		return tenantService.createNewTenant(tenant);
+	public ResponseEntity<?> save(@ApiParam(required = true) @RequestBody @Valid final Tenant tenant) {
+		try {
+			return new ResponseEntity<Tenant>(tenantService.createNewTenant(tenant), HttpStatus.CREATED);
+		} catch (TenantAlreadyExistsException ex) {
+			return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/unique/key")

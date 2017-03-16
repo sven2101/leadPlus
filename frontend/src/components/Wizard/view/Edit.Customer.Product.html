@@ -1,0 +1,26 @@
+<form name="cpform" novalidate>
+    <customer-edit form="null" edit-workflow-unit="editWorkflowUnit" edit-process="editProcess" editable="editable" small="true" show-customer-details="showCustomerData"></customer-edit>
+    <div style="margin-top: -30px">
+    <hr style="border-top: 1px dashed #8c8b8b;" />
+    <span ng-click="changeShowDeliveryData()" class="pull-left" style="font-size: 1.5em;cursor:pointer">
+            <h4 ng-style="{color: {true:'red'}[cpform.pform.$invalid || cpform.fakeform.$invalid]}">{{'SUPPLY' | translate}}
+                <i ng-if="showDeliveryData===true" class="fa fa-caret-up" aria-hidden="true"></i>
+                <i ng-if="showDeliveryData!==true" class="fa fa-caret-down" aria-hidden="true"></i>
+            </h4> 
+        </span>	
+    </div>
+    <br/><br/>
+    <div id="deliveryProductEditDiv" class="animate-if" ng-if="showDeliveryData">
+        <product-edit form="null" edit-workflow-unit="editWorkflowUnit" edit-process="editProcess" editable="editable"></product-edit>
+    </div>
+    <!-- Fake Hidden Inputfields for NG-IF validation-->
+    <ng-form name="fakeform">
+        <input required type="hidden" name="netPriceFake" ng-model="editProcess.offer.netPrice">
+        <input required type="hidden" name="vatFake" ng-model="editProcess.offer.vat">
+        <input ng-repeat="orderPosition in editWorkflowUnit.orderPositions" type="hidden" name="{{ 'fakeOrderPositionDiscount'+$index}}" ng-model="orderPosition.discount" required>
+        <input ng-repeat="orderPosition in editWorkflowUnit.orderPositions" type="hidden" name="{{ 'fakeOrderPositionNetPrice'+$index}}" ng-model="orderPosition.netPrice" required>
+    </ng-form>                      
+</form>
+
+
+

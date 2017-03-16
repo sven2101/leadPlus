@@ -21,6 +21,7 @@ import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.TEMPLATE_NOT_FOUND;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,9 +37,10 @@ import dash.exceptions.UpdateFailedException;
 import dash.messagemanagement.business.IMessageService;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.notificationmanagement.domain.Notification;
-import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.templatemanagement.domain.Template;
+import dash.templatemanagement.domain.WorkflowTemplateObject;
+import freemarker.template.TemplateException;
 
 @Service
 public class TemplateService implements ITemplateService {
@@ -116,20 +118,34 @@ public class TemplateService implements ITemplateService {
 			}
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			logger.error(UPDATE_FAILED_EXCEPTION + TemplateService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
+			logger.error(UPDATE_FAILED_EXCEPTION + TemplateService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+					ufex);
 			throw ufex;
 		}
 	}
 
 	@Override
-	public AbstractMessage generateOfferContent(final long templateId, final Offer offer, final Notification notification) throws NotFoundException {
-		if (offer != null) {
+	public AbstractMessage getMessageContent(final long templateId, final WorkflowTemplateObject workflowTemplateObject,
+			final Notification notification) throws NotFoundException, IOException, TemplateCompilationException {
+		return getMessageContentByTemplate(getById(templateId), workflowTemplateObject, notification);
+	}
+
+	@Override
+	public AbstractMessage getMessageContentByTemplate(final Template template,
+			final WorkflowTemplateObject workflowTemplateObject, final Notification notification)
+			throws NotFoundException, IOException, TemplateCompilationException {
+		if (workflowTemplateObject != null && template != null) {
 			try {
-				return messageService.getOfferContent(offer, getById(templateId).getContent(), notification);
-			} catch (Exception ex) {
+				return messageService.getMessageContent(workflowTemplateObject, template.getContent(), notification);
+			} catch (NotFoundException ex) {
 				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
-				throw new NotFoundException(OFFER_NOT_FOUND);
+				throw ex;
+			} catch (TemplateException ex) {
+				throw new TemplateCompilationException(ex.getFTLInstructionStack());
+			} catch (IOException ex) {
+				throw new TemplateCompilationException(ex.getMessage());
 			}
+
 		} else {
 			NotFoundException nfex = new NotFoundException(OFFER_NOT_FOUND);
 			logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);

@@ -1,26 +1,10 @@
 /// <reference path="../../app/App.Resource.ts" />
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 /// <reference path="../model/Attachment.Model.ts" />
-/// <reference path="../../Common/model/Promise.Interface.ts" />
 
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
-
-declare var Ladda;
 
 const NotificationServiceId: string = "NotificationService";
+const broadcastUserNotificationShouldChange: string = "userNotificationShouldChange";
 
 class NotificationService {
 
@@ -34,6 +18,7 @@ class NotificationService {
     fileReader;
     notification: Notification;
     q;
+    userNotifications: Array<Notification> = [];
 
     constructor(toaster, $translate, $rootScope, NotificationResource, $q) {
         this.notificationResource = NotificationResource.resource;
@@ -44,19 +29,40 @@ class NotificationService {
         this.formdata = new FormData();
         this.fileReader = new FileReader();
         this.notification = new Notification();
+        let broadcastUserNotificationShouldChangeListener = $rootScope.$on(broadcastUserNotificationShouldChange, (event, result) => {
+            this.refreshUserNotifications();
+        });
     }
 
-    sendNotification(notification: Notification): IPromise<boolean> {
-        let self = this;
-        let defer = this.q.defer();
-        this.notificationResource.sendNotification({ userId: this.rootScope.user.id, smtpKey: this.rootScope.user.smtpKey }, notification).$promise.then(function () {
-            self.toaster.pop("success", "", self.translate.instant("NOTIICATION_SEND"));
-            defer.resolve(true);
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("NOTIICATION_SEND_ERROR"));
-            defer.reject(false);
-        });
-        return defer.promise;
+    async sendNotification(notification: Notification, process: Process): Promise<Notification> {
+        try {
+            this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SENDING);
+            let sendNotification: Notification = await this.notificationResource.sendNotification({ processId: process.id, senderId: this.rootScope.user.id }, { smtpKey: this.rootScope.user.smtpKey, notification: notification }).$promise;
+
+            this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SUCCESS);
+            setTimeout(() => {
+                this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.DEFAULT);
+            }, 1000 * 60);
+            // this.toaster.pop("success", "", this.translate.instant("NOTIICATION_SEND"));
+            return sendNotification;
+        } catch (error) {
+            this.toaster.pop("error", "", this.translate.instant("NOTIICATION_SEND_ERROR"));
+            this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.ERROR);
+            throw error;
+        } finally {
+            this.rootScope.$broadcast(broadcastUserNotificationShouldChange);
+        }
+
+    }
+
+    async getNotificationsBySenderId(senderId: number): Promise<Array<Notification>> {
+        return this.notificationResource.getNotificationsBySenderId({ senderId: senderId }).$promise;
+    }
+
+    async refreshUserNotifications(): Promise<void> {
+        this.userNotifications = await this.getNotificationsBySenderId(this.rootScope.user.id);
+        this.rootScope.$broadcast(broadcastUserNotificationChanged, [this.userNotifications]);
+
     }
 
 }

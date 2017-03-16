@@ -2,20 +2,8 @@
 /// <reference path="../app/App.Authentication.Service.ts" />
 /// <reference path="../Profile/controller/Profile.Service.ts" />
 
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-"use strict";
-
-angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
-    function ($routeProvider, $httpProvider) {
+angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationProviderId, $compileProviderId,
+    function ($routeProvider, $httpProvider, $locationProvider, $compileProvider) {
         $routeProvider
             .when("/",
             {
@@ -36,28 +24,31 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             .when("/leads/:processId?",
             {
                 templateUrl: "components/Lead/view/Lead.html",
-                controller: "LeadController",
+                controller: "WorkflowController",
                 controllerAs: "leadCtrl",
                 authenticated: true,
-                package: "basic"
+                package: "basic",
+                type: WorkflowType.LEAD
             })
             .when("/offers/:processId?",
             {
                 templateUrl: "components/Offer/view/Offer.html",
-                controller: "OfferController",
+                controller: "WorkflowController",
                 controllerAs: "offerCtrl",
                 authenticated: true,
-                package: "basic"
+                package: "basic",
+                type: WorkflowType.OFFER
             })
             .when("/sales/:processId?",
             {
                 templateUrl: "components/Sale/view/Sale.html",
-                controller: "SaleController",
+                controller: "WorkflowController",
                 controllerAs: "saleCtrl",
                 authenticated: true,
-                package: "basic"
+                package: "basic",
+                type: WorkflowType.SALE
             })
-            .when("/statistic",
+            .when("/statistic/:tab?",
             {
                 templateUrl: "components/Statistic/view/Statistic.html",
                 controller: "StatisticController",
@@ -65,7 +56,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 authenticated: true,
                 package: "basic"
             })
-            .when("/settings",
+            .when("/settings/:tab?",
             {
                 templateUrl: "components/Setting/view/Setting.html",
                 controller: "SettingController",
@@ -73,17 +64,25 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 authenticated: true,
                 package: "basic"
             })
-            .when("/settings/detail/:userId",
+            .when("/settings/template/details/:templateId?",
             {
-                templateUrl: "components/Setting/view/UserDetail.html",
+                templateUrl: "components/Template/view/Template.Detail.html",
+                controller: "TemplateController",
+                controllerAs: "templateCtrl",
+                authenticated: true,
+                package: "basic"
+            })
+            .when("/statistic/users/detail/:userId",
+            {
+                templateUrl: "components/Statistic/view/UserDetail.html",
                 controller: "UserDetailController",
                 controllerAs: "UserDetailCtrl",
                 authenticated: true,
                 package: "basic"
             })
-            .when("/profile",
+            .when("/profile/:tab?",
             {
-                templateUrl: "components/Profile/view/Profile.html",
+                templateUrl: "components/Profile/view/ProfileMain.html",
                 controller: "ProfileController",
                 controllerAs: "profileCtrl",
                 authenticated: true,
@@ -121,10 +120,17 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controllerAs: "productCtrl",
                 authenticated: true,
                 package: "basic"
-            }).when("/product/detail/:productId",
+            }).when("/product/detail/:productId?",
             {
-                templateUrl: "components/Product/view/ProductDetail.html",
+                templateUrl: "components/Product/view/Product.Detail.html",
                 controller: "ProductDetailController",
+                controllerAs: "productDetailCtrl",
+                authenticated: true,
+                package: "basic"
+            }).when("/statistic/product/detail/:productId",
+            {
+                templateUrl: "components/Statistic/view/ProductDetail.html",
+                controller: "ProductStatisticDetailController",
                 controllerAs: "ProductDetailCtrl",
                 authenticated: true,
                 package: "basic"
@@ -135,6 +141,13 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controllerAs: "customerCtrl",
                 authenticated: true,
                 package: "basic"
+            }).when("/customer/timeline/:customerId",
+            {
+                templateUrl: "components/Customer/view/CustomerTimeline.html",
+                controller: "CustomerTimelineController",
+                controllerAs: "customerTimelineCtrl",
+                authenticated: true,
+                package: "basic"
             }).when("/customer/detail/:customerId",
             {
                 templateUrl: "components/Customer/view/CustomerDetail.html",
@@ -142,7 +155,25 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 controllerAs: "customerDetailCtrl",
                 authenticated: true,
                 package: "basic"
-            }).when("/401",
+            }).when("/licences/agb",
+            {
+                templateUrl: "components/Licence/view/AGB.html",
+                authenticated: false
+            }).when("/licences/licence",
+            {
+                templateUrl: "components/Licence/view/Licence.html",
+                authenticated: false
+            }).when("/licences/PrivacyPolicy",
+            {
+                templateUrl: "components/Licence/view/Privacy.Policy.html",
+                authenticated: false
+            })
+            .when("/licences/auftragsdatenverarbeitungsvertrag",
+            {
+                templateUrl: "components/Licence/view/Auftragsdatenverarbeitungsvertrag.html",
+                authenticated: false
+            })
+            .when("/401",
             {
                 templateUrl: "components/Common/view/Unauthorized.html",
             }).when("/403",
@@ -155,6 +186,8 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
                 redirectTo: "/404"
             });
 
+        $locationProvider.hashPrefix("");
+        $compileProvider.preAssignBindingsEnabled(true);
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
@@ -184,11 +217,14 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
         });
 
     }])
-    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId,
-        function ($location, $http, $rootScope, Auth, $cookies, $injector) {
+    .run([$locationId, $httpId, $rootScopeId, AuthServiceId, $cookiesId, $injectorId, $windowId, $qId,
+        function ($location, $http, $rootScope, Auth, $cookies, $injector, $window, $q) {
+            // TODO Workaround for native promises!!!
+            $window.Promise = $q;
             try {
                 $rootScope.user = $cookies.getObject("user");
                 $rootScope.tenant = $cookies.getObject("tenant");
+
             } catch (error) {
                 $rootScope.user = undefined;
                 $rootScope.tenant = undefined;
@@ -198,8 +234,12 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId,
             if (!isNullOrUndefined($rootScope.user) && !isNullOrUndefined($rootScope.tenant)) {
                 $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
                 $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
-                let dashboardService: DashboardService = $injector.get("DashboardService");
+                let x = $injector.get(SmtpServiceId);
+                let dashboardService: DashboardService = $injector.get(DashboardServiceId);
                 dashboardService.refreshTodos();
+                let notificationService: NotificationService = $injector.get(NotificationServiceId);
+                notificationService.refreshUserNotifications();
+
             }
 
             $rootScope.$on("$routeChangeStart", function (event, next, current) {

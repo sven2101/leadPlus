@@ -4,62 +4,59 @@
 	}
 </style>
 
-<div ng-if="settingCtrl.currentTab==3">
-	<div class="row">
-		<div class="col-lg-12">
-			<div class="ibox float-e-margins">
-				<div class="ibox-title">
-					<h5>{{ 'SOURCE_MANAGE_SOURCES' | translate }} - <strong>{{sourceCtrl.sourceService.sources.length}}</strong> {{ 'SOURCE_SOURCES'
-						| translate }}</h5>
-				</div>
-				<div class="ibox-content">
-					<form role="form" class="form-inline">
-						<button type="button" class="btn btn-success btn-sm btn-primary" ng-click="sourceCtrl.clearSource()" data-toggle="modal"
-							data-target="#createSourceModal" data-backdrop="static">
-                                <i class="fa fa-plus"></i>
-                                &nbsp;{{ 'SOURCE_CREATE' | translate }}
-                        </button>
+<div ng-if="settingCtrl.currentTab=='source'">
+	<div class="ibox float-e-margins">
+		<div class="ibox-title">
+			<h5>{{ 'SOURCE_MANAGE_SOURCES' | translate }} - <strong>{{sourceCtrl.sourceService.sources.length}}</strong> {{ 'SOURCE_SOURCES'
+				| translate }}</h5>
+		</div>
+		<div class="ibox-content"  style="overflow-x: auto">
+			<form role="form" class="form-inline">
+				<button type="button" class="btn btn-success btn-primary" ng-click="sourceCtrl.clearSource()" data-toggle="modal"
+					data-target="#createSourceModal" data-backdrop="static">
+						<i class="fa fa-plus"></i>
+						&nbsp;{{ 'SOURCE_CREATE' | translate }}
+				</button>
 
-						<!--
-                        <button type="button" ng-click="sourceCtrl.refreshData()" type="button" class="btn btn-success btn-sm btn-primary">
-                            <i class="fa fa-refresh"></i>
-                            &nbsp;{{ 'COMMON_REFRESH' | translate }}
-                        </button>
-                            -->
-						<span class="pull-right ">
-                            <input  type="text" placeholder="{{ 'COMMON_SEARCH' | translate }}" class="input-sm form-control" ng-model="searchText">
-                        </span>
-					</form>
+				<!--
+				<button type="button" ng-click="sourceCtrl.refreshData()" type="button" class="btn btn-success btn-sm btn-primary">
+					<i class="fa fa-refresh"></i>
+					&nbsp;{{ 'COMMON_REFRESH' | translate }}
+				</button>
+					-->
+				<span class="pull-right ">
+					<input  type="text" placeholder="{{ 'COMMON_SEARCH' | translate }}" class="input-sm form-control" ng-model="searchText">
+				</span>
+			</form>
 
-					<div class="project-list">
-						<table class="table table-hover text-center">
-							<tbody>
-								<tr ng-repeat="source in sourceCtrl.sourceService.sources| filter:searchText |orderBy:'name' | limitTo:sourceCtrl.sourceAmountLimit ">
-									<!-- <td class="project-status col-md-1">
-										<span ng-show="!source.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
-										<span ng-show="source.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
-									</td> -->
-									<td><i class="fa fa-rss" aria-hidden="true"></i></td>
-									<td class="project-status col-md-1">
-									</td>
-									<td class="project-title col-md-2">
-										<a>{{source.name}}</a>
-									</td>
-									<td class="project-completion col-md-7" max>
-										<small style="word-wrap: break-word; word-break: break-all;">{{source.description}}</small>
-									</td>
-									<td class="project-actions col-md-1">
-										<button type="button" class="btn btn-white btn-sm" ng-click="sourceCtrl.editSource(source)" data-toggle="modal" data-target="#createSourceModal"
-											data-backdrop="static">
-                                     <i class="fa fa-pencil"></i>&nbsp;Edit</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<div ng-if="sourceCtrl.sourceAmountLimit<=sourceCtrl.sourceService.sources.length" class="row" style="text-align: center;">
-							<a href="" ng-click="sourceCtrl.sourceAmountLimit=sourceCtrl.sourceAmountLimit+20">20 {{ 'COMMON_LOAD_MORE' | translate }}</a>
-						</div>
-					</div>
+			<div class="project-list">
+				<table class="table table-hover text-center">
+					<thead>
+						<tr>
+							<th></th>
+							<th class="text-center">{{ 'COMMON_NAME' | translate }}</th>
+							<th class="text-center">{{ 'COMMON_DESCRIPTION' | translate }}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="source in sourceCtrl.sourceService.sources| filter:searchText |orderBy:'name' | limitTo:sourceCtrl.sourceAmountLimit " style="cursor: pointer" ng-click="sourceCtrl.editSource(source)" data-toggle="modal" data-target="#createSourceModal"
+									data-backdrop="static">
+							<!-- <td class="project-status col-md-1">
+								<span ng-show="!source.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
+								<span ng-show="source.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
+							</td> -->
+							<td class="project-title col-md-1"><i class="fa fa-rss" aria-hidden="true"></i></td>
+							<td class="project-title col-md-3">
+								<a>{{source.name}}</a>
+							</td>
+							<td class="project-completion col-md-7" max>
+								<small style="word-wrap: break-word; word-break: break-all;">{{source.description}}</small>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div ng-if="sourceCtrl.sourceAmountLimit<=sourceCtrl.sourceService.sources.length" class="row" style="text-align: center;">
+					<a href="" ng-click="sourceCtrl.sourceAmountLimit=sourceCtrl.sourceAmountLimit+20">20 {{ 'COMMON_LOAD_MORE' | translate }}</a>
 				</div>
 			</div>
 		</div>

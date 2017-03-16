@@ -1,4 +1,4 @@
-<div ng-if="statisticCtrl.currentTab==1">
+<div ng-if="statisticCtrl.currentTab==='single'">
     <div class="row">
         <div class="col-lg-6">
             <div class="ibox float-e-margins">
@@ -105,7 +105,7 @@
                         <tbody>
                             <tr ng-repeat="productStatistic in  statisticCtrl.getProductStatistic() |orderBy:'-count' | limitTo:10">
                                 <td>{{$index+1}}</td>
-                                <td>{{productStatistic.product.name}}</td>
+                                <td class="text-center"><a ng-href="#/statistic/product/detail/{{productStatistic.product.id}} ">{{productStatistic.product.name}} <i class="fa fa-line-chart"></i></a></td>
                                 <td>{{productStatistic.count}}</td>
                                 <td>{{productStatistic.turnover | currency:'\u20AC'}}</td>
                                 <td>{{statisticCtrl.getRatePercentage(productStatistic.discount,productStatistic.count)/100 |

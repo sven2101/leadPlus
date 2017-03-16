@@ -13,36 +13,54 @@
  *******************************************************************************/
 package dash.test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
 import org.apache.commons.codec.binary.Base64;
-import org.junit.After;
-import org.junit.Before;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.TestRestTemplate;
+import org.h2.server.web.WebServlet;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import dash.commentmanagement.business.CommentRepository;
-import dash.customermanagement.business.CustomerRepository;
-import dash.leadmanagement.business.LeadRepository;
-import dash.offermanagement.business.OfferRepository;
-import dash.processmanagement.business.ProcessRepository;
-import dash.productmanagement.business.ProductRepository;
-import dash.salemanagement.business.SaleRepository;
-import dash.usermanagement.business.UserRepository;
-import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
-import dash.usermanagement.settings.language.Language;
-import dash.vendormanagement.business.VendorRepository;
 
-public class BaseConfig {
+/**
+ * defines Base-Configurations for testing
+ *
+ */
+@RunWith(SpringRunner.class)
+@ActiveProfiles("test")
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
+public abstract class BaseConfig {
 
+	@Bean
+	public ServletRegistrationBean h2servletRegistration() {
+		ServletRegistrationBean registration = new ServletRegistrationBean(new WebServlet());
+		registration.addUrlMappings("/console/*");
+		return registration;
+	}
+
+	// REST-API Endpoints
 	protected final static String BASE_URI = "http://localhost:8080";
-	protected final static String USERNAME = "test";
-	protected final static String PASSWORD = "test";
 
 	protected final static String REST_COMMENTS = "/api/rest/comments";
 	protected final static String REST_CONTAINERS = "/api/rest/containers";
@@ -55,80 +73,60 @@ public class BaseConfig {
 	protected final static String REST_SALES = "/api/rest/sales";
 	protected final static String REST_VENDORS = "/api/rest/vendors";
 
-	protected RestTemplate restTemplate = new TestRestTemplate();
-	protected HttpHeaders headers = new HttpHeaders();
-
-	protected String plainCreds = USERNAME + ":" + PASSWORD;
-	protected byte[] plainCredsBytes = plainCreds.getBytes();
-	protected byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
-	protected String base64Creds = new String(base64CredsBytes);
-
-	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
-	private ProcessRepository processRepository;
-
-	@Autowired
-	private CommentRepository commentRepository;
-
-	@Autowired
-	private ProductRepository containerRepository;
-
-	@Autowired
-	private CustomerRepository customerRepository;
-
-	@Autowired
-	private LeadRepository leadRepository;
-
-	@Autowired
-	private OfferRepository offerRepository;
-
-	@Autowired
-	private SaleRepository saleRepository;
-
-	@Autowired
-	private VendorRepository vendorRepository;
+	protected final static String BASIC_HEADER = "YWRtaW5AZXZpYXJjLmNvbTorNVJvOEMvbWFqSEJtalNDUDVIazUwakRjYncyYUFxSHZ3MHRoZ05jc2pRPQ==";
 
 	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+	public TestRestTemplate testRestTemplate() {
+		return new TestRestTemplate();
 	}
 
-	@Before
-	public void setup() {
-		User test = new User();
-
-		test.setPassword(passwordEncoder().encode("test"));
-		test.setEmail("test@eviarc.com");
-
-		test.setRole(Role.USER);
-		test.setEnabled(true);
-		test.setLanguage(Language.DE);
-
-		userRepository.save(test);
-
-		headers.clear();
-		headers.add("Authorization", "Basic " + base64Creds);
+	public HttpHeaders getHttpHeaders() {
+		final HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.add("X-TenantID", "demo.leadplus.me");
+		headers.add("Authorization", "Basic " + BASIC_HEADER);
+		return headers;
 	}
 
-	@After
-	public void after() {
-		commentRepository.deleteAll();
+	public String getBasic64Creds(String username, String password) {
+		String plainCreds = username + ":";
 
-		processRepository.deleteAll();
+		byte a[] = plainCreds.getBytes();
+		byte b[] = hashPassword(password.toCharArray(), username.getBytes(), 10000, 44);
 
-		leadRepository.deleteAll();
-		offerRepository.deleteAll();
-		saleRepository.deleteAll();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		try {
+			outputStream.write(a);
+			outputStream.write(b);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-		customerRepository.deleteAll();
+		byte plainCredsBytes[] = outputStream.toByteArray();
+		byte[] base64CredsBytes = Base64.encodeBase64(plainCredsBytes);
+		return new String(base64CredsBytes);
+	}
 
-		containerRepository.deleteAll();
+	protected byte[] hashPassword(final char[] password, final byte[] salt, final int iterations, final int length) {
+		try {
+			SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+			PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, length);
+			SecretKey key = skf.generateSecret(spec);
+			byte[] res = key.getEncoded();
+			System.out.println(new String(res));
+			return res;
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-		vendorRepository.deleteAll();
+	protected User getUserById(final long id) {
+		HttpEntity<Object> authenticate = new HttpEntity<>(this.getHttpHeaders());
 
-		userRepository.deleteAll();
+		ResponseEntity<User> response = testRestTemplate().exchange(BASE_URI + "/users/2", HttpMethod.GET, authenticate,
+				User.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		return response.getBody();
 	}
 }

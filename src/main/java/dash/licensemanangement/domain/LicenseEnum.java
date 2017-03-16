@@ -10,9 +10,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public enum LicenseEnum {
 	ERROR("error", new HashSet<String>(Arrays.asList("/components/Common/view/NotFound.html",
 			"/components/Common/view/Unauthorized.html", "/components/Common/view/Forbidden.html", "/main.html")),
-			0), FREE("free", new HashSet<String>(Arrays.asList("/", "/health", "/images/favicon/**", "/assets/**",
-					"/fonts/**", "/app/**", "/components/Login/view/Login.html", "/logout", "/logout.html", "/401.html",
-					"/403.html", "/404.html", "/components/Signup/view/Signup.html",
+			0), FREE("free", new HashSet<String>(Arrays.asList("/", "/console/**", "/health", "/images/favicon/**",
+					"/assets/**", "/fonts/**", "/app/**", "/components/Login/view/Login.html", "/logout",
+					"/logout.html", "/401.html", "/403.html", "/404.html", "/components/Signup/view/Signup.html",
 					"/components/Tenant/registration/view/**", "/components/Licence/view/**",
 					"/api/rest/tenants/unique/key", "/api/rest/tenants", "/api/rest/registrations/**",
 					"/components/Common/view/NotFound.html", "/components/Common/view/Unauthorized.html",
@@ -25,7 +25,9 @@ public enum LicenseEnum {
 									"/components/Offer/view/**", "/components/Product/view/**",
 									"/components/Profile/view/**", "/components/Sale/view/**",
 									"/components/Setting/view/**", "/components/Template/view/**", "/main.html",
-									"/api/rest/**", "/components/Statistic/view/**")),
+									"/api/rest/**", "/components/Statistic/view/**", "/components/Wizard/view/**",
+									"/components/ActionButtons/view/**", "/components/Commentary/view/**",
+									"/components/ConfirmationModal/view/**", "/components/Workflow/view/**")),
 							2), PRO("pro", new HashSet<String>(Arrays.asList("")),
 									3), ULTIMATE("ultimate", new HashSet<String>(Arrays.asList("")), 4);
 

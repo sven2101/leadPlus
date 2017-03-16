@@ -1,25 +1,18 @@
 /// <reference path="../app/App.Constants.ts" />
+/// <reference path="../app/App.Common.ts" />
 /// <reference path="../app/App.Resource.ts" />
 /// <reference path="../dashboard/controller/Dashboard.Service.ts" />
 /// <reference path="../Profile/controller/Profile.Service.ts" />
-
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-"use strict";
+/// <reference path="../Notification/model/NotificationSendState.ts" />
 
 const AppControllerId: string = "AppController";
+const broadcastSetNotificationSendState: string = "setNotificationSendState";
+const broadcastAddNotification: string = "AddNotification";
+const broadcastUserNotificationChanged: string = "userNotificationChanged";
 
 class AppController {
 
-    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId];
+    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId, $windowId, $timeoutId, SmtpServiceId];
 
     translate;
     rootScope;
@@ -27,12 +20,17 @@ class AppController {
     location;
     processResource;
     userResource;
+    window;
     stop;
+    timeout;
     todos: Array<Process> = [];
+    userNotifications: Array<Notification> = [];
+    notificationSendState: NotificationSendState = NotificationSendState.DEFAULT;
 
     profileService: ProfileService;
+    rendered: boolean = false;
 
-    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope) {
+    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService, $window, $timeout) {
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.interval = $interval;
@@ -41,13 +39,13 @@ class AppController {
         this.profileService = ProfileService;
         this.rootScope.leadsCount = 0;
         this.location = $location;
+        this.window = $window;
+        this.timeout = $timeout;
 
         this.rootScope.offersCount = 0;
         this.stop = undefined;
 
         this.setCurrentUserPicture();
-
-
         this.registerLoadLabels();
         this.rootScope.loadLabels();
         this.registerChangeLanguage();
@@ -59,9 +57,47 @@ class AppController {
             this.todos = result;
         });
 
+        let broadcastAddNotificationListener = $scope.$on(broadcastAddNotification, (event, notification: Notification) => {
+            this.userNotifications.push(notification);
+        });
+
+        let broadcastSetNotificationSendStateListener = $scope.$on(broadcastSetNotificationSendState, (event, notificationSendState: NotificationSendState) => {
+            this.notificationSendState = notificationSendState;
+            if ($scope.$$phase == null) {
+                $scope.$apply();
+            }
+        });
+        let broadcastUserNotificationChangedListener = $rootScope.$on(broadcastUserNotificationChanged, (event, result) => {
+            this.userNotifications = result;
+        });
+
         $scope.$on("$destroy", function handler() {
             todosChanged();
+            broadcastAddNotificationListener();
+            broadcastSetNotificationSendStateListener();
+            broadcastUserNotificationChangedListener();
         });
+
+        $scope.$on("$viewContentLoaded", function () {
+            $(document.getElementById("outer-language")).css("visibility", "visible");
+            $(document.body).css("overflow", "hidden");
+            $rootScope.documentLoaded = true;
+            setTimeout(function () {
+                $(document.body).css("overflow", "visible");
+                $(window).trigger("resize");
+                $(document.getElementById("loading-pane-overlay")).addClass("loading-pane-fade-out");
+                setTimeout(function () {
+                    $(document.getElementById("loading-pane-overlay")).children().removeClass("loader");
+                }, 1000);
+            }, 1250);
+        });
+    }
+
+
+    setTopbarNotificationState(state: NotificationSendState) {
+        this.timeout(() => {
+            this.notificationSendState = state;
+        }, 200);
     }
 
     navigateTo(todo: Process) {
@@ -118,6 +154,14 @@ class AppController {
                         self.rootScope.changeLanguage(result.language);
                     });
             }
+            else {
+                // TODO remove after Safari testing          
+                let lang: string = self.window.navigator.language || self.window.navigator.userLanguage;
+                if (lang.indexOf("de") !== -1) {
+                    lang = "DE";
+                }
+                self.rootScope.changeLanguage(lang.toUpperCase());
+            }
         };
     }
 
@@ -172,6 +216,10 @@ class AppController {
             }
         }
         return sum;
+    }
+
+    openEmailDirective(notification: Notification, processId: number): void {
+        this.rootScope.$emit(openQuickEmailModal, { notification: deepCopy(notification), processId: processId });
     }
 }
 

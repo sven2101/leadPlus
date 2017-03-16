@@ -97,7 +97,7 @@ public class Product implements Serializable {
 	private Double netPrice;
 
 	@ApiModelProperty(hidden = true)
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "picture_fk", nullable = true)
 	private FileUpload picture;
 
@@ -119,6 +119,14 @@ public class Product implements Serializable {
 
 	public ProductState getProductState() {
 		return productState;
+	}
+
+	public String getProductStateGermanTranslation() {
+		return productState == null ? null : productState.getGermanTranslation();
+	}
+
+	public String getProductStateEnglishTranslation() {
+		return productState == null ? null : productState.getEnglishTranslation();
 	}
 
 	public void setProductState(ProductState productState) {

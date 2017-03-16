@@ -23,9 +23,12 @@ import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_NOT_FOUND;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.mail.MessagingException;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,35 +48,47 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
 import dash.fileuploadmanagement.business.IFileUploadService;
+import dash.messagemanagement.business.MessageService;
+import dash.messagemanagement.domain.AbstractMessage;
+import dash.notificationmanagement.business.AWSEmailService;
 import dash.smtpmanagement.business.ISmtpService;
 import dash.smtpmanagement.domain.Smtp;
 import dash.tenantmanagement.business.TenantContext;
+import dash.tenantmanagement.business.TenantService;
+import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
 import dash.usermanagement.registration.domain.Validation;
 import dash.usermanagement.settings.language.Language;
 import dash.usermanagement.settings.password.PasswordChange;
+import freemarker.template.TemplateException;
 
 @Service
 public class UserService implements IUserService {
 
 	private static final Logger logger = Logger.getLogger(UserService.class);
 
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final IFileUploadService fileUploadService;
+	private final ISmtpService smtpService;
+	private MessageService messageService;
+	private AWSEmailService awsEmailService;
+	private TenantService tenantService;
 
 	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private Validation validation;
-
-	@Autowired
-	private IFileUploadService fileUploadService;
-
-	@Autowired
-	private ISmtpService smtpService;
+	public UserService(IFileUploadService fileUploadService, ISmtpService smtpService, PasswordEncoder passwordEncoder,
+			UserRepository userRepository, MessageService messageService, AWSEmailService awsEmailService,
+			TenantService tenantService) {
+		this.fileUploadService = fileUploadService;
+		this.smtpService = smtpService;
+		this.passwordEncoder = passwordEncoder;
+		this.userRepository = userRepository;
+		this.messageService = messageService;
+		this.awsEmailService = awsEmailService;
+		this.tenantService = tenantService;
+	}
 
 	@Override
 	public List<User> getAll() {
@@ -104,7 +119,7 @@ public class UserService implements IUserService {
 	}
 
 	public User checkEmailExists(final String email) {
-		if (Optional.ofNullable(email).isPresent()) {
+		if (email != null) {
 			return userRepository.findByEmailIgnoreCase(email);
 		}
 		return null;
@@ -112,7 +127,7 @@ public class UserService implements IUserService {
 
 	@Override
 	public User save(final User user) throws SaveFailedException {
-		if (Optional.ofNullable(user).isPresent()) {
+		if (user != null) {
 			return userRepository.save(user);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
@@ -213,15 +228,12 @@ public class UserService implements IUserService {
 					if (passwordEncoder.matches(passwordChange.getOldPassword(), user.getPassword())) {
 						user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
 						Smtp smtp = null;
-						try {
-							smtp = smtpService.findByUser(id);
-						} catch (NotFoundException ex) {
-							smtp = null;
-						}
+						smtp = smtpService.findByUserId(user.getId());
 						if (smtp != null) {
 							smtp.setPassword(Encryptor.decrypt(
 									new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()),
 									passwordChange.getOldSmtpKey()));
+							smtp.setDecrypted(true);
 							smtpService.save(smtp, passwordChange.getNewSmtpKey());
 						}
 						save(user);
@@ -312,7 +324,7 @@ public class UserService implements IUserService {
 				user.setPassword(passwordEncoder.encode(registration.getPassword()));
 				user.setRole(role);
 				user.setEnabled(enabled);
-				user.setLanguage(Language.EN);
+				user.setLanguage(registration.getLanguage());
 				user.setDefaultVat(19.00);
 
 				return save(user);
@@ -329,10 +341,11 @@ public class UserService implements IUserService {
 	}
 
 	public Validation emailAlreadyExists(String email) {
-		this.validation.setValidation(false);
+		final Validation validation = new Validation();
+		validation.setValidation(false);
 		if (checkEmailExists(email) != null)
-			this.validation.setValidation(true);
-		return this.validation;
+			validation.setValidation(true);
+		return validation;
 	}
 
 	@Override
@@ -342,28 +355,27 @@ public class UserService implements IUserService {
 		user.setProfilPicture(fileUploadService.save(file));
 		return update(user);
 	}
-	
-	public void createInitialUsers(String apiPassword) throws SaveFailedException{
+
+	public void createInitialUsers(String apiPassword) throws SaveFailedException {
 		User superadmin = new User();
 		superadmin.setEmail("superadmin@eviarc.com");
 		superadmin.setUsername("superadmin@eviarc.com");
 		superadmin.setFirstname("Superadmin");
 		superadmin.setLastname("Eviarc");
-		
+
 		superadmin.setPassword("$2a$10$V7c4F8TMpN6zUPC4llkuM.tvGp.HuHdoEmu2CqMS1IEHGyGEOUAWW");
 		superadmin.setRole(Role.SUPERADMIN);
 		superadmin.setEnabled(true);
 		superadmin.setLanguage(Language.EN);
 		superadmin.setDefaultVat(19.00);
 		this.save(superadmin);
-		
+
 		User api = new User();
-		api.setEmail("api@"+TenantContext.getTenant());
-		api.setUsername("api@"+TenantContext.getTenant());
+		api.setEmail("api@" + TenantContext.getTenant());
+		api.setUsername("api@" + TenantContext.getTenant());
 		api.setFirstname("Api");
 		api.setLastname(TenantContext.getTenant());
-		api.setPassword(
-				passwordEncoder.encode(apiPassword));
+		api.setPassword(passwordEncoder.encode(apiPassword));
 		api.setRole(Role.API);
 		api.setEnabled(true);
 		api.setLanguage(Language.EN);
@@ -371,4 +383,16 @@ public class UserService implements IUserService {
 		this.save(api);
 	}
 
+	public void notifyUser(User user) throws TemplateException, IOException, MessagingException {
+		Tenant tenant = this.tenantService.getTenantByName(TenantContext.getTenant());
+
+		String templateName = "welcome_en.ftl";
+		if (user.getLanguage().equals(Language.DE))
+			templateName = "welcome_de.ftl";
+
+		AbstractMessage welcomeMessage = this.messageService.getWelcomeMessage(templateName, tenant, user);
+		this.awsEmailService.sendMail("andreas.foitzik@leadplus.io", welcomeMessage.getRecipients(),
+				welcomeMessage.getSubject(), welcomeMessage.getContent());
+
+	}
 }
