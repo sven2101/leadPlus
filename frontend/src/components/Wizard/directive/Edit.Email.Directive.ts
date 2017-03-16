@@ -35,7 +35,7 @@ class EditEmailDirective implements IDirective {
             EditEmailDirective.init = true;
             return;
         }
-
+        scope.rootScope = this.$rootScope;
         scope.$sce = this.$sce;
         scope.$window = this.$window;
         scope.translate = this.$translate;

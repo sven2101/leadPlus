@@ -5222,6 +5222,13 @@ body.modal-open {
 .b-l{
   border-left: 1px solid #e7eaec
 }
+.text-ellipses{
+		white-space: nowrap;
+		text-overflow: ellipsis; 
+    max-width: 250px;
+    display: inline-block;
+		overflow: hidden;
+	}
 
 
 /*!

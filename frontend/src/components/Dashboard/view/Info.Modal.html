@@ -66,19 +66,19 @@
 									<span class="elipsis" title="{{dashboardCtrl.workflowModalData.deliveryAddressLine}}">{{dashboardCtrl.workflowModalData.deliveryAddressLine}}</span>
 								</div>
 							</div>
-							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'offer' || dashboardCtrl.workflowModalType == 'lead'">
+							<div class="col-md-3 b-r ">
 								<div>
 									<label><i class="fa fa-truck " aria-hidden="true "></i> {{ 'COMMON_DELIVERY_TIME' | translate }}</label>
 									<span>{{dashboardCtrl.workflowModalData.deliveryDate | date:'dd-MM-yyyy'}}</span>
 								</div>
 							</div>		
-							<div class="col-sm-3 b-r " ng-if="dashboardCtrl.workflowModalType=='offer'">
+							<div class="col-sm-3 b-r " ng-if="dashboardCtrl.workflowModalType=='offer' || dashboardCtrl.workflowModalType=='sale'">
 							<div>
 								<label title="{{ 'COMMON_SUPPLY_DELIVERY_TERM' | translate }}"><i class="fa fa-truck " aria-hidden="true "></i>  {{ 'COMMON_SUPPLY_DELIVERY_TERM' | translate }}</label>
 								<span class="elipsis" title="{{dashboardCtrl.workflowModalData.deliveryTerm}}">{{dashboardCtrl.workflowModalData.deliveryTerm}}</span>
 							</div>
 							</div>
-							<div class="col-sm-3 b-r " ng-if="dashboardCtrl.workflowModalType=='offer'">
+							<div class="col-sm-3 b-r " ng-if="dashboardCtrl.workflowModalType=='offer' || dashboardCtrl.workflowModalType=='sale'">
 								<div>
 									<label title="{{ 'COMMON_SUPPLY_PAYMENT_TERM' | translate }}"><i class="fa fa-usd " aria-hidden="true "></i>  {{ 'COMMON_SUPPLY_PAYMENT_TERM' | translate }}</label>
 									<span class="elipsis" title="{{dashboardCtrl.workflowModalData.paymentTerm}}">{{dashboardCtrl.workflowModalData.paymentTerm}}</span>
@@ -136,6 +136,12 @@
 								<div>
 									<label><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_SALE_PROFIT' | translate }}</label>
 									<span>{{dashboardCtrl.workflowModalData.saleProfit| currency:'\u20AC'}}</span>
+								</div>
+							</div>
+							<div class="col-md-3 b-r ">
+								<div>
+									<label title="{{ 'COMMON_BILLING_ADDRESS' | translate }}"><i class="fa fa-university " aria-hidden="true "></i> {{ 'COMMON_BILLING_ADDRESS' | translate }}</label>
+									<span title="{{dashboardCtrl.workflowService.customerService.getAddressLine(dashboardCtrl.workflowModalData.billingAddress)}}">{{dashboardCtrl.workflowService.customerService.getAddressLine(dashboardCtrl.workflowModalData.billingAddress)}}</span>
 								</div>
 							</div>
 							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'sale'">
@@ -200,7 +206,7 @@
 													{{dashboardCtrl.toLocalDate(dashboardCtrl.workflowModalProcess.comments[dashboardCtrl.workflowModalProcess.comments.length-1].timestamp)}}
 												</small>
 							</div>
-							<div ng-if="showComments===true">
+							<div ng-if="showComments===true" class="animate-if">
 							<div class="chat-view">
 								<div class=" text-left">
 									<div ng-if="dashboardCtrl.workflowModalProcess.comments.length>0" class="row">
