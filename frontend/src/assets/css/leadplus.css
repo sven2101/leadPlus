@@ -65,6 +65,7 @@ div#loginscreen
     background-size: cover; 
     position: absolute; 
     background-position: center; 
+    overflow-x: hidden;
     width: 100%; 
     min-height: 100%; 
     top: 0;  
