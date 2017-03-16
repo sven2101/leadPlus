@@ -86,7 +86,8 @@ public class FileUploadResource {
 		fileService.delete(id);
 	}
 
-	@RequestMapping(value = "/pdf", method = RequestMethod.POST, produces = { MediaType.APPLICATION_PDF_VALUE })
+	@RequestMapping(value = "/generate/pdf", method = RequestMethod.POST, produces = {
+			MediaType.APPLICATION_PDF_VALUE })
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "generate PDF", notes = "")
 	public byte[] genereatePdfFromHtml(@RequestBody Map<String, String> json)

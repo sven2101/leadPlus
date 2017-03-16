@@ -13,11 +13,18 @@
  *******************************************************************************/
 package dash.templatemanagement.domain;
 
+import java.util.Set;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -61,6 +68,12 @@ public class Template {
 	@NotNull
 	@Column(name = "deactivated", nullable = false)
 	private boolean deactivated;
+
+	@ElementCollection(targetClass = TemplateType.class)
+	@CollectionTable(name = "template_types", joinColumns = @JoinColumn(name = "template_id"))
+	@Column(name = "template_type", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Set<TemplateType> templateTypes;
 
 	public Template() {
 	}
@@ -129,6 +142,14 @@ public class Template {
 		this.subject = subject;
 	}
 
+	public Set<TemplateType> getTemplateTypes() {
+		return templateTypes;
+	}
+
+	public void setTemplateTypes(Set<TemplateType> templateTypes) {
+		this.templateTypes = templateTypes;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -141,6 +162,7 @@ public class Template {
 		result = prime * result + ((notificationTypeString == null) ? 0 : notificationTypeString.hashCode());
 		result = prime * result + ((sourceString == null) ? 0 : sourceString.hashCode());
 		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+		result = prime * result + ((templateTypes == null) ? 0 : templateTypes.hashCode());
 		return result;
 	}
 
@@ -189,6 +211,11 @@ public class Template {
 			if (other.subject != null)
 				return false;
 		} else if (!subject.equals(other.subject))
+			return false;
+		if (templateTypes == null) {
+			if (other.templateTypes != null)
+				return false;
+		} else if (!templateTypes.equals(other.templateTypes))
 			return false;
 		return true;
 	}

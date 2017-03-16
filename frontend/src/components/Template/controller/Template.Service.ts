@@ -104,16 +104,8 @@ class TemplateService {
         return this.templateResource.test({ workflowTemplateObject: workflow, notification: notification, template: template }).$promise;
     }
 
-    generatePDF(html: string) {
-        let defer = this.q.defer();
-        let self = this;
-        this.templateResource.generatePDF({ htmlString: html }).$promise.then(function (result) {
-            console.log(result);
-            defer.resolve(result);
-        }, function (error: any) {
-            defer.reject(error);
-        });
-        return defer.promise;
+    async generatePDF(html: string) {
+        return await this.templateResource.generatePDF({ htmlString: html }).$promise;
     }
 
     async getAll(): Promise<Array<Template>> {

@@ -9,7 +9,10 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
 
 import dash.common.HtmlCleaner;
@@ -22,7 +25,7 @@ public class HtmlToPdfService {
 	public static final String PHANTOMJS_EXE = PHANTOMJS_ROOT_DIR + "/phantomjs.exe";
 	public static final String TEMP_DIR = PHANTOMJS_ROOT_DIR + "/temp";
 
-	public synchronized byte[] genereatePdfFromHtml(String htmlString)
+	public synchronized byte[] genereatePdfFromHtml(String htmlStringWithImageInline)
 			throws PdfGenerationFailedException, IOException {
 
 		int exitCode = 0;
@@ -33,17 +36,19 @@ public class HtmlToPdfService {
 		File tempPdf = null;
 		String errorConsoleOutput = "";
 		Process phantom = null;
-
+		List<File> files = null;
 		try {
 			// String tempDirUrl =
 			// this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()+
 			// TEMP_DIR;
+			files = new ArrayList<>();
+			String htmlString = extractBase64Images(htmlStringWithImageInline, files);
 
 			String tempDirUrl = this.getClass().getResource(TEMP_DIR).getPath();
 
 			tempHtml = File.createTempFile("tempHtml", ".html", new File(tempDirUrl));
 			writer = new PrintWriter(tempHtml);
-			writer.print(HtmlCleaner.cleanHtml(htmlString));
+			writer.print(HtmlCleaner.cleanHtmlForPdf(htmlString));
 			writer.close();
 
 			String configFileUrl = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()
@@ -59,7 +64,7 @@ public class HtmlToPdfService {
 			phantom = renderProcess.start();
 
 			long now = System.currentTimeMillis();
-			long timeoutInMillis = 1000L * 10;
+			long timeoutInMillis = 1000L * 60;
 			long finish = now + timeoutInMillis;
 			while (isAlive(phantom) && (System.currentTimeMillis() < finish)) {
 				Thread.sleep(100);
@@ -118,6 +123,9 @@ public class HtmlToPdfService {
 			if (phantom != null) {
 				phantom.destroy();
 			}
+			if (files != null) {
+				files.stream().filter(f -> f != null).forEach(f -> f.delete());
+			}
 		}
 
 	}
@@ -129,6 +137,49 @@ public class HtmlToPdfService {
 		} catch (IllegalThreadStateException e) {
 			return true;
 		}
+	}
+
+	private String extractBase64Images(String oldHtml, List<File> files) throws IOException {
+		StringBuilder newContentBuilder = new StringBuilder();
+		boolean inImage = false;
+		StringBuilder currentBase64ImageStringBuilder = new StringBuilder();
+		StringBuilder currentBase64HeaderStringBuilder = new StringBuilder();
+		String tempDirUrl = this.getClass().getResource(TEMP_DIR).getPath();
+		for (int i = 0; i < oldHtml.length(); i++) {
+			char c = oldHtml.charAt(i);
+			if (inImage) {
+				if (c != '"') {
+					currentBase64ImageStringBuilder.append(c);
+				} else {
+					File tempImage = File.createTempFile("tempImage", ".png", new File(tempDirUrl));
+					org.apache.commons.codec.binary.Base64
+							.decodeBase64(currentBase64ImageStringBuilder.toString().getBytes());
+					byte[] imageAsByteArray = org.apache.commons.codec.binary.Base64
+							.decodeBase64(currentBase64ImageStringBuilder.toString().getBytes());
+					FileUtils.writeByteArrayToFile(tempImage, imageAsByteArray);
+					files.add(tempImage);
+					currentBase64HeaderStringBuilder = new StringBuilder();
+					currentBase64ImageStringBuilder = new StringBuilder();
+					newContentBuilder
+							.append("src=\"file:///" + tempImage.getAbsolutePath().replaceAll("\\\\", "/") + "\"");
+					inImage = false;
+				}
+				continue;
+			}
+			if (i + 2 < oldHtml.length() && c == 's' && oldHtml.charAt(i + 1) == 'r' && oldHtml.charAt(i + 2) == 'c') {
+				for (; i < oldHtml.length() && oldHtml.charAt(i) != ','; i++) {
+					c = oldHtml.charAt(i);
+					currentBase64HeaderStringBuilder.append(c);
+				}
+				inImage = true;
+				continue;
+			}
+			if (!inImage) {
+				newContentBuilder.append(c);
+			}
+		}
+
+		return newContentBuilder.toString();
 	}
 
 }

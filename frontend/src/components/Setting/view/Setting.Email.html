@@ -6,9 +6,11 @@
 </style>
 <div ng-if="settingCtrl.currentTab=='template'">
 	<div class="ibox float-e-margins">
-		<div class="ibox-title">
-				<h5>{{ 'SETTING_EMAIL_TEMPLATES_MANAGEMENT' | translate }}</h5>
-		</div>
+		<a>
+			<div class="ibox-title">
+				<h5>{{ 'SETTING_TEMPLATES_MANAGEMENT' | translate }}</h5>
+			</div>
+		</a>
 		<div class="ibox-content" id="templates" style="overflow-x: auto">
 			<button type="button" class="btn btn-success btn-primary" ng-click="settingCtrl.showTemplate(0)">
 					<i class="fa fa-plus"></i>&nbsp; {{ 'SETTING_EMAIL_NEW_TEMPLATE' | translate }}

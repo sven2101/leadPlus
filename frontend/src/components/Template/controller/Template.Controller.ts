@@ -21,6 +21,7 @@ class TemplateController {
     templateFound: boolean;
     templateTested: boolean = false;
     templateHead: string;
+    templateType = TemplateType;
     constructor(TemplateService, private SummernoteService: SummernoteService, private SourceService: SourceService, private $translate, private toaster, $routeParams, $location) {
         this.templateService = TemplateService;
         this.location = $location;

@@ -95,7 +95,7 @@ class EditEmailDirective implements IDirective {
                 if (fileUpload.content == null) {
                     fileUpload.content = "";
                 }
-
+                console.log(fileUpload);
                 attachment.fileUpload = fileUpload;
                 notification.attachments.push(attachment);
                 self.isFileSizeInvalid(notification, scope);
@@ -119,8 +119,11 @@ class EditEmailDirective implements IDirective {
     openAttachment(fileUpload: FileUpload, scope: any): void {
         if (!isNullOrUndefined(fileUpload.content)) {
             let file = b64toBlob(fileUpload.content, fileUpload.mimeType);
-            let fileURL = URL.createObjectURL(file);
-            window.open(scope.$sce.trustAsResourceUrl(fileURL), "_blank");
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                window.open(reader.result, "_blank");
+            };
+            reader.readAsDataURL(file);
             return;
         }
         scope.$http.get("/api/rest/files/content/" + fileUpload.id, { method: "GET", responseType: "arraybuffer" }).
@@ -216,17 +219,14 @@ class EditEmailDirective implements IDirective {
         scope.generate(t, scope.workflow, scope.notification);
     }
     async generatePdf(scope: any, currentNotification: Notification): Promise<void> {
-        let data = await scope.TemplateService.generatePDF(currentNotification.content);
-        let contentType = "application/pdf";
-        console.log(data);
-        let file = new Blob([data], { type: contentType });
-        let fileURL = URL.createObjectURL(file);
-        let reader = new FileReader();
-        reader.onload = function (e) {
-
-            window.open(reader.result, "_blank");
-        };
-        reader.readAsDataURL(file);
+        let self = this;
+        scope.$http.post("/api/rest/files/generate/pdf", { htmlString: currentNotification.content }, { method: "POST", responseType: "arraybuffer" }).
+            then(function (response) {
+                let contentType = response.headers("content-type");
+                let file = new Blob([response.data], { type: contentType });
+                file["name"] = "Angebot.pdf";
+                self.setAttachments([file], currentNotification, scope);
+            });
     }
 
 }

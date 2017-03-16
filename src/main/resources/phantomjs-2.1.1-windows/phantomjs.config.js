@@ -51,7 +51,7 @@ var header ='<!DOCTYPE html>'+
 				'<meta name="viewport" content="width=device-width, initial-scale=1.0">'+
 				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/bootstrap.min.css" />'+
 				// '<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/assets.css" />'+
-				// '<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/style.css" />'+
+				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/style.css" />'+
 				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/font-awesome.min.css" />'+
 			'</head>'+
 			'<body>'+
