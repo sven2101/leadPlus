@@ -59,7 +59,7 @@
         </p>
         
         <div class="information">
-            <h4><a href="https://${tenant.tenantKey}.leadplus.io/Password.Reset.html?ID=${passwordForgot.id}">Click here</a> to set a new password!</h4>
+            <h4><a href="https://${tenant.tenantKey}.leadplus.io/Password.Reset.html?ID=${passwordForgot.randomKey}">Click here</a> to set a new password!</h4>
             Sign in with your username <h4>${user.email}</h4>
         </div>
 

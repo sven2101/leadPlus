@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.node.TextNode;
 
-import dash.smtpmanagement.business.SmtpService;
-import dash.smtpmanagement.domain.Smtp;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.password.forgot.business.PasswordForgotService;
@@ -36,14 +34,11 @@ public class PasswordForgotResource {
 	private static final Logger logger = Logger.getLogger(PasswordForgotResource.class);
 	private PasswordForgotService passwordForgotService;
 	private UserService userService;
-	private SmtpService smtpService;
 
 	@Autowired
-	public PasswordForgotResource(PasswordForgotService passwordForgotService, UserService userService,
-			SmtpService smtpService) {
+	public PasswordForgotResource(PasswordForgotService passwordForgotService, UserService userService) {
 		this.passwordForgotService = passwordForgotService;
 		this.userService = userService;
-		this.smtpService = smtpService;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -63,7 +58,7 @@ public class PasswordForgotResource {
 	public ResponseEntity<?> getById(
 			@ApiParam(required = true) @RequestParam(value = "ID", required = true) final String id,
 			@RequestBody(required = true) final TextNode password) {
-		PasswordForgot passwordForgot = this.passwordForgotService.getById(id);
+		PasswordForgot passwordForgot = this.passwordForgotService.getByRandomKey(id);
 		if (passwordForgot == null)
 			return new ResponseEntity<>(RESET_ID_NOT_FOUND, HttpStatus.CONFLICT);
 
@@ -79,48 +74,4 @@ public class PasswordForgotResource {
 		}
 		return new ResponseEntity<>("Success", HttpStatus.OK);
 	}
-
-	@RequestMapping(value = "/smtp", method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Get password forgot. ", notes = "")
-	public ResponseEntity<?> checkForSmtp(
-			@ApiParam(required = true) @RequestParam(value = "ID", required = true) final String id) {
-		final PasswordForgot passwordForgot;
-		final Smtp smtp;
-		boolean exists = false;
-		passwordForgot = this.passwordForgotService.getById(id);
-
-		if (passwordForgot == null)
-			return new ResponseEntity<>(RESET_ID_NOT_FOUND, HttpStatus.CONFLICT);
-
-		smtp = this.smtpService.findByUserUsername(passwordForgot.getEmail());
-
-		if (smtp != null)
-			exists = true;
-
-		return new ResponseEntity<>(exists, HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/smtp/reset", method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation(value = "Get password forgot. ", notes = "")
-	public ResponseEntity<?> resetSmtp(
-			@ApiParam(required = true) @RequestParam(value = "ID", required = true) final String id,
-			@RequestBody(required = true) final TextNode smtpPassword) {
-		final PasswordForgot passwordForgot;
-		final Smtp smtp;
-		boolean exists = false;
-		passwordForgot = this.passwordForgotService.getById(id);
-
-		if (passwordForgot == null)
-			return new ResponseEntity<>(RESET_ID_NOT_FOUND, HttpStatus.CONFLICT);
-
-		smtp = this.smtpService.findByUserUsername(passwordForgot.getEmail());
-
-		if (smtp != null)
-			exists = true;
-
-		return new ResponseEntity<>(exists, HttpStatus.OK);
-	}
-
 }

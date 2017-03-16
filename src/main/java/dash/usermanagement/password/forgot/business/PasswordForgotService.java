@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import dash.messagemanagement.business.MessageService;
 import dash.messagemanagement.domain.EmailMessage;
 import dash.notificationmanagement.business.AWSEmailService;
+import dash.smtpmanagement.business.SmtpService;
+import dash.smtpmanagement.domain.Smtp;
 import dash.tenantmanagement.business.TenantContext;
 import dash.tenantmanagement.business.TenantService;
 import dash.tenantmanagement.domain.Tenant;
@@ -33,21 +35,25 @@ public class PasswordForgotService {
 	private MessageService messageService;
 	private TenantService tenantService;
 	private AWSEmailService awsEmailService;
+	private SmtpService smtpService;
 
 	@Autowired
 	public PasswordForgotService(PasswordForgotRepository passwordForgotRepository, UserService userService,
-			MessageService messageService, TenantService tenantService, AWSEmailService awsEmailService) {
+			MessageService messageService, TenantService tenantService, AWSEmailService awsEmailService,
+			SmtpService smtpService) {
 		this.passwordForgotRepository = passwordForgotRepository;
 		this.userService = userService;
 		this.messageService = messageService;
 		this.tenantService = tenantService;
 		this.awsEmailService = awsEmailService;
+		this.smtpService = smtpService;
 	}
 
 	public PasswordForgot save(String email) throws NotFoundException, TemplateException, MessagingException {
 		PasswordForgot passwordForgot = new PasswordForgot();
 		final Tenant tenant;
 		final User user;
+		final Smtp smtp;
 		final EmailMessage abstractMessage;
 		final String emailFrom = "support@leadplus.io";
 		String template = "forgot_password_en.ftl";
@@ -55,12 +61,12 @@ public class PasswordForgotService {
 		String randomID;
 		boolean isUUIDinUse = false;
 		do {
-			randomID = String.valueOf(UUID.randomUUID().toString().hashCode());
-			if (this.passwordForgotRepository.findOne(randomID) != null)
+			randomID = String.valueOf(UUID.randomUUID().toString());
+			if (this.passwordForgotRepository.findByRandomKey(randomID) != null)
 				isUUIDinUse = true;
 		} while (isUUIDinUse);
 
-		passwordForgot.setId(randomID);
+		passwordForgot.setRandomKey(randomID);
 		passwordForgot.setTimestamp(Calendar.getInstance());
 
 		user = this.userService.getUserByEmail(email);
@@ -68,6 +74,12 @@ public class PasswordForgotService {
 			throw new UsernameNotFoundException(USER_NOT_FOUND);
 
 		passwordForgot.setEmail(email);
+
+		smtp = this.smtpService.findByUserUsername(email);
+		if (smtp == null)
+			passwordForgot.setResetSmtp(false);
+		else
+			passwordForgot.setResetSmtp(true);
 
 		tenant = tenantService.getTenantByName(TenantContext.getTenant());
 		if (tenant == null)
@@ -85,8 +97,8 @@ public class PasswordForgotService {
 		return this.passwordForgotRepository.save(passwordForgot);
 	}
 
-	public PasswordForgot getById(String id) {
-		final PasswordForgot passwordForgot = this.passwordForgotRepository.findOne(id);
+	public PasswordForgot getByRandomKey(String id) {
+		final PasswordForgot passwordForgot = this.passwordForgotRepository.findByRandomKey(id);
 		if (passwordForgot != null) {
 			Calendar calendar = Calendar.getInstance();
 			calendar.add(Calendar.DAY_OF_YEAR, -2);
@@ -97,5 +109,4 @@ public class PasswordForgotService {
 		} else
 			return null;
 	}
-
 }

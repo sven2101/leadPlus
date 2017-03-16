@@ -59,7 +59,7 @@
         </p>
         
         <div class="information">
-            <h4><a href="https://${tenant.tenantKey}.leadplus.io/Password.Reset.html?ID=${passwordForgot.id}">Klicke hier</a>, um Dein neues Passwort festzulegen!</h4>
+            <h4><a href="https://${tenant.tenantKey}.leadplus.io/Password.Reset.html?ID=${passwordForgot.randomKey}">Klicke hier</a>, um Dein neues Passwort festzulegen!</h4>
             Melde Dich mit Deinem Benutzernamen an <h4>${user.email}</h4>
         </div>
 
