@@ -66,6 +66,12 @@ class LeadDataTableService implements IDatatableService {
     configRow(row: any, data: Process) {
         let currentDate = moment(newTimestamp(), "DD.MM.YYYY");
         let leadDate = moment(data.lead.timestamp, "DD.MM.YYYY");
+        let self = this;
+        $(row).attr("id", "id_" + data.id);
+        $("td:not(:last-child)", row).unbind("click");
+        $("td:not(:last-child)", row).bind("click", function () {
+            self.rootScope.$broadcast(broadcastClickChildrow, data);
+        }).css("cursor", "pointer");
 
         if (currentDate["businessDiff"](leadDate, "days") > 3
             && data.status === "OPEN") {
@@ -83,8 +89,8 @@ class LeadDataTableService implements IDatatableService {
     getDTColumnConfiguration(addDetailButton: Function, addStatusStyle: Function, addActionsButtons: Function): Array<any> {
         let self = this;
         return [
-            this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
-                .renderWith(addDetailButton),
+            /* this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
+                .renderWith(addDetailButton).notVisible(),*/
             this.DTColumnBuilder.newColumn("lead.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("lead.customer.lastname").withTitle(

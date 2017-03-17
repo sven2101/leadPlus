@@ -70,8 +70,8 @@ class SaleDataTableService implements IDatatableService {
     getDTColumnConfiguration(addDetailButton: Function, addStatusStyle: Function, addActionsButtons: Function): Array<any> {
         let self = this;
         return [
-            this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
-                .renderWith(addDetailButton),
+            /*this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
+                            .renderWith(addDetailButton),*/
             this.DTColumnBuilder.newColumn("sale.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("sale.customer.lastname").withTitle(
@@ -168,6 +168,12 @@ class SaleDataTableService implements IDatatableService {
     }
 
     configRow(row: any, data: Process) {
+        let self = this;
+        $(row).attr("id", "id_" + data.id);
+        $("td:not(:last-child)", row).unbind("click");
+        $("td:not(:last-child)", row).bind("click", function () {
+            self.rootScope.$broadcast(broadcastClickChildrow, data);
+        }).css("cursor", "pointer");
     }
 
     getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {

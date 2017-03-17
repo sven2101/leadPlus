@@ -156,9 +156,11 @@
 	<div class="row">
 		<div class="col-lg-4">
 			<div class="ibox">
-				<div class="ibox-content text-left" style="min-height: 122px">
+				<div class="ibox-content text-left" style="min-height: 122px;">
 					<label><i class="fa fa-envelope " aria-hidden="true "></i>  {{ 'COMMON_NOTE' | translate }}</label>
-					<div ng-bind-html="parent.getAsHtml(workflowUnit.message)"></div>
+					<div style="max-height: 400px;overflow: auto;overflow-x: hidden;">
+						<div ng-bind-html="parent.getAsHtml(workflowUnit.message)"></div>
+					</div>
 				</div>
 			</div>
 		</div>

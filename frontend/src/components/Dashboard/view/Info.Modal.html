@@ -170,7 +170,9 @@
 						<div class="ibox">
 							<div class="ibox-content">
 								<label style="font-size: 1.2em"><i class="fa fa-envelope" aria-hidden="true "></i> {{ 'COMMON_NOTE' | translate }}</label>
-								<div style="margin-left:20px" ng-bind-html="dashboardCtrl.getAsHtml(dashboardCtrl.workflowModalData.message)"></div>
+								<div style="max-height: 400px;overflow: auto;overflow-x: hidden;">
+									<div style="margin-left:20px" ng-bind-html="dashboardCtrl.getAsHtml(dashboardCtrl.workflowModalData.message)"></div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -178,14 +180,16 @@
 						<div class="ibox" >
 							<div class="ibox-content">
 								<label style="font-size: 1.2em"><i class="fa fa-table" aria-hidden="true "></i> {{ 'PRODUCT_MENU' | translate }}</label>
-								<table class="table table-bordered text-left" style="table-layout: fixed">
-									<tbody>
-										<tr ng-repeat="orderPosition in dashboardCtrl.workflowModalData.orderPositions">
-											<td style="white-space: nowrap; width: 100%"><span class="ellipsis" title="{{orderPosition.amount}}x {{orderPosition.product.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'\u20AC'}})">
-												{{orderPosition.amount}}x {{orderPosition.product.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'\u20AC'}})</span></td>
-										</tr>
-									</tbody>
-								</table>
+								<div style="max-height: 400px;overflow: auto;overflow-x: hidden;">
+									<table class="table table-bordered text-left" style="table-layout: fixed">
+										<tbody>
+											<tr ng-repeat="orderPosition in dashboardCtrl.workflowModalData.orderPositions">
+												<td style="white-space: nowrap; width: 100%"><span class="ellipsis" title="{{orderPosition.amount}}x {{orderPosition.product.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'\u20AC'}})">
+													{{orderPosition.amount}}x {{orderPosition.product.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'\u20AC'}})</span></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>

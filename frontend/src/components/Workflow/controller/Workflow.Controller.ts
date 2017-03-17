@@ -11,6 +11,7 @@ const broadcastRemoveOrUpdate: string = "removeOrUpdateRow";
 const broadcastRemove: string = "removeRow";
 const broadcastOpenEditModal: string = "openEditModal";
 const broadcastUpdateChildrow: string = "updateChildrow";
+const broadcastClickChildrow: string = "clickChildrow";
 
 
 class WorkflowController {
@@ -92,8 +93,8 @@ class WorkflowController {
             return self.IDatatableService.getStatusStyleHTML(data);
         }
         function addDetailButton(data: Process, type, full, meta) {
-            self.processes[data.id] = data;
-            return self.IDatatableService.getDetailHTML(data.id);
+            // self.processes[data.id] = data;
+            // return self.IDatatableService.getDetailHTML(data.id);
         }
 
         this.dtOptions = this.IDatatableService.getDTOptionsConfiguration(createdRow, "");
@@ -146,6 +147,10 @@ class WorkflowController {
 
         let updateChildRow = $rootScope.$on(broadcastUpdateChildrow, (event, data) => {
             this.updateChildRow(data);
+        });
+
+        let clickChildRow = $rootScope.$on(broadcastClickChildrow, (event, data) => {
+            this.appendChildRow(data);
         });
 
         let openEditModal = $rootScope.$on(broadcastOpenEditModal, (event, data: Process) => {

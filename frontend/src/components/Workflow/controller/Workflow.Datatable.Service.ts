@@ -144,24 +144,19 @@ class WorkflowDatatableService {
         childScope.parent = parent;
         childScope.type = type;
 
-        let link = angular.element("#id_" + process.id), icon = link
-            .find(".glyphicon"), tr = link.parent().parent(), table = dtInstance.DataTable, row = table
-                .row(tr);
+        let tr = angular.element("#id_" + process.id), table = dtInstance.DataTable, row = table
+            .row(tr);
 
         if (row.child.isShown()) {
             let newChildRow = $("#childRow" + process.id);
             newChildRow.removeClass("openMenu");
             newChildRow.parent().parent().children("td").css("height", "0px");
             setTimeout(function () {
-                icon.removeClass("glyphicon-minus-sign")
-                    .addClass("glyphicon-plus-sign");
                 row.child.hide();
                 tr.removeClass("shown");
                 childScope.$destroy();
             }, 300);
         } else {
-            icon.removeClass("glyphicon-plus-sign")
-                .addClass("glyphicon-minus-sign");
             let childRow = row.child(
                 this.compile(
                     "<div childrow id='childRow" + process.id + "' type='" + type + "' class='clearfix closeMenuChildRow'></div>")(
