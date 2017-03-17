@@ -103,9 +103,7 @@ module.exports = {
 				baseSrcPath + 'logout.html',
 				baseSrcPath + '401.html',
 				baseSrcPath + '403.html',
-				baseSrcPath + '404.html',
-				baseSrcPath + 'Password.html',
-				baseSrcPath + 'Password.Reset.html'
+				baseSrcPath + '404.html'
 			],
 			dst: baseDstPath + ''
 		},

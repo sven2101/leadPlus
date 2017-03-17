@@ -49,6 +49,8 @@ public interface IUserService {
 	public User updateProfilPicture(final User user)
 			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException;
 
+	public void resetPassword(final Long id, final String newPassword);
+
 	public User activate(final long id, final boolean enabled) throws UpdateFailedException;
 
 	public User setProfilePicture(final long id, final MultipartFile file) throws NotFoundException,

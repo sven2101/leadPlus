@@ -109,4 +109,8 @@ public class PasswordForgotService {
 		} else
 			return null;
 	}
+
+	public void delete(PasswordForgot passwordForgot) {
+		this.passwordForgotRepository.delete(passwordForgot);
+	}
 }

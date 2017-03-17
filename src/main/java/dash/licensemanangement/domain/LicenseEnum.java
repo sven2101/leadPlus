@@ -12,7 +12,7 @@ public enum LicenseEnum {
 			"/components/Common/view/Unauthorized.html", "/components/Common/view/Forbidden.html", "/main.html")),
 			0), FREE("free", new HashSet<String>(Arrays.asList("/", "/console/**", "/health", "/images/favicon/**",
 					"/assets/**", "/fonts/**", "/app/**", "/components/Login/view/Login.html", "/logout",
-					"/Password.html", "/Password.Reset.html", "/logout.html", "/401.html", "/403.html", "/404.html",
+					"/password/forgot", "/password/forgot/reset", "/logout.html", "/401.html", "/403.html", "/404.html",
 					"/components/Signup/view/Signup.html", "/components/Tenant/registration/view/**",
 					"/components/Licence/view/**", "/api/rest/tenants/unique/key", "/api/rest/tenants",
 					"/api/rest/registrations/**", "/api/rest/password/forgot/**",

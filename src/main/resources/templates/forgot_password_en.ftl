@@ -47,34 +47,33 @@
 	
     <div class="content">
         <h3 class="heading">Hallo ${user.firstname} ${user.lastname},</h3>
-        <p>
-        Neues Passwort anfordern! 
+		<p>
+        Request a new Password! 
         <br/>
         <br/>
-        Damit Du ein neues Passwort verwenden kannst, musst Du untenstehenden Link verwenden. 
-        Anschließend wirst du aufgefordert, ein neues Passwort zu wählen und dieses zu bestätigen. 
+        To create a new password you need to use the link below. 
+        Afterwards you will be prompted to type in a new password and to confirm it. 
         <br/>
         <br/>
-        War die Eingabe erfolgreich, kannst Du dich wie gewohnt mit Deinem neuen Passwort anmelden!
+        After your successful forgot password request you can use lead+ with your new password! 
         </p>
         
         <div class="information">
-            <h4><a href="https://${tenant.tenantKey}.leadplus.io/Password.Reset.html?ID=${passwordForgot.randomKey}">Klicke hier</a>, um Dein neues Passwort festzulegen!</h4>
-            Melde Dich mit Deinem Benutzernamen an <h4>${user.email}</h4>
+            <h4><a href="https://${tenant.tenantKey}.${hostname}/password/forgot/reset?ID=${passwordForgot.randomKey}">Click here</a> to set a new password!</h4>
+            Sign in with your username <h4>${user.email}</h4>
         </div>
 
         <p>
-        <b>Wir sind hier um Dir zur helfen!</b>
+        <b>We're here to help!</b>
         <br/>
-        Falls Du Hilfe benötigst, oder Fragen hast, sind wir stets zur Stelle.
-        Melde Dich einfach bei mir und unser Support Team unterstütz Dich! 
+        If there's ever anything I can do to help just let me know and our support team will make sure you get the data you need!
         <br/>
         <br/>
-        Regelmäßig stellen wir Dir zusätzliche Materialien, wichtige Neuerung und Best Practice Szenarien bereit, damit Du das meiste
-        aus lead+ machst.
+        We'll be in touch periodically with additional resources, important updates and best practices to help you
+        get the most out of lead+.
         </p>
         <br/>
-        Beste Grüße,
+        Cheers,
         <br/>
         Andreas
         <br/>

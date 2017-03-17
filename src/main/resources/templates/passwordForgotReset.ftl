@@ -1,26 +1,14 @@
 <html>
-    <head>
-
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-
+	<head>
+		<meta charset=utf-8>
+		<meta name=viewport content="width=device-width, initial-scale=1.0">
+		<meta http-equiv=X-UA-Compatible content="IE=edge">
 		<title>LeadPlus</title>
-
-		<link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon">
-		<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon.ico">
-
-		<!-- CSS -->
-		<link href="assets/assets.css" rel="stylesheet">
-
-		<link href="assets/font-awesome.min.css" rel="stylesheet">
-		<link href="assets/bootstrap.min.css" rel="stylesheet">
-		<link href="assets/style.css" rel="stylesheet">
-
-		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-        <title>Reset your Password</title>
-
+		<link rel=icon type=image/png sizes=16x16 href=/assets/img/favicon.ico>
+		<link href=/assets/assets.css rel=stylesheet>
+		<link href=/assets/font-awesome.min.css rel=stylesheet>
+		<link href=/assets/bootstrap.min.css rel=stylesheet>
+		<link href=/assets/style.css rel=stylesheet>
 		<style>
 			input::-webkit-outer-spin-button,
 			input::-webkit-inner-spin-button {
@@ -30,9 +18,9 @@
 			#outer-language ul.nav .open > a, ul.nav .open > a:hover, ul.nav .open > a:focus{
 				background: transparent !important;
 			}
-			div.error {
+			.desc {
 				font-style:normal;
-				color:#CC3300;
+				color:#BF472C;
 			}
 			.center {
 				text-align:center;
@@ -47,47 +35,43 @@
 		</style>
 	</head>
 	<body>
-	<div class="container">
-		<div class="middle-box text-center animated fadeInDown" style="margin-top: -40px;">		
-			<div class="row">
+		<div class="container">
+			<div class="middle-box text-center animated fadeInDown" style="margin-top: -40px;">
+				<div class="row">
 					<h1 class="logo-name" style="color:white">lead+</h1>
-					<h3 style="color:white">Reset your Password</h3>
-					<p style="color:white">
-						Almost done. Enter your new password, and you're good to go.
-					</p>
+					<h3 style="color:white;">Reset your Password</h3>
+					<p style="color:white;">Almost done. Enter your new password, and you're good to go.</p>
 					<form id="formCheckPassword">
 						<div class="alert alert-success" id="success">
-							<i class="icon-check"></i> <strong>Success!</strong> 
-							<br/>
-							We've successfully updated your password. Login now with your new password!
+							<i class="icon-check"></i>
+							<strong>Success!</strong>
+							<br>We've successfully updated your password. Login now with your new password!
 						</div>
 						<div class="alert alert-danger" id="error">
-							<i class="icon-warning-sign"></i> <strong>Error!</strong>
-							<br/>
-							There occured an Error. Please contact us or send an email to support@leadplus.io. 
+							<i class="icon-warning-sign"></i>
+							<strong>Error!</strong>
+							<br>There occured an Error. Please contact us or send an email to support@leadplus.io.
 						</div>
 						<div class="form-group">
 							<input type="password" class="form-control" placeholder="New Password" id="password" name="password">
-							<br/>
+							<br>
 							<input type="password" class="form-control" placeholder="Confirm new Password" id="cfmPassword" name="cfmPassword">
 						</div>
 						<div id="request">
 							<button type="button" class="btn btn-success block full-width m-b" id="reset">Reset Password</button>
 						</div>
-						<div id="login">
+						<div id=login>
 							<a href="/#/login" class="btn btn-success block full-width m-b">Return to login</a>
 						</div>
 					</form>
 					©eviarc 2017 All Rights Reserved.
+				</div>
 			</div>
 		</div>
-	</div>
 	</body>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
-<script>
-
+	<script src=https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js></script>
+	<script src=https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js></script>
+	<script>
 	$(document).ready(function () {
 		$("#success").hide();
 		$("#error").hide();
@@ -115,7 +99,7 @@
     		$("#error").show();
 		}
 
-		$('#password').on('blur', function() {
+		$('#password').on('keyup blur', function() {
     	if ($("#formCheckPassword").valid()) {
 				$('#reset').attr('disabled', false);  
 			} else {
@@ -136,15 +120,15 @@
                password: { 
                  required: true,
                     minlength: 6,
-                    maxlength: 10,
+                    maxlength: 15,
                }, 
 				cfmPassword: { 
 				equalTo: "#password",
 					minlength: 6,
-					maxlength: 10
+					maxlength: 15
                }
 			},
-			errorElement: "div",
+			errorClass: "desc",
 			messages:{
 				password: { 
 					required:"the password is required"
@@ -152,26 +136,26 @@
 			}
 		});
 
-		$("#request").click( function(){
+		$("#request").click(function(){
 			$("#formCheckPassword").valid();
 			var password = $('#password').val();
-
+			
 			$.ajax({
-				url: "/api/rest/password/forgot/reset?ID=".id,
+				url: "/api/rest/password/forgot/reset?ID="+id,
 				type:"POST",
 				headers: {
 					"Content-Type": "application/json",   
 					"X-TenantID": $(location).attr("hostname")
 				},
 				data : '"'.concat(password).concat('"'),
-				dataType: "json",
 				success : function(result) {
 					$("#success").show( "slow", function() {
 						$("#email").attr("readonly", true);
+						$("#password").hide();
+						$("#cfmPassword").hide();
 						$("#request").hide();
 						$("#login").show();
 					});
-					console.log(result);
 				},
 				error: function(xhr, resp, text) {
 					$("#error").show( "slow", function() {
@@ -181,6 +165,5 @@
 			})
 		});
 	});
-</script>
-
+	</script>
 </html>
