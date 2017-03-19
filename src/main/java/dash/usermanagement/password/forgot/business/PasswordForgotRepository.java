@@ -21,5 +21,5 @@ import dash.usermanagement.password.forgot.domain.PasswordForgot;
 @Repository
 public interface PasswordForgotRepository extends JpaRepository<PasswordForgot, Long> {
 
-	public PasswordForgot findByRandomKey(String random);
+	public PasswordForgot findByRandomKey(String randomKey);
 }

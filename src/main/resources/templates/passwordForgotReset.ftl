@@ -69,101 +69,121 @@
 			</div>
 		</div>
 	</body>
-	<script src=https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js></script>
-	<script src=https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js></script>
-	<script>
+	<script type="text/javascript" src=https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js></script>
+	<script type="text/javascript" src=https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js></script>
+	<script type="text/javascript" src="/assets/js/unbundled/sjcl.js"></script>
+	<script type="text/javascript" >
 	$(document).ready(function () {
 		$("#success").hide();
 		$("#error").hide();
 		$("#login").hide();
 		$("#notify").hide();
 		$("#reset").attr("disabled", "disabled");
+		
+		var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+			sURLVariables = sPageURL.split('&'),
+			sParameterName,
+			i;
 
-		var id = getUrlParameter("ID");
-		function getUrlParameter(sParam) {
-			var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-				sURLVariables = sPageURL.split('&'),
-				sParameterName,
-				i;
+		for (i = 0; i < sURLVariables.length; i++) {
+			sParameterName = sURLVariables[i].split('=');
 
-			for (i = 0; i < sURLVariables.length; i++) {
-				sParameterName = sURLVariables[i].split('=');
-
-				if (sParameterName[0] === sParam) {
-					return sParameterName[1] === undefined ? true : sParameterName[1];
-				}
-			}			
-		};
-
-		if (typeof id === "undefined") {
-    		$("#error").show();
+			if (sParameterName[0] === "ID") {
+				$.ajax({
+				  url: "/api/rest/password/forgot/"+sParameterName[1],
+				  headers: {
+						"Content-Type": "application/json",   
+						"X-TenantID": $(location).attr("hostname")
+				  },
+				  success: function(result) {
+					  continueWithReset(result, sParameterName[1]);
+				  }, 
+				  error: function(result) {
+					  errorHandling(result);
+				  }
+				});
+			}
 		}
+				
+		function errorHandling(result){
+			  $("#error").show();
+			  $("#password").attr("disabled", "disabled");
+			  $("#cfmPassword").attr("disabled", "disabled");
+		}
+		
+		function continueWithReset(email, id){
 
-		$('#password').on('keyup blur', function() {
-    	if ($("#formCheckPassword").valid()) {
-				$('#reset').attr('disabled', false);  
-			} else {
-				$('#reset').attr('disabled', 'disabled');
-			}
-		});
-
-		$('#cfmPassword').on('blur', function() {
-    	if ($("#formCheckPassword").valid()) {
-				$('#reset').attr('disabled', false);  
-			} else {
-				$('#reset').attr('disabled', 'disabled');
-			}
-		});
-
-		$("#formCheckPassword").validate({
-           rules: {
-               password: { 
-                 required: true,
-                    minlength: 6,
-                    maxlength: 15,
-               }, 
-				cfmPassword: { 
-				equalTo: "#password",
-					minlength: 6,
-					maxlength: 15
-               }
-			},
-			errorClass: "desc",
-			messages:{
-				password: { 
-					required:"the password is required"
+			$('#password').on('keyup blur', function() {
+	    	if ($("#formCheckPassword").valid()) {
+					$('#reset').attr('disabled', false);  
+				} else {
+					$('#reset').attr('disabled', 'disabled');
 				}
-			}
-		});
-
-		$("#request").click(function(){
-			$("#formCheckPassword").valid();
-			var password = $('#password').val();
-			
-			$.ajax({
-				url: "/api/rest/password/forgot/reset?ID="+id,
-				type:"POST",
-				headers: {
-					"Content-Type": "application/json",   
-					"X-TenantID": $(location).attr("hostname")
-				},
-				data : '"'.concat(password).concat('"'),
-				success : function(result) {
-					$("#success").show( "slow", function() {
-						$("#email").attr("readonly", true);
-						$("#password").hide();
-						$("#cfmPassword").hide();
-						$("#request").hide();
-						$("#login").show();
-					});
-				},
-				error: function(xhr, resp, text) {
-					$("#error").show( "slow", function() {
-					});
-					console.log(xhr, resp, text);
+			});
+	
+			$('#cfmPassword').on('blur', function() {
+	    	if ($("#formCheckPassword").valid()) {
+					$('#reset').attr('disabled', false);  
+				} else {
+					$('#reset').attr('disabled', 'disabled');
 				}
-			})
-		});
+			});
+
+			$("#formCheckPassword").validate({
+	           rules: {
+	               password: { 
+	                 required: true,
+	                    minlength: 6,
+	                    maxlength: 15,
+	               }, 
+					cfmPassword: { 
+					equalTo: "#password",
+						minlength: 6,
+						maxlength: 15
+	               }
+				},
+				errorClass: "desc",
+				messages:{
+					password: { 
+						required:"the password is required"
+					}
+				}
+			});
+		
+			$("#request").click(function(){
+				$("#formCheckPassword").valid();	
+				console.log(email);
+				console.log(id);
+				var password = $('#password').val();
+				
+				var oldPassword = sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2(password, email, 10000));
+				
+				$.ajax({
+					url: "/api/rest/password/forgot/reset?ID="+id,
+					type:"POST",
+					headers: {
+						"Content-Type": "application/json",   
+						"X-TenantID": $(location).attr("hostname")
+					},
+					data : '"'.concat(oldPassword).concat('"'),
+					success : function(result) {
+						$("#success").show( "slow", function() {
+							$("#email").attr("readonly", true);
+							$("#password").hide();
+							$("#cfmPassword").hide();
+							$("#request").hide();
+							$("#login").show();
+						});
+					},
+					error: function(xhr, resp, text) {
+						$("#error").show( "slow", function() {
+						});
+						console.log(xhr, resp, text);
+					}
+				})
+			});
+		}
+		
 	});
 	</script>
 </html>

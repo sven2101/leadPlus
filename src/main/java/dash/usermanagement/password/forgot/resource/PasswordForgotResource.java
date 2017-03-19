@@ -3,10 +3,12 @@ package dash.usermanagement.password.forgot.resource;
 import static dash.Constants.RESET_ID_NOT_FOUND;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,6 +38,23 @@ public class PasswordForgotResource {
 	public PasswordForgotResource(PasswordForgotService passwordForgotService, UserService userService) {
 		this.passwordForgotService = passwordForgotService;
 		this.userService = userService;
+	}
+
+	@RequestMapping(value = "/{randomKey}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@ApiOperation(value = "Get password forgot request. ", notes = "")
+	public ResponseEntity<?> getById(@ApiParam(required = true) @PathVariable final String randomKey) {
+		try {
+			final PasswordForgot passwordForgot = passwordForgotService.getByRandomKey(randomKey);
+			if (passwordForgot != null)
+				return new ResponseEntity<>(
+						JSONObject.quote((passwordForgot.getEmail() == null) ? "" : passwordForgot.getEmail()),
+						HttpStatus.OK);
+			else
+				return new ResponseEntity<>(JSONObject.quote(""), HttpStatus.NOT_FOUND);
+		} catch (Exception ex) {
+			logger.error(PasswordForgotResource.class.getSimpleName(), ex);
+			return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -70,4 +89,5 @@ public class PasswordForgotResource {
 		}
 		return new ResponseEntity<>("Your password was successfully reset. ", HttpStatus.OK);
 	}
+
 }
