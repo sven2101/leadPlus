@@ -30,7 +30,7 @@
 				<h4 class="modal-title">{{ 'COMMON_DETAILS' | translate }}</h4>
 				<h2>{{dashboardCtrl.workflowModalData.container.name}}</h2>
 			</div>
-			<div class="modal-body">
+			<div class="modal-body content-height">
 				<div class="ibox">
 					<div class="ibox-content">
 						<div class="row customerdetails">
@@ -66,19 +66,19 @@
 									<span class="elipsis" title="{{dashboardCtrl.workflowModalData.deliveryAddressLine}}">{{dashboardCtrl.workflowModalData.deliveryAddressLine}}</span>
 								</div>
 							</div>
-							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'offer' || dashboardCtrl.workflowModalType == 'lead'">
+							<div class="col-md-3 b-r ">
 								<div>
 									<label><i class="fa fa-truck " aria-hidden="true "></i> {{ 'COMMON_DELIVERY_TIME' | translate }}</label>
 									<span>{{dashboardCtrl.workflowModalData.deliveryDate | date:'dd-MM-yyyy'}}</span>
 								</div>
 							</div>		
-							<div class="col-sm-3 b-r " ng-if="dashboardCtrl.workflowModalType=='offer'">
+							<div class="col-sm-3 b-r " ng-if="dashboardCtrl.workflowModalType=='offer' || dashboardCtrl.workflowModalType=='sale'">
 							<div>
 								<label title="{{ 'COMMON_SUPPLY_DELIVERY_TERM' | translate }}"><i class="fa fa-truck " aria-hidden="true "></i>  {{ 'COMMON_SUPPLY_DELIVERY_TERM' | translate }}</label>
 								<span class="elipsis" title="{{dashboardCtrl.workflowModalData.deliveryTerm}}">{{dashboardCtrl.workflowModalData.deliveryTerm}}</span>
 							</div>
 							</div>
-							<div class="col-sm-3 b-r " ng-if="dashboardCtrl.workflowModalType=='offer'">
+							<div class="col-sm-3 b-r " ng-if="dashboardCtrl.workflowModalType=='offer' || dashboardCtrl.workflowModalType=='sale'">
 								<div>
 									<label title="{{ 'COMMON_SUPPLY_PAYMENT_TERM' | translate }}"><i class="fa fa-usd " aria-hidden="true "></i>  {{ 'COMMON_SUPPLY_PAYMENT_TERM' | translate }}</label>
 									<span class="elipsis" title="{{dashboardCtrl.workflowModalData.paymentTerm}}">{{dashboardCtrl.workflowModalData.paymentTerm}}</span>
@@ -138,6 +138,12 @@
 									<span>{{dashboardCtrl.workflowModalData.saleProfit| currency:'\u20AC'}}</span>
 								</div>
 							</div>
+							<div class="col-md-3 b-r ">
+								<div>
+									<label title="{{ 'COMMON_BILLING_ADDRESS' | translate }}"><i class="fa fa-university " aria-hidden="true "></i> {{ 'COMMON_BILLING_ADDRESS' | translate }}</label>
+									<span title="{{dashboardCtrl.workflowService.customerService.getAddressLine(dashboardCtrl.workflowModalData.billingAddress)}}">{{dashboardCtrl.workflowService.customerService.getAddressLine(dashboardCtrl.workflowModalData.billingAddress)}}</span>
+								</div>
+							</div>
 							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalType == 'sale'">
 								<div>
 									<label><i class="fa fa-university " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_SALE_INVOICE_NUMBER_SHORT' | translate }}</label>
@@ -164,7 +170,9 @@
 						<div class="ibox">
 							<div class="ibox-content">
 								<label style="font-size: 1.2em"><i class="fa fa-envelope" aria-hidden="true "></i> {{ 'COMMON_NOTE' | translate }}</label>
-								<div style="margin-left:20px" ng-bind-html="dashboardCtrl.getAsHtml(dashboardCtrl.workflowModalData.message)"></div>
+								<div style="max-height: 400px;overflow: auto;overflow-x: hidden;">
+									<div style="margin-left:20px" ng-bind-html="dashboardCtrl.getAsHtml(dashboardCtrl.workflowModalData.message)"></div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -172,14 +180,16 @@
 						<div class="ibox" >
 							<div class="ibox-content">
 								<label style="font-size: 1.2em"><i class="fa fa-table" aria-hidden="true "></i> {{ 'PRODUCT_MENU' | translate }}</label>
-								<table class="table table-bordered text-left" style="table-layout: fixed">
-									<tbody>
-										<tr ng-repeat="orderPosition in dashboardCtrl.workflowModalData.orderPositions">
-											<td style="white-space: nowrap; width: 100%"><span class="ellipsis" title="{{orderPosition.amount}}x {{orderPosition.product.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'\u20AC'}})">
-												{{orderPosition.amount}}x {{orderPosition.product.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'\u20AC'}})</span></td>
-										</tr>
-									</tbody>
-								</table>
+								<div style="max-height: 400px;overflow: auto;overflow-x: hidden;">
+									<table class="table table-bordered text-left" style="table-layout: fixed">
+										<tbody>
+											<tr ng-repeat="orderPosition in dashboardCtrl.workflowModalData.orderPositions">
+												<td style="white-space: nowrap; width: 100%"><span class="ellipsis" title="{{orderPosition.amount}}x {{orderPosition.product.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'\u20AC'}})">
+													{{orderPosition.amount}}x {{orderPosition.product.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'\u20AC'}})</span></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -200,7 +210,7 @@
 													{{dashboardCtrl.toLocalDate(dashboardCtrl.workflowModalProcess.comments[dashboardCtrl.workflowModalProcess.comments.length-1].timestamp)}}
 												</small>
 							</div>
-							<div ng-if="showComments===true">
+							<div ng-if="showComments===true" class="animate-if">
 							<div class="chat-view">
 								<div class=" text-left">
 									<div ng-if="dashboardCtrl.workflowModalProcess.comments.length>0" class="row">
@@ -241,7 +251,7 @@
 											<textarea class="form-control message-input" ng-model="dashboardCtrl.commentModalInput" required ng-maxlength="5000" style="resize: none; width:100%;box-sizing: border-box;" name="message" placeholder="{{ 'COMMON_COMMENTS_ENTER' | translate }}" />
 											<p ng-show="commentform.message.$error.maxlength && !commentform.message.$pristine" class="help-block">{{ 'COMMON_VALIDATE_MAX' | translate }}5000{{ 'COMMON_VALIDATE_MAX_END' | translate }}</p>
 											</div>
-											<button style="width:35%; margin-top: 10px;" class="btn btn-success" ng-disabled="commentform.message.$invalid" ng-click="dashboardCtrl.addComment(dashboardCtrl.workflowModalProcess)">
+											<button style="width:200px; margin-top: 10px;" class="btn btn-success" ng-disabled="commentform.message.$invalid" ng-click="dashboardCtrl.addComment(dashboardCtrl.workflowModalProcess)">
 											<i class="fa fa-comment-o"></i>&nbsp;{{ 'COMMON_COMMENTS_ADD' | translate }}
 											</button>
 											</div>

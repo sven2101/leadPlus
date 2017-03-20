@@ -61,6 +61,14 @@ class ProductService {
         return defer.promise;
     }
 
+    async getProductById(productId: number) {
+        let product = await this.productResource.getProductById({ id: productId }).$promise as Product;
+        if (isNullOrUndefined(product.id)) {
+            return null;
+        }
+        return product;
+    }
+
     getActiveProducts(): Array<Product> {
         let temp: Array<Product> = new Array<Product>();
         for (let product of this.products) {

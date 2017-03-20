@@ -99,14 +99,14 @@
 							</div>
 							<div class="row">
 								<div style="float:left; margin-left: 15px;">
-									<button type="button " class="btn btn-success " ng-click="templateCtrl.goBack()">{{ 'COMMON_BACK'| translate }}
+									<button type="button " class="btn btn-success " ng-click="templateCtrl.goBack()"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;{{ 'COMMON_BACK'| translate }}
 									</button>
 								</div>
 								<div style="float:right; margin-right: 15px;">
 								<span ng-if="!templateCtrl.templateTested"><a uib-tooltip="{{ 'SETTING_TEMPLATE_TEST_TEMPLATE'| translate }}"><i style="color:red; margin-right: 10px;font-size: 1.5em" class="fa fa-exclamation-triangle"></i></a></span> 
-								<button type="button " class="btn btn-warning " ng-disabled="templateCtrl.isTemplateInPreviewMode() || createTemplate.$invalid" ng-click="templateCtrl.testSyntax()">{{ 'SETTING_TEMPLATE_TEST_SYNTAX'| translate }}
+								<button type="button " class="btn btn-warning " ng-disabled="templateCtrl.isTemplateInPreviewMode() || createTemplate.$invalid" ng-click="templateCtrl.testSyntax()"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;{{ 'SETTING_TEMPLATE_TEST_SYNTAX'| translate }}
 									</button>
-								<button type="submit " class="btn btn-success " ng-disabled="templateCtrl.isTemplateInPreviewMode() || createTemplate.$invalid || !templateCtrl.templateTested" ng-click="templateCtrl.save() ">{{ 'COMMON_SAVE'| translate }}
+								<button type="submit " class="btn btn-success " ng-disabled="templateCtrl.isTemplateInPreviewMode() || createTemplate.$invalid || !templateCtrl.templateTested" ng-click="templateCtrl.save() "><i class="fa fa-save "></i>&nbsp;{{ 'COMMON_SAVE'| translate }}
 									</button>
 								</div>
 							</div>

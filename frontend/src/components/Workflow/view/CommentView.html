@@ -16,7 +16,7 @@
 				{{getTimestamp(process.comments[process.comments.length-1].timestamp)}}
             </small>
 		</div>
-		<div class="ibox-content text-left" ng-if="showCommentDetails===true">
+		<div class="ibox-content text-left animate-if" ng-if="showCommentDetails===true">
 			<div class="row" ng-if="process.comments.length>0">
 				<div class="col-md-12">
 					<div class="chat-discussion" ng-model="process.comments">

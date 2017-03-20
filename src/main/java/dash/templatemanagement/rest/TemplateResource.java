@@ -102,7 +102,7 @@ public class TemplateResource {
 			@ApiParam(required = true) @RequestBody @Valid final MessageContext messageContext)
 			throws NotFoundException, IOException, TemplateCompilationException {
 		return templateService.getMessageContent(templateId, messageContext.getWorkflowTemplateObject(),
-				messageContext.getNotification());
+				messageContext.getNotification(), messageContext.getUser());
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.POST)
@@ -111,7 +111,7 @@ public class TemplateResource {
 	public AbstractMessage generate(@ApiParam(required = true) @RequestBody @Valid final MessageContext messageContext)
 			throws NotFoundException, IOException, TemplateCompilationException {
 		return templateService.getMessageContentByTemplate(messageContext.getTemplate(),
-				messageContext.getWorkflowTemplateObject(), messageContext.getNotification());
+				messageContext.getWorkflowTemplateObject(), messageContext.getNotification(), messageContext.getUser());
 	}
 
 	@RequestMapping(value = "/{templateId}/offers/pdf/generate", method = RequestMethod.POST, produces = "application/pdf")

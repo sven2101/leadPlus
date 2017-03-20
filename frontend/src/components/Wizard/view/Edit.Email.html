@@ -1,7 +1,8 @@
 <form id="scopeStuff" name="eform" novalidate>
-	
+
 	<div>
 		<div class="form-inline">
+			<span ng-if="!rootScope.isSmptVerified" style="color:red; padding: 0px !important; font-size: 13px important;"><b><translate>EMAIL_SMTP_VALIDATION_WITHOUT_LINK</translate></b><br><br></span>
 			<div class="form-group" style="width:45%">
 				<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>
 				<select ng-model="currentTemplate" style="width:100%" ng-disabled="disabled" class="form-control" ng-change="generate(currentTemplate,workflow,notification)"> 
@@ -15,8 +16,8 @@
 			</div>
 			<div class="form-group" style="width:45%; float:right">
 				<label>{{ 'EMAIL_NOTIFICATION_HISTORY' | translate }}</label>
-				<select ng-change="onNotificationSelected()" class="form-control" ng-disabled="process.notifications==null||process.notifications.length==0" style="width:100%"
-					ng-model="notification" ng-options="(translate.instant(notification.notificationType) +' - '+notification.subject) for notification in process.notifications track by notification.id">
+				<select ng-change="onNotificationSelected()" class="form-control" ng-disabled="process.notifications==null||process.notifications.length==0"
+				 style="width:100%" ng-model="notification" ng-options="(translate.instant(notification.notificationType) +' - '+notification.subject +' '+ toLocalDate(notification.timestamp)) for notification in process.notifications track by notification.id">
 				<option></option>                                         
 				</select>
 			</div>
@@ -29,8 +30,8 @@
 			<span style="color:red" ng-show="eform.recipients.$error.maxlength&&!disabled&&!eform.recipients.$pristine">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
 			<div class="form-inline">
 				<div class="form-group" style="width:90%" ng-class="{ 'has-error' : eform.recipients.$invalid&&!disabled}">
-					<input autocomplete="off" style="width:100%" ng-disabled="disabled" multipleemails  form="eform" name="recipients"
-						required class="form-control" ng-model="notification.recipients" ng-model-options="{debounce: 350}" ng-maxlength="255">
+					<input autocomplete="off" style="width:100%" ng-disabled="disabled" multipleemails form="eform" name="recipients" required
+					 class="form-control" ng-model="notification.recipients" ng-model-options="{debounce: 350}" ng-maxlength="255">
 
 				</div>
 				<a ng-disabled="disabled" style="width:9%;height:34px" class="btn btn-default pull-right" ng-click="showCC_BCC=!showCC_BCC">CC/BCC</a>
@@ -41,15 +42,15 @@
 					<label>{{ 'EMAIL_RECIPIENT' | translate }} - CC</label>
 					<span style="color:red" ng-show="eform.recipientsCC.$error.email&&!disabled">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
 					<span style="color:red" ng-show="eform.recipientsCC.$error.maxlength&&!disabled">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
-					<input autocomplete="off" style="width:100%" ng-disabled="disabled" multipleemails form="eform" name="recipientsCC"
-						class="form-control" ng-model="notification.recipientsCC" ng-model-options="{debounce: 350}" ng-maxlength="255">
+					<input autocomplete="off" style="width:100%" ng-disabled="disabled" multipleemails form="eform" name="recipientsCC" class="form-control"
+					 ng-model="notification.recipientsCC" ng-model-options="{debounce: 350}" ng-maxlength="255">
 				</div>
 				<div style="width:49%;float:right" class="form-group" ng-class="{ 'has-error' : eform.recipientsBCC.$invalid&&!disabled&&!eform.recipientsBCC.$pristine}">
 					<label>{{ 'EMAIL_RECIPIENT' | translate }} - BCC</label>
 					<span style="color:red" ng-show="eform.recipientsBCC.$error.email&&!disabled">{{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
 					<span style="color:red" ng-show="eform.recipientsBCC.$error.maxlength&&!disabled">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
-					<input autocomplete="off" style="width:100%" ng-disabled="disabled" multipleemails form="eform" name="recipientsBCC"
-						class="form-control" ng-model="notification.recipientsBCC" ng-model-options="{debounce: 350}" ng-maxlength="255">
+					<input autocomplete="off" style="width:100%" ng-disabled="disabled" multipleemails form="eform" name="recipientsBCC" class="form-control"
+					 ng-model="notification.recipientsBCC" ng-model-options="{debounce: 350}" ng-maxlength="255">
 				</div>
 			</div>
 			<br ng-show="showCC_BCC" />
@@ -61,7 +62,7 @@
 					<span style="color:red" ng-show="eform.subject.$error.required&&!disabled&&!eform.subject.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
 					<br>
 					<input style="width:100%" ng-disabled="disabled" name="subject" required type="text" class="form-control" ng-model="notification.subject"
-						ng-minlength="3" ng-maxlength="255">
+					 ng-minlength="3" ng-maxlength="255">
 				</div>
 				<div style="width:18%;float:right;" ng-if="!disabled||(disabled&&notification.attachments.length>0)" class="form-group" ng-class="{ 'has-error' : parent.emailEditeform.attachement.$invalid}">
 					<label style="margin-left:15px;">{{ 'EMAIL_ATTACHMENT' | translate }}</label>
@@ -75,8 +76,8 @@
 						<span class="fileinput-new">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }}</span>
 						<span class="fileinput-exists">{{ 'EMAIL_ATTACHMENT_SELECT' | translate }} </span>
 						<input id="fileInput" name="attachement" multiple required type="file" onchange="angular.element(document.getElementById('scopeStuff')).scope().setAttachments(files);"
-							accept="application/pdf,image/*,.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.csv,application/vnd.ms-excel,text/plain,application/vnd.ms-powerpoint, application/msword,.pps,.xlsx,.xls,.doc,.docx,.ppt,.pptx,.txt,.zip,.rar">
-							</span>
+						 accept="application/pdf,image/*,.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.csv,application/vnd.ms-excel,text/plain,application/vnd.ms-powerpoint, application/msword,.pps,.xlsx,.xls,.doc,.docx,.ppt,.pptx,.txt,.zip,.rar">
+						</span>
 					</div>
 				</div>
 			</div>
@@ -101,4 +102,3 @@
 		</div>
 	</div>
 </form>
-

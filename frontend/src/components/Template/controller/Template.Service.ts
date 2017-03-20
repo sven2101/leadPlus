@@ -8,7 +8,7 @@ const TemplateServiceId: string = "TemplateService";
 
 class TemplateService {
 
-    private $inject = [toasterId, $translateId, TemplateResourceId, $uibModalId, $qId, $windowId, $sceId];
+    private $inject = [toasterId, $translateId, $rootScopeId, TemplateResourceId, $uibModalId, $qId, $windowId, $sceId];
 
     templateResource;
 
@@ -22,7 +22,7 @@ class TemplateService {
     currentEditTemplate: Template;
     sce;
 
-    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q, $window, $sce) {
+    constructor(toaster, $translate, private $rootScope, TemplateResource, $uibModal, $q, $window, $sce) {
         this.toaster = toaster;
         this.translate = $translate;
         this.uibModal = $uibModal;
@@ -97,11 +97,11 @@ class TemplateService {
     }
 
     async generate(templateId: number, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
-        return this.templateResource.generate({ templateId: templateId }, { workflowTemplateObject: workflow, notification: notification }).$promise;
+        return this.templateResource.generate({ templateId: templateId }, { workflowTemplateObject: workflow, notification: notification, user: this.$rootScope.user }).$promise;
     }
 
     async testTemplate(template: Template, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
-        return this.templateResource.test({ workflowTemplateObject: workflow, notification: notification, template: template }).$promise;
+        return this.templateResource.test({ workflowTemplateObject: workflow, notification: notification, template: template, user: this.$rootScope.user }).$promise;
     }
 
     generatePDF(templateId: string, offer: Offer) {
@@ -126,10 +126,10 @@ class TemplateService {
 
     async getTemplateById(id: number): Promise<Template> {
         let template: Template = await this.templateResource.getById({ id: id }).$promise as Template;
-        this.currentEditTemplate = template;
         if (isNullOrUndefined(template.id)) {
             return null;
         }
+        this.currentEditTemplate = template;
         return template;
     }
 }

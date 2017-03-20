@@ -17,6 +17,7 @@ class ConfirmationModalController {
     title: string;
     body: string;
     submitText: string;
+    icon: string;
     submitFunction: any;
 
 
@@ -48,6 +49,7 @@ class ConfirmationModalController {
         this.title = this.translate.instant("OFFER_ROLLBACK_TITLE");
         this.body = this.translate.instant("OFFER_ROLLBACK_BODY");
         this.submitText = this.translate.instant("OFFER_ROLLBACK_TITLE");
+        this.icon = "fa fa-undo";
         this.submitFunction = this.rollbackOffer;
     }
 
@@ -55,6 +57,7 @@ class ConfirmationModalController {
         this.title = this.translate.instant("SALE_ROLLBACK_TITLE");
         this.body = this.translate.instant("SALE_ROLLBACK_BODY");
         this.submitText = this.translate.instant("SALE_ROLLBACK_TITLE");
+        this.icon = "fa fa-undo";
         this.submitFunction = this.rollbackSale;
 
     }
@@ -73,6 +76,7 @@ class ConfirmationModalController {
         this.title = this.translate.instant("PROCESS_DELETE_PROCESS_TITLE");
         this.body = this.translate.instant("PROCESS_DELETE_PROCESS_BODY");
         this.submitText = this.translate.instant("PROCESS_DELETE_PROCESS_TITLE");
+        this.icon = "fa fa-times-circle";
         this.submitFunction = this.deleteProcess;
     }
 

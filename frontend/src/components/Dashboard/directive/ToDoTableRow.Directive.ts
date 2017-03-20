@@ -13,11 +13,11 @@ class ToDoTableRowDirective implements IDirective {
         process: "=",
     };
 
-    constructor(private WorkflowService: WorkflowService, private $rootScope) { }
+    constructor(private WorkflowService: WorkflowService, private $rootScope, private $location) { }
 
     static directiveFactory(): ToDoTableRowDirective {
-        let directive: any = (WorkflowService: WorkflowService, $rootScope) => new ToDoTableRowDirective(WorkflowService, $rootScope);
-        directive.$inject = [WorkflowServiceId, $rootScopeId];
+        let directive: any = (WorkflowService: WorkflowService, $rootScope, $location) => new ToDoTableRowDirective(WorkflowService, $rootScope, $location);
+        directive.$inject = [WorkflowServiceId, $rootScopeId, $locationId];
         return directive;
     }
 
@@ -28,8 +28,15 @@ class ToDoTableRowDirective implements IDirective {
         scope.toLocalDate = (timestamp: any) => toLocalDate(timestamp, "DD.MM.YYYY HH:mm");
         scope.text = scope.editWorkflowUnit.customer.company ? scope.editWorkflowUnit.customer.company : scope.editWorkflowUnit.customer.firstname + " " + scope.editWorkflowUnit.customer.lastname;
         scope.price = scope.process.status === Status.OPEN || scope.process.status === Status.INCONTACT ? this.sumOrderPositions(scope.editWorkflowUnit.orderPositions) : scope.editWorkflowUnit.netPrice;
-        scope.goToLink = scope.process.status === Status.OPEN || scope.process.status === Status.INCONTACT ? "#/leads/" + scope.process.id : "#/offers/" + scope.process.id;
+        scope.goToLink = scope.process.status === Status.OPEN || scope.process.status === Status.INCONTACT ? "leads/" + scope.process.id : "offers/" + scope.process.id;
+        scope.lastname = scope.editWorkflowUnit.customer.lastname;
+        scope.firstname = scope.editWorkflowUnit.customer.firstname;
+        scope.goToWorkflow = () => this.goToWorkflow(scope);
     };
+
+    goToWorkflow(scope: any) {
+        this.$location.path(scope.goToLink);
+    }
 
     getStatusTranslationKeyByProcess(process: Process): string {
         switch (process.status) {

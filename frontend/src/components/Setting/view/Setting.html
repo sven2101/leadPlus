@@ -24,8 +24,8 @@
 					<li>
 						<a href="#/dashboard">Home</a>
 					</li>
-					<li ng-click="settingCtrl.tabOnClick('users')">
-						<a href="#/settings/users">{{ 'SETTINGS_MENU' | translate }}</a>
+					<li ng-click="settingCtrl.tabOnClick('user')">
+						<a href="#/settings/user">{{ 'SETTINGS_MENU' | translate }}</a>
 					</li>
 					<li class="active">
 						<strong>{{ settingCtrl.currentTab | translate }}</strong> 
@@ -41,7 +41,7 @@
                 <div class="col-lg-12">
                     <div class="tabs-container">  
 						<ul class="nav nav-tabs">			
-							<li ng-class="{'active':settingCtrl.currentTab === 'users'}" ng-click="settingCtrl.tabOnClick('users')"><a href="/#/settings/users" aria-expanded="true">{{'SETTING_USER' | translate }}</a></li>
+							<li ng-class="{'active':settingCtrl.currentTab === 'user'}" ng-click="settingCtrl.tabOnClick('user')"><a href="/#/settings/user" aria-expanded="true">{{'SETTING_USER' | translate }}</a></li>
 							<li ng-class="{'active':settingCtrl.currentTab === 'source'}" ng-click="settingCtrl.tabOnClick('source')"><a href="/#/settings/source" aria-expanded="true">{{'SOURCE_SOURCES' | translate }}</a></li>
 							<li ng-class="{'active':settingCtrl.currentTab === 'template'}" ng-click="settingCtrl.tabOnClick('template')" ><a href="/#/settings/template" aria-expanded="true">{{ 'SETTING_EMAIL' | translate}}</a></li>
 						</ul>
@@ -54,17 +54,3 @@
 	</div>
 	<div ng-include="'components/Setting/view/Setting.Source.Modal.html'"></div>
 </div>
-<script>
-	// Collapse iBox Contents
-    $('.collapse').on('shown.bs.collapse', function(){
-        $(this).parent().find(".fa-chevron-down").removeClass("fa-chevron-down").addClass("fa-chevron-up");
-    }).on('hidden.bs.collapse', function(){
-        $(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
-    });
-</script>
-
-<script>
-	$(document).ready(function(){
-		$('[data-toggle="tooltip"]').tooltip({ placement: 'right'});
-	});
-</script>

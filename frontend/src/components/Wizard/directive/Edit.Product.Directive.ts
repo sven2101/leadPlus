@@ -97,7 +97,6 @@ class ProductEditDirective implements IDirective {
         else {
             scope.editWorkflowUnit[addressLine] = addressStr;
         }
-
     }
 
     addProduct(array: Array<OrderPosition>, currentProductId: string, currentProductAmount: number, scope: any) {

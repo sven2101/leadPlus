@@ -17,6 +17,7 @@ package dash.usermanagement.rest;
 import static dash.Constants.USER_NOT_FOUND;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -47,7 +48,8 @@ import dash.usermanagement.settings.password.PasswordChange;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/api/rest/users", consumes = { MediaType.ALL_VALUE }, produces = {
+		MediaType.APPLICATION_JSON_VALUE })
 public class UserManagmentResource {
 
 	@Autowired
@@ -56,7 +58,7 @@ public class UserManagmentResource {
 	@Autowired
 	private ISmtpService smtpService;
 
-	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get all user.", notes = "All users.")
 	public List<User> getAll() {
@@ -70,7 +72,7 @@ public class UserManagmentResource {
 		return userService.getById(id);
 	}
 
-	@RequestMapping(method = RequestMethod.PUT)
+	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update a single user.", notes = "Provide a valid user ID.")
 	public User update(@RequestBody final User user)
@@ -81,9 +83,9 @@ public class UserManagmentResource {
 	@RequestMapping(value = "/{id}/pw", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update password of a single user.", notes = "Provide a valid user ID.")
-	public void updatePassword(@PathVariable final long id, @RequestBody @Valid final PasswordChange passwordChange)
-			throws Exception {
-		userService.updatePassword(id, passwordChange);
+	public Map<String, String> updatePassword(@PathVariable final long id,
+			@RequestBody @Valid final PasswordChange passwordChange) throws Exception {
+		return userService.updatePassword(id, passwordChange);
 	}
 
 	@RequestMapping(value = "/{id}/activate", method = RequestMethod.PUT)
@@ -101,7 +103,7 @@ public class UserManagmentResource {
 		return userService.setRoleForUser(id, role);
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@ApiOperation(value = "Delete a single user.", notes = "Provide a valid user ID.")
 	public void delete(@PathVariable final long id) throws DeleteFailedException {
@@ -153,6 +155,14 @@ public class UserManagmentResource {
 	@ApiOperation(value = "Get Smtp by UserId.", notes = "Provide a valid user ID.")
 	public Smtp getSmtpByUserId(@PathVariable final long id) {
 		return smtpService.findByUserId(id);
+
+	}
+
+	@RequestMapping(value = "/email", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get User by email.", notes = "Provide a valid user email.")
+	public User getSmtpByUserId(@RequestBody final String email) {
+		return userService.getUserByEmail(email);
 
 	}
 

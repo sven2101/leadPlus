@@ -200,7 +200,7 @@ public class ProcessResource {
 					.findByLeadIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
 		} else {
 			page = processRepository
-					.findByLeadCustomerFirstnameContainingOrLeadCustomerLastnameContainingOrLeadCustomerEmailContainingOrLeadCustomerCompanyContainingOrLeadCustomerPhoneContainingOrLeadDeliveryAddressContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
+					.findByLeadCustomerFirstnameContainingOrLeadCustomerLastnameContainingOrLeadCustomerEmailContainingOrLeadCustomerCompanyContainingOrLeadCustomerPhoneContainingOrLeadDeliveryAddressLineContainingOrLeadMessageContainingOrStatusContainingAllIgnoreCaseAndLeadIsNotNull(
 							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
 							searchText, new PageRequest(start / length, length, sortDirection, sortColumn));
 		}
@@ -256,7 +256,7 @@ public class ProcessResource {
 					.findByOfferIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
 		else
 			page = processRepository
-					.findByOfferCustomerFirstnameContainingOrOfferCustomerLastnameContainingOrOfferCustomerEmailContainingOrOfferCustomerCompanyContainingOrOfferCustomerPhoneContainingOrOfferDeliveryAddressContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(
+					.findByOfferCustomerFirstnameContainingOrOfferCustomerLastnameContainingOrOfferCustomerEmailContainingOrOfferCustomerCompanyContainingOrOfferCustomerPhoneContainingOrOfferDeliveryAddressLineContainingOrStatusContainingAllIgnoreCaseAndOfferIsNotNull(
 							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
 							new PageRequest(start / length, length, sortDirection, sortColumn));
 
@@ -311,8 +311,8 @@ public class ProcessResource {
 					.findBySaleIsNotNull(new PageRequest(start / length, length, sortDirection, sortColumn));
 		else
 			page = processRepository
-					.findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleCustomerPhoneContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
-							searchText, searchText, searchText, searchText, searchText, searchText,
+					.findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleDeliveryAddressLineContainingOrSaleCustomerPhoneContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
+							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
 							new PageRequest(start / length, length, sortDirection, sortColumn));
 
 		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),

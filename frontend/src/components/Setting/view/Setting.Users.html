@@ -1,4 +1,4 @@
-<div ng-if="settingCtrl.currentTab=='users'">
+<div ng-if="settingCtrl.currentTab=='user'">
 	<div class="ibox float-e-margins">
 		<div class="ibox-title">
 			<h5>{{ 'SETTING_ACCESS_MANAGEMENT' | translate }}</h5>
@@ -52,12 +52,3 @@
 		</div>
 	</div>
 </div>
-
-<script>
-	// Collapse iBox Contents
-    $('.collapse').on('shown.bs.collapse', function(){
-        $(this).parent().find(".fa-chevron-down").removeClass("fa-chevron-down").addClass("fa-chevron-up");
-    }).on('hidden.bs.collapse', function(){
-        $(this).parent().find(".fa-chevron-up").removeClass("fa-chevron-up").addClass("fa-chevron-down");
-    });
-</script>

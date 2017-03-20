@@ -1,14 +1,14 @@
-<td class="project-status">
+<td class="project-status" style="cursor: pointer" ng-click="::goToWorkflow()">
     <span class="{{::badgeClass}}">{{ ::statusTranslation | translate }}</span>
 </td>
-<td align="left" class="project-title">
+<td align="left" class="project-title" style="cursor: pointer" ng-click="::goToWorkflow()">
     <a >{{::text}}</a>
     <br>
     <small>{{'COMMON_CREATED' | translate }} {{::toLocalDate(editWorkflowUnit.timestamp)}}</small>   
 </td>
-<td class="project-completion">
-    <strong >{{::price| currency:'\u20AC'}}</strong>
+<td class="project-completion" style="cursor: pointer" ng-click="::goToWorkflow()">
+    {{::firstname}} {{::lastname}}
 </td>
-<td class="project-actions">
-    <a class="btn btn-white btn-sm" href="{{::goToLink}}"><i class="fa fa-globe fa-lg"></i> Go to </a> 
+<td class="project-completion" style="cursor: pointer" ng-click="::goToWorkflow()">
+    <strong >{{::price| currency:'\u20AC'}}</strong>
 </td>

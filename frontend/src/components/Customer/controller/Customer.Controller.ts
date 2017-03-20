@@ -22,15 +22,10 @@ class CustomerController {
 
     $inject = [CustomerServiceId, $locationId, $scopeId];
 
-    createCustomerForm;
-    currentCustomer: Customer;
-    currentEditCustomer: Customer;
-    isCurrentCustomerNew;
     customerService: CustomerService;
     location;
     scope;
 
-    customers: Array<Customer>;
     pageStart: number = 20;
     searchText: string;
     loadAllCustomers: boolean = false;
@@ -51,25 +46,12 @@ class CustomerController {
 
     }
 
-    copyBillingAddress() {
-        if (!isNullOrUndefined(this.currentCustomer.deliveryAddress) && !isNullOrUndefined(this.currentCustomer.billingAddress)) {
-            let oldId = this.currentCustomer.deliveryAddress.id;
-            shallowCopy(this.currentCustomer.billingAddress, this.currentCustomer.deliveryAddress);
-            this.currentCustomer.deliveryAddress.id = oldId;
+    showCustomer(id: number) {
+        if (id === 0) {
+            this.location.path("customer/detail/new");
+        } else {
+            this.location.path("customer/detail/" + id);
         }
-    }
-
-    clearCustomer(): void {
-        this.createCustomerForm.$setPristine();
-        this.currentCustomer = new Customer();
-        this.isCurrentCustomerNew = true;
-    }
-
-    editCustomer(customer: Customer): void {
-        this.currentEditCustomer = customer;
-        this.currentCustomer = new Customer();
-        shallowCopy(this.currentEditCustomer, this.currentCustomer);
-        this.isCurrentCustomerNew = false;
     }
 
     searchCustomer(searchText: string) {
@@ -91,24 +73,12 @@ class CustomerController {
         this.pageStart += 20;
     }
 
-    async saveCustomer() {
-        if (!this.isCurrentCustomerNew) {
-            shallowCopy(this.currentCustomer, this.currentEditCustomer);
-        }
-        await this.customerService.saveCustomer(this.currentCustomer, this.isCurrentCustomerNew);
-        if (!isNullOrUndefined(this.searchText) && this.searchText.length > 0) {
-            this.searchText = "";
-        } else {
-            this.searchCustomer("noSearchText");
-        }
-    }
-
     getLocalTimestamp: any = function (customer: Customer) {
         return toLocalDate(customer.timestamp);
     };
 
     goToCustomerDetail(customerId: number) {
-        this.location.path("customer/detail/" + customerId);
+        this.location.path("customer/timeline/" + customerId);
     }
 }
 

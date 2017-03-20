@@ -5,18 +5,26 @@ const SignupControllerId: string = "SignupController";
 
 class SignupController {
 
-    private $inject = [SignupServiceId];
+    private $inject = [SignupServiceId, $locationId];
 
     signupService: SignupService;
     user: Signup;
     password1: string;
     password2: string;
 
-    constructor(SignupService) {
+    constructor(SignupService, private $location) {
         this.signupService = SignupService;
         this.user = new Signup();
+        this.checkForSubdomain();
     }
 
+    checkForSubdomain(): void {
+        let host: string = this.$location.host();
+        let hostArray = host.split(".");
+        if (hostArray[0].toLocaleLowerCase() === "leadplus" || hostArray[0].toLocaleLowerCase() === "boexli") {
+            this.$location.path("/404");
+        }
+    }
     uniqueEmail(): void {
         this.signupService.uniqueEmail(this.user);
     }
