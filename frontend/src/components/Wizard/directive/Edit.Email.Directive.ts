@@ -19,12 +19,12 @@ class EditEmailDirective implements IDirective {
     };
 
     constructor(private WorkflowService: WorkflowService, private $rootScope, private TemplateService: TemplateService, private SummernoteService: SummernoteService,
-        private $sce, private $http, private $window, private $translate, private toaster) { }
+        private $sce, private $http, private $window, private $translate, private toaster, private $cookies, private TokenService: TokenService) { }
 
     static directiveFactory(): EditEmailDirective {
-        let directive: any = (WorkflowService: WorkflowService, $rootScope, TemplateService: TemplateService, SummernoteService: SummernoteService, $sce, $http, $window, $translate, toaster) =>
-            new EditEmailDirective(WorkflowService, $rootScope, TemplateService, SummernoteService, $sce, $http, $window, $translate, toaster);
-        directive.$inject = [WorkflowServiceId, $rootScopeId, TemplateServiceId, SummernoteServiceId, $sceId, $httpId, $windowId, $translateId, toasterId];
+        let directive: any = (WorkflowService: WorkflowService, $rootScope, TemplateService: TemplateService, SummernoteService: SummernoteService, $sce, $http, $window, $translate, toaster, $cookies, TokenService) =>
+            new EditEmailDirective(WorkflowService, $rootScope, TemplateService, SummernoteService, $sce, $http, $window, $translate, toaster, $cookies, TokenService);
+        directive.$inject = [WorkflowServiceId, $rootScopeId, TemplateServiceId, SummernoteServiceId, $sceId, $httpId, $windowId, $translateId, toasterId, $cookiesId, TokenServiceId];
         return directive;
     }
     static init: boolean = false;
@@ -55,6 +55,7 @@ class EditEmailDirective implements IDirective {
         scope.sizeInvalid = false;
         scope.TemplateService = this.TemplateService;
         scope.summernoteOptions = this.SummernoteService.getDefaultOptions(false);
+        scope.TokenService = this.TokenService;
         scope.workflow = scope.process.offer == null ? scope.process.lead : scope.process.offer;
         scope.workflow = scope.process.sale != null ? scope.process.sale : scope.workflow;
         scope.notification.recipient = scope.workflow.customer.email;
@@ -88,7 +89,6 @@ class EditEmailDirective implements IDirective {
             fileUpload.size = file.size;
             fileReader.readAsDataURL(file);
             fileReader.onload = function () {
-
                 fileUpload.content = this.result.split(",")[1];
                 if (fileUpload.content == null) {
                     fileUpload.content = "";
@@ -115,6 +115,7 @@ class EditEmailDirective implements IDirective {
     }
 
     openAttachment(fileUpload: FileUpload, scope: any): void {
+        let self = this;
         if (!isNullOrUndefined(fileUpload.content)) {
             let file = b64toBlob(fileUpload.content, fileUpload.mimeType);
             let reader = new FileReader();
@@ -124,18 +125,10 @@ class EditEmailDirective implements IDirective {
             reader.readAsDataURL(file);
             return;
         }
-        scope.$http.get("/api/rest/files/content/" + fileUpload.id, { method: "GET", responseType: "arraybuffer" }).
-            then(function (response) {
-                let contentType = response.headers("content-type");
-                let file = new Blob([response.data], { type: contentType });
-                let fileURL = URL.createObjectURL(file);
-                let reader = new FileReader();
-                let out = new Blob([response.data], { type: contentType });
-                reader.onload = function (e) {
-                    window.open(reader.result, "_blank");
-                };
-                reader.readAsDataURL(out);
-            });
+
+        await scope.TokenService.setAccessTokenCookie();
+        window.open("/api/rest/files/open/content/" + fileUpload.id, "_blank");
+
     }
 
     async generateContent(template: Template | null, workflow: Lead | Offer, currentNotification: Notification, scope: any): Promise<void> {

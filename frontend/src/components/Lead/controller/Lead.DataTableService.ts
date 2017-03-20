@@ -12,7 +12,7 @@ const openDataLeadRoute = "/api/rest/processes/workflow/LEAD/state/OPEN";
 
 class LeadDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId, TokenServiceId, ProcessResourceId, $httpId];
 
     workflowService: WorkflowService;
     workflowDatatableService: WorkflowDatatableService;
@@ -24,8 +24,9 @@ class LeadDataTableService implements IDatatableService {
     filter;
     compile;
     rootScope;
+    processResource;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService, private TokenService: TokenService, ProcessResource, private $http) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -34,22 +35,18 @@ class LeadDataTableService implements IDatatableService {
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
         this.workflowDatatableService = WorkflowDatatableService;
+        this.processResource = ProcessResource.resource;
     }
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
-            .withOption("ajax", {
-                url: openDataLeadRoute,
-                error: function (xhr, error, thrown) {
-                    handleError(xhr);
-                },
-                type: "GET",
-                "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
-                }
+            .withOption("ajax", function (data, callback, settings) {
+                self.$http.get(openDataLeadRoute).then(function (response) {
+                    callback(response.data);
+                });
             })
+
             .withOption("stateSave", false)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")

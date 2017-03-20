@@ -6,7 +6,7 @@
 /// <reference path="../../Product/model/OrderPosition.Model.ts" />
 /// <reference path="../../Commentary/model/Commentary.Model.ts" />
 /// <reference path="../../app/App.Common.ts" />
-/// <reference path="../../app/App.Common.ts" />
+/// <reference path="../../app/App.TokenService.ts" />
 /// <reference path="../../Process/model/Status.Model.ts" />
 /// <reference path="../../Workflow/model/WorkflowType.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Controller.ts" />
@@ -19,12 +19,12 @@ const WorkflowDatatableServiceId: string = "WorkflowDatatableService";
 
 class WorkflowDatatableService {
 
-    private $inject = [$rootScopeId, $compileId];
+    private $inject = [$rootScopeId, $compileId, TokenServiceId, $httpId];
 
     rootScope;
     compile;
 
-    constructor($rootScope, $compile) {
+    constructor($rootScope, $compile, private TokenService: TokenService, private $http) {
         this.rootScope = $rootScope;
         this.compile = $compile;
     }
@@ -97,19 +97,21 @@ class WorkflowDatatableService {
         }
     }
 
-    changeDataInput(loadAllData: boolean, dtOptions: any, allDataRoute: string, latestDataRoute: string) {
+    async changeDataInput(loadAllData: boolean, dtOptions: any, allDataRoute: string, latestDataRoute: string) {
         let searchDelay: number = 0;
+        let self = this;
         if (loadAllData === true) {
             searchDelay = 600;
         }
         dtOptions.withOption("serverSide", loadAllData)
-            .withOption("ajax", this.getData(loadAllData, allDataRoute, latestDataRoute))
+            .withOption("ajax", await self.getData(loadAllData, allDataRoute, latestDataRoute))
             .withOption("searchDelay", searchDelay);
     }
 
-    getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): any {
+    async getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): Promise<any> {
         let self = this;
         if (loadAllData === true) {
+            let token = await self.TokenService.getAccessTokenPromise();
             return {
                 url: allDataRoute,
                 type: "GET",
@@ -118,23 +120,20 @@ class WorkflowDatatableService {
                 error: function (xhr, error, thrown) {
                     handleError(xhr);
                 },
-                "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
+                beforeSend: function (request) {
+                    request.setRequestHeader("X-Authorization", "Bearer " + token);
                 }
             };
+
+
+
         } else {
-            return {
-                url: latestDataRoute,
-                error: function (xhr, error, thrown) {
-                    handleError(xhr);
-                },
-                type: "GET",
-                "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
-                }
+            return (data, callback, settings) => {
+                self.$http.get(latestDataRoute).then(function (response) {
+                    callback(response.data);
+                });
             };
+
         }
     }
 

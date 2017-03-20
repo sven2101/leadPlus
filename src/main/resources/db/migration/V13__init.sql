@@ -1,3 +1,4 @@
+
 CREATE OR REPLACE function f_add_address_col(_tbl regclass)
   RETURNS bool AS
 $func$
@@ -27,3 +28,4 @@ SELECT f_add_address_col('lead');
 SELECT f_add_address_col('offer');
 SELECT f_add_address_col('sale');
 SELECT f_add_address_col('customer');
+

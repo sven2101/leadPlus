@@ -116,8 +116,7 @@ class AppController {
     registerLoadLabels() {
         let self = this;
         self.rootScope.loadLabels = function () {
-            if (!angular
-                .isUndefined(self.rootScope.user)) {
+            if (self.rootScope.user != null) {
                 self.processResource.getCountWorkflowByStatus({
                     workflow: "LEAD",
                     status: "OPEN"
@@ -145,8 +144,7 @@ class AppController {
     registerSetUserDefaultLanguage() {
         let self = this;
         self.rootScope.setUserDefaultLanguage = function () {
-            if (!angular
-                .isUndefined(self.rootScope.user)) {
+            if (self.rootScope.user != null) {
                 self.userResource
                     .get({
                         id: self.rootScope.user.id
@@ -174,8 +172,7 @@ class AppController {
             }
         });
         self.stop = self.interval(function () {
-            if (!angular
-                .isUndefined(self.rootScope.user)) {
+            if (self.rootScope.user != null) {
                 self.processResource.getCountWorkflowByStatus({
                     workflow: "LEAD",
                     status: "OPEN"

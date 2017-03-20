@@ -67,7 +67,7 @@ public class SmtpResource {
 			@RequestBody @Valid final SmtpContext smtpContext)
 			throws UnsupportedEncodingException, NotFoundException, MessagingException, Exception {
 
-		return smtpService.test(id, smtpContext.getSmtpKey());
+		return smtpService.test(id);
 
 	}
 

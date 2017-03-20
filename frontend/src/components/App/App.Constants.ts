@@ -103,6 +103,9 @@ const moduleSourceResource: string = moduleSource + ".resource";
 const moduleSourceService: string = moduleSource + ".service";
 const moduleWizard: string = moduleApp + ".wizard";
 const moduleConfirmation: string = moduleApp + ".confirmationModal";
+const moduleToken: string = moduleApp + ".token";
+const moduleTokenService: string = moduleToken + ".service";
+const moduleLoginModal: string = moduleApp + ".loginModal";
 
 
 const moduleTranslate: string = "pascalprecht.translate";

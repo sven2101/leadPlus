@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import dash.messagemanagement.domain.AbstractMessage;
@@ -57,8 +56,9 @@ public class MessageService implements IMessageService {
 
 	@Override
 	public AbstractMessage getMessageContent(final WorkflowTemplateObject workflowTemplateObject,
-			final String templateWithPlaceholders, final Notification notification)
-			throws TemplateException, IOException {
+
+			final String templateWithPlaceholders, final Notification notification, final User user)
+			throws IOException, TemplateException {
 
 		final StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
 		cfg.setTemplateLoader(stringTemplateLoader);
@@ -70,8 +70,6 @@ public class MessageService implements IMessageService {
 		mapping.put("workflow", workflowTemplateObject);
 		mapping.put("customer", workflowTemplateObject.getCustomer());
 		mapping.put("orderPositions", workflowTemplateObject.getOrderPositions());
-
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (user != null) {
 			user.setPassword(null);
 			mapping.put("user", user);

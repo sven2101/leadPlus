@@ -103,7 +103,8 @@ module.exports = {
 				baseSrcPath + 'logout.html',
 				baseSrcPath + '401.html',
 				baseSrcPath + '403.html',
-				baseSrcPath + '404.html'
+				baseSrcPath + '404.html',
+				baseSrcPath + 'subdomainiframe.html'
 			],
 			dst: baseDstPath + ''
 		},

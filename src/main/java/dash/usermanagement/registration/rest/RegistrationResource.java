@@ -29,6 +29,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+<<<<<<< HEAD
+=======
+import dash.exceptions.EmailAlreadyExistsException;
+import dash.exceptions.RegisterFailedException;
+>>>>>>> JWT
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
@@ -37,7 +42,7 @@ import freemarker.template.TemplateException;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+@RequestMapping(value = "/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 		MediaType.APPLICATION_JSON_VALUE })
 public class RegistrationResource {
 
@@ -70,9 +75,5 @@ public class RegistrationResource {
 		return userService.emailAlreadyExists(registration.getEmail());
 	}
 
-	@RequestMapping(value = "/init", method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.CREATED)
-	public void createInitialUsers(@RequestBody final String apiPassword) throws IOException, TemplateException {
-		this.userService.createInitialUsers(apiPassword);
-	}
+
 }

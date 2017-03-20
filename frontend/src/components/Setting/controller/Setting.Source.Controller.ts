@@ -76,6 +76,10 @@ class SourceController {
         }
         this.sourceService.saveSource(this.currentSource);
     }
+    async generateApiToken(source): Promise<void> {
+        let x = await this.sourceService.generateApiToken(source);
+        console.log(x);
+    }
 
 }
 
