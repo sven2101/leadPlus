@@ -24,16 +24,22 @@ class LoginController {
 
     loginService: LoginService;
     credentials: Credentials;
-    location;
 
-    constructor(LoginService: LoginService, $location) {
+    constructor(LoginService: LoginService, private $location) {
         this.loginService = LoginService;
-        this.location = $location;
         this.credentials = new Credentials();
+        this.checkForSubdomain();
     }
 
+    checkForSubdomain(): void {
+        let host: string = this.$location.host();
+        let hostArray = host.split(".");
+        if (hostArray[0].toLocaleLowerCase() === "leadplus" || hostArray[0].toLocaleLowerCase() === "boexli") {
+            this.$location.path("/404");
+        }
+    }
     login() {
-        this.credentials.tenant = this.location.host();
+        this.credentials.tenant = this.$location.host();
         this.loginService.login(this.credentials);
     }
 }

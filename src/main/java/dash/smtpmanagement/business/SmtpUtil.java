@@ -37,9 +37,12 @@ import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
 import org.apache.log4j.Logger;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import dash.common.EncryptionWrapper;
 import dash.common.Encryptor;
+import dash.security.jwt.domain.UserContext;
 import dash.smtpmanagement.domain.Smtp;
 import dash.smtpmanagement.domain.SmtpEncryptionType;
 
@@ -50,9 +53,12 @@ public class SmtpUtil {
 	private SmtpUtil() {
 	}
 
-	public static String decryptPasswordForSmtp(Smtp smtp, String smtpKey) throws UnsupportedEncodingException {
+	public static String decryptPasswordForSmtp(Smtp smtp) throws UnsupportedEncodingException {
 		byte[] smtpPassword = null;
 		try {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			UserContext userContext = (UserContext) authentication.getPrincipal();
+			String smtpKey = userContext.getSmtpKey();
 			smtpPassword = Encryptor.decrypt(
 					new EncryptionWrapper(smtp.getPassword().clone(), smtp.getSalt().clone(), smtp.getIv().clone()),
 					smtpKey);

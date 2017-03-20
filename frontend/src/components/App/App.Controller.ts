@@ -12,7 +12,7 @@ const broadcastUserNotificationChanged: string = "userNotificationChanged";
 
 class AppController {
 
-    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId, $windowId, $timeoutId];
+    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId, $windowId, $timeoutId, SmtpServiceId];
 
     translate;
     rootScope;
@@ -93,6 +93,7 @@ class AppController {
         });
     }
 
+
     setTopbarNotificationState(state: NotificationSendState) {
         this.timeout(() => {
             this.notificationSendState = state;
@@ -115,8 +116,7 @@ class AppController {
     registerLoadLabels() {
         let self = this;
         self.rootScope.loadLabels = function () {
-            if (!angular
-                .isUndefined(self.rootScope.user)) {
+            if (self.rootScope.user != null) {
                 self.processResource.getCountWorkflowByStatus({
                     workflow: "LEAD",
                     status: "OPEN"
@@ -144,8 +144,7 @@ class AppController {
     registerSetUserDefaultLanguage() {
         let self = this;
         self.rootScope.setUserDefaultLanguage = function () {
-            if (!angular
-                .isUndefined(self.rootScope.user)) {
+            if (self.rootScope.user != null) {
                 self.userResource
                     .get({
                         id: self.rootScope.user.id
@@ -154,14 +153,11 @@ class AppController {
                     });
             }
             else {
-                // TODO remove after Safari testing
-                console.log(self.window.navigator.language);
-                console.log(self.window.navigator.userLanguage);
+                // TODO remove after Safari testing          
                 let lang: string = self.window.navigator.language || self.window.navigator.userLanguage;
                 if (lang.indexOf("de") !== -1) {
                     lang = "DE";
                 }
-                console.log(lang);
                 self.rootScope.changeLanguage(lang.toUpperCase());
             }
         };
@@ -176,8 +172,7 @@ class AppController {
             }
         });
         self.stop = self.interval(function () {
-            if (!angular
-                .isUndefined(self.rootScope.user)) {
+            if (self.rootScope.user != null) {
                 self.processResource.getCountWorkflowByStatus({
                     workflow: "LEAD",
                     status: "OPEN"

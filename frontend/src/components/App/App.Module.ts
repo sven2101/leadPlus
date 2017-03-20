@@ -69,6 +69,8 @@ angular.module(moduleApp,
         moduleSourceResource,
         moduleWizard,
         moduleConfirmation,
+        moduleTokenService,
+        moduleLoginModal,
 
         moduleTranslate,
         moduleNgResource,

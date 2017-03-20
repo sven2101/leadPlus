@@ -102,7 +102,6 @@ class DashboardController {
         this.workflowService.openQuickEmailModal(process);
     }
 
-
     refreshTodos(): void {
         this.dashboardService.refreshTodos();
     }

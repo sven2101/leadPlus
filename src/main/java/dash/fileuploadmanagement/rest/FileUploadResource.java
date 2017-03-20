@@ -76,6 +76,21 @@ public class FileUploadResource {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.setContentType(
 				new MediaType(fileUpload.getMimeType().split("/")[0], fileUpload.getMimeType().split("/")[1]));
+
+		return new ResponseEntity<>(fileUpload.getContent(), responseHeaders, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "open/content/{id}", method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_PDF_VALUE })
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get file by Id. ", notes = "")
+	public ResponseEntity<byte[]> getContentByFileUploadNewTabId(@ApiParam(required = true) @PathVariable final Long id)
+			throws NotFoundException {
+		FileUpload fileUpload = fileService.getById(id);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentType(
+				new MediaType(fileUpload.getMimeType().split("/")[0], fileUpload.getMimeType().split("/")[1]));
+
 		return new ResponseEntity<>(fileUpload.getContent(), responseHeaders, HttpStatus.OK);
 	}
 

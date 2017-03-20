@@ -12,7 +12,7 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.security;
+package dash.security.jwt;
 
 import java.io.IOException;
 

@@ -23,7 +23,7 @@ const ProfileServiceId: string = "ProfileService";
 
 class ProfileService {
 
-    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId, $cookiesId, $locationId];
+    private $inject = [$rootScopeId, toasterId, $translateId, UserResourceId, FileResourceId, $qId, $locationId, TokenServiceId];
 
     userResource;
     translate;
@@ -33,14 +33,13 @@ class ProfileService {
     fileResource;
     formdata;
     q;
-    cookies;
 
     oldPassword: string;
     newPassword1: string;
     newPassword2: string;
     location;
 
-    constructor($rootScope, toaster, $translate, UserResource, FileResource, $q, $cookies, $location) {
+    constructor($rootScope, toaster, $translate, UserResource, FileResource, $q, $location, private TokenService: TokenService) {
         this.fileResource = FileResource.resource;
         this.userResource = UserResource.resource;
         this.translate = $translate;
@@ -48,7 +47,6 @@ class ProfileService {
         this.rootScope = $rootScope;
         this.formdata = new FormData();
         this.q = $q;
-        this.cookies = $cookies;
         this.location = $location;
     }
 
@@ -58,9 +56,7 @@ class ProfileService {
 
         this.userResource.update(user).$promise.then(function (updatedUser: User) {
             self.updateRootScope(updatedUser);
-            let date = new Date();
-            date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
-            self.cookies.putObject("user", self.rootScope.user, { domain: self.rootScope.tenant.tenantKey, path: "/", expires: date });
+            self.TokenService.saveItemToLocalStorage(USER_STORAGE, self.rootScope.user);
             self.rootScope.changeLanguage(self.rootScope.user.language);
             self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
             defer.resolve(updatedUser);
@@ -78,43 +74,29 @@ class ProfileService {
             data.authorization = self.rootScope.user.authorization;
             data.smtpKey = self.rootScope.user.smtpKey;
             self.rootScope.user = data;
-            let date = new Date();
-            date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
-            self.cookies.putObject("user", self.rootScope.user, { domain: self.rootScope.tenant.tenantKey, path: "/", expires: date });
+            self.TokenService.saveItemToLocalStorage(USER_STORAGE, self.rootScope.user);
             $("#profilePicture").prop("src", "data:image/jpeg;base64," + user.picture.content);
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
         });
     }
 
-    updatePassword(oldPassword, newPassword1, newPassword2): Promise<boolean> {
+    async updatePassword(oldPassword, newPassword1, newPassword2): Promise<void> {
         let salt: string = this.rootScope.user.email;
         oldPassword = hashPasswordPbkdf2(oldPassword, salt);
         newPassword1 = hashPasswordPbkdf2(newPassword1, salt);
-        newPassword2 = hashPasswordPbkdf2(newPassword2, salt);
-        let defer = this.q.defer();
-        let self = this;
-        this.userResource.changePassword({
-            id: this.rootScope.user.id
-        }, {
-                newPassword: newPassword1,
-                oldPassword: oldPassword,
-                oldSmtpKey: self.rootScope.user.smtpKey,
-                newSmtpKey: encodeURIComponent(hashPasswordPbkdf2(newPassword1, salt))
-            }).$promise.then(function () {
-                self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
-                let authorization = btoa(self.rootScope.user.email + ":" + newPassword1);
-                self.rootScope.user.authorization = authorization;
-                let date = new Date();
-                date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
-                self.cookies.putObject("user", self.rootScope.user, { domain: self.location.host(), path: "/", expires: date });
-                self.rootScope.user.smtpKey = encodeURIComponent(hashPasswordPbkdf2(newPassword1, salt));
-                defer.resolve(true);
-            }, function (error) {
-                self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
-                defer.reject(error);
-            });
-        return defer.promise;
+
+        try {
+            let token = await this.userResource.changePassword({ id: this.rootScope.user.id }, {
+                newPassword: newPassword1, oldPassword: oldPassword,
+            }).$promise;
+
+            this.TokenService.setToken(token);
+            this.toaster.pop("success", "", this.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_SUCCESS"));
+        } catch (error) {
+            this.toaster.pop("error", "", this.translate.instant("PROFILE_TOAST_PASSWORD_CHANGE_ERROR"));
+
+        }
     }
 
     uploadFiles() {

@@ -1,6 +1,7 @@
 <form id="scopeStuff" name="eform" novalidate>
 
 	<div>
+		<span ng-if="!rootScope.isSmptVerified" style="color:red; padding: 0px !important; font-size: 13px important;"><b><translate>EMAIL_SMTP_VALIDATION_WITHOUT_LINK</translate></b><br><br></span>
 		<div class="form-group">
 			<label>{{ 'EMAIL_NOTIFICATION_HISTORY' | translate }}</label>
 			<select ng-change="onNotificationSelected()" class="form-control" ng-disabled="process.notifications==null||process.notifications.length==0"
@@ -22,12 +23,14 @@
 				</div>
 			</div>
 
+
 			<div class="col-sm-6 form-group">
 				<label>{{ 'PDF_TEMPLATE' | translate }}</label>
 				<div class="input-group m-b">
 					<select ng-model="currentTemplate" style="width:100%" ng-disabled="disabled" class="form-control" ng-change="generate(currentTemplate,workflow,notification)"> 
 					<option ng-value="null">- {{ 'EMAIL_TEMPLATE_SELECT' | translate }} -</option>
 					<option ng-repeat="template in templates" ng-value="template">{{template.name}}</option>
+
 
 				</select>
 					<a ng-disabled="disabled" class="btn btn-default input-group-addon" ng-click="alert();generate(currentTemplate, workflow,notification)">
@@ -117,4 +120,6 @@
 			</div>
 		</div>
 	</div>
+
 </form>
+
