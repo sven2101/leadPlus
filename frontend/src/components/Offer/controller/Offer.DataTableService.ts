@@ -2,17 +2,6 @@
 /// <reference path="../../User/Model/User.Model.ts" />
 /// <reference path="../../Process/model/Process.Model.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH. All rights reserved.
- * 
- * NOTICE: All information contained herein is, and remains the property of
- * Eviarc GmbH and its suppliers, if any. The intellectual and technical
- * concepts contained herein are proprietary to Eviarc GmbH, and are protected
- * by trade secret or copyright law. Dissemination of this information or
- * reproduction of this material is strictly forbidden unless prior written
- * permission is obtained from Eviarc GmbH.
- ******************************************************************************/
-"use strict";
 
 const OfferDataTableServiceId: string = "OfferDataTableService";
 const allDataOfferRoute: string = "/api/rest/processes/offers";
@@ -20,7 +9,7 @@ const openDataOfferRoute: string = "/api/rest/processes/workflow/OFFER/state/OFF
 
 class OfferDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId, TokenServiceId, $httpId];
 
     workflowService: WorkflowService;
     workflowDatatableService: WorkflowDatatableService;
@@ -33,7 +22,7 @@ class OfferDataTableService implements IDatatableService {
     compile;
     rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService, private TokenService: TokenService, private $http) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -47,26 +36,20 @@ class OfferDataTableService implements IDatatableService {
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
-            .withOption("ajax", {
-                url: openDataOfferRoute,
-                error: function (xhr, error, thrown) {
-                    handleError(xhr);
-                },
-                type: "GET",
-                "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
-                }
+            .withOption("ajax", function (data, callback, settings) {
+                self.$http.get(openDataOfferRoute).then(function (response) {
+                    callback(response.data);
+                });
             })
             .withOption("stateSave", false)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowDatatableService.getButtons(this.translate("OFFER_OFFERS"), [6, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("OFFER_OFFERS"), [7, 2, 1, 3, 5, 8, 9, 10, 11, 12, 13]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("deferRender", true)
             .withOption("lengthMenu", [10, 20, 50])
-            .withOption("order", [4, "desc"])
+            .withOption("order", [5, "desc"])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
     }
@@ -74,6 +57,12 @@ class OfferDataTableService implements IDatatableService {
     configRow(row: any, data: Process) {
         let currentDate = moment(newTimestamp(), "DD.MM.YYYY");
         let offerDate = moment(data.offer.timestamp, "DD.MM.YYYY");
+        let self = this;
+        $(row).attr("id", "id_" + data.id);
+        $("td:not(:last-child)", row).unbind("click");
+        $("td:not(:last-child)", row).bind("click", function () {
+            self.rootScope.$broadcast(broadcastClickChildrow, data);
+        }).css("cursor", "pointer");
 
         if ((currentDate["businessDiff"](offerDate, "days") > 3 && data.status === "OFFER")
             || (currentDate["businessDiff"](offerDate, "days") > 5 && data.status === "FOLLOWUP")) {
@@ -91,14 +80,24 @@ class OfferDataTableService implements IDatatableService {
     getDTColumnConfiguration(addDetailButton: Function, addStatusStyle: Function, addActionsButtons: Function): Array<any> {
         let self = this;
         return [
-            this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
-                .renderWith(addDetailButton),
-            this.DTColumnBuilder.newColumn("offer.customer.lastname").withTitle(
-                this.translate("COMMON_NAME")).withClass("text-center"),
+            /*this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
+                .renderWith(addDetailButton),*/
             this.DTColumnBuilder.newColumn("offer.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
+            this.DTColumnBuilder.newColumn("offer.customer.lastname").withTitle(
+                this.translate("COMMON_NAME")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("offer.customer.email").withTitle(
-                this.translate("COMMON_EMAIL")).withClass("text-center"),
+                this.translate("COMMON_EMAIL")).notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(
+                this.translate("COMMON_PRODUCT_DESTINATION")).withClass("text-center").renderWith(function (data, type, full) {
+                    let zip = "";
+                    let city = "";
+                    let country = "";
+                    !isNullOrUndefined(data.offer.deliveryAddress.zip) ? zip = data.offer.deliveryAddress.zip : angular.noop;
+                    !isNullOrUndefined(data.offer.deliveryAddress.city) ? city = data.offer.deliveryAddress.city : angular.noop;
+                    !isNullOrUndefined(data.offer.deliveryAddress.country) ? country = data.offer.deliveryAddress.country : angular.noop;
+                    return "<span class='text-ellipses' title='" + zip + " " + city + " " + country + "'>" + zip + " " + city + " " + country + "</span>";
+                }),
             this.DTColumnBuilder.newColumn("offer.timestamp").withTitle(
                 this.translate("COMMON_DATE")).renderWith(
                 function (data, type, full) {
@@ -109,7 +108,7 @@ class OfferDataTableService implements IDatatableService {
                 this.translate("COMMON_PHONE")).notVisible(),
             this.DTColumnBuilder.newColumn("offer.customer.firstname").withTitle(
                 this.translate("COMMON_FIRSTNAME")).notVisible(),
-            this.DTColumnBuilder.newColumn("offer.deliveryAddress").withTitle(
+            this.DTColumnBuilder.newColumn("offer.deliveryAddressLine").withTitle(
                 this.translate("COMMON_PRODUCT_DESTINATION")).notVisible(),
             this.DTColumnBuilder.newColumn("offer.deliveryDate").withTitle(
                 this.translate("COMMON_DELIVERY_TIME")).notVisible(),
@@ -148,6 +147,7 @@ class OfferDataTableService implements IDatatableService {
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
                 "text-center").withOption("width", "210px").notSortable().renderWith(addActionsButtons),
+            this.DTColumnBuilder.newColumn("offer.deliveryAddressLine").notVisible(),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {

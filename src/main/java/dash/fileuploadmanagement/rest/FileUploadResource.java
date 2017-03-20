@@ -47,23 +47,40 @@ public class FileUploadResource {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Post a file. ", notes = "")
-	public FileUpload save(@ApiParam(required = true) @RequestBody @Valid final FileUpload fileUpload) throws SaveFailedException {
+	public FileUpload save(@ApiParam(required = true) @RequestBody @Valid final FileUpload fileUpload)
+			throws SaveFailedException {
 		return fileService.save(fileUpload);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ApiOperation(value = "Get a single file by id. ", notes = "")
-	public FileUpload getFileUploadById(@ApiParam(required = true) @PathVariable final Long id) throws SaveFailedException, NotFoundException {
+	public FileUpload getFileUploadById(@ApiParam(required = true) @PathVariable final Long id)
+			throws SaveFailedException, NotFoundException {
 		return fileService.getById(id);
 	}
 
 	@RequestMapping(value = "/content/{id}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_PDF_VALUE })
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get file by Id. ", notes = "")
-	public ResponseEntity<byte[]> getContentByFileUploadId(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
+	public ResponseEntity<byte[]> getContentByFileUploadId(@ApiParam(required = true) @PathVariable final Long id)
+			throws NotFoundException {
 		FileUpload fileUpload = fileService.getById(id);
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.setContentType(new MediaType(fileUpload.getMimeType().split("/")[0], fileUpload.getMimeType().split("/")[1]));
+		responseHeaders.setContentType(
+				new MediaType(fileUpload.getMimeType().split("/")[0], fileUpload.getMimeType().split("/")[1]));
+		return new ResponseEntity<>(fileUpload.getContent(), responseHeaders, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "open/content/{id}", method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_PDF_VALUE })
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get file by Id. ", notes = "")
+	public ResponseEntity<byte[]> getContentByFileUploadNewTabId(@ApiParam(required = true) @PathVariable final Long id)
+			throws NotFoundException {
+		FileUpload fileUpload = fileService.getById(id);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentType(
+				new MediaType(fileUpload.getMimeType().split("/")[0], fileUpload.getMimeType().split("/")[1]));
 		return new ResponseEntity<>(fileUpload.getContent(), responseHeaders, HttpStatus.OK);
 	}
 

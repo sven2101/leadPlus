@@ -9,7 +9,6 @@ class Sale implements IWorkflow {
     customer: Customer;
     timestamp: any;
     vendor: any;
-    deliveryAddress: any;
     deliveryDate: any;
     saleTurnover: number;
     saleProfit: number;
@@ -17,9 +16,18 @@ class Sale implements IWorkflow {
     deliveryCosts: number;
     invoiceNumber: string;
     message: string;
+    deliveryAddressLine: string;
+    deliveryTerm: string;
+    paymentTerm: string;
+    skonto: number;
+    deliveryAddress: Address;
+    billingAddress: Address;
 
 
     constructor() {
+        this.skonto = 0;
+        this.deliveryAddress = new Address();
+        this.billingAddress = new Address();
         this.deliveryCosts = 0;
         this.saleCost = 0;
         this.saleTurnover = 0;

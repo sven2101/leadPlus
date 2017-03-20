@@ -4,7 +4,7 @@
 	}
 </style>
 
-<div ng-if="settingCtrl.currentTab==2">
+<div ng-if="settingCtrl.currentTab=='source'">
 	<div class="ibox float-e-margins">
 		<div class="ibox-title">
 			<h5>{{ 'SOURCE_MANAGE_SOURCES' | translate }} - <strong>{{sourceCtrl.sourceService.sources.length}}</strong> {{ 'SOURCE_SOURCES'
@@ -12,7 +12,7 @@
 		</div>
 		<div class="ibox-content"  style="overflow-x: auto">
 			<form role="form" class="form-inline">
-				<button type="button" class="btn btn-success btn-sm btn-primary" ng-click="sourceCtrl.clearSource()" data-toggle="modal"
+				<button type="button" class="btn btn-success btn-primary" ng-click="sourceCtrl.clearSource()" data-toggle="modal"
 					data-target="#createSourceModal" data-backdrop="static">
 						<i class="fa fa-plus"></i>
 						&nbsp;{{ 'SOURCE_CREATE' | translate }}
@@ -36,11 +36,11 @@
 							<th></th>
 							<th class="text-center">{{ 'COMMON_NAME' | translate }}</th>
 							<th class="text-center">{{ 'COMMON_DESCRIPTION' | translate }}</th>
-							<th class="text-center"><i class="fa fa-cog"></i></th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="source in sourceCtrl.sourceService.sources| filter:searchText |orderBy:'name' | limitTo:sourceCtrl.sourceAmountLimit ">
+						<tr ng-repeat="source in sourceCtrl.sourceService.sources| filter:searchText |orderBy:'name' | limitTo:sourceCtrl.sourceAmountLimit " style="cursor: pointer" ng-click="sourceCtrl.editSource(source)" data-toggle="modal" data-target="#createSourceModal"
+									data-backdrop="static">
 							<!-- <td class="project-status col-md-1">
 								<span ng-show="!source.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
 								<span ng-show="source.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
@@ -49,14 +49,16 @@
 							<td class="project-title col-md-3">
 								<a>{{source.name}}</a>
 							</td>
-							<td class="project-completion col-md-7" max>
+							<td class="project-completion col-md-6" max>
 								<small style="word-wrap: break-word; word-break: break-all;">{{source.description}}</small>
 							</td>
+
 							<td class="project-actions col-md-1">
-								<button type="button" class="btn btn-white btn-sm" ng-click="sourceCtrl.editSource(source)" data-toggle="modal" data-target="#createSourceModal"
-									data-backdrop="static">
-								<i class="fa fa-pencil"></i></button>
+								<button type="button" class="btn btn-white btn-sm" ng-click="sourceCtrl.generateApiToken(source)">
+									<i class="fa fa-recycle"></i>
+								</button>								
 							</td>
+
 						</tr>
 					</tbody>
 				</table>

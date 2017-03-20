@@ -26,7 +26,6 @@ const $routeId: string = "$route";
 const $locationProviderId = "$locationProvider";
 const $compileProviderId = "$compileProvider";
 
-
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";
 const moduleServices: string = moduleApp + ".services";
@@ -56,6 +55,7 @@ const moduleUserResource: string = moduleUser + ".resource";
 const moduleComment: string = moduleApp + ".comment";
 const moduleCommentResource: string = moduleComment + ".resource";
 const moduleStatistic: string = moduleApp + ".statistic";
+const moduleStatisticProductDetail: string = moduleStatistic + ".product.detail";
 const moduleStatisticResource: string = moduleStatistic + ".resource";
 const moduleStatisticService: string = moduleStatistic + ".service";
 const moduleSetting: string = moduleApp + ".settings";
@@ -68,6 +68,7 @@ const moduleProductDetail: string = moduleProduct + ".detail";
 const moduleProductResource: string = moduleProduct + ".resource";
 const moduleProductService: string = moduleProduct + ".service";
 const moduleCustomer: string = moduleApp + ".customer";
+const moduleCustomerTimeline: string = moduleCustomer + ".timeline";
 const moduleCustomerDetail: string = moduleCustomer + ".detail";
 const moduleCustomerResource: string = moduleCustomer + ".resource";
 const moduleCustomerService: string = moduleCustomer + ".service";
@@ -84,6 +85,7 @@ const moduleSmtp: string = moduleApp + ".smtp";
 const moduleSmtpResource: string = moduleSmtp + ".resource";
 const moduleSmtpService: string = moduleSmtp + ".service";
 const moduleTemplate: string = moduleApp + ".template";
+const moduleDeleteTemplate: string = moduleTemplate + ".delete";
 const moduleTemplateResource: string = moduleTemplate + ".resource";
 const moduleTemplateService: string = moduleTemplate + ".service";
 const moduleNotification: string = moduleApp + ".notification";
@@ -101,6 +103,9 @@ const moduleSourceResource: string = moduleSource + ".resource";
 const moduleSourceService: string = moduleSource + ".service";
 const moduleWizard: string = moduleApp + ".wizard";
 const moduleConfirmation: string = moduleApp + ".confirmationModal";
+const moduleToken: string = moduleApp + ".token";
+const moduleTokenService: string = moduleToken + ".service";
+const moduleLoginModal: string = moduleApp + ".loginModal";
 
 
 const moduleTranslate: string = "pascalprecht.translate";

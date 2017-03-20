@@ -11,12 +11,16 @@ const ProfileControllerId: string = "ProfileController";
 
 class ProfileController {
 
-    private $inject = [ProfileServiceId, $rootScopeId, $scopeId, toasterId, $translateId];
+    private $inject = [ProfileServiceId, $rootScopeId, $scopeId, toasterId, $translateId, $routeId];
 
     myImage = "";
     myCroppedImage = "";
     profileService: ProfileService;
     rootscope;
+    scope;
+    route;
+    lastRoute;
+
 
     passwordForm;
 
@@ -24,16 +28,19 @@ class ProfileController {
     oldPassword: string;
     newPassword1: string;
     newPassword2: string;
-    currentTab: number = 1;
+    currentTab: string;
     smtpForm;
     SmtpEncryptionType: Object = SmtpEncryptionType;
     testingSmtp: boolean = false;
 
-    constructor(ProfileService: ProfileService, $rootScope, $scope, private SmtpService: SmtpService, private toaster, private $translate) {
+    constructor(ProfileService: ProfileService, $rootScope, $scope, private SmtpService: SmtpService, private toaster, private $translate, $route) {
         this.profileService = ProfileService;
         this.rootscope = $rootScope;
         this.currentUser = deepCopy(this.rootscope.user);
+        this.scope = $scope;
+        this.route = $route;
         this.getById();
+        this.internalRouting($route);
         let self = this;
         let profileImageSaved = $rootScope.$on("profileImageSaved", function (evt, data: FileUpload) {
             if (!isNullOrUndefined(data)) {
@@ -48,6 +55,34 @@ class ProfileController {
         });
     }
 
+    internalRouting(route: any) {
+        let paramTab = route.current.params.tab;
+        if (!isNullOrUndefined(paramTab)) {
+            this.currentTab = paramTab;
+        } else {
+            this.tabOnClick("information");
+            route.updateParams({
+                tab: this.currentTab
+            });
+        }
+        let self = this;
+        self.lastRoute = route.current;
+        self.scope.$on("$locationChangeSuccess", function (event) {
+            if (self.lastRoute.$$route && route.current.$$route && self.lastRoute.$$route.originalPath === route.current.$$route.originalPath) {
+                if (route.current.params && isNullOrUndefined(route.current.params.tab)) {
+                    route.updateParams({
+                        tab: self.currentTab
+                    });
+                }
+                route.current = self.lastRoute;
+            }
+        });
+    }
+
+    tabOnClick(tab: string) {
+        this.lastRoute = this.route.current;
+        this.currentTab = tab;
+    }
 
     async testSmtpConnection() {
         this.testingSmtp = true;

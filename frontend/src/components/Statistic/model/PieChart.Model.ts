@@ -61,6 +61,7 @@ class PieChart extends AbstractStatisticModel {
             selected: selected
         });
     }
+
     clearData() {
         this.chartConfig.series[0].data = [];
     }

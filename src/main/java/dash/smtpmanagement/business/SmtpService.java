@@ -17,6 +17,8 @@ package dash.smtpmanagement.business;
 import javax.mail.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import dash.common.EncryptionWrapper;
@@ -25,6 +27,7 @@ import dash.exceptions.NotFoundException;
 import dash.notificationmanagement.business.NotificationUtil;
 import dash.notificationmanagement.domain.Notification;
 import dash.security.business.ISecurityService;
+import dash.security.jwt.domain.UserContext;
 import dash.smtpmanagement.domain.Smtp;
 import dash.smtpmanagement.domain.SmtpEncryptionType;
 
@@ -41,7 +44,7 @@ public class SmtpService implements ISmtpService {
 	}
 
 	@Override
-	public Smtp test(final Long smtpId, final String smtpKey) throws Exception {
+	public Smtp test(final Long smtpId) throws Exception {
 
 		Smtp smtp = this.smtpRepository.findOne(smtpId);
 		if (smtp == null)
@@ -64,7 +67,7 @@ public class SmtpService implements ISmtpService {
 
 		Notification notification;
 
-		password = SmtpUtil.decryptPasswordForSmtp(smtp, smtpKey);
+		password = SmtpUtil.decryptPasswordForSmtp(smtp);
 		session = SmtpUtil.createSessionWithAuthentication(host, port, smtpEncryptionType, username, password);
 		notification = NotificationUtil.createTestNotification(smtp.getEmail(), smtp.getSender());
 		Smtp tempSmtp = null;
@@ -81,13 +84,13 @@ public class SmtpService implements ISmtpService {
 
 		} finally {
 
-			tempSmtp = save(smtp, smtpKey);
+			tempSmtp = save(smtp, null);
 		}
 		return tempSmtp;
 	}
 
 	@Override
-	public Smtp save(final Smtp smtp, final String smtpKey) throws Exception {
+	public Smtp save(final Smtp smtp, String smtpKey) throws Exception {
 
 		if (smtp != null && smtp.getId() != null
 				&& (smtp.getPassword() == null || new String(smtp.getPassword(), "UTF-8") == "")) {
@@ -97,6 +100,12 @@ public class SmtpService implements ISmtpService {
 			smtp.setIv(tempSmpt.getIv());
 		} else if (smtp != null && smtp.isDecrypted() == true && smtp.getPassword() != null
 				&& new String(smtp.getPassword(), "UTF-8") != "") {
+			if (smtpKey == null) {
+				Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+				UserContext userContext = (UserContext) authentication.getPrincipal();
+				smtpKey = userContext.getSmtpKey();
+			}
+
 			EncryptionWrapper encryptionWrapper = Encryptor.encrypt(smtp.getPassword(), smtpKey);
 			smtp.setPassword(encryptionWrapper.getCiphertext());
 			smtp.setSalt(encryptionWrapper.getSalt());

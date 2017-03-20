@@ -25,7 +25,7 @@ const RegistrationControllerId: string = "RegistrationController";
 
 class RegistrationController {
 
-    private $inject = [RegistrationServiceId, SignupServiceId, TenantServiceId, LoginServiceId, $httpId, $locationId];
+    private $inject = [RegistrationServiceId, SignupServiceId, TenantServiceId, LoginServiceId, $httpId, $locationId, $sceId, TokenServiceId];
 
     signupService: SignupService;
     registrationService: RegistrationService;
@@ -38,10 +38,12 @@ class RegistrationController {
     password2: string;
     user: Signup;
 
+    iframeUrl = "";
+
     http;
     location;
 
-    constructor(RegistrationService, SignupService, TenantService, LoginService, $http, $location) {
+    constructor(RegistrationService, SignupService, TenantService, LoginService, $http, private $location, private $sce, private TokenService: TokenService) {
         this.registrationService = RegistrationService;
         this.signupService = SignupService;
         this.tenantService = TenantService;
@@ -50,7 +52,23 @@ class RegistrationController {
         this.user = new Signup();
         this.credentials = new Credentials();
         this.http = $http;
-        this.location = $location;
+        this.removeSubdomain();
+
+    }
+
+    removeSubdomain(): void {
+        let host: string = this.$location.host();
+        let path: string = this.$location.path();
+        let port = this.$location.port();
+        port = ":" + port;
+        if (port !== ":8080") {
+            port = "";
+        }
+        let hostArray = host.split(".");
+        if (hostArray[1].toLocaleLowerCase() === "leadplus" || hostArray[1].toLocaleLowerCase() === "boexli") {
+            window.open("https://" + hostArray[1].toLocaleLowerCase() + "." + hostArray[hostArray.length - 1] + port + "/#" + path, "_self");
+        }
+
     }
 
     uniqueTenantKey(): void {
@@ -63,7 +81,7 @@ class RegistrationController {
         this.signupService.uniqueEmail(this.user);
     }
 
-    register(): void {
+    async register(): Promise<void> {
         let self = this;
 
         this.user.password = this.password1;
@@ -72,20 +90,19 @@ class RegistrationController {
         this.tenant.license.term = newTimestamp();
         this.tenant.license.trial = true;
         this.tenant.license.licenseType = "BASIC";
+        this.tenant.registration = this.user;
+        this.tenant.registration.password = hashPasswordPbkdf2(this.user.password, this.user.email);
 
+        this.tenant.registration.password2 = hashPasswordPbkdf2(this.user.password, this.user.email);
         this.user.email = this.user.email.toLowerCase();
-        this.credentials.email = this.user.email;
-        this.credentials.password = this.user.password;
-        this.credentials.tenant = this.tenant.tenantKey + "." + this.location.host();
 
-        this.tenantService.save(this.tenant).then(function (createdTenant: Tenant) {
-            self.http.defaults.headers.common["X-TenantID"] = self.credentials.tenant;
-            self.signupService.signup(self.user).then(function (createdUser: User) {
-                self.signupService.init(self.user.password, self.tenant.tenantKey);
-                self.loginService.login(self.credentials);
-            }, function (error) {
-                handleError(error);
-            });
+        this.tenantService.save(this.tenant).then(async function (createdTenant: Tenant) {
+            let port = self.location.port();
+            port = ":" + port;
+            if (port !== ":8080") {
+                port = "";
+            }
+            window.open("https://" + self.tenant.tenantKey + "." + self.location.host() + port + "/", "_self");
         }, function (error) {
             handleError(error);
         });

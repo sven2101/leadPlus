@@ -135,7 +135,6 @@ span.round-tab i{
 
 .content-height {
     background-color: #f8fafb; 
-    min-height: 70%;
 }
 
 @media( max-width : 585px ) {

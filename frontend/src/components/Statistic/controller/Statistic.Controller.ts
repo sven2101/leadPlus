@@ -22,30 +22,56 @@ const StatisticControllerId: string = "StatisticController";
 
 class StatisticController {
 
-    $inject = [StatisticServiceId, SourceServiceId, $routeParamsId, $rootScopeId];
+    $inject = [StatisticServiceId, SourceServiceId, $rootScopeId, $routeId, $scopeId];
 
     statisticService: StatisticService;
     sourceService: SourceService;
-    currentTab: number = 1;
+    currentTab: string;
     dateRange: string = "MONTHLY";
     source: string = "ALL";
     currentUser: User;
 
-    constructor(StatisticService, SourceService, $routeParams, $rootScope) {
+    route;
+    lastRoute;
+    scope;
+
+    constructor(StatisticService, SourceService, $rootScope, $route, $scope) {
         this.statisticService = StatisticService;
         this.sourceService = SourceService;
-        let paramTab = $routeParams.tab;
         this.currentUser = $rootScope.user;
-        if (!isNullOrUndefined(paramTab)) {
-            this.currentTab = Number(paramTab);
-        }
+        this.route = $route;
+        this.scope = $scope;
+        this.internalRouting($route);
         this.onStatisticChange(this.dateRange, this.source);
         this.statisticService.generateMyStatistic(this.currentUser);
     }
 
+    internalRouting(route: any) {
+        let paramTab = route.current.params.tab;
+        if (!isNullOrUndefined(paramTab)) {
+            this.currentTab = paramTab;
+        } else {
+            this.tabOnClick("single");
+            route.updateParams({
+                tab: this.currentTab
+            });
+        }
+        let self = this;
+        self.lastRoute = route.current;
+        self.scope.$on("$locationChangeSuccess", function (event) {
+            if (self.lastRoute.$$route && route.current.$$route && self.lastRoute.$$route.originalPath === route.current.$$route.originalPath) {
+                if (route.current.params && isNullOrUndefined(route.current.params.tab)) {
+                    route.updateParams({
+                        tab: self.currentTab
+                    });
+                }
+                route.current = self.lastRoute;
+            }
+        });
+    }
 
-
-    tabOnClick(tab: number) {
+    tabOnClick(tab: string) {
+        this.lastRoute = this.route.current;
         this.currentTab = tab;
     }
 

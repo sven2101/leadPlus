@@ -488,19 +488,29 @@ class DashboardService {
         if (!stringIsNullorEmpty(searchText)) {
             this.openLeads = this.allOpenLeads.filter(process => (!isNullOrUndefined(process.lead.customer.firstname) && process.lead.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
                 || (!isNullOrUndefined(process.lead.customer.lastname) && process.lead.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.lead.customer.company) && process.lead.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+                || (!isNullOrUndefined(process.lead.customer.company) && process.lead.customer.company.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.lead.customer.email) && process.lead.customer.email.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.lead.deliveryAddressLine) && process.lead.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
             this.inContacts = this.allInContacts.filter(process => (!isNullOrUndefined(process.lead.customer.firstname) && process.lead.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
                 || (!isNullOrUndefined(process.lead.customer.lastname) && process.lead.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.lead.customer.company) && process.lead.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+                || (!isNullOrUndefined(process.lead.customer.company) && process.lead.customer.company.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.lead.customer.email) && process.lead.customer.email.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.lead.deliveryAddressLine) && process.lead.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
             this.openOffers = this.allOpenOffers.filter(process => (!isNullOrUndefined(process.offer.customer.firstname) && process.offer.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
                 || (!isNullOrUndefined(process.offer.customer.lastname) && process.offer.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.offer.customer.company) && process.offer.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+                || (!isNullOrUndefined(process.offer.customer.company) && process.offer.customer.company.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.offer.customer.email) && process.offer.customer.email.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.offer.deliveryAddressLine) && process.offer.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
             this.doneOffers = this.allDoneOffers.filter(process => (!isNullOrUndefined(process.offer.customer.firstname) && process.offer.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
                 || (!isNullOrUndefined(process.offer.customer.lastname) && process.offer.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.offer.customer.company) && process.offer.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+                || (!isNullOrUndefined(process.offer.customer.company) && process.offer.customer.company.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.offer.customer.email) && process.offer.customer.email.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.offer.deliveryAddressLine) && process.offer.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
             this.closedSales = this.allClosedSales.filter(process => (!isNullOrUndefined(process.sale.customer.firstname) && process.sale.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
                 || (!isNullOrUndefined(process.sale.customer.lastname) && process.sale.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.sale.customer.company) && process.sale.customer.company.toLowerCase().includes(searchText.toLowerCase())));
+                || (!isNullOrUndefined(process.sale.customer.company) && process.sale.customer.company.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.sale.customer.email) && process.sale.customer.email.toLowerCase().includes(searchText.toLowerCase()))
+                || (!isNullOrUndefined(process.sale.deliveryAddressLine) && process.sale.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
         } else {
             this.openLeads = this.allOpenLeads;
             this.inContacts = this.allInContacts;

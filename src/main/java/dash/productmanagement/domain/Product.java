@@ -121,6 +121,14 @@ public class Product implements Serializable {
 		return productState;
 	}
 
+	public String getProductStateGermanTranslation() {
+		return productState == null ? null : productState.getGermanTranslation();
+	}
+
+	public String getProductStateEnglishTranslation() {
+		return productState == null ? null : productState.getEnglishTranslation();
+	}
+
 	public void setProductState(ProductState productState) {
 		this.productState = productState;
 	}

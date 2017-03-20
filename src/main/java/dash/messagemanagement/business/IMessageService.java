@@ -31,9 +31,11 @@ public interface IMessageService {
 	String getSubject();
 
 	AbstractMessage getMessageContent(final WorkflowTemplateObject workflowTemplateObject,
-			String templateWithPlaceholders, final Notification notification) throws TemplateException, IOException;
 
-	AbstractMessage getWelcomeMessage(String template, Tenant tenant, User user) throws TemplateException, IOException;
+			String templateWithPlaceholders, final Notification notification, final User user)
+			throws IOException, TemplateException;
+
+	AbstractMessage getWelcomeMessage(String templateName, Tenant tenant, User user) throws TemplateException;
 
 	AbstractMessage getForgotPasswordMessage(String template, Tenant tenant, User user, PasswordForgot passwordForgot)
 			throws TemplateException, IOException;

@@ -2,14 +2,13 @@
 /// <reference path="../../Notification/model/Notification.Model.ts" />
 /// <reference path="../model/Attachment.Model.ts" />
 
-declare var Ladda;
 
 const NotificationServiceId: string = "NotificationService";
 const broadcastUserNotificationShouldChange: string = "userNotificationShouldChange";
 
 class NotificationService {
 
-    private $inject = [toasterId, $translateId, $rootScopeId, NotificationResourceId, $qId];
+    private $inject = [toasterId, $translateId, $rootScopeId, NotificationResourceId, $qId, TokenServiceId];
 
     toaster;
     translate;
@@ -21,7 +20,7 @@ class NotificationService {
     q;
     userNotifications: Array<Notification> = [];
 
-    constructor(toaster, $translate, $rootScope, NotificationResource, $q) {
+    constructor(toaster, $translate, $rootScope, NotificationResource, $q, private TokenService: TokenService) {
         this.notificationResource = NotificationResource.resource;
         this.toaster = toaster;
         this.translate = $translate;
@@ -38,7 +37,7 @@ class NotificationService {
     async sendNotification(notification: Notification, process: Process): Promise<Notification> {
         try {
             this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SENDING);
-            let sendNotification: Notification = await this.notificationResource.sendNotification({ processId: process.id, senderId: this.rootScope.user.id }, { smtpKey: this.rootScope.user.smtpKey, notification: notification }).$promise;
+            let sendNotification: Notification = await this.notificationResource.sendNotification({ processId: process.id, senderId: this.rootScope.user.id }, { smtpKey: this.TokenService.getSmtpKey(), notification: notification }).$promise;
 
             this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SUCCESS);
             setTimeout(() => {

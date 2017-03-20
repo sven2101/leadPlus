@@ -13,6 +13,7 @@
  *******************************************************************************/
 package dash.tenantmanagement.rest;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Tenant Resource")
-@RequestMapping(value = "/api/rest/tenants", consumes = { MediaType.ALL_VALUE })
+@RequestMapping(value = "/tenants", consumes = { MediaType.ALL_VALUE })
 @Api(value = "Tenant API")
 public class TenantResource {
 
@@ -43,10 +44,14 @@ public class TenantResource {
 
 	@RequestMapping(method = RequestMethod.POST, consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@ApiOperation(value = "Post a tenant. ", notes = "")
+	@Transactional
 	public ResponseEntity<?> save(@ApiParam(required = true) @RequestBody @Valid final Tenant tenant) {
+
 		try {
 			return new ResponseEntity<Tenant>(tenantService.createNewTenant(tenant), HttpStatus.CREATED);
 		} catch (TenantAlreadyExistsException ex) {
+			return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+		} catch (InterruptedException ex) {
 			return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -55,6 +60,7 @@ public class TenantResource {
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Check uniqueness of Tenant Key. ", notes = "")
 	public Validation uniqueTenantKey(@ApiParam(required = true) @RequestBody final Tenant tenant) {
+
 		return tenantService.uniqueTenantKey(tenant);
 	}
 }

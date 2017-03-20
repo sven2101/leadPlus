@@ -7,6 +7,7 @@ class Tenant {
     description: string;
     address: string;
     license: License;
+    registration: Signup;
     constructor() {
         this.license = new License();
     }

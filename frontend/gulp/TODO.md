@@ -1,5 +1,7 @@
 ### TODOs
 | Filename | line # | TODO
 |:------|:------:|:------
-| App/App.Route.ts | 200 | Workaround for native promises!!!
-| Wizard/directive/Edit.Email.Directive.ts | 35 | find better solution
+| App\App.Controller.ts | 156 | remove after Safari testing
+| App\App.Route.ts | 218 | Workaround for native promises!!!
+| Customer\controller\Customer.Service.ts | 67 | change to mapzen api
+| Wizard\directive\Edit.Email.Directive.ts | 33 | find better solution

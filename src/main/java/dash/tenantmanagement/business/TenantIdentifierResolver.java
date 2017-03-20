@@ -16,14 +16,13 @@ package dash.tenantmanagement.business;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.stereotype.Component;
 
-@Component
+import dash.multitenancy.configuration.TenantContext;
+
+// @Component
 public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver {
 
 	@Override
 	public String resolveCurrentTenantIdentifier() {
-		String tenant = TenantContext.getTenant();
-		if(tenant == null || tenant.equals(""))
-			return TenantContext.PUBLIC_TENANT;	
 		return TenantContext.getTenant();
 	}
 

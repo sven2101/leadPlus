@@ -3,21 +3,6 @@
 /// <reference path="../../app/App.Constants.ts" />
 /// <reference path="../../app/App.Common.ts" />
 
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
-
 angular.module(moduleApp)
     .directive("userstatistic", [$translateId, StatisticServiceId, function ($translate, StatisticService) {
         let directive: { restrict: string, scope: any, templateUrl: any, transclude: boolean, link: any };
@@ -27,7 +12,8 @@ angular.module(moduleApp)
             chart: "=",
             daterange: "=",
             source: "=",
-            userobj: "="
+            userobj: "=",
+            animated: "<?"
         };
         directive.templateUrl = function (elem, attr) {
             return "components/Statistic/view/UserStatistic.Directive.html";
@@ -35,9 +21,10 @@ angular.module(moduleApp)
         directive.transclude = true;
         directive.link = function (scope, element, attrs) {
             scope.userStatistic;
-
+            isNullOrUndefined(scope.animated) ? scope.isAnimated = true : scope.isAnimated = scope.animated;
             scope.chart.clearData();
             loadData(scope.daterange, scope.source);
+
             scope.$watch("daterange", function (newValue, oldValue) {
                 if (newValue !== oldValue) {
                     scope.chart.clearData();

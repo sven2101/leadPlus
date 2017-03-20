@@ -29,7 +29,7 @@ class SummernoteService {
         this.timeout.cancel(this.currentTimeout);
     }
 
-    getDefaultOptions(): any {
+    getDefaultOptions(withTooltips: boolean): any {
         let options = {
             lang: "en-US",
             maximumImageFileSize: "512000",
@@ -46,7 +46,16 @@ class SummernoteService {
                 ["table", ["table"]],
                 ["insert", ["link", "picture", "hr"]],
                 ["view", ["fullscreen", "codeview"]],
-            ]
+            ],
+            callbacks: {
+                onInit: function () {
+                    if (withTooltips !== true) {
+                        let noteEditor = $(this).parent().find(".note-editor");
+                        (<any>noteEditor).tooltip("disable");
+                        noteEditor.find(".note-btn.btn.btn-default.btn-sm").attr("data-original-title", "");
+                    }
+                }
+            }
         };
 
         if (this.rootScope.language === Language[Language.DE]) {
@@ -56,8 +65,9 @@ class SummernoteService {
         return options;
     }
 
-    getTemplateOptions(): any {
+    getTemplateOptions(withTooltips: boolean): any {
         let self = this;
+
         let options = {
             lang: "en-US",
             maximumImageFileSize: "512000",
@@ -89,6 +99,15 @@ class SummernoteService {
                 customerDropdown: this.getCustomerDropdown(),
                 orderDropdown: this.getOrderDropdown(),
                 userDropdown: this.getUserDropdown()
+            },
+            callbacks: {
+                onInit: function () {
+                    if (withTooltips !== true) {
+                        let noteEditor = $(this).parent().find(".note-editor");
+                        (<any>noteEditor).tooltip("disable");
+                        noteEditor.find(".note-btn.btn.btn-default.btn-sm").attr("data-original-title", "");
+                    }
+                }
             }
         };
         if (this.rootScope.language === Language[Language.DE]) {
@@ -109,19 +128,19 @@ class SummernoteService {
     getOrderListTemplate(self): string {
         return "<#if orderPositions?has_content &amp;&amp; orderPositions?size != 0>"
             + "<table style='width: 90%;'>"
-            + "<thead><tr><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("COMMON_PRODUCT_DESCRIPTION", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("COMMON_PRODUCT_AMOUNT", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("COMMON_PRODUCT_SINGLE_PRICE", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + "</th></tr></thead>"
-            + "<tbody style='border-top: 2px solid #ddd;'><!--<#assign sum = 0> &lt;#list orderPositions as orderPosition&gt; <#assign sum = sum + (orderPosition.amount)! * (orderPosition.netPrice)!>-->"
-            + "<tr'><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>${(orderPosition.product.name)!}</td><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: center;'>${(orderPosition.amount)!}</td>"
+            + "<thead><tr><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("COMMON_PRODUCT_DESCRIPTION", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("PRODUCT_PRODUCT_STATE", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("COMMON_PRODUCT_AMOUNT", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("COMMON_PRODUCT_SINGLE_PRICE", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + "</th></tr></thead>"
+            + "<tbody style='border-top: 2px solid #ddd;'><!-- &lt;#list orderPositions as orderPosition&gt;-->"
+            + "<tr'><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>${(orderPosition.product.name)!}</td><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION", "", "", self.summernoteLanguage) + "</td><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: center;'>${(orderPosition.amount)!}</td>"
             + "<td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>${((orderPosition.netPrice)!)?string('#,##0.00;;roundingMode=halfUp')}  " + self.translate.instant("COMMON_CURRENCY") + "</td><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>${((orderPosition.amount)! * (orderPosition.netPrice)!)?string('#,##0.00;;roundingMode=halfUp')} " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td>"
             + "</tr><!--&lt;/#list&gt;--></tbody>"
-            + "<tfoot><tr><td> </td><td> </td><td style='font-weight: bold; background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'> " + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + "</td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'><#if workflow.netPrice?has_content>${(workflow.netPrice - workflow.deliveryCosts)?string('#,##0.00;;roundingMode=halfUp')}<#else>${((sum)!)?string('#,##0.00;;roundingMode=halfUp')}&lt;/#if&gt; " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr>"
-            + "<tr><td> </td><td> </td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'>+ " + self.translate.instant("COMMON_PRODUCT_DELIVERYCOSTS", "", "", self.summernoteLanguage) + "</td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'>${((workflow.deliveryCosts)!)?string('#,##0.00;;roundingMode=halfUp')} " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr>"
-            + "<tr><td> </td><td> </td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'>= <#if workflow.netPrice?has_content &amp;&amp; workflow.vat?has_content>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE_INKL", "", "", self.summernoteLanguage) + " ${(workflow.vat)!}% " + self.translate.instant("COMMON_PRODUCT_VAT", "", "", self.summernoteLanguage) + "<#else>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + " " + self.translate.instant("COMMON_PRODUCT_INCL_DELIVERY_COSTS", "", "", self.summernoteLanguage) + "&lt;/#if&gt;</td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'><#if workflow.netPrice?has_content &amp;&amp; workflow.vat?has_content> ${((workflow.netPrice) *(1 + (workflow.vat)! / 100))?string('#,##0.00;;roundingMode=halfUp')}<#else>${((sum+(workflow.deliveryCosts)!)!)?string('#,##0.00;;roundingMode=halfUp')}&lt;/#if&gt; " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr></tfoot>"
+            + "<tfoot><tr><td> </td><td> </td><td> </td><td style='font-weight: bold; background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'> " + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + "</td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'>${workflow.sumOrderpositions?string('#,##0.00;;roundingMode=halfUp')}" + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr>"
+            + "<tr><td> </td><td> </td><td> </td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'>+ " + self.translate.instant("COMMON_PRODUCT_DELIVERYCOSTS", "", "", self.summernoteLanguage) + "</td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'><#if workflow.deliveryCosts?has_content>${workflow.deliveryCosts?string('#,##0.00;;roundingMode=halfUp')}&lt;/#if&gt " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr>"
+            + "<tr><td> </td><td> </td><td> </td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'>= <#if workflow.grossPrice?has_content>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE_INKL", "", "", self.summernoteLanguage) + " ${(workflow.vat)!}% " + self.translate.instant("COMMON_PRODUCT_VAT", "", "", self.summernoteLanguage) + "<#else>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + " " + self.translate.instant("COMMON_PRODUCT_INCL_DELIVERY_COSTS", "", "", self.summernoteLanguage) + "&lt;/#if&gt;</td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'><#if workflow.grossPrice?has_content> ${workflow.grossPrice?string('#,##0.00;;roundingMode=halfUp')}<#else>${workflow.orderpositionsAndDelivery?string('#,##0.00;;roundingMode=halfUp')}&lt;/#if&gt; " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr></tfoot>"
             + "</table>&lt;/#if&gt;";
     }
 
     getDeliveryTemplate(self) {
-        return self.translate.instant("SUMMERNOTE_DELIVERY", "", "", self.summernoteLanguage) + "<#if workflow.deliveryAddress?has_content> " + self.translate.instant("SUMMERNOTE_DELIVERY_TO", "", "", self.summernoteLanguage) + " ${(workflow.deliveryAddress)!}&lt;/#if&gt;<#if workflow.deliveryDate?has_content> " + self.translate.instant("SUMMERNOTE_DELIVERY_AT", "", "", self.summernoteLanguage) + " ${(workflow.deliveryDate)!}&lt;/#if&gt;.";
+        return self.translate.instant("SUMMERNOTE_DELIVERY", "", "", self.summernoteLanguage) + "<#if workflow.deliveryAddressLine?has_content> " + self.translate.instant("SUMMERNOTE_DELIVERY_TO", "", "", self.summernoteLanguage) + " ${(workflow.deliveryAddressLine)!}&lt;/#if&gt;<#if workflow.deliveryDate?has_content> " + self.translate.instant("SUMMERNOTE_DELIVERY_AT", "", "", self.summernoteLanguage) + " ${(workflow.deliveryDate)!}&lt;/#if&gt;.";
     }
 
     getSingleTemplateButton(buttonName: string, insertText, fa: string, asHtml: boolean = false): any {
@@ -157,7 +176,7 @@ class SummernoteService {
                         context.code("<div class='cog-loader'>"
                             + "<i class='fa-spin fa fa-cog'></i>"
                             + "<i class='fa-spin fa-spin-reverse fa fa-cog'></i>"
-                            + "<i class='fa-spin fa fa-cog'></i></div><div class='text-center' style='font-size: 1.5em;color: gray; font-weight: bold'>" + self.translate.instant("SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE") + "</div>");
+                            + "<i class='fa-spin fa fa-cog'></i></div><div class='text-center' style='font-size: 1.5em;color: gray; font-weight: bold;margin-top:30px;'>" + self.translate.instant("SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE") + "</div>");
                         self.addPreviewMode(buttonSelf, context);
                         if (plainText !== null && plainText !== undefined && plainText !== "") {
                             self.templateService.testTemplate(self.templateService.getCurrentEditTemplate(), new WorkflowTemplateObject(), new Notification()).then(function (result: Notification) {
@@ -238,7 +257,7 @@ class SummernoteService {
         return function dropdownExample(context) {
             let ui = (<any>$).summernote.ui;
             let templateVarButtonGroup = ui.buttonGroup([
-                self.getTemplateButton(ui, context, self.translate.instant("SUMMERNOTE_TEMPLATE_LANGUAGE")),
+                self.getTemplateButton(ui, context, self.translate.instant("SUMMERNOTE_TEMPLATE_LANGUAGE") + " (" + self.translate.instant("SUMMERNOTE_LANGUAGE") + ")"),
                 self.getLanguageTemplateDropdown(ui, context, self.getLanguageTemplateVar()),
             ]);
             return templateVarButtonGroup.render();
@@ -296,7 +315,7 @@ class SummernoteService {
     getTemplateButton(ui: any, context: any, buttonName: string): any {
         return ui.button({
             className: "dropdown-toggle",
-            contents: buttonName + " <span class='caret'</span>",
+            contents: buttonName + " <span class='caret'></span>",
             data: {
                 toggle: "dropdown"
             },
@@ -316,7 +335,7 @@ class SummernoteService {
                     $(this).click(function () {
                         context.invoke("editor.restoreRange");
                         context.invoke("editor.focus");
-                        context.invoke("editor.insertText", $(this)[0].attributes[0].nodeValue);
+                        context.invoke("editor.insertText", $(this).attr("template-value"));
                     });
                 });
             }
@@ -333,9 +352,10 @@ class SummernoteService {
                     $(this).click(function () {
                         context.invoke("editor.restoreRange");
                         context.invoke("editor.focus");
-                        self.summernoteLanguage = $(this)[0].attributes[0].nodeValue;
+                        self.summernoteLanguage = $(this).attr("template-value");
+                        self.onChangeSummernoteLanguage(self, $($(this).parent().parent().parent()[0].firstChild)[0]);
                         $dropdown.find("li a i").each(function () {
-                            let language = $(this).parent()[0].attributes[0].nodeValue;
+                            let language = $(this).parent().attr("template-value");
                             if (self.summernoteLanguage === language) {
                                 $(this).css("visibility", "visible");
                             }
@@ -347,6 +367,15 @@ class SummernoteService {
                 });
             }
         });
+    }
+
+    onChangeSummernoteLanguage(self, button) {
+        let buttonName: string = button.innerText.slice(0, -5);
+        buttonName += " (" + self.translate.instant("SUMMERNOTE_LANGUAGE", "", "", self.summernoteLanguage) + ")";
+        button.innerText = buttonName;
+        button.innerHTML = buttonName + " <span class='caret'></span>";
+        $(button).parent().parent().parent().find("#customerTitleVar").attr({ "template-value": self.translate.instant("SUMMERNOTE_TITLE_CODE_TRANSLATION", "", "", self.summernoteLanguage) });
+        $(button).parent().parent().parent().find("#orderpositionProductstateVar").attr({ "template-value": self.translate.instant("SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION", "", "", self.summernoteLanguage) });
     }
 
     getLanguageTemplateVar(): string {
@@ -365,40 +394,47 @@ class SummernoteService {
 
 
     getWorkflowTemplateVar(): string {
-        return "<li><a template-value='${(workflow.netPrice)!}'>" + this.translate.instant("PRODUCT_PRICE") + "</a></li>" +
+        return "<li><a template-value='<#if workflow.netPrice?has_content>${((workflow.netPrice)!)?string(&quot;#,##0.00&quot;)}&lt;/#if&gt;'>" + this.translate.instant("PRODUCT_PRICE") + "</a></li>" +
+            "<li><a template-value='<#if workflow.netPricesAndDelivery?has_content>${((workflow.netPricesAndDelivery)!)?string(&quot;#,##0.00&quot;)}&lt;/#if&gt;'>" + this.translate.instant("PRODUCT_PRICE") + " " + this.translate.instant("COMMON_PRODUCT_INCL_DELIVERY_COSTS") + "</a></li>" +
             "<li><a template-value='${(workflow.vat)!}'>" + this.translate.instant("CALCULATION_VAT") + "</a></li>" +
-            " <li><a template-value='${(workflow.deliveryCosts)!}'>" + this.translate.instant("COMMON_PRODUCT_DELIVERYCOSTS") + "</a></li>" +
-            "<li><a template-value='${(workflow.deliveryAddress)!}'>" + this.translate.instant("COMMON_PRODUCT_DESTINATION") + "</a></li>" +
+            "<li><a template-value='<#if workflow.grossPrice?has_content>${((workflow.grossPrice)!)?string(&quot;#,##0.00&quot;)}&lt;/#if&gt;'>" + this.translate.instant("PRODUCT_GROSS_PRICE") + "</a></li>" +
+            "<li><a template-value='${(workflow.skonto)!}'>" + this.translate.instant("COMMON_SUPPLY_SKONTO") + "</a></li>" +
+            "<li><a template-value='<#if workflow.grossPriceSkonto?has_content>${((workflow.grossPriceSkonto)!)?string(&quot;#,##0.00&quot;)}&lt;/#if&gt;'>" + this.translate.instant("PRODUCT_GROSS_PRICE_SKONTO") + "</a></li>" +
+            "<li><a template-value='${(workflow.paymentTerm)!}'>" + this.translate.instant("COMMON_SUPPLY_PAYMENT_TERM") + "</a></li>" +
+            "<li><a template-value='<#if workflow.deliveryCosts?has_content>${((workflow.deliveryCosts)!)?string(&quot;#,##0.00&quot;)}&lt;/#if&gt;'>" + this.translate.instant("COMMON_PRODUCT_DELIVERYCOSTS") + "</a></li>" +
+            "<li><a template-value='${(workflow.deliveryTerm)!}'>" + this.translate.instant("COMMON_SUPPLY_DELIVERY_TERM") + "</a></li>" +
+            "<li><a template-value='<#if workflow.billingAddress.street?has_content>${(workflow.billingAddress.street)!} ${(workflow.billingAddress.number)!}<br>&lt;/#if&gt; <#if workflow.billingAddress.zip?has_content || workflow.billingAddress.city?has_content>${(workflow.billingAddress.zip)!} ${(workflow.billingAddress.city)!}<br>&lt;/#if&gt; <#if workflow.billingAddress.state?has_content>${(workflow.billingAddress.state)!}<br>&lt;/#if&gt; <#if workflow.billingAddress.country?has_content>${(workflow.billingAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_BILLING_ADDRESS_BLOCK") + "</a></li>" +
+            "<li><a template-value='<#if workflow.billingAddress.street?has_content>${(workflow.billingAddress.street)!} ${(workflow.billingAddress.number)!},&lt;/#if&gt; <#if workflow.billingAddress.zip?has_content || workflow.billingAddress.city?has_content>${(workflow.billingAddress.zip)!} ${(workflow.billingAddress.city)!},&lt;/#if&gt; <#if workflow.billingAddress.state?has_content>${(workflow.billingAddress.state)!},&lt;/#if&gt; <#if workflow.billingAddress.country?has_content>${(workflow.billingAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_BILLING_ADDRESS_LINE") + "</a></li>" +
+            "<li><a template-value='<#if workflow.deliveryAddress.street?has_content>${(workflow.deliveryAddress.street)!} ${(workflow.deliveryAddress.number)!}<br>&lt;/#if&gt; <#if workflow.deliveryAddress.zip?has_content || workflow.deliveryAddress.city?has_content>${(workflow.deliveryAddress.zip)!} ${(workflow.deliveryAddress.city)!}<br>&lt;/#if&gt; <#if workflow.deliveryAddress.state?has_content>${(workflow.deliveryAddress.state)!}<br>&lt;/#if&gt; <#if workflow.deliveryAddress.country?has_content>${(workflow.deliveryAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_DELIVERY_ADDRESS_BLOCK") + "</a></li>" +
+            "<li><a template-value='<#if workflow.deliveryAddress.street?has_content>${(workflow.deliveryAddress.street)!} ${(workflow.deliveryAddress.number)!},&lt;/#if&gt; <#if workflow.deliveryAddress.zip?has_content || workflow.deliveryAddress.city?has_content>${(workflow.deliveryAddress.zip)!} ${(workflow.deliveryAddress.city)!},&lt;/#if&gt; <#if workflow.deliveryAddress.state?has_content>${(workflow.deliveryAddress.state)!},&lt;/#if&gt; <#if workflow.deliveryAddress.country?has_content>${(workflow.deliveryAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_DELIVERY_ADDRESS_LINE") + "</a></li>" +
             "<li><a template-value='${(workflow.deliveryDate)!}'>" + this.translate.instant("COMMON_DELIVERY_TIME") + "</a></li>" +
             "<li><a template-value='${(workflow.message)!}'>" + this.translate.instant("EMAIL_MESSAGE") + "</a></li>";
     }
 
     getCustomerTemplateVar(): string {
-        return "<li><a template-value='${(customer.title)!}'>" + this.translate.instant("COMMON_TITLE") + "</a></li>" +
+        return "<li><a id='customerTitleVar' template-value='" + this.translate.instant("SUMMERNOTE_TITLE_CODE_TRANSLATION", "", "", this.summernoteLanguage) + "'>" + this.translate.instant("COMMON_TITLE") + "</a></li>" +
             "<li><a template-value='${(customer.firstname)!}'>" + this.translate.instant("COMMON_FIRSTNAME") + "</a></li>" +
             " <li><a template-value='${(customer.lastname)!}'>" + this.translate.instant("COMMON_LASTNAME") + "</a></li>" +
             "<li><a template-value='${(customer.company)!}'>" + this.translate.instant("COMMON_COMPANY") + "</a></li>" +
             "<li><a template-value='${(customer.email)!}'>" + this.translate.instant("COMMON_EMAIL") + "</a></li>" +
             "<li><a template-value='${(customer.phone)!}'>" + this.translate.instant("COMMON_PHONE") + "</a></li>" +
-            "<li><a template-value='${(customer.phone)!}'>" + this.translate.instant("COMMON_FAX") + "</a></li>" +
-            "<li><a template-value='${(customer.phone)!}'>" + this.translate.instant("COMMON_MOBILE") + "</a></li>" +
-            "<li><a template-value='${(customer.address.number)!}'>" + this.translate.instant("COMMON_HOUSE_NUMBER") + "</a></li>" +
-            "<li><a template-value='${(customer.address.street)!}'>" + this.translate.instant("COMMON_STREET") + "</a></li>" +
-            "<li><a template-value='${(customer.address.zip)!}'>" + this.translate.instant("COMMON_ZIP") + "</a></li>" +
-            "<li><a template-value='${(customer.address.city)!}'>" + this.translate.instant("COMMON_CITY") + "</a></li>" +
-            "<li><a template-value='${(customer.address.state)!}'>" + this.translate.instant("COMMON_STATE") + "</a></li>" +
-            "<li><a template-value='${(customer.address.country)!}'>" + this.translate.instant("COMMON_COUNTRY") + "</a></li>" +
-            "<li><a template-value='${(customer.customerNumber)!}'>" + this.translate.instant("CUSTOMER_NUMBER") + "</a></li>";
+            "<li><a template-value='${(customer.fax)!}'>" + this.translate.instant("COMMON_FAX") + "</a></li>" +
+            "<li><a template-value='${(customer.mobile)!}'>" + this.translate.instant("COMMON_MOBILE") + "</a></li>" +
+            "<li><a template-value='${(customer.customerNumber)!}'>" + this.translate.instant("CUSTOMER_NUMBER") + "</a></li>" +
+            "<li><a template-value='<#if customer.billingAddress.street?has_content>${(customer.billingAddress.street)!} ${(customer.billingAddress.number)!}<br>&lt;/#if&gt; <#if customer.billingAddress.zip?has_content || customer.billingAddress.city?has_content>${(customer.billingAddress.zip)!} ${(customer.billingAddress.city)!}<br>&lt;/#if&gt; <#if customer.billingAddress.state?has_content>${(customer.billingAddress.state)!}<br>&lt;/#if&gt; <#if customer.billingAddress.country?has_content>${(customer.billingAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_BILLING_ADDRESS_BLOCK") + "</a></li>" +
+            "<li><a template-value='<#if customer.billingAddress.street?has_content>${(customer.billingAddress.street)!} ${(customer.billingAddress.number)!},&lt;/#if&gt; <#if customer.billingAddress.zip?has_content || customer.billingAddress.city?has_content>${(customer.billingAddress.zip)!} ${(customer.billingAddress.city)!},&lt;/#if&gt; <#if customer.billingAddress.state?has_content>${(customer.billingAddress.state)!},&lt;/#if&gt; <#if customer.billingAddress.country?has_content>${(customer.billingAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_BILLING_ADDRESS_LINE") + "</a></li>" +
+            "<li><a template-value='<#if customer.deliveryAddress.street?has_content>${(customer.deliveryAddress.street)!} ${(customer.deliveryAddress.number)!}<br>&lt;/#if&gt; <#if customer.deliveryAddress.zip?has_content || customer.deliveryAddress.city?has_content>${(customer.deliveryAddress.zip)!} ${(customer.deliveryAddress.city)!}<br>&lt;/#if&gt; <#if customer.deliveryAddress.state?has_content>${(customer.deliveryAddress.state)!}<br>&lt;/#if&gt; <#if customer.deliveryAddress.country?has_content>${(customer.deliveryAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_DELIVERY_ADDRESS_BLOCK") + "</a></li>" +
+            "<li><a template-value='<#if customer.deliveryAddress.street?has_content>${(customer.deliveryAddress.street)!} ${(customer.deliveryAddress.number)!},&lt;/#if&gt; <#if customer.deliveryAddress.zip?has_content || customer.deliveryAddress.city?has_content>${(customer.deliveryAddress.zip)!} ${(customer.deliveryAddress.city)!},&lt;/#if&gt; <#if customer.deliveryAddress.state?has_content>${(customer.deliveryAddress.state)!},&lt;/#if&gt; <#if customer.deliveryAddress.country?has_content>${(customer.deliveryAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_DELIVERY_ADDRESS_LINE") + "</a></li>";
     }
 
     getOrderTemplateVar(): string {
         return "<li><a template-value='${(orderPosition.product.name)!}'>" + this.translate.instant("PRODUCT_PRODUCTNAME") + "</a></li>" +
             "<li><a template-value='${(orderPosition.product.description)!}'>" + this.translate.instant("PRODUCT_DESCRIPTION") + "</a></li>" +
-            " <li><a template-value='${(orderPosition.netPrice)!}'>" + this.translate.instant("PRODUCT_PRICE") + "</a></li>" +
+            "<li><a template-value='<#if orderPosition.netPrice?has_content>${((orderPosition.netPrice)!)?string(&quot;#,##0.00&quot;)}&lt;/#if&gt;'>" + this.translate.instant("PRODUCT_PRICE") + "</a></li>" +
             "<li><a template-value='${(orderPosition.discount)!}'>" + this.translate.instant("PRODUCT_DISCOUNT") + "</a></li>" +
             "<li><a template-value='${(orderPosition.amount)!}'>" + this.translate.instant("COMMON_PRODUCT_AMOUNT") + "</a></li>" +
-            "<li><a template-value='${(orderPosition.product.netPrice)!}'> " + this.translate.instant("Originalpreis") + "</a></li>" +
-            "<li><a template-value='${(orderPosition.product.productState)!}'>" + this.translate.instant("PRODUCT_PRODUCT_STATE") + "</a></li>" +
+            "<li><a template-value='<#if orderPosition.product.netPrice?has_content>${((orderPosition.product.netPrice)!)?string(&quot;#,##0.00&quot;)}&lt;/#if&gt;'> " + this.translate.instant("Originalpreis") + "</a></li>" +
+            "<li><a id='orderpositionProductstateVar' template-value='" + this.translate.instant("SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION", "", "", this.summernoteLanguage) + "'>" + this.translate.instant("PRODUCT_PRODUCT_STATE") + "</a></li>" +
             "<li><a template-value='${(orderPosition.product.productNumber)!}'>" + this.translate.instant("PRODUCT_NUMBER") + "</a></li>";
     }
 

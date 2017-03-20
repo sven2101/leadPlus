@@ -8,7 +8,7 @@ const TemplateServiceId: string = "TemplateService";
 
 class TemplateService {
 
-    private $inject = [toasterId, $translateId, TemplateResourceId, $uibModalId, $qId, $windowId, $sceId];
+    private $inject = [toasterId, $translateId, $rootScopeId, TemplateResourceId, $uibModalId, $qId, $windowId, $sceId];
 
     templateResource;
 
@@ -22,7 +22,7 @@ class TemplateService {
     currentEditTemplate: Template;
     sce;
 
-    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q, $window, $sce) {
+    constructor(toaster, $translate, private $rootScope, TemplateResource, $uibModal, $q, $window, $sce) {
         this.toaster = toaster;
         this.translate = $translate;
         this.uibModal = $uibModal;
@@ -36,29 +36,17 @@ class TemplateService {
         return this.currentEditTemplate;
     }
 
-    openEmailTemplateModal(template: Template) {
-        let editTemplate = deepCopy(template);
+    getTemplateFromTemplatesById(id: number): Template {
+        let editTemplate = deepCopy(findElementById(this.templates, id));
         this.currentEditTemplate = editTemplate;
-        this.uibModal.open({
-            templateUrl: "components/Template/view/Template.Modal.html",
-            controller: "TemplateController",
-            controllerAs: "templateCtrl",
-            windowClass: "inmodal",
-            size: "lg",
-            backdrop: "static",
-            resolve: {
-                template: function () {
-                    return editTemplate;
-                }
-            }
-        });
+        return editTemplate;
     }
 
     openEmailTemplateDeleteModal(template: Template) {
         this.uibModal.open({
             templateUrl: "components/Template/view/Template.Delete.Modal.html",
-            controller: "TemplateController",
-            controllerAs: "templateCtrl",
+            controller: "TemplateDeleteController",
+            controllerAs: "TemplateDeleteCtrl",
             resolve: {
                 template: function () {
                     return template;
@@ -109,11 +97,11 @@ class TemplateService {
     }
 
     async generate(templateId: number, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
-        return this.templateResource.generate({ templateId: templateId }, { workflowTemplateObject: workflow, notification: notification }).$promise;
+        return this.templateResource.generate({ templateId: templateId }, { workflowTemplateObject: workflow, notification: notification, user: this.$rootScope.user }).$promise;
     }
 
     async testTemplate(template: Template, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
-        return this.templateResource.test({ workflowTemplateObject: workflow, notification: notification, template: template }).$promise;
+        return this.templateResource.test({ workflowTemplateObject: workflow, notification: notification, template: template, user: this.$rootScope.user }).$promise;
     }
 
     generatePDF(templateId: string, offer: Offer) {
@@ -134,6 +122,15 @@ class TemplateService {
     async getAll(): Promise<Array<Template>> {
         this.templates = await this.templateResource.getAll().$promise;
         return this.templates;
+    }
+
+    async getTemplateById(id: number): Promise<Template> {
+        let template: Template = await this.templateResource.getById({ id: id }).$promise as Template;
+        if (isNullOrUndefined(template.id)) {
+            return null;
+        }
+        this.currentEditTemplate = template;
+        return template;
     }
 }
 

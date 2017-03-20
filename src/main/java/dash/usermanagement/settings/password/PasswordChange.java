@@ -19,7 +19,6 @@ public class PasswordChange {
 	private String newPassword;
 	private String oldPassword;
 	private String oldSmtpKey;
-	private String newSmtpKey;
 
 	public PasswordChange() {
 	}
@@ -46,14 +45,6 @@ public class PasswordChange {
 
 	public void setOldSmtpKey(String oldSmtpKey) {
 		this.oldSmtpKey = oldSmtpKey;
-	}
-
-	public String getNewSmtpKey() {
-		return newSmtpKey;
-	}
-
-	public void setNewSmtpKey(String newSmtpKey) {
-		this.newSmtpKey = newSmtpKey;
 	}
 
 }

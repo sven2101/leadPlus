@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 
 import dash.messagemanagement.business.MessageService;
 import dash.messagemanagement.domain.EmailMessage;
+import dash.multitenancy.configuration.TenantContext;
 import dash.notificationmanagement.business.AWSEmailService;
 import dash.smtpmanagement.business.SmtpService;
 import dash.smtpmanagement.domain.Smtp;
-import dash.tenantmanagement.business.TenantContext;
 import dash.tenantmanagement.business.TenantService;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.business.UserService;

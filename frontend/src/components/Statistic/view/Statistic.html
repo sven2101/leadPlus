@@ -13,8 +13,12 @@
 				<h2>{{ 'STATISTIC_MENU' | translate }}</h2>
 				<ol class="breadcrumb">
 					<li><a href="#/dashboard">Home</a></li>
-					<li class="active"><strong>{{ 'STATISTIC_MENU' |
-							translate }}</strong></li>
+					<li ng-click="statisticCtrl.tabOnClick('single')">
+						<a href="#/statistic/single">{{ 'STATISTIC_MENU' | translate }}</a>
+					</li>
+					<li class="active">
+						<strong>{{ statisticCtrl.currentTab | translate }}</strong> 
+                    </li>
 				</ol>
 			</div>
 			<div class="col-lg-2">
@@ -58,12 +62,12 @@
 		<div class="col-lg-12">
 			<div class="tabs-container">
 			<ul class="nav nav-tabs">
-				<li ng-class="{'active':statisticCtrl.currentTab === 1}" ng-click="statisticCtrl.tabOnClick(1)"><a data-toggle="tab" aria-expanded="true">{{
+				<li ng-class="{'active':statisticCtrl.currentTab === 'single'}" ng-click="statisticCtrl.tabOnClick('single')"><a href="/#/statistic/single" aria-expanded="true">{{
 					'STATISTIC_SINGLE_STATISTIC' | translate }}</a></li>
-				<li ng-class="{'active':statisticCtrl.currentTab === 2}" ng-click="statisticCtrl.tabOnClick(2)"><a data-toggle="tab" aria-expanded="true">{{ 'STATISTIC_GENERAL_STATISTIC' | translate
+				<li ng-class="{'active':statisticCtrl.currentTab === 'entire'}" ng-click="statisticCtrl.tabOnClick('entire')"><a href="/#/statistic/entire" aria-expanded="true">{{ 'STATISTIC_GENERAL_STATISTIC' | translate
 					}}</a></li>
-				<li ng-class="{'active':statisticCtrl.currentTab === 4}" ng-click="statisticCtrl.tabOnClick(4)"><a data-toggle="tab" aria-expanded="true">{{ 'STATISTIC_MY_STATISTIC' | translate}}</a></li>
-				<li ng-if="statisticCtrl.currentUser.role==='SUPERADMIN'|| statisticCtrl.currentUser.role==='ADMIN'" ng-class="{'active':statisticCtrl.currentTab === 3}" ng-click="statisticCtrl.tabOnClick(3)"><a data-toggle="tab" aria-expanded="true">{{ 'STATISTIC_USER_STATISTIC' | translate }}</a>
+				<li ng-class="{'active':statisticCtrl.currentTab === 'my'}" ng-click="statisticCtrl.tabOnClick('my')"><a href="/#/statistic/my" aria-expanded="true">{{ 'STATISTIC_MY_STATISTIC' | translate}}</a></li>
+				<li ng-if="statisticCtrl.currentUser.role==='SUPERADMIN'|| statisticCtrl.currentUser.role==='ADMIN'" ng-class="{'active':statisticCtrl.currentTab === 'users'}" ng-click="statisticCtrl.tabOnClick('users')"><a href="/#/statistic/users" aria-expanded="true">{{ 'STATISTIC_USER_STATISTIC' | translate }}</a>
 				</li>
 			</ul>
 			</div>
@@ -71,10 +75,9 @@
 	</div>
 	<div ng-include="'components/Statistic/view/SingleStatistic.html'"></div>
 	<div ng-include="'components/Statistic/view/EntireStatistic.html'"></div>
-	<div ng-include="'components/Statistic/view/UserStatistic.html'"></div>
-	<div ng-if="statisticCtrl.currentTab==4">
-		<div userstatistic chart="statisticCtrl.statisticService.MyUserStatisticColumnChart" daterange="statisticCtrl.dateRange" source="statisticCtrl.source"
+	<div ng-show="statisticCtrl.currentTab==='my'">
+		<div userstatistic chart="statisticCtrl.statisticService.MyUserStatisticColumnChart" daterange="statisticCtrl.dateRange" animated="false" source="statisticCtrl.source"
         userobj="statisticCtrl.currentUser"></div>
 	</div>
-	
+	<div ng-include="'components/Statistic/view/UserStatistic.html'"></div>
 </div>
