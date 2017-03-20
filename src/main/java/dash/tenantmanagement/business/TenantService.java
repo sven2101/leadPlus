@@ -16,11 +16,13 @@ package dash.tenantmanagement.business;
 import static dash.Constants.CREATING_SUBDOMAIN;
 import static dash.Constants.TENANT_ALREADY_EXISTS;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
+import javax.mail.MessagingException;
 import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
@@ -43,13 +45,17 @@ import com.amazonaws.services.route53.model.ResourceRecordSet;
 
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.TenantAlreadyExistsException;
+import dash.messagemanagement.business.MessageService;
+import dash.messagemanagement.domain.AbstractMessage;
 import dash.multitenancy.configuration.TenantContext;
+import dash.notificationmanagement.business.AWSEmailService;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Validation;
 import dash.usermanagement.settings.language.Language;
+import freemarker.template.TemplateException;
 
 @Service
 public class TenantService implements ITenantService {
@@ -82,10 +88,16 @@ public class TenantService implements ITenantService {
 	private DataSource dataSource;
 	private AmazonRoute53 r53;
 
+	private MessageService messageService;
+	private AWSEmailService awsEmailService;
+
 	@Autowired
-	public TenantService(DataSource dataSource, AmazonRoute53 r53) {
+	public TenantService(DataSource dataSource, AmazonRoute53 r53, MessageService messageService,
+			AWSEmailService awsEmailService) {
 		this.dataSource = dataSource;
 		this.r53 = r53;
+		this.messageService = messageService;
+		this.awsEmailService = awsEmailService;
 	}
 
 	@Override
@@ -279,6 +291,19 @@ public class TenantService implements ITenantService {
 	@Override
 	public List<Tenant> getAllTenants() {
 		return tenantRepository.findAll();
+	}
+
+	public void notifyUser(User user) throws TemplateException, IOException, MessagingException {
+		Tenant tenant = getTenantByName(TenantContext.getTenant());
+
+		String templateName = "welcome_en.ftl";
+		if (user.getLanguage().equals(Language.DE))
+			templateName = "welcome_de.ftl";
+
+		AbstractMessage welcomeMessage = this.messageService.getWelcomeMessage(templateName, tenant, user);
+		this.awsEmailService.sendMail("andreas.foitzik@leadplus.io", welcomeMessage.getRecipients(),
+				welcomeMessage.getSubject(), welcomeMessage.getContent());
+
 	}
 
 }

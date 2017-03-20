@@ -217,22 +217,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
         async function ($location, $http, $rootScope, AuthService: AuthService, $injector, $window, $q, TokenService: TokenService) {
             // TODO Workaround for native promises!!!
             $window.Promise = $q;
-<<<<<<< HEAD
-            try {
-                $rootScope.user = $cookies.getObject("user");
-                $rootScope.tenant = $cookies.getObject("tenant");
 
-            } catch (error) {
-                $rootScope.user = undefined;
-                $rootScope.tenant = undefined;
-                Auth.logout();
-            }
-
-            if (!isNullOrUndefined($rootScope.user) && !isNullOrUndefined($rootScope.tenant)) {
-                $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.user.authorization;
-                $http.defaults.headers.common["X-TenantID"] = $rootScope.tenant.tenantKey;
-                let x = $injector.get(SmtpServiceId);
-=======
             await AuthService.awaitInit();
             $rootScope.user = TokenService.getItemFromLocalStorage(USER_STORAGE);
             if (AuthService.isLoggedIn() === true && $rootScope.user == null) {
@@ -240,7 +225,6 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
             }
             if (AuthService.isLoggedIn() === true && AuthService.isLoggedIn() === false) {
                 console.log("inject Dashboard");
->>>>>>> JWT
                 let dashboardService: DashboardService = $injector.get(DashboardServiceId);
                 dashboardService.refreshTodos();
                 let notificationService: NotificationService = $injector.get(NotificationServiceId);

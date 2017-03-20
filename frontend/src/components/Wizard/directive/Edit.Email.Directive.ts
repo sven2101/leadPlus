@@ -114,7 +114,7 @@ class EditEmailDirective implements IDirective {
         scope.fileSize = notification.attachments.map(a => a.fileUpload.size).reduce((a, b) => a + b, 0);
     }
 
-    openAttachment(fileUpload: FileUpload, scope: any): void {
+    async openAttachment(fileUpload: FileUpload, scope: any): Promise<void> {
         let self = this;
         if (!isNullOrUndefined(fileUpload.content)) {
             let file = b64toBlob(fileUpload.content, fileUpload.mimeType);
