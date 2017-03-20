@@ -13,11 +13,11 @@
 			<div class="col-sm-6 form-group">
 				<label>{{ 'EMAIL_TEMPLATE' | translate }}</label>
 				<div class="input-group m-b">
-					<select ng-model="currentTemplate" style="width:100%" ng-disabled="disabled" class="form-control" ng-change="generate(currentTemplate,workflow,notification)"> 
+					<select ng-model="currentEmailTemplate" style="width:100%" ng-disabled="disabled" class="form-control" ng-change="generateContent(currentEmailTemplate,workflow,notification)"> 
 					<option ng-value="null">- {{ 'EMAIL_TEMPLATE_SELECT' | translate }} -</option>
-					<option ng-repeat="template in templates" ng-value="template">{{template.name}}</option>
+					<option ng-repeat="template in emailTemplates" ng-value="template">{{template.name}}</option>
 				</select>
-					<a ng-disabled="disabled" class="btn btn-default input-group-addon" ng-click="alert();generate(currentTemplate, workflow,notification)">
+					<a ng-disabled="disabled" class="btn btn-default input-group-addon" ng-click="generateContent(currentEmailTemplate, workflow,notification)">
 						<i class="fa fa-refresh" aria-hidden="true"></i>
 					</a>
 				</div>
@@ -27,13 +27,11 @@
 			<div class="col-sm-6 form-group">
 				<label>{{ 'PDF_TEMPLATE' | translate }}</label>
 				<div class="input-group m-b">
-					<select ng-model="currentTemplate" style="width:100%" ng-disabled="disabled" class="form-control" ng-change="generate(currentTemplate,workflow,notification)"> 
+					<select ng-model="currentPdfTemplate" style="width:100%" ng-disabled="disabled" class="form-control" ng-change="generatePdfFromTemplate(currentPdfTemplate)"> 
 					<option ng-value="null">- {{ 'EMAIL_TEMPLATE_SELECT' | translate }} -</option>
-					<option ng-repeat="template in templates" ng-value="template">{{template.name}}</option>
-
-
+					<option ng-repeat="template in pdfTemplates" ng-value="template">{{template.name}}</option>
 				</select>
-					<a ng-disabled="disabled" class="btn btn-default input-group-addon" ng-click="alert();generate(currentTemplate, workflow,notification)">
+					<a ng-disabled="disabled" class="btn btn-default input-group-addon" ng-click="generatePdfFromTemplate(currentPdfTemplate)">
 						<i class="fa fa-refresh" aria-hidden="true"></i>
 					</a>
 				</div>
@@ -70,8 +68,8 @@
 				</div>
 			</div>
 			<br ng-show="showCC_BCC" />
-			<div class="form-inline">
-				<div style="width:82%" class="form-group" ng-class="{ 'has-error' : eform.subject.$invalid&&!disabled}">
+			<div class="row">
+				<div class="col-sm-10 form-group" ng-class="{ 'has-error' : eform.subject.$invalid&&!disabled}">
 					<label>{{ 'EMAIL_SUBJECT' | translate }} <span style="color:red">*</span></label>
 					<span style="color:red" ng-show="eform.subject.$error.minlength&&!disabled">{{ 'COMMON_VALIDATE_MIN' | translate:'{ number: "3" }'}}</span>
 					<span style="color:red" ng-show="eform.subject.$error.maxlength&&!disabled">{{ 'COMMON_VALIDATE_TOO_LONG' | translate}}</span>
@@ -80,7 +78,7 @@
 					<input style="width:100%" ng-disabled="disabled" name="subject" required type="text" class="form-control" ng-model="notification.subject"
 					 ng-minlength="3" ng-maxlength="255">
 				</div>
-				<div style="width:18%;float:right;" ng-if="!disabled||(disabled&&notification.attachments.length>0)" class="form-group" ng-class="{ 'has-error' : parent.emailEditeform.attachement.$invalid}">
+				<div ng-if="!disabled||(disabled&&notification.attachments.length>0)" class="col-sm-2 form-group" ng-class="{ 'has-error' : parent.emailEditeform.attachement.$invalid}">
 					<label style="margin-left:15px;">{{ 'EMAIL_ATTACHMENT' | translate }}</label>
 					<span style="color:red" ng-if="eform.fileSize.$error.max">max 10 MB</span>
 					<div hidden>
@@ -96,18 +94,21 @@
 						</span>
 					</div>
 				</div>
-				<div class="form-control">
-					<a class="btn btn-default" ng-click="generatePdf(notification)">PDF</a>
-				</div>
 			</div>
-			<div style="float:left" ng-if="!disabled||(disabled&&notification.attachments.length>0)" class="form-group" ng-class="{ 'has-error' : parent.emailEditeform.attachement.$invalid}">
-				<span ng-repeat="attachment in notification.attachments">
-					<a ng-click="openAttachment(attachment.fileUpload)">{{attachment.fileUpload.filename}}</a>
-					<a ng-click="deleteAttachment($index)" href="" class="close" style="float: none">x</a>
+			<div ng-if="!disabled||(disabled&&notification.attachments.length>0)" class="form-group" ng-class="{ 'has-error' : parent.emailEditeform.attachement.$invalid}">
+				<span class="attachement-box" ng-repeat="attachment in notification.attachments">				
+					<a ng-if="attachment.inProgress===false||attachment.inProgress==null" ng-click="openAttachment(attachment.fileUpload)">{{attachment.fileUpload.filename}}</a>
+					<a ng-if="attachment.inProgress===true" ng-click="null">{{attachment.fileUpload.filename}}</a>
+					<a ng-click="deleteAttachment($index)" href="" class="close" >
+						<div ng-if="attachment.inProgress===false||attachment.inProgress==null" style="margin-left: 5px;margin-top: -2px;">x</div>	
+						<span ng-if="attachment.inProgress===true">
+								<div class="spinner-black" style="margin-left: 5px;margin-top: 3px;"></div>	
+						</span>
+					</a>
 				</span>
 			</div>
 		</div>
-		<div style="clear: left;" class="form-group">
+		<div class="form-group">
 			<br>
 			<label>{{ 'EMAIL_MESSAGE' | translate }}<span style="color:red">*</span></label>
 			<span style="color:red" ng-show="eform.message.$error.required&&!eform.message.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
@@ -122,4 +123,3 @@
 	</div>
 
 </form>
-

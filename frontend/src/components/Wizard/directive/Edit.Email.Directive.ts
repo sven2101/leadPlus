@@ -1,6 +1,7 @@
 /// <reference path="../../App/App.Constants.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Service.ts" />
 /// <reference path="../../Template/controller/Template.Service.ts" />
+/// <reference path="../../Template/model/TemplateType.ts" />
 /// <reference path="../../App/App.Common.ts" />
 
 const EditEmailDirectiveId: string = "emailEdit";
@@ -44,7 +45,8 @@ class EditEmailDirective implements IDirective {
         scope.onNotificationSelected = () => this.onNotificationSelected(scope);
         scope.openAttachment = (fileUpload: FileUpload) => this.openAttachment(fileUpload, scope);
         scope.showCC_BCC = scope.disabled;
-        scope.currentTemplate = null;
+        scope.currentEmailTemplate = null;
+        scope.currentPdfTemplate = null;
         if (!isNullOrUndefined(scope.form)) {
             scope.form instanceof WizardButtonConfig ? scope.form.setForm(scope.eform) : scope.eform = scope.form;
         }
@@ -59,16 +61,19 @@ class EditEmailDirective implements IDirective {
         scope.workflow = scope.process.offer == null ? scope.process.lead : scope.process.offer;
         scope.workflow = scope.process.sale != null ? scope.process.sale : scope.workflow;
         scope.notification.recipient = scope.workflow.customer.email;
-        scope.generate = (template, workflow, currentNotification) => this.generateContent(template, workflow, currentNotification, scope);
+        scope.generateContent = (template, workflow, currentNotification) => this.generateContent(template, workflow, currentNotification, scope);
         scope.setAttachments = (files) => this.setAttachments(files, scope.notification, scope);
         scope.deleteAttachment = (index) => this.deleteAttachment(index, scope);
         scope.toLocalDate = (timestamp) => this.toLocalDate(timestamp, scope);
-        scope.generatePdf = (currentNotification) => this.generatePdf(scope, currentNotification);
-
-        scope.templates = await this.TemplateService.getAll();
+        scope.generatePdf = (htmlString) => this.generatePdf(scope, htmlString);
+        scope.generatePdfFromTemplate = (template) => this.generatePdfFromTemplate(scope, template, scope.workflow, scope.notification);
+        let templates = await this.TemplateService.getAll();
+        scope.emailTemplates = templates.filter(t => t.templateTypes.indexOf(TemplateType.EMAIL) !== -1);
+        scope.pdfTemplates = templates.filter(t => t.templateTypes.indexOf(TemplateType.PDF) !== -1);
 
         if (scope.notification.id == null) {
-            this.setDefaultTemplate(scope);
+            this.setDefaultTemplate(scope, scope.emailTemplates, TemplateType.EMAIL);
+            this.setDefaultTemplate(scope, scope.pdfTemplates, TemplateType.PDF);
         }
         EditEmailDirective.init = false;
     };
@@ -139,7 +144,7 @@ class EditEmailDirective implements IDirective {
         }
         let id = isNumeric(template) ? template : template.id;
         try {
-            let notification: Notification = await scope.TemplateService.generate(id, workflow, currentNotification);
+            let notification: Notification = await scope.TemplateService.generateNotification(id, workflow, currentNotification);
             notification.subject = !isNumeric(template) ? template.subject : currentNotification.subject;
             scope.notification.content = notification.content;
             scope.notification.subject = notification.subject;
@@ -178,46 +183,85 @@ class EditEmailDirective implements IDirective {
         scope.sizeInvalid = this.isFileSizeInvalid(scope.notification, scope);
     }
 
-    setDefaultTemplate(scope: any): void {
+    setDefaultTemplate(scope: any, templates: Array<Template>, templateType: TemplateType): void {
         let notificationType = scope.notification.notificationType;
         let sourceName = scope.process.source == null ? "NONE" : scope.process.source.name;
-        let templates: Array<Template> = scope.templates;
         for (let t of templates) {
             let containsNotificationType = t.notificationTypeString == null ? false : contains<string>(t.notificationTypeString.split(","), notificationType);
             let containsSourceName = t.sourceString == null ? false : contains<string>(t.sourceString.split(","), sourceName);
             if (containsNotificationType === true && containsSourceName === true) {
-                this.setTemplate(scope, t);
+                this.setTemplate(scope, t, templateType);
                 return;
             }
         }
         for (let t of templates.filter(t => t.notificationTypeString != null && t.sourceString != null && contains<string>(t.notificationTypeString.split(","), "ALL"))) {
             if (contains<string>(t.sourceString.split(","), sourceName) || contains<string>(t.sourceString.split(","), "ALL")) {
-                this.setTemplate(scope, t);
+                this.setTemplate(scope, t, templateType);
                 return;
             }
         }
         for (let t of templates.filter(t => t.notificationTypeString != null && t.sourceString != null && contains<string>(t.sourceString.split(","), "ALL"))) {
             if (contains<string>(t.notificationTypeString.split(","), notificationType) || contains<string>(t.notificationTypeString.split(","), "ALL")) {
-                this.setTemplate(scope, t);
+                this.setTemplate(scope, t, templateType);
                 return;
             }
         }
 
     }
-    setTemplate(scope: any, t: Template): void {
-        scope.currentTemplate = t;
-        scope.notification.subject = t.subject;
-        scope.generate(t, scope.workflow, scope.notification);
+    setTemplate(scope: any, t: Template, templateType: TemplateType): void {
+        if (templateType === TemplateType.EMAIL) {
+            scope.currentEmailTemplate = t;
+            scope.notification.subject = t.subject;
+            scope.generateContent(t, scope.workflow, scope.notification);
+        } else if (templateType === TemplateType.PDF) {
+            scope.currentPdfTemplate = t;
+            scope.generatePdfFromTemplate(t);
+        }
     }
-    async generatePdf(scope: any, currentNotification: Notification): Promise<void> {
+
+    async generatePdfFromTemplate(scope, template: Template, workflow: Lead | Offer, currentNotification: Notification): Promise<void> {
+        if (template == null || workflow == null) { return; }
+        let attachment = new Attachment();
+        let fileUpload = new FileUpload();
+        fileUpload.filename = template.subject.replace(/ /g, "_") + ".pdf";
+        attachment.fileUpload = fileUpload;
+        currentNotification.attachments = currentNotification.attachments == null ? [] : currentNotification.attachments;
+        currentNotification.attachments.push(attachment);
+        attachment["inProgress"] = true;
+
+        let response = await scope.$http.post("/api/rest/templates/" + template.id + "/offers/pdf/generate",
+            { workflowTemplateObject: workflow, user: scope.rootScope.user }, { method: "POST", responseType: "arraybuffer" });
+        let contentType = response.headers("content-type");
+        let file = new Blob([response.data], { type: contentType });
+        let fileReader = new FileReader();
+
+        fileUpload.mimeType = file.type;
+        fileUpload.size = file.size;
+        fileReader.readAsDataURL(file);
+
+
+        fileReader.onload = function () {
+            fileUpload.content = this.result.split(",")[1];
+            if (fileUpload.content == null) {
+                fileUpload.content = "";
+            }
+
+            attachment["inProgress"] = false;
+            scope.$apply();
+        };
+        fileReader.onerror = (error) => {
+            handleError(error);
+        };
+    }
+
+    async generatePdf(scope: any, htmlString: string): Promise<Blob> {
         let self = this;
-        scope.$http.post("/api/rest/files/generate/pdf", { htmlString: currentNotification.content }, { method: "POST", responseType: "arraybuffer" }).
-            then(function (response) {
-                let contentType = response.headers("content-type");
-                let file = new Blob([response.data], { type: contentType });
-                file["name"] = "Angebot.pdf";
-                self.setAttachments([file], currentNotification, scope);
-            });
+        let response = await scope.$http.post("/api/rest/files/generate/pdf", { htmlString: htmlString }, { method: "POST", responseType: "arraybuffer" });
+        let contentType = response.headers("content-type");
+        let file = new Blob([response.data], { type: contentType });
+        file["name"] = "Angebot.pdf";
+        return file;
+
     }
 
 }

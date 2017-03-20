@@ -13,20 +13,15 @@
  *******************************************************************************/
 package dash.templatemanagement.rest;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
-import org.apache.pdfbox.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,9 +33,10 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.fileuploadmanagement.business.HtmlToPdfService;
+import dash.fileuploadmanagement.business.PdfGenerationFailedException;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.messagemanagement.domain.MessageContext;
-import dash.processmanagement.domain.Process;
 import dash.templatemanagement.business.ITemplateService;
 import dash.templatemanagement.business.TemplateCompilationException;
 import dash.templatemanagement.domain.Template;
@@ -57,6 +53,9 @@ public class TemplateResource {
 
 	@Autowired
 	private ITemplateService templateService;
+
+	@Autowired
+	private HtmlToPdfService htmlToPdfService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -117,22 +116,13 @@ public class TemplateResource {
 	@RequestMapping(value = "/{templateId}/offers/pdf/generate", method = RequestMethod.POST, produces = "application/pdf")
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Generate a pdf based on a template and an offer.", notes = "")
-	public ResponseEntity<byte[]> generatePdf(@ApiParam(required = true) @PathVariable final Long templateId,
-			@ApiParam(required = true) @PathVariable final long offerId,
-			@ApiParam(required = true) @RequestBody @Valid final Process process)
-			throws NotFoundException, IOException {
+	public byte[] generatePdf(@ApiParam(required = true) @PathVariable final long templateId,
+			@ApiParam(required = true) @RequestBody @Valid final MessageContext messageContext)
+			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException {
+		String message = templateService.getMessageContentStringByTemplateId(templateId,
+				messageContext.getWorkflowTemplateObject(), messageContext.getUser());
 
-		FileInputStream fileStream;
-		fileStream = new FileInputStream(new File("D://abc.pdf"));
-		logger.info("PDF: " + fileStream.toString());
-		byte[] contents = IOUtils.toByteArray(fileStream);
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.parseMediaType("application/pdf"));
-		String filename = "abc.pdf";
-		headers.setContentDispositionFormData(filename, filename);
-		fileStream.close();
-		return new ResponseEntity<byte[]>(contents, headers, HttpStatus.OK);
-
+		return htmlToPdfService.genereatePdfFromHtml(message);
 	}
 
 }

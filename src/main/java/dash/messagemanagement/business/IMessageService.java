@@ -36,4 +36,7 @@ public interface IMessageService {
 
 	AbstractMessage getWelcomeMessage(String templateName, Tenant tenant, User user) throws TemplateException;
 
+	String getMessageContentString(WorkflowTemplateObject workflowTemplateObject, String templateWithPlaceholders,
+			User user) throws IOException, TemplateException;
+
 }

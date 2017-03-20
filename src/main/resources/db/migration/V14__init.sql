@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 CREATE TABLE IF NOT EXISTS template_types
 (
   template_id BIGINT NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS template_types
 WITH (
   OIDS=FALSE
 );
-=======
+
 CREATE OR REPLACE function f_add_col(_tbl regclass, _col  text, _type regtype)
   RETURNS bool AS
 $func$
@@ -37,4 +37,4 @@ WHERE tenantkey='demo';
 
 ALTER TABLE  source
 ADD token_id character varying(50);
->>>>>>> dev
+

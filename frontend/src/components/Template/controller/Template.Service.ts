@@ -96,8 +96,8 @@ class TemplateService {
         });
     }
 
-    async generate(templateId: number, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
-        return this.templateResource.generate({ templateId: templateId }, { workflowTemplateObject: workflow, notification: notification, user: this.$rootScope.user }).$promise;
+    async generateNotification(templateId: number, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
+        return this.templateResource.generateNotification({ templateId: templateId }, { workflowTemplateObject: workflow, notification: notification, user: this.$rootScope.user }).$promise;
     }
 
     async testTemplate(template: Template, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
@@ -106,6 +106,11 @@ class TemplateService {
 
     async generatePDF(html: string) {
         return await this.templateResource.generatePDF({ htmlString: html }).$promise;
+    }
+
+    async generatePdfFromTemplate(templateId: number, workflow: Lead | Offer): Promise<any> {
+        return await this.templateResource.generatePdfFromTemplate({ templateId: templateId }, { workflowTemplateObject: workflow, user: this.$rootScope.user }).$promise;
+
     }
 
     async getAll(): Promise<Array<Template>> {

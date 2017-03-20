@@ -60,6 +60,16 @@ public class MessageService implements IMessageService {
 			final String templateWithPlaceholders, final Notification notification, final User user)
 			throws IOException, TemplateException {
 
+		String message = getMessageContentString(workflowTemplateObject, templateWithPlaceholders, user);
+
+		return new OfferMessage(notification.getRecipients(), notification.getSubject(), message,
+				notification.getAttachments(), NotificationType.OFFER);
+	}
+
+	@Override
+	public String getMessageContentString(final WorkflowTemplateObject workflowTemplateObject,
+
+			final String templateWithPlaceholders, final User user) throws IOException, TemplateException {
 		final StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
 		cfg.setTemplateLoader(stringTemplateLoader);
 		stringTemplateLoader.putTemplate("template", unescapeString(templateWithPlaceholders));
@@ -77,9 +87,7 @@ public class MessageService implements IMessageService {
 
 		Writer writer = new StringWriter();
 		template.process(mapping, writer);
-
-		return new OfferMessage(notification.getRecipients(), notification.getSubject(), writer.toString(),
-				notification.getAttachments(), NotificationType.OFFER);
+		return writer.toString();
 	}
 
 	private String unescapeString(String escapedString) {
