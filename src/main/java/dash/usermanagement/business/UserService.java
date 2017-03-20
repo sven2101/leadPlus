@@ -266,6 +266,26 @@ public class UserService implements IUserService {
 		save(user);
 	}
 
+	/*
+	 * @Override public void resetPasswordAndSmtp(Long id, String newPassword,
+	 * String newSmtpKey) { try { User user = getById(id); if (user != null &&
+	 * newPassword != null) { if
+	 * (passwordEncoder.matches(passwordChange.getOldPassword(),
+	 * user.getPassword())) {
+	 * user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()))
+	 * ; Smtp smtp = null; smtp = smtpService.findByUserId(user.getId()); if
+	 * (smtp != null) { smtp.setPassword(Encryptor.decrypt( new
+	 * EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()),
+	 * passwordChange.getOldSmtpKey())); smtp.setDecrypted(true);
+	 * smtpService.save(smtp, passwordChange.getNewSmtpKey()); } save(user); }
+	 * else { throw new DontMatchException(UPDATE_FAILED_EXCEPTION); } } else {
+	 * throw new NotFoundException(USER_NOT_FOUND); } } catch
+	 * (IllegalArgumentException | NotFoundException | SaveFailedException ex) {
+	 * logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
+	 * throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION); } catch
+	 * (DontMatchException dmex) { logger.error(DONT_MATCH +
+	 * UserService.class.getSimpleName(), dmex); throw dmex; } }
+	 */
 	@Override
 	public User activate(final long id, final boolean enabled) throws UpdateFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
@@ -404,4 +424,11 @@ public class UserService implements IUserService {
 				welcomeMessage.getSubject(), welcomeMessage.getContent());
 
 	}
+
+	@Override
+	public void resetPasswordAndSmtp(Long id, String newPassword, String newSmtpKey) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

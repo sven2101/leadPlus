@@ -50,9 +50,11 @@
 						<div class="alert alert-danger" id="error">
 							<i class="icon-warning-sign"></i>
 							<strong>Error!</strong>
-							<br>There occured an Error. Please contact us or send an email to support@leadplus.io.
+							<br>There occured an Error. Please contact us or send an email to <b>support@leadplus.io</b>.
 						</div>
 						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Email" id="email" name="email" autocomplete="off">
+							<br/>
 							<input type="password" class="form-control" placeholder="New Password" id="password" name="password">
 							<br>
 							<input type="password" class="form-control" placeholder="Confirm new Password" id="cfmPassword" name="cfmPassword">
@@ -107,12 +109,21 @@
 				
 		function errorHandling(result){
 			  $("#error").show();
+			  $("#email").attr("disabled", "disabled");
 			  $("#password").attr("disabled", "disabled");
 			  $("#cfmPassword").attr("disabled", "disabled");
 		}
 		
 		function continueWithReset(email, id){
 
+			$('#email').on('keyup blur', function() {
+	    	if ($("#formCheckPassword").valid()) {
+					$('#reset').attr('disabled', false);  
+				} else {
+					$('#reset').attr('disabled', 'disabled');
+				}
+			});
+			
 			$('#password').on('keyup blur', function() {
 	    	if ($("#formCheckPassword").valid()) {
 					$('#reset').attr('disabled', false);  
@@ -121,7 +132,7 @@
 				}
 			});
 	
-			$('#cfmPassword').on('blur', function() {
+			$('#cfmPassword').on('keyup blur', function() {
 	    	if ($("#formCheckPassword").valid()) {
 					$('#reset').attr('disabled', false);  
 				} else {
@@ -136,11 +147,15 @@
 	                    minlength: 6,
 	                    maxlength: 15,
 	               }, 
-					cfmPassword: { 
+				   cfmPassword: { 
 					equalTo: "#password",
 						minlength: 6,
 						maxlength: 15
-	               }
+	               },
+	               email: {
+						required: true,
+						email: true
+					}
 				},
 				errorClass: "desc",
 				messages:{
@@ -152,10 +167,12 @@
 		
 			$("#request").click(function(){
 				$("#formCheckPassword").valid();	
-				console.log(email);
-				console.log(id);
-				var password = $('#password').val();
 				
+				var data = {
+					password: $('#password').val(),
+					email: $('#email').val()
+			    }
+				console.log(data);
 				var oldPassword = sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2(password, email, 10000));
 				
 				$.ajax({
@@ -165,7 +182,7 @@
 						"Content-Type": "application/json",   
 						"X-TenantID": $(location).attr("hostname")
 					},
-					data : '"'.concat(oldPassword).concat('"'),
+					data : JSON.stringify(data),
 					success : function(result) {
 						$("#success").show( "slow", function() {
 							$("#email").attr("readonly", true);

@@ -51,6 +51,8 @@ public interface IUserService {
 
 	public void resetPassword(final Long id, final String newPassword);
 
+	public void resetPasswordAndSmtp(final Long id, final String newPassword, final String newSmtpKey);
+
 	public User activate(final long id, final boolean enabled) throws UpdateFailedException;
 
 	public User setProfilePicture(final long id, final MultipartFile file) throws NotFoundException,

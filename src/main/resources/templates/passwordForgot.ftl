@@ -44,7 +44,7 @@
 					</div>
 					<div class="alert alert-warning" id="notify">
 						<strong>General!</strong>
-						<br>If the email doesn't show up soon, check your spam folder. We sent it from support@leadplus.io.
+						<br>If the email doesn't show up soon, check your spam folder. We sent it from <b>support@leadplus.io</b>.
 						<strong>Otherwise text us.</strong>
 					</div>
 					<div class="form-group">
@@ -52,8 +52,14 @@
 						<div class="reset">We'll email you a password reset link.</div>
 					</div>
 					<div id="request">
-						<button type="button" class="btn btn-success block full-width m-b" id="reset" disabled="true">Reset Password</button>
+						<button type="button" class="btn btn-success block full-width m-b" id="reset" disabled="true">
+						Reset Password
+						<span id="spinner" style="float: left;margin-left: -5px;padding-right:2px;padding-top: 2px ">
+                            <div class="spinner-white"></div>
+                        </span>
+					</button>
 					</div>
+					
 					<div id="login">
 						<a href=/#/login class="btn btn-primary block full-width m-b">Return to login</a>
 					</div>
@@ -71,8 +77,9 @@
 		$("#error").hide();
 		$("#notify").hide();
 		$("#login").hide();
+		$("#spinner").hide();
 		$("#email").attr("readonly", false);
-
+		
 		$('#forgotPassword').validate({
 			rules: {
 				email: {
@@ -93,8 +100,9 @@
 
 		$("#reset").click( function(){
 			$("#forgotPassword").valid();
-			var email = $('#email').val();
+			$("#spinner").show();
 
+			var email = $('#email').val();
 			$.ajax({
 				url: "/api/rest/password/forgot",
 				type:"POST",
@@ -112,15 +120,16 @@
 					});
 					$("#notify").show( "slow", function() {
 					});
-					console.log(result);
 				},
 				error: function(xhr, resp, text) {
 					$("#error").show( "slow", function() {
 					});
 					$("#notify").show( "slow", function() {
 					});
-					console.log(xhr, resp, text);
-				}
+				},
+				complete: function(){
+					$("#spinner").hide();
+		      	}
 			})
 		}
       );

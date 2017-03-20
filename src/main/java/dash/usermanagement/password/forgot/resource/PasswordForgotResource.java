@@ -3,6 +3,7 @@ package dash.usermanagement.password.forgot.resource;
 import static dash.Constants.RESET_ID_NOT_FOUND;
 
 import org.apache.log4j.Logger;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,11 +45,8 @@ public class PasswordForgotResource {
 	@ApiOperation(value = "Get password forgot request. ", notes = "")
 	public ResponseEntity<?> getById(@ApiParam(required = true) @PathVariable final String randomKey) {
 		try {
-			final PasswordForgot passwordForgot = passwordForgotService.getByRandomKey(randomKey);
-			if (passwordForgot != null)
-				return new ResponseEntity<>(
-						JSONObject.quote((passwordForgot.getEmail() == null) ? "" : passwordForgot.getEmail()),
-						HttpStatus.OK);
+			if (passwordForgotService.getByRandomKey(randomKey) != null)
+				return new ResponseEntity<>(JSONObject.quote(""), HttpStatus.OK);
 			else
 				return new ResponseEntity<>(JSONObject.quote(""), HttpStatus.NOT_FOUND);
 		} catch (Exception ex) {
@@ -72,20 +70,32 @@ public class PasswordForgotResource {
 	@ApiOperation(value = "Create a new Password for a password forgot request. ", notes = "")
 	public ResponseEntity<?> getById(
 			@ApiParam(required = true) @RequestParam(value = "ID", required = true) final String id,
-			@RequestBody(required = true) final TextNode password) {
+			@RequestBody(required = true) final String payload) {
+		JSONObject json = null;
+		String email = null;
+		String password = null;
+		try {
+			json = new JSONObject(payload);
+			email = json.get("email").toString();
+			password = json.get("password").toString();
+		} catch (JSONException e1) {
+			logger.error(PasswordForgotResource.class.getSimpleName(), e1);
+			return new ResponseEntity<>(e1.getMessage(), HttpStatus.CONFLICT);
+		}
+
 		PasswordForgot passwordForgot = this.passwordForgotService.getByRandomKey(id);
-		if (passwordForgot == null)
-			return new ResponseEntity<String>(RESET_ID_NOT_FOUND, HttpStatus.CONFLICT);
+		if (passwordForgot == null || !passwordForgot.getEmail().equals(email) || password == null)
+			return new ResponseEntity<>(RESET_ID_NOT_FOUND, HttpStatus.CONFLICT);
 
 		User user = this.userService.getUserByEmail(passwordForgot.getEmail());
 
 		try {
-			this.userService.resetPassword(user.getId(), password.asText());
+			this.userService.resetPassword(user.getId(), password);
 			if (!passwordForgot.getResetSmtp())
 				this.passwordForgotService.delete(passwordForgot);
 		} catch (Exception e) {
 			logger.error(PasswordForgotResource.class.getSimpleName(), e);
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.CONFLICT);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<>("Your password was successfully reset. ", HttpStatus.OK);
 	}

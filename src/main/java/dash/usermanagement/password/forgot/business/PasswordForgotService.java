@@ -98,7 +98,7 @@ public class PasswordForgotService {
 	}
 
 	public PasswordForgot getByRandomKey(String randomKey) {
-		final PasswordForgot passwordForgot = this.passwordForgotRepository.findByRandomKey(randomKey);
+		PasswordForgot passwordForgot = this.passwordForgotRepository.findByRandomKey(randomKey);
 		if (passwordForgot != null) {
 			Calendar calendar = Calendar.getInstance();
 			calendar.add(Calendar.DAY_OF_YEAR, -2);
