@@ -91,7 +91,6 @@ public class SmtpService implements ISmtpService {
 
 	@Override
 	public Smtp save(final Smtp smtp, String smtpKey) throws Exception {
-
 		if (smtp != null && smtp.getId() != null
 				&& (smtp.getPassword() == null || new String(smtp.getPassword(), "UTF-8") == "")) {
 			Smtp tempSmpt = smtpRepository.findOne(smtp.getId());

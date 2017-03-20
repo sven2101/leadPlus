@@ -26,6 +26,8 @@ const $routeId: string = "$route";
 const $locationProviderId = "$locationProvider";
 const $compileProviderId = "$compileProvider";
 
+const SweetAlertId: string = "SweetAlert";
+
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";
 const moduleServices: string = moduleApp + ".services";

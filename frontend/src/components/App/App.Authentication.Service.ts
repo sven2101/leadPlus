@@ -9,7 +9,7 @@ const AuthServiceId: string = "AuthService";
 
 class AuthService {
 
-    $inject = [$httpId, $rootScopeId, $locationId, $windowId, UserResourceId, $injectorId, $qId, TokenServiceId];
+    $inject = [$httpId, $rootScopeId, $locationId, $windowId, UserResourceId, $injectorId, $qId, TokenServiceId, SmtpServiceId, SweetAlertId, $translateId];
 
     http;
     rootScope;
@@ -17,11 +17,12 @@ class AuthService {
     window;
     userResource;
     injector;
+    sweetAlert;
+    translate;
 
     $q;
 
-    constructor($http, $rootScope, $location, $window, UserResource, $injector, $q, private TokenService: TokenService) {
-
+    constructor($http, $rootScope, $location, $window, UserResource, $injector, $q, private TokenService: TokenService, private SmtpService: SmtpService, SweetAlert, $translate) {
         this.http = $http;
         this.$q = $q;
         this.rootScope = $rootScope;
@@ -29,6 +30,8 @@ class AuthService {
         this.window = $window;
         this.userResource = UserResource.resource;
         this.injector = $injector;
+        this.sweetAlert = SweetAlert;
+        this.translate = $translate;
     }
 
     async login(credentials): Promise<void> {
@@ -60,17 +63,34 @@ class AuthService {
                         package: ["basic", "pro", "ultimate"],
                         term: "09.12.2020",
                         trial: false
-
                     }
                 };
                 this.TokenService.saveItemToLocalStorage(USER_STORAGE, this.rootScope.user);
-
+                if (this.rootScope.user != null) {
+                    await this.SmtpService.refreshCurrentSmtp();
+                    let smtp: Smtp = this.SmtpService.currentSmtp;
+                    if (smtp.smtpPasswordNull) {
+                        let self = this;
+                        self.rootScope.changeLanguage();
+                        this.sweetAlert.swal({
+                            title: self.translate.instant("SMTP_CONNECTION"),
+                            text: self.translate.instant("SAFETY_NOTE"),
+                            type: "warning",
+                            showCancelButton: false,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: self.translate.instant("YES"),
+                        }, function (isConfirm) {
+                            if (isConfirm) {
+                                self.location.path("/profile/smtp");
+                            }
+                        });
+                    }
+                }
                 if (!hasLicense(this.rootScope.tenant.license, "basic")) {
                     alert("Lizenz abgelaufen am: " + this.rootScope.tenant.license.term);
                     this.rootScope.user = null;
                     this.rootScope.tenant = null;
                 } else {
-
                     let date = new Date();
                     date = new Date(date.getFullYear() + 1, date.getMonth(), date.getDate());
 

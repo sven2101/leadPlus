@@ -273,6 +273,15 @@ public class UserService implements IUserService {
 
 		user.setPassword(passwordEncoder.encode(newPassword));
 		save(user);
+
+		try {
+			Smtp smtp = this.smtpService.findByUserId(id);
+			smtp.setPassword(null);
+			this.smtpService.save(smtp, null);
+		} catch (Exception ex) {
+			logger.error("User didn't specify a SMTP-Server - " + UserService.class.getSimpleName(), ex);
+			ex.printStackTrace();
+		}
 	}
 
 	@Override

@@ -37,9 +37,6 @@ public class PasswordForgot {
 	@Column(name = "email", length = 50, nullable = false)
 	private String email;
 
-	@Column(name = "resetSmtp", nullable = false)
-	private Boolean resetSmtp;
-
 	public PasswordForgot() {
 	}
 
@@ -74,13 +71,4 @@ public class PasswordForgot {
 	public void setRandomKey(String randomKey) {
 		this.randomKey = randomKey;
 	}
-
-	public Boolean getResetSmtp() {
-		return resetSmtp;
-	}
-
-	public void setResetSmtp(Boolean resetSmtp) {
-		this.resetSmtp = resetSmtp;
-	}
-
 }

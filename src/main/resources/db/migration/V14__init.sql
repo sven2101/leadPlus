@@ -36,7 +36,5 @@ CREATE TABLE password_forgot_request
   randomKey character varying(300) NOT NULL UNIQUE,
   "timestamp" timestamp without time zone,
   email character varying(50) NOT NULL,
-  resetSmtp boolean NOT NULL,
-
   CONSTRAINT password_forgot_request_pkey PRIMARY KEY (id)
 );

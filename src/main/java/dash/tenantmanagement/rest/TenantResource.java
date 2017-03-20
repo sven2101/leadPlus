@@ -60,7 +60,6 @@ public class TenantResource {
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Check uniqueness of Tenant Key. ", notes = "")
 	public Validation uniqueTenantKey(@ApiParam(required = true) @RequestBody final Tenant tenant) {
-
 		return tenantService.uniqueTenantKey(tenant);
 	}
 }

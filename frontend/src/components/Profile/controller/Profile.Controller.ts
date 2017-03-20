@@ -35,6 +35,7 @@ class ProfileController {
 
     constructor(ProfileService: ProfileService, $rootScope, $scope, private SmtpService: SmtpService, private toaster, private $translate, $route) {
         this.profileService = ProfileService;
+        this.SmtpService.refreshCurrentSmtp();
         this.rootscope = $rootScope;
         this.currentUser = deepCopy(this.rootscope.user);
         this.scope = $scope;

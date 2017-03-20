@@ -16,8 +16,6 @@ import dash.messagemanagement.business.MessageService;
 import dash.messagemanagement.domain.EmailMessage;
 import dash.multitenancy.configuration.TenantContext;
 import dash.notificationmanagement.business.AWSEmailService;
-import dash.smtpmanagement.business.SmtpService;
-import dash.smtpmanagement.domain.Smtp;
 import dash.tenantmanagement.business.TenantService;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.business.UserService;
@@ -35,25 +33,21 @@ public class PasswordForgotService {
 	private MessageService messageService;
 	private TenantService tenantService;
 	private AWSEmailService awsEmailService;
-	private SmtpService smtpService;
 
 	@Autowired
 	public PasswordForgotService(PasswordForgotRepository passwordForgotRepository, UserService userService,
-			MessageService messageService, TenantService tenantService, AWSEmailService awsEmailService,
-			SmtpService smtpService) {
+			MessageService messageService, TenantService tenantService, AWSEmailService awsEmailService) {
 		this.passwordForgotRepository = passwordForgotRepository;
 		this.userService = userService;
 		this.messageService = messageService;
 		this.tenantService = tenantService;
 		this.awsEmailService = awsEmailService;
-		this.smtpService = smtpService;
 	}
 
 	public PasswordForgot save(String email) throws NotFoundException, TemplateException, MessagingException {
 		PasswordForgot passwordForgot = new PasswordForgot();
 		final Tenant tenant;
 		final User user;
-		final Smtp smtp;
 		final EmailMessage abstractMessage;
 		final String emailFrom = "support@leadplus.io";
 		String template = "forgot_password_en.ftl";
@@ -74,12 +68,6 @@ public class PasswordForgotService {
 			throw new UsernameNotFoundException(USER_NOT_FOUND);
 
 		passwordForgot.setEmail(email);
-
-		smtp = this.smtpService.findByUserUsername(email);
-		if (smtp == null)
-			passwordForgot.setResetSmtp(false);
-		else
-			passwordForgot.setResetSmtp(true);
 
 		tenant = tenantService.getTenantByName(TenantContext.getTenant());
 		if (tenant == null)

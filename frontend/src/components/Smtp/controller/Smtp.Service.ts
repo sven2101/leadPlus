@@ -39,7 +39,6 @@ class SmtpService {
         this.q = $q;
         this.smtpResource = SmtpResource.resource;
         this.userResource = UserResource.resource;
-        this.getSMtp();
     }
 
     async test(): Promise<any> {
@@ -57,7 +56,7 @@ class SmtpService {
         }
     }
 
-    async getSMtp() {
+    async refreshCurrentSmtp(): Promise<void> {
         this.currentSmtp = await this.smtpResource.getByUserId({ id: this.rootScope.user.id }).$promise;
         if (this.currentSmtp.id == null) {
             this.rootScope.isSmptVerified = false;
@@ -65,20 +64,21 @@ class SmtpService {
         }
         this.currentSmtp.stringPassword = "";
         this.rootScope.isSmptVerified = this.currentSmtp.verified;
+        if (this.currentSmtp.smtpPasswordNull === true) { return; }
         for (let i = 0; i < this.currentPasswordLength; i++) {
             this.currentSmtp.stringPassword += "x";
         }
-
     }
     async save(): Promise<any> {
         this.currentPasswordLength = this.currentSmtp.stringPassword !== null ? this.currentSmtp.stringPassword.length : this.currentPasswordLength;
         if (this.currentSmtp.stringPassword.replace(/x/g, "") === "") {
             this.currentSmtp.stringPassword = null;
+        } else {
+            this.currentSmtp.decrypted = true;
         }
         let defer = this.q.defer();
         this.currentSmtp.user = this.rootScope.user;
         this.currentSmtp.password = this.currentSmtp.stringPassword !== null ? btoa(this.currentSmtp.stringPassword) : null;
-        this.currentSmtp.decrypted = true;
 
         this.currentSmtp = await this.smtpResource.createSmtp({ smtpKey: this.rootScope.user.smtpKey, smtp: this.currentSmtp }).$promise;
         this.rootScope.isSmptVerified = this.currentSmtp.verified;

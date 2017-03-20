@@ -18,6 +18,7 @@ class Smtp {
     user: User;
     verified: boolean;
     decrypted: boolean;
+    smtpPasswordNull: boolean;
 
     constructor() {
     }

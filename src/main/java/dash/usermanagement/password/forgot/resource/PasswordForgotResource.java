@@ -91,8 +91,7 @@ public class PasswordForgotResource {
 
 		try {
 			this.userService.resetPassword(user.getId(), password);
-			if (!passwordForgot.getResetSmtp())
-				this.passwordForgotService.delete(passwordForgot);
+			this.passwordForgotService.delete(passwordForgot);
 		} catch (Exception e) {
 			logger.error(PasswordForgotResource.class.getSimpleName(), e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);

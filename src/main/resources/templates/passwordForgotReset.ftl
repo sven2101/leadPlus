@@ -166,13 +166,12 @@
 		
 			$("#request").click(function(){
 				$("#formCheckPassword").valid();	
-				
+				var oldPassword = sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2($('#password').val(), $('#email').val(), 10000));
+
 				var data = {
-					password: $('#password').val(),
+					password: oldPassword,
 					email: $('#email').val()
 			    }
-				var oldPassword = sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2(password, email, 10000));
-				
 				$.ajax({
 					url: "/password/forgot/requests/reset?ID="+id,
 					type:"POST",

@@ -25,7 +25,7 @@ const broadcastOnTodosChanged: string = "onTodosChange";
 
 class DashboardService {
 
-    private $inject = [ProcessResourceId, toasterId, $rootScopeId, $translateId, WorkflowServiceId, $uibModalId, $qId, "SweetAlert"];
+    private $inject = [ProcessResourceId, toasterId, $rootScopeId, $translateId, WorkflowServiceId, $uibModalId, $qId, SweetAlertId];
 
     processResource: any;
     workflowService: WorkflowService;
