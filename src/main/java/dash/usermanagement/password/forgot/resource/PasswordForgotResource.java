@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Password Forgot Resource")
-@RequestMapping(value = "/api/rest/password/forgot", consumes = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "password/forgot/requests", consumes = { MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "Password Forgot API")
 public class PasswordForgotResource {
 

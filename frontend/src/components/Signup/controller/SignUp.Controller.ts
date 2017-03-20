@@ -11,6 +11,7 @@ class SignupController {
     user: Signup;
     password1: string;
     password2: string;
+    registerInProgress: boolean = false;
 
     constructor(SignupService, private $location) {
         this.signupService = SignupService;
@@ -29,10 +30,12 @@ class SignupController {
         this.signupService.uniqueEmail(this.user);
     }
 
-    signup(): void {
+    async signup(): Promise <void> {
+        this.registerInProgress = true;
         this.user.password = this.password1;
         this.user.password2 = this.password2;
-        this.signupService.signup(this.user);
+        await this.signupService.signup(this.user);
+        this.registerInProgress = false;
     }
 }
 

@@ -92,10 +92,9 @@
 
 			if (sParameterName[0] === "ID") {
 				$.ajax({
-				  url: "/api/rest/password/forgot/"+sParameterName[1],
+				  url: "/password/forgot/requests/"+sParameterName[1],
 				  headers: {
-						"Content-Type": "application/json",   
-						"X-TenantID": $(location).attr("hostname")
+						"Content-Type": "application/json"  
 				  },
 				  success: function(result) {
 					  continueWithReset(result, sParameterName[1]);
@@ -172,11 +171,10 @@
 					password: $('#password').val(),
 					email: $('#email').val()
 			    }
-				console.log(data);
 				var oldPassword = sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2(password, email, 10000));
 				
 				$.ajax({
-					url: "/api/rest/password/forgot/reset?ID="+id,
+					url: "/password/forgot/requests/reset?ID="+id,
 					type:"POST",
 					headers: {
 						"Content-Type": "application/json",   
@@ -195,7 +193,6 @@
 					error: function(xhr, resp, text) {
 						$("#error").show( "slow", function() {
 						});
-						console.log(xhr, resp, text);
 					}
 				})
 			});

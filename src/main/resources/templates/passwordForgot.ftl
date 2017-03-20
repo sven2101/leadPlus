@@ -104,11 +104,10 @@
 
 			var email = $('#email').val();
 			$.ajax({
-				url: "/api/rest/password/forgot",
+				url: "/password/forgot/requests",
 				type:"POST",
 				headers: {
-					"Content-Type": "application/json",   
-					"X-TenantID": $(location).attr("hostname")
+					"Content-Type": "application/json"
 				},
 				data : '"'.concat(email).concat('"'),
 				dataType: "json",

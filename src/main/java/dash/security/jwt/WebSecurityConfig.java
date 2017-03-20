@@ -42,8 +42,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private AjaxAuthenticationProvider ajaxAuthenticationProvider;
 	@Autowired
 	private JwtAuthenticationProvider jwtAuthenticationProvider;
-	// @Autowired
-	// private TenantAuthenticationProvider tenantAuthenticationProvider;
 
 	@Autowired
 	private TokenExtractor tokenExtractor;
