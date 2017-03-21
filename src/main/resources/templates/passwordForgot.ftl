@@ -69,8 +69,8 @@
 		</div>
 	</div>
 	</body>
-	<script src=https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js></script>
-	<script src=https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js></script>
+	<script type="text/javascript" src="/assets/js/unbundled/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="/assets/js/unbundled/jquery.validation-1.16.0.js"></script>
 	<script>
 	$(document).ready(function () {
 		$("#success").hide();

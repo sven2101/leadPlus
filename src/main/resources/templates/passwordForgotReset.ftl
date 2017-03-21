@@ -50,7 +50,7 @@
 						<div class="alert alert-danger" id="error">
 							<i class="icon-warning-sign"></i>
 							<strong>Error!</strong>
-							<br>There occured an Error. Please contact us or send an email to <b>support@leadplus.io</b>.
+							<br>There occurred an Error. Please contact us or send an email to <b>support@leadplus.io</b>.
 						</div>
 						<div class="form-group">
 							<input type="text" class="form-control" placeholder="Email" id="email" name="email" autocomplete="off">
@@ -71,8 +71,8 @@
 			</div>
 		</div>
 	</body>
-	<script type="text/javascript" src=https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js></script>
-	<script type="text/javascript" src=https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js></script>
+	<script type="text/javascript" src="/assets/js/unbundled/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="/assets/js/unbundled/jquery.validation-1.16.0.js"></script>
 	<script type="text/javascript" src="/assets/js/unbundled/sjcl.js"></script>
 	<script type="text/javascript" >
 	$(document).ready(function () {
