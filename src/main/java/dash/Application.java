@@ -14,7 +14,10 @@ Copyright (c) 2016 Eviarc GmbH.
 
 package dash;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.TimeZone;
+import java.util.zip.ZipException;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -43,11 +46,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableContextRegion(region = "eu-central-1")
 public class Application {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ZipException, URISyntaxException, IOException {
+
 		TenantContext.setTenant(TenantContext.PUBLIC_TENANT);
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 		SpringApplication.run(Application.class, args);
 		SchemaMigration.migrate();
+
 	}
 
 	@Configuration

@@ -45,8 +45,8 @@
 							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
 								{{settingCtrl.translateStringArray(template.notificationTypeString,'NOTIFICATION')}}
 							</td>
-							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
-								{{template.templateTypes}}
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">								
+								<span ng-repeat="t in template.templateTypes">{{t}},&nbsp;</span>
 							</td>
 							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
 								{{settingCtrl.translateStringArray(template.sourceString,'SOURCE')}}

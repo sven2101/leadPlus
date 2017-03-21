@@ -20,10 +20,11 @@ import dash.common.HtmlCleaner;
 @Service
 public class HtmlToPdfService {
 
-	public static final String PHANTOMJS_ROOT_DIR = "/phantomjs-2.1.1-windows";
+	public static final String PHANTOMJS_ROOT_DIR = System.getProperty("user.dir").replaceAll("\\\\", "/")
+			+ "/phantomjs-2.1.1-windows";
 	public static final String PHANTOMJS_CONFIG_FILE = PHANTOMJS_ROOT_DIR + "/phantomjs.config.js";
 	public static final String PHANTOMJS_EXE = PHANTOMJS_ROOT_DIR + "/phantomjs.exe";
-	public static final String TEMP_DIR = PHANTOMJS_ROOT_DIR + "/temp";
+	public static final String TMP_DIR = PHANTOMJS_ROOT_DIR + "/tmp";
 
 	public synchronized byte[] genereatePdfFromHtml(String htmlStringWithImageInline)
 			throws PdfGenerationFailedException, IOException {
@@ -38,29 +39,23 @@ public class HtmlToPdfService {
 		Process phantom = null;
 		List<File> files = null;
 		try {
-			// String tempDirUrl =
-			// this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()+
-			// TEMP_DIR;
+
 			files = new ArrayList<>();
 			String htmlString = extractBase64Images(htmlStringWithImageInline, files);
 
-			String tempDirUrl = this.getClass().getResource(TEMP_DIR).getPath();
+			new File(TMP_DIR).mkdirs();
 
-			tempHtml = File.createTempFile("tempHtml", ".html", new File(tempDirUrl));
+			tempHtml = File.createTempFile("tempHtml", ".html", new File(TMP_DIR));
 			writer = new PrintWriter(tempHtml);
 			writer.print(HtmlCleaner.cleanHtmlForPdf(htmlString));
 			writer.close();
 
-			String configFileUrl = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()
-					+ PHANTOMJS_CONFIG_FILE;
-			File configFile = Paths.get(new URI("file:" + configFileUrl)).toFile();
+			File configFile = Paths.get(new URI("file:/" + PHANTOMJS_CONFIG_FILE)).toFile();
 
-			tempPdf = File.createTempFile("tempPdf", ".pdf", new File(tempDirUrl));
+			tempPdf = File.createTempFile("tempPdf", ".pdf", new File(TMP_DIR));
 
-			String exeUrl = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()
-					+ PHANTOMJS_EXE;
-			ProcessBuilder renderProcess = new ProcessBuilder(exeUrl, configFile.getAbsolutePath(),
-					tempHtml.getAbsolutePath(), tempPdf.getAbsolutePath());
+			ProcessBuilder renderProcess = new ProcessBuilder(PHANTOMJS_EXE, configFile.getPath(), tempHtml.getPath(),
+					tempPdf.getPath());
 			phantom = renderProcess.start();
 
 			long now = System.currentTimeMillis();
@@ -103,6 +98,7 @@ public class HtmlToPdfService {
 			if (exitCode != 0) {
 				throw new PdfGenerationFailedException("PdfGenerator exited with Code " + exitCode);
 			}
+			e.printStackTrace();
 			throw new PdfGenerationFailedException("PdfGenerator exited:" + e.getMessage() + errorConsoleOutput);
 		} finally {
 			if (inputStreamReader != null) {
@@ -144,14 +140,13 @@ public class HtmlToPdfService {
 		boolean inImage = false;
 		StringBuilder currentBase64ImageStringBuilder = new StringBuilder();
 		StringBuilder currentBase64HeaderStringBuilder = new StringBuilder();
-		String tempDirUrl = this.getClass().getResource(TEMP_DIR).getPath();
 		for (int i = 0; i < oldHtml.length(); i++) {
 			char c = oldHtml.charAt(i);
 			if (inImage) {
 				if (c != '"') {
 					currentBase64ImageStringBuilder.append(c);
 				} else {
-					File tempImage = File.createTempFile("tempImage", ".png", new File(tempDirUrl));
+					File tempImage = File.createTempFile("tempImage", ".png", new File(TMP_DIR));
 					org.apache.commons.codec.binary.Base64
 							.decodeBase64(currentBase64ImageStringBuilder.toString().getBytes());
 					byte[] imageAsByteArray = org.apache.commons.codec.binary.Base64
