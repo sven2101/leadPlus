@@ -35,22 +35,25 @@
 		</style>
 	</head>
 	<body>
+	<div id="loginscreen">
 		<div class="container">
 			<div class="middle-box text-center animated fadeInDown" style="margin-top: -40px;">
 				<div class="row">
 					<h1 class="logo-name" style="color:white">lead+</h1>
-					<h3 style="color:white;">Reset your Password</h3>
-					<p style="color:white;">Almost done. Enter your new password, and you're good to go.</p>
+					<h3 style="color:white;" id="heading"></h3>
+					<p style="color:white;" id="subheading"></p>
 					<form id="formCheckPassword">
 						<div class="alert alert-success" id="success">
 							<i class="icon-check"></i>
-							<strong>Success!</strong>
-							<br>We've successfully updated your password. Login now with your new password!
+							<strong id="successHeader"></strong>
+							<br>
+							<p id="successMessage"></p>
 						</div>
 						<div class="alert alert-danger" id="error">
 							<i class="icon-warning-sign"></i>
-							<strong>Error!</strong>
-							<br>There occurred an Error. Please contact us or send an email to <b>support@leadplus.io</b>.
+							<strong id="errorHeader"></strong>
+							<br>
+							<p id="errorMessage"></p>
 						</div>
 						<div class="form-group">
 							<input type="text" class="form-control" placeholder="Email" id="email" name="email" autocomplete="off">
@@ -60,16 +63,24 @@
 							<input type="password" class="form-control" placeholder="Confirm new Password" id="cfmPassword" name="cfmPassword">
 						</div>
 						<div id="request">
-							<button type="button" class="btn btn-success block full-width m-b" id="reset">Reset Password</button>
+							<button type="button" class="btn btn-success block full-width m-b" id="reset">
+								<div id="en_reset">
+									<strong>Reset Password</strong>
+								</div>
+								<div id="de_reset">
+									<strong>Passwort zurücksetzen</strong>
+								</div>
+							</button>
 						</div>
 						<div id=login>
-							<a href="/#/login" class="btn btn-success block full-width m-b">Return to login</a>
+							<a href="#" id=userLogin class="btn btn-success block full-width m-b"><strong id="loginMessage"></strong></a>
 						</div>
 					</form>
 					©eviarc 2017 All Rights Reserved.
 				</div>
 			</div>
 		</div>
+	</div>
 	</body>
 	<script type="text/javascript" src="/assets/js/unbundled/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="/assets/js/unbundled/jquery.validation-1.16.0.js"></script>
@@ -82,6 +93,54 @@
 		$("#notify").hide();
 		$("#reset").attr("disabled", "disabled");
 		
+		// internationalization
+		var heading = "Reset your Password";
+		var subheading = "Almost done. Enter your new password, and you're good to go.";
+		
+		var successHeader ="Success!";
+		var successMessage = "We've successfully updated your password. Login now with your new password!";
+		var errorHeader = "Error!";
+		var errorMessage = "There occurred an Error. Please contact us or send an email to support@leadplus.io.";
+		
+		var email = "Your Email";
+		var password = "Password";
+		var cfmPassword = "Confirm your Password";
+		
+		var loginMessage = "Return to login";
+		
+		$("#de_reset").hide();
+		$("#en_reset").show();
+		
+		var language = navigator.language || navigator.userLanguage;
+		if (language.indexOf("de") !== -1) {
+			heading = "Passwort zurücksetzen?";
+			subheading = "Du hast es beinahe geschafft. Gebe Dein neues Passwort ein und Du kannst loslegen.";
+			successHeader = "Erfolgreich!";
+			successMessage = "Wir haben Dein Passwort erfolgreich zurückgesetzt. Du kannst es direkt ausprobieren!";
+			errorHeader = "Fehler!";
+			errorMessage = "Es ist ein Fehler aufgetreten. Bitte kontaktiere uns, oder sende uns eine Email an support@leadplus.io.";
+			
+			email = "Deine Email";
+			password = "Passwort";
+			cfmPassword = "Wiederhole dein Passwort";
+			
+			loginMessage = "Zurück zum Login";
+			
+			$("#de_reset").show();
+			$("#en_reset").hide();
+		}
+		
+		$("#heading").text(heading);
+		$("#subheading").text(subheading);
+		$("#successHeader").text(successHeader);
+		$("#successMessage").text(successMessage);
+		$("#errorHeader").text(errorHeader);
+		$("#errorMessage").text(errorMessage);
+		$("#email").prop("placeholder", email);
+		$("#password").prop("placeholder", password);
+		$("#cfmPassword").prop("placeholder", cfmPassword);
+		$("#loginMessage").text(loginMessage);
+
 		var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 			sURLVariables = sPageURL.split('&'),
 			sParameterName,
@@ -187,6 +246,8 @@
 							$("#cfmPassword").hide();
 							$("#request").hide();
 							$("#login").show();
+							
+							$("#userLogin").prop("href", "https://"+$('#tenantKey').val()+"."+$(location).attr('host')+"/#/login")
 						});
 					},
 					error: function(xhr, resp, text) {

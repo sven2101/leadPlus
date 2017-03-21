@@ -25,56 +25,59 @@
 		</style>
 	</head>
 	<body>
-	<div class="container">
-	<div class="middle-box text-center animated fadeInDown" style="margin-top: -40px;">
-		<div class="row">
-			<h1 class="logo-name" style="color:white;">lead+</h1>
-			<h3 style="color:white;" id="heading"></h3>
-			<p style="color:white;" id="subheading"></p>
-				<form id="forgotPassword">
-					<div class="alert alert-success" id="success">
-						<i class="icon-check"></i> 
-						<strong id = "successHeader"></strong>
-						<br>
-						<p id="successMessage"></p>
-					</div>
-					<div class="alert alert-danger" id="error">
-						<i class="icon-warning-sign"></i>
-						<strong id="errorHeader"></strong>
-						<br>
-						<p id="errorMessage"></p>
-					</div>
-					<div class="alert alert-warning" id="notify">
-						<strong id="generalHeader">General!</strong>
-						<br>
-						<p id="generalMessage"></p>
-					</div>
-					<div class="form-group">
-						<input type="text" class="form-control" placeholder="Email" id="email" name="email" autocomplete="off">
-						<div class="reset" id="resetMessage"></div>
-					</div>
-					<div id="request">
-						<button type="button" class="btn btn-success block full-width m-b" id="reset" disabled>
-							<div id="en_reset">
-								<strong>Reset Password</strong>
-							</div>
-							<div id="de_reset">
-								<strong>Passwort zurücksetzen</strong>
-							</div>
-						<span id="spinner" style="float: left;margin-left: -5px;padding-right:2px;padding-top: 2px ">
-                            <div class="spinner-white"></div>
-                        </span>
-					</button>
-					</div>
-					
-					<div id="login">
-						<a href=/#/login class="btn btn-primary block full-width m-b"><strong id="loginMessage"></strong></a>
-					</div>
-				</form>
-				<p>©eviarc 2017 All Rights Reserved.</p>
+	<div id="loginscreen">
+		<div class="container">
+		<div class="middle-box text-center animated fadeInDown" style="margin-top: -40px;">
+			<div class="row">
+				<h1 class="logo-name" style="color:white;">lead+</h1>
+				<h3 style="color:white;" id="heading"></h3>
+				<p style="color:white;" id="subheading"></p>
+					<form id="forgotPassword">
+						<div class="alert alert-success" id="success">
+							<i class="icon-check"></i> 
+							<strong id = "successHeader"></strong>
+							<br>
+							<p id="successMessage"></p>
+						</div>
+						<div class="alert alert-danger" id="error">
+							<i class="icon-warning-sign"></i>
+							<strong id="errorHeader"></strong>
+							<br>
+							<p id="errorMessage"></p>
+						</div>
+						<div class="alert alert-warning" id="notify">
+							<strong id="generalHeader">General!</strong>
+							<br>
+							<p id="generalMessage"></p>
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Email" id="email" name="email" autocomplete="off">
+							<div class="reset" id="resetMessage"></div>
+						</div>
+						<div id="request">
+							<button type="button" class="btn btn-success block full-width m-b" id="reset" disabled>
+								<div id="en_reset">
+									<strong>Reset Password</strong>
+								</div>
+								<div id="de_reset">
+									<strong>Passwort zurücksetzen</strong>
+								</div>
+							<span id="spinner" style="float: left;margin-left: -5px;padding-right:2px;padding-top: 2px ">
+	                            <div class="spinner-white"></div>
+	                        </span>
+						</button>
+						</div>
+						
+						<div id="login">
+							<a href="#" id=userLogin class="btn btn-primary block full-width m-b"><strong id="loginMessage"></strong></a>
+						</div>
+					</form>
+					<p>©eviarc 2017 All Rights Reserved.</p>
+				</div>
 			</div>
 		</div>
 	</div>
+	
 	</body>
 	<script type="text/javascript" src="/assets/js/unbundled/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="/assets/js/unbundled/jquery.validation-1.16.0.js"></script>
@@ -130,7 +133,6 @@
 		$("#generalMessage").text(generalMessage);
 		$("#loginMessage").text(loginMessage);
 
-		
 		$('#forgotPassword').validate({
 			rules: {
 				email: {
@@ -167,14 +169,14 @@
 						$("#email").attr("readonly", true);
 						$("#request").hide();
 						$("#login").show();
+						
+						$("#userLogin").prop("href", "https://"+$('#tenantKey').val()+"."+$(location).attr('host')+"/#/login")
 					});
 					$("#notify").show( "slow", function() {
 					});
 				},
 				error: function(xhr, resp, text) {
 					$("#error").show( "slow", function() {
-					});
-					$("#notify").show( "slow", function() {
 					});
 				},
 				complete: function(){
