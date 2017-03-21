@@ -29,31 +29,38 @@
 	<div class="middle-box text-center animated fadeInDown" style="margin-top: -40px;">
 		<div class="row">
 			<h1 class="logo-name" style="color:white;">lead+</h1>
-			<h3 style="color:white;">Reset Your Password?</h3>
-			<p style="color:white;">Fear not. We’ll email you instructions to reset your password. If you don’t have access to your email anymore, just contact us.</p>
+			<h3 style="color:white;" id="heading"></h3>
+			<p style="color:white;" id="subheading"></p>
 				<form id="forgotPassword">
 					<div class="alert alert-success" id="success">
 						<i class="icon-check"></i> 
-						<strong>Success!</strong>
-						<br>We've sent an email to your address with password reset instructions.
+						<strong id = "successHeader"></strong>
+						<br>
+						<p id="successMessage"></p>
 					</div>
 					<div class="alert alert-danger" id="error">
 						<i class="icon-warning-sign"></i>
-						<strong>Error!</strong>
-						<br>We haven't sent an email to your address with password reset instructions.
+						<strong id="errorHeader"></strong>
+						<br>
+						<p id="errorMessage"></p>
 					</div>
 					<div class="alert alert-warning" id="notify">
-						<strong>General!</strong>
-						<br>If the email doesn't show up soon, check your spam folder. We sent it from <b>support@leadplus.io</b>.
-						<strong>Otherwise text us.</strong>
+						<strong id="generalHeader">General!</strong>
+						<br>
+						<p id="generalMessage"></p>
 					</div>
 					<div class="form-group">
 						<input type="text" class="form-control" placeholder="Email" id="email" name="email" autocomplete="off">
-						<div class="reset">We'll email you a password reset link.</div>
+						<div class="reset" id="resetMessage"></div>
 					</div>
 					<div id="request">
-						<button type="button" class="btn btn-success block full-width m-b" id="reset" disabled="true">
-						Reset Password
+						<button type="button" class="btn btn-success block full-width m-b" id="reset" disabled>
+							<div id="en_reset">
+								<strong>Reset Password</strong>
+							</div>
+							<div id="de_reset">
+								<strong>Passwort zurücksetzen</strong>
+							</div>
 						<span id="spinner" style="float: left;margin-left: -5px;padding-right:2px;padding-top: 2px ">
                             <div class="spinner-white"></div>
                         </span>
@@ -61,7 +68,7 @@
 					</div>
 					
 					<div id="login">
-						<a href=/#/login class="btn btn-primary block full-width m-b">Return to login</a>
+						<a href=/#/login class="btn btn-primary block full-width m-b"><strong id="loginMessage"></strong></a>
 					</div>
 				</form>
 				<p>©eviarc 2017 All Rights Reserved.</p>
@@ -79,6 +86,50 @@
 		$("#login").hide();
 		$("#spinner").hide();
 		$("#email").attr("readonly", false);
+
+		// internationalization
+		var heading = "Reset Your Password?";
+		var subheading = "Fear not. We’ll email you instructions to reset your password. If you don’t have access to your email anymore, just contact us.";
+		
+		var successHeader ="Success!";
+		var successMessage = "We've sent an email to your address with password reset instructions.";
+		var errorHeader = "Error!";
+		var errorMessage = "We haven't sent an email to your address with password reset instructions.";
+		var generalHeader = "General!";
+		var generalMessage = "If the email doesn't show up soon, check your spam folder. We sent it from support@leadplus.io. Otherwise text us.";
+		var resetMessage = "We'll email you a password reset link.";
+		var loginMessage = "Return to login";
+		
+		$("#de_reset").hide();
+		$("#en_reset").show();
+		
+		var language = navigator.language || navigator.userLanguage;
+		if (language.indexOf("de") !== -1) {
+			heading = "Passwort zurücksetzen?";
+			subheading = "Keine Angst. Wir senden Dir eine Email, mit welcher Du Dein Passwort zurücksetzen kannst. Wenn Du keinen Zugriff auf Deine Emails hast, kontaktiere uns.";
+			successHeader = "Erfolgreich!";
+			successMessage = "Wir haben Dir eine Email gesendet, wie Du Dein Passwort vollends zurücksetzen kannst.";
+			errorHeader = "Fehler!";
+			errorMessage = "Wir konnten Dir keine Email senden.";
+			generalHeader = "Allgemein!";
+			generalMessage = "Falls Du die Email nicht zeitnah erhälst, solltest Du in Deinen Spam-Ordner schauen. Die Email wurde von support@leadplus.io versendet. Ansonsten kontaktiere uns.";
+			resetMessage = "Wir senden Dir deinen Link zum Passwort zurücksetzen";
+			loginMessage = "Zurück zum Login";
+			
+			$("#de_reset").show();
+			$("#en_reset").hide();
+		}
+		
+		$("#heading").text(heading);
+		$("#subheading").text(subheading);
+		$("#successHeader").text(successHeader);
+		$("#successMessage").text(successMessage);
+		$("#errorHeader").text(errorHeader);
+		$("#errorMessage").text(errorMessage);
+		$("#generalHeader").text(generalHeader);
+		$("#generalMessage").text(generalMessage);
+		$("#loginMessage").text(loginMessage);
+
 		
 		$('#forgotPassword').validate({
 			rules: {

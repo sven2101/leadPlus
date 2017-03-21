@@ -156,8 +156,6 @@
 	<script type="text/javascript">
 	$(document).ready(function () {
 
-		var language = navigator.language || navigator.userLanguage;
-		
 		var heading = "Register your Company";
 		var subheading = "Start with lead+ and an create an Account for your company as well as your initial user.";
 		
@@ -180,6 +178,7 @@
 		$("#de_register").hide();
 		$("#en_register").show();
 		
+		var language = navigator.language || navigator.userLanguage;
 		if (language.indexOf("de") !== -1) {
 			// GERMAN 
 			
