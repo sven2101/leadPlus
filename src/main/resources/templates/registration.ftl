@@ -124,12 +124,8 @@
 										<div class="errorTxt"></div>
 										<div id="request">
 											<button type="button" class="btn btn-success block full-width m-b" disabled id="register" name="register">
-												<div id="en_register">
-													<strong>Register</strong>
-												</div>
-												<div id="de_register">
-													<strong>Registrieren</strong>
-												</div>
+												<strong id="en_register">Register</strong>
+												<strong id="de_register">Registrieren</strong>
 												<span id="spinner" style="float: left;margin-left: -5px;padding-right:2px;padding-top: 2px ">
 						                            <div class="spinner-white"></div>
 						                        </span>

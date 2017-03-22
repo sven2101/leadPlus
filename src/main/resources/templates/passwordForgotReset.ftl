@@ -73,7 +73,7 @@
 							</button>
 						</div>
 						<div id=login>
-							<a href="#" id=userLogin class="btn btn-success block full-width m-b"><strong id="loginMessage"></strong></a>
+							<a href="/#/login" id=userLogin class="btn btn-success block full-width m-b"><strong id="loginMessage"></strong></a>
 						</div>
 					</form>
 					©eviarc 2017 All Rights Reserved.
@@ -246,8 +246,6 @@
 							$("#cfmPassword").hide();
 							$("#request").hide();
 							$("#login").show();
-							
-							$("#userLogin").prop("href", "https://"+$('#tenantKey').val()+"."+$(location).attr('host')+"/#/login")
 						});
 					},
 					error: function(xhr, resp, text) {

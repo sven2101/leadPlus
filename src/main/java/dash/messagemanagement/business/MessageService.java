@@ -93,7 +93,7 @@ public class MessageService implements IMessageService {
 	}
 
 	@Override
-	public AbstractMessage getWelcomeMessage(String templateName, Tenant tenant, User user) throws TemplateException {
+	public AbstractMessage getWelcomeMessage(String templateName, String tenant, User user) throws TemplateException {
 
 		Template template;
 		String message = "";
@@ -102,7 +102,6 @@ public class MessageService implements IMessageService {
 		try {
 			template = cfg.getTemplate(templateName);
 			Map<String, Object> mapping = new HashMap<>();
-			user.setPassword(null);
 			if (user.getLanguage() == Language.DE)
 				subject = "Willkommen bei lead+";
 			mapping.put("tenant", tenant);

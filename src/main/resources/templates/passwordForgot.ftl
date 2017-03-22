@@ -56,20 +56,16 @@
 						</div>
 						<div id="request">
 							<button type="button" class="btn btn-success block full-width m-b" id="reset" disabled>
-								<div id="en_reset">
-									<strong>Reset Password</strong>
-								</div>
-								<div id="de_reset">
-									<strong>Passwort zurücksetzen</strong>
-								</div>
-							<span id="spinner" style="float: left;margin-left: -5px;padding-right:2px;padding-top: 2px ">
-	                            <div class="spinner-white"></div>
-	                        </span>
+								<strong id="en_reset">Reset Password</strong>
+								<strong id="de_reset">Passwort zurücksetzen</strong>
+								<span id="spinner" style="float: left;margin-left: -5px;padding-right:2px;padding-top: 2px ">
+	                            	<div class="spinner-white"></div>
+	                        	</span>
 						</button>
 						</div>
 						
 						<div id="login">
-							<a href="#" id=userLogin class="btn btn-primary block full-width m-b"><strong id="loginMessage"></strong></a>
+							<a href="/#/login" id=userLogin class="btn btn-primary block full-width m-b"><strong id="loginMessage"></strong></a>
 						</div>
 					</form>
 					<p>©eviarc 2017 All Rights Reserved.</p>
@@ -169,8 +165,6 @@
 						$("#email").attr("readonly", true);
 						$("#request").hide();
 						$("#login").show();
-						
-						$("#userLogin").prop("href", "https://"+$('#tenantKey').val()+"."+$(location).attr('host')+"/#/login")
 					});
 					$("#notify").show( "slow", function() {
 					});

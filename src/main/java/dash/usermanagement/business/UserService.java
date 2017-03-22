@@ -48,7 +48,10 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.exceptions.UsernameAlreadyExistsException;
 import dash.fileuploadmanagement.business.IFileUploadService;
+import dash.messagemanagement.business.MessageService;
+import dash.messagemanagement.domain.AbstractMessage;
 import dash.multitenancy.configuration.TenantContext;
+import dash.notificationmanagement.business.AWSEmailService;
 import dash.security.jwt.JwtTokenFactory;
 import dash.security.jwt.domain.JwtToken;
 import dash.security.jwt.domain.UserContext;
@@ -59,6 +62,7 @@ import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
 import dash.usermanagement.registration.domain.Validation;
+import dash.usermanagement.settings.language.Language;
 import dash.usermanagement.settings.password.PasswordChange;
 
 @Service
@@ -70,18 +74,20 @@ public class UserService implements IUserService {
 	private PasswordEncoder passwordEncoder;
 	private IFileUploadService fileUploadService;
 	private ISmtpService smtpService;
-
+	private MessageService messageService;
+	private AWSEmailService awsEmailService;
 	@Autowired
 	private JwtTokenFactory tokenFactory;
 
 	@Autowired
 	public UserService(IFileUploadService fileUploadService, ISmtpService smtpService, PasswordEncoder passwordEncoder,
-			UserRepository userRepository) {
+			UserRepository userRepository, MessageService messageService, AWSEmailService awsEmailService) {
 		this.fileUploadService = fileUploadService;
 		this.smtpService = smtpService;
 		this.passwordEncoder = passwordEncoder;
 		this.userRepository = userRepository;
-
+		this.messageService = messageService;
+		this.awsEmailService = awsEmailService;
 	}
 
 	@Override
@@ -354,7 +360,7 @@ public class UserService implements IUserService {
 				user.setEnabled(enabled);
 				user.setLanguage(registration.getLanguage());
 				user.setDefaultVat(19.00);
-
+				notify(user);
 				return save(user);
 			} catch (SaveFailedException ex) {
 				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
@@ -386,5 +392,23 @@ public class UserService implements IUserService {
 
 	public Optional<User> loadUserByEmail(String email) {
 		return userRepository.findByEmailIgnoreCase(email);
+	}
+
+	public void notify(User user) {
+		String tenant = TenantContext.getTenant();
+
+		String templateName = "welcome_en.ftl";
+		if (user.getLanguage().equals(Language.DE))
+			templateName = "welcome_de.ftl";
+
+		AbstractMessage welcomeMessage;
+		try {
+			welcomeMessage = this.messageService.getWelcomeMessage(templateName, tenant, user);
+			this.awsEmailService.sendMail("andreas.foitzik@leadplus.io", welcomeMessage.getRecipients(),
+					welcomeMessage.getSubject(), welcomeMessage.getContent());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 }

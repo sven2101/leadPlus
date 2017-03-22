@@ -59,7 +59,7 @@
         </p>
         
         <div class="information">
-            Dein Link für Deinen lead+ Account <h4><a href="https://${tenant.tenantKey}.leadplus.io">https://${tenant.tenantKey}.leadplus.io</a></h4>
+            Dein Link für Deinen lead+ Account <h4><a href="https://${tenant}.leadplus.io">https://${tenant}.leadplus.io</a></h4>
             Melde Dich mit Deinem Benutzernamen an <h4>${user.email}</h4>
         </div>
 

@@ -35,7 +35,7 @@ public interface IMessageService {
 			String templateWithPlaceholders, final Notification notification, final User user)
 			throws IOException, TemplateException;
 
-	AbstractMessage getWelcomeMessage(String templateName, Tenant tenant, User user) throws TemplateException;
+	AbstractMessage getWelcomeMessage(String templateName, String tenant, User user) throws TemplateException;
 
 	AbstractMessage getForgotPasswordMessage(String template, Tenant tenant, User user, PasswordForgot passwordForgot)
 			throws TemplateException, IOException;

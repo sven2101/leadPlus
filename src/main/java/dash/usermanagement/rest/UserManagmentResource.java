@@ -52,11 +52,14 @@ import io.swagger.annotations.ApiOperation;
 		MediaType.APPLICATION_JSON_VALUE })
 public class UserManagmentResource {
 
-	@Autowired
 	private UserService userService;
+	private ISmtpService smtpService;
 
 	@Autowired
-	private ISmtpService smtpService;
+	public UserManagmentResource(UserService userService, ISmtpService smtpService) {
+		this.userService = userService;
+		this.smtpService = smtpService;
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
