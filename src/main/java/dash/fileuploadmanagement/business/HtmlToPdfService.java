@@ -16,15 +16,25 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
 
 import dash.common.HtmlCleaner;
+import dash.common.OSValidator;
 
 @Service
 public class HtmlToPdfService {
 
-	public static final String PHANTOMJS_ROOT_DIR = System.getProperty("user.dir").replaceAll("\\\\", "/")
-			+ "/phantomjs-2.1.1-windows";
+	public static final String PHANTOMJS_ROOT_DIR = getRootPath() + "/phantomjs";
 	public static final String PHANTOMJS_CONFIG_FILE = PHANTOMJS_ROOT_DIR + "/phantomjs.config.js";
-	public static final String PHANTOMJS_EXE = PHANTOMJS_ROOT_DIR + "/phantomjs.exe";
+	public static final String PHANTOMJS_EXE = PHANTOMJS_ROOT_DIR + "/" + OSValidator.getOS() + "/phantomjs";
 	public static final String TMP_DIR = PHANTOMJS_ROOT_DIR + "/tmp";
+
+	private static String getRootPath() {
+		String path = System.getProperty("user.dir").replaceAll("\\\\", "/");
+		String className = HtmlToPdfService.class.getName().replace('.', '/');
+		String classJar = HtmlToPdfService.class.getResource("/" + className + ".class").toString();
+		if (!classJar.startsWith("jar:")) {
+			path += "/elb_config";
+		}
+		return path;
+	}
 
 	public synchronized byte[] genereatePdfFromHtml(String htmlStringWithImageInline)
 			throws PdfGenerationFailedException, IOException {
@@ -50,7 +60,12 @@ public class HtmlToPdfService {
 			writer.print(HtmlCleaner.cleanHtmlForPdf(htmlString));
 			writer.close();
 
-			File configFile = Paths.get(new URI("file:/" + PHANTOMJS_CONFIG_FILE)).toFile();
+			File configFile = null;
+			if (OSValidator.isWindows()) {
+				configFile = Paths.get(new URI("file:/" + PHANTOMJS_CONFIG_FILE)).toFile();
+			} else {
+				configFile = Paths.get(new URI("file://" + PHANTOMJS_CONFIG_FILE)).toFile();
+			}
 
 			tempPdf = File.createTempFile("tempPdf", ".pdf", new File(TMP_DIR));
 

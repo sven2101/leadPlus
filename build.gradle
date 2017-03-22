@@ -1,6 +1,8 @@
 group 'com.getnet'
 version '2.1'
 
+
+
 buildscript {
     repositories {
         mavenCentral()
@@ -8,7 +10,7 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.0.RELEASE")
 		classpath("org.flywaydb:flyway-gradle-plugin:4.0.3")
-    }
+    }     
 }
 
 apply plugin: 'java'
@@ -17,9 +19,10 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "org.flywaydb.flyway"
 
+
 jar {
     baseName = 'leadplus'
-    version =  '3.2.0'
+    version =  '3.3.0alpha15'
 }
 
 repositories {
@@ -85,3 +88,19 @@ flyway {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.7'
 }
+
+task zipContent(type: Zip) {
+   from 'build/libs'
+   from 'elb_config'
+   exclude '*.jar.original'
+   include '*'
+   include '*/*' 
+   include '*/*/*'
+   include '*/*/*/*'  
+   include '*/*/*/*/*' 
+   include '*/*/*/*/*/*' 
+   include '*/*/*/*/*/*/*' 
+   archiveName jar.baseName+'-'+jar.version +'.zip'
+   destinationDir(file('/build/'))
+}
+build.finalizedBy(zipContent)
