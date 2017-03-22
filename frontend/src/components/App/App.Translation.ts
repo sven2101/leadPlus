@@ -126,6 +126,7 @@ function config($translateProvider) {
             COMMON_SEND: "Senden",
             COMMON_NEXT: "Weiter",
             COMMON_BACK: "Zurück",
+            COMMON_CLOSE: "Schließen",
             COMMON_CONTINUE_AND_SENDING: "Speichern und senden",
             COMMON_CONTINUE_WITHOUT_SENDING: "Speichern ohne senden",
             COMMON_DELETE: "Löschen",
@@ -547,6 +548,12 @@ function config($translateProvider) {
             SOURCE_TOAST_SAVE: "Quelle wurde erfolgreich angelegt/bearbeitet",
             SOURCE_TOAST_SAVE_ERROR: "Quelle konnte nicht angelegt/aktualisiert werden",
             SOURCE_NAME_EXISTS: "Der Name existiert bereits",
+            SOURCE_API_TOKEN_RESET_TITLE: "Zugriff dieser Quelle zurücksetzen?",
+            SOURCE_API_TOKEN_RESET_TEXT: "Mit dieser Aktion entziehen Sie dieser Schnittstelle den Zugriff auf lead+",
+            SOURCE_API_TOKEN_CONFIRMATION_RESET_TITLE: "Wirklich zurücksetzen?",
+            SOURCE_API_TOKEN_CONFIRMATION_RESET_TEXT: "Beim Zurücksetzen wird der Zugriff der Quelle auf lead+ <strong>gesperrt</strong>. Als Konsquenz müssen Sie die Authentifizierung der Quelle gegenüber lead+ mit dem neuen Access Key anpassen! ",
+            SOURCE_NEW_API_TOKEN_TITLE: "Neuer Access-Token",
+            SOURCE_NEW_API_TOKEN_TEXT: "Dieser Access-Token wird nur <strong>einmal angezeigt</strong>! Kopiere und speichere diesen Access-Token umgehend! Diesen musst Du anschließend für die Authentifizierung der Quelle gegenüber lead+ verweden.",
 
             // Define customer elements
             CUSTOMER: "Kontakt",
@@ -746,6 +753,7 @@ function config($translateProvider) {
             COMMON_SEND: "Send",
             COMMON_NEXT: "Next",
             COMMON_BACK: "Back",
+            COMMON_CLOSE: "Close",
             COMMON_CONTINUE_AND_SENDING: "Save and send",
             COMMON_CONTINUE_WITHOUT_SENDING: "Save without send",
             COMMON_DELETE: "Delete",
@@ -1166,6 +1174,12 @@ function config($translateProvider) {
             SOURCE_TOAST_SAVE: "Creating/Editing Source was successful",
             SOURCE_TOAST_SAVE_ERROR: "Creating/Editing Source was unsuccessful",
             SOURCE_NAME_EXISTS: "Name is already in use",
+            SOURCE_API_TOKEN_RESET_TITLE: "Reset Source Access?",
+            SOURCE_API_TOKEN_RESET_TEXT: "With this action you will <strong>revoke</strong> your source's access to lead+.",
+            SOURCE_API_TOKEN_CONFIRMATION_RESET_TITLE: "Do you really want to revoke access?",
+            SOURCE_API_TOKEN_CONFIRMATION_RESET_TEXT: "As a consequence the access of your source for lead+ will be revoked. To continue passing leads to lead+ you need to adjust the authentication of your source against lead+.",
+            SOURCE_NEW_API_TOKEN_TITLE: "New Access-Token",
+            SOURCE_NEW_API_TOKEN_TEXT: "This Access-Token is only <strong>shown once</strong>! Copy and save it immediately! Afterwards you need to protect it and use it to authenticate your source against lead+.",
 
             // Define customer elements
             CUSTOMER: "Contacts",

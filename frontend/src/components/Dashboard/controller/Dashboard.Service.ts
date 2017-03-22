@@ -213,7 +213,7 @@ class DashboardService {
                     ui.item.sortable.cancel();
                 }
             },
-            stop: function (e, ui) {
+            stop: async function (e, ui) {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
@@ -304,8 +304,9 @@ class DashboardService {
                         title = self.translate.instant("OFFER_CLOSE_OFFER");
                         text = self.translate.instant("OFFER_CLOSE_OFFER_REALLY");
                     }
+
                     self.inModal = true;
-                    self.SweetAlert.swal({
+                    let deletePromise = self.SweetAlert.swal({
                         title: title,
                         text: text,
                         type: "warning",
@@ -313,27 +314,27 @@ class DashboardService {
                         cancelButtonText: self.translate.instant("NO"),
                         confirmButtonColor: "#DD6B55",
                         confirmButtonText: self.translate.instant("YES"),
-                    }, function (isConfirm) {
-                        if (isConfirm) {
-                            self.closeProcess(item, source);
-                            target.splice(source.indexOf(item), 1);
-                            self.sliceElementFromArray(self.allOpenLeads, item);
-                            self.sliceElementFromArray(self.allInContacts, item);
-                            self.sliceElementFromArray(self.allOpenOffers, item);
-                            self.sliceElementFromArray(self.allDoneOffers, item);
-                            let todoElement: Process = findElementById(self.todos, item.id) as Process;
-                            if (!isNullOrUndefined(todoElement)) {
-                                self.todos.splice(self.todos.indexOf(todoElement), 1);
-                                self.rootScope.$broadcast("todosChanged", self.todos);
-                            }
-                            self.inModal = false;
-                        }
-                        else {
-                            target.splice(target.indexOf(item), 1);
-                            source.push(item);
-                            self.inModal = false;
-                        }
                     });
+
+                    try {
+                        await deletePromise;
+                        self.closeProcess(item, source);
+                        target.splice(source.indexOf(item), 1);
+                        self.sliceElementFromArray(self.allOpenLeads, item);
+                        self.sliceElementFromArray(self.allInContacts, item);
+                        self.sliceElementFromArray(self.allOpenOffers, item);
+                        self.sliceElementFromArray(self.allDoneOffers, item);
+                        let todoElement: Process = findElementById(self.todos, item.id) as Process;
+                        if (!isNullOrUndefined(todoElement)) {
+                            self.todos.splice(self.todos.indexOf(todoElement), 1);
+                            self.rootScope.$broadcast("todosChanged", self.todos);
+                        }
+                        self.inModal = false;
+                    } catch (error) {
+                        target.splice(target.indexOf(item), 1);
+                        source.push(item);
+                        self.inModal = false;
+                    }
                 }
             },
             connectWith: ".connectList",

@@ -128,5 +128,5 @@ const moduleSummernote: string = "summernote";
 const moduleSummernoteService: string = moduleSummernote + ".service";
 const moduleFootable: string = "ui.footable";
 const moduleSanitize: string = "ngSanitize";
-const moduleSweetAlert: string = "oitozero.ngSweetAlert";
+const moduleSweetAlert: string = "socialbase.sweetAlert";
 const moduleAngularChosen: string = "localytics.directives";

@@ -71,19 +71,21 @@ class AuthService {
                     let smtp: Smtp = this.SmtpService.currentSmtp;
                     if (smtp.smtpPasswordNull) {
                         let self = this;
-                        self.rootScope.changeLanguage(this.rootScope.user.language);
+                        let resetPromise = self.rootScope.changeLanguage(this.rootScope.user.language);
                         this.sweetAlert.swal({
                             title: self.translate.instant("SMTP_CONNECTION"),
                             text: self.translate.instant("SAFETY_NOTE"),
                             type: "warning",
                             showCancelButton: false,
                             confirmButtonColor: "#DD6B55",
-                            confirmButtonText: self.translate.instant("YES"),
-                        }, function (isConfirm) {
-                            if (isConfirm) {
-                                self.location.path("/profile/smtp");
-                            }
+                            confirmButtonText: self.translate.instant("YES")
                         });
+
+                        try {
+                            await resetPromise;
+                            self.location.path("/profile/smtp");
+                        } catch (error) {
+                        }
                     }
                 }
                 if (!hasLicense(this.rootScope.tenant.license, "basic")) {

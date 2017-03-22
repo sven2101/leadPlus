@@ -151,7 +151,7 @@
 	
 	<script type="text/javascript">
 	$(document).ready(function () {
-
+		
 		var heading = "Register your Company";
 		var subheading = "Start with lead+ and an create an Account for your company as well as your initial user.";
 		
@@ -408,7 +408,14 @@
 						$("#legal").hide();
 
 						$("#login").show();
-						$("#userLogin").prop("href", "https://"+$('#tenantKey').val()+"."+$(location).attr('host')+"/#/login")
+					
+						var host = $(location).attr('host');
+						var hostnameParts = host.split(".");
+						var topLevelDomain = hostnameParts.pop();
+						var subHost = hostnameParts.join(".");
+						var secondLevelDomain = subHost.split(".").pop();
+						
+						$("#userLogin").prop("href", "https://"+$('#tenantKey').val()+"."+ secondLevelDomain +"."+ topLevelDomain +"/#/login")
 					});
 				},
 				error: function(xhr, resp, text) {
