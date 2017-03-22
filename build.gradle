@@ -66,6 +66,7 @@ dependencies {
 	compile group: 'com.h2database', name: 'h2', version: '1.4.193'
 	
 	compile('io.jsonwebtoken:jjwt:0.7.0')
+	compile group: 'org.json', name: 'json', version: '20160810'
 	
 	testCompile group: 'org.mockito', name: 'mockito-all', version: '2.0.2-beta'
 	testCompile("org.springframework.boot:spring-boot-starter-test")
