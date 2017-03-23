@@ -28,6 +28,8 @@ import dash.messagemanagement.domain.EmailMessage;
 import dash.messagemanagement.domain.OfferMessage;
 import dash.notificationmanagement.domain.Notification;
 import dash.notificationmanagement.domain.NotificationType;
+import dash.productmanagement.business.IProductService;
+import dash.productmanagement.domain.OrderPosition;
 import dash.templatemanagement.domain.WorkflowTemplateObject;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.domain.User;
@@ -43,6 +45,9 @@ public class MessageService implements IMessageService {
 
 	@Autowired
 	private Configuration cfg;
+
+	@Autowired
+	private IProductService productService;
 
 	@Override
 	public String getRecipient() {
@@ -76,6 +81,10 @@ public class MessageService implements IMessageService {
 		Template template = cfg.getTemplate("template");
 
 		Map<String, Object> mapping = new HashMap<>();
+
+		for (OrderPosition orderPosition : workflowTemplateObject.getOrderPositions()) {
+			orderPosition.setProduct(productService.getById(orderPosition.getProduct().getId()));
+		}
 
 		mapping.put("workflow", workflowTemplateObject);
 		mapping.put("customer", workflowTemplateObject.getCustomer());

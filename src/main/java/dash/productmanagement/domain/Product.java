@@ -39,6 +39,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.fileuploadmanagement.domain.FileUpload;
 import io.swagger.annotations.ApiModelProperty;
@@ -105,6 +106,32 @@ public class Product implements Serializable {
 	@Size(max = 255)
 	@Column(name = "productnumber")
 	private String productNumber;
+
+	@JsonIgnore
+	private String getBase64ImgTag() {
+		if (getPicture() == null || getPicture().getContent() == null)
+			return null;
+		String base64String = org.apache.commons.codec.binary.Base64.encodeBase64String(getPicture().getContent());
+		return "<img src=\"data:image/jpeg;base64," + base64String;
+	}
+
+	@JsonIgnore
+	public String getProductPictureSmall() {
+		String base64ImgTag = getBase64ImgTag();
+		return base64ImgTag == null ? null : base64ImgTag + "\" style=\"height:50px;width:50px\">";
+	}
+
+	@JsonIgnore
+	public String getProductPictureMedium() {
+		String base64ImgTag = getBase64ImgTag();
+		return base64ImgTag == null ? null : base64ImgTag + "\" style=\"height:100px;width:100px\">";
+	}
+
+	@JsonIgnore
+	public String getProductPictureBig() {
+		String base64ImgTag = getBase64ImgTag();
+		return base64ImgTag == null ? null : base64ImgTag + "\" style=\"height:200px;width:200px\">";
+	}
 
 	public Product() {
 	}

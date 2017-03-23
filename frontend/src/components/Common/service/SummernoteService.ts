@@ -435,7 +435,10 @@ class SummernoteService {
             "<li><a template-value='${(orderPosition.amount)!}'>" + this.translate.instant("COMMON_PRODUCT_AMOUNT") + "</a></li>" +
             "<li><a template-value='<#if orderPosition.product.netPrice?has_content>${((orderPosition.product.netPrice)!)?string(&quot;#,##0.00&quot;)}&lt;/#if&gt;'> " + this.translate.instant("Originalpreis") + "</a></li>" +
             "<li><a id='orderpositionProductstateVar' template-value='" + this.translate.instant("SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION", "", "", this.summernoteLanguage) + "'>" + this.translate.instant("PRODUCT_PRODUCT_STATE") + "</a></li>" +
-            "<li><a template-value='${(orderPosition.product.productNumber)!}'>" + this.translate.instant("PRODUCT_NUMBER") + "</a></li>";
+            "<li><a template-value='${(orderPosition.product.productNumber)!}'>" + this.translate.instant("PRODUCT_NUMBER") + "</a></li>" +
+            "<li><a template-value='${(orderPosition.product.productPictureSmall)!}'>" + this.translate.instant("PRODUCT_PICTURE_SMALL") + "</a></li>" +
+            "<li><a template-value='${(orderPosition.product.productPictureMedium)!}'>" + this.translate.instant("PRODUCT_PICTURE_MEDIUM") + "</a></li>" +
+            "<li><a template-value='${(orderPosition.product.productPictureBig)!}'>" + this.translate.instant("PRODUCT_PICTURE_BIG") + "</a></li>";
     }
 
     getUserTemplateVar(): string {
