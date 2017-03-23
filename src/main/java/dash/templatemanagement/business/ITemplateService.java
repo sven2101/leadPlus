@@ -22,11 +22,13 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.fileuploadmanagement.business.PdfGenerationFailedException;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.notificationmanagement.domain.Notification;
 import dash.templatemanagement.domain.Template;
 import dash.templatemanagement.domain.WorkflowTemplateObject;
 import dash.usermanagement.domain.User;
+import freemarker.template.TemplateException;
 
 @Service
 public interface ITemplateService {
@@ -50,6 +52,10 @@ public interface ITemplateService {
 			throws NotFoundException, IOException, TemplateCompilationException;
 
 	String getMessageContentStringByTemplateId(long templateId, WorkflowTemplateObject workflowTemplateObject,
-			User user) throws NotFoundException, IOException, TemplateCompilationException;
+			User user) throws NotFoundException, IOException, TemplateException, TemplateCompilationException;
+
+	byte[] getPdfBytemplateId(long templateId, WorkflowTemplateObject workflowTemplateObject, User user)
+			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException,
+			TemplateException;
 
 }

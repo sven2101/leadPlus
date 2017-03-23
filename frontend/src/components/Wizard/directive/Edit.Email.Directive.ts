@@ -229,29 +229,45 @@ class EditEmailDirective implements IDirective {
         currentNotification.attachments.push(attachment);
         attachment["inProgress"] = true;
 
-        let response = await scope.$http.post("/api/rest/templates/" + template.id + "/offers/pdf/generate",
-            { workflowTemplateObject: workflow, user: scope.rootScope.user }, { method: "POST", responseType: "arraybuffer" });
-        let contentType = response.headers("content-type");
-        let file = new Blob([response.data], { type: contentType });
-        let fileReader = new FileReader();
-
-        fileUpload.mimeType = file.type;
-        fileUpload.size = file.size;
-        fileReader.readAsDataURL(file);
-
-
-        fileReader.onload = function () {
-            fileUpload.content = this.result.split(",")[1];
-            if (fileUpload.content == null) {
-                fileUpload.content = "";
+        try {
+            let response = await this.TemplateService.generatePdfFromTemplateId(template.id, workflow);
+            let file = b64toBlob(response.data, "application/pdf");
+            let fileReader = new FileReader();
+            fileUpload.mimeType = file.type;
+            fileUpload.size = file.size;
+            fileReader.onload = function () {
+                fileUpload.content = this.result.split(",")[1];
+                if (fileUpload.content == null) {
+                    fileUpload.content = "";
+                }
+                attachment["inProgress"] = false;
+                scope.$apply();
+            };
+            fileReader.readAsDataURL(file);
+            fileReader.onerror = (error) => {
+                handleError(error);
+            };
+        } catch (error) {
+            attachment["hasError"] = true;
+            setTimeout(function () {
+                let index = currentNotification.attachments.indexOf(attachment);
+                if (index !== -1) {
+                    currentNotification.attachments.splice(index, 1);
+                }
+                scope.$apply();
+            }, 3000);
+            if (error.data != null && error.data.exception !== "dash.templatemanagement.business.TemplateCompilationException") {
+                return this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR"));
             }
+            let errorMessage = error == null || error.data == null ? "" : ": " + error.data.message;
+            if (error != null && error.data != null && error.data.message != null && error.data.message.substring(0, 6) !== "Syntax") {
+                this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR") + errorMessage);
+                return;
+            }
+            errorMessage = error == null || error.data == null ? "" : ": " + error.data.message.substring(36);
+            this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR") + errorMessage);
+        }
 
-            attachment["inProgress"] = false;
-            scope.$apply();
-        };
-        fileReader.onerror = (error) => {
-            handleError(error);
-        };
     }
 
     async generatePdf(scope: any, htmlString: string): Promise<Blob> {

@@ -14,7 +14,9 @@
 package dash.templatemanagement.rest;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -40,6 +42,7 @@ import dash.messagemanagement.domain.MessageContext;
 import dash.templatemanagement.business.ITemplateService;
 import dash.templatemanagement.business.TemplateCompilationException;
 import dash.templatemanagement.domain.Template;
+import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -113,16 +116,18 @@ public class TemplateResource {
 				messageContext.getWorkflowTemplateObject(), messageContext.getNotification(), messageContext.getUser());
 	}
 
-	@RequestMapping(value = "/{templateId}/offers/pdf/generate", method = RequestMethod.POST, produces = "application/pdf")
-	@ResponseStatus(HttpStatus.CREATED)
+	@RequestMapping(value = "/{templateId}/offers/pdf/generate", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Generate a pdf based on a template and an offer.", notes = "")
-	public byte[] generatePdf(@ApiParam(required = true) @PathVariable final long templateId,
+	public Map<String, byte[]> generatePdf(@ApiParam(required = true) @PathVariable final long templateId,
 			@ApiParam(required = true) @RequestBody @Valid final MessageContext messageContext)
-			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException {
-		String message = templateService.getMessageContentStringByTemplateId(templateId,
-				messageContext.getWorkflowTemplateObject(), messageContext.getUser());
+			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException,
+			TemplateException {
+		Map<String, byte[]> x = new HashMap<>();
+		x.put("data", templateService.getPdfBytemplateId(templateId, messageContext.getWorkflowTemplateObject(),
+				messageContext.getUser()));
+		return x;
 
-		return htmlToPdfService.genereatePdfFromHtml(message);
 	}
 
 }

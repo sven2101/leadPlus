@@ -34,6 +34,8 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.fileuploadmanagement.business.HtmlToPdfService;
+import dash.fileuploadmanagement.business.PdfGenerationFailedException;
 import dash.messagemanagement.business.IMessageService;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.notificationmanagement.domain.Notification;
@@ -52,6 +54,9 @@ public class TemplateService implements ITemplateService {
 
 	@Autowired
 	private IMessageService messageService;
+
+	@Autowired
+	private HtmlToPdfService htmlToPdfService;
 
 	@Override
 	public List<Template> getAll() {
@@ -158,11 +163,13 @@ public class TemplateService implements ITemplateService {
 	@Override
 	public String getMessageContentStringByTemplateId(final long templateId,
 			final WorkflowTemplateObject workflowTemplateObject, final User user)
-			throws NotFoundException, IOException, TemplateCompilationException {
+			throws NotFoundException, IOException, TemplateException, TemplateCompilationException {
+
 		if (workflowTemplateObject != null) {
 			try {
 				return messageService.getMessageContentString(workflowTemplateObject, getById(templateId).getContent(),
 						user);
+
 			} catch (NotFoundException ex) {
 				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw ex;
@@ -177,6 +184,17 @@ public class TemplateService implements ITemplateService {
 			logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
 			throw nfex;
 		}
+
+	}
+
+	@Override
+	public byte[] getPdfBytemplateId(final long templateId, final WorkflowTemplateObject workflowTemplateObject,
+			final User user) throws NotFoundException, IOException, TemplateCompilationException,
+			PdfGenerationFailedException, TemplateException {
+
+		String message = getMessageContentStringByTemplateId(templateId, workflowTemplateObject, user);
+		return htmlToPdfService.genereatePdfFromHtml(message);
+
 	}
 
 }

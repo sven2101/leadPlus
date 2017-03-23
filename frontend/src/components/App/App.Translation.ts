@@ -95,7 +95,7 @@ function config($translateProvider) {
 
             // Template
             EMAIL_TEMPLATE: "Email Vorlagen",
-            EMAIL_TEMPLATE_ERROR: "Fehler in der Email-Vorlage",
+            EMAIL_TEMPLATE_ERROR: "Fehler in der Vorlage",
             EMAIL_TEMPLATE_SELECT: "Keine Vorlage",
 
             SETTING_TEMPLATE_TEMPLATE_TYPE: "Vorlagentyp",
@@ -718,7 +718,7 @@ function config($translateProvider) {
 
             // Template
             EMAIL_TEMPLATE: "Email templates",
-            EMAIL_TEMPLATE_ERROR: "Error in email template",
+            EMAIL_TEMPLATE_ERROR: "Error in template",
             EMAIL_TEMPLATE_SELECT: "No template",
             EMAIL_TEMPLATE_SYNTAX_SUCCESS: "Template is valid",
             SETTING_TEMPLATE_TEST_SYNTAX: "Test Template",

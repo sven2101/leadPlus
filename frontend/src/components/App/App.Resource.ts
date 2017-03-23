@@ -348,9 +348,7 @@ class TemplateResource {
                 }
             },
             generatePdfFromTemplate: {
-                url: "/api/rest/templates/:templateId/offers/pdf/generate", method: "POST", params: {
-                    templateId: "@templateId"
-                }, responseType: "arraybuffer"
+                url: "/api/rest/templates/:templateId/offers/pdf/generate", method: "POST"
             },
             test: { url: "/api/rest/templates/test", method: "POST" },
             generatePDF: {
