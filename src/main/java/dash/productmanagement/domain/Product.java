@@ -118,19 +118,19 @@ public class Product implements Serializable {
 	@JsonIgnore
 	public String getProductPictureSmall() {
 		String base64ImgTag = getBase64ImgTag();
-		return base64ImgTag == null ? null : base64ImgTag + "\" style=\"height:50px;width:50px\">";
+		return base64ImgTag == null ? null : base64ImgTag + "\" width=\"50\" style=\"max-width:50px\">";
 	}
 
 	@JsonIgnore
 	public String getProductPictureMedium() {
 		String base64ImgTag = getBase64ImgTag();
-		return base64ImgTag == null ? null : base64ImgTag + "\" style=\"height:100px;width:100px\">";
+		return base64ImgTag == null ? null : base64ImgTag + "\" width=\"100\" style=\"max-width:100px\">";
 	}
 
 	@JsonIgnore
 	public String getProductPictureBig() {
 		String base64ImgTag = getBase64ImgTag();
-		return base64ImgTag == null ? null : base64ImgTag + "\" style=\"height:200px;width:200px\">";
+		return base64ImgTag == null ? null : base64ImgTag + "\" width=\"200\" style=\"max-width:200px\">";
 	}
 
 	public Product() {
