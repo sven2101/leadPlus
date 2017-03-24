@@ -53,7 +53,9 @@ public class SmtpResource {
 	@ApiOperation(value = "Create a single Smtp.", notes = "You have to provide a valid Smtp entity.")
 	public ResponseEntity<Object> save(@ApiParam(required = true) @RequestBody @Valid final SmtpContext smtpContext) {
 		try {
+
 			return new ResponseEntity<>(smtpService.save(smtpContext.getSmtp(), null), HttpStatus.CREATED);
+
 		} catch (Exception e) {
 			logger.error(SmtpResource.class.getSimpleName() + e.getMessage(), e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -96,11 +96,15 @@ function config($translateProvider) {
 
             // Template
             EMAIL_TEMPLATE: "Email Vorlagen",
-            EMAIL_TEMPLATE_ERROR: "Fehler in der Email-Vorlage",
+            EMAIL_TEMPLATE_ERROR: "Fehler in der Vorlage",
             EMAIL_TEMPLATE_SELECT: "Keine Vorlage",
+
+            SETTING_TEMPLATE_TEMPLATE_TYPE: "Vorlagentyp",
+
             EMAIL_TEMPLATE_SYNTAX_SUCCESS: "Vorlage ist valide",
             SETTING_TEMPLATE_TEST_SYNTAX: "Vorlage testen",
             SETTING_TEMPLATE_TEST_TEMPLATE: "Vor dem Speichern Vorlage testen!",
+
             EMAIL_RECIPIENT_COMMA: "(mit Komma getrennt)",
             EMAIL_RECIPIENT: "Empfänger",
             EMAIL_SUBJECT: "Betreff",
@@ -387,8 +391,10 @@ function config($translateProvider) {
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST_ERROR: "Verbindung zum SMTP Server fehlgeschlagen. ",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE: "Speichern der SMTP Server Verbindung erfolgreich. ",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_SAVE_ERROR: "Speichern der SMTP Server Verbindung fehlgeschlagen. ",
+
             SETTING_EMAIL_TEMPLATES_MANAGEMENT: "Email Vorlagen",
             SETTING_EMAIL_NEW_TEMPLATE: "Neue Vorlage",
+
             SETTING_ACCESS_MANAGEMENT: "Benutzer verwalten",
             SETTING_ACTIVATE_USER: "Freischalten",
             SETTING_DEACTIVATE_USER: "Deaktivieren",
@@ -528,6 +534,9 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE: "Produkt wurde erfolgreich aktuallisiert",
             PRODUCT_TOAST_UPDATE_ERROR: "Produkt konnte nicht aktuallisiert werden",
             PRODUCT_NUMBER: "Produktnummer",
+            PRODUCT_PICTURE_SMALL: "Produktbild klein",
+            PRODUCT_PICTURE_MEDIUM: "Produktbild mittel",
+            PRODUCT_PICTURE_BIG: "Produktbild groß",
             PRODUCT_ORIGINAL_PRICE: "Originalpreis",
             NEW: "Neu",
             USED_A: "Gebraucht A",
@@ -723,11 +732,12 @@ function config($translateProvider) {
 
             // Template
             EMAIL_TEMPLATE: "Email templates",
-            EMAIL_TEMPLATE_ERROR: "Error in email template",
+            EMAIL_TEMPLATE_ERROR: "Error in template",
             EMAIL_TEMPLATE_SELECT: "No template",
             EMAIL_TEMPLATE_SYNTAX_SUCCESS: "Template is valid",
             SETTING_TEMPLATE_TEST_SYNTAX: "Test Template",
             SETTING_TEMPLATE_TEST_TEMPLATE: "Test Template before saving",
+            SETTING_TEMPLATE_TEMPLATE_TYPE: "Type of Template",
             EMAIL_RECIPIENT_COMMA: "(seperated by comma)",
             EMAIL_RECIPIENT: "Recipient",
             EMAIL_SUBJECT: "Subject",
@@ -1009,7 +1019,7 @@ function config($translateProvider) {
             SETTING_EMAIL_MANAGEMENT_PORT: "Port",
             SETTING_EMAIL_MANAGEMENT_PORT_NO_INPUT: "No input = standardport",
             SETTING_EMAIL_MANAGEMENT_CONNECTION_TEST: "Testing Connection",
-            SETTING_EMAIL_TEMPLATES_MANAGEMENT: "Email Templates",
+            SETTING_TEMPLATES_MANAGEMENT: "Templates",
             SETTING_EMAIL_NEW_TEMPLATE: "New Template",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST: "Connection to SMTP Server successful.  ",
             SETTING_TOAST_EMAIL_MANAGEMENT_CONNECTION_TEST_ERROR: "Connection to SMTP Server failed. ",
@@ -1154,6 +1164,9 @@ function config($translateProvider) {
             PRODUCT_TOAST_UPDATE: "Updating product was successful",
             PRODUCT_TOAST_UPDATE_ERROR: "Updating product was unsuccessful",
             PRODUCT_NUMBER: "Product number",
+            PRODUCT_PICTURE_SMALL: "Product picture small",
+            PRODUCT_PICTURE_MEDIUM: "Product picture medium",
+            PRODUCT_PICTURE_BIG: "Product picture big",
             PRODUCT_ORIGINAL_PRICE: "Original price",
             NEW: "New",
             USED_A: "Used A",

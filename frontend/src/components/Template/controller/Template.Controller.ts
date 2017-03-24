@@ -21,6 +21,7 @@ class TemplateController {
     templateFound: boolean;
     templateTested: boolean = false;
     templateHead: string;
+    templateType = TemplateType;
     constructor(TemplateService, private SummernoteService: SummernoteService, private SourceService: SourceService, private $translate, private toaster, $routeParams, $location) {
         this.templateService = TemplateService;
         this.location = $location;
@@ -39,6 +40,7 @@ class TemplateController {
             isNullOrUndefined(this.template) ? this.templateFound = false : this.templateFound = true;
         } else if (!isNullOrUndefined(templateId) && templateId === "new") {
             this.template = new Template();
+            this.template.templateTypes = [TemplateType.EMAIL];
             this.templateService.currentEditTemplate = this.template;
             this.template.sourceString = "NONE,ALL";
             this.templateHead = "SETTING_EMAIL_NEW_TEMPLATE";
@@ -68,6 +70,7 @@ class TemplateController {
     }
 
     save() {
+        console.log(this.template);
         if (this.currentSelectedNotificationTypes.length > 0) {
             this.template.notificationTypeString = this.currentSelectedNotificationTypes.join(",");
         } else {

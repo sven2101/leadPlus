@@ -342,18 +342,17 @@ class TemplateResource {
             save: { url: "/api/rest/templates", method: "POST" },
             update: { url: "/api/rest/templates", method: "PUT" },
             remove: { url: "/api/rest/templates/:id", method: "DELETE" },
-            generate: {
+            generateNotification: {
                 url: "/api/rest/templates/:templateId/offers/generate", method: "POST", params: {
-                    templateId: "@templateId",
-                    offerId: "@offerId"
+                    templateId: "@templateId"
                 }
+            },
+            generatePdfFromTemplate: {
+                url: "/api/rest/templates/:templateId/offers/pdf/generate", method: "POST"
             },
             test: { url: "/api/rest/templates/test", method: "POST" },
             generatePDF: {
-                url: "/api/rest/templates/:templateId/offers/pdf/generate", method: "POST", params: {
-                    templateId: "@templateId",
-                    offerId: "@offerId"
-                }, responseType: "arraybuffer"
+                url: "/api/rest/files/pdf", method: "POST"
             }
         });
     }

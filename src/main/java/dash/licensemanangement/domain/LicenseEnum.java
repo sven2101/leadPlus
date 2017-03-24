@@ -10,8 +10,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public enum LicenseEnum {
 	ERROR("error", new HashSet<String>(Arrays.asList("/components/Common/view/NotFound.html",
 			"/components/Common/view/Unauthorized.html", "/components/Common/view/Forbidden.html", "/main.html")),
+
 			0), FREE("free", new HashSet<String>(Arrays.asList("/", "/console/**", "/health", "/images/favicon/**",
 					"/assets/**", "/fonts/**", "/app/**", "/components/Login/view/Login.html", "/logout",
+
 					"/password/forgot/**", "/registration/**", "/logout.html", "/401.html", "/403.html", "/404.html",
 					"/components/Signup/view/Signup.html", "/components/Tenant/registration/view/**",
 					"/components/Licence/view/**", "/api/rest/tenants/unique/key", "/api/rest/tenants",
@@ -21,6 +23,7 @@ public enum LicenseEnum {
 					"/v2/api-docs/**", "/configuration/security", "/components/**", "/main.html", "/registrations",
 					"/registrations/**", "/tenants", "/tenants/**", "/api/rest/auth/login", "/api/rest/auth/token",
 					"/subdomainiframe.html")),
+
 					1), BASIC("basic",
 							new HashSet<String>(Arrays.asList("/user", "/users/all", "/components/Common/view/**",
 									"/components/Customer/view/**", "/components/Dashboard/view/**",

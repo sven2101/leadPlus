@@ -18,6 +18,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ import dash.messagemanagement.domain.EmailMessage;
 import dash.messagemanagement.domain.OfferMessage;
 import dash.notificationmanagement.domain.Notification;
 import dash.notificationmanagement.domain.NotificationType;
+import dash.productmanagement.business.IProductService;
+import dash.productmanagement.domain.OrderPosition;
 import dash.templatemanagement.domain.WorkflowTemplateObject;
 import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.domain.User;
@@ -50,6 +53,9 @@ public class MessageService implements IMessageService {
 	@Value("${hostname.suffix}")
 	private String hostname;
 
+	@Autowired
+	private IProductService productService;
+
 	@Override
 	public String getRecipient() {
 		return null;
@@ -63,15 +69,34 @@ public class MessageService implements IMessageService {
 	@Override
 	public AbstractMessage getMessageContent(final WorkflowTemplateObject workflowTemplateObject,
 
-			final String templateWithPlaceholders, final Notification notification, final User user)
+			final String templateWithPlaceholders, final Notification notification, final User user,
+			final Long templateId) throws IOException, TemplateException {
+
+		String message = getMessageContentString(workflowTemplateObject, templateWithPlaceholders, user, templateId);
+
+		return new OfferMessage(notification.getRecipients(), notification.getSubject(), message,
+				notification.getAttachments(), NotificationType.OFFER);
+	}
+
+	@Override
+	public synchronized String getMessageContentString(final WorkflowTemplateObject workflowTemplateObject,
+
+			final String templateWithPlaceholders, final User user, final Long templateId)
 			throws IOException, TemplateException {
+
+		final String randomId = UUID.randomUUID().toString();
 
 		final StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
 		cfg.setTemplateLoader(stringTemplateLoader);
-		stringTemplateLoader.putTemplate("template", unescapeString(templateWithPlaceholders));
-		Template template = cfg.getTemplate("template");
+
+		stringTemplateLoader.putTemplate("template" + randomId, unescapeString(templateWithPlaceholders));
+		Template template = cfg.getTemplate("template" + randomId);
 
 		Map<String, Object> mapping = new HashMap<>();
+
+		for (OrderPosition orderPosition : workflowTemplateObject.getOrderPositions()) {
+			orderPosition.setProduct(productService.getById(orderPosition.getProduct().getId()));
+		}
 
 		mapping.put("workflow", workflowTemplateObject);
 		mapping.put("customer", workflowTemplateObject.getCustomer());
@@ -84,8 +109,8 @@ public class MessageService implements IMessageService {
 		Writer writer = new StringWriter();
 		template.process(mapping, writer);
 
-		return new OfferMessage(notification.getRecipients(), notification.getSubject(), writer.toString(),
-				notification.getAttachments(), NotificationType.OFFER);
+		cfg.removeTemplateFromCache("template" + randomId);
+		return writer.toString();
 	}
 
 	private String unescapeString(String escapedString) {

@@ -34,10 +34,11 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.fileuploadmanagement.business.HtmlToPdfService;
+import dash.fileuploadmanagement.business.PdfGenerationFailedException;
 import dash.messagemanagement.business.IMessageService;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.notificationmanagement.domain.Notification;
-import dash.processmanagement.domain.Process;
 import dash.templatemanagement.domain.Template;
 import dash.templatemanagement.domain.WorkflowTemplateObject;
 import dash.usermanagement.domain.User;
@@ -53,6 +54,9 @@ public class TemplateService implements ITemplateService {
 
 	@Autowired
 	private IMessageService messageService;
+
+	@Autowired
+	private HtmlToPdfService htmlToPdfService;
 
 	@Override
 	public List<Template> getAll() {
@@ -139,7 +143,7 @@ public class TemplateService implements ITemplateService {
 		if (workflowTemplateObject != null && template != null) {
 			try {
 				return messageService.getMessageContent(workflowTemplateObject, template.getContent(), notification,
-						user);
+						user,template.getId());
 			} catch (NotFoundException ex) {
 				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw ex;
@@ -157,50 +161,40 @@ public class TemplateService implements ITemplateService {
 	}
 
 	@Override
-	public byte[] generatePdf(final long templateId, final Process process) throws NotFoundException {
-		if (process != null) {
+	public String getMessageContentStringByTemplateId(final long templateId,
+			final WorkflowTemplateObject workflowTemplateObject, final User user)
+			throws NotFoundException, IOException, TemplateException, TemplateCompilationException {
+
+		if (workflowTemplateObject != null) {
 			try {
-				return doIt("test", "test");
-			} catch (Exception ex) {
+				return messageService.getMessageContentString(workflowTemplateObject, getById(templateId).getContent(),
+						user, templateId);
+
+			} catch (NotFoundException ex) {
 				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
-				throw new NotFoundException(OFFER_NOT_FOUND);
+				throw ex;
+			} catch (TemplateException ex) {
+				throw new TemplateCompilationException(ex.getFTLInstructionStack());
+			} catch (IOException ex) {
+				throw new TemplateCompilationException(ex.getMessage());
 			}
+
 		} else {
 			NotFoundException nfex = new NotFoundException(OFFER_NOT_FOUND);
 			logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
 			throw nfex;
 		}
+
 	}
 
-	public byte[] doIt(String file, String message) throws Exception {
-		/*
-		 * // Create a document and add a page to it PDDocument document = new
-		 * PDDocument(); PDPage page = new PDPage(); document.addPage(page);
-		 * 
-		 * // Create a new font object selecting one of the PDF base fonts
-		 * PDFont font = PDType1Font.HELVETICA_BOLD;
-		 * 
-		 * // Start a new content stream which will "hold" the to be created
-		 * content PDPageContentStream contentStream = new
-		 * PDPageContentStream(document, page);
-		 * 
-		 * // Define a text content stream using the selected font, moving the
-		 * cursor and drawing the text "Hello World" contentStream.beginText();
-		 * contentStream.setFont(font, 12);
-		 * contentStream.moveTextPositionByAmount(100, 700);
-		 * contentStream.drawString("Hello World"); contentStream.endText();
-		 * 
-		 * // Make sure that the content stream is closed:
-		 * contentStream.close();
-		 * 
-		 * document.toString();
-		 * 
-		 * ByteArrayOutputStream out = new ByteArrayOutputStream(); try {
-		 * document.save(out); document.close(); } catch (Exception ex) {
-		 * logger.error(ex); }
-		 * 
-		 * return out.toByteArray();
-		 */
-		return null;
+	@Override
+	public byte[] getPdfBytemplateId(final long templateId, final WorkflowTemplateObject workflowTemplateObject,
+			final User user) throws NotFoundException, IOException, TemplateCompilationException,
+			PdfGenerationFailedException, TemplateException {
+
+		String message = getMessageContentStringByTemplateId(templateId, workflowTemplateObject, user);
+		return htmlToPdfService.genereatePdfFromHtml(message);
+
 	}
+
 }

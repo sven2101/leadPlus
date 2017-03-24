@@ -25,7 +25,6 @@ public class MessageContext {
 	@NotNull
 	private WorkflowTemplateObject workflowTemplateObject;
 
-	@NotNull
 	private Notification notification;
 
 	private User user;
