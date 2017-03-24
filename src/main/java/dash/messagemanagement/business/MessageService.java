@@ -18,6 +18,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,23 +63,28 @@ public class MessageService implements IMessageService {
 	@Override
 	public AbstractMessage getMessageContent(final WorkflowTemplateObject workflowTemplateObject,
 
-			final String templateWithPlaceholders, final Notification notification, final User user)
-			throws IOException, TemplateException {
+			final String templateWithPlaceholders, final Notification notification, final User user,
+			final Long templateId) throws IOException, TemplateException {
 
-		String message = getMessageContentString(workflowTemplateObject, templateWithPlaceholders, user);
+		String message = getMessageContentString(workflowTemplateObject, templateWithPlaceholders, user, templateId);
 
 		return new OfferMessage(notification.getRecipients(), notification.getSubject(), message,
 				notification.getAttachments(), NotificationType.OFFER);
 	}
 
 	@Override
-	public String getMessageContentString(final WorkflowTemplateObject workflowTemplateObject,
+	public synchronized String getMessageContentString(final WorkflowTemplateObject workflowTemplateObject,
 
-			final String templateWithPlaceholders, final User user) throws IOException, TemplateException {
+			final String templateWithPlaceholders, final User user, final Long templateId)
+			throws IOException, TemplateException {
+
+		final String randomId = UUID.randomUUID().toString();
+
 		final StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
 		cfg.setTemplateLoader(stringTemplateLoader);
-		stringTemplateLoader.putTemplate("template", unescapeString(templateWithPlaceholders));
-		Template template = cfg.getTemplate("template");
+
+		stringTemplateLoader.putTemplate("template" + randomId, unescapeString(templateWithPlaceholders));
+		Template template = cfg.getTemplate("template" + randomId);
 
 		Map<String, Object> mapping = new HashMap<>();
 
@@ -96,6 +102,8 @@ public class MessageService implements IMessageService {
 
 		Writer writer = new StringWriter();
 		template.process(mapping, writer);
+
+		cfg.removeTemplateFromCache("template" + randomId);
 		return writer.toString();
 	}
 

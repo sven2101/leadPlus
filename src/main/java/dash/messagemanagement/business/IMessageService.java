@@ -31,12 +31,12 @@ public interface IMessageService {
 
 	AbstractMessage getMessageContent(final WorkflowTemplateObject workflowTemplateObject,
 
-			String templateWithPlaceholders, final Notification notification, final User user)
+			String templateWithPlaceholders, final Notification notification, final User user, final Long templateId)
 			throws IOException, TemplateException;
 
 	AbstractMessage getWelcomeMessage(String templateName, Tenant tenant, User user) throws TemplateException;
 
 	String getMessageContentString(WorkflowTemplateObject workflowTemplateObject, String templateWithPlaceholders,
-			User user) throws IOException, TemplateException;
+			User user, final Long templateId) throws IOException, TemplateException;
 
 }

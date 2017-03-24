@@ -124,6 +124,7 @@ public class TemplateResource {
 			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException,
 			TemplateException {
 		Map<String, byte[]> x = new HashMap<>();
+
 		x.put("data", templateService.getPdfBytemplateId(templateId, messageContext.getWorkflowTemplateObject(),
 				messageContext.getUser()));
 		return x;

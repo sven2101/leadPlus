@@ -143,7 +143,7 @@ public class TemplateService implements ITemplateService {
 		if (workflowTemplateObject != null && template != null) {
 			try {
 				return messageService.getMessageContent(workflowTemplateObject, template.getContent(), notification,
-						user);
+						user,template.getId());
 			} catch (NotFoundException ex) {
 				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw ex;
@@ -168,7 +168,7 @@ public class TemplateService implements ITemplateService {
 		if (workflowTemplateObject != null) {
 			try {
 				return messageService.getMessageContentString(workflowTemplateObject, getById(templateId).getContent(),
-						user);
+						user, templateId);
 
 			} catch (NotFoundException ex) {
 				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);

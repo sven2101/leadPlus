@@ -71,6 +71,9 @@ class EditEmailDirective implements IDirective {
         scope.emailTemplates = templates.filter(t => t.templateTypes.indexOf(TemplateType.EMAIL) !== -1);
         scope.pdfTemplates = templates.filter(t => t.templateTypes.indexOf(TemplateType.PDF) !== -1);
 
+        console.log(templates);
+        console.log(scope.emailTemplates);
+        console.log(scope.pdfTemplates);
         if (scope.notification.id == null) {
             this.setDefaultTemplate(scope, scope.emailTemplates, TemplateType.EMAIL);
             this.setDefaultTemplate(scope, scope.pdfTemplates, TemplateType.PDF);
@@ -209,6 +212,7 @@ class EditEmailDirective implements IDirective {
 
     }
     setTemplate(scope: any, t: Template, templateType: TemplateType): void {
+        console.log(t);
         if (templateType === TemplateType.EMAIL) {
             scope.currentEmailTemplate = t;
             scope.notification.subject = t.subject;
