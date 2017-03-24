@@ -1,3 +1,18 @@
+
+CREATE TABLE IF NOT EXISTS template_types
+(
+  template_id BIGINT NOT NULL,
+  template_type CHARACTER VARYING(100) NOT NULL,
+ 
+  CONSTRAINT template_types_pk PRIMARY KEY (template_id,template_type),
+  CONSTRAINT template_typestemplate_fk FOREIGN KEY (template_id)
+      REFERENCES template (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+
 CREATE OR REPLACE function f_add_col(_tbl regclass, _col  text, _type regtype)
   RETURNS bool AS
 $func$
@@ -23,18 +38,3 @@ WHERE tenantkey='demo';
 ALTER TABLE  source
 ADD token_id character varying(50);
 
-CREATE SEQUENCE IF NOT EXISTS password_forgot_req_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 2
-  CACHE 1;
-  
-CREATE TABLE password_forgot_request
-(
-  id bigint NOT NULL DEFAULT nextval('password_forgot_req_id_seq'::regclass),
-  randomKey character varying(300) NOT NULL UNIQUE,
-  "timestamp" timestamp without time zone,
-  email character varying(50) NOT NULL,
-  CONSTRAINT password_forgot_request_pkey PRIMARY KEY (id)
-);
