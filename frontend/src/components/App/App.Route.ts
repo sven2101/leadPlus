@@ -220,17 +220,14 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
 
             await AuthService.awaitInit();
             $rootScope.user = TokenService.getItemFromLocalStorage(USER_STORAGE);
+
             if (AuthService.isLoggedIn() === true && $rootScope.user == null) {
                 AuthService.logout();
+            } else if (AuthService.isLoggedIn() === true) {
+                let SmtpService: SmtpService = $injector.get(SmtpServiceId);
+                await SmtpService.refreshCurrentSmtp();
             }
-            if (AuthService.isLoggedIn() === true && AuthService.isLoggedIn() === false) {
-                console.log("inject Dashboard");
-                let dashboardService: DashboardService = $injector.get(DashboardServiceId);
-                dashboardService.refreshTodos();
-                let notificationService: NotificationService = $injector.get(NotificationServiceId);
-                notificationService.refreshUserNotifications();
 
-            }
 
             $rootScope.$on("$routeChangeStart", function (event, next, current) {
                 if ((next.authenticate === true && !AuthService.isLoggedIn()) || (next.authenticate === false && AuthService.isLoggedIn())) {
