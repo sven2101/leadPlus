@@ -21,7 +21,7 @@
 						<td>{{user.email}}</td>
 						<td ng-if="user.role!='SUPERADMIN'">
 
-							<select ng-disabled="user.role=='ADMIN'&&settingCtrl.currentUser.role!='SUPERADMIN'" class="form-control" ng-change="settingCtrl.changeRole(user)"
+							<select ng-disabled="user.enabled===false||(user.role=='ADMIN'&&settingCtrl.currentUser.role!='SUPERADMIN')" class="form-control" ng-change="settingCtrl.changeRole(user)"
 								ng-model="user.role ">                            
 								<option value="USER ">{{ 'COMMON_USER' | translate }}</option>
 								<option value="ADMIN ">{{ 'COMMON_ADMIN' | translate }}</option>                                        
