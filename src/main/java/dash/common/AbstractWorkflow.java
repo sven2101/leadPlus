@@ -51,6 +51,7 @@ public abstract class AbstractWorkflow implements Request {
 	@Where(clause = "deleted <> '1'")
 	private Customer customer;
 
+	@ApiModelProperty(hidden = true)
 	@Size(max = 255)
 	@Column(name = "deliveryaddress_line", length = 255, nullable = true)
 	private String deliveryAddressLine;
@@ -85,6 +86,7 @@ public abstract class AbstractWorkflow implements Request {
 	@Column(length = 4096, nullable = true)
 	private String message;
 
+	@ApiModelProperty(hidden = true)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "deliverydate", nullable = true)
@@ -197,6 +199,7 @@ public abstract class AbstractWorkflow implements Request {
 		this.orderPositions = orderPositions;
 	}
 
+	@ApiModelProperty(hidden = true)
 	public Double getSumOrderpositions() {
 		double sum = 0;
 		if (this.orderPositions != null) {
@@ -207,6 +210,7 @@ public abstract class AbstractWorkflow implements Request {
 		return sum;
 	}
 
+	@ApiModelProperty(hidden = true)
 	public Double getOrderpositionsAndDelivery() {
 		return this.getSumOrderpositions() + this.deliveryCosts;
 	}

@@ -148,10 +148,12 @@ public class Product implements Serializable {
 		return productState;
 	}
 
+	@ApiModelProperty(hidden = true)
 	public String getProductStateGermanTranslation() {
 		return productState == null ? null : productState.getGermanTranslation();
 	}
 
+	@ApiModelProperty(hidden = true)
 	public String getProductStateEnglishTranslation() {
 		return productState == null ? null : productState.getEnglishTranslation();
 	}
