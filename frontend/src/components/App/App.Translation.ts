@@ -95,10 +95,11 @@ function config($translateProvider) {
             NO: "Nein",
 
             // Template
+            TEMPLATES: "Vorlagen",
             EMAIL_TEMPLATE: "Email Vorlagen",
             EMAIL_TEMPLATE_ERROR: "Fehler in der Vorlage",
             EMAIL_TEMPLATE_SELECT: "Keine Vorlage",
-
+            PDF_TEMPLATES: "PDF Vorlagen",
             SETTING_TEMPLATE_TEMPLATE_TYPE: "Vorlagentyp",
             SETTING_TEMPLATE_TYPE_SELECT: "Vorlagentyp wählen",
 
@@ -109,6 +110,7 @@ function config($translateProvider) {
             EMAIL_RECIPIENT_COMMA: "(mit Komma getrennt)",
             EMAIL_RECIPIENT: "Empfänger",
             EMAIL_SUBJECT: "Betreff",
+            EMAIL_SUBJECT_FILENAME: "Email Betreff (bei einer PDF-Datei Dateiname)",
             EMAIL_ATTACHMENT: "Anhang",
             EMAIL_ATTACHMENT_SELECT: "Datei auswählen",
             EMAIL_ATTACHMENT_CHANGE: "Ändern",
@@ -377,6 +379,7 @@ function config($translateProvider) {
             template: "E-Mail Vorlagen",
             SETTING_USER: "Benutzer",
             SETTING_USER_MANAGEMENT: "Benutzer Einstellungen",
+            SETTING_TEMPLATES: "Vorlagen",
             SETTING_EMAIL: "Email Vorlagen",
             SETTING_EMAIL_MANAGEMENT: "SMTP Einstellungen",
             SETTING_EMAIL_MANAGEMENT_SENDER: "Absendername",
@@ -732,10 +735,12 @@ function config($translateProvider) {
             NO: "No",
 
             // Template
+            TEMPLATES: "Templates",
             EMAIL_TEMPLATE: "Email templates",
             EMAIL_TEMPLATE_ERROR: "Error in template",
             EMAIL_TEMPLATE_SELECT: "No template",
             EMAIL_TEMPLATE_SYNTAX_SUCCESS: "Template is valid",
+            PDF_TEMPLATES: "PDF templates",
             SETTING_TEMPLATE_TEST_SYNTAX: "Test Template",
             SETTING_TEMPLATE_TEST_TEMPLATE: "Test Template before saving",
             SETTING_TEMPLATE_TEMPLATE_TYPE: "Type of Template",
@@ -1010,6 +1015,7 @@ function config($translateProvider) {
             template: "E-Mail Templates",
             SETTING_USER: "Users",
             SETTING_USER_MANAGEMENT: "User Management",
+            SETTING_TEMPLATES: "Templates",
             SETTING_EMAIL: "Email Templates",
             SETTING_EMAIL_MANAGEMENT: "SMTP Settings",
             SETTING_EMAIL_MANAGEMENT_SENDER: "Sender-Name",
