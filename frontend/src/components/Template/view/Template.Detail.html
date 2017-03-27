@@ -69,7 +69,7 @@
 								<div class="col-lg-2">
 									<div class="form-group">
 										<label>{{ 'SETTING_TEMPLATE_TEMPLATE_TYPE' | translate }}</label>
-										<select ng-model="templateCtrl.template.templateTypes" data-placeholder-text-multiple="templateCtrl.getTranslationByKey('SETTING_TEMPLATE_Template_TYPE_SELECT')"
+										<select ng-model="templateCtrl.template.templateTypes" data-placeholder-text-multiple="templateCtrl.getTranslationByKey('SETTING_TEMPLATE_TYPE_SELECT')"
 											chosen multiple>										
 											<option ng-value="t" ng-repeat="t in templateCtrl.templateType.getAll()">{{ t | translate }}</option>
 										</select>

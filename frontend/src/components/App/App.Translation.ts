@@ -100,6 +100,7 @@ function config($translateProvider) {
             EMAIL_TEMPLATE_SELECT: "Keine Vorlage",
 
             SETTING_TEMPLATE_TEMPLATE_TYPE: "Vorlagentyp",
+            SETTING_TEMPLATE_TYPE_SELECT: "Vorlagentyp wählen",
 
             EMAIL_TEMPLATE_SYNTAX_SUCCESS: "Vorlage ist valide",
             SETTING_TEMPLATE_TEST_SYNTAX: "Vorlage testen",
@@ -738,6 +739,7 @@ function config($translateProvider) {
             SETTING_TEMPLATE_TEST_SYNTAX: "Test Template",
             SETTING_TEMPLATE_TEST_TEMPLATE: "Test Template before saving",
             SETTING_TEMPLATE_TEMPLATE_TYPE: "Type of Template",
+            SETTING_TEMPLATE_TYPE_SELECT: "Select type of Template",
             EMAIL_RECIPIENT_COMMA: "(seperated by comma)",
             EMAIL_RECIPIENT: "Recipient",
             EMAIL_SUBJECT: "Subject",

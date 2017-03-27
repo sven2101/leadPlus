@@ -70,7 +70,6 @@ class TemplateController {
     }
 
     save() {
-        console.log(this.template);
         if (this.currentSelectedNotificationTypes.length > 0) {
             this.template.notificationTypeString = this.currentSelectedNotificationTypes.join(",");
         } else {
@@ -89,6 +88,7 @@ class TemplateController {
         }
 
         this.template = null;
+
         this.goBack();
     }
 
@@ -105,7 +105,6 @@ class TemplateController {
 
         } catch (error) {
             this.templateTested = false;
-            console.log(error);
             if (error.data != null && error.data.exception !== "dash.templatemanagement.business.TemplateCompilationException") {
                 return this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR"));
             }

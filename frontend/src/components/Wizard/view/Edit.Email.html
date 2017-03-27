@@ -31,7 +31,7 @@
 					<option ng-value="null">- {{ 'EMAIL_TEMPLATE_SELECT' | translate }} -</option>
 					<option ng-repeat="template in pdfTemplates" ng-value="template">{{template.name}}</option>
 				</select>
-					<a ng-disabled="disabled" class="btn btn-default input-group-addon" ng-click="generatePdfFromTemplate(currentPdfTemplate)">
+					<a ng-disabled="disabled||generatePdfFromTemplateInProgress===true" class="btn btn-default input-group-addon" ng-click="generatePdfFromTemplate(currentPdfTemplate)">
 						<i class="fa fa-refresh" aria-hidden="true"></i>
 					</a>
 				</div>
