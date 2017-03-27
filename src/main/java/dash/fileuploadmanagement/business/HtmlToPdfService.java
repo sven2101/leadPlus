@@ -67,9 +67,17 @@ public class HtmlToPdfService {
 			}
 
 			tempPdf = File.createTempFile("tempPdf", ".pdf", new File(TMP_DIR));
-
-			ProcessBuilder renderProcess = new ProcessBuilder(PHANTOMJS_EXE, configFile.getPath(), tempHtml.getPath(),
-					tempPdf.getPath());
+			List<String> arguments = new ArrayList<>();
+			if (OSValidator.isUnix()) {
+				arguments.add("nice");
+				arguments.add("-n");
+				arguments.add("10");
+			}
+			arguments.add(PHANTOMJS_EXE);
+			arguments.add(configFile.getPath());
+			arguments.add(tempHtml.getPath());
+			arguments.add(tempPdf.getPath());
+			ProcessBuilder renderProcess = new ProcessBuilder(arguments);
 			phantom = renderProcess.start();
 
 			long now = System.currentTimeMillis();
