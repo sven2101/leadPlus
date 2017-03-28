@@ -66,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	protected JwtTokenAuthenticationProcessingFilter buildJwtTokenAuthenticationProcessingFilter() throws Exception {
-		List<String> pathsToSkip = Arrays.asList(TOKEN_REFRESH_ENTRY_POINT, FORM_BASED_LOGIN_ENTRY_POINT, FILE_API);
+		List<String> pathsToSkip = Arrays.asList(TOKEN_REFRESH_ENTRY_POINT, FORM_BASED_LOGIN_ENTRY_POINT);
 		SkipPathRequestMatcher matcher = new SkipPathRequestMatcher(pathsToSkip, TOKEN_BASED_AUTH_ENTRY_POINT);
 		JwtTokenAuthenticationProcessingFilter filter = new JwtTokenAuthenticationProcessingFilter(failureHandler,
 				tokenExtractor, matcher);
@@ -128,7 +128,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(),
 						UsernamePasswordAuthenticationFilter.class)
 				.addFilterAfter(buildApiProcessingFilter(), JwtTokenAuthenticationProcessingFilter.class)
-				.addFilterAfter(buildJwtCookieAuthenticationFilter(), JwtTokenAuthenticationProcessingFilter.class)
+				// .addFilterAfter(buildJwtCookieAuthenticationFilter(),
+				// JwtTokenAuthenticationProcessingFilter.class)
 				.addFilterAfter(new TenantFallbackProcessingFilter(), JwtTokenAuthenticationProcessingFilter.class);
 
 	}

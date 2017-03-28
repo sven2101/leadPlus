@@ -219,6 +219,7 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
             } else if (AuthService.isLoggedIn() === true) {
                 let SmtpService: SmtpService = $injector.get(SmtpServiceId);
                 await SmtpService.refreshCurrentSmtp();
+                $rootScope.$broadcast(broadcastUserNotificationShouldChange);
             }
 
 
