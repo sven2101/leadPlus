@@ -76,8 +76,8 @@ public class AWSEmailService {
 		message.setContent(content);
 		content.addBodyPart(wrap);
 
-		Resource resourceEmployee = resourceLoader.getResource("classpath:/email/images/Andreas_Foitzik.png");
-		Resource resourceLogo = resourceLoader.getResource("classpath:/email/images/logo.png");
+		Resource resourceEmployee = resourceLoader.getResource("classpath:email/images/Andreas_Foitzik.png");
+		Resource resourceLogo = resourceLoader.getResource("classpath:email/images/logo.png");
 
 		Map<String, Resource> attachmentsFiles = new HashMap<>();
 		attachmentsFiles.put("employee", resourceEmployee);
@@ -146,8 +146,8 @@ public class AWSEmailService {
 	private Set<Attachment> getInlineAttachments() {
 		Set<Attachment> attachments = new HashSet<>();
 
-		Resource resourceEmployee = resourceLoader.getResource("classpath:/email/images/Andreas_Foitzik.png");
-		Resource resourceLogo = resourceLoader.getResource("classpath:/email/images/logo.png");
+		Resource resourceEmployee = resourceLoader.getResource("classpath:email/images/Andreas_Foitzik.png");
+		Resource resourceLogo = resourceLoader.getResource("classpath:email/images/logo.png");
 
 		Map<String, Resource> attachmentsFiles = new HashMap<>();
 		attachmentsFiles.put("employee", resourceEmployee);
