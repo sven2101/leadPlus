@@ -13,6 +13,7 @@
  *******************************************************************************/
 package dash.messagemanagement.business;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -21,7 +22,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -47,14 +47,19 @@ public class MessageService implements IMessageService {
 
 	private static final Logger logger = Logger.getLogger(MessageService.class);
 
-	@Autowired
-	private Configuration cfg;
-
 	@Value("${hostname.suffix}")
 	private String hostname;
 
-	@Autowired
+	private Configuration cfg;
+	private Configuration freeMarkerStringTemplatesConfigurer;
 	private IProductService productService;
+
+	public MessageService(Configuration cfg, Configuration freeMarkerStringTemplatesConfigurer,
+			IProductService productService) {
+		this.cfg = cfg;
+		this.freeMarkerStringTemplatesConfigurer = freeMarkerStringTemplatesConfigurer;
+		this.productService = productService;
+	}
 
 	@Override
 	public String getRecipient() {
@@ -68,7 +73,6 @@ public class MessageService implements IMessageService {
 
 	@Override
 	public AbstractMessage getMessageContent(final WorkflowTemplateObject workflowTemplateObject,
-
 			final String templateWithPlaceholders, final Notification notification, final User user,
 			final Long templateId) throws IOException, TemplateException {
 
@@ -87,10 +91,10 @@ public class MessageService implements IMessageService {
 		final String randomId = UUID.randomUUID().toString();
 
 		final StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
-		cfg.setTemplateLoader(stringTemplateLoader);
+		freeMarkerStringTemplatesConfigurer.setTemplateLoader(stringTemplateLoader);
 
 		stringTemplateLoader.putTemplate("template" + randomId, unescapeString(templateWithPlaceholders));
-		Template template = cfg.getTemplate("template" + randomId);
+		Template template = freeMarkerStringTemplatesConfigurer.getTemplate("template" + randomId);
 
 		Map<String, Object> mapping = new HashMap<>();
 
@@ -109,7 +113,7 @@ public class MessageService implements IMessageService {
 		Writer writer = new StringWriter();
 		template.process(mapping, writer);
 
-		cfg.removeTemplateFromCache("template" + randomId);
+		freeMarkerStringTemplatesConfigurer.removeTemplateFromCache("template" + randomId);
 		return writer.toString();
 	}
 
@@ -125,6 +129,7 @@ public class MessageService implements IMessageService {
 		String subject = "Welcome to lead+";
 
 		try {
+			cfg.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
 			template = cfg.getTemplate(templateName);
 			Map<String, Object> mapping = new HashMap<>();
 			if (user.getLanguage() == Language.DE)
@@ -150,6 +155,7 @@ public class MessageService implements IMessageService {
 		String message = "";
 		String subject = "lead+ Forgot Password";
 		try {
+			cfg.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
 			template = cfg.getTemplate(templateName);
 			Map<String, Object> mapping = new HashMap<>();
 			if (user.getLanguage() == Language.DE)
