@@ -22,6 +22,16 @@ public class FreemarkerConfig {
 
 	@Bean
 	@Primary
+	@Qualifier(value = "freeMarkerDirectoryTemplatesConfigurer")
+	public Configuration freeMarkerDirectoryTemplatesConfigurer(FreeMarkerConfigurationFactory factory)
+			throws IOException, TemplateException {
+		Properties settings = new Properties();
+		settings.putAll(this.properties.getSettings());
+		factory.setFreemarkerSettings(settings);
+		return factory.createConfiguration();
+	}
+
+	@Bean
 	@Qualifier(value = "freeMarkerStringTemplatesConfigurer")
 	public Configuration freeMarkerStringTemplatesConfigurer(FreeMarkerConfigurationFactory factory)
 			throws IOException, TemplateException {

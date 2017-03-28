@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -50,13 +52,16 @@ public class MessageService implements IMessageService {
 	@Value("${hostname.suffix}")
 	private String hostname;
 
-	private Configuration cfg;
+	private Configuration freeMarkerDirectoryTemplatesConfigurer;
 	private Configuration freeMarkerStringTemplatesConfigurer;
 	private IProductService productService;
 
-	public MessageService(Configuration cfg, Configuration freeMarkerStringTemplatesConfigurer,
+	@Autowired
+	public MessageService(
+			@Qualifier("freeMarkerDirectoryTemplatesConfigurer") Configuration freeMarkerDirectoryTemplatesConfigurer,
+			@Qualifier("freeMarkerStringTemplatesConfigurer") Configuration freeMarkerStringTemplatesConfigurer,
 			IProductService productService) {
-		this.cfg = cfg;
+		this.freeMarkerDirectoryTemplatesConfigurer = freeMarkerDirectoryTemplatesConfigurer;
 		this.freeMarkerStringTemplatesConfigurer = freeMarkerStringTemplatesConfigurer;
 		this.productService = productService;
 	}
@@ -129,8 +134,9 @@ public class MessageService implements IMessageService {
 		String subject = "Welcome to lead+";
 
 		try {
-			cfg.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
-			template = cfg.getTemplate(templateName);
+			freeMarkerDirectoryTemplatesConfigurer
+					.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
+			template = freeMarkerDirectoryTemplatesConfigurer.getTemplate(templateName);
 			Map<String, Object> mapping = new HashMap<>();
 			if (user.getLanguage() == Language.DE)
 				subject = "Willkommen bei lead+";
@@ -155,8 +161,9 @@ public class MessageService implements IMessageService {
 		String message = "";
 		String subject = "lead+ Forgot Password";
 		try {
-			cfg.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
-			template = cfg.getTemplate(templateName);
+			freeMarkerDirectoryTemplatesConfigurer
+					.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
+			template = freeMarkerDirectoryTemplatesConfigurer.getTemplate(templateName);
 			Map<String, Object> mapping = new HashMap<>();
 			if (user.getLanguage() == Language.DE)
 				subject = "lead+ Passwort vergessen";
