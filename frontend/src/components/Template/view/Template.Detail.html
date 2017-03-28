@@ -91,10 +91,11 @@
 							<div class="col-lg-12">
 								<!-- Subject -->
 								<div class="form-group" ng-class="{ 'has-error' : createTemplate.subject.$invalid && !createTemplate.subject.$pristine }">
-									<label>{{ 'EMAIL_SUBJECT_FILENAME' | translate }}</label>
+									<label>{{ 'EMAIL_SUBJECT_FILENAME' | translate }}<span style="color:red">*</span></label>
 									<span style="color:red" ng-show="createTemplate.subject.$error.maxlength && !createTemplate.subject.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
 									<span style="color:red" ng-show="createTemplate.subject.$error.required  && !createTemplate.subject.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
-									<input type="text" name="subject" class="form-control" ng-model="templateCtrl.template.subject" ng-maxlength="255">
+									<span style="color:red" ng-show="createTemplate.subject.$error.required  && !createTemplate.subject.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
+									<input required type="text" name="subject" class="form-control" ng-model="templateCtrl.template.subject" ng-maxlength="255">
 								</div>
 								<!-- Template -->
 								<div class="form-group ">

@@ -13,7 +13,6 @@
  *******************************************************************************/
 package dash.messagemanagement.business;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -134,8 +133,6 @@ public class MessageService implements IMessageService {
 		String subject = "Welcome to lead+";
 
 		try {
-			freeMarkerDirectoryTemplatesConfigurer
-					.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
 			template = freeMarkerDirectoryTemplatesConfigurer.getTemplate(templateName);
 			Map<String, Object> mapping = new HashMap<>();
 			if (user.getLanguage() == Language.DE)
@@ -161,8 +158,6 @@ public class MessageService implements IMessageService {
 		String message = "";
 		String subject = "lead+ Forgot Password";
 		try {
-			freeMarkerDirectoryTemplatesConfigurer
-					.setDirectoryForTemplateLoading(new File("src/main/resources/templates"));
 			template = freeMarkerDirectoryTemplatesConfigurer.getTemplate(templateName);
 			Map<String, Object> mapping = new HashMap<>();
 			if (user.getLanguage() == Language.DE)

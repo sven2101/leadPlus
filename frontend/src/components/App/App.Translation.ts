@@ -376,7 +376,7 @@ function config($translateProvider) {
             // Define setting elements
             user: "Benutzer",
             source: "Quellen",
-            template: "E-Mail Vorlagen",
+            template: "Vorlagen",
             SETTING_USER: "Benutzer",
             SETTING_USER_MANAGEMENT: "Benutzer Einstellungen",
             SETTING_TEMPLATES: "Vorlagen",
