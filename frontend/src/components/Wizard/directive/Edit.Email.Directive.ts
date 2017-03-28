@@ -220,7 +220,6 @@ class EditEmailDirective implements IDirective {
 
     async generatePdfFromTemplate(scope, template: Template, workflow: Lead | Offer, currentNotification: Notification): Promise<void> {
         if (scope.generatePdfFromTemplateInProgress === true) { return; }
-        scope.generatePdfFromTemplateInProgress = true;
         if (template == null || workflow == null) { return; }
         let attachment = new Attachment();
         let fileUpload = new FileUpload();
@@ -229,6 +228,7 @@ class EditEmailDirective implements IDirective {
         currentNotification.attachments = currentNotification.attachments == null ? [] : currentNotification.attachments;
         currentNotification.attachments.push(attachment);
         attachment["inProgress"] = true;
+        scope.generatePdfFromTemplateInProgress = true;
         try {
 
             let response = await this.TemplateService.generatePdfFromTemplateId(template.id, workflow);
