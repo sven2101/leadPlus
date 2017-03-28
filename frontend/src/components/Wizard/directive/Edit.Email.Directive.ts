@@ -20,12 +20,14 @@ class EditEmailDirective implements IDirective {
     };
 
     constructor(private WorkflowService: WorkflowService, private $rootScope, private TemplateService: TemplateService, private SummernoteService: SummernoteService,
-        private $sce, private $http, private $window, private $translate, private toaster, private $cookies, private TokenService: TokenService) { }
+        private $sce, private $http, private $window, private $translate, private toaster, private $cookies, private TokenService: TokenService, private FileSaver) { }
 
     static directiveFactory(): EditEmailDirective {
-        let directive: any = (WorkflowService: WorkflowService, $rootScope, TemplateService: TemplateService, SummernoteService: SummernoteService, $sce, $http, $window, $translate, toaster, $cookies, TokenService) =>
-            new EditEmailDirective(WorkflowService, $rootScope, TemplateService, SummernoteService, $sce, $http, $window, $translate, toaster, $cookies, TokenService);
-        directive.$inject = [WorkflowServiceId, $rootScopeId, TemplateServiceId, SummernoteServiceId, $sceId, $httpId, $windowId, $translateId, toasterId, $cookiesId, TokenServiceId];
+        let directive: any = (WorkflowService: WorkflowService, $rootScope, TemplateService: TemplateService,
+            SummernoteService: SummernoteService, $sce, $http, $window, $translate, toaster, $cookies, TokenService, FileSaver) =>
+            new EditEmailDirective(WorkflowService, $rootScope, TemplateService,
+                SummernoteService, $sce, $http, $window, $translate, toaster, $cookies, TokenService, FileSaver);
+        directive.$inject = [WorkflowServiceId, $rootScopeId, TemplateServiceId, SummernoteServiceId, $sceId, $httpId, $windowId, $translateId, toasterId, $cookiesId, TokenServiceId, FileSaverId];
         return directive;
     }
     static init: boolean = false;
@@ -124,16 +126,17 @@ class EditEmailDirective implements IDirective {
         let self = this;
         if (!isNullOrUndefined(fileUpload.content)) {
             let file = b64toBlob(fileUpload.content, fileUpload.mimeType);
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                window.open(reader.result, "_blank");
-            };
-            reader.readAsDataURL(file);
+            this.FileSaver.saveAs(file, fileUpload.filename);
             return;
         }
 
-        await scope.TokenService.setAccessTokenCookie();
-        window.open("/api/rest/files/open/content/" + fileUpload.id, "_blank");
+        // await scope.TokenService.setAccessTokenCookie();
+        // window.open("/api/rest/files/open/content/" + fileUpload.id, "_blank");
+
+        let response = await this.$http.get("/api/rest/files/open/content/" + fileUpload.id, { method: "GET", responseType: "arraybuffer" });
+        let contentType = response.headers("content-type");
+        let file = new Blob([response.data], { type: contentType });
+        this.FileSaver.saveAs(file, fileUpload.filename);
 
     }
 
@@ -274,7 +277,6 @@ class EditEmailDirective implements IDirective {
     }
 
     async generatePdf(scope: any, htmlString: string): Promise<Blob> {
-        let self = this;
         let response = await scope.$http.post("/api/rest/files/generate/pdf", { htmlString: htmlString }, { method: "POST", responseType: "arraybuffer" });
         let contentType = response.headers("content-type");
         let file = new Blob([response.data], { type: contentType });

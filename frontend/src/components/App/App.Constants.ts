@@ -25,8 +25,8 @@ const $sceId: string = "$sce";
 const $routeId: string = "$route";
 const $locationProviderId = "$locationProvider";
 const $compileProviderId = "$compileProvider";
-
 const SweetAlertId: string = "SweetAlert";
+const FileSaverId: string = "FileSaver";
 
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";
@@ -127,3 +127,4 @@ const moduleFootable: string = "ui.footable";
 const moduleSanitize: string = "ngSanitize";
 const moduleSweetAlert: string = "socialbase.sweetAlert";
 const moduleAngularChosen: string = "localytics.directives";
+const moduleNgFileSaver: string = "ngFileSaver"; 
