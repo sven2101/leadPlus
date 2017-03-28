@@ -19,10 +19,9 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: "org.flywaydb.flyway"
 
-
 jar {
     baseName = 'leadplus'
-    version =  '3.3.0beta2'
+    version =  '3.3.0beta6'
 }
 
 repositories {
@@ -103,6 +102,6 @@ task zipContent(type: Zip) {
    include '*/*/*/*/*/*' 
    include '*/*/*/*/*/*/*' 
    archiveName jar.baseName+'-'+jar.version +'.zip'
-   destinationDir(file('/build/'))
+   destinationDir(file('build/'))
 }
 build.finalizedBy(zipContent)
