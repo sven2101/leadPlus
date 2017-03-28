@@ -32,7 +32,7 @@ page.paperSize = {
             return '' +
                 '<div style="margin: 0 1cm 0 1cm; font-size: 0.65em">' +
                 '   <div style="color: #888; padding:20px 20px 0 10px; border-top: 1px solid #ccc;">' +
-                '       <span>REPORT FOOTER</span> ' +
+                '       <span></span> ' +
                 '       <span style="float:right">' + pageNum + ' / ' + numPages + '</span>' +
                 '   </div>' +
                 '</div>';
