@@ -17,7 +17,7 @@
 					<option ng-value="null">- {{ 'EMAIL_TEMPLATE_SELECT' | translate }} -</option>
 					<option ng-repeat="template in emailTemplates" ng-value="template">{{template.name}}</option>
 				</select>
-					<a ng-disabled="disabled" class="btn btn-default input-group-addon" ng-click="generateContent(currentEmailTemplate, workflow,notification)">
+					<a ng-disabled="disabled||currentEmailTemplate===null" class="btn btn-default input-group-addon" ng-click="generateContent(currentEmailTemplate, workflow,notification)">
 						<i class="fa fa-refresh" aria-hidden="true"></i>
 					</a>
 				</div>
@@ -27,11 +27,11 @@
 			<div class="col-sm-6 form-group">
 				<label>{{ 'PDF_TEMPLATES' | translate }}</label>
 				<div class="input-group m-b">
-					<select ng-model="currentPdfTemplate" style="width:100%" ng-disabled="disabled" class="form-control" ng-change="generatePdfFromTemplate(currentPdfTemplate)"> 
+					<select ng-model="currentPdfTemplate" style="width:100%" ng-disabled="disabled||generatePdfFromTemplateInProgress===true" class="form-control" ng-change="generatePdfFromTemplate(currentPdfTemplate)"> 
 					<option ng-value="null">- {{ 'EMAIL_TEMPLATE_SELECT' | translate }} -</option>
 					<option ng-repeat="template in pdfTemplates" ng-value="template">{{template.name}}</option>
 				</select>
-					<a ng-disabled="disabled||generatePdfFromTemplateInProgress===true" class="btn btn-default input-group-addon" ng-click="generatePdfFromTemplate(currentPdfTemplate)">
+					<a ng-disabled="disabled||generatePdfFromTemplateInProgress===true||currentPdfTemplate===null" class="btn btn-default input-group-addon" ng-click="generatePdfFromTemplate(currentPdfTemplate)">
 						<i class="fa fa-refresh" aria-hidden="true"></i>
 					</a>
 				</div>
