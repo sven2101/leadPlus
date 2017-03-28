@@ -104,13 +104,6 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 authenticate: false,
                 package: "basic"
             })
-            .when("/tenants/registration",
-            {
-                templateUrl: "components/Tenant/registration/view/Registration.html",
-                controller: "RegistrationController",
-                authenticate: false,
-                controllerAs: "registrationCtrl"
-            })
             .when("/login",
             {
                 templateUrl: "components/Login/view/Login.html",

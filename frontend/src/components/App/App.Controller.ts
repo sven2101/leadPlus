@@ -153,7 +153,6 @@ class AppController {
                     });
             }
             else {
-                // TODO remove after Safari testing          
                 let lang: string = self.window.navigator.language || self.window.navigator.userLanguage;
                 if (lang.indexOf("de") !== -1) {
                     lang = "DE";
