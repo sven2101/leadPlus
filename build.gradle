@@ -19,7 +19,7 @@ apply plugin: "org.flywaydb.flyway"
 
 jar {
     baseName = 'leadplus'
-    version =  '3.2.0'
+    version =  '3.2.1'
 }
 
 repositories {
