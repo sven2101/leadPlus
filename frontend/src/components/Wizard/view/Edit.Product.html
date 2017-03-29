@@ -218,7 +218,7 @@
 							<th class="col-md-5">
 								<select class="form-control" ng-model="currentProductId" ng-disabled="!editable">
 									<option value="-1" selected disabled hidden>{{ 'LEAD_EDIT_SELECT_PRODUCT' | translate }}</option>                                     
-									<option value="{{product.id}}" ng-repeat="product in productService.getActiveProducts()">{{product.name}} {{product.netPrice | currency:'\u20AC'}}</option>                                          
+									<option value="{{product.id}}" ng-repeat="product in productService.getActiveProducts()">{{product.name}} - {{product.productNumber}} - {{product.netPrice | currency:'\u20AC'}}</option>                                          
 								</select>
 							</th>
 							<th class="col-md-2"></th>
