@@ -242,7 +242,7 @@ class ProductResource {
             getAllProducts: { url: "/api/rest/products", method: "GET", isArray: true },
             createProduct: { url: "/api/rest/products", method: "POST" },
             updateProduct: { url: "/api/rest/products", method: "PUT" },
-            deleteProduct: { url: "/api/rest/products", method: "DELETE" },
+            deleteProduct: { url: "/api/rest/products/:id", method: "DELETE" },
             uploadImage: {
                 url: "/api/rest/products/:id/image", params: { file: "@file" }, method: "POST", transformRequest: angular.identity,
                 headers: { "Content-Type": undefined }
@@ -276,7 +276,7 @@ class CustomerResource {
             getAllCustomerBySearchText: { url: "/api/rest/customer/search/:searchtext", method: "GET", isArray: true },
             createCustomer: { url: "/api/rest/customer", method: "POST" },
             updateCustomer: { url: "/api/rest/customer", method: "PUT" },
-            deleteCustomer: { url: "/api/rest/customer", method: "DELETE" }
+            deleteCustomer: { url: "/api/rest/customer/:id", method: "DELETE" }
         });
     }
 }

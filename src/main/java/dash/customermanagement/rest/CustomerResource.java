@@ -63,7 +63,7 @@ public class CustomerResource {
 		return customerService.getAllByPage(start, length, searchtext, allCustomers);
 
 	}
-	
+
 	@ApiOperation(value = "Returns a list of customer by page.", notes = "")
 	@RequestMapping(value = "/search/{searchtext}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -103,7 +103,6 @@ public class CustomerResource {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Delete a single customer.", notes = "You have to provide a valid customer ID.")
 	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
 		customerService.delete(id);

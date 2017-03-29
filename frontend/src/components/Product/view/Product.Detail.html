@@ -92,6 +92,7 @@
                     <div>
                         <a class="btn btn-success" href="#/product"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;{{ 'COMMON_BACK' | translate }}</a>
                         <button type="button" class="btn btn-success" ng-disabled="createProductForm.$invalid" ng-click="productDetailCtrl.savePicture()" style="float:right;"><i class="fa fa-save "></i>&nbsp;{{ 'COMMON_SAVE' | translate }}</button>
+                        <button ng-if="productDetailCtrl.isNewProduct===false" type="button" class="btn btn-danger" ng-click="productDetailCtrl.deleteProduct()" style="float:right;margin-right: 3px;"><i class="fa fa-trash "></i>&nbsp;{{ 'COMMON_DELETE' | translate }}</button>
                     </div>
 				</div>
 			</div>
