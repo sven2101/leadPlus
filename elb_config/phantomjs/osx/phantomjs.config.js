@@ -53,6 +53,9 @@ var header ='<!DOCTYPE html>'+
 				// '<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/assets.css" />'+
 				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/style.css" />'+
 				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/font-awesome.min.css" />'+
+				'<style type="text/css" media="all">'+
+        				'html { margin:0; zoom: 1;  }'+
+    				'</style>'+
 			'</head>'+
 			'<body>'+
 				'<div style="padding:30px">';

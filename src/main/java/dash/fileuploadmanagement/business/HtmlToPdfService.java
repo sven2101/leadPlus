@@ -22,8 +22,9 @@ import dash.common.OSValidator;
 public class HtmlToPdfService {
 
 	public static final String PHANTOMJS_ROOT_DIR = getRootPath() + "/phantomjs";
-	public static final String PHANTOMJS_CONFIG_FILE = PHANTOMJS_ROOT_DIR + "/phantomjs.config.js";
-	public static final String PHANTOMJS_EXE = PHANTOMJS_ROOT_DIR + "/" + OSValidator.getOS() + "/phantomjs";
+	public static final String PHANTOMJS_ROOT_DIR_OS = PHANTOMJS_ROOT_DIR + "/" + OSValidator.getOS();
+	public static final String PHANTOMJS_CONFIG_FILE = PHANTOMJS_ROOT_DIR_OS + "/phantomjs.config.js";
+	public static final String PHANTOMJS_EXE = PHANTOMJS_ROOT_DIR_OS + "/phantomjs";
 	public static final String TMP_DIR = PHANTOMJS_ROOT_DIR + "/tmp";
 
 	private static String getRootPath() {

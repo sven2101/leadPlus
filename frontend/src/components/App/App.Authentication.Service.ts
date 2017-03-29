@@ -54,7 +54,9 @@ class AuthService {
                     defaultVat: user.defaultVat,
                     smtpKey: encodeURIComponent(hashPasswordPbkdf2(hashedPassword, salt)),
                     picture: user.picture,
-                    thumbnail: user.thumbnail
+                    thumbnail: user.thumbnail,
+                    defaultBCC: user.defaultBCC,
+                    defaultCC: user.defaultCC
                 };
 
                 this.rootScope.tenant = {

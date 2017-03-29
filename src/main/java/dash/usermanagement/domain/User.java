@@ -120,11 +120,19 @@ public class User implements UserDetails, Principal {
 	@NotNull
 	@Column(name = "enabled", nullable = false)
 	private boolean enabled;
-	
+
 	@NotNull
 	@Digits(integer = 4, fraction = 2)
 	@Column(name = "default_vat", nullable = false)
 	private Double defaultVat;
+
+	@Size(max = 255)
+	@Column(name = "default_bcc", nullable = false)
+	private String defaultBCC;
+
+	@Size(max = 255)
+	@Column(name = "default_cc", nullable = false)
+	private String defaultCC;
 
 	public User() {
 	}
@@ -259,7 +267,6 @@ public class User implements UserDetails, Principal {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
 
 	public Double getDefaultVat() {
 		return defaultVat;
@@ -267,6 +274,22 @@ public class User implements UserDetails, Principal {
 
 	public void setDefaultVat(Double defaultVat) {
 		this.defaultVat = defaultVat;
+	}
+
+	public String getDefaultBCC() {
+		return defaultBCC;
+	}
+
+	public void setDefaultBCC(String defaultBCC) {
+		this.defaultBCC = defaultBCC;
+	}
+
+	public String getDefaultCC() {
+		return defaultCC;
+	}
+
+	public void setDefaultCC(String defaultCC) {
+		this.defaultCC = defaultCC;
 	}
 
 	@Override
@@ -301,6 +324,8 @@ public class User implements UserDetails, Principal {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((defaultBCC == null) ? 0 : defaultBCC.hashCode());
+		result = prime * result + ((defaultCC == null) ? 0 : defaultCC.hashCode());
 		result = prime * result + ((defaultVat == null) ? 0 : defaultVat.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + (enabled ? 1231 : 1237);
@@ -329,6 +354,16 @@ public class User implements UserDetails, Principal {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
+		if (defaultBCC == null) {
+			if (other.defaultBCC != null)
+				return false;
+		} else if (!defaultBCC.equals(other.defaultBCC))
+			return false;
+		if (defaultCC == null) {
+			if (other.defaultCC != null)
+				return false;
+		} else if (!defaultCC.equals(other.defaultCC))
+			return false;
 		if (defaultVat == null) {
 			if (other.defaultVat != null)
 				return false;
@@ -401,14 +436,6 @@ public class User implements UserDetails, Principal {
 		} else if (!username.equals(other.username))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", firstname=" + firstname + ", phone=" + phone
-				+ ", skype=" + skype + ", fax=" + fax + ", job=" + job + ", lastname=" + lastname + ", email=" + email
-				+ ", password=" + password + ", role=" + role + ", picture=" + picture + ", thumbnail=" + thumbnail
-				+ ", language=" + language + ", enabled=" + enabled + ", default_vat=" + defaultVat + "]";
 	}
 
 	@Override
