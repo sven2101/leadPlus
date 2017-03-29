@@ -50,21 +50,19 @@ class ProfileService {
         this.location = $location;
     }
 
-    updateProfilInfo(user: User): Promise<User> {
-        let defer = this.q.defer();
-        let self = this;
+    async updateProfilInfo(user: User): Promise<User> {
 
-        this.userResource.update(user).$promise.then(function (updatedUser: User) {
-            self.updateRootScope(updatedUser);
-            self.TokenService.saveItemToLocalStorage(USER_STORAGE, self.rootScope.user);
-            self.rootScope.changeLanguage(self.rootScope.user.language);
-            self.toaster.pop("success", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
-            defer.resolve(updatedUser);
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
-            defer.reject(self.rootScope.user);
-        });
-        return defer.promise;
+        try {
+            let updatedUser: User = await this.userResource.update(user).$promise;
+            this.rootScope.user = updatedUser;
+            this.TokenService.saveItemToLocalStorage(USER_STORAGE, this.rootScope.user);
+            this.rootScope.changeLanguage(this.rootScope.user.language);
+            this.toaster.pop("success", "", this.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_SUCCESS"));
+            return updatedUser;
+        }
+        catch (error) {
+            this.toaster.pop("error", "", this.translate.instant("PROFILE_TOAST_PROFILE_INFORMATION_ERROR"));
+        }
     }
 
     updateProfileImage(user: User) {
@@ -121,17 +119,7 @@ class ProfileService {
         return defer.promise;
     }
 
-    updateRootScope(user: User) {
-        this.rootScope.user.email = user.email;
-        this.rootScope.user.firstname = user.firstname;
-        this.rootScope.user.lastname = user.lastname;
-        this.rootScope.user.phone = user.phone;
-        this.rootScope.user.language = user.language;
-        this.rootScope.user.skype = user.skype;
-        this.rootScope.user.job = user.job;
-        this.rootScope.user.fax = user.fax;
-        this.rootScope.user.defaultVat = user.defaultVat;
-    }
+
 
     getTheFiles($files) {
         this.formdata.append("file", $files[0]);

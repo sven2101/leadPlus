@@ -110,21 +110,11 @@ class ProfileController {
         this.rootscope.$broadcast("saveCroppedImage");
     }
 
-    updateProfilInfo() {
-        this.profileService.updateProfilInfo(this.currentUser).then((result) => this.currentUser = result, (error) => { this.reduceCurrentUserInfo(); });
+    async updateProfilInfo(): Promise<void> {
+        this.currentUser = await this.profileService.updateProfilInfo(this.currentUser);
     }
 
-    reduceCurrentUserInfo() {
-        this.currentUser.email = this.rootscope.user.email;
-        this.currentUser.firstname = this.rootscope.user.firstname;
-        this.currentUser.lastname = this.rootscope.user.lastname;
-        this.currentUser.phone = this.rootscope.user.phone;
-        this.currentUser.language = this.rootscope.user.language;
-        this.currentUser.skype = this.rootscope.user.skype;
-        this.currentUser.job = this.rootscope.user.job;
-        this.currentUser.fax = this.rootscope.user.fax;
-        this.currentUser.defaultVat = this.rootscope.user.defaultVat;
-    }
+
 
     updateProfileImage(user: User) {
         this.profileService.updateProfileImage(user);

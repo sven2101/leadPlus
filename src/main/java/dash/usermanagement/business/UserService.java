@@ -158,6 +158,8 @@ public class UserService implements IUserService {
 					updateUser.setFax(user.getFax());
 					updateUser.setJob(user.getJob());
 					updateUser.setDefaultVat(user.getDefaultVat());
+					updateUser.setDefaultBCC(user.getDefaultBCC());
+					updateUser.setDefaultCC(user.getDefaultCC());
 					return save(updateUser);
 
 				} else {

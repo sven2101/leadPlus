@@ -18,6 +18,8 @@ class User {
     fax: string;
     job: string;
     defaultVat: number;
+    defaultBCC: number;
+    defaultCC: number;
     authorization: string;
 
     constructor() {

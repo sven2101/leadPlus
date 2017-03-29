@@ -69,6 +69,7 @@ class EditEmailDirective implements IDirective {
         scope.toLocalDate = (timestamp) => this.toLocalDate(timestamp, scope);
         scope.generatePdf = (htmlString) => this.generatePdf(scope, htmlString);
         scope.generatePdfFromTemplate = (template) => this.generatePdfFromTemplate(scope, template, scope.workflow, scope.notification);
+        this.setDefaultBCCAndCC(scope.notification);
         let templates = await this.TemplateService.getAll();
         scope.emailTemplates = templates.filter(t => t.templateTypes.indexOf(TemplateType.EMAIL) !== -1);
         scope.pdfTemplates = templates.filter(t => t.templateTypes.indexOf(TemplateType.PDF) !== -1);
@@ -282,7 +283,10 @@ class EditEmailDirective implements IDirective {
         let file = new Blob([response.data], { type: contentType });
         file["name"] = "Angebot.pdf";
         return file;
-
+    }
+    setDefaultBCCAndCC(notification: Notification): void {
+        notification.recipientsBCC = this.$rootScope.user.defaultBCC;
+        notification.recipientsCC = this.$rootScope.user.defaultCC;
     }
 
 }
