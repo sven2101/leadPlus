@@ -73,8 +73,8 @@ class AuthService {
                     let smtp: Smtp = this.SmtpService.currentSmtp;
                     if (smtp.smtpPasswordNull) {
                         let self = this;
-                        let resetPromise = self.rootScope.changeLanguage(this.rootScope.user.language);
-                        this.sweetAlert.swal({
+                        self.rootScope.changeLanguage(this.rootScope.user.language);
+                        let resetPromise = this.sweetAlert.swal({
                             title: self.translate.instant("SMTP_CONNECTION"),
                             text: self.translate.instant("SAFETY_NOTE"),
                             type: "warning",
