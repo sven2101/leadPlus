@@ -11,7 +11,6 @@ import java.util.Set;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -21,6 +20,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.log4j.Logger;
 import org.apache.pdfbox.io.IOUtils;
@@ -92,7 +92,7 @@ public class AWSEmailService {
 
 			DataSource fds;
 			try {
-				fds = new FileDataSource(entry.getValue().getFile());
+				fds = new ByteArrayDataSource(entry.getValue().getInputStream(), "image/png");
 				attachment.setDataHandler(new DataHandler(fds));
 				attachment.setHeader("Content-ID", "<" + entry.getKey() + ">");
 				attachment.setFileName(fds.getName());
