@@ -1,9 +1,12 @@
 package dash.fileuploadmanagement.business;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.nio.file.Files;
@@ -11,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
@@ -42,6 +46,7 @@ public class HtmlToPdfService {
 
 		int exitCode = 0;
 		BufferedReader errorReader = null;
+		BufferedWriter out = null;
 		InputStreamReader inputStreamReader = null;
 		PrintWriter writer = null;
 		File tempHtml = null;
@@ -54,17 +59,22 @@ public class HtmlToPdfService {
 			files = new ArrayList<>();
 			new File(TMP_DIR).mkdirs();
 			String htmlString = extractBase64Images(htmlStringWithImageInline, files);
+			String tmpHtmlId = UUID.randomUUID().toString();
 
-			tempHtml = File.createTempFile("tempHtml", ".html", new File(TMP_DIR));
-			writer = new PrintWriter(tempHtml);
-			writer.print(HtmlCleaner.cleanHtmlForPdf(htmlString));
-			writer.close();
+			String tmpHtmlPath = TMP_DIR + "/" + tmpHtmlId + "tempHtml.html";
 
+			out = new BufferedWriter(
+					new OutputStreamWriter(new FileOutputStream(TMP_DIR + "/" + tmpHtmlId + "tempHtml.html"), "UTF-8"));
+
+			out.write(HtmlCleaner.cleanHtmlForPdf(htmlString));
+			out.close();
 			File configFile = null;
 			if (OSValidator.isWindows()) {
 				configFile = Paths.get(new URI("file:/" + PHANTOMJS_CONFIG_FILE)).toFile();
+				tempHtml = Paths.get(new URI("file:/" + tmpHtmlPath)).toFile();
 			} else {
 				configFile = Paths.get(new URI("file://" + PHANTOMJS_CONFIG_FILE)).toFile();
+				tempHtml = Paths.get(new URI("file://" + tmpHtmlPath)).toFile();
 			}
 
 			tempPdf = File.createTempFile("tempPdf", ".pdf", new File(TMP_DIR));
@@ -75,14 +85,16 @@ public class HtmlToPdfService {
 				arguments.add("10");
 			}
 			arguments.add(PHANTOMJS_EXE);
+			arguments.add("--output-encoding=utf8");
+			arguments.add("--script-encoding=utf8");
 			arguments.add(configFile.getPath());
-			arguments.add(tempHtml.getPath());
+			arguments.add(tmpHtmlPath);
 			arguments.add(tempPdf.getPath());
 			ProcessBuilder renderProcess = new ProcessBuilder(arguments);
 			phantom = renderProcess.start();
 
 			long now = System.currentTimeMillis();
-			long timeoutInMillis = 1000L * 60;
+			long timeoutInMillis = 1000L * 20;
 			long finish = now + timeoutInMillis;
 			while (isAlive(phantom) && (System.currentTimeMillis() < finish)) {
 				Thread.sleep(100);
@@ -93,15 +105,16 @@ public class HtmlToPdfService {
 			}
 
 			exitCode = phantom.waitFor();
-			/*
-			 * BufferedReader debugReader = new BufferedReader(new
-			 * InputStreamReader(phantom.getInputStream())); StringBuilder
-			 * debugBuilder = new StringBuilder(); String debugLine = null;
-			 * while ((debugLine = debugReader.readLine()) != null) {
-			 * debugBuilder.append(debugLine);
-			 * debugBuilder.append(System.getProperty("line.separator")); }
-			 * String debugConsoleOutput = debugBuilder.toString();
-			 */
+
+			BufferedReader debugReader = new BufferedReader(new InputStreamReader(phantom.getInputStream()));
+			StringBuilder debugBuilder = new StringBuilder();
+			String debugLine = null;
+			while ((debugLine = debugReader.readLine()) != null) {
+				debugBuilder.append(debugLine);
+				debugBuilder.append(System.getProperty("line.separator"));
+			}
+			String debugConsoleOutput = debugBuilder.toString();
+
 			inputStreamReader = new InputStreamReader(phantom.getErrorStream());
 			errorReader = new BufferedReader(inputStreamReader);
 			StringBuilder errorBuilder = new StringBuilder();

@@ -9,8 +9,10 @@ public class HtmlCleaner {
 		if (html == null) {
 			return null;
 		}
-		return Jsoup.clean(html, Whitelist.relaxed().addAttributes(":all", "style").addAttributes(":all", "class")
-				.addProtocols("img", "src", "data").addAttributes("img", "width").addTags("style"));
+		return Jsoup.clean(html,
+				Whitelist.relaxed().addAttributes(":all", "style").addAttributes(":all", "class")
+						.addProtocols("img", "src", "data").addAttributes("img", "width").addAttributes("font", "face")
+						.addTags("style").addTags("font"));
 	}
 
 	public static String cleanHtmlForPdf(String html) {
@@ -18,7 +20,8 @@ public class HtmlCleaner {
 			return null;
 		}
 
-		return Jsoup.clean(html, ExtendedHtmlWhitelist.relaxed().addAttributes(":all", "style")
-				.addAttributes(":all", "class").addAttributes("img", "width").addTags("style"));
+		return Jsoup.clean(html,
+				ExtendedHtmlWhitelist.relaxed().addAttributes(":all", "style").addAttributes(":all", "class")
+						.addAttributes("img", "width").addAttributes("font", "face").addTags("style").addTags("font"));
 	}
 }
