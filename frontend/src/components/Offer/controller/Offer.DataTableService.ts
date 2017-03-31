@@ -9,7 +9,7 @@ const openDataOfferRoute: string = "/api/rest/processes/workflow/OFFER/state/OFF
 
 class OfferDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId, TokenServiceId, $httpId];
 
     workflowService: WorkflowService;
     workflowDatatableService: WorkflowDatatableService;
@@ -22,7 +22,7 @@ class OfferDataTableService implements IDatatableService {
     compile;
     rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService, private TokenService: TokenService, private $http) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -36,16 +36,10 @@ class OfferDataTableService implements IDatatableService {
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
-            .withOption("ajax", {
-                url: openDataOfferRoute,
-                error: function (xhr, error, thrown) {
-                    handleError(xhr);
-                },
-                type: "GET",
-                "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
-                }
+            .withOption("ajax", function (data, callback, settings) {
+                self.$http.get(openDataOfferRoute).then(function (response) {
+                    callback(response.data);
+                });
             })
             .withOption("stateSave", false)
             .withDOM(this.workflowDatatableService.getDomString())
@@ -63,6 +57,12 @@ class OfferDataTableService implements IDatatableService {
     configRow(row: any, data: Process) {
         let currentDate = moment(newTimestamp(), "DD.MM.YYYY");
         let offerDate = moment(data.offer.timestamp, "DD.MM.YYYY");
+        let self = this;
+        $(row).attr("id", "id_" + data.id);
+        $("td:not(:last-child)", row).unbind("click");
+        $("td:not(:last-child)", row).bind("click", function () {
+            self.rootScope.$broadcast(broadcastClickChildrow, data);
+        }).css("cursor", "pointer");
 
         if ((currentDate["businessDiff"](offerDate, "days") > 3 && data.status === "OFFER")
             || (currentDate["businessDiff"](offerDate, "days") > 5 && data.status === "FOLLOWUP")) {
@@ -80,8 +80,8 @@ class OfferDataTableService implements IDatatableService {
     getDTColumnConfiguration(addDetailButton: Function, addStatusStyle: Function, addActionsButtons: Function): Array<any> {
         let self = this;
         return [
-            this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
-                .renderWith(addDetailButton),
+            /*this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
+                .renderWith(addDetailButton),*/
             this.DTColumnBuilder.newColumn("offer.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("offer.customer.lastname").withTitle(

@@ -1,0 +1,6 @@
+<script>
+    window.onmessage = function (e) {
+        var payload = JSON.parse(e.data);
+        localStorage.setItem(payload.key, JSON.stringify(payload.data));
+    };
+</script>

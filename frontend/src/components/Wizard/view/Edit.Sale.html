@@ -50,7 +50,7 @@
 				<span style="color:red" ng-show="sform.saleProfit.$error.max && !sform.saleProfit.$pristine">{{ 'COMMON_VALIDATE_TOO_BIG'| translate }}</span>
 				<div class="input-group">
 					<span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
-					<div  disabled="true" class="form-control currency" >{{editWorkflowUnit.saleProfit | number : 2}}</div>
+					<div  name="saleProfit" disabled="true" class="form-control currency">{{editWorkflowUnit.saleProfit|number:2}}</div>
 				</div>
 			</div>
 		</div>

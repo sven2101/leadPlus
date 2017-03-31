@@ -33,7 +33,7 @@ class CustomerService {
         this.http = $http;
         this.toaster = toaster;
         this.translate = $translate;
-        this.getAllCustomerByPage(1, 20, "noSearchText", false);
+        // this.getAllCustomerByPage(1, 20, "noSearchText", false);
     }
 
     async saveCustomer(customer: Customer, insert: boolean = true): Promise<Customer> {

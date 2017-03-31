@@ -39,6 +39,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.fileuploadmanagement.domain.FileUpload;
 import io.swagger.annotations.ApiModelProperty;
@@ -106,6 +107,32 @@ public class Product implements Serializable {
 	@Column(name = "productnumber")
 	private String productNumber;
 
+	@JsonIgnore
+	private String getBase64ImgTag() {
+		if (getPicture() == null || getPicture().getContent() == null)
+			return null;
+		String base64String = org.apache.commons.codec.binary.Base64.encodeBase64String(getPicture().getContent());
+		return "<img src=\"data:image/jpeg;base64," + base64String;
+	}
+
+	@JsonIgnore
+	public String getProductPictureSmall() {
+		String base64ImgTag = getBase64ImgTag();
+		return base64ImgTag == null ? null : base64ImgTag + "\" width=\"50\" style=\"max-width:50px\">";
+	}
+
+	@JsonIgnore
+	public String getProductPictureMedium() {
+		String base64ImgTag = getBase64ImgTag();
+		return base64ImgTag == null ? null : base64ImgTag + "\" width=\"100\" style=\"max-width:100px\">";
+	}
+
+	@JsonIgnore
+	public String getProductPictureBig() {
+		String base64ImgTag = getBase64ImgTag();
+		return base64ImgTag == null ? null : base64ImgTag + "\" width=\"200\" style=\"max-width:200px\">";
+	}
+
 	public Product() {
 	}
 
@@ -121,10 +148,12 @@ public class Product implements Serializable {
 		return productState;
 	}
 
+	@ApiModelProperty(hidden = true)
 	public String getProductStateGermanTranslation() {
 		return productState == null ? null : productState.getGermanTranslation();
 	}
 
+	@ApiModelProperty(hidden = true)
 	public String getProductStateEnglishTranslation() {
 		return productState == null ? null : productState.getEnglishTranslation();
 	}

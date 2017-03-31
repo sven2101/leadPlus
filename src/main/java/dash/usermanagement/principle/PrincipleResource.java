@@ -21,14 +21,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import dash.exceptions.NotFoundException;
 import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 
-@RestController
-@RequestMapping(value = { "/user", "/me" })
+// @RestController
+// @RequestMapping(value = { "/user", "/me" })
 public class PrincipleResource {
 
 	@Autowired

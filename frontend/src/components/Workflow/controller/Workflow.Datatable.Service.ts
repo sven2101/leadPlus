@@ -6,7 +6,7 @@
 /// <reference path="../../Product/model/OrderPosition.Model.ts" />
 /// <reference path="../../Commentary/model/Commentary.Model.ts" />
 /// <reference path="../../app/App.Common.ts" />
-/// <reference path="../../app/App.Common.ts" />
+/// <reference path="../../app/App.TokenService.ts" />
 /// <reference path="../../Process/model/Status.Model.ts" />
 /// <reference path="../../Workflow/model/WorkflowType.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Controller.ts" />
@@ -19,12 +19,12 @@ const WorkflowDatatableServiceId: string = "WorkflowDatatableService";
 
 class WorkflowDatatableService {
 
-    private $inject = [$rootScopeId, $compileId];
+    private $inject = [$rootScopeId, $compileId, TokenServiceId, $httpId];
 
     rootScope;
     compile;
 
-    constructor($rootScope, $compile) {
+    constructor($rootScope, $compile, private TokenService: TokenService, private $http) {
         this.rootScope = $rootScope;
         this.compile = $compile;
     }
@@ -97,19 +97,21 @@ class WorkflowDatatableService {
         }
     }
 
-    changeDataInput(loadAllData: boolean, dtOptions: any, allDataRoute: string, latestDataRoute: string) {
+    async changeDataInput(loadAllData: boolean, dtOptions: any, allDataRoute: string, latestDataRoute: string) {
         let searchDelay: number = 0;
+        let self = this;
         if (loadAllData === true) {
             searchDelay = 600;
         }
         dtOptions.withOption("serverSide", loadAllData)
-            .withOption("ajax", this.getData(loadAllData, allDataRoute, latestDataRoute))
+            .withOption("ajax", await self.getData(loadAllData, allDataRoute, latestDataRoute))
             .withOption("searchDelay", searchDelay);
     }
 
-    getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): any {
+    async getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): Promise<any> {
         let self = this;
         if (loadAllData === true) {
+            let token = await self.TokenService.getAccessTokenPromise();
             return {
                 url: allDataRoute,
                 type: "GET",
@@ -118,23 +120,20 @@ class WorkflowDatatableService {
                 error: function (xhr, error, thrown) {
                     handleError(xhr);
                 },
-                "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
+                beforeSend: function (request) {
+                    request.setRequestHeader("X-Authorization", "Bearer " + token);
                 }
             };
+
+
+
         } else {
-            return {
-                url: latestDataRoute,
-                error: function (xhr, error, thrown) {
-                    handleError(xhr);
-                },
-                type: "GET",
-                "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
-                }
+            return (data, callback, settings) => {
+                self.$http.get(latestDataRoute).then(function (response) {
+                    callback(response.data);
+                });
             };
+
         }
     }
 
@@ -144,24 +143,19 @@ class WorkflowDatatableService {
         childScope.parent = parent;
         childScope.type = type;
 
-        let link = angular.element("#id_" + process.id), icon = link
-            .find(".glyphicon"), tr = link.parent().parent(), table = dtInstance.DataTable, row = table
-                .row(tr);
+        let tr = angular.element("#id_" + process.id), table = dtInstance.DataTable, row = table
+            .row(tr);
 
         if (row.child.isShown()) {
             let newChildRow = $("#childRow" + process.id);
             newChildRow.removeClass("openMenu");
             newChildRow.parent().parent().children("td").css("height", "0px");
             setTimeout(function () {
-                icon.removeClass("glyphicon-minus-sign")
-                    .addClass("glyphicon-plus-sign");
                 row.child.hide();
                 tr.removeClass("shown");
                 childScope.$destroy();
             }, 300);
         } else {
-            icon.removeClass("glyphicon-plus-sign")
-                .addClass("glyphicon-minus-sign");
             let childRow = row.child(
                 this.compile(
                     "<div childrow id='childRow" + process.id + "' type='" + type + "' class='clearfix closeMenuChildRow'></div>")(

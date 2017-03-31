@@ -23,21 +23,21 @@ import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_NOT_FOUND;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.mail.MessagingException;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import dash.common.EncryptionWrapper;
 import dash.common.Encryptor;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.DontMatchException;
@@ -50,51 +50,50 @@ import dash.exceptions.UsernameAlreadyExistsException;
 import dash.fileuploadmanagement.business.IFileUploadService;
 import dash.messagemanagement.business.MessageService;
 import dash.messagemanagement.domain.AbstractMessage;
+import dash.multitenancy.configuration.TenantContext;
 import dash.notificationmanagement.business.AWSEmailService;
+import dash.security.jwt.JwtTokenFactory;
+import dash.security.jwt.domain.JwtToken;
+import dash.security.jwt.domain.UserContext;
 import dash.smtpmanagement.business.ISmtpService;
+import dash.smtpmanagement.business.SmtpUtil;
 import dash.smtpmanagement.domain.Smtp;
-import dash.tenantmanagement.business.TenantContext;
-import dash.tenantmanagement.business.TenantService;
-import dash.tenantmanagement.domain.Tenant;
 import dash.usermanagement.domain.Role;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
 import dash.usermanagement.registration.domain.Validation;
 import dash.usermanagement.settings.language.Language;
 import dash.usermanagement.settings.password.PasswordChange;
-import freemarker.template.TemplateException;
 
 @Service
 public class UserService implements IUserService {
 
 	private static final Logger logger = Logger.getLogger(UserService.class);
 
-	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
-	private final IFileUploadService fileUploadService;
-	private final ISmtpService smtpService;
+	private UserRepository userRepository;
+	private PasswordEncoder passwordEncoder;
+	private IFileUploadService fileUploadService;
+	private ISmtpService smtpService;
 	private MessageService messageService;
 	private AWSEmailService awsEmailService;
-	private TenantService tenantService;
+	@Autowired
+	private JwtTokenFactory tokenFactory;
 
 	@Autowired
 	public UserService(IFileUploadService fileUploadService, ISmtpService smtpService, PasswordEncoder passwordEncoder,
-			UserRepository userRepository, MessageService messageService, AWSEmailService awsEmailService,
-			TenantService tenantService) {
+			UserRepository userRepository, MessageService messageService, AWSEmailService awsEmailService) {
 		this.fileUploadService = fileUploadService;
 		this.smtpService = smtpService;
 		this.passwordEncoder = passwordEncoder;
 		this.userRepository = userRepository;
 		this.messageService = messageService;
 		this.awsEmailService = awsEmailService;
-		this.tenantService = tenantService;
 	}
 
 	@Override
 	public List<User> getAll() {
 		return userRepository.findAll().stream().filter(it -> !"superadmin@eviarc.com".equals(it.getUsername()))
 				.collect(Collectors.toList());
-
 	}
 
 	@Override
@@ -109,8 +108,8 @@ public class UserService implements IUserService {
 	}
 
 	public User getUserByEmail(final String email) throws NotFoundException {
-		if (Optional.ofNullable(email).isPresent()) {
-			return userRepository.findByEmailIgnoreCase(email);
+		if (email != null) {
+			return userRepository.findByEmailIgnoreCase(email).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 		} else {
 			NotFoundException cnfex = new NotFoundException(USER_NOT_FOUND);
 			logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
@@ -120,7 +119,7 @@ public class UserService implements IUserService {
 
 	public User checkEmailExists(final String email) {
 		if (email != null) {
-			return userRepository.findByEmailIgnoreCase(email);
+			return userRepository.findByEmailIgnoreCase(email).orElse(null);
 		}
 		return null;
 	}
@@ -159,6 +158,8 @@ public class UserService implements IUserService {
 					updateUser.setFax(user.getFax());
 					updateUser.setJob(user.getJob());
 					updateUser.setDefaultVat(user.getDefaultVat());
+					updateUser.setDefaultBCC(user.getDefaultBCC());
+					updateUser.setDefaultCC(user.getDefaultCC());
 					return save(updateUser);
 
 				} else {
@@ -219,7 +220,7 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public void updatePassword(final long id, final PasswordChange passwordChange) throws Exception {
+	public Map<String, String> updatePassword(final long id, final PasswordChange passwordChange) throws Exception {
 		if (Optional.ofNullable(id).isPresent() && Optional.ofNullable(passwordChange).isPresent()) {
 			try {
 				User user = getById(id);
@@ -229,14 +230,29 @@ public class UserService implements IUserService {
 						user.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
 						Smtp smtp = null;
 						smtp = smtpService.findByUserId(user.getId());
+						String newSmtpKey = null;
 						if (smtp != null) {
-							smtp.setPassword(Encryptor.decrypt(
-									new EncryptionWrapper(smtp.getPassword(), smtp.getSalt(), smtp.getIv()),
-									passwordChange.getOldSmtpKey()));
+
+							smtp.setPassword(SmtpUtil.decryptPasswordForSmtp(smtp).getBytes());
+							newSmtpKey = Encryptor.hashTextPBKDF2(passwordChange.getNewPassword(), user.getEmail(),
+									300);
 							smtp.setDecrypted(true);
-							smtpService.save(smtp, passwordChange.getNewSmtpKey());
+							smtpService.save(smtp, newSmtpKey);
+
 						}
 						save(user);
+						Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+						UserContext userContext = (UserContext) authentication.getPrincipal();
+
+						JwtToken accessToken = tokenFactory.createAccessJwtToken(userContext, TenantContext.getTenant(),
+								newSmtpKey);
+						JwtToken refreshToken = tokenFactory.createRefreshToken(userContext, TenantContext.getTenant(),
+								newSmtpKey);
+
+						Map<String, String> tokenMap = new HashMap<String, String>();
+						tokenMap.put("token", accessToken.getToken());
+						tokenMap.put("refreshToken", refreshToken.getToken());
+						return tokenMap;
 					} else {
 						throw new DontMatchException(UPDATE_FAILED_EXCEPTION);
 					}
@@ -254,6 +270,25 @@ public class UserService implements IUserService {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			logger.error(UPDATE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
 			throw ufex;
+		}
+	}
+
+	@Override
+	public void resetPassword(final Long id, final String newPassword) {
+		User user = getById(id);
+		if (user == null)
+			throw new NotFoundException(USER_NOT_FOUND);
+
+		user.setPassword(passwordEncoder.encode(newPassword));
+		save(user);
+
+		try {
+			Smtp smtp = this.smtpService.findByUserId(id);
+			smtp.setPassword(null);
+			this.smtpService.save(smtp, null);
+		} catch (Exception ex) {
+			logger.error("User didn't specify a SMTP-Server - " + UserService.class.getSimpleName(), ex);
+			ex.printStackTrace();
 		}
 	}
 
@@ -303,6 +338,7 @@ public class UserService implements IUserService {
 	}
 
 	public User register(final Registration registration) throws EmailAlreadyExistsException, RegisterFailedException {
+
 		if (registration != null && registration.getEmail() != null && registration.getPassword() != null) {
 
 			try {
@@ -326,7 +362,7 @@ public class UserService implements IUserService {
 				user.setEnabled(enabled);
 				user.setLanguage(registration.getLanguage());
 				user.setDefaultVat(19.00);
-
+				notify(user);
 				return save(user);
 			} catch (SaveFailedException ex) {
 				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);
@@ -356,43 +392,25 @@ public class UserService implements IUserService {
 		return update(user);
 	}
 
-	public void createInitialUsers(String apiPassword) throws SaveFailedException {
-		User superadmin = new User();
-		superadmin.setEmail("superadmin@eviarc.com");
-		superadmin.setUsername("superadmin@eviarc.com");
-		superadmin.setFirstname("Superadmin");
-		superadmin.setLastname("Eviarc");
-
-		superadmin.setPassword("$2a$10$V7c4F8TMpN6zUPC4llkuM.tvGp.HuHdoEmu2CqMS1IEHGyGEOUAWW");
-		superadmin.setRole(Role.SUPERADMIN);
-		superadmin.setEnabled(true);
-		superadmin.setLanguage(Language.EN);
-		superadmin.setDefaultVat(19.00);
-		this.save(superadmin);
-
-		User api = new User();
-		api.setEmail("api@" + TenantContext.getTenant());
-		api.setUsername("api@" + TenantContext.getTenant());
-		api.setFirstname("Api");
-		api.setLastname(TenantContext.getTenant());
-		api.setPassword(passwordEncoder.encode(apiPassword));
-		api.setRole(Role.API);
-		api.setEnabled(true);
-		api.setLanguage(Language.EN);
-		api.setDefaultVat(19.00);
-		this.save(api);
+	public Optional<User> loadUserByEmail(String email) {
+		return userRepository.findByEmailIgnoreCase(email);
 	}
 
-	public void notifyUser(User user) throws TemplateException, IOException, MessagingException {
-		Tenant tenant = this.tenantService.getTenantByName(TenantContext.getTenant());
+	public void notify(User user) {
+		String tenant = TenantContext.getTenant();
 
 		String templateName = "welcome_en.ftl";
 		if (user.getLanguage().equals(Language.DE))
 			templateName = "welcome_de.ftl";
 
-		AbstractMessage welcomeMessage = this.messageService.getWelcomeMessage(templateName, tenant, user);
-		this.awsEmailService.sendMail("andreas.foitzik@leadplus.io", welcomeMessage.getRecipients(),
-				welcomeMessage.getSubject(), welcomeMessage.getContent());
+		AbstractMessage welcomeMessage;
+		try {
+			welcomeMessage = this.messageService.getWelcomeMessage(templateName, tenant, user);
+			this.awsEmailService.sendMail("andreas.foitzik@leadplus.io", welcomeMessage.getRecipients(),
+					welcomeMessage.getSubject(), welcomeMessage.getContent());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 }

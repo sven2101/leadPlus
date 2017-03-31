@@ -8,7 +8,7 @@ const TemplateServiceId: string = "TemplateService";
 
 class TemplateService {
 
-    private $inject = [toasterId, $translateId, TemplateResourceId, $uibModalId, $qId, $windowId, $sceId];
+    private $inject = [toasterId, $translateId, $rootScopeId, TemplateResourceId, $uibModalId, $qId, $windowId, $sceId];
 
     templateResource;
 
@@ -22,7 +22,7 @@ class TemplateService {
     currentEditTemplate: Template;
     sce;
 
-    constructor(toaster, $translate, $rootScope, TemplateResource, $uibModal, $q, $window, $sce) {
+    constructor(toaster, $translate, private $rootScope, TemplateResource, $uibModal, $q, $window, $sce) {
         this.toaster = toaster;
         this.translate = $translate;
         this.uibModal = $uibModal;
@@ -96,27 +96,21 @@ class TemplateService {
         });
     }
 
-    async generate(templateId: number, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
-        return this.templateResource.generate({ templateId: templateId }, { workflowTemplateObject: workflow, notification: notification }).$promise;
+    async generateNotification(templateId: number, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
+        return this.templateResource.generateNotification({ templateId: templateId }, { workflowTemplateObject: workflow, notification: notification, user: this.$rootScope.user }).$promise;
     }
 
     async testTemplate(template: Template, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
-        return this.templateResource.test({ workflowTemplateObject: workflow, notification: notification, template: template }).$promise;
+        return this.templateResource.test({ workflowTemplateObject: workflow, notification: notification, template: template, user: this.$rootScope.user }).$promise;
     }
 
-    generatePDF(templateId: string, offer: Offer) {
-        let defer = this.q.defer();
-        let self = this;
-        this.templateResource.generatePDF({ templateId: templateId }, offer).$promise.then(function (result) {
-            let file = new Blob([result], { type: "application/pdf" });
-            let fileURL = URL.createObjectURL(file);
-            self.window.open(self.sce.trustAsResourceUrl(fileURL), "_blank");
-            self.window.open(fileURL);
-            defer.resolve(result);
-        }, function (error: any) {
-            defer.reject(error);
-        });
-        return defer.promise;
+    async generatePDF(html: string) {
+        return await this.templateResource.generatePDF({ htmlString: html }).$promise;
+    }
+
+    async generatePdfFromTemplateId(templateId: number, workflow: Lead | Offer): Promise<any> {
+        return await this.templateResource.generatePdfFromTemplate({ templateId: templateId }, { workflowTemplateObject: workflow, user: this.$rootScope.user }).$promise;
+
     }
 
     async getAll(): Promise<Array<Template>> {

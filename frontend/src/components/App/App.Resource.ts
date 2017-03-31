@@ -102,7 +102,7 @@ class ProcessResource {
             getCountWorkflowByStatus: { url: "/api/rest/processes/count/workflow/:workflow/state/:status", method: "GET" },
             getLatestSales: { url: "/api/rest/processes/sales/latest/10", method: "GET", isArray: true },
             getLatest100Sales: { url: "/api/rest/processes/sales/latest/100", method: "GET", isArray: true },
-            getTodos: { url: "api/rest/processes/processor/:processorId", method: "GET", isArray: true },
+            getTodos: { url: "/api/rest/processes/processor/:processorId", method: "GET", isArray: true },
         });
     }
 }
@@ -143,22 +143,23 @@ class UserResource {
     resource: any;
 
     constructor($resource) {
-        this.resource = $resource("/users/:id", {}, {
-            getById: { url: "/users/:id", method: "GET" },
-            update: { url: "/users", method: "PUT" },
-            changePassword: { url: "/users/:id/pw", method: "POST" },
+        this.resource = $resource("/api/rest/users/:id", {}, {
+            getById: { url: "/api/rest/users/:id", method: "GET" },
+            update: { url: "/api/rest/users", method: "POST" },
+            changePassword: { url: "/api/rest/users/:id/pw", method: "POST" },
             setProfilePicture2: {
-                url: "/users/:id/profile/picture", params: { file: "@file" }, method: "POST", transformRequest: angular.identity,
+                url: "/api/rest/users/:id/profile/picture", params: { file: "@file" }, method: "POST", transformRequest: angular.identity,
                 headers: { "Content-Type": undefined }
             },
             setProfilePicture: {
-                url: "/users/profile/picture", method: "POST"
+                url: "/api/rest/users/profile/picture", method: "POST"
             },
             getProfilePicture: {
-                url: "/users/:id/profile/picture/object", method: "GET"
+                url: "/api/rest/users/:id/profile/picture/object", method: "GET"
             },
-            getAll: { url: "/users/all", method: "GET", isArray: true },
-            // setSmtpConnection: { url: "/users/:id/smtps", method: "POST" }
+            getAll: { url: "/api/rest/users", method: "GET", isArray: true },
+            // setSmtpConnection: { url: "/api/rest/users/:id/smtps", method: "POST" }
+            getByEmail: { url: "/api/rest/users/email", method: "POST" }
         });
     }
 }
@@ -177,9 +178,9 @@ class SettingResource {
 
     constructor($resource) {
         this.resource = $resource("/users/:id", {}, {
-            getAll: { url: "/users/all", method: "GET", isArray: true },
-            activate: { url: "/users/:id/activate", method: "PUT" },
-            changeRole: { url: "/users/:id/role/:role/update", method: "GET" }
+            getAll: { url: "/api/rest/users", method: "GET", isArray: true },
+            activate: { url: "/api/rest/users/:id/activate", method: "PUT" },
+            changeRole: { url: "/api/rest/users/:id/role/:role/update", method: "GET" }
         });
     }
 }
@@ -293,11 +294,10 @@ class SignupResource {
     resource: any;
 
     constructor($resource) {
-        this.resource = $resource("/api/rest/registrations", {}, {
-            signup: { url: "/api/rest/registrations", method: "POST", headers: { "Content-Type": "application/json" } },
-            uniqueUsername: { url: "/api/rest/registrations/unique/username", method: "POST", headers: { "Content-Type": "application/json" } },
-            uniqueEmail: { url: "/api/rest/registrations/unique/email", method: "POST", headers: { "Content-Type": "application/json" } },
-            init: { url: "/api/rest/registrations/init", method: "POST", headers: { "Content-Type": "application/json" } }
+        this.resource = $resource("registrations", {}, {
+            signup: { url: "registrations", method: "POST", headers: { "Content-Type": "application/json" } },
+            uniqueEmail: { url: "registrations/unique/email", method: "POST", headers: { "Content-Type": "application/json" } },
+            init: { url: "registrations/init", method: "POST", headers: { "Content-Type": "application/json" } }
         });
     }
 }
@@ -342,18 +342,17 @@ class TemplateResource {
             save: { url: "/api/rest/templates", method: "POST" },
             update: { url: "/api/rest/templates", method: "PUT" },
             remove: { url: "/api/rest/templates/:id", method: "DELETE" },
-            generate: {
+            generateNotification: {
                 url: "/api/rest/templates/:templateId/offers/generate", method: "POST", params: {
-                    templateId: "@templateId",
-                    offerId: "@offerId"
+                    templateId: "@templateId"
                 }
+            },
+            generatePdfFromTemplate: {
+                url: "/api/rest/templates/:templateId/offers/pdf/generate", method: "POST"
             },
             test: { url: "/api/rest/templates/test", method: "POST" },
             generatePDF: {
-                url: "/api/rest/templates/:templateId/offers/pdf/generate", method: "POST", params: {
-                    templateId: "@templateId",
-                    offerId: "@offerId"
-                }, responseType: "arraybuffer"
+                url: "/api/rest/files/pdf", method: "POST"
             }
         });
     }
@@ -375,7 +374,7 @@ class SmtpResource {
         this.resource = $resource("/api/rest/smtp", {}, {
             createSmtp: { url: "/api/rest/smtp/", method: "POST" },
             testSmtp: { url: "/api/rest/smtp/:id/test", method: "POST" },
-            getByUserId: { url: "/users/smtp/user/:id", method: "GET" },
+            getByUserId: { url: "/api/rest/users/smtp/user/:id", method: "GET" },
         });
     }
 }
@@ -414,8 +413,8 @@ class TenantResource {
 
     constructor($resource) {
         this.resource = $resource("/api/rest/tenants", {}, {
-            save: { url: "/api/rest/tenants", method: "POST" },
-            uniqueTenantKey: { url: "/api/rest/tenants/unique/key", method: "POST" }
+            save: { url: "tenants", method: "POST" },
+            uniqueTenantKey: { url: "tenants/unique/key", method: "POST" }
         });
     }
 }
@@ -435,7 +434,8 @@ class SourceResource {
             getAllSources: { url: "/api/rest/source", method: "GET", isArray: true },
             createSource: { url: "/api/rest/source", method: "POST" },
             updateSource: { url: "/api/rest/source", method: "PUT" },
-            deleteSource: { url: "/api/rest/source", method: "DELETE" }
+            deleteSource: { url: "/api/rest/source", method: "DELETE" },
+            generateApiToken: { url: "/api/rest/source/apitoken/:id", method: "GET" },
         });
     }
 }

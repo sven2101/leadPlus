@@ -29,7 +29,7 @@ import dash.productmanagement.domain.Product;
 @Transactional
 public interface IPublicApiService {
 
-	Lead saveLead(Lead lead, String source) throws SaveFailedException, NotFoundException;
+	Lead saveLead(Lead lead) throws SaveFailedException, NotFoundException;
 
 	List<Product> findByDeactivated(boolean deactivated);
 

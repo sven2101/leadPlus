@@ -22,11 +22,13 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.fileuploadmanagement.business.PdfGenerationFailedException;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.notificationmanagement.domain.Notification;
-import dash.processmanagement.domain.Process;
 import dash.templatemanagement.domain.Template;
 import dash.templatemanagement.domain.WorkflowTemplateObject;
+import dash.usermanagement.domain.User;
+import freemarker.template.TemplateException;
 
 @Service
 public interface ITemplateService {
@@ -41,12 +43,19 @@ public interface ITemplateService {
 
 	public Template update(final Template template) throws UpdateFailedException;
 
-	public byte[] generatePdf(final long templateId, final Process process) throws NotFoundException;
-
 	public AbstractMessage getMessageContent(long templateId, WorkflowTemplateObject workflowTemplateObject,
-			final Notification notification) throws NotFoundException, IOException, TemplateCompilationException;
+			final Notification notification, final User user)
+			throws NotFoundException, IOException, TemplateCompilationException;
 
 	AbstractMessage getMessageContentByTemplate(Template template, WorkflowTemplateObject workflowTemplateObject,
-			Notification notification) throws NotFoundException, IOException, TemplateCompilationException;
+			Notification notification, final User user)
+			throws NotFoundException, IOException, TemplateCompilationException;
+
+	String getMessageContentStringByTemplateId(long templateId, WorkflowTemplateObject workflowTemplateObject,
+			User user) throws NotFoundException, IOException, TemplateException, TemplateCompilationException;
+
+	byte[] getPdfBytemplateId(long templateId, WorkflowTemplateObject workflowTemplateObject, User user)
+			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException,
+			TemplateException;
 
 }

@@ -7,8 +7,7 @@
 <div ng-if="settingCtrl.currentTab=='source'">
 	<div class="ibox float-e-margins">
 		<div class="ibox-title">
-			<h5>{{ 'SOURCE_MANAGE_SOURCES' | translate }} - <strong>{{sourceCtrl.sourceService.sources.length}}</strong> {{ 'SOURCE_SOURCES'
-				| translate }}</h5>
+			<h5>{{ 'SOURCE_MANAGE_SOURCES' | translate }}</h5>
 		</div>
 		<div class="ibox-content"  style="overflow-x: auto">
 			<form role="form" class="form-inline">
@@ -39,19 +38,26 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="source in sourceCtrl.sourceService.sources| filter:searchText |orderBy:'name' | limitTo:sourceCtrl.sourceAmountLimit " style="cursor: pointer" ng-click="sourceCtrl.editSource(source)" data-toggle="modal" data-target="#createSourceModal"
+						<tr ng-repeat="source in sourceCtrl.sourceService.sources| filter:searchText |orderBy:'name' | limitTo:sourceCtrl.sourceAmountLimit " style="cursor: pointer" 
 									data-backdrop="static">
 							<!-- <td class="project-status col-md-1">
 								<span ng-show="!source.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
 								<span ng-show="source.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 							</td> -->
-							<td class="project-title col-md-1"><i class="fa fa-rss" aria-hidden="true"></i></td>
-							<td class="project-title col-md-3">
+							<td ng-click="sourceCtrl.editSource(source)" data-toggle="modal" data-target="#createSourceModal" class="project-title col-md-1"><i class="fa fa-rss" aria-hidden="true"></i></td>
+							<td ng-click="sourceCtrl.editSource(source)" data-toggle="modal" data-target="#createSourceModal" class="project-title col-md-3">
 								<a>{{source.name}}</a>
 							</td>
-							<td class="project-completion col-md-7" max>
+							<td ng-click="sourceCtrl.editSource(source)" data-toggle="modal" data-target="#createSourceModal" class="project-completion col-md-6" max>
 								<small style="word-wrap: break-word; word-break: break-all;">{{source.description}}</small>
 							</td>
+
+							<td class="project-actions col-md-1">
+								<button type="button" class="btn btn-white btn-sm" ng-click="sourceCtrl.generateApiToken(source)">
+									<i class="fa fa-recycle"></i>
+								</button>								
+							</td>
+
 						</tr>
 					</tbody>
 				</table>

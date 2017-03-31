@@ -8,7 +8,7 @@
     opacity: 0;
 }
  .animate-if.ng-enter.ng-enter-active {
-    max-height: 1000px;
+    max-height: 2000px;
 	  overflow: hidden;
     opacity:1;
 }
@@ -19,7 +19,7 @@
     -o-transition:max-height 0.15s ease-out;
     transition: max-height 0.15s ease-out;
 	  overflow: hidden;
-    max-height: 1000px;
+    max-height: 2000px;
     opacity:1;
 }
  .animate-if.ng-leave.ng-leave-active {
@@ -48,7 +48,7 @@
 }
 
 .openMenu{
-    max-height: 1000px;
+    max-height: 2000px;
     -webkit-transition: max-height 0.3s ease-in;
     -moz-transition: max-height 0.3s ease-in;
     -ms-transition: max-height 0.3s ease-in;
@@ -65,6 +65,7 @@ div#loginscreen
     background-size: cover; 
     position: absolute; 
     background-position: center; 
+    overflow-x: hidden;
     width: 100%; 
     min-height: 100%; 
     top: 0;  
@@ -148,6 +149,7 @@ div#loginscreen
     transform: rotate(360deg);
   }
 }
+
 @keyframes load3 {
   0% {
     -webkit-transform: rotate(0deg);
@@ -198,4 +200,48 @@ body.modal-open {
     display: inline-block;
 		overflow: hidden;
 	}
+
+.spinner {
+     height: 15px;
+    width: 15px;
+    animation: rotate 0.8s infinite linear;
+    border: 3px solid #1ab394;
+    border-right-color: transparent;
+    border-radius: 50%;
+}
+
+.spinner-white {
+     height: 15px;
+    width: 15px;
+    animation: rotate 0.8s infinite linear;
+    border: 3px solid white;
+    border-right-color: transparent;
+    border-radius: 50%;
+}
+
+
+.spinner-black {
+     height: 15px;
+    width: 15px;
+    animation: rotate 0.8s infinite linear;
+    border: 3px solid black;
+    border-right-color: transparent;
+    border-radius: 50%;
+}
+
+
+@keyframes rotate {
+  0%    { transform: rotate(0deg); }
+  100%  { transform: rotate(360deg); }
+}
+
+
+.attachement-box{
+  float: left;
+  margin-left: 5px;
+  border-radius: 6px;
+  padding: 5px; 
+  background-color: #eee;
+  margin-top: 7px
+}
 

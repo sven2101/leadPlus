@@ -41,8 +41,10 @@
         ng-click="followUp()">
 		<span><i class="fa fa-arrow-up" aria-hidden="true"></i>&nbsp;{{ 'EMAIL_ONLY_FOLLOWUP'| translate }}</span>
 		</button>
+        <!--         || !rootScope.isSmptVerified"-->
     <button ng-if="currentWizard.isEmail" type="button " class="btn btn-warning" data-style="zoom-in"
-        ng-disabled="isAnyFormInvalid() || currentWizard.form.$invalid || disableSendingButton || !rootScope.isSmptVerified"
+        ng-disabled="isAnyFormInvalid() || currentWizard.form.$invalid || disableSendingButton "
+
         ng-click="send()">
          <span  ng-if="disableSendingButton==true" style="float: left;margin-left: -5px;padding-right:2px;padding-top: 2px ">
              <div  class="spinner-white"></div>

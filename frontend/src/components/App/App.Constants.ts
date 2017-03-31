@@ -25,6 +25,8 @@ const $sceId: string = "$sce";
 const $routeId: string = "$route";
 const $locationProviderId = "$locationProvider";
 const $compileProviderId = "$compileProvider";
+const SweetAlertId: string = "SweetAlert";
+const FileSaverId: string = "FileSaver";
 
 const moduleApp: string = "app";
 const moduleAppController: string = moduleApp + ".controller";
@@ -93,9 +95,6 @@ const moduleNotificationResource: string = moduleNotification + ".resource";
 const moduleNotificationService: string = moduleNotification + ".service";
 const moduleTenant: string = moduleApp + ".tenant";
 const moduleTenantResource: string = moduleTenant + ".resource";
-const moduleTenantService: string = moduleTenant + ".service";
-const moduleRegistration: string = moduleApp + ".registration";
-const moduleRegistrationService: string = moduleRegistration + ".service";
 const moduleSubdomain: string = moduleApp + ".subdomain";
 const moduleSubdomainService: string = moduleSubdomain + ".service";
 const moduleSource: string = moduleApp + ".source";
@@ -103,6 +102,9 @@ const moduleSourceResource: string = moduleSource + ".resource";
 const moduleSourceService: string = moduleSource + ".service";
 const moduleWizard: string = moduleApp + ".wizard";
 const moduleConfirmation: string = moduleApp + ".confirmationModal";
+const moduleToken: string = moduleApp + ".token";
+const moduleTokenService: string = moduleToken + ".service";
+const moduleLoginModal: string = moduleApp + ".loginModal";
 
 
 const moduleTranslate: string = "pascalprecht.translate";
@@ -123,5 +125,6 @@ const moduleSummernote: string = "summernote";
 const moduleSummernoteService: string = moduleSummernote + ".service";
 const moduleFootable: string = "ui.footable";
 const moduleSanitize: string = "ngSanitize";
-const moduleSweetAlert: string = "oitozero.ngSweetAlert";
+const moduleSweetAlert: string = "socialbase.sweetAlert";
 const moduleAngularChosen: string = "localytics.directives";
+const moduleNgFileSaver: string = "ngFileSaver"; 

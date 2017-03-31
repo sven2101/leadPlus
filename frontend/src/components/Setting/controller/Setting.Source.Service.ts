@@ -78,6 +78,10 @@ class SourceService {
         return this.sources.filter(s => s.name.toLowerCase() === source.name.toLowerCase()).length > 0;
     }
 
+    public async generateApiToken(source): Promise<any> {
+        return await this.SourceResource.generateApiToken({ id: source.id }).$promise;
+    }
+
 }
 
 angular.module(moduleSourceService, [ngResourceId]).service(SourceServiceId, SourceService);

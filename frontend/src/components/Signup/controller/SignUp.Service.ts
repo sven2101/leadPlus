@@ -30,6 +30,7 @@ class SignupService {
     }
 
     uniqueEmail(user: Signup): void {
+        if (user.email == null) { return; }
         let self = this;
         user.email = user.email.toLowerCase();
         this.signupResource.uniqueEmail(user).$promise.then(function (data, headersGetter, status) {

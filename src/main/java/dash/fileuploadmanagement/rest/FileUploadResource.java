@@ -13,6 +13,9 @@
  *******************************************************************************/
 package dash.fileuploadmanagement.rest;
 
+import java.io.IOException;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +33,9 @@ import org.springframework.web.bind.annotation.RestController;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
+import dash.fileuploadmanagement.business.HtmlToPdfService;
 import dash.fileuploadmanagement.business.IFileUploadService;
+import dash.fileuploadmanagement.business.PdfGenerationFailedException;
 import dash.fileuploadmanagement.domain.FileUpload;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,26 +49,48 @@ public class FileUploadResource {
 	@Autowired
 	private IFileUploadService fileService;
 
+	@Autowired
+	private HtmlToPdfService htmlToPdfService;
+
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Post a file. ", notes = "")
-	public FileUpload save(@ApiParam(required = true) @RequestBody @Valid final FileUpload fileUpload) throws SaveFailedException {
+	public FileUpload save(@ApiParam(required = true) @RequestBody @Valid final FileUpload fileUpload)
+			throws SaveFailedException {
 		return fileService.save(fileUpload);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ApiOperation(value = "Get a single file by id. ", notes = "")
-	public FileUpload getFileUploadById(@ApiParam(required = true) @PathVariable final Long id) throws SaveFailedException, NotFoundException {
+	public FileUpload getFileUploadById(@ApiParam(required = true) @PathVariable final Long id)
+			throws SaveFailedException, NotFoundException {
 		return fileService.getById(id);
 	}
 
 	@RequestMapping(value = "/content/{id}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_PDF_VALUE })
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Get file by Id. ", notes = "")
-	public ResponseEntity<byte[]> getContentByFileUploadId(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
+	public ResponseEntity<byte[]> getContentByFileUploadId(@ApiParam(required = true) @PathVariable final Long id)
+			throws NotFoundException {
 		FileUpload fileUpload = fileService.getById(id);
 		HttpHeaders responseHeaders = new HttpHeaders();
-		responseHeaders.setContentType(new MediaType(fileUpload.getMimeType().split("/")[0], fileUpload.getMimeType().split("/")[1]));
+		responseHeaders.setContentType(
+				new MediaType(fileUpload.getMimeType().split("/")[0], fileUpload.getMimeType().split("/")[1]));
+
+		return new ResponseEntity<>(fileUpload.getContent(), responseHeaders, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "open/content/{id}", method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_PDF_VALUE })
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Get file by Id. ", notes = "")
+	public ResponseEntity<byte[]> getContentByFileUploadNewTabId(@ApiParam(required = true) @PathVariable final Long id)
+			throws NotFoundException {
+		FileUpload fileUpload = fileService.getById(id);
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentType(
+				new MediaType(fileUpload.getMimeType().split("/")[0], fileUpload.getMimeType().split("/")[1]));
+
 		return new ResponseEntity<>(fileUpload.getContent(), responseHeaders, HttpStatus.OK);
 	}
 
@@ -72,6 +99,17 @@ public class FileUploadResource {
 	@ApiOperation(value = "Delete a file. ", notes = "")
 	public void delete(@ApiParam(required = true) @PathVariable final long id) throws DeleteFailedException {
 		fileService.delete(id);
+	}
+
+	@RequestMapping(value = "/generate/pdf", method = RequestMethod.POST, produces = {
+			MediaType.APPLICATION_PDF_VALUE })
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "generate PDF", notes = "")
+	public byte[] genereatePdfFromHtml(@RequestBody Map<String, String> json)
+			throws PdfGenerationFailedException, IOException {
+
+		return htmlToPdfService.genereatePdfFromHtml(json.get("htmlString"));
+
 	}
 
 }

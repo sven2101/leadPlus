@@ -1,14 +1,15 @@
 <style>
-	.tooltip.fade.bottom.in{
+	.tooltip.fade.bottom.in {
 		z-index: 999;
 	}
-
 </style>
 <div ng-if="settingCtrl.currentTab=='template'">
 	<div class="ibox float-e-margins">
-		<div class="ibox-title">
-				<h5>{{ 'SETTING_EMAIL_TEMPLATES_MANAGEMENT' | translate }}</h5>
-		</div>
+		<a>
+			<div class="ibox-title">
+				<h5>{{ 'SETTING_TEMPLATES' | translate }}</h5>
+			</div>
+		</a>
 		<div class="ibox-content" id="templates" style="overflow-x: auto">
 			<button type="button" class="btn btn-success btn-primary" ng-click="settingCtrl.showTemplate(0)">
 					<i class="fa fa-plus"></i>&nbsp; {{ 'SETTING_EMAIL_NEW_TEMPLATE' | translate }}
@@ -24,6 +25,7 @@
 							<th class="text-center">{{ 'COMMON_NAME' | translate }}</th>
 							<th class="text-center">{{ 'EMAIL_SUBJECT' | translate }}</th>
 							<th class="text-center">{{ 'SETTING_TEMPLATE_NOTIFICATION_TYPE' | translate }}</th>
+							<th class="text-center">{{ 'SETTING_TEMPLATE_TEMPLATE_TYPE' | translate }}</th>
 							<th class="text-center">{{ 'SETTING_TEMPLATE_SOURCE' | translate }}</th>
 							<th class="text-center"><i class="fa fa-cog"></i></th>
 						</tr>
@@ -34,19 +36,22 @@
 								<span ng-show="!template.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
 								<span ng-show="template.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 							</td>
-							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-3 text-center">
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
 								{{template.name}}
 							</td>
-							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-3 text-center">
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
 								{{template.subject}}
 							</td>
 							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
 								{{settingCtrl.translateStringArray(template.notificationTypeString,'NOTIFICATION')}}
 							</td>
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">								
+								<span ng-repeat="t in template.templateTypes">{{t}}<span ng-if="$index!==template.templateTypes.length-1">,&nbsp;</span></span>
+							</td>
 							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
 								{{settingCtrl.translateStringArray(template.sourceString,'SOURCE')}}
 							</td>
-							<td class="project-actions col-md-1 text-center" style="white-space: nowrap;text-align:center;" >
+							<td class="project-actions col-md-1 text-center" style="white-space: nowrap;text-align:center;">
 								<button type="button" class="btn btn-white btn-sm" ng-click="settingCtrl.openEmailTemplateDeleteModal(template)" title="{{ 'SETTING_EMAIL_TEMPLATE_DELETE' | translate }}">
 									<i class="fa fa-trash" aria-hidden="true"></i>
 								</button>
@@ -54,7 +59,7 @@
 						</tr>
 					</tbody>
 				</table>
-			</div>		
+			</div>
 		</div>
 	</div>
 </div>

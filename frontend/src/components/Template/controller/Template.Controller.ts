@@ -21,6 +21,7 @@ class TemplateController {
     templateFound: boolean;
     templateTested: boolean = false;
     templateHead: string;
+    templateType = TemplateType;
     constructor(TemplateService, private SummernoteService: SummernoteService, private SourceService: SourceService, private $translate, private toaster, $routeParams, $location) {
         this.templateService = TemplateService;
         this.location = $location;
@@ -39,6 +40,7 @@ class TemplateController {
             isNullOrUndefined(this.template) ? this.templateFound = false : this.templateFound = true;
         } else if (!isNullOrUndefined(templateId) && templateId === "new") {
             this.template = new Template();
+            this.template.templateTypes = [TemplateType.EMAIL];
             this.templateService.currentEditTemplate = this.template;
             this.template.sourceString = "NONE,ALL";
             this.templateHead = "SETTING_EMAIL_NEW_TEMPLATE";
@@ -86,6 +88,7 @@ class TemplateController {
         }
 
         this.template = null;
+
         this.goBack();
     }
 
@@ -102,7 +105,6 @@ class TemplateController {
 
         } catch (error) {
             this.templateTested = false;
-            console.log(error);
             if (error.data != null && error.data.exception !== "dash.templatemanagement.business.TemplateCompilationException") {
                 return this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR"));
             }

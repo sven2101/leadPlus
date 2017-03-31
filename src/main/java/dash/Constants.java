@@ -45,6 +45,7 @@ public final class Constants {
 	public static final String ATTACHMENT_NOT_FOUND = "Attachment not found. ";
 	public static final String TEMPLATE_NOT_FOUND = "Template not found. ";
 	public static final String TENANT_NOT_FOUND = "Tenant not found. ";
+	public static final String RESET_ID_NOT_FOUND = "Password Reset ID not found";
 
 	public static final String USER_NOT_ACTIVATED = "User not activated. ";
 	public static final String USER_EXISTS = "Username already exists. ";

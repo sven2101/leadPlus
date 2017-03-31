@@ -18,14 +18,16 @@ import javax.validation.constraints.NotNull;
 import dash.notificationmanagement.domain.Notification;
 import dash.templatemanagement.domain.Template;
 import dash.templatemanagement.domain.WorkflowTemplateObject;
+import dash.usermanagement.domain.User;
 
 public class MessageContext {
 
 	@NotNull
 	private WorkflowTemplateObject workflowTemplateObject;
 
-	@NotNull
 	private Notification notification;
+
+	private User user;
 
 	private Template template;
 
@@ -54,6 +56,14 @@ public class MessageContext {
 
 	public void setTemplate(Template template) {
 		this.template = template;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }

@@ -19,6 +19,7 @@ import static dash.Constants.TENANT_ALREADY_EXISTS;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 import javax.sql.DataSource;
 
@@ -40,9 +41,15 @@ import com.amazonaws.services.route53.model.RRType;
 import com.amazonaws.services.route53.model.ResourceRecord;
 import com.amazonaws.services.route53.model.ResourceRecordSet;
 
+import dash.exceptions.SaveFailedException;
 import dash.exceptions.TenantAlreadyExistsException;
+import dash.multitenancy.configuration.TenantContext;
 import dash.tenantmanagement.domain.Tenant;
+import dash.usermanagement.business.UserService;
+import dash.usermanagement.domain.Role;
+import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Validation;
+import dash.usermanagement.settings.language.Language;
 
 @Service
 public class TenantService implements ITenantService {
@@ -65,14 +72,16 @@ public class TenantService implements ITenantService {
 	@Value("${spring.profiles.active}")
 	private String springProfileActive;
 
-	@Autowired
 	private TenantRepository tenantRepository;
-
+	private UserService userService;
 	private DataSource dataSource;
 	private AmazonRoute53 r53;
 
 	@Autowired
-	public TenantService(DataSource dataSource, AmazonRoute53 r53) {
+	public TenantService(TenantRepository tenantRepository, UserService userService, DataSource dataSource,
+			AmazonRoute53 r53) {
+		this.tenantRepository = tenantRepository;
+		this.userService = userService;
 		this.dataSource = dataSource;
 		this.r53 = r53;
 	}
@@ -85,12 +94,15 @@ public class TenantService implements ITenantService {
 	}
 
 	@Override
-	public Tenant createNewTenant(final Tenant tenant) throws TenantAlreadyExistsException {
+	public Tenant createNewTenant(final Tenant tenant) throws TenantAlreadyExistsException, InterruptedException {
+		tenant.setTenantKey(tenant.getTenantKey().toLowerCase());
 		tenant.setEnabled(true);
+		tenant.setJwtTokenVersion(UUID.randomUUID().toString());
 		Calendar oneYearLater = Calendar.getInstance();
 		oneYearLater.add(Calendar.YEAR, 1);
 		tenant.getLicense().setTerm(oneYearLater);
 		Validation tenantNotExists = uniqueTenantKey(tenant);
+		TenantContext.setTenant(tenant.getTenantKey());
 		if (tenantNotExists.isValidation()) {
 			if (springProfileActive.equals(SPRING_PROFILE_TEST) || springProfileActive.equals(SPRING_PROFILE_LOCAL)) {
 				createSchema(tenant);
@@ -107,7 +119,45 @@ public class TenantService implements ITenantService {
 			logger.error(TENANT_ALREADY_EXISTS + tenant.getTenantKey());
 			throw new TenantAlreadyExistsException("Tenant " + tenant.getTenantKey() + " already Exists");
 		}
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				TenantContext.setTenant(tenant.getTenantKey());
+				userService.register(tenant.getRegistration());
+				createInitialUsers();
+			}
+		});
+		t.start();
+		t.join();
+
 		return tenant;
+	}
+
+	public void createInitialUsers() throws SaveFailedException {
+		User superadmin = new User();
+		superadmin.setEmail("superadmin@eviarc.com");
+		superadmin.setUsername("superadmin@eviarc.com");
+		superadmin.setFirstname("Superadmin");
+		superadmin.setLastname("Eviarc");
+
+		superadmin.setPassword("$2a$10$V7c4F8TMpN6zUPC4llkuM.tvGp.HuHdoEmu2CqMS1IEHGyGEOUAWW");
+		superadmin.setRole(Role.SUPERADMIN);
+		superadmin.setEnabled(true);
+		superadmin.setLanguage(Language.EN);
+		superadmin.setDefaultVat(19.00);
+		userService.save(superadmin);
+
+		User api = new User();
+		api.setEmail("api@" + TenantContext.getTenant());
+		api.setUsername("api@" + TenantContext.getTenant());
+		api.setPassword("$2a$10$V7c4F8TMpN6zUPC4llkuM.tvGp.HuHdoEmu2CqMS1IEHGyGEOUAWW");
+		api.setFirstname("Api");
+		api.setLastname(TenantContext.getTenant());
+		api.setRole(Role.API);
+		api.setEnabled(true);
+		api.setLanguage(Language.EN);
+		api.setDefaultVat(19.00);
+		userService.save(api);
 	}
 
 	public void createSchema(final Tenant tenant) {
@@ -202,6 +252,7 @@ public class TenantService implements ITenantService {
 		boolean proofUniquenessRemote = true;
 
 		try {
+
 			validateTenant = getTenantByName(tenant.getTenantKey());
 			if (validateTenant != null)
 				proofUniquenessLocal = false;

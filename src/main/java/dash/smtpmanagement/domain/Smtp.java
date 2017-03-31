@@ -203,6 +203,10 @@ public class Smtp {
 		this.decrypted = decrypted;
 	}
 
+	public boolean isSmtpPasswordNull() {
+		return this.password == null;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
