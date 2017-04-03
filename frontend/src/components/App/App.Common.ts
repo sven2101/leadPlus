@@ -67,7 +67,7 @@ let toLocalDate = function (date: any, pattern: string = "DD.MM.YYYY HH:mm:ss"):
     let currentDateUtc: any = moment.utc(date, pattern);
     let currentDateLocal = currentDateUtc.tz(timezone);
     if (currentDateLocal.isDST()) {
-        currentDateLocal.add(-1, "h");
+        // currentDateLocal.add(-1, "h");
     }
     return currentDateLocal.format(pattern);
 };
