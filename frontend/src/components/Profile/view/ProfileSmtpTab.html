@@ -47,11 +47,11 @@
                                     <i ng-if="profileCtrl.testingSmtp==false" class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;
                                     {{ 'SETTING_EMAIL_MANAGEMENT_CONNECTION_TEST' | translate }}
                                 </button>
-                                <span style="color:red;padding-left: 10px" ng-if="profileCtrl.SmtpService.currentSmtp.verified===false || profileCtrl.SmtpService.currentSmtp.smtpPasswordNull === true">
+                                <span style="color:red;padding-left: 10px" ng-if="(profileCtrl.SmtpService.currentSmtp.verified===false || profileCtrl.SmtpService.currentSmtp.smtpPasswordNull === true)&&profileCtrl.testingSmtp!==true">
                                     <i class="fa fa-exclamation-triangle"></i>
                                     {{ 'SETTING_SMTP_NOT_YET_VERIFIED' | translate }}         
                                 </span>
-                                <span style="color: green;padding-left: 10px" ng-if="profileCtrl.SmtpService.currentSmtp.verified===true && profileCtrl.SmtpService.currentSmtp.smtpPasswordNull === false">
+                                <span style="color: green;padding-left: 10px" ng-if="(profileCtrl.SmtpService.currentSmtp.verified===true && profileCtrl.SmtpService.currentSmtp.smtpPasswordNull === false)&&profileCtrl.testingSmtp!==true">
                                     <i  class="fa fa-check"></i>
                                      {{ 'SETTING_SMTP_ALREADY_VERIFIED' | translate }}
                                 </span>
