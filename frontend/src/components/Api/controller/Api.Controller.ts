@@ -31,10 +31,10 @@ class ApiController {
     apiService: ApiService;
     rootScope;
     sourceAmountLimit: number = 20;
-    nameExists: boolean;
 
     api: Api;
     apiFound: boolean;
+    apiTested: boolean = false;
     apiHead: string;
     apiVendors: Array<string>;
 
@@ -70,6 +70,7 @@ class ApiController {
 
     save() {
         if (isNullOrUndefined(this.api.id)) {
+            this.api.apiVendor = ApiVendor.WECLAPP;
             this.api.isVerified = true;
             this.apiService.save(this.api);
         } else {
@@ -84,15 +85,14 @@ class ApiController {
         this.createApiForm.$setPristine();
         this.currentApi = new Api();
         this.isCurrentApiNew = true;
-        this.nameExists = false;
     }
 
     editApi(api: Api): void {
         this.createApiForm.$setPristine();
         this.currentEditApi = api;
         this.currentApi = new Api();
+        this.currentApi.apiVendor = ApiVendor.WECLAPP;
         this.isCurrentApiNew = false;
-        this.nameExists = false;
         shallowCopy(this.currentEditApi, this.currentApi);
     }
 
@@ -107,6 +107,18 @@ class ApiController {
         this.location.path("settings/api");
     }
 
+    async testApi(): Promise<void> {
+        try {
+            await this.apiService.testApi(this.api);
+            this.apiTested = true;
+            this.api.isVerified = true;
+            this.toaster.pop("success", "", this.translate.instant("SETTING_API_CONNECTION_SUCCESS"));
+        } catch (error) {
+            this.apiTested = true;
+            this.api.isVerified = false;
+            this.toaster.pop("error", "", this.translate.instant("SETTING_API_CONNECTION_ERROR"));
+        }
+    }
 }
 
 angular.module(moduleApi, [ngResourceId]).controller(ApiControllerId, ApiController);

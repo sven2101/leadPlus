@@ -45,8 +45,8 @@ public class Api {
 	private Boolean isVerified;
 
 	@NotNull
-	@Column(name = "isActive", nullable = false)
-	private Boolean isActive;
+	@Column(name = "isDeactivated", nullable = false)
+	private Boolean isDeactivated;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "apiVendor", length = 255, nullable = true)
@@ -104,12 +104,12 @@ public class Api {
 		this.isVerified = isVerified;
 	}
 
-	public Boolean getIsActive() {
-		return isActive;
+	public Boolean getIsDeactivated() {
+		return isDeactivated;
 	}
 
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
+	public void setIsDeactivated(Boolean isDeactivated) {
+		this.isDeactivated = isDeactivated;
 	}
 
 	public ApiVendor getApiVendor() {

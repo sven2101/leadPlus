@@ -5,10 +5,13 @@ import org.springframework.http.ResponseEntity;
 
 import dash.common.AbstractWorkflow;
 import dash.customermanagement.domain.Customer;
+import dash.extern.apimanagement.domain.Api;
 
 public interface IExternApiService {
 
-	public ResponseEntity<String> createCustomer(final Customer customer);
+	public Boolean test(final Api api);
 
-	public ResponseEntity<String> createSalesOrder(final AbstractWorkflow workflow) throws JSONException;
+	public ResponseEntity<String> createCustomer(final Api api, final Customer customer) throws JSONException;
+
+	public ResponseEntity<String> createSalesOrder(final Api api, final AbstractWorkflow workflow) throws JSONException;
 }

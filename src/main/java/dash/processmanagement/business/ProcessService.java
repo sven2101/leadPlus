@@ -52,6 +52,11 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.extern.apimanagement.business.ApiRepository;
+import dash.extern.apimanagement.business.IExternApiService;
+import dash.extern.apimanagement.business.WeclappApiService;
+import dash.extern.apimanagement.domain.Api;
+import dash.extern.apimanagement.domain.ApiVendor;
 import dash.leadmanagement.business.ILeadService;
 import dash.leadmanagement.domain.Lead;
 import dash.notificationmanagement.domain.Attachment;
@@ -74,23 +79,28 @@ public class ProcessService implements IProcessService {
 
 	private static final Logger logger = Logger.getLogger(ProcessService.class);
 
-	@Autowired
 	private ProcessRepository processRepository;
-
-	@Autowired
 	private UserService userService;
-
-	@Autowired
 	private CustomerService customerService;
-
-	@Autowired
 	private ILeadService leadService;
-
-	@Autowired
 	private IOfferService offerService;
+	private ISaleService saleService;
+	private IExternApiService weclappApiService;
+	private ApiRepository apiRepository;
 
 	@Autowired
-	private ISaleService saleService;
+	public ProcessService(ProcessRepository processRepository, UserService userService, CustomerService customerService,
+			ILeadService leadService, IOfferService offerService, ISaleService saleService,
+			WeclappApiService weclappApiService, ApiRepository apiRepository) {
+		this.processRepository = processRepository;
+		this.userService = userService;
+		this.customerService = customerService;
+		this.leadService = leadService;
+		this.offerService = offerService;
+		this.saleService = saleService;
+		this.weclappApiService = weclappApiService;
+		this.apiRepository = apiRepository;
+	}
 
 	@Override
 	public List<Process> getElementsByStatus(final Workflow workflow, final Status status) {
@@ -143,11 +153,28 @@ public class ProcessService implements IProcessService {
 			setOrderPositions(process);
 			setNotifications(process);
 			setComments(process);
+			if (process.getStatus().equals(Status.SALE))
+				triggerAPIs(process);
 			return processRepository.save(process);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(OFFER_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
 			throw sfex;
+		}
+	}
+
+	private void triggerAPIs(final Process process) {
+		final List<Api> apis = this.apiRepository.findByIsDeactivatedFalse();
+		for (Api api : apis) {
+			if (api.getApiVendor().equals(ApiVendor.WECLAPP) && api.getIsVerified()) {
+				try {
+					this.weclappApiService.createCustomer(api, process.getSale().getCustomer());
+					// this.weclappApiService.createSalesOrder(api,
+					// process.getSale());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 

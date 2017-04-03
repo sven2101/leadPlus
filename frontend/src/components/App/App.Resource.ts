@@ -458,7 +458,8 @@ class ApiResource {
             getAll: { url: "/api/rest/apis/extern", method: "GET", isArray: true },
             create: { url: "/api/rest/apis/extern", method: "POST" },
             update: { url: "/api/rest/apis/extern", method: "POST" },
-            delete: { url: "/api/rest/apis/extern/:id", method: "DELETE" }
+            delete: { url: "/api/rest/apis/extern/:id", method: "DELETE" },
+            testWeclapp: { url: "/api/rest/apis/extern/weclapp/test", method: "POST" }
         });
     }
 }

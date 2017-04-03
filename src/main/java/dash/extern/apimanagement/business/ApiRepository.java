@@ -14,10 +14,13 @@
 
 package dash.extern.apimanagement.business;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import dash.extern.apimanagement.domain.Api;
 
 public interface ApiRepository extends JpaRepository<Api, Long> {
 
+	public List<Api> findByIsDeactivatedFalse();
 }

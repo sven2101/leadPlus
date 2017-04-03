@@ -29,8 +29,8 @@
 					<tbody>
 						<tr ng-repeat="api in settingCtrl.apiService.apis|orderBy:'name'">
 							<td ng-click="settingCtrl.showApi(api.id)" style="cursor: pointer" class="project-status col-md-1 text-center">
-								<span ng-show="!api.isActive" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
-								<span ng-show="api.isActive" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
+								<span ng-show="!api.isDeactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
+								<span ng-show="api.isDeactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 							</td>
 							<td ng-click="settingCtrl.showApi(api.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
 								{{api.apiVendor}}

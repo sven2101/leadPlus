@@ -22,7 +22,7 @@ class Api {
     tenant: string;
     version: string;
     isVerified: boolean;
-    isActive: boolean;
+    isDeactivated: boolean;
     apiVendor: ApiVendor;
 
     constructor() {

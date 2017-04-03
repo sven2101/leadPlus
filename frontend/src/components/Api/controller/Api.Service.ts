@@ -66,6 +66,10 @@ class ApiService {
         return defer.promise;
     }
 
+    async testApi(api: Api): Promise<Api> {
+        return this.ApiResource.testWeclapp(api).$promise;
+    }
+
     async getAll(): Promise<Array<Api>> {
         this.apis = await this.ApiResource.getAll().$promise;
         return this.apis;

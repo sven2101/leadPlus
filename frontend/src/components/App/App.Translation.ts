@@ -342,7 +342,6 @@ function config($translateProvider) {
             LEAD_DELETE_LEAD_BODY: "Möchten Sie die Anfrage wirklich löschen?",
             LEAD_EDIT_SELECT_PRODUCT: "Produkt wählen",
 
-
             // Define all offer elements
             OFFER_OFFERS: "Angebote",
             OFFER_OFFER: "Angebot",
@@ -452,6 +451,10 @@ function config($translateProvider) {
             SETTING_API_DELETE: "Schnittstelle löschen",
             SETTING_API_DELETE_CONFIRMATION_1: "Möchten Sie sicher die Verbindung zur Schnittstelle ",
             SETTING_API_DELETE_CONFIRMATION_2: " löschen",
+            SETTING_API_CONNECTION_SUCCESS: "Verbindung ist valide",
+            SETTING_API_CONNECTION_ERROR: "Verbindung ist nicht valide",
+            SETTING_API_CONNECTION_TEST: "Verbindung testen",
+            SETTING_API_CONNECTION_TEST_BEFORE: "Vor dem Speichern Verbindung testen!",
 
             // Define statistic elements
             single: "Einzelstatistik",
@@ -1108,6 +1111,10 @@ function config($translateProvider) {
             SETTING_API_DELETE: "Delete API",
             SETTING_API_DELETE_CONFIRMATION_1: "Sure you want to delete this API ",
             SETTING_API_DELETE_CONFIRMATION_2: " ",
+            SETTING_API_CONNECTION_SUCCESS: "Connection is valid",
+            SETTING_API_CONNECTION_ERROR: "Connection is not valid",
+            SETTING_API_CONNECTION_TEST: "Test Connection",
+            SETTING_API_CONNECTION_TEST_BEFORE: "Test your Connection before you save it.",
 
             // Define statistic elements
             single: "Single Statistic",

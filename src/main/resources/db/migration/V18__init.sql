@@ -13,7 +13,7 @@ CREATE TABLE api
   tenant character varying(255) NOT NULL,
   version character varying(255) NOT NULL,
   isVerified boolean NOT NULL,
-  isActive boolean NOT NULL,
+  isDeactivated boolean NOT NULL,
   apiVendor character varying(255) NOT NULL,
   CONSTRAINT api_pkey PRIMARY KEY (id)
 );
