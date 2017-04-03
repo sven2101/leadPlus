@@ -420,6 +420,7 @@ class TenantResource {
     }
 }
 angular.module(moduleTenantResource, [ngResourceId]).service(TenantResourceId, TenantResource);
+
 // ----------------------------------------------------------------------------------------
 const SourceResourceId: string = "SourceResource";
 
@@ -440,7 +441,26 @@ class SourceResource {
         });
     }
 }
-
 angular.module(moduleSourceResource, [ngResourceId]).service(SourceResourceId, SourceResource);
 
+// ----------------------------------------------------------------------------------------
+const ApiResourceId: string = "ApiResource";
 
+class ApiResource {
+
+    private $inject = [$resourceId];
+
+    resource: any;
+
+    constructor($resource) {
+        this.resource = $resource("/api/rest/apis/extern", {}, {
+            getById: { url: "/api/rest/apis/extern/:id", method: "GET" },
+            getAll: { url: "/api/rest/apis/extern", method: "GET", isArray: true },
+            create: { url: "/api/rest/apis/extern", method: "POST" },
+            update: { url: "/api/rest/apis/extern", method: "POST" },
+            delete: { url: "/api/rest/apis/extern/:id", method: "DELETE" }
+        });
+    }
+}
+
+angular.module(moduleApiResource, [ngResourceId]).service(ApiResourceId, ApiResource);

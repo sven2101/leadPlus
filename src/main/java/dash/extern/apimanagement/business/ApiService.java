@@ -19,9 +19,9 @@ import dash.customermanagement.domain.Customer;
 import dash.productmanagement.domain.OrderPosition;
 
 @Service
-public class WeclappApiService implements IExternApiService {
+public class ApiService implements IExternApiService {
 
-	private static final Logger logger = Logger.getLogger(WeclappApiService.class);
+	private static final Logger logger = Logger.getLogger(ApiService.class);
 
 	private String version;
 	private String tenant;
@@ -29,7 +29,7 @@ public class WeclappApiService implements IExternApiService {
 	private RestTemplate restTemplate;
 
 	@Autowired
-	public WeclappApiService(RestTemplate restTemplate) {
+	public ApiService(RestTemplate restTemplate) {
 		this.version = "v1";
 		this.restTemplate = restTemplate;
 		this.uri = "https://" + tenant + ".weclapp.com/webapp/api/" + version + "/";

@@ -116,7 +116,6 @@ class TemplateController {
             errorMessage = error == null || error.data == null ? "" : ": " + error.data.message.substring(36);
             this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR") + errorMessage);
         }
-
     }
 
 

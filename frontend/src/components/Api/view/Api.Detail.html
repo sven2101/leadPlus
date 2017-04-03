@@ -1,0 +1,92 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-10">
+				<h2>{{ 'SETTING_API' | translate }}</h2>
+				<ol class="breadcrumb">
+					<li>
+						<a href="#/dashboard">Home</a>
+					</li>
+					<li>
+						<a href="#/settings">{{ 'SETTINGS_MENU' | translate }}</a>
+					</li>
+					<li>
+						<a href="#/settings/api">{{ 'SETTING_API' | translate }}</a>
+					</li>
+					<li class="active">
+						<strong>{{ apiCtrl.apiHead | translate }}</strong>
+					</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight" ng-if="apiCtrl.apiFound===true">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>{{ apiCtrl.apiHead | translate }}</h5>
+				</div>
+				<div class="ibox-content">
+					<form name="createApi">
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="form-group">
+									<select ng-model="apiCtrl.api.apiVendor" class="form-control m-b">
+										<option value=""></option>
+										<option value="Weclapp" selected>Weclapp</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group col-xs-6">
+								<input required id="authenticationKey" ng-model="apiCtrl.api.authenticationKey" class="form-control input-group-lg reg_name" type="text" placeholder="Authentication Key"/>
+							</div>
+							<div class="form-group col-xs-6">
+								<input required id="authenticationValue" ng-model="apiCtrl.api.authenticationValue" class="form-control input-group-lg reg_name" type="text" placeholder="Authentication Value"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group col-xs-6">
+								<select ng-model="apiCtrl.api.version" class="form-control m-b">
+									<option value=""></option>
+									<option value="v1" selected>v1</option>
+								</select>
+							</div>
+							<div class="form-group col-xs-6">
+								<input required id="tenant" ng-model="apiCtrl.api.tenant" class="form-control input-group-lg reg_name" type="text" placeholder="Tenant"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="form-group col-xs-6">
+								<label class="checkbox-inline "> <input type="checkbox " ng-model="apiCtrl.api.isActive">{{ 'COMMON_DEACTIVATED' | translate }}</label>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div style="float:left; margin-left: 15px;">
+								<button type="button " class="btn btn-success " ng-click="apiCtrl.goBack()"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;{{ 'COMMON_BACK'| translate }}
+									</button>
+							</div>
+							<div style="float:right; margin-right: 15px;">
+								<span ng-if="!apiCtrl.api.currentApi.isVerified">
+									<a uib-tooltip="{{ 'SETTING_TEMPLATE_TEST_TEMPLATE'| translate }}">
+										<i style="color:red; margin-right: 10px;font-size: 1.5em" class="fa fa-exclamation-triangle"></i>
+									</a>
+								</span>
+								<button type="button " class="btn btn-warning " ng-disabled="templateCtrl.isTemplateInPreviewMode() || createTemplate.$invalid"
+								 ng-click="templateCtrl.testSyntax()"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;{{ 'SETTING_TEMPLATE_TEST_SYNTAX'| translate }}
+									</button>
+								<button type="submit " class="btn btn-success " ng-disabled="createApi.$invalid"
+								 ng-click="apiCtrl.save() "><i class="fa fa-save "></i>&nbsp;{{ 'COMMON_SAVE'| translate }}
+									</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

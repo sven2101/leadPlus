@@ -10,7 +10,7 @@ const SettingControllerId: string = "SettingController";
 
 class SettingController {
 
-    private $inject = [SettingServiceId, SmtpServiceId, TemplateServiceId, $rootScopeId, $translateId, $routeId, $scopeId, $locationId];
+    private $inject = [SettingServiceId, SmtpServiceId, TemplateServiceId, $rootScopeId, $translateId, $routeId, $scopeId, $locationId, ApiServiceId];
 
     createTemplateForm;
 
@@ -19,6 +19,7 @@ class SettingController {
     settingService: SettingService;
     smtpService: SmtpService;
     templateService: TemplateService;
+    apiService: ApiService;
 
     roleSelection = Array<any>();
 
@@ -35,12 +36,13 @@ class SettingController {
     currentUser: User;
     lastRoute;
 
-    constructor(SettingService, SmtpService, TemplateService, private SummernoteService: SummernoteService, $rootScope, $translate, $route, $scope, $location) {
+    constructor(SettingService, SmtpService, TemplateService, private SummernoteService: SummernoteService, $rootScope, $translate, $route, $scope, $location, ApiService) {
         this.smtp = new Smtp();
         this.template = new Template();
         this.settingService = SettingService;
         this.templateService = TemplateService;
         this.smtpService = SmtpService;
+        this.apiService = ApiService;
         this.rootScope = $rootScope;
         this.scope = $scope;
         this.route = $route;
@@ -83,6 +85,14 @@ class SettingController {
         }
     }
 
+    showApi(id: number) {
+        if (id === 0) {
+            this.location.path("settings/api/details/new");
+        } else {
+            this.location.path("settings/api/details/" + id);
+        }
+    }
+
     tabOnClick(tab: string) {
         this.lastRoute = this.route.current;
         this.currentTab = tab;
@@ -107,6 +117,11 @@ class SettingController {
     openEmailTemplateDeleteModal(template: Template) {
         this.templateService.openEmailTemplateDeleteModal(template);
     }
+
+    openApiDeleteModal(api: Api) {
+        this.apiService.openApiDeleteModal(api);
+    }
+
 
     translateStringArray(str: string, from: string): string {
         let returnString = "";

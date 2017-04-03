@@ -10,7 +10,7 @@ const SettingServiceId: string = "SettingService";
 
 class SettingService {
 
-    private $inject = [$filterId, toasterId, $translateId, $rootScopeId, SettingResourceId, SmtpResourceId, UserResourceId, FileResourceId, TemplateServiceId];
+    private $inject = [$filterId, toasterId, $translateId, $rootScopeId, SettingResourceId, SmtpResourceId, UserResourceId, FileResourceId, TemplateServiceId, ApiServiceId];
 
     settingsResource;
     smtpResource;
@@ -19,6 +19,7 @@ class SettingService {
     templateResource;
 
     templateService;
+    apiService;
 
     rootScope;
     translate;
@@ -29,10 +30,9 @@ class SettingService {
     roleSelection = Array<any>();
     users: Array<User>;
     templates: Array<Template>;
+    apis: Array<Api>;
 
-
-
-    constructor($filter, toaster, $translate, $rootScope, SettingResource, SmtpResource, UserResource, FileResource, TemplateService) {
+    constructor($filter, toaster, $translate, $rootScope, SettingResource, SmtpResource, UserResource, FileResource, TemplateService, ApiService) {
         this.filter = $filter;
         this.toaster = toaster;
         this.rootScope = $rootScope;
@@ -45,8 +45,9 @@ class SettingService {
         this.loadUsers();
 
         this.templateService = TemplateService;
+        this.apiService = ApiService;
         this.templateService.getAll();
-
+        this.apiService.getAll();
     }
 
     loadUsers() {
