@@ -274,6 +274,8 @@ function config($translateProvider) {
             COMMON_SUPPLY_PAYMENT_TERM: "Zahlungsbedingungen",
             COMMON_SUPPLY_SKONTO: "Skonto",
 
+            COMMON_FILES: "Dateien",
+
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Anfragen verwalten",
             DASHBOARD_DRAG_INFO: "Ziehen Sie die Elemente per Drag\"n\"Drop",
@@ -913,6 +915,8 @@ function config($translateProvider) {
             COMMON_SUPPLY_DELIVERY_TERM: "Term of delivery",
             COMMON_SUPPLY_PAYMENT_TERM: "Term of Payment",
             COMMON_SUPPLY_SKONTO: "Skonto",
+
+            COMMON_FILES: "Files",
 
             // Define dashboard elements
             DASHBOARD_MANAGE_LEADS: "Manage leads",

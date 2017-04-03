@@ -3,21 +3,31 @@
 		word-break: break-all;
 	}
 	
-	#childrow .col-sm-3{
-		width:20% !important;
+	#childrow .col-sm-3 {
+		width: 20% !important;
 	}
-	#childrow div{
+	
+	#childrow div {
 		min-height: 80px;
 	}
-	#childrow label{
+	
+	#childrow label {
 		white-space: nowrap;
-		text-overflow: ellipsis; 
+		text-overflow: ellipsis;
 		display: block;
 		overflow: hidden;
 	}
-	#childrow span{
+	
+	#childrow span {
 		white-space: nowrap;
-		text-overflow: ellipsis; 
+		text-overflow: ellipsis;
+		display: block;
+		overflow: hidden;
+	}
+	
+	.ellipsis {
+		white-space: nowrap;
+		text-overflow: ellipsis;
 		display: block;
 		overflow: hidden;
 	}
@@ -31,7 +41,7 @@
 						<div class="col-sm-3 b-r">
 							<div>
 								<label><a ng-href="#/customer/detail/{{workflowUnit.customer.id}}" title="{{ 'CUSTOMER_DETAIL_TIMELINE' | translate }}" style="cursor: pointer"><i class="fa fa-address-book-o" aria-hidden="true "></i></a> {{ 'COMMON_NAME' | translate }}</label>
-								<span title="{{workflowUnit.customer.firstname}} {{workflowUnit.customer.lastname}}">{{workflowUnit.customer.firstname}} {{workflowUnit.customer.lastname}}</span> 
+								<span title="{{workflowUnit.customer.firstname}} {{workflowUnit.customer.lastname}}">{{workflowUnit.customer.firstname}} {{workflowUnit.customer.lastname}}</span>
 							</div>
 						</div>
 						<div class="col-sm-3 b-r ">
@@ -83,7 +93,7 @@
 							</div>
 						</div>
 						<div class="col-sm-3 b-r " ng-if="type ==='lead'">
-							<div> 
+							<div>
 								<label title="{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}"><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}</label>
 								<span>{{(parent.workflowService.sumOrderPositions(workflowUnit.orderPositions)+workflowUnit.deliveryCosts)| currency:'\u20AC'}}</span>
 							</div>
@@ -164,10 +174,26 @@
 				</div>
 			</div>
 		</div>
-		<div ng-include="'components/Workflow/view/ProductView.html'"></div>
+		<div class="col-lg-8" ng-include="'components/Workflow/view/ProductView.html'"></div>
 	</div>
 	<div class="row">
-		<div ng-include="'components/Workflow/view/CommentView.html'"></div>
+		<div class="col-lg-6">
+			<div class="ibox">
+				<div class="ibox-content text-left" style="min-height: 122px;">
+					<label><i class="fa fa-paperclip" aria-hidden="true "></i>  {{ 'COMMON_FILES' | translate }}</label>
+					<div ng-repeat="notification in process.notifications">
+						<div class="ellipsis" ng-repeat="attachment in notification.attachments">
+							<span ng-if="::attachment.fileUpload.mimeType==='image/jpeg'"><i class="fa fa-file-image-o" aria-hidden="true "></i></span>
+							<span ng-if="::attachment.fileUpload.mimeType==='application/pdf'"><i class="fa fa-file-pdf-o" aria-hidden="true "></i></span>
+							<span ng-if="::(attachment.fileUpload.mimeType!=='application/pdf'&&attachment.fileUpload.mimeType!=='image/jpeg')"><i class="fa fa-paperclip" aria-hidden="true "></i></span>
+							<span>{{::notification.timestamp| limitTo:16}}</span>						
+							<span> <a ng-click="openAttachment(attachment.fileUpload)">{{::attachment.fileUpload.filename}}</a></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6" ng-include="'components/Workflow/view/CommentView.html'"></div>
 	</div>
 </div>
 <!--<div class="row" ng-include="'components/Commentary/view/AllComments.Modal.html'"></div>-->
