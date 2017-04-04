@@ -148,7 +148,6 @@ class EditEmailDirective implements IDirective {
         let id = isNumeric(template) ? template : template.id;
         try {
             workflow.referencedOfferContent = this.getLastOfferNotificationContent(scope.process);
-            console.log(workflow);
             let notification: Notification = await scope.TemplateService.generateNotification(id, workflow, currentNotification);
             notification.subject = !isNumeric(template) ? template.subject : currentNotification.subject;
             scope.notification.content = notification.content;
@@ -169,12 +168,10 @@ class EditEmailDirective implements IDirective {
     };
 
     getLastOfferNotificationContent(process: Process): string {
-        console.log(process.notifications);
         if (process.notifications == null) { return null; }
         let notifications = process.notifications
             .filter(n => n.notificationType === NotificationType.OFFER)
             .sort((a, b) => a.timestamp - b.timestamp);
-        console.log(notifications);
         if (notifications.length === 0 || notifications[0] == null) { return null; }
 
         return this.getFormatedReferencedNotification(notifications[0]);
