@@ -56,7 +56,7 @@ public class OrderPosition {
 
 	@ManyToOne
 	@JoinColumn(name = "product_fk", nullable = false)
-	@Where(clause = "deleted <> '1'")
+	// @Where(clause = "deleted <> '1'")
 	private Product product;
 
 	@JsonIgnore

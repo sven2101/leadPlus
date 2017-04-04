@@ -36,7 +36,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -46,7 +45,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @SQLDelete(sql = "UPDATE product SET deleted = '1' WHERE id = ?")
-@Where(clause = "deleted <> '1'")
+// @Where(clause = "deleted <> '1'")
 @Table(name = "product")
 public class Product implements Serializable {
 

@@ -26,20 +26,26 @@ import dash.customermanagement.domain.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-	public List<Customer> getByEmailIgnoreCase(String email);
+	public List<Customer> findByEmailIgnoreCaseAndDeletedFalse(String email);
 
-	public Page<Customer> findByRealCustomer(Boolean realCustomer, Pageable pageable);
+	public List<Customer> findByDeletedFalse();
 
-	@Query("select c from Customer c where c.realCustomer = true AND (LOWER(c.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.email) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.customerNumber) like LOWER(CONCAT('%',:searchText,'%')))")
+	public Page<Customer> findByDeletedFalse(Pageable pageable);
+
+	public Customer findByIdAndDeletedFalse(Long id);
+
+	public Page<Customer> findByRealCustomerAndDeletedFalse(Boolean realCustomer, Pageable pageable);
+
+	@Query("select c from Customer c where c.realCustomer = true AND c.deleted = false AND (LOWER(c.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.email) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.customerNumber) like LOWER(CONCAT('%',:searchText,'%')))")
 	public Page<Customer> findRealCustomerBySearchText(@Param(value = "searchText") String searchText,
 			Pageable pageable);
 
-	public List<Customer> findByRealCustomer(Boolean realCustomer);
+	public List<Customer> findByRealCustomerAndDeletedFalse(Boolean realCustomer);
 
-	public List<Customer> findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCase(
+	public List<Customer> findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCaseAndDeletedFalse(
 			String firstname, String lastname, String email, String company, String customernumber);
 
-	public Page<Customer> findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCase(
+	public Page<Customer> findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCaseAndDeletedFalse(
 			String firstname, String lastname, String email, String company, String customernumber, Pageable pageable);
 
 }
