@@ -121,6 +121,7 @@ function config($translateProvider) {
             EMAIL_ONLY_FOLLOWUP: "Nur FollowUp setzen",
             EMAIL_NOTIFICATION_HISTORY: "Bisher gesendete Nachrichten",
             EMAIL_NOTIFICATION_SELECT: "Nachricht auswählen",
+            EMAIL_REFERENCED_OFFER: "Versendetes Angebot",
             TEMPLATE_VARIABLES_INFO: "Sie können all die unten aufgelisteten Variablen innerhalb Ihrer Vorlage verwenden.",
             COMMON_MY_PROFILE: "Mein Profil",
             COMMON_SKYPE: "Skype",
@@ -293,6 +294,8 @@ function config($translateProvider) {
             NOTIICATION_SEND_ERROR: "Fehler beim Senden. Bitte überprüfen sie ihre SMTP Einstellungen",
             NOTIFICATION_NO_NOTIFICATIONS: "Keine versendeten Nachrichten vorhanden",
             NOTIFICATION_SEND_NOTIFICATIONS: "Versendete Nachrichten",
+            NOTIFICATION_SENT_ON: "Versendet am",
+            NOTIFICATION_EMAIL_REFERENCE: "Verweisen auf",
 
             // Define profile elements
             information: "Profilinformationen",
@@ -762,6 +765,7 @@ function config($translateProvider) {
             EMAIL_ONLY_FOLLOWUP: "Only set FollowUp",
             EMAIL_NOTIFICATION_HISTORY: "Previous send notifications",
             EMAIL_NOTIFICATION_SELECT: "Select notification",
+            EMAIL_REFERENCED_OFFER: "Sent Offer",
             TEMPLATE_VARIABLES_INFO: "Within your Template you can use each Variable listed below.",
             COMMON_MY_PROFILE: "My Profile",
             COMMON_SKYPE: "Skype",
@@ -935,7 +939,8 @@ function config($translateProvider) {
             NOTIICATION_SEND_ERROR: "Error sending Notification. Please check your SMTP settings",
             NOTIFICATION_NO_NOTIFICATIONS: "No sent notifications available",
             NOTIFICATION_SEND_NOTIFICATIONS: "Sent notifications",
-
+            NOTIFICATION_SENT_ON: "Sent Notification on",
+            NOTIFICATION_EMAIL_REFERENCE: "Verweisen auf",
             // Define profile elements
             information: "Profile Information",
             password: "Password and Profile Picture",

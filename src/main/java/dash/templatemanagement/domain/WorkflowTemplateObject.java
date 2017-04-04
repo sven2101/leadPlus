@@ -59,6 +59,8 @@ public class WorkflowTemplateObject {
 
 	private String invoiceNumber;
 
+	private String referencedOfferContent;
+
 	public Double getSaleTurnover() {
 		return saleTurnover;
 	}
@@ -289,6 +291,18 @@ public class WorkflowTemplateObject {
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+
+	public String getReferencedOfferContent() {
+		return referencedOfferContent;
+	}
+
+	public void setReferencedOfferContent(String referencedOfferContent) {
+		this.referencedOfferContent = referencedOfferContent;
+	}
+
+	public void setDeliveryCosts(Double deliveryCosts) {
+		this.deliveryCosts = deliveryCosts;
 	}
 
 	@Override

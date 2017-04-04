@@ -2,12 +2,15 @@
 
 	<div>
 		<span ng-if="!rootScope.isSmptVerified" style="color:red; padding: 0px !important; font-size: 13px important;"><b><translate>EMAIL_SMTP_VALIDATION_WITHOUT_LINK</translate></b><br><br></span>
-		<div class="form-group">
-			<label>{{ 'EMAIL_NOTIFICATION_HISTORY' | translate }}</label>
-			<select ng-change="onNotificationSelected()" class="form-control" ng-disabled="process.notifications==null||process.notifications.length==0"
-			 style="width:100%" ng-model="notification" ng-options="(translate.instant(notification.notificationType) +' - '+notification.subject) for notification in process.notifications track by notification.id">
-				<option></option>                                         
+
+		<div class="row">
+			<div class="col-sm-12  form-group">
+				<label>{{ 'EMAIL_NOTIFICATION_HISTORY' | translate }}</label>
+				<select ng-change="onNotificationSelected()" class="form-control" ng-disabled="process.notifications==null||process.notifications.length==0"
+				 ng-model="notification">
+				<option ng-repeat="notification in process.notifications" ng-value="notification">{{notification.notificationType|translate}} {{notification.subject}}</option>                                       
 				</select>
+			</div>		
 		</div>
 		<div class="row">
 			<div class="col-sm-6 form-group">
@@ -27,11 +30,13 @@
 			<div class="col-sm-6 form-group">
 				<label>{{ 'PDF_TEMPLATES' | translate }}</label>
 				<div class="input-group m-b">
-					<select ng-model="currentPdfTemplate" style="width:100%" ng-disabled="disabled||generatePdfFromTemplateInProgress===true" class="form-control" ng-change="generatePdfFromTemplate(currentPdfTemplate)"> 
+					<select ng-model="currentPdfTemplate" style="width:100%" ng-disabled="disabled||generatePdfFromTemplateInProgress===true"
+					 class="form-control" ng-change="generatePdfFromTemplate(currentPdfTemplate)"> 
 					<option ng-value="null">- {{ 'EMAIL_TEMPLATE_SELECT' | translate }} -</option>
 					<option ng-repeat="template in pdfTemplates" ng-value="template">{{template.name}}</option>
 				</select>
-					<a ng-disabled="disabled||generatePdfFromTemplateInProgress===true||currentPdfTemplate===null" class="btn btn-default input-group-addon" ng-click="generatePdfFromTemplate(currentPdfTemplate)">
+					<a ng-disabled="disabled||generatePdfFromTemplateInProgress===true||currentPdfTemplate===null" class="btn btn-default input-group-addon"
+					 ng-click="generatePdfFromTemplate(currentPdfTemplate)">
 						<i class="fa fa-refresh" aria-hidden="true"></i>
 					</a>
 				</div>
@@ -104,7 +109,7 @@
 						<span ng-if="attachment.inProgress===true">
 								<div class="spinner-black" style="margin-left: 5px;margin-top: 3px;"></div>	
 						</span>
-					</a>
+				</a>
 				</span>
 			</div>
 		</div>

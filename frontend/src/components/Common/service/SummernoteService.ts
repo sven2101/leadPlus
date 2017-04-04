@@ -408,7 +408,8 @@ class SummernoteService {
             "<li><a template-value='<#if workflow.deliveryAddress.street?has_content>${(workflow.deliveryAddress.street)!} ${(workflow.deliveryAddress.number)!}<br>&lt;/#if&gt; <#if workflow.deliveryAddress.zip?has_content || workflow.deliveryAddress.city?has_content>${(workflow.deliveryAddress.zip)!} ${(workflow.deliveryAddress.city)!}<br>&lt;/#if&gt; <#if workflow.deliveryAddress.state?has_content>${(workflow.deliveryAddress.state)!}<br>&lt;/#if&gt; <#if workflow.deliveryAddress.country?has_content>${(workflow.deliveryAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_DELIVERY_ADDRESS_BLOCK") + "</a></li>" +
             "<li><a template-value='<#if workflow.deliveryAddress.street?has_content>${(workflow.deliveryAddress.street)!} ${(workflow.deliveryAddress.number)!},&lt;/#if&gt; <#if workflow.deliveryAddress.zip?has_content || workflow.deliveryAddress.city?has_content>${(workflow.deliveryAddress.zip)!} ${(workflow.deliveryAddress.city)!},&lt;/#if&gt; <#if workflow.deliveryAddress.state?has_content>${(workflow.deliveryAddress.state)!},&lt;/#if&gt; <#if workflow.deliveryAddress.country?has_content>${(workflow.deliveryAddress.country)!}&lt;/#if&gt;'>" + this.translate.instant("SUMMERNOTE_DELIVERY_ADDRESS_LINE") + "</a></li>" +
             "<li><a template-value='${(workflow.deliveryDate)!}'>" + this.translate.instant("COMMON_DELIVERY_TIME") + "</a></li>" +
-            "<li><a template-value='${(workflow.message)!}'>" + this.translate.instant("EMAIL_MESSAGE") + "</a></li>";
+            "<li><a template-value='${(workflow.message)!}'>" + this.translate.instant("EMAIL_MESSAGE") + "</a></li>" +
+            "<li><a template-value='${(workflow.referencedOfferContent)!}'>" + this.translate.instant("EMAIL_REFERENCED_OFFER") + "</a></li>";
     }
 
     getCustomerTemplateVar(): string {

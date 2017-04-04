@@ -141,12 +141,14 @@ class EditEmailDirective implements IDirective {
 
     }
 
-    async generateContent(template: Template | null, workflow: Lead | Offer, currentNotification: Notification, scope: any): Promise<void> {
+    async generateContent(template: Template | null, workflow: WorkflowTemplateObject, currentNotification: Notification, scope: any): Promise<void> {
         if (template == null) {
             return;
         }
         let id = isNumeric(template) ? template : template.id;
         try {
+            workflow.referencedOfferContent = this.getLastOfferNotificationContent(scope.process);
+            console.log(workflow);
             let notification: Notification = await scope.TemplateService.generateNotification(id, workflow, currentNotification);
             notification.subject = !isNumeric(template) ? template.subject : currentNotification.subject;
             scope.notification.content = notification.content;
@@ -165,6 +167,18 @@ class EditEmailDirective implements IDirective {
             this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR") + errorMessage);
         }
     };
+
+    getLastOfferNotificationContent(process: Process): string {
+        console.log(process.notifications);
+        if (process.notifications == null) { return null; }
+        let notifications = process.notifications
+            .filter(n => n.notificationType === NotificationType.OFFER)
+            .sort((a, b) => a.timestamp - b.timestamp);
+        console.log(notifications);
+        if (notifications.length === 0 || notifications[0] == null) { return null; }
+
+        return this.getFormatedReferencedNotification(notifications[0]);
+    }
 
     reloadHtmlString(scope: any): void {
         if (isNullOrUndefined(scope.notification)) {
@@ -289,6 +303,30 @@ class EditEmailDirective implements IDirective {
         notification.recipientsCC = this.$rootScope.user.defaultCC;
     }
 
+    getFormatedReferencedNotification(referenceNotification: Notification): string {
+        return `<table>
+                    <tbody>
+                        <tr>
+                            <td style="width:50px"></td>
+                            <td style="width:3px;height:100%; border:3px solid;border-color: #dddddd; border-radius: 25px;background-color: #dddddd"></td>
+                            <td style="width:20px;"></td>
+                            <td style="font-style:italic;">
+                                <style> 
+                                    em td {    font-style: italic !important;}
+                                    em img {    font-style: italic !important;-webkit-filter: grayscale(100%); filter: grayscale(100%);}
+                                </style>
+                                <div>${this.$translate.instant("NOTIFICATION_SENT_ON")} ${referenceNotification.timestamp.substr(0, 16)} </div><br>
+                                <em>${referenceNotification.content}</em>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>`;
+    }
+    removeReferenceNotification(notification: Notification): void {
+        if (notification.content == null) { return; }
+        let n = notification.content.indexOf("<!-- referenceNotification -->");
+        notification.content = notification.content.substring(0, n !== -1 ? n : notification.content.length);
+    }
 }
 
 angular.module(moduleApp).directive(EditEmailDirectiveId, EditEmailDirective.directiveFactory());

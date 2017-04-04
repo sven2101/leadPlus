@@ -96,7 +96,7 @@ class TemplateService {
         });
     }
 
-    async generateNotification(templateId: number, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
+    async generateNotification(templateId: number, workflow: WorkflowTemplateObject, notification: Notification): Promise<Notification> {
         return this.templateResource.generateNotification({ templateId: templateId }, { workflowTemplateObject: workflow, notification: notification, user: this.$rootScope.user }).$promise;
     }
 
