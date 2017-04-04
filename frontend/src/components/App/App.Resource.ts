@@ -354,6 +354,9 @@ class TemplateResource {
             test: { url: "/api/rest/templates/test", method: "POST" },
             generatePDF: {
                 url: "/api/rest/files/pdf", method: "POST"
+            },
+            exportProcessAsPDF: {
+                url: "/api/rest/templates/process/pdf", method: "POST"
             }
         });
     }

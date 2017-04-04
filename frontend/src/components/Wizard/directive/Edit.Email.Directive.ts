@@ -124,16 +124,12 @@ class EditEmailDirective implements IDirective {
     }
 
     async openAttachment(fileUpload: FileUpload, scope: any): Promise<void> {
-        let self = this;
+
         if (!isNullOrUndefined(fileUpload.content)) {
             let file = b64toBlob(fileUpload.content, fileUpload.mimeType);
             this.FileSaver.saveAs(file, fileUpload.filename);
             return;
         }
-
-        // await scope.TokenService.setAccessTokenCookie();
-        // window.open("/api/rest/files/open/content/" + fileUpload.id, "_blank");
-
         let response = await this.$http.get("/api/rest/files/open/content/" + fileUpload.id, { method: "GET", responseType: "arraybuffer" });
         let contentType = response.headers("content-type");
         let file = new Blob([response.data], { type: contentType });

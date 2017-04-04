@@ -324,6 +324,7 @@ function config($translateProvider) {
             // Define all process elements
             PROCESS_DELETE_PROCESS_TITLE: "Prozess löschen",
             PROCESS_DELETE_PROCESS_BODY: "Möchten Sie den Prozess wirklich löschen?",
+            PROCESS_EXPORT: "PDF Export",
 
             // Define all lead elements
             LEAD_LEADS: "Anfragen",
@@ -992,6 +993,7 @@ function config($translateProvider) {
             // Define all process elements
             PROCESS_DELETE_PROCESS_TITLE: "Delete process",
             PROCESS_DELETE_PROCESS_BODY: "Are you sure to delete this process?",
+            PROCESS_EXPORT: "PDF Export",
 
             // Define all lead elements
             LEAD_LEADS: "Leads",

@@ -58,4 +58,7 @@ public interface ITemplateService {
 			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException,
 			TemplateException;
 
+	byte[] exportProcessAsPDF(WorkflowTemplateObject workflowTemplateObject)
+			throws TemplateException, IOException, PdfGenerationFailedException;
+
 }

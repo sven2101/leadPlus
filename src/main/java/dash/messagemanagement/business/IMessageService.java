@@ -43,4 +43,6 @@ public interface IMessageService {
 	String getMessageContentString(WorkflowTemplateObject workflowTemplateObject, String templateWithPlaceholders,
 			User user, final Long templateId) throws IOException, TemplateException;
 
+	String exportProcessAsPDF(WorkflowTemplateObject workflowTemplateObject) throws TemplateException, IOException;
+
 }

@@ -108,6 +108,10 @@ class TemplateService {
         return await this.templateResource.generatePDF({ htmlString: html }).$promise;
     }
 
+    async exportProcessAsPDF(workflow: WorkflowTemplateObject): Promise<any> {
+        return this.templateResource.exportProcessAsPDF({ workflowTemplateObject: workflow}).$promise;
+    }
+
     async generatePdfFromTemplateId(templateId: number, workflow: Lead | Offer): Promise<any> {
         return await this.templateResource.generatePdfFromTemplate({ templateId: templateId }, { workflowTemplateObject: workflow, user: this.$rootScope.user }).$promise;
 

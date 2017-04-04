@@ -42,6 +42,7 @@ import dash.messagemanagement.domain.MessageContext;
 import dash.templatemanagement.business.ITemplateService;
 import dash.templatemanagement.business.TemplateCompilationException;
 import dash.templatemanagement.domain.Template;
+import dash.templatemanagement.domain.WorkflowTemplateObject;
 import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -123,11 +124,25 @@ public class TemplateResource {
 			@ApiParam(required = true) @RequestBody @Valid final MessageContext messageContext)
 			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException,
 			TemplateException {
-		Map<String, byte[]> x = new HashMap<>();
+		Map<String, byte[]> map = new HashMap<>();
 
-		x.put("data", templateService.getPdfBytemplateId(templateId, messageContext.getWorkflowTemplateObject(),
+		map.put("data", templateService.getPdfBytemplateId(templateId, messageContext.getWorkflowTemplateObject(),
 				messageContext.getUser()));
-		return x;
+		return map;
+
+	}
+
+	@RequestMapping(value = "/process/pdf", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Generate a pdf based on a workflowTemplateObject.", notes = "")
+	public Map<String, byte[]> exportProcessAsPDF(
+			@ApiParam(required = true) @RequestBody @Valid final WorkflowTemplateObject workflowTemplateObject)
+			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException,
+			TemplateException {
+		Map<String, byte[]> map = new HashMap<>();
+
+		map.put("data", templateService.exportProcessAsPDF(workflowTemplateObject));
+		return map;
 
 	}
 
