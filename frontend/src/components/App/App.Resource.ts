@@ -239,6 +239,7 @@ class ProductResource {
     constructor($resource) {
         this.resource = $resource("/api/rest/products", {}, {
             getProductById: { url: "/api/rest/products/:id", method: "GET" },
+            getProductByIdIncludeDeleted: { url: "/api/rest/products/includedeleted/:id", method: "GET" },
             getAllProducts: { url: "/api/rest/products", method: "GET", isArray: true },
             createProduct: { url: "/api/rest/products", method: "POST" },
             updateProduct: { url: "/api/rest/products", method: "PUT" },

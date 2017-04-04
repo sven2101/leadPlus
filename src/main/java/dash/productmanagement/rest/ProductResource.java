@@ -116,4 +116,12 @@ public class ProductResource {
 	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
 		productService.delete(id);
 	}
+
+	@ApiOperation(value = "Get a single product.", notes = "You have to provide a valid product ID.")
+	@RequestMapping(value = "/includedeleted/{id}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public Product getProductByIdIncludeDeleted(@ApiParam(required = true) @PathVariable final Long id)
+			throws NotFoundException {
+		return productService.getProductByIdIncludeDeleted(id);
+	}
 }

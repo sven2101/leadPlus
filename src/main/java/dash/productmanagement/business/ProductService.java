@@ -129,4 +129,15 @@ public class ProductService implements IProductService {
 	public List<Product> findByDeactivated(boolean deactivated) {
 		return productRepository.findByDeactivatedAndDeletedFalse(deactivated);
 	}
+
+	@Override
+	public Product getProductByIdIncludeDeleted(final Long id) throws NotFoundException {
+		if (Optional.ofNullable(id).isPresent()) {
+			return productRepository.findOne(id);
+		} else {
+			NotFoundException cnfex = new NotFoundException(PRODUCT_NOT_FOUND);
+			logger.error(PRODUCT_NOT_FOUND + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, cnfex);
+			throw cnfex;
+		}
+	}
 }
