@@ -21,53 +21,43 @@ class ApiService {
     private $inject = [toasterId, $translateId, ApiResourceId, $qId, $uibModalId];
 
     apis: Array<Api>;
-    toaster;
-    translate;
     ApiResource;
-    q;
     formdata;
     currentEditApi: Api;
-    uibModal;
 
-    constructor(toaster, $translate, ApiResource, $q, $uibModal) {
-        this.toaster = toaster;
-        this.translate = $translate;
-        this.uibModal = $uibModal;
-        this.q = $q;
+    constructor(private toaster, private $translate, ApiResource, private $q, private $uibModal) {
         this.ApiResource = ApiResource.resource;
         this.apis = new Array<Api>();
         this.formdata = new FormData();
     }
 
-    save(api: Api) {
-        let self = this;
-        this.ApiResource.create(api).$promise.then(function (result: Api) {
-            self.getAll();
-            self.toaster.pop("success", "", self.translate.instant("SETTING_API_TOAST_SAVE"));
-
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SETTING_API_TOAST_SAVE_ERROR"));
-        });
+    async save(api: Api) {
+        try {
+            await this.ApiResource.create(api).$promise;
+            this.getAll();
+        } catch (error) {
+            this.toaster.pop("error", "", this.$translate.instant("SETTING_API_TOAST_SAVE_ERROR"));
+        }
     }
 
-    update(api: Api): Promise<Api> {
-        let defer = this.q.defer();
-        let self = this;
-        this.ApiResource.update(api).$promise.then(function (result: Api) {
-            self.toaster.pop("success", "", self.translate.instant("SETTING_API_TOAST_SAVE"));
-            let oldApi: Api = findElementById(self.apis, api.id);
-            let index = self.apis.indexOf(oldApi);
-            self.apis[index] = api;
-            defer.resolve(result);
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SETTING_API_TOAST_SAVE_ERROR"));
-            defer.reject(null);
-        });
-        return defer.promise;
+    async update(api: Api): Promise<void> {
+        try {
+            await this.ApiResource.update(api).$promise;
+            let oldApi: Api = findElementById(this.apis, api.id);
+            let index = this.apis.indexOf(oldApi);
+            this.apis[index] = api;
+        }
+        catch (error) {
+            this.toaster.pop("error", "", this.$translate.instant("SETTING_API_TOAST_SAVE_ERROR"));
+        }
     }
 
     async testApi(api: Api): Promise<Api> {
         return this.ApiResource.testWeclapp(api).$promise;
+    }
+
+    async weclappCreateCustomer(process: Process): Promise<any> {
+        return this.ApiResource.createCustomer(process).$promise;
     }
 
     async getAll(): Promise<Array<Api>> {
@@ -84,19 +74,19 @@ class ApiService {
         return api;
     }
 
-    remove(api: Api) {
-        let self = this;
-        let indexOfApi = this.apis.indexOf(api);
-        this.ApiResource.delete({ id: api.id }).$promise.then(function () {
-            self.toaster.pop("success", "", self.translate.instant("SETTING_API_TOAST_DELETE"));
-            self.apis.splice(indexOfApi, 1);
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SETTING_API_TOAST_DELETE_ERROR"));
-        });
+    async remove(api: Api): Promise<void> {
+        try {
+            let indexOfApi = this.apis.indexOf(api);
+            await this.ApiResource.delete({ id: api.id }).$promise;
+            this.toaster.pop("success", "", this.$translate.instant("SETTING_API_TOAST_DELETE"));
+            this.apis.splice(indexOfApi, 1);
+        } catch (error) {
+            this.toaster.pop("error", "", this.$translate.instant("SETTING_API_TOAST_DELETE_ERROR"));
+        }
     }
 
     openApiDeleteModal(api: Api) {
-        this.uibModal.open({
+        this.$uibModal.open({
             templateUrl: "components/Api/view/Api.Delete.Modal.html",
             controller: "ApiDeleteController",
             controllerAs: "ApiDeleteCtrl",

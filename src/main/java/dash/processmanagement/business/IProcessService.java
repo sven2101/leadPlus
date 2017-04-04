@@ -32,7 +32,6 @@ import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
-import dash.usermanagement.domain.User;
 import dash.workflowmanagement.domain.Workflow;
 
 @Service

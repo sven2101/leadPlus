@@ -74,7 +74,7 @@ public class ApiResource {
 	public ResponseEntity<Object> deleteApiById(@RequestBody @PathVariable final Long id) {
 		try {
 			apiRepository.delete(id);
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(SmtpResource.class.getSimpleName() + e.getMessage(), e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

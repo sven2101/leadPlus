@@ -8,12 +8,12 @@ CREATE SEQUENCE IF NOT EXISTS api_id_seq
 CREATE TABLE api
 (
   id bigint NOT NULL DEFAULT nextval('api_id_seq'::regclass),
-  authenticationKey character varying(255) NOT NULL,
-  authenticationValue character varying(255) NOT NULL,
+  authentication_key character varying(255) NOT NULL,
+  authentication_value character varying(255) NOT NULL,
   tenant character varying(255) NOT NULL,
   version character varying(255) NOT NULL,
-  isVerified boolean NOT NULL,
-  isDeactivated boolean NOT NULL,
-  apiVendor character varying(255) NOT NULL,
+  is_verified boolean NOT NULL,
+  is_deactivated boolean NOT NULL,
+  api_vendor character varying(255) NOT NULL,
   CONSTRAINT api_pkey PRIMARY KEY (id)
 );

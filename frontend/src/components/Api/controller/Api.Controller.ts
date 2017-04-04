@@ -28,25 +28,24 @@ class ApiController {
     translate;
     toaster;
     location;
+    scope;
     apiService: ApiService;
     rootScope;
     sourceAmountLimit: number = 20;
 
     api: Api;
     apiFound: boolean;
-    apiTested: boolean = false;
     apiHead: string;
-    apiVendors: Array<string>;
 
     constructor(ApiService: ApiService, $rootScope, $translate, toaster, $scope, private SweetAlert, $location, $routeParams) {
         this.apiService = ApiService;
         this.rootScope = $rootScope;
+        this.scope = $scope;
         this.translate = $translate;
         this.location = $location;
         this.toaster = toaster;
         this.apiService.getAll();
         this.initApis($routeParams);
-        this.apiVendors = ["Weclapp"];
     }
 
     async initApis($routeParams) {
@@ -59,6 +58,10 @@ class ApiController {
             this.api = new Api();
             this.apiService.currentEditApi = this.api;
             this.apiHead = "SETTING_API_NEW";
+            this.api.apiVendor = ApiVendor.WECLAPP;
+            this.api.version = "v1";
+            this.api.isVerified = false;
+            this.api.isDeactivated = false;
             this.apiFound = true;
         }
         if (this.apiFound === true) {
@@ -68,16 +71,15 @@ class ApiController {
         }
     }
 
-    save() {
+    async save(): Promise<void> {
         if (isNullOrUndefined(this.api.id)) {
             this.api.apiVendor = ApiVendor.WECLAPP;
             this.api.isVerified = true;
-            this.apiService.save(this.api);
+            await this.apiService.save(this.api);
         } else {
-            this.apiService.update(this.api);
+            await this.apiService.update(this.api);
         }
 
-        this.api = null;
         this.goBack();
     }
 
@@ -96,11 +98,12 @@ class ApiController {
         shallowCopy(this.currentEditApi, this.currentApi);
     }
 
-    saveApi() {
+    async saveApi(): Promise<void> {
         if (!this.isCurrentApiNew) {
             shallowCopy(this.currentApi, this.currentEditApi);
         }
-        this.apiService.save(this.currentApi);
+        await this.apiService.save(this.currentApi);
+        this.goBack();
     }
 
     goBack() {
@@ -109,12 +112,12 @@ class ApiController {
 
     async testApi(): Promise<void> {
         try {
-            await this.apiService.testApi(this.api);
-            this.apiTested = true;
             this.api.isVerified = true;
+            await this.apiService.testApi(this.api);
+            this.createApiForm.$setPristine();
             this.toaster.pop("success", "", this.translate.instant("SETTING_API_CONNECTION_SUCCESS"));
         } catch (error) {
-            this.apiTested = true;
+            this.createApiForm.$setPristine();
             this.api.isVerified = false;
             this.toaster.pop("error", "", this.translate.instant("SETTING_API_CONNECTION_ERROR"));
         }

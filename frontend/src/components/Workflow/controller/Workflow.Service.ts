@@ -23,7 +23,7 @@ const openQuickEmailModal: string = "openQuickEmailModal";
 
 class WorkflowService {
 
-    private $inject = [CommentResourceId, SaleResourceId, OfferResourceId, toasterId, $rootScopeId, $translateId, $qId, CustomerServiceId, UserResourceId, ProcessServiceId, WorkflowModalServiceId];
+    private $inject = [CommentResourceId, SaleResourceId, OfferResourceId, toasterId, $rootScopeId, $translateId, $qId, CustomerServiceId, UserResourceId, ProcessServiceId, WorkflowModalServiceId, ApiServiceId];
 
     commentResource;
     saleResource;
@@ -31,6 +31,7 @@ class WorkflowService {
     userResource;
     processService: ProcessService;
     customerService: CustomerService;
+    apiService: ApiService;
     workflowModalService: WorkflowModalService;
     toaster;
     rootScope;
@@ -38,7 +39,7 @@ class WorkflowService {
     $q;
     users: Array<User> = [];
 
-    constructor(CommentResource, SaleResource, OfferResource, toaster, $rootScope, $translate, $q, CustomerService, UserResource, ProcessService, WorkflowModalService) {
+    constructor(CommentResource, SaleResource, OfferResource, toaster, $rootScope, $translate, $q, CustomerService, UserResource, ProcessService, WorkflowModalService, ApiService) {
         this.commentResource = CommentResource.resource;
         this.saleResource = SaleResource.resource;
         this.userResource = UserResource.resource;
@@ -46,6 +47,7 @@ class WorkflowService {
         this.toaster = toaster;
         this.processService = ProcessService;
         this.workflowModalService = WorkflowModalService;
+        this.apiService = ApiService;
         this.rootScope = $rootScope;
         this.translate = $translate;
         this.$q = $q;
@@ -210,6 +212,7 @@ class WorkflowService {
             let updatedCustomer: Customer = await this.customerService.updateCustomer(customer);
             resultProcess.offer.customer = updatedCustomer;
         }
+        await this.apiService.weclappCreateCustomer(resultProcess);
         this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_NEW_SALE"));
         this.rootScope.offersCount -= 1;
         return resultProcess;

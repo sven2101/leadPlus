@@ -455,6 +455,12 @@ function config($translateProvider) {
             SETTING_API_CONNECTION_ERROR: "Verbindung ist nicht valide",
             SETTING_API_CONNECTION_TEST: "Verbindung testen",
             SETTING_API_CONNECTION_TEST_BEFORE: "Vor dem Speichern Verbindung testen!",
+            SETTING_API_HELP: "Integrieren Sie eine externe Schnittstelle in lead+. Wenn die Schnittstelle aktiv ist, werden die Kundendaten, beim Erstellen eines Verkaufs an das externe System übermittelt.",
+            SETTING_API_API_VENDOR: "Schnittstelle zu",
+            SETTING_API_AUTHENTICATION_KEY: "Authentifizierungs-Schlüssel",
+            SETTING_API_AUTHENTICATION_VALUE: "Authentifizierung-Wert",
+            SETTING_API_VERSION: "Version der Schnittstelle",
+            SETTING_API_SYSTEM_TENANT: "Mandant",
 
             // Define statistic elements
             single: "Einzelstatistik",
@@ -1115,6 +1121,12 @@ function config($translateProvider) {
             SETTING_API_CONNECTION_ERROR: "Connection is not valid",
             SETTING_API_CONNECTION_TEST: "Test Connection",
             SETTING_API_CONNECTION_TEST_BEFORE: "Test your Connection before you save it.",
+            SETTING_API_HELP: "Connect to an extern API to one of your extern Systems. If you activate this API it will be triggered, each time you create a sale. As a result all your Customers will be transferd to your extern CRM System.  ",
+            SETTING_API_API_VENDOR: "API to",
+            SETTING_API_AUTHENTICATION_KEY: "Authentication-Key",
+            SETTING_API_AUTHENTICATION_VALUE: "Authentication-Value",
+            SETTING_API_VERSION: "Version of API",
+            SETTING_API_SYSTEM_TENANT: "Tenant",
 
             // Define statistic elements
             single: "Single Statistic",

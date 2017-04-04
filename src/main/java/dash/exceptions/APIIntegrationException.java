@@ -12,16 +12,26 @@
  * from Eviarc GmbH.
  *******************************************************************************/
 
-package dash.extern.apimanagement.business;
+package dash.exceptions;
 
-import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import net.minidev.json.JSONObject;
 
-import dash.extern.apimanagement.domain.Api;
-import dash.extern.apimanagement.domain.ApiVendor;
+@ResponseStatus(HttpStatus.CONFLICT)
+public class APIIntegrationException extends Exception {
 
-public interface ApiRepository extends JpaRepository<Api, Long> {
+	private static final long serialVersionUID = 5520905786207281118L;
+	private final JSONObject error;
 
-	public List<Api> findByIsDeactivatedFalseAndIsVerifiedTrueAndApiVendor(ApiVendor apiVendor);
+	public APIIntegrationException(String message) {
+		super(message);
+		error = new JSONObject();
+		error.put("error", message);
+	}
+
+	public JSONObject getError() {
+		return error;
+	}
 }

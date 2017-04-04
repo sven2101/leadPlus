@@ -25,11 +25,11 @@ public class Api {
 	private Long id;
 
 	@NotNull
-	@Column(name = "authenticationKey", length = 255, nullable = false)
+	@Column(name = "authentication_key", length = 255, nullable = false)
 	private String authenticationKey;
 
 	@NotNull
-	@Column(name = "authenticationValue", nullable = false)
+	@Column(name = "authentication_value", nullable = false)
 	private String authenticationValue;
 
 	@NotNull
@@ -41,15 +41,15 @@ public class Api {
 	private String version;
 
 	@NotNull
-	@Column(name = "isVerified", nullable = false)
+	@Column(name = "is_verified", nullable = false)
 	private Boolean isVerified;
 
 	@NotNull
-	@Column(name = "isDeactivated", nullable = false)
+	@Column(name = "is_deactivated", nullable = false)
 	private Boolean isDeactivated;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "apiVendor", length = 255, nullable = true)
+	@Column(name = "api_vendor", length = 255, nullable = true)
 	private ApiVendor apiVendor;
 
 	public Api() {

@@ -97,7 +97,7 @@ public class SmtpService implements ISmtpService {
 			smtp.setPassword(tempSmpt.getPassword());
 			smtp.setSalt(tempSmpt.getSalt());
 			smtp.setIv(tempSmpt.getIv());
-		} else if (smtp != null && smtp.isDecrypted() == true && smtp.getPassword() != null
+		} else if (smtp != null && smtp.isDecrypted() && smtp.getPassword() != null
 				&& new String(smtp.getPassword(), "UTF-8") != "") {
 			if (smtpKey == null) {
 				Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
