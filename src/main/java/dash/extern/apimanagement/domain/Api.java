@@ -4,33 +4,22 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import dash.common.EncryptedObject;
 import io.swagger.annotations.ApiModel;
 
 @ApiModel(value = "Api", description = "Extern Api")
 @Entity
 @Table(name = "api")
-public class Api {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "api_auto_gen")
-	@SequenceGenerator(name = "api_auto_gen", sequenceName = "api_id_seq", allocationSize = 1)
-	@Column(name = "id", nullable = false)
-	private Long id;
+@SequenceGenerator(name = "idgen", sequenceName = "api_id_seq", allocationSize = 1)
+public class Api extends EncryptedObject {
 
 	@NotNull
 	@Column(name = "authentication_key", length = 255, nullable = false)
 	private String authenticationKey;
-
-	@NotNull
-	@Column(name = "authentication_value", nullable = false)
-	private String authenticationValue;
 
 	@NotNull
 	@Column(name = "tenant", length = 255, nullable = false)
@@ -56,28 +45,12 @@ public class Api {
 
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getAuthenticationKey() {
 		return authenticationKey;
 	}
 
 	public void setAuthenticationKey(String authenticationKey) {
 		this.authenticationKey = authenticationKey;
-	}
-
-	public String getAuthenticationValue() {
-		return authenticationValue;
-	}
-
-	public void setAuthenticationValue(String authenticationValue) {
-		this.authenticationValue = authenticationValue;
 	}
 
 	public String getTenant() {
@@ -119,4 +92,57 @@ public class Api {
 	public void setApiVendor(ApiVendor apiVendor) {
 		this.apiVendor = apiVendor;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((apiVendor == null) ? 0 : apiVendor.hashCode());
+		result = prime * result + ((authenticationKey == null) ? 0 : authenticationKey.hashCode());
+		result = prime * result + ((isDeactivated == null) ? 0 : isDeactivated.hashCode());
+		result = prime * result + ((isVerified == null) ? 0 : isVerified.hashCode());
+		result = prime * result + ((tenant == null) ? 0 : tenant.hashCode());
+		result = prime * result + ((version == null) ? 0 : version.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Api other = (Api) obj;
+		if (apiVendor != other.apiVendor)
+			return false;
+		if (authenticationKey == null) {
+			if (other.authenticationKey != null)
+				return false;
+		} else if (!authenticationKey.equals(other.authenticationKey))
+			return false;
+		if (isDeactivated == null) {
+			if (other.isDeactivated != null)
+				return false;
+		} else if (!isDeactivated.equals(other.isDeactivated))
+			return false;
+		if (isVerified == null) {
+			if (other.isVerified != null)
+				return false;
+		} else if (!isVerified.equals(other.isVerified))
+			return false;
+		if (tenant == null) {
+			if (other.tenant != null)
+				return false;
+		} else if (!tenant.equals(other.tenant))
+			return false;
+		if (version == null) {
+			if (other.version != null)
+				return false;
+		} else if (!version.equals(other.version))
+			return false;
+		return true;
+	}
+
 }

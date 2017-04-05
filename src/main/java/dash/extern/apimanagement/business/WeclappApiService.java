@@ -1,5 +1,7 @@
 package dash.extern.apimanagement.business;
 
+import static dash.Constants.UTF_8;
+
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,11 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import dash.common.AbstractWorkflow;
+import dash.common.Encryptor;
 import dash.common.FailedToDecryptCipherTextException;
 import dash.customermanagement.domain.Customer;
 import dash.exceptions.APIIntegrationException;
@@ -134,19 +138,21 @@ public class WeclappApiService implements IExternApiService {
 
 	private HttpHeaders createHeader(final Api encryptedApi)
 			throws FailedToDecryptCipherTextException, UnsupportedEncodingException {
+
+		Api api = encryptedApi;
+		if (!encryptedApi.isDecrypted()) {
+			Api tmpApi = apiService.getById(encryptedApi.getId());
+			encryptedApi.setPassword(tmpApi.getPassword());
+			encryptedApi.setSalt(tmpApi.getSalt());
+			encryptedApi.setIv(tmpApi.getIv());
+			api = (Api) Encryptor.decrypt(encryptedApi);
+		}
+
+		String authenticationValue = new String(api.getPassword(), UTF_8);
 		final HttpHeaders headers = new HttpHeaders();
-		/*
-		 * Api api = encryptedApi; if (!encryptedApi.isDecrypted()) { Api tmpApi
-		 * = apiService.getById(encryptedApi.getId());
-		 * encryptedApi.setPassword(tmpApi.getPassword());
-		 * encryptedApi.setSalt(tmpApi.getSalt());
-		 * encryptedApi.setIv(tmpApi.getIv()); } api = (Api)
-		 * Encryptor.decrypt(encryptedApi); String authenticationValue = new
-		 * String(api.getPassword(), UTF_8);
-		 * 
-		 * headers.setContentType(MediaType.APPLICATION_JSON);
-		 * headers.set(api.getAuthenticationKey(), authenticationValue);
-		 */
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.set(api.getAuthenticationKey(), authenticationValue);
+
 		return headers;
 	}
 

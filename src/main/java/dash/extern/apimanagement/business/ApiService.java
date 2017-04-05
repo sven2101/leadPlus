@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import dash.common.Encryptor;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -43,10 +44,19 @@ public class ApiService {
 		}
 	}
 
-	public Api save(Api api) throws Exception {
+	public Api save(final Api api) throws Exception {
 		if (api != null) {
-			// api = (Api) Encryptor.encrypt(api);
-			return apiRepository.save(api);
+			Api encryptedApi = null;
+			if (!api.isDecrypted()) {
+				Api tmpApi = getById(api.getId());
+				encryptedApi = api;
+				encryptedApi.setPassword(tmpApi.getPassword());
+				encryptedApi.setSalt(tmpApi.getSalt());
+				encryptedApi.setIv(tmpApi.getIv());
+			} else {
+				encryptedApi = (Api) Encryptor.encrypt(api);
+			}
+			return apiRepository.save(encryptedApi);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(SAVE_FAILED_EXCEPTION + ApiService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);

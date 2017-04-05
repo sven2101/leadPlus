@@ -3,17 +3,23 @@ package dash.common;
 import java.util.Arrays;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+@MappedSuperclass
 public abstract class EncryptedObject {
 
 	@Id
-	protected Long id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idgen")
+	@Column(name = "id", nullable = false)
+	private Long id;
 
 	@JsonIgnore
 	@Column(name = "salt", nullable = false)
@@ -25,7 +31,7 @@ public abstract class EncryptedObject {
 
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(name = "password", nullable = false)
-	private byte[] password;
+	protected byte[] password;
 
 	@Transient
 	@JsonProperty(access = Access.WRITE_ONLY)

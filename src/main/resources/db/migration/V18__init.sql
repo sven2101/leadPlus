@@ -9,7 +9,6 @@ CREATE TABLE api
 (
   id bigint NOT NULL DEFAULT nextval('api_id_seq'::regclass),
   authentication_key character varying(255) NOT NULL,
-  authentication_value character varying(255) NOT NULL,
   iv bytea,
   password bytea,
   salt bytea,

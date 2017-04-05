@@ -178,5 +178,12 @@ function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+ function b64EncodeUnicode(str) {
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+            let x = String.fromCharCode as any;
+            return x("0x" + p1);
+        }));
+    }
+
 
 

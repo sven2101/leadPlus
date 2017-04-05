@@ -52,6 +52,7 @@ class ApiController {
         let apiId = $routeParams.apiId;
         if (!isNullOrUndefined(apiId) && apiId !== 0 && !isNaN(apiId) && angular.isNumber(+apiId)) {
             this.api = await this.apiService.getApiById(Number(apiId));
+            this.api.authenticationValue = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
             this.apiHead = ApiVendor[this.api.apiVendor];
             isNullOrUndefined(this.api) ? this.apiFound = false : this.apiFound = true;
         } else if (!isNullOrUndefined(apiId) && apiId === "new") {
@@ -71,7 +72,16 @@ class ApiController {
         }
     }
 
+
+
     async save(): Promise<void> {
+        if (this.api.authenticationValue.replace(/x/g, "") === "") {
+            this.api.password = null;
+            this.api.decrypted = false;
+        } else {
+            this.api.decrypted = true;
+            this.api.password = b64EncodeUnicode(this.api.authenticationValue);
+        }
         if (isNullOrUndefined(this.api.id)) {
             this.api.apiVendor = ApiVendor.WECLAPP;
             this.api.isVerified = true;
@@ -112,6 +122,13 @@ class ApiController {
 
     async testApi(): Promise<void> {
         try {
+            if (this.api.authenticationValue.replace(/x/g, "") === "") {
+                this.api.password = null;
+                this.api.decrypted = false;
+            } else {
+                this.api.decrypted = true;
+                this.api.password = b64EncodeUnicode(this.api.authenticationValue);
+            }
             this.api.isVerified = true;
             await this.apiService.testApi(this.api);
             this.createApiForm.$setPristine();

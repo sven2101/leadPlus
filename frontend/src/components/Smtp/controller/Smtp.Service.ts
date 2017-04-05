@@ -78,7 +78,7 @@ class SmtpService {
         }
         let defer = this.q.defer();
         this.currentSmtp.user = this.rootScope.user;
-        this.currentSmtp.password = this.currentSmtp.stringPassword !== null ? btoa(this.currentSmtp.stringPassword) : null;
+        this.currentSmtp.password = this.currentSmtp.stringPassword !== null ? b64EncodeUnicode(this.currentSmtp.stringPassword) : null;
 
         this.currentSmtp = await this.smtpResource.createSmtp({ smtpKey: this.rootScope.user.smtpKey, smtp: this.currentSmtp }).$promise;
         this.rootScope.isSmptVerified = this.currentSmtp.verified;

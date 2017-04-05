@@ -56,8 +56,8 @@
 							</div>
 							<div class="form-group col-xs-6">
 								<label>{{ 'SETTING_API_AUTHENTICATION_VALUE' | translate }}<span style="color:red">*</span></label>
-								<input required id="authenticationValue" ng-model="apiCtrl.api.authenticationValue" class="form-control input-group-lg reg_name"
-								 type="text" placeholder="Authentication Value" />
+								<input type="password" required id="authenticationValue" ng-model="apiCtrl.api.authenticationValue" class="form-control input-group-lg reg_name"
+								 placeholder="Authentication Value" />
 							</div>
 						</div>
 
@@ -81,7 +81,11 @@
 								<button type="button " class="btn btn-warning " ng-disabled="apiCtrl.createApiForm.$invalid || apiCtrl.createApiForm.$pristine"
 										ng-click="apiCtrl.testApi()"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;{{ 'SETTING_API_CONNECTION_TEST'| translate }}
 								</button>
-								<button type="submit " class="btn btn-success " ng-disabled="apiCtrl.createApiForm.$invalid || !apiCtrl.api.isVerified || !apiCtrl.createApiForm.$pristine"
+								<!-- ng-disabled="apiCtrl.createApiForm.$invalid || !apiCtrl.api.isVerified || !apiCtrl.createApiForm.$pristine" -->
+								<button type="submit " class="btn btn-success " 
+							
+								
+								
 									ng-click="apiCtrl.save() "><i class="fa fa-save "></i>&nbsp;{{ 'COMMON_SAVE'| translate }}
 								</button>
 							</div>

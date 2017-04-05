@@ -24,6 +24,8 @@ class Api {
     isVerified: boolean;
     isDeactivated: boolean;
     apiVendor: ApiVendor;
+    password: string;
+    decrypted: boolean;
 
     constructor() {
     }
