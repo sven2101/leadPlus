@@ -79,21 +79,17 @@
 									</a>
 								</span>
 								<button type="button " class="btn btn-warning " ng-disabled="apiCtrl.createApiForm.$invalid || apiCtrl.createApiForm.$pristine"
-										ng-click="apiCtrl.testApi()"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;{{ 'SETTING_API_CONNECTION_TEST'| translate }}
-								</button>
-								<!-- ng-disabled="apiCtrl.createApiForm.$invalid || !apiCtrl.api.isVerified || !apiCtrl.createApiForm.$pristine" -->
-								<button type="submit " class="btn btn-success " 
-							
-								
-								
-									ng-click="apiCtrl.save() "><i class="fa fa-save "></i>&nbsp;{{ 'COMMON_SAVE'| translate }}
+								 ng-click="apiCtrl.testApi()"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;{{ 'SETTING_API_CONNECTION_TEST'| translate }}
+								</button>							
+								<button type="submit " class="btn btn-success" ng-disabled="apiCtrl.createApiForm.$invalid || !apiCtrl.api.isVerified || !apiCtrl.createApiForm.$pristine"
+								 ng-click="apiCtrl.save() "><i class="fa fa-save "></i>&nbsp;{{ 'COMMON_SAVE'| translate }}
 								</button>
 							</div>
 						</div>
-							
+
 					</form>
-					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
