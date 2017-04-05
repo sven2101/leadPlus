@@ -32,16 +32,16 @@ class ActionButtonDirective implements IDirective {
         scope.rootScope = this.$rootScope;
         scope.config = scope.actionbuttonconfig;
         scope.ConfirmationFunctionType = ConfirmationFunctionType;
-        let workflow = scope.process.offer == null ? scope.process.lead : scope.process.offer;
-        workflow = scope.process.sale != null ? scope.process.sale : scope.workflow;
-        scope.exportProcessAsPDF = () => this.exportProcessAsPDF(workflow);
+        scope.workflow = scope.process.offer == null ? scope.process.lead : scope.process.offer;
+        scope.workflow = scope.process.sale != null ? scope.process.sale : scope.workflow;
+        scope.workflow.processor = scope.process.processor;
+        scope.exportProcessAsPDF = () => this.exportProcessAsPDF(scope.workflow);
         scope.openEditModal = (process: Process): void => {
             this.$rootScope.$broadcast(broadcastOpenEditModal, process);
         };
     };
 
     async exportProcessAsPDF(workflow: WorkflowTemplateObject): Promise<void> {
-
         let response = await this.TemplateService.exportProcessAsPDF(workflow);
         let file = b64toBlob(response.data, "application/pdf");
         this.FileSaver.saveAs(file, "export.pdf");

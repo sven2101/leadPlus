@@ -11,6 +11,7 @@ import dash.addressmanagement.domain.Address;
 import dash.common.HtmlCleaner;
 import dash.customermanagement.domain.Customer;
 import dash.productmanagement.domain.OrderPosition;
+import dash.usermanagement.domain.User;
 import dash.vendormanagement.domain.Vendor;
 
 public class WorkflowTemplateObject {
@@ -60,6 +61,8 @@ public class WorkflowTemplateObject {
 	private String invoiceNumber;
 
 	private String referencedOfferContent;
+
+	private User processor;
 
 	public Double getSaleTurnover() {
 		return saleTurnover;
@@ -303,6 +306,14 @@ public class WorkflowTemplateObject {
 
 	public void setDeliveryCosts(Double deliveryCosts) {
 		this.deliveryCosts = deliveryCosts;
+	}
+
+	public User getProcessor() {
+		return processor;
+	}
+
+	public void setProcessor(User processor) {
+		this.processor = processor;
 	}
 
 	@Override

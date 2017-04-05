@@ -109,7 +109,7 @@ class TemplateService {
     }
 
     async exportProcessAsPDF(workflow: WorkflowTemplateObject): Promise<any> {
-        return this.templateResource.exportProcessAsPDF({ workflowTemplateObject: workflow}).$promise;
+        return this.templateResource.exportProcessAsPDF(workflow).$promise;
     }
 
     async generatePdfFromTemplateId(templateId: number, workflow: Lead | Offer): Promise<any> {

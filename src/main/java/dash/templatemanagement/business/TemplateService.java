@@ -198,11 +198,9 @@ public class TemplateService implements ITemplateService {
 	}
 
 	@Override
-	public byte[] exportProcessAsPDF(WorkflowTemplateObject workflowTemplateObject)
+	public byte[] exportProcessAsPDF(WorkflowTemplateObject workflowTemplateObject, final User user)
 			throws TemplateException, IOException, PdfGenerationFailedException {
-
-		String message = messageService.exportProcessAsPDF(workflowTemplateObject);
-		return htmlToPdfService.genereatePdfFromHtml(message);
+		return htmlToPdfService.genereatePdfFromHtml(messageService.exportProcessAsPDF(workflowTemplateObject, user));
 	}
 
 }
