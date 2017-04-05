@@ -26,6 +26,17 @@ function config($translateProvider) {
             LOGOUT: "Abmelden",
             LANGUAGE: "Sprache",
 
+            // Help
+            HELP: "Hilfe",
+            HELP_GENERAL: "General",
+            HELP_PIPELINE: "Pipeline",
+            HELP_SETTINGS: "Einstellungen",
+            HELP_ACCOUNT: "Account Management",
+            HELP_TEMPLATES: "Vorlagen",
+            HELP_EMAIL: "Email",
+            HELP_API: "Schnittstellen",
+            HELP_SUPPORT: "Support",
+
             // Define login elements
             LOGIN_WELCOME: "Willkommen bei " + pageLogo,
             LOGIN_WELCOME_DESCRIPTION: pageLogo + " Lead Management System",
@@ -697,6 +708,17 @@ function config($translateProvider) {
             LOGIN: "Login",
             LOGOUT: "Logout",
             LANGUAGE: "Language",
+
+            // Help
+            HELP: "Help",
+            HELP_GENERAL: "General",
+            HELP_PIPELINE: "Pipeline",
+            HELP_SETTINGS: "Settings",
+            HELP_ACCOUNT: "Account Management",
+            HELP_TEMPLATES: "Templates",
+            HELP_EMAIL: "Email",
+            HELP_API: "APIs",
+            HELP_SUPPORT: "Support",
 
             // Define login elements
             LOGIN_WELCOME: "Welcome to " + pageLogo,
