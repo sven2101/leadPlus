@@ -155,6 +155,7 @@ public class UserService implements IUserService {
 					updateUser.setLastname(user.getLastname());
 					updateUser.setPhone(user.getPhone());
 					updateUser.setSkype(user.getSkype());
+					updateUser.setMobile(user.getMobile());
 					updateUser.setFax(user.getFax());
 					updateUser.setJob(user.getJob());
 					updateUser.setDefaultVat(user.getDefaultVat());

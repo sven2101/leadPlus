@@ -447,6 +447,7 @@ class SummernoteService {
             "<li><a template-value='${(user.lastname)!}'>" + this.translate.instant("COMMON_LASTNAME") + "</a></li>" +
             " <li><a template-value='${(user.email)!}'>" + this.translate.instant("COMMON_EMAIL") + "</a></li>" +
             "<li><a template-value='${(user.phone)!}'>" + this.translate.instant("COMMON_PHONE") + "</a></li>" +
+            "<li><a template-value='${(user.mobile)!}'>" + this.translate.instant("COMMON_MOBILE") + "</a></li>" +
             "<li><a template-value='${(user.fax)!}'>" + this.translate.instant("COMMON_FAX") + "</a></li>" +
             "<li><a template-value='${(user.skype)!}'>" + this.translate.instant("COMMON_SKYPE") + "</a></li>" +
             "<li><a template-value='${(user.job)!}'>" + this.translate.instant("COMMON_JOB") + "</a></li>";

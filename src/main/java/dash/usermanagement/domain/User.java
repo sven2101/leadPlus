@@ -79,6 +79,10 @@ public class User implements UserDetails, Principal {
 	@Column(name = "fax", length = 50, nullable = true)
 	private String fax;
 
+	@Size(max = 50)
+	@Column(name = "mobile", length = 50, nullable = true)
+	private String mobile;
+
 	@Size(max = 100)
 	@Column(name = "job", length = 50, nullable = true)
 	private String job;
@@ -292,6 +296,14 @@ public class User implements UserDetails, Principal {
 		this.defaultCC = defaultCC;
 	}
 
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
 	@Override
 	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -321,6 +333,11 @@ public class User implements UserDetails, Principal {
 	}
 
 	@Override
+	public String getName() {
+		return this.email;
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -335,6 +352,7 @@ public class User implements UserDetails, Principal {
 		result = prime * result + ((job == null) ? 0 : job.hashCode());
 		result = prime * result + ((language == null) ? 0 : language.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
+		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
 		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
@@ -403,6 +421,11 @@ public class User implements UserDetails, Principal {
 				return false;
 		} else if (!lastname.equals(other.lastname))
 			return false;
+		if (mobile == null) {
+			if (other.mobile != null)
+				return false;
+		} else if (!mobile.equals(other.mobile))
+			return false;
 		if (password == null) {
 			if (other.password != null)
 				return false;
@@ -436,11 +459,6 @@ public class User implements UserDetails, Principal {
 		} else if (!username.equals(other.username))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String getName() {
-		return this.email;
 	}
 
 }

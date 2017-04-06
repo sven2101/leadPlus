@@ -72,6 +72,14 @@
 								<input type="text " id="phone " name="phone " class="form-control " placeholder="{{ 'COMMON_PHONE' | translate}} " ng-model="profileCtrl.currentUser.phone "
 								 ng-minlength="2 " ng-maxlength="50 ">
 							</div>
+							<!-- MOBILE -->
+							<div class="form-group ">
+								<label><i class="fa fa-mobile" aria-hidden="true"></i>   {{ 'COMMON_MOBILE' | translate }}</label>
+								<span style="color:red" ng-show="profilInfoForm.mobile.$error.minlength&&!profilInfoForm.mobile.$pristine ">{{ 'PROFIL_VALIDATE_PHONE_TO_SHORT' | translate }}</span>
+								<span style="color:red" ng-show="profilInfoForm.mobile.$error.maxlength&&!profilInfoForm.mobile.$pristine ">{{ 'COMMON_VALIDATE_MAX' | translate }}20{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
+								<input type="text " id="mobile " name="mobile " class="form-control " placeholder="{{ 'COMMON_MOBILE' | translate}} " ng-model="profileCtrl.currentUser.mobile "
+								 ng-minlength="2 " ng-maxlength="20 ">
+							</div>
 							<!-- SKYPE -->
 							<div class="form-group ">
 								<label><i class="fa fa-skype " aria-hidden="true "></i>   {{ 'COMMON_SKYPE' | translate }}</label>

@@ -1,0 +1,1 @@
+ALTER TABLE "user" 	ADD COLUMN mobile character varying(50);

@@ -14,6 +14,7 @@ class User {
     firstname: string;
     lastname: string;
     phone: string;
+    mobile: string;
     skype: string;
     fax: string;
     job: string;
