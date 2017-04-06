@@ -1,0 +1,6 @@
+{
+  "/api/rest": {
+    "target": "https://demo.leadplus.localhost:8080",
+    "secure": true
+  }
+}

@@ -1,5 +1,4 @@
 {
-    "typescript.check.workspaceVersion": false,
     "tslint.configFile": "frontend/gulp/tslintOptions.json",
     "tslint.autoFixOnSave": true,
     "vsicons.presets.angular": false

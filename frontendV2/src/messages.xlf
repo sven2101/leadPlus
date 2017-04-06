@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="ccf8bad31ba354c1a3679d47b7d79105ad377485" datatype="html">
+        <source>Hi <x id="INTERPOLATION"/> <x id="INTERPOLATION"/> wtf</source>
+        <target/>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
