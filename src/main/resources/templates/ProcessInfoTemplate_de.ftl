@@ -36,11 +36,15 @@ td{
 
 <h1 class="heading">Übersicht</h1>
 
+<h2>Bearbeiter:</h2>
 <table class="table">
-	<#if workflow.processor?has_content>
+	<#if workflow.processor??>
 		<tr>
-			<td><b>Bearbeiter</b></td>
-			<td>${workflow.processor.firstname} ${workflow.processor.lastname}</td>
+			<td><b>Name</b></td>
+			<td>
+				<#if workflow.processor.firstname?has_content>${workflow.processor.firstname}<#else></#if>
+			 	<#if workflow.processor.lastname?has_content>${workflow.processor.lastname}<#else></#if>
+			</td>
 		</tr>
 	<#else></#if>
 	<#if workflow.processor.phone?has_content>
