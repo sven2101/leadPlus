@@ -69,7 +69,6 @@ public class WeclappApiService implements IExternApiService {
 		WeclappInvoiceAddress weclappInvoiceAddress = new WeclappInvoiceAddress(customer);
 		WeclappCustomer weclappCustomer = new WeclappCustomer(customer, weclappDeliveryAddress, weclappInvoiceAddress);
 		HttpEntity<WeclappCustomer> request = new HttpEntity<>(weclappCustomer, headers);
-
 		ResponseEntity<String> response = restTemplate.postForEntity(BASE_URI + "/customer", request, String.class,
 				createVars(api));
 

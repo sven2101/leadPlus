@@ -20,29 +20,45 @@ public class WeclappCustomer {
 	private String salutation;
 	private String company;
 	private String partyType;
+	private List<WeclappContact> contacts;
 
 	public WeclappCustomer(Customer customer, WeclappDeliveryAddress weclappDeliveryAddress,
 			WeclappInvoiceAddress weclappInvoiceAddress) {
-		this.addresses = new ArrayList<WeclappAddress>();
+		this.currencyId = "248";
+		this.currencyName = "EUR";
+		this.firstName = customer.getFirstname();
+		this.lastName = customer.getLastname();
+		this.addresses = new ArrayList<>();
 		if (weclappDeliveryAddress != null)
 			this.addresses.add(weclappDeliveryAddress);
 		if (weclappInvoiceAddress != null)
 			this.addresses.add(weclappInvoiceAddress);
-		this.currencyId = "248";
-		this.currencyName = "EUR";
-		this.email = customer.getEmail();
-		this.firstName = customer.getFirstname();
-		this.lastName = customer.getLastname();
-		this.fax = customer.getFax();
-		this.mobilePhone1 = customer.getMobile();
-		this.phone = customer.getPhone();
-		this.company = customer.getCompany();
+
 		if (customer.getTitle() != null && customer.getTitle().equals(Title.MS))
 			this.salutation = "MR";
 		if (customer.getTitle() != null && customer.getTitle().equals(Title.MS))
 			this.salutation = "MRS";
 
-		this.partyType = customer.getCompany() == null ? "PERSON" : "ORGANIZATION";
+		if (customer.getCompany() != null) {
+			this.company = customer.getCompany();
+			this.partyType = "ORGANIZATION";
+		} else {
+			this.partyType = "PERSON";
+			this.company = "Privat";
+		}
+
+		this.contacts = new ArrayList<>();
+		WeclappContact contact = new WeclappContact();
+		contact.setAddresses(this.addresses);
+		contact.setCompany(customer.getCompany() == null ? "Privat" : customer.getCompany());
+		contact.setFirstName(customer.getFirstname());
+		contact.setLastName(customer.getLastname());
+		contact.setFax(customer.getFax());
+		contact.setMobilePhone1(customer.getMobile());
+		contact.setPhone(customer.getPhone());
+		contact.setEmail(customer.getEmail());
+		contact.setPartyType("PERSON");
+		this.contacts.add(contact);
 	}
 
 	public List<WeclappAddress> getAddresses() {
@@ -139,6 +155,14 @@ public class WeclappCustomer {
 
 	public void setPartyType(String partyType) {
 		this.partyType = partyType;
+	}
+
+	public List<WeclappContact> getContacts() {
+		return contacts;
+	}
+
+	public void setContacts(List<WeclappContact> contacts) {
+		this.contacts = contacts;
 	}
 
 }
