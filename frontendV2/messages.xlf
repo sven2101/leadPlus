@@ -18,6 +18,51 @@
         <source>yyy</source>
         <target/>
       </trans-unit>
+      <trans-unit id="afb5e4fcdb5b99d548cadfd94d0ac472ae121200" datatype="html">
+        <source>lead+</source>
+        <target/>
+      </trans-unit>
+      <trans-unit id="f0e31c7a35fdbff702b5fa2f1201d4ab19512857" datatype="html">
+        <source>Welcome to lead+</source>
+        <target/>
+      </trans-unit>
+      <trans-unit id="e6e231dca1d296bb874dff57b6c2e54cada6c782" datatype="html">
+        <source>Lead Management System</source>
+        <target/>
+      </trans-unit>
+      <trans-unit id="244aae9346da82b0922506c2d2581373a15641cc" datatype="html">
+        <source>Email</source>
+        <target/>
+      </trans-unit>
+      <trans-unit id="d8b81951d25439864e92f750f7c99d7426d6517c" datatype="html">
+        <source>password</source>
+        <target/>
+      </trans-unit>
+      <trans-unit id="c15f0f6076dd3f758adb69556fb1751f7a8139dc" datatype="html">
+        <source>Login
+            </source>
+        <target/>
+      </trans-unit>
+      <trans-unit id="e29132368315b1f862d59595c842b322b6831fa9" datatype="html">
+        <source>Do not have an account?</source>
+        <target/>
+      </trans-unit>
+      <trans-unit id="6255a8674662e55d6ccc3ad46cc1dd0dd6394d75" datatype="html">
+        <source>Forgot Password?</source>
+        <target/>
+      </trans-unit>
+      <trans-unit id="cfc2f436ec2beffb042e7511a73c89c372e86a6c" datatype="html">
+        <source>Register</source>
+        <target/>
+      </trans-unit>
+      <trans-unit id="2940a3c5f32eab438d6a27adc9adacd5201489e5" datatype="html">
+        <source>Public Api description</source>
+        <target/>
+      </trans-unit>
+      <trans-unit id="b461d9cf80ac4e81d7e4f67637b4d85b1c02412e" datatype="html">
+        <source>In cooperation with eviarc UG (haftungsbeschränkt) © 2017</source>
+        <target/>
+      </trans-unit>
     </body>
   </file>
 </xliff>

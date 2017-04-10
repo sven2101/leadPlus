@@ -19,9 +19,13 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.css"
+        "styles.css",
+        "assets/css/bootstrap.min.css",
+        "assets/css/inspinia.css"
       ],
-      "scripts": [],
+      "scripts": [
+        "assets/js/sjcl.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
@@ -55,4 +59,3 @@
     "component": {}
   }
 }
-

@@ -1,1 +1,248 @@
 /* You can add global styles to this file, and also import other style files */
+.animate-if.ng-enter {
+	  -webkit-transition: max-height 0.3s ease-in;
+    -moz-transition: max-height 0.3s ease-in;
+    -ms-transition: max-height 0.3s ease-in;
+    -o-transition:max-height 0.3s ease-in;
+    transition: max-height 0.3s ease-in;
+    max-height: 0;
+    opacity: 0;
+}
+ .animate-if.ng-enter.ng-enter-active {
+    max-height: 2000px;
+	  overflow: hidden;
+    opacity:1;
+}
+ .animate-if.ng-leave {
+	-webkit-transition: max-height 0.15s ease-out;
+    -moz-transition: max-height 0.15s ease-out;
+    -ms-transition: max-height 0.15s ease-out;
+    -o-transition:max-height 0.15s ease-out;
+    transition: max-height 0.15s ease-out;
+	  overflow: hidden;
+    max-height: 2000px;
+    opacity:1;
+}
+ .animate-if.ng-leave.ng-leave-active {
+    max-height: 0;
+    opacity:1;
+}
+
+.closeMenu {
+    max-height: 0;
+	  -webkit-transition: max-height 0.15s ease-out;
+    -moz-transition: max-height 0.15s ease-out;
+    -ms-transition: max-height 0.15s ease-out;
+    -o-transition:max-height 0.15s ease-out;
+    transition: max-height 0.15s ease-out;
+    overflow: hidden;
+}
+
+.closeMenuChildRow {
+    max-height: 0;
+	  -webkit-transition: max-height 0.3s ease-out;
+    -moz-transition: max-height 0.3s ease-out;
+    -ms-transition: max-height 0.3s ease-out;
+    -o-transition:max-height 0.3s ease-out;
+    transition: max-height 0.3s ease-out;
+    overflow: hidden;
+}
+
+.openMenu{
+    max-height: 2000px;
+    -webkit-transition: max-height 0.3s ease-in;
+    -moz-transition: max-height 0.3s ease-in;
+    -ms-transition: max-height 0.3s ease-in;
+    -o-transition:max-height 0.3s ease-in;
+    transition: max-height 0.3s ease-in;
+}
+div#loginscreen
+{   content: ""; 
+    display: block;
+    left: 0; 
+    background-image: url(assets/img/leadplus_background.png); 
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    background-size: cover; 
+    position: absolute; 
+    background-position: center; 
+    overflow-x: hidden;
+    width: 100%; 
+    min-height: 100%; 
+    top: 0;  
+}
+#loading-pane-overlay {
+    overflow: hidden;
+    position: absolute;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: 99999;
+    background-attachment: fixed; 
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQYV2P4/PnLfwAJkQPaRscKVAAAAABJRU5ErkJggg==);
+    background-repeat: repeat;
+    background-size: cover; 
+    background-position: center; 
+    visibility: visible;
+    opacity: 1;
+	}
+.loading-pane-fade-out{
+    visibility: hidden !important;
+    opacity: 0 !important;
+    transition: visibility 0s 0.75s, opacity 0.75s linear;
+    }
+
+    .loading-pane-show{
+    visibility: visible !important;
+    opacity: 1 !important;
+    }
+
+.loader {
+  font-size: 6px;
+  text-indent: -9999em;
+  width: 11em;
+  height: 11em;
+  margin-top: 35vh;
+  margin-left: calc(50vw - 5.5em);
+  border-radius: 50%;
+  background: #1c84c6;
+  background: -moz-linear-gradient(left, #1c84c6 10%, rgba(0,0,255, 0) 42%);
+  background: -webkit-linear-gradient(left, #1c84c6 10%, rgba(0,0,255, 0) 42%);
+  background: -o-linear-gradient(left, #1c84c6 10%, rgba(0,0,255, 0) 42%);
+  background: -ms-linear-gradient(left, #1c84c6 10%, rgba(0,0,255, 0) 42%);
+  background: linear-gradient(to right, #1c84c6 10%, rgba(0,0,255, 0) 42%);
+  position: absolute;
+  -webkit-animation: load3 1.4s infinite linear;
+  animation: load3 1.4s infinite linear;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+.loader:before {
+  width: 50%;
+  height: 50%;
+  background:  #1c84c6;
+  border-radius: 100% 0 0 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  content: '';
+}
+.loader:after {
+  background:#f3f3f4;
+  width: 75%;
+  height: 75%;
+  border-radius: 50%;
+  content: '';
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+@-webkit-keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes load3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@media (min-width: 1200px) {
+  .modal-lg {
+    width: 1100px !important;
+  }
+ .modal-body.content-height{
+    min-height: 60vh !important;
+    max-height: 60vh  !important;
+  }
+}
+@media (min-width: 1600px) {
+  .modal-lg {
+    width: 1300px !important;
+  }
+  .modal-body.content-height{
+    min-height: 70vh !important;
+    max-height: 70vh  !important;
+  }
+}
+.modal-body.content-height{
+    overflow-y: scroll;
+    overflow-x: hidden;
+   min-height: 50vh;
+   max-height: 50vh;
+}
+.modal-lg.modal-dialog, .modal-dialog.modal-lg{
+      max-height: 90vh;
+}
+body.modal-open {
+  overflow: inherit !important;
+}
+.b-l{
+  border-left: 1px solid #e7eaec
+}
+.text-ellipses{
+		white-space: nowrap;
+		text-overflow: ellipsis; 
+    max-width: 250px;
+    display: inline-block;
+		overflow: hidden;
+	}
+
+.spinner {
+     height: 15px;
+    width: 15px;
+    animation: rotate 0.8s infinite linear;
+    border: 3px solid #1ab394;
+    border-right-color: transparent;
+    border-radius: 50%;
+}
+
+.spinner-white {
+     height: 15px;
+    width: 15px;
+    animation: rotate 0.8s infinite linear;
+    border: 3px solid white;
+    border-right-color: transparent;
+    border-radius: 50%;
+}
+
+
+.spinner-black {
+     height: 15px;
+    width: 15px;
+    animation: rotate 0.8s infinite linear;
+    border: 3px solid black;
+    border-right-color: transparent;
+    border-radius: 50%;
+}
+
+
+@keyframes rotate {
+  0%    { transform: rotate(0deg); }
+  100%  { transform: rotate(360deg); }
+}
+
+
+.attachement-box{
+  float: left;
+  margin-left: 5px;
+  border-radius: 6px;
+  padding: 5px; 
+  background-color: #eee;
+  margin-top: 7px
+}
+

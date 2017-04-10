@@ -1,19 +1,32 @@
 import { Routes, RouterModule } from "@angular/router";
 
-import { LoggedInGuard } from "./logged-in.Guard";
-import { LoggedOutGuard } from "./logged-out.Guard";
+import { LoggedInGuard } from "./login/logged-in.guard";
+import { LoggedOutGuard } from "./login/logged-out.guard";
 
-import { AppComponent } from "./app.component";
+import { DashboardComponent } from "./dashboard/dashboard.component";
+import { LoginComponent } from "./login/login.component";
 
-const appRoutes: Routes = [
+export const appRoutes: Routes = [
     {
         path: "",
-        redirectTo: "/login",
+        redirectTo: "dashboard",
+        pathMatch: "full"
+    },
+    {
+        path: "start",
+        redirectTo: "dashboard",
         pathMatch: "full"
     },
     {
         path: "login",
-        component: AppComponent,
+        component: LoginComponent,
         canActivate: [LoggedOutGuard]
+    },
+    {
+        path: "dashboard",
+        component: DashboardComponent,
+        canActivate: [LoggedInGuard]
     }
 ];
+
+export class AppRoutes { }
