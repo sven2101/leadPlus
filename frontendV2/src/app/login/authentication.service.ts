@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { Http, Headers, RequestOptions, Response } from "@angular/http";
 import { Router } from "@angular/router";
 
+import * as sjcl from "assets/js/sjcl";
+
 import * as jwt_decode from "jwt-decode";
 
 import "rxjs/add/operator/map";
@@ -9,13 +11,10 @@ import "rxjs/add/operator/toPromise";
 
 import { CookieService } from "./cookie.service";
 
-declare var sjcl;
-
-
 @Injectable()
 export class AuthenticationService {
 
-  public static readonly API_ENPOINT = "https://demo.leadplus.localhost:8080";
+  public static readonly API_ENPOINT = "http://demo.leadplus.localhost:8080";
 
   // static readonly ACCESS_TOKEN: string = "accessToken";
   public static readonly REFRESH_TOKEN = "refreshToken";
@@ -48,15 +47,15 @@ export class AuthenticationService {
 
   private setTenant(): void {
     const host = window.location.host.split(".")[0];
-    let tempTenant = "";
+    let tempTenant;
     if (host.indexOf(".") < 0) {
-      tempTenant = null;
+      tempTenant = "dummyTenant";
     } else if (host.split(".")[0] === "www") {
       tempTenant = host.split(".")[1];
     } else {
       tempTenant = host.split(".")[0];
     }
-    this.tenant = tempTenant === "leadplus" || tempTenant === "boexli" ? null : tempTenant;
+    this.tenant = tempTenant === "leadplus" || tempTenant === "boexli" ? "dummyTenant" : tempTenant;
   }
 
   private async initToken(): Promise<void> {
@@ -95,7 +94,7 @@ export class AuthenticationService {
 
   private async getAccessTokenByRefreshToken(refreshToken: string): Promise<{ token: string }> {
     const headers = new Headers(AuthenticationService.JSON_HEADER);
-    const requestOptions = new RequestOptions(headers);
+    const requestOptions = new RequestOptions({ headers: headers, withCredentials: true });
     requestOptions.headers.append("X-Authorization", "Bearer  " + this.refreshToken);
     return this.http.get(AuthenticationService.TOKEN_REFRESH_URL, requestOptions)
       .map((res: Response) => res.json())
@@ -207,6 +206,7 @@ export class AuthenticationService {
 
   public getItemFromLocalStorage(key: string): any {
     if (key == null) { return null; }
+    const x = this.tenant + "_" + key;
     const temp: string = localStorage.getItem(this.tenant + "_" + key);
     if (temp == null) { return null; }
     return JSON.parse(temp);

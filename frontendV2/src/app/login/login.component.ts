@@ -10,15 +10,15 @@ import { AuthenticationService } from "./authentication.service";
 })
 export class LoginComponent implements OnInit {
 
-  private credentials = { username: null, password: null };
+  public credentials = { username: null, password: null };
   constructor(private AuthenticationService: AuthenticationService, private Router: Router) { }
 
   ngOnInit(): void {
   }
 
-  private async login(credentials: { username: string, password: string }): Promise<void> {
+  public async login(credentials: { username: string, password: string }): Promise<void> {
     await this.AuthenticationService.setTokenByCredentials(credentials);
-    this.Router.navigate(["/start"]);
+    this.Router.navigate(["/home/dashboard"]);
   }
 
 }

@@ -1,48 +1,35 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { RouterModule } from "@angular/router";
 
 import { appRoutes } from "./app.routes";
-import { LoggedInGuard } from "./login/logged-in.guard";
-import { LoggedOutGuard } from "./login/logged-out.guard";
+import { SharedModule } from "./shared/shared.module";
 
 // components
 import { AppComponent } from "./app.component";
-import { LoginComponent } from "./login/login.component";
-
-// services
-import { AuthenticationService } from "./login/authentication.service";
-import { CookieService } from "./login/cookie.service";
-import { HttpClient } from "./common/http-client";
 import { DashboardComponent } from "./dashboard/dashboard.component";
-import { NavigationComponent } from "./navigation/navigation.component";
-
+import { SideBarComponent } from "./navigation/side-bar/side-bar.component";
+import { TopBarComponent } from "./navigation/top-bar/top-bar.component";
+import { ImageLoaderDirective } from './common/image-loader.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     DashboardComponent,
-    NavigationComponent,
-
+    SideBarComponent,
+    TopBarComponent,
+    ImageLoaderDirective,
   ],
   imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-    RouterModule.forRoot(appRoutes)
+    CommonModule,
+    RouterModule.forChild(appRoutes),
+    SharedModule
   ],
   providers: [
-    HttpClient,
-    AuthenticationService,
-    LoggedInGuard,
-    LoggedOutGuard,
 
-
-    CookieService
-  ],
-  bootstrap: [AppComponent]
+  ]
 })
 export class AppModule { }

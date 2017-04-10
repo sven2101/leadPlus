@@ -9,7 +9,7 @@ export class LoggedOutGuard implements CanActivate {
     async canActivate(): Promise<boolean> {
         await this.authentication.awaitInit();
         if (this.authentication.isLoggedIn() === true) {
-            this.router.navigate(["/start"]);
+            this.router.navigate(["/home"]);
             return false;
         } else {
             return true;

@@ -1,0 +1,61 @@
+<!--
+<nav class="navbar-default navbar-static-side" role="navigation" style="position: fixed; height: 100%; background-color: #2f4050;">
+	<div class="sidebar-collapse">
+		<ul class="nav metismenu" id="side-menu">
+			<li class="nav-header">
+				<div class="profile-element">
+					<div style="margin-top:-20px" class="row">
+						<div id="profilePictureDiv" class="col-md-6">
+							<img id="profilePicture" style="width: 100px; height:100px;border-radius: 10%;" [src]="'/api/rest/files/content/'+user.picture.id" alt="">
+						</div>
+					</div>
+					<br>
+					<div>
+						<a class="profileLink" href="#/profile">
+							<i class="fa fa-user" aria-hidden="true"></i>
+							<strong class="font-bold" ng-if="(user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname=='')">
+										{{user.username}}
+							</strong>
+							<strong class="font-bold" ng-if="!((user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname==''))">
+										{{user.firstname}} {{user.lastname}}
+							</strong>
+						</a>
+					</div>
+				</div>		
+			</li>
+			<li>
+				<a href="#/dashboard"><i class="fa fa-th-large"></i> <span class="nav-label"  i18n>DASHBOARD_MENU</span></a>
+			</li>
+			<li>
+				<a href="#/leads"><i class="fa fa-inbox"></i> <span
+                        class="nav-label" i18n>LEADS_MENU</span><span ng-if="leadsCount>0"
+                                                                                     class="label label-danger pull-right">{{leadsCount}}</span></a>
+			</li>
+			<li>
+				<a href="#/offers"><i class="fa fa-level-up"></i> <span
+                        class="nav-label" i18n>OFFERS_MENU</span><span ng-if="offersCount>0"
+                                                                                      class="label label-warning pull-right">{{offersCount}}</span></a>
+			</li>
+			<li>
+				<a href="#/sales"><i class="fa fa-usd"></i> <span
+                        class="nav-label" i18n>SALES_MENU</span></a>
+
+			</li>
+			<li>
+				<a href="#/statistic"><i class="fa fa-line-chart"></i> <span class="nav-label" i18n>STATISTIC_MENU</span></a>
+			</li>
+			<li>
+				<a href="#/product"><i class="fa fa-table"></i> <span class="nav-label" i18n>PRODUCT_MENU</span></a>
+			</li>
+			<li>
+				<a href="#/customer"><i class="fa fa-users"></i> <span class="nav-label" i18n>CUSTOMER_MENU</span></a>
+			</li>
+			<li ng-if="user.role==='SUPERADMIN'||user.role==='ADMIN'">
+				<a href="#/settings"><i class="fa fa-cogs"></i> <span class="nav-label" i18n>SETTINGS_MENU</span></a>
+			</li>
+		</ul>
+	</div>
+
+</nav>
+
+-->

@@ -17,15 +17,14 @@
       "test": "test.ts",
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
-      "prefix": "app",
+      "prefix": "",
       "styles": [
+        "../node_modules/bootstrap/dist/css/bootstrap.css",
+        "assets/css/inspinia.css",
         "styles.css",
-        "assets/css/bootstrap.min.css",
-        "assets/css/inspinia.css"
+        "../node_modules/font-awesome/css/font-awesome.css"
       ],
-      "scripts": [
-        "assets/js/sjcl.js"
-      ],
+      "scripts": [],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
