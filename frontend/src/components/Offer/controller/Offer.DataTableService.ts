@@ -83,7 +83,7 @@ class OfferDataTableService implements IDatatableService {
             /*this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
                 .renderWith(addDetailButton),*/
             this.DTColumnBuilder.newColumn(null).withTitle(
-                "<i style='margin-top:2px;margin-left:12px;' class='fa fa-user' aria-hidden='true'></i>").withClass("text-center").renderWith(function (data: Process, type, full) {
+                "<i style='margin-top:2px;margin-left:12px;' class='fa fa-thumb-tack' aria-hidden='true'></i>").withClass("text-center").renderWith(function (data: Process, type, full) {
                     if (data.processor != null && data.processor.thumbnail != null) {
                         return `<div style="height:48px;">
                     <img title="` + data.processor.firstname + ` ` + data.processor.lastname + `" style="width: 48px; height:48px;border-radius: 10%;"
