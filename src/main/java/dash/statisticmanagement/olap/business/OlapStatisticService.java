@@ -72,7 +72,7 @@ public class OlapStatisticService {
 	private void saveStatisticInOLAP(DateRange dateRange) throws IOException {
 		Olap olap = new Olap();
 		olap.setDateRange(dateRange);
-		olap.setTimeStamp(Calendar.getInstance());
+		olap.setTimestamp(Calendar.getInstance());
 		Map<String, List<Double>> profit = profitStatisticService.getStatisticByDateRange(Workflow.SALE, dateRange,
 				null);
 		olap.setProfit(ByteSearializer.serialize(profit));
@@ -94,5 +94,10 @@ public class OlapStatisticService {
 		Map<String, List<UserStatistic>> users = userStatisticService.getTopSalesMen(dateRange);
 		olap.setUsers(ByteSearializer.serialize(users));
 		olapRepository.save(olap);
+	}
+
+	public Olap getLastOlapByDateRange(DateRange dateRange) {
+		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
+		return olap;
 	}
 }

@@ -219,6 +219,12 @@ class StatisticResource {
             },
             getSingleUserStatistic: {
                 url: "/api/rest/processes/statistics/user/daterange/:dateRange/source/:source/id/:id", method: "GET"
+            },
+            generateOlap: {
+                url: "/api/rest/processes/statistics/generate", method: "GET"
+            },
+            getLatestOlapTimestamp: {
+                url: "/api/rest/processes/statistics/generate/timestamp/:dateRange", method: "GET"
             }
         });
     }
