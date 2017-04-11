@@ -21,8 +21,8 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th class="text-center">{{ 'SETTING_API_SYSTEM' | translate }}</th>
-							<th class="text-center">{{ 'SETTING_API_TENANT' | translate }}</th>
+							<th class="text-left">{{ 'SETTING_API_SYSTEM' | translate }}</th>
+							<th class="text-left">{{ 'SETTING_API_TENANT' | translate }}</th>
 							<th class="text-center"><i class="fa fa-cog"></i></th>
 						</tr>
 					</thead>
@@ -32,10 +32,10 @@
 								<span ng-show="!api.isDeactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
 								<span ng-show="api.isDeactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 							</td>
-							<td ng-click="settingCtrl.showApi(api.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
+							<td ng-click="settingCtrl.showApi(api.id)" style="cursor: pointer" class="project-title col-md-2 text-left">
 								{{api.apiVendor}}
 							</td>
-							<td ng-click="settingCtrl.showApi(api.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
+							<td ng-click="settingCtrl.showApi(api.id)" style="cursor: pointer" class="project-title col-md-2 text-left">
 								{{api.tenant}}
 							</td>
 							<td class="project-actions col-md-1 text-center" style="white-space: nowrap;text-align:center;">

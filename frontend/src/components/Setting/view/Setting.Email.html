@@ -22,11 +22,11 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th class="text-center">{{ 'COMMON_NAME' | translate }}</th>
-							<th class="text-center">{{ 'EMAIL_SUBJECT' | translate }}</th>
-							<th class="text-center">{{ 'SETTING_TEMPLATE_NOTIFICATION_TYPE' | translate }}</th>
-							<th class="text-center">{{ 'SETTING_TEMPLATE_TEMPLATE_TYPE' | translate }}</th>
-							<th class="text-center">{{ 'SETTING_TEMPLATE_SOURCE' | translate }}</th>
+							<th class="text-left">{{ 'COMMON_NAME' | translate }}</th>
+							<th class="text-left">{{ 'EMAIL_SUBJECT' | translate }}</th>
+							<th class="text-left">{{ 'SETTING_TEMPLATE_NOTIFICATION_TYPE' | translate }}</th>
+							<th class="text-left">{{ 'SETTING_TEMPLATE_TEMPLATE_TYPE' | translate }}</th>
+							<th class="text-left">{{ 'SETTING_TEMPLATE_SOURCE' | translate }}</th>
 							<th class="text-center"><i class="fa fa-cog"></i></th>
 						</tr>
 					</thead>
@@ -36,19 +36,19 @@
 								<span ng-show="!template.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
 								<span ng-show="template.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 							</td>
-							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-left">
 								{{template.name}}
 							</td>
-							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-left">
 								{{template.subject}}
 							</td>
-							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-left">
 								{{settingCtrl.translateStringArray(template.notificationTypeString,'NOTIFICATION')}}
 							</td>
-							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">								
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-left">								
 								<span ng-repeat="t in template.templateTypes">{{t}}<span ng-if="$index!==template.templateTypes.length-1">,&nbsp;</span></span>
 							</td>
-							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-center">
+							<td ng-click="settingCtrl.showTemplate(template.id)" style="cursor: pointer" class="project-title col-md-2 text-left">
 								{{settingCtrl.translateStringArray(template.sourceString,'SOURCE')}}
 							</td>
 							<td class="project-actions col-md-1 text-center" style="white-space: nowrap;text-align:center;">

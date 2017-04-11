@@ -5205,7 +5205,7 @@ body.modal-open {
 .text-ellipses{
 		white-space: nowrap;
 		text-overflow: ellipsis; 
-    max-width: 250px;
+    max-width: 350px;
     display: inline-block;
 		overflow: hidden;
 	}
