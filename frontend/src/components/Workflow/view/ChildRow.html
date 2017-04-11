@@ -173,15 +173,10 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div class="col-lg-8" ng-include="'components/Workflow/view/ProductView.html'"></div>
-	</div>
-	<div class="row">
-		<div class="col-lg-6">
 			<div class="ibox">
 				<div class="ibox-content text-left" style="min-height: 122px;">
 					<label><i class="fa fa-paperclip" aria-hidden="true "></i>  {{ 'COMMON_FILES' | translate }}</label>
-					<div ng-repeat="notification in process.notifications">
+					<div ng-repeat="notification in process.notifications" style="max-height: 400px;overflow: auto;overflow-x: hidden;">
 						<div class="ellipsis" ng-repeat="attachment in notification.attachments">
 							<span ng-if="::attachment.fileUpload.mimeType==='image/jpeg'"><i class="fa fa-file-image-o" aria-hidden="true "></i></span>
 							<span ng-if="::attachment.fileUpload.mimeType==='application/pdf'"><i class="fa fa-file-pdf-o" aria-hidden="true "></i></span>
@@ -193,7 +188,10 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-lg-6" ng-include="'components/Workflow/view/CommentView.html'"></div>
+		<div class="col-lg-8">
+			<div ng-include="'components/Workflow/view/ProductView.html'"></div>
+			<div ng-include="'components/Workflow/view/CommentView.html'"></div>
+		</div>
 	</div>
 </div>
 <!--<div class="row" ng-include="'components/Commentary/view/AllComments.Modal.html'"></div>-->
