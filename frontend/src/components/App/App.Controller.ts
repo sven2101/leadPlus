@@ -30,7 +30,7 @@ class AppController {
     profileService: ProfileService;
     rendered: boolean = false;
 
-    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService, $window, $timeout) {
+    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService, $window, $timeout, private TokenService) {
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.interval = $interval;
@@ -45,6 +45,7 @@ class AppController {
         this.rootScope.offersCount = 0;
         this.stop = undefined;
 
+        this.rootScope.user = TokenService.getItemFromLocalStorage(USER_STORAGE);
         this.setCurrentUserPicture();
         this.registerLoadLabels();
         this.rootScope.loadLabels();

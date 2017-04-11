@@ -23,7 +23,7 @@
 								<span style="color:red" ng-show="profilInfoForm.firstname.$error.minlength&&!profilInfoForm.firstname.$pristine ">{{ 'SIGNUP_VALIDATE_FIRSTNAME_TO_SHORT' | translate }}</span>
 								<span style="color:red" ng-show="profilInfoForm.firstname.$error.maxlength&&!profilInfoForm.firstname.$pristine ">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
 								<input type="text " id="firstname " name="firstname " class="form-control " placeholder="{{ 'COMMON_FIRSTNAME'
-					| translate }} " required ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/ " ng-model="profileCtrl.currentUser.firstname " ng-minlength="2
+					| translate }} " required ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöüß]*$/ " ng-model="profileCtrl.currentUser.firstname " ng-minlength="2
 					" ng-maxlength="50 ">
 
 							</div>
@@ -34,7 +34,7 @@
 								<span style="color:red" ng-show="profilInfoForm.lastname.$error.minlength&&!profilInfoForm.lastname.$pristine ">{{ 'SIGNUP_VALIDATE_LASTNAME_TO_SHORT' | translate }}</span>
 								<span style="color:red" ng-show="profilInfoForm.lastname.$error.maxlength&&!profilInfoForm.lastname.$pristine ">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
 								<input type="text " id="lastname " name="lastname " class="form-control " placeholder="{{ 'COMMON_LASTNAME' |
-										translate }} " required ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöÜß]*$/ " ng-model="profileCtrl.currentUser.lastname " ng-minlength="2
+										translate }} " required ng-pattern="/^[a-zA-Z0-9.-ÄÖÜäöüß]*$/ " ng-model="profileCtrl.currentUser.lastname " ng-minlength="2
 										" ng-maxlength="50 ">
 							</div>	
 							<!-- JOB-POSITION -->

@@ -66,6 +66,19 @@ class SaleDataTableService implements IDatatableService {
         return [
             /*this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
                             .renderWith(addDetailButton),*/
+            this.DTColumnBuilder.newColumn(null).withTitle(
+                "<i style='margin-top:2px;margin-left:12px;' class='fa fa-user' aria-hidden='true'></i>").withClass("text-center").renderWith(function (data: Process, type, full) {
+                    if (data.processor != null && data.processor.thumbnail != null) {
+                        return `<div style="height:48px;">
+                    <img title="` + data.processor.firstname + ` ` + data.processor.lastname + `" style="width: 48px; height:48px;border-radius: 10%;"
+                    pictureid="` + data.processor.thumbnail.id + `" httpsrc="/api/rest/files/content/" alt="">
+                </div>`;
+                    } else if (data.processor != null && data.processor.thumbnail == null && data.processor.firstname != null && data.processor.lastname != null) {
+                        return "<span style='font-weight:bold' title='" + data.processor.firstname + " " + data.processor.lastname + "'>" + data.processor.firstname[0] + data.processor.lastname[0] + "</span>";
+                    } else {
+                        return "-";
+                    }
+                }).withOption("width", "48px").notSortable(),
             this.DTColumnBuilder.newColumn("sale.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("sale.customer.lastname").withTitle(

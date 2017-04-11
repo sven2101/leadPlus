@@ -274,6 +274,7 @@ function config($translateProvider) {
             COMMON_STATUS_SET_DONE: "Als in Abwicklung markieren",
             COMMON_STATUS_SET_OPEN: "Als offen markieren",
             COMMON_SEARCH: "Suchen...",
+            COMMON_WORKFLOW_NO_ACTION: "Keine Aktion möglich",
 
             COMMON_HOUSE_NUMBER: "Hausnummer",
             COMMON_STREET: "Straße",
@@ -354,6 +355,7 @@ function config($translateProvider) {
             LEAD_DELETE_LEAD: "Anfrage löschen",
             LEAD_DELETE_LEAD_BODY: "Möchten Sie die Anfrage wirklich löschen?",
             LEAD_EDIT_SELECT_PRODUCT: "Produkt wählen",
+            LEAD_NO_ACTION_INFO: "Ihre Anfrage befindet sich in einem weiteren Prozessschritt. Daher ist es nicht möglich diese hier zu bearbeiten.",
 
             // Define all offer elements
             OFFER_OFFERS: "Angebote",
@@ -378,7 +380,7 @@ function config($translateProvider) {
             OFFER_GENERATION_AND_SENDING: "Angebot generieren und versenden",
             OFFER_ROLLBACK_TITLE: "Angebot zurücksetzen",
             OFFER_ROLLBACK_BODY: "Möchten Sie das Angebot wirklich zurücksetzen?",
-
+            OFFER_NO_ACTION_INFO: "Ihr Angebot befindet sich in einem weiteren Prozessschritt. Daher ist es nicht möglich dieses hier zu bearbeiten.",
 
             // Define all offer elements
             SALE_SALES: "Verkäufe",
@@ -957,6 +959,7 @@ function config($translateProvider) {
             COMMON_STATUS_SET_DONE: "Mark as processing",
             COMMON_STATUS_SET_OPEN: "Mark as open",
             COMMON_SEARCH: "Search...",
+            COMMON_WORKFLOW_NO_ACTION: "No action possible",
 
             COMMON_HOUSE_NUMBER: "Number",
             COMMON_STREET: "Street",
@@ -1036,6 +1039,7 @@ function config($translateProvider) {
             LEAD_DELETE_LEAD: "Delete lead",
             LEAD_DELETE_LEAD_BODY: "Are you sure to delete this lead?",
             LEAD_EDIT_SELECT_PRODUCT: "Choose product",
+            LEAD_NO_ACTION_INFO: "Your lead exists under a continuing process step. Therefore it is not possible to edit your lead here.",
 
             // Define all offer elements
             OFFER_OFFERS: "Offers",
@@ -1060,6 +1064,7 @@ function config($translateProvider) {
             OFFER_GENERATION_AND_SENDING: "Generate and Send Offer",
             OFFER_ROLLBACK_TITLE: "Reset offer",
             OFFER_ROLLBACK_BODY: "Are you sure to reset this offer?",
+            OFFER_NO_ACTION_INFO: "Your offer exists under a continuing process step. Therefore it is not possible to edit your offer here.",
 
             // Define all sale elements
             SALE_SALES: "Sales",

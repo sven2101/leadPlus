@@ -13,6 +13,7 @@ class User {
     enabled: boolean;
     firstname: string;
     lastname: string;
+    thumbnail: any;
     phone: string;
     mobile: string;
     skype: string;
