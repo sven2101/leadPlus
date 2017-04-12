@@ -5,6 +5,8 @@ import { LoggedInGuard } from "../login/logged-in.guard";
 import { LoggedOutGuard } from "../login/logged-out.guard";
 import { HttpClient } from "../common/http-client";
 
+import { ToasterService } from "angular2-toaster";
+
 @NgModule({})
 export class SharedModule {
   static forRoot(): ModuleWithProviders {
@@ -15,7 +17,8 @@ export class SharedModule {
         CookieService,
         LoggedInGuard,
         LoggedOutGuard,
-        HttpClient
+        HttpClient,
+        ToasterService
       ]
     };
   }

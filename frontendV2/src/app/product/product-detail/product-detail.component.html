@@ -1,0 +1,104 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-12">
+    <div class="row">
+      <div class="col-lg-10">
+        <h2 i18n>Products</h2>
+        <ol class="breadcrumb">
+          <li>
+            <a href="/dashboard">Home</a>
+          </li>
+          <li>
+            <a href="/product" i18n>Products</a>
+          </li>
+          <li class="active">
+            <strong *ngIf="product.id==null" i18n>New product</strong>
+            <strong *ngIf="product.id!=null" i18n>{{product.name}}</strong>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5 *ngIf="product.id==null" i18n>New product</h5>
+          <h5 *ngIf="product.id!=null" i18n>{{product.name}}</h5>
+        </div>
+        <div class="ibox-content">
+          <form name="createProductForm" novalidate>
+            <div class="row">
+              <!-- PRODUCTNAME -->
+              <div class="col-sm-6 b-r">
+                <div class="row">
+                  <div class="col-sm-10">
+                    <div class="form-group" [class]="{ 'has-error' : name.$invalid && name.$pristine }">
+                      <label i18n>Product Name<span style="color:red">*</span></label>
+                      <span style="color:red" *ngIf="name.errors.maxlength && ! name.touched" i18n>Only  {{100}} letters are allowed</span>
+                      <span style="color:red" *ngIf="name.errors.required && !name.touched" i18n>Field required</span>
+                      <input type="text" name="name" class="form-control" [(ngModel)]="product.name" #name="ngModel" maxlength="100" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-2">
+                    <img style="width: 60px; height:60px;border-radius: 10%" [src]="getProductPictureId(product)" alt="">
+                  </div>
+                </div>
+                <!--DESCRIPTION -->
+                <div class="form-group" [class]="{ 'has-error' : description.$invalid && description.$pristine }">
+                  <label i18n>Description</label>
+                  <span style="color:red" *ngIf="description.errors.maxlength" i18n>Only {{3000}} letters are allowed</span>
+                  <textarea style="resize: none" rows="7" type="text" name="description" class="form-control " [(ngModel)]="product.description"
+                    maxlength="3000" #description="ngModel"></textarea>
+                </div>
+                <!-- PRICE -->
+                <div class="form-group" [class]="{ 'has-error' : netPrice.$invalid && netPrice.$pristine }">
+                  <label i18n>Net price<span style="color:red">*</span></label>
+                  <span style="color:red" *ngIf="netPrice.errors.pattern && !netPrice.touched"><ng-container i18n>Field required</ng-container>(<ng-container i18n>Negative numbers are restricted</ng-container>)</span>
+                  <span style="color:red" *ngIf="netPrice.errors.required && !netPrice.touched" i18n>Field required</span>
+                  <div class="input-group">
+                    <span class="input-group-addon" i18n>€</span>
+                    <input type="number" name="netPrice" class="form-control currency" [(ngModel)]="product.netPrice" ng-maxlength="10" pattern="/^[0-9]+(\.[0-9]{1,2})?$/"
+                      step="any" required>
+                  </div>
+
+                </div>
+                <div class="form-group">
+                  <label i18n>State</label>
+                  <select name="productState" class="form-control" [(ngModel)]="product.productState">
+                      <option value="NEW" selected i18n>New</option>                                                                   
+                      <option value="USED_A" i18n><ng-container>Used</ng-container> A</option>       
+                      <option value="USED_B" i18n><ng-container>Used</ng-container> B</option>  
+                      <option value="USED_C" i18n><ng-container>Used</ng-container> C</option>  
+                      <option value="USED_D" i18n><ng-container>Used</ng-container> D</option>                                                
+                  </select>
+                </div>
+                <!-- PRODUCTNUMBER -->
+                <div class="form-group" [class]="{ 'has-error' : productNumber.$invalid && productNumber.$pristine }">
+                  <label i18n>Product number</label>
+                  <span style="color:red" *ngIf="productNumber.$invalid && productNumber.$pristine" i18n>Only {{50}} letters are allowed</span>
+                  <input type="text" name="productNumber" class="form-control" [(ngModel)]="product.productNumber" ng-maxlength="50">
+                </div>
+                <div class="form-group" *ngIf="!isproductNew">
+                  <label class="checkbox-inline"> <input type="checkbox" name="isDeactivated"  [(ngModel)]="product.deactivated" id="inlineCheckbox1" i18n>Deactivated</label>
+                </div>
+              </div>
+              <!-- IMAGE -->
+              <div class="col-sm-6">
+                <label i18n>Image</label>
+                <br/>
+                <div imagecrop style="margin-left:15px" quality="10" event="productImageSaved"></div>
+              </div>
+            </div>
+          </form>
+          <div>
+            <a class="btn btn-success" [routerLink]="['product']"><i class="fa fa-arrow-left" aria-hidden="true"></i><ng-container i18n>Zurück</ng-container></a>
+            <button type="button" class="btn btn-success" [disabled]="$invalid" (click)="saveProduct(product)" style="float:right;"><i class="fa fa-save "></i><ng-container i18n>Save</ng-container></button>
+            <button *ngIf="product.id==null" type="button" class="btn btn-danger" (click)="deleteProduct(product)" style="float:right;margin-right: 3px;"><i class="fa fa-trash "></i><ng-container i18n>Delete</ng-container></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

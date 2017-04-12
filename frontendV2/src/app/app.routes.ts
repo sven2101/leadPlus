@@ -1,3 +1,5 @@
+import { productRoutes } from "./product/product.routes";
+import { ProductComponent } from "./product/product.component";
 import { Routes, RouterModule } from "@angular/router";
 
 import { LoggedInGuard } from "./login/logged-in.guard";
@@ -10,12 +12,25 @@ export const appRoutes: Routes = [
     {
         path: "",
         component: AppComponent,
+        canActivate: [LoggedInGuard],
         children: [
             {
+                path: "",
+                redirectTo: "dashboard",
+                canActivate: [LoggedInGuard]
+            },
+            {
                 path: "dashboard",
-                component: DashboardComponent
+                component: DashboardComponent,
+                canActivate: [LoggedInGuard]
+            },
+            {
+                path: "product",
+                children: productRoutes,
+                canActivate: [LoggedInGuard]
             }
         ]
+
     }
 ];
 

@@ -1,0 +1,26 @@
+	.important {
+		background: #FFEBEB;
+	}
+	.grayfilter {
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+	}
+	.frontlayer {
+    position: relative;
+    width: 100px;
+    height: 28px;
+    bottom: -45px;
+	color: white;
+    text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+    z-index: 1;
+	font-size: 13pt;
+	 -webkit-transform: rotate(315deg);
+    -moz-transform: rotate(315deg);
+    -o-transform: rotate(315deg);
+    -ms-transform: rotate(315deg);
+    transform: rotate(315deg);
+	}

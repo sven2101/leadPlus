@@ -1,3 +1,5 @@
+import { ToasterService } from "angular2-toaster";
+import { User } from "./../user/user.model";
 import { Injectable } from "@angular/core";
 import { Http, Headers, RequestOptions, Response } from "@angular/http";
 import { Router } from "@angular/router";
@@ -16,12 +18,13 @@ export class AuthenticationService {
 
   public static readonly API_ENPOINT = "http://demo.leadplus.localhost:8080";
 
-  // static readonly ACCESS_TOKEN: string = "accessToken";
+  public static readonly ACCESS_TOKEN = "accessToken";
   public static readonly REFRESH_TOKEN = "refreshToken";
   public static readonly USER_STORAGE = "user";
   public static readonly ACCESS_TOKEN_COOKIE_KEY = "token";
   public static readonly TOKEN_REFRESH_URL = AuthenticationService.API_ENPOINT + "/api/rest/auth/token";
   public static readonly LOGIN_URL = AuthenticationService.API_ENPOINT + "/api/rest/auth/login";
+  public static readonly USER_BY_USERNAME_URL = AuthenticationService.API_ENPOINT + "/api/rest/users/email";
   public static readonly JSON_HEADER = { "Content-Type": "application/json" };
   public static readonly FREE_ROUTES = ["/tenants/registration"];
 
@@ -36,7 +39,9 @@ export class AuthenticationService {
   private tenant: String;
   private localStorageMap: {} = {};
 
-  constructor(private Router: Router, private http: Http, private cookieService: CookieService) {
+  public currentUser: User;
+
+  constructor(private Router: Router, private http: Http, private cookieService: CookieService, private ToasterService: ToasterService) {
     this.setTenant();
     this.init();
   }
@@ -59,21 +64,20 @@ export class AuthenticationService {
   }
 
   private async initToken(): Promise<void> {
-    // this.openLoginModal();
     const currentPath = this.Router.url;
+    const tmpUser: User = this.getItemFromLocalStorage(AuthenticationService.USER_STORAGE);
+    if (tmpUser == null) { this.logout(false); }
+    this.currentUser = tmpUser;
     if (AuthenticationService.FREE_ROUTES.indexOf(currentPath) !== -1) { return; }
-    console.log("init start", this.loggedIn);
     this.refreshToken = this.getItemFromLocalStorage(AuthenticationService.REFRESH_TOKEN);
     this.accessTokenJson = this.accessToken == null ? null : jwt_decode(this.accessToken);
     this.refreshTokenJson = this.refreshToken == null ? null : jwt_decode(this.refreshToken);
     if (this.isExpired(this.refreshTokenJson)) {
       this.loggedIn = false;
-      console.log("refreshToken expired");
       this.logout(false);
     } else if (!this.isExpired(this.accessTokenJson)) {
       this.loggedIn = true;
     } else {
-      console.log("accessToken expired");
       this.accessToken = await this.getAccessTokenPromise();
       this.accessTokenJson = jwt_decode(this.accessToken);
       this.loggedIn = true;
@@ -87,7 +91,6 @@ export class AuthenticationService {
     this.accessTokenJson = this.accessToken == null ? null : jwt_decode(this.accessToken);
     this.refreshTokenJson = this.refreshToken == null ? null : jwt_decode(this.refreshToken);
     this.saveItemToLocalStorage(AuthenticationService.REFRESH_TOKEN, this.refreshToken);
-    console.log(newToken);
     this.loggedIn = true;
     return this.refreshToken;
   }
@@ -101,19 +104,23 @@ export class AuthenticationService {
       .toPromise();
   }
 
-  public async setTokenByCredentials(credentials: { username: string, password: string }): Promise<string> {
-    const salt: string = credentials.username;
-    const hashedPassword = sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2(credentials.password, credentials.username, 10000));
-    console.log(salt, credentials.password, hashedPassword);
-    const options = new RequestOptions({ headers: new Headers(AuthenticationService.JSON_HEADER) });
-    const tokens: { token: string; refreshToken: string } =
-      await this.http.post(AuthenticationService.LOGIN_URL,
-        { username: credentials.username, password: hashedPassword },
-        options)
-        .map((res: Response) => res.json())
-        .toPromise()
-        .catch(error => { throw Error("invalid password or username"); });
-    return this.setToken(tokens);
+  public async setTokenByCredentials(credentials: { username: string, password: string }): Promise<void> {
+    try {
+      const salt: string = credentials.username;
+      const hashedPassword = sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2(credentials.password, credentials.username, 10000));
+      const options = new RequestOptions({ headers: new Headers(AuthenticationService.JSON_HEADER) });
+      const tokens: { token: string; refreshToken: string } =
+        await this.http.post(AuthenticationService.LOGIN_URL,
+          { username: credentials.username, password: hashedPassword },
+          options)
+          .map((res: Response) => res.json())
+          .toPromise();
+      this.setToken(tokens);
+      this.currentUser = await this.getCurrentUserByUsername(credentials.username);
+      this.saveItemToLocalStorage(AuthenticationService.USER_STORAGE, this.currentUser);
+    } catch (error) {
+      this.ToasterService.pop("error", "", "LOGIN_ERROR");
+    }
   }
 
   public async getAccessTokenPromise(): Promise<string> {
@@ -130,46 +137,22 @@ export class AuthenticationService {
     try {
       if (this.accessToken != null && !this.isExpired(this.accessTokenJson)) { return this.accessToken; }
       if (this.refreshToken == null || this.isExpired(this.refreshTokenJson)) { throw Error("Refresh token expired!"); }
-
-      console.log("refresh");
       const temp: { token: string } = await this.getAccessTokenByRefreshToken(this.refreshToken);
-      console.log(temp);
       this.accessToken = temp.token;
       this.accessTokenJson = jwt_decode(this.accessToken);
-      console.log(this.accessToken);
       this.loggedIn = true;
       return this.accessToken;
-
     } catch (error) {
       this.loggedIn = false;
-      console.log("getAccessToken", error);
       this.logout();
     }
   }
-
-  public getAccessTokenInstant(): string {
-    try {
-      if (this.accessToken != null && !this.isExpired(this.accessTokenJson)) { return this.accessToken; }
-      if (this.refreshToken == null || this.isExpired(this.refreshTokenJson)) { throw Error("Refresh token expired!"); }
-
-      this.getAccessTokenPromise();
-      return null;
-
-    } catch (error) {
-      this.loggedIn = false;
-      console.log("getAccessToken", error);
-      this.logout();
-    }
-
-  }
-
 
   private isExpired(token: any): boolean {
     return token == null || token.exp * 1000 < (new Date().getTime() + 1000 * 30);
   }
 
   public logout(fullPageReload: boolean = true): void {
-    console.log("logout");
     this.loggedIn = false;
     this.removeAllItemsFromLocalStorage();
     let port = window.location.port;
@@ -185,7 +168,6 @@ export class AuthenticationService {
   }
 
   public isLoggedIn(): boolean {
-    console.log(this.loggedIn);
     return this.loggedIn;
   }
 
@@ -194,7 +176,6 @@ export class AuthenticationService {
   }
 
   public getSmtpKey(): string {
-    console.log(this.accessTokenJson.signature);
     return this.accessTokenJson.signature;
   }
 
@@ -218,10 +199,8 @@ export class AuthenticationService {
   }
 
   private removeAllItemsFromLocalStorage(): void {
-    console.log(this.localStorageMap);
     for (const key in this.localStorageMap) {
       if (this.localStorageMap.hasOwnProperty(key)) {
-        console.log(key);
         localStorage.removeItem(this.tenant + "_" + key);
       }
 
@@ -236,7 +215,12 @@ export class AuthenticationService {
     this.cookieService.setCookie(AuthenticationService.ACCESS_TOKEN_COOKIE_KEY, tokenString);
   }
 
-  private hashPasswordPbkdf2(password: string, salt: string): string {
-    return sjcl.codec.base64.fromBits(sjcl.misc.pbkdf2(password, salt, 10000));
-  };
+  private async getCurrentUserByUsername(username: string): Promise<User> {
+    const headers = new Headers(AuthenticationService.JSON_HEADER);
+    const requestOptions = new RequestOptions({ headers: headers, withCredentials: true });
+    requestOptions.headers.append("X-Authorization", "Bearer  " + this.accessToken);
+    return this.http.post(AuthenticationService.USER_BY_USERNAME_URL, username, requestOptions)
+      .map((res: Response) => res.json())
+      .toPromise();
+  }
 }

@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
 
   public async login(credentials: { username: string, password: string }): Promise<void> {
     await this.AuthenticationService.setTokenByCredentials(credentials);
-    this.Router.navigate(["/home/dashboard"]);
+    this.Router.navigate(["/dashboard"]);
   }
 
 }

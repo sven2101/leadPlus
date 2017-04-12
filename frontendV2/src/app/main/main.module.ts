@@ -1,3 +1,4 @@
+import { ToasterModule } from "angular2-toaster";
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -11,12 +12,7 @@ import { LoggedInGuard } from "../login/logged-in.guard";
 import { LoggedOutGuard } from "../login/logged-out.guard";
 
 // components
-import { AppComponent } from "../app.component";
 import { LoginComponent } from "../login/login.component";
-
-// services
-import { AuthenticationService } from "../login/authentication.service";
-import { CookieService } from "../login/cookie.service";
 import { MainComponent } from "./main.component";
 
 
@@ -31,7 +27,8 @@ import { MainComponent } from "./main.component";
     FormsModule,
     HttpModule,
     RouterModule.forRoot(mainRoutes),
-    SharedModule.forRoot()
+    SharedModule.forRoot(),
+    ToasterModule
   ],
   providers: [
 
