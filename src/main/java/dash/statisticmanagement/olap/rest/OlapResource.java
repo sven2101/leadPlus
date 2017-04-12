@@ -14,8 +14,6 @@
 
 package dash.statisticmanagement.olap.rest;
 
-import java.util.Date;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.google.gson.JsonObject;
 
 import dash.exceptions.NotFoundException;
 import dash.statisticmanagement.domain.DateRange;

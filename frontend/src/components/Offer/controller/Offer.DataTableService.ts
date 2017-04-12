@@ -44,12 +44,12 @@ class OfferDataTableService implements IDatatableService {
             .withOption("stateSave", false)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowDatatableService.getButtons(this.translate("OFFER_OFFERS"), [7, 2, 1, 3, 5, 8, 9, 10, 11, 12, 13]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("OFFER_OFFERS"), [8, 3, 2, 4, 7, 6, 9, 10, 11, 12, 13]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("deferRender", true)
             .withOption("lengthMenu", [10, 20, 50])
-            .withOption("order", [5, "desc"])
+            .withOption("order", [6, "desc"])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
     }
@@ -95,6 +95,14 @@ class OfferDataTableService implements IDatatableService {
                         return "-";
                     }
                 }).withOption("width", "48px").notSortable(),
+            this.DTColumnBuilder.newColumn(null).renderWith(
+                function (data: Process, type, full) {
+                    if (data != null && data.processor != null) {
+                        return data.processor.email;
+                    } else {
+                        return "";
+                    }
+                }).notVisible(),
             this.DTColumnBuilder.newColumn("offer.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("offer.customer.lastname").withTitle(
@@ -145,22 +153,20 @@ class OfferDataTableService implements IDatatableService {
                     return self.filter("currency")(data.offer.netPrice,
                         "€", 2);
                 }).notVisible(),
-
-            this.DTColumnBuilder.newColumn(null).withTitle(
-                this.translate("COMMON_PROCESSOR")).renderWith((data: Process, type, full) => {
-                    if (isNullOrUndefined(data.processor)) {
-                        return "";
-                    }
-                    return data.processor.email;
-                }).notVisible(),
-
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_STATUS")).withClass("text-center")
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
                 "text-center").withOption("width", "210px").notSortable().renderWith(addActionsButtons),
-            this.DTColumnBuilder.newColumn("offer.deliveryAddressLine").notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(this.translate("COMMON_PROCESSOR")).renderWith(
+                function (data: Process, type, full) {
+                    if (data != null && data.processor != null) {
+                        return data.processor.firstname + " " + data.processor.lastname;
+                    } else {
+                        return "";
+                    }
+                }).notVisible(),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {

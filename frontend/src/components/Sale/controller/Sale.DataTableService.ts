@@ -44,12 +44,12 @@ class SaleDataTableService implements IDatatableService {
             .withOption("stateSave", false)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowDatatableService.getButtons(this.translate("SALE_SALES"), [7, 2, 1, 3, 4, 5, 9, 10, 11, 13, 12]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("SALE_SALES"), [8, 3, 2, 4, 7, 6, 14, 13, 10, 11]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("deferRender", true)
             .withOption("lengthMenu", [10, 20, 50])
-            .withOption("order", [5, "desc"])
+            .withOption("order", [6, "desc"])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
     }
@@ -79,6 +79,14 @@ class SaleDataTableService implements IDatatableService {
                         return "-";
                     }
                 }).withOption("width", "48px").notSortable(),
+            this.DTColumnBuilder.newColumn(null).renderWith(
+                function (data: Process, type, full) {
+                    if (data != null && data.processor != null) {
+                        return data.processor.email;
+                    } else {
+                        return "";
+                    }
+                }).notVisible(),
             this.DTColumnBuilder.newColumn("sale.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("sale.customer.lastname").withTitle(
@@ -126,21 +134,35 @@ class SaleDataTableService implements IDatatableService {
                         (data.sale.saleProfit, "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
-                this.translate("COMMON_PROCESSOR")).renderWith((data: Process, type, full) => {
-                    if (isNullOrUndefined(data.processor)) {
-                        return "";
-                    }
-                    return data.processor.email;
-                }).notVisible(),
-            this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_STATUS")).withClass("text-center")
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn("sale.invoiceNumber").withTitle(
                 this.translate("COMMON_PRODUCT_SALE_INVOICE_NUMBER")).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
+                this.translate("COMMON_BILLING_ADDRESS")).renderWith(function (data: Process, type, full) {
+                    let street = "";
+                    let streetNumber = "";
+                    let zip = "";
+                    let city = "";
+                    let country = "";
+                    !isNullOrUndefined(data.sale.billingAddress.street) ? street = data.sale.billingAddress.street : angular.noop;
+                    !isNullOrUndefined(data.sale.billingAddress.number) ? streetNumber = data.sale.billingAddress.number : angular.noop;
+                    !isNullOrUndefined(data.sale.billingAddress.zip) ? zip = data.sale.billingAddress.zip : angular.noop;
+                    !isNullOrUndefined(data.sale.billingAddress.city) ? city = data.sale.billingAddress.city : angular.noop;
+                    !isNullOrUndefined(data.sale.billingAddress.country) ? country = data.sale.billingAddress.country : angular.noop;
+                    return street + " " + streetNumber + " " + zip + " " + city + " " + country;
+                }).notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
                 "text-center").withOption("width", "90px").notSortable().renderWith(addActionsButtons),
-            this.DTColumnBuilder.newColumn("sale.deliveryAddressLine").notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(this.translate("COMMON_PROCESSOR")).renderWith(
+                function (data: Process, type, full) {
+                    if (data != null && data.processor != null) {
+                        return data.processor.firstname + " " + data.processor.lastname;
+                    } else {
+                        return "";
+                    }
+                }).notVisible(),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {

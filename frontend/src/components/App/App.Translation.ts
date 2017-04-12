@@ -275,6 +275,7 @@ function config($translateProvider) {
             COMMON_STATUS_SET_OPEN: "Als offen markieren",
             COMMON_SEARCH: "Suchen...",
             COMMON_WORKFLOW_NO_ACTION: "Keine Aktion möglich",
+            COMMON_PIN_TO_ME: "Mir zuweisen",
 
             COMMON_HOUSE_NUMBER: "Hausnummer",
             COMMON_STREET: "Straße",
@@ -637,6 +638,12 @@ function config($translateProvider) {
 
             TODO_TODOS: "Aufgaben",
             SHOW_MY_TASKS: "Zeige meine Aufgaben",
+            SHOW_MY_OPEN_LEADS: "Zeige meine offenen Anfragen",
+            SHOW_MY_OPEN_LEADS_INFO: "Filter ist in \"Alle Anfragen\" nicht verfügbar",
+            SHOW_MY_OPEN_OFFERS_INFO: "Filter ist in \"Alle Angebote\" nicht verfügbar",
+            SHOW_MY_OPEN_SALES_INFO: "Filter ist in \"Alle Verkäufe\" nicht verfügbar",
+            SHOW_MY_OPEN_OFFERS: "Zeige meine offenen Angebote",
+            SHOW_MY_CLOSED_SALES: "Zeige meine Verkäufe",
             TODO_NO_TODOS: "Keine Aufgaben vorhanden",
 
             // Define calculation elements 
@@ -960,6 +967,7 @@ function config($translateProvider) {
             COMMON_STATUS_SET_OPEN: "Mark as open",
             COMMON_SEARCH: "Search...",
             COMMON_WORKFLOW_NO_ACTION: "No action possible",
+            COMMON_PIN_TO_ME: "Assign to me",
 
             COMMON_HOUSE_NUMBER: "Number",
             COMMON_STREET: "Street",
@@ -1029,7 +1037,7 @@ function config($translateProvider) {
             LEAD_ADD_LEAD: "New lead",
             LEAD_ADD_LEAD_MODAL: "Create lead",
             LEAD_EDIT_LEAD_MODAL: "Edit lead",
-            LEAD_SHOW_ALL_LEADS: "Total leads",
+            LEAD_SHOW_ALL_LEADS: "Total Leads",
             LEAD_FOLLOW_UP: "Create offer ",
             LEAD_PIN: "Assign to me",
             LEAD_OPEN_LEAD: "Unlock lead",
@@ -1048,7 +1056,7 @@ function config($translateProvider) {
             OFFER_ADD_OFFER: "New offer",
             OFFER_ADD_OFFER_MODAL: "Create offer",
             OFFER_EDIT_OFFER_MODAL: "Edit offer",
-            OFFER_SHOW_ALL_OFFERS: "Total offers",
+            OFFER_SHOW_ALL_OFFERS: "Total Offers",
             OFFER_CREATE_SALE: "Make sale",
             OFFER_FOLLOW_UP: "Follow up",
             LEAD_IN_CONTACT: "In contact",
@@ -1073,7 +1081,7 @@ function config($translateProvider) {
             SALE_EDIT_SALE: "Edit sale",
             SALE_ADD_SALE_MODAL: "Create sale",
             SALE_EDIT_SALE_MODAL: "Edit sale",
-            SALE_SHOW_ALL_SALES: "Total sales",
+            SALE_SHOW_ALL_SALES: "Total Sales",
             SALE_DELETE_SALE: "Delete sale",
             SALE_DELETE_SALE_BODY: "Are you sure to delete this sale?",
             SALE_ROLLBACK_TITLE: "Reset sale",
@@ -1321,6 +1329,12 @@ function config($translateProvider) {
 
             TODO_TODOS: "Tasks",
             SHOW_MY_TASKS: "Show my tasks",
+            SHOW_MY_OPEN_LEADS: "Show my open leads",
+            SHOW_MY_OPEN_OFFERS: "Show my open offers",
+            SHOW_MY_CLOSED_SALES: "Show my sales",
+            SHOW_MY_OPEN_LEADS_INFO: "Filter is not available in \"Total Leads\"",
+            SHOW_MY_OPEN_OFFERS_INFO: "Filter is not available in \"Total Offers\"",
+            SHOW_MY_OPEN_SALES_INFO: "Filter is not available in \"Total Sales\"",
             TODO_NO_TODOS: "No tasks available",
 
             // Define calculation elements 
