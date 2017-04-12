@@ -30,7 +30,7 @@
 						<td ng-if="user.role=='SUPERADMIN' ">
 							{{ 'COMMON_SUPERADMIN' | translate }}
 						</td>
-						<td ng-if="user.enabled==false ">
+						<td ng-if="user.enabled==false " class="text-center" style="white-space: nowrap;text-align:center;">
 
 							<button ng-click="settingCtrl.activateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&settingCtrl.currentUser.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
 
@@ -39,7 +39,7 @@
 						</td>
 						<td ng-if="user.enabled==true " class="text-center" style="white-space: nowrap;text-align:center;">
 
-							<button ng-click="settingCtrl.deactivateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&settingCtrl.currentUser.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
+							<button ng-click="settingCtrl.deactivateUser(user) " type="button " class="btn btn-danger" ng-disabled="(user.role=='ADMIN'&&settingCtrl.currentUser.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
 
 							<i class="fa fa-ban "></i>&nbsp;{{ 'SETTING_DEACTIVATE_USER' | translate }}
 						</button>

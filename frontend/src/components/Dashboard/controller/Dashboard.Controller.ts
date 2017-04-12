@@ -179,6 +179,10 @@ class DashboardController {
     getConversionrate(): number {
         return this.statisticService.getLeadConversionRate();
     }
+
+    getOlapTimestamp(): string {
+        return this.statisticService.olapTimestamp;
+    }
     toLocalDate(timestamp: any, process: Process = null): any {
         if (timestamp === undefined) {
             timestamp = newTimestamp();

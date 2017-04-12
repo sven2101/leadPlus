@@ -21,13 +21,14 @@
             <div class="ibox-title">
                 <span class="label label-danger pull-right">{{ 'STATISTIC_PERIOD_TODAY' | translate }}</span>
                 <h5>{{ 'LEADS_MENU' | translate }}</h5>
-                <div class="ibox-content statisticDiv">
+            </div>
+            <div class="ibox-content statisticDiv">
                     <h1 class="no-margins">{{dashboardCtrl.getLeadsArray()[dashboardCtrl.getLeadsArray().length-1]}}</h1>
                     <sparklinechart data="{{dashboardCtrl.getLeadsArray()}}" color="#ed5565"></sparklinechart>
                     <small>{{ 'STATISTIC_PERIOD_LAST_30_DAYS' | translate }}</small>
-                </div>
-
-            </div>
+                    <br>
+                    <span style="margin-top:-15px" class="pull-right"><small>{{dashboardCtrl.getOlapTimestamp()}}</small></span>
+             </div>
         </div>
     </div>
      <div class="col-lg-3 ">
@@ -35,12 +36,13 @@
             <div class="ibox-title">
                 <span class="label label-success pull-right">{{ 'STATISTIC_PERIOD_TODAY' | translate }}</span>
                 <h5>{{ 'SALES_MENU' | translate }}</h5>
-                <div class="ibox-content statisticDiv">
-                    <h1 class="no-margins">{{dashboardCtrl.getSalesArray()[dashboardCtrl.getSalesArray().length-1]}}</h1>
-                    <sparklinechart data="{{dashboardCtrl.getSalesArray()}}" color="#1c84c6"></sparklinechart>
-                    <small>{{ 'STATISTIC_PERIOD_LAST_30_DAYS' | translate }}</small>
-                </div>
-
+            </div>
+            <div class="ibox-content statisticDiv">
+                <h1 class="no-margins">{{dashboardCtrl.getSalesArray()[dashboardCtrl.getSalesArray().length-1]}}</h1>
+                <sparklinechart data="{{dashboardCtrl.getSalesArray()}}" color="#1c84c6"></sparklinechart>
+                <small>{{ 'STATISTIC_PERIOD_LAST_30_DAYS' | translate }}</small>
+                <br>
+                <span style="margin-top:-15px" class="pull-right"><small>{{dashboardCtrl.getOlapTimestamp()}}</small></span>
             </div>
         </div>
     </div>
@@ -64,6 +66,7 @@
                         <small>{{ 'COMMON_SALE_PROFIT' | translate }}</small>
                     </div>
                 </div>
+                <span class="pull-right"><small>{{dashboardCtrl.getOlapTimestamp()}}</small></span>
             </div>
         </div>
     </div>
@@ -79,6 +82,7 @@
                     <div ng-style="{'width':dashboardCtrl.getConversionrate()+'%'}" class="progress-bar progress-bar-success"></div>
                 </div>
                 <div class="m-t-sm small">{{ 'LEADS_MENU' | translate }} / {{ 'SALES_MENU' | translate }}</div>
+                <span class="pull-right" style="margin-top:35px"><small>{{dashboardCtrl.getOlapTimestamp()}}</small></span>
             </div>
         </div>
     </div>

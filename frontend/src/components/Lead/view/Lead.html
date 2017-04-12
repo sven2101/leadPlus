@@ -39,7 +39,7 @@
                     </button>
 					<span class="pull-right" style=" font-size: 1.5em;">{{ 'LEAD_SHOW_ALL_LEADS' | translate }} &nbsp;<input type="checkbox" ng-model="leadCtrl.loadAllData" ng-change="leadCtrl.changeDataInput()"
 	class="js-switch" ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}" /></span>
-					<span class="pull-right" style="margin-right:15px; margin-top:3px;"><input title="{{leadCtrl.loadAllData==true?leadCtrl.getShowMyTasksInfo('LEADS') : ''}}" ng-disabled="leadCtrl.loadAllData==true" style="transform:scale(1.5);margin-right: 6px;" type="checkbox" ng-click= "leadCtrl.filterMyTasks()" ng-model="leadCtrl.showMyTasks"><span style="font-size: 12pt;">{{ 'SHOW_MY_OPEN_LEADS' | translate }}</span></span>
+					<span class="pull-right" style="margin-right:15px; margin-top:3px;"><input title="{{leadCtrl.loadAllData==true?leadCtrl.getShowMyTasksInfo('LEADS') : ''}}" ng-disabled="leadCtrl.loadAllData==true" style="transform:scale(1.5);margin-right: 6px;" type="checkbox" ng-click= "leadCtrl.filterMyTasks()" ng-model="leadCtrl.showMyTasks">&nbsp;<span ng-style="{color: {true:'darkgray'}[leadCtrl.loadAllData==true]}" style="font-size: 12pt;">{{ 'SHOW_MY_OPEN_LEADS' | translate }}</span></span>
 					<br/>
 					<br/>
 					<div class="table-responsive text-center">

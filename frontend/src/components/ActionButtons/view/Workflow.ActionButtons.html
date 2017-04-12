@@ -11,8 +11,8 @@
     </button>
 		<ul style="max-height: 200px; overflow-x: hidden; " class="dropdown-menu right ">
 			<li ng-if="::config[ 'PIN_DROPDOWN_EMPTY_PROCESSOR'].visible " ng-click="workflowService.togglePin(process,null) "><a>{{ 'COMMON_EMPTY_PROCESSOR' | translate }}</a></li>
-			<li ng-if="::config[ 'PIN_DROPDOWN_EMPTY_PROCESSOR'].visible " role="separator " class="divider "></li>
 			<li ng-if="::config[ 'PIN_DROPDOWN_EMPTY_PROCESSOR'].visible " ng-click="workflowService.togglePin(process,rootScope.user) "><a>{{ 'COMMON_PIN_TO_ME' | translate }}</a></li>
+			<li ng-if="::config[ 'PIN_DROPDOWN_EMPTY_PROCESSOR'].visible " role="separator " class="divider "></li>
 			<li ng-click="workflowService.togglePin(process,user) " ng-repeat="user in ::workflowService.users ">
 				<a ng-if="::(((user.firstname==null||user.firstname=='' )&&(user.lastname==null||user.lastname=='' ))&&user.role!='API')"
 				 ng-style="::(user.id==process.processor.id?{ 'font-weight': 'bold', 'font-style': 'italic'}:{ 'font-weight': 'normal', 'font-style':
