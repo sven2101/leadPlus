@@ -19,6 +19,7 @@ class WorkflowTemplateObject {
     skonto: number;
     deliveryAddress: Address;
     billingAddress: Address;
+    referencedOfferContent: string;
 
     constructor() {
         this.id = 0;

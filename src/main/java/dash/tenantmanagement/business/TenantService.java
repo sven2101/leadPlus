@@ -110,7 +110,7 @@ public class TenantService implements ITenantService {
 				logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());
 			} else if (springProfileActive.equals(SPRING_PROFILE_PRODUCTION)
 					|| springProfileActive.equals(SPRING_PROFILE_DEVELOPMENT)) {
-				createTenantSubdomain(tenant);
+				// createTenantSubdomain(tenant);
 				createSchema(tenant);
 				tenantRepository.save(tenant);
 				logger.debug(CREATING_SUBDOMAIN + tenant.getTenantKey());

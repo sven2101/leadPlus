@@ -143,7 +143,7 @@ public class TemplateService implements ITemplateService {
 		if (workflowTemplateObject != null && template != null) {
 			try {
 				return messageService.getMessageContent(workflowTemplateObject, template.getContent(), notification,
-						user,template.getId());
+						user, template.getId());
 			} catch (NotFoundException ex) {
 				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw ex;
@@ -195,6 +195,12 @@ public class TemplateService implements ITemplateService {
 		String message = getMessageContentStringByTemplateId(templateId, workflowTemplateObject, user);
 		return htmlToPdfService.genereatePdfFromHtml(message);
 
+	}
+
+	@Override
+	public byte[] exportProcessAsPDF(WorkflowTemplateObject workflowTemplateObject, final User user)
+			throws TemplateException, IOException, PdfGenerationFailedException {
+		return htmlToPdfService.genereatePdfFromHtml(messageService.exportProcessAsPDF(workflowTemplateObject, user));
 	}
 
 }

@@ -72,6 +72,14 @@ angular.module(moduleApp).config([$routeProviderId, $httpProviderId, $locationPr
                 authenticated: true,
                 package: "basic"
             })
+            .when("/settings/api/details/:apiId?",
+            {
+                templateUrl: "components/Api/view/Api.Detail.html",
+                controller: "ApiController",
+                controllerAs: "apiCtrl",
+                authenticated: true,
+                package: "basic"
+            })
             .when("/statistic/users/detail/:userId",
             {
                 templateUrl: "components/Statistic/view/UserDetail.html",

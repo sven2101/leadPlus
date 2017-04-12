@@ -105,7 +105,10 @@ const moduleConfirmation: string = moduleApp + ".confirmationModal";
 const moduleToken: string = moduleApp + ".token";
 const moduleTokenService: string = moduleToken + ".service";
 const moduleLoginModal: string = moduleApp + ".loginModal";
-
+const moduleApi: string = moduleApp + ".api";
+const moduleApiResource: string = moduleApi + ".resource";
+const moduleApiService: string = moduleApi + ".service";
+const moduleDeleteApi: string = moduleApi + ".delete";
 
 const moduleTranslate: string = "pascalprecht.translate";
 const moduleNgResource: string = "ngResource";

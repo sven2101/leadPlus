@@ -54,7 +54,7 @@ public class CustomerService implements ICustomerService {
 
 		if (!allCustomers.booleanValue()) {
 			if (null == searchText || searchText.equals("noSearchText") || searchText.equals("")) {
-				page = customerRepository.findByRealCustomer(true,
+				page = customerRepository.findByRealCustomerAndDeletedFalse(true,
 						new PageRequest(start / length, length, sortDirection, sortColumn));
 			} else {
 				page = customerRepository.findRealCustomerBySearchText(searchText,
@@ -62,10 +62,11 @@ public class CustomerService implements ICustomerService {
 			}
 		} else {
 			if (null == searchText || searchText.equals("noSearchText") || searchText.equals("")) {
-				page = customerRepository.findAll(new PageRequest(start / length, length, sortDirection, sortColumn));
+				page = customerRepository
+						.findByDeletedFalse((new PageRequest(start / length, length, sortDirection, sortColumn)));
 			} else {
 				page = customerRepository
-						.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCase(
+						.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCaseAndDeletedFalse(
 								searchText, searchText, searchText, searchText, searchText,
 								new PageRequest(start / length, length, sortDirection, sortColumn));
 			}
@@ -78,7 +79,7 @@ public class CustomerService implements ICustomerService {
 	public Customer getById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
-				return customerRepository.findOne(id);
+				return customerRepository.findByIdAndDeletedFalse(id);
 			} catch (Exception ex) {
 				logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw new NotFoundException(CUSTOMER_NOT_FOUND);
@@ -141,23 +142,23 @@ public class CustomerService implements ICustomerService {
 	@Override
 	public List<Customer> getByEmailIgnoreCase(String email) {
 
-		return customerRepository.getByEmailIgnoreCase(email);
+		return customerRepository.findByEmailIgnoreCaseAndDeletedFalse(email);
 	}
 
 	@Override
 	public List<Customer> getRealCustomer() {
-		return customerRepository.findByRealCustomer(true);
+		return customerRepository.findByRealCustomerAndDeletedFalse(true);
 	}
 
 	@Override
 	public List<Customer> getAll() {
-		return customerRepository.findAll();
+		return customerRepository.findByDeletedFalse();
 	}
 
 	@Override
 	public List<Customer> getCustomerBySearchText(String searchText) {
 		return customerRepository
-				.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCase(
+				.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCaseAndDeletedFalse(
 						searchText, searchText, searchText, searchText, searchText);
 	}
 

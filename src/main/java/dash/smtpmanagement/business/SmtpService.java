@@ -21,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import dash.common.EncryptionWrapper;
 import dash.common.Encryptor;
 import dash.exceptions.NotFoundException;
 import dash.notificationmanagement.business.NotificationUtil;
@@ -90,14 +89,14 @@ public class SmtpService implements ISmtpService {
 	}
 
 	@Override
-	public Smtp save(final Smtp smtp, String smtpKey) throws Exception {
+	public Smtp save(Smtp smtp, String smtpKey) throws Exception {
 		if (smtp != null && smtp.getId() != null
 				&& (smtp.getPassword() == null || new String(smtp.getPassword(), "UTF-8") == "")) {
 			Smtp tempSmpt = smtpRepository.findOne(smtp.getId());
 			smtp.setPassword(tempSmpt.getPassword());
 			smtp.setSalt(tempSmpt.getSalt());
 			smtp.setIv(tempSmpt.getIv());
-		} else if (smtp != null && smtp.isDecrypted() == true && smtp.getPassword() != null
+		} else if (smtp != null && smtp.isDecrypted() && smtp.getPassword() != null
 				&& new String(smtp.getPassword(), "UTF-8") != "") {
 			if (smtpKey == null) {
 				Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -105,10 +104,7 @@ public class SmtpService implements ISmtpService {
 				smtpKey = userContext.getSmtpKey();
 			}
 
-			EncryptionWrapper encryptionWrapper = Encryptor.encrypt(smtp.getPassword(), smtpKey);
-			smtp.setPassword(encryptionWrapper.getCiphertext());
-			smtp.setSalt(encryptionWrapper.getSalt());
-			smtp.setIv(encryptionWrapper.getIv());
+			smtp = (Smtp) Encryptor.encrypt(smtp, smtpKey);
 		}
 		return smtpRepository.save(smtp);
 	}

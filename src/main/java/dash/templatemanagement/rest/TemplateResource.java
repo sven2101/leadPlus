@@ -20,10 +20,10 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,13 +35,15 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
-import dash.fileuploadmanagement.business.HtmlToPdfService;
 import dash.fileuploadmanagement.business.PdfGenerationFailedException;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.messagemanagement.domain.MessageContext;
+import dash.security.jwt.domain.UserContext;
 import dash.templatemanagement.business.ITemplateService;
 import dash.templatemanagement.business.TemplateCompilationException;
 import dash.templatemanagement.domain.Template;
+import dash.templatemanagement.domain.WorkflowTemplateObject;
+import dash.usermanagement.business.UserService;
 import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,13 +54,14 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "Template API")
 public class TemplateResource {
 
-	private static final Logger logger = Logger.getLogger(TemplateResource.class);
-
-	@Autowired
 	private ITemplateService templateService;
+	private UserService userService;
 
 	@Autowired
-	private HtmlToPdfService htmlToPdfService;
+	public TemplateResource(ITemplateService templateService, UserService userService) {
+		this.templateService = templateService;
+		this.userService = userService;
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -123,12 +126,25 @@ public class TemplateResource {
 			@ApiParam(required = true) @RequestBody @Valid final MessageContext messageContext)
 			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException,
 			TemplateException {
-		Map<String, byte[]> x = new HashMap<>();
-
-		x.put("data", templateService.getPdfBytemplateId(templateId, messageContext.getWorkflowTemplateObject(),
+		Map<String, byte[]> map = new HashMap<>();
+		map.put("data", templateService.getPdfBytemplateId(templateId, messageContext.getWorkflowTemplateObject(),
 				messageContext.getUser()));
-		return x;
+		return map;
 
+	}
+
+	@RequestMapping(value = "/process/pdf", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Generate a pdf based on a workflowTemplateObject.", notes = "")
+	public Map<String, byte[]> exportProcessAsPDF(
+			@ApiParam(required = true) @RequestBody @Valid final WorkflowTemplateObject workflowTemplateObject)
+			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException,
+			TemplateException {
+		UserContext userContext = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Map<String, byte[]> map = new HashMap<>();
+		map.put("data", templateService.exportProcessAsPDF(workflowTemplateObject,
+				this.userService.getUserByEmail(userContext.getUsername())));
+		return map;
 	}
 
 }

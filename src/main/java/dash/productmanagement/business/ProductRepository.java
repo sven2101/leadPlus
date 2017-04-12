@@ -25,5 +25,9 @@ import dash.productmanagement.domain.Product;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 	Product findByNameIgnoreCase(String name);
 
-	public List<Product> findByDeactivated(boolean deactivated);
+	public List<Product> findByDeactivatedAndDeletedFalse(boolean deactivated);
+
+	public List<Product> findByDeletedFalse();
+
+	public Product findByIdAndDeletedFalse(Long id);
 }

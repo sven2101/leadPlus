@@ -67,7 +67,7 @@ let toLocalDate = function (date: any, pattern: string = "DD.MM.YYYY HH:mm:ss"):
     let currentDateUtc: any = moment.utc(date, pattern);
     let currentDateLocal = currentDateUtc.tz(timezone);
     if (currentDateLocal.isDST()) {
-        currentDateLocal.add(-1, "h");
+        // currentDateLocal.add(-1, "h");
     }
     return currentDateLocal.format(pattern);
 };
@@ -177,6 +177,13 @@ function isNumeric(n) {
 function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+ function b64EncodeUnicode(str) {
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+            let x = String.fromCharCode as any;
+            return x("0x" + p1);
+        }));
+    }
 
 
 

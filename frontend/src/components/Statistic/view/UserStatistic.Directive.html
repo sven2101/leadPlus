@@ -5,7 +5,7 @@
 				<span class="label label-success pull-right">{{ daterange | translate }}</span>
 				<h5>{{ 'DETAIL_STATISTIC_USERSTATISTIC' | translate }} {{getNameOfUser(userobj)}}</h5>
 			</div>
-			<div class="ibox-content" id="ibox-content">
+			<div class="ibox-content" id="ibox-content" style="overflow: hidden">
 				<highchart id="SingleProductColumnChart" config="chart.chartConfig"></highchart>
 			</div>
 		</div>

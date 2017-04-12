@@ -154,6 +154,9 @@ class CustomerService {
             });
         }
     }
+    async deleteCustomer(customer: Customer): Promise<void> {
+        await this.customerResource.deleteCustomer({ id: customer.id }).$promise;
+    }
 }
 
 angular.module(moduleCustomerService, [ngResourceId]).service(CustomerServiceId, CustomerService);

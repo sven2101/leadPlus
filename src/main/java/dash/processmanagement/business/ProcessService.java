@@ -74,23 +74,23 @@ public class ProcessService implements IProcessService {
 
 	private static final Logger logger = Logger.getLogger(ProcessService.class);
 
-	@Autowired
 	private ProcessRepository processRepository;
-
-	@Autowired
 	private UserService userService;
-
-	@Autowired
 	private CustomerService customerService;
-
-	@Autowired
 	private ILeadService leadService;
-
-	@Autowired
 	private IOfferService offerService;
+	private ISaleService saleService;
 
 	@Autowired
-	private ISaleService saleService;
+	public ProcessService(ProcessRepository processRepository, UserService userService, CustomerService customerService,
+			ILeadService leadService, IOfferService offerService, ISaleService saleService) {
+		this.processRepository = processRepository;
+		this.userService = userService;
+		this.customerService = customerService;
+		this.leadService = leadService;
+		this.offerService = offerService;
+		this.saleService = saleService;
+	}
 
 	@Override
 	public List<Process> getElementsByStatus(final Workflow workflow, final Status status) {

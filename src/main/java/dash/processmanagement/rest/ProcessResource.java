@@ -74,8 +74,7 @@ public class ProcessResource {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public Process getById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
-		Process x = processService.getById(id);
-		return x;
+		return processService.getById(id);
 	}
 
 	@ApiOperation(value = "Returns processes with a certain state", notes = "")
@@ -84,7 +83,6 @@ public class ProcessResource {
 	public List<Process> getElementsByStatus(@ApiParam(required = true) @PathVariable final Workflow workflow,
 			@ApiParam(required = true) @PathVariable final Status status) {
 		return processService.getElementsByStatus(workflow, status);
-
 	}
 
 	@ApiOperation(value = "Returns count processes with a certain state", notes = "")
@@ -94,7 +92,6 @@ public class ProcessResource {
 			@ApiParam(required = true) @PathVariable final Workflow workflow,
 			@ApiParam(required = true) @PathVariable final Status status) {
 		return processService.getCountElementsByStatus(workflow, status);
-
 	}
 
 	@ApiOperation(value = "Returns status", notes = "")
@@ -111,9 +108,7 @@ public class ProcessResource {
 	public Process setStatusByProcessId(@ApiParam(required = true) @PathVariable final Long id,
 			@ApiParam(required = true) @RequestBody @Valid final String status)
 			throws NotFoundException, SaveFailedException, UpdateFailedException {
-
 		return processService.setStatus(id, status);
-
 	}
 
 	@ApiOperation(value = "Update a single process.", notes = "")

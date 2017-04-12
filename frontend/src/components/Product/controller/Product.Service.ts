@@ -82,6 +82,12 @@ class ProductService {
     getTheFiles($files) {
         this.formdata.append("file", $files[0]);
     }
+
+    async deleteProduct(product: Product): Promise<void> {
+        product.picture = null;
+        await this.productResource.createProduct(product).$promise;
+        await this.productResource.deleteProduct({ id: product.id }).$promise;
+    }
 }
 
 angular.module(moduleProductService, [ngResourceId]).service(ProductServiceId, ProductService);

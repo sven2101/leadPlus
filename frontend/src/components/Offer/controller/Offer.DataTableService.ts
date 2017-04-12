@@ -44,12 +44,12 @@ class OfferDataTableService implements IDatatableService {
             .withOption("stateSave", false)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowDatatableService.getButtons(this.translate("OFFER_OFFERS"), [7, 2, 1, 3, 5, 8, 9, 10, 11, 12, 13]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("OFFER_OFFERS"), [8, 3, 2, 4, 7, 6, 9, 10, 11, 12, 13]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
             .withOption("deferRender", true)
             .withOption("lengthMenu", [10, 20, 50])
-            .withOption("order", [5, "desc"])
+            .withOption("order", [6, "desc"])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
     }
@@ -82,6 +82,27 @@ class OfferDataTableService implements IDatatableService {
         return [
             /*this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
                 .renderWith(addDetailButton),*/
+            this.DTColumnBuilder.newColumn(null).withTitle(
+                "<i style='margin-top:2px;margin-left:12px;' class='fa fa-thumb-tack' aria-hidden='true'></i>").withClass("text-center").renderWith(function (data: Process, type, full) {
+                    if (data.processor != null && data.processor.thumbnail != null) {
+                        return `<div style="height:48px;">
+                    <img title="` + data.processor.firstname + ` ` + data.processor.lastname + `" style="width: 48px; height:48px;border-radius: 10%;"
+                    pictureid="` + data.processor.thumbnail.id + `" httpsrc="/api/rest/files/content/" alt="">
+                </div>`;
+                    } else if (data.processor != null && data.processor.thumbnail == null && data.processor.firstname != null && data.processor.lastname != null) {
+                        return "<span style='font-weight:bold' title='" + data.processor.firstname + " " + data.processor.lastname + "'>" + data.processor.firstname[0] + data.processor.lastname[0] + "</span>";
+                    } else {
+                        return "-";
+                    }
+                }).withOption("width", "48px").notSortable(),
+            this.DTColumnBuilder.newColumn(null).renderWith(
+                function (data: Process, type, full) {
+                    if (data != null && data.processor != null) {
+                        return data.processor.email;
+                    } else {
+                        return "";
+                    }
+                }).notVisible(),
             this.DTColumnBuilder.newColumn("offer.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("offer.customer.lastname").withTitle(
@@ -132,22 +153,20 @@ class OfferDataTableService implements IDatatableService {
                     return self.filter("currency")(data.offer.netPrice,
                         "€", 2);
                 }).notVisible(),
-
-            this.DTColumnBuilder.newColumn(null).withTitle(
-                this.translate("COMMON_PROCESSOR")).renderWith((data: Process, type, full) => {
-                    if (isNullOrUndefined(data.processor)) {
-                        return "";
-                    }
-                    return data.processor.email;
-                }).notVisible(),
-
             this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_STATUS")).withClass("text-center")
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
                 "text-center").withOption("width", "210px").notSortable().renderWith(addActionsButtons),
-            this.DTColumnBuilder.newColumn("offer.deliveryAddressLine").notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(this.translate("COMMON_PROCESSOR")).renderWith(
+                function (data: Process, type, full) {
+                    if (data != null && data.processor != null) {
+                        return data.processor.firstname + " " + data.processor.lastname;
+                    } else {
+                        return "";
+                    }
+                }).notVisible(),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {
@@ -201,35 +220,33 @@ class OfferDataTableService implements IDatatableService {
 
     getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {
         actionButtonConfig[process.id] = this.getActionButtonConfig(process);
-        return "<div actionbuttons actionbuttonconfig=offerCtrl.actionButtonConfig[" + process.id + "]  process='offerCtrl.processes[" + process.id + "]'></div>";
+        let actionButtons = actionButtonConfig[process.id];
+        if (actionButtons.DETAILS_DROPDOWN.disabled === true) {
+            let currentStatus = this.translate.instant(process.status);
+            return this.translate.instant("COMMON_WORKFLOW_NO_ACTION") + " <a uib-tooltip='" + this.translate.instant("OFFER_NO_ACTION_INFO", { status: currentStatus }) + "' tooltip-class='noActionTooltip' tooltip-placement='top-right'><i class='fa fa-info-circle'></i></a>";
+        } else {
+            return "<div actionbuttons actionbuttonconfig=offerCtrl.actionButtonConfig[" + process.id + "]  process='offerCtrl.processes[" + process.id + "]'></div>";
+        }
     }
 
     getStatusStyleHTML(data: Process): string {
-        let hasProcessor: string = "";
-        if (data.processor !== null) {
-            hasProcessor = "&nbsp;<span style='color: #ea394c;'><i class='fa fa-thumb-tack'></i></span>";
-        }
         if (data.status === "OPEN" || data.status === "OFFER") {
             return "<span style='color: green;'>"
-                + this.translate.instant("COMMON_STATUS_OPEN") + "</span>"
-                + hasProcessor;
+                + this.translate.instant("COMMON_STATUS_OPEN") + "</span>";
         } else if (data.status === "FOLLOWUP") {
             return "<span style='color: #f79d3c;'>"
-                + data.followUpAmount + "x " + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>"
-                + hasProcessor;
+                + data.followUpAmount + "x " + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>";
         }
         else if (data.status === "DONE") {
             return "<span style='color: #f79d3c;'>"
-                + this.translate.instant("COMMON_STATUS_DONE") + "</span>"
-                + hasProcessor;
+                + this.translate.instant("COMMON_STATUS_DONE") + "</span>";
         }
         else if (data.status === "SALE") {
             return "<span style='color: #1872ab;'>"
                 + this.translate.instant("COMMON_STATUS_SALE") + "</span>";
         } else if (data.status === "CLOSED") {
             return "<span style='color: #ea394c;'>"
-                + this.translate.instant("COMMON_STATUS_CLOSED") + "</span>"
-                + hasProcessor;
+                + this.translate.instant("COMMON_STATUS_CLOSED") + "</span>";
         }
     }
 

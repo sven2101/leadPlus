@@ -25,6 +25,7 @@ public final class Constants {
 	public static final String NOT_FOUND = "Not found. ";
 	public static final String PROCESS_NOT_FOUND = "Process not found. ";
 	public static final String PRODUCT_NOT_FOUND = "Product not found. ";
+	public static final String API_NOT_FOUND = "Api not found. ";
 	public static final String COMMENT_NOT_FOUND = "Comment not found. ";
 	public static final String USER_NOT_FOUND = "User not found. ";
 	public static final String SMTP_NOT_FOUND = "Smtp not found";

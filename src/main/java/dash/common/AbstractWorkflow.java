@@ -48,7 +48,7 @@ public abstract class AbstractWorkflow implements Request {
 
 	@ManyToOne
 	@JoinColumn(name = "customer_fk", nullable = true)
-	@Where(clause = "deleted <> '1'")
+	// @Where(clause = "deleted <> '1'")
 	private Customer customer;
 
 	@ApiModelProperty(hidden = true)

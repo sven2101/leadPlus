@@ -29,10 +29,12 @@ class WorkflowController {
     dtColumns;
     dtInstance: any = { DataTable: null };
     dtInstanceCallback: any;
+    showMyTasks: boolean = false;
 
     compile: any;
     uibModal: any;
     rootScope: any;
+    translate: any;
 
     commentInput: string;
     commentModalInput: string;
@@ -45,9 +47,9 @@ class WorkflowController {
     allDataRoute: string;
     openDataRoute: string;
 
-    $inject = [$rootScopeId, $scopeId, $compileId, $routeParamsId, $routeId, $sceId, $uibModalId, WorkflowServiceId, WorkflowDatatableServiceId, WorkflowDatatableRowServiceId, LeadDataTableServiceId, , OfferDataTableServiceId, SaleDataTableServiceId];
+    $inject = [$rootScopeId, $scopeId, $compileId, $routeParamsId, $routeId, $sceId, $uibModalId, WorkflowServiceId, WorkflowDatatableServiceId, WorkflowDatatableRowServiceId, LeadDataTableServiceId, , OfferDataTableServiceId, SaleDataTableServiceId, $translateId];
 
-    constructor($rootScope, $scope, $compile, $routeParams, $route, $sce, $uibModal, WorkflowService, WorkflowDatatableService, WorkflowDatatableRowService, LeadDataTableService, OfferDataTableService, SaleDataTableService) {
+    constructor($rootScope, $scope, $compile, $routeParams, $route, $sce, $uibModal, WorkflowService, WorkflowDatatableService, WorkflowDatatableRowService, LeadDataTableService, OfferDataTableService, SaleDataTableService, $translate) {
 
         this.controllerType = $route.current.$$route.type;
         switch (this.controllerType) {
@@ -77,6 +79,7 @@ class WorkflowController {
         this.uibModal = $uibModal;
         this.rootScope = $rootScope;
         this.compile = $compile;
+        this.translate = $translate;
 
         let self = this;
 
@@ -167,6 +170,23 @@ class WorkflowController {
         this.registerIntervall();
     }
 
+    getShowMyTasksInfo(type: string): string {
+        return this.translate.instant("SHOW_MY_OPEN_" + type + "_INFO");
+    }
+
+    filterMyTasks() {
+        if (this.loadAllData === true) {
+            return;
+        }
+        let table = this.dtInstance.DataTable;
+        if (this.showMyTasks === true) {
+            let regExSearch = "^" + this.rootScope.user.email + "$";
+            table.column(1).search(regExSearch, true, false, true).draw();
+        } else {
+            table.column(1).search("").draw();
+        }
+    }
+
     registerIntervall() {
         let self = this;
         let intervall = setInterval(function () {
@@ -218,6 +238,7 @@ class WorkflowController {
 
     changeDataInput() {
         this.destroyAllScopes();
+        this.showMyTasks = false;
         this.workflowDatatableService.changeDataInput(this.loadAllData, this.dtOptions, this.allDataRoute, this.openDataRoute);
     }
 

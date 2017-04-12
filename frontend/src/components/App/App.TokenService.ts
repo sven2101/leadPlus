@@ -163,12 +163,10 @@ class TokenService {
             // console.log("getAccessToken", error);
             this.logout();
         }
-
     }
 
-
     private isExpired(token: any): boolean {
-        return token == null || token.exp * 1000 < (new Date().getTime() + 1000 * 30);
+        return token == null || token.exp < ((Date.now() / 1000 ) + 30);
     }
 
     public logout(fullPageReload: boolean = true) {

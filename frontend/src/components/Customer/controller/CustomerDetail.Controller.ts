@@ -7,7 +7,7 @@ const CustomerDetailControllerId: string = "CustomerDetailController";
 
 class CustomerDetailController {
 
-    $inject = [CustomerServiceId, $routeParamsId, $scopeId, $rootScopeId, $locationId];
+    $inject = [CustomerServiceId, $routeParamsId, $scopeId, $rootScopeId, $locationId, SweetAlertId, $translateId, toasterId];
     customerService: CustomerService;
     routeParams;
     rootScope;
@@ -17,7 +17,7 @@ class CustomerDetailController {
     isNewCustomer: boolean;
     location;
 
-    constructor(CustomerService, $routeParams, $scope, $rootScope, $location) {
+    constructor(CustomerService, $routeParams, $scope, $rootScope, $location, private SweetAlert, private $translate, private toaster) {
         this.customerService = CustomerService;
         this.routeParams = $routeParams;
         this.rootScope = $rootScope;
@@ -53,6 +53,24 @@ class CustomerDetailController {
         }
     }
 
+    async deleteCustomer(): Promise<void> {
+        try {
+            await this.SweetAlert.swal({
+                title: this.$translate.instant("COMMON_DELETE"),
+                html: this.$translate.instant("COMMON_DELETE_QUESTITION"),
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonColor: "#3085d6",
+                confirmButtonColor: "#d33",
+                confirmButtonText: this.$translate.instant("COMMON_DELETE"),
+                cancelButtonText: this.$translate.instant("COMMON_CANCEL")
+            });
+            await this.customerService.deleteCustomer(this.customer);
+            this.location.path("/customer");
+        } catch (error) {
+            this.toaster.pop("error", "", this.$translate.instant("COMMON_DELETE_ERROR"));
+        }
+    }
 }
 angular.module(moduleCustomerDetail, [ngResourceId]).controller(CustomerDetailControllerId, CustomerDetailController);
 

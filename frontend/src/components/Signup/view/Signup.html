@@ -44,8 +44,8 @@
 						<span style="color:red" ng-show="registration.email.$error.required&&!registration.email.$pristine"> {{ 'COMMON_VALIDATE_REQ'| translate }}</span>
 						<span style="color:red" ng-show="signupCtrl.signupService.emailExist || registration.email.$error.emailExist"> {{ 'SIGNUP_VALIDATE_EMAIL_IN_USE' | translate }}</span>
 						<span style="color:red" ng-show="registration.email.$error.email"> {{ 'COMMON_VALIDATE_EMAIL' | translate }}</span>
-						<input type="email" id="email" name="email" class="form-control" ng-model-options="{ debounce: 600 }" placeholder="{{ 'COMMON_EMAIL' | translate }}"
-						 required ng-model="signupCtrl.user.email" ng-blur="signupCtrl.uniqueEmail()">
+						<input type="email" id="email" name="email" class="form-control" placeholder="{{ 'COMMON_EMAIL' | translate }}"
+						 required ng-model="signupCtrl.user.email" ng-keyup="signupCtrl.uniqueEmail()" ng-blur="signupCtrl.uniqueEmail()">
 					</div>
 				</div>
 			</div>
@@ -88,7 +88,7 @@
 			<div class="row">
 				<div class="col-md-8">
 					<button type="button" id="registration" ng-click="signupCtrl.signup();" class="btn btn-success block m-b btn-sm btn-block"
-					 ng-disabled="registration.$invalid || vm.dataLoading">
+					 ng-disabled="registration.$invalid || vm.dataLoading || signupCtrl.signupService.emailExist">
 						<span ng-if="signupCtrl.registerInProgress===true" style="float: left;margin-left: -5px;padding-right:2px;padding-top: 2px ">
 							<div class="spinner-white"></div>						
 						</span>

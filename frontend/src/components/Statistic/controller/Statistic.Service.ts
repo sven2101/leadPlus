@@ -50,6 +50,8 @@ class StatisticService {
     offerAmount: number = 0;
     saleAmount: number = 0;
 
+    olapTimestamp: string;
+
     singleStatisticEfficiency: number = 0;
     singleStatisticLeadConversionRate: number = 0;
     singleStatisticOfferConversionRate: number = 0;
@@ -165,6 +167,7 @@ class StatisticService {
         this.loadTurnoverResourcesByDateRange(dateRange, source);
         this.loadProductResourcesByDateRange(dateRange, source);
         this.loadUserStatisticResourcesByDateRange(dateRange, source);
+        this.getOlapTimestamp(dateRange);
     }
 
     loadWorkflowResourcesByDateRange(dateRange: string, source: string) {
@@ -197,6 +200,11 @@ class StatisticService {
             self.isProfitPromise = true;
             self.checkPromises();
         });
+    }
+
+    async getOlapTimestamp(dateRange: string) {
+        let object = await this.statisticResource.getLatestOlapTimestamp({ dateRange: dateRange }).$promise;
+        this.olapTimestamp = toLocalDate(moment(object.timestamp), "DD.MM.YYYY HH:mm");
     }
 
     loadTurnoverResourcesByDateRange(dateRange: string, source: string) {

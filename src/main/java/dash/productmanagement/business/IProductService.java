@@ -46,4 +46,6 @@ public interface IProductService {
 
 	public void delete(final Long id) throws DeleteFailedException;
 
+	public Product getProductByIdIncludeDeleted(Long id);
+
 }

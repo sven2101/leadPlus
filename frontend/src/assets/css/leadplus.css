@@ -196,7 +196,7 @@ body.modal-open {
 .text-ellipses{
 		white-space: nowrap;
 		text-overflow: ellipsis; 
-    max-width: 250px;
+    max-width: 350px;
     display: inline-block;
 		overflow: hidden;
 	}
@@ -244,4 +244,9 @@ body.modal-open {
   background-color: #eee;
   margin-top: 7px
 }
+
+.tooltip.defaultTooltip .tooltip-inner {
+		width: 250px;
+		max-width: 300px;
+	}
 

@@ -34,7 +34,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -45,7 +44,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "Customer", description = "Customer")
 @Entity
 @SQLDelete(sql = "UPDATE customer SET deleted = '1' WHERE id = ?")
-@Where(clause = "deleted <> '1'")
+// @Where(clause = "deleted <> '1'")
 @Table(name = "customer")
 public class Customer {
 
@@ -118,12 +117,10 @@ public class Customer {
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "billing_address_fk", nullable = true)
-	@Where(clause = "deleted <> '1'")
 	private Address billingAddress;
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "delivery_address_fk", nullable = true)
-	@Where(clause = "deleted <> '1'")
 	private Address deliveryAddress;
 
 	public Customer() {

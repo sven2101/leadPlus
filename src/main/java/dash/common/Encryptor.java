@@ -22,16 +22,58 @@ import org.springframework.stereotype.Component;
 @Component
 public class Encryptor {
 
-	private static String smtpSecret;
+	private static String encryptionSecret;
 
-	@Value("${security.smtp.secret}")
-	public void setSmtpSecret(String smtpSecret) {
-		Encryptor.smtpSecret = smtpSecret;
+	@Value("${security.general.encryptionSecret}")
+	public void setEncryptionSecret(String encryptionSecret) {
+		Encryptor.encryptionSecret = encryptionSecret;
+	}
+
+	public static EncryptedObject encrypt(EncryptedObject encryptedObject, String password)
+			throws FailedToEncryptCipherTextException {
+		if (encryptedObject == null || !encryptedObject.isDecrypted()) {
+			return encryptedObject;
+		}
+		try {
+			EncryptionWrapper encryptionWrapper = encrypt(encryptedObject.getPassword(), password);
+			encryptedObject.setPassword(encryptionWrapper.getCiphertext());
+			encryptedObject.setIv(encryptionWrapper.getIv());
+			encryptedObject.setSalt(encryptionWrapper.getSalt());
+			encryptedObject.setDecrypted(false);
+		} catch (Exception ex) {
+			throw new FailedToEncryptCipherTextException(ex.getMessage(), ex.getStackTrace());
+		}
+		return encryptedObject;
+	}
+
+	public static EncryptedObject decrypt(EncryptedObject encryptedObject, String password)
+			throws FailedToDecryptCipherTextException {
+		if (encryptedObject == null || encryptedObject.isDecrypted()) {
+			return encryptedObject;
+		}
+		try {
+			EncryptionWrapper encryptionWrapper = new EncryptionWrapper(encryptedObject.getPassword(),
+					encryptedObject.getSalt(), encryptedObject.getIv());
+			encryptedObject.setPassword(decrypt(encryptionWrapper, password));
+			encryptedObject.setDecrypted(true);
+		} catch (Exception ex) {
+			throw new FailedToDecryptCipherTextException(ex.getMessage(), ex.getStackTrace());
+		}
+
+		return encryptedObject;
+	}
+
+	public static EncryptedObject decrypt(EncryptedObject encryptedObject) throws FailedToDecryptCipherTextException {
+		return decrypt(encryptedObject, "test");
+	}
+
+	public static EncryptedObject encrypt(EncryptedObject encryptedObject) throws FailedToEncryptCipherTextException {
+		return encrypt(encryptedObject, "test");
 	}
 
 	public static EncryptionWrapper encrypt(byte[] text, String password) throws Exception {
 		try {
-			String tempPassword = password + smtpSecret;
+			String tempPassword = password + encryptionSecret;
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");
 			digest.update(tempPassword.getBytes("UTF-8"));
 			byte[] hash = digest.digest();
@@ -58,7 +100,7 @@ public class Encryptor {
 
 	public static byte[] decrypt(EncryptionWrapper encryptionWrapper, String password) throws Exception {
 		try {
-			String tempPassword = password + smtpSecret;
+			String tempPassword = password + encryptionSecret;
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");
 			digest.update(tempPassword.getBytes("UTF-8"));
 			byte[] hash = digest.digest();

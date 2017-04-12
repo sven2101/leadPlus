@@ -48,6 +48,9 @@ public class MessageService implements IMessageService {
 
 	private static final Logger logger = Logger.getLogger(MessageService.class);
 
+	private static final String PROCESS_INFO_TEMPLATE_DE = "ProcessInfoTemplate_de.ftl";
+	private static final String PROCESS_INFO_TEMPLATE_EN = "ProcessInfoTemplate_en.ftl";
+
 	@Value("${hostname.suffix}")
 	private String hostname;
 
@@ -175,6 +178,23 @@ public class MessageService implements IMessageService {
 		}
 
 		return new EmailMessage(user.getEmail(), subject, message, null, NotificationType.FORGOT_PASSWORD);
+	}
+
+	@Override
+	public String exportProcessAsPDF(WorkflowTemplateObject workflowTemplateObject, final User user)
+			throws TemplateException, IOException {
+
+		Template template;
+		if (user.getLanguage().equals(Language.DE))
+			template = freeMarkerDirectoryTemplatesConfigurer.getTemplate(PROCESS_INFO_TEMPLATE_DE);
+		else
+			template = freeMarkerDirectoryTemplatesConfigurer.getTemplate(PROCESS_INFO_TEMPLATE_EN);
+
+		Map<String, Object> mapping = new HashMap<>();
+		mapping.put("workflow", workflowTemplateObject);
+		Writer writer = new StringWriter();
+		template.process(mapping, writer);
+		return writer.toString();
 	}
 
 }
