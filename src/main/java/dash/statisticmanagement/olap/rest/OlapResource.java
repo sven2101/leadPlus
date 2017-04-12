@@ -54,7 +54,9 @@ public class OlapResource {
 	JSONObject getOlapTimestampByDateRange(@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange) {
 		Olap olap = this.olapStatisticService.getLastOlapByDateRange(dateRange);
 		JSONObject jsonObj = new JSONObject();
-		jsonObj.put("timestamp", olap.getTimestamp());
+		if (olap != null) {
+			jsonObj.put("timestamp", olap.getTimestamp());
+		}
 		return jsonObj;
 	}
 
