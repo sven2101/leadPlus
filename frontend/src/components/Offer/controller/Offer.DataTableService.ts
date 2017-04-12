@@ -222,7 +222,8 @@ class OfferDataTableService implements IDatatableService {
         actionButtonConfig[process.id] = this.getActionButtonConfig(process);
         let actionButtons = actionButtonConfig[process.id];
         if (actionButtons.DETAILS_DROPDOWN.disabled === true) {
-            return this.translate.instant("COMMON_WORKFLOW_NO_ACTION") + " <a uib-tooltip='" + this.translate.instant("OFFER_NO_ACTION_INFO") + "' tooltip-class='noActionTooltip' tooltip-placement='top-right'><i class='fa fa-info-circle'></i></a>";
+            let currentStatus = this.translate.instant(process.status);
+            return this.translate.instant("COMMON_WORKFLOW_NO_ACTION") + " <a uib-tooltip='" + this.translate.instant("OFFER_NO_ACTION_INFO", { status: currentStatus }) + "' tooltip-class='noActionTooltip' tooltip-placement='top-right'><i class='fa fa-info-circle'></i></a>";
         } else {
             return "<div actionbuttons actionbuttonconfig=offerCtrl.actionButtonConfig[" + process.id + "]  process='offerCtrl.processes[" + process.id + "]'></div>";
         }

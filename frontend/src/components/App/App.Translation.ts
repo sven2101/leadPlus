@@ -26,6 +26,15 @@ function config($translateProvider) {
             LOGOUT: "Abmelden",
             LANGUAGE: "Sprache",
 
+            // STATUS
+            LEAD: "Anfrage",
+            INCONTACT: "In Kontakt",
+            OFFER: "Angebot",
+            FOLLOWUP: "Follow Up",
+            DONE: "Abwicklung",
+            SALE: "Verkauf",
+            CLOSED: "Geschlossen",
+
             // Help
             HELP: "Hilfe",
             HELP_GENERAL: "General",
@@ -92,15 +101,9 @@ function config($translateProvider) {
             MONTHLY: "Monat",
             YEARLY: "Jahr",
             ALL: "Alle",
-
-            LEAD: "Anfrage",
-            OFFER: "Angebot",
-            FOLLOWUP: "FollowUp",
             ERROR: "Fehler",
             SUPPLY: "Lieferung",
             EMAIL: "Email",
-            SALE: "Verkauf",
-
 
             YES: "Ja",
             NO: "Nein",
@@ -356,7 +359,7 @@ function config($translateProvider) {
             LEAD_DELETE_LEAD: "Anfrage löschen",
             LEAD_DELETE_LEAD_BODY: "Möchten Sie die Anfrage wirklich löschen?",
             LEAD_EDIT_SELECT_PRODUCT: "Produkt wählen",
-            LEAD_NO_ACTION_INFO: "Ihre Anfrage befindet sich in einem weiteren Prozessschritt. Daher ist es nicht möglich diese hier zu bearbeiten.",
+            LEAD_NO_ACTION_INFO: "Ihre Anfrage befindet sich im Status {{status}}. Daher ist es nicht möglich diese hier zu bearbeiten.",
 
             // Define all offer elements
             OFFER_OFFERS: "Angebote",
@@ -381,7 +384,7 @@ function config($translateProvider) {
             OFFER_GENERATION_AND_SENDING: "Angebot generieren und versenden",
             OFFER_ROLLBACK_TITLE: "Angebot zurücksetzen",
             OFFER_ROLLBACK_BODY: "Möchten Sie das Angebot wirklich zurücksetzen?",
-            OFFER_NO_ACTION_INFO: "Ihr Angebot befindet sich in einem weiteren Prozessschritt. Daher ist es nicht möglich dieses hier zu bearbeiten.",
+            OFFER_NO_ACTION_INFO: "Ihr Angebot befindet sich im Status {{status}}. Daher ist es nicht möglich dieses hier zu bearbeiten.",
 
             // Define all offer elements
             SALE_SALES: "Verkäufe",
@@ -720,6 +723,15 @@ function config($translateProvider) {
             LOGOUT: "Logout",
             LANGUAGE: "Language",
 
+            // STATUS
+            LEAD: "Lead",
+            INCONTACT: "In Contact",
+            OFFER: "Offer",
+            FOLLOWUP: "Follow Up",
+            DONE: "Processing",
+            SALE: "Sale",
+            CLOSED: "Closed",
+
             // Help
             HELP: "Help",
             HELP_GENERAL: "General",
@@ -786,13 +798,9 @@ function config($translateProvider) {
             YEARLY: "Year",
             ALL: "All",
 
-            LEAD: "Lead",
-            OFFER: "Offer",
-            FOLLOWUP: "FollowUp",
             ERROR: "Error",
             SUPPLY: "Supply",
             EMAIL: "Email",
-            SALE: "Sale",
 
 
 
@@ -1047,7 +1055,7 @@ function config($translateProvider) {
             LEAD_DELETE_LEAD: "Delete lead",
             LEAD_DELETE_LEAD_BODY: "Are you sure to delete this lead?",
             LEAD_EDIT_SELECT_PRODUCT: "Choose product",
-            LEAD_NO_ACTION_INFO: "Your lead exists under a continuing process step. Therefore it is not possible to edit your lead here.",
+            LEAD_NO_ACTION_INFO: "Your lead exists under the status {{status}}. Therefore it is not possible to edit your lead here.",
 
             // Define all offer elements
             OFFER_OFFERS: "Offers",
@@ -1072,7 +1080,7 @@ function config($translateProvider) {
             OFFER_GENERATION_AND_SENDING: "Generate and Send Offer",
             OFFER_ROLLBACK_TITLE: "Reset offer",
             OFFER_ROLLBACK_BODY: "Are you sure to reset this offer?",
-            OFFER_NO_ACTION_INFO: "Your offer exists under a continuing process step. Therefore it is not possible to edit your offer here.",
+            OFFER_NO_ACTION_INFO: "Your offer exists under the status {{status}}. Therefore it is not possible to edit your offer here.",
 
             // Define all sale elements
             SALE_SALES: "Sales",

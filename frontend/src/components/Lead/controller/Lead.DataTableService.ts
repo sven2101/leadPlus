@@ -220,7 +220,13 @@ class LeadDataTableService implements IDatatableService {
         actionButtonConfig[process.id] = this.getActionButtonConfig(process);
         let actionButtons = actionButtonConfig[process.id];
         if (actionButtons.DETAILS_DROPDOWN.disabled === true) {
-            return this.translate.instant("COMMON_WORKFLOW_NO_ACTION") + " <a uib-tooltip='" + this.translate.instant("LEAD_NO_ACTION_INFO") + "' tooltip-class='noActionTooltip' tooltip-placement='top-right'><i class='fa fa-info-circle'></i></a>";
+            let currentStatus = "";
+            if (process.status === Status.CLOSED && process.offer !== null && process.sale === null) {
+                currentStatus = this.translate.instant(Status.OFFER) + "/" + this.translate.instant(Status.CLOSED);
+            } else {
+                currentStatus = this.translate.instant(process.status);
+            }
+            return this.translate.instant("COMMON_WORKFLOW_NO_ACTION") + " <a uib-tooltip='" + this.translate.instant("LEAD_NO_ACTION_INFO", { status: currentStatus }) + "' tooltip-class='noActionTooltip' tooltip-placement='top-right'><i class='fa fa-info-circle'></i></a>";
         } else {
             return "<div actionbuttons actionbuttonconfig=leadCtrl.actionButtonConfig[" + process.id + "]  process='leadCtrl.processes[" + process.id + "]'></div>";
         }
