@@ -85,8 +85,8 @@ class OfferDataTableService implements IDatatableService {
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<i style='margin-top:2px;margin-left:12px;' class='fa fa-thumb-tack' aria-hidden='true'></i>").withClass("text-center").renderWith(function (data: Process, type, full) {
                     if (data.processor != null && data.processor.thumbnail != null) {
-                        return `<div style="height:48px;">
-                    <img title="` + data.processor.firstname + ` ` + data.processor.lastname + `" style="width: 48px; height:48px;border-radius: 10%;"
+                        return `<div style="height:45px;">
+                    <img title="` + data.processor.firstname + ` ` + data.processor.lastname + `" style="width: 45px; height:45px;border-radius: 10%;"
                     pictureid="` + data.processor.thumbnail.id + `" httpsrc="/api/rest/files/content/" alt="">
                 </div>`;
                     } else if (data.processor != null && data.processor.thumbnail == null && data.processor.firstname != null && data.processor.lastname != null) {
@@ -94,7 +94,7 @@ class OfferDataTableService implements IDatatableService {
                     } else {
                         return "-";
                     }
-                }).withOption("width", "48px").notSortable(),
+                }).withOption("width", "45px").notSortable(),
             this.DTColumnBuilder.newColumn(null).renderWith(
                 function (data: Process, type, full) {
                     if (data != null && data.processor != null) {
