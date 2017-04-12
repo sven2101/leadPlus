@@ -821,6 +821,7 @@ function config($translateProvider) {
             EMAIL_RECIPIENT_COMMA: "(seperated by comma)",
             EMAIL_RECIPIENT: "Recipient",
             EMAIL_SUBJECT: "Subject",
+            EMAIL_SUBJECT_FILENAME: "Email Subject (When PDF file then filename)",
             EMAIL_ATTACHMENT: "Attachment",
             EMAIL_ATTACHMENT_SELECT: "Select file",
             EMAIL_ATTACHMENT_CHANGE: "Change",
