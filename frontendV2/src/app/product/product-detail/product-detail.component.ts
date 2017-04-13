@@ -3,6 +3,7 @@ import { ProductService } from "./../product.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Component, OnInit } from "@angular/core";
 
+
 @Component({
   selector: "app-product-detail",
   templateUrl: "./product-detail.component.html",
@@ -11,6 +12,7 @@ import { Component, OnInit } from "@angular/core";
 export class ProductDetailComponent implements OnInit {
 
   public product: Product = new Product();
+  public productName: string;
 
   constructor(private ActivatedRoute: ActivatedRoute, private ProductService: ProductService, private Router: Router) { }
 
@@ -18,6 +20,7 @@ export class ProductDetailComponent implements OnInit {
     const routeParam = this.ActivatedRoute.snapshot.params["id"];
     if (!isNaN(Number(routeParam))) {
       this.product = await this.ProductService.getProductById(routeParam);
+      this.productName = this.product.name;
       if (this.product == null) { this.Router.navigate(["product"]); }
     } else if (routeParam === "new") {
       this.product = new Product();
