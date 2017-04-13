@@ -19,6 +19,11 @@ page.onResourceRequested = function(requestData, request) {
   console.log('::loading', requestData['url']);  // this does get logged now
 };
 
+var footerContent = null
+try{
+	footerContent=fs.read(system.args[3]);
+}catch(error){}
+
 page.paperSize = {
     format: 'A4',
     orientation: 'portrait',
@@ -29,13 +34,12 @@ page.paperSize = {
     footer: {
         height: "1cm",
         contents: phantom.callback(function (pageNum, numPages) {
-            return '' +
-                '<div style="margin: 0 1cm 0 1cm; font-size: 0.65em">' +
-                '   <div style="color: #888; padding:20px 20px 0 10px; border-top: 1px solid #ccc;">' +
-                '       <span></span> ' +
-                '       <span style="float:right">' + pageNum + ' / ' + numPages + '</span>' +
-                '   </div>' +
-                '</div>';
+			if(footerContent==null){
+				return null;
+			}			
+			footerContent=footerContent.replace("$pageNum",pageNum);
+			footerContent=footerContent.replace("$numPages",numPages);			
+             return  footerContent;
         })
     }
 };

@@ -12,7 +12,7 @@ public class HtmlCleaner {
 		return Jsoup.clean(html,
 				Whitelist.relaxed().addAttributes(":all", "style").addAttributes(":all", "class")
 						.addProtocols("img", "src", "data").addAttributes("img", "width").addAttributes("font", "face")
-						.addTags("style").addTags("font"));
+						.addTags("style").addTags("font").addTags("span"));
 	}
 
 	public static String cleanHtmlForPdf(String html) {
@@ -22,6 +22,7 @@ public class HtmlCleaner {
 
 		return Jsoup.clean(html,
 				ExtendedHtmlWhitelist.relaxed().addAttributes(":all", "style").addAttributes(":all", "class")
-						.addAttributes("img", "width").addAttributes("font", "face").addTags("style").addTags("font"));
+						.addAttributes("img", "width").addAttributes("font", "face").addTags("style").addTags("font")
+						.addTags("span"));
 	}
 }
