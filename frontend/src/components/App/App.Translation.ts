@@ -692,7 +692,7 @@ function config($translateProvider) {
             SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION: "${(orderPosition.product.productStateGermanTranslation)!}",
             SUMMERNOTE_TITLE_CODE_TRANSLATION: "${(customer.titleGermanTranslation)!}",
             SUMMERNOTE_LANGUAGE: "DE",
-            SUMMERNOTE_FOOTER: "PDF Fußzeile",
+            SUMMERNOTE_FOOTER: "Fußzeile",
 
             // ERROR PAGES
             ERROR_PAGE_404_HEADLINE: "Seite konnte nicht gefunden werden",
@@ -1390,7 +1390,7 @@ function config($translateProvider) {
             SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION: "${(orderPosition.product.productStateEnglishTranslation)!}",
             SUMMERNOTE_TITLE_CODE_TRANSLATION: "${(customer.titleEnglishTranslation)!}",
             SUMMERNOTE_LANGUAGE: "EN",
-            SUMMERNOTE_FOOTER: "PDF Footer",
+            SUMMERNOTE_FOOTER: "Footer",
 
             // ERROR PAGES
             ERROR_PAGE_404_HEADLINE: "Page not found",
