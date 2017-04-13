@@ -231,9 +231,7 @@ public class HtmlToPdfService {
 	private int extractFooter(String text, String footerPath, int i) throws IOException {
 		StringBuilder footer = new StringBuilder();
 		for (; i < text.length(); i++) {
-			if (i + 8 < text.length() && text.charAt(i) == '<' && text.charAt(i + 1) == '/' && text.charAt(i + 2) == 'f'
-					&& text.charAt(i + 3) == 'o' && text.charAt(i + 4) == 'o' && text.charAt(i + 5) == 't'
-					&& text.charAt(i + 6) == 'e' && text.charAt(i + 7) == 'r' && text.charAt(i + 8) == '>') {
+			if (hasKeyword(text, "</footer>", i)) {
 				BufferedWriter out = new BufferedWriter(
 						new OutputStreamWriter(new FileOutputStream(footerPath), "UTF-8"));
 				out.write(HtmlCleaner.cleanHtmlForPdf(footer.toString()));
