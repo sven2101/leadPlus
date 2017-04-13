@@ -241,7 +241,8 @@ public class TenantService implements ITenantService {
 	public Validation uniqueTenantKey(Tenant tenant) {
 		final Validation validation = new Validation();
 		if ("www".contains(tenant.getTenantKey().toLowerCase())
-				|| "leadplus".contains(tenant.getTenantKey().toLowerCase())) {
+				|| "leadplus".contains(tenant.getTenantKey().toLowerCase())
+				|| "app".equals(tenant.getTenantKey().toLowerCase())) {
 			validation.setValidation(false);
 			return validation;
 		}
