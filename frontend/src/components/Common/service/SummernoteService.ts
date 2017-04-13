@@ -84,13 +84,14 @@ class SummernoteService {
                 ["table", ["table"]],
                 ["insert", ["link", "picture", "hr"]],
                 ["view", ["fullscreen", "codeview"]],
-                ["templateDefault", ["languageDropdown", "formOfAddress", "orderList", "delivery", "ending"]],
+                ["templateDefault", ["languageDropdown", "formOfAddress", "orderList", "delivery", "ending", "footer"]],
                 ["templateButtonGroup", ["workflowDropdown", "customerDropdown", "orderDropdown", "userDropdown"]],
                 ["generateTemplate", ["preview"]]
             ],
             buttons: {
                 formOfAddress: this.getSingleTemplateButton(self.translate.instant("COMMON_FORM_OF_ADDRESS"), self.getFormOfAddressTemplate, "fa fa-user", true),
                 ending: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ENDING"), self.getEndingTemplate, "fa fa-handshake-o", true),
+                footer: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_FOOTER"), self.getFooterTemplate, "fa fa-clipboard", false, true),
                 orderList: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ORDER_LIST"), self.getOrderListTemplate, "fa fa-shopping-cart", true),
                 delivery: this.getSingleTemplateButton(self.translate.instant("SUPPLY"), self.getDeliveryTemplate, "fa fa-truck", true),
                 preview: this.getPreviewContentButton(self.translate.instant("SUMMERNOTE_TEMPLATE_PREVIEW"), "fa fa-cogs"),
@@ -125,6 +126,10 @@ class SummernoteService {
         return self.translate.instant("SUMMERNOTE_REGARDS", "", "", self.summernoteLanguage) + "<br><br><#if user.firstname?has_content&amp;&amp;user.lastname?has_content>${user.firstname} ${user.lastname}<#if user.job?has_content><br>${user.job}&lt;/#if&gt;<#else>" + self.translate.instant("SUMMERNOTE_SALESTEAM", "", "", self.summernoteLanguage) + "&lt;/#if&gt;<br><br><br><#if user.email?has_content>E-Mail.:  ${user.email}<br>&lt;/#if&gt;<#if user.phone?has_content>Tel.:  ${user.phone}<br>&lt;/#if&gt;<#if user.fax?has_content>Fax.: ${user.fax}<br>&lt;/#if&gt;<#if user.skype?has_content>Skype.: ${user.skype}&lt;/#if&gt;";
     }
 
+    getFooterTemplate(self): string {
+        return "<footer>pageNum/numPages</footer>";
+    }
+
     getOrderListTemplate(self): string {
         return "<#if orderPositions?has_content &amp;&amp; orderPositions?size != 0>"
             + "<table style='width: 90%;'>"
@@ -143,7 +148,7 @@ class SummernoteService {
         return self.translate.instant("SUMMERNOTE_DELIVERY", "", "", self.summernoteLanguage) + "<#if workflow.deliveryAddressLine?has_content> " + self.translate.instant("SUMMERNOTE_DELIVERY_TO", "", "", self.summernoteLanguage) + " ${(workflow.deliveryAddressLine)!}&lt;/#if&gt;<#if workflow.deliveryDate?has_content> " + self.translate.instant("SUMMERNOTE_DELIVERY_AT", "", "", self.summernoteLanguage) + " ${(workflow.deliveryDate)!}&lt;/#if&gt;.";
     }
 
-    getSingleTemplateButton(buttonName: string, insertText, fa: string, asHtml: boolean = false): any {
+    getSingleTemplateButton(buttonName: string, insertText, fa: string, asHtml: boolean = false, cursorAtEnd: boolean = false): any {
         let self = this;
         let editorInvoke = "editor.insertText";
         if (asHtml === true) {
@@ -154,6 +159,9 @@ class SummernoteService {
             let button = ui.button({
                 contents: "<i class='" + fa + "'/> " + buttonName,
                 click: function () {
+                    if (cursorAtEnd === true) {
+                        (<any>$(".note-editor").find(".note-editable")).placeCursorAtEnd();
+                    }
                     context.invoke(editorInvoke, insertText(self));
                 }
             });

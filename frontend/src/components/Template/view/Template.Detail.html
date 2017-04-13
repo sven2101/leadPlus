@@ -144,4 +144,28 @@
  	   $('.summernote').summernote({
       		dialogsInBody: true
     	});
+
+		$(document).ready(function () {
+			$.fn.extend({
+				placeCursorAtEnd: function () {
+					// Places the cursor at the end of a contenteditable container (should also work for textarea / input)
+					if (this.length === 0) {
+						throw new Error("Cannot manipulate an element if there is no element!");
+					}
+					var el = this[0];
+					var range = document.createRange();
+					var sel = window.getSelection();
+					var childLength = el.childNodes.length;
+					if (childLength > 0) {
+						var lastNode = el.childNodes[childLength - 1];
+						var lastNodeChildren = lastNode.childNodes.length;
+						range.setStart(lastNode, lastNodeChildren);
+						range.collapse(true);
+						sel.removeAllRanges();
+						sel.addRange(range);
+					}
+					return this;
+				}
+			});
+		});
 </script>
