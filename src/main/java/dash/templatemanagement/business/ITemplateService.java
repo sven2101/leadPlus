@@ -61,4 +61,11 @@ public interface ITemplateService {
 	byte[] exportProcessAsPDF(WorkflowTemplateObject workflowTemplateObject, final User user)
 			throws TemplateException, IOException, PdfGenerationFailedException;
 
+	String getMessageContentStringByTemplate(Template template, WorkflowTemplateObject workflowTemplateObject,
+			User user) throws NotFoundException, IOException, TemplateException, TemplateCompilationException;
+
+	byte[] getPdfBytemplate(Template template, WorkflowTemplateObject workflowTemplateObject, User user)
+			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException,
+			TemplateException;
+
 }

@@ -114,7 +114,12 @@ class TemplateService {
 
     async generatePdfFromTemplateId(templateId: number, workflow: Lead | Offer): Promise<any> {
         return await this.templateResource.generatePdfFromTemplate({ templateId: templateId }, { workflowTemplateObject: workflow, user: this.$rootScope.user }).$promise;
+    }
 
+    async generatePdfFromTemplate(template: Template, workflow: WorkflowTemplateObject): Promise<any> {
+        let user: User = deepCopy(this.$rootScope.user);
+        delete user["smtpKey"];
+        return await this.templateResource.generatePdfFromTemplateObject({ template: template, workflowTemplateObject: workflow, user: user }).$promise;
     }
 
     async getAll(): Promise<Array<Template>> {

@@ -357,9 +357,12 @@ class TemplateResource {
             generatePdfFromTemplate: {
                 url: "/api/rest/templates/:templateId/offers/pdf/generate", method: "POST"
             },
+            generatePdfFromTemplateObject: {
+                url: "/api/rest/templates/test/pdf/generate", method: "POST"
+            },
             test: { url: "/api/rest/templates/test", method: "POST" },
             generatePDF: {
-                url: "/api/rest/files/pdf", method: "POST"
+                url: "/api/rest/files/generate/pdf", method: "POST"
             },
             exportProcessAsPDF: {
                 url: "/api/rest/templates/process/pdf", method: "POST"

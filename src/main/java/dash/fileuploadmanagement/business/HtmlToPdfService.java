@@ -43,6 +43,7 @@ public class HtmlToPdfService {
 
 	public synchronized byte[] genereatePdfFromHtml(String htmlStringWithImageInline)
 			throws PdfGenerationFailedException, IOException {
+		
 
 		int exitCode = 0;
 		BufferedReader errorReader = null;

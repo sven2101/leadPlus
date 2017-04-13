@@ -107,6 +107,7 @@ public class FileUploadResource {
 	@ApiOperation(value = "generate PDF", notes = "")
 	public byte[] genereatePdfFromHtml(@RequestBody Map<String, String> json)
 			throws PdfGenerationFailedException, IOException {
+		
 
 		return htmlToPdfService.genereatePdfFromHtml(json.get("htmlString"));
 

@@ -10,10 +10,11 @@ class SummernoteService {
     summernoteLanguage: string;
     summernoteBeforePreviewContent: string;
     previewMode: boolean = false;
+    pdfDownloadStart: boolean = false;
     timeout;
     currentTimeout;
 
-    constructor($rootScope, $translate, toaster, TemplateService, $timeout) {
+    constructor($rootScope, $translate, toaster, TemplateService, $timeout, private FileSaver) {
         this.rootScope = $rootScope;
         this.translate = $translate;
         this.toaster = toaster;
@@ -24,6 +25,7 @@ class SummernoteService {
 
     resetSummernoteConfiguration() {
         this.previewMode = false;
+        this.pdfDownloadStart = false;
         this.summernoteBeforePreviewContent = "";
         this.summernoteLanguage = this.rootScope.language;
         this.timeout.cancel(this.currentTimeout);
@@ -86,15 +88,16 @@ class SummernoteService {
                 ["view", ["fullscreen", "codeview"]],
                 ["templateDefault", ["languageDropdown", "formOfAddress", "orderList", "delivery", "ending", "footer"]],
                 ["templateButtonGroup", ["workflowDropdown", "customerDropdown", "orderDropdown", "userDropdown"]],
-                ["generateTemplate", ["preview"]]
+                ["generateTemplate", ["preview", "pdfPreview"]]
             ],
             buttons: {
                 formOfAddress: this.getSingleTemplateButton(self.translate.instant("COMMON_FORM_OF_ADDRESS"), self.getFormOfAddressTemplate, "fa fa-user", true),
                 ending: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ENDING"), self.getEndingTemplate, "fa fa-handshake-o", true),
-                footer: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_FOOTER"), self.getFooterTemplate, "fa fa-clipboard", false, true),
+                footer: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_FOOTER"), self.getFooterTemplate, "fa fa-clipboard", true, true),
                 orderList: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ORDER_LIST"), self.getOrderListTemplate, "fa fa-shopping-cart", true),
                 delivery: this.getSingleTemplateButton(self.translate.instant("SUPPLY"), self.getDeliveryTemplate, "fa fa-truck", true),
                 preview: this.getPreviewContentButton(self.translate.instant("SUMMERNOTE_TEMPLATE_PREVIEW"), "fa fa-cogs"),
+                pdfPreview: this.getPdfPreviewButton(self.translate.instant("SUMMERNOTE_PDF_PREVIEW"), "fa fa-file-pdf-o"),
                 languageDropdown: this.getLanguageDropdown(),
                 workflowDropdown: this.getWorkflowDropdown(),
                 customerDropdown: this.getCustomerDropdown(),
@@ -127,7 +130,7 @@ class SummernoteService {
     }
 
     getFooterTemplate(self): string {
-        return "<footer>pageNum/numPages</footer>";
+        return "<p>&lt;footer&gt;</p><div style='margin: 0 1cm 0 1cm; font-size: 0.65em'><div style='color: #888; padding:20px 20px 0 10px; border-top: 1px solid #ccc;'><span></span>  ${(user.firstname)!}&nbsp;${(user.lastname)!}<span style='float:right'>$pageNum/$numPages</span></div></div><p>&lt;/footer&gt;</p>";
     }
 
     getOrderListTemplate(self): string {
@@ -168,6 +171,58 @@ class SummernoteService {
             return button.render();
         };
         return templateButton;
+    }
+
+    getPdfPreviewButton(buttonName: string, fa: string): any {
+        let self = this;
+        let templateButton = function (context) {
+            let ui = (<any>$).summernote.ui;
+            let button = ui.button({
+                contents: "<i class='" + fa + "'/> " + buttonName,
+                click: function () {
+                    if (self.pdfDownloadStart === false) {
+                        let buttonSelf = this;
+                        self.addPdfPreview(buttonSelf);
+                        self.generatePdf(buttonSelf);
+                        context.invoke("editor.focus");
+                    }
+                    self.pdfDownloadStart = true;
+                }
+            });
+            return button.render();
+        };
+        return templateButton;
+    }
+
+    async generatePdf(buttonSelf): Promise<void> {
+        let self = this;
+        let template = this.templateService.getCurrentEditTemplate();
+        let response = await this.templateService.generatePdfFromTemplate(template, new WorkflowTemplateObject()).catch(function (error) {
+            self.showTemplateErrorMessage(error);
+            self.removePdfPreview(buttonSelf, self);
+            return;
+        });
+        let file = b64toBlob(response.data, "application/pdf");
+        this.FileSaver.saveAs(file, template.subject);
+        self.removePdfPreview(buttonSelf, self);
+        return;
+    }
+
+    addPdfPreview(buttonSelf) {
+        let buttonInnertext = $(buttonSelf)[0].innerText;
+        $(buttonSelf)[0].innerText = buttonInnertext;
+        $(buttonSelf)[0].innerHTML = buttonInnertext + " <i class='fa fa-cog fa-spin'></i>";
+        $(buttonSelf).addClass("active");
+        $(buttonSelf).css("background-color", "#d4d4d4");
+    }
+    removePdfPreview(buttonSelf, self) {
+        $(buttonSelf).removeClass("active");
+        $(buttonSelf).css("background-color", "white");
+        $(buttonSelf).css("border-color", "#e7eaec");
+        let buttonName: string = $(buttonSelf)[0].innerText.slice(0, -1);
+        $(buttonSelf)[0].innerText = buttonName;
+        $(buttonSelf)[0].innerHTML = buttonName;
+        self.pdfDownloadStart = false;
     }
 
     getPreviewContentButton(buttonName: string, fa: string): any {

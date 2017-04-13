@@ -188,14 +188,48 @@ public class TemplateService implements ITemplateService {
 	}
 
 	@Override
+	public String getMessageContentStringByTemplate(final Template template,
+			final WorkflowTemplateObject workflowTemplateObject, final User user)
+			throws NotFoundException, IOException, TemplateException, TemplateCompilationException {
+
+		if (workflowTemplateObject != null) {
+			try {
+				return messageService.getMessageContentString(workflowTemplateObject, template.getContent(), user,
+						null);
+
+			} catch (NotFoundException ex) {
+				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
+				throw ex;
+			} catch (TemplateException ex) {
+				throw new TemplateCompilationException(ex.getFTLInstructionStack());
+			} catch (IOException ex) {
+				throw new TemplateCompilationException(ex.getMessage());
+			}
+
+		} else {
+			NotFoundException nfex = new NotFoundException(OFFER_NOT_FOUND);
+			logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
+			throw nfex;
+		}
+
+	}
+
+	@Override
 	public byte[] getPdfBytemplateId(final long templateId, final WorkflowTemplateObject workflowTemplateObject,
 			final User user) throws NotFoundException, IOException, TemplateCompilationException,
 			PdfGenerationFailedException, TemplateException {
-
 		String message = getMessageContentStringByTemplateId(templateId, workflowTemplateObject, user);
 		return htmlToPdfService.genereatePdfFromHtml(message);
-
 	}
+	
+	@Override
+	public byte[] getPdfBytemplate(final Template template, final WorkflowTemplateObject workflowTemplateObject,
+			final User user) throws NotFoundException, IOException, TemplateCompilationException,
+			PdfGenerationFailedException, TemplateException {
+		String message = getMessageContentStringByTemplate(template, workflowTemplateObject, user);
+		return htmlToPdfService.genereatePdfFromHtml(message);
+	}
+
 
 	@Override
 	public byte[] exportProcessAsPDF(WorkflowTemplateObject workflowTemplateObject, final User user)
