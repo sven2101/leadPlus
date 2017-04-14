@@ -245,7 +245,7 @@ class SummernoteService {
                             self.templateService.testTemplate(self.templateService.getCurrentEditTemplate(), new WorkflowTemplateObject(), new Notification()).then(function (result: Notification) {
                                 self.currentTimeout = self.timeout(function () {
                                     if (self.previewMode === true) {
-                                        context.code(result.content);
+                                        context.code(result.content.replace("$pageNum", "1").replace("$numPages", "1"));
                                     }
                                 }, 600);
                             }).catch(function (error) {

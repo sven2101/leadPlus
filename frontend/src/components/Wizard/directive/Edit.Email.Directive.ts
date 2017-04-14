@@ -146,7 +146,7 @@ class EditEmailDirective implements IDirective {
             workflow.referencedOfferContent = this.getLastOfferNotificationContent(scope.process);
             let notification: Notification = await scope.TemplateService.generateNotification(id, workflow, currentNotification);
             notification.subject = !isNumeric(template) ? template.subject : currentNotification.subject;
-            scope.notification.content = notification.content;
+            scope.notification.content = notification.content.replace("$pageNum", "1").replace("$numPages", "1");
             scope.notification.subject = notification.subject;
         }
         catch (error) {
@@ -318,7 +318,7 @@ class EditEmailDirective implements IDirective {
     removeReferenceNotification(notification: Notification): void {
         if (notification.content == null) { return; }
         let n = notification.content.indexOf("<!-- referenceNotification -->");
-        notification.content = notification.content.substring(0, n !== -1 ? n : notification.content.length);
+        notification.content = notification.content.substring(0, n !== -1 ? n : notification.content.length).replace("$pageNum", "1").replace("$numPages", "1");
     }
 }
 
