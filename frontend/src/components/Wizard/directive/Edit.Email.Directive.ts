@@ -85,7 +85,7 @@ class EditEmailDirective implements IDirective {
         return toLocalDate(timestamp, "DD.MM.YYYY HH:mm");
     }
 
-    setAttachments(files, notification: Notification, scope): void {
+    setAttachments(files, notification: EmailNotification, scope): void {
         if (isNullOrUndefined(notification.attachments)) {
             notification.attachments = [];
         }
@@ -116,7 +116,7 @@ class EditEmailDirective implements IDirective {
 
     }
 
-    isFileSizeInvalid(notification: Notification, scope: any): void {
+    isFileSizeInvalid(notification: EmailNotification, scope: any): void {
         if (isNullOrUndefined(notification.attachments)) {
             return;
         }
@@ -137,14 +137,14 @@ class EditEmailDirective implements IDirective {
 
     }
 
-    async generateContent(template: Template | null, workflow: WorkflowTemplateObject, currentNotification: Notification, scope: any): Promise<void> {
+    async generateContent(template: Template | null, workflow: WorkflowTemplateObject, currentNotification: EmailNotification, scope: any): Promise<void> {
         if (template == null) {
             return;
         }
         let id = isNumeric(template) ? template : template.id;
         try {
             workflow.referencedOfferContent = this.getLastOfferNotificationContent(scope.process);
-            let notification: Notification = await scope.TemplateService.generateNotification(id, workflow, currentNotification);
+            let notification: EmailNotification = await scope.TemplateService.generateNotification(id, workflow, currentNotification);
             notification.subject = !isNumeric(template) ? template.subject : currentNotification.subject;
             scope.notification.content = notification.content.replace("$pageNum", "1").replace("$numPages", "1");
             scope.notification.subject = notification.subject;
@@ -187,7 +187,7 @@ class EditEmailDirective implements IDirective {
 
     onNotificationSelected(scope: any): void {
         if (isNullOrUndefined(scope.notification)) {
-            scope.notification = new Notification();
+            scope.notification = new EmailNotification();
         }
         this.reloadHtmlString(scope);
         scope.sizeInvalid = this.isFileSizeInvalid(scope.notification, scope);
@@ -229,7 +229,7 @@ class EditEmailDirective implements IDirective {
         }
     }
 
-    async generatePdfFromTemplate(scope, template: Template, workflow: Lead | Offer, currentNotification: Notification): Promise<void> {
+    async generatePdfFromTemplate(scope, template: Template, workflow: Lead | Offer, currentNotification: EmailNotification): Promise<void> {
         if (scope.generatePdfFromTemplateInProgress === true) { return; }
         if (template == null || workflow == null) { return; }
         let attachment = new Attachment();
@@ -291,12 +291,12 @@ class EditEmailDirective implements IDirective {
         file["name"] = "Angebot.pdf";
         return file;
     }
-    setDefaultBCCAndCC(notification: Notification): void {
+    setDefaultBCCAndCC(notification: EmailNotification): void {
         notification.recipientsBCC = this.$rootScope.user.defaultBCC;
         notification.recipientsCC = this.$rootScope.user.defaultCC;
     }
 
-    getFormatedReferencedNotification(referenceNotification: Notification): string {
+    getFormatedReferencedNotification(referenceNotification: EmailNotification): string {
         return `<table>
                     <tbody>
                         <tr>
@@ -315,7 +315,7 @@ class EditEmailDirective implements IDirective {
                     </tbody>
                 </table>`;
     }
-    removeReferenceNotification(notification: Notification): void {
+    removeReferenceNotification(notification: EmailNotification): void {
         if (notification.content == null) { return; }
         let n = notification.content.indexOf("<!-- referenceNotification -->");
         notification.content = notification.content.substring(0, n !== -1 ? n : notification.content.length).replace("$pageNum", "1").replace("$numPages", "1");

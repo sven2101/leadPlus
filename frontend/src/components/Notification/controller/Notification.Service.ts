@@ -16,7 +16,7 @@ class NotificationService {
     notificationResource;
     formdata;
     fileReader;
-    notification: Notification;
+    notification: EmailNotification;
     q;
     userNotifications: Array<Notification> = [];
 
@@ -28,16 +28,16 @@ class NotificationService {
         this.q = $q;
         this.formdata = new FormData();
         this.fileReader = new FileReader();
-        this.notification = new Notification();
+        this.notification = new EmailNotification();
         let broadcastUserNotificationShouldChangeListener = $rootScope.$on(broadcastUserNotificationShouldChange, (event, result) => {
             this.refreshUserNotifications();
         });
     }
 
-    async sendNotification(notification: Notification, process: Process): Promise<Notification> {
+    async sendNotification(notification: EmailNotification, process: Process): Promise<EmailNotification> {
         try {
             this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SENDING);
-            let sendNotification: Notification = await this.notificationResource.sendNotification({ processId: process.id, senderId: this.rootScope.user.id }, { smtpKey: this.TokenService.getSmtpKey(), notification: notification }).$promise;
+            let sendNotification: EmailNotification = await this.notificationResource.sendNotification({ processId: process.id, senderId: this.rootScope.user.id }, { smtpKey: this.TokenService.getSmtpKey(), notification: notification }).$promise;
 
             this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SUCCESS);
             setTimeout(() => {

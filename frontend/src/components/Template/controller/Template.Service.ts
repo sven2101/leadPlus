@@ -96,11 +96,11 @@ class TemplateService {
         });
     }
 
-    async generateNotification(templateId: number, workflow: WorkflowTemplateObject, notification: Notification): Promise<Notification> {
+    async generateNotification(templateId: number, workflow: WorkflowTemplateObject, notification: EmailNotification): Promise<EmailNotification> {
         return this.templateResource.generateNotification({ templateId: templateId }, { workflowTemplateObject: workflow, notification: notification, user: this.$rootScope.user }).$promise;
     }
 
-    async testTemplate(template: Template, workflow: Offer | Lead, notification: Notification): Promise<Notification> {
+    async testTemplate(template: Template, workflow: Offer | Lead, notification: EmailNotification): Promise<EmailNotification> {
         return this.templateResource.test({ workflowTemplateObject: workflow, notification: notification, template: template, user: this.$rootScope.user }).$promise;
     }
 

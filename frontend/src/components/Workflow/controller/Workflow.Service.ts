@@ -53,7 +53,7 @@ class WorkflowService {
         this.$q = $q;
         this.customerService = CustomerService;
         this.refreshUsers();
-        this.rootScope.$on(openQuickEmailModal, (event, data: { notification: Notification, processId: number }) => {
+        this.rootScope.$on(openQuickEmailModal, (event, data: { notification: EmailNotification, processId: number }) => {
             this.openQuickEmailModal(data.processId, data.notification);
         });
 
@@ -164,7 +164,7 @@ class WorkflowService {
         return await this.workflowModalService.openSaleTransformationModal(process);
     }
 
-    async openQuickEmailModal(process: Process | number, notification: Notification = null): Promise<Process> {
+    async openQuickEmailModal(process: Process | number, notification: EmailNotification = null): Promise<Process> {
         if (isNumeric(process)) {
             process = await this.processService.getById(process);
         }

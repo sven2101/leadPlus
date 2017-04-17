@@ -24,7 +24,7 @@ class AppController {
     stop;
     timeout;
     todos: Array<Process> = [];
-    userNotifications: Array<Notification> = [];
+    userNotifications: Array<EmailNotification> = [];
     notificationSendState: NotificationSendState = NotificationSendState.DEFAULT;
 
     profileService: ProfileService;
@@ -58,7 +58,7 @@ class AppController {
             this.todos = result;
         });
 
-        let broadcastAddNotificationListener = $scope.$on(broadcastAddNotification, (event, notification: Notification) => {
+        let broadcastAddNotificationListener = $scope.$on(broadcastAddNotification, (event, notification: EmailNotification) => {
             this.userNotifications.push(notification);
         });
 
@@ -215,7 +215,7 @@ class AppController {
         return sum;
     }
 
-    openEmailDirective(notification: Notification, processId: number): void {
+    openEmailDirective(notification: EmailNotification, processId: number): void {
         this.rootScope.$emit(openQuickEmailModal, { notification: deepCopy(notification), processId: processId });
     }
 }

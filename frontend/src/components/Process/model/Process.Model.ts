@@ -14,7 +14,7 @@ class Process {
     processor: User;
     status: any;
     comments: Array<Commentary>;
-    notifications: Array<Notification>;
+    notifications: Array<EmailNotification>;
     followUpAmount: number;
     formerProcessors: Array<Processor>;
     source: Source;

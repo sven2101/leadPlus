@@ -99,7 +99,7 @@ class TemplateController {
 
     async testSyntax(): Promise<void> {
         try {
-            await this.templateService.testTemplate(this.template, new WorkflowTemplateObject(), new Notification());
+            await this.templateService.testTemplate(this.template, new WorkflowTemplateObject(), new EmailNotification());
             this.templateTested = true;
             this.toaster.pop("success", "", this.$translate.instant("EMAIL_TEMPLATE_SYNTAX_SUCCESS"));
 

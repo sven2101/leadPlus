@@ -200,7 +200,7 @@ class WizardDirective implements IDirective {
         let process: Process = scope.editProcess;
         process.notifications = process.notifications ? process.notifications : [];
 
-        let notification: Notification = deepCopy(scope.currentNotification);
+        let notification: EmailNotification = deepCopy(scope.currentNotification);
         notification.attachments = notification.attachments ? notification.attachments : [];
         notification.notificationType = notificationType;
         notification.id = undefined;

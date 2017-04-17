@@ -32,7 +32,7 @@ page.paperSize = {
         bottom: "1cm"
     },
     footer: {
-        height: "1cm",
+        height: "10cm",
         contents: phantom.callback(function (pageNum, numPages) {
 			if(footerContent==null){
 				return null;

@@ -20,10 +20,10 @@ class WizardModalController {
     wizardOfferTransitionConfig: Array<WizardButtonConfig>;
     wizardSaleTransitionConfig: Array<WizardButtonConfig>;
 
-    notification: Notification;
+    notification: EmailNotification;
 
 
-    constructor(process: Process, workflowType: WorkflowType, transformation: boolean, notification: Notification, $uibModalInstance, $rootScope, WorkflowService) {
+    constructor(process: Process, workflowType: WorkflowType, transformation: boolean, notification: EmailNotification, $uibModalInstance, $rootScope, WorkflowService) {
         this.uibModalInstance = $uibModalInstance;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
@@ -33,7 +33,7 @@ class WizardModalController {
         this.wizardQuickEmailConfig = this.getQuickEmailWizardConfig(workflowType);
         this.wizardOfferTransitionConfig = this.getOfferWizardTransitionConfig();
         this.wizardSaleTransitionConfig = this.getSaleWizardTransitionConfig();
-        this.notification = notification == null ? new Notification() : notification;
+        this.notification = notification == null ? new EmailNotification() : notification;
     }
 
     getWizardEditConfig(): Array<WizardButtonConfig> {

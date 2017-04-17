@@ -247,7 +247,7 @@ class SummernoteService {
                             + "<i class='fa-spin fa fa-cog'></i></div><div class='text-center' style='font-size: 1.5em;color: gray; font-weight: bold;margin-top:30px;'>" + self.translate.instant("SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE") + "</div>");
                         self.addPreviewMode(buttonSelf, context);
                         if (plainText !== null && plainText !== undefined && plainText !== "") {
-                            self.templateService.testTemplate(self.templateService.getCurrentEditTemplate(), new WorkflowTemplateObject(), new Notification()).then(function (result: Notification) {
+                            self.templateService.testTemplate(self.templateService.getCurrentEditTemplate(), new WorkflowTemplateObject(), new EmailNotification()).then(function (result: EmailNotification) {
                                 self.currentTimeout = self.timeout(function () {
                                     if (self.previewMode === true) {
                                         context.code(result.content.replace("$pageNum", "1").replace("$numPages", "1"));
