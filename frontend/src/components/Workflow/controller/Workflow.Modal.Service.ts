@@ -77,7 +77,7 @@ class WorkflowModalService {
                 transformation: function (): boolean {
                     return false;
                 },
-                notification: function (): Notification {
+                notification: function (): EmailNotification {
                     return null;
                 }
             }
@@ -109,7 +109,7 @@ class WorkflowModalService {
                 transformation: function (): boolean {
                     return false;
                 },
-                notification: function (): Notification {
+                notification: function (): EmailNotification {
                     return null;
                 }
             }
@@ -152,7 +152,7 @@ class WorkflowModalService {
                 transformation: function (): boolean {
                     return false;
                 },
-                notification: function (): Notification {
+                notification: function (): EmailNotification {
                     return notification;
                 }
             }
@@ -195,7 +195,7 @@ class WorkflowModalService {
                 transformation: function (): boolean {
                     return true;
                 },
-                notification: function (): Notification {
+                notification: function (): EmailNotification {
                     return null;
                 }
             }
@@ -235,7 +235,7 @@ class WorkflowModalService {
                 transformation: function (): boolean {
                     return true;
                 },
-                notification: function (): Notification {
+                notification: function (): EmailNotification {
                     return null;
                 }
             }

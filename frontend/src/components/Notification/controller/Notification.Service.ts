@@ -18,7 +18,7 @@ class NotificationService {
     fileReader;
     notification: EmailNotification;
     q;
-    userNotifications: Array<Notification> = [];
+    userNotifications: Array<EmailNotification> = [];
 
     constructor(toaster, $translate, $rootScope, NotificationResource, $q, private TokenService: TokenService) {
         this.notificationResource = NotificationResource.resource;
@@ -55,7 +55,7 @@ class NotificationService {
 
     }
 
-    async getNotificationsBySenderId(senderId: number): Promise<Array<Notification>> {
+    async getNotificationsBySenderId(senderId: number): Promise<Array<EmailNotification>> {
         return this.notificationResource.getNotificationsBySenderId({ senderId: senderId }).$promise;
     }
 
