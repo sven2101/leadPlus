@@ -45,6 +45,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import dash.common.AbstractWorkflow;
+import dash.common.ConsistencyFailedException;
 import dash.customermanagement.business.CustomerService;
 import dash.customermanagement.domain.Customer;
 import dash.exceptions.DeleteFailedException;
@@ -167,7 +168,7 @@ public class ProcessService implements IProcessService {
 	}
 
 	@Override
-	public Sale createSale(final long processId, final Sale sale) throws SaveFailedException {
+	public Sale createSale(final long processId, final Sale sale) throws SaveFailedException, ConsistencyFailedException {
 		Process process = processRepository.findOne(processId);
 		if (Optional.ofNullable(process).isPresent()) {
 			Customer updateCustomer = sale.getCustomer();

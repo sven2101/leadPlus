@@ -23,9 +23,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -41,7 +38,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import dash.commentmanagement.domain.Comment;
+
 import dash.common.AbstractWorkflow;
+
+import dash.common.ConsistencyObject;
+
 import dash.leadmanagement.domain.Lead;
 import dash.notificationmanagement.domain.Notification;
 import dash.notificationmanagement.domain.NotificationType;
@@ -55,13 +56,8 @@ import dash.usermanagement.domain.User;
 @SQLDelete(sql = "UPDATE process SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
 @Table(name = "process")
-public class Process {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "process_auto_gen")
-	@SequenceGenerator(name = "process_auto_gen", sequenceName = "process_id_seq", allocationSize = 1)
-	@Column(name = "id", nullable = false)
-	private Long id;
+@SequenceGenerator(name = "idgen", sequenceName = "process_id_seq", allocationSize = 1)
+public class Process extends ConsistencyObject {
 
 	@NotNull
 	@Column(name = "deleted", nullable = false)
@@ -144,10 +140,6 @@ public class Process {
 		this.deleted = deleted;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
 	public Lead getLead() {
 		return lead;
 	}
@@ -212,10 +204,6 @@ public class Process {
 		this.notifications = notifications;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public Source getSource() {
 		return source;
 	}
@@ -257,7 +245,6 @@ public class Process {
 		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((formerProcessors == null) ? 0 : formerProcessors.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lead == null) ? 0 : lead.hashCode());
 		result = prime * result + ((notifications == null) ? 0 : notifications.hashCode());
 		result = prime * result + ((offer == null) ? 0 : offer.hashCode());
@@ -288,11 +275,6 @@ public class Process {
 			if (other.formerProcessors != null)
 				return false;
 		} else if (!formerProcessors.equals(other.formerProcessors))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
 			return false;
 		if (lead == null) {
 			if (other.lead != null)
@@ -331,9 +313,9 @@ public class Process {
 
 	@Override
 	public String toString() {
-		return "Process [id=" + id + ", deleted=" + deleted + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale
-				+ ", comments=" + comments + ", status=" + status + ", processor=" + processor + ", notifications="
-				+ notifications + ", source=" + source + "]";
+		return "Process [deleted=" + deleted + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale + ", comments="
+				+ comments + ", status=" + status + ", processor=" + processor + ", notifications=" + notifications
+				+ ", source=" + source + "]";
 	}
 
 }

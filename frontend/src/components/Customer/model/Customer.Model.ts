@@ -18,6 +18,8 @@ class Customer {
     realCustomer: boolean;
     billingAddress: Address;
     deliveryAddress: Address;
+    lastEdited: any;
+    lastEditor: string;
 
     constructor() {
         this.billingAddress = new Address();

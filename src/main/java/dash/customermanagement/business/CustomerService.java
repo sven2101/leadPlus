@@ -18,8 +18,8 @@ import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.CUSTOMER_NOT_FOUND;
 import static dash.Constants.DELETE_FAILED_EXCEPTION;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
-import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,11 +31,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import dash.common.ConsistencyFailedException;
 import dash.customermanagement.domain.Customer;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
-import dash.exceptions.UpdateFailedException;
 
 @Service
 public class CustomerService implements ICustomerService {
@@ -92,34 +92,21 @@ public class CustomerService implements ICustomerService {
 	}
 
 	@Override
-	public Customer save(final Customer customer) throws SaveFailedException {
+	public Customer save(final Customer customer) throws SaveFailedException, ConsistencyFailedException {
 		if (Optional.ofNullable(customer).isPresent()) {
-			try {
-				return customerRepository.save(customer);
-			} catch (Exception ex) {
-				logger.error(CustomerService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
+			if (customer.getId() != null) {
+				Customer savedCustomer = customerRepository.findOne(customer.getId());
+				if (savedCustomer != null && savedCustomer.getLastEdited().getTimeInMillis()!=(customer.getLastEdited().getTimeInMillis())) {
+					throw new ConsistencyFailedException(
+							savedCustomer.getLastEditor()+";"+savedCustomer.getLastEdited().getTimeInMillis());
+				}
 			}
+			customer.setLastEdited(Calendar.getInstance());
+			return customerRepository.save(customer);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
 			logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
 			throw sfex;
-		}
-	}
-
-	@Override
-	public Customer update(final Customer customer) throws UpdateFailedException {
-		if (Optional.ofNullable(customer).isPresent()) {
-			try {
-				return save(customer);
-			} catch (IllegalArgumentException | SaveFailedException ex) {
-				logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			}
-		} else {
-			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
-			throw ufex;
 		}
 	}
 

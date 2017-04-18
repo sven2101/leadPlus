@@ -638,6 +638,8 @@ function config($translateProvider) {
             CUSTOMER_NUMBER: "Kundennummer",
             CUSTOMER_TOAST_SAVE: "Der Kontakt wurde erfolgreich angelegt/aktualisiert",
             CUSTOMER_TOAST_ERROR: "Der Kontakt konnte nicht angelegt/aktualisiert werden",
+            CUSTOMER_INCONSISTENCY_BY_AT_ERROR: "Fehler beim Speichern. Der Datensatz wurde von {{editedBy}} um {{editedAt}} aktualisiet. Bitte neuladen!",
+            CUSTOMER_INCONSISTENCY_ERROR: "Fehler beim Speichern. Datensatz ist nicht aktuell. Bitte den Datensatz neuladen!",
 
             TODO_TODOS: "Aufgaben",
             SHOW_MY_TASKS: "Zeige meine Aufgaben",
@@ -703,6 +705,7 @@ function config($translateProvider) {
             ERROR_PAGE_403_HEADLINE: "Zugriff verboten",
             ERROR_PAGE_403_TEXT: "Du bist nicht befugt diese Seite zu besuchen. Bei Fragen kontaktiere bitte den Administrator.",
             ERROR_PAGE_GO_BACK: "Gehe zurück",
+            SAVE_ERROR: "Fehler beim Speichern"
         })
         .translations(Language[Language.EN], {
             // GENERAL
@@ -1336,6 +1339,8 @@ function config($translateProvider) {
             CUSTOMER_NUMBER: "Contact number",
             CUSTOMER_TOAST_SAVE: "Creating/Editing Contact was successful",
             CUSTOMER_TOAST_ERROR: "Creating/Editing Contact was unsuccessful",
+            CUSTOMER_INCONSISTENCY_BY_AT_ERROR: "Saving failed. The customer was edited by {{editedBy}} at {{editedAt}}. Please reload!",
+            CUSTOMER_INCONSISTENCY_ERROR: "Saving failed. The customer is not up-to-date. Please reload!",
 
 
             TODO_TODOS: "Tasks",
@@ -1402,6 +1407,7 @@ function config($translateProvider) {
             ERROR_PAGE_403_HEADLINE: "Forbidden",
             ERROR_PAGE_403_TEXT: "You are not allowed to visit this site. Please contact your administrator.",
             ERROR_PAGE_GO_BACK: "Go back",
+            SAVE_ERROR: "Saving failed"
         });
     $translateProvider.useSanitizeValueStrategy(null);
     $translateProvider.preferredLanguage(Language[Language.EN]);

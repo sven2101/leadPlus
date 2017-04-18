@@ -2,9 +2,6 @@ package dash.sourcemanagement.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -13,17 +10,14 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import dash.common.ConsistencyObject;
+
 @Entity
 @SQLDelete(sql = "UPDATE source SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
 @Table(name = "source")
-public class Source {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "source_auto_gen")
-	@SequenceGenerator(name = "source_auto_gen", sequenceName = "source_id_seq", allocationSize = 1)
-	@Column(name = "id", nullable = false)
-	private Long id;
+@SequenceGenerator(name = "idgen", sequenceName = "source_id_seq", allocationSize = 1)
+public class Source extends ConsistencyObject {
 
 	@NotNull
 	@Column(name = "deleted", nullable = false)
@@ -48,14 +42,6 @@ public class Source {
 
 	public Source() {
 
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public boolean isDeleted() {
@@ -105,7 +91,6 @@ public class Source {
 		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
@@ -128,11 +113,6 @@ public class Source {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -143,7 +123,7 @@ public class Source {
 
 	@Override
 	public String toString() {
-		return "Source [id=" + id + ", deleted=" + deleted + ", deactivated=" + deactivated + ", name=" + name
-				+ ", description=" + description + "]";
+		return "Source [deleted=" + deleted + ", deactivated=" + deactivated + ", name=" + name + ", description="
+				+ description + "]";
 	}
 }

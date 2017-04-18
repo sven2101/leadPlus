@@ -8,9 +8,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -38,14 +35,8 @@ import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class AbstractWorkflow implements Request {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "workflow_auto_gen")
-	@SequenceGenerator(name = "workflow_auto_gen", sequenceName = "workflow_id_seq", allocationSize = 1)
-	@ApiModelProperty(hidden = true)
-	@Column(name = "id", nullable = false)
-	private Long id;
+@SequenceGenerator(name = "idgen", sequenceName = "workflow_id_seq", allocationSize = 1)
+public abstract class AbstractWorkflow extends ConsistencyObject implements Request {
 
 	@ManyToOne
 	@JoinColumn(name = "customer_fk", nullable = true)
@@ -146,14 +137,6 @@ public abstract class AbstractWorkflow implements Request {
 
 	public void setDeliveryCosts(double deliveryCosts) {
 		this.deliveryCosts = deliveryCosts;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getDeliveryTerm() {
@@ -272,7 +255,6 @@ public abstract class AbstractWorkflow implements Request {
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((deliveryDate == null) ? 0 : deliveryDate.hashCode());
 		result = prime * result + ((deliveryTerm == null) ? 0 : deliveryTerm.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
 		result = prime * result + ((orderPositions == null) ? 0 : orderPositions.hashCode());
 		result = prime * result + ((paymentTerm == null) ? 0 : paymentTerm.hashCode());
@@ -325,11 +307,6 @@ public abstract class AbstractWorkflow implements Request {
 				return false;
 		} else if (!deliveryTerm.equals(other.deliveryTerm))
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
 		if (message == null) {
 			if (other.message != null)
 				return false;
@@ -365,11 +342,11 @@ public abstract class AbstractWorkflow implements Request {
 
 	@Override
 	public String toString() {
-		return "AbstractWorkflow [id=" + id + ", customer=" + customer + ", deliveryAddressLine=" + deliveryAddressLine
-				+ ", deleted=" + deleted + ", deliveryCosts=" + deliveryCosts + ", orderPositions=" + orderPositions
-				+ ", timestamp=" + timestamp + ", vendor=" + vendor + ", message=" + message + ", deliveryDate="
-				+ deliveryDate + ", deliveryTerm=" + deliveryTerm + ", paymentTerm=" + paymentTerm + ", skonto="
-				+ skonto + ", billingAddress=" + billingAddress + ", deliveryAddress=" + deliveryAddress + "]";
+		return "AbstractWorkflow [customer=" + customer + ", deliveryAddressLine=" + deliveryAddressLine + ", deleted="
+				+ deleted + ", deliveryCosts=" + deliveryCosts + ", orderPositions=" + orderPositions + ", timestamp="
+				+ timestamp + ", vendor=" + vendor + ", message=" + message + ", deliveryDate=" + deliveryDate
+				+ ", deliveryTerm=" + deliveryTerm + ", paymentTerm=" + paymentTerm + ", skonto=" + skonto
+				+ ", billingAddress=" + billingAddress + ", deliveryAddress=" + deliveryAddress + "]";
 	}
 
 }

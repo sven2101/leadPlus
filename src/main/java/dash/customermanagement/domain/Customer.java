@@ -21,9 +21,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -38,6 +35,7 @@ import org.hibernate.annotations.SQLDelete;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.addressmanagement.domain.Address;
+import dash.common.ConsistencyObject;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -46,13 +44,8 @@ import io.swagger.annotations.ApiModelProperty;
 @SQLDelete(sql = "UPDATE customer SET deleted = '1' WHERE id = ?")
 // @Where(clause = "deleted <> '1'")
 @Table(name = "customer")
-public class Customer {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_auto_gen")
-	@SequenceGenerator(name = "customer_auto_gen", sequenceName = "customer_id_seq", allocationSize = 1)
-	@Column(name = "id", nullable = false)
-	private Long id;
+@SequenceGenerator(name = "idgen", sequenceName = "customer_id_seq", allocationSize = 1)
+public class Customer extends ConsistencyObject {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "title", length = 255, nullable = true)
@@ -126,20 +119,12 @@ public class Customer {
 	public Customer() {
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public boolean isDeactivated() {
 		return deactivated;
 	}
 
 	public void setDeactivated(boolean deactivated) {
 		this.deactivated = deactivated;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public Title getTitle() {
@@ -277,7 +262,6 @@ public class Customer {
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((fax == null) ? 0 : fax.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
@@ -335,11 +319,6 @@ public class Customer {
 				return false;
 		} else if (!firstname.equals(other.firstname))
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
 		if (lastname == null) {
 			if (other.lastname != null)
 				return false;
@@ -369,9 +348,9 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname
-				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone + ", fax="
-				+ fax + ", mobile=" + mobile + ", deactivated=" + deactivated + ", realCustomer=" + realCustomer
+		return "Customer [title=" + title + ", deleted=" + deleted + ", firstname=" + firstname + ", lastname="
+				+ lastname + ", company=" + company + ", email=" + email + ", phone=" + phone + ", fax=" + fax
+				+ ", mobile=" + mobile + ", deactivated=" + deactivated + ", realCustomer=" + realCustomer
 				+ ", timestamp=" + timestamp + ", customerNumber=" + customerNumber + ", billingAddress="
 				+ billingAddress + ", deliveryAddress=" + deliveryAddress + "]";
 	}

@@ -22,9 +22,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -40,6 +37,7 @@ import org.hibernate.annotations.SQLDelete;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import dash.common.ConsistencyObject;
 import dash.fileuploadmanagement.domain.FileUpload;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -47,15 +45,10 @@ import io.swagger.annotations.ApiModelProperty;
 @SQLDelete(sql = "UPDATE product SET deleted = '1' WHERE id = ?")
 // @Where(clause = "deleted <> '1'")
 @Table(name = "product")
-public class Product implements Serializable {
+@SequenceGenerator(name = "idgen", sequenceName = "product_id_seq", allocationSize = 1)
+public class Product extends ConsistencyObject implements Serializable {
 
 	private static final long serialVersionUID = 2316129901873904110L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_auto_gen")
-	@SequenceGenerator(name = "product_auto_gen", sequenceName = "product_id_seq", allocationSize = 1)
-	@Column(name = "id", nullable = false)
-	private Long id;
 
 	@ApiModelProperty(hidden = true)
 	@NotNull
@@ -185,10 +178,6 @@ public class Product implements Serializable {
 		this.picture = picture;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -221,10 +210,6 @@ public class Product implements Serializable {
 		this.productNumber = productNumber;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -232,7 +217,6 @@ public class Product implements Serializable {
 		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((netPrice == null) ? 0 : netPrice.hashCode());
@@ -259,11 +243,6 @@ public class Product implements Serializable {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -297,9 +276,9 @@ public class Product implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", deleted=" + deleted + ", name=" + name + ", productState=" + productState
-				+ ", timestamp=" + timestamp + ", deactivated=" + deactivated + ", priceNetto=" + netPrice
-				+ ", picture=" + picture + "]";
+		return "Product [deleted=" + deleted + ", name=" + name + ", productState=" + productState + ", timestamp="
+				+ timestamp + ", deactivated=" + deactivated + ", priceNetto=" + netPrice + ", picture=" + picture
+				+ "]";
 	}
 
 }

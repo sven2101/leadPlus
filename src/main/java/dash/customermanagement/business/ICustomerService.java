@@ -18,11 +18,11 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import dash.common.ConsistencyFailedException;
 import dash.customermanagement.domain.Customer;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
-import dash.exceptions.UpdateFailedException;
 
 @Service
 public interface ICustomerService {
@@ -35,9 +35,7 @@ public interface ICustomerService {
 
 	public List<Customer> getRealCustomer();
 
-	public Customer save(final Customer inquirer) throws SaveFailedException;
-
-	public Customer update(final Customer inquirer) throws UpdateFailedException;
+	public Customer save(final Customer inquirer) throws SaveFailedException, ConsistencyFailedException;
 
 	public void delete(final Long id) throws DeleteFailedException;
 

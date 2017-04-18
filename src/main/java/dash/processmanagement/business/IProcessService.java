@@ -23,6 +23,7 @@ import javax.persistence.metamodel.SingularAttribute;
 import org.springframework.stereotype.Service;
 
 import dash.common.AbstractWorkflow;
+import dash.common.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -60,7 +61,7 @@ public interface IProcessService {
 
 	public Offer createOffer(final long processId, final Offer offer) throws SaveFailedException;
 
-	public Sale createSale(final long processId, final Sale sale) throws SaveFailedException;
+	public Sale createSale(final long processId, final Sale sale) throws SaveFailedException, ConsistencyFailedException;
 
 	public Process setProcessor(final long processId, final long userId) throws Exception;
 

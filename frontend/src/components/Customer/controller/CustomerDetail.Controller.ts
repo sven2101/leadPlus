@@ -41,8 +41,10 @@ class CustomerDetailController {
     }
 
     async saveCustomer() {
-        await this.customerService.saveCustomer(this.customer, this.isNewCustomer);
-        this.location.path("/customer");
+        let customer = await this.customerService.saveCustomer(this.customer, this.isNewCustomer);
+        if (customer !== null) {
+            this.location.path("/customer");
+        }
     }
 
     copyBillingAddress() {

@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.common.ConsistencyFailedException;
 import dash.customermanagement.business.ICustomerService;
 import dash.customermanagement.domain.Customer;
 import dash.exceptions.DeleteFailedException;
@@ -90,7 +91,7 @@ public class CustomerResource {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Create a single customer.", notes = "You have to provide a valid customer entity.")
 	public Customer save(@ApiParam(required = true) @RequestBody @Valid final Customer customer)
-			throws SaveFailedException {
+			throws SaveFailedException, ConsistencyFailedException {
 		return customerService.save(customer);
 	}
 
@@ -98,8 +99,8 @@ public class CustomerResource {
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update a single customer.", notes = "You have to provide a valid customer ID.")
 	public Customer update(@ApiParam(required = true) @RequestBody @Valid final Customer customer)
-			throws UpdateFailedException {
-		return customerService.update(customer);
+			throws UpdateFailedException, SaveFailedException, ConsistencyFailedException {
+		return customerService.save(customer);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.common.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -357,7 +358,7 @@ public class ProcessResource {
 	@RequestMapping(value = "/{processId}/sales", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Sale createSaleByProcess(@PathVariable Long processId, @RequestBody @Valid final Sale sale)
-			throws NotFoundException, SaveFailedException {
+			throws NotFoundException, SaveFailedException,ConsistencyFailedException {
 		return processService.createSale(processId, sale);
 	}
 

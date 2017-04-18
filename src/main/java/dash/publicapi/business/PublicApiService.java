@@ -33,6 +33,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import dash.addressmanagement.domain.Address;
+import dash.common.ConsistencyFailedException;
 import dash.common.HtmlCleaner;
 import dash.customermanagement.business.ICustomerService;
 import dash.customermanagement.domain.Customer;
@@ -69,7 +70,7 @@ public class PublicApiService implements IPublicApiService {
 	private ISourceService sourceService;
 
 	@Override
-	public Lead saveLead(Lead lead) throws SaveFailedException, NotFoundException {
+	public Lead saveLead(Lead lead) throws SaveFailedException, NotFoundException, ConsistencyFailedException {
 		if (lead == null) {
 			throw new SaveFailedException(INVALID_LEAD);
 		}
