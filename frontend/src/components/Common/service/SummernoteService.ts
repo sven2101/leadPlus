@@ -130,12 +130,12 @@ class SummernoteService {
     }
 
     getFooterTemplate(self): string {
-        return "<p>&lt;footer height=\"2cm\" &gt;</p>" +
+        return "&lt;footer height=\"2cm\" &gt;" +
             "<table class='table' style='width: 90%; margin: auto;border-top: 1px solid #ccc;'><tr style='font-size: 0.65em;color: #888;'>" +
             "<td style='text-align: left;width:33.3%;vertical-align: text-top'>${(user.firstname)!}&nbsp;${(user.lastname)!}</td>" +
             "<td style='text-align: center;width:33.3%;vertical-align: text-top'>Angebot A12345</td>" +
             "<td style='text-align: right;width:33.3%;vertical-align: text-top'>$pageNum/$numPages</td>" +
-            "</tr></table><p>&lt;/footer&gt;</p>";
+            "</tr></table>&lt;/footer&gt;";
     }
 
     getOrderListTemplate(self): string {
