@@ -43,7 +43,6 @@ public class HtmlToPdfService {
 
 	public synchronized byte[] genereatePdfFromHtml(String htmlStringWithImageInline)
 			throws PdfGenerationFailedException, IOException {
-		
 
 		int exitCode = 0;
 		BufferedReader errorReader = null;
@@ -56,6 +55,7 @@ public class HtmlToPdfService {
 		String errorConsoleOutput = "";
 		Process phantom = null;
 		List<File> files = null;
+		StringBuilder footerHeight = new StringBuilder();
 		try {
 
 			files = new ArrayList<>();
@@ -64,7 +64,7 @@ public class HtmlToPdfService {
 			String tmpFooterId = UUID.randomUUID().toString();
 			String tmpFooterPath = TMP_DIR + "/" + tmpFooterId + "tmpFooter.html";
 
-			String htmlString = extractFromText(htmlStringWithImageInline, files, tmpFooterPath);
+			String htmlString = extractFromText(htmlStringWithImageInline, files, tmpFooterPath, footerHeight);
 
 			String tmpHtmlId = UUID.randomUUID().toString();
 			String tmpHtmlPath = TMP_DIR + "/" + tmpHtmlId + "tmpHtml.html";
@@ -96,6 +96,7 @@ public class HtmlToPdfService {
 			arguments.add(tmpHtmlPath);
 			arguments.add(tempPdf.getPath());
 			arguments.add(footerFile.getPath());
+			arguments.add(footerHeight.toString());
 			ProcessBuilder renderProcess = new ProcessBuilder(arguments);
 			phantom = renderProcess.start();
 
@@ -180,7 +181,8 @@ public class HtmlToPdfService {
 		}
 	}
 
-	private String extractFromText(String oldHtml, List<File> files, String footer) throws IOException {
+	private String extractFromText(String oldHtml, List<File> files, String footer, StringBuilder footerHeight)
+			throws IOException {
 		StringBuilder newContentBuilder = new StringBuilder();
 
 		for (int i = 0; i < oldHtml.length(); i++) {
@@ -193,8 +195,8 @@ public class HtmlToPdfService {
 				continue;
 			}
 			// extract footer
-			if (hasKeyword(oldHtml, "<footer>", i)) {
-				i = extractFooter(oldHtml, footer, i + 8);
+			if (hasKeyword(oldHtml, "<footer", i)) {
+				i = extractFooter(oldHtml, footer, i, footerHeight);
 				continue;
 			}
 			newContentBuilder.append(oldHtml.charAt(i));
@@ -229,8 +231,27 @@ public class HtmlToPdfService {
 		return i++;
 	}
 
-	private int extractFooter(String text, String footerPath, int i) throws IOException {
+	private int extractFooter(String text, String footerPath, int i, StringBuilder footerHeight) throws IOException {
 		StringBuilder footer = new StringBuilder();
+		boolean isInFooterHeight = false;
+		for (; i < text.length(); i++) {
+			if (hasKeyword(text, ">", i)) {
+				i += 1;
+				break;
+			}
+			if (hasKeyword(text, "height=\"", i)) {
+				i += 8;
+				isInFooterHeight = true;
+			}
+			if (hasKeyword(text, "\"", i)) {
+				i += 1;
+				isInFooterHeight = false;
+			}
+			if (isInFooterHeight) {
+				footerHeight.append(text.charAt(i));
+			}
+		}
+
 		for (; i < text.length(); i++) {
 			if (hasKeyword(text, "</footer>", i)) {
 				BufferedWriter out = new BufferedWriter(
@@ -242,47 +263,6 @@ public class HtmlToPdfService {
 			footer.append(text.charAt(i));
 		}
 		return i;
-	}
-
-	@Deprecated
-	private String extractBase64ImagesAndFooter(String oldHtml, List<File> files, File footer) throws IOException {
-		StringBuilder newContentBuilder = new StringBuilder();
-		boolean inImage = false;
-		StringBuilder currentBase64ImageStringBuilder = new StringBuilder();
-		StringBuilder currentBase64HeaderStringBuilder = new StringBuilder();
-		for (int i = 0; i < oldHtml.length(); i++) {
-			char c = oldHtml.charAt(i);
-			if (inImage) {
-				if (c != '"') {
-					currentBase64ImageStringBuilder.append(c);
-				} else {
-					File tempImage = File.createTempFile("tempImage", ".png", new File(TMP_DIR));
-					byte[] imageAsByteArray = org.apache.commons.codec.binary.Base64
-							.decodeBase64(currentBase64ImageStringBuilder.toString().getBytes());
-					FileUtils.writeByteArrayToFile(tempImage, imageAsByteArray);
-					files.add(tempImage);
-					currentBase64HeaderStringBuilder = new StringBuilder();
-					currentBase64ImageStringBuilder = new StringBuilder();
-					newContentBuilder
-							.append("src=\"file:///" + tempImage.getAbsolutePath().replaceAll("\\\\", "/") + "\"");
-					inImage = false;
-				}
-				continue;
-			}
-			if (i + 2 < oldHtml.length() && c == 's' && oldHtml.charAt(i + 1) == 'r' && oldHtml.charAt(i + 2) == 'c') {
-				for (; i < oldHtml.length() && oldHtml.charAt(i) != ','; i++) {
-					c = oldHtml.charAt(i);
-					currentBase64HeaderStringBuilder.append(c);
-				}
-				inImage = true;
-				continue;
-			}
-			if (!inImage) {
-				newContentBuilder.append(c);
-			}
-		}
-
-		return newContentBuilder.toString();
 	}
 
 }

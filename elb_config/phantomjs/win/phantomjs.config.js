@@ -20,9 +20,16 @@ page.onResourceRequested = function(requestData, request) {
 };
 
 var footerContent = null
+var footerHeight = null
 try{
 	footerContent=fs.read(system.args[3]);
+	footerHeight=system.args[4];	
 }catch(error){}
+finally{
+	if(footerHeight==null){
+		footerHeight="1cm";
+	}
+}
 
 page.paperSize = {
     format: 'A4',
@@ -32,14 +39,12 @@ page.paperSize = {
         bottom: "1cm"
     },
     footer: {
-        height: "10cm",
+        height: footerHeight,
         contents: phantom.callback(function (pageNum, numPages) {
 			if(footerContent==null){
 				return null;
-			}			
-			footerContent=footerContent.replace("$pageNum",pageNum);
-			footerContent=footerContent.replace("$numPages",numPages);			
-             return  footerContent;
+			}
+            return  footerContent.replace("$pageNum",pageNum).replace("$numPages",numPages);
         })
     }
 };

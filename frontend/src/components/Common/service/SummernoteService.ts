@@ -130,7 +130,7 @@ class SummernoteService {
     }
 
     getFooterTemplate(self): string {
-        return "<p>&lt;footer&gt;</p>" +
+        return "<p>&lt;footer height=\"2cm\" &gt;</p>" +
             "<table class='table' style='width: 90%; margin: auto;border-top: 1px solid #ccc;'><tr style='font-size: 0.65em;color: #888;'>" +
             "<td style='text-align: left;width:33.3%;vertical-align: text-top'>${(user.firstname)!}&nbsp;${(user.lastname)!}</td>" +
             "<td style='text-align: center;width:33.3%;vertical-align: text-top'>Angebot A12345</td>" +
@@ -207,8 +207,9 @@ class SummernoteService {
             self.removePdfPreview(buttonSelf, self);
             return;
         });
+        let filename = template.subject == null || template.subject === "" ? "test" : template.subject;
         let file = b64toBlob(response.data, "application/pdf");
-        this.FileSaver.saveAs(file, template.subject);
+        this.FileSaver.saveAs(file, filename);
         self.removePdfPreview(buttonSelf, self);
         return;
     }
