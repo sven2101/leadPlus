@@ -8,6 +8,12 @@ import { Component, OnInit } from "@angular/core";
 })
 export class ManagmentCardComponent implements OnInit {
 
+  process;
+  workflowService;
+  editWorkflowUnit;
+  goToLink;
+  text;
+
   constructor() { }
 
   ngOnInit() {

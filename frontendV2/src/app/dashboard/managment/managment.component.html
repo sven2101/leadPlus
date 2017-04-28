@@ -38,7 +38,7 @@
 									<h4>{{DashboardService.openLeads}}</h4>
 									<ul [dragula]="'bag'" [id]="Activity.OPEN" [dragulaModel]="DashboardService.openLeads" class="sortable-list agile-list dragulaBag">
 										<li class="danger-element" *ngFor="let process of DashboardService.openLeads ">
-											<dashboard-managment-card process="process" workflowunittype="lead"></dashboard-managment-card>
+											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>
 								</div>
@@ -54,7 +54,7 @@
 									<h4>{{DashboardService.leadsInContact}}</h4>
 									<ul [dragula]="'bag'" [id]="Activity.INCONTACT" [dragulaModel]="DashboardService.leadsInContact" class="sortable-list agile-list dragulaBag">
 										<li class="danger-element" *ngFor="let process of DashboardService.leadsInContact ">
-											<dashboard-managment-card process="process" workflowunittype="lead"></dashboard-managment-card>
+											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>
 								</div>
@@ -71,7 +71,7 @@
 									<h4>{{DashboardService.offers}}</h4>
 									<ul [dragula]="'bag'" [id]="Activity.OFFER" [dragulaModel]="DashboardService.offers" class="sortable-list agile-list dragulaBag">
 										<li class="warning-element" *ngFor="let process of DashboardService.offers ">
-											<dashboard-managment-card process="process" workflowunittype="offer"></dashboard-managment-card>
+											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>
 								</div>
@@ -85,7 +85,7 @@
 									</div>
 									<ul [dragula]="'bag'" [id]="Activity.DONE" [dragulaModel]="DashboardService.doneOffers" class="sortable-list agile-list dragulaBag">
 										<li class="warning-element" *ngFor="let process of DashboardService.doneOffers ">
-											<dashboard-managment-card process="process" workflowunittype="offer"></dashboard-managment-card>
+											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>
 								</div>
@@ -98,8 +98,8 @@
 											<br/> {{DashboardService.closedSalesValue| currency:'\u20AC'}}</h3>
 									</div>
 									<ul [dragula]="'bag'" [id]="Activity.SALE" [dragulaModel]="DashboardService.sales" class="sortable-list agile-list dragulaBag">
-										<li class="info-element" *ngFor="let process of DashboardService.sales ">
-											<dashboard-managment-card process="process" workflowunittype="sale"></dashboard-managment-card>
+										<li class="info-element" *ngFor="let process of DashboardService.sales">
+											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>
 								</div>
