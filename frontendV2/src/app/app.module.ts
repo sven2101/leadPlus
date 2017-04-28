@@ -1,3 +1,4 @@
+import { DashboardService } from "./dashboard/dashboard.service";
 import { ProductService } from "./product/product.service";
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
@@ -5,6 +6,7 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { RouterModule } from "@angular/router";
+import { DragulaModule } from "ng2-dragula/ng2-dragula";
 
 
 import { appRoutes } from "./app.routes";
@@ -22,6 +24,10 @@ import { ProductComponent } from "./product/product.component";
 import { ProductDetailComponent } from "./product/product-detail/product-detail.component";
 import { ToLocalTimestampPipe } from "./common/to-local-timestamp.pipe";
 import { FilterPipe } from "./common/filter.pipe";
+import { ManagmentComponent } from "./dashboard/managment/managment.component";
+import { StatisticComponent } from "./dashboard/statistic/statistic.component";
+import { ToDoComponent } from "./dashboard/to-do/to-do.component";
+import { ManagmentCardComponent } from "./dashboard/managment/managment-card.component";
 
 
 @NgModule({
@@ -37,17 +43,21 @@ import { FilterPipe } from "./common/filter.pipe";
     ProductDetailComponent,
     ToLocalTimestampPipe,
     FilterPipe,
-
-
+    ManagmentComponent,
+    StatisticComponent,
+    ToDoComponent,
+    ManagmentCardComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(appRoutes),
     SharedModule,
-    FormsModule
+    FormsModule,
+    DragulaModule
   ],
   providers: [
-    ProductService
+    ProductService,
+    DashboardService
   ]
 })
 export class AppModule { }

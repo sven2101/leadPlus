@@ -10,7 +10,7 @@ export class LimitToPipe implements PipeTransform {
     const limit = args ? parseInt(args, 10) : 10;
     const trail = "...";
 
-    return value.length > limit ? value.substring(0, limit) + trail : value;
+    return value.slice(0, limit);
   }
 
 }

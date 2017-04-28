@@ -8,6 +8,7 @@ export class User {
     email: string;
     role: Role;
     picture: FileUpload;
+    thumbnail: FileUpload;
     language: Language;
     enabled: boolean;
     firstname: string;
