@@ -3,11 +3,11 @@ import { Injectable } from "@angular/core";
 @Injectable()
 export class DashboardService {
 
-  openLeads = [1, 2, 3, 6, 7, 8, 9, 10, 11, 12, 13];
-  leadsInContact = [4, 5];
-  offers = [0];
-  doneOffers = [0];
-  sales = [0];
+  openLeads = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }, { id: 9 }];
+  leadsInContact = [];
+  offers = [{ id: 10 }];
+  doneOffers = [];
+  sales = [{ id: 11 }];
 
   openLeadsValue;
   inContactsValue;

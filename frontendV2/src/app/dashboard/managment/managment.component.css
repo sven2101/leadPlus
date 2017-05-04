@@ -44,10 +44,21 @@
 		position: absolute;
 		opacity: 0.3;
 		z-index: 100;
-		width: calc((100% - 30px));
+		width:100px;
 		text-align: center;
 		margin-top: 10px;
 	}
+
 	.dragulaBag{
 		min-height: 20px;
+	}
+	i > li { 
+		display: none;
+	}
+	.fixedContainer {
+    position: absolute; 
+	}
+	.center {
+		margin: auto;
+		width: 100px;    
 	}

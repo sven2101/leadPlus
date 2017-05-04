@@ -3,7 +3,11 @@
 		<div class="ibox float-e-margins">
 			<div id="deleteDropzone" ng-style="{'visibility':DashboardService.delementDropzoneVisibility}" class="connectList" ui-sortable="sortableOptions"
 			 ng-model="DashboardService.elementToDelete"></div>
-			<div [dragula]="'bag'" id="trashSymbol" ng-style="{'visibility':DashboardService.delementDropzoneVisibility}"><i class="fa fa-trash fa-3x"></i></div>
+			<div class="center">
+				<i [dragula]="'bucket'" id="trashSymbol" [dragulaModel]="trashBucket" class="fa fa-trash fa-3x">
+					
+				</i>
+			</div>
 			<div class="ibox-content test">
 				<div style="margin-left:-5px;margin-right:-5px">
 					<div class="row" style="overflow-x:auto">
@@ -14,7 +18,7 @@
 								</button>
 							</span>
 							<span class="pull-right" style="padding-right:15px;"><input  type="text" i18n-placeholder placeholder="COMMON_SEARCH" class="input-sm form-control" ng-model="cardSearchText" ng-model-options="{debounce: 600}"></span>
-							<span class="pull-right" style="padding-right:15px;"><label><input type="checkbox" ng-click= "DashboardService.filterMytasks(showMyTasks); cardSearchText = ''" ng-model="showMyTasks" i18n>SHOW_MY_TASKS</label>  </span>
+							<span class="pull-right" style="padding-right:15px;"><label><input type="checkbox" ng-click="DashboardService.filterMytasks(showMyTasks); cardSearchText = ''" ng-model="showMyTasks" i18n>SHOW_MY_TASKS</label>  </span>
 						</div>
 						<div class="col-xs-12" style="min-width:1100px; overflow: hidden; padding-bottom: 5px;">
 							<br>
@@ -29,15 +33,15 @@
 									<!--
 										<div ng-style="{'height':getHeight()+'px','border':DashboardService.dropzoneClass.sale}">
 										<ul ui-sortable="sortableOptions" class="sortable-list connectList agile-list" style="height: 100%;" id="sale" ng-model="DashboardService.closedSales">
-											<li class="info-element not-sortable draggable dragItem" ng-repeat="process in getClosedSales() ">
+											<li class="info-element not-sortable draggable dragItem" ng-repeat="process in getClosedSales()">
 												<dashboard-managment-card process="process" workflowunittype="sale" disabled></dashboard-managment-card>
 											</li>
 										</ul>
 									</div>
 									-->
-									<h4>{{DashboardService.openLeads}}</h4>
-									<ul [dragula]="'bag'" [id]="Activity.OPEN" [dragulaModel]="DashboardService.openLeads" class="sortable-list agile-list dragulaBag">
-										<li class="danger-element" *ngFor="let process of DashboardService.openLeads ">
+									
+									<ul [dragula]="'bucket'" [id]="Activity.OPEN" [dragulaModel]="DashboardService.openLeads" class="sortable-list agile-list dragulaBag">
+										<li [id]="process.id" class="danger-element" *ngFor="let process of DashboardService.openLeads| limitTo:7">
 											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>
@@ -51,16 +55,14 @@
 											<br/> {{DashboardService.inContactsValue| currency:'\u20AC'}}
 										</h3>
 									</div>
-									<h4>{{DashboardService.leadsInContact}}</h4>
-									<ul [dragula]="'bag'" [id]="Activity.INCONTACT" [dragulaModel]="DashboardService.leadsInContact" class="sortable-list agile-list dragulaBag">
-										<li class="danger-element" *ngFor="let process of DashboardService.leadsInContact ">
+									<ul [dragula]="'bucket'" [id]="Activity.INCONTACT" [dragulaModel]="DashboardService.leadsInContact" class="sortable-list agile-list dragulaBag">
+										<li [id]="process.id" data-process="process" class="danger-element" *ngFor="let process of DashboardService.leadsInContact">
 											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>
 								</div>
 							</div>
-
-							<div class="dragColumn ">
+							<div class="dragColumn">
 								<div class="box">
 									<div>
 										<br/>
@@ -68,23 +70,22 @@
 											<br/> {{DashboardService.openOffersValue| currency:'\u20AC'}}
 										</h3>
 									</div>
-									<h4>{{DashboardService.offers}}</h4>
-									<ul [dragula]="'bag'" [id]="Activity.OFFER" [dragulaModel]="DashboardService.offers" class="sortable-list agile-list dragulaBag">
-										<li class="warning-element" *ngFor="let process of DashboardService.offers ">
+									<ul [dragula]="'bucket'" [id]="Activity.OFFER" [dragulaModel]="DashboardService.offers" class="sortable-list agile-list dragulaBag">
+										<li [id]="process.id" class="warning-element" *ngFor="let process of DashboardService.offers">
 											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>
 								</div>
 							</div>
-							<div class="dragColumn ">
+							<div class="dragColumn">
 								<div class="box">
 									<div>
 										<br/>
 										<h3 style="text-align: center;" i18n>DASHBOARD_DONE_OFFERS<br/>
 											<br/> {{DashboardService.doneOffersValue| currency:'\u20AC'}}</h3>
 									</div>
-									<ul [dragula]="'bag'" [id]="Activity.DONE" [dragulaModel]="DashboardService.doneOffers" class="sortable-list agile-list dragulaBag">
-										<li class="warning-element" *ngFor="let process of DashboardService.doneOffers ">
+									<ul [dragula]="'bucket'" [id]="Activity.DONE" [dragulaModel]="DashboardService.doneOffers" class="sortable-list agile-list dragulaBag">
+										<li [id]="process.id" class="warning-element" *ngFor="let process of DashboardService.doneOffers">
 											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>
@@ -97,8 +98,8 @@
 										<h3 style="text-align: center;" i18n>DASHBOARD_LATEST_SALES<br/>
 											<br/> {{DashboardService.closedSalesValue| currency:'\u20AC'}}</h3>
 									</div>
-									<ul [dragula]="'bag'" [id]="Activity.SALE" [dragulaModel]="DashboardService.sales" class="sortable-list agile-list dragulaBag">
-										<li class="info-element" *ngFor="let process of DashboardService.sales">
+									<ul [dragula]="'bucket'" [id]="Activity.SALE" [dragulaModel]="DashboardService.sales" class="sortable-list agile-list dragulaBag">
+										<li [id]="process.id" class="info-element not-sortable" *ngFor="let process of DashboardService.sales">
 											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>

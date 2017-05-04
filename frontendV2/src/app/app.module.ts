@@ -28,6 +28,7 @@ import { ManagmentComponent } from "./dashboard/managment/managment.component";
 import { StatisticComponent } from "./dashboard/statistic/statistic.component";
 import { ToDoComponent } from "./dashboard/to-do/to-do.component";
 import { ManagmentCardComponent } from "./dashboard/managment/managment-card.component";
+import { VarDirective } from './common/var.directive';
 
 
 @NgModule({
@@ -46,14 +47,16 @@ import { ManagmentCardComponent } from "./dashboard/managment/managment-card.com
     ManagmentComponent,
     StatisticComponent,
     ToDoComponent,
-    ManagmentCardComponent
+    ManagmentCardComponent,
+    VarDirective
   ],
   imports: [
+    DragulaModule,
     CommonModule,
     RouterModule.forChild(appRoutes),
     SharedModule,
-    FormsModule,
-    DragulaModule
+    FormsModule
+
   ],
   providers: [
     ProductService,
