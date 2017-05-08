@@ -15,3 +15,8 @@
     .fluid-column {
         width: calc(100% - 50px);
     }
+    .icon-buttons{
+        padding-left:7px;
+        padding-top:2px;
+        float:left;
+    }

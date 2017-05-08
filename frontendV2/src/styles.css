@@ -161,6 +161,7 @@ div#loginscreen
     transform: rotate(360deg);
   }
 }
+/*
 @media (min-width: 1200px) {
   .modal-lg {
     width: 1100px !important;
@@ -191,6 +192,7 @@ div#loginscreen
 body.modal-open {
   overflow: inherit !important;
 }
+*/
 .b-l{
   border-left: 1px solid #e7eaec
 }
@@ -203,7 +205,7 @@ body.modal-open {
 	}
 
 .spinner {
-     height: 15px;
+    height: 15px;
     width: 15px;
     animation: rotate 0.8s infinite linear;
     border: 3px solid #1ab394;

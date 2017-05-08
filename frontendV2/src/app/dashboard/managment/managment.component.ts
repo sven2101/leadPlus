@@ -1,6 +1,6 @@
 import { Process } from "./../../process/process.model";
 import { DashboardService } from "./../dashboard.service";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { DragulaService } from "ng2-dragula/components/dragula.provider";
 
 import { Activity } from "../../process/activity.enum";
@@ -10,7 +10,7 @@ import { Activity } from "../../process/activity.enum";
   templateUrl: "./managment.component.html",
   styleUrls: ["./managment.component.css"]
 })
-export class ManagmentComponent implements OnInit {
+export class ManagmentComponent implements OnInit, OnDestroy {
 
   trashBucket = [];
 
@@ -21,6 +21,11 @@ export class ManagmentComponent implements OnInit {
   ngOnInit() {
     this.setDragulaOptions();
   }
+
+  ngOnDestroy() {
+    this.DragulaService.destroy("bucket");
+  }
+
   private setDragulaOptions(): void {
     this.DragulaService.setOptions("bucket", {
       accepts: (el, target, source, sibling) => {

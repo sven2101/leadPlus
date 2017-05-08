@@ -15,8 +15,6 @@ import { LoggedOutGuard } from "../login/logged-out.guard";
 import { LoginComponent } from "../login/login.component";
 import { MainComponent } from "./main.component";
 
-
-
 @NgModule({
   declarations: [
     LoginComponent,

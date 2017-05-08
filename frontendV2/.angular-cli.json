@@ -19,16 +19,15 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "",
       "styles": [
-        "../node_modules/bootstrap/dist/css/bootstrap.css",
+        "../node_modules/bootstrap/dist/css/bootstrap.min.css",
         "../node_modules/angular2-toaster/toaster.css",
         "assets/css/inspinia.css",
         "styles.css",
-        "../node_modules/font-awesome/css/font-awesome.css",
-        "../node_modules/dragula/dist/dragula.css"
+        "../node_modules/font-awesome/css/font-awesome.min.css",
+        "../node_modules/dragula/dist/dragula.min.css"
       ],
       "scripts": [
-        "../node_modules/jquery/dist/jquery.min.js",
-        "../node_modules/bootstrap/dist/js/bootstrap.min.js"
+        "../node_modules/jquery/dist/jquery.min.js"   
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

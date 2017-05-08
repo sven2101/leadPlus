@@ -16,8 +16,8 @@ export class TopBarComponent implements OnInit {
   public userNotifications = [];
   public NotificationSendState = NotificationSendState;
   public NotificationType = NotificationType;
-  public notificationSendState: NotificationSendState;
-  public isSmptVerified: boolean;
+  public notificationSendState: NotificationSendState= NotificationSendState.SENDING;
+  public isSmptVerified= true;
 
   constructor(private AuthenticationService: AuthenticationService) { }
 

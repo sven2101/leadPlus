@@ -7,6 +7,7 @@ import { FormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
 import { RouterModule } from "@angular/router";
 import { DragulaModule } from "ng2-dragula/ng2-dragula";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 
 import { appRoutes } from "./app.routes";
@@ -28,8 +29,7 @@ import { ManagmentComponent } from "./dashboard/managment/managment.component";
 import { StatisticComponent } from "./dashboard/statistic/statistic.component";
 import { ToDoComponent } from "./dashboard/to-do/to-do.component";
 import { ManagmentCardComponent } from "./dashboard/managment/managment-card.component";
-import { VarDirective } from './common/var.directive';
-
+import { ConfirmationComponent } from "./modal/confirmation/confirmation/confirmation.component";
 
 @NgModule({
   declarations: [
@@ -48,15 +48,15 @@ import { VarDirective } from './common/var.directive';
     StatisticComponent,
     ToDoComponent,
     ManagmentCardComponent,
-    VarDirective
+    ConfirmationComponent
   ],
   imports: [
     DragulaModule,
     CommonModule,
     RouterModule.forChild(appRoutes),
     SharedModule,
-    FormsModule
-
+    FormsModule,
+    NgbModule.forRoot()
   ],
   providers: [
     ProductService,

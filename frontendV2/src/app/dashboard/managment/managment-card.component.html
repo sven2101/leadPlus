@@ -6,18 +6,14 @@
           <img [title]="process?.processor.firstname+' '+process?.processor.lastname" style="width: 48px; height:48px;border-radius: 10%;"
             [src]="getProductPictureId(process?.processor)" alt="">
         </div>
-        <div *ngIf="process?.processor==null" style="height:48px;border-radius: 10%;border-style: dashed;  border-width: 1px; border-color: grey;">
-          <a *ngIf="!disabled" style="margin-left:15px;margin-top:15px;" class="btn btn-xs" ng-click="pin(process)">
+        <div *ngIf="process?.processor==null" style="height:48px;border-radius: 10%;border-style: dashed;  border-width: 1px; border-color: grey;"
+          ng-click="pin(process)">
+          <a *ngIf="!disabled" style="margin-top:5px;" class="btn btn-xs">
             <i style="color:grey" class="fa fa-thumb-tack lg"></i>
           </a>
         </div>
-        <div style="margin-top:3px">
-          <a style="width:23px;height:20px;" ng-click="onInfoClick(editWorkflowUnit,workflowunittype,process)" class="btn btn-xs btn-white"
-            data-toggle="modal" data-target="#infoModal" title="DASHBOARD_INFO_BUTTON" i18n-title data-backdrop="static">
-            <i style="margin-top:3px;margin-left:-1px;color:black" class="fa fa-info-circle fa-lg" aria-hidden="true"></i></a>
-          <a style="width:23px;height:20px;" href="{{goToLink}}" title="DASHBOARD_GOTO_BUTTON" i18n-title class="btn btn-xs btn-white">
-            <i style="margin-top:3px;margin-left:-1px;color:black" class="fa fa-globe fa-lg" aria-hidden="true"></i></a>
-        </div>
+        <div class="icon-buttons"><i style="color:black" class="fa fa-info-circle fa-lg" aria-hidden="true"></i></div>
+        <div class="icon-buttons"><i style="color:black" class="fa fa-globe fa-lg" aria-hidden="true"></i></div>       
       </div>
     </div>
     <div class="fluid-column">

@@ -1,233 +1,181 @@
 <div class="row border-bottom">
-  <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+  <nav class="navbar navbar-toggleable-md navbar-light bg-faded" role="navigation" style="width:100%">
     <div class="navbar-header">
-      <a class="navbar-minimalize minimalize-styl-2 btn btn-success" (click)="toggleMiniNavBar()"><i class="fa fa-bars"></i> </a>
+      <a class="navbar-minimalize minimalize-styl-2 btn btn-success" (click)="toggleMiniNavBar()"><i style="color:white" class="fa fa-bars"></i> </a>
     </div>
-    <ul class="nav navbar-top-links navbar-right">
-      <li class="dropdown">
-        <a class="dropdown-toggle count-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span><i class="fa fa-question-circle"></i><b class="caret"></b></span>
-        </a>
-        <ul class="dropdown-menu animated fadeInRight m-t-xs ng-scope">
-          <li>
-            <a target="_blank" href="https://leadplus.io/article-categories/general/">
+    <ul class="navbar-nav ml-auto">
+    </ul>
+    <ul class="navbar-nav float-rigth">
+      <!-- help -->
+      <li class="nav-item">
+        <div ngbDropdown class="nav-link">
+          <a class="nav-link" ngbDropdownToggle><i class="fa fa-question-circle"></i></a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" target="_blank" href="https://leadplus.io/article-categories/general/">
               <i class="fa fa-globe" aria-hidden="true"></i>
               <ng-container i18n>General</ng-container>
             </a>
-          </li>
-          <li>
-            <a target="_blank" href="https://leadplus.io/article-categories/pipeline/">
+            <a class="dropdown-item" target="_blank" href="https://leadplus.io/article-categories/pipeline/">
               <i class="fa fa-forward" aria-hidden="true"></i>
               <ng-container i18n>Pipeline</ng-container>
             </a>
-          </li>
-          <li>
-            <a target="_blank" href="https://leadplus.io/article-categories/einstellungen/">
+            <a class="dropdown-item" target="_blank" href="https://leadplus.io/article-categories/einstellungen/">
               <i class="fa fa-cogs" aria-hidden="true"></i>
               <ng-container i18n>Settings</ng-container>
             </a>
-          </li>
-          <li>
-            <a target="_blank" href="https://leadplus.io/article-categories/account-management/">
+            <a class="dropdown-item" target="_blank" href="https://leadplus.io/article-categories/account-management/">
               <i class="fa fa-user" aria-hidden="true"></i>
               <ng-container i18n>Account Management</ng-container>
             </a>
-          </li>
-          <li>
-            <a target="_blank" href="https://leadplus.io/article-categories/vorlagen/">
+            <a class="dropdown-item" target="_blank" href="https://leadplus.io/article-categories/vorlagen/">
               <i class="fa fa-file-text" aria-hidden="true"></i>
               <ng-container i18n>Templates</ng-container>
             </a>
-          </li>
-          <li>
-            <a target="_blank" href="https://leadplus.io/article-categories/email/">
+            <a class="dropdown-item" target="_blank" href="https://leadplus.io/article-categories/email/">
               <i class="fa fa-envelope-o" aria-hidden="true"></i>
               <ng-container i18n>Email</ng-container>
             </a>
-          </li>
-          <li>
-            <a target="_blank" href="https://leadplus.io/article-categories/schnittstellen/">
+            <a class="dropdown-item" target="_blank" href="https://leadplus.io/article-categories/schnittstellen/">
               <i class="fa fa-magic" aria-hidden="true"></i>
               <ng-container i18n>APIs</ng-container>
             </a>
-          </li>
-          <li>
-            <a target="_blank" href="https://leadplus.io/article-categories/support/">
+            <a class="dropdown-item" target="_blank" href="https://leadplus.io/article-categories/support/">
               <i class="fa fa-phone" aria-hidden="true"></i>
               <ng-container i18n>Support</ng-container>
             </a>
-          </li>
-        </ul>
+          </div>
+        </div>
       </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle count-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span i18n>Language<b class="caret"></b></span>
-        </a>
-        <ul class="dropdown-menu animated fadeInRight m-t-xs ng-scope">
-          <li>
-            <a (click)="changeLanguage('DE')">
-              <img alt="image" class="img-thumbnail" src="assets/img/flags/16/Germany.png">&nbsp;&nbsp;Deutsch (de)
+      <!-- language -->
+      <li class="nav-item">
+        <div ngbDropdown class="nav-link">
+          <a class="nav-link" ngbDropdownToggle i18n>Language</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" (click)="changeLanguage('DE')">
+              <img alt="image" src="assets/img/flags/16/Germany.png" i18n> Deutsch (de)
             </a>
-          </li>
-          <li>
-            <a (click)="changeLanguage('EN')">
-              <img alt="image" class="img-thumbnail" src="assets/img/flags/16/United-States.png">&nbsp;&nbsp;English (en)
+            <a class="dropdown-item" (click)="changeLanguage('EN')">
+              <img alt="image" src="assets/img/flags/16/United-States.png" i18n> English (en)
             </a>
-          </li>
-        </ul>
+          </div>
+        </div>
       </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle count-info" data-toggle="dropdown">
-          <i class="fa fa-tasks fa-lg"></i>
-          <span *ngIf="todos.length>0" class="label label-danger">{{ todos.length}}</span>
-        </a>
-        <ul style="min-width:480px" class="dropdown-menu dropdown-messages">
-          <li>
-            <div class="dropdown-messages-box">
+      <!-- todo -->
+      <li class="nav-item">
+        <div ngbDropdown class="nav-link">
+          <a class="nav-link" ngbDropdownToggle>   
+            <i class="fa fa-tasks fa-lg"></i>
+            <span *ngIf="todos.length>0" class="label label-danger">{{ todos.length}}</span>
+          </a>
+          <div class="dropdown-menu" style="margin-left: -440px;">
+            <h6 class="dropdown-header" i18n>Tasks</h6>
+            <div class="dropdown-item dropdown-table">
+              <table class="table table-hover">
+                <tbody>
+                  <tr style="cursor:pointer" (click)="navigateTo(todo)" *ngFor="let todo of todos | limitTo:5 | orderBy:'timestamp'">
+                    <td class="project-status" style="padding: 13px 20px !important">
+                      <span *ngIf="todo.status=='OPEN'" class="label label-danger" i18n>Lead</span>
+                      <span *ngIf="todo.status=='OFFER'" class="label label-warning" i18n>Offer</span>
+                      <span *ngIf="todo.status=='FOLLOWUP'" class="label label-warning" i18n>Follow up</span>
+                      <span *ngIf="todo.status=='INCONTACT'" class="label label-danger" i18n>In Kontakt</span>
+                      <span *ngIf="todo.status=='DONE'" class="label label-success" i18n>Abwicklung</span>
+                    </td>
+                    <td align="left" class="project-title text-left">
+                      <span *ngIf="todo.status=='OPEN'||todo.status=='INCONTACT'" class="text-left">{{todo.lead.customer.firstname}} {{todo.lead.customer.lastname}}</span>
+                      <span *ngIf="todo.status=='OFFER'||todo.status=='FOLLOWUP'||todo.status=='DONE'" class="text-left">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</span>
+                    </td>
+                    <td class="project-completion">
+                      <strong *ngIf="todo.status=='OPEN'||todo.status=='INCONTACT'">{{sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</strong>
+                      <strong *ngIf="todo.status=='OFFER'||todo.status=='FOLLOWUP'||todo.status=='DONE'">{{todo.offer.netPrice| currency:'\u20AC'}}</strong>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
+                <p style="margin-top:7px" i18n>No tasks available</p>
+              </div>
+              <div>
+                <p *ngIf="todos.length>5" class="text-center">...</p>
+              </div>
 
-              <div class="media-body">
-                <strong i18n>Tasks</strong> <br>
-                <br>
-              </div>
             </div>
-          </li>
-          <li>
-            <table class="table table-hover">
-              <tbody>
-                <tr style="cursor:pointer" (click)="navigateTo(todo)" *ngFor="let todo of todos | limitTo:5 | orderBy:'timestamp'">
-                  <td class="project-status" style="padding: 13px 20px !important">
-                    <span *ngIf="todo.status=='OPEN'" class="label label-danger" i18n>Lead</span>
-                    <span *ngIf="todo.status=='OFFER'" class="label label-warning" i18n>Offer</span>
-                    <span *ngIf="todo.status=='FOLLOWUP'" class="label label-warning" i18n>Follow up</span>
-                    <span *ngIf="todo.status=='INCONTACT'" class="label label-danger" i18n>In Kontakt</span>
-                    <span *ngIf="todo.status=='DONE'" class="label label-success" i18n>Abwicklung</span>
-                  </td>
-                  <td align="left" class="project-title text-left">
-                    <span *ngIf="todo.status=='OPEN'||todo.status=='INCONTACT'" class="text-left">{{todo.lead.customer.firstname}} {{todo.lead.customer.lastname}}</span>
-                    <span *ngIf="todo.status=='OFFER'||todo.status=='FOLLOWUP'||todo.status=='DONE'" class="text-left">{{todo.offer.customer.firstname}} {{todo.offer.customer.lastname}}</span>
-                  </td>
-                  <td class="project-completion">
-                    <strong *ngIf="todo.status=='OPEN'||todo.status=='INCONTACT'">{{sumOrderPositions(todo.lead.orderPositions)| currency:'\u20AC'}}</strong>
-                    <strong *ngIf="todo.status=='OFFER'||todo.status=='FOLLOWUP'||todo.status=='DONE'">{{todo.offer.netPrice| currency:'\u20AC'}}</strong>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div *ngIf="todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
-              <p style="margin-top:7px" i18n>No tasks available</p>
-            </div>
-          </li>
-          <li>
-            <p *ngIf="todos.length>5" class="text-center">...</p>
-          </li>
-        </ul>
+
+          </div>
+        </div>
       </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle count-info" data-toggle="dropdown" (click)="setTopbarNotificationState(NotificationSendState.DEFAULT)">
-          <i *ngIf="notificationSendState!=NotificationSendState.SENDING" class="fa fa-envelope fa-lg"></i>
-          <i *ngIf="notificationSendState==NotificationSendState.SENDING" class="fa fa-send fa-lg"></i>
-          <span *ngIf="notificationSendState==NotificationSendState.SENDING" class="label" style="background-color: transparent;margin-right: -3px;margin-top: -3px;">
-							<div class="spinner"></div>
+      <!-- notification -->
+      <li class="nav-item">
+        <div ngbDropdown class="nav-link">
+          <a class="nav-link" ngbDropdownToggle>
+            <i *ngIf="notificationSendState!=NotificationSendState.SENDING" class="fa fa-envelope fa-lg"></i>
+            <i *ngIf="notificationSendState==NotificationSendState.SENDING" class="fa fa-send fa-lg"></i>
+            <span *ngIf="notificationSendState==NotificationSendState.SENDING">
+							  <div class="spinner custom-spinner"></div>
 						</span>
-          <span *ngIf="notificationSendState==NotificationSendState.SUCCESS && isSmptVerified" class="label label-primary">
-							<i style="margin-right: -2;margin-left: -2;margin-top: 1;" class="fa fa-check"></i>
+            <span *ngIf="notificationSendState==NotificationSendState.SUCCESS && isSmptVerified" class="badge badge-success custom-badge" style="background-color: #1ab394;">
+							  <i class="fa fa-check"></i>
 						</span>
-          <span *ngIf="notificationSendState==NotificationSendState.ERROR && isSmptVerified" class="label  label-danger">
-							<i style="margin-right: -2;margin-left: -2;margin-top: 1;" class="fa fa-exclamation-triangle"></i>
+            <span *ngIf="notificationSendState==NotificationSendState.ERROR && isSmptVerified" class="badge badge-danger custom-badge">
+							  <i class="fa fa-exclamation-triangle"></i>
 						</span>
-          <span *ngIf="!isSmptVerified" class="label  label-danger">
-							<i style="margin-right: -2;margin-left: -2;margin-top: 1;" class="fa fa-exclamation-circle"></i>
+            <span *ngIf="!isSmptVerified" class="badge badge-danger custom-badge">
+							  <i class="fa fa-exclamation-circle"></i>
 						</span>
-        </a>
-        <ul style="min-width:600px" class="dropdown-menu dropdown-messages">
-          <li>
-            <div class="dropdown-messages-box">
-              <div class="media-body">
-                <strong i18n>Sent notifications</strong> <br>
-                <br>
-              </div>
-            </div>
-          </li>
-          <li>
-            <span *ngIf="!isSmptVerified" style="color:red; padding: 0px !important; font-size: 13px important;">
+          </a>
+          <div class="dropdown-menu" style="margin-left: -440px;">
+            <h6 class="dropdown-header" i18n>Sent notifications</h6>
+            <div class="dropdown-item dropdown-table">
+              <span *ngIf="!isSmptVerified" style="color:red; padding: 0px !important; font-size: 13px important;">
               <b i18n>
                 <i class="fa fa-exclamation-circle"></i> 
                 <ng-container i18n>Your SMTP is not verified. Please verify your SMTP </ng-container>                
                 <a style="padding: 0px !important; font-size: 13px !important;" [routerLink]="['profile/smtp']"  i18n>here!</a>
               </b>
             </span>
-            <table class="table table-hover" style="table-layout: fixed">
-              <tbody>
-         
-                <tr class="row" style="cursor:pointer; height: 50;" (click)="openEmailDirective(notification,notification.processId)" *ngFor="let notification of userNotifications | limitTo:5 ">
-                
-                  <td *ngIf="notification.notificationType!==NotificationType.ERROR" style="vertical-align: middle; width: 10%">
-                    <span class="label label-primary">
+              <table class="table table-hover" style="table-layout: fixed">
+                <tbody>
+                  <tr class="row" style="cursor:pointer; height: 50;" (click)="openEmailDirective(notification,notification.processId)" *ngFor="let notification of userNotifications | limitTo:5 ">
+                    <td *ngIf="notification.notificationType!==NotificationType.ERROR" style="vertical-align: middle; width: 10%">
+                      <span class="label label-primary">
 												<i  class="fa fa-check"></i>
 											</span>
-                  </td>                
-                  <td *ngIf="notification.notificationType===NotificationType.ERROR" style="vertical-align: middle; width: 10%">
-                    <span class="label label-danger">
+                    </td>
+                    <td *ngIf="notification.notificationType===NotificationType.ERROR" style="vertical-align: middle; width: 10%">
+                      <span class="label label-danger">
 												<i class="fa fa-exclamation-triangle"></i>
 											</span>
-                  </td>
-                  <td style="vertical-align: middle; width: 40%">
-                    <div>
-                      <span style="text-overflow: ellipsis;display: block;overflow: hidden;" title="{{notification.subject}}">{{notification.subject}}</span>
-                    </div>
-                  </td>
-                  <td style="vertical-align: middle; width: 50%">
-                    <div>
-                      <span style="text-overflow: ellipsis;display: block;overflow: hidden;" title="{{notification.recipients}}">{{notification.recipients}}</span>
-                    </div>
-                  </td>
-                </tr>
-             
-              </tbody>
-            </table>
-            <div *ngIf="userNotifications.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
-              <p style="margin-top:7px" i18n>No sent notifications available</p>
+                    </td>
+                    <td style="vertical-align: middle; width: 40%">
+                      <div>
+                        <span style="text-overflow: ellipsis;display: block;overflow: hidden;" title="{{notification.subject}}">{{notification.subject}}</span>
+                      </div>
+                    </td>
+                    <td style="vertical-align: middle; width: 50%">
+                      <div>
+                        <span style="text-overflow: ellipsis;display: block;overflow: hidden;" title="{{notification.recipients}}">{{notification.recipients}}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="userNotifications.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
+                <p style="margin-top:7px" i18n>No sent notifications available</p>
+              </div>
+              <div *ngIf="userNotifications.length>5">
+                <p class="text-center">...</p>
+              </div>
             </div>
-          </li>
-          <li>
-            <p *ngIf="todos.length>5" class="text-center">...</p>
-          </li>
-        </ul>
+          </div>
+        </div>
       </li>
-      <!-- TODO should used for comments or events
-                <li class="dropdown">
-                    <a class="dropdown-toggle count-info" data-toggle="dropdown">
-                        <i class="fa fa-bell"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-alerts">
-                        <li>
-                            <a>
-                                <div>
-                                    <i class="fa fa-envelope fa-fw"></i> Coming soon
-                                    <span class="pull-right text-muted small">Coming soon</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <div class="text-center link-block">
-                                <a>
-                                    <strong>Coming soon</strong>
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-                -->
-      <li>
-        <a [routerLink]="['profile']" >
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['profile']">
           <i class="fa fa-user"></i>
           <ng-container i18n>My Profile</ng-container>
         </a>
       </li>
-      <li>
-        <a (click)="logout()">
+      <li class="nav-item">
+        <a class="nav-link" (click)="logout()">
           <i class="fa fa-sign-out"></i>
           <ng-container i18n>logout</ng-container>
         </a>
@@ -241,39 +189,3 @@
   </div>
   <!--/footer -->
 </div>
-
-<!--/page-wrapper -->
-<!-- page level javascript -->
-<script>
-  $(document).ready(function () {
-    // Minimalize menu
-    $('.navbar-minimalize').click(function () {
-      $("body").toggleClass("mini-navbar");
-      SmoothlyMenu();
-
-    });
-
-  });
-
-  function SmoothlyMenu() {
-    if (!$('body').hasClass('mini-navbar') || $('body').hasClass('body-small')) {
-      // Hide menu in order to smoothly turn on when maximize menu
-      $('#side-menu').hide();
-      // For smoothly turn on menu
-      setTimeout(
-        function () {
-          $('#side-menu').fadeIn(400);
-        }, 200);
-    } else if ($('body').hasClass('fixed-sidebar')) {
-      $('#side-menu').hide();
-      setTimeout(
-        function () {
-          $('#side-menu').fadeIn(400);
-        }, 100);
-    } else {
-      // Remove all inline style from jquery fadeIn function to reset menu state
-      $('#side-menu').removeAttr('style');
-    }
-  }
-
-</script>
