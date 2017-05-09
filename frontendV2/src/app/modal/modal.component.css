@@ -1,0 +1,30 @@
+.wizard-step{
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 45px;
+    border-color: #e0e0e0;
+    margin: 30px;
+    height: 45px;
+    width: 45px;
+}
+.wizard-step-active{
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 45px;
+    border-color: #1c84c6;
+    margin: 30px;
+    height: 45px;
+    width: 45px;
+}
+
+.wizard-step:hover{
+    border-color:black;
+}
+
+.wizard-icon{
+    margin-top: 15px;
+}
+
+.wizard-header{
+    margin-top: -30px;
+}

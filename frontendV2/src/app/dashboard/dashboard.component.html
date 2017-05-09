@@ -2,12 +2,40 @@
   dashboard works!
 </p>
 
+<ng-template #content let-c="close" let-d="dismiss">
+  <app-modal (dismiss)="d($event)" (close)="c($event)">
+    <div modal-title>Modal title...</div>
+    <h1><strong>nice body</strong></h1>
+    <h3>nice body</h3>
+    <div modal-footer>
+      <button type="button" class="btn btn-secondary" (click)="c('wtf');save()">Save</button>
+      <button type="button" class="btn btn-secondary" (click)="d('wtf')">Close</button>
+    </div>
+  </app-modal>
+</ng-template>
+
+<h1>{{closeResult}}</h1>
+
+<button class="btn btn-lg btn-outline-primary" (click)="open(content)">modal</button>
+
+<ng-template #content2 let-c="close" let-d="dismiss">
+  <app-modal (dismiss)="d($event)" (close)="c($event)">
+    <h1>h1</h1>
+    <h3>h3</h3>
+    <h4>h4</h4>
+    <div modal-footer>
+      <button type="button" class="btn btn-secondary" (click)="c('wtf');save()">Save</button>
+      <button type="button" class="btn btn-secondary" (click)="d('wtf')">Close</button>
+    </div>
+  </app-modal>
+</ng-template>
+
+<h1>{{closeResult}}</h1>
+
+<button class="btn btn-lg btn-outline-primary" (click)="open(content2)">modal without title</button>
+
 <dashboard-statistic></dashboard-statistic>
 
 <dashbhoard-managment></dashbhoard-managment>
 
 <dashboard-to-do></dashboard-to-do>
-
-<app-confirmation-modal></app-confirmation-modal>
-
-

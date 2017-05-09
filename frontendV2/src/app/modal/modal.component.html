@@ -1,0 +1,59 @@
+<div class="modal-header">
+  <div style="width:100%" class="modal-title">
+    <div #modalTitle>
+      <ng-content select="[modal-title]"></ng-content>
+    </div>
+    <div *ngIf="!isElementPresent(modalTitleElement)">
+      <ul class="nav justify-content-center">
+        <li class="nav-item"><div class="nav-link" style="height:1px;width: 100%;border:solid"></div></li>
+        <li *ngIf="isElementPresent(h1Element)" class="nav-item">         
+          <div [class]="currentStep===WizardStep.H1?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=WizardStep.H1">
+            <h4 class="wizard-header">h1</h4>
+            <i class="wizard-icon fa fa-plus fa-lg"></i>
+          </div>
+        </li>
+        <li *ngIf="isElementPresent(h2Element)" class="nav-item">
+          <div [class]="currentStep===WizardStep.H2?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=WizardStep.H2">
+            <h4 class="wizard-header">h2</h4>
+            <i class="wizard-icon fa fa-user fa-lg"></i>
+          </div>
+        </li>
+        <li *ngIf="isElementPresent(h3Element)" class="nav-item">
+          <div [class]="currentStep===WizardStep.H3?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=WizardStep.H3">
+            <h4 class="wizard-header">h3</h4>
+            <i class="wizard-icon fa fa-envelope fa-lg"></i>
+          </div>
+        </li>
+        <li *ngIf="isElementPresent(h4Element)" class="nav-item">
+          <div [class]="currentStep===WizardStep.H4?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=WizardStep.H4">
+            <h4 class="wizard-header">h4</h4>
+            <i class="wizard-icon fa fa-send fa-lg"></i>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <button type="button" class="close" aria-label="Close" (click)="fireDismissEvent('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+  <div #h1 [hidden]="currentStep!==WizardStep.H1">
+    <ng-content select="h1"></ng-content>
+  </div>
+  <div #h2 [hidden]="currentStep!==WizardStep.H2">
+    <ng-content select="h2"></ng-content>
+  </div>
+  <div #h3 [hidden]="currentStep!==WizardStep.H3">
+    <ng-content select="h3"></ng-content>
+  </div>
+  <div #h4 [hidden]="currentStep!==WizardStep.H4">
+    <ng-content select="h4"></ng-content>
+  </div>
+</div>
+<div class="modal-footer">
+  <div #modalFooter>
+    <ng-content select="[modal-footer]"></ng-content>
+  </div>
+</div>
+<hr>

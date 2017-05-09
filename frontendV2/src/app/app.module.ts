@@ -29,7 +29,7 @@ import { ManagmentComponent } from "./dashboard/managment/managment.component";
 import { StatisticComponent } from "./dashboard/statistic/statistic.component";
 import { ToDoComponent } from "./dashboard/to-do/to-do.component";
 import { ManagmentCardComponent } from "./dashboard/managment/managment-card.component";
-import { ConfirmationComponent } from "./modal/confirmation/confirmation/confirmation.component";
+import { ConfirmationComponent } from "./modal/modal.component";
 
 @NgModule({
   declarations: [
