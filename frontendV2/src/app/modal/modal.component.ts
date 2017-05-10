@@ -10,18 +10,18 @@ import { WizardStep } from "./wizard-step.enum";
 })
 export class ConfirmationComponent implements OnInit, AfterViewInit {
 
-  WizardStep = WizardStep;
-  currentStep: WizardStep = WizardStep.H1;
+  currentStep = 1;
 
   @Output() dismiss = new EventEmitter();
   @Output() close = new EventEmitter();
 
   @ViewChild("modalTitle") modalTitleElement: ElementRef;
   @ViewChild("modalFooter") modalFooterElement: ElementRef;
-  @ViewChild("h1") h1Element: ElementRef;
-  @ViewChild("h2") h2Element: ElementRef;
-  @ViewChild("h3") h3Element: ElementRef;
-  @ViewChild("h4") h4Element: ElementRef;
+  @ViewChild("wizardStep1Content") wizardStep1ContentElement: ElementRef;
+  @ViewChild("wizardStep2Content") wizardStep2ContentElement: ElementRef;
+  @ViewChild("wizardStep3Content") wizardStep3ContentElement: ElementRef;
+  @ViewChild("wizardStep4Content") wizardStep4ContentElement: ElementRef;
+  @ViewChild("wizardStep5Content") wizardStep5ContentElement: ElementRef;
 
   constructor() { }
 
@@ -46,7 +46,8 @@ export class ConfirmationComponent implements OnInit, AfterViewInit {
     this.close.emit(event);
   }
 
-  public isElementPresent(element: ElementRef): boolean {
+  public isElementPresent(elementName: string): boolean {
+    const element: ElementRef = this[elementName];
     if (element == null || element.nativeElement == null || element.nativeElement.children == null) { return false; }
     return element.nativeElement.children.length > 0;
   }

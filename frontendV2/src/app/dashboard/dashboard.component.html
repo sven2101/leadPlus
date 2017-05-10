@@ -20,9 +20,15 @@
 
 <ng-template #content2 let-c="close" let-d="dismiss">
   <app-modal (dismiss)="d($event)" (close)="c($event)">
-    <h1>h1</h1>
-    <h3>h3</h3>
-    <h4>h4</h4>
+    <p wizard-step-1-title>title 1</p>
+    <i wizard-step-1-icon class="fa fa-plus fa-lg"></i>
+    <h1 wizard-step-1-content>content 1</h1>
+    <p wizard-step-2-title>title 2</p>
+    <i wizard-step-2-icon class="fa fa-send fa-lg"></i>
+    <h1 wizard-step-2-content>content 2</h1>
+    <p wizard-step-4-title>title 4</p>
+    <i wizard-step-4-icon class="fa fa-user fa-lg"></i>
+    <h1 wizard-step-4-content>content 4</h1>
     <div modal-footer>
       <button type="button" class="btn btn-secondary" (click)="c('wtf');save()">Save</button>
       <button type="button" class="btn btn-secondary" (click)="d('wtf')">Close</button>

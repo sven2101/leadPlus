@@ -17,6 +17,8 @@ export class ProductComponent implements OnInit {
   public searchText = "";
   public productAmountLimit = 20;
 
+  public text = 1;
+
   constructor(private ProductService: ProductService, private Router: Router, private MessagingService: MessagingService) { }
 
   ngOnInit(): void {
@@ -40,8 +42,9 @@ export class ProductComponent implements OnInit {
   }
 
   public publish(): void {
-    let x = new User;
-    x.firstname = "coole Sache";
+    const x = new User;
+    x.id = this.text;
+    x.firstname = "coole Sache" + this.text;
     this.MessagingService.publish<TestMessage>(new TestMessage(x));
   }
 

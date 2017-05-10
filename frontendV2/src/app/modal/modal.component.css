@@ -27,4 +27,11 @@
 
 .wizard-header{
     margin-top: -30px;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.wizard-navigation-buttons{
+    margin-right:auto; 
+    margin-left:0;
 }

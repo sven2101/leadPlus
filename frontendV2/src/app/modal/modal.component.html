@@ -5,29 +5,54 @@
     </div>
     <div *ngIf="!isElementPresent(modalTitleElement)">
       <ul class="nav justify-content-center">
-        <li class="nav-item"><div class="nav-link" style="height:1px;width: 100%;border:solid"></div></li>
-        <li *ngIf="isElementPresent(h1Element)" class="nav-item">         
-          <div [class]="currentStep===WizardStep.H1?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=WizardStep.H1">
-            <h4 class="wizard-header">h1</h4>
-            <i class="wizard-icon fa fa-plus fa-lg"></i>
+        <li *ngIf="isElementPresent('wizardStep1ContentElement')" class="nav-item">
+          <div [class]="currentStep===1?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=1">
+            <div class="wizard-header">
+              <ng-content select="[wizard-step-1-title]"></ng-content>
+            </div>
+            <div class="wizard-icon">
+              <ng-content select="[wizard-step-1-icon]"></ng-content>
+            </div>
           </div>
         </li>
-        <li *ngIf="isElementPresent(h2Element)" class="nav-item">
-          <div [class]="currentStep===WizardStep.H2?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=WizardStep.H2">
-            <h4 class="wizard-header">h2</h4>
-            <i class="wizard-icon fa fa-user fa-lg"></i>
+        <li *ngIf="isElementPresent('wizardStep2ContentElement')" class="nav-item">
+          <div [class]="currentStep===2?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=2">
+            <div class="wizard-header">
+              <ng-content select="[wizard-step-2-title]"></ng-content>
+            </div>
+            <div class="wizard-icon">
+              <ng-content select="[wizard-step-2-icon]"></ng-content>
+            </div>
           </div>
         </li>
-        <li *ngIf="isElementPresent(h3Element)" class="nav-item">
-          <div [class]="currentStep===WizardStep.H3?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=WizardStep.H3">
-            <h4 class="wizard-header">h3</h4>
-            <i class="wizard-icon fa fa-envelope fa-lg"></i>
+        <li *ngIf="isElementPresent('wizardStep3ContentElement')" class="nav-item">
+          <div [class]="currentStep===3?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=3">
+            <div class="wizard-header">
+              <ng-content select="[wizard-step-3-title]"></ng-content>
+            </div>
+            <div class="wizard-icon">
+              <ng-content select="[wizard-step-3-icon]"></ng-content>
+            </div>
           </div>
         </li>
-        <li *ngIf="isElementPresent(h4Element)" class="nav-item">
-          <div [class]="currentStep===WizardStep.H4?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=WizardStep.H4">
-            <h4 class="wizard-header">h4</h4>
-            <i class="wizard-icon fa fa-send fa-lg"></i>
+        <li *ngIf="isElementPresent('wizardStep4ContentElement')" class="nav-item">
+          <div [class]="currentStep===4?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=4">
+            <div class="wizard-header">
+              <ng-content select="[wizard-step-4-title]"></ng-content>
+            </div>
+            <div class="wizard-icon">
+              <ng-content select="[wizard-step-4-icon]"></ng-content>
+            </div>
+          </div>
+        </li>
+        <li *ngIf="isElementPresent('wizardStep5ContentElement')" class="nav-item">
+          <div [class]="currentStep===5?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=5">
+            <div class="wizard-header">
+              <ng-content select="[wizard-step-5-title]"></ng-content>
+            </div>
+            <div class="wizard-icon">
+              <ng-content select="[wizard-step-5-icon]"></ng-content>
+            </div>
           </div>
         </li>
       </ul>
@@ -38,20 +63,27 @@
     </button>
 </div>
 <div class="modal-body">
-  <div #h1 [hidden]="currentStep!==WizardStep.H1">
-    <ng-content select="h1"></ng-content>
+  <div #wizardStep1Content [hidden]="currentStep!==1">
+    <ng-content select="[wizard-step-1-content]"></ng-content>
   </div>
-  <div #h2 [hidden]="currentStep!==WizardStep.H2">
-    <ng-content select="h2"></ng-content>
+  <div #wizardStep2Content [hidden]="currentStep!==2">
+    <ng-content select="[wizard-step-2-content]"></ng-content>
   </div>
-  <div #h3 [hidden]="currentStep!==WizardStep.H3">
-    <ng-content select="h3"></ng-content>
+  <div #wizardStep3Content [hidden]="currentStep!==3">
+    <ng-content select="[wizard-step-3-content]"></ng-content>
   </div>
-  <div #h4 [hidden]="currentStep!==WizardStep.H4">
-    <ng-content select="h4"></ng-content>
+  <div #wizardStep4Content [hidden]="currentStep!==4">
+    <ng-content select="[wizard-step-4-content]"></ng-content>
+  </div>
+  <div #wizardStep5Content [hidden]="currentStep!==5">
+    <ng-content select="[wizard-step-5-content]"></ng-content>
   </div>
 </div>
 <div class="modal-footer">
+  <div class="wizard-navigation-buttons">
+    <button type="button" class="btn btn-secondary" [disabled]="!isElementPresent('wizardStep'+(currentStep-1)+'ContentElement')" (click)="currentStep=currentStep-1">back</button>
+    <button type="button" class="btn btn-secondary" [disabled]="!isElementPresent('wizardStep'+(currentStep+1)+'ContentElement')" (click)="currentStep=currentStep+1">forth</button>
+  </div>
   <div #modalFooter>
     <ng-content select="[modal-footer]"></ng-content>
   </div>

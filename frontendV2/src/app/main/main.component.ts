@@ -1,16 +1,16 @@
 import { TestMessage } from "./../messaging/test-message";
 import { MessagingService } from "./../messaging/messaging.service";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ToasterService, ToasterConfig } from "angular2-toaster";
-import { Observable } from "rxjs/Rx";
+import { Observable, Subscription } from "rxjs/Rx";
 
 @Component({
   selector: "app-main",
   templateUrl: "./main.component.html"
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, OnDestroy {
 
-  userUpdatedSubscription;
+  userUpdatedSubscription: Subscription;
 
   public toasterconfig: ToasterConfig = new ToasterConfig({
     mouseoverTimerStop: true,
@@ -20,9 +20,14 @@ export class MainComponent implements OnInit {
   constructor(private ToasterService: ToasterService, private MessagingService: MessagingService) { }
 
   ngOnInit(): void {
-    this.userUpdatedSubscription = this.MessagingService.of(TestMessage).subscribe(message => {
-      alert(message.user.firstname);
-    });
+    this.userUpdatedSubscription = this.MessagingService.of(TestMessage)
+      .filter(message => Number(message.user.id) === 123)
+      .subscribe(message => {
+        alert(message.user.firstname);
+      });
   }
 
+  ngOnDestroy() {
+    this.userUpdatedSubscription.unsubscribe();
+  }
 }
