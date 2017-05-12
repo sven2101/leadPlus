@@ -10,6 +10,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from "@angula
 export class DashboardComponent implements OnInit, AfterViewInit {
 
   closeResult;
+  @ViewChild("#content2") content2: ElementRef;
 
   constructor(private modalService: NgbModal) { }
 

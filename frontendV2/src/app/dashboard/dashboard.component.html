@@ -4,19 +4,19 @@
 
 <ng-template #content let-c="close" let-d="dismiss">
   <app-modal (dismiss)="d($event)" (close)="c($event)">
-    <div modal-title>Modal title...</div>
-    <h1><strong>nice body</strong></h1>
-    <h3>nice body</h3>
+    <p wizard-step-1-title>Email</p>
+    <i wizard-step-1-icon class="fa fa-envelope"></i>
+    <div wizard-step-1-content>Email-content</div>
+    <i wizard-step-2-icon class="fa fa-envelope"></i>
+    <div wizard-step-2-content>Email-content</div>
+    <div wizard-step-3-content>Email-content</div>
     <div modal-footer>
-      <button type="button" class="btn btn-secondary" (click)="c('wtf');save()">Save</button>
-      <button type="button" class="btn btn-secondary" (click)="d('wtf')">Close</button>
+      <button type="button" class="btn btn-secondary btn-sm" (click)="d('wtf')">Close</button>
+      <button type="button" class="btn btn-success btn-sm" (click)="c('wtf');save()"><i class="fa fa-save"></i> Send</button>
     </div>
   </app-modal>
 </ng-template>
-
-<h1>{{closeResult}}</h1>
-
-<button class="btn btn-lg btn-outline-primary" (click)="open(content)">modal</button>
+<button class="btn btn-lg btn-outline-primary" (click)="open(content)">email modal</button>
 
 <ng-template #content2 let-c="close" let-d="dismiss">
   <app-modal (dismiss)="d($event)" (close)="c($event)">
@@ -26,19 +26,30 @@
     <p wizard-step-2-title>title 2</p>
     <i wizard-step-2-icon class="fa fa-send fa-lg"></i>
     <h1 wizard-step-2-content>content 2</h1>
+    <p wizard-step-3-title>title 3</p>
+    <i wizard-step-3-icon class="fa fa-user fa-lg"></i>
+    <h1 wizard-step-3-content>content 3</h1>
     <p wizard-step-4-title>title 4</p>
     <i wizard-step-4-icon class="fa fa-user fa-lg"></i>
     <h1 wizard-step-4-content>content 4</h1>
+    <p wizard-step-5-title>title 5</p>
+    <i wizard-step-5-icon class="fa fa-user fa-lg"></i>
+    <h1 wizard-step-5-content>content 5</h1>
     <div modal-footer>
-      <button type="button" class="btn btn-secondary" (click)="c('wtf');save()">Save</button>
-      <button type="button" class="btn btn-secondary" (click)="d('wtf')">Close</button>
+      <button type="button" class="btn btn-secondary btn-sm" (click)="d('wtf')">Close</button>
+      <button type="button" class="btn btn-success btn-sm" (click)="c('wtf');save()"><i class="fa fa-save"></i> Save</button>
     </div>
   </app-modal>
 </ng-template>
+<button class="btn btn-lg btn-outline-primary" (click)="open(content2)">full wizard</button>
 
-<h1>{{closeResult}}</h1>
-
-<button class="btn btn-lg btn-outline-primary" (click)="open(content2)">modal without title</button>
+<ng-template #content3 let-c="close" let-d="dismiss">
+  <app-modal (dismiss)="d($event)" (close)="c($event)">
+    <div modal-header>Modal title...</div>
+    <h1 wizard-step-1-content><strong>nice body</strong></h1>
+  </app-modal>
+</ng-template>
+<button class="btn btn-lg btn-outline-primary" (click)="open(content3)">basic modal</button>
 
 <dashboard-statistic></dashboard-statistic>
 

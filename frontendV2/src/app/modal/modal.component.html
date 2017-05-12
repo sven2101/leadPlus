@@ -1,9 +1,9 @@
 <div class="modal-header">
   <div style="width:100%" class="modal-title">
-    <div #modalTitle>
-      <ng-content select="[modal-title]"></ng-content>
+    <div #modalHeader>
+      <ng-content select="[modal-header]"></ng-content>
     </div>
-    <div *ngIf="!isElementPresent(modalTitleElement)">
+    <div *ngIf="!isElementPresent('modalHeaderElement')">
       <ul class="nav justify-content-center">
         <li *ngIf="isElementPresent('wizardStep1ContentElement')" class="nav-item">
           <div [class]="currentStep===1?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=1">
@@ -15,6 +15,7 @@
             </div>
           </div>
         </li>
+        <li *ngIf="isElementPresent('wizardStep2ContentElement')" class="nav-item wizard-step-seperator"></li>
         <li *ngIf="isElementPresent('wizardStep2ContentElement')" class="nav-item">
           <div [class]="currentStep===2?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=2">
             <div class="wizard-header">
@@ -25,6 +26,7 @@
             </div>
           </div>
         </li>
+        <li *ngIf="isElementPresent('wizardStep3ContentElement')" class="nav-item wizard-step-seperator"></li>
         <li *ngIf="isElementPresent('wizardStep3ContentElement')" class="nav-item">
           <div [class]="currentStep===3?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=3">
             <div class="wizard-header">
@@ -35,6 +37,7 @@
             </div>
           </div>
         </li>
+        <li *ngIf="isElementPresent('wizardStep4ContentElement')" class="nav-item wizard-step-seperator"></li>
         <li *ngIf="isElementPresent('wizardStep4ContentElement')" class="nav-item">
           <div [class]="currentStep===4?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=4">
             <div class="wizard-header">
@@ -45,6 +48,7 @@
             </div>
           </div>
         </li>
+        <li *ngIf="isElementPresent('wizardStep5ContentElement')" class="nav-item wizard-step-seperator"></li>
         <li *ngIf="isElementPresent('wizardStep5ContentElement')" class="nav-item">
           <div [class]="currentStep===5?'nav-link wizard-step-active':'nav-link wizard-step'" (click)="currentStep=5">
             <div class="wizard-header">
@@ -80,12 +84,17 @@
   </div>
 </div>
 <div class="modal-footer">
-  <div class="wizard-navigation-buttons">
-    <button type="button" class="btn btn-secondary" [disabled]="!isElementPresent('wizardStep'+(currentStep-1)+'ContentElement')" (click)="currentStep=currentStep-1">back</button>
-    <button type="button" class="btn btn-secondary" [disabled]="!isElementPresent('wizardStep'+(currentStep+1)+'ContentElement')" (click)="currentStep=currentStep+1">forth</button>
+  <div *ngIf="isElementPresent('wizardStep'+(currentStep-1)+'ContentElement')||isElementPresent('wizardStep'+(currentStep+1)+'ContentElement')" class="wizard-navigation-buttons">
+    <button type="button" class="btn btn-success btn-sm" [disabled]="!isElementPresent('wizardStep'+(currentStep-1)+'ContentElement')"
+      (click)="currentStep=currentStep-1"><i class="fa fa-arrow-left"></i> Back</button>
+    <button type="button" class="btn btn-success btn-sm" [disabled]="!isElementPresent('wizardStep'+(currentStep+1)+'ContentElement')"
+      (click)="currentStep=currentStep+1">Next <i class="fa fa-arrow-right"></i></button>
   </div>
   <div #modalFooter>
     <ng-content select="[modal-footer]"></ng-content>
   </div>
+  <div *ngIf="!isElementPresent('modalFooterElement')">
+    <button type="button" class="btn btn-secondary btn-sm" (click)="fireDismissEvent('Close Button')">Close</button>
+    <button type="button" class="btn btn-success btn-sm" (click)="fireCloseEvent('OK Button')">OK</button>
+  </div>
 </div>
-<hr>

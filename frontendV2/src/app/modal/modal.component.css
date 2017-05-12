@@ -4,6 +4,7 @@
     border-radius: 45px;
     border-color: #e0e0e0;
     margin: 30px;
+    margin-left: 0px;
     height: 45px;
     width: 45px;
 }
@@ -13,6 +14,7 @@
     border-radius: 45px;
     border-color: #1c84c6;
     margin: 30px;
+    margin-left: 0px;
     height: 45px;
     width: 45px;
 }
@@ -22,16 +24,27 @@
 }
 
 .wizard-icon{
-    margin-top: 15px;
+    text-align: center;
+    vertical-align: bottom;
 }
 
 .wizard-header{
     margin-top: -30px;
     white-space: nowrap;
     text-align: center;
+    width: 100px;
+    min-height: 19px;
+    margin-left: -43px;
 }
 
 .wizard-navigation-buttons{
     margin-right:auto; 
     margin-left:0;
+}
+
+.wizard-step-seperator{    
+    width: 100px;
+    border-top: solid 1px;
+    margin-top: 52px;
+    margin-left: -30px
 }

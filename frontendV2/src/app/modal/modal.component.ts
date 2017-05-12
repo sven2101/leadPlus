@@ -15,7 +15,7 @@ export class ConfirmationComponent implements OnInit, AfterViewInit {
   @Output() dismiss = new EventEmitter();
   @Output() close = new EventEmitter();
 
-  @ViewChild("modalTitle") modalTitleElement: ElementRef;
+  @ViewChild("modalHeader") modalHeaderElement: ElementRef;
   @ViewChild("modalFooter") modalFooterElement: ElementRef;
   @ViewChild("wizardStep1Content") wizardStep1ContentElement: ElementRef;
   @ViewChild("wizardStep2Content") wizardStep2ContentElement: ElementRef;
