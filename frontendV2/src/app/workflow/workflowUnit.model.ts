@@ -1,8 +1,7 @@
-import { Address } from "./address.model";
-import { Customer } from "./../customer/customer.model";
 import { OrderPosition } from "./../product/order-position.model";
-
-export class Sale {
+import { Customer } from "./../customer/customer.model";
+import { Address } from "./address.model";
+export class WorkflowUnit {
     id: number;
     orderPositions: Array<OrderPosition>;
     customer: Customer;
@@ -31,5 +30,6 @@ export class Sale {
         this.saleCost = 0;
         this.saleTurnover = 0;
         this.saleProfit = 0;
+        this.invoiceNumber = "";
     }
 }

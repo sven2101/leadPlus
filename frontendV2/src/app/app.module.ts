@@ -1,3 +1,5 @@
+import { AbstractModalContentDirective } from "./modal/abstract-modal-content.component";
+import { ModalModule } from "./modal/modal.module";
 import { DashboardService } from "./dashboard/dashboard.service";
 import { ProductService } from "./product/product.service";
 import { BrowserModule } from "@angular/platform-browser";
@@ -8,7 +10,7 @@ import { HttpModule } from "@angular/http";
 import { RouterModule } from "@angular/router";
 import { DragulaModule } from "ng2-dragula/ng2-dragula";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-
+import { ReactiveFormsModule } from "@angular/forms";
 
 import { appRoutes } from "./app.routes";
 import { SharedModule } from "./shared/shared.module";
@@ -29,7 +31,7 @@ import { ManagmentComponent } from "./dashboard/managment/managment.component";
 import { StatisticComponent } from "./dashboard/statistic/statistic.component";
 import { ToDoComponent } from "./dashboard/to-do/to-do.component";
 import { ManagmentCardComponent } from "./dashboard/managment/managment-card.component";
-import { ConfirmationComponent } from "./modal/modal.component";
+import { ModalComponent } from "./modal/modal.component";
 
 @NgModule({
   declarations: [
@@ -48,7 +50,8 @@ import { ConfirmationComponent } from "./modal/modal.component";
     StatisticComponent,
     ToDoComponent,
     ManagmentCardComponent,
-    ConfirmationComponent
+    AbstractModalContentDirective
+
   ],
   imports: [
     DragulaModule,
@@ -56,7 +59,9 @@ import { ConfirmationComponent } from "./modal/modal.component";
     RouterModule.forChild(appRoutes),
     SharedModule,
     FormsModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    ModalModule,
+    ReactiveFormsModule
   ],
   providers: [
     ProductService,

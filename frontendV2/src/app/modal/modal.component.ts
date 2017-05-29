@@ -1,6 +1,13 @@
+import { AbstractModalContentDirective } from "./abstract-modal-content.component";
+import { SaleWizardStepComponent } from "./wizard-step/sale-wizard-step/sale-wizard-step.component";
+import { FormGroup, FormBuilder } from "@angular/forms";
+import { ModalFormContent } from "./modal-form-content";
 import { element } from "protractor";
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Output, EventEmitter } from "@angular/core";
-import { WizardStep } from "./wizard-step.enum";
+import {
+  Component, OnInit, AfterContentInit, ViewContainerRef, ViewChildren,
+  AfterViewInit, ViewChild, ElementRef, Output, EventEmitter, ContentChildren, ContentChild, QueryList
+} from "@angular/core";
+
 
 
 @Component({
@@ -8,8 +15,9 @@ import { WizardStep } from "./wizard-step.enum";
   templateUrl: "./modal.component.html",
   styleUrls: ["./modal.component.css"]
 })
-export class ConfirmationComponent implements OnInit, AfterViewInit {
+export class ModalComponent implements OnInit, AfterViewInit, AfterContentInit, ModalFormContent {
 
+  formModel: FormGroup;
   currentStep = 1;
 
   @Output() dismiss = new EventEmitter();
@@ -17,25 +25,46 @@ export class ConfirmationComponent implements OnInit, AfterViewInit {
 
   @ViewChild("modalHeader") modalHeaderElement: ElementRef;
   @ViewChild("modalFooter") modalFooterElement: ElementRef;
-  @ViewChild("wizardStep1Content") wizardStep1ContentElement: ElementRef;
-  @ViewChild("wizardStep2Content") wizardStep2ContentElement: ElementRef;
-  @ViewChild("wizardStep3Content") wizardStep3ContentElement: ElementRef;
-  @ViewChild("wizardStep4Content") wizardStep4ContentElement: ElementRef;
-  @ViewChild("wizardStep5Content") wizardStep5ContentElement: ElementRef;
+  @ViewChild("modalFooterButtons") modalFooterButtonsElement: ElementRef;
+  @ViewChild("step1Content") step1ContentElement: ElementRef;
+  @ViewChild("step2Content") step2ContentElement: ElementRef;
+  @ViewChild("step3Content") step3ContentElement: ElementRef;
+  @ViewChild("step4Content") step4ContentElement: ElementRef;
+  @ViewChild("step5Content") step5ContentElement: ElementRef;
 
-  constructor() { }
+  @ContentChildren(AbstractModalContentDirective) contentChildren: QueryList<AbstractModalContentDirective>;
+  maxContentHeight = 0;
+
+  constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
+    this.formModel = this.formBuilder.group({
+    });
 
   }
   ngAfterViewInit() {
-    /*
-    console.log(this.h1Element.nativeElement);
-    console.log(this.h2Element.nativeElement);
-    console.log(this.h3Element.nativeElement);
-    console.log(this.modalTitleElement.nativeElement);
-    console.log(this.modalFooterElement.nativeElement);
-    */
+    // console.log("children", this.children);
+    this.getHtmlTagFromHtmlByTagNameRecursive(this.modalFooterButtonsElement.nativeElement, "BUTTON")
+      .filter(b => b.hasAttribute("submit-button"))
+      .map(b => b.disabled = true);
+  }
+
+  ngAfterContentInit(): void {
+    console.log("contentChildren", this.contentChildren);
+    [1, 2, 3, 4, 5]
+      .forEach(x => this.maxContentHeight = this["step" + x + "ContentElement"].nativeElement.offsetHeight > this.maxContentHeight ?
+        this["step" + x + "ContentElement"].nativeElement.offsetHeight :
+        this.maxContentHeight);
+    console.log("buttons", this.modalFooterButtonsElement.nativeElement);
+
+  }
+
+  private getHtmlTagFromHtmlByTagNameRecursive(html: any, tagName: string): Array<any> {
+    if (html == null) { return []; }
+    if (html.tagName === tagName) { return [html]; }
+    const children: Array<any> = Array.from(html.children);
+    if (children == null || children.length === 0) { return []; }
+    return children.reduce((array, child) => array.concat(this.getHtmlTagFromHtmlByTagNameRecursive(child, tagName)), []);
   }
 
   public fireDismissEvent(event) {
@@ -50,6 +79,18 @@ export class ConfirmationComponent implements OnInit, AfterViewInit {
     const element: ElementRef = this[elementName];
     if (element == null || element.nativeElement == null || element.nativeElement.children == null) { return false; }
     return element.nativeElement.children.length > 0;
+  }
+
+  public isChildFormValid(elementName: string): boolean {
+    if (!this.isElementPresent(elementName)) { return true; }
+
+  }
+
+  submitForm(): void {
+
+  }
+  isFormValid(): boolean {
+    return false;
   }
 
 }

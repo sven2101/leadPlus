@@ -1,5 +1,7 @@
+import { WorkflowUnit } from "./../workflow/workflowUnit.model";
+import { Process } from "./../process/process.model";
 import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
-import { ConfirmationComponent } from "./../modal/modal.component";
+import { ModalComponent } from "./../modal/modal.component";
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from "@angular/core";
 
 @Component({
@@ -11,11 +13,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   closeResult;
   @ViewChild("#content2") content2: ElementRef;
+  xyz = true;
+  process: Process;
 
   constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
-
+    this.process = new Process();
+    this.process.sale = new WorkflowUnit();
   }
 
   ngAfterViewInit() {

@@ -1,4 +1,4 @@
-export enum Status {
+export enum ProcessStatus {
     OPEN = <any>"OPEN",
     OFFER = <any>"OFFER",
     FOLLOWUP = <any>"FOLLOWUP",
