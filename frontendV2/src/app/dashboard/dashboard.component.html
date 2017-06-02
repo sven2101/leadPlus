@@ -12,6 +12,8 @@
     <sale-wizard-step [process]="process" step-2-content>Sale</sale-wizard-step>
     <div step-3-content>
       <h1 style="min-height:0px">dies ist ein test</h1>
+      <h1 style="min-height:0px">dies ist ein test</h1>
+      <h1 style="min-height:0px">dies ist ein test</h1>
     </div>
     <i step-3-icon class="fa fa-envelope"></i>
     <div modal-footer>
@@ -42,6 +44,7 @@
     <div modal-footer>
       <button type="button" class="btn btn-secondary btn-sm" (click)="d('wtf')">Close</button>
       <button type="button" submit-button class="btn btn-success btn-sm" (click)="c('wtf');save()"><i class="fa fa-save"></i> Save</button>
+      <button type="button" submit-button class="btn btn-success btn-sm" (click)="c('wtf');save()"><i class="fa fa-save"></i> Send</button>
     </div>
   </app-modal>
 </ng-template>
@@ -50,11 +53,16 @@
 <ng-template #content3 let-c="close" let-d="dismiss">
   <app-modal (dismiss)="d($event)" (close)="xyz.hidden=!xyz.hidden">
     <div modal-header>Modal title...</div>
+    <p step-1-title>Email</p>
+    <i step-1-icon class="fa fa-envelope"></i>
     <h1 step-1-content><strong>nice body</strong>
       <h2 #xyz>WOW</h2>
     </h1>
   </app-modal>
 </ng-template>
+
+
+
 <button class="btn btn-lg btn-outline-primary" (click)="open(content3)">basic modal</button>
 
 <dashboard-statistic></dashboard-statistic>

@@ -6,7 +6,8 @@
 				<label i18n>COMMON_PRODUCT_SALE_TURNOVER<span style="color:red">*</span></label>
 				<div *ngIf="formModel.get('saleTurnover').touched">
 					<span style="color:red" *ngIf="formModel.get('saleTurnover').hasError('required')" i18n>COMMON_VALIDATE_REQ</span>
-					<span style="color:red" *ngIf="formModel.get('saleTurnover').hasError('maxlength')" i18n>COMMON_VALIDATE_TOO_BIG</span>
+					<span style="color:red" *ngIf="formModel.get('saleTurnover').hasError('max')" i18n>COMMON_VALIDATE_TOO_BIG</span>
+					<span style="color:red" *ngIf="formModel.get('saleTurnover').hasError('min')" i18n>COMMON_VALIDATE_TOO_SMALL</span>
 				</div>
 				<div class="input-group">
 					<span class="input-group-addon" i18n>COMMON_CURRENCY</span>
@@ -31,10 +32,11 @@
 		<div class="col-sm-6 text-left">
 			<!-- SALE COST -->
 			<div class="form-group" ng-class="{ 'has-error' : formModel.controls.saleCost.$invalid && !formModel.controls.saleCost.$pristine }">
-				<label i18n>COMMON_PRODUCT_SALE_COST<span style="color:red">*</span></label>			
+				<label i18n>COMMON_PRODUCT_SALE_COST<span style="color:red">*</span></label>
 				<div *ngIf="formModel.get('saleCost').touched">
 					<span style="color:red" *ngIf="formModel.get('saleCost').hasError('required')" i18n>COMMON_VALIDATE_REQ</span>
-					<span style="color:red" *ngIf="formModel.get('saleCost').hasError('maxlength')" i18n>COMMON_VALIDATE_TOO_BIG</span>
+					<span style="color:red" *ngIf="formModel.get('saleCost').hasError('max')" i18n>COMMON_VALIDATE_TOO_BIG</span>
+					<span style="color:red" *ngIf="formModel.get('saleCost').hasError('min')" i18n>COMMON_VALIDATE_TOO_SMALL</span>
 				</div>
 				<div class="input-group">
 					<span class="input-group-addon" i18n>COMMON_CURRENCY</span>
@@ -48,10 +50,11 @@
 		<div class="col-sm-6 text-left">
 			<!-- SALE PROFIT -->
 			<div class="form-group" ng-class="{ 'has-error' : formModel.controls.saleProfit.$invalid && !formModel.controls.saleProfit.$pristine }">
-				<label i18n>COMMON_PRODUCT_SALE_PROFIT<span style="color:red">*</span></label>			
+				<label i18n>COMMON_PRODUCT_SALE_PROFIT<span style="color:red">*</span></label>
 				<div *ngIf="formModel.get('saleProfit').touched">
 					<span style="color:red" *ngIf="formModel.get('saleProfit').hasError('required')" i18n>COMMON_VALIDATE_REQ</span>
-					<span style="color:red" *ngIf="formModel.get('saleProfit').hasError('maxlength')" i18n>COMMON_VALIDATE_TOO_BIG</span>
+					<span style="color:red" *ngIf="formModel.get('saleProfit').hasError('max')" i18n>COMMON_VALIDATE_TOO_BIG</span>
+					<span style="color:red" *ngIf="formModel.get('saleProfit').hasError('min')" i18n>COMMON_VALIDATE_TOO_SMALL</span>
 				</div>
 				<div class="input-group">
 					<span class="input-group-addon" i18n>COMMON_CURRENCY</span>
@@ -60,4 +63,9 @@
 			</div>
 		</div>
 	</div>
+
 </form>
+{{formModel.status|json}}
+{{formModel.get('saleTurnover').hasError('min')|json}}
+{{formModel.get('saleTurnover').hasError('max')|json}}
+{{formModel.get('saleTurnover').hasError('required')|json}}

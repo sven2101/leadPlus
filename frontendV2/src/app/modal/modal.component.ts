@@ -43,19 +43,16 @@ export class ModalComponent implements OnInit, AfterViewInit, AfterContentInit, 
 
   }
   ngAfterViewInit() {
-    // console.log("children", this.children);
     this.getHtmlTagFromHtmlByTagNameRecursive(this.modalFooterButtonsElement.nativeElement, "BUTTON")
       .filter(b => b.hasAttribute("submit-button"))
       .map(b => b.disabled = true);
   }
 
   ngAfterContentInit(): void {
-    console.log("contentChildren", this.contentChildren);
     [1, 2, 3, 4, 5]
       .forEach(x => this.maxContentHeight = this["step" + x + "ContentElement"].nativeElement.offsetHeight > this.maxContentHeight ?
         this["step" + x + "ContentElement"].nativeElement.offsetHeight :
         this.maxContentHeight);
-    console.log("buttons", this.modalFooterButtonsElement.nativeElement);
 
   }
 

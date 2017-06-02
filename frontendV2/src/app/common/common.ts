@@ -25,5 +25,6 @@ export class Common {
         if (process.sale == null) { return process.offer; }
         return process.sale;
     }
+
 }
 
