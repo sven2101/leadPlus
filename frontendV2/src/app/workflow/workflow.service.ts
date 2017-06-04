@@ -12,7 +12,7 @@ export class WorkflowService {
   constructor(private HttpClient: HttpClient) { }
 
   getSaleByInvoiceNumber(invoiceNumber: string): Promise<Array<WorkflowUnit>> {
-    return this.HttpClient.post(SALE_BY_INVOICE_NUMBER, invoiceNumber);
+    return this.HttpClient.post(SALE_BY_INVOICE_NUMBER, { "invoiceNumber": invoiceNumber });
   }
 
 }

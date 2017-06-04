@@ -6,7 +6,7 @@ import { ModalComponent } from "./../../modal.component";
 import { Process } from "./../../../process/process.model";
 import { WorkflowUnit } from "./../../../workflow/workflowUnit.model";
 import { Component, OnInit, Input, forwardRef } from "@angular/core";
-import { FormBuilder, FormGroup, FormControl, Validators, AsyncValidatorFn, AbstractControl } from "@angular/forms";
+import { FormBuilder, FormGroup, FormControl, Validators, AsyncValidatorFn, AbstractControl, ValidationErrors } from "@angular/forms";
 import { ModalFormContent } from "../../modal-form-content";
 
 
@@ -20,6 +20,7 @@ export class SaleWizardStepComponent implements OnInit, ModalFormContent {
 
   formModel: FormGroup;
   editWorkflowUnit: WorkflowUnit;
+  private isInvoiceNumberAvailibleValidatorTimeout;
   @Input("process") process: Process;
 
   constructor(private formBuilder: FormBuilder, private WorkflowService: WorkflowService) { }
@@ -32,7 +33,7 @@ export class SaleWizardStepComponent implements OnInit, ModalFormContent {
     // console.log(this.process);
     this.formModel = this.formBuilder.group({
       saleTurnover: ["", [Validators.required, CommonValidators.min(0), CommonValidators.max(1000000000)]],
-      invoiceNumber: ["", [Validators.maxLength(255), this.createValidator()]],
+      invoiceNumber: ["", [Validators.maxLength(255), this.isInvoiceNumberAvailibleValidator.bind(this)]],
       saleCost: ["", [Validators.required, CommonValidators.max(1000000000), CommonValidators.min(0)]],
       saleProfit: [{ value: "", disabled: true }, [Validators.required, CommonValidators.max(1000000000), CommonValidators.min(0)]],
     });
@@ -46,25 +47,17 @@ export class SaleWizardStepComponent implements OnInit, ModalFormContent {
     return false;
   }
 
-  validateInvoiceNumberAvalibility(v: any): any {
-    console.log(v);
-
+  isInvoiceNumberAvailibleValidator(c: FormControl) {
+    clearTimeout(this.isInvoiceNumberAvailibleValidatorTimeout);
+    return new Promise((resolve, reject) => {
+      this.isInvoiceNumberAvailibleValidatorTimeout = setTimeout(() => {
+        this.WorkflowService.getSaleByInvoiceNumber(c.value)
+          .then(response => resolve(null))
+          .catch(error => resolve({ availability: true }));
+      }, 500);
+    });
   }
 
-  createValidator(): AsyncValidatorFn {
 
-    // This is used to signal streams to terminate.
-    const changed$ = new Subject<any>();
-
-    return (control: AbstractControl): Observable<{} | null> => {
-      changed$.next(); // This will signal the previous stream (if any) to terminate.
-      console.log(control);
-      return control.valueChanges
-        .takeUntil(changed$)
-        .take(1)
-        .debounceTime(1000)
-        .switchMap(value => this.validateInvoiceNumberAvalibility(value));
-    };
-  }
 
 }
