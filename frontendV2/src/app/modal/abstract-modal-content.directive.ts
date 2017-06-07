@@ -1,7 +1,4 @@
-
-import {Directive, Component, OnInit, Input, forwardRef } from "@angular/core";
-
-
+import {Directive} from "@angular/core";
 
 @Directive({
     selector: "abstract-modal-content"

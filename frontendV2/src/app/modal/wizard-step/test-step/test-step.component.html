@@ -1,0 +1,6 @@
+<form novalidate [formGroup]="formModel">
+  <input type="text" class="form-control" formControlName="testInput">
+</form>
+
+{{formModel.status}}
+{{formModel.get('testInput').errors|json}}

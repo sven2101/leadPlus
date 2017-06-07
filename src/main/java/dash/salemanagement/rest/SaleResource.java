@@ -15,7 +15,9 @@
 package dash.salemanagement.rest;
 
 import java.util.List;
+import java.util.Map;
 
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -74,8 +76,15 @@ public class SaleResource {
 	@ApiOperation(value = "Return sale by invoice.", notes = "")
 	@RequestMapping(value = "/invoice", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
-	public List<Sale> getByInvoiceNumber(@RequestBody final String invoiceNumber) {
+	public List<Sale> getByInvoice(@RequestBody final String invoiceNumber) {
 		return saleService.getByInvoiceNumber(invoiceNumber);
+	}
+
+	@ApiOperation(value = "Return sale by a JSON invoice Nmber.", notes = "")
+	@RequestMapping(value = "/invoiceNumber", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseStatus(HttpStatus.OK)
+	public List<Sale> getByInvoiceNumber(@RequestBody final Map<String, String> invoiceNumber) throws JSONException {
+		return saleService.getByInvoiceNumber(invoiceNumber.get("invoiceNumber"));
 	}
 
 }

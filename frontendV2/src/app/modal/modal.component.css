@@ -8,6 +8,7 @@
     height: 45px;
     width: 45px;
 }
+
 .step-active{
     border-style: solid;
     border-width: 2px;
@@ -17,6 +18,23 @@
     margin-left: 0px;
     height: 45px;
     width: 45px;
+}
+
+.step-invalid{
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 45px;
+    border-color: red; 
+    margin: 30px;
+    margin-left: 0px;
+    height: 45px;
+    width: 45px;
+}
+.step-invalid>.step-icon{
+    color: red;
+    text-align: center;
+    vertical-align: bottom;
+    margin-top: 3px;
 }
 
 .step:hover{

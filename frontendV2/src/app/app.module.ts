@@ -1,5 +1,5 @@
 import { WorkflowService } from "./workflow/workflow.service";
-import { AbstractModalContentDirective } from "./modal/abstract-modal-content.component";
+import { AbstractModalContentDirective } from "./modal/abstract-modal-content.directive";
 import { ModalModule } from "./modal/modal.module";
 import { DashboardService } from "./dashboard/dashboard.service";
 import { ProductService } from "./product/product.service";

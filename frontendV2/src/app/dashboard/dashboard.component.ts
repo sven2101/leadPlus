@@ -36,7 +36,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
   }
   save() {
-    alert("save");
+    console.log("save");
+  }
+
+  send() {
+    console.log("send");
   }
 
 

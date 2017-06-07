@@ -4,7 +4,7 @@
 			<!-- SALE TURNOVER -->
 			<div class="form-group" ng-class="{ 'has-error' : formModel.controls.saleTurnover.$invalid && !formModel.controls.saleTurnover.$pristine }">
 				<label i18n>COMMON_PRODUCT_SALE_TURNOVER<span style="color:red">*</span></label>
-				<div *ngIf="formModel.get('saleTurnover').touched">
+				<div *ngIf="formModel.get('saleTurnover').dirty">
 					<span style="color:red" *ngIf="formModel.get('saleTurnover').hasError('required')" i18n>COMMON_VALIDATE_REQ</span>
 					<span style="color:red" *ngIf="formModel.get('saleTurnover').hasError('max')" i18n>COMMON_VALIDATE_TOO_BIG</span>
 					<span style="color:red" *ngIf="formModel.get('saleTurnover').hasError('min')" i18n>COMMON_VALIDATE_TOO_SMALL</span>
@@ -20,11 +20,12 @@
 			<!-- SALE INVOICE NUMBER -->
 			<div class="form-group" ng-class="{ 'has-error' : formModel.controls.saleInvoiceNumber.$invalid }">
 				<label i18n>COMMON_PRODUCT_SALE_INVOICE_NUMBER</label>
-				<div *ngIf="formModel.get('invoiceNumber').touched">
-					<span style="color:#FFCC00" *ngIf="invoiceNumberAlreadyExists" i18n>COMMON_VALIDATE_INVOICE_NUMBER_ALREADY_EXISTS</span>
+				<span style="color:#FFCC00" *ngIf="invoiceNumberAlreadyExists" i18n>COMMON_VALIDATE_INVOICE_NUMBER_ALREADY_EXISTS</span>
+				<div *ngIf="formModel.get('invoiceNumber').dirty">					
 					<span style="color:red" *ngIf="formModel.get('invoiceNumber').hasError('maxlength')" i18n>COMMON_VALIDATE_TOO_BIG</span>
 				</div>
-				<input type="text" class="form-control" formControlName="invoiceNumber">
+				<input type="text" class="form-control" #invoiceNumberInput (keyup)="isInvoiceNumberAvailible(invoiceNumberInput.value)"
+				 formControlName="invoiceNumber">
 			</div>
 		</div>
 	</div>
@@ -33,7 +34,7 @@
 			<!-- SALE COST -->
 			<div class="form-group" ng-class="{ 'has-error' : formModel.controls.saleCost.$invalid && !formModel.controls.saleCost.$pristine }">
 				<label i18n>COMMON_PRODUCT_SALE_COST<span style="color:red">*</span></label>
-				<div *ngIf="formModel.get('saleCost').touched">
+				<div *ngIf="formModel.get('saleCost').dirty">
 					<span style="color:red" *ngIf="formModel.get('saleCost').hasError('required')" i18n>COMMON_VALIDATE_REQ</span>
 					<span style="color:red" *ngIf="formModel.get('saleCost').hasError('max')" i18n>COMMON_VALIDATE_TOO_BIG</span>
 					<span style="color:red" *ngIf="formModel.get('saleCost').hasError('min')" i18n>COMMON_VALIDATE_TOO_SMALL</span>
@@ -51,7 +52,7 @@
 			<!-- SALE PROFIT -->
 			<div class="form-group" ng-class="{ 'has-error' : formModel.controls.saleProfit.$invalid && !formModel.controls.saleProfit.$pristine }">
 				<label i18n>COMMON_PRODUCT_SALE_PROFIT<span style="color:red">*</span></label>
-				<div *ngIf="formModel.get('saleProfit').touched">
+				<div *ngIf="formModel.get('saleProfit').dirty">
 					<span style="color:red" *ngIf="formModel.get('saleProfit').hasError('required')" i18n>COMMON_VALIDATE_REQ</span>
 					<span style="color:red" *ngIf="formModel.get('saleProfit').hasError('max')" i18n>COMMON_VALIDATE_TOO_BIG</span>
 					<span style="color:red" *ngIf="formModel.get('saleProfit').hasError('min')" i18n>COMMON_VALIDATE_TOO_SMALL</span>
@@ -65,7 +66,4 @@
 	</div>
 
 </form>
-{{formModel.status|json}}
-{{formModel.get('saleTurnover').hasError('min')|json}}
-{{formModel.get('saleTurnover').hasError('max')|json}}
-{{formModel.get('saleTurnover').hasError('required')|json}}
+{{formModel.status|json}} {{formModel.errors}}

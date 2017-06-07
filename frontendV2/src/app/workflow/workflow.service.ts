@@ -2,7 +2,7 @@ import { WorkflowUnit } from "./workflowUnit.model";
 import { HttpClient } from "./../common/http-client";
 import { Injectable } from "@angular/core";
 
-const SALE_BY_INVOICE_NUMBER = "/api/rest/sales/invoice";
+const SALE_BY_INVOICE_NUMBER = "/api/rest/sales/invoiceNumber";
 
 @Injectable()
 export class WorkflowService {
