@@ -55,6 +55,8 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 
 	List<Process> findByStatusAndSaleIsNotNull(Status status);
 
+	Page<Process> findByStatus(Status status, Pageable pageable);
+
 	Integer countByStatusAndSaleIsNotNull(Status status);
 
 	Page<Process> findBySaleIsNotNull(Pageable pageable);

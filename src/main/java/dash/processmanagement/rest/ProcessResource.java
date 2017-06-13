@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,6 +44,7 @@ import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.business.IProcessService;
 import dash.processmanagement.business.ProcessRepository;
+import dash.processmanagement.business.newProcessService;
 import dash.processmanagement.domain.Process;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
@@ -60,6 +62,9 @@ public class ProcessResource {
 
 	@Autowired
 	private IProcessService processService;
+
+	@Autowired
+	private newProcessService newProcessService;
 
 	@Autowired
 	private ProcessRepository processRepository;
@@ -204,34 +209,42 @@ public class ProcessResource {
 				page.getContent());
 	}
 
-	@ApiOperation(value = "Returns a list of leads.", notes = "")
-	@RequestMapping(value = "/leads/page", method = RequestMethod.GET)
+	@ApiOperation(value = "Returns a page of processes where lead is not null.", notes = "")
+	@RequestMapping(value = "pagination/leads", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Page<Process> getAllProcessesWithLeadNotNullPage(@RequestParam JSONObject pageRequest) {
-		return processRepository
-				.findByLeadIsNotNull(new PageRequest(pageRequest.optInt("page", 1), pageRequest.optInt("size", 10),
-						pageRequest.optString("direction", "asc") == "asc" ? Sort.Direction.ASC : Sort.Direction.DESC,
-						pageRequest.optString("properties", "lead.timestamp")));
+	public Page<Process> getAllProcessesWithLeadNotNullPage(@RequestBody String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesWithLeadNotNullPage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+
 	}
 
-	@ApiOperation(value = "Returns a list of leads.", notes = "")
-	@RequestMapping(value = "/offers/page", method = RequestMethod.GET)
+	@ApiOperation(value = "Returns a page of processes where offer is not null.", notes = "")
+	@RequestMapping(value = "pagination/offers", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Page<Process> getAllProcessesWithOfferNotNullPage(@RequestParam JSONObject pageRequest) {
-		return processRepository
-				.findByLeadIsNotNull(new PageRequest(pageRequest.optInt("page", 1), pageRequest.optInt("size", 10),
-						pageRequest.optString("direction", "asc") == "asc" ? Sort.Direction.ASC : Sort.Direction.DESC,
-						pageRequest.optString("properties", "lead.timestamp")));
+	public Page<Process> getAllProcessesWithOfferNotNullPage(@RequestBody String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesWithOfferNotNullPage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
 	}
 
-	@ApiOperation(value = "Returns a list of leads.", notes = "")
-	@RequestMapping(value = "/sales/page", method = RequestMethod.GET)
+	@ApiOperation(value = "Returns a page of processes where sale is not null.", notes = "")
+	@RequestMapping(value = "pagination/sales", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Page<Process> getAllProcessesWithSaleNotNullPage(@RequestParam JSONObject pageRequest) {
-		return processRepository
-				.findByLeadIsNotNull(new PageRequest(pageRequest.optInt("page", 1), pageRequest.optInt("size", 10),
-						pageRequest.optString("direction", "asc") == "asc" ? Sort.Direction.ASC : Sort.Direction.DESC,
-						pageRequest.optString("properties", "lead.timestamp")));
+	public Page<Process> getAllProcessesWithSaleNotNullPage(@RequestBody String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesWithSaleNotNullPage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+	}
+
+	@ApiOperation(value = "Returns a page of processes by Status.", notes = "")
+	@RequestMapping(value = "pagination/{status}", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesByStatus(@PathVariable final Status status, @RequestBody final String body)
+			throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesByStatusPage(status, pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
 	}
 
 	@ApiOperation(value = "Return a single lead.", notes = "")

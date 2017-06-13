@@ -1,3 +1,4 @@
+import { ProcessService } from "./process/process.service";
 import { WorkflowService } from "./workflow/workflow.service";
 import { AbstractModalContentDirective } from "./modal/abstract-modal-content.directive";
 import { ModalModule } from "./modal/modal.module";
@@ -67,7 +68,8 @@ import { ModalComponent } from "./modal/modal.component";
   providers: [
     ProductService,
     DashboardService,
-    WorkflowService
+    WorkflowService,
+    ProcessService
   ]
 })
 export class AppModule { }
