@@ -37,6 +37,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import dash.commentmanagement.domain.Comment;
 import dash.leadmanagement.domain.Lead;
 import dash.notificationmanagement.domain.Notification;
@@ -80,6 +82,7 @@ public class Process {
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
 	@Where(clause = "deleted <> '1'")
+	@JsonManagedReference("process-comments")
 	private Set<Comment> comments;
 
 	@Enumerated(EnumType.STRING)
@@ -94,6 +97,7 @@ public class Process {
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
 	@Where(clause = "deleted <> '1'")
+	@JsonManagedReference("process-notifications")
 	private Set<Notification> notifications;
 
 	@ManyToOne
@@ -103,6 +107,7 @@ public class Process {
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
 	@Where(clause = "deleted <> '1'")
+	@JsonManagedReference("process-formerProcessors")
 	private Set<Processor> formerProcessors;
 
 	public Process(Lead lead) {

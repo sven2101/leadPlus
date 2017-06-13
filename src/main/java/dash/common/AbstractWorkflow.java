@@ -27,6 +27,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import dash.addressmanagement.domain.Address;
 import dash.customermanagement.domain.Customer;
@@ -68,6 +69,7 @@ public abstract class AbstractWorkflow implements Request {
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "workflow", fetch = FetchType.LAZY)
 	@Where(clause = "deleted <> '1'")
+	@JsonManagedReference("orderPositions-abstractWorkflow")
 	private List<OrderPosition> orderPositions;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss:SSS")

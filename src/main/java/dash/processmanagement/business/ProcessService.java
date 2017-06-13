@@ -44,7 +44,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import dash.commentmanagement.domain.Comment;
 import dash.common.AbstractWorkflow;
 import dash.customermanagement.business.CustomerService;
 import dash.customermanagement.domain.Customer;
@@ -54,14 +53,10 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.business.ILeadService;
 import dash.leadmanagement.domain.Lead;
-import dash.notificationmanagement.domain.Attachment;
-import dash.notificationmanagement.domain.Notification;
 import dash.offermanagement.business.IOfferService;
 import dash.offermanagement.business.OfferService;
 import dash.offermanagement.domain.Offer;
 import dash.processmanagement.domain.Process;
-import dash.processmanagement.domain.Processor;
-import dash.productmanagement.domain.OrderPosition;
 import dash.salemanagement.business.ISaleService;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
@@ -116,8 +111,7 @@ public class ProcessService implements IProcessService {
 	@Override
 	public void saveProcesses(List<Process> processes) throws SaveFailedException {
 		for (Process process : processes) {
-			setOrderPositions(process);
-			setNotifications(process);
+
 			if (Optional.ofNullable(process.getLead()).isPresent())
 				leadService.save(process.getLead());
 			if (Optional.ofNullable(process.getOffer()).isPresent())
@@ -140,9 +134,7 @@ public class ProcessService implements IProcessService {
 	@Override
 	public Process save(final Process process) throws SaveFailedException {
 		if (Optional.ofNullable(process).isPresent()) {
-			setOrderPositions(process);
-			setNotifications(process);
-			setComments(process);
+
 			return processRepository.save(process);
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
@@ -292,54 +284,6 @@ public class ProcessService implements IProcessService {
 			throw ufex;
 		}
 
-	}
-
-	private void setOrderPositions(Process process) {
-		if (process == null) {
-			return;
-		}
-		if (process.getLead() != null) {
-			for (OrderPosition temp : process.getLead().getOrderPositions()) {
-				temp.setWorkflow(process.getLead());
-			}
-		}
-		if (process.getOffer() != null) {
-			for (OrderPosition temp : process.getOffer().getOrderPositions()) {
-				temp.setWorkflow(process.getOffer());
-			}
-		}
-		if (process.getSale() != null) {
-			for (OrderPosition temp : process.getSale().getOrderPositions()) {
-				temp.setWorkflow(process.getSale());
-			}
-		}
-		if (process.getFormerProcessors() != null) {
-			for (Processor temp : process.getFormerProcessors()) {
-				temp.setProcess(process);
-			}
-		}
-	}
-
-	private void setNotifications(Process process) {
-		if (process.getNotifications() != null) {
-			for (Notification notification : process.getNotifications()) {
-				if (process.getNotifications() != null) {
-					for (Attachment attachment : notification.getAttachments()) {
-						attachment.setNotification(notification);
-					}
-				}
-				notification.setProcess(process);
-			}
-		}
-
-	}
-
-	private void setComments(Process process) {
-		if (process.getComments() != null) {
-			for (Comment comment : process.getComments()) {
-				comment.setProcess(process);
-			}
-		}
 	}
 
 	@Override

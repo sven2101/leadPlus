@@ -38,8 +38,9 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import dash.common.HtmlCleaner;
 import dash.processmanagement.domain.Process;
@@ -97,11 +98,12 @@ public class Notification {
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "notification")
 	@Where(clause = "deleted <> '1'")
+	@JsonManagedReference("notification-attachments")
 	private Set<Attachment> attachments;
 
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "process_fk", nullable = false)
+	@JsonBackReference("process-notifications")
 	private Process process;
 
 	@Enumerated(EnumType.STRING)

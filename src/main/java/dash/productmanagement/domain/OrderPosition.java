@@ -29,7 +29,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import dash.common.AbstractWorkflow;
 import io.swagger.annotations.ApiModel;
@@ -59,10 +59,10 @@ public class OrderPosition {
 	// @Where(clause = "deleted <> '1'")
 	private Product product;
 
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "workflow_fk", nullable = false)
 	@Where(clause = "deleted <> '1'")
+	@JsonBackReference("orderPositions-abstractWorkflow")
 	private AbstractWorkflow workflow;
 
 	@NotNull
