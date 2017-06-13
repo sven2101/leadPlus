@@ -1,7 +1,7 @@
 export enum Activity {
-    OPEN = <any>"OPEN",
-    OFFER = <any>"OFFER",
-    SALE = <any>"SALE",
-    INCONTACT = <any>"INCONTACT",
-    DONE = <any>"DONE",
+    OPEN = "OPEN",
+    OFFER = "OFFER",
+    SALE = "SALE",
+    INCONTACT = "INCONTACT",
+    DONE = "DONE",
 }

@@ -1,9 +1,9 @@
 export enum ProcessStatus {
-    OPEN = <any>"OPEN",
-    OFFER = <any>"OFFER",
-    FOLLOWUP = <any>"FOLLOWUP",
-    DONE = <any>"DONE",
-    SALE = <any>"SALE",
-    CLOSED = <any>"CLOSED",
-    INCONTACT = <any>"INCONTACT"
+    OPEN = "OPEN",
+    OFFER = "OFFER",
+    FOLLOWUP = "FOLLOWUP",
+    DONE = "DONE",
+    SALE = "SALE",
+    CLOSED = "CLOSED",
+    INCONTACT = "INCONTACT"
 }
