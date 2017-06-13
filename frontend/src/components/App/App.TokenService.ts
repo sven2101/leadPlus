@@ -181,7 +181,7 @@ class TokenService {
         }
         // console.log(this.$location.path());
         if (fullPageReload === true) {
-            window.open("https://" + this.$location.host() + port + "/", "_self");
+            window.open("http://" + this.$location.host() + port + "/", "_self");
         } else if (fullPageReload === false) {
             this.$location.path("/login");
         }
