@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -201,6 +202,36 @@ public class ProcessResource {
 		}
 		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),
 				page.getContent());
+	}
+
+	@ApiOperation(value = "Returns a list of leads.", notes = "")
+	@RequestMapping(value = "/leads/page", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesWithLeadNotNullPage(@RequestParam JSONObject pageRequest) {
+		return processRepository
+				.findByLeadIsNotNull(new PageRequest(pageRequest.optInt("page", 1), pageRequest.optInt("size", 10),
+						pageRequest.optString("direction", "asc") == "asc" ? Sort.Direction.ASC : Sort.Direction.DESC,
+						pageRequest.optString("properties", "lead.timestamp")));
+	}
+
+	@ApiOperation(value = "Returns a list of leads.", notes = "")
+	@RequestMapping(value = "/offers/page", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesWithOfferNotNullPage(@RequestParam JSONObject pageRequest) {
+		return processRepository
+				.findByLeadIsNotNull(new PageRequest(pageRequest.optInt("page", 1), pageRequest.optInt("size", 10),
+						pageRequest.optString("direction", "asc") == "asc" ? Sort.Direction.ASC : Sort.Direction.DESC,
+						pageRequest.optString("properties", "lead.timestamp")));
+	}
+
+	@ApiOperation(value = "Returns a list of leads.", notes = "")
+	@RequestMapping(value = "/sales/page", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesWithSaleNotNullPage(@RequestParam JSONObject pageRequest) {
+		return processRepository
+				.findByLeadIsNotNull(new PageRequest(pageRequest.optInt("page", 1), pageRequest.optInt("size", 10),
+						pageRequest.optString("direction", "asc") == "asc" ? Sort.Direction.ASC : Sort.Direction.DESC,
+						pageRequest.optString("properties", "lead.timestamp")));
 	}
 
 	@ApiOperation(value = "Return a single lead.", notes = "")
