@@ -24,7 +24,7 @@ export class SaleStepComponent implements OnInit, AbstractModalFormContent {
   @Input("process") process: Process;
   formModel: FormGroup;
   private isInvoiceNumberAvailibleValidatorTimeout;
-  private invoiceNumberAlreadyExists;
+  public invoiceNumberAlreadyExists;
   constructor(private formBuilder: FormBuilder, private WorkflowService: WorkflowService) { }
 
   ngOnInit() {

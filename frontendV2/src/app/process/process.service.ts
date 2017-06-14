@@ -37,6 +37,7 @@ export class ProcessService {
     const key = "getAllProcessesWithLeadNotNullPage";
     const resultFromCache = this.evaluateCache(key, pageNumber, pageSize, sortDirection, sortProperties);
     if (resultFromCache != null && fromCache === true) {
+      console.log("fromCache", fromCache);
       return resultFromCache;
     }
     this.processCache[key].pages[pageNumber] = await this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_WITH_LEAD_NOT_NULL_PAGE_URL,
@@ -49,6 +50,7 @@ export class ProcessService {
     const key = "getAllProcessesWithOfferNotNullPage";
     const resultFromCache = this.evaluateCache(key, pageNumber, pageSize, sortDirection, sortProperties);
     if (resultFromCache != null && fromCache === true) {
+      console.log("fromCache", fromCache);
       return resultFromCache;
     }
     this.processCache[key].pages[pageNumber] = await this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_WITH_OFFER_NOT_NULL_PAGE_URL,
@@ -61,6 +63,7 @@ export class ProcessService {
     const key = "getAllProcessesWithSaleNotNullPage";
     const resultFromCache = this.evaluateCache(key, pageNumber, pageSize, sortDirection, sortProperties);
     if (resultFromCache != null && fromCache === true) {
+      console.log("fromCache", fromCache);
       return resultFromCache;
     }
     this.processCache[key].pages[pageNumber] = await this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_BY_STATUS_PAGE_URL,
@@ -70,10 +73,11 @@ export class ProcessService {
   }
 
   public async getAllProcessesByStatusPage(status: ProcessStatus, pageNumber: number = 0, pageSize: number = 10, sortDirection: SortDirection = null
-    , sortProperties: string = null, fromCache: boolean = false): Promise<Page<Process>> {
+    , sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
     const key = "getAllProcessesByStatusPage" + status;
     const resultFromCache = this.evaluateCache(key, pageNumber, pageSize, sortDirection, sortProperties);
     if (resultFromCache != null && fromCache === true) {
+      console.log("fromCache ", fromCache);
       return resultFromCache;
     }
     this.processCache[key].pages[pageNumber] =

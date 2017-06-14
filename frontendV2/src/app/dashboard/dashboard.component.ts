@@ -1,6 +1,7 @@
 import { DashboardService } from "./dashboard.service";
 import { WorkflowUnit } from "./../workflow/workflowUnit.model";
 import { Process } from "./../process/process.model";
+import { ProcessStatus } from "./../process/process-status.enum";
 import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
 import { ModalComponent } from "./../modal/modal.component";
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from "@angular/core";
@@ -17,17 +18,18 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   xyz = true;
   process: Process;
 
-  constructor(private modalService: NgbModal, private dashboardService: DashboardService) { }
+  constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.process = new Process();
     this.process.sale = new WorkflowUnit();
-    console.log(this.dashboardService);
   }
 
   ngAfterViewInit() {
 
   }
+
+
 
   async open(content: ElementRef): Promise<void> {
     try {

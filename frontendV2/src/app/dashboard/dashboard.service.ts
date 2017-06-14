@@ -1,3 +1,5 @@
+import { Page } from "./../common/page.interface";
+import { Process } from "./../process/process.model";
 import { ProcessService } from "./../process/process.service";
 import { Injectable } from "@angular/core";
 import { ProcessStatus } from "../process/process-status.enum";
@@ -19,43 +21,12 @@ export class DashboardService {
   closedSalesValue;
 
   constructor(private processService: ProcessService) {
-    this.xyz();
+
   }
 
-  async xyz() {
-
-    await this.processService.getAllProcessesWithLeadNotNullPage(0, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(1, 10, SortDirection.DESC, "id", true);
-
-    await this.processService.getAllProcessesWithLeadNotNullPage(0, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(1, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(0, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(1, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(0, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(1, 10, SortDirection.DESC, "id", true);
-
-    await this.processService.getAllProcessesWithLeadNotNullPage(1, 10, SortDirection.ASC, "id", true);
-
-    await this.processService.getAllProcessesWithLeadNotNullPage(0, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(1, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(0, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(1, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(0, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(1, 10, SortDirection.DESC, "id", true);
-
-    await this.processService.getAllProcessesWithLeadNotNullPage(1, 10, SortDirection.ASC, "lead.timestamp", true);
-
-    await this.processService.getAllProcessesWithLeadNotNullPage(0, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(1, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(0, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(1, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(0, 10, SortDirection.DESC, "id", true);
-    await this.processService.getAllProcessesWithLeadNotNullPage(1, 10, SortDirection.DESC, "id", true);
-
-    setInterval(async () => {
-      await this.processService.getAllProcessesWithLeadNotNullPage(0, 10, SortDirection.DESC, "id", true);
-    }, 1000 * 5);
-
+  public async getProcessesByStatus(status: ProcessStatus): Promise<Array<Process>> {
+    const page = await this.processService.getAllProcessesByStatusPage(status, 0, 10);
+    return page.content;
   }
 
 

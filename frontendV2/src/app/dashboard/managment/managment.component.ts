@@ -1,4 +1,5 @@
 import { Process } from "./../../process/process.model";
+import { ProcessStatus } from "./../../process/process-status.enum";
 import { DashboardService } from "./../dashboard.service";
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { DragulaService } from "ng2-dragula/components/dragula.provider";
@@ -12,22 +13,44 @@ import { Activity } from "../../process/activity.enum";
 })
 export class ManagmentComponent implements OnInit, OnDestroy {
 
-  trashBucket = [];
+  openLeads: any = [];
+  leadsInContact: any = [];
+  offers: any = [];
+  doneOffers: any = [];
+  sales: any = [];
+  trashBucket: any = [];
 
   Activity = Activity;
+  ProcessStatus = ProcessStatus;
 
-  constructor(public DashboardService: DashboardService, private DragulaService: DragulaService) { }
+  constructor(public dashboardService: DashboardService, private dragulaService: DragulaService) { }
 
   ngOnInit() {
     this.setDragulaOptions();
+    this.initProcesses();
+
   }
 
   ngOnDestroy() {
-    this.DragulaService.destroy("bucket");
+    this.dragulaService.destroy("bucket");
   }
 
+  private async initProcesses(): Promise<void> {
+    const openLeadsPromise = this.dashboardService.getProcessesByStatus(ProcessStatus.OPEN);
+    const leadsInContactPromise = this.dashboardService.getProcessesByStatus(ProcessStatus.INCONTACT);
+    const offersPromise = this.dashboardService.getProcessesByStatus(ProcessStatus.OFFER);
+    const doneOffersPromise = this.dashboardService.getProcessesByStatus(ProcessStatus.DONE);
+    const salesPromise = this.dashboardService.getProcessesByStatus(ProcessStatus.SALE);
+    this.openLeads = await openLeadsPromise;
+    this.leadsInContact = await leadsInContactPromise;
+    this.offers = await offersPromise;
+    this.doneOffers = await doneOffersPromise;
+    this.sales = await salesPromise;
+  }
+
+
   private setDragulaOptions(): void {
-    this.DragulaService.setOptions("bucket", {
+    this.dragulaService.setOptions("bucket", {
       accepts: (el, target, source, sibling) => {
         return this.acceptsElement(source.id, target.id);
       },
@@ -35,7 +58,7 @@ export class ManagmentComponent implements OnInit, OnDestroy {
         return source.id !== Activity.SALE;
       }
     });
-    this.DragulaService.dropModel.subscribe((value) => {
+    this.dragulaService.dropModel.subscribe((value) => {
       this.onDropModel(value.slice(1));
     });
   }
@@ -67,22 +90,22 @@ export class ManagmentComponent implements OnInit, OnDestroy {
   }
 
   private async setInContact(el: HTMLElement): Promise<void> {
-    const process = this.DashboardService.leadsInContact.filter(p => p.id === Number(el.id))[0];
+    const process = this.dashboardService.leadsInContact.filter(p => p.id === Number(el.id))[0];
     console.log("INCONTACT", process);
   }
 
   private async setOffer(el: HTMLElement): Promise<void> {
-    const process = this.DashboardService.offers.filter(p => p.id === Number(el.id))[0];
+    const process = this.dashboardService.offers.filter(p => p.id === Number(el.id))[0];
     console.log("OFFER", process);
   }
 
   private async setDone(el: HTMLElement): Promise<void> {
-    const process = this.DashboardService.doneOffers.filter(p => p.id === Number(el.id))[0];
+    const process = this.dashboardService.doneOffers.filter(p => p.id === Number(el.id))[0];
     console.log("DONE", process);
   }
 
   private async setSale(el: HTMLElement): Promise<void> {
-    const process = this.DashboardService.sales.filter(p => p.id === Number(el.id))[0];
+    const process = this.dashboardService.sales.filter(p => p.id === Number(el.id))[0];
     console.log("SALE", process);
   }
 
