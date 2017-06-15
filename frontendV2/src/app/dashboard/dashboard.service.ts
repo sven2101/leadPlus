@@ -1,3 +1,6 @@
+import { ObjectUpdatedMessage } from "./../common/object-updated-message";
+import { MessagingService } from "./../messaging/messaging.service";
+import { CacheService } from "./../common/cache.service";
 import { Page } from "./../common/page.interface";
 import { Process } from "./../process/process.model";
 import { ProcessService } from "./../process/process.service";
@@ -20,14 +23,26 @@ export class DashboardService {
   doneOffersValue;
   closedSalesValue;
 
-  constructor(private processService: ProcessService) {
-
+  constructor(private processService: ProcessService, private messagingService: MessagingService) {
+    this.test();
   }
 
   public async getProcessesByStatus(status: ProcessStatus): Promise<Array<Process>> {
-    const page = await this.processService.getAllProcessesByStatusPage(status, 0, 10);
+    const page = await this.processService.getAllProcessesByStatusPageCached(status, 0, 10);
     return page.content;
   }
+
+  public async test() {
+    const x = await this.processService.getAllProcessesWithOfferNotNullPageCached(0, 10, SortDirection.ASC, "id");
+    console.log(x);
+    this.messagingService.publish(new ObjectUpdatedMessage(Process, { id: 5 }));
+    const y = await this.processService.getAllProcessesWithOfferNotNullPageCached(0, 10, SortDirection.ASC, "id");
+    console.log(y);
+
+
+  }
+
+
 
 
 

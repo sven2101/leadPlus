@@ -1,3 +1,4 @@
+import { CacheService } from "./common/cache.service";
 import { ProcessService } from "./process/process.service";
 import { WorkflowService } from "./workflow/workflow.service";
 import { AbstractModalContentDirective } from "./modal/abstract-modal-content.directive";
@@ -69,7 +70,8 @@ import { ModalComponent } from "./modal/modal.component";
     ProductService,
     DashboardService,
     WorkflowService,
-    ProcessService
+    ProcessService,
+    CacheService
   ]
 })
 export class AppModule { }

@@ -37,9 +37,11 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import dash.commentmanagement.domain.Comment;
+import dash.common.AbstractWorkflow;
 import dash.leadmanagement.domain.Lead;
 import dash.notificationmanagement.domain.Notification;
 import dash.notificationmanagement.domain.NotificationType;
@@ -228,6 +230,24 @@ public class Process {
 
 	public void setFormerProcessors(Set<Processor> formerProcessors) {
 		this.formerProcessors = formerProcessors;
+	}
+
+	@JsonIgnore
+	public AbstractWorkflow getWorkflowUnitBasedOnStatus() {
+		if (status == Status.OPEN || status == Status.INCONTACT) {
+			return lead;
+		} else if (status == Status.OFFER || status == Status.FOLLOWUP) {
+			return offer;
+		} else if (status == Status.DONE || status == Status.SALE) {
+			return sale;
+		}
+		if (offer == null) {
+			return lead;
+		}
+		if (sale == null) {
+			return offer;
+		}
+		return sale;
 	}
 
 	@Override

@@ -209,44 +209,6 @@ public class ProcessResource {
 				page.getContent());
 	}
 
-	@ApiOperation(value = "Returns a page of processes where lead is not null.", notes = "")
-	@RequestMapping(value = "pagination/leads", method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.OK)
-	public Page<Process> getAllProcessesWithLeadNotNullPage(@RequestBody String body) throws JSONException {
-		JSONObject pageRequest = new JSONObject(body);
-		return newProcessService.getAllProcessesWithLeadNotNullPage(pageRequest.optInt("page"),
-				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
-
-	}
-
-	@ApiOperation(value = "Returns a page of processes where offer is not null.", notes = "")
-	@RequestMapping(value = "pagination/offers", method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.OK)
-	public Page<Process> getAllProcessesWithOfferNotNullPage(@RequestBody String body) throws JSONException {
-		JSONObject pageRequest = new JSONObject(body);
-		return newProcessService.getAllProcessesWithOfferNotNullPage(pageRequest.optInt("page"),
-				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
-	}
-
-	@ApiOperation(value = "Returns a page of processes where sale is not null.", notes = "")
-	@RequestMapping(value = "pagination/sales", method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.OK)
-	public Page<Process> getAllProcessesWithSaleNotNullPage(@RequestBody String body) throws JSONException {
-		JSONObject pageRequest = new JSONObject(body);
-		return newProcessService.getAllProcessesWithSaleNotNullPage(pageRequest.optInt("page"),
-				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
-	}
-
-	@ApiOperation(value = "Returns a page of processes by Status.", notes = "")
-	@RequestMapping(value = "pagination/{status}", method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.OK)
-	public Page<Process> getAllProcessesByStatus(@PathVariable final Status status, @RequestBody final String body)
-			throws JSONException {
-		JSONObject pageRequest = new JSONObject(body);
-		return newProcessService.getAllProcessesByStatusPage(status, pageRequest.optInt("page"),
-				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
-	}
-
 	@ApiOperation(value = "Return a single lead.", notes = "")
 	@RequestMapping(value = "/{processId}/leads", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -404,6 +366,54 @@ public class ProcessResource {
 	@ResponseStatus(HttpStatus.OK)
 	public List<Process> createSaleByProcess(@PathVariable Long processorId) {
 		return processService.getProcessesByProcessor(processorId);
+	}
+
+	////////////////////////////////////////////////////////////////////////////// NEW
+	////////////////////////////////////////////////////////////////////////////// METHODS
+
+	@ApiOperation(value = "Returns a page of processes where lead is not null.", notes = "")
+	@RequestMapping(value = "pagination/leads", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesWithLeadNotNullPage(@RequestBody String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesWithLeadNotNullPage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+
+	}
+
+	@ApiOperation(value = "Returns a page of processes where offer is not null.", notes = "")
+	@RequestMapping(value = "pagination/offers", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesWithOfferNotNullPage(@RequestBody String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesWithOfferNotNullPage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+	}
+
+	@ApiOperation(value = "Returns a page of processes where sale is not null.", notes = "")
+	@RequestMapping(value = "pagination/sales", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesWithSaleNotNullPage(@RequestBody String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesWithSaleNotNullPage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+	}
+
+	@ApiOperation(value = "Returns a page of processes by Status.", notes = "")
+	@RequestMapping(value = "pagination/{status}", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesByStatus(@PathVariable final Status status, @RequestBody final String body)
+			throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesByStatusPage(status, pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+	}
+
+	@ApiOperation(value = "Save a process and its customer", notes = "")
+	@RequestMapping(value = "save", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Process saveProcess(@RequestBody final Process process) {
+		return newProcessService.saveProcess(process);
 	}
 
 }

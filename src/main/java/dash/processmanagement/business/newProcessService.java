@@ -8,6 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import dash.common.AbstractWorkflow;
+import dash.customermanagement.business.CustomerService;
 import dash.processmanagement.domain.Process;
 import dash.statusmanagement.domain.Status;
 
@@ -16,10 +18,12 @@ import dash.statusmanagement.domain.Status;
 public class newProcessService {
 
 	ProcessRepository processRepository;
+	CustomerService customerService;
 
 	@Autowired
-	public newProcessService(ProcessRepository processRepository) {
+	public newProcessService(ProcessRepository processRepository, CustomerService customerService) {
 		this.processRepository = processRepository;
+		this.customerService = customerService;
 	}
 
 	public Page<Process> getAllProcessesWithLeadNotNullPage(int page, int size, String directionString,
@@ -37,7 +41,7 @@ public class newProcessService {
 		size = size < 0 ? 0 : size;
 		Sort.Direction direction = "ASC".equals(directionString) ? Sort.Direction.ASC : Sort.Direction.DESC;
 		properties = "null".equals(properties) ? "lead.timestamp" : properties;
-		return processRepository.findByLeadIsNotNull(new PageRequest(page, size, direction));
+		return processRepository.findByOfferIsNotNull(new PageRequest(page, size, direction, properties));
 	}
 
 	public Page<Process> getAllProcessesWithSaleNotNullPage(int page, int size, String directionString,
@@ -46,7 +50,7 @@ public class newProcessService {
 		size = size < 0 ? 0 : size;
 		Sort.Direction direction = "ASC".equals(directionString) ? Sort.Direction.ASC : Sort.Direction.DESC;
 		properties = "null".equals(properties) ? "lead.timestamp" : properties;
-		return processRepository.findByLeadIsNotNull(new PageRequest(page, size, direction, properties));
+		return processRepository.findBySaleIsNotNull(new PageRequest(page, size, direction, properties));
 	}
 
 	public Page<Process> getAllProcessesByStatusPage(Status status, int page, int size, String directionString,
@@ -56,6 +60,14 @@ public class newProcessService {
 		Sort.Direction direction = "ASC".equals(directionString) ? Sort.Direction.ASC : Sort.Direction.DESC;
 		properties = "null".equals(properties) ? "lead.timestamp" : properties;
 		return processRepository.findByStatus(status, new PageRequest(page, size, direction, properties));
+	}
+
+	public Process saveProcess(final Process process) {
+		AbstractWorkflow workflow = process.getWorkflowUnitBasedOnStatus();
+		if (workflow != null && workflow.getCustomer() != null) {
+			process.getWorkflowUnitBasedOnStatus().setCustomer(customerService.save(workflow.getCustomer()));
+		}
+		return processRepository.save(process);
 	}
 
 }

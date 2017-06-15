@@ -1,4 +1,6 @@
-import { ProcessUpdateMessage } from "./process-update-message";
+import { CacheService } from "./../common/cache.service";
+import { Common } from "./../common/common";
+import { ObjectUpdatedMessage } from "./process-update-message";
 import { MessagingService } from "./../messaging/messaging.service";
 import { Process } from "./process.model";
 import { Page } from "./../common/page.interface";
@@ -17,6 +19,7 @@ export class ProcessService {
   public static readonly PROCESSES_WITH_OFFER_NOT_NULL_PAGE_URL = "/api/rest/processes/pagination/offers";
   public static readonly PROCESSES_WITH_SALE_NOT_NULL_PAGE_URL = "/api/rest/processes/pagination/sales";
   public static readonly PROCESSES_BY_STATUS_PAGE_URL = "/api/rest/processes/pagination/{status}";
+  public static readonly SAVE_PROCESS_URL = "/api/rest/processes/save";
 
   private processCache: {
     [key: string]: {
@@ -28,100 +31,57 @@ export class ProcessService {
     }
   } = {};
 
-  constructor(private httpClient: HttpClient, private messagingService: MessagingService) {
-    this.messagingService.of(ProcessUpdateMessage).subscribe(m => this.updateProcessInCache(m.process));
+  constructor(private httpClient: HttpClient, private cacheService: CacheService) { }
+
+  public async saveProcess(process: Process): Promise<Process> {
+    return this.httpClient.post<Process>(ProcessService.SAVE_PROCESS_URL, process);
   }
 
-  public async getAllProcessesWithLeadNotNullPage(pageNumber: number = 0, pageSize: number = 10
-    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = false): Promise<Page<Process>> {
-    const key = "getAllProcessesWithLeadNotNullPage";
-    const resultFromCache = this.evaluateCache(key, pageNumber, pageSize, sortDirection, sortProperties);
-    if (resultFromCache != null && fromCache === true) {
-      console.log("fromCache", fromCache);
-      return resultFromCache;
-    }
-    this.processCache[key].pages[pageNumber] = await this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_WITH_LEAD_NOT_NULL_PAGE_URL,
+  private async getAllProcessesWithLeadNotNullPage(pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_WITH_LEAD_NOT_NULL_PAGE_URL,
       { page: pageNumber, size: pageSize, direction: sortDirection, properties: sortProperties });
-    return this.processCache[key].pages[pageNumber];
   }
 
-  public async getAllProcessesWithOfferNotNullPage(pageNumber: number = 0, pageSize: number = 10
-    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = false): Promise<Page<Process>> {
-    const key = "getAllProcessesWithOfferNotNullPage";
-    const resultFromCache = this.evaluateCache(key, pageNumber, pageSize, sortDirection, sortProperties);
-    if (resultFromCache != null && fromCache === true) {
-      console.log("fromCache", fromCache);
-      return resultFromCache;
-    }
-    this.processCache[key].pages[pageNumber] = await this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_WITH_OFFER_NOT_NULL_PAGE_URL,
+  public async getAllProcessesWithLeadNotNullPageCached(pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.cacheService.invokeFunctionCached(this.getAllProcessesWithLeadNotNullPage.bind(this), Process, "getAllProcessesWithLeadNotNullPageCached"
+      , fromCache, pageNumber, pageSize, sortDirection, sortProperties);
+  }
+
+  private async getAllProcessesWithOfferNotNullPage(pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_WITH_OFFER_NOT_NULL_PAGE_URL,
       { page: pageNumber, size: pageSize, direction: sortDirection, properties: sortProperties });
-    return this.processCache[key].pages[pageNumber];
   }
 
-  public async getAllProcessesWithSaleNotNullPage(pageNumber: number = 0, pageSize: number = 10
-    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = false): Promise<Page<Process>> {
-    const key = "getAllProcessesWithSaleNotNullPage";
-    const resultFromCache = this.evaluateCache(key, pageNumber, pageSize, sortDirection, sortProperties);
-    if (resultFromCache != null && fromCache === true) {
-      console.log("fromCache", fromCache);
-      return resultFromCache;
-    }
-    this.processCache[key].pages[pageNumber] = await this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_BY_STATUS_PAGE_URL,
+  public async getAllProcessesWithOfferNotNullPageCached(pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.cacheService.invokeFunctionCached(this.getAllProcessesWithOfferNotNullPage.bind(this), Process, "getAllProcessesWithOfferNotNullPageCached"
+      , fromCache, pageNumber, pageSize, sortDirection, sortProperties);
+  }
+
+  private async getAllProcessesWithSaleNotNullPage(pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_WITH_SALE_NOT_NULL_PAGE_URL,
       { page: pageNumber, size: pageSize, direction: sortDirection, properties: sortProperties });
-
-    return this.processCache[key].pages[pageNumber];
   }
 
-  public async getAllProcessesByStatusPage(status: ProcessStatus, pageNumber: number = 0, pageSize: number = 10, sortDirection: SortDirection = null
-    , sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
-    const key = "getAllProcessesByStatusPage" + status;
-    const resultFromCache = this.evaluateCache(key, pageNumber, pageSize, sortDirection, sortProperties);
-    if (resultFromCache != null && fromCache === true) {
-      console.log("fromCache ", fromCache);
-      return resultFromCache;
-    }
-    this.processCache[key].pages[pageNumber] =
-      await this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_BY_STATUS_PAGE_URL.replace("{status}", status.toString()),
-        { page: pageNumber, size: pageSize, direction: sortDirection, properties: sortProperties });
-
-    return this.processCache[key].pages[pageNumber];
+  public async getAllProcessesWithSaleNotNullPageCached(pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.cacheService.invokeFunctionCached(this.getAllProcessesWithSaleNotNullPage.bind(this), Process, "getAllProcessesWithSaleNotNullPageCached"
+      , fromCache, pageNumber, pageSize, sortDirection, sortProperties);
   }
 
-  private evaluateCache(key: string, pageNumber: number, pageSize: number, sortDirection: SortDirection, sortProperties: string): Page<Process> | undefined {
-    const filterSettings = pageSize + sortDirection + sortProperties;
-    if (this.processCache[key] == null
-      || this.processCache[key].filterSettings !== filterSettings
-      || this.processCache[key].timestamp + ProcessService.CACHE_LIFESPAN < Date.now()) {
-      this.processCache[key] = {
-        filterSettings: filterSettings,
-        timestamp: Date.now(),
-        pages: {}
-      };
-    } else if (ProcessService.CACHE_ENABLED === true && this.processCache[key].pages[pageNumber] != null) {
-      return this.processCache[key].pages[pageNumber];
-    }
-    return null;
+  private async getAllProcessesByStatusPage(status: ProcessStatus, pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_BY_STATUS_PAGE_URL.replace("{status}", status.toString()),
+      { page: pageNumber, size: pageSize, direction: sortDirection, properties: sortProperties });
   }
 
-  private updateProcessInCache(process: Process): void {
-    Object.keys(this.processCache)
-      .map(key => this.processCache[key])
-      .map(value => value.pages)
-      .forEach(page => {
-        Object.keys(page)
-          .map(key => page[key])
-          .map(value => value.content)
-          .forEach(processes => {
-            processes.filter(p => p.id === process.id)
-              .forEach(p => {
-                Object.keys(p)
-                  .forEach(key => p[key] = process[key]);
-                Object.keys(process)
-                  .forEach(key => p[key] = process[key]);
-              });
-          });
-      });
-
-
+  public async getAllProcessesByStatusPageCached(status: ProcessStatus, pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.cacheService.invokeFunctionCached(this.getAllProcessesByStatusPage.bind(this, status), Process, "getAllProcessesByStatusPageCached_" + status
+      , fromCache, pageNumber, pageSize, sortDirection, sortProperties);
   }
 }

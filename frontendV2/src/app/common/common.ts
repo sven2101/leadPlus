@@ -26,5 +26,9 @@ export class Common {
         return process.sale;
     }
 
+    public static deepCopy<T>(obj: T): T {
+        return JSON.parse(JSON.stringify(obj));
+    }
+
 }
 

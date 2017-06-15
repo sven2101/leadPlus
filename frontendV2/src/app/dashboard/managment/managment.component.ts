@@ -1,3 +1,5 @@
+import { Common } from "./../../common/common";
+import { ProcessService } from "./../../process/process.service";
 import { Process } from "./../../process/process.model";
 import { ProcessStatus } from "./../../process/process-status.enum";
 import { DashboardService } from "./../dashboard.service";
@@ -23,7 +25,7 @@ export class ManagmentComponent implements OnInit, OnDestroy {
   Activity = Activity;
   ProcessStatus = ProcessStatus;
 
-  constructor(public dashboardService: DashboardService, private dragulaService: DragulaService) { }
+  constructor(public dashboardService: DashboardService, private processService: ProcessService, private dragulaService: DragulaService) { }
 
   ngOnInit() {
     this.setDragulaOptions();
@@ -36,6 +38,7 @@ export class ManagmentComponent implements OnInit, OnDestroy {
   }
 
   private async initProcesses(): Promise<void> {
+    console.log("init Process");
     const openLeadsPromise = this.dashboardService.getProcessesByStatus(ProcessStatus.OPEN);
     const leadsInContactPromise = this.dashboardService.getProcessesByStatus(ProcessStatus.INCONTACT);
     const offersPromise = this.dashboardService.getProcessesByStatus(ProcessStatus.OFFER);
@@ -90,27 +93,37 @@ export class ManagmentComponent implements OnInit, OnDestroy {
   }
 
   private async setInContact(el: HTMLElement): Promise<void> {
-    const process = this.dashboardService.leadsInContact.filter(p => p.id === Number(el.id))[0];
+    const process: Process = this.leadsInContact.filter(p => p.id === Number(el.id))[0];
     console.log("INCONTACT", process);
+    process.status = ProcessStatus.INCONTACT;
+    this.processService.saveProcess(process);
   }
 
   private async setOffer(el: HTMLElement): Promise<void> {
-    const process = this.dashboardService.offers.filter(p => p.id === Number(el.id))[0];
+    const process: Process = this.offers.filter(p => p.id === Number(el.id))[0];
     console.log("OFFER", process);
+    process.status = ProcessStatus.OFFER;
+    process.offer = Common.deepCopy(process.lead);
+    this.processService.saveProcess(process);
   }
 
   private async setDone(el: HTMLElement): Promise<void> {
-    const process = this.dashboardService.doneOffers.filter(p => p.id === Number(el.id))[0];
+    const process: Process = this.doneOffers.filter(p => p.id === Number(el.id))[0];
     console.log("DONE", process);
+    process.status = ProcessStatus.DONE;
+    process.sale = Common.deepCopy(process.offer);
+    this.processService.saveProcess(process);
   }
 
   private async setSale(el: HTMLElement): Promise<void> {
-    const process = this.dashboardService.sales.filter(p => p.id === Number(el.id))[0];
+    const process: Process = this.sales.filter(p => p.id === Number(el.id))[0];
     console.log("SALE", process);
+    process.status = ProcessStatus.SALE;
+    this.processService.saveProcess(process);
   }
 
   private async deleteProcess(el: HTMLElement): Promise<void> {
-    const process = this.trashBucket.filter(p => p.id === Number(el.id))[0];
+    const process: Process = this.trashBucket.filter(p => p.id === Number(el.id))[0];
     console.log("DELETE", process);
   }
 

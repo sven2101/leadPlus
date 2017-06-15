@@ -77,7 +77,7 @@
 										</h3>
 									</div>
 									<ul [dragula]="'bucket'" [id]="Activity.INCONTACT" [dragulaModel]="leadsInContact" class="sortable-list agile-list dragulaBag">
-										<li [id]="process.id" data-process="process" class="danger-element" *ngFor="let process of leadsInContact">
+										<li [id]="process.id" data-process="process" class="danger-element" *ngFor="let process of leadsInContact| limitTo:7">
 											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>
@@ -92,7 +92,7 @@
 										</h3>
 									</div>
 									<ul [dragula]="'bucket'" [id]="Activity.OFFER" [dragulaModel]="offers" class="sortable-list agile-list dragulaBag">
-										<li [id]="process.id" class="warning-element" *ngFor="let process of offers">
+										<li [id]="process.id" class="warning-element" *ngFor="let process of offers| limitTo:7">
 											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>
@@ -106,7 +106,7 @@
 											<br/> {{dashboardService.doneOffersValue| currency:'\u20AC'}}</h3>
 									</div>
 									<ul [dragula]="'bucket'" [id]="Activity.DONE" [dragulaModel]="doneOffers" class="sortable-list agile-list dragulaBag">
-										<li [id]="process.id" class="warning-element" *ngFor="let process of doneOffers">
+										<li [id]="process.id" class="warning-element" *ngFor="let process of doneOffers| limitTo:7">
 											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>
@@ -120,7 +120,7 @@
 											<br/> {{dashboardService.closedSalesValue| currency:'\u20AC'}}</h3>
 									</div>
 									<ul [dragula]="'bucket'" [id]="Activity.SALE" [dragulaModel]="sales" class="sortable-list agile-list dragulaBag">
-										<li [id]="process.id" class="info-element not-sortable" *ngFor="let process of sales">
+										<li [id]="process.id" class="info-element not-sortable" *ngFor="let process of sales| limitTo:7">
 											<dashboard-managment-card process="process"></dashboard-managment-card>
 										</li>
 									</ul>
