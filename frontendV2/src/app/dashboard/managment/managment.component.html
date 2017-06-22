@@ -1,12 +1,11 @@
+<info-modal #content></info-modal>
 <div class="row">
 	<div class="col-lg-12">
 		<div class="ibox float-e-margins">
 			<div id="deleteDropzone" ng-style="{'visibility':dashboardService.delementDropzoneVisibility}" class="connectList" ui-sortable="sortableOptions"
 			 ng-model="dashboardService.elementToDelete"></div>
 			<div class="center">
-				<i [dragula]="'bucket'" id="trashSymbol" [dragulaModel]="trashBucket" class="fa fa-trash fa-3x">
-					
-				</i>
+				<i [dragula]="'bucket'" id="trashSymbol" [dragulaModel]="trashBucket" class="fa fa-trash fa-3x"></i>
 			</div>
 			<div class="ibox-content">
 				<div style="margin-left:-5px;margin-right:-5px">
@@ -50,20 +49,10 @@
 										<h3 style="text-align: center;" i18n>DASHBOARD_OPEN_LEADS<br/>
 											<br/> {{dashboardService.openLeadsValue| currency:'\u20AC'}}
 										</h3>
-									</div>
-									<!--
-										<div ng-style="{'height':getHeight()+'px','border':dashboardService.dropzoneClass.sale}">
-										<ul ui-sortable="sortableOptions" class="sortable-list connectList agile-list" style="height: 100%;" id="sale" ng-model="dashboardService.closedSales">
-											<li class="info-element not-sortable draggable dragItem" ng-repeat="process in getClosedSales()">
-												<dashboard-managment-card process="process" workflowunittype="sale" disabled></dashboard-managment-card>
-											</li>
-										</ul>
-									</div>
-									-->
-
+									</div>	
 									<ul [dragula]="'bucket'" [id]="Activity.OPEN" [dragulaModel]="openLeads" class="sortable-list agile-list dragulaBag">
-										<li [id]="process.id" class="danger-element" *ngFor="let process of openLeads| limitTo:7">
-											<dashboard-managment-card process="process"></dashboard-managment-card>
+										<li [id]="process.id" class="danger-element" *ngFor="let process of allData|filter:{ status:  ProcessStatus.OPEN }| limitTo:7">
+											<dashboard-managment-card (openInfoModal)="openInfoModal($event)" [process]="process"></dashboard-managment-card>
 										</li>
 									</ul>
 								</div>
@@ -77,8 +66,8 @@
 										</h3>
 									</div>
 									<ul [dragula]="'bucket'" [id]="Activity.INCONTACT" [dragulaModel]="leadsInContact" class="sortable-list agile-list dragulaBag">
-										<li [id]="process.id" data-process="process" class="danger-element" *ngFor="let process of leadsInContact| limitTo:7">
-											<dashboard-managment-card process="process"></dashboard-managment-card>
+										<li [id]="process.id" data-process="process" class="danger-element" *ngFor="let process of allData|filter:{ status:  ProcessStatus.INCONTACT }| limitTo:7">
+											<dashboard-managment-card (openInfoModal)="openInfoModal($event)" [process]="process"></dashboard-managment-card>
 										</li>
 									</ul>
 								</div>
@@ -92,8 +81,8 @@
 										</h3>
 									</div>
 									<ul [dragula]="'bucket'" [id]="Activity.OFFER" [dragulaModel]="offers" class="sortable-list agile-list dragulaBag">
-										<li [id]="process.id" class="warning-element" *ngFor="let process of offers| limitTo:7">
-											<dashboard-managment-card process="process"></dashboard-managment-card>
+										<li [id]="process.id" class="warning-element" *ngFor="let process of allData|filter:{ status:  ProcessStatus.OFFER }| limitTo:7">
+											<dashboard-managment-card (openInfoModal)="openInfoModal($event)" [process]="process"></dashboard-managment-card>
 										</li>
 									</ul>
 								</div>
@@ -106,8 +95,8 @@
 											<br/> {{dashboardService.doneOffersValue| currency:'\u20AC'}}</h3>
 									</div>
 									<ul [dragula]="'bucket'" [id]="Activity.DONE" [dragulaModel]="doneOffers" class="sortable-list agile-list dragulaBag">
-										<li [id]="process.id" class="warning-element" *ngFor="let process of doneOffers| limitTo:7">
-											<dashboard-managment-card process="process"></dashboard-managment-card>
+										<li [id]="process.id" class="warning-element" *ngFor="let process of allData|filter:{ status: ProcessStatus.DONE }| limitTo:7">
+											<dashboard-managment-card (openInfoModal)="openInfoModal($event)" [process]="process"></dashboard-managment-card>
 										</li>
 									</ul>
 								</div>
@@ -120,8 +109,8 @@
 											<br/> {{dashboardService.closedSalesValue| currency:'\u20AC'}}</h3>
 									</div>
 									<ul [dragula]="'bucket'" [id]="Activity.SALE" [dragulaModel]="sales" class="sortable-list agile-list dragulaBag">
-										<li [id]="process.id" class="info-element not-sortable" *ngFor="let process of sales| limitTo:7">
-											<dashboard-managment-card process="process"></dashboard-managment-card>
+										<li [id]="process.id" class="info-element not-sortable" *ngFor="let process of sales|filter:{ status: ProcessStatus.SALE }| limitTo:7">
+											<dashboard-managment-card (openInfoModal)="openInfoModal($event)" [process]="process"></dashboard-managment-card>
 										</li>
 									</ul>
 								</div>

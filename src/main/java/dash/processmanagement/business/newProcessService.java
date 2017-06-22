@@ -40,7 +40,7 @@ public class newProcessService {
 		page = page < 0 ? 0 : page;
 		size = size < 0 ? 0 : size;
 		Sort.Direction direction = "ASC".equals(directionString) ? Sort.Direction.ASC : Sort.Direction.DESC;
-		properties = "null".equals(properties) ? "lead.timestamp" : properties;
+		properties = "null".equals(properties) ? "offer.timestamp" : properties;
 		return processRepository.findByOfferIsNotNull(new PageRequest(page, size, direction, properties));
 	}
 
@@ -49,7 +49,7 @@ public class newProcessService {
 		page = page < 0 ? 0 : page;
 		size = size < 0 ? 0 : size;
 		Sort.Direction direction = "ASC".equals(directionString) ? Sort.Direction.ASC : Sort.Direction.DESC;
-		properties = "null".equals(properties) ? "lead.timestamp" : properties;
+		properties = "null".equals(properties) ? "sale.timestamp" : properties;
 		return processRepository.findBySaleIsNotNull(new PageRequest(page, size, direction, properties));
 	}
 

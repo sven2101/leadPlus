@@ -3,8 +3,9 @@ import { ProcessService } from "./../../process/process.service";
 import { Process } from "./../../process/process.model";
 import { ProcessStatus } from "./../../process/process-status.enum";
 import { DashboardService } from "./../dashboard.service";
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, ContentChild, ViewChild } from "@angular/core";
 import { DragulaService } from "ng2-dragula/components/dragula.provider";
+import { InfoModalComponent } from "./info-modal/info-modal.component";
 
 import { Activity } from "../../process/activity.enum";
 
@@ -15,12 +16,15 @@ import { Activity } from "../../process/activity.enum";
 })
 export class ManagmentComponent implements OnInit, OnDestroy {
 
+  @ViewChild(InfoModalComponent) infoModalComponent: InfoModalComponent;
+
   openLeads: any = [];
   leadsInContact: any = [];
   offers: any = [];
   doneOffers: any = [];
   sales: any = [];
   trashBucket: any = [];
+  allData: any = [];
 
   Activity = Activity;
   ProcessStatus = ProcessStatus;
@@ -37,8 +41,12 @@ export class ManagmentComponent implements OnInit, OnDestroy {
     this.dragulaService.destroy("bucket");
   }
 
+  ngAfterContentInit() {
+    console.log(this.infoModalComponent.open);
+  }
+
   private async initProcesses(): Promise<void> {
-    console.log("init Process");
+
     const openLeadsPromise = this.dashboardService.getProcessesByStatus(ProcessStatus.OPEN);
     const leadsInContactPromise = this.dashboardService.getProcessesByStatus(ProcessStatus.INCONTACT);
     const offersPromise = this.dashboardService.getProcessesByStatus(ProcessStatus.OFFER);
@@ -49,6 +57,7 @@ export class ManagmentComponent implements OnInit, OnDestroy {
     this.offers = await offersPromise;
     this.doneOffers = await doneOffersPromise;
     this.sales = await salesPromise;
+    this.allData = this.openLeads.concat(this.leadsInContact.concat(this.offers.concat(this.doneOffers.concat(this.sales))));
   }
 
 
@@ -91,40 +100,43 @@ export class ManagmentComponent implements OnInit, OnDestroy {
       case Activity.SALE: return false;
     }
   }
-
   private async setInContact(el: HTMLElement): Promise<void> {
-    const process: Process = this.leadsInContact.filter(p => p.id === Number(el.id))[0];
+    const process: Process = this.allData.filter(p => p.id === Number(el.id))[0];
     console.log("INCONTACT", process);
     process.status = ProcessStatus.INCONTACT;
-    this.processService.saveProcess(process);
+    // this.processService.saveProcess(process);
   }
 
   private async setOffer(el: HTMLElement): Promise<void> {
-    const process: Process = this.offers.filter(p => p.id === Number(el.id))[0];
+    const process: Process = this.allData.filter(p => p.id === Number(el.id))[0];
     console.log("OFFER", process);
     process.status = ProcessStatus.OFFER;
     process.offer = Common.deepCopy(process.lead);
-    this.processService.saveProcess(process);
+    // this.processService.saveProcess(process);
   }
 
   private async setDone(el: HTMLElement): Promise<void> {
-    const process: Process = this.doneOffers.filter(p => p.id === Number(el.id))[0];
+    const process: Process = this.allData.filter(p => p.id === Number(el.id))[0];
     console.log("DONE", process);
     process.status = ProcessStatus.DONE;
     process.sale = Common.deepCopy(process.offer);
-    this.processService.saveProcess(process);
+    // this.processService.saveProcess(process);
   }
 
   private async setSale(el: HTMLElement): Promise<void> {
-    const process: Process = this.sales.filter(p => p.id === Number(el.id))[0];
+    const process: Process = this.allData.filter(p => p.id === Number(el.id))[0];
     console.log("SALE", process);
     process.status = ProcessStatus.SALE;
-    this.processService.saveProcess(process);
+    // this.processService.saveProcess(process);
   }
 
   private async deleteProcess(el: HTMLElement): Promise<void> {
     const process: Process = this.trashBucket.filter(p => p.id === Number(el.id))[0];
     console.log("DELETE", process);
+  }
+
+  public openInfoModal(process: Process) {
+    this.infoModalComponent.open(process);
   }
 
 }

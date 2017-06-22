@@ -24,7 +24,7 @@ export class DashboardService {
   closedSalesValue;
 
   constructor(private processService: ProcessService, private messagingService: MessagingService) {
-    this.test();
+
   }
 
   public async getProcessesByStatus(status: ProcessStatus): Promise<Array<Process>> {

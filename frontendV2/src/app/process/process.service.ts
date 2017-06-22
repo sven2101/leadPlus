@@ -1,6 +1,6 @@
 import { CacheService } from "./../common/cache.service";
 import { Common } from "./../common/common";
-import { ObjectUpdatedMessage } from "./process-update-message";
+import { ObjectUpdatedMessage } from "./../common/object-updated-message";
 import { MessagingService } from "./../messaging/messaging.service";
 import { Process } from "./process.model";
 import { Page } from "./../common/page.interface";

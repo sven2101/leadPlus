@@ -1,0 +1,250 @@
+<ng-template #content let-c="close" let-d="dismiss">
+  <app-modal (dismiss)="d($event)" (close)="xyz.hidden=!xyz.hidden">
+    <div modal-header>Info</div>
+    <div step-content="1">
+      <div class="ibox">
+        <div class="ibox-content">
+          <div class="row customerdetails">
+            <div class="col-md-3 b-r">
+              <div>
+                <label i18n><i class="fa fa-address-book-o" aria-hidden="true"></i>COMMON_NAME</label>
+                <span>{{workflowUnit.customer.firstname}} {{workflowUnit.customer.lastname}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r ">
+              <div>
+                <label i18n><i class="fa fa-building-o " aria-hidden="true"></i>COMMON_COMPANY</label>
+                <span>{{workflowUnit.customer.company}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r ">
+              <div>
+                <label i18n><i class="fa fa-at " aria-hidden="true "></i> COMMON_EMAIL</label>
+                <span class="elipsis" i18n-title title="{{workflowUnit.customer.email}}">{{workflowUnit.customer.email}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r ">
+              <div>
+                <label i18n><i class="fa fa-phone " aria-hidden="true "></i> COMMON_PHONE</label>
+                <span>{{workflowUnit.customer.phone}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="row customerdetails">
+            <div class="col-md-3 b-r ">
+              <div>
+                <label i18n><i class="fa fa-mobile " aria-hidden="true "></i> COMMON_MOBILE</label>
+                <span>{{workflowUnit.customer.mobile}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r ">
+              <div>
+                <label i18n><i class="fa fa-truck " aria-hidden="true "></i> COMMON_PRODUCT_DESTINATION</label>
+                <span class="elipsis" i18n-title title="{{workflowUnit.deliveryAddressLine}}">{{workflowUnit.deliveryAddressLine}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r ">
+              <div>
+                <label i18n><i class="fa fa-truck " aria-hidden="true "></i> COMMON_DELIVERY_TIME</label>
+                <span>{{workflowUnit.deliveryDate | date:'dd-MM-yyyy'}}</span>
+              </div>
+            </div>
+            <div class="col-sm-3 b-r " ng-if="workflowModalType=='offer' || workflowModalType=='sale'">
+              <div>
+                <label i18n i18n-title title="COMMON_SUPPLY_DELIVERY_TERM"><i class="fa fa-truck " aria-hidden="true "></i>  COMMON_SUPPLY_DELIVERY_TERM</label>
+                <span class="elipsis" i18n-title title="{{workflowUnit.deliveryTerm}}">{{workflowUnit.deliveryTerm}}</span>
+              </div>
+            </div>
+            <div class="col-sm-3 b-r " ng-if="workflowModalType=='offer' || workflowModalType=='sale'">
+              <div>
+                <label i18n i18n-title title="COMMON_SUPPLY_PAYMENT_TERM"><i class="fa fa-usd " aria-hidden="true "></i>  COMMON_SUPPLY_PAYMENT_TERM</label>
+                <span class="elipsis" i18n-title title="{{workflowUnit.paymentTerm}}">{{workflowUnit.paymentTerm}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r ">
+              <div>
+                <label i18n><i class="fa fa-usd " aria-hidden="true "></i> COMMON_PRODUCT_DELIVERYCOSTS</label>
+                <span>{{workflowUnit.deliveryCosts | currency:'EUR'}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r " ng-if="workflowModalType == 'lead'">
+              <div>
+                <label i18n><i class="fa fa-usd " aria-hidden="true "></i> COMMON_PRODUCT_ENTIRE_PRICE</label>
+                <span>{{sumOrderPositions(workflowUnit.orderPositions)| currency:'EUR'}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r " ng-if="workflowModalType == 'lead'">
+              <div>
+                <label i18n i18n-title title="COMMON_PRODUCT_ENTIRE_PRICE COMMON_PRODUCT_INCL_DELIVERY_COSTS" class="ellipsis"><i class="fa fa-usd " aria-hidden="true "></i> COMMON_PRODUCT_ENTIRE_PRICE COMMON_PRODUCT_INCL_DELIVERY_COSTS</label>
+                <span>{{sumOrderPositions(workflowUnit.orderPositions) + workflowUnit.deliveryCosts | currency:'EUR'}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r " ng-if="workflowModalType == 'offer'">
+              <div>
+                <label i18n><i class="fa fa-usd " aria-hidden="true "></i> COMMON_PRODUCT_OFFER_PRICE</label>
+                <span>{{workflowUnit.netPrice| currency:'EUR'}}</span>
+              </div>
+            </div>
+            <div class="col-sm-3 b-r " ng-if="workflowModalType=='offer'">
+              <div>
+                <label i18n i18n-title title="COMMON_PRODUCT_OFFER_PRICE COMMON_PRODUCT_INCL_DELIVERY_COSTS" class="ellipsis"><i class="fa fa-usd " aria-hidden="true "></i> COMMON_PRODUCT_OFFER_PRICE COMMON_PRODUCT_INCL_DELIVERY_COSTS</label>
+                <span>{{workflowUnit.netPrice + workflowUnit.deliveryCosts | currency:'EUR'}}</span>
+              </div>
+            </div>
+            <div class="col-sm-3 b-r " ng-if="workflowModalType=='offer'">
+              <div>
+                <label i18n><i class="fa fa-usd " aria-hidden="true "></i>  PRODUCT_GROSS_PRICE</label>
+                <span>{{(workflowUnit.netPrice+ workflowUnit.deliveryCosts)*(1+(workflowUnit.vat/100))|currency:'EUR'}} ({{workflowUnit.vat}}% COMMON_PRODUCT_VAT)</span>
+              </div>
+            </div>
+            <div class="col-sm-3 b-r " ng-if="workflowModalType=='offer' && workflowUnit.skonto>0">
+              <div>
+                <label i18n i18n-title title="PRODUCT_GROSS_PRICE_SKONTO"><i class="fa fa-usd " aria-hidden="true "></i> PRODUCT_GROSS_PRICE_SKONTO</label>
+                <span>{{(((workflowUnit.netPrice+ workflowUnit.deliveryCosts)*(1+(workflowUnit.vat/100)))-((workflowUnit.netPrice+ workflowUnit.deliveryCosts)*(1+(workflowUnit.vat/100))*(workflowUnit.skonto/100)))|currency:'EUR'}} ({{workflowUnit.skonto}}%)</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r " ng-if="workflowModalType == 'sale'">
+              <div>
+                <label i18n><i class="fa fa-usd " aria-hidden="true "></i> COMMON_PRODUCT_SALE_TURNOVER</label>
+                <span>{{workflowUnit.saleTurnover| currency:'EUR'}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r " ng-if="workflowModalType == 'sale'">
+              <div>
+                <label i18n><i class="fa fa-usd " aria-hidden="true "></i> COMMON_PRODUCT_SALE_PROFIT</label>
+                <span>{{workflowUnit.saleProfit| currency:'EUR'}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r ">
+              <div>
+                <label i18n i18n-title title="COMMON_BILLING_ADDRESS"><i class="fa fa-university " aria-hidden="true "></i> COMMON_BILLING_ADDRESS</label>
+                <span i18n-title title="{{getAddressLine(workflowUnit.billingAddress)}}">{{getAddressLine(workflowUnit.billingAddress)}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r " ng-if="workflowModalType == 'sale'">
+              <div>
+                <label i18n><i class="fa fa-university " aria-hidden="true "></i> COMMON_PRODUCT_SALE_INVOICE_NUMBER_SHORT</label>
+                <span>{{workflowUnit.invoiceNumber}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r ">
+              <div>
+                <label i18n><i class="fa fa-rss " aria-hidden="true "></i> SOURCE_SOURCE</label>
+                <span>{{process.source?.name}}</span>
+              </div>
+            </div>
+            <div class="col-md-3 b-r " ng-if="process.processor != null">
+              <div>
+                <label i18n><i class="fa fa-thumb-tack " aria-hidden="true "></i> COMMON_PROCESSOR</label>
+                <span>{{getNameOfUser(process.processor)}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6" ng-if="workflowUnit.message.length>0">
+          <div class="ibox">
+            <div class="ibox-content">
+              <label style="font-size: 1.2em"><i class="fa fa-envelope" aria-hidden="true "></i> COMMON_NOTE</label>
+              <div style="max-height: 400px;overflow: auto;overflow-x: hidden;">
+                <div style="margin-left:20px" ng-bind-html="getAsHtml(workflowUnit.message)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6" ng-if="workflowUnit.orderPositions.length > 0">
+          <div class="ibox">
+            <div class="ibox-content">
+              <label style="font-size: 1.2em"><i class="fa fa-table" aria-hidden="true "></i> PRODUCT_MENU</label>
+              <div style="max-height: 400px;overflow: auto;overflow-x: hidden;">
+                <table class="table table-bordered text-left" style="table-layout: fixed">
+                  <tbody>
+                    <tr *ngFor="let orderPosition of workflowUnit.orderPositions">
+                      <td style="white-space: nowrap; width: 100%"><span class="ellipsis" i18n-title title="{{orderPosition.amount}}x {{orderPosition.product?.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'EUR'}})">
+													{{orderPosition.amount}}x {{orderPosition.product?.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'EUR'}})</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ibox">
+        <div class="ibox-content">
+          <div class="text-left" style="white-space: nowrap">
+            <label style="font-size: 1.2em">
+								<span ng-click="showComments=showComments!==true?true:false" class="pull-left" style="cursor:pointer">
+								<i class="fa fa-comments" aria-hidden="true "></i> COMMON_COMMENTS
+								<i ng-if="showComments===true" class="fa fa-caret-up" aria-hidden="true"></i>
+								<i ng-if="showComments!==true" class="fa fa-caret-down" aria-hidden="true"></i>
+								</span>
+								</label>
+            <span ng-if="process.comments.length>0" class="label label-danger" style="margin-top: 4px;margin-left: 4px; position: absolute">{{process.comments.length}}</span>
+            <small ng-if="process.comments.length>0" class="pull-right text-muted">
+													COMMON_COMMENTS_LAST:
+													{{process.comments[process.comments.length-1]|toLocalTimestamp}}
+												</small>
+          </div>
+          <div ng-if="showComments===true" class="animate-if">
+            <div class="chat-view">
+              <div class=" text-left">
+                <div ng-if="process.comments.length>0" class="row">
+                  <div class="col-md-12 ">
+                    <div style="max-height:250px" class="chat-discussion" ng-model="process.comments">
+                      <div *ngFor="let comment of process.comments | orderBy: '-timestamp'">
+                        <div ng-if="$index%2==0" class="chat-message left">
+                          <img class="message-avatar" [pictureId]="comment.creator.thumbnail.id" httpsrc="/api/rest/files/content/" alt="">
+                          <div class="message">
+                            <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" style="cursor:default"
+                              href="#" onclick="return false;"> {{comment.creator.username}} </a>
+                            <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" style="cursor:default"
+                              href="#" onclick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+                            <span class="message-date"> {{comment.timestamp|toLocalTimestamp}} </span>
+                            <span class="message-content">
+																		{{comment.commentText}}
+																	</span>
+                          </div>
+                        </div>
+                        <div ng-if="$index%2!=0" class="chat-message right">
+                          <img class="message-avatar" [pictureId]="comment.creator.thumbnail.id" httpsrc="/api/rest/files/content/" alt="">
+                          <div class="message">
+                            <a ng-if="comment.creator.firstname==null&&comment.creator.lastname==null" class="message-author" style="cursor:default"
+                              href="#" onclick="return false;"> {{comment.creator.username}} </a>
+                            <a ng-if="!(comment.creator.firstname==null&&comment.creator.lastname==null)" class="message-author" style="cursor:default"
+                              href="#" onclick="return false;"> {{comment.creator.firstname}} {{comment.creator.lastname}} </a>
+                            <span class="message-date"> {{comment.timestamp |toLocalTimestamp}} </span>
+                            <span class="message-content">
+																											{{comment.commentText}}
+																									</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <form name="commentform">
+                      <div class="chat-message-form" style="width:100%">
+                        <div class="form-group" style="width:100%" ng-class="{ 'has-error' : commentform.message.$error.maxlength && !commentform.message.$pristine }">
+                          <textarea class="form-control message-input" ng-model="commentModalInput" required ng-maxlength="5000" style="resize: none; width:100%;box-sizing: border-box;"
+                            name="message" placeholder="COMMON_COMMENTS_ENTER" ></textarea>
+                          <p ng-show="commentform.message.$error.maxlength && !commentform.message.$pristine" class="help-block">COMMON_VALIDATE_MAX5000COMMON_VALIDATE_MAX_END</p>
+                        </div>
+                        <button style="width:200px; margin-top: 10px;" class="btn btn-success" ng-disabled="commentform.message.$invalid" ng-click="addComment(process)">
+											<i class="fa fa-comment-o"></i>&nbsp;COMMON_COMMENTS_ADD
+											</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </app-modal>
+</ng-template>

@@ -33,8 +33,9 @@ import { FilterPipe } from "./common/filter.pipe";
 import { ManagmentComponent } from "./dashboard/managment/managment.component";
 import { StatisticComponent } from "./dashboard/statistic/statistic.component";
 import { ToDoComponent } from "./dashboard/to-do/to-do.component";
-import { ManagmentCardComponent } from "./dashboard/managment/managment-card.component";
+import { ManagmentCardComponent } from "./dashboard/managment/managment-card/managment-card.component";
 import { ModalComponent } from "./modal/modal.component";
+import { InfoModalComponent } from './dashboard/managment/info-modal/info-modal.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { ModalComponent } from "./modal/modal.component";
     StatisticComponent,
     ToDoComponent,
     ManagmentCardComponent,
-    AbstractModalContentDirective
+    AbstractModalContentDirective,
+    InfoModalComponent
 
   ],
   imports: [

@@ -28,7 +28,7 @@ export class CacheService {
     this.messagingService.of(ObjectUpdatedMessage).subscribe(m => this.updateObjectInCache(m.type, m.object));
   }
 
-  public async invokeFunctionCached(method: (...args: any[]) => any, cachedObjectType: { new (...args: any[]) }, cacheName: string, fromCache: boolean
+  public async invokeFunctionCached(method: (...args: any[]) => Page<any>, cachedObjectType: { new (...args: any[]) }, cacheName: string, fromCache: boolean
     , pageNumber: number = 0, pageSize: number = 10, sortDirection: SortDirection = null, sortProperties: string = null
     , cacheExpireTime: number = CacheService.CACHE_LIFESPAN): Promise<Page<any>> {
 
