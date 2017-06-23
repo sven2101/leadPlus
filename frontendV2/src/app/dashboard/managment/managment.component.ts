@@ -1,3 +1,4 @@
+import { Page } from "./../../common/page.interface";
 import { Common } from "./../../common/common";
 import { ProcessService } from "./../../process/process.service";
 import { Process } from "./../../process/process.model";
@@ -18,31 +19,37 @@ export class ManagmentComponent implements OnInit, OnDestroy {
 
   @ViewChild(InfoModalComponent) infoModalComponent: InfoModalComponent;
 
-  openLeads: any = [];
-  leadsInContact: any = [];
-  offers: any = [];
-  doneOffers: any = [];
-  sales: any = [];
+  openLeads: Page<Process> = <any>{ content: [] };
+  leadsInContact: Page<Process> = <any>{ content: [] };
+  offers: Page<Process> = <any>{ content: [] };
+  doneOffers: Page<Process> = <any>{ content: [] };
+  sales: Page<Process> = <any>{ content: [] };
   trashBucket: any = [];
   allData: any = [];
+
+  page: Page<any>;
 
   Activity = Activity;
   ProcessStatus = ProcessStatus;
 
   constructor(public dashboardService: DashboardService, private processService: ProcessService, private dragulaService: DragulaService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.setDragulaOptions();
     this.initProcesses();
-
   }
 
   ngOnDestroy() {
     this.dragulaService.destroy("bucket");
+    this.openLeads.removeActiveFlag(this);
+    this.leadsInContact.removeActiveFlag(this);
+    this.offers.removeActiveFlag(this);
+    this.doneOffers.removeActiveFlag(this);
+    this.sales.removeActiveFlag(this);
   }
 
   ngAfterContentInit() {
-    console.log(this.infoModalComponent.open);
+
   }
 
   private async initProcesses(): Promise<void> {
@@ -57,8 +64,14 @@ export class ManagmentComponent implements OnInit, OnDestroy {
     this.offers = await offersPromise;
     this.doneOffers = await doneOffersPromise;
     this.sales = await salesPromise;
-    this.allData = this.openLeads.concat(this.leadsInContact.concat(this.offers.concat(this.doneOffers.concat(this.sales))));
+    this.openLeads.setActiveFlag(this);
+    this.leadsInContact.setActiveFlag(this);
+    this.offers.setActiveFlag(this);
+    this.doneOffers.setActiveFlag(this);
+    this.sales.setActiveFlag(this);
   }
+
+
 
 
   private setDragulaOptions(): void {

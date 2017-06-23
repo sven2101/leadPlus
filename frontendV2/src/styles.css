@@ -248,3 +248,8 @@ body.modal-open {
   margin-top: 7px
 }
 
+.modal-big {
+		min-width: 1100px !important
+	}
+
+

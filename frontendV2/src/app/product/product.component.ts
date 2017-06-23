@@ -1,3 +1,5 @@
+import { ProcessStatus } from "./../process/process-status.enum";
+import { ProcessService } from "./../process/process.service";
 import { User } from "./../user/user.model";
 import { TestMessage } from "./../messaging/test-message";
 import { MessagingService } from "./../messaging/messaging.service";
@@ -19,10 +21,12 @@ export class ProductComponent implements OnInit {
 
   public text = 1;
 
-  constructor(private ProductService: ProductService, private Router: Router, private MessagingService: MessagingService) { }
+  constructor(private ProductService: ProductService, private Router: Router, private MessagingService: MessagingService, private processService: ProcessService) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.ProductService.refreshProducts();
+    const x = await this.processService.getAllProcessesByStatusPageCached(ProcessStatus.OPEN);
+    x.setDirty();
   }
 
   ngOnDestroy(): void {

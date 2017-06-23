@@ -26,12 +26,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    let f=this.test.bind(this,1);
-    let f2 =f.bind(undefined,2);
-    console.log("f:",f);
-    console.log("f2:",f2);
-  
-    f2(3);
+
+
 
   }
 
@@ -53,9 +49,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     console.log("send");
   }
 
-  test(x,y,z){
-    console.log(x,y,z,this.xyz);
-  }
 
 
 

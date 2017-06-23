@@ -29,7 +29,7 @@ export class InfoModalComponent implements OnInit {
   async open(process: Process): Promise<NgbModalRef> {
     this.process = process;
     this.workflowUnit = Common.getWorkflowUnitBasedOnProcessStatus(this.process);
-    return this.modalService.open(this.content, { size: "lg" });
+    return this.modalService.open(this.content, { size: <any>"big" });
   }
 
   sumOrderPositions(orderPositions: Array<OrderPosition>): number {
