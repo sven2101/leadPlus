@@ -72,4 +72,6 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 	List<Process> findTop50BySaleIsNotNullOrderBySaleTimestampDesc();
 
 	List<Process> findAll(Specification<Process> spec);
+
+	Page<Process> findAll(Specification<Process> spec, Pageable pageable);
 }

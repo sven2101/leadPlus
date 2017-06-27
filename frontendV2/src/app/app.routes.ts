@@ -1,3 +1,4 @@
+import { LeadComponent } from "./workflow/lead/lead.component";
 import { productRoutes } from "./product/product.routes";
 import { ProductComponent } from "./product/product.component";
 import { Routes, RouterModule } from "@angular/router";
@@ -27,6 +28,11 @@ export const appRoutes: Routes = [
             {
                 path: "product",
                 children: productRoutes,
+                canActivate: [LoggedInGuard]
+            },
+            {
+                path: "lead",
+                component: LeadComponent,
                 canActivate: [LoggedInGuard]
             }
         ]

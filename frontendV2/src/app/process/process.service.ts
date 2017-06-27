@@ -19,6 +19,9 @@ export class ProcessService {
   public static readonly PROCESSES_WITH_OFFER_NOT_NULL_PAGE_URL = "/api/rest/processes/pagination/offers";
   public static readonly PROCESSES_WITH_SALE_NOT_NULL_PAGE_URL = "/api/rest/processes/pagination/sales";
   public static readonly PROCESSES_BY_STATUS_PAGE_URL = "/api/rest/processes/pagination/{status}";
+  public static readonly PROCESSES_BY_OPEN_OR_INCONTACT = "/api/rest/processes/pagination/open-or-incontact";
+  public static readonly PROCESSES_BY_OFFER_OR_FOLLOWUP = "/api/rest/processes/pagination/offer-or-followup";
+  public static readonly PROCESSES_BY_DONE_OR_SALE = "/api/rest/processes/pagination/done-or-sale";
   public static readonly SAVE_PROCESS_URL = "/api/rest/processes/save";
 
   constructor(private httpClient: HttpClient, private cacheService: CacheService) { }
@@ -73,5 +76,41 @@ export class ProcessService {
     , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
     return this.cacheService.invokeFunctionCached<Process>(this.getAllProcessesByStatusPage.bind(this, status), Process
       , "getAllProcessesByStatusPageCached_" + status, fromCache, pageNumber, pageSize, sortDirection, sortProperties);
+  }
+
+  private async getAllProcessesByStatusIsOpenOrIncontactPage(pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_BY_OPEN_OR_INCONTACT
+      , { page: pageNumber, size: pageSize, direction: sortDirection, properties: sortProperties });
+  }
+
+  public async getAllProcessesByStatusIsOpenOrIncontactPageCached(pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.cacheService.invokeFunctionCached<Process>(this.getAllProcessesByStatusIsOpenOrIncontactPage.bind(this), Process
+      , "getAllProcessesByStatusIsOpenOrIncontactPageCached", fromCache, pageNumber, pageSize, sortDirection, sortProperties);
+  }
+
+  private async getAllProcessesByStatusIsOfferOrFollowupPage(pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_BY_OFFER_OR_FOLLOWUP
+      , { page: pageNumber, size: pageSize, direction: sortDirection, properties: sortProperties });
+  }
+
+  public async getAllProcessesByStatusIsOfferOrFollowupPageCached(pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.cacheService.invokeFunctionCached<Process>(this.getAllProcessesByStatusIsOfferOrFollowupPage.bind(this), Process
+      , "getAllProcessesByStatusIsOfferOrFollowupPageCached", fromCache, pageNumber, pageSize, sortDirection, sortProperties);
+  }
+
+  private async getAllProcessesByStatusIsDoneOrSalePage(pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.httpClient.post<Page<Process>>(ProcessService.PROCESSES_BY_DONE_OR_SALE
+      , { page: pageNumber, size: pageSize, direction: sortDirection, properties: sortProperties });
+  }
+
+  public async getAllProcessesByStatusIsDoneOrSalePageCached(pageNumber: number = 0, pageSize: number = 10
+    , sortDirection: SortDirection = null, sortProperties: string = null, fromCache: boolean = true): Promise<Page<Process>> {
+    return this.cacheService.invokeFunctionCached<Process>(this.getAllProcessesByStatusIsDoneOrSalePage.bind(this), Process
+      , "getAllProcessesByStatusIsDoneOrSalePageCached", fromCache, pageNumber, pageSize, sortDirection, sortProperties);
   }
 }

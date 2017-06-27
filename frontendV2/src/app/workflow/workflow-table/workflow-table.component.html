@@ -1,0 +1,42 @@
+<select [(ngModel)]="pageSize" class="form-control pull-left select-page-size" (change)="getNewPage(currentPage.number)">
+  <option>1</option>
+  <option>10</option>
+  <option>20</option>
+  <option>50</option>
+  <option>100</option>
+</select>
+<table class="table table-bordered table-hover table-condensed text-center">
+  <thead>
+    <th i18n>Processor</th>
+    <th i18n>Firma</th>
+    <th i18n>Name</th>
+    <th i18n>Lieferort</th>
+    <th i18n>Datum</th>
+    <th i18n>Status</th>
+    <th i18n>Actions</th>
+  </thead>
+  <tbody>
+    <tr *ngFor="let process of currentPage?.content">
+      <td>{{process.processor?.id}}</td>
+      <td>{{process[workflowUnitType].customer.company}}</td>
+      <td>{{process[workflowUnitType].customer.lastname}}</td>
+      <td>{{process.processor?.id}}</td>
+      <td>{{process[workflowUnitType].timestamp|toLocalTimestamp :'DD.MM.YYYY HH:mm'}}</td>
+      <td>{{process.status}}</td>
+      <td>
+        <div class="btn-group btn-group-sm mr-2" role="group">
+          <button type="button" class="btn btn-secondary">1</button>
+          <button type="button" class="btn btn-secondary">2</button>
+          <button type="button" class="btn btn-secondary">3</button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div class="btn-group btn-group-sm mr-2 pull-right" role="group">
+  <button type="button" class="btn btn-secondary" [disabled]="currentPage?.number===0" (click)="getNewPage(0)">Erste</button>
+  <button type="button" class="btn btn-secondary" [disabled]="currentPage?.number===0" (click)="getNewPage(currentPage.number-1)">Zurück</button>
+  <button style="min-width:34px" *ngFor="let pageCount of currentPageArray" (click)="getNewPage(pageCount)" type="button" [class]="pageCount===currentPage?.number?' btn btn-secondary active':'btn btn-secondary'">{{pageCount+1}}</button>
+  <button type="button" class="btn btn-secondary" [disabled]="currentPage?.number===currentPage?.totalPages-1" (click)="getNewPage(currentPage.number+1)">Nächste</button>
+  <button type="button" class="btn btn-secondary" [disabled]="currentPage?.number===currentPage?.totalPages-1" (click)="getNewPage(currentPage.totalPages-1)">Letzte</button>
+</div>

@@ -1,0 +1,44 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-12">
+    <div class="row">
+      <div class="col-lg-10">
+        <h2 i18n>LEAD_LEADS</h2>
+        <ol class="breadcrumb">
+          <li>
+            <a href="#/dashboard">Home</a>
+          </li>
+          <li class="active">
+            <strong i18n>LEAD_LEADS</strong>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5 i18n>LEAD_MANAGE_LEADS</h5>
+        </div>
+        <div class="ibox-content">
+          <button type="button" class="btn btn-success" ng-click="leadCtrl.openNewLeadModal()" i18n>
+                        <i class="fa fa-plus"></i> LEAD_ADD_LEAD
+                    </button>
+          <span class="pull-right" style=" font-size: 1.5em;" i18n>LEAD_SHOW_ALL_LEADS <input type="checkbox" ng-model="leadCtrl.loadAllData" ng-change="leadCtrl.changeDataInput()"
+	class="js-switch" ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}" /></span>
+          <span class="pull-right" style="margin-right:15px; margin-top:3px;">
+            <input i18n-title title="ALL_LEADS" style="transform:scale(1.5);margin-right: 6px;" type="checkbox" >
+            &nbsp;<span ng-style="{color: {true:'darkgray'}[leadCtrl.loadAllData==true]}" style="font-size: 12pt;" i18n>SHOW_MY_OPEN_LEADS</span>
+          </span>
+          <br/>
+          <br/>
+          <div class="table-responsive text-center">
+            <workflow-table [workflowUnitType]="'lead'" [method]="method"></workflow-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

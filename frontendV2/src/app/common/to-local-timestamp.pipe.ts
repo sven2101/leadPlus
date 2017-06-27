@@ -7,7 +7,7 @@ import * as jstz from "jstz";
 })
 export class ToLocalTimestampPipe implements PipeTransform {
 
-  private static toLocalDate(date: any, pattern: string = "DD.MM.YYYY HH:mm:ss"): string {
+  private static toLocalDate(date: any, pattern: string = "DD.MM.YYYY HH:mm:SS"): string {
     const timezone = jstz.determine().name();
     const currentDateUtc: any = moment.utc(date, pattern);
     // const currentDateLocal = currentDateUtc.tz(timezone);
@@ -17,7 +17,7 @@ export class ToLocalTimestampPipe implements PipeTransform {
   };
 
   transform(value: any, args?: any): any {
-    return ToLocalTimestampPipe.toLocalDate(value);
+    return ToLocalTimestampPipe.toLocalDate(value, args);
   }
 
 

@@ -1,5 +1,8 @@
 package dash.processmanagement.business;
 
+import static dash.processmanagement.business.ProcessSpecs.hasStatus;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +71,36 @@ public class newProcessService {
 			process.getWorkflowUnitBasedOnStatus().setCustomer(customerService.save(workflow.getCustomer()));
 		}
 		return processRepository.save(process);
+	}
+
+	public Page<Process> getAllProcessesByStatusIsOpenOrIncontactPage(int page, int size, String directionString,
+			String properties) {
+		page = page < 0 ? 0 : page;
+		size = size < 0 ? 0 : size;
+		Sort.Direction direction = "ASC".equals(directionString) ? Sort.Direction.ASC : Sort.Direction.DESC;
+		properties = "null".equals(properties) ? "lead.timestamp" : properties;
+		return processRepository.findAll(where(hasStatus(Status.OPEN)).or(hasStatus(Status.INCONTACT)),
+				new PageRequest(page, size, direction, properties));
+	}
+
+	public Page<Process> getAllProcessesByStatusIsOfferOrFollowupPage(int page, int size, String directionString,
+			String properties) {
+		page = page < 0 ? 0 : page;
+		size = size < 0 ? 0 : size;
+		Sort.Direction direction = "ASC".equals(directionString) ? Sort.Direction.ASC : Sort.Direction.DESC;
+		properties = "null".equals(properties) ? "lead.timestamp" : properties;
+		return processRepository.findAll(where(hasStatus(Status.OFFER)).or(hasStatus(Status.FOLLOWUP)),
+				new PageRequest(page, size, direction, properties));
+	}
+
+	public Page<Process> getAllProcessesByStatusIsDoneOrSalePage(int page, int size, String directionString,
+			String properties) {
+		page = page < 0 ? 0 : page;
+		size = size < 0 ? 0 : size;
+		Sort.Direction direction = "ASC".equals(directionString) ? Sort.Direction.ASC : Sort.Direction.DESC;
+		properties = "null".equals(properties) ? "lead.timestamp" : properties;
+		return processRepository.findAll(where(hasStatus(Status.DONE)).or(hasStatus(Status.SALE)),
+				new PageRequest(page, size, direction, properties));
 	}
 
 }

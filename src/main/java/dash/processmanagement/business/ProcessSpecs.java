@@ -46,6 +46,14 @@ public class ProcessSpecs {
 		};
 	}
 
+	public static Specification<Process> hasStatus(final Status status) {
+		return new Specification<Process>() {
+			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+				return builder.equal(root.get(Process_.status), status);
+			}
+		};
+	}
+
 	public static Specification<Process> isDeleted(boolean isDeleted) {
 		return new Specification<Process>() {
 			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {

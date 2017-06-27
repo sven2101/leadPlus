@@ -45,20 +45,22 @@ export class CacheService {
     , sortProperties: string = null, cacheExpireTime: number = CacheService.CACHE_LIFESPAN): Promise<Page<T>> {
 
     const resultFromCache = this.retireveDataFromCache(cachedObjectType, cacheName, pageSize + "_" + sortDirection + "_" + sortProperties, pageNumber
-      , cacheExpireTime);
+      , cacheExpireTime, loadFromCache);
 
     if (resultFromCache != null && loadFromCache === true) {
       console.log("fromCache", resultFromCache);
+      resultFromCache._fromCache = true;
       return resultFromCache as Page<T>;
     }
     this.cache[cachedObjectType.name][cacheName].pages[pageNumber] = await method(pageNumber, pageSize, sortDirection, sortProperties);
     const currentPage = this.cache[cachedObjectType.name][cacheName].pages[pageNumber];
-    currentPage.responsibleMethod = method.bind(null, pageNumber, pageSize, sortDirection, sortProperties);
+    currentPage._responsibleMethod = method.bind(null, pageNumber, pageSize, sortDirection, sortProperties);
     currentPage._dirty = false;
     currentPage._active = [];
     currentPage.setActiveFlag = this.setActive.bind(this, currentPage);
     currentPage.removeActiveFlag = (context) => currentPage._active.splice(currentPage._active.indexOf(context), 1);
     currentPage.setDirty = this.setDirty.bind(this, currentPage);
+    currentPage._fromCache = false;
     return currentPage as Page<T>;
   }
 
@@ -67,7 +69,7 @@ export class CacheService {
    * @return returns cached page if cache is valid, returns null if cache is invalid
    */
   private retireveDataFromCache(cachedObjectType: { new (...args: any[]) }, cacheName: string, filterSettings: string
-    , pageNumber: number = 0, cacheExpireTime: number = CacheService.CACHE_LIFESPAN): Page<CachableObject> | null {
+    , pageNumber: number = 0, cacheExpireTime: number, loadFromCache: boolean): Page<CachableObject> | null {
 
     if (this.cache[cachedObjectType.name] == null) {
       this.cache[cachedObjectType.name] = {};
@@ -88,7 +90,7 @@ export class CacheService {
   }
 
   private async replayCachedMethode(oldPage: Page<CachableObject>): Promise<void> {
-    const newPage = await oldPage.responsibleMethod();
+    const newPage = await oldPage._responsibleMethod();
     oldPage.content.length = 0;
     oldPage.content.push(...newPage.content);
     oldPage._dirty = false;

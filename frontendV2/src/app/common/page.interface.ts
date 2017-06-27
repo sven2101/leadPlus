@@ -13,7 +13,8 @@ export interface Page<T extends CachableObject> {
     setDirty: () => Promise<void>;
     setActiveFlag: (context: any) => Promise<void>;
     removeActiveFlag: (context: any) => void;
-    responsibleMethod: () => Page<T>;
+    _responsibleMethod: () => Page<T>;
+    _fromCache: boolean;
     sort: [
         {
             ascending: boolean;

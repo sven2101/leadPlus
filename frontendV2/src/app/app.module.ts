@@ -36,6 +36,8 @@ import { ToDoComponent } from "./dashboard/to-do/to-do.component";
 import { ManagmentCardComponent } from "./dashboard/managment/managment-card/managment-card.component";
 import { ModalComponent } from "./modal/modal.component";
 import { InfoModalComponent } from './dashboard/managment/info-modal/info-modal.component';
+import { WorkflowTableComponent } from './workflow/workflow-table/workflow-table.component';
+import { LeadComponent } from './workflow/lead/lead.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,9 @@ import { InfoModalComponent } from './dashboard/managment/info-modal/info-modal.
     ToDoComponent,
     ManagmentCardComponent,
     AbstractModalContentDirective,
-    InfoModalComponent
+    InfoModalComponent,
+    WorkflowTableComponent,
+    LeadComponent
 
   ],
   imports: [

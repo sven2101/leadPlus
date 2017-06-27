@@ -28,7 +28,7 @@ export class DashboardService {
   }
 
   public async getProcessesByStatus(status: ProcessStatus): Promise<Page<Process>> {
-    return this.processService.getAllProcessesByStatusPageCached(status, 0, 10, undefined, undefined, false);
+    return this.processService.getAllProcessesByStatusPageCached(status, 0, 10, undefined, undefined, true);
   }
 
   public async test() {

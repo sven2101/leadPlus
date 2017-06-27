@@ -409,6 +409,33 @@ public class ProcessResource {
 				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
 	}
 
+	@ApiOperation(value = "Returns a page of processes by Status OPEN or INCONTACT.", notes = "")
+	@RequestMapping(value = "pagination/open-or-incontact", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesByStatusIsOpenOrInContact(@RequestBody final String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesByStatusIsOpenOrIncontactPage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+	}
+
+	@ApiOperation(value = "Returns a page of processes by Status OFFER or FOLLOWUP.", notes = "")
+	@RequestMapping(value = "pagination/offer-or-followup", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesByStatusIsOfferOrFollowup(@RequestBody final String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesByStatusIsOfferOrFollowupPage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+	}
+
+	@ApiOperation(value = "Returns a page of processes by Status DONE or SALE.", notes = "")
+	@RequestMapping(value = "pagination/done-or-sale", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesByStatusIsDoneOrSale(@RequestBody final String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesByStatusIsDoneOrSalePage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+	}
+
 	@ApiOperation(value = "Save a process and its customer", notes = "")
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
