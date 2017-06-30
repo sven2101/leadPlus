@@ -19,6 +19,9 @@ export class WorkflowTableComponent implements OnInit, AfterViewInit {
   currentPage: Page<Process>;
   currentPageArray: Array<number> = [];
   pageSize = 1;
+  currentSortProperty = this.workflowUnitType + ".timestamp";
+  currentSortDirection = SortDirection.ASC;
+  SortDirection = SortDirection;
 
   constructor() { }
 
@@ -42,7 +45,7 @@ export class WorkflowTableComponent implements OnInit, AfterViewInit {
 
         if (y < paginationSize / 2) {
           tmp.pop();
-        }else{
+        } else {
           tmp.shift();
         }
         console.log(tmp);
@@ -54,9 +57,22 @@ export class WorkflowTableComponent implements OnInit, AfterViewInit {
 
   async getNewPage(pageNumber: number): Promise<void> {
     pageNumber = pageNumber < 0 ? 1 : pageNumber;
-    this.currentPage = await this.method(pageNumber, this.pageSize, null, null, true)
+    this.currentPage = await this.method(pageNumber, this.pageSize, this.currentSortDirection, this.currentSortProperty, true)
     this.currentPageArray = await this.getPagesCount(this.currentPage);
   }
 
+  async setSortProperty(property: string): Promise<void> {
+    if (this.currentSortProperty !== property) {
+      this.currentSortDirection = SortDirection.ASC;
+      this.currentSortProperty = property;
+    } else {
+      if (this.currentSortDirection === SortDirection.ASC) {
+        this.currentSortDirection = SortDirection.DESC;
+      } else {
+        this.currentSortDirection = SortDirection.ASC;
+      }
+    }
+    await this.getNewPage(this.currentPage.number);
+  }
 
 }

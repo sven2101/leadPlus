@@ -7,12 +7,42 @@
 </select>
 <table class="table table-bordered table-hover table-condensed text-center">
   <thead>
-    <th i18n>Processor</th>
-    <th i18n>Firma</th>
-    <th i18n>Name</th>
-    <th i18n>Lieferort</th>
-    <th i18n>Datum</th>
-    <th i18n>Status</th>
+    <th i18n>Processor </th>
+    <th class="sortableColumn" (click)="setSortProperty(workflowUnitType+'.customer.company')" i18n>Firma
+      <i *ngIf="currentSortProperty!==workflowUnitType+'.customer.company'" class="fa fa-unsorted pull-right" aria-hidden="true"></i>
+      <ng-container *ngIf="currentSortProperty===workflowUnitType+'.customer.company'">
+        <i *ngIf="currentSortDirection===SortDirection.ASC" class="fa fa-sort-amount-asc pull-right" aria-hidden="true"></i>
+        <i *ngIf="currentSortDirection===SortDirection.DESC" class="fa fa-sort-amount-desc pull-right" aria-hidden="true"></i>
+      </ng-container>      
+    </th>
+    <th class="sortableColumn" (click)="setSortProperty(workflowUnitType+'.customer.lastname')" i18n>Name
+      <i *ngIf="currentSortProperty!==workflowUnitType+'.customer.lastname'" class="fa fa-unsorted pull-right" aria-hidden="true"></i>
+      <ng-container *ngIf="currentSortProperty===workflowUnitType+'.customer.lastname'">
+        <i *ngIf="currentSortDirection===SortDirection.ASC" class="fa fa-sort-amount-asc pull-right" aria-hidden="true"></i>
+        <i *ngIf="currentSortDirection===SortDirection.DESC" class="fa fa-sort-amount-desc pull-right" aria-hidden="true"></i>
+      </ng-container>      
+    </th>
+    <th class="sortableColumn" (click)="setSortProperty(workflowUnitType+'.deliveryAddressLine')" i18n>Lieferort
+      <i *ngIf="currentSortProperty!==workflowUnitType+'.deliveryAddressLine'" class="fa fa-unsorted pull-right" aria-hidden="true"></i>
+      <ng-container *ngIf="currentSortProperty===workflowUnitType+'.deliveryAddressLine'">
+        <i *ngIf="currentSortDirection===SortDirection.ASC" class="fa fa-sort-amount-asc pull-right" aria-hidden="true"></i>
+        <i *ngIf="currentSortDirection===SortDirection.DESC" class="fa fa-sort-amount-desc pull-right" aria-hidden="true"></i>
+      </ng-container>      
+    </th>
+    <th class="sortableColumn" (click)="setSortProperty(workflowUnitType+'.timestamp')" i18n>Datum
+      <i *ngIf="currentSortProperty!==workflowUnitType+'.timestamp'" class="fa fa-unsorted pull-right" aria-hidden="true"></i>
+      <ng-container *ngIf="currentSortProperty===workflowUnitType+'.timestamp'">
+        <i *ngIf="currentSortDirection===SortDirection.ASC" class="fa fa-sort-amount-asc pull-right" aria-hidden="true"></i>
+        <i *ngIf="currentSortDirection===SortDirection.DESC" class="fa fa-sort-amount-desc pull-right" aria-hidden="true"></i>
+      </ng-container>      
+    </th>
+    <th class="sortableColumn" (click)="setSortProperty('status')" i18n>Status
+      <i *ngIf="currentSortProperty!=='status'" class="fa fa-unsorted pull-right" aria-hidden="true"></i>
+      <ng-container *ngIf="currentSortProperty==='status'">
+        <i *ngIf="currentSortDirection===SortDirection.ASC" class="fa fa-sort-amount-asc pull-right" aria-hidden="true"></i>
+        <i *ngIf="currentSortDirection===SortDirection.DESC" class="fa fa-sort-amount-desc pull-right" aria-hidden="true"></i>
+      </ng-container>      
+    </th>
     <th i18n>Actions</th>
   </thead>
   <tbody>
