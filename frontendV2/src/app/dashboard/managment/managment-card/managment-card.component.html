@@ -4,7 +4,7 @@
       <div style="clear:right;clear:left;">
         <div *ngIf="process?.processor!=null" style="height:48px;">
           <img [title]="process?.processor.firstname+' '+process?.processor.lastname" style="width: 48px; height:48px;border-radius: 10%;"
-            [src]="getProductPictureId(process?.processor)" alt="">
+            [pictureId]="process?.processor?.thumbnail?.id" alt="">
         </div>
         <div *ngIf="process?.processor==null" style="height:48px;border-radius: 10%;border-style: dashed;  border-width: 1px; border-color: grey;"
           ng-click="pin(process)">

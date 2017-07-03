@@ -6,6 +6,8 @@ import { AuthenticationService } from "../login/authentication.service";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/toPromise";
 
+declare var $;
+
 @Injectable()
 export class HttpClient {
 
@@ -30,6 +32,27 @@ export class HttpClient {
             .map((res: Response) => this.extractResponse(res))
             .toPromise()
             .catch(error => this.extractErrorResponse(error));
+    }
+
+    public async getBrowserCached<T>(url: string): Promise<T> {
+        const accessToken = await this.AuthenticationService.getAccessTokenPromise();
+        return new Promise<T>((resolve, reject) => {
+            $.ajax({
+                type: "GET",
+                url: AuthenticationService.API_ENPOINT + url,
+
+                headers: {
+                    "X-Authorization": "Bearer " + accessToken,
+                    "Content-Type": "arraybuffer"
+                },
+                success: (response) => {
+                    resolve(response);
+                },
+                error: (error) => {
+                    reject(error);
+                }
+            });
+        });
     }
 
     public async post<T>(url: string, data: Object, requestOptions: RequestOptions | undefined = undefined): Promise<T> {

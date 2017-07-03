@@ -15,15 +15,19 @@
 package dash.processmanagement.business;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
 import dash.processmanagement.domain.Process;
 import dash.statusmanagement.domain.Status;
+import dash.usermanagement.domain.User;
 
 //@Transactional
 //@Repository
@@ -74,4 +78,37 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 	List<Process> findAll(Specification<Process> spec);
 
 	Page<Process> findAll(Specification<Process> spec, Pageable pageable);
+
+	@Query("SELECT p FROM Process p WHERE p.deleted = false AND p.status IN :status AND p.lead is not null AND (LOWER(p.lead.customer.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.lead.customer.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.lead.customer.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.lead.customer.email) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.lead.customer.customerNumber) like LOWER(CONCAT('%',:searchText,'%')))")
+	public Page<Process> findLeadProcessesByStatusAndSearchText(@Param(value = "searchText") String searchText,
+			@Param(value = "status") Collection<Status> status, Pageable pageable);
+
+	@Query("SELECT p FROM Process p WHERE p.deleted = false AND p.status IN :status AND p.offer is not null AND (LOWER(p.offer.customer.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.offer.customer.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.offer.customer.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.offer.customer.email) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.offer.customer.customerNumber) like LOWER(CONCAT('%',:searchText,'%')))")
+	public Page<Process> findOfferProcessesByStatusAndSearchText(@Param(value = "searchText") String searchText,
+			@Param(value = "status") Collection<Status> status, Pageable pageable);
+
+	@Query("SELECT p FROM Process p WHERE p.deleted = false AND p.status IN :status AND p.sale is not null AND p.sale.timestamp > :inputCalendar AND (LOWER(p.sale.customer.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.sale.customer.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.sale.customer.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.sale.customer.email) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.sale.customer.customerNumber) like LOWER(CONCAT('%',:searchText,'%')))")
+	public Page<Process> findSaleProcessesByStatusAndSearchText(@Param(value = "searchText") String searchText,
+			@Param(value = "status") Collection<Status> status, @Param(value = "inputCalendar") Calendar calendar,
+			Pageable pageable);
+
+	@Query("SELECT p FROM Process p WHERE p.deleted = false AND p.status IN :status AND p.processor = :user AND p.lead is not null AND (LOWER(p.lead.customer.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.lead.customer.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.lead.customer.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.lead.customer.email) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.lead.customer.customerNumber) like LOWER(CONCAT('%',:searchText,'%')))")
+	public Page<Process> findMyLeadProcessesByStatusAndSearchText(@Param(value = "searchText") String searchText,
+			@Param(value = "status") Collection<Status> status, @Param(value = "user") User user, Pageable pageable);
+
+	@Query("SELECT p FROM Process p WHERE p.deleted = false AND p.status IN :status AND p.processor = :user AND p.offer is not null AND (LOWER(p.offer.customer.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.offer.customer.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.offer.customer.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.offer.customer.email) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.offer.customer.customerNumber) like LOWER(CONCAT('%',:searchText,'%')))")
+	public Page<Process> findMyOfferProcessesByStatusAndSearchText(@Param(value = "searchText") String searchText,
+			@Param(value = "status") Collection<Status> status, @Param(value = "user") User user, Pageable pageable);
+
+	@Query("SELECT p FROM Process p WHERE p.deleted = false AND p.status IN :status AND p.processor = :user AND p.sale is not null AND p.sale.timestamp > :inputCalendar AND (LOWER(p.sale.customer.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.sale.customer.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.sale.customer.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.sale.customer.email) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(p.sale.customer.customerNumber) like LOWER(CONCAT('%',:searchText,'%')))")
+	public Page<Process> findMySaleProcessesByStatusAndSearchText(@Param(value = "searchText") String searchText,
+			@Param(value = "status") Collection<Status> status, @Param(value = "user") User user,
+			@Param(value = "inputCalendar") Calendar calendar, Pageable pageable);
+
+	@Query("SELECT sum(o.netPrice) FROM Offer o, Process p WHERE p.status IN :inputStatus AND p.offer.id = o.id AND p.deleted = false AND o.deleted = false")
+	public Double getOfferSumByStatus(@Param(value = "inputStatus") Collection<Status> inputStatus);
+
+	@Query("SELECT sum(s.saleTurnover) FROM Sale s, Process p WHERE p.status = 'SALE' AND p.sale.id = s.id AND s.timestamp > :inputCalendar AND p.deleted = false AND s.deleted = false")
+	public Double getSaleSumByStatus(@Param(value = "inputCalendar") Calendar calendar);
+
 }

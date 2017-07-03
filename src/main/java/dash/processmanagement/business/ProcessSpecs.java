@@ -12,6 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import dash.common.AbstractWorkflow;
 import dash.common.AbstractWorkflow_;
+import dash.customermanagement.domain.Customer;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Process_;
 import dash.processmanagement.domain.Processor_;
@@ -66,6 +67,43 @@ public class ProcessSpecs {
 		return new Specification<Process>() {
 			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 				return builder.equal(root.get(Process_.status), Status.SALE);
+			}
+		};
+	}
+
+	public static Specification<Process> containsSearchTextInCustomer(
+			SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute,
+			SingularAttribute<Customer, String> customerAttribute, String searchText) {
+
+		return new Specification<Process>() {
+			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+				final String tmpSearchtext = "%" + searchText + "%";
+				return builder.like(
+						root.join(abstractWorkflowAttribute).join(AbstractWorkflow_.customer).get(customerAttribute),
+						tmpSearchtext);
+			}
+		};
+	}
+
+	public static Specification<Process> containsSearchTextInStatus(
+
+			String searchText) {
+
+		return new Specification<Process>() {
+			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+				final String tmpSearchtext = "%" + searchText + "%";
+				return builder.like(root.get(Process_.status).as(String.class), tmpSearchtext);
+			}
+		};
+	}
+
+	public static Specification<Process> containsSearchTextInWorkflow(
+			SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute,
+			SingularAttribute<AbstractWorkflow, String> workflowAttribute, String searchText) {
+		return new Specification<Process>() {
+			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+				final String tmpSearchtext = "%" + searchText + "%";
+				return builder.like(root.join(abstractWorkflowAttribute).get(workflowAttribute), tmpSearchtext);
 			}
 		};
 	}

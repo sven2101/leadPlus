@@ -18,7 +18,7 @@ export class WorkflowTableComponent implements OnInit, AfterViewInit {
   @Input() workflowUnitType = "lead";
   currentPage: Page<Process>;
   currentPageArray: Array<number> = [];
-  pageSize = 1;
+  pageSize = 10;
   currentSortProperty = this.workflowUnitType + ".timestamp";
   currentSortDirection = SortDirection.ASC;
   SortDirection = SortDirection;
