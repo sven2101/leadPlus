@@ -21,6 +21,7 @@ class TemplateService {
     templates: Array<Template>;
     currentEditTemplate: Template;
     sce;
+    inconsistency: string;
 
     constructor(toaster, $translate, private $rootScope, TemplateResource, $uibModal, $q, $window, $sce) {
         this.toaster = toaster;
@@ -33,7 +34,7 @@ class TemplateService {
     }
 
     getCurrentEditTemplate(): Template {
-        return this.currentEditTemplate;
+        return deepCopy(this.currentEditTemplate);
     }
 
     getTemplateFromTemplatesById(id: number): Template {
@@ -55,34 +56,30 @@ class TemplateService {
         });
     }
 
-    save(template: Template): Promise<Template> {
-        let defer = this.q.defer();
-        let self = this;
-        this.templateResource.save(template).$promise.then(function (result: Template) {
-            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_TEMPLATE_SAVE"));
-            self.templates.push(result);
-            defer.resolve(result);
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_TEMPLATE_SAVE_ERROR"));
-            defer.reject(null);
-        });
-        return defer.promise;
+    async save(template: Template): Promise<Template> {
+        try {
+            let savedTemplate = await this.templateResource.save(template).$promise;
+            this.inconsistency = null;
+            this.templates.push(savedTemplate);
+            return savedTemplate;
+        } catch (error) {
+            template = null;
+            throw error;
+        }
     }
 
-    update(template: Template): Promise<Template> {
-        let defer = this.q.defer();
-        let self = this;
-        this.templateResource.update(template).$promise.then(function (result: Template) {
-            self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_EMAIL_TEMPLATE_UPDATE"));
-            let oldTemplate: Template = findElementById(self.templates, template.id);
-            let index = self.templates.indexOf(oldTemplate);
-            self.templates[index] = template;
-            defer.resolve(result);
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_EMAIL_TEMPLATE_UPDATE_ERROR"));
-            defer.reject(null);
-        });
-        return defer.promise;
+    async update(template: Template): Promise<Template> {
+        try {
+            let savedTemplate = await this.templateResource.update(template).$promise;
+            this.inconsistency = null;
+            let oldTemplate: Template = findElementById(this.templates, template.id);
+            let index = this.templates.indexOf(oldTemplate);
+            this.templates[index] = savedTemplate;
+            return savedTemplate;
+        } catch (error) {
+            template = null;
+            throw error;
+        }
     }
 
     remove(template: Template) {

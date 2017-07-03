@@ -19,8 +19,8 @@ page.onResourceRequested = function(requestData, request) {
   console.log('::loading', requestData['url']);  // this does get logged now
 };
 
-var footerContent = null
-var footerHeight = null
+var footerContent = null;
+var footerHeight = null;
 try{
 	footerContent=fs.read(system.args[3]);
 	footerHeight=system.args[4];	
@@ -35,8 +35,10 @@ page.paperSize = {
     format: 'A4',
     orientation: 'portrait',
     margin: {
-        top: "1.5cm",
-        bottom: "1cm"
+        top: "1cm",
+        bottom: "0cm",
+		left:"1.5cm",
+		right:"1.5cm"
     },
     footer: {
         height: footerHeight,
@@ -58,12 +60,13 @@ var header ='<!DOCTYPE html>'+
 				'<title>The title is irrelevant</title>'+
 				'<meta http-equiv="content-type" content="text/html; charset=UTF-8">'+
 				'<meta name="viewport" content="width=device-width, initial-scale=1.0">'+
-				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/bootstrap.min.css" />'+
-				// '<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/assets.css" />'+
-				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/style.css" />'+
-				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/font-awesome.min.css" />'+
+				'<link rel="stylesheet" media="all" type="text/css" href="file:///var/app/current/phantomjs/libs/assets/bootstrap.min.css" />'+
+				// '<link rel="stylesheet" media="all" type="text/css" href="file:///var/app/current/phantomjs/libs/assets/assets.css" />'+
+				// '<link rel="stylesheet" media="all" type="text/css" href="file:///var/app/current/phantomjs/libs/assets/style.css" />'+
+				'<link rel="stylesheet" media="all" type="text/css" href="file:///var/app/current/phantomjs/libs/font-awesome.min.css" />'+
 				'<style type="text/css" media="all">'+
-        				'html { margin:0; zoom: 1;  }'+
+        				'html { margin:0; zoom: 0.8; }'+
+								
     				'</style>'+
 			'</head>'+
 			'<body>'+

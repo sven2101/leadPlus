@@ -42,10 +42,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
 	public List<Customer> findByRealCustomerAndDeletedFalse(Boolean realCustomer);
 
-	public List<Customer> findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCaseAndDeletedFalse(
-			String firstname, String lastname, String email, String company, String customernumber);
+	@Query("select c from Customer c where c.deleted = false AND (LOWER(c.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.email) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.customerNumber) like LOWER(CONCAT('%',:searchText,'%')))")
+	public List<Customer> findCustomerBySearchText(@Param(value = "searchText") String searchText);
 
-	public Page<Customer> findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCaseAndDeletedFalse(
-			String firstname, String lastname, String email, String company, String customernumber, Pageable pageable);
+	@Query("select c from Customer c where c.deleted = false AND (LOWER(c.company) LIKE LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.firstname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.lastname) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.email) like LOWER(CONCAT('%',:searchText,'%')) OR LOWER(c.customerNumber) like LOWER(CONCAT('%',:searchText,'%')))")
+	public Page<Customer> findPageableCustomerBySearchText(
+			@Param(value = "searchText") String searchText, Pageable pageable);
 
 }

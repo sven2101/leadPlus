@@ -38,7 +38,6 @@ class AuthService {
         if (credentials) {
             let salt: string = credentials.email;
             let hashedPassword = hashPasswordPbkdf2(credentials.password, salt);
-            console.log(salt, credentials.password, JSON.parse(JSON.stringify(hashedPassword)));
             await this.TokenService.setTokenByCredentials({ username: credentials.email, password: hashedPassword });
             let user = await this.userResource.getByEmail(credentials.email).$promise;
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import dash.common.AbstractWorkflow;
 import dash.customermanagement.business.CustomerService;
+import dash.exceptions.ConsistencyFailedException;
 import dash.processmanagement.domain.Process;
 import dash.statusmanagement.domain.Status;
 
@@ -65,7 +66,7 @@ public class newProcessService {
 		return processRepository.findByStatus(status, new PageRequest(page, size, direction, properties));
 	}
 
-	public Process saveProcess(final Process process) {
+	public Process saveProcess(final Process process) throws ConsistencyFailedException {
 		AbstractWorkflow workflow = process.getWorkflowUnitBasedOnStatus();
 		if (workflow != null && workflow.getCustomer() != null) {
 			process.getWorkflowUnitBasedOnStatus().setCustomer(customerService.save(workflow.getCustomer()));

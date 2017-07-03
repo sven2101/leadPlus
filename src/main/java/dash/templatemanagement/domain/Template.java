@@ -27,7 +27,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import dash.common.ConsistencyObject;
+import dash.consistencymanagement.domain.ConsistencyObject;
 
 @Entity
 @Table(name = "template")
@@ -139,7 +139,7 @@ public class Template extends ConsistencyObject {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((content == null) ? 0 : content.hashCode());
 		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
@@ -155,7 +155,7 @@ public class Template extends ConsistencyObject {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;

@@ -38,15 +38,31 @@ class LeadDataTableService implements IDatatableService {
         this.processResource = ProcessResource.resource;
     }
 
+
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
             .withOption("ajax", function (data, callback, settings) {
+                if (!isNullOrUndefined(self.workflowDatatableService.cache[WorkflowType.LEAD.toString()])) {
+                    setTimeout(function () {
+                        callback(self.workflowDatatableService.cache[WorkflowType.LEAD.toString()]);
+                    }, 400);
+                }
                 self.$http.get(openDataLeadRoute).then(function (response) {
-                    callback(response.data);
+                    if (isNullOrUndefined(self.workflowDatatableService.cache[WorkflowType.LEAD.toString()])) {
+                        callback(response.data);
+                    }
+                    self.workflowDatatableService.cache[WorkflowType.LEAD.toString()] = response.data;
+                    let refreshObject = {
+                        data: response.data,
+                        timestamp: newTimestamp(),
+                        workflow: WorkflowType.LEAD
+                    };
+                    setTimeout(function () {
+                        self.rootScope.$broadcast(broadcastUpdateOldRow, refreshObject);
+                    }, 400);
                 });
             })
-
             .withOption("stateSave", false)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
@@ -78,8 +94,7 @@ class LeadDataTableService implements IDatatableService {
 
     getDetailHTML(id: number): string {
         return "<a id='id_" + id + "' class='green shortinfo' href='javascript:;'"
-            + "ng-click='leadCtrl.appendChildRow(leadCtrl.processes[" + id
-            + "])' title='Details'>"
+            + "ng-click='leadCtrl.appendChildRow(" + id + ")' title='Details'>"
             + "<i class='glyphicon glyphicon-plus-sign'/></a>";
     }
 

@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.common.FailedToEncryptCipherTextException;
+import dash.exceptions.ConsistencyFailedException;
+import dash.exceptions.NotFoundException;
 import dash.extern.apimanagement.business.ApiService;
 import dash.extern.apimanagement.domain.Api;
 import dash.smtpmanagement.rest.SmtpResource;
@@ -38,12 +41,14 @@ public class ApiResource {
 
 	@ApiOperation(value = "Create and store details for an Api.")
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Object> createApi(@RequestBody @Valid final Api api) {
+	public ResponseEntity<Object> createApi(@RequestBody @Valid final Api api) throws ConsistencyFailedException,
+			FailedToEncryptCipherTextException, IllegalArgumentException, NotFoundException {
 		try {
 			return new ResponseEntity<>(apiService.save(api), HttpStatus.CREATED);
-		} catch (Exception e) {
+		} catch (ConsistencyFailedException | FailedToEncryptCipherTextException | IllegalArgumentException
+				| NotFoundException e) {
 			logger.error(ApiResource.class.getSimpleName() + e.getMessage(), e);
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+			throw e;
 		}
 	}
 

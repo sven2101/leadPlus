@@ -29,7 +29,9 @@ class CustomerDetailController {
         let customerId = $routeParams.customerId;
         if (!isNullOrUndefined(customerId) && customerId !== 0 && !isNaN(customerId) && angular.isNumber(+customerId)) {
             this.customer = await this.customerService.getCustomerById(Number(customerId));
-            this.customerHead = this.customer.firstname + " " + this.customer.lastname;
+            if (!isNullOrUndefined(this.customer)) {
+                this.customerHead = this.customer.firstname + " " + this.customer.lastname;
+            }
             this.isNewCustomer = false;
             isNullOrUndefined(this.customer) ? this.customerFound = false : this.customerFound = true;
         } else if (!isNullOrUndefined(customerId) && customerId === "new") {
@@ -38,12 +40,16 @@ class CustomerDetailController {
             this.customerFound = true;
             this.isNewCustomer = true;
         }
+        this.customerService.inconsistency = null;
     }
 
     async saveCustomer() {
-        let customer = await this.customerService.saveCustomer(this.customer, this.isNewCustomer);
-        if (customer !== null) {
+        try {
+            this.customer = await this.customerService.saveCustomer(this.customer, this.isNewCustomer, this.isNewCustomer);
             this.location.path("/customer");
+        } catch (error) {
+            this.customerService.inconsistency = showConsistencyErrorMessage(error, this.$translate, this.toaster, "CUSTOMER");
+            throw error;
         }
     }
 

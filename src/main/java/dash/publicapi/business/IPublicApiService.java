@@ -20,7 +20,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import dash.common.ConsistencyFailedException;
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.leadmanagement.domain.Lead;

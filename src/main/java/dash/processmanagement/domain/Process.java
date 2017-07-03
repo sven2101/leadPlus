@@ -39,9 +39,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import dash.commentmanagement.domain.Comment;
 
+
 import dash.common.AbstractWorkflow;
 
-import dash.common.ConsistencyObject;
+import dash.consistencymanagement.domain.ConsistencyObject;
+
 
 import dash.leadmanagement.domain.Lead;
 import dash.notificationmanagement.domain.Notification;
@@ -57,11 +59,7 @@ import dash.usermanagement.domain.User;
 @Where(clause = "deleted <> '1'")
 @Table(name = "process")
 @SequenceGenerator(name = "idgen", sequenceName = "process_id_seq", allocationSize = 1)
-public class Process extends ConsistencyObject {
-
-	@NotNull
-	@Column(name = "deleted", nullable = false)
-	private boolean deleted;
+public class Process extends ConsistencyObject implements Cloneable {
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "lead_fk", nullable = true)
@@ -78,7 +76,7 @@ public class Process extends ConsistencyObject {
 	@Where(clause = "deleted <> '1'")
 	private Sale sale;
 
-	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
+	@OneToMany(orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
 	@Where(clause = "deleted <> '1'")
 	@JsonManagedReference("process-comments")
 	private Set<Comment> comments;
@@ -116,6 +114,10 @@ public class Process extends ConsistencyObject {
 		this.processor = null;
 	}
 
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
 	public int getFollowUpAmount() {
 		if (getNotifications() == null) {
 			return 0;
@@ -130,14 +132,6 @@ public class Process extends ConsistencyObject {
 	}
 
 	public Process() {
-	}
-
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
 	}
 
 	public Lead getLead() {
@@ -241,9 +235,8 @@ public class Process extends ConsistencyObject {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
-		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((formerProcessors == null) ? 0 : formerProcessors.hashCode());
 		result = prime * result + ((lead == null) ? 0 : lead.hashCode());
 		result = prime * result + ((notifications == null) ? 0 : notifications.hashCode());
@@ -259,7 +252,7 @@ public class Process extends ConsistencyObject {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -268,8 +261,6 @@ public class Process extends ConsistencyObject {
 			if (other.comments != null)
 				return false;
 		} else if (!comments.equals(other.comments))
-			return false;
-		if (deleted != other.deleted)
 			return false;
 		if (formerProcessors == null) {
 			if (other.formerProcessors != null)
@@ -313,9 +304,8 @@ public class Process extends ConsistencyObject {
 
 	@Override
 	public String toString() {
-		return "Process [deleted=" + deleted + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale + ", comments="
-				+ comments + ", status=" + status + ", processor=" + processor + ", notifications=" + notifications
-				+ ", source=" + source + "]";
+		return "Process [lead=" + lead + ", offer=" + offer + ", sale=" + sale + ", comments=" + comments + ", status="
+				+ status + ", processor=" + processor + ", notifications=" + notifications + ", source=" + source + "]";
 	}
 
 }

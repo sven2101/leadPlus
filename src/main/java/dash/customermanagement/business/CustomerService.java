@@ -17,9 +17,7 @@ import static dash.Constants.BECAUSE_OF_ILLEGAL_ID;
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.CUSTOMER_NOT_FOUND;
 import static dash.Constants.DELETE_FAILED_EXCEPTION;
-import static dash.Constants.SAVE_FAILED_EXCEPTION;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,22 +28,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import dash.common.ConsistencyFailedException;
+import dash.consistencymanagement.business.ConsistencyService;
 import dash.customermanagement.domain.Customer;
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
-import dash.exceptions.SaveFailedException;
 
 @Service
-public class CustomerService implements ICustomerService {
+@Transactional
+public class CustomerService extends ConsistencyService {
 
 	private static final Logger logger = Logger.getLogger(CustomerService.class);
 
 	@Autowired
 	private CustomerRepository customerRepository;
 
-	@Override
 	public Page<Customer> getAllByPage(Integer start, Integer length, String searchText, Boolean allCustomers) {
 
 		Page<Customer> page = null;
@@ -65,17 +64,14 @@ public class CustomerService implements ICustomerService {
 				page = customerRepository
 						.findByDeletedFalse((new PageRequest(start / length, length, sortDirection, sortColumn)));
 			} else {
-				page = customerRepository
-						.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCaseAndDeletedFalse(
-								searchText, searchText, searchText, searchText, searchText,
-								new PageRequest(start / length, length, sortDirection, sortColumn));
+				page = customerRepository.findPageableCustomerBySearchText(searchText,
+						new PageRequest(start / length, length, sortDirection, sortColumn));
 			}
 		}
 
 		return page;
 	}
 
-	@Override
 	public Customer getById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
@@ -91,26 +87,16 @@ public class CustomerService implements ICustomerService {
 		}
 	}
 
-	@Override
-	public Customer save(final Customer customer) throws SaveFailedException, ConsistencyFailedException {
-		if (Optional.ofNullable(customer).isPresent()) {
-			if (customer.getId() != null) {
-				Customer savedCustomer = customerRepository.findOne(customer.getId());
-				if (savedCustomer != null && savedCustomer.getLastEdited().getTimeInMillis()!=(customer.getLastEdited().getTimeInMillis())) {
-					throw new ConsistencyFailedException(
-							savedCustomer.getLastEditor()+";"+savedCustomer.getLastEdited().getTimeInMillis());
-				}
-			}
-			customer.setLastEdited(Calendar.getInstance());
-			return customerRepository.save(customer);
-		} else {
-			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
-			throw sfex;
+	public Customer save(final Customer customer) throws ConsistencyFailedException {
+		if (customer == null) {
+			logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
+			throw new IllegalArgumentException(
+					CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
 		}
+		this.checkConsistencyAndSetTimestamp(customer, customerRepository);
+		return customerRepository.save(customer);
 	}
 
-	@Override
 	public void delete(final Long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
@@ -126,27 +112,21 @@ public class CustomerService implements ICustomerService {
 		}
 	}
 
-	@Override
 	public List<Customer> getByEmailIgnoreCase(String email) {
 
 		return customerRepository.findByEmailIgnoreCaseAndDeletedFalse(email);
 	}
 
-	@Override
 	public List<Customer> getRealCustomer() {
 		return customerRepository.findByRealCustomerAndDeletedFalse(true);
 	}
 
-	@Override
 	public List<Customer> getAll() {
 		return customerRepository.findByDeletedFalse();
 	}
 
-	@Override
 	public List<Customer> getCustomerBySearchText(String searchText) {
-		return customerRepository
-				.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCaseAndDeletedFalse(
-						searchText, searchText, searchText, searchText, searchText);
+		return customerRepository.findCustomerBySearchText(searchText);
 	}
 
 }

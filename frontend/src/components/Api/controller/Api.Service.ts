@@ -24,6 +24,7 @@ class ApiService {
     ApiResource;
     formdata;
     currentEditApi: Api;
+    inconsistency: string;
 
     constructor(private toaster, private $translate, ApiResource, private $q, private $uibModal) {
         this.ApiResource = ApiResource.resource;
@@ -34,21 +35,24 @@ class ApiService {
     async save(api: Api) {
         try {
             await this.ApiResource.create(api).$promise;
+            this.inconsistency = null;
             this.getAll();
         } catch (error) {
-            this.toaster.pop("error", "", this.$translate.instant("SETTING_API_TOAST_SAVE_ERROR"));
+            throw error;
         }
     }
 
     async update(api: Api): Promise<void> {
         try {
-            await this.ApiResource.update(api).$promise;
-            let oldApi: Api = findElementById(this.apis, api.id);
+            let savedApi = await this.ApiResource.update(api).$promise;
+            this.inconsistency = null;
+            let oldApi: Api = findElementById(this.apis, savedApi.id);
             let index = this.apis.indexOf(oldApi);
-            this.apis[index] = api;
+            this.apis[index] = savedApi;
         }
         catch (error) {
-            this.toaster.pop("error", "", this.$translate.instant("SETTING_API_TOAST_SAVE_ERROR"));
+            this.inconsistency = showConsistencyErrorMessage(error, this.$translate, this.toaster, "SETTING_SINGLE_API");
+            throw error;
         }
     }
 

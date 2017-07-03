@@ -33,14 +33,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import dash.addressmanagement.domain.Address;
-import dash.common.ConsistencyFailedException;
 import dash.common.HtmlCleaner;
-import dash.customermanagement.business.ICustomerService;
+import dash.customermanagement.business.CustomerService;
 import dash.customermanagement.domain.Customer;
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.leadmanagement.domain.Lead;
-import dash.processmanagement.business.IProcessService;
+import dash.processmanagement.business.ProcessService;
 import dash.processmanagement.domain.Process;
 import dash.productmanagement.business.IProductService;
 import dash.productmanagement.business.ProductService;
@@ -61,10 +61,10 @@ public class PublicApiService implements IPublicApiService {
 	private IProductService productService;
 
 	@Autowired
-	private ICustomerService customerService;
+	private CustomerService customerService;
 
 	@Autowired
-	private IProcessService processService;
+	private ProcessService processService;
 
 	@Autowired
 	private ISourceService sourceService;

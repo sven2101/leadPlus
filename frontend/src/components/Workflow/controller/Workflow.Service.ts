@@ -208,8 +208,7 @@ class WorkflowService {
         let resultProcess = await this.processService.save(tempProcess, tempProcess.sale, false, true) as Process;
         let customer: Customer = resultProcess.offer.customer;
         if (!customer.realCustomer) {
-            customer.realCustomer = true;
-            let updatedCustomer: Customer = await this.customerService.updateCustomer(customer);
+            let updatedCustomer: Customer = await this.customerService.saveCustomer(customer, false, true);
             resultProcess.offer.customer = updatedCustomer;
         }
         await this.apiService.weclappCreateCustomer(resultProcess);
@@ -242,23 +241,31 @@ class WorkflowService {
         }
     }
 
-    togglePin(process: Process, user: User) {
-        let self = this;
-        if (user !== null) {
-            this.processService.setProcessor(process, user).then((result) => {
-                process.processor = user;
-                self.rootScope.$broadcast(broadcastOnTodosChanged);
-                self.rootScope.$broadcast(broadcastUpdate, result);
-                self.rootScope.$broadcast(broadcastUpdateChildrow, result);
-            }, (error) => handleError(error));
-        } else if (process.processor !== null) {
-            this.processService.removeProcessor(process).then(function () {
-                process.processor = null;
-                self.rootScope.$broadcast(broadcastUpdate, process);
-                self.rootScope.$broadcast(broadcastOnTodosChanged);
-            }, (error) => handleError(error));
+    async togglePin(process: Process, user: User): Promise<Process> {
+        try {
+            if (user !== null) {
+                let resultProcess = await this.processService.setProcessor(process, user);
+                this.rootScope.$broadcast(broadcastOnTodosChanged);
+                this.rootScope.$broadcast(broadcastUpdate, resultProcess);
+                this.rootScope.$broadcast(broadcastUpdateChildrow, resultProcess);
+                return resultProcess;
+            } else if (process.processor !== null) {
+                let resultProcess = await this.processService.removeProcessor(process);
+                this.rootScope.$broadcast(broadcastUpdate, resultProcess);
+                this.rootScope.$broadcast(broadcastOnTodosChanged);
+                this.rootScope.$broadcast(broadcastUpdateChildrow, resultProcess);
+                return resultProcess;
+            }
+        } catch (error) {
+            this.rootScope.$broadcast(broadcastRefreshDatatable);
+            this.rootScope.$broadcast(broadcastRefreshDashboard);
+            this.toaster.pop("error", "", this.translate
+                .instant("COMMON_ACTION_ERROR"));
+            handleError(error);
+            throw error;
         }
     }
+
 
     async inContact(process: Process): Promise<Process> {
         process.status = Status.INCONTACT;
@@ -268,13 +275,18 @@ class WorkflowService {
         }
         if (!this.checkForDupsInFormerProcessors(process.formerProcessors, this.rootScope.user, Activity.INCONTACT)) {
             process.formerProcessors.push(new Processor(process.processor, Activity.INCONTACT));
+        } try {
+            let resultProcess = await this.processService.save(process, null, false, false) as Process;
+            this.rootScope.$broadcast(broadcastOnTodosChanged);
+            this.rootScope.$broadcast(broadcastUpdate, resultProcess);
+            this.rootScope.$broadcast(broadcastUpdateChildrow, resultProcess);
+            this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_INCONTACT"));
+            return resultProcess;
+        } catch (error) {
+            this.rootScope.$broadcast(broadcastRefreshDatatable);
+            showConsistencyErrorMessage(error, this.translate, this.toaster, "PROCESS_PROCESS");
+            throw error;
         }
-        let resultProcess = await this.processService.save(process, null, false, false) as Process;
-        this.rootScope.$broadcast(broadcastOnTodosChanged);
-        this.rootScope.$broadcast(broadcastUpdate, resultProcess);
-        this.rootScope.$broadcast(broadcastUpdateChildrow, resultProcess);
-        this.toaster.pop("success", "", this.translate.instant("COMMON_TOAST_SUCCESS_INCONTACT"));
-        return resultProcess;
     }
 
     async doneOffer(process: Process): Promise<Process> {
@@ -291,34 +303,47 @@ class WorkflowService {
             }
             toastMsg = "COMMON_TOAST_SUCCESS_REVERT_DONE_OFFER";
             process.processor = this.rootScope.user;
+        } try {
+            let resultProcess = await this.processService.save(process, null, true, false) as Process;
+            this.rootScope.$broadcast(broadcastOnTodosChanged);
+            this.toaster.pop("success", "", this.translate.instant(toastMsg));
+            return resultProcess;
+        } catch (error) {
+            this.rootScope.$broadcast(broadcastRefreshDatatable);
+            showConsistencyErrorMessage(error, this.translate, this.toaster, "PROCESS_PROCESS");
+            throw error;
         }
-        let resultProcess = await this.processService.save(process, null, true, false) as Process;
-        this.rootScope.$broadcast(broadcastOnTodosChanged);
-        this.toaster.pop("success", "", this.translate.instant(toastMsg));
-        return resultProcess;
     }
 
     async toggleClosedOrOpenState(process: Process): Promise<void> {
-        let resultProcess: Process;
-        if (process.status !== Status.CLOSED) {
-            resultProcess = await this.processService.setStatus(process, Status.CLOSED);
-            await this.processService.removeProcessor(resultProcess);
-            resultProcess.processor = null;
-            if (isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
-                this.rootScope.leadsCount -= 1;
+        try {
+            let resultProcess: Process;
+            if (process.status !== Status.CLOSED) {
+                resultProcess = await this.processService.setStatus(process, Status.CLOSED);
+                await this.processService.removeProcessor(resultProcess);
+                resultProcess.processor = null;
+                if (isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
+                    this.rootScope.leadsCount -= 1;
+                } else if (!isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
+                    this.rootScope.offersCount -= 1;
+                }
+                this.rootScope.$broadcast(broadcastRemoveOrUpdate, resultProcess);
+                this.rootScope.$broadcast(broadcastOnTodosChanged, resultProcess);
+            } else if (isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
+                resultProcess = await this.processService.setStatus(process, Status.OPEN);
+                this.rootScope.leadsCount += 1;
+                this.rootScope.$broadcast(broadcastUpdate, resultProcess);
             } else if (!isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
-                this.rootScope.offersCount -= 1;
+                resultProcess = await this.processService.setStatus(process, Status.OFFER);
+                this.rootScope.offersCount += 1;
+                this.rootScope.$broadcast(broadcastUpdate, resultProcess);
             }
-            this.rootScope.$broadcast(broadcastRemoveOrUpdate, resultProcess);
-            this.rootScope.$broadcast(broadcastOnTodosChanged, resultProcess);
-        } else if (isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
-            resultProcess = await this.processService.setStatus(process, Status.OPEN);
-            this.rootScope.leadsCount += 1;
-            this.rootScope.$broadcast(broadcastUpdate, resultProcess);
-        } else if (!isNullOrUndefined(process.offer) && isNullOrUndefined(process.sale)) {
-            resultProcess = await this.processService.setStatus(process, Status.OFFER);
-            this.rootScope.offersCount += 1;
-            this.rootScope.$broadcast(broadcastUpdate, resultProcess);
+        } catch (error) {
+            this.rootScope.$broadcast(broadcastRefreshDatatable);
+            this.rootScope.$broadcast(broadcastRefreshDashboard);
+            this.toaster.pop("error", "", this.translate
+                .instant("COMMON_ACTION_ERROR"));
+            throw error;
         }
     }
 
@@ -329,11 +354,17 @@ class WorkflowService {
         let offerId = process.offer.id;
         process.offer = null;
         process.status = Status.OPEN;
-
-        let resultProcess = await this.processService.save(process, null, false, true) as Process;
-        this.offerResource.drop({ id: offerId });
-        this.rootScope.leadsCount += 1; this.rootScope.offersCount -= 1;
-        return resultProcess;
+        try {
+            let resultProcess = await this.processService.save(process, null, false, true) as Process;
+            this.offerResource.drop({ id: offerId });
+            this.rootScope.leadsCount += 1; this.rootScope.offersCount -= 1;
+            return resultProcess;
+        } catch (error) {
+            this.rootScope.$broadcast(broadcastRefreshDatatable);
+            this.toaster.pop("error", "", this.translate
+                .instant("COMMON_RESET_ERROR"));
+            throw error;
+        }
     }
 
     async rollBackSale(process: Process): Promise<Process> {
@@ -344,25 +375,39 @@ class WorkflowService {
         process.sale = null;
         process.status = Status.OFFER;
         let self = this;
-        let resultProcess = await this.processService.save(process, null, false, true) as Process;
-        self.saleResource.drop({ id: saleId });
-        this.rootScope.offersCount += 1; this.rootScope.salesCount -= 1;
-        return resultProcess;
+        try {
+            let resultProcess = await this.processService.save(process, null, false, true) as Process;
+            self.saleResource.drop({ id: saleId });
+            this.rootScope.offersCount += 1; this.rootScope.salesCount -= 1;
+            return resultProcess;
+        } catch (error) {
+            this.rootScope.$broadcast(broadcastRefreshDatatable);
+            this.toaster.pop("error", "", this.translate
+                .instant("COMMON_RESET_ERROR"));
+            throw error;
+        }
     }
 
     async deleteProcess(process: Process): Promise<Process> {
-        let resultProcess = await this.processService.delete(process) as Process;
-        this.toaster.pop("success", "", this.translate
-            .instant("COMMON_TOAST_SUCCESS_DELETE_LEAD"));
-        if (this.isLead(process)) {
-            this.rootScope.leadsCount -= 1;
+        try {
+            let resultProcess = await this.processService.delete(process) as Process;
+            this.toaster.pop("success", "", this.translate
+                .instant("COMMON_TOAST_SUCCESS_DELETE_LEAD"));
+            if (this.isLead(process)) {
+                this.rootScope.leadsCount -= 1;
+            }
+            else if (this.isOffer(process)) {
+                this.rootScope.offersCount -= 1;
+            }
+            this.rootScope.$broadcast(broadcastOnTodosChanged);
+            this.rootScope.$broadcast(broadcastRemove, process);
+            return resultProcess;
+        } catch (error) {
+            this.rootScope.$broadcast(broadcastRefreshDatatable);
+            this.toaster.pop("error", "", this.translate
+                .instant("COMMON_DELETE_ERROR"));
+            throw error;
         }
-        else if (this.isOffer(process)) {
-            this.rootScope.offersCount -= 1;
-        }
-        this.rootScope.$broadcast(broadcastOnTodosChanged);
-        this.rootScope.$broadcast(broadcastRemove, process);
-        return resultProcess;
     }
 
     checkForDupsInFormerProcessors(formerProcessors: Array<Processor>, user: User, activity: Activity): boolean {

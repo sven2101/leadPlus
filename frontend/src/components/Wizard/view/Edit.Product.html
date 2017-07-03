@@ -79,7 +79,7 @@
 		<div class="col-sm-6 text-left">
 			<!-- Billing Address -->
 			<div class="form-group " ng-class="{ 'has-error' : pform.billingAddress.$invalid && !pform.billingAddress.$pristine || pform.billingStreet.$invalid || pform.billingNumber.$invalid || pform.billingCity.$invalid || pform.billingZip.$invalid || pform.billingState.$invalid || pform.billingCountry.$invalid} ">
-				<label>{{ 'COMMON_BILLING_ADDRESS' | translate }}</label><span ng-if="editable"><a ng-click="copyAddress(editWorkflowUnit.customer.billingAddress, editWorkflowUnit.billingAddress,'billingAddressLine')">{{'COMMON_BILLINGADDRESS_FROM_CUSTOMER' | translate}}</a></span>
+				<label>{{ 'COMMON_BILLING_ADDRESS' | translate }}</label><span ng-if="editable"><a ng-click="copyAddress(editWorkflowUnit.customer.billingAddress, editWorkflowUnit.billingAddress,'billingAddressLine')">&nbsp;{{'COMMON_BILLINGADDRESS_FROM_CUSTOMER' | translate}}</a></span>
 				<span style="color:red" ng-show="pform.billingAddress.$invalid && !pform.billingAddress.$pristine || pform.billingStreet.$invalid || pform.billingNumber.$invalid || pform.billingCity.$invalid || pform.billingZip.$invalid || pform.billingState.$invalid || pform.billingCountry.$invalid"> {{ 'COMMON_VALIDATE_INVALID' | translate }}</span>
 			<div class="input-group">
 				<input type="text " name="billingAddress " class="form-control " ng-model-options="{debounce: 200}" ng-model="billingAddressLine

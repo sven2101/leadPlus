@@ -36,14 +36,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.common.ConsistencyFailedException;
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
-import dash.processmanagement.business.IProcessService;
+import dash.processmanagement.business.ProcessService;
 import dash.processmanagement.business.ProcessRepository;
 import dash.processmanagement.business.newProcessService;
 import dash.processmanagement.domain.Process;
@@ -62,7 +62,7 @@ import io.swagger.annotations.ApiParam;
 public class ProcessResource {
 
 	@Autowired
-	private IProcessService processService;
+	private ProcessService processService;
 
 	@Autowired
 	private newProcessService newProcessService;
@@ -114,16 +114,8 @@ public class ProcessResource {
 	@ResponseStatus(HttpStatus.OK)
 	public Process setStatusByProcessId(@ApiParam(required = true) @PathVariable final Long id,
 			@ApiParam(required = true) @RequestBody @Valid final String status)
-			throws NotFoundException, SaveFailedException, UpdateFailedException {
+			throws NotFoundException, SaveFailedException, UpdateFailedException, ConsistencyFailedException {
 		return processService.setStatus(id, status);
-	}
-
-	@ApiOperation(value = "Update a single process.", notes = "")
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.OK)
-	public Process update(@ApiParam(required = true) @RequestBody @Valid final Process updateProcess)
-			throws UpdateFailedException {
-		return processService.update(updateProcess);
 	}
 
 	@ApiOperation(value = "Returns processor.", notes = "")
@@ -144,9 +136,9 @@ public class ProcessResource {
 	@ApiOperation(value = "Remove processor from process", notes = "")
 	@RequestMapping(value = "/{id}/processors", method = { RequestMethod.DELETE })
 	@ResponseStatus(HttpStatus.OK)
-	public void removeProcessorByProcessId(@ApiParam(required = true) @PathVariable final Long id)
-			throws UpdateFailedException {
-		processService.removeProcessorByProcessId(id);
+	public Process removeProcessorByProcessId(@ApiParam(required = true) @PathVariable final Long id)
+			throws UpdateFailedException, ConsistencyFailedException {
+		return processService.removeProcessorByProcessId(id);
 	}
 
 	@ApiOperation(value = "Delete a single process.", notes = "")
@@ -159,15 +151,9 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a process.", notes = "")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Process save(@RequestBody @Valid final Process process) throws SaveFailedException {
+	public Process save(@RequestBody @Valid final Process process)
+			throws SaveFailedException, ConsistencyFailedException {
 		return processService.save(process);
-	}
-
-	@ApiOperation(value = "Creates processes based on a List of Processes.", notes = "")
-	@RequestMapping(value = "/list", method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.OK)
-	public void saveProcesses(@RequestBody final List<Process> processes) throws SaveFailedException {
-		processService.saveProcesses(processes);
 	}
 
 	/*
@@ -221,7 +207,7 @@ public class ProcessResource {
 	@RequestMapping(value = "/{processId}/leads", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Lead createLeadByProcess(@PathVariable final Long processId, @RequestBody @Valid final Lead lead)
-			throws NotFoundException, SaveFailedException {
+			throws NotFoundException, SaveFailedException, ConsistencyFailedException {
 		return processService.createLead(processId, lead);
 	}
 
@@ -277,7 +263,7 @@ public class ProcessResource {
 	@RequestMapping(value = "/{processId}/offers", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Offer createOfferByProcess(@PathVariable final Long processId, @RequestBody @Valid final Offer offer)
-			throws SaveFailedException {
+			throws SaveFailedException, ConsistencyFailedException {
 		return processService.createOffer(processId, offer);
 	}
 
@@ -358,7 +344,7 @@ public class ProcessResource {
 	@RequestMapping(value = "/{processId}/sales", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Sale createSaleByProcess(@PathVariable Long processId, @RequestBody @Valid final Sale sale)
-			throws NotFoundException, SaveFailedException,ConsistencyFailedException {
+			throws NotFoundException, SaveFailedException, ConsistencyFailedException {
 		return processService.createSale(processId, sale);
 	}
 
@@ -367,6 +353,26 @@ public class ProcessResource {
 	@ResponseStatus(HttpStatus.OK)
 	public List<Process> createSaleByProcess(@PathVariable Long processorId) {
 		return processService.getProcessesByProcessor(processorId);
+	}
+
+	@ApiOperation(value = "Returns sum of turnover by Status.", notes = "")
+	@RequestMapping(value = "sum/{status}", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Map<String, Double> getSumTurnoverByStatus(@PathVariable final Status status,
+			@RequestBody final String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return processService.getSumTurnoverByStatus(status);
+	}
+
+	@ApiOperation(value = "Returns a page of processes by Status.", notes = "")
+	@RequestMapping(value = "pagination/extended/{status}", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesByStatusAndSearchTextAndMyTasks(@PathVariable final Status status,
+			@RequestBody final String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return processService.getAllProcessesByStatusAndSearchTextAndMyTasksPage(status, pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"),
+				pageRequest.optString("searchText"), pageRequest.optLong("userId"));
 	}
 
 	////////////////////////////////////////////////////////////////////////////// NEW
@@ -440,7 +446,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Save a process and its customer", notes = "")
 	@RequestMapping(value = "save", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Process saveProcess(@RequestBody final Process process) {
+	public Process saveProcess(@RequestBody final Process process) throws ConsistencyFailedException {
 		return newProcessService.saveProcess(process);
 	}
 

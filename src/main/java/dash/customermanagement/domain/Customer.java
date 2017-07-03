@@ -35,7 +35,7 @@ import org.hibernate.annotations.SQLDelete;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.addressmanagement.domain.Address;
-import dash.common.ConsistencyObject;
+import dash.consistencymanagement.domain.ConsistencyObject;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -50,11 +50,6 @@ public class Customer extends ConsistencyObject {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "title", length = 255, nullable = true)
 	private Title title;
-
-	@ApiModelProperty(hidden = true)
-	@NotNull
-	@Column(name = "deleted", nullable = false)
-	private boolean deleted;
 
 	@NotNull
 	@Size(max = 255)
@@ -209,14 +204,6 @@ public class Customer extends ConsistencyObject {
 		this.timestamp = timestamp;
 	}
 
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
 	public String getCustomerNumber() {
 		return customerNumber;
 	}
@@ -252,12 +239,11 @@ public class Customer extends ConsistencyObject {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((billingAddress == null) ? 0 : billingAddress.hashCode());
 		result = prime * result + ((company == null) ? 0 : company.hashCode());
 		result = prime * result + ((customerNumber == null) ? 0 : customerNumber.hashCode());
 		result = prime * result + (deactivated ? 1231 : 1237);
-		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((fax == null) ? 0 : fax.hashCode());
@@ -275,7 +261,7 @@ public class Customer extends ConsistencyObject {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -296,8 +282,6 @@ public class Customer extends ConsistencyObject {
 		} else if (!customerNumber.equals(other.customerNumber))
 			return false;
 		if (deactivated != other.deactivated)
-			return false;
-		if (deleted != other.deleted)
 			return false;
 		if (deliveryAddress == null) {
 			if (other.deliveryAddress != null)
@@ -348,11 +332,11 @@ public class Customer extends ConsistencyObject {
 
 	@Override
 	public String toString() {
-		return "Customer [title=" + title + ", deleted=" + deleted + ", firstname=" + firstname + ", lastname="
-				+ lastname + ", company=" + company + ", email=" + email + ", phone=" + phone + ", fax=" + fax
-				+ ", mobile=" + mobile + ", deactivated=" + deactivated + ", realCustomer=" + realCustomer
-				+ ", timestamp=" + timestamp + ", customerNumber=" + customerNumber + ", billingAddress="
-				+ billingAddress + ", deliveryAddress=" + deliveryAddress + "]";
+		return "Customer [title=" + title + ", firstname=" + firstname + ", lastname=" + lastname + ", company="
+				+ company + ", email=" + email + ", phone=" + phone + ", fax=" + fax + ", mobile=" + mobile
+				+ ", deactivated=" + deactivated + ", realCustomer=" + realCustomer + ", timestamp=" + timestamp
+				+ ", customerNumber=" + customerNumber + ", billingAddress=" + billingAddress + ", deliveryAddress="
+				+ deliveryAddress + "]";
 	}
 
 }

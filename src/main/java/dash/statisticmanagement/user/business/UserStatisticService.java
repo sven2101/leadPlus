@@ -38,7 +38,7 @@ import dash.productmanagement.domain.OrderPosition;
 import dash.statisticmanagement.common.AbstractStatisticService;
 import dash.statisticmanagement.domain.DateRange;
 import dash.statisticmanagement.domain.StatisticHelper;
-import dash.usermanagement.business.IUserService;
+import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 import dash.workflowmanagement.domain.Workflow;
 
@@ -51,7 +51,7 @@ public class UserStatisticService extends AbstractStatisticService {
 	private ProcessService ProcessService;
 
 	@Autowired
-	private IUserService userService;
+	private UserService userService;
 
 	public Map<String, List<UserStatistic>> getTopSalesMen(DateRange dateRange) {
 		Map<String, Map<Long, UserStatistic>> userMap = new HashMap<>();

@@ -35,8 +35,10 @@ page.paperSize = {
     format: 'A4',
     orientation: 'portrait',
     margin: {
-        top: "1.5cm",
-        bottom: "1cm"
+        top: "1cm",
+        bottom: "0cm",
+		left:"1.5cm",
+		right:"1.5cm"
     },
     footer: {
         height: footerHeight,

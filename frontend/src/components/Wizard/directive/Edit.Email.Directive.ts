@@ -39,6 +39,7 @@ class EditEmailDirective implements IDirective {
             return;
         }
         scope.rootScope = this.$rootScope;
+        scope.isSmptVerified = scope.rootScope.isSmptVerified;
         scope.$sce = this.$sce;
         scope.$window = this.$window;
         scope.translate = this.$translate;

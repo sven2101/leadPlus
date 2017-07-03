@@ -21,5 +21,4 @@ public class Customer_ {
 	public static volatile SingularAttribute<Customer, String> email;
 
 	public static volatile SingularAttribute<Customer, String> fax;
-
 }

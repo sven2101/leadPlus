@@ -28,6 +28,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -37,7 +38,7 @@ import org.hibernate.annotations.SQLDelete;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import dash.common.ConsistencyObject;
+import dash.consistencymanagement.domain.ConsistencyObject;
 import dash.fileuploadmanagement.domain.FileUpload;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -50,11 +51,10 @@ public class Product extends ConsistencyObject implements Serializable {
 
 	private static final long serialVersionUID = 2316129901873904110L;
 
-	@ApiModelProperty(hidden = true)
-	@NotNull
-	@Column(name = "deleted", nullable = false)
-	private boolean deleted;
-
+	// For Olap Deserialization
+	@Transient
+	private Long id;
+	
 	@ApiModelProperty(hidden = true)
 	@NotNull
 	@Size(max = 100)
@@ -126,14 +126,6 @@ public class Product extends ConsistencyObject implements Serializable {
 	}
 
 	public Product() {
-	}
-
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
 	}
 
 	public ProductState getProductState() {
@@ -209,17 +201,24 @@ public class Product extends ConsistencyObject implements Serializable {
 	public void setProductNumber(String productNumber) {
 		this.productNumber = productNumber;
 	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + (deactivated ? 1231 : 1237);
-		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((netPrice == null) ? 0 : netPrice.hashCode());
+		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((productNumber == null) ? 0 : productNumber.hashCode());
 		result = prime * result + ((productState == null) ? 0 : productState.hashCode());
 		result = prime * result + ((timestamp == null) ? 0 : timestamp.hashCode());
@@ -230,14 +229,12 @@ public class Product extends ConsistencyObject implements Serializable {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		Product other = (Product) obj;
 		if (deactivated != other.deactivated)
-			return false;
-		if (deleted != other.deleted)
 			return false;
 		if (description == null) {
 			if (other.description != null)
@@ -249,15 +246,15 @@ public class Product extends ConsistencyObject implements Serializable {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (picture == null) {
-			if (other.picture != null)
-				return false;
-		} else if (!picture.equals(other.picture))
-			return false;
 		if (netPrice == null) {
 			if (other.netPrice != null)
 				return false;
 		} else if (!netPrice.equals(other.netPrice))
+			return false;
+		if (picture == null) {
+			if (other.picture != null)
+				return false;
+		} else if (!picture.equals(other.picture))
 			return false;
 		if (productNumber == null) {
 			if (other.productNumber != null)
@@ -276,9 +273,8 @@ public class Product extends ConsistencyObject implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Product [deleted=" + deleted + ", name=" + name + ", productState=" + productState + ", timestamp="
-				+ timestamp + ", deactivated=" + deactivated + ", priceNetto=" + netPrice + ", picture=" + picture
-				+ "]";
+		return "Product [name=" + name + ", productState=" + productState + ", timestamp=" + timestamp
+				+ ", deactivated=" + deactivated + ", priceNetto=" + netPrice + ", picture=" + picture + "]";
 	}
 
 }

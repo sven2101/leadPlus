@@ -28,6 +28,7 @@ class CustomerService {
     toaster: any;
     translate: any;
     rootScope: any;
+    inconsistency: string;
 
     constructor(CustomerResource: CustomerResource, $http, toaster, $translate, $rootScope) {
         this.customerResource = CustomerResource.resource;
@@ -38,50 +39,20 @@ class CustomerService {
         // this.getAllCustomerByPage(1, 20, "noSearchText", false);
     }
 
-    async saveCustomer(customer: Customer, insert: boolean = true): Promise<Customer> {
-        customer.lastEditor = getNameOfUser(this.rootScope.user);
+    async saveCustomer(customer: Customer, insert: boolean = false, upgradeToRealCustomer: boolean = false): Promise<Customer> {
         if (insert) {
             customer.timestamp = newTimestamp();
+        }
+        if (upgradeToRealCustomer) {
             customer.realCustomer = true;
-            try {
-                customer = await this.customerResource.createCustomer(customer).$promise;
-            } catch (error) {
-                this.showCustomerErrorMessage(error);
-                return null;
-            }
-
-        } else {
-            try {
-                customer = await this.customerResource.updateCustomer(customer).$promise;
-            } catch (error) {
-                this.showCustomerErrorMessage(error);
-                return null;
-            }
         }
-        return customer;
-    }
-
-    showCustomerErrorMessage(error) {
-        let errorMessage = "";
-        if (error.data != null && error.data.exception === "dash.common.ConsistencyFailedException") {
-            if (error.data.message !== null) {
-                let splitAryMsg = error.data.message.split(";");
-                if (splitAryMsg.length >= 1) {
-                    let editedBy = splitAryMsg[0];
-                    let jsDate = new Date(splitAryMsg[1]);
-                    console.log(jsDate);
-                    console.log(jsDate.toString());
-                    let editedAt = toLocalDate(moment(jsDate.toString(), "DD.MM.YYYY HH:mm:ss"));
-                    console.log(editedAt);
-                    errorMessage = this.translate.instant("CUSTOMER_INCONSISTENCY_BY_AT_ERROR", { editedBy: editedBy, editedAt: editedAt });
-                } else {
-                    errorMessage = this.translate.instant("CUSTOMER_INCONSISTENCY_ERROR");
-                }
-            }
-            return this.toaster.pop("error", "", errorMessage);
+        try {
+            let savedCustomer = await this.customerResource.createCustomer(customer).$promise;
+            this.inconsistency = null;
+            return savedCustomer;
+        } catch (error) {
+            throw error;
         }
-        errorMessage = error == null || error.data == null ? "" : ": " + error.data.message;
-        this.toaster.pop("error", "", this.translate.instant("SAVE_ERROR") + errorMessage);
     }
 
     async getCustomerById(customerId: number) {
@@ -90,27 +61,6 @@ class CustomerService {
             return null;
         }
         return customer;
-    }
-
-    async insertCustomer(customer: Customer): Promise<Customer> {
-        customer.lastEditor = getNameOfUser(this.rootScope.user);
-        try {
-            return await this.customerResource.createCustomer(customer).$promise as Customer;
-        } catch (error) {
-            this.showCustomerErrorMessage(error);
-            return null;
-        }
-    }
-
-    async updateCustomer(customer: Customer): Promise<Customer> {
-
-        customer.lastEditor = getNameOfUser(this.rootScope.user);
-        try {
-            return await this.customerResource.updateCustomer(customer).$promise as Customer;
-        } catch (error) {
-            this.showCustomerErrorMessage(error);
-            return null;
-        }
     }
 
     // TODO change to mapzen api

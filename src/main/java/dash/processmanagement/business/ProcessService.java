@@ -18,7 +18,6 @@ import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.DELETE_FAILED_EXCEPTION;
 import static dash.Constants.OFFER_NOT_FOUND;
 import static dash.Constants.PROCESS_NOT_FOUND;
-import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_NOT_FOUND;
 import static dash.processmanagement.business.ProcessSpecs.hasProcessorInDistinct;
@@ -32,6 +31,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,12 +42,17 @@ import javax.persistence.metamodel.SingularAttribute;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import dash.common.AbstractWorkflow;
-import dash.common.ConsistencyFailedException;
+import dash.consistencymanagement.business.ConsistencyService;
 import dash.customermanagement.business.CustomerService;
 import dash.customermanagement.domain.Customer;
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -66,29 +71,24 @@ import dash.usermanagement.domain.User;
 import dash.workflowmanagement.domain.Workflow;
 
 @Service
-public class ProcessService implements IProcessService {
+@Transactional
+public class ProcessService extends ConsistencyService {
 
 	private static final Logger logger = Logger.getLogger(ProcessService.class);
 
+	@Autowired
 	private ProcessRepository processRepository;
+
 	private UserService userService;
 	private CustomerService customerService;
-	private ILeadService leadService;
-	private IOfferService offerService;
-	private ISaleService saleService;
 
 	@Autowired
-	public ProcessService(ProcessRepository processRepository, UserService userService, CustomerService customerService,
-			ILeadService leadService, IOfferService offerService, ISaleService saleService) {
-		this.processRepository = processRepository;
+	public ProcessService(UserService userService, CustomerService customerService, ILeadService leadService,
+			IOfferService offerService, ISaleService saleService) {
 		this.userService = userService;
 		this.customerService = customerService;
-		this.leadService = leadService;
-		this.offerService = offerService;
-		this.saleService = saleService;
 	}
 
-	@Override
 	public List<Process> getElementsByStatus(final Workflow workflow, final Status status) {
 		List<Process> processes = new ArrayList<>();
 
@@ -109,43 +109,18 @@ public class ProcessService implements IProcessService {
 		return processes;
 	}
 
-	@Override
-	public void saveProcesses(List<Process> processes) throws SaveFailedException {
-		for (Process process : processes) {
-
-			if (Optional.ofNullable(process.getLead()).isPresent())
-				leadService.save(process.getLead());
-			if (Optional.ofNullable(process.getOffer()).isPresent())
-				offerService.save(process.getOffer());
-			if (Optional.ofNullable(process.getSale()).isPresent()) {
-				// try {
-				// process.setProcessor(userService.getUserByName("admin"));
-				// } catch (NotFoundException nfex) {
-				// logger.error(PROCESS_NOT_FOUND +
-				// ProcessService.class.getSimpleName() +
-				// BECAUSE_OF_OBJECT_IS_NULL,
-				// nfex);
-				// }
-				saleService.save(process.getSale());
-			}
-			save(process);
+	public Process save(final Process process) throws ConsistencyFailedException {
+		if (process == null) {
+			logger.error(OFFER_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
+			throw new IllegalArgumentException(
+					OFFER_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
 		}
+		this.checkConsistencyAndSetTimestamp(process, processRepository);
+		return processRepository.save(process);
 	}
 
-	@Override
-	public Process save(final Process process) throws SaveFailedException {
-		if (Optional.ofNullable(process).isPresent()) {
-
-			return processRepository.save(process);
-		} else {
-			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(OFFER_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
-			throw sfex;
-		}
-	}
-
-	@Override
-	public Lead createLead(final long processId, final Lead lead) throws SaveFailedException {
+	public Lead createLead(final long processId, final Lead lead)
+			throws SaveFailedException, ConsistencyFailedException {
 		Process process = processRepository.findOne(processId);
 		if (Optional.ofNullable(process).isPresent()) {
 			process.setLead(lead);
@@ -156,8 +131,8 @@ public class ProcessService implements IProcessService {
 		}
 	}
 
-	@Override
-	public Offer createOffer(final long processId, final Offer offer) throws SaveFailedException {
+	public Offer createOffer(final long processId, final Offer offer)
+			throws SaveFailedException, ConsistencyFailedException {
 		Process process = processRepository.findOne(processId);
 		if (Optional.ofNullable(process).isPresent()) {
 			process.setOffer(offer);
@@ -167,8 +142,8 @@ public class ProcessService implements IProcessService {
 		}
 	}
 
-	@Override
-	public Sale createSale(final long processId, final Sale sale) throws SaveFailedException, ConsistencyFailedException {
+	public Sale createSale(final long processId, final Sale sale)
+			throws SaveFailedException, ConsistencyFailedException {
 		Process process = processRepository.findOne(processId);
 		if (Optional.ofNullable(process).isPresent()) {
 			Customer updateCustomer = sale.getCustomer();
@@ -181,43 +156,26 @@ public class ProcessService implements IProcessService {
 		}
 	}
 
-	@Override
-	public Process setProcessor(final long processId, final long userId) throws NotFoundException, SaveFailedException {
-		Process process = processRepository.findOne(processId);
+	public Process setProcessor(final long processId, final long userId)
+			throws NotFoundException, SaveFailedException, ConsistencyFailedException {
+		Process process = getById(processId);
 		final User processor = userService.getById(userId);
 		if (!Optional.ofNullable(process).isPresent())
 			throw new NotFoundException(PROCESS_NOT_FOUND);
 		if (!Optional.ofNullable(processor).isPresent())
 			throw new NotFoundException(USER_NOT_FOUND);
-		process.setProcessor(processor);
-		Process resultProcess = save(process);
-		return resultProcess;
-	}
-
-	@Override
-	public Process update(final Process process) throws UpdateFailedException {
-		if (Optional.ofNullable(process).isPresent()) {
-			try {
-				return save(process);
-			} catch (IllegalArgumentException | SaveFailedException ex) {
-				logger.error(ex.getMessage() + ProcessService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			}
-		} else {
-			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
-			throw ufex;
+		try {
+			Process copyProcess = (Process) process.clone();
+			copyProcess.setProcessor(processor);
+			return save(copyProcess);
+		} catch (CloneNotSupportedException e) {
+			logger.error("Cannot Copy Process" + ProcessService.class.getSimpleName() + e.getMessage(), e);
+			e.printStackTrace();
 		}
+		return process;
 
 	}
 
-	@Override
-	public List<Process> getProcessWithLatestSales(int amount) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Process getById(final long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
@@ -234,12 +192,10 @@ public class ProcessService implements IProcessService {
 		}
 	}
 
-	@Override
 	public Iterable<Process> getAll() {
 		return processRepository.findAll();
 	}
 
-	@Override
 	public void delete(final long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
@@ -255,14 +211,19 @@ public class ProcessService implements IProcessService {
 		}
 	}
 
-	@Override
-	public void removeProcessorByProcessId(final long id) throws UpdateFailedException {
+	public Process removeProcessorByProcessId(final long id) throws UpdateFailedException, ConsistencyFailedException {
+		Process process = null;
 		if (Optional.ofNullable(id).isPresent()) {
+			process = getById(id);
 			try {
-				Process process = getById(id);
-				process.setProcessor(null);
-				save(process);
-			} catch (EmptyResultDataAccessException | SaveFailedException | NotFoundException ex) {
+
+				if (process == null)
+					throw new NotFoundException(PROCESS_NOT_FOUND);
+				Process copyProcess = (Process) process.clone();
+				copyProcess.setProcessor(null);
+				return save(copyProcess);
+			} catch (EmptyResultDataAccessException | SaveFailedException | NotFoundException
+					| CloneNotSupportedException ex) {
 				logger.error(ProcessService.class.getSimpleName() + ex.getMessage(), ex);
 			}
 		} else {
@@ -270,15 +231,24 @@ public class ProcessService implements IProcessService {
 			logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
 			throw ufex;
 		}
+		return process;
 	}
 
-	@Override
 	public Process setStatus(long id, String status)
-			throws SaveFailedException, NotFoundException, UpdateFailedException {
+			throws SaveFailedException, NotFoundException, UpdateFailedException, ConsistencyFailedException {
 		if (Optional.ofNullable(status).isPresent()) {
 			Process process = getById(id);
-			process.setStatus(Status.valueOf(status));
-			return save(process);
+			if (process == null)
+				throw new NotFoundException(PROCESS_NOT_FOUND);
+			try {
+				Process copyProcess = (Process) process.clone();
+				copyProcess.setStatus(Status.valueOf(status));
+				return save(copyProcess);
+			} catch (CloneNotSupportedException e) {
+				logger.error("Cannot Copy Process" + ProcessService.class.getSimpleName() + e.getMessage(), e);
+				e.printStackTrace();
+			}
+			return process;
 		} else {
 			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
 			logger.error(PROCESS_NOT_FOUND + ProcessService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
@@ -287,26 +257,22 @@ public class ProcessService implements IProcessService {
 
 	}
 
-	@Override
 	public List<Process> getProcessesByProcessor(long processorId) {
 		return processRepository.findAll(where(isProcessor(processorId)).and(not(isClosed())).and(not(isSale())));
 	}
 
-	@Override
 	public List<Process> getProcessesByProcessorAndBetweenTimestampAndWorkflow(long processorId, Calendar from,
 			Calendar until, SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute) {
 		return processRepository.findAll(where(hasProcessorInDistinct(processorId))
 				.and(isBetweenTimestamp(from, until, abstractWorkflowAttribute)).and(isDeleted(false)));
 	}
 
-	@Override
 	public List<Process> getProcessesBetweenTimestamp(Calendar from, Calendar until,
 			SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute) {
 		return processRepository
 				.findAll(where(isBetweenTimestamp(from, until, abstractWorkflowAttribute)).and(isDeleted(false)));
 	}
 
-	@Override
 	public Map<String, Integer> getCountElementsByStatus(Workflow workflow, Status status) {
 		int count = 0;
 		if (workflow.equals(Workflow.LEAD)) {
@@ -326,5 +292,106 @@ public class ProcessService implements IProcessService {
 		Map<String, Integer> returnMap = new HashMap<String, Integer>();
 		returnMap.put("value", count);
 		return returnMap;
+	}
+
+	public Map<String, Double> getSumTurnoverByStatus(Status status) {
+		if (status == null)
+			return null;
+		double sum = 0;
+		Map<String, Double> returnMap = new HashMap<String, Double>();
+		if (status.equals(Status.OPEN) || status.equals(Status.INCONTACT)) {
+			List<Process> processes = processRepository.findByStatusAndLeadIsNotNull(status);
+			for (Process p : processes) {
+				sum += p.getLead().getSumOrderpositions();
+			}
+		} else if (status.equals(Status.OFFER) || status.equals(Status.DONE)) {
+			try {
+				Collection<Status> colStatus = new ArrayList<>();
+				colStatus.add(status);
+				if (status.equals(Status.OFFER)) {
+					colStatus.add(Status.FOLLOWUP);
+				}
+				sum = processRepository.getOfferSumByStatus(colStatus);
+			} catch (NullPointerException ex) {
+				sum = 0;
+			}
+		} else if (status.equals(Status.SALE)) {
+			Calendar todayMidnight = Calendar.getInstance();
+			todayMidnight.set(Calendar.HOUR_OF_DAY, 0);
+			todayMidnight.set(Calendar.MINUTE, 0);
+			todayMidnight.set(Calendar.SECOND, 0);
+			todayMidnight.set(Calendar.MILLISECOND, 0);
+			try {
+				sum = processRepository.getSaleSumByStatus(todayMidnight);
+			} catch (NullPointerException ex) {
+				sum = 0;
+			}
+		}
+		returnMap.put("value", sum);
+		return returnMap;
+	}
+
+	public Page<Process> getAllProcessesByStatusAndSearchTextAndMyTasksPage(Status status, int page, int size,
+			String directionString, String properties, String searchText, Long userId) {
+		page = page < 0 ? 0 : page;
+		size = size < 0 ? 0 : size;
+		Sort.Direction direction = "ASC".equals(directionString) ? Sort.Direction.ASC : Sort.Direction.DESC;
+		properties = "null".equals(properties) ? "lead.timestamp" : properties;
+		Calendar todayMidnight = Calendar.getInstance();
+		todayMidnight.set(Calendar.HOUR_OF_DAY, 0);
+		todayMidnight.set(Calendar.MINUTE, 0);
+		todayMidnight.set(Calendar.SECOND, 0);
+		todayMidnight.set(Calendar.MILLISECOND, 0);
+		Collection<Status> statusCol = new ArrayList<>();
+		statusCol.add(status);
+		if (status.equals(Status.OFFER)) {
+			statusCol.add(Status.FOLLOWUP);
+		}
+		if ("null".equals(searchText) && userId == 0) {
+			if (status.equals(Status.SALE)) {
+				return processRepository.findBySaleIsNotNullAndSaleTimestampAfter(todayMidnight,
+						new PageRequest(page, size, direction, properties));
+			} else {
+				return processRepository.findByStatusIn(statusCol, new PageRequest(page, size, direction, properties));
+			}
+
+		} else if (!"null".equals(searchText) && userId == 0) {
+			if (status.equals(Status.OPEN) || status.equals(Status.INCONTACT)) {
+				return processRepository.findLeadProcessesByStatusAndSearchText(searchText, statusCol,
+						new PageRequest(page, size, direction, properties));
+			} else if (status.equals(Status.OFFER) || status.equals(Status.DONE)) {
+				return processRepository.findOfferProcessesByStatusAndSearchText(searchText, statusCol,
+						new PageRequest(page, size, direction, properties));
+			} else if (status.equals(Status.SALE)) {
+				return processRepository.findSaleProcessesByStatusAndSearchText(searchText, statusCol, todayMidnight,
+						new PageRequest(page, size, direction, properties));
+			}
+
+		} else if ("null".equals(searchText) && userId > 0) {
+			final User processor = userService.getById(userId);
+			if (status.equals(Status.SALE)) {
+				return processRepository.findBySaleIsNotNullAndProcessorAndSaleTimestampAfter(processor, todayMidnight,
+						new PageRequest(page, size, direction, properties));
+			} else {
+				return processRepository.findByStatusInAndProcessor(statusCol, processor,
+						new PageRequest(page, size, direction, properties));
+			}
+
+		} else if (!"null".equals(searchText) && userId > 0) {
+			final User processor = userService.getById(userId);
+			if (status.equals(Status.OPEN) || status.equals(Status.INCONTACT)) {
+				return processRepository.findMyLeadProcessesByStatusAndSearchText(searchText, statusCol, processor,
+						new PageRequest(page, size, direction, properties));
+			} else if (status.equals(Status.OFFER) || status.equals(Status.DONE)) {
+				return processRepository.findMyOfferProcessesByStatusAndSearchText(searchText, statusCol, processor,
+						new PageRequest(page, size, direction, properties));
+			} else if (status.equals(Status.SALE)) {
+				return processRepository.findMySaleProcessesByStatusAndSearchText(searchText, statusCol, processor,
+						todayMidnight, new PageRequest(page, size, direction, properties));
+			}
+
+		}
+		return null;
+
 	}
 }

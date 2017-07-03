@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -35,12 +36,10 @@ public interface IProductService {
 
 	public Product getById(final Long id) throws NotFoundException;
 
-	public Product save(final Product product) throws SaveFailedException;
-
-	public Product update(final Product product) throws UpdateFailedException;
+	public Product save(final Product product) throws SaveFailedException, ConsistencyFailedException;
 
 	public Product setImage(final long id, final MultipartFile multipartFile)
-			throws NotFoundException, SaveFailedException, UpdateFailedException;
+			throws NotFoundException, SaveFailedException, UpdateFailedException, ConsistencyFailedException;
 
 	public List<Product> findByDeactivated(boolean deactivated);
 

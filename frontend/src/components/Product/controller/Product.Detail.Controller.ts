@@ -39,7 +39,9 @@ class ProductDetailController {
         let productId = $routeParams.productId;
         if (!isNullOrUndefined(productId) && productId !== 0 && !isNaN(productId) && angular.isNumber(+productId)) {
             this.product = await this.productService.getProductById(Number(productId));
-            this.productHead = this.product.name;
+            if (!isNullOrUndefined(this.product)) {
+                this.productHead = this.product.name;
+            }
             this.isNewProduct = false;
             isNullOrUndefined(this.product) ? this.productFound = false : this.productFound = true;
         } else if (!isNullOrUndefined(productId) && productId === "new") {
@@ -52,17 +54,23 @@ class ProductDetailController {
             if (isNullOrUndefined(this.productService.products)) {
                 this.productService.getAllProducts();
             }
-
         }
+        this.productService.inconsistency = null;
     }
 
     savePicture() {
         this.rootScope.$broadcast("saveCroppedImage");
     }
 
-    saveProduct() {
-        this.productService.saveProduct(this.product, this.isNewProduct);
-        this.location.path("/product");
+    async saveProduct() {
+        try {
+            this.product = await this.productService.saveProduct(this.product, this.isNewProduct);
+            this.location.path("/product");
+        } catch (error) {
+            this.productService.inconsistency = showConsistencyErrorMessage(error, this.$translate, this.toaster, "PRODUCT_PRODUCT");
+            throw error;
+        }
+
     }
 
     async deleteProduct(): Promise<void> {

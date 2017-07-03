@@ -1,3 +1,5 @@
+/// <reference path="../../Template/model/WorkflowTemplateObjectModel.ts" />
+
 const SummernoteServiceId: string = "SummernoteService";
 
 class SummernoteService {
@@ -73,6 +75,8 @@ class SummernoteService {
         let options = {
             lang: "en-US",
             maximumImageFileSize: "512000",
+            fontSizes: ["6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "36", "48", "64", "82", "150"],
+            lineHeights: ["1", "1.25", "1.5", "1.75", "2.0", "2.25", "2.5", "2.75", "3.0"],
             prettifyHtml: true,
             toolbar: [
                 ["edit", ["undo", "redo"]],
@@ -81,20 +85,25 @@ class SummernoteService {
                 ["fontface", ["fontname"]],
                 ["textsize", ["fontsize"]],
                 ["fontclr", ["color"]],
-                ["alignment", ["ul", "ol", "paragraph", "lineheight"]],
+                ["alignment", ["ul", "ol", "paragraph", "lineheight", "pageSeperator", "setFloatLeft", "setFloatRight"]],
                 ["height", ["height"]],
-                ["table", ["table"]],
+                ["table", ["table", "tableBlock"]],
                 ["insert", ["link", "picture", "hr"]],
                 ["view", ["fullscreen", "codeview"]],
-                ["templateDefault", ["languageDropdown", "formOfAddress", "orderList", "delivery", "ending", "footer"]],
+                ["templateDefault", ["languageDropdown", "formOfAddress", "orderList1", "orderList2", "delivery", "ending", "footer"]],
                 ["templateButtonGroup", ["workflowDropdown", "customerDropdown", "orderDropdown", "userDropdown"]],
                 ["generateTemplate", ["preview", "pdfPreview"]]
             ],
             buttons: {
+                pageSeperator: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_SEPERATOR"), self.getPageSegment, "fa fa-arrows-h", true),
+                tableBlock: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_TABLE_BLOCK"), self.getTableBlock, "fa fa-th-large", true),
+                setFloatLeft: this.getStyleButton(self.translate.instant("SUMMERNOTE_FLOAT_LEFT"), "fa fa-arrow-left", "span", "float:left;"),
+                setFloatRight: this.getStyleButton(self.translate.instant("SUMMERNOTE_FLOAT_RIGHT"), "fa fa-arrow-right", "span", "float:right;"),
                 formOfAddress: this.getSingleTemplateButton(self.translate.instant("COMMON_FORM_OF_ADDRESS"), self.getFormOfAddressTemplate, "fa fa-user", true),
                 ending: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ENDING"), self.getEndingTemplate, "fa fa-handshake-o", true),
                 footer: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_FOOTER"), self.getFooterTemplate, "fa fa-clipboard", true, true),
-                orderList: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ORDER_LIST"), self.getOrderListTemplate, "fa fa-shopping-cart", true),
+                orderList1: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ORDER_LIST") + " 1", self.getOrderListTemplate1, "fa fa-shopping-cart", true),
+                orderList2: this.getSingleTemplateButton(self.translate.instant("SUMMERNOTE_ORDER_LIST") + " 2", self.getOrderListTemplate2, "fa fa-shopping-cart", true),
                 delivery: this.getSingleTemplateButton(self.translate.instant("SUPPLY"), self.getDeliveryTemplate, "fa fa-truck", true),
                 preview: this.getPreviewContentButton(self.translate.instant("SUMMERNOTE_TEMPLATE_PREVIEW"), "fa fa-cogs"),
                 pdfPreview: this.getPdfPreviewButton(self.translate.instant("SUMMERNOTE_PDF_PREVIEW"), "fa fa-file-pdf-o"),
@@ -131,29 +140,81 @@ class SummernoteService {
 
     getFooterTemplate(self): string {
         return "&lt;footer height=\"2cm\" &gt;" +
-            "<table class='table' style='width: 90%; margin: auto;border-top: 1px solid #ccc;'><tr style='font-size: 0.65em;color: #888;'>" +
+            "</br><table class='table' style='width: 95%; margin: auto;border-top: 1px solid #ccc;'><tr style='font-size: 0.65em;color: #888;'>" +
             "<td style='text-align: left;width:33.3%;vertical-align: text-top'>${(user.firstname)!}&nbsp;${(user.lastname)!}</td>" +
             "<td style='text-align: center;width:33.3%;vertical-align: text-top'>Angebot A12345</td>" +
             "<td style='text-align: right;width:33.3%;vertical-align: text-top'>$pageNum/$numPages</td>" +
             "</tr></table>&lt;/footer&gt;";
     }
 
-    getOrderListTemplate(self): string {
+    getOrderListTemplate1(self): string {
         return "<#if orderPositions?has_content &amp;&amp; orderPositions?size != 0>"
-            + "<table style='width: 90%;'>"
-            + "<thead><tr><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("COMMON_PRODUCT_DESCRIPTION", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("PRODUCT_PRODUCT_STATE", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("COMMON_PRODUCT_AMOUNT", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("COMMON_PRODUCT_SINGLE_PRICE", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + "</th></tr></thead>"
+            + "<table style='width: 100%;border-spacing: 0px 0px;border-collapse: collapse;'>"
+            + "<thead style='display: table-row-group;'><tr><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>Pos.</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>" + self.translate.instant("PRODUCT_NUMBER", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>" + self.translate.instant("COMMON_PRODUCT_DESCRIPTION", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>" + self.translate.instant("PRODUCT_PRODUCT_STATE", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>" + self.translate.instant("COMMON_PRODUCT_AMOUNT", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>" + self.translate.instant("COMMON_PRODUCT_SINGLE_PRICE", "", "", self.summernoteLanguage) + "</th><th style='border: 1px solid #e7eaec; background-color: whitesmoke;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + "</th></tr></thead>"
             + "<tbody style='border-top: 2px solid #ddd;'><!-- &lt;#list orderPositions as orderPosition&gt;-->"
-            + "<tr'><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>${(orderPosition.product.name)!}</td><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION", "", "", self.summernoteLanguage) + "</td><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: center;'>${(orderPosition.amount)!}</td>"
+            + "<tr'><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>${orderPosition?index+1}</td><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>${(orderPosition.product.productNumber)!}</td><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>${(orderPosition.product.name)!}</td><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION", "", "", self.summernoteLanguage) + "</td><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>${(orderPosition.amount)!}</td>"
             + "<td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>${((orderPosition.netPrice)!)?string('#,##0.00;;roundingMode=halfUp')}  " + self.translate.instant("COMMON_CURRENCY") + "</td><td style='border: 1px solid #e7eaec;line-height: 1.42857;padding: 8px;vertical-align: top;'>${((orderPosition.amount)! * (orderPosition.netPrice)!)?string('#,##0.00;;roundingMode=halfUp')} " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td>"
-            + "</tr><!--&lt;/#list&gt;--></tbody>"
-            + "<tfoot><tr><td> </td><td> </td><td> </td><td style='font-weight: bold; background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'> " + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + "</td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'>${workflow.sumOrderpositions?string('#,##0.00;;roundingMode=halfUp')}" + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr>"
-            + "<tr><td> </td><td> </td><td> </td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'>+ " + self.translate.instant("COMMON_PRODUCT_DELIVERYCOSTS", "", "", self.summernoteLanguage) + "</td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'><#if workflow.deliveryCosts?has_content>${workflow.deliveryCosts?string('#,##0.00;;roundingMode=halfUp')}&lt;/#if&gt " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr>"
-            + "<tr><td> </td><td> </td><td> </td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'>= <#if workflow.grossPrice?has_content>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE_INKL", "", "", self.summernoteLanguage) + " ${(workflow.vat)!}% " + self.translate.instant("COMMON_PRODUCT_VAT", "", "", self.summernoteLanguage) + "<#else>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + " " + self.translate.instant("COMMON_PRODUCT_INCL_DELIVERY_COSTS", "", "", self.summernoteLanguage) + "&lt;/#if&gt;</td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'><#if workflow.grossPrice?has_content> ${workflow.grossPrice?string('#,##0.00;;roundingMode=halfUp')}<#else>${workflow.orderpositionsAndDelivery?string('#,##0.00;;roundingMode=halfUp')}&lt;/#if&gt; " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr></tfoot>"
+            + "</tr><!--&lt;/#list&gt;-->"
+            + "<tr><td> </td><td> </td><td> </td><td colspan='3' style='font-weight: bold; background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'> " + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + "</td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'>${workflow.sumOrderpositions?string('#,##0.00;;roundingMode=halfUp')}" + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr>"
+            + "<tr><td> </td><td> </td><td> </td><td colspan='3' style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'>+ " + self.translate.instant("COMMON_PRODUCT_DELIVERYCOSTS", "", "", self.summernoteLanguage) + "</td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'><#if workflow.deliveryCosts?has_content>${workflow.deliveryCosts?string('#,##0.00;;roundingMode=halfUp')}&lt;/#if&gt " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr>"
+            + "<tr><td> </td><td> </td><td> </td><td colspan='3' style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'>= <#if workflow.grossPrice?has_content>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE_INKL", "", "", self.summernoteLanguage) + " ${(workflow.vat)!}% " + self.translate.instant("COMMON_PRODUCT_VAT", "", "", self.summernoteLanguage) + "<#else>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + " " + self.translate.instant("COMMON_PRODUCT_INCL_DELIVERY_COSTS", "", "", self.summernoteLanguage) + "&lt;/#if&gt;</td><td style='font-weight: bold;background-color: whitesmoke;line-height: 1.42857;padding: 8px;vertical-align: top;'><#if workflow.grossPrice?has_content> ${workflow.grossPrice?string('#,##0.00;;roundingMode=halfUp')}<#else>${workflow.orderpositionsAndDelivery?string('#,##0.00;;roundingMode=halfUp')}&lt;/#if&gt; " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr></tbody>"
+            + "</table>&lt;/#if&gt;";
+    }
+
+    getPageSegment(): string {
+        return "<table style='width: 100%; margin: auto;border-spacing: 0px 0px;border-collapse: collapse;color:black;'>"
+            + "<tbody>"
+            + "<tr>"
+            + "<td style='text-align: left;float:left;width:49%;vertical-align: text-top'><p>Text1</p></td>"
+            + "<td style='text-align: right;float:right;width:49%;vertical-align: text-top'><p>Text2</p></td>"
+            + "</tr>"
+            + "</tbody>"
+            + "</table>";
+    }
+
+    getTableBlock(): string {
+        return "<table style='float:inherit;border-spacing: 0px 0px;border-collapse: collapse;color:black;'>"
+            + "<tbody>"
+            + "<tr>"
+            + "<td style='text-align: left;vertical-align: text-top'>LeftSide&nbsp;</td>"
+            + "<td style='text-align: left;vertical-align: text-top'>RightSide</td>"
+            + "</tr>"
+            + "</tbody>"
+            + "</table>";
+    }
+
+
+    getOrderListTemplate2(self): string {
+        return "<#if orderPositions?has_content &amp;&amp; orderPositions?size != 0>"
+            + "<table style='width: 100%;border-spacing: 0px 0px;border-collapse: collapse;'>"
+            + "<thead style='display: table-row-group;'><tr><th style='border-bottom: 1px solid black;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>Pos.</th><th style='border-bottom: 1px solid black;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>" + self.translate.instant("PRODUCT_NUMBER", "", "", self.summernoteLanguage) + "</th><th style='border-bottom: 1px solid black;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>" + self.translate.instant("COMMON_PRODUCT_DESCRIPTION", "", "", self.summernoteLanguage) + "</th><th style='border-bottom: 1px solid black;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>" + self.translate.instant("PRODUCT_PRODUCT_STATE", "", "", self.summernoteLanguage) + "</th><th style='border-bottom: 1px solid black;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>" + self.translate.instant("COMMON_PRODUCT_AMOUNT", "", "", self.summernoteLanguage) + "</th><th style='border-bottom: 1px solid black;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>" + self.translate.instant("COMMON_PRODUCT_SINGLE_PRICE", "", "", self.summernoteLanguage) + "</th><th style='border-bottom: 1px solid black;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;text-align: left;'>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + "</th></tr></thead>"
+            + "<tbody><!-- &lt;#list orderPositions as orderPosition&gt;-->"
+            + "<tr'><td style='line-height: 1.42857;padding: 8px;vertical-align: top;'>${orderPosition?index+1}</td><td style='line-height: 1.42857;padding: 8px;vertical-align: top;'>${(orderPosition.product.productNumber)!}</td><td style='line-height: 1.42857;padding: 8px;vertical-align: top;'>${(orderPosition.product.name)!}</td><td style='line-height: 1.42857;padding: 8px;vertical-align: top;'>" + self.translate.instant("SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION", "", "", self.summernoteLanguage) + "</td><td style='line-height: 1.42857;padding: 8px;vertical-align: top;'>${(orderPosition.amount)!}</td>"
+            + "<td style='line-height: 1.42857;padding: 8px;vertical-align: top;'>${((orderPosition.netPrice)!)?string('#,##0.00;;roundingMode=halfUp')}  " + self.translate.instant("COMMON_CURRENCY") + "</td><td style='line-height: 1.42857;padding: 8px;vertical-align: top;'>${((orderPosition.amount)! * (orderPosition.netPrice)!)?string('#,##0.00;;roundingMode=halfUp')} " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td>"
+            + "</tr><!--&lt;/#list&gt;-->"
+            + "<tr><td> </td><td> </td><td> </td><td colspan='3' style='border-top: 1px solid black;font-weight: bold; line-height: 1.42857;padding: 8px;vertical-align: top;'> " + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + "</td><td style='border-top: 1px solid black;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>${workflow.sumOrderpositions?string('#,##0.00;;roundingMode=halfUp')}" + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr>"
+            + "<tr><td> </td><td> </td><td> </td><td colspan='3' style='font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>+ " + self.translate.instant("COMMON_PRODUCT_DELIVERYCOSTS", "", "", self.summernoteLanguage) + "</td><td style='font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'><#if workflow.deliveryCosts?has_content>${workflow.deliveryCosts?string('#,##0.00;;roundingMode=halfUp')}&lt;/#if&gt " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr>"
+            + "<tr><td> </td><td> </td><td> </td><td colspan='3' style='border-bottom: 1px solid black;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'>= <#if workflow.grossPrice?has_content>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE_INKL", "", "", self.summernoteLanguage) + " ${(workflow.vat)!}% " + self.translate.instant("COMMON_PRODUCT_VAT", "", "", self.summernoteLanguage) + "<#else>" + self.translate.instant("COMMON_PRODUCT_ENTIRE_PRICE", "", "", self.summernoteLanguage) + " " + self.translate.instant("COMMON_PRODUCT_INCL_DELIVERY_COSTS", "", "", self.summernoteLanguage) + "&lt;/#if&gt;</td><td style='border-bottom: 1px solid black;font-weight: bold;line-height: 1.42857;padding: 8px;vertical-align: top;'><#if workflow.grossPrice?has_content> ${workflow.grossPrice?string('#,##0.00;;roundingMode=halfUp')}<#else>${workflow.orderpositionsAndDelivery?string('#,##0.00;;roundingMode=halfUp')}&lt;/#if&gt; " + self.translate.instant("COMMON_CURRENCY", "", "", self.summernoteLanguage) + "</td></tr></tbody>"
             + "</table>&lt;/#if&gt;";
     }
 
     getDeliveryTemplate(self) {
         return self.translate.instant("SUMMERNOTE_DELIVERY", "", "", self.summernoteLanguage) + "<#if workflow.deliveryAddressLine?has_content> " + self.translate.instant("SUMMERNOTE_DELIVERY_TO", "", "", self.summernoteLanguage) + " ${(workflow.deliveryAddressLine)!}&lt;/#if&gt;<#if workflow.deliveryDate?has_content> " + self.translate.instant("SUMMERNOTE_DELIVERY_AT", "", "", self.summernoteLanguage) + " ${(workflow.deliveryDate)!}&lt;/#if&gt;.";
+    }
+
+    getStyleButton(buttonName: string, fa: string, tag: string, style: string) {
+        let templateButton = function (context) {
+            let ui = (<any>$).summernote.ui;
+            let button = ui.button({
+                contents: "<i class='" + fa + "'/> " + buttonName,
+                click: function () {
+                    let range = context.invoke("editor.createRange");
+                    range.pasteHTML("<" + tag + " style='" + style + "'>" + range.toString() + "</" + tag + ">");
+                }
+            });
+            return button.render();
+        };
+        return templateButton;
     }
 
     getSingleTemplateButton(buttonName: string, insertText, fa: string, asHtml: boolean = false, cursorAtEnd: boolean = false): any {
@@ -248,10 +309,13 @@ class SummernoteService {
                             + "<i class='fa-spin fa fa-cog'></i></div><div class='text-center' style='font-size: 1.5em;color: gray; font-weight: bold;margin-top:30px;'>" + self.translate.instant("SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE") + "</div>");
                         self.addPreviewMode(buttonSelf, context);
                         if (plainText !== null && plainText !== undefined && plainText !== "") {
-                            self.templateService.testTemplate(self.templateService.getCurrentEditTemplate(), new WorkflowTemplateObject(), new EmailNotification()).then(function (result: EmailNotification) {
+                            let templateToTest: Template = self.templateService.getCurrentEditTemplate();
+                            templateToTest.content = self.summernoteBeforePreviewContent;
+                            self.templateService.testTemplate(templateToTest, new WorkflowTemplateObject(), new EmailNotification()).then(function (result: EmailNotification) {
                                 self.currentTimeout = self.timeout(function () {
                                     if (self.previewMode === true) {
-                                        context.code(result.content.replace("$pageNum", "1").replace("$numPages", "1"));
+                                        let newContent = result.content.replace("$pageNum", "1").replace("$numPages", "1");
+                                        context.code(newContent);
                                     }
                                 }, 600);
                             }).catch(function (error) {

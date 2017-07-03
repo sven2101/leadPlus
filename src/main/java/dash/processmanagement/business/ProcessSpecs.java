@@ -13,18 +13,18 @@ import org.springframework.data.jpa.domain.Specification;
 import dash.common.AbstractWorkflow;
 import dash.common.AbstractWorkflow_;
 import dash.customermanagement.domain.Customer;
+import dash.consistencymanagement.domain.ConsistencyObject_;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Process_;
 import dash.processmanagement.domain.Processor_;
 import dash.statusmanagement.domain.Status;
-import dash.usermanagement.domain.User_;
 
 public class ProcessSpecs {
 
 	public static Specification<Process> isProcessor(final long id) {
 		return new Specification<Process>() {
 			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-				return builder.equal(root.join(Process_.processor).get(User_.id), id);
+				return builder.equal(root.join(Process_.processor).get(ConsistencyObject_.id), id);
 			}
 
 		};
@@ -34,7 +34,7 @@ public class ProcessSpecs {
 		return new Specification<Process>() {
 			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 				query.distinct(true);
-				return builder.equal(root.join(Process_.formerProcessors).join(Processor_.user).get(User_.id), id);
+				return builder.equal(root.join(Process_.formerProcessors).join(Processor_.user).get(ConsistencyObject_.id), id);
 			}
 		};
 	}
@@ -58,7 +58,7 @@ public class ProcessSpecs {
 	public static Specification<Process> isDeleted(boolean isDeleted) {
 		return new Specification<Process>() {
 			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-				return builder.equal(root.get(Process_.deleted), isDeleted);
+				return builder.equal(root.get(ConsistencyObject_.deleted), isDeleted);
 			}
 		};
 	}

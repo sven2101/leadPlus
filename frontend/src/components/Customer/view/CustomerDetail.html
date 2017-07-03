@@ -18,8 +18,13 @@
         </div>
     </div>
 </div>
-<div class="wrapper wrapper-content animated fadeInRight" ng-if="customerDetailCtrl.customerFound===true">
-    <div class="row">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins" ng-if="customerDetailCtrl.customerFound===false && customerDetailCtrl.customerService.inconsistency === null">
+        <div class="ibox-content" style="font-size: 1.3em">
+            {{ 'INCONSISTENCY_DELETED' | translate}} <a href="#/customer"> {{ 'COMMON_BACK' | translate}}</a>
+        </div>
+    </div>
+    <div class="row" ng-if="customerDetailCtrl.customerFound===true">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
@@ -198,10 +203,13 @@
                     </form>
                     <div>
                         <a href="#/customer" class="btn btn-success"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;{{ 'COMMON_BACK' | translate }}</a>
-                        <button type="button" class="btn btn-success" ng-disabled="createCustomerForm.$invalid" ng-click="customerDetailCtrl.saveCustomer()"
-                            style="float:right;"><i class="fa fa-save "></i>&nbsp;{{ 'COMMON_SAVE' | translate }}</button>
-                        <button ng-if="customerDetailCtrl.isNewCustomer===false" type="button" class="btn btn-danger" ng-click="customerDetailCtrl.deleteCustomer()" style="float:right;margin-right: 3px;"><i class="fa fa-trash "></i>&nbsp;{{ 'COMMON_DELETE' | translate }}</button>
+                        <button type="button" class="btn btn-success" ng-disabled="createCustomerForm.$invalid || customerDetailCtrl.customerService.inconsistency !== null"
+                            ng-click="customerDetailCtrl.saveCustomer()" style="float:right;"><i class="fa fa-save "></i>&nbsp;{{ 'COMMON_SAVE' | translate }}</button>
+                        <button ng-if="customerDetailCtrl.isNewCustomer===false" type="button" class="btn btn-danger" ng-click="customerDetailCtrl.deleteCustomer()"
+                            ng-disabled="customerDetailCtrl.customerService.inconsistency !== null" style="float:right;margin-right: 3px;"><i class="fa fa-trash "></i>&nbsp;{{ 'COMMON_DELETE' | translate }}</button>
                     </div>
+                    <br>
+                    <span ng-if="customerDetailCtrl.customerService.inconsistency !== null" style="color:red; font-size:14px;font-weight:bold"><i style="color:red" class="fa fa-exclamation-triangle "></i> {{customerDetailCtrl.customerService.inconsistency}} <a ng-click="customerDetailCtrl.initCustomer(customerDetailCtrl.routeParams)">{{'COMMON_REFRESH' | translate}}</a></span>
                 </div>
             </div>
         </div>

@@ -178,12 +178,58 @@ function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
- function b64EncodeUnicode(str) {
-        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
-            let x = String.fromCharCode as any;
-            return x("0x" + p1);
-        }));
+function b64EncodeUnicode(str) {
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+        let x = String.fromCharCode as any;
+        return x("0x" + p1);
+    }));
+}
+
+function showConsistencyErrorMessage(error, translate, toaster, dataToTranslate) {
+    let errorMessage = "";
+    if (error.data != null && error.data.exception === "dash.exceptions.ConsistencyFailedException") {
+        if (error.data.message !== null) {
+            let splitAryMsg = error.data.message.split(";");
+            if (splitAryMsg.length >= 1) {
+                let editedBy = splitAryMsg[0];
+                let editedAt = toLocalDate(moment(splitAryMsg[1], "x"));
+                errorMessage = translate.instant("INCONSISTENCY_BY_AT_ERROR", { editedBy: editedBy, editedAt: editedAt, data: translate.instant(dataToTranslate) });
+            } else {
+                errorMessage = translate.instant("INCONSISTENCY_ERROR");
+            }
+        }
+        toaster.pop("error", "", errorMessage);
+        return errorMessage;
     }
+    errorMessage = error == null || error.data == null ? translate.instant("SAVE_ERROR") : translate.instant("SAVE_ERROR") + ": " + error.data.message;
+    toaster.pop("error", "", errorMessage);
+    return errorMessage;
+};
+
+function getConsistencyErrorMessage(error, translate, dataToTranslate) {
+    let errorMessage = "";
+    if (error.data != null && error.data.exception === "dash.exceptions.ConsistencyFailedException") {
+        if (error.data.message !== null) {
+            let splitAryMsg = error.data.message.split(";");
+            if (splitAryMsg.length >= 1) {
+                let editedBy = splitAryMsg[0];
+                let editedAt = toLocalDate(moment(splitAryMsg[1], "x"));
+                errorMessage = translate.instant("INCONSISTENCY_BY_AT_ERROR", { editedBy: editedBy, editedAt: editedAt, data: translate.instant(dataToTranslate) });
+            } else {
+                errorMessage = translate.instant("INCONSISTENCY_ERROR");
+            }
+        }
+        return errorMessage;
+    }
+    errorMessage = error == null || error.data == null ? translate.instant("SAVE_ERROR") : translate.instant("SAVE_ERROR") + ": " + error.data.message;
+    return errorMessage;
+};
+
+function toastErrorMessage(error, toaster) {
+    let errorMessage = error == null || error.data == null ? "Error:Unknown" : "Error: " + error.data.message;
+    toaster.pop("error", "", errorMessage);
+    return errorMessage;
+};
 
 
 

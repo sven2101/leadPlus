@@ -1,16 +1,16 @@
 <form id="scopeStuff" name="eform" novalidate>
 
 	<div>
-		<span ng-if="!rootScope.isSmptVerified" style="color:red; padding: 0px !important; font-size: 13px important;"><b><translate>EMAIL_SMTP_VALIDATION_WITHOUT_LINK</translate></b><br><br></span>
+		<span ng-if="!isSmptVerified" style="color:red; padding: 0px !important; font-size: 13px important;"><b><translate>EMAIL_SMTP_VALIDATION_WITHOUT_LINK</translate></b><br><br></span>
 
 		<div class="row">
 			<div class="col-sm-12  form-group">
 				<label>{{ 'EMAIL_NOTIFICATION_HISTORY' | translate }}</label>
 				<select ng-change="onNotificationSelected()" class="form-control" ng-disabled="process.notifications==null||process.notifications.length==0"
 				 ng-model="notification">
-				<option ng-repeat="notification in process.notifications" ng-value="notification">{{notification.notificationType|translate}} {{notification.subject}}</option>                                       
+				<option ng-repeat="notification in process.notifications" ng-value="notification">{{notification.notificationType|translate}} {{notification.subject}} {{toLocalDate(notification.timestamp,"DD.MM.YYYY HH:mm")}}</option>                                       
 				</select>
-			</div>		
+			</div>
 		</div>
 		<div class="row">
 			<div class="col-sm-6 form-group">

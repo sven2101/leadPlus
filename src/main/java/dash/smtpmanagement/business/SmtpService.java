@@ -14,6 +14,8 @@
 
 package dash.smtpmanagement.business;
 
+import java.util.Calendar;
+
 import javax.mail.Session;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,6 +108,10 @@ public class SmtpService implements ISmtpService {
 
 			smtp = (Smtp) Encryptor.encrypt(smtp, smtpKey);
 		}
+		smtp.setLastEdited(Calendar.getInstance());
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserContext userContext = (UserContext) authentication.getPrincipal();
+		smtp.setLastEditor(userContext.getUsername());
 		return smtpRepository.save(smtp);
 	}
 

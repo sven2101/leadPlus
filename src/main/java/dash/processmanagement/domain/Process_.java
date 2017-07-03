@@ -19,8 +19,6 @@ public class Process_ {
 
 	public static volatile SingularAttribute<Process, Long> id;
 
-	public static volatile SingularAttribute<Process, Boolean> deleted;
-
 	public static volatile SingularAttribute<Process, Status> status;
 
 	public static volatile SingularAttribute<Process, User> processor;

@@ -26,15 +26,16 @@ class WizardDirective implements IDirective {
         modalInstance: "=",
         wizardConfig: "=",
         currentNotification: "=",
-        transform: "<"
+        transform: "<",
+        inconsistency: "="
     };
 
-    constructor(private WorkflowService: WorkflowService, private CustomerService: CustomerService, private ProcessService: ProcessService, private FileService: FileService, private NotificationService: NotificationService, private $rootScope) {
+    constructor(private WorkflowService: WorkflowService, private CustomerService: CustomerService, private ProcessService: ProcessService, private FileService: FileService, private NotificationService: NotificationService, private $rootScope, private $translate, private toaster) {
     }
 
     static directiveFactory(): WizardDirective {
-        let directive: any = (WorkflowService: WorkflowService, CustomerService: CustomerService, ProcessService: ProcessService, FileService: FileService, NotificationService: NotificationService, $rootScope) => new WizardDirective(WorkflowService, CustomerService, ProcessService, FileService, NotificationService, $rootScope);
-        directive.$inject = [WorkflowServiceId, CustomerServiceId, ProcessServiceId, FileServiceId, NotificationServiceId, $rootScopeId];
+        let directive: any = (WorkflowService: WorkflowService, CustomerService: CustomerService, ProcessService: ProcessService, FileService: FileService, NotificationService: NotificationService, $rootScope, $translate, toaster) => new WizardDirective(WorkflowService, CustomerService, ProcessService, FileService, NotificationService, $rootScope, $translate, toaster);
+        directive.$inject = [WorkflowServiceId, CustomerServiceId, ProcessServiceId, FileServiceId, NotificationServiceId, $rootScopeId, $translateId, toasterId];
         return directive;
     }
 
@@ -42,6 +43,8 @@ class WizardDirective implements IDirective {
         scope.workflowService = this.WorkflowService;
         scope.customerService = this.CustomerService;
         scope.processService = this.ProcessService;
+        scope.translate = this.$translate;
+        scope.toaster = this.toaster;
         scope.fileService = this.FileService;
         scope.notificationService = this.NotificationService;
         scope.rootScope = this.$rootScope;
@@ -54,6 +57,7 @@ class WizardDirective implements IDirective {
         scope.continue = () => this.continue(scope);
         scope.allowToContinue = () => this.allowToContinue(scope);
         scope.close = (result: boolean, process: Process) => this.close(result, process, scope);
+        scope.closeAndRefresh = () => this.closeAndRefresh(scope);
         scope.transformWorkflow = () => this.transformWorkflow(scope);
         scope.save = () => this.save(scope);
         scope.saveOrTransform = () => this.saveOrTransform(scope);
@@ -163,19 +167,37 @@ class WizardDirective implements IDirective {
     async transformWorkflow(scope: any) {
         let process = scope.editProcess;
         let resultProcess = null;
-        if (scope.isLead()) {
-            resultProcess = await scope.workflowService.addLeadToOffer(process);
-        } else if (scope.isOffer()) {
-            resultProcess = await scope.workflowService.addOfferToSale(process);
+        try {
+            if (scope.isLead()) {
+                resultProcess = await scope.workflowService.addLeadToOffer(process);
+            } else if (scope.isOffer()) {
+                resultProcess = await scope.workflowService.addOfferToSale(process);
+            }
+            scope.inconsistency = null;
+            scope.close(true, resultProcess);
+        } catch (error) {
+            scope.inconsistency = showConsistencyErrorMessage(error, scope.translate, scope.toaster, "PROCESS_PROCESS");
+            throw error;
         }
-        scope.close(true, resultProcess);
     }
 
     async save(scope: any): Promise<Process> {
         let isNewProcess: boolean = isNullOrUndefined(scope.editProcess.id);
-        let resultProcess = await scope.processService.save(scope.editProcess, scope.editWorkflowUnit, !isNewProcess, false) as Process;
-        scope.close(true, resultProcess);
-        return resultProcess;
+        try {
+            let resultProcess = await scope.processService.save(scope.editProcess, scope.editWorkflowUnit, !isNewProcess, false) as Process;
+            scope.inconsistency = null;
+            scope.close(true, resultProcess);
+            return resultProcess;
+        } catch (error) {
+            scope.inconsistency = showConsistencyErrorMessage(error, scope.translate, scope.toaster, "PROCESS_PROCESS");
+            throw error;
+        }
+    }
+
+    closeAndRefresh(scope) {
+        scope.close(true, undefined);
+        scope.rootScope.$broadcast(broadcastRefreshDatatable);
+        scope.rootScope.$broadcast(broadcastRefreshDashboard);
     }
 
     getNotificationType(scope: any): NotificationType {
@@ -205,12 +227,19 @@ class WizardDirective implements IDirective {
         notification.notificationType = notificationType;
         notification.id = undefined;
         let deleteRow = false;
-        if (scope.isInOfferTransformation()) {
-            deleteRow = true;
-            await scope.workflowService.addLeadToOffer(process);
-        } else if (scope.isInSaleTransformation()) {
-            deleteRow = true;
-            await scope.workflowService.addOfferToSale(process);
+
+        try {
+            if (scope.isInOfferTransformation()) {
+                deleteRow = true;
+                process = await scope.workflowService.addLeadToOffer(process);
+            } else if (scope.isInSaleTransformation()) {
+                deleteRow = true;
+                process = await scope.workflowService.addOfferToSale(process);
+            }
+            scope.inconsistency = null;
+        } catch (error) {
+            scope.inconsistency = showConsistencyErrorMessage(error, scope.translate, scope.toaster, "PROCESS_PROCESS");
+            throw error;
         }
 
         if (notificationType === NotificationType.FOLLOWUP) {
@@ -223,7 +252,15 @@ class WizardDirective implements IDirective {
             }
         }
 
-        let resultProcess = await scope.processService.save(process, scope.editWorkflowUnit, !deleteRow, deleteRow) as Process;
+        let resultProcess;
+        try {
+            resultProcess = await scope.processService.save(process, scope.editWorkflowUnit, !deleteRow, deleteRow) as Process;
+            scope.inconsistency = null;
+        } catch (error) {
+            scope.inconsistency = showConsistencyErrorMessage(error, scope.translate, scope.toaster, "PROCESS_PROCESS");
+            throw error;
+        }
+
         scope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SENDING);
         scope.close(true, resultProcess);
 
@@ -254,9 +291,15 @@ class WizardDirective implements IDirective {
 
     async followUp(scope) {
         if (scope.editProcess.status !== Status.FOLLOWUP && scope.editProcess.status !== Status.DONE) {
-            let resultProcess = await scope.processService.setStatus(scope.editProcess, Status.FOLLOWUP) as Process;
-            scope.rootScope.$broadcast(broadcastUpdate, resultProcess);
-            scope.close(true, resultProcess);
+            try {
+                let resultProcess = await scope.processService.setStatus(scope.editProcess, Status.FOLLOWUP) as Process;
+                scope.rootScope.$broadcast(broadcastUpdate, resultProcess);
+                scope.inconsistency = null;
+                scope.close(true, resultProcess);
+            } catch (error) {
+                scope.inconsistency = showConsistencyErrorMessage(error, scope.translate, scope.toaster, "PROCESS_PROCESS");
+                throw error;
+            }
         } else {
             scope.close(true);
         }

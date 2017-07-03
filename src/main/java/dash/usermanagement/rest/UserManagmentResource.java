@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.EmailAlreadyExistsException;
 import dash.exceptions.NotFoundException;
@@ -78,8 +79,8 @@ public class UserManagmentResource {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update a single user.", notes = "Provide a valid user ID.")
-	public User update(@RequestBody final User user)
-			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+	public User update(@RequestBody final User user) throws UpdateFailedException, UsernameAlreadyExistsException,
+			EmailAlreadyExistsException, ConsistencyFailedException {
 		return userService.update(user);
 	}
 
@@ -94,7 +95,8 @@ public class UserManagmentResource {
 	@RequestMapping(value = "/{id}/activate", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Activate a single user.", notes = "Provide a valid user ID.")
-	public User activate(@PathVariable final long id, @RequestBody final boolean enabled) throws UpdateFailedException {
+	public User activate(@PathVariable final long id, @RequestBody final boolean enabled)
+			throws UpdateFailedException, IllegalArgumentException, ConsistencyFailedException {
 		return userService.activate(id, enabled);
 	}
 
@@ -102,7 +104,7 @@ public class UserManagmentResource {
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Set a User Role .", notes = "Provide a valid user ID.")
 	public User setRoleForUser(@PathVariable final long id, @PathVariable @Valid final Role role)
-			throws UpdateFailedException {
+			throws UpdateFailedException, IllegalArgumentException, ConsistencyFailedException {
 		return userService.setRoleForUser(id, role);
 	}
 
@@ -149,7 +151,8 @@ public class UserManagmentResource {
 	@RequestMapping(value = "/profile/picture", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update a single user.", notes = "Provide a valid user ID.")
-	public User setProfilePicture(@RequestBody final User user) throws UpdateFailedException {
+	public User setProfilePicture(@RequestBody final User user)
+			throws UpdateFailedException, ConsistencyFailedException {
 		return userService.updateProfilPicture(user);
 	}
 

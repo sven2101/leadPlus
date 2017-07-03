@@ -19,22 +19,23 @@ class ProcessService {
     }
 
     async save(editProcess: Process, editWorkflowUnit: IWorkflow, updateRow: boolean, deleteRow: boolean): Promise<Process> {
-        if (!isNullOrUndefined(editWorkflowUnit) && isNullOrUndefined(editWorkflowUnit.customer.id)) {
-            editWorkflowUnit.customer.timestamp = newTimestamp();
-            editWorkflowUnit.customer = await this.customerService.insertCustomer(editWorkflowUnit.customer) as Customer;
-        } else if (!isNullOrUndefined(editWorkflowUnit)) {
-            editWorkflowUnit.customer = await this.customerService.updateCustomer(editWorkflowUnit.customer) as Customer;
+        try {
+            if (!isNullOrUndefined(editWorkflowUnit) && !isNullOrUndefined(editWorkflowUnit.customer)) {
+                let isNewCustomer: boolean = isNullOrUndefined(editWorkflowUnit.customer.id);
+                editWorkflowUnit.customer = await this.customerService.saveCustomer(editWorkflowUnit.customer, isNewCustomer) as Customer;
+            }
+            let resultProcess: Process = await this.processResource.save(editProcess).$promise as Process;
+            if (updateRow === true) {
+                this.rootScope.$broadcast(broadcastUpdate, resultProcess);
+            }
+            if (deleteRow === true) {
+                this.rootScope.$broadcast(broadcastRemove, resultProcess);
+            }
+            this.rootScope.$broadcast(broadcastOnTodosChanged);
+            return resultProcess;
+        } catch (error) {
+            throw error;
         }
-
-        let resultProcess: Process = await this.processResource.save(editProcess).$promise as Process;
-        if (updateRow === true) {
-            this.rootScope.$broadcast(broadcastUpdate, resultProcess);
-        }
-        if (deleteRow === true) {
-            this.rootScope.$broadcast(broadcastRemove, resultProcess);
-        }
-        this.rootScope.$broadcast(broadcastOnTodosChanged);
-        return resultProcess;
     }
 
     async delete(process): Promise<Process> {
@@ -65,7 +66,7 @@ class ProcessService {
         return await this.processResource.removeProcessor({ id: process.id }).$promise as Process;
     }
     async getById(processId): Promise<Process> {
-        return this.processResource.getById({ id: processId }).$promise;
+        return await this.processResource.getById({ id: processId }).$promise as Process;
     }
 }
 angular.module(moduleProcessService, [ngResourceId]).service(ProcessServiceId, ProcessService);

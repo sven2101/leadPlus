@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import dash.common.AbstractWorkflow;
-import dash.processmanagement.business.IProcessService;
+import dash.processmanagement.business.ProcessService;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Process_;
 import dash.statisticmanagement.domain.DateRange;
@@ -20,7 +20,7 @@ public abstract class AbstractStatisticService implements IStatisticService {
 	private static final Logger logger = Logger.getLogger(AbstractStatisticService.class);
 
 	@Autowired
-	protected IProcessService processService;
+	protected ProcessService processService;
 
 	public final static String ALL_STATISTIC_KEY = "ALL";
 

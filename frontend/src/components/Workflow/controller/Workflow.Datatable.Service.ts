@@ -19,12 +19,13 @@ const WorkflowDatatableServiceId: string = "WorkflowDatatableService";
 
 class WorkflowDatatableService {
 
-    private $inject = [$rootScopeId, $compileId, TokenServiceId, $httpId];
+    private $inject = [$rootScopeId, $compileId, TokenServiceId, $httpId, ProcessResourceId];
 
     rootScope;
     compile;
+    cache: { [key: string]: Process[] } = {};
 
-    constructor($rootScope, $compile, private TokenService: TokenService, private $http) {
+    constructor($rootScope, $compile, private TokenService: TokenService, private $http, ProcessResource) {
         this.rootScope = $rootScope;
         this.compile = $compile;
     }
@@ -129,13 +130,66 @@ class WorkflowDatatableService {
 
         } else {
             return (data, callback, settings) => {
+                let currentWorkflowType = self.getStatusByWorkflowType(latestDataRoute);
+                if (!isNullOrUndefined(self.cache[currentWorkflowType.toString()])) {
+                    setTimeout(function () {
+                        callback(self.cache[currentWorkflowType.toString()]);
+                    }, 400);
+                }
                 self.$http.get(latestDataRoute).then(function (response) {
-                    callback(response.data);
+                    if (isNullOrUndefined(self.cache[currentWorkflowType.toString()])) {
+                        callback(response.data);
+                    }
+                    self.cache[currentWorkflowType.toString()] = response.data;
+                    let refreshObject = {
+                        data: response.data,
+                        timestamp: newTimestamp(),
+                        workflow: currentWorkflowType
+                    };
+                    setTimeout(function () {
+                        self.rootScope.$broadcast(broadcastUpdateOldRow, refreshObject);
+                    }, 400);
                 });
             };
 
         }
     }
+
+    getStatusByWorkflowType(latestDataRoute): WorkflowType {
+        switch (latestDataRoute) {
+            case openDataLeadRoute:
+                return WorkflowType.LEAD;
+            case openDataOfferRoute:
+                return WorkflowType.OFFER;
+            case openDataSaleRoute:
+                return WorkflowType.SALE;
+        };
+    }
+
+    updateCache(workflowType: WorkflowType, processToUpdate: Process) {
+        if (!isNullOrUndefined(this.cache[workflowType.toString()]) && !isNullOrUndefined(processToUpdate) && !isNullOrUndefined(processToUpdate.id)) {
+            let oldProcess: Process = findElementById(this.cache[workflowType.toString()], processToUpdate.id);
+            if (oldProcess != null && this.cache[workflowType.toString()].indexOf(oldProcess) > -1) {
+                this.cache[workflowType.toString()][this.cache[workflowType.toString()].indexOf(oldProcess)] = processToUpdate;
+            }
+        }
+    }
+
+    addElementToCache(workflowType: WorkflowType, processToAdd: Process) {
+        if (!isNullOrUndefined(this.cache[workflowType.toString()]) && !isNullOrUndefined(processToAdd)) {
+            this.cache[workflowType.toString()].push(processToAdd);
+        }
+    }
+
+    removeElementFromCache(workflowType: WorkflowType, processToRemove: Process) {
+        if (!isNullOrUndefined(this.cache[workflowType.toString()]) && !isNullOrUndefined(processToRemove) && !isNullOrUndefined(processToRemove.id)) {
+            let oldProcess: Process = findElementById(this.cache[workflowType.toString()], processToRemove.id);
+            if (oldProcess != null && this.cache[workflowType.toString()].indexOf(oldProcess) > -1) {
+                this.cache[workflowType.toString()].splice(this.cache[workflowType.toString()].indexOf(oldProcess), 1);
+            }
+        }
+    }
+
 
     appendChildRow(childScope: any, process: Process, workflowUnit: IWorkflow, dtInstance: any, parent: WorkflowController, type: string) {
         childScope.workflowUnit = workflowUnit;

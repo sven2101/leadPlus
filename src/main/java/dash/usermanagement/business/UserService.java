@@ -19,7 +19,6 @@ import static dash.Constants.DELETE_FAILED_EXCEPTION;
 import static dash.Constants.DONT_MATCH;
 import static dash.Constants.EMAIL_EXISTS;
 import static dash.Constants.REGISTER_FAILED_EXCEPTION;
-import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 import static dash.Constants.USER_NOT_FOUND;
 
@@ -39,6 +38,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import dash.common.Encryptor;
+import dash.consistencymanagement.business.ConsistencyService;
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.DontMatchException;
 import dash.exceptions.EmailAlreadyExistsException;
@@ -66,7 +67,7 @@ import dash.usermanagement.settings.language.Language;
 import dash.usermanagement.settings.password.PasswordChange;
 
 @Service
-public class UserService implements IUserService {
+public class UserService extends ConsistencyService {
 
 	private static final Logger logger = Logger.getLogger(UserService.class);
 
@@ -90,13 +91,11 @@ public class UserService implements IUserService {
 		this.awsEmailService = awsEmailService;
 	}
 
-	@Override
 	public List<User> getAll() {
 		return userRepository.findAll().stream().filter(it -> !"superadmin@eviarc.com".equals(it.getUsername()))
 				.collect(Collectors.toList());
 	}
 
-	@Override
 	public User getById(final long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
 			return userRepository.findOne(id);
@@ -124,20 +123,19 @@ public class UserService implements IUserService {
 		return null;
 	}
 
-	@Override
-	public User save(final User user) throws SaveFailedException {
-		if (user != null) {
-			return userRepository.save(user);
-		} else {
-			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(SAVE_FAILED_EXCEPTION + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
-			throw sfex;
+	public User save(final User user)
+			throws SaveFailedException, NotFoundException, IllegalArgumentException, ConsistencyFailedException {
+		if (user == null) {
+			logger.error(USER_NOT_FOUND + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
+			throw new IllegalArgumentException(
+					USER_NOT_FOUND + UserService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
 		}
+		this.checkConsistencyAndSetTimestamp(user, userRepository);
+		return userRepository.save(user);
 	}
 
-	@Override
 	public User update(final User user)
-			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+			throws UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException, ConsistencyFailedException {
 		if (user != null) {
 			try {
 				User updateUser = getById(user.getId());
@@ -180,8 +178,7 @@ public class UserService implements IUserService {
 		}
 	}
 
-	@Override
-	public User updateProfilPicture(final User user) throws UpdateFailedException {
+	public User updateProfilPicture(final User user) throws UpdateFailedException, ConsistencyFailedException {
 		if (Optional.ofNullable(user).isPresent()) {
 			try {
 				User updateUser = getById(user.getId());
@@ -203,7 +200,6 @@ public class UserService implements IUserService {
 		}
 	}
 
-	@Override
 	public void delete(final long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
@@ -220,7 +216,6 @@ public class UserService implements IUserService {
 
 	}
 
-	@Override
 	public Map<String, String> updatePassword(final long id, final PasswordChange passwordChange) throws Exception {
 		if (Optional.ofNullable(id).isPresent() && Optional.ofNullable(passwordChange).isPresent()) {
 			try {
@@ -274,8 +269,7 @@ public class UserService implements IUserService {
 		}
 	}
 
-	@Override
-	public void resetPassword(final Long id, final String newPassword) {
+	public void resetPassword(final Long id, final String newPassword) throws SaveFailedException, NotFoundException, IllegalArgumentException, ConsistencyFailedException {
 		User user = getById(id);
 		if (user == null)
 			throw new NotFoundException(USER_NOT_FOUND);
@@ -293,8 +287,7 @@ public class UserService implements IUserService {
 		}
 	}
 
-	@Override
-	public User activate(final long id, final boolean enabled) throws UpdateFailedException {
+	public User activate(final long id, final boolean enabled) throws UpdateFailedException, IllegalArgumentException, ConsistencyFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
 				User user = getById(id);
@@ -316,7 +309,7 @@ public class UserService implements IUserService {
 		}
 	}
 
-	public User setRoleForUser(final Long id, final Role role) throws UpdateFailedException {
+	public User setRoleForUser(final Long id, final Role role) throws UpdateFailedException, IllegalArgumentException, ConsistencyFailedException {
 		if (Optional.ofNullable(id).isPresent() && Optional.ofNullable(role).isPresent()) {
 			try {
 				User user = getById(id);
@@ -338,7 +331,7 @@ public class UserService implements IUserService {
 		}
 	}
 
-	public User register(final Registration registration) throws EmailAlreadyExistsException, RegisterFailedException {
+	public User register(final Registration registration) throws EmailAlreadyExistsException, RegisterFailedException, NotFoundException, IllegalArgumentException, ConsistencyFailedException {
 
 		if (registration != null && registration.getEmail() != null && registration.getPassword() != null) {
 
@@ -385,9 +378,8 @@ public class UserService implements IUserService {
 		return validation;
 	}
 
-	@Override
 	public User setProfilePicture(long id, MultipartFile file) throws NotFoundException, SaveFailedException,
-			UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+			UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException, ConsistencyFailedException {
 		User user = getById(id);
 		user.setProfilPicture(fileUploadService.save(file));
 		return update(user);

@@ -21,17 +21,15 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import dash.processmanagement.domain.Process;
 import dash.statusmanagement.domain.Status;
 import dash.usermanagement.domain.User;
 
-//@Transactional
-//@Repository
-public interface ProcessRepository extends PagingAndSortingRepository<Process, Long> {
+public interface ProcessRepository extends JpaRepository<Process, Long> {
 
 	List<Process> findProcessesByStatus(Status status);
 
@@ -61,9 +59,18 @@ public interface ProcessRepository extends PagingAndSortingRepository<Process, L
 
 	Page<Process> findByStatus(Status status, Pageable pageable);
 
+	Page<Process> findBySaleIsNotNullAndSaleTimestampAfter(Calendar after, Pageable pageable);
+
+	Page<Process> findByStatusIn(Collection<Status> status, Pageable pageable);
+
+	Page<Process> findByStatusInAndProcessor(Collection<Status> status, User processor, Pageable pageable);
+
 	Integer countByStatusAndSaleIsNotNull(Status status);
 
 	Page<Process> findBySaleIsNotNull(Pageable pageable);
+
+	Page<Process> findBySaleIsNotNullAndProcessorAndSaleTimestampAfter(User processor,
+			Calendar after, Pageable pageable);
 
 	Page<Process> findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleDeliveryAddressLineContainingOrSaleCustomerPhoneContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
 			String firstname, String lastname, String email, String company, String deliveryAddress, String phone,

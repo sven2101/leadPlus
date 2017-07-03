@@ -37,9 +37,9 @@ import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
-import dash.processmanagement.business.IProcessService;
+import dash.processmanagement.business.ProcessService;
 import dash.processmanagement.domain.Process;
-import dash.usermanagement.business.IUserService;
+import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 
 @Service
@@ -51,14 +51,15 @@ public class CommentService implements ICommentService {
 	private CommentRepository commentRepository;
 
 	@Autowired
-	private IProcessService processService;
+	private ProcessService processService;
 
 	@Autowired
-	private IUserService userService;
+	private UserService userService;
 
 	@Override
 	public Comment save(final Comment comment, final Long processId) throws SaveFailedException {
-		if (processId > 0 && Optional.ofNullable(comment).isPresent() && Optional.ofNullable(comment.getCreator()).isPresent()
+		if (processId > 0 && Optional.ofNullable(comment).isPresent()
+				&& Optional.ofNullable(comment.getCreator()).isPresent()
 				&& Optional.ofNullable(comment.getCreator().getId()).isPresent()) {
 			try {
 				final User user = userService.getById(comment.getCreator().getId());
@@ -68,7 +69,8 @@ public class CommentService implements ICommentService {
 					return commentRepository.save(comment);
 				} else {
 					SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-					logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_USER_NOT_FOUND,
+					logger.error(
+							SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_USER_NOT_FOUND,
 							new UsernameNotFoundException(USER_NOT_FOUND));
 					throw sfex;
 				}
@@ -78,7 +80,8 @@ public class CommentService implements ICommentService {
 			}
 		} else {
 			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
+			logger.error(SAVE_FAILED_EXCEPTION + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+					sfex);
 			throw sfex;
 		}
 	}
@@ -91,7 +94,8 @@ public class CommentService implements ICommentService {
 				return commentRepository.findByProcess(process);
 			} else {
 				NotFoundException pnfex = new NotFoundException(PROCESS_NOT_FOUND);
-				logger.error(PROCESS_NOT_FOUND + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, pnfex);
+				logger.error(PROCESS_NOT_FOUND + CommentService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
+						pnfex);
 				throw pnfex;
 			}
 		} else {

@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -86,7 +87,7 @@ public class TemplateResource {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Post a template. ", notes = "")
 	public Template save(@ApiParam(required = true) @RequestBody @Valid final Template template)
-			throws SaveFailedException {
+			throws SaveFailedException, ConsistencyFailedException {
 		return templateService.save(template);
 	}
 
@@ -94,8 +95,8 @@ public class TemplateResource {
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public Template update(@ApiParam(required = true) @RequestBody @Valid final Template template)
-			throws UpdateFailedException {
-		return templateService.update(template);
+			throws UpdateFailedException, SaveFailedException, ConsistencyFailedException {
+		return templateService.save(template);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

@@ -37,8 +37,24 @@ class OfferDataTableService implements IDatatableService {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
             .withOption("ajax", function (data, callback, settings) {
+                if (!isNullOrUndefined(self.workflowDatatableService.cache[WorkflowType.OFFER.toString()])) {
+                    setTimeout(function () {
+                        callback(self.workflowDatatableService.cache[WorkflowType.OFFER.toString()]);
+                    }, 400);
+                }
                 self.$http.get(openDataOfferRoute).then(function (response) {
-                    callback(response.data);
+                    if (isNullOrUndefined(self.workflowDatatableService.cache[WorkflowType.OFFER.toString()])) {
+                        callback(response.data);
+                    }
+                    self.workflowDatatableService.cache[WorkflowType.OFFER.toString()] = response.data;
+                    let refreshObject = {
+                        data: response.data,
+                        timestamp: newTimestamp(),
+                        workflow: WorkflowType.OFFER
+                    };
+                    setTimeout(function () {
+                        self.rootScope.$broadcast(broadcastUpdateOldRow, refreshObject);
+                    }, 400);
                 });
             })
             .withOption("stateSave", false)
@@ -72,8 +88,7 @@ class OfferDataTableService implements IDatatableService {
 
     getDetailHTML(id: number): string {
         return "<a id='id_" + id + "' class='green shortinfo' href='javascript:;'"
-            + "ng-click='offerCtrl.appendChildRow(offerCtrl.processes[" + id
-            + "])' title='Details'>"
+            + "ng-click='offerCtrl.appendChildRow(" + id + ")' title='Details'>"
             + "<i class='glyphicon glyphicon-plus-sign'/></a>";
     }
 

@@ -18,7 +18,6 @@ import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.DELETE_FAILED_EXCEPTION;
 import static dash.Constants.PRODUCT_NOT_FOUND;
 import static dash.Constants.SAVE_FAILED_EXCEPTION;
-import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +30,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import dash.consistencymanagement.business.ConsistencyService;
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -40,7 +41,7 @@ import dash.productmanagement.domain.Product;
 
 @Service
 @Transactional
-public class ProductService implements IProductService {
+public class ProductService extends ConsistencyService implements IProductService {
 
 	private static final Logger logger = Logger.getLogger(ProductService.class);
 
@@ -67,36 +68,17 @@ public class ProductService implements IProductService {
 	}
 
 	@Override
-	public Product save(final Product product) throws SaveFailedException {
-		if (Optional.ofNullable(product).isPresent()) {
-			if (product.getPicture() != null && product.getPicture().getId() != null) {
-				product.setPicture(fileUploadService.getById(product.getPicture().getId()));
-			}
-			return productRepository.save(product);
-		} else {
-			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(SAVE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					sfex);
-			throw sfex;
+	public Product save(final Product product) throws ConsistencyFailedException {
+		if (product == null) {
+			logger.error(SAVE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
+			throw new IllegalArgumentException(
+					SAVE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
 		}
-	}
-
-	@Override
-	public Product update(final Product product) throws UpdateFailedException {
-		if (Optional.ofNullable(product).isPresent()) {
-			try {
-				return save(product);
-			} catch (SaveFailedException ex) {
-				logger.error(ex.getMessage() + ProductService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			}
-
-		} else {
-			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			logger.error(UPDATE_FAILED_EXCEPTION + ProductService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					ufex);
-			throw ufex;
+		this.checkConsistencyAndSetTimestamp(product, productRepository);
+		if (product.getPicture() != null && product.getPicture().getId() != null) {
+			product.setPicture(fileUploadService.getById(product.getPicture().getId()));
 		}
+		return productRepository.save(product);
 	}
 
 	@Override
@@ -119,7 +101,7 @@ public class ProductService implements IProductService {
 
 	@Override
 	public Product setImage(final long id, MultipartFile multipartFile)
-			throws NotFoundException, SaveFailedException, UpdateFailedException {
+			throws NotFoundException, SaveFailedException, UpdateFailedException, ConsistencyFailedException {
 		Product product = getById(id);
 		product.setPicture(fileUploadService.save(multipartFile));
 		return save(product);

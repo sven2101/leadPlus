@@ -15,6 +15,7 @@ class ProductService {
     productResource;
     q;
     formdata;
+    inconsistency: string;
 
     constructor(toaster, $translate, ProductResource, $q) {
         this.toaster = toaster;
@@ -26,26 +27,17 @@ class ProductService {
         this.getAllProducts();
     }
 
-    saveProduct(product: Product, insert: boolean) {
-        let self = this;
+    async saveProduct(product: Product, insert: boolean): Promise<Product> {
         if (insert) {
             product.timestamp = newTimestamp();
-            this.productResource.createProduct(product).$promise.then(function (result: Product) {
-                // self.products.push(result);
-                self.getAllProducts();
-                self.toaster.pop("success", "", self.translate.instant("PRODUCT_TOAST_SAVE"));
-
-            }, function () {
-                self.toaster.pop("error", "", self.translate.instant("PRODUCT_TOAST_SAVE_ERROR"));
-            });
-        } else {
-            this.productResource.createProduct(product).$promise.then(function (result: Product) {
-                self.getAllProducts();
-                self.toaster.pop("success", "", self.translate.instant("PRODUCT_TOAST_UPDATE"));
-
-            }, function () {
-                self.toaster.pop("error", "", self.translate.instant("PRODUCT_TOAST_UPDATE_ERROR"));
-            });
+        }
+        try {
+            let savedProduct = await this.productResource.createProduct(product).$promise;
+            this.getAllProducts();
+            this.inconsistency = null;
+            return savedProduct;
+        } catch (error) {
+            throw error;
         }
     }
 

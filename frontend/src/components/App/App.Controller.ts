@@ -12,7 +12,7 @@ const broadcastUserNotificationChanged: string = "userNotificationChanged";
 
 class AppController {
 
-    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId, $windowId, $timeoutId, SmtpServiceId];
+    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId, $windowId, $timeoutId];
 
     translate;
     rootScope;
@@ -146,12 +146,16 @@ class AppController {
         let self = this;
         self.rootScope.setUserDefaultLanguage = function () {
             if (self.rootScope.user != null) {
-                self.userResource
-                    .get({
-                        id: self.rootScope.user.id
-                    }).$promise.then(function (result) {
-                        self.rootScope.changeLanguage(result.language);
-                    });
+                if (!isNullOrUndefined(self.rootScope.user.language)) {
+                    self.rootScope.changeLanguage(self.rootScope.user.language);
+                } else {
+                    self.userResource
+                        .get({
+                            id: self.rootScope.user.id
+                        }).$promise.then(function (result) {
+                            self.rootScope.changeLanguage(result.language);
+                        });
+                }
             }
             else {
                 let lang: string = self.window.navigator.language || self.window.navigator.userLanguage;

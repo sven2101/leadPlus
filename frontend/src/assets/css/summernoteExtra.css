@@ -32,6 +32,10 @@ height: 30px;
   animation-direction: reverse;
 }
 
+.note-fontclr .dropdown-menu{
+  left: -287px;
+}
+
 .cog-loader {
   width: 5%;
   height: 9em;
@@ -66,4 +70,17 @@ height: 30px;
   font-size: 2.7em;
   top: 0.39em;
   left: 1.85em;
+}
+
+.note-editing-area {
+  font-family: Arial, Helvetica, sans-serif !important;
+
+}
+
+.note-editing-area {
+  font-family: Arial, Helvetica, sans-serif !important;
+  
+}
+.note-editing-area table{
+  font-size: inherit;
 }

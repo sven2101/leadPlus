@@ -21,8 +21,13 @@
 		</div>
 	</div>
 </div>
-<div class="wrapper wrapper-content animated fadeInRight" ng-if="templateCtrl.templateFound===true">
-	<div class="row">
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="ibox float-e-margins" ng-if="templateCtrl.templateFound===false && templateCtrl.templateService.inconsistency === null">
+		<div class="ibox-content" style="font-size: 1.3em">
+			{{ 'INCONSISTENCY_DELETED' | translate}} <a href="#/settings/template"> {{ 'COMMON_BACK' | translate}}</a>
+		</div>
+	</div>
+	<div class="row" ng-if="templateCtrl.templateFound===true">
 		<div class="col-lg-12">
 			<div class="ibox float-e-margins">
 				<div class="ibox-title">
@@ -101,8 +106,8 @@
 								<div class="form-group ">
 									<label>{{ 'SETTING_EMAIL_TEMPLATE_TEXT' | translate }}<span style="color:red">*</span></label>
 									<div style="border: 1px solid #a9a9a9;" ng-style="createTemplate.content.$invalid  && !createTemplate.content.$pristine ?{ 'border-color': 'red'}:{ 'border-color': '#a9a9a9'}">
-										<summernote required config="templateCtrl.summernoteOptions" name="content " class="form-control" height="500"
-										 ng-model="templateCtrl.template.content " ng-change="templateCtrl.templateTested=false"></summernote>
+										<summernote required config="templateCtrl.summernoteOptions" name="content " class="form-control" height="500" ng-model="templateCtrl.template.content "
+										 ng-change="templateCtrl.templateTested=false"></summernote>
 									</div>
 								</div>
 							</div>
@@ -117,11 +122,13 @@
 								<button type="button " class="btn btn-warning " ng-disabled="templateCtrl.isTemplateInPreviewMode() || createTemplate.$invalid"
 								 ng-click="templateCtrl.testSyntax()"><i class="fa fa-cogs" aria-hidden="true"></i>&nbsp;{{ 'SETTING_TEMPLATE_TEST_SYNTAX'| translate }}
 									</button>
-								<button type="submit " class="btn btn-success " ng-disabled="templateCtrl.isTemplateInPreviewMode() || createTemplate.$invalid || !templateCtrl.templateTested"
+								<button type="submit " class="btn btn-success " ng-disabled="templateCtrl.isTemplateInPreviewMode() || createTemplate.$invalid || !templateCtrl.templateTested || templateCtrl.templateService.inconsistency !== null"
 								 ng-click="templateCtrl.save() "><i class="fa fa-save "></i>&nbsp;{{ 'COMMON_SAVE'| translate }}
 									</button>
 							</div>
 						</div>
+						<br>
+						<span ng-if="templateCtrl.templateService.inconsistency !== null" style="color:red; font-size:14px;font-weight:bold"><i style="color:red" class="fa fa-exclamation-triangle "></i> {{templateCtrl.templateService.inconsistency}} <a style="color:#23527c" ng-click="templateCtrl.initTemplate(templateCtrl.routeParams)">{{'COMMON_REFRESH' | translate}}</a></span>
 					</form>
 				</div>
 			</div>
@@ -135,37 +142,40 @@
 	.chosen-drop {
 		width: 100% !important;
 	}
-	.modal-backdrop, .modal-backdrop.in{
+
+	.modal-backdrop,
+	.modal-backdrop.in {
 		display: none;
 	}
 </style>
 <script>
 	// Bugfix for Summernote Modal content stays behind modal-backdrop
- 	   $('.summernote').summernote({
-      		dialogsInBody: true
-    	});
+	$('.summernote').summernote({
+		dialogsInBody: true
+	});
 
-		$(document).ready(function () {
-			$.fn.extend({
-				placeCursorAtEnd: function () {
-					// Places the cursor at the end of a contenteditable container (should also work for textarea / input)
-					if (this.length === 0) {
-						throw new Error("Cannot manipulate an element if there is no element!");
-					}
-					var el = this[0];
-					var range = document.createRange();
-					var sel = window.getSelection();
-					var childLength = el.childNodes.length;
-					if (childLength > 0) {
-						var lastNode = el.childNodes[childLength - 1];
-						var lastNodeChildren = lastNode.childNodes.length;
-						range.setStart(lastNode, lastNodeChildren);
-						range.collapse(true);
-						sel.removeAllRanges();
-						sel.addRange(range);
-					}
-					return this;
+	$(document).ready(function () {
+		$.fn.extend({
+			placeCursorAtEnd: function () {
+				// Places the cursor at the end of a contenteditable container (should also work for textarea / input)
+				if (this.length === 0) {
+					throw new Error("Cannot manipulate an element if there is no element!");
 				}
-			});
+				var el = this[0];
+				var range = document.createRange();
+				var sel = window.getSelection();
+				var childLength = el.childNodes.length;
+				if (childLength > 0) {
+					var lastNode = el.childNodes[childLength - 1];
+					var lastNodeChildren = lastNode.childNodes.length;
+					range.setStart(lastNode, lastNodeChildren);
+					range.collapse(true);
+					sel.removeAllRanges();
+					sel.addRange(range);
+				}
+				return this;
+			}
 		});
+	});
+
 </script>

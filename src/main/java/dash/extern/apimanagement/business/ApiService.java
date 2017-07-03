@@ -12,14 +12,16 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import dash.common.Encryptor;
+import dash.common.FailedToEncryptCipherTextException;
+import dash.consistencymanagement.business.ConsistencyService;
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
-import dash.exceptions.SaveFailedException;
 import dash.extern.apimanagement.domain.Api;
 import dash.extern.apimanagement.domain.ApiVendor;
 
 @Service
-public class ApiService {
+public class ApiService extends ConsistencyService {
 
 	private static final Logger logger = Logger.getLogger(ApiService.class);
 
@@ -44,24 +46,26 @@ public class ApiService {
 		}
 	}
 
-	public Api save(final Api api) throws Exception {
-		if (api != null) {
-			Api encryptedApi = null;
-			if (!api.isDecrypted()) {
-				Api tmpApi = getById(api.getId());
-				encryptedApi = api;
-				encryptedApi.setPassword(tmpApi.getPassword());
-				encryptedApi.setSalt(tmpApi.getSalt());
-				encryptedApi.setIv(tmpApi.getIv());
-			} else {
-				encryptedApi = (Api) Encryptor.encrypt(api);
-			}
-			return apiRepository.save(encryptedApi);
-		} else {
-			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(SAVE_FAILED_EXCEPTION + ApiService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
-			throw sfex;
+	public Api save(final Api api) throws FailedToEncryptCipherTextException, ConsistencyFailedException,
+			NotFoundException, IllegalArgumentException {
+		if (api == null) {
+			logger.error(SAVE_FAILED_EXCEPTION + ApiService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
+			throw new IllegalArgumentException(
+					SAVE_FAILED_EXCEPTION + ApiService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
 		}
+		this.checkConsistencyAndSetTimestamp(api, apiRepository);
+		Api encryptedApi = null;
+		if (!api.isDecrypted()) {
+			Api tmpApi = getById(api.getId());
+			encryptedApi = api;
+			encryptedApi.setPassword(tmpApi.getPassword());
+			encryptedApi.setSalt(tmpApi.getSalt());
+			encryptedApi.setIv(tmpApi.getIv());
+		} else {
+			encryptedApi = (Api) Encryptor.encrypt(api);
+		}
+		return apiRepository.save(encryptedApi);
+
 	}
 
 	public void delete(final Long id) throws DeleteFailedException {

@@ -18,6 +18,8 @@ class Process {
     followUpAmount: number;
     formerProcessors: Array<Processor>;
     source: Source;
+    lastEditor: any;
+    lastEdited: string;
 
     constructor() {
         this.comments = new Array<Commentary>();

@@ -13,27 +13,63 @@ class WizardModalController {
     uibModalInstance;
     rootScope;
     workflowService: WorkflowService;
-
     editProcess: Process;
     wizardEditConfig: Array<WizardButtonConfig>;
     wizardQuickEmailConfig: Array<WizardButtonConfig>;
     wizardOfferTransitionConfig: Array<WizardButtonConfig>;
     wizardSaleTransitionConfig: Array<WizardButtonConfig>;
+    processAlreadyTransformed: string = null;
 
     notification: EmailNotification;
 
 
-    constructor(process: Process, workflowType: WorkflowType, transformation: boolean, notification: EmailNotification, $uibModalInstance, $rootScope, WorkflowService) {
+    constructor(process: Process, workflowType: WorkflowType, transformation: boolean, notification: EmailNotification, $uibModalInstance, $rootScope, WorkflowService, private ProcessService: ProcessService, private $translate) {
         this.uibModalInstance = $uibModalInstance;
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
         this.editProcess = deepCopy(process);
         this.appendTransformation(transformation, workflowType);
+        this.initProcess(process, transformation, workflowType);
         this.wizardEditConfig = this.getWizardEditConfig();
         this.wizardQuickEmailConfig = this.getQuickEmailWizardConfig(workflowType);
         this.wizardOfferTransitionConfig = this.getOfferWizardTransitionConfig();
         this.wizardSaleTransitionConfig = this.getSaleWizardTransitionConfig();
         this.notification = notification == null ? new EmailNotification() : notification;
+    }
+
+    async initProcess(oldProcess: Process, transformation: boolean, workflowType: WorkflowType) {
+        let tempProcess = await this.setProcess(oldProcess) as Process;
+        if (isNullOrUndefined(tempProcess.lead) && isNullOrUndefined(tempProcess.offer) && isNullOrUndefined(tempProcess.sale)) {
+            this.processAlreadyTransformed = this.$translate.instant("INCONSISTENCY_DELETED");
+            return;
+        }
+
+        if ((isNullOrUndefined(oldProcess.sale) && isNullOrUndefined(tempProcess.sale) && !(isNullOrUndefined(oldProcess.offer) && !isNullOrUndefined(tempProcess.offer)))
+            || (!isNullOrUndefined(oldProcess.offer) && !isNullOrUndefined(tempProcess.offer) && !(isNullOrUndefined(oldProcess.sale) && !isNullOrUndefined(tempProcess.sale)))) {
+            if (tempProcess.status !== Status.CLOSED && (!transformation && !isNullOrUndefined(tempProcess[workflowType.toString().toLowerCase()])
+                || transformation && workflowType === WorkflowType.OFFER && !isNullOrUndefined(tempProcess.lead)
+                || transformation && workflowType === WorkflowType.SALE && !isNullOrUndefined(tempProcess.offer)
+            )) {
+                this.editProcess = tempProcess;
+                this.rootScope.$broadcast(broadcastUpdate, deepCopy(tempProcess));
+                this.rootScope.$broadcast(broadcastUpdateDashboardElement, oldProcess, deepCopy(tempProcess), false);
+                this.rootScope.$broadcast(broadcastUpdateChildrow, deepCopy(tempProcess));
+                this.appendTransformation(transformation, workflowType);
+            } else {
+                this.processAlreadyTransformed = this.$translate.instant("INCONSISTENCY_BY_AT_ERROR", { editedBy: tempProcess.lastEditor, editedAt: tempProcess.lastEdited, data: this.$translate.instant("PROCESS_PROCESS") });
+            }
+        } else {
+            this.processAlreadyTransformed = this.$translate.instant("INCONSISTENCY_BY_AT_ERROR", { editedBy: tempProcess.lastEditor, editedAt: tempProcess.lastEdited, data: this.$translate.instant("PROCESS_PROCESS") });
+        }
+    }
+
+    async setProcess(process: Process): Promise<Process> {
+        if (isNullOrUndefined(process)) {
+            return new Process();
+        } else if (isNullOrUndefined(process.id)) {
+            return process;
+        }
+        return await this.ProcessService.getById(process.id) as Process;
     }
 
     getWizardEditConfig(): Array<WizardButtonConfig> {
