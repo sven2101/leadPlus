@@ -56,10 +56,12 @@ class WizardModalController {
                 this.rootScope.$broadcast(broadcastUpdateChildrow, deepCopy(tempProcess));
                 this.appendTransformation(transformation, workflowType);
             } else {
-                this.processAlreadyTransformed = this.$translate.instant("INCONSISTENCY_BY_AT_ERROR", { editedBy: tempProcess.lastEditor, editedAt: tempProcess.lastEdited, data: this.$translate.instant("PROCESS_PROCESS") });
+                let editedAt = toLocalDate(tempProcess.lastEdited);
+                this.processAlreadyTransformed = this.$translate.instant("INCONSISTENCY_BY_AT_ERROR", { editedBy: tempProcess.lastEditor, editedAt: editedAt, data: this.$translate.instant("PROCESS_PROCESS") });
             }
         } else {
-            this.processAlreadyTransformed = this.$translate.instant("INCONSISTENCY_BY_AT_ERROR", { editedBy: tempProcess.lastEditor, editedAt: tempProcess.lastEdited, data: this.$translate.instant("PROCESS_PROCESS") });
+            let editedAt = toLocalDate(tempProcess.lastEdited);
+            this.processAlreadyTransformed = this.$translate.instant("INCONSISTENCY_BY_AT_ERROR", { editedBy: tempProcess.lastEditor, editedAt: editedAt, data: this.$translate.instant("PROCESS_PROCESS") });
         }
     }
 
