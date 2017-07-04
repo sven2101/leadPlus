@@ -1,5 +1,6 @@
+import { Common } from "./common";
 import { Injectable } from "@angular/core";
-import { Http, Headers, RequestOptions, Response } from "@angular/http";
+import { Http, Headers, RequestOptions, Response, ResponseContentType } from "@angular/http";
 
 import { AuthenticationService } from "../login/authentication.service";
 
@@ -34,23 +35,25 @@ export class HttpClient {
             .catch(error => this.extractErrorResponse(error));
     }
 
-    public async getBrowserCached<T>(url: string): Promise<T> {
+    public async getBrowserCachedBase64Image<T>(url: string): Promise<T> {
         const accessToken = await this.AuthenticationService.getAccessTokenPromise();
+        // console.log(accessToken);
         return new Promise<T>((resolve, reject) => {
             $.ajax({
-                type: "GET",
                 url: AuthenticationService.API_ENPOINT + url,
-
+                type: "GET",
                 headers: {
-                    "X-Authorization": "Bearer " + accessToken,
-                    "Content-Type": "arraybuffer"
+                    "X-Authorization": "Bearer " + accessToken
                 },
-                success: (response) => {
-                    resolve(response);
+                xhrFields: {
+                    withCredentials: true
                 },
-                error: (error) => {
-                    reject(error);
-                }
+                cache: true,
+                mimeType: "text/plain; charset=x-user-defined"
+            }).done((data, textStatus, jqXHR) => {
+                resolve(Common.base64Encode(data) as any);
+            }).fail((jqXHR, textStatus, errorThrown) => {
+                reject(errorThrown);
             });
         });
     }
