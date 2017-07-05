@@ -5,7 +5,7 @@
 
 const OfferDataTableServiceId: string = "OfferDataTableService";
 const allDataOfferRoute: string = "/api/rest/processes/offers";
-const openDataOfferRoute: string = "/api/rest/processes/workflow/OFFER/state/OFFER";
+const openDataOfferRoute: string = "/api/rest/processes/offers/open";
 
 class OfferDataTableService implements IDatatableService {
 
@@ -36,38 +36,40 @@ class OfferDataTableService implements IDatatableService {
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
-            .withOption("ajax", function (data, callback, settings) {
-                if (!isNullOrUndefined(self.workflowDatatableService.cache[WorkflowType.OFFER.toString()])) {
-                    setTimeout(function () {
-                        callback(self.workflowDatatableService.cache[WorkflowType.OFFER.toString()]);
-                    }, 400);
-                }
-                self.$http.get(openDataOfferRoute).then(function (response) {
-                    if (isNullOrUndefined(self.workflowDatatableService.cache[WorkflowType.OFFER.toString()])) {
-                        callback(response.data);
-                    }
-                    self.workflowDatatableService.cache[WorkflowType.OFFER.toString()] = response.data;
-                    let refreshObject = {
-                        data: response.data,
-                        timestamp: newTimestamp(),
-                        workflow: WorkflowType.OFFER
-                    };
-                    setTimeout(function () {
-                        self.rootScope.$broadcast(broadcastUpdateOldRow, refreshObject);
-                    }, 400);
-                });
-            })
+            .withOption("searchDelay", 600)
+            .withOption("ajax", self.getInitData())
             .withOption("stateSave", false)
+            .withOption("serverSide", true)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
             .withButtons(this.workflowDatatableService.getButtons(this.translate("OFFER_OFFERS"), [8, 3, 2, 4, 7, 6, 9, 10, 11, 12, 13]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
-            .withOption("deferRender", true)
+            .withOption("deferRender", false)
             .withOption("lengthMenu", [10, 20, 50])
             .withOption("order", [6, "desc"])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
+    }
+
+    async getInitData() {
+        let token = await this.TokenService.getAccessTokenPromise();
+        let self = this;
+        return {
+            url: openDataOfferRoute,
+            type: "GET",
+            pages: 2,
+            dataSrc: "data",
+            data: function (d) {
+                d.userId = self.workflowDatatableService.showMyTasksUserId["OFFER"];
+            },
+            error: function (xhr, error, thrown) {
+                handleError(xhr);
+            },
+            beforeSend: function (request) {
+                request.setRequestHeader("X-Authorization", "Bearer " + token);
+            }
+        };
     }
 
     configRow(row: any, data: Process) {

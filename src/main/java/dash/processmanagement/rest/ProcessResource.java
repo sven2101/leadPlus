@@ -14,7 +14,9 @@
 
 package dash.processmanagement.rest;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -43,8 +45,8 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
-import dash.processmanagement.business.ProcessService;
 import dash.processmanagement.business.ProcessRepository;
+import dash.processmanagement.business.ProcessService;
 import dash.processmanagement.business.newProcessService;
 import dash.processmanagement.domain.Process;
 import dash.salemanagement.domain.Sale;
@@ -196,6 +198,48 @@ public class ProcessResource {
 				page.getContent());
 	}
 
+	@ApiOperation(value = "Returns a list of offers.", notes = "")
+	@RequestMapping(value = "/leads/open", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public DatatableServerSideJsonObject getProcessWithOpenLeads(@RequestParam Integer draw,
+			@RequestParam Integer start, @RequestParam Integer length,
+			@RequestParam(value = "search[value]") String searchText,
+			@RequestParam(value = "order[0][column]") int orderCol,
+			@RequestParam(value = "order[0][dir]") String orderDir, @RequestParam(value = "userId") long userId) {
+		String sortColumn = "lead.timestamp";
+		if (orderCol == 1)
+			sortColumn = "lead.customer.lastname";
+		else if (orderCol == 2)
+			sortColumn = "lead.customer.company";
+		else if (orderCol == 3)
+			sortColumn = "lead.customer.email";
+		else if (orderCol == 4)
+			sortColumn = "lead.timestamp";
+		else if (orderCol == 15)
+			sortColumn = "status";
+
+		if (searchText.startsWith("#id:") && searchText.endsWith("#")) {
+			long gotoProcessId = Long.parseLong(searchText.replace("#id:", "").replaceAll("#", ""));
+			Page<Process> gotoPage = this.processRepository.findById(gotoProcessId, new PageRequest(0, 1));
+			return new DatatableServerSideJsonObject(draw, gotoPage.getTotalElements(), gotoPage.getTotalElements(),
+					gotoPage.getContent());
+		}
+
+		Sort.Direction sortDirection = Sort.Direction.ASC;
+		if (orderDir.equals("desc"))
+			sortDirection = Sort.Direction.DESC;
+		Page<Process> page;
+		Collection<Status> statusCol = new ArrayList<>();
+		statusCol.add(Status.OPEN);
+		statusCol.add(Status.INCONTACT);
+
+		page = this.processService.getAllProcessesByStatusAndSearchTextAndMyTasksPage(statusCol, start / length, length,
+				sortDirection.toString(), sortColumn, searchText, userId, false);
+
+		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),
+				page.getContent());
+	}
+
 	@ApiOperation(value = "Return a single lead.", notes = "")
 	@RequestMapping(value = "/{processId}/leads", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -252,6 +296,49 @@ public class ProcessResource {
 				page.getContent());
 	}
 
+	@ApiOperation(value = "Returns a list of offers.", notes = "")
+	@RequestMapping(value = "/offers/open", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public DatatableServerSideJsonObject getProcessWithOpenOffers(@RequestParam Integer draw,
+			@RequestParam Integer start, @RequestParam Integer length,
+			@RequestParam(value = "search[value]") String searchText,
+			@RequestParam(value = "order[0][column]") int orderCol,
+			@RequestParam(value = "order[0][dir]") String orderDir, @RequestParam(value = "userId") long userId) {
+		String sortColumn = "offer.timestamp";
+		if (orderCol == 1)
+			sortColumn = "offer.customer.lastname";
+		else if (orderCol == 2)
+			sortColumn = "offer.customer.company";
+		else if (orderCol == 3)
+			sortColumn = "offer.customer.email";
+		else if (orderCol == 4)
+			sortColumn = "offer.timestamp";
+		else if (orderCol == 15)
+			sortColumn = "status";
+
+		if (searchText.startsWith("#id:") && searchText.endsWith("#")) {
+			long gotoProcessId = Long.parseLong(searchText.replace("#id:", "").replaceAll("#", ""));
+			Page<Process> gotoPage = this.processRepository.findById(gotoProcessId, new PageRequest(0, 1));
+			return new DatatableServerSideJsonObject(draw, gotoPage.getTotalElements(), gotoPage.getTotalElements(),
+					gotoPage.getContent());
+		}
+
+		Sort.Direction sortDirection = Sort.Direction.ASC;
+		if (orderDir.equals("desc"))
+			sortDirection = Sort.Direction.DESC;
+		Page<Process> page;
+		Collection<Status> statusCol = new ArrayList<>();
+		statusCol.add(Status.OFFER);
+		statusCol.add(Status.FOLLOWUP);
+		statusCol.add(Status.DONE);
+
+		page = this.processService.getAllProcessesByStatusAndSearchTextAndMyTasksPage(statusCol, start / length, length,
+				sortDirection.toString(), sortColumn, searchText, userId, false);
+
+		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),
+				page.getContent());
+	}
+
 	@ApiOperation(value = "Returns single offer.", notes = "")
 	@RequestMapping(value = "{processId}/offers", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -268,10 +355,10 @@ public class ProcessResource {
 	}
 
 	/*
-	 * Sales
+	 * Sales Not in Use
 	 */
 	@ApiOperation(value = "Returns a list of sales.", notes = "")
-	@RequestMapping(value = "/sales", method = RequestMethod.GET)
+	@RequestMapping(value = "/sales/old", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public DatatableServerSideJsonObject getProcessWithSales(@RequestParam Integer draw, @RequestParam Integer start,
 			@RequestParam Integer length, @RequestParam(value = "search[value]") String searchText,
@@ -302,6 +389,48 @@ public class ProcessResource {
 					.findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleDeliveryAddressLineContainingOrSaleCustomerPhoneContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
 							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
 							new PageRequest(start / length, length, sortDirection, sortColumn));
+
+		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),
+				page.getContent());
+	}
+
+	@ApiOperation(value = "Returns a list of sales.", notes = "")
+	@RequestMapping(value = "/sales", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public DatatableServerSideJsonObject getProcessWithClosedSales(@RequestParam Integer draw,
+			@RequestParam Integer start, @RequestParam Integer length,
+			@RequestParam(value = "search[value]") String searchText,
+			@RequestParam(value = "order[0][column]") int orderCol,
+			@RequestParam(value = "order[0][dir]") String orderDir, @RequestParam(value = "userId") long userId) {
+		String sortColumn = "sale.timestamp";
+		if (orderCol == 1)
+			sortColumn = "sale.customer.lastname";
+		else if (orderCol == 2)
+			sortColumn = "sale.customer.company";
+		else if (orderCol == 3)
+			sortColumn = "sale.customer.email";
+		else if (orderCol == 4)
+			sortColumn = "sale.timestamp";
+		else if (orderCol == 14)
+			sortColumn = "status";
+
+		if (searchText.startsWith("#id:") && searchText.endsWith("#")) {
+			long gotoProcessId = Long.parseLong(searchText.replace("#id:", "").replaceAll("#", ""));
+			Page<Process> gotoPage = this.processRepository.findById(gotoProcessId, new PageRequest(0, 1));
+			return new DatatableServerSideJsonObject(draw, gotoPage.getTotalElements(), gotoPage.getTotalElements(),
+					gotoPage.getContent());
+		}
+
+		Sort.Direction sortDirection = Sort.Direction.ASC;
+		if (orderDir.equals("desc"))
+			sortDirection = Sort.Direction.DESC;
+		Page<Process> page;
+
+		Collection<Status> statusCol = new ArrayList<>();
+		statusCol.add(Status.SALE);
+
+		page = this.processService.getAllProcessesByStatusAndSearchTextAndMyTasksPage(statusCol, start / length, length,
+				sortDirection.toString(), sortColumn, searchText, userId, false);
 
 		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),
 				page.getContent());
@@ -358,8 +487,8 @@ public class ProcessResource {
 	@ApiOperation(value = "Returns sum of turnover by Status.", notes = "")
 	@RequestMapping(value = "sum/{status}", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Map<String, Double> getSumTurnoverByStatus(@PathVariable final Status status,
-			@RequestBody final String body) throws JSONException {
+	public Map<String, Double> getSumTurnoverByStatus(@PathVariable final Status status, @RequestBody final String body)
+			throws JSONException {
 		JSONObject pageRequest = new JSONObject(body);
 		return processService.getSumTurnoverByStatus(status);
 	}
@@ -370,9 +499,14 @@ public class ProcessResource {
 	public Page<Process> getAllProcessesByStatusAndSearchTextAndMyTasks(@PathVariable final Status status,
 			@RequestBody final String body) throws JSONException {
 		JSONObject pageRequest = new JSONObject(body);
-		return processService.getAllProcessesByStatusAndSearchTextAndMyTasksPage(status, pageRequest.optInt("page"),
+		Collection<Status> statusCol = new ArrayList<>();
+		statusCol.add(status);
+		if (status.equals(Status.OFFER)) {
+			statusCol.add(Status.FOLLOWUP);
+		}
+		return processService.getAllProcessesByStatusAndSearchTextAndMyTasksPage(statusCol, pageRequest.optInt("page"),
 				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"),
-				pageRequest.optString("searchText"), pageRequest.optLong("userId"));
+				pageRequest.optString("searchText"), pageRequest.optLong("userId"), true);
 	}
 
 	////////////////////////////////////////////////////////////////////////////// NEW

@@ -277,8 +277,6 @@ class DashboardService {
                         } else {
                             let index = target.indexOf(item);
                             target[index] = result;
-                            self.workflowDatatableService.addElementToCache(WorkflowType.SALE, result);
-                            self.workflowDatatableService.removeElementFromCache(WorkflowType.OFFER, result);
                             self.inModal = false;
                             if (self.openOffers === source) {
                                 self.openOffersValue -= result.offer.netPrice;
@@ -310,8 +308,6 @@ class DashboardService {
                         } else {
                             let index = target.indexOf(item);
                             target[index] = result;
-                            self.workflowDatatableService.addElementToCache(WorkflowType.OFFER, result);
-                            self.workflowDatatableService.removeElementFromCache(WorkflowType.LEAD, result);
                             self.inModal = false;
                             self.orderProcessByTimestamp(target, "offer", self.direction);
                             if (self.openLeads === source) {
@@ -338,7 +334,6 @@ class DashboardService {
                         let leadOrderpositionValue = self.workflowService.sumOrderPositions(result.lead.orderPositions);
                         self.openLeadsValue -= leadOrderpositionValue;
                         self.inContactsValue += leadOrderpositionValue;
-                        self.workflowDatatableService.updateCache(WorkflowType.LEAD, result);
                         self.orderProcessByTimestamp(target, "lead", self.direction);
                         self.updateDashboard("lead");
                     }, function (error) {
@@ -351,7 +346,6 @@ class DashboardService {
                         target[index] = result;
                         self.openOffersValue -= result.offer.netPrice;
                         self.doneOffersValue += result.offer.netPrice;
-                        self.workflowDatatableService.updateCache(WorkflowType.OFFER, result);
                         self.orderProcessByTimestamp(target, "offer", self.direction);
                         self.updateDashboard("offer");
                     }, function (error) {
@@ -364,7 +358,6 @@ class DashboardService {
                         target[index] = result;
                         self.doneOffersValue -= result.offer.netPrice;
                         self.openOffersValue += result.offer.netPrice;
-                        self.workflowDatatableService.updateCache(WorkflowType.OFFER, result);
                         self.orderProcessByTimestamp(target, "offer", self.direction);
                         self.updateDashboard("done");
                     }, function (error) {
@@ -397,11 +390,7 @@ class DashboardService {
                         await deletePromise;
                         self.closeProcess(item, source);
                         target.splice(source.indexOf(item), 1);
-                        if (source === self.openLeads || source === self.inContacts) {
-                            self.workflowDatatableService.removeElementFromCache(WorkflowType.LEAD, item);
-                        } else if (source === self.openOffers || source === self.doneOffers) {
-                            self.workflowDatatableService.removeElementFromCache(WorkflowType.OFFER, item);
-                        }
+
                         let todoElement: Process = findElementById(self.todos, item.id) as Process;
                         if (!isNullOrUndefined(todoElement)) {
                             self.todos.splice(self.todos.indexOf(todoElement), 1);

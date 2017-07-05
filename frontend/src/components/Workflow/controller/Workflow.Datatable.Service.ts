@@ -23,11 +23,14 @@ class WorkflowDatatableService {
 
     rootScope;
     compile;
-    cache: { [key: string]: Process[] } = {};
+    showMyTasksUserId: { [key: string]: number } = {};
 
     constructor($rootScope, $compile, private TokenService: TokenService, private $http, ProcessResource) {
         this.rootScope = $rootScope;
         this.compile = $compile;
+        this.showMyTasksUserId["LEAD"] = 0;
+        this.showMyTasksUserId["OFFER"] = 0;
+        this.showMyTasksUserId["SALE"] = 0;
     }
 
     getButtons(title: string, columns: Array<number>): Array<any> {
@@ -99,20 +102,15 @@ class WorkflowDatatableService {
     }
 
     async changeDataInput(loadAllData: boolean, dtOptions: any, allDataRoute: string, latestDataRoute: string) {
-        let searchDelay: number = 0;
         let self = this;
-        if (loadAllData === true) {
-            searchDelay = 600;
-        }
-        dtOptions.withOption("serverSide", loadAllData)
-            .withOption("ajax", await self.getData(loadAllData, allDataRoute, latestDataRoute))
-            .withOption("searchDelay", searchDelay);
+        let ajaxCall = await self.getData(loadAllData, allDataRoute, latestDataRoute);
+        dtOptions.withOption("ajax", ajaxCall);
     }
 
     async getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): Promise<any> {
         let self = this;
+        let token = await self.TokenService.getAccessTokenPromise();
         if (loadAllData === true) {
-            let token = await self.TokenService.getAccessTokenPromise();
             return {
                 url: allDataRoute,
                 type: "GET",
@@ -125,33 +123,22 @@ class WorkflowDatatableService {
                     request.setRequestHeader("X-Authorization", "Bearer " + token);
                 }
             };
-
-
-
         } else {
-            return (data, callback, settings) => {
-                let currentWorkflowType = self.getStatusByWorkflowType(latestDataRoute);
-                if (!isNullOrUndefined(self.cache[currentWorkflowType.toString()])) {
-                    setTimeout(function () {
-                        callback(self.cache[currentWorkflowType.toString()]);
-                    }, 400);
+            return {
+                url: latestDataRoute,
+                type: "GET",
+                pages: 2,
+                dataSrc: "data",
+                data: function (d) {
+                    d.userId = self.showMyTasksUserId[self.getStatusByWorkflowType(latestDataRoute)];
+                },
+                error: function (xhr, error, thrown) {
+                    handleError(xhr);
+                },
+                beforeSend: function (request) {
+                    request.setRequestHeader("X-Authorization", "Bearer " + token);
                 }
-                self.$http.get(latestDataRoute).then(function (response) {
-                    if (isNullOrUndefined(self.cache[currentWorkflowType.toString()])) {
-                        callback(response.data);
-                    }
-                    self.cache[currentWorkflowType.toString()] = response.data;
-                    let refreshObject = {
-                        data: response.data,
-                        timestamp: newTimestamp(),
-                        workflow: currentWorkflowType
-                    };
-                    setTimeout(function () {
-                        self.rootScope.$broadcast(broadcastUpdateOldRow, refreshObject);
-                    }, 400);
-                });
             };
-
         }
     }
 
@@ -164,30 +151,6 @@ class WorkflowDatatableService {
             case openDataSaleRoute:
                 return WorkflowType.SALE;
         };
-    }
-
-    updateCache(workflowType: WorkflowType, processToUpdate: Process) {
-        if (!isNullOrUndefined(this.cache[workflowType.toString()]) && !isNullOrUndefined(processToUpdate) && !isNullOrUndefined(processToUpdate.id)) {
-            let oldProcess: Process = findElementById(this.cache[workflowType.toString()], processToUpdate.id);
-            if (oldProcess != null && this.cache[workflowType.toString()].indexOf(oldProcess) > -1) {
-                this.cache[workflowType.toString()][this.cache[workflowType.toString()].indexOf(oldProcess)] = processToUpdate;
-            }
-        }
-    }
-
-    addElementToCache(workflowType: WorkflowType, processToAdd: Process) {
-        if (!isNullOrUndefined(this.cache[workflowType.toString()]) && !isNullOrUndefined(processToAdd)) {
-            this.cache[workflowType.toString()].push(processToAdd);
-        }
-    }
-
-    removeElementFromCache(workflowType: WorkflowType, processToRemove: Process) {
-        if (!isNullOrUndefined(this.cache[workflowType.toString()]) && !isNullOrUndefined(processToRemove) && !isNullOrUndefined(processToRemove.id)) {
-            let oldProcess: Process = findElementById(this.cache[workflowType.toString()], processToRemove.id);
-            if (oldProcess != null && this.cache[workflowType.toString()].indexOf(oldProcess) > -1) {
-                this.cache[workflowType.toString()].splice(this.cache[workflowType.toString()].indexOf(oldProcess), 1);
-            }
-        }
     }
 
 

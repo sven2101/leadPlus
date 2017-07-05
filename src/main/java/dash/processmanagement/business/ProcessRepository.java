@@ -35,6 +35,8 @@ public interface ProcessRepository extends JpaRepository<Process, Long> {
 
 	Process findById(Long id);
 
+	Page<Process> findById(Long id, Pageable pageable);
+
 	List<Process> findByStatusAndLeadIsNotNull(Status status);
 
 	Integer countByStatusAndLeadIsNotNull(Status status);
@@ -61,16 +63,27 @@ public interface ProcessRepository extends JpaRepository<Process, Long> {
 
 	Page<Process> findBySaleIsNotNullAndSaleTimestampAfter(Calendar after, Pageable pageable);
 
-	Page<Process> findByStatusIn(Collection<Status> status, Pageable pageable);
+	Page<Process> findByStatusInAndLeadIsNotNull(Collection<Status> status, Pageable pageable);
 
-	Page<Process> findByStatusInAndProcessor(Collection<Status> status, User processor, Pageable pageable);
+	Page<Process> findByStatusInAndOfferIsNotNull(Collection<Status> status, Pageable pageable);
+
+	Page<Process> findByStatusInAndSaleIsNotNull(Collection<Status> status, Pageable pageable);
+
+	Page<Process> findByStatusInAndProcessorAndLeadIsNotNull(Collection<Status> status, User processor,
+			Pageable pageable);
+
+	Page<Process> findByStatusInAndProcessorAndOfferIsNotNull(Collection<Status> status, User processor,
+			Pageable pageable);
+
+	Page<Process> findByStatusInAndProcessorAndSaleIsNotNull(Collection<Status> status, User processor,
+			Pageable pageable);
 
 	Integer countByStatusAndSaleIsNotNull(Status status);
 
 	Page<Process> findBySaleIsNotNull(Pageable pageable);
 
-	Page<Process> findBySaleIsNotNullAndProcessorAndSaleTimestampAfter(User processor,
-			Calendar after, Pageable pageable);
+	Page<Process> findBySaleIsNotNullAndProcessorAndSaleTimestampAfter(User processor, Calendar after,
+			Pageable pageable);
 
 	Page<Process> findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleDeliveryAddressLineContainingOrSaleCustomerPhoneContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
 			String firstname, String lastname, String email, String company, String deliveryAddress, String phone,

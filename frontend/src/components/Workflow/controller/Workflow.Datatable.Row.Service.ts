@@ -44,8 +44,7 @@ class WorkflowDatatableRowService {
 
     updateRow(process: Process, dtInstance: any, workflowType: WorkflowType, scope: any) {
         if (!isNullOrUndefined(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id])) {
-            dtInstance.DataTable.row(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).data(process).draw(
-                false);
+            dtInstance.DataTable.row(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).data(process);
             this.compile(angular.element(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).contents())(scope);
         } else {
             dtInstance.DataTable.rows().every(function () {

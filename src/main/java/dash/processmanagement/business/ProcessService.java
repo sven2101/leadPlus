@@ -331,8 +331,8 @@ public class ProcessService extends ConsistencyService {
 		return returnMap;
 	}
 
-	public Page<Process> getAllProcessesByStatusAndSearchTextAndMyTasksPage(Status status, int page, int size,
-			String directionString, String properties, String searchText, Long userId) {
+	public Page<Process> getAllProcessesByStatusAndSearchTextAndMyTasksPage(Collection<Status> status, int page,
+			int size, String directionString, String properties, String searchText, Long userId, boolean salesToday) {
 		page = page < 0 ? 0 : page;
 		size = size < 0 ? 0 : size;
 		Sort.Direction direction = "ASC".equals(directionString) ? Sort.Direction.ASC : Sort.Direction.DESC;
@@ -342,51 +342,55 @@ public class ProcessService extends ConsistencyService {
 		todayMidnight.set(Calendar.MINUTE, 0);
 		todayMidnight.set(Calendar.SECOND, 0);
 		todayMidnight.set(Calendar.MILLISECOND, 0);
-		Collection<Status> statusCol = new ArrayList<>();
-		statusCol.add(status);
-		if (status.equals(Status.OFFER)) {
-			statusCol.add(Status.FOLLOWUP);
+		if (!salesToday) {
+			todayMidnight.set(Calendar.YEAR, 2014);
 		}
-		if ("null".equals(searchText) && userId == 0) {
-			if (status.equals(Status.SALE)) {
+		if (("null".equals(searchText) || "".equals(searchText)) && userId == 0) {
+			if (status.contains(Status.SALE)) {
 				return processRepository.findBySaleIsNotNullAndSaleTimestampAfter(todayMidnight,
 						new PageRequest(page, size, direction, properties));
-			} else {
-				return processRepository.findByStatusIn(statusCol, new PageRequest(page, size, direction, properties));
-			}
-
-		} else if (!"null".equals(searchText) && userId == 0) {
-			if (status.equals(Status.OPEN) || status.equals(Status.INCONTACT)) {
-				return processRepository.findLeadProcessesByStatusAndSearchText(searchText, statusCol,
+			} else if (status.contains(Status.OPEN) || status.contains(Status.INCONTACT)) {
+				return processRepository.findByStatusInAndLeadIsNotNull(status,
 						new PageRequest(page, size, direction, properties));
-			} else if (status.equals(Status.OFFER) || status.equals(Status.DONE)) {
-				return processRepository.findOfferProcessesByStatusAndSearchText(searchText, statusCol,
-						new PageRequest(page, size, direction, properties));
-			} else if (status.equals(Status.SALE)) {
-				return processRepository.findSaleProcessesByStatusAndSearchText(searchText, statusCol, todayMidnight,
+			} else if (status.contains(Status.OFFER) || status.contains(Status.DONE)) {
+				return processRepository.findByStatusInAndOfferIsNotNull(status,
 						new PageRequest(page, size, direction, properties));
 			}
+		} else if (!("null".equals(searchText) && "".equals(searchText)) && userId == 0) {
+			if (status.contains(Status.OPEN) || status.contains(Status.INCONTACT)) {
+				return processRepository.findLeadProcessesByStatusAndSearchText(searchText, status,
+						new PageRequest(page, size, direction, properties));
+			} else if (status.contains(Status.OFFER) || status.contains(Status.DONE)) {
+				return processRepository.findOfferProcessesByStatusAndSearchText(searchText, status,
+						new PageRequest(page, size, direction, properties));
+			} else if (status.contains(Status.SALE)) {
+				return processRepository.findSaleProcessesByStatusAndSearchText(searchText, status, todayMidnight,
+						new PageRequest(page, size, direction, properties));
+			}
 
-		} else if ("null".equals(searchText) && userId > 0) {
+		} else if (("null".equals(searchText) || "".equals(searchText)) && userId > 0) {
 			final User processor = userService.getById(userId);
-			if (status.equals(Status.SALE)) {
+			if (status.contains(Status.SALE)) {
 				return processRepository.findBySaleIsNotNullAndProcessorAndSaleTimestampAfter(processor, todayMidnight,
 						new PageRequest(page, size, direction, properties));
-			} else {
-				return processRepository.findByStatusInAndProcessor(statusCol, processor,
+			} else if (status.contains(Status.OPEN) || status.contains(Status.INCONTACT)) {
+				return processRepository.findByStatusInAndProcessorAndLeadIsNotNull(status, processor,
+						new PageRequest(page, size, direction, properties));
+			} else if (status.contains(Status.OFFER) || status.contains(Status.DONE)) {
+				return processRepository.findByStatusInAndProcessorAndOfferIsNotNull(status, processor,
 						new PageRequest(page, size, direction, properties));
 			}
 
-		} else if (!"null".equals(searchText) && userId > 0) {
+		} else if (!("null".equals(searchText) && "".equals(searchText)) && userId > 0) {
 			final User processor = userService.getById(userId);
-			if (status.equals(Status.OPEN) || status.equals(Status.INCONTACT)) {
-				return processRepository.findMyLeadProcessesByStatusAndSearchText(searchText, statusCol, processor,
+			if (status.contains(Status.OPEN) || status.contains(Status.INCONTACT)) {
+				return processRepository.findMyLeadProcessesByStatusAndSearchText(searchText, status, processor,
 						new PageRequest(page, size, direction, properties));
-			} else if (status.equals(Status.OFFER) || status.equals(Status.DONE)) {
-				return processRepository.findMyOfferProcessesByStatusAndSearchText(searchText, statusCol, processor,
+			} else if (status.contains(Status.OFFER) || status.contains(Status.DONE)) {
+				return processRepository.findMyOfferProcessesByStatusAndSearchText(searchText, status, processor,
 						new PageRequest(page, size, direction, properties));
-			} else if (status.equals(Status.SALE)) {
-				return processRepository.findMySaleProcessesByStatusAndSearchText(searchText, statusCol, processor,
+			} else if (status.contains(Status.SALE)) {
+				return processRepository.findMySaleProcessesByStatusAndSearchText(searchText, status, processor,
 						todayMidnight, new PageRequest(page, size, direction, properties));
 			}
 

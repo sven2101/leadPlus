@@ -8,7 +8,7 @@
 
 const LeadDataTableServiceId: string = "LeadDataTableService";
 const allDataLeadRoute = "/api/rest/processes/leads";
-const openDataLeadRoute = "/api/rest/processes/workflow/LEAD/state/OPEN";
+const openDataLeadRoute = "/api/rest/processes/leads/open";
 
 class LeadDataTableService implements IDatatableService {
 
@@ -42,38 +42,40 @@ class LeadDataTableService implements IDatatableService {
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
-            .withOption("ajax", function (data, callback, settings) {
-                if (!isNullOrUndefined(self.workflowDatatableService.cache[WorkflowType.LEAD.toString()])) {
-                    setTimeout(function () {
-                        callback(self.workflowDatatableService.cache[WorkflowType.LEAD.toString()]);
-                    }, 400);
-                }
-                self.$http.get(openDataLeadRoute).then(function (response) {
-                    if (isNullOrUndefined(self.workflowDatatableService.cache[WorkflowType.LEAD.toString()])) {
-                        callback(response.data);
-                    }
-                    self.workflowDatatableService.cache[WorkflowType.LEAD.toString()] = response.data;
-                    let refreshObject = {
-                        data: response.data,
-                        timestamp: newTimestamp(),
-                        workflow: WorkflowType.LEAD
-                    };
-                    setTimeout(function () {
-                        self.rootScope.$broadcast(broadcastUpdateOldRow, refreshObject);
-                    }, 400);
-                });
-            })
+            .withOption("searchDelay", 600)
+            .withOption("ajax", self.getInitData())
             .withOption("stateSave", false)
+            .withOption("serverSide", true)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
             .withButtons(this.workflowDatatableService.getButtons(this.translate("LEAD_LEADS"), [8, 3, 2, 4, 7, 6, 13, 10, 9, 11]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
-            .withOption("deferRender", true)
+            .withOption("deferRender", false)
             .withOption("order", [6, "desc"])
             .withOption("lengthMenu", [10, 20, 50])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
+    }
+
+    async getInitData() {
+        let token = await this.TokenService.getAccessTokenPromise();
+        let self = this;
+        return {
+            url: openDataLeadRoute,
+            type: "GET",
+            pages: 2,
+            dataSrc: "data",
+            data: function (d) {
+                d.userId = self.workflowDatatableService.showMyTasksUserId["LEAD"];
+            },
+            error: function (xhr, error, thrown) {
+                handleError(xhr);
+            },
+            beforeSend: function (request) {
+                request.setRequestHeader("X-Authorization", "Bearer " + token);
+            }
+        };
     }
 
     configRow(row: any, data: Process) {

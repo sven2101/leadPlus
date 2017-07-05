@@ -5,7 +5,7 @@
 
 const SaleDataTableServiceId: string = "SaleDataTableService";
 const allDataSaleRoute: string = "/api/rest/processes/sales";
-const openDataSaleRoute: string = "/api/rest/processes/sales/latest/50";
+const openDataSaleRoute: string = "/api/rest/processes/sales";
 
 class SaleDataTableService implements IDatatableService {
 
@@ -36,39 +36,40 @@ class SaleDataTableService implements IDatatableService {
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
-            .withOption("ajax", function (data, callback, settings) {
-                if (!isNullOrUndefined(self.workflowDatatableService.cache[WorkflowType.SALE.toString()])) {
-                    setTimeout(function () {
-                        callback(self.workflowDatatableService.cache[WorkflowType.SALE.toString()]);
-                    }, 400);
-                }
-                self.$http.get(openDataSaleRoute).then(function (response) {
-                    if (isNullOrUndefined(self.workflowDatatableService.cache[WorkflowType.SALE.toString()])) {
-                        callback(response.data);
-                    }
-                    self.workflowDatatableService.cache[WorkflowType.SALE.toString()] = response.data;
-                    let refreshObject = {
-                        data: response.data,
-                        timestamp: newTimestamp(),
-                        workflow: WorkflowType.SALE
-                    };
-                    setTimeout(function () {
-                        self.rootScope.$broadcast(broadcastUpdateOldRow, refreshObject);
-                    }, 400);
-
-                });
-            })
+            .withOption("searchDelay", 600)
+            .withOption("ajax", self.getInitData())
             .withOption("stateSave", false)
+            .withOption("serverSide", true)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
             .withButtons(this.workflowDatatableService.getButtons(this.translate("SALE_SALES"), [8, 3, 2, 4, 7, 6, 14, 13, 10, 11]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
-            .withOption("deferRender", true)
+            .withOption("deferRender", false)
             .withOption("lengthMenu", [10, 20, 50])
             .withOption("order", [6, "desc"])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
+    }
+
+    async getInitData() {
+        let token = await this.TokenService.getAccessTokenPromise();
+        let self = this;
+        return {
+            url: openDataSaleRoute,
+            type: "GET",
+            pages: 2,
+            dataSrc: "data",
+            data: function (d) {
+                d.userId = self.workflowDatatableService.showMyTasksUserId["SALE"];
+            },
+            error: function (xhr, error, thrown) {
+                handleError(xhr);
+            },
+            beforeSend: function (request) {
+                request.setRequestHeader("X-Authorization", "Bearer " + token);
+            }
+        };
     }
 
     getDetailHTML(id: number): string {
