@@ -257,8 +257,9 @@ public class ProcessService extends ConsistencyService {
 
 	}
 
-	public List<Process> getProcessesByProcessor(long processorId) {
-		return processRepository.findAll(where(isProcessor(processorId)).and(not(isClosed())).and(not(isSale())));
+	public Page<Process> getProcessesByProcessor(long processorId) {
+		return processRepository.findAll(where(isProcessor(processorId)).and(not(isClosed())).and(not(isSale())),
+				new PageRequest(0, 20, Sort.Direction.ASC, "lead.timestamp"));
 	}
 
 	public List<Process> getProcessesByProcessorAndBetweenTimestampAndWorkflow(long processorId, Calendar from,

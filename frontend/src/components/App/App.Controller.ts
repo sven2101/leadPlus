@@ -23,7 +23,8 @@ class AppController {
     window;
     stop;
     timeout;
-    todos: Array<Process> = [];
+    todos: any = { content: [] };
+    totalTodoElements = 10;
     userNotifications: Array<EmailNotification> = [];
     notificationSendState: NotificationSendState = NotificationSendState.DEFAULT;
 
@@ -55,7 +56,11 @@ class AppController {
         this.registerInterval();
 
         let todosChanged = $rootScope.$on("todosChanged", (event, result) => {
-            this.todos = result;
+            this.todos.content.length = 0;
+            result.content.forEach(x => {
+                this.todos.content.push(x);
+            });
+            this.totalTodoElements = result.totalElements;
         });
 
         let broadcastAddNotificationListener = $scope.$on(broadcastAddNotification, (event, notification: EmailNotification) => {

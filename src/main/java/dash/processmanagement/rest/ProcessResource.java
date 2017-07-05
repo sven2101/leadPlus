@@ -480,7 +480,7 @@ public class ProcessResource {
 	@ApiOperation(value = "Get Processes by ProcessorId.", notes = "")
 	@RequestMapping(value = "/processor/{processorId}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Process> createSaleByProcess(@PathVariable Long processorId) {
+	public Page<Process> getProcessesByProcessor(@PathVariable Long processorId) {
 		return processService.getProcessesByProcessor(processorId);
 	}
 
