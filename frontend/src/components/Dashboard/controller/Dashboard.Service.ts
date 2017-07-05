@@ -55,7 +55,7 @@ class DashboardService {
     closedSalesValue: number = 0;
     SweetAlert: any;
     uibModal;
-    todos: Array<Process> = [];
+    todos: any = { content: [] };
     dropzoneClass = {
         lead: "none",
         contact: "none",
@@ -631,7 +631,8 @@ class DashboardService {
             return;
         }
         this.processResource.getTodos({ processorId: this.rootScope.user.id }).$promise.then((data) => {
-            this.todos = this.orderByTimestamp(data);
+            this.todos = data;
+            this.todos.content = this.orderByTimestamp(data.content);
             this.rootScope.$broadcast("todosChanged", this.todos);
         }, (error) => handleError(error));
 

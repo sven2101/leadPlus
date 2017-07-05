@@ -43,8 +43,8 @@ import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
-import dash.processmanagement.business.ProcessService;
 import dash.processmanagement.business.ProcessRepository;
+import dash.processmanagement.business.ProcessService;
 import dash.processmanagement.business.newProcessService;
 import dash.processmanagement.domain.Process;
 import dash.salemanagement.domain.Sale;
@@ -351,15 +351,15 @@ public class ProcessResource {
 	@ApiOperation(value = "Get Processes by ProcessorId.", notes = "")
 	@RequestMapping(value = "/processor/{processorId}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Process> createSaleByProcess(@PathVariable Long processorId) {
+	public Page<Process> getProcessesByProcessor(@PathVariable Long processorId) {
 		return processService.getProcessesByProcessor(processorId);
 	}
 
 	@ApiOperation(value = "Returns sum of turnover by Status.", notes = "")
 	@RequestMapping(value = "sum/{status}", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Map<String, Double> getSumTurnoverByStatus(@PathVariable final Status status,
-			@RequestBody final String body) throws JSONException {
+	public Map<String, Double> getSumTurnoverByStatus(@PathVariable final Status status, @RequestBody final String body)
+			throws JSONException {
 		JSONObject pageRequest = new JSONObject(body);
 		return processService.getSumTurnoverByStatus(status);
 	}

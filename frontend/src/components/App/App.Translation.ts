@@ -660,6 +660,7 @@ function config($translateProvider) {
             SHOW_MY_OPEN_OFFERS: "Zeige meine offenen Angebote",
             SHOW_MY_CLOSED_SALES: "Zeige meine Verkäufe",
             TODO_NO_TODOS: "Keine Aufgaben vorhanden",
+            TODO_MANY_TODOS: "zugewießene Aufgaben",
 
             // Define calculation elements 
             CALCULATION_NET: "Netto",
@@ -1375,6 +1376,7 @@ function config($translateProvider) {
             SHOW_MY_OPEN_OFFERS_INFO: "Filter is not available in \"Total Offers\"",
             SHOW_MY_OPEN_SALES_INFO: "Filter is not available in \"Total Sales\"",
             TODO_NO_TODOS: "No tasks available",
+            TODO_MANY_TODOS: "assigned tasks",
 
             // Define calculation elements 
             CALCULATION_NET: "Net",
