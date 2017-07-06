@@ -109,7 +109,6 @@ class WorkflowDatatableService {
 
     async getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): Promise<any> {
         let self = this;
-        let token = await self.TokenService.getAccessTokenPromise();
         if (loadAllData === true) {
             return {
                 url: allDataRoute,
@@ -120,7 +119,7 @@ class WorkflowDatatableService {
                     handleError(xhr);
                 },
                 beforeSend: function (request) {
-                    request.setRequestHeader("X-Authorization", "Bearer " + token);
+                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
                 }
             };
         } else {
@@ -136,7 +135,7 @@ class WorkflowDatatableService {
                     handleError(xhr);
                 },
                 beforeSend: function (request) {
-                    request.setRequestHeader("X-Authorization", "Bearer " + token);
+                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
                 }
             };
         }

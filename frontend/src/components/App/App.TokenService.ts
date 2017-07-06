@@ -153,9 +153,10 @@ class TokenService {
     public getAccessTokenInstant(): string {
         try {
             if (this.accessToken != null && !this.isExpired(this.accessTokenJson)) { return this.accessToken; }
-            if (this.refreshToken == null || this.isExpired(this.refreshTokenJson)) { throw Error("Refresh token expired!"); }
-
             this.getAccessTokenPromise();
+            if (this.accessToken != null && !(this.accessTokenJson.exp < ((Date.now() / 1000) + 60 * 1))) {
+                return this.accessToken;
+            }
             return null;
 
         } catch (error) {
@@ -166,7 +167,7 @@ class TokenService {
     }
 
     private isExpired(token: any): boolean {
-        return token == null || token.exp < ((Date.now() / 1000 ) + 30);
+        return token == null || token.exp < ((Date.now() / 1000) + 60 * 8);
     }
 
     public logout(fullPageReload: boolean = true) {
