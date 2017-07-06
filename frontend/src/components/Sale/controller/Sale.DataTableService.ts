@@ -53,7 +53,6 @@ class SaleDataTableService implements IDatatableService {
     }
 
     async getInitData() {
-        let token = await this.TokenService.getAccessTokenPromise();
         let self = this;
         return {
             url: openDataSaleRoute,
@@ -67,7 +66,7 @@ class SaleDataTableService implements IDatatableService {
                 handleError(xhr);
             },
             beforeSend: function (request) {
-                request.setRequestHeader("X-Authorization", "Bearer " + token);
+                request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
             }
         };
     }
