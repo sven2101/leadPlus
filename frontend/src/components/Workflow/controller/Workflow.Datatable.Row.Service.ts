@@ -65,7 +65,7 @@ class WorkflowDatatableRowService {
     }
 
     deleteRow(process: Process, dtInstance: any, workflowType: WorkflowType): void {
-        dtInstance.DataTable.row(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).remove().draw();
+        dtInstance.DataTable.row(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).remove().draw("page");
     }
 }
 

@@ -88,9 +88,29 @@ class WorkflowController {
         let self = this;
 
         function createdRow(row, data: Process, dataIndex) {
+            /*let actionbuttonOld = angular.element(row).contents()[6];
+            console.log(actionbuttonOld);
+            setTimeout(function () {
+                console.log(actionbuttonOld.outerHTML);
+            }, 300);
+               console.log((angular.element(actionbuttonOld)));
+            */
+
+
             self.workflowDatatableRowService.setRow(data.id, self.controllerType, row);
             self.IDatatableService.configRow(row, data);
             self.compile(angular.element(row).contents())(self.getScopeByKey("actionButtonScope" + data.id));
+            //self.compile(angular.element(row).contents()[6])(self.getScopeByKey("actionButtonScope" + data.id));
+
+            /* let childScope = self.scopes["actionButtonScope" + data.id];
+             if (isNullOrUndefined(childScope) || childScope.$$destroyed) {
+                 self.compile(angular.element(row).contents()[6])(self.getScopeByKey("actionButtonScope" + data.id));
+             } else {
+                 setTimeout(function () {
+                     angular.element(angular.element(row).contents()[6]).html(actionbuttonOld.outerHTML);
+                 }, 300);
+             }
+             */
         }
         function addActionsButtons(data: Process, type, full, meta) {
             return self.IDatatableService.getActionButtonsHTML(data, self.actionButtonConfig);
@@ -326,6 +346,8 @@ class WorkflowController {
         }
         return childScope;
     }
+
+
 
     dropCreateScope(key: string, isolated: boolean = false): any {
         let childScope = this.scopes[key];
