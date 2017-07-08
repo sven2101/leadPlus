@@ -107,7 +107,7 @@ class ProcessResource {
             getLatestSales: { url: "/api/rest/processes/sales/latest/10", method: "GET", isArray: true },
             getLatest50Sales: { url: "/api/rest/processes/sales/latest/50", method: "GET", isArray: true },
             getLatest100Sales: { url: "/api/rest/processes/sales/latest/100", method: "GET", isArray: true },
-            getTodos: { url: "/api/rest/processes/processor/:processorId", method: "GET"},
+            getTodos: { url: "/api/rest/processes/processor/:processorId", method: "POST"},
         });
     }
 }

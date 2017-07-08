@@ -50,6 +50,9 @@ class DashboardController {
     todoAmountLimit: number = 10;
     height: number;
     cardSearchText: string;
+    dashboardTodos: any;
+    todoDirection: string = "ASC";
+    todoSearchText: string = "";
 
     rootScope;
     scope;
@@ -77,6 +80,7 @@ class DashboardController {
         this.dashboardService.searchText = null;
         this.dashboardService.showMyTaskUserId = 0;
         this.refreshTodos();
+        this.searchTodos(0);
         this.dashboardService.initDashboard(true, true);
 
         $scope.$watch("dashboardCtrl.cardSearchText", (newValue, oldValue) => {
@@ -103,6 +107,19 @@ class DashboardController {
         self.scope.$on("$destroy", function () {
             clearInterval(intervall);
         });
+    }
+
+    async searchTodos(page: number): Promise<void> {
+        this.dashboardTodos = await this.dashboardService.getTodosBySearchText(this.todoSearchText, 5, page, this.todoDirection);
+    }
+
+    switchTodoDirection() {
+        if (this.todoDirection === "ASC") {
+            this.todoDirection = "DESC";
+        } else if (this.todoDirection === "DESC") {
+            this.todoDirection = "ASC";
+        }
+        this.searchTodos(0);
     }
 
     switchDirection() {

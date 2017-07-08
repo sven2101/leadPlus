@@ -478,10 +478,14 @@ public class ProcessResource {
 	}
 
 	@ApiOperation(value = "Get Processes by ProcessorId.", notes = "")
-	@RequestMapping(value = "/processor/{processorId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/processor/{processorId}", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public Page<Process> getProcessesByProcessor(@PathVariable Long processorId) {
-		return processService.getProcessesByProcessor(processorId);
+	public Page<Process> getProcessesByProcessor(@PathVariable Long processorId, @RequestBody final String body) throws JSONException {
+
+		JSONObject pageRequest = new JSONObject(body);
+		return processService.getProcessesByProcessor(processorId,pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"),
+				pageRequest.optString("searchText"));
 	}
 
 	@ApiOperation(value = "Returns sum of turnover by Status.", notes = "")

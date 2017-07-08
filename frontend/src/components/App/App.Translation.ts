@@ -309,6 +309,14 @@ function config($translateProvider) {
             DASHBOARD_GOTO_BUTTON: "Go to",
             DASHBOARD_COMPLETION: "Abschlüsse",
 
+            // Define Page elements
+            PAGE_FIRST: "Erste",
+            PAGE_LAST: "Letzte",
+            PAGE_NEXT: "Nächste",
+            PAGE_BACK: "Zurück",
+            PAGE_PAGE: "Seite",
+            PAGE_OF: "von",
+
             // Define notification elements
             NOTIICATION_SEND: "Nachricht erfolgreich versendet",
             NOTIICATION_SEND_ERROR: "Fehler beim Senden. Bitte überprüfen sie ihre SMTP Einstellungen",
@@ -1026,6 +1034,14 @@ function config($translateProvider) {
             DASHBOARD_INFO_BUTTON: "Info",
             DASHBOARD_GOTO_BUTTON: "Go to",
             DASHBOARD_COMPLETION: "Sales statements",
+
+            // Define Page elements
+            PAGE_FIRST: "First",
+            PAGE_LAST: "Last",
+            PAGE_NEXT: "Next",
+            PAGE_BACK: "Previous",
+            PAGE_PAGE: "Page",
+            PAGE_OF: "of",
 
             // Define notification elements
             NOTIICATION_SEND: "Notification successfully send",

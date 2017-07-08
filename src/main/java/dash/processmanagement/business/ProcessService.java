@@ -257,9 +257,22 @@ public class ProcessService extends ConsistencyService {
 
 	}
 
-	public Page<Process> getProcessesByProcessor(long processorId) {
-		return processRepository.findAll(where(isProcessor(processorId)).and(not(isClosed())).and(not(isSale())),
-				new PageRequest(0, 20, Sort.Direction.ASC, "lead.timestamp"));
+	public Page<Process> getProcessesByProcessor(long processorId, int page, int size, String directionString,
+			String properties, String searchText) {
+		page = page < 0 ? 0 : page;
+		size = size < 0 ? 0 : size;
+		Sort.Direction direction = "ASC".equals(directionString) ? Sort.Direction.ASC : Sort.Direction.DESC;
+		properties = "null".equals(properties) ? "lead.timestamp" : properties;
+
+		if (searchText.equals("null") || searchText.equals("")) {
+			return processRepository.findAll(where(isProcessor(processorId)).and(not(isClosed())).and(not(isSale())),
+					new PageRequest(page, size, direction, properties));
+		} else {
+			User user = userService.getById(processorId);
+			Page<Process> p =  processRepository.findMyTasksProcessesSearchText(searchText, user,
+					new PageRequest(page, size, direction, properties));
+			return p;
+		}
 	}
 
 	public List<Process> getProcessesByProcessorAndBetweenTimestampAndWorkflow(long processorId, Calendar from,

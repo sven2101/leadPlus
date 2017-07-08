@@ -130,5 +130,18 @@ public interface ProcessRepository extends JpaRepository<Process, Long> {
 
 	@Query("SELECT sum(s.saleTurnover) FROM Sale s, Process p WHERE p.status = 'SALE' AND p.sale.id = s.id AND s.timestamp > :inputCalendar AND p.deleted = false AND s.deleted = false")
 	public Double getSaleSumByStatus(@Param(value = "inputCalendar") Calendar calendar);
+	
+	@Query("SELECT p FROM Process p WHERE p.id IN"
+			+ "(SELECT p2.id from Process p2 WHERE p2.deleted = false AND p2.sale IS NULL AND p2.processor = :user AND p2.lead IS NOT NULL AND p2.offer IS NULL AND (LOWER(p2.lead.customer.company) LIKE LOWER(CONCAT('%',:searchText,'%')) "
+			+ "OR LOWER(p2.lead.customer.firstname) like LOWER(CONCAT('%',:searchText,'%')) "
+			+ "OR LOWER(p2.lead.customer.lastname) like LOWER(CONCAT('%',:searchText,'%')) "
+			+ "OR LOWER(p2.lead.customer.email) like LOWER(CONCAT('%',:searchText,'%')) "
+			+ "OR LOWER(p2.lead.customer.customerNumber) like LOWER(CONCAT('%',:searchText,'%')))) "
+			+ "OR p.id IN (SELECT p3.id FROM Process p3 WHERE p3.deleted = false AND p3.sale IS NULL AND p3.processor = :user AND p3.offer IS NOT NULL AND (LOWER(p3.offer.customer.company) LIKE LOWER(CONCAT('%',:searchText,'%')) "
+			+ "OR LOWER(p3.offer.customer.firstname) like LOWER(CONCAT('%',:searchText,'%')) "
+			+ "OR LOWER(p3.offer.customer.lastname) like LOWER(CONCAT('%',:searchText,'%')) "
+			+ "OR LOWER(p3.offer.customer.email) like LOWER(CONCAT('%',:searchText,'%')) "
+			+ "OR LOWER(p3.offer.customer.customerNumber) like LOWER(CONCAT('%',:searchText,'%'))))")
+	public Page<Process> findMyTasksProcessesSearchText(@Param(value = "searchText") String searchText, @Param(value = "user") User user, Pageable pageable);
 
 }
