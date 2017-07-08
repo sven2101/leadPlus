@@ -145,6 +145,7 @@ class DashboardController {
 
     refreshTodos(): void {
         this.dashboardService.refreshTodos();
+        this.searchTodos(0);
     }
     updateProcessElement(oldProcess: Process, newProcess: Process, updateNow: boolean): void {
         this.dashboardService.updateProcessElement(oldProcess, newProcess, updateNow);
