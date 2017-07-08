@@ -50,7 +50,9 @@ class WorkflowController {
     openDataRoute: string;
 
     processResource: any;
+    createdActionButtonsHtml: { [key: number]: any } = {};
     createdRows: { [key: number]: Process } = {};
+    processOpenChildrow: { [key: number]: boolean } = {};
 
     $inject = [$rootScopeId, $scopeId, $compileId, $routeParamsId, $routeId, $sceId, $uibModalId, WorkflowServiceId, WorkflowDatatableServiceId, WorkflowDatatableRowServiceId, LeadDataTableServiceId, , OfferDataTableServiceId, SaleDataTableServiceId, $translateId, ProcessResourceId];
 
@@ -88,29 +90,25 @@ class WorkflowController {
         let self = this;
 
         function createdRow(row, data: Process, dataIndex) {
-            /*let actionbuttonOld = angular.element(row).contents()[6];
-            console.log(actionbuttonOld);
-            setTimeout(function () {
-                console.log(actionbuttonOld.outerHTML);
-            }, 300);
-               console.log((angular.element(actionbuttonOld)));
-            */
-
-
             self.workflowDatatableRowService.setRow(data.id, self.controllerType, row);
             self.IDatatableService.configRow(row, data);
-            self.compile(angular.element(row).contents())(self.getScopeByKey("actionButtonScope" + data.id));
-            //self.compile(angular.element(row).contents()[6])(self.getScopeByKey("actionButtonScope" + data.id));
-
-            /* let childScope = self.scopes["actionButtonScope" + data.id];
-             if (isNullOrUndefined(childScope) || childScope.$$destroyed) {
-                 self.compile(angular.element(row).contents()[6])(self.getScopeByKey("actionButtonScope" + data.id));
-             } else {
-                 setTimeout(function () {
-                     angular.element(angular.element(row).contents()[6]).html(actionbuttonOld.outerHTML);
-                 }, 300);
-             }
-             */
+            let childScope = self.scopes["actionButtonScope" + data.id];
+            if (isNullOrUndefined(childScope) || childScope.$$destroyed || isNullOrUndefined(self.createdActionButtonsHtml[data.id]) || isNullOrUndefined(self.createdRows[data.id]) || self.createdRows[data.id].lastEdited !== data.lastEdited) {
+                self.compile(angular.element(row).contents()[6])(self.getScopeByKey("actionButtonScope" + data.id));
+                self.createdRows[data.id] = deepCopy(data);
+                setTimeout(function () {
+                    self.createdActionButtonsHtml[data.id] = angular.element(row).contents()[6];
+                }, 150);
+            } else {
+                self.createdRows[data.id] = deepCopy(data);
+                angular.element(row).contents()[6] = self.createdActionButtonsHtml[data.id];
+                angular.element(row)[0].replaceChild(self.createdActionButtonsHtml[data.id], angular.element(row).contents()[6]);
+            }
+            if (!isNullOrUndefined(angular.element("#id_" + data.id)) && !isNullOrUndefined(self.processes[data.id]) && !isNullOrUndefined(self.processOpenChildrow[data.id]) && self.processOpenChildrow[data.id] === true) {
+                setTimeout(function () {
+                    self.appendChildRow(data.id, true);
+                }, 150);
+            }
         }
         function addActionsButtons(data: Process, type, full, meta) {
             return self.IDatatableService.getActionButtonsHTML(data, self.actionButtonConfig);
@@ -140,6 +138,10 @@ class WorkflowController {
 
         this.dtInstanceCallback = function dtInstanceCallback(dtInstance) {
             self.dtInstance = dtInstance;
+
+            self.dtInstance.DataTable.on("page.dt search.dt length.dt", function () {
+                self.processOpenChildrow = {};
+            });
             if (!isNullOrUndefined(processId) && processId !== "" && searchLink !== "") {
                 self.dtInstance.DataTable.search(searchLink);
                 self.refreshData();
@@ -217,6 +219,7 @@ class WorkflowController {
     }
 
     filterMyTasks() {
+        this.processOpenChildrow = {};
         if (this.loadAllData === true) {
             return;
         }
@@ -295,6 +298,7 @@ class WorkflowController {
 
     changeDataInput() {
         this.destroyAllScopes();
+        this.processOpenChildrow = {};
         if (this.loadAllData === false) {
             this.workflowDatatableService.showMyTasksUserId[this.controllerType.toString()] = 0;
         } else if (this.loadAllData === true) {
@@ -304,9 +308,14 @@ class WorkflowController {
         this.rootScope.loadLabels();
     }
 
-    appendChildRow(id: number) {
+    appendChildRow(id: number, appendByCreatedRow: boolean = false) {
         if (isNullOrUndefined(id) || isNullOrUndefined(this.processes[id])) {
             return;
+        }
+        if (isNullOrUndefined(this.processOpenChildrow[id]) && appendByCreatedRow === false) {
+            this.processOpenChildrow[id] = true;
+        } else if (appendByCreatedRow === false) {
+            this.processOpenChildrow[id] = !this.processOpenChildrow[id];
         }
         let process = this.processes[id];
         this.workflowDatatableService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process[this.controllerType.toString().toLowerCase()], this.dtInstance, this, this.controllerType.toString().toLowerCase());
