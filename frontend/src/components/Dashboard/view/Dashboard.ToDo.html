@@ -13,14 +13,17 @@
                     </span>
 					<span class="pull-right" style="padding-right:15px;"><label><span  style="cursor: pointer;" ng-click= "dashboardCtrl.switchTodoDirection()"><i ng-class="{'fa fa-sort-amount-asc':dashboardCtrl.todoDirection==='ASC', 'fa fa-sort-amount-desc':dashboardCtrl.todoDirection==='DESC'}" aria-hidden="true"></i> {{ dashboardCtrl.todoDirection | translate }}</span></label></span>
 				<div class="project-list" style="min-height: 450px">
-
-					<table class="table table-hover">
+					<table class="table table-hover" ng-if="dashboardCtrl.todosLoad===true">
 						<tbody>
 							<tr todoitem process="::todo" ng-repeat="todo in dashboardCtrl.dashboardTodos.content">		
 							</tr>
 						</tbody>
 					</table>
-					<div ng-if="dashboardCtrl.dashboardTodos.content.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
+					<div style = "text-align: center;" ng-if="dashboardCtrl.todosLoad===false">
+						<br>
+						<i class="fa fa-refresh fa-spin" style="font-size:24px"></i>
+					</div>
+					<div ng-if="dashboardCtrl.dashboardTodos.totalElements==0 && dashboardCtrl.todosLoad===true" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
 					<p style="margin-top:7px">{{ 'TODO_NO_TODOS' | translate }}</p>
 					</div>
 				</div>				

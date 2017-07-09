@@ -31,6 +31,13 @@ class ToDoTableRowDirective implements IDirective {
         scope.goToLink = scope.process.status === Status.OPEN || scope.process.status === Status.INCONTACT ? "leads/" + scope.process.id : "offers/" + scope.process.id;
         scope.lastname = scope.editWorkflowUnit.customer.lastname;
         scope.firstname = scope.editWorkflowUnit.customer.firstname;
+        let zip = "";
+        let city = "";
+        let country = "";
+        !isNullOrUndefined(scope.editWorkflowUnit.deliveryAddress.zip) ? zip = scope.editWorkflowUnit.deliveryAddress.zip : angular.noop;
+        !isNullOrUndefined(scope.editWorkflowUnit.deliveryAddress.city) ? city = scope.editWorkflowUnit.deliveryAddress.city : angular.noop;
+        !isNullOrUndefined(scope.editWorkflowUnit.deliveryAddress.country) ? country = scope.editWorkflowUnit.deliveryAddress.country : angular.noop;
+        scope.deliveryAddress = zip + " " + city + " " + country;
         scope.goToWorkflow = () => this.goToWorkflow(scope);
     };
 

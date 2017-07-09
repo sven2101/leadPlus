@@ -92,16 +92,15 @@ class WorkflowController {
         function createdRow(row, data: Process, dataIndex) {
             self.workflowDatatableRowService.setRow(data.id, self.controllerType, row);
             self.IDatatableService.configRow(row, data);
+            self.compile(angular.element(row).contents()[0])(self.getScopeByKey("profilePicture" + data.id));
+
             let childScope = self.scopes["actionButtonScope" + data.id];
             if (isNullOrUndefined(childScope) || childScope.$$destroyed || isNullOrUndefined(self.createdActionButtonsHtml[data.id]) || isNullOrUndefined(self.createdRows[data.id]) || self.createdRows[data.id].lastEdited !== data.lastEdited) {
                 self.compile(angular.element(row).contents()[6])(self.getScopeByKey("actionButtonScope" + data.id));
-                self.createdRows[data.id] = deepCopy(data);
                 setTimeout(function () {
                     self.createdActionButtonsHtml[data.id] = angular.element(row).contents()[6];
                 }, 150);
             } else {
-                self.createdRows[data.id] = deepCopy(data);
-                angular.element(row).contents()[6] = self.createdActionButtonsHtml[data.id];
                 angular.element(row)[0].replaceChild(self.createdActionButtonsHtml[data.id], angular.element(row).contents()[6]);
             }
             if (!isNullOrUndefined(angular.element("#id_" + data.id)) && !isNullOrUndefined(self.processes[data.id]) && !isNullOrUndefined(self.processOpenChildrow[data.id]) && self.processOpenChildrow[data.id] === true) {
@@ -109,6 +108,7 @@ class WorkflowController {
                     self.appendChildRow(data.id, true);
                 }, 150);
             }
+            self.createdRows[data.id] = deepCopy(data);
         }
         function addActionsButtons(data: Process, type, full, meta) {
             return self.IDatatableService.getActionButtonsHTML(data, self.actionButtonConfig);

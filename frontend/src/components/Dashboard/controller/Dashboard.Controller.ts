@@ -53,6 +53,7 @@ class DashboardController {
     dashboardTodos: any;
     todoDirection: string = "ASC";
     todoSearchText: string = "";
+    todosLoad: boolean = false;
 
     rootScope;
     scope;
@@ -110,7 +111,9 @@ class DashboardController {
     }
 
     async searchTodos(page: number): Promise<void> {
+        this.todosLoad = false;
         this.dashboardTodos = await this.dashboardService.getTodosBySearchText(this.todoSearchText, 5, page, this.todoDirection);
+        this.todosLoad = true;
     }
 
     switchTodoDirection() {

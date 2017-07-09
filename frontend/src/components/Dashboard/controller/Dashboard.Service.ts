@@ -619,9 +619,8 @@ class DashboardService {
         if (isNullOrUndefined(this.rootScope.user)) {
             return;
         }
-        this.processResource.getTodos({ processorId: this.rootScope.user.id }, { properties: "lead.timestamp", size: 10, page: 0, direction: "ASC", searchText: null }).$promise.then((data) => {
+        this.processResource.getTodos({ processorId: this.rootScope.user.id }, { properties: "lead.timestamp", size: 5, page: 0, direction: "ASC", searchText: null }).$promise.then((data) => {
             this.todos = data;
-            // this.todos.content = this.orderByTimestamp(data.content);
             this.rootScope.$broadcast("todosChanged", this.todos);
         }, (error) => handleError(error));
 
