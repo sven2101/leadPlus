@@ -61,7 +61,7 @@ public class Customer extends ConsistencyObject {
 	@Column(name = "lastname", length = 255, nullable = false)
 	private String lastname;
 
-	@Size(max = 255)
+	@Size(max = 500)
 	@Column(name = "company", length = 255, nullable = true)
 	private String company;
 

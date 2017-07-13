@@ -83,8 +83,8 @@ public abstract class AbstractWorkflow implements Request {
 	@Where(clause = "deleted <> '1'")
 	private Vendor vendor;
 
-	@Size(max = 4096)
-	@Column(length = 4096, nullable = true)
+	@Size(max = 20000)
+	@Column(length = 20000, nullable = true)
 	private String message;
 
 	@ApiModelProperty(hidden = true)

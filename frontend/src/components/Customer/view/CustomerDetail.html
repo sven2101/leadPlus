@@ -61,7 +61,7 @@
                                 <div class="form-group" ng-class="{ 'has-error' : createCustomerForm.company.$invalid && !createCustomerForm.company.$pristine }">
                                     <label>{{ 'COMMON_COMPANY' | translate }}</label>
                                     <span style="color:red" ng-show="createCustomerForm.company.$invalid && !createCustomerForm.company.$pristine">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
-                                    <input type="text" name="company" class="form-control" ng-model="customerDetailCtrl.customer.company" ng-maxlength="50">
+                                    <input type="text" name="company" class="form-control" ng-model="customerDetailCtrl.customer.company" ng-maxlength="500">
                                 </div>
                                 <!-- CUSTOMERNUMBER -->
                                 <div class="form-group" ng-class="{ 'has-error' : createCustomerForm.customerNumber.$invalid && !createCustomerForm.customerNumber.$pristine }">

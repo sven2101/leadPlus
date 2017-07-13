@@ -69,7 +69,7 @@
 				<div class="form-group" ng-class="{ 'has-error' : cform.company.$invalid && !cform.company.$pristine }">
 					<label>{{ 'COMMON_COMPANY' | translate }}</label>
 					<span style="color:red" ng-show="cform.company.$invalid && !cform.company.$pristine">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
-					<input type="text" name="company" class="form-control" ng-model="editWorkflowUnit.customer.company" ng-maxlength="50"
+					<input type="text" name="company" class="form-control" ng-model="editWorkflowUnit.customer.company" ng-maxlength="500"
 						ng-disabled="customerSelected && customerEditLocked">
 				</div>
 			</div>
