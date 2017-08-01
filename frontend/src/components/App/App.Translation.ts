@@ -349,6 +349,8 @@ function config($translateProvider) {
             PROFILE_PASSWORD_TAB: "Passwort und Profilbild",
             PROFILE_ACCOUNT_TAB: "Profilinformationen",
 
+            DATATABLE_REFRESH: "Die Tabelle wurde aktualisiert",
+
             // Define all process elements
             PROCESS_DELETE_PROCESS_TITLE: "Prozess löschen",
             PROCESS_DELETE_PROCESS_BODY: "Möchten Sie den Prozess wirklich löschen?",
@@ -1073,6 +1075,8 @@ function config($translateProvider) {
             PROFILE_SMTP_TAB: "SMTP Settings",
             PROFILE_PASSWORD_TAB: "Password and Profile Picture",
             PROFILE_ACCOUNT_TAB: "Profile Information",
+
+            DATATABLE_REFRESH: "Datatable was refreshed",
 
             // Define all process elements
             PROCESS_DELETE_PROCESS_TITLE: "Delete process",

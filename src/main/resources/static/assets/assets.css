@@ -5064,6 +5064,15 @@ span.CodeMirror-selectedtext { background: none; }
     -o-transition:max-height 0.3s ease-in;
     transition: max-height 0.3s ease-in;
 }
+
+.openMenu2{
+    max-height: 2000px;
+    -webkit-transition: max-height 0s ease-in;
+    -moz-transition: max-height 0s ease-in;
+    -ms-transition: max-height 0s ease-in;
+    -o-transition:max-height 0s ease-in;
+    transition: max-height 0s ease-in;
+}
 div#loginscreen
 {   content: ""; 
     display: block;

@@ -53,13 +53,15 @@ class WorkflowController {
     createdActionButtonsHtml: { [key: number]: any } = {};
     createdRows: { [key: number]: Process } = {};
     processOpenChildrow: { [key: number]: boolean } = {};
+    toaster;
 
-    $inject = [$rootScopeId, $scopeId, $compileId, $routeParamsId, $routeId, $sceId, $uibModalId, WorkflowServiceId, WorkflowDatatableServiceId, WorkflowDatatableRowServiceId, LeadDataTableServiceId, , OfferDataTableServiceId, SaleDataTableServiceId, $translateId, ProcessResourceId];
+    $inject = [$rootScopeId, $scopeId, $compileId, $routeParamsId, $routeId, $sceId, $uibModalId, WorkflowServiceId, WorkflowDatatableServiceId, WorkflowDatatableRowServiceId, LeadDataTableServiceId, , OfferDataTableServiceId, SaleDataTableServiceId, $translateId, ProcessResourceId, toasterId];
 
-    constructor($rootScope, $scope, $compile, $routeParams, $route, $sce, $uibModal, WorkflowService, WorkflowDatatableService, WorkflowDatatableRowService, LeadDataTableService, OfferDataTableService, SaleDataTableService, $translate, ProcessResource) {
+    constructor($rootScope, $scope, $compile, $routeParams, $route, $sce, $uibModal, WorkflowService, WorkflowDatatableService, WorkflowDatatableRowService, LeadDataTableService, OfferDataTableService, SaleDataTableService, $translate, ProcessResource, toaster) {
         this.workflowDatatableService = WorkflowDatatableService;
         this.processResource = ProcessResource.resource;
         this.controllerType = $route.current.$$route.type;
+        this.toaster = toaster;
         switch (this.controllerType) {
             case WorkflowType.LEAD:
                 this.IDatatableService = LeadDataTableService;
@@ -236,6 +238,7 @@ class WorkflowController {
     registerIntervall() {
         let self = this;
         let intervall = setInterval(function () {
+            self.toaster.pop("success", "", self.translate.instant("DATATABLE_REFRESH"));
             let openChildRowsBeforeRefresh = deepCopy(self.processOpenChildrow);
             self.refreshData(openChildRowsBeforeRefresh);
         }, 10 * 60 * 1000);
@@ -250,7 +253,9 @@ class WorkflowController {
         this.dtInstance.reloadData(function () {
             if (reopechilds !== null) {
                 for (let key in reopechilds) {
-                    self.appendChildRow(Number(key));
+                    if (reopechilds[key] === true) {
+                        self.appendChildRow(Number(key), false, true);
+                    }
                 }
             }
         }, resetPaging);
@@ -315,7 +320,7 @@ class WorkflowController {
         this.rootScope.loadLabels();
     }
 
-    appendChildRow(id: number, appendByCreatedRow: boolean = false) {
+    appendChildRow(id: number, appendByCreatedRow: boolean = false, withEasingIn: boolean = false) {
         if (isNullOrUndefined(id) || isNullOrUndefined(this.processes[id])) {
             return;
         }
@@ -325,7 +330,7 @@ class WorkflowController {
             this.processOpenChildrow[id] = !this.processOpenChildrow[id];
         }
         let process = this.processes[id];
-        this.workflowDatatableService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process[this.controllerType.toString().toLowerCase()], this.dtInstance, this, this.controllerType.toString().toLowerCase());
+        this.workflowDatatableService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process[this.controllerType.toString().toLowerCase()], this.dtInstance, this, this.controllerType.toString().toLowerCase(), withEasingIn);
     }
 
     getAsHtml(html: string) {

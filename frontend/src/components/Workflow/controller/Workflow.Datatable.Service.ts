@@ -153,7 +153,7 @@ class WorkflowDatatableService {
     }
 
 
-    appendChildRow(childScope: any, process: Process, workflowUnit: IWorkflow, dtInstance: any, parent: WorkflowController, type: string) {
+    appendChildRow(childScope: any, process: Process, workflowUnit: IWorkflow, dtInstance: any, parent: WorkflowController, type: string, withEasingIn: boolean = false) {
         childScope.workflowUnit = workflowUnit;
         childScope.process = process;
         childScope.parent = parent;
@@ -165,6 +165,7 @@ class WorkflowDatatableService {
         if (row.child.isShown()) {
             let newChildRow = $("#childRow" + process.id);
             newChildRow.removeClass("openMenu");
+            newChildRow.removeClass("openMenu2");
             newChildRow.parent().parent().children("td").css("height", "0px");
             setTimeout(function () {
                 row.child.hide();
@@ -181,9 +182,13 @@ class WorkflowDatatableService {
             let newChildRow = $("#childRow" + process.id);
             newChildRow.parent().parent().children("td").css("height", "0px");
             newChildRow.parent().parent().addClass("childstyle");
-            setTimeout(function () {
-                newChildRow.addClass("openMenu");
-            }, 100);
+            if (withEasingIn === true) {
+                newChildRow.addClass("openMenu2");
+            } else {
+                setTimeout(function () {
+                    newChildRow.addClass("openMenu");
+                }, 100);
+            }
         }
     }
 }
