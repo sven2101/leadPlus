@@ -138,7 +138,6 @@ class WorkflowController {
 
         this.dtInstanceCallback = function dtInstanceCallback(dtInstance) {
             self.dtInstance = dtInstance;
-
             self.dtInstance.DataTable.on("page.dt search.dt length.dt", function () {
                 self.processOpenChildrow = {};
             });
@@ -237,16 +236,24 @@ class WorkflowController {
     registerIntervall() {
         let self = this;
         let intervall = setInterval(function () {
-            self.refreshData();
-        }, 3 * 60 * 1000);
+            let openChildRowsBeforeRefresh = deepCopy(self.processOpenChildrow);
+            self.refreshData(openChildRowsBeforeRefresh);
+        }, 10 * 60 * 1000);
         self.scope.$on("$destroy", function () {
             clearInterval(intervall);
         });
     }
 
-    refreshData() {
+    refreshData(reopechilds: { [key: number]: boolean } = null) {
         let resetPaging = false;
-        this.dtInstance.reloadData(resetPaging);
+        let self = this;
+        this.dtInstance.reloadData(function () {
+            if (reopechilds !== null) {
+                for (let key in reopechilds) {
+                    self.appendChildRow(Number(key));
+                }
+            }
+        }, resetPaging);
         this.rootScope.loadLabels();
         this.rootScope.$broadcast(broadcastOnTodosChanged);
     }
