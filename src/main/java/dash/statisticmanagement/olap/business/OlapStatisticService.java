@@ -2,6 +2,7 @@ package dash.statisticmanagement.olap.business;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -88,8 +89,20 @@ public class OlapStatisticService {
 		Map<String, List<Double>> sales = workflowStatisticService.getStatisticByDateRange(Workflow.SALE, dateRange,
 				null);
 		olap.setSales(ByteSearializer.serialize(sales));
-		Map<String, List<ProductStatistic>> products = productStatisticService.getTopProductStatstic(Workflow.SALE,
+
+		Map<String, List<ProductStatistic>> productsLead = productStatisticService.getTopProductStatstic(Workflow.LEAD,
 				dateRange, null);
+		Map<String, List<ProductStatistic>> productsOffer = productStatisticService
+				.getTopProductStatstic(Workflow.OFFER, dateRange, null);
+		Map<String, List<ProductStatistic>> productsSale = productStatisticService.getTopProductStatstic(Workflow.SALE,
+				dateRange, null);
+
+		Map<Workflow, Map<String, List<ProductStatistic>>> products = new HashMap<>();
+
+		products.put(Workflow.LEAD, productsLead);
+		products.put(Workflow.OFFER, productsOffer);
+		products.put(Workflow.SALE, productsSale);
+
 		olap.setProducts(ByteSearializer.serialize(products));
 		Map<String, List<UserStatistic>> users = userStatisticService.getTopSalesMen(dateRange);
 		olap.setUsers(ByteSearializer.serialize(users));
