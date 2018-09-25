@@ -55,7 +55,6 @@ public class OlapStatisticService {
 			saveStatisticInOLAP(DateRange.WEEKLY);
 			saveStatisticInOLAP(DateRange.MONTHLY);
 			saveStatisticInOLAP(DateRange.YEARLY);
-			saveStatisticInOLAP(DateRange.ALL);
 		} catch (IOException ex) {
 			logger.error("Something went wrong when serialzing olap data.", ex);
 			logger.warn("Deleting old olap data. Maybe invalid bytestream in olap.");
