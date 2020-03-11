@@ -27,6 +27,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import dash.addressmanagement.domain.Address;
 import dash.customermanagement.domain.Customer;
@@ -37,12 +38,11 @@ import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@SequenceGenerator(name = "idgen", sequenceName = "workflow_id_seq", allocationSize = 1)
 public abstract class AbstractWorkflow implements Request {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "workflow_auto_gen")
-	@SequenceGenerator(name = "workflow_auto_gen", sequenceName = "workflow_id_seq", allocationSize = 1)
-	@ApiModelProperty(hidden = true)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idgen")
 	@Column(name = "id", nullable = false)
 	private Long id;
 
@@ -68,6 +68,7 @@ public abstract class AbstractWorkflow implements Request {
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "workflow", fetch = FetchType.LAZY)
 	@Where(clause = "deleted <> '1'")
+	@JsonManagedReference("orderPositions-abstractWorkflow")
 	private List<OrderPosition> orderPositions;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss:SSS")
@@ -82,8 +83,8 @@ public abstract class AbstractWorkflow implements Request {
 	@Where(clause = "deleted <> '1'")
 	private Vendor vendor;
 
-	@Size(max = 4096)
-	@Column(length = 4096, nullable = true)
+	@Size(max = 20000)
+	@Column(length = 20000, nullable = true)
 	private String message;
 
 	@ApiModelProperty(hidden = true)
@@ -113,6 +114,14 @@ public abstract class AbstractWorkflow implements Request {
 	@JoinColumn(name = "delivery_address_fk", nullable = true)
 	@Where(clause = "deleted <> '1'")
 	private Address deliveryAddress;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public Calendar getDeliveryDate() {
 		return deliveryDate;
@@ -144,14 +153,6 @@ public abstract class AbstractWorkflow implements Request {
 
 	public void setDeliveryCosts(double deliveryCosts) {
 		this.deliveryCosts = deliveryCosts;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getDeliveryTerm() {

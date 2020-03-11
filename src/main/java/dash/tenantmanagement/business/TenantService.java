@@ -41,7 +41,10 @@ import com.amazonaws.services.route53.model.RRType;
 import com.amazonaws.services.route53.model.ResourceRecord;
 import com.amazonaws.services.route53.model.ResourceRecordSet;
 
-import dash.exceptions.SaveFailedException;
+import dash.exceptions.ConsistencyFailedException;
+import dash.exceptions.EmailAlreadyExistsException;
+import dash.exceptions.NotFoundException;
+import dash.exceptions.RegisterFailedException;
 import dash.exceptions.TenantAlreadyExistsException;
 import dash.multitenancy.configuration.TenantContext;
 import dash.tenantmanagement.domain.Tenant;
@@ -123,8 +126,15 @@ public class TenantService implements ITenantService {
 			@Override
 			public void run() {
 				TenantContext.setTenant(tenant.getTenantKey());
-				userService.register(tenant.getRegistration());
-				createInitialUsers();
+				try {
+					userService.register(tenant.getRegistration());
+					createInitialUsers();
+				} catch (EmailAlreadyExistsException | RegisterFailedException | NotFoundException
+						| IllegalArgumentException | ConsistencyFailedException e) {
+					e.printStackTrace();
+					logger.error("Cannot register user in " + tenant.getTenantKey());
+				}
+
 			}
 		});
 		t.start();
@@ -133,31 +143,19 @@ public class TenantService implements ITenantService {
 		return tenant;
 	}
 
-	public void createInitialUsers() throws SaveFailedException {
+	public void createInitialUsers() throws NotFoundException, IllegalArgumentException, ConsistencyFailedException {
 		User superadmin = new User();
 		superadmin.setEmail("superadmin@eviarc.com");
 		superadmin.setUsername("superadmin@eviarc.com");
 		superadmin.setFirstname("Superadmin");
 		superadmin.setLastname("Eviarc");
 
-		superadmin.setPassword("$2a$10$V7c4F8TMpN6zUPC4llkuM.tvGp.HuHdoEmu2CqMS1IEHGyGEOUAWW");
+		superadmin.setPassword("$2a$10$9081wfaRFVSikb09ZawwpOeDZfdFoL77pXoH7DXZvH618p/5h/J1W");
 		superadmin.setRole(Role.SUPERADMIN);
 		superadmin.setEnabled(true);
 		superadmin.setLanguage(Language.EN);
 		superadmin.setDefaultVat(19.00);
 		userService.save(superadmin);
-
-		User api = new User();
-		api.setEmail("api@" + TenantContext.getTenant());
-		api.setUsername("api@" + TenantContext.getTenant());
-		api.setPassword("$2a$10$V7c4F8TMpN6zUPC4llkuM.tvGp.HuHdoEmu2CqMS1IEHGyGEOUAWW");
-		api.setFirstname("Api");
-		api.setLastname(TenantContext.getTenant());
-		api.setRole(Role.API);
-		api.setEnabled(true);
-		api.setLanguage(Language.EN);
-		api.setDefaultVat(19.00);
-		userService.save(api);
 	}
 
 	public void createSchema(final Tenant tenant) {
@@ -241,7 +239,8 @@ public class TenantService implements ITenantService {
 	public Validation uniqueTenantKey(Tenant tenant) {
 		final Validation validation = new Validation();
 		if ("www".contains(tenant.getTenantKey().toLowerCase())
-				|| "leadplus".contains(tenant.getTenantKey().toLowerCase())) {
+				|| "leadplus".contains(tenant.getTenantKey().toLowerCase())
+				|| "app".equals(tenant.getTenantKey().toLowerCase())) {
 			validation.setValidation(false);
 			return validation;
 		}

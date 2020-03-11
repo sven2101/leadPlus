@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.EmailAlreadyExistsException;
 import dash.exceptions.NotFoundException;
@@ -71,7 +72,7 @@ public class ProductResource {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Product save(@ApiParam(required = true) @RequestBody @Valid final Product product)
-			throws SaveFailedException {
+			throws SaveFailedException, ConsistencyFailedException {
 		return productService.save(product);
 	}
 
@@ -80,7 +81,7 @@ public class ProductResource {
 	@ApiOperation(value = "Post a file. ", notes = "")
 	public Product setImage(@PathVariable final long id, @RequestParam("file") MultipartFile file)
 			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException,
-			EmailAlreadyExistsException {
+			EmailAlreadyExistsException, ConsistencyFailedException {
 		return productService.setImage(id, file);
 	}
 
@@ -106,8 +107,8 @@ public class ProductResource {
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public Product update(@ApiParam(required = true) @RequestBody @Valid final Product product)
-			throws UpdateFailedException {
-		return productService.update(product);
+			throws UpdateFailedException, SaveFailedException, ConsistencyFailedException {
+		return productService.save(product);
 	}
 
 	@ApiOperation(value = "Delete a single product.", notes = "")

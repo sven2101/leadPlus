@@ -16,9 +16,9 @@ class NotificationService {
     notificationResource;
     formdata;
     fileReader;
-    notification: Notification;
+    notification: EmailNotification;
     q;
-    userNotifications: Array<Notification> = [];
+    userNotifications: Array<EmailNotification> = [];
 
     constructor(toaster, $translate, $rootScope, NotificationResource, $q, private TokenService: TokenService) {
         this.notificationResource = NotificationResource.resource;
@@ -28,16 +28,16 @@ class NotificationService {
         this.q = $q;
         this.formdata = new FormData();
         this.fileReader = new FileReader();
-        this.notification = new Notification();
+        this.notification = new EmailNotification();
         let broadcastUserNotificationShouldChangeListener = $rootScope.$on(broadcastUserNotificationShouldChange, (event, result) => {
             this.refreshUserNotifications();
         });
     }
 
-    async sendNotification(notification: Notification, process: Process): Promise<Notification> {
+    async sendNotification(notification: EmailNotification, process: Process): Promise<EmailNotification> {
         try {
             this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SENDING);
-            let sendNotification: Notification = await this.notificationResource.sendNotification({ processId: process.id, senderId: this.rootScope.user.id }, { smtpKey: this.TokenService.getSmtpKey(), notification: notification }).$promise;
+            let sendNotification: EmailNotification = await this.notificationResource.sendNotification({ processId: process.id, senderId: this.rootScope.user.id }, { smtpKey: this.TokenService.getSmtpKey(), notification: notification }).$promise;
 
             this.rootScope.$broadcast(broadcastSetNotificationSendState, NotificationSendState.SUCCESS);
             setTimeout(() => {
@@ -55,7 +55,7 @@ class NotificationService {
 
     }
 
-    async getNotificationsBySenderId(senderId: number): Promise<Array<Notification>> {
+    async getNotificationsBySenderId(senderId: number): Promise<Array<EmailNotification>> {
         return this.notificationResource.getNotificationsBySenderId({ senderId: senderId }).$promise;
     }
 

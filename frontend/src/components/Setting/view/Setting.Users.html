@@ -7,17 +7,17 @@
 			<table class="table text-left">
 				<thead>
 					<tr>
-						<th class="text-left">{{ 'COMMON_FIRSTNAME' | translate }}</th>
 						<th class="text-left">{{ 'COMMON_LASTNAME' | translate }}</th>
+						<th class="text-left">{{ 'COMMON_FIRSTNAME' | translate }}</th>
 						<th class="text-left">{{ 'COMMON_EMAIL' | translate }}</th>
 						<th class="text-left">{{ 'COMMON_ROLE' | translate }}</th>
 						<th class="text-center"><i class="fa fa-cog"></i></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-if="user.role!='API'" ng-repeat="user in settingCtrl.settingService.users">
-						<td>{{user.firstname}}</td>
+					<tr ng-if="user.role!='API'" ng-repeat="user in settingCtrl.settingService.users | orderBy : ['lastname','firstname']">
 						<td>{{user.lastname}}</td>
+						<td>{{user.firstname}}</td>
 						<td>{{user.email}}</td>
 						<td ng-if="user.role!='SUPERADMIN'">
 

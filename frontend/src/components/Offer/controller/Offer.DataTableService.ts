@@ -5,7 +5,7 @@
 
 const OfferDataTableServiceId: string = "OfferDataTableService";
 const allDataOfferRoute: string = "/api/rest/processes/offers";
-const openDataOfferRoute: string = "/api/rest/processes/workflow/OFFER/state/OFFER";
+const openDataOfferRoute: string = "/api/rest/processes/offers/open";
 
 class OfferDataTableService implements IDatatableService {
 
@@ -36,22 +36,39 @@ class OfferDataTableService implements IDatatableService {
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
-            .withOption("ajax", function (data, callback, settings) {
-                self.$http.get(openDataOfferRoute).then(function (response) {
-                    callback(response.data);
-                });
-            })
+            .withOption("searchDelay", 600)
+            .withOption("ajax", self.getInitData())
             .withOption("stateSave", false)
+            .withOption("serverSide", true)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
             .withButtons(this.workflowDatatableService.getButtons(this.translate("OFFER_OFFERS"), [8, 3, 2, 4, 7, 6, 9, 10, 11, 12, 13]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
-            .withOption("deferRender", true)
+            .withOption("deferRender", false)
             .withOption("lengthMenu", [10, 20, 50])
             .withOption("order", [6, "desc"])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
+    }
+
+    async getInitData() {
+        let self = this;
+        return {
+            url: openDataOfferRoute,
+            type: "GET",
+            pages: 2,
+            dataSrc: "data",
+            data: function (d) {
+                d.userId = self.workflowDatatableService.showMyTasksUserId["OFFER"];
+            },
+            error: function (xhr, error, thrown) {
+                handleError(xhr);
+            },
+            beforeSend: function (request) {
+                request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
+            }
+        };
     }
 
     configRow(row: any, data: Process) {
@@ -72,8 +89,7 @@ class OfferDataTableService implements IDatatableService {
 
     getDetailHTML(id: number): string {
         return "<a id='id_" + id + "' class='green shortinfo' href='javascript:;'"
-            + "ng-click='offerCtrl.appendChildRow(offerCtrl.processes[" + id
-            + "])' title='Details'>"
+            + "ng-click='offerCtrl.appendChildRow(" + id + ")' title='Details'>"
             + "<i class='glyphicon glyphicon-plus-sign'/></a>";
     }
 
@@ -85,8 +101,8 @@ class OfferDataTableService implements IDatatableService {
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<i style='margin-top:2px;margin-left:12px;' class='fa fa-thumb-tack' aria-hidden='true'></i>").withClass("text-center").renderWith(function (data: Process, type, full) {
                     if (data.processor != null && data.processor.thumbnail != null) {
-                        return `<div style="height:48px;">
-                    <img title="` + data.processor.firstname + ` ` + data.processor.lastname + `" style="width: 48px; height:48px;border-radius: 10%;"
+                        return `<div style="height:45px;">
+                    <img title="` + data.processor.firstname + ` ` + data.processor.lastname + `" style="width: 45px; height:45px;border-radius: 10%;"
                     pictureid="` + data.processor.thumbnail.id + `" httpsrc="/api/rest/files/content/" alt="">
                 </div>`;
                     } else if (data.processor != null && data.processor.thumbnail == null && data.processor.firstname != null && data.processor.lastname != null) {
@@ -94,7 +110,7 @@ class OfferDataTableService implements IDatatableService {
                     } else {
                         return "-";
                     }
-                }).withOption("width", "48px").notSortable(),
+                }).withOption("width", "45px").notSortable(),
             this.DTColumnBuilder.newColumn(null).renderWith(
                 function (data: Process, type, full) {
                     if (data != null && data.processor != null) {

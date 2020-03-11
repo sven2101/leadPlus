@@ -36,10 +36,12 @@ class SourceController {
         this.rootScope = $rootScope;
         this.translate = $translate;
         this.toaster = toaster;
+        this.sourceService.inconsistency = null;
     }
 
     refreshData(): void {
         this.sourceService.getAllSources();
+        this.sourceService.inconsistency = null;
     }
 
     clearSource(): void {
@@ -69,11 +71,16 @@ class SourceController {
         this.nameExists = this.sourceService.checkSourceName(this.currentSource);
     }
 
-    saveSource() {
-        if (!this.isCurrentSourceNew) {
-            shallowCopy(this.currentSource, this.currentEditSource);
+    async saveSource() {
+        try {
+            let source = await this.sourceService.saveSource(this.currentSource);
+            if (!this.isCurrentSourceNew) {
+                shallowCopy(source, this.currentEditSource);
+            }
+        } catch (error) {
+            this.sourceService.inconsistency = showConsistencyErrorMessage(error, this.translate, this.toaster, "SOURCE_SOURCE");
+            throw error;
         }
-        this.sourceService.saveSource(this.currentSource);
     }
 
     async generateApiToken(source): Promise<void> {

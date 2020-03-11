@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import dash.fileuploadmanagement.domain.FileUpload;
 import io.swagger.annotations.ApiModel;
@@ -59,9 +59,9 @@ public class Attachment {
 	private FileUpload fileUpload;
 
 	@ManyToOne
-	@JsonIgnore
 	@JoinColumn(name = "notification_fk", nullable = false)
 	@Where(clause = "deleted <> '1'")
+	@JsonBackReference("notification-attachments")
 	private Notification notification;
 
 	public Attachment() {

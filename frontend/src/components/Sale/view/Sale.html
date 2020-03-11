@@ -24,12 +24,6 @@
                     <h5>{{ 'SALE_MANAGE_SALES' | translate }}</h5>
                 </div>
                 <div class="ibox-content">
-                    <span class="pull-right" style=" font-size: 1.5em;">{{ 'SALE_SHOW_ALL_SALES' | translate }} &nbsp;<input
-                            type="checkbox"
-                            ng-model="saleCtrl.loadAllData"
-                            ng-change="saleCtrl.changeDataInput()"
-                            class="js-switch"
-                            ui-switch="{color: '#ed5565', secondaryColor: '#F3F3F3'}"/></span>
                    	<span class="pull-right" style="margin-right:15px; margin-top:3px;"><input title="{{saleCtrl.loadAllData==true?saleCtrl.getShowMyTasksInfo('SALES') : ''}}"  ng-disabled="saleCtrl.loadAllData==true" style="transform:scale(1.5);margin-right: 6px;" type="checkbox" ng-click= "saleCtrl.filterMyTasks()" ng-model="saleCtrl.showMyTasks">&nbsp;<span ng-style="{color: {true:'darkgray'}[saleCtrl.loadAllData==true]}" style="font-size: 12pt;">{{ 'SHOW_MY_CLOSED_SALES' | translate }}</span></span>
                     <br/>
                     <br/>

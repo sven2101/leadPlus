@@ -69,11 +69,7 @@ class CustomerEditDirective implements IDirective {
         if (isNullOrUndefined(customer) || isNullOrUndefined(Number(customer.id))) {
             return new Customer();
         }
-        let temp: Customer = findElementById(scope.customerService.searchCustomers, Number(customer.id)) as Customer;
-        if (isNullOrUndefined(temp) || isNullOrUndefined(Number(temp.id))) {
-            return new Customer();
-        }
-        return deepCopy(temp);
+        return deepCopy(customer);
     }
 
     getAsHtml(html: string, scope: any) {

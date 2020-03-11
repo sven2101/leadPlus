@@ -14,10 +14,12 @@ class Process {
     processor: User;
     status: any;
     comments: Array<Commentary>;
-    notifications: Array<Notification>;
+    notifications: Array<EmailNotification>;
     followUpAmount: number;
     formerProcessors: Array<Processor>;
     source: Source;
+    lastEditor: any;
+    lastEdited: string;
 
     constructor() {
         this.comments = new Array<Commentary>();

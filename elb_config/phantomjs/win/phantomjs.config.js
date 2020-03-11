@@ -19,23 +19,34 @@ page.onResourceRequested = function(requestData, request) {
   console.log('::loading', requestData['url']);  // this does get logged now
 };
 
+var footerContent = null
+var footerHeight = null
+try{
+	footerContent=fs.read(system.args[3]);
+	footerHeight=system.args[4];	
+}catch(error){}
+finally{
+	if(footerHeight==null){
+		footerHeight="1cm";
+	}
+}
+
 page.paperSize = {
     format: 'A4',
     orientation: 'portrait',
-    margin: {
-        top: "1.5cm",
-        bottom: "1cm"
+	margin: {
+        top: "1cm",
+        bottom: "0cm",
+		left:"1.5cm",
+		right:"1.5cm"
     },
     footer: {
-        height: "1cm",
+        height: footerHeight,
         contents: phantom.callback(function (pageNum, numPages) {
-            return '' +
-                '<div style="margin: 0 1cm 0 1cm; font-size: 0.65em">' +
-                '   <div style="color: #888; padding:20px 20px 0 10px; border-top: 1px solid #ccc;">' +
-                '       <span></span> ' +
-                '       <span style="float:right">' + pageNum + ' / ' + numPages + '</span>' +
-                '   </div>' +
-                '</div>';
+			if(footerContent==null){
+				return null;
+			}
+            return  footerContent.replace("$pageNum",pageNum).replace("$numPages",numPages);
         })
     }
 };
@@ -51,7 +62,7 @@ var header ='<!DOCTYPE html>'+
 				'<meta name="viewport" content="width=device-width, initial-scale=1.0">'+
 				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/bootstrap.min.css" />'+
 				// '<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/assets.css" />'+
-				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/style.css" />'+
+				// '<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/assets/style.css" />'+
 				'<link rel="stylesheet" media="all" type="text/css" href="file:///D:/LeadPlus/bin/phantomjs-2.1.1-windows/libs/font-awesome.min.css" />'+
 				'<style type="text/css" media="all">'+
         				'html { margin:0; zoom: 1;  }'+

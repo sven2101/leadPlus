@@ -99,6 +99,8 @@ public class MessageService implements IMessageService {
 
 		final StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
 		freeMarkerStringTemplatesConfigurer.setTemplateLoader(stringTemplateLoader);
+		freeMarkerStringTemplatesConfigurer.setLocale(java.util.Locale.GERMANY);
+
 
 		stringTemplateLoader.putTemplate("template" + randomId, unescapeString(templateWithPlaceholders));
 		Template template = freeMarkerStringTemplatesConfigurer.getTemplate("template" + randomId);
@@ -106,7 +108,9 @@ public class MessageService implements IMessageService {
 		Map<String, Object> mapping = new HashMap<>();
 
 		for (OrderPosition orderPosition : workflowTemplateObject.getOrderPositions()) {
-			orderPosition.setProduct(productService.getById(orderPosition.getProduct().getId()));
+			if (orderPosition.getProduct() != null && orderPosition.getProduct().getId() != null) {
+				orderPosition.setProduct(productService.getById(orderPosition.getProduct().getId()));
+			}
 		}
 
 		mapping.put("workflow", workflowTemplateObject);

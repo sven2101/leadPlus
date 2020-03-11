@@ -17,9 +17,7 @@ import static dash.Constants.BECAUSE_OF_ILLEGAL_ID;
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.DELETE_FAILED_EXCEPTION;
 import static dash.Constants.OFFER_NOT_FOUND;
-import static dash.Constants.SAVE_FAILED_EXCEPTION;
 import static dash.Constants.TEMPLATE_NOT_FOUND;
-import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,10 +28,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import dash.consistencymanagement.business.ConsistencyService;
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
-import dash.exceptions.SaveFailedException;
-import dash.exceptions.UpdateFailedException;
 import dash.fileuploadmanagement.business.HtmlToPdfService;
 import dash.fileuploadmanagement.business.PdfGenerationFailedException;
 import dash.messagemanagement.business.IMessageService;
@@ -45,7 +43,7 @@ import dash.usermanagement.domain.User;
 import freemarker.template.TemplateException;
 
 @Service
-public class TemplateService implements ITemplateService {
+public class TemplateService extends ConsistencyService implements ITemplateService {
 
 	private static final Logger logger = Logger.getLogger(TemplateService.class);
 
@@ -64,19 +62,14 @@ public class TemplateService implements ITemplateService {
 	}
 
 	@Override
-	public Template save(final Template template) throws SaveFailedException {
-		if (template != null) {
-			try {
-				return templateRepository.save(template);
-			} catch (Exception ex) {
-				logger.error(TemplateService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			}
-		} else {
-			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(TEMPLATE_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
-			throw sfex;
+	public Template save(final Template template) throws ConsistencyFailedException {
+		if (template == null) {
+			logger.error(TEMPLATE_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
+			throw new IllegalArgumentException(
+					TEMPLATE_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
 		}
+		this.checkConsistencyAndSetTimestamp(template, templateRepository);
+		return templateRepository.save(template);
 	}
 
 	@Override
@@ -109,23 +102,6 @@ public class TemplateService implements ITemplateService {
 			NotFoundException nfex = new NotFoundException(TEMPLATE_NOT_FOUND);
 			logger.error(TEMPLATE_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
 			throw nfex;
-		}
-	}
-
-	@Override
-	public Template update(final Template template) throws UpdateFailedException {
-		if (template != null) {
-			try {
-				return save(template);
-			} catch (SaveFailedException ex) {
-				logger.error(ex.getMessage() + TemplateService.class.getSimpleName(), ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			}
-		} else {
-			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			logger.error(UPDATE_FAILED_EXCEPTION + TemplateService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL,
-					ufex);
-			throw ufex;
 		}
 	}
 
@@ -188,14 +164,48 @@ public class TemplateService implements ITemplateService {
 	}
 
 	@Override
+	public String getMessageContentStringByTemplate(final Template template,
+			final WorkflowTemplateObject workflowTemplateObject, final User user)
+			throws NotFoundException, IOException, TemplateException, TemplateCompilationException {
+
+		if (workflowTemplateObject != null) {
+			try {
+				return messageService.getMessageContentString(workflowTemplateObject, template.getContent(), user,
+						null);
+
+			} catch (NotFoundException ex) {
+				logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
+				throw ex;
+			} catch (TemplateException ex) {
+				throw new TemplateCompilationException(ex.getFTLInstructionStack());
+			} catch (IOException ex) {
+				throw new TemplateCompilationException(ex.getMessage());
+			}
+
+		} else {
+			NotFoundException nfex = new NotFoundException(OFFER_NOT_FOUND);
+			logger.error(OFFER_NOT_FOUND + TemplateService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, nfex);
+			throw nfex;
+		}
+
+	}
+
+	@Override
 	public byte[] getPdfBytemplateId(final long templateId, final WorkflowTemplateObject workflowTemplateObject,
 			final User user) throws NotFoundException, IOException, TemplateCompilationException,
 			PdfGenerationFailedException, TemplateException {
-
 		String message = getMessageContentStringByTemplateId(templateId, workflowTemplateObject, user);
 		return htmlToPdfService.genereatePdfFromHtml(message);
-
 	}
+	
+	@Override
+	public byte[] getPdfBytemplate(final Template template, final WorkflowTemplateObject workflowTemplateObject,
+			final User user) throws NotFoundException, IOException, TemplateCompilationException,
+			PdfGenerationFailedException, TemplateException {
+		String message = getMessageContentStringByTemplate(template, workflowTemplateObject, user);
+		return htmlToPdfService.genereatePdfFromHtml(message);
+	}
+
 
 	@Override
 	public byte[] exportProcessAsPDF(WorkflowTemplateObject workflowTemplateObject, final User user)

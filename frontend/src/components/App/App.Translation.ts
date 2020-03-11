@@ -16,7 +16,7 @@ function config($translateProvider) {
             OFFERS_MENU: "Angebote",
             SALES_MENU: "Verkäufe",
             STATISTIC_MENU: "Statistiken",
-            SETTINGS_MENU: "Einstellungen",
+            SETTINGS_MENU: "Systemeinstellungen",
             PROFILE_MENU: "Profil",
             PRODUCT_MENU: "Produkte",
             CUSTOMER_MENU: "Kontakte",
@@ -149,12 +149,15 @@ function config($translateProvider) {
             COMMON_NEXT: "Weiter",
             COMMON_BACK: "Zurück",
             COMMON_CLOSE: "Schließen",
+            COMMON_AND: "und",
             COMMON_CONTINUE_AND_SENDING: "Speichern und senden",
             COMMON_CONTINUE_WITHOUT_SENDING: "Speichern ohne senden",
             COMMON_DELETE: "Löschen",
             COMMON_DELETE_QUESTITION: " Wirklich löschen?",
             COMMON_DELETE_SUCCESS: "Löschen erfolgreich",
             COMMON_DELETE_ERROR: "Löschen fehlgeschlagen",
+            COMMON_RESET_ERROR: "Zurücksetzen fehlgeschlagen",
+            COMMON_ACTION_ERROR: "Aktion fehlgeschlagen",
             COMMON_DETAILS: "Details",
             COMMON_FOLLOWUP: "Follow Up Mail",
             COMMON_ACTIVATED: "Aktiviert",
@@ -306,6 +309,14 @@ function config($translateProvider) {
             DASHBOARD_GOTO_BUTTON: "Go to",
             DASHBOARD_COMPLETION: "Abschlüsse",
 
+            // Define Page elements
+            PAGE_FIRST: "Erste",
+            PAGE_LAST: "Letzte",
+            PAGE_NEXT: "Nächste",
+            PAGE_BACK: "Zurück",
+            PAGE_PAGE: "Seite",
+            PAGE_OF: "von",
+
             // Define notification elements
             NOTIICATION_SEND: "Nachricht erfolgreich versendet",
             NOTIICATION_SEND_ERROR: "Fehler beim Senden. Bitte überprüfen sie ihre SMTP Einstellungen",
@@ -338,10 +349,13 @@ function config($translateProvider) {
             PROFILE_PASSWORD_TAB: "Passwort und Profilbild",
             PROFILE_ACCOUNT_TAB: "Profilinformationen",
 
+            DATATABLE_REFRESH: "Die Tabelle wurde aktualisiert",
+
             // Define all process elements
             PROCESS_DELETE_PROCESS_TITLE: "Prozess löschen",
             PROCESS_DELETE_PROCESS_BODY: "Möchten Sie den Prozess wirklich löschen?",
             PROCESS_EXPORT: "PDF Export",
+            PROCESS_PROCESS: "Prozess",
 
             // Define all lead elements
             LEAD_LEADS: "Anfragen",
@@ -406,6 +420,7 @@ function config($translateProvider) {
             api: "Schnittstellen",
             SETTING_USER: "Benutzer",
             SETTING_USER_MANAGEMENT: "Benutzer Einstellungen",
+            SETTING_TEMPLATE: "Vorlage",
             SETTING_TEMPLATES: "Vorlagen",
             SETTING_EMAIL: "Email Vorlagen",
             SETTING_EMAIL_MANAGEMENT: "SMTP Einstellungen",
@@ -457,6 +472,7 @@ function config($translateProvider) {
             SETTING_TOAST_EMAIL_TEMPLATE_DELETE_ERROR: "Fehler beim Löschen der Email Vorlage",
             SETTING_SMTP_NOT_YET_VERIFIED: "SMTP-Server nicht erfolgreich verifiziert",
             SETTING_SMTP_ALREADY_VERIFIED: "SMTP-Server erfolgreich verifiziert",
+            SETTING_SINGLE_API: "Schnittstelle",
             SETTING_API: "Schnittstellen",
             SETTING_API_MANAGE_APIS: "Schnittstellen verwalten",
             SETTING_API_NEW_API: "Neue Schnittstelle",
@@ -639,8 +655,14 @@ function config($translateProvider) {
             CUSTOMER_TOAST_SAVE: "Der Kontakt wurde erfolgreich angelegt/aktualisiert",
             CUSTOMER_TOAST_ERROR: "Der Kontakt konnte nicht angelegt/aktualisiert werden",
 
+            INCONSISTENCY_BY_AT_ERROR: "Fehler beim Speichern. {{data}} wurde von {{editedBy}} am {{editedAt}} aktualisiert. Bitte neuladen!",
+            INCONSISTENCY_ERROR: "Fehler beim Speichern. Datensatz ist nicht aktuell. Bitte den Datensatz neuladen!",
+            INCONSISTENCY_DELETED: "Der angefragte Datensatz ist nicht verfügbar. Stellen Sie sicher, dass kein anderen Benutzer ihn gelöscht hat.",
+
             TODO_TODOS: "Aufgaben",
             SHOW_MY_TASKS: "Zeige meine Aufgaben",
+            ASC: "Aufsteigend",
+            DESC: "Absteigend",
             SHOW_MY_OPEN_LEADS: "Zeige meine offenen Anfragen",
             SHOW_MY_OPEN_LEADS_INFO: "Filter ist in \"Alle Anfragen\" nicht verfügbar",
             SHOW_MY_OPEN_OFFERS_INFO: "Filter ist in \"Alle Angebote\" nicht verfügbar",
@@ -648,6 +670,7 @@ function config($translateProvider) {
             SHOW_MY_OPEN_OFFERS: "Zeige meine offenen Angebote",
             SHOW_MY_CLOSED_SALES: "Zeige meine Verkäufe",
             TODO_NO_TODOS: "Keine Aufgaben vorhanden",
+            TODO_MANY_TODOS: "zugewießene Aufgaben",
 
             // Define calculation elements 
             CALCULATION_NET: "Netto",
@@ -684,6 +707,7 @@ function config($translateProvider) {
             SUMMERNOTE_DELIVERY_AT: "am",
             SUMMERNOTE_TEMPLATE_LANGUAGE: "Vorlagen Sprache",
             SUMMERNOTE_TEMPLATE_PREVIEW: "Vorlagen Vorschau",
+            SUMMERNOTE_PDF_PREVIEW: "PDF Vorschau",
             SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE: "Erstelle Vorlagen Vorschau...",
             SUMMERNOTE_BILLING_ADDRESS_BLOCK: "Rechnungsadresse Block",
             SUMMERNOTE_BILLING_ADDRESS_LINE: "Rechnungsadresse Zeile",
@@ -692,6 +716,11 @@ function config($translateProvider) {
             SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION: "${(orderPosition.product.productStateGermanTranslation)!}",
             SUMMERNOTE_TITLE_CODE_TRANSLATION: "${(customer.titleGermanTranslation)!}",
             SUMMERNOTE_LANGUAGE: "DE",
+            SUMMERNOTE_FOOTER: "Fußzeile",
+            SUMMERNOTE_SEPERATOR: "Seitenteiler",
+            SUMMERNOTE_TABLE_BLOCK: "Zuweisungsblock",
+            SUMMERNOTE_FLOAT_LEFT: "Text links",
+            SUMMERNOTE_FLOAT_RIGHT: "Text rechts",
 
             // ERROR PAGES
             ERROR_PAGE_404_HEADLINE: "Seite konnte nicht gefunden werden",
@@ -701,6 +730,7 @@ function config($translateProvider) {
             ERROR_PAGE_403_HEADLINE: "Zugriff verboten",
             ERROR_PAGE_403_TEXT: "Du bist nicht befugt diese Seite zu besuchen. Bei Fragen kontaktiere bitte den Administrator.",
             ERROR_PAGE_GO_BACK: "Gehe zurück",
+            SAVE_ERROR: "Fehler beim Speichern"
         })
         .translations(Language[Language.EN], {
             // GENERAL
@@ -846,12 +876,15 @@ function config($translateProvider) {
             COMMON_NEXT: "Next",
             COMMON_BACK: "Back",
             COMMON_CLOSE: "Close",
+            COMMON_AND: "and",
             COMMON_CONTINUE_AND_SENDING: "Save and send",
             COMMON_CONTINUE_WITHOUT_SENDING: "Save without send",
             COMMON_DELETE: "Delete",
             COMMON_DELETE_QUESTITION: "Are you sure you want to delete this item?",
             COMMON_DELETE_SUCCESS: "Successfully deleted",
             COMMON_DELETE_ERROR: "Delete failed",
+            COMMON_RESET_ERROR: "Rollback failed",
+            COMMON_ACTION_ERROR: "Action failed",
             COMMON_DETAILS: "Details",
             COMMON_FOLLOWUP: "Follow Up Mail",
             COMMON_ACTIVATED: "Activated",
@@ -1004,6 +1037,14 @@ function config($translateProvider) {
             DASHBOARD_GOTO_BUTTON: "Go to",
             DASHBOARD_COMPLETION: "Sales statements",
 
+            // Define Page elements
+            PAGE_FIRST: "First",
+            PAGE_LAST: "Last",
+            PAGE_NEXT: "Next",
+            PAGE_BACK: "Previous",
+            PAGE_PAGE: "Page",
+            PAGE_OF: "of",
+
             // Define notification elements
             NOTIICATION_SEND: "Notification successfully send",
             NOTIICATION_SEND_ERROR: "Error sending Notification. Please check your SMTP settings",
@@ -1035,10 +1076,13 @@ function config($translateProvider) {
             PROFILE_PASSWORD_TAB: "Password and Profile Picture",
             PROFILE_ACCOUNT_TAB: "Profile Information",
 
+            DATATABLE_REFRESH: "Datatable was refreshed",
+
             // Define all process elements
             PROCESS_DELETE_PROCESS_TITLE: "Delete process",
             PROCESS_DELETE_PROCESS_BODY: "Are you sure to delete this process?",
             PROCESS_EXPORT: "PDF Export",
+            PROCESS_PROCESS: "Process",
 
             // Define all lead elements
             LEAD_LEADS: "Leads",
@@ -1103,6 +1147,7 @@ function config($translateProvider) {
             api: "APIs",
             SETTING_USER: "Users",
             SETTING_USER_MANAGEMENT: "User Management",
+            SETTING_TEMPLATE: "Template",
             SETTING_TEMPLATES: "Templates",
             SETTING_EMAIL: "Email Templates",
             SETTING_EMAIL_MANAGEMENT: "SMTP Settings",
@@ -1154,6 +1199,7 @@ function config($translateProvider) {
             SETTING_SMTP_ALREADY_VERIFIED: "SMTP-Server is verified",
             // SETTING API
             SETTING_API: "APIs",
+            SETTING_SINGLE_API: "API",
             SETTING_API_MANAGE_APIS: "Manage APIs",
             SETTING_API_NEW_API: "New API",
             SETTING_API_TOAST_SAVE: "API was created successfully",
@@ -1335,9 +1381,14 @@ function config($translateProvider) {
             CUSTOMER_TOAST_SAVE: "Creating/Editing Contact was successful",
             CUSTOMER_TOAST_ERROR: "Creating/Editing Contact was unsuccessful",
 
+            INCONSISTENCY_BY_AT_ERROR: "Saving failed. {{data}} was edited by {{editedBy}} at {{editedAt}}. Please reload!",
+            INCONSISTENCY_ERROR: "Saving failed. Data is not up-to-date. Please reload!",
+            INCONSISTENCY_DELETED: "The requested data is not available. Make sure that it isn't deleted by another user.",
 
             TODO_TODOS: "Tasks",
             SHOW_MY_TASKS: "Show my tasks",
+            ASC: "Ascending",
+            DESC: "Descending",
             SHOW_MY_OPEN_LEADS: "Show my open leads",
             SHOW_MY_OPEN_OFFERS: "Show my open offers",
             SHOW_MY_CLOSED_SALES: "Show my sales",
@@ -1345,6 +1396,7 @@ function config($translateProvider) {
             SHOW_MY_OPEN_OFFERS_INFO: "Filter is not available in \"Total Offers\"",
             SHOW_MY_OPEN_SALES_INFO: "Filter is not available in \"Total Sales\"",
             TODO_NO_TODOS: "No tasks available",
+            TODO_MANY_TODOS: "assigned tasks",
 
             // Define calculation elements 
             CALCULATION_NET: "Net",
@@ -1381,6 +1433,7 @@ function config($translateProvider) {
             SUMMERNOTE_DELIVERY_AT: "at",
             SUMMERNOTE_TEMPLATE_LANGUAGE: "Template language",
             SUMMERNOTE_TEMPLATE_PREVIEW: "Template preview",
+            SUMMERNOTE_PDF_PREVIEW: "PDF preview",
             SUMMERNOTE_TEMPLATE_PREVIEW_GENERATE: "Generate template preview...",
             SUMMERNOTE_BILLING_ADDRESS_BLOCK: "Billing address block",
             SUMMERNOTE_BILLING_ADDRESS_LINE: "Billing address line",
@@ -1389,6 +1442,11 @@ function config($translateProvider) {
             SUMMERNOTE_PRODUCTSTATE_CODE_TRANSLATION: "${(orderPosition.product.productStateEnglishTranslation)!}",
             SUMMERNOTE_TITLE_CODE_TRANSLATION: "${(customer.titleEnglishTranslation)!}",
             SUMMERNOTE_LANGUAGE: "EN",
+            SUMMERNOTE_FOOTER: "Footer",
+            SUMMERNOTE_SEPERATOR: "Page divider",
+            SUMMERNOTE_TABLE_BLOCK: "Assignment block",
+            SUMMERNOTE_FLOAT_LEFT: "Text left",
+            SUMMERNOTE_FLOAT_RIGHT: "Text right",
 
             // ERROR PAGES
             ERROR_PAGE_404_HEADLINE: "Page not found",
@@ -1398,6 +1456,7 @@ function config($translateProvider) {
             ERROR_PAGE_403_HEADLINE: "Forbidden",
             ERROR_PAGE_403_TEXT: "You are not allowed to visit this site. Please contact your administrator.",
             ERROR_PAGE_GO_BACK: "Go back",
+            SAVE_ERROR: "Saving failed"
         });
     $translateProvider.useSanitizeValueStrategy(null);
     $translateProvider.preferredLanguage(Language[Language.EN]);

@@ -32,6 +32,7 @@ class ApiController {
     apiService: ApiService;
     rootScope;
     sourceAmountLimit: number = 20;
+    routeParams;
 
     api: Api;
     apiFound: boolean;
@@ -44,6 +45,7 @@ class ApiController {
         this.translate = $translate;
         this.location = $location;
         this.toaster = toaster;
+        this.routeParams = $routeParams;
         this.apiService.getAll();
         this.initApis($routeParams);
     }
@@ -52,8 +54,10 @@ class ApiController {
         let apiId = $routeParams.apiId;
         if (!isNullOrUndefined(apiId) && apiId !== 0 && !isNaN(apiId) && angular.isNumber(+apiId)) {
             this.api = await this.apiService.getApiById(Number(apiId));
-            this.api.authenticationValue = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-            this.apiHead = ApiVendor[this.api.apiVendor];
+            if (!isNullOrUndefined(this.api)) {
+                this.api.authenticationValue = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+                this.apiHead = ApiVendor[this.api.apiVendor];
+            }
             isNullOrUndefined(this.api) ? this.apiFound = false : this.apiFound = true;
         } else if (!isNullOrUndefined(apiId) && apiId === "new") {
             this.api = new Api();
@@ -70,9 +74,8 @@ class ApiController {
                 this.apiService.getAll();
             }
         }
+        this.apiService.inconsistency = null;
     }
-
-
 
     async save(): Promise<void> {
         if (this.api.authenticationValue.replace(/x/g, "") === "") {
@@ -82,15 +85,19 @@ class ApiController {
             this.api.decrypted = true;
             this.api.password = b64EncodeUnicode(this.api.authenticationValue);
         }
-        if (isNullOrUndefined(this.api.id)) {
-            this.api.apiVendor = ApiVendor.WECLAPP;
-            this.api.isVerified = true;
-            await this.apiService.save(this.api);
-        } else {
-            await this.apiService.update(this.api);
+        try {
+            if (isNullOrUndefined(this.api.id)) {
+                this.api.apiVendor = ApiVendor.WECLAPP;
+                this.api.isVerified = true;
+                await this.apiService.save(this.api);
+            } else {
+                await this.apiService.update(this.api);
+            }
+            this.goBack();
+        } catch (error) {
+            this.apiService.inconsistency = showConsistencyErrorMessage(error, this.translate, this.toaster, "SETTING_SINGLE_API");
+            throw error;
         }
-
-        this.goBack();
     }
 
     clearApi(): void {
@@ -109,11 +116,17 @@ class ApiController {
     }
 
     async saveApi(): Promise<void> {
-        if (!this.isCurrentApiNew) {
-            shallowCopy(this.currentApi, this.currentEditApi);
+        try {
+            if (!this.isCurrentApiNew) {
+                shallowCopy(this.currentApi, this.currentEditApi);
+            }
+            await this.apiService.save(this.currentApi);
+            this.goBack();
         }
-        await this.apiService.save(this.currentApi);
-        this.goBack();
+        catch (error) {
+            this.apiService.inconsistency = showConsistencyErrorMessage(error, this.translate, this.toaster, "SETTING_SINGLE_API");
+            throw error;
+        }
     }
 
     goBack() {

@@ -1,0 +1,13 @@
+.dropdown-table{
+    min-width:480px;
+    padding-bottom:20px;
+}
+.custom-badge{
+    margin-left: -10px;
+    margin-top: -5px;
+    vertical-align: top;
+}
+.custom-spinner{
+    margin-top: -25px;
+    margin-left: 10px;
+}

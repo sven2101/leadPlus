@@ -19,14 +19,18 @@ const WorkflowDatatableServiceId: string = "WorkflowDatatableService";
 
 class WorkflowDatatableService {
 
-    private $inject = [$rootScopeId, $compileId, TokenServiceId, $httpId];
+    private $inject = [$rootScopeId, $compileId, TokenServiceId, $httpId, ProcessResourceId];
 
     rootScope;
     compile;
+    showMyTasksUserId: { [key: string]: number } = {};
 
-    constructor($rootScope, $compile, private TokenService: TokenService, private $http) {
+    constructor($rootScope, $compile, private TokenService: TokenService, private $http, ProcessResource) {
         this.rootScope = $rootScope;
         this.compile = $compile;
+        this.showMyTasksUserId["LEAD"] = 0;
+        this.showMyTasksUserId["OFFER"] = 0;
+        this.showMyTasksUserId["SALE"] = 0;
     }
 
     getButtons(title: string, columns: Array<number>): Array<any> {
@@ -98,20 +102,14 @@ class WorkflowDatatableService {
     }
 
     async changeDataInput(loadAllData: boolean, dtOptions: any, allDataRoute: string, latestDataRoute: string) {
-        let searchDelay: number = 0;
         let self = this;
-        if (loadAllData === true) {
-            searchDelay = 600;
-        }
-        dtOptions.withOption("serverSide", loadAllData)
-            .withOption("ajax", await self.getData(loadAllData, allDataRoute, latestDataRoute))
-            .withOption("searchDelay", searchDelay);
+        let ajaxCall = await self.getData(loadAllData, allDataRoute, latestDataRoute);
+        dtOptions.withOption("ajax", ajaxCall);
     }
 
     async getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): Promise<any> {
         let self = this;
         if (loadAllData === true) {
-            let token = await self.TokenService.getAccessTokenPromise();
             return {
                 url: allDataRoute,
                 type: "GET",
@@ -121,23 +119,41 @@ class WorkflowDatatableService {
                     handleError(xhr);
                 },
                 beforeSend: function (request) {
-                    request.setRequestHeader("X-Authorization", "Bearer " + token);
+                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
                 }
             };
-
-
-
         } else {
-            return (data, callback, settings) => {
-                self.$http.get(latestDataRoute).then(function (response) {
-                    callback(response.data);
-                });
+            return {
+                url: latestDataRoute,
+                type: "GET",
+                pages: 2,
+                dataSrc: "data",
+                data: function (d) {
+                    d.userId = self.showMyTasksUserId[self.getStatusByWorkflowType(latestDataRoute)];
+                },
+                error: function (xhr, error, thrown) {
+                    handleError(xhr);
+                },
+                beforeSend: function (request) {
+                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
+                }
             };
-
         }
     }
 
-    appendChildRow(childScope: any, process: Process, workflowUnit: IWorkflow, dtInstance: any, parent: WorkflowController, type: string) {
+    getStatusByWorkflowType(latestDataRoute): WorkflowType {
+        switch (latestDataRoute) {
+            case openDataLeadRoute:
+                return WorkflowType.LEAD;
+            case openDataOfferRoute:
+                return WorkflowType.OFFER;
+            case openDataSaleRoute:
+                return WorkflowType.SALE;
+        };
+    }
+
+
+    appendChildRow(childScope: any, process: Process, workflowUnit: IWorkflow, dtInstance: any, parent: WorkflowController, type: string, withEasingIn: boolean = false) {
         childScope.workflowUnit = workflowUnit;
         childScope.process = process;
         childScope.parent = parent;
@@ -149,6 +165,7 @@ class WorkflowDatatableService {
         if (row.child.isShown()) {
             let newChildRow = $("#childRow" + process.id);
             newChildRow.removeClass("openMenu");
+            newChildRow.removeClass("openMenu2");
             newChildRow.parent().parent().children("td").css("height", "0px");
             setTimeout(function () {
                 row.child.hide();
@@ -165,9 +182,13 @@ class WorkflowDatatableService {
             let newChildRow = $("#childRow" + process.id);
             newChildRow.parent().parent().children("td").css("height", "0px");
             newChildRow.parent().parent().addClass("childstyle");
-            setTimeout(function () {
-                newChildRow.addClass("openMenu");
-            }, 100);
+            if (withEasingIn === true) {
+                newChildRow.addClass("openMenu2");
+            } else {
+                setTimeout(function () {
+                    newChildRow.addClass("openMenu");
+                }, 100);
+            }
         }
     }
 }

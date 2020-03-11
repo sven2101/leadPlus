@@ -53,7 +53,7 @@
 				<a><i class="{{::config[ 'DETAILS_TOGGLE_CLOSE_OR_OPEN'].icon}} "></i>&nbsp;{{config['DETAILS_TOGGLE_CLOSE_OR_OPEN'].title| translate }}</a></li>
 			<li ng-if="::config[ 'DETAILS_TOGGLE_CLOSE_OR_OPEN'].visible " role="separator " class="divider "></li>
 			<li ng-class="{ 'disabled': config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled } " ng-if="::config[ 'DETAILS_OPEN_EDIT_MODAL'].visible "
-			 ng-click="openEditModal(process) " data-toggle="{{::!config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled ? 'modal' : ''}} " data-backdrop="static">
+			 ng-click="::config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled || openEditModal(process) " data-toggle="{{::!config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled ? 'modal' : ''}} " data-backdrop="static">
 				<a><i class="fa fa-edit "></i>&nbsp;{{config['DETAILS_OPEN_EDIT_MODAL'].title| translate }}</a></li>
 			<li role="separator " class="divider "></li>
 			<li ng-click="exportProcessAsPDF()">
@@ -68,7 +68,7 @@
 			</li>
 			<li ng-if="::config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].visible " role="separator " class="divider "></li>
 			<li ng-if="::config[ 'DETAILS_OPEN_DELETE_MODAL'].visible " ng-class="{ 'disabled': config[
-		'DETAILS_OPEN_DELETE_MODAL'].disabled } " ng-click="workflowService.openConfirmationModal(process,ConfirmationFunctionType.DELETE)"
+		'DETAILS_OPEN_DELETE_MODAL'].disabled } " ng-click="::config[ 'DETAILS_OPEN_DELETE_MODAL'].disabled || workflowService.openConfirmationModal(process,ConfirmationFunctionType.DELETE)"
 			 data-toggle="{{::!config[ 'DETAILS_OPEN_DELETE_MODAL'].disabled ? 'modal'
 		: ''}} " data-backdrop="static" data-target="#deleteConfirmationModal ">
 				<a><i class="fa fa-trash-o "></i>&nbsp;{{config['DETAILS_OPEN_DELETE_MODAL'].title| translate }}</a>

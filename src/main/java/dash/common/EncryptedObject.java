@@ -3,9 +3,6 @@ package dash.common;
 import java.util.Arrays;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
@@ -13,13 +10,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
-@MappedSuperclass
-public abstract class EncryptedObject {
+import dash.consistencymanagement.domain.ConsistencyObject;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idgen")
-	@Column(name = "id", nullable = false)
-	private Long id;
+@MappedSuperclass
+public abstract class EncryptedObject extends ConsistencyObject {
 
 	@JsonIgnore
 	@Column(name = "salt", nullable = false)
@@ -69,20 +63,11 @@ public abstract class EncryptedObject {
 		this.decrypted = decrypted;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + (decrypted ? 1231 : 1237);
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + Arrays.hashCode(iv);
 		result = prime * result + Arrays.hashCode(password);
 		result = prime * result + Arrays.hashCode(salt);
@@ -93,17 +78,12 @@ public abstract class EncryptedObject {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		EncryptedObject other = (EncryptedObject) obj;
 		if (decrypted != other.decrypted)
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
 			return false;
 		if (!Arrays.equals(iv, other.iv))
 			return false;

@@ -12,7 +12,7 @@ const broadcastUserNotificationChanged: string = "userNotificationChanged";
 
 class AppController {
 
-    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId, $windowId, $timeoutId, SmtpServiceId];
+    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId, $windowId, $timeoutId];
 
     translate;
     rootScope;
@@ -23,8 +23,8 @@ class AppController {
     window;
     stop;
     timeout;
-    todos: Array<Process> = [];
-    userNotifications: Array<Notification> = [];
+    todos: any;
+    userNotifications: Array<EmailNotification> = [];
     notificationSendState: NotificationSendState = NotificationSendState.DEFAULT;
 
     profileService: ProfileService;
@@ -58,7 +58,7 @@ class AppController {
             this.todos = result;
         });
 
-        let broadcastAddNotificationListener = $scope.$on(broadcastAddNotification, (event, notification: Notification) => {
+        let broadcastAddNotificationListener = $scope.$on(broadcastAddNotification, (event, notification: EmailNotification) => {
             this.userNotifications.push(notification);
         });
 
@@ -146,12 +146,16 @@ class AppController {
         let self = this;
         self.rootScope.setUserDefaultLanguage = function () {
             if (self.rootScope.user != null) {
-                self.userResource
-                    .get({
-                        id: self.rootScope.user.id
-                    }).$promise.then(function (result) {
-                        self.rootScope.changeLanguage(result.language);
-                    });
+                if (!isNullOrUndefined(self.rootScope.user.language)) {
+                    self.rootScope.changeLanguage(self.rootScope.user.language);
+                } else {
+                    self.userResource
+                        .get({
+                            id: self.rootScope.user.id
+                        }).$promise.then(function (result) {
+                            self.rootScope.changeLanguage(result.language);
+                        });
+                }
             }
             else {
                 let lang: string = self.window.navigator.language || self.window.navigator.userLanguage;
@@ -215,7 +219,7 @@ class AppController {
         return sum;
     }
 
-    openEmailDirective(notification: Notification, processId: number): void {
+    openEmailDirective(notification: EmailNotification, processId: number): void {
         this.rootScope.$emit(openQuickEmailModal, { notification: deepCopy(notification), processId: processId });
     }
 }

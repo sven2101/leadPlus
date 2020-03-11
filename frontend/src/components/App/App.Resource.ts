@@ -94,6 +94,10 @@ class ProcessResource {
             setStatus: { url: "/api/rest/processes/:id/status/:status", method: "PUT" },
             getByStatus: { url: "/api/rest/processes/status/:status", method: "GET" },
 
+            getProcessPage: { url: "/api/rest/processes/pagination/:status", method: "POST" },
+            getExtendedProcessPage: { url: "/api/rest/processes/pagination/extended/:status", method: "POST" },
+            getSumByStatus: { url: "/api/rest/processes/sum/:status", method: "POST" },
+
             getProcessByLead: { url: "/api/rest/processes/leads", method: "GET", isArray: true },
             getProcessByOffer: { url: "/api/rest/processes/offers", method: "GET", isArray: true },
             getProcessBySale: { url: "/api/rest/processes/sales", method: "GET", isArray: true },
@@ -101,8 +105,9 @@ class ProcessResource {
             getWorkflowByStatus: { url: "/api/rest/processes/workflow/:workflow/state/:status", method: "GET", isArray: true },
             getCountWorkflowByStatus: { url: "/api/rest/processes/count/workflow/:workflow/state/:status", method: "GET" },
             getLatestSales: { url: "/api/rest/processes/sales/latest/10", method: "GET", isArray: true },
+            getLatest50Sales: { url: "/api/rest/processes/sales/latest/50", method: "GET", isArray: true },
             getLatest100Sales: { url: "/api/rest/processes/sales/latest/100", method: "GET", isArray: true },
-            getTodos: { url: "/api/rest/processes/processor/:processorId", method: "GET", isArray: true },
+            getTodos: { url: "/api/rest/processes/processor/:processorId", method: "POST"},
         });
     }
 }
@@ -282,7 +287,6 @@ class CustomerResource {
             getAllCustomerByPage: { url: "/api/rest/customer/all/:start/:length/:searchtext/:allCustomers", method: "GET", isArray: false },
             getAllCustomerBySearchText: { url: "/api/rest/customer/search/:searchtext", method: "GET", isArray: true },
             createCustomer: { url: "/api/rest/customer", method: "POST" },
-            updateCustomer: { url: "/api/rest/customer", method: "PUT" },
             deleteCustomer: { url: "/api/rest/customer/:id", method: "DELETE" }
         });
     }
@@ -357,9 +361,12 @@ class TemplateResource {
             generatePdfFromTemplate: {
                 url: "/api/rest/templates/:templateId/offers/pdf/generate", method: "POST"
             },
+            generatePdfFromTemplateObject: {
+                url: "/api/rest/templates/test/pdf/generate", method: "POST"
+            },
             test: { url: "/api/rest/templates/test", method: "POST" },
             generatePDF: {
-                url: "/api/rest/files/pdf", method: "POST"
+                url: "/api/rest/files/generate/pdf", method: "POST"
             },
             exportProcessAsPDF: {
                 url: "/api/rest/templates/process/pdf", method: "POST"

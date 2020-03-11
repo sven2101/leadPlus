@@ -42,7 +42,7 @@ class WorkflowModalService {
                 wizardSteps += `<sale-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardEditConfig,"${WizardType.SALE}")' edit-workflow-unit='wizardCtrl.editProcess["${controllerType.toString().toLowerCase()}"]' edit-process='wizardCtrl.editProcess' editable='true'/>`;
                 break;
         };
-        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess["${controllerType.toString().toLowerCase()}"]' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardEditConfig' current-notification='wizardCtrl.notification' transform='false'>
+        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess["${controllerType.toString().toLowerCase()}"]' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardEditConfig' current-notification='wizardCtrl.notification' transform='false' inconsistency='wizardCtrl.processAlreadyTransformed'>
             ` + wizardSteps + `</wizard>`;
     }
 
@@ -77,7 +77,7 @@ class WorkflowModalService {
                 transformation: function (): boolean {
                     return false;
                 },
-                notification: function (): Notification {
+                notification: function (): EmailNotification {
                     return null;
                 }
             }
@@ -109,7 +109,7 @@ class WorkflowModalService {
                 transformation: function (): boolean {
                     return false;
                 },
-                notification: function (): Notification {
+                notification: function (): EmailNotification {
                     return null;
                 }
             }
@@ -125,7 +125,7 @@ class WorkflowModalService {
     getQuickEmailWizardTemplate(workflowType: WorkflowType): string {
         let wizardSteps = `
       <email-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardQuickEmailConfig,"${WizardType.EMAIL}")' process='wizardCtrl.editProcess' disabled='false' notification='wizardCtrl.notification'/>`;
-        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess["${workflowType.toString().toLowerCase()}"]' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardQuickEmailConfig' current-notification='wizardCtrl.notification' transform='false'>
+        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess["${workflowType.toString().toLowerCase()}"]' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardQuickEmailConfig' current-notification='wizardCtrl.notification' transform='false' inconsistency='wizardCtrl.processAlreadyTransformed'>
             ` + wizardSteps + `</wizard>`;
     }
 
@@ -152,7 +152,7 @@ class WorkflowModalService {
                 transformation: function (): boolean {
                     return false;
                 },
-                notification: function (): Notification {
+                notification: function (): EmailNotification {
                     return notification;
                 }
             }
@@ -170,7 +170,7 @@ class WorkflowModalService {
         wizardSteps += `<email-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardOfferTransitionConfig,"${WizardType.EMAIL}")' process='wizardCtrl.editProcess' disabled='false' notification='wizardCtrl.notification'/>`;
         wizardSteps += `<sale-edit />`;
 
-        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess.offer' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardOfferTransitionConfig' current-notification='wizardCtrl.notification' transform='true'>
+        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess.offer' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardOfferTransitionConfig' current-notification='wizardCtrl.notification' transform='true' inconsistency='wizardCtrl.processAlreadyTransformed'>
             ` + wizardSteps + `</wizard>`;
     }
 
@@ -195,7 +195,7 @@ class WorkflowModalService {
                 transformation: function (): boolean {
                     return true;
                 },
-                notification: function (): Notification {
+                notification: function (): EmailNotification {
                     return null;
                 }
             }
@@ -213,7 +213,7 @@ class WorkflowModalService {
         wizardSteps += `<email-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardSaleTransitionConfig,"${WizardType.EMAIL}")' process='wizardCtrl.editProcess' disabled='false' notification='wizardCtrl.notification'/>`;
         wizardSteps += `<sale-edit form='wizardCtrl.getWizardConfigByDirectiveType(wizardCtrl.wizardSaleTransitionConfig,"${WizardType.SALE}")' edit-workflow-unit='wizardCtrl.editProcess.sale' edit-process='wizardCtrl.editProcess' editable='true'/>`;
 
-        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess.sale' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardSaleTransitionConfig' current-notification='wizardCtrl.notification' transform='true'>
+        return `<wizard edit-process='wizardCtrl.editProcess' edit-workflow-unit='wizardCtrl.editProcess.sale' modal-instance='wizardCtrl.uibModalInstance' wizard-config='wizardCtrl.wizardSaleTransitionConfig' current-notification='wizardCtrl.notification' transform='true' inconsistency='wizardCtrl.processAlreadyTransformed'>
             ` + wizardSteps + `</wizard>`;
     }
 
@@ -235,7 +235,7 @@ class WorkflowModalService {
                 transformation: function (): boolean {
                     return true;
                 },
-                notification: function (): Notification {
+                notification: function (): EmailNotification {
                     return null;
                 }
             }

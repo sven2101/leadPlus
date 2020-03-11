@@ -1,0 +1,57 @@
+<nav class="navbar-default navbar-static-side" role="navigation" style="position: fixed; height: 100%; background-color: #2f4050;">
+	<div class="sidebar-collapse" >
+		<ul class="nav metismenu flex-column" id="side-menu">
+			<li class="nav-header">
+				<div class="profile-element">
+					<div style="margin-top:-20px" class="row">
+						<div id="profilePictureDiv" class="col-md-6">
+							<img id="profilePicture" style="width: 100px; height:100px;border-radius: 10%;" [pictureId]="user.picture?.id" alt="">
+						</div>
+					</div>
+					<br>
+					<div>
+						<a class="profileLink" href="#/profile">
+							<i class="fa fa-user" aria-hidden="true"></i>
+							<strong class="font-bold" *ngIf="(user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname=='')">
+										{{user.username}}
+							</strong>
+							<strong class="font-bold" *ngIf="!((user.firstname==null||user.firstname=='')&&(user.lastname==null||user.lastname==''))">
+										{{user.firstname}} {{user.lastname}}
+							</strong>
+						</a>
+					</div>
+				</div>
+			</li>
+			<li class="nav-item">
+				<a [routerLink]="['/dashboard']" class="nav-link active" ><i class="fa fa-th-large"></i> <span class="nav-label"  i18n>Dashboard</span></a>
+			</li>
+			<li class="nav-item">
+				<a [routerLink]="['/lead']" class="nav-link active"><i class="fa fa-inbox"></i> <span
+                        class="nav-label" i18n>Leads</span><span ng-if="leadsCount>0"
+                                                                                     class="label label-danger pull-right">{{leadsCount}}</span></a>
+			</li>
+			<li class="nav-item">
+				<a [routerLink]="['/offers']" class="nav-link active"><i class="fa fa-level-up"></i> <span
+                        class="nav-label" i18n>Offers</span><span ng-if="offersCount>0" class="label label-warning pull-right">{{offersCount}}</span></a>
+			</li>
+			<li class="nav-item">
+				<a [routerLink]="['/sales']" class="nav-link active"><i class="fa fa-usd"></i> <span
+                        class="nav-label" i18n>Sales</span></a>
+
+			</li>
+			<li class="nav-item">
+				<a [routerLink]="['/statistic']" class="nav-link active"><i class="fa fa-line-chart"></i> <span class="nav-label" i18n>Statistics</span></a>
+			</li>
+			<li class="nav-item">
+				<a [routerLink]="['/product']" class="nav-link active"><i class="fa fa-table"></i> <span class="nav-label" i18n>Products</span></a>
+			</li>
+			<li class="nav-item">
+				<a [routerLink]="['/customer']" class="nav-link active"><i class="fa fa-users"></i> <span class="nav-label" i18n>Contacts</span></a>
+			</li>
+			<li *ngIf="user.role===Role.SUPERADMIN||user.role===Role.ADMIN" class="nav-item">
+				<a [routerLink]="['/settings']" class="nav-link active"><i class="fa fa-cogs"></i> <span class="nav-label" i18n>Settings</span></a>
+			</li>
+		</ul>
+	</div>
+
+</nav>

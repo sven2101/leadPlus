@@ -51,30 +51,37 @@ public class HtmlToPdfService {
 		PrintWriter writer = null;
 		File tempHtml = null;
 		File tempPdf = null;
+		File footerFile = null;
 		String errorConsoleOutput = "";
 		Process phantom = null;
 		List<File> files = null;
+		StringBuilder footerHeight = new StringBuilder();
 		try {
 
 			files = new ArrayList<>();
 			new File(TMP_DIR).mkdirs();
-			String htmlString = extractBase64Images(htmlStringWithImageInline, files);
+
+			String tmpFooterId = UUID.randomUUID().toString();
+			String tmpFooterPath = TMP_DIR + "/" + tmpFooterId + "tmpFooter.html";
+
+			String htmlString = extractFromText(htmlStringWithImageInline, files, tmpFooterPath, footerHeight);
+
 			String tmpHtmlId = UUID.randomUUID().toString();
+			String tmpHtmlPath = TMP_DIR + "/" + tmpHtmlId + "tmpHtml.html";
 
-			String tmpHtmlPath = TMP_DIR + "/" + tmpHtmlId + "tempHtml.html";
-
-			out = new BufferedWriter(
-					new OutputStreamWriter(new FileOutputStream(TMP_DIR + "/" + tmpHtmlId + "tempHtml.html"), "UTF-8"));
-
+			out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tmpHtmlPath), "UTF-8"));
 			out.write(HtmlCleaner.cleanHtmlForPdf(htmlString));
 			out.close();
+
 			File configFile = null;
 			if (OSValidator.isWindows()) {
 				configFile = Paths.get(new URI("file:/" + PHANTOMJS_CONFIG_FILE)).toFile();
 				tempHtml = Paths.get(new URI("file:/" + tmpHtmlPath)).toFile();
+				footerFile = Paths.get(new URI("file:/" + tmpFooterPath)).toFile();
 			} else {
 				configFile = Paths.get(new URI("file://" + PHANTOMJS_CONFIG_FILE)).toFile();
 				tempHtml = Paths.get(new URI("file://" + tmpHtmlPath)).toFile();
+				footerFile = Paths.get(new URI("file://" + tmpFooterPath)).toFile();
 			}
 
 			tempPdf = File.createTempFile("tempPdf", ".pdf", new File(TMP_DIR));
@@ -85,11 +92,11 @@ public class HtmlToPdfService {
 				arguments.add("10");
 			}
 			arguments.add(PHANTOMJS_EXE);
-			arguments.add("--output-encoding=utf8");
-			arguments.add("--script-encoding=utf8");
 			arguments.add(configFile.getPath());
 			arguments.add(tmpHtmlPath);
 			arguments.add(tempPdf.getPath());
+			arguments.add(footerFile.getPath());
+			arguments.add(footerHeight.toString());
 			ProcessBuilder renderProcess = new ProcessBuilder(arguments);
 			phantom = renderProcess.start();
 
@@ -149,6 +156,9 @@ public class HtmlToPdfService {
 			if (tempHtml != null) {
 				tempHtml.delete();
 			}
+			if (footerFile != null) {
+				footerFile.delete();
+			}
 			if (tempPdf != null) {
 				tempPdf.delete();
 			}
@@ -171,46 +181,88 @@ public class HtmlToPdfService {
 		}
 	}
 
-	private String extractBase64Images(String oldHtml, List<File> files) throws IOException {
+	private String extractFromText(String oldHtml, List<File> files, String footer, StringBuilder footerHeight)
+			throws IOException {
 		StringBuilder newContentBuilder = new StringBuilder();
-		boolean inImage = false;
-		StringBuilder currentBase64ImageStringBuilder = new StringBuilder();
-		StringBuilder currentBase64HeaderStringBuilder = new StringBuilder();
+
 		for (int i = 0; i < oldHtml.length(); i++) {
-			char c = oldHtml.charAt(i);
-			if (inImage) {
-				if (c != '"') {
-					currentBase64ImageStringBuilder.append(c);
-				} else {
-					File tempImage = File.createTempFile("tempImage", ".png", new File(TMP_DIR));
-					org.apache.commons.codec.binary.Base64
-							.decodeBase64(currentBase64ImageStringBuilder.toString().getBytes());
-					byte[] imageAsByteArray = org.apache.commons.codec.binary.Base64
-							.decodeBase64(currentBase64ImageStringBuilder.toString().getBytes());
-					FileUtils.writeByteArrayToFile(tempImage, imageAsByteArray);
-					files.add(tempImage);
-					currentBase64HeaderStringBuilder = new StringBuilder();
-					currentBase64ImageStringBuilder = new StringBuilder();
-					newContentBuilder
-							.append("src=\"file:///" + tempImage.getAbsolutePath().replaceAll("\\\\", "/") + "\"");
-					inImage = false;
-				}
+			// extract src Tags
+			if (hasKeyword(oldHtml, "src", i)) {
+				File tmpImage = File.createTempFile("tmpImage", ".png", new File(TMP_DIR));
+				i = extractImage(oldHtml, tmpImage, i);
+				newContentBuilder.append("src=\"file:///" + tmpImage.getAbsolutePath().replaceAll("\\\\", "/") + "\"");
+				files.add(tmpImage);
 				continue;
 			}
-			if (i + 2 < oldHtml.length() && c == 's' && oldHtml.charAt(i + 1) == 'r' && oldHtml.charAt(i + 2) == 'c') {
-				for (; i < oldHtml.length() && oldHtml.charAt(i) != ','; i++) {
-					c = oldHtml.charAt(i);
-					currentBase64HeaderStringBuilder.append(c);
-				}
-				inImage = true;
+			// extract footer
+			if (hasKeyword(oldHtml, "<footer", i)) {
+				i = extractFooter(oldHtml, footer, i, footerHeight);
 				continue;
 			}
-			if (!inImage) {
-				newContentBuilder.append(c);
+			newContentBuilder.append(oldHtml.charAt(i));
+
+		}
+		return newContentBuilder.toString();
+	}
+
+	private boolean hasKeyword(String text, String keyword, int start) {
+		if (text.length() < start + keyword.length()) {
+			return false;
+		}
+		for (int i = 0; i < keyword.length(); i++) {
+			if (text.charAt(start + i) != keyword.charAt(i)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private int extractImage(String text, File image, int i) throws IOException {
+
+		for (; i < text.length() && text.charAt(i) != ','; i++) {
+		}
+		StringBuilder currentBase64ImageStringBuilder = new StringBuilder();
+		for (; i < text.length() && text.charAt(i) != '"'; i++) {
+			currentBase64ImageStringBuilder.append(text.charAt(i));
+		}
+		byte[] imageAsByteArray = org.apache.commons.codec.binary.Base64
+				.decodeBase64(currentBase64ImageStringBuilder.toString().getBytes());
+		FileUtils.writeByteArrayToFile(image, imageAsByteArray);
+		return i++;
+	}
+
+	private int extractFooter(String text, String footerPath, int i, StringBuilder footerHeight) throws IOException {
+		StringBuilder footer = new StringBuilder();
+		boolean isInFooterHeight = false;
+		for (; i < text.length(); i++) {
+			if (hasKeyword(text, ">", i)) {
+				i += 1;
+				break;
+			}
+			if (hasKeyword(text, "height=\"", i)) {
+				i += 8;
+				isInFooterHeight = true;
+			}
+			if (hasKeyword(text, "\"", i)) {
+				i += 1;
+				isInFooterHeight = false;
+			}
+			if (isInFooterHeight) {
+				footerHeight.append(text.charAt(i));
 			}
 		}
 
-		return newContentBuilder.toString();
+		for (; i < text.length(); i++) {
+			if (hasKeyword(text, "</footer>", i)) {
+				BufferedWriter out = new BufferedWriter(
+						new OutputStreamWriter(new FileOutputStream(footerPath), "UTF-8"));
+				out.write(HtmlCleaner.cleanHtmlForPdf(footer.toString()));
+				out.close();
+				return i + 8;
+			}
+			footer.append(text.charAt(i));
+		}
+		return i;
 	}
 
 }

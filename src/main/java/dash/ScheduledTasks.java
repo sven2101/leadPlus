@@ -16,7 +16,7 @@ import dash.tenantmanagement.domain.Tenant;
 @Component
 public class ScheduledTasks {
 
-	private static final int THREAD_MIN = 5;
+	private static final int THREAD_MIN = 2;
 
 	private static final Logger logger = Logger.getLogger(ScheduledTasks.class);
 
@@ -26,13 +26,13 @@ public class ScheduledTasks {
 	@Autowired
 	private ITenantService tenantService;
 
-	@Scheduled(cron = "0 0/10 5-23 * * MON-FRI")
+	@Scheduled(cron = "0 0 5-20/3 * * MON-FRI")
 	private void generateStatisticsSchedulerMoToFr() {
 		logger.info("Do cronejob for MON-FRI");
 		generateStatistics();
 	}
 
-	@Scheduled(cron = "0 0 6-22/2 * * SAT,SUN")
+	@Scheduled(cron = "0 0 6-20/12 * * SAT,SUN")
 	// @Scheduled(cron = "0 0/1 5-23 * * SAT,SUN")
 	private void generateStatisticsSchedulerSatToSun() {
 		logger.info("Do cronejob for SAT,SUN");

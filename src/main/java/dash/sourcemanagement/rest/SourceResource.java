@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -65,7 +66,8 @@ public class SourceResource {
 	@ApiOperation(value = "Add a single source.", notes = "You have to provide a valid source Object")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Source save(@ApiParam(required = true) @RequestBody @Valid final Source source) throws SaveFailedException {
+	public Source save(@ApiParam(required = true) @RequestBody @Valid final Source source)
+			throws SaveFailedException, ConsistencyFailedException {
 		return sourceService.save(source);
 	}
 
@@ -73,8 +75,8 @@ public class SourceResource {
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public Source update(@ApiParam(required = true) @RequestBody @Valid final Source source)
-			throws UpdateFailedException {
-		return sourceService.update(source);
+			throws UpdateFailedException, ConsistencyFailedException {
+		return sourceService.save(source);
 	}
 
 	@ApiOperation(value = "Delete a single source.", notes = "")
@@ -88,7 +90,7 @@ public class SourceResource {
 	@RequestMapping(value = "/apitoken/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public ApiJwtToken generateApiTokenBySourceId(@ApiParam(required = true) @PathVariable final Long id)
-			throws NotFoundException {
+			throws NotFoundException, ConsistencyFailedException {
 		return sourceService.generateApiTokenBySourceId(id);
 	}
 }

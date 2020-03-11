@@ -1,0 +1,91 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-lg-12">
+    <div class="row">
+      <div class="col-lg-10">
+        <h2 i18n>Products</h2>
+        <ol class="breadcrumb">
+          <li>
+            <a href="/dashboard">Home</a>
+          </li>
+          <li class="active">
+            <strong i18n>Products</strong>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<input type="number"  [(ngModel)]="text">
+<button (click)="publish()">publish</button>
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>
+            <ng-container i18n> Manage Products -</ng-container>
+            <strong>{{getProducts().length}}</strong>
+            <ng-container i18n>Products</ng-container>
+          </h5>
+        </div>
+        <div class="ibox-content" style="overflow-x: auto">
+          <form role="form" class="form-inline">
+            <button type="button" class="btn btn-success btn-primary" (click)="showProduct(0)">
+							<i class="fa fa-plus"></i>&nbsp;<ng-container i18n>New product</ng-container>
+            </button>
+            <span class="pull-right ">
+                <input  type="text" name="searchText" placeholder="Search..." i18n-placeholder class="input-sm form-control"  [(ngModel)]="searchText">
+            </span>
+          </form>
+
+          <div class="project-list">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th class="text-center" i18n>Name</th>
+                  <th class="text-center" i18n>Price</th>
+                  <th class="text-center" i18n>State</th>
+                  <th class="text-center" i18n>Product number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let product of getProducts()| filter:searchText |orderBy:'name' | limitTo:productAmountLimit"
+                  (click)="showProduct(product.id)" style="cursor: pointer">
+                  <td class="project-status col-md-1 text-center">
+                    <div *ngIf="product.picture!=null" [style]="product.deactivated === true?{ 'margin-top': '-28px'}:{}">
+                      <div *ngIf="product.deactivated === true" class="frontlayer" i18n>Deactivated</div>
+                      <img ng-class="{'grayfilter':product.deactivated}" style="width: 60px; height:60px;border-radius: 10%" [src]="getProductPictureId(product)"
+                        alt=""> <br>
+                    </div>
+                    <span *ngIf="product.picture==null&&product.deactivated===false" class="label label-primary" i18n>Activated</span>
+                    <span *ngIf="product.picture==null&&product.deactivated===true" class="label label-default" i18n>Deactivated</span>
+                  </td>
+                  <td class="project-title col-md-4 text-center">
+                    {{product.name}}
+                    <br>
+                    <small><ng-container i18n>Created</ng-container>{{product.timestamp|toLocalTimestamp}}</small>
+                  </td>
+                  <td class="project-completion col-md-2 text-center" style="word-wrap: break-word;">
+                    {{product.netPrice | currency:'EUR'}}
+                  </td>
+                  <td class="project-completion col-md-2 text-center" style="word-wrap: break-word;">
+                    {{ product.productState }}
+                  </td>
+                  <td class="project-completion col-md-2 text-center" style="word-wrap: break-word;">
+                    {{product.productNumber}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngIf="productAmountLimit<=getProducts().length" class="row" style="text-align: center;">
+              <a href="" (click)="productAmountLimit=productAmountLimit+20">20 <ng-container i18n>more</ng-container></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

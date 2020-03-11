@@ -26,6 +26,8 @@
 "use strict";
 
 const DashboardControllerId: string = "DashboardController";
+const broadcastRefreshDashboard: string = "refreshDashboard";
+const broadcastUpdateDashboardElement: string = "updateDashboardElement";
 
 class DashboardController {
 
@@ -48,6 +50,10 @@ class DashboardController {
     todoAmountLimit: number = 10;
     height: number;
     cardSearchText: string;
+    dashboardTodos: any;
+    todoDirection: string = "ASC";
+    todoSearchText: string = "";
+    todosLoad: boolean = false;
 
     rootScope;
     scope;
@@ -60,6 +66,7 @@ class DashboardController {
         this.workflowService = WorkflowService;
         this.statisticService = StatisticService;
         this.dashboardService = DashboardService;
+        this.dashboardService.direction = "ASC";
         this.templateService = TemplateService;
         this.getAllActiveTemplates();
 
@@ -71,23 +78,60 @@ class DashboardController {
         this.currentUser = this.rootScope.user;
         this.registerIntervall();
 
-        this.refreshData();
+        this.dashboardService.searchText = null;
+        this.dashboardService.showMyTaskUserId = 0;
         this.refreshTodos();
-        let self = this;
-        $scope.$watch("dashboardCtrl.cardSearchText", function (newValue) {
-            self.dashboardService.filterBySearch(newValue, self.showMyTasks);
+        this.searchTodos(0);
+        this.dashboardService.initDashboard(true, true);
+
+        $scope.$watch("dashboardCtrl.cardSearchText", (newValue, oldValue) => {
+            if (newValue !== oldValue) {
+                this.dashboardService.filterBySearch(newValue, this.showMyTasks);
+            }
+        });
+
+        let refreshDashboard = $rootScope.$on(broadcastRefreshDashboard, (event) => {
+            this.refreshData(true);
+        });
+
+        let updateDashboardElement = $rootScope.$on(broadcastUpdateDashboardElement, (event, oldProcess: Process, newProcess: Process, updateNow: boolean) => {
+            this.updateProcessElement(oldProcess, newProcess, updateNow);
         });
     }
     registerIntervall() {
         let self = this;
         let intervall = setInterval(function () {
             if (!self.dashboardService.dragging && !self.dashboardService.inModal) {
-                self.refreshData();
+                self.refreshData(false);
             }
-        }, 10 * 60 * 1000);
+        }, 5 * 60 * 1000);
         self.scope.$on("$destroy", function () {
             clearInterval(intervall);
         });
+    }
+
+    async searchTodos(page: number): Promise<void> {
+        this.todosLoad = false;
+        this.dashboardTodos = await this.dashboardService.getTodosBySearchText(this.todoSearchText, 5, page, this.todoDirection);
+        this.todosLoad = true;
+    }
+
+    switchTodoDirection() {
+        if (this.todoDirection === "ASC") {
+            this.todoDirection = "DESC";
+        } else if (this.todoDirection === "DESC") {
+            this.todoDirection = "ASC";
+        }
+        this.searchTodos(0);
+    }
+
+    switchDirection() {
+        if (this.dashboardService.direction === "ASC") {
+            this.dashboardService.direction = "DESC";
+        } else if (this.dashboardService.direction === "DESC") {
+            this.dashboardService.direction = "ASC";
+        }
+        this.dashboardService.initDashboard(true, true);
     }
 
     async openNewLeadModal() {
@@ -104,6 +148,10 @@ class DashboardController {
 
     refreshTodos(): void {
         this.dashboardService.refreshTodos();
+        this.searchTodos(0);
+    }
+    updateProcessElement(oldProcess: Process, newProcess: Process, updateNow: boolean): void {
+        this.dashboardService.updateProcessElement(oldProcess, newProcess, updateNow);
     }
 
     getNameOfUser(user: User): string {
@@ -120,8 +168,10 @@ class DashboardController {
         this.workflowModalProcess = process;
     }
 
-    refreshData() {
-        this.dashboardService.initDashboard();
+    refreshData(withLoading: boolean) {
+        this.dashboardService.initDashboard(withLoading, true);
+        this.rootScope.loadLabels();
+        this.rootScope.$broadcast(broadcastOnTodosChanged);
     }
 
     addComment(process) {
@@ -238,18 +288,20 @@ class DashboardController {
             return this.height;
         }
         let max = 0;
-        let array: Array<number> = new Array<number>(this.getOpenLeads().length, this.getInContacts().length, this.getOpenOffers().length, this.getDoneOffers().length, this.getClosedSales().length);
-        for (let element of array) {
-            if (element > max) {
-                max = element;
+        if (!isNullOrUndefined(this.getOpenLeads) && !isNullOrUndefined(this.getInContacts) && !isNullOrUndefined(this.getOpenOffers) && !isNullOrUndefined(this.getDoneOffers) && !isNullOrUndefined(this.getClosedSales)) {
+            let array: Array<number> = new Array<number>(this.getOpenLeads().length, this.getInContacts().length, this.getOpenOffers().length, this.getDoneOffers().length, this.getClosedSales().length);
+            for (let element of array) {
+                if (element > max) {
+                    max = element;
+                }
             }
-        }
-        if (max >= 7) {
-            this.height = 7 * 85;
+            if (max >= 7) {
+                this.height = 7 * 85;
+                return this.height;
+            }
+            this.height = (max * 85) + 100;
             return this.height;
         }
-        this.height = (max * 85) + 100;
-        return this.height;
     }
 }
 

@@ -20,8 +20,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.usermanagement.domain.User;
 import io.swagger.annotations.ApiModelProperty;
@@ -58,11 +58,11 @@ public class Processor {
 	@Column(name = "deleted", nullable = false)
 	private boolean deleted;
 
-	@JsonIgnore
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "process_fk", nullable = false)
 	@Where(clause = "deleted <> '1'")
+	@JsonBackReference("process-formerProcessors")
 	private Process process;
 
 	public Long getId() {

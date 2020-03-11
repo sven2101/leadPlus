@@ -123,7 +123,7 @@
 					<a class="dropdown-toggle count-info" data-toggle="dropdown">
 						<i class="fa fa-tasks fa-lg"></i>
 
-						<span ng-if="appCtrl.todos.length>0" class="label label-danger">{{ appCtrl.todos.length}}</span>
+						<span ng-if="appCtrl.todos.totalElements>0" class="label label-danger">{{ appCtrl.todos.totalElements}}</span>
 
 					</a>
 					<ul style="min-width:480px" class="dropdown-menu dropdown-messages">
@@ -139,7 +139,7 @@
 						<li>
 							<table class="table table-hover">
 								<tbody>
-									<tr style="cursor:pointer" ng-click="appCtrl.navigateTo(todo)" ng-repeat="todo in appCtrl.todos | limitTo:5 | orderBy:'timestamp'">
+									<tr style="cursor:pointer" ng-click="appCtrl.navigateTo(todo)" ng-repeat="todo in appCtrl.todos.content | limitTo:5 | orderBy:'timestamp'">
 										<td class="project-status" style="padding: 13px 20px !important">
 											<span ng-if="todo.status=='OPEN'" class="label label-danger">{{ 'LEAD' | translate }}</span>
 											<span ng-if="todo.status=='OFFER'" class="label label-warning">{{ 'COMMON_STATUS_OFFER' | translate }}</span>
@@ -158,12 +158,12 @@
 									</tr>
 								</tbody>
 							</table>
-							<div ng-if="appCtrl.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
+							<div ng-if="appCtrl.todos.totalElements==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
 								<p style="margin-top:7px">{{ 'TODO_NO_TODOS' | translate }}</p>
 							</div>
 						</li>
 						<li>
-							<p ng-if="appCtrl.todos.length>5" class="text-center">...</p>
+							<p ng-if="appCtrl.todos.totalElements>5" class="text-center">...</p>
 						</li>
 					</ul>
 				</li>
@@ -227,7 +227,7 @@
 							</div>
 						</li>
 						<li>
-							<p ng-if="appCtrl.todos.length>5" class="text-center">...</p>
+							<p ng-if="appCtrl.todos.totalElements>5" class="text-center">...</p>
 						</li>
 					</ul>
 				</li>

@@ -65,6 +65,8 @@
 				<div ng-if="sourceCtrl.sourceAmountLimit<=sourceCtrl.sourceService.sources.length" class="row" style="text-align: center;">
 					<a href="" ng-click="sourceCtrl.sourceAmountLimit=sourceCtrl.sourceAmountLimit+20">20 {{ 'COMMON_LOAD_MORE' | translate }}</a>
 				</div>
+				<br>
+                	<span ng-if="sourceCtrl.sourceService.inconsistency !== null"> <span style="color:red; font-size:14px;font-weight:bold"><i style="color:red" class="fa fa-exclamation-triangle "></i> {{sourceCtrl.sourceService.inconsistency}} </span>&nbsp;<a style="color: #337ab7; font-size:14px;font-weight:bold" href="javascript:void(0)" ng-click="sourceCtrl.refreshData()">{{'COMMON_REFRESH' | translate}}</a></span>
 			</div>
 		</div>
 	</div>

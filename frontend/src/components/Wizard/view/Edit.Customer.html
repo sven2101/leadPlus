@@ -91,7 +91,7 @@
 						<div class="form-group" ng-class="{ 'has-error' : cform.company.$invalid && !cform.company.$pristine }">
 							<label>{{ 'COMMON_COMPANY' | translate }}</label>
 							<span style="color:red" ng-show="cform.company.$invalid && !cform.company.$pristine">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
-							<input type="text" name="company" class="form-control" ng-model="editWorkflowUnit.customer.company" ng-maxlength="50"
+							<input type="text" name="company" class="form-control" ng-model="editWorkflowUnit.customer.company" ng-maxlength="500"
 								ng-disabled="customerSelected && customerEditLocked">
 						</div>
 					</div>
@@ -285,8 +285,9 @@
 			<!-- MESSAGE -->
 			<div class="form-group">
 				<label>{{ 'COMMON_NOTE' | translate }}</label>
+				<span style="color:red" ng-show="cform.content.$invalid && !cform.content.$pristine">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
 				<div style="border: 1px solid #a9a9a9">
-					<summernote ng-if="editable" name="content " class="form-control" config="summernoteOptions" ng-model="editWorkflowUnit.message" height="300"></summernote>
+					<summernote ng-if="editable" name="content " class="form-control" config="summernoteOptions" ng-model="editWorkflowUnit.message" ng-maxlength="20000" height="300"></summernote>
 				</div>
 				<div ng-if="!editable" style="border: 1px solid gray;  padding: 15px;">
 					<div ng-bind-html="getAsHtml(editWorkflowUnit.message)"></div>

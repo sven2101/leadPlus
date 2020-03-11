@@ -20,6 +20,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +33,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
@@ -44,6 +49,7 @@ import dash.templatemanagement.business.TemplateCompilationException;
 import dash.templatemanagement.domain.Template;
 import dash.templatemanagement.domain.WorkflowTemplateObject;
 import dash.usermanagement.business.UserService;
+import dash.usermanagement.domain.User;
 import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -81,7 +87,7 @@ public class TemplateResource {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Post a template. ", notes = "")
 	public Template save(@ApiParam(required = true) @RequestBody @Valid final Template template)
-			throws SaveFailedException {
+			throws SaveFailedException, ConsistencyFailedException {
 		return templateService.save(template);
 	}
 
@@ -89,8 +95,8 @@ public class TemplateResource {
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public Template update(@ApiParam(required = true) @RequestBody @Valid final Template template)
-			throws UpdateFailedException {
-		return templateService.update(template);
+			throws UpdateFailedException, SaveFailedException, ConsistencyFailedException {
+		return templateService.save(template);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -130,7 +136,29 @@ public class TemplateResource {
 		map.put("data", templateService.getPdfBytemplateId(templateId, messageContext.getWorkflowTemplateObject(),
 				messageContext.getUser()));
 		return map;
+	}
 
+	@RequestMapping(value = "/test/pdf/generate", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Generate a pdf based on a template and an offer.", notes = "")
+	public Map<String, byte[]> generatePdfByTemplate(@RequestBody @Valid String payload) throws NotFoundException,
+			IOException, TemplateCompilationException, PdfGenerationFailedException, TemplateException, JSONException {
+		JSONObject json = null;
+		Template template = null;
+		WorkflowTemplateObject workflowTemplateObject = null;
+		User user = null;
+		try {
+			json = new JSONObject(payload);
+			template = new ObjectMapper().readValue(json.get("template").toString(), Template.class);
+			workflowTemplateObject = new ObjectMapper().readValue(json.get("workflowTemplateObject").toString(),
+					WorkflowTemplateObject.class);
+			user = new ObjectMapper().readValue(json.get("user").toString(), User.class);
+		} catch (JSONException e) {
+			throw new JSONException(e.getMessage());
+		}
+		Map<String, byte[]> map = new HashMap<>();
+		map.put("data", templateService.getPdfBytemplate(template, workflowTemplateObject, user));
+		return map;
 	}
 
 	@RequestMapping(value = "/process/pdf", method = RequestMethod.POST)

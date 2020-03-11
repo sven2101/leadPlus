@@ -46,6 +46,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableJpaRepositories(basePackages = {
 		"dash" }, entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "entityTransactionManager")
 @EnableContextRegion(region = "eu-central-1")
+// @CrossOrigin(origins = "http://localhost:4200")
 public class Application {
 
 	public static void main(String[] args) throws ZipException, URISyntaxException, IOException {

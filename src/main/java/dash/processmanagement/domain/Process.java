@@ -23,9 +23,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -37,7 +34,17 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import dash.commentmanagement.domain.Comment;
+
+
+import dash.common.AbstractWorkflow;
+
+import dash.consistencymanagement.domain.ConsistencyObject;
+
+
 import dash.leadmanagement.domain.Lead;
 import dash.notificationmanagement.domain.Notification;
 import dash.notificationmanagement.domain.NotificationType;
@@ -51,17 +58,8 @@ import dash.usermanagement.domain.User;
 @SQLDelete(sql = "UPDATE process SET deleted = '1' WHERE id = ?")
 @Where(clause = "deleted <> '1'")
 @Table(name = "process")
-public class Process {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "process_auto_gen")
-	@SequenceGenerator(name = "process_auto_gen", sequenceName = "process_id_seq", allocationSize = 1)
-	@Column(name = "id", nullable = false)
-	private Long id;
-
-	@NotNull
-	@Column(name = "deleted", nullable = false)
-	private boolean deleted;
+@SequenceGenerator(name = "idgen", sequenceName = "process_id_seq", allocationSize = 1)
+public class Process extends ConsistencyObject implements Cloneable {
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "lead_fk", nullable = true)
@@ -78,8 +76,9 @@ public class Process {
 	@Where(clause = "deleted <> '1'")
 	private Sale sale;
 
-	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
+	@OneToMany(orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
 	@Where(clause = "deleted <> '1'")
+	@JsonManagedReference("process-comments")
 	private Set<Comment> comments;
 
 	@Enumerated(EnumType.STRING)
@@ -94,6 +93,7 @@ public class Process {
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
 	@Where(clause = "deleted <> '1'")
+	@JsonManagedReference("process-notifications")
 	private Set<Notification> notifications;
 
 	@ManyToOne
@@ -103,6 +103,7 @@ public class Process {
 
 	@OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true, mappedBy = "process", fetch = FetchType.LAZY)
 	@Where(clause = "deleted <> '1'")
+	@JsonManagedReference("process-formerProcessors")
 	private Set<Processor> formerProcessors;
 
 	public Process(Lead lead) {
@@ -111,6 +112,10 @@ public class Process {
 		this.sale = null;
 		this.status = Status.OPEN;
 		this.processor = null;
+	}
+
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 	public int getFollowUpAmount() {
@@ -127,18 +132,6 @@ public class Process {
 	}
 
 	public Process() {
-	}
-
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public Lead getLead() {
@@ -205,10 +198,6 @@ public class Process {
 		this.notifications = notifications;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public Source getSource() {
 		return source;
 	}
@@ -225,14 +214,30 @@ public class Process {
 		this.formerProcessors = formerProcessors;
 	}
 
+	@JsonIgnore
+	public AbstractWorkflow getWorkflowUnitBasedOnStatus() {
+		if (status == Status.OPEN || status == Status.INCONTACT) {
+			return lead;
+		} else if (status == Status.OFFER || status == Status.FOLLOWUP) {
+			return offer;
+		} else if (status == Status.DONE || status == Status.SALE) {
+			return sale;
+		}
+		if (offer == null) {
+			return lead;
+		}
+		if (sale == null) {
+			return offer;
+		}
+		return sale;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((comments == null) ? 0 : comments.hashCode());
-		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((formerProcessors == null) ? 0 : formerProcessors.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lead == null) ? 0 : lead.hashCode());
 		result = prime * result + ((notifications == null) ? 0 : notifications.hashCode());
 		result = prime * result + ((offer == null) ? 0 : offer.hashCode());
@@ -247,7 +252,7 @@ public class Process {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -257,17 +262,10 @@ public class Process {
 				return false;
 		} else if (!comments.equals(other.comments))
 			return false;
-		if (deleted != other.deleted)
-			return false;
 		if (formerProcessors == null) {
 			if (other.formerProcessors != null)
 				return false;
 		} else if (!formerProcessors.equals(other.formerProcessors))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
 			return false;
 		if (lead == null) {
 			if (other.lead != null)
@@ -306,9 +304,8 @@ public class Process {
 
 	@Override
 	public String toString() {
-		return "Process [id=" + id + ", deleted=" + deleted + ", lead=" + lead + ", offer=" + offer + ", sale=" + sale
-				+ ", comments=" + comments + ", status=" + status + ", processor=" + processor + ", notifications="
-				+ notifications + ", source=" + source + "]";
+		return "Process [lead=" + lead + ", offer=" + offer + ", sale=" + sale + ", comments=" + comments + ", status="
+				+ status + ", processor=" + processor + ", notifications=" + notifications + ", source=" + source + "]";
 	}
 
 }

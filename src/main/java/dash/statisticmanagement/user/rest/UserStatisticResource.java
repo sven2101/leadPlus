@@ -87,6 +87,7 @@ public class UserStatisticResource {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/daterange/{dateRange}/source/{source}/id/{id}", method = { RequestMethod.GET,
 			RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
@@ -94,13 +95,34 @@ public class UserStatisticResource {
 	public UserStatistic getSingleProductStatistic(
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
 			@ApiParam(required = true) @PathVariable @Valid String source,
-			@ApiParam(required = true) @PathVariable @Valid final Long id) throws NotFoundException {
+			@ApiParam(required = true) @PathVariable @Valid final Long id)
+			throws NotFoundException, ClassNotFoundException, IOException {
 		if (CommonUtils.isNullOrEmpty(source))
 			source = AbstractStatisticService.ALL_STATISTIC_KEY;
-		Map<String, UserStatistic> sourceMap = userStatisticService.getUserStatisticByIdAndDateRange(dateRange, id);
-		if (!sourceMap.containsKey(source))
-			return new UserStatistic();
-		return sourceMap.get(source);
+
+		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
+		if (olap != null && olap.getUsers() != null) {
+			logger.info("Information from OLAP.");
+			Object obj = ByteSearializer.deserialize(olap.getUsers());
+			if (!(obj instanceof Map<?, ?>))
+				return new UserStatistic();
+			Map<String, List<UserStatistic>> sourceMap = (Map<String, List<UserStatistic>>) obj;
+			if (!sourceMap.containsKey(source))
+				return new UserStatistic();
+			UserStatistic userStatisticReturn = new UserStatistic();
+			for (UserStatistic userStatistic : sourceMap.get(source)) {
+				if (userStatistic.getUser().getId().equals(id)) {
+					userStatisticReturn = userStatistic;
+					break;
+				}
+			}
+			return userStatisticReturn;
+		} else {
+			Map<String, UserStatistic> sourceMap = userStatisticService.getUserStatisticByIdAndDateRange(dateRange, id);
+			if (!sourceMap.containsKey(source))
+				return new UserStatistic();
+			return sourceMap.get(source);
+		}
 	}
 
 }

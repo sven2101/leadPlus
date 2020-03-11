@@ -6,9 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -92,6 +94,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return filter;
 	}
 
+	protected SimpleCORSFilter buildSimpleCORSFilter() {
+		return new SimpleCORSFilter();
+	}
+
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -105,13 +111,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
+	}
+
+	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable() // We don't need CSRF for JWT based authentication
 				.exceptionHandling().authenticationEntryPoint(this.authenticationEntryPoint)
 
-				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
-				.and().authorizeRequests()
+				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.authorizeRequests()
 				.antMatchers(LicenseEnum.FREE.getAllowedRoutes()
 						.toArray(new String[LicenseEnum.FREE.getAllowedRoutes().size()]))
 				.permitAll() // Login
@@ -124,6 +134,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.hasAnyAuthority("ROLE_SUPERADMIN,ROLE_ADMIN,ROLE_USER,ROLE_API")
 				.antMatchers(TOKEN_BASED_AUTH_ENTRY_POINT).hasAnyAuthority("ROLE_SUPERADMIN,ROLE_ADMIN,ROLE_USER")
 				.anyRequest().authenticated().and()
+
+				.addFilterBefore(buildSimpleCORSFilter(), UsernamePasswordAuthenticationFilter.class)
+
 				.addFilterBefore(buildAjaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(buildJwtTokenAuthenticationProcessingFilter(),
 						UsernamePasswordAuthenticationFilter.class)

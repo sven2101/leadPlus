@@ -8,7 +8,7 @@
 
 const LeadDataTableServiceId: string = "LeadDataTableService";
 const allDataLeadRoute = "/api/rest/processes/leads";
-const openDataLeadRoute = "/api/rest/processes/workflow/LEAD/state/OPEN";
+const openDataLeadRoute = "/api/rest/processes/leads/open";
 
 class LeadDataTableService implements IDatatableService {
 
@@ -38,26 +38,43 @@ class LeadDataTableService implements IDatatableService {
         this.processResource = ProcessResource.resource;
     }
 
+
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
-            .withOption("ajax", function (data, callback, settings) {
-                self.$http.get(openDataLeadRoute).then(function (response) {
-                    callback(response.data);
-                });
-            })
-
+            .withOption("searchDelay", 600)
+            .withOption("ajax", self.getInitData())
             .withOption("stateSave", false)
+            .withOption("serverSide", true)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
             .withButtons(this.workflowDatatableService.getButtons(this.translate("LEAD_LEADS"), [8, 3, 2, 4, 7, 6, 13, 10, 9, 11]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
-            .withOption("deferRender", true)
+            .withOption("deferRender", false)
             .withOption("order", [6, "desc"])
             .withOption("lengthMenu", [10, 20, 50])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
+    }
+
+    async getInitData() {
+        let self = this;
+        return {
+            url: openDataLeadRoute,
+            type: "GET",
+            pages: 2,
+            dataSrc: "data",
+            data: function (d) {
+                d.userId = self.workflowDatatableService.showMyTasksUserId["LEAD"];
+            },
+            error: function (xhr, error, thrown) {
+                handleError(xhr);
+            },
+            beforeSend: function (request) {
+                request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
+            }
+        };
     }
 
     configRow(row: any, data: Process) {
@@ -78,8 +95,7 @@ class LeadDataTableService implements IDatatableService {
 
     getDetailHTML(id: number): string {
         return "<a id='id_" + id + "' class='green shortinfo' href='javascript:;'"
-            + "ng-click='leadCtrl.appendChildRow(leadCtrl.processes[" + id
-            + "])' title='Details'>"
+            + "ng-click='leadCtrl.appendChildRow(" + id + ")' title='Details'>"
             + "<i class='glyphicon glyphicon-plus-sign'/></a>";
     }
 
@@ -91,8 +107,8 @@ class LeadDataTableService implements IDatatableService {
             this.DTColumnBuilder.newColumn(null).withTitle(
                 "<i style='margin-top:2px;margin-left:12px;' class='fa fa-thumb-tack' aria-hidden='true'></i>").withClass("text-center").renderWith(function (data: Process, type, full) {
                     if (data.processor != null && data.processor.thumbnail != null) {
-                        return `<div style="height:48px;">
-                    <img title="` + data.processor.firstname + ` ` + data.processor.lastname + `" style="width: 48px; height:48px;border-radius: 10%;"
+                        return `<div style="height:45px;">
+                    <img title="` + data.processor.firstname + ` ` + data.processor.lastname + `" style="width: 45px; height:45px;border-radius: 10%;"
                     pictureid="` + data.processor.thumbnail.id + `" httpsrc="/api/rest/files/content/" alt="">
                 </div>`;
                     } else if (data.processor != null && data.processor.thumbnail == null && data.processor.firstname != null && data.processor.lastname != null) {
@@ -100,7 +116,7 @@ class LeadDataTableService implements IDatatableService {
                     } else {
                         return "-";
                     }
-                }).withOption("width", "48px").notSortable(),
+                }).withOption("width", "45px").notSortable(),
             this.DTColumnBuilder.newColumn(null).renderWith(
                 function (data: Process, type, full) {
                     if (data != null && data.processor != null) {

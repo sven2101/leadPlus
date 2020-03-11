@@ -47,6 +47,9 @@ class LoginService {
 
     async login(credentials: Credentials): Promise<void> {
         try {
+            if (isNullOrUndefined(credentials.email) || isNullOrUndefined(credentials.password)) {
+                throw { "error": "username or password requiered!" };
+            }
             credentials.email = credentials.email.toLowerCase();
             await this.authService.login(credentials);
             if (this.location.host() === credentials.tenant) {

@@ -24,13 +24,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -42,21 +40,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import dash.consistencymanagement.domain.ConsistencyObject;
 import dash.fileuploadmanagement.domain.FileUpload;
 import dash.usermanagement.settings.language.Language;
 
 @Entity
 @Table(name = "\"user\"")
-public class User implements UserDetails, Principal {
+@SequenceGenerator(name = "idgen", sequenceName = "user_id_seq", allocationSize = 1)
+public class User extends ConsistencyObject implements UserDetails, Principal {
 
 	private static final long serialVersionUID = 3125258392087209376L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_auto_gen")
-	@SequenceGenerator(name = "user_auto_gen", sequenceName = "user_id_seq", allocationSize = 1)
-	@Column(name = "id", nullable = false)
+	// For Olap Deserialization
+	@Transient
 	private Long id;
-
+	
 	@NotNull
 	@Size(max = 100)
 	@Column(name = "username", length = 30, nullable = false)
@@ -169,10 +167,6 @@ public class User implements UserDetails, Principal {
 		return serialVersionUID;
 	}
 
-	public Long getId() {
-		return this.id;
-	}
-
 	@Override
 	public String getUsername() {
 		return this.username;
@@ -264,10 +258,6 @@ public class User implements UserDetails, Principal {
 		this.thumbnail = thumbnail;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -302,6 +292,14 @@ public class User implements UserDetails, Principal {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	@Override
@@ -340,7 +338,7 @@ public class User implements UserDetails, Principal {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((defaultBCC == null) ? 0 : defaultBCC.hashCode());
 		result = prime * result + ((defaultCC == null) ? 0 : defaultCC.hashCode());
 		result = prime * result + ((defaultVat == null) ? 0 : defaultVat.hashCode());
@@ -348,7 +346,6 @@ public class User implements UserDetails, Principal {
 		result = prime * result + (enabled ? 1231 : 1237);
 		result = prime * result + ((fax == null) ? 0 : fax.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((job == null) ? 0 : job.hashCode());
 		result = prime * result + ((language == null) ? 0 : language.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
@@ -367,7 +364,7 @@ public class User implements UserDetails, Principal {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -403,11 +400,6 @@ public class User implements UserDetails, Principal {
 			if (other.firstname != null)
 				return false;
 		} else if (!firstname.equals(other.firstname))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
 			return false;
 		if (job == null) {
 			if (other.job != null)

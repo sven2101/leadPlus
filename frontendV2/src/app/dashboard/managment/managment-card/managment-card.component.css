@@ -1,0 +1,22 @@
+ .workflow-container {
+        margin-top: -7px;
+        margin-left: -7px;
+    }
+    
+    .cardRow > div {
+        height: 65px;
+        float: left;
+    }
+    
+    .fixed-column {
+        width: 50px;
+    }
+    
+    .fluid-column {
+        width: calc(100% - 50px);
+    }
+    .icon-buttons{
+        padding-left:7px;
+        padding-top:2px;
+        float:left;
+    }
