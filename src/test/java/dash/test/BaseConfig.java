@@ -1,16 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
 package dash.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -73,7 +60,7 @@ public abstract class BaseConfig {
 	protected final static String REST_SALES = "/api/rest/sales";
 	protected final static String REST_VENDORS = "/api/rest/vendors";
 
-	protected final static String BASIC_HEADER = "YWRtaW5AZXZpYXJjLmNvbTorNVJvOEMvbWFqSEJtalNDUDVIazUwakRjYncyYUFxSHZ3MHRoZ05jc2pRPQ==";
+	protected final static String BASIC_HEADER = "***REMOVED***";
 
 	@Bean
 	public TestRestTemplate testRestTemplate() {
