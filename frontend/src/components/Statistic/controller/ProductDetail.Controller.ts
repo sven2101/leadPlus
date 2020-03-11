@@ -43,7 +43,7 @@ class ProductStatisticDetailController {
 
     getProductById() {
         let self = this;
-        this.productResource.getProductById({ id: this.currentProductId }).$promise.then(function (result: Product) {
+        this.productResource.getProductByIdIncludeDeleted({ id: this.currentProductId }).$promise.then(function (result: Product) {
             self.currentProduct = result;
             if (!isNullOrUndefined(self.currentProduct.id)) {
                 self.productStatisticColumnChart = new PieChart(self.translate, "SPCLOS", self.currentProduct.name,

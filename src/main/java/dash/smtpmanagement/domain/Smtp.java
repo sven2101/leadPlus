@@ -13,13 +13,8 @@
  *******************************************************************************/
 package dash.smtpmanagement.domain;
 
-import java.util.Arrays;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -28,21 +23,16 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import dash.common.EncryptedObject;
 import dash.usermanagement.domain.User;
 
 @Entity
 @Table(name = "smtp")
-public class Smtp {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "smtp_auto_gen")
-	@SequenceGenerator(name = "smtp_auto_gen", sequenceName = "smtp_id_seq", allocationSize = 1)
-	@Column(name = "id", nullable = false)
-	private Long id;
+@SequenceGenerator(name = "idgen", sequenceName = "smtp_id_seq", allocationSize = 1)
+public class Smtp extends EncryptedObject {
 
 	@NotNull
 	@Size(max = 255)
@@ -58,10 +48,6 @@ public class Smtp {
 	@Size(max = 255)
 	@Column(name = "username", nullable = false, length = 255)
 	private String username;
-
-	@JsonProperty(access = Access.WRITE_ONLY)
-	@Column(name = "password", nullable = false)
-	private byte[] password;
 
 	@NotNull
 	@Size(max = 255)
@@ -79,14 +65,6 @@ public class Smtp {
 	@Column(name = "verified", nullable = false)
 	private boolean verified;
 
-	@JsonIgnore
-	@Column(name = "salt", nullable = false)
-	private byte[] salt;
-
-	@JsonIgnore
-	@Column(name = "iv", nullable = false)
-	private byte[] iv;
-
 	@NotNull
 	@OneToOne
 	@JoinColumn(name = "user_fk", nullable = false)
@@ -97,14 +75,6 @@ public class Smtp {
 	private boolean decrypted;
 
 	public Smtp() {
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getSender() {
@@ -139,14 +109,6 @@ public class Smtp {
 		this.username = username;
 	}
 
-	public byte[] getPassword() {
-		return password;
-	}
-
-	public void setPassword(byte[] password) {
-		this.password = password;
-	}
-
 	public SmtpEncryptionType getEncryption() {
 		return encryption;
 	}
@@ -179,22 +141,6 @@ public class Smtp {
 		this.user = user;
 	}
 
-	public byte[] getSalt() {
-		return salt;
-	}
-
-	public void setSalt(byte[] salt) {
-		this.salt = salt;
-	}
-
-	public byte[] getIv() {
-		return iv;
-	}
-
-	public void setIv(byte[] iv) {
-		this.iv = iv;
-	}
-
 	public boolean isDecrypted() {
 		return decrypted;
 	}
@@ -203,22 +149,23 @@ public class Smtp {
 		this.decrypted = decrypted;
 	}
 
+	public boolean isSmtpPasswordNull() {
+		return this.password == null;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
-		result = prime * result + (verified ? 1231 : 1237);
+		int result = super.hashCode();
+		result = prime * result + (decrypted ? 1231 : 1237);
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((encryption == null) ? 0 : encryption.hashCode());
 		result = prime * result + ((host == null) ? 0 : host.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + Arrays.hashCode(iv);
-		result = prime * result + Arrays.hashCode(password);
 		result = prime * result + ((port == null) ? 0 : port.hashCode());
-		result = prime * result + Arrays.hashCode(salt);
 		result = prime * result + ((sender == null) ? 0 : sender.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		result = prime * result + (verified ? 1231 : 1237);
 		return result;
 	}
 
@@ -226,12 +173,12 @@ public class Smtp {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		Smtp other = (Smtp) obj;
-		if (verified != other.verified)
+		if (decrypted != other.decrypted)
 			return false;
 		if (email == null) {
 			if (other.email != null)
@@ -245,21 +192,10 @@ public class Smtp {
 				return false;
 		} else if (!host.equals(other.host))
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (!Arrays.equals(iv, other.iv))
-			return false;
-		if (!Arrays.equals(password, other.password))
-			return false;
 		if (port == null) {
 			if (other.port != null)
 				return false;
 		} else if (!port.equals(other.port))
-			return false;
-		if (!Arrays.equals(salt, other.salt))
 			return false;
 		if (sender == null) {
 			if (other.sender != null)
@@ -275,6 +211,8 @@ public class Smtp {
 			if (other.username != null)
 				return false;
 		} else if (!username.equals(other.username))
+			return false;
+		if (verified != other.verified)
 			return false;
 		return true;
 	}

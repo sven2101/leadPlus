@@ -1,0 +1,8 @@
+.select-page-size{
+    width: 100px;
+    margin-bottom: 3px;
+}
+
+.sortableColumn{
+    cursor: pointer;
+}

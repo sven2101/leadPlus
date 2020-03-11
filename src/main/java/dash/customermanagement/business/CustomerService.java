@@ -17,8 +17,6 @@ import static dash.Constants.BECAUSE_OF_ILLEGAL_ID;
 import static dash.Constants.BECAUSE_OF_OBJECT_IS_NULL;
 import static dash.Constants.CUSTOMER_NOT_FOUND;
 import static dash.Constants.DELETE_FAILED_EXCEPTION;
-import static dash.Constants.SAVE_FAILED_EXCEPTION;
-import static dash.Constants.UPDATE_FAILED_EXCEPTION;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,22 +28,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import dash.consistencymanagement.business.ConsistencyService;
 import dash.customermanagement.domain.Customer;
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
-import dash.exceptions.SaveFailedException;
-import dash.exceptions.UpdateFailedException;
 
 @Service
-public class CustomerService implements ICustomerService {
+@Transactional
+public class CustomerService extends ConsistencyService {
 
 	private static final Logger logger = Logger.getLogger(CustomerService.class);
 
 	@Autowired
 	private CustomerRepository customerRepository;
 
-	@Override
 	public Page<Customer> getAllByPage(Integer start, Integer length, String searchText, Boolean allCustomers) {
 
 		Page<Customer> page = null;
@@ -54,7 +53,7 @@ public class CustomerService implements ICustomerService {
 
 		if (!allCustomers.booleanValue()) {
 			if (null == searchText || searchText.equals("noSearchText") || searchText.equals("")) {
-				page = customerRepository.findByRealCustomer(true,
+				page = customerRepository.findByRealCustomerAndDeletedFalse(true,
 						new PageRequest(start / length, length, sortDirection, sortColumn));
 			} else {
 				page = customerRepository.findRealCustomerBySearchText(searchText,
@@ -62,23 +61,21 @@ public class CustomerService implements ICustomerService {
 			}
 		} else {
 			if (null == searchText || searchText.equals("noSearchText") || searchText.equals("")) {
-				page = customerRepository.findAll(new PageRequest(start / length, length, sortDirection, sortColumn));
-			} else {
 				page = customerRepository
-						.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCase(
-								searchText, searchText, searchText, searchText, searchText,
-								new PageRequest(start / length, length, sortDirection, sortColumn));
+						.findByDeletedFalse((new PageRequest(start / length, length, sortDirection, sortColumn)));
+			} else {
+				page = customerRepository.findPageableCustomerBySearchText(searchText,
+						new PageRequest(start / length, length, sortDirection, sortColumn));
 			}
 		}
 
 		return page;
 	}
 
-	@Override
 	public Customer getById(final Long id) throws NotFoundException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
-				return customerRepository.findOne(id);
+				return customerRepository.findByIdAndDeletedFalse(id);
 			} catch (Exception ex) {
 				logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
 				throw new NotFoundException(CUSTOMER_NOT_FOUND);
@@ -90,39 +87,16 @@ public class CustomerService implements ICustomerService {
 		}
 	}
 
-	@Override
-	public Customer save(final Customer customer) throws SaveFailedException {
-		if (Optional.ofNullable(customer).isPresent()) {
-			try {
-				return customerRepository.save(customer);
-			} catch (Exception ex) {
-				logger.error(CustomerService.class.getSimpleName() + ex.getMessage(), ex);
-				throw new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			}
-		} else {
-			SaveFailedException sfex = new SaveFailedException(SAVE_FAILED_EXCEPTION);
-			logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, sfex);
-			throw sfex;
+	public Customer save(final Customer customer) throws ConsistencyFailedException {
+		if (customer == null) {
+			logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
+			throw new IllegalArgumentException(
+					CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL);
 		}
+		this.checkConsistencyAndSetTimestamp(customer, customerRepository);
+		return customerRepository.save(customer);
 	}
 
-	@Override
-	public Customer update(final Customer customer) throws UpdateFailedException {
-		if (Optional.ofNullable(customer).isPresent()) {
-			try {
-				return save(customer);
-			} catch (IllegalArgumentException | SaveFailedException ex) {
-				logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_ILLEGAL_ID, ex);
-				throw new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			}
-		} else {
-			UpdateFailedException ufex = new UpdateFailedException(UPDATE_FAILED_EXCEPTION);
-			logger.error(CUSTOMER_NOT_FOUND + CustomerService.class.getSimpleName() + BECAUSE_OF_OBJECT_IS_NULL, ufex);
-			throw ufex;
-		}
-	}
-
-	@Override
 	public void delete(final Long id) throws DeleteFailedException {
 		if (Optional.ofNullable(id).isPresent()) {
 			try {
@@ -138,27 +112,21 @@ public class CustomerService implements ICustomerService {
 		}
 	}
 
-	@Override
 	public List<Customer> getByEmailIgnoreCase(String email) {
 
-		return customerRepository.getByEmailIgnoreCase(email);
+		return customerRepository.findByEmailIgnoreCaseAndDeletedFalse(email);
 	}
 
-	@Override
 	public List<Customer> getRealCustomer() {
-		return customerRepository.findByRealCustomer(true);
+		return customerRepository.findByRealCustomerAndDeletedFalse(true);
 	}
 
-	@Override
 	public List<Customer> getAll() {
-		return customerRepository.findAll();
+		return customerRepository.findByDeletedFalse();
 	}
 
-	@Override
 	public List<Customer> getCustomerBySearchText(String searchText) {
-		return customerRepository
-				.findByFirstnameContainingOrLastnameContainingOrEmailContainingOrCompanyContainingOrCustomerNumberContainingAllIgnoreCase(
-						searchText, searchText, searchText, searchText, searchText);
+		return customerRepository.findCustomerBySearchText(searchText);
 	}
 
 }

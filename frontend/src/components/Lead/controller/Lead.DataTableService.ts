@@ -8,11 +8,11 @@
 
 const LeadDataTableServiceId: string = "LeadDataTableService";
 const allDataLeadRoute = "/api/rest/processes/leads";
-const openDataLeadRoute = "/api/rest/processes/workflow/LEAD/state/OPEN";
+const openDataLeadRoute = "/api/rest/processes/leads/open";
 
 class LeadDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId, TokenServiceId, ProcessResourceId, $httpId];
 
     workflowService: WorkflowService;
     workflowDatatableService: WorkflowDatatableService;
@@ -24,8 +24,9 @@ class LeadDataTableService implements IDatatableService {
     filter;
     compile;
     rootScope;
+    processResource;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService, private TokenService: TokenService, ProcessResource, private $http) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -34,38 +35,57 @@ class LeadDataTableService implements IDatatableService {
         this.rootScope = $rootScope;
         this.workflowService = WorkflowService;
         this.workflowDatatableService = WorkflowDatatableService;
+        this.processResource = ProcessResource.resource;
     }
+
 
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
-            .withOption("ajax", {
-                url: openDataLeadRoute,
-                error: function (xhr, error, thrown) {
-                    handleError(xhr);
-                },
-                type: "GET",
-                "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
-                }
-            })
+            .withOption("searchDelay", 600)
+            .withOption("ajax", self.getInitData())
             .withOption("stateSave", false)
+            .withOption("serverSide", true)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowDatatableService.getButtons(this.translate("LEAD_LEADS"), [7, 2, 1, 3, 4, 5, 7, 9, 8, 10]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("LEAD_LEADS"), [8, 3, 2, 4, 7, 6, 13, 10, 9, 11]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
-            .withOption("deferRender", true)
-            .withOption("order", [5, "desc"])
+            .withOption("deferRender", false)
+            .withOption("order", [6, "desc"])
             .withOption("lengthMenu", [10, 20, 50])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
     }
 
+    async getInitData() {
+        let self = this;
+        return {
+            url: openDataLeadRoute,
+            type: "GET",
+            pages: 2,
+            dataSrc: "data",
+            data: function (d) {
+                d.userId = self.workflowDatatableService.showMyTasksUserId["LEAD"];
+            },
+            error: function (xhr, error, thrown) {
+                handleError(xhr);
+            },
+            beforeSend: function (request) {
+                request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
+            }
+        };
+    }
+
     configRow(row: any, data: Process) {
         let currentDate = moment(newTimestamp(), "DD.MM.YYYY");
         let leadDate = moment(data.lead.timestamp, "DD.MM.YYYY");
+        let self = this;
+        $(row).attr("id", "id_" + data.id);
+        $("td:not(:last-child)", row).unbind("click");
+        $("td:not(:last-child)", row).bind("click", function () {
+            self.rootScope.$broadcast(broadcastClickChildrow, data);
+        }).css("cursor", "pointer");
 
         if (currentDate["businessDiff"](leadDate, "days") > 3
             && data.status === "OPEN") {
@@ -75,16 +95,36 @@ class LeadDataTableService implements IDatatableService {
 
     getDetailHTML(id: number): string {
         return "<a id='id_" + id + "' class='green shortinfo' href='javascript:;'"
-            + "ng-click='leadCtrl.appendChildRow(leadCtrl.processes[" + id
-            + "])' title='Details'>"
+            + "ng-click='leadCtrl.appendChildRow(" + id + ")' title='Details'>"
             + "<i class='glyphicon glyphicon-plus-sign'/></a>";
     }
 
     getDTColumnConfiguration(addDetailButton: Function, addStatusStyle: Function, addActionsButtons: Function): Array<any> {
         let self = this;
         return [
-            this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
-                .renderWith(addDetailButton),
+            /* this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
+                .renderWith(addDetailButton).notVisible(),*/
+            this.DTColumnBuilder.newColumn(null).withTitle(
+                "<i style='margin-top:2px;margin-left:12px;' class='fa fa-thumb-tack' aria-hidden='true'></i>").withClass("text-center").renderWith(function (data: Process, type, full) {
+                    if (data.processor != null && data.processor.thumbnail != null) {
+                        return `<div style="height:45px;">
+                    <img title="` + data.processor.firstname + ` ` + data.processor.lastname + `" style="width: 45px; height:45px;border-radius: 10%;"
+                    pictureid="` + data.processor.thumbnail.id + `" httpsrc="/api/rest/files/content/" alt="">
+                </div>`;
+                    } else if (data.processor != null && data.processor.thumbnail == null && data.processor.firstname != null && data.processor.lastname != null) {
+                        return "<span style='font-weight:bold' title='" + data.processor.firstname + " " + data.processor.lastname + "'>" + data.processor.firstname[0] + data.processor.lastname[0] + "</span>";
+                    } else {
+                        return "-";
+                    }
+                }).withOption("width", "45px").notSortable(),
+            this.DTColumnBuilder.newColumn(null).renderWith(
+                function (data: Process, type, full) {
+                    if (data != null && data.processor != null) {
+                        return data.processor.email;
+                    } else {
+                        return "";
+                    }
+                }).notVisible(),
             this.DTColumnBuilder.newColumn("lead.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("lead.customer.lastname").withTitle(
@@ -132,9 +172,18 @@ class LeadDataTableService implements IDatatableService {
                 this.translate("COMMON_STATUS")).withClass("text-center")
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn(null).withTitle(
-                "<span class='glyphicon glyphicon-cog'></span>").withClass(
+                "<span style='margin-top:2px' class='glyphicon glyphicon-cog'></span>").withClass(
                 "text-center").withOption("width", "210px").notSortable().renderWith(addActionsButtons),
-            this.DTColumnBuilder.newColumn("lead.deliveryAddressLine").notVisible(),
+            this.DTColumnBuilder.newColumn("lead.deliveryAddressLine").withTitle(
+                this.translate("COMMON_PRODUCT_DESTINATION")).notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(this.translate("COMMON_PROCESSOR")).renderWith(
+                function (data: Process, type, full) {
+                    if (data != null && data.processor != null) {
+                        return data.processor.firstname + " " + data.processor.lastname;
+                    } else {
+                        return "";
+                    }
+                }).notVisible(),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {
@@ -185,45 +234,46 @@ class LeadDataTableService implements IDatatableService {
 
     getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {
         actionButtonConfig[process.id] = this.getActionButtonConfig(process);
-        return "<div actionbuttons actionbuttonconfig=leadCtrl.actionButtonConfig[" + process.id + "]  process='leadCtrl.processes[" + process.id + "]'></div>";
+        let actionButtons = actionButtonConfig[process.id];
+        if (actionButtons.DETAILS_DROPDOWN.disabled === true) {
+            let currentStatus = "";
+            if (process.status === Status.CLOSED && process.offer !== null && process.sale === null) {
+                currentStatus = this.translate.instant(Status.OFFER) + "/" + this.translate.instant(Status.CLOSED);
+            } else {
+                currentStatus = this.translate.instant(process.status);
+            }
+            return this.translate.instant("COMMON_WORKFLOW_NO_ACTION") + " <a uib-tooltip='" + this.translate.instant("LEAD_NO_ACTION_INFO", { status: currentStatus }) + "' tooltip-class='noActionTooltip' tooltip-placement='top-right'><i class='fa fa-info-circle'></i></a>";
+        } else {
+            return "<div actionbuttons actionbuttonconfig=leadCtrl.actionButtonConfig[" + process.id + "]  process='leadCtrl.processes[" + process.id + "]'></div>";
+        }
     }
 
     getStatusStyleHTML(data: Process): string {
-        let hasProcessor: string = "";
-        if (data.processor !== null) {
-            hasProcessor = "&nbsp;<span style='color: #ea394c;'><i class='fa fa-thumb-tack'></i></span>";
-        }
         if (data.status === "OPEN") {
             return "<span style='color: green;'>"
-                + this.translate.instant("COMMON_STATUS_OPEN") + "</span>"
-                + hasProcessor;
+                + this.translate.instant("COMMON_STATUS_OPEN") + "</span>";
         } else if (data.status === "OFFER") {
             return "<span style='color: #f79d3c;'>"
-                + this.translate.instant("COMMON_STATUS_OFFER") + "</span>"
-                + hasProcessor;
+                + this.translate.instant("COMMON_STATUS_OFFER") + "</span>";
         }
         else if (data.status === "INCONTACT") {
             return "<span style='color: #f79d3c;'>"
-                + this.translate.instant("COMMON_STATUS_INCONTACT") + "</span>"
-                + hasProcessor;
+                + this.translate.instant("COMMON_STATUS_INCONTACT") + "</span>";
         }
         else if (data.status === "FOLLOWUP") {
             return "<span style='color: #f79d3c;'>"
-                + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>"
-                + hasProcessor;
+                + this.translate.instant("COMMON_STATUS_FOLLOW_UP") + "</span>";
         }
         else if (data.status === "DONE") {
             return "<span style='color: #f79d3c;'>"
-                + this.translate.instant("COMMON_STATUS_DONE") + "</span>"
-                + hasProcessor;
+                + this.translate.instant("COMMON_STATUS_DONE") + "</span>";
         }
         else if (data.status === "SALE") {
             return "<span style='color: #1872ab;'>"
                 + this.translate.instant("COMMON_STATUS_SALE") + "</span>";
         } else if (data.status === "CLOSED") {
             return "<span style='color: #ea394c;'>"
-                + this.translate.instant("COMMON_STATUS_CLOSED") + "</span>"
-                + hasProcessor;
+                + this.translate.instant("COMMON_STATUS_CLOSED") + "</span>";
         }
     }
 

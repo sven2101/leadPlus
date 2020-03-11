@@ -1,0 +1,69 @@
+<form novalidate [formGroup]="formModel">
+	<div class="row">
+		<div class="col-sm-6 text-left">
+			<!-- SALE TURNOVER -->
+			<div class="form-group" ng-class="{ 'has-error' : formModel.controls.saleTurnover.$invalid && !formModel.controls.saleTurnover.$pristine }">
+				<label i18n>COMMON_PRODUCT_SALE_TURNOVER<span style="color:red">*</span></label>
+				<div *ngIf="formModel.get('saleTurnover').dirty">
+					<span style="color:red" *ngIf="formModel.get('saleTurnover').hasError('required')" i18n>COMMON_VALIDATE_REQ</span>
+					<span style="color:red" *ngIf="formModel.get('saleTurnover').hasError('max')" i18n>COMMON_VALIDATE_TOO_BIG</span>
+					<span style="color:red" *ngIf="formModel.get('saleTurnover').hasError('min')" i18n>COMMON_VALIDATE_TOO_SMALL</span>
+				</div>
+				<div class="input-group">
+					<span class="input-group-addon" i18n>COMMON_CURRENCY</span>
+					<input type="number" ng-model="editWorkflowUnit.saleTurnover" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="any" data-number-to-fixed="2"
+					 data-number-stepfactor="100" class="form-control currency" formControlName="saleTurnover" ng-keyup="calculateProfit()">
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6 text-left">
+			<!-- SALE INVOICE NUMBER -->
+			<div class="form-group" ng-class="{ 'has-error' : formModel.controls.saleInvoiceNumber.$invalid }">
+				<label i18n>COMMON_PRODUCT_SALE_INVOICE_NUMBER</label>
+				<span style="color:#FFCC00" *ngIf="invoiceNumberAlreadyExists" i18n>COMMON_VALIDATE_INVOICE_NUMBER_ALREADY_EXISTS</span>
+				<div *ngIf="formModel.get('invoiceNumber').dirty">					
+					<span style="color:red" *ngIf="formModel.get('invoiceNumber').hasError('maxlength')" i18n>COMMON_VALIDATE_TOO_BIG</span>
+				</div>
+				<input type="text" class="form-control" #invoiceNumberInput (keyup)="isInvoiceNumberAvailible(invoiceNumberInput.value)"
+				 formControlName="invoiceNumber">
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 text-left">
+			<!-- SALE COST -->
+			<div class="form-group" ng-class="{ 'has-error' : formModel.controls.saleCost.$invalid && !formModel.controls.saleCost.$pristine }">
+				<label i18n>COMMON_PRODUCT_SALE_COST<span style="color:red">*</span></label>
+				<div *ngIf="formModel.get('saleCost').dirty">
+					<span style="color:red" *ngIf="formModel.get('saleCost').hasError('required')" i18n>COMMON_VALIDATE_REQ</span>
+					<span style="color:red" *ngIf="formModel.get('saleCost').hasError('max')" i18n>COMMON_VALIDATE_TOO_BIG</span>
+					<span style="color:red" *ngIf="formModel.get('saleCost').hasError('min')" i18n>COMMON_VALIDATE_TOO_SMALL</span>
+				</div>
+				<div class="input-group">
+					<span class="input-group-addon" i18n>COMMON_CURRENCY</span>
+					<input type="number" ng-model="editWorkflowUnit.saleCost" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="any" min="0" data-number-to-fixed="2"
+					 data-number-stepfactor="100" class="form-control currency" ng-keyup="calculateProfit()" formControlName="saleCost">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 text-left">
+			<!-- SALE PROFIT -->
+			<div class="form-group" ng-class="{ 'has-error' : formModel.controls.saleProfit.$invalid && !formModel.controls.saleProfit.$pristine }">
+				<label i18n>COMMON_PRODUCT_SALE_PROFIT<span style="color:red">*</span></label>
+				<div *ngIf="formModel.get('saleProfit').dirty">
+					<span style="color:red" *ngIf="formModel.get('saleProfit').hasError('required')" i18n>COMMON_VALIDATE_REQ</span>
+					<span style="color:red" *ngIf="formModel.get('saleProfit').hasError('max')" i18n>COMMON_VALIDATE_TOO_BIG</span>
+					<span style="color:red" *ngIf="formModel.get('saleProfit').hasError('min')" i18n>COMMON_VALIDATE_TOO_SMALL</span>
+				</div>
+				<div class="input-group">
+					<span class="input-group-addon" i18n>COMMON_CURRENCY</span>
+					<input class="form-control currency" formControlName="saleProfit">
+				</div>
+			</div>
+		</div>
+	</div>
+
+</form>
+{{formModel.status|json}} {{formModel.errors}}

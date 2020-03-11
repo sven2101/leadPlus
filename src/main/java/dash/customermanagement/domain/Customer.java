@@ -21,9 +21,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -34,35 +31,25 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import dash.addressmanagement.domain.Address;
+import dash.consistencymanagement.domain.ConsistencyObject;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "Customer", description = "Customer")
 @Entity
 @SQLDelete(sql = "UPDATE customer SET deleted = '1' WHERE id = ?")
-@Where(clause = "deleted <> '1'")
+// @Where(clause = "deleted <> '1'")
 @Table(name = "customer")
-public class Customer {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_auto_gen")
-	@SequenceGenerator(name = "customer_auto_gen", sequenceName = "customer_id_seq", allocationSize = 1)
-	@Column(name = "id", nullable = false)
-	private Long id;
+@SequenceGenerator(name = "idgen", sequenceName = "customer_id_seq", allocationSize = 1)
+public class Customer extends ConsistencyObject {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "title", length = 255, nullable = true)
 	private Title title;
-
-	@ApiModelProperty(hidden = true)
-	@NotNull
-	@Column(name = "deleted", nullable = false)
-	private boolean deleted;
 
 	@NotNull
 	@Size(max = 255)
@@ -74,7 +61,7 @@ public class Customer {
 	@Column(name = "lastname", length = 255, nullable = false)
 	private String lastname;
 
-	@Size(max = 255)
+	@Size(max = 500)
 	@Column(name = "company", length = 255, nullable = true)
 	private String company;
 
@@ -118,19 +105,13 @@ public class Customer {
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "billing_address_fk", nullable = true)
-	@Where(clause = "deleted <> '1'")
 	private Address billingAddress;
 
 	@OneToOne(cascade = { CascadeType.ALL }, orphanRemoval = true)
 	@JoinColumn(name = "delivery_address_fk", nullable = true)
-	@Where(clause = "deleted <> '1'")
 	private Address deliveryAddress;
 
 	public Customer() {
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public boolean isDeactivated() {
@@ -139,10 +120,6 @@ public class Customer {
 
 	public void setDeactivated(boolean deactivated) {
 		this.deactivated = deactivated;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public Title getTitle() {
@@ -227,14 +204,6 @@ public class Customer {
 		this.timestamp = timestamp;
 	}
 
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
 	public String getCustomerNumber() {
 		return customerNumber;
 	}
@@ -270,17 +239,15 @@ public class Customer {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((billingAddress == null) ? 0 : billingAddress.hashCode());
 		result = prime * result + ((company == null) ? 0 : company.hashCode());
 		result = prime * result + ((customerNumber == null) ? 0 : customerNumber.hashCode());
 		result = prime * result + (deactivated ? 1231 : 1237);
-		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((fax == null) ? 0 : fax.hashCode());
 		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
 		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
@@ -294,7 +261,7 @@ public class Customer {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -316,8 +283,6 @@ public class Customer {
 			return false;
 		if (deactivated != other.deactivated)
 			return false;
-		if (deleted != other.deleted)
-			return false;
 		if (deliveryAddress == null) {
 			if (other.deliveryAddress != null)
 				return false;
@@ -337,11 +302,6 @@ public class Customer {
 			if (other.firstname != null)
 				return false;
 		} else if (!firstname.equals(other.firstname))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
 			return false;
 		if (lastname == null) {
 			if (other.lastname != null)
@@ -372,11 +332,11 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		return "Customer [id=" + id + ", title=" + title + ", deleted=" + deleted + ", firstname=" + firstname
-				+ ", lastname=" + lastname + ", company=" + company + ", email=" + email + ", phone=" + phone + ", fax="
-				+ fax + ", mobile=" + mobile + ", deactivated=" + deactivated + ", realCustomer=" + realCustomer
-				+ ", timestamp=" + timestamp + ", customerNumber=" + customerNumber + ", billingAddress="
-				+ billingAddress + ", deliveryAddress=" + deliveryAddress + "]";
+		return "Customer [title=" + title + ", firstname=" + firstname + ", lastname=" + lastname + ", company="
+				+ company + ", email=" + email + ", phone=" + phone + ", fax=" + fax + ", mobile=" + mobile
+				+ ", deactivated=" + deactivated + ", realCustomer=" + realCustomer + ", timestamp=" + timestamp
+				+ ", customerNumber=" + customerNumber + ", billingAddress=" + billingAddress + ", deliveryAddress="
+				+ deliveryAddress + "]";
 	}
 
 }

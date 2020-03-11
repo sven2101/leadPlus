@@ -43,8 +43,12 @@ public class SaleService implements ISaleService {
 
 	private static final Logger logger = Logger.getLogger(SaleService.class);
 
-	@Autowired
 	private SaleRepository saleRepository;
+
+	@Autowired
+	public SaleService(SaleRepository saleRepository) {
+		this.saleRepository = saleRepository;
+	}
 
 	@Override
 	public List<Sale> getAll() {

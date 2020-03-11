@@ -69,7 +69,7 @@
 				<div class="form-group" ng-class="{ 'has-error' : cform.company.$invalid && !cform.company.$pristine }">
 					<label>{{ 'COMMON_COMPANY' | translate }}</label>
 					<span style="color:red" ng-show="cform.company.$invalid && !cform.company.$pristine">{{ 'COMMON_VALIDATE_TOO_LONG' | translate }}</span>
-					<input type="text" name="company" class="form-control" ng-model="editWorkflowUnit.customer.company" ng-maxlength="50"
+					<input type="text" name="company" class="form-control" ng-model="editWorkflowUnit.customer.company" ng-maxlength="500"
 						ng-disabled="customerSelected && customerEditLocked">
 				</div>
 			</div>
@@ -283,8 +283,8 @@
 	text-align: left;
 	color: black;
 	background-color: white;
-	width: 250px;
-	max-width: 300px;
+	width: 450px;
+	max-width: 450px;
 	box-shadow: 0px 1px 12px rgba(0,0,0,1);
 	}
 #typeahead-autocompletion .dropdown-menu {

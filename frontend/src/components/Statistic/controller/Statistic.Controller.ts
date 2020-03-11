@@ -129,6 +129,9 @@ class StatisticController {
     getSaleAmount(): number {
         return this.statisticService.getSaleAmount();
     }
+    getOlapTimestamp(): string {
+        return this.statisticService.olapTimestamp;
+    }
 }
 
 angular.module(moduleStatistic, [ngResourceId]).controller(StatisticControllerId, StatisticController);

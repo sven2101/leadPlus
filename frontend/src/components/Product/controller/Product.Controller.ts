@@ -18,6 +18,7 @@ class ProductController {
         this.productService = ProductService;
         this.toaster = toaster;
         this.location = $location;
+        this.refreshData();
     }
 
     showProduct(id: number) {

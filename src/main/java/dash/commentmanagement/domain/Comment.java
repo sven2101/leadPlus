@@ -33,8 +33,8 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import dash.processmanagement.domain.Process;
 import dash.usermanagement.domain.User;
@@ -60,9 +60,9 @@ public class Comment {
 	@JoinColumn(name = "creator_fk", nullable = false)
 	private User creator;
 
-	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "process_fk", nullable = false)
+	@JsonBackReference("process-comments")
 	private Process process;
 
 	@NotNull

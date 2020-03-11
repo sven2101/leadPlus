@@ -12,7 +12,7 @@ const broadcastUserNotificationChanged: string = "userNotificationChanged";
 
 class AppController {
 
-    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId, $windowId, $timeoutId, SmtpServiceId];
+    private $inject = [$translateId, $rootScopeId, $intervalId, ProcessResourceId, UserResourceId, ProfileServiceId, $locationId, $scopeId, NotificationServiceId, $windowId, $timeoutId];
 
     translate;
     rootScope;
@@ -23,14 +23,14 @@ class AppController {
     window;
     stop;
     timeout;
-    todos: Array<Process> = [];
-    userNotifications: Array<Notification> = [];
+    todos: any;
+    userNotifications: Array<EmailNotification> = [];
     notificationSendState: NotificationSendState = NotificationSendState.DEFAULT;
 
     profileService: ProfileService;
     rendered: boolean = false;
 
-    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService, $window, $timeout) {
+    constructor($translate, $rootScope, $interval, ProcessResource, UserResource, ProfileService, $location, $scope, private NotificationService: NotificationService, $window, $timeout, private TokenService) {
         this.translate = $translate;
         this.rootScope = $rootScope;
         this.interval = $interval;
@@ -45,6 +45,7 @@ class AppController {
         this.rootScope.offersCount = 0;
         this.stop = undefined;
 
+        this.rootScope.user = TokenService.getItemFromLocalStorage(USER_STORAGE);
         this.setCurrentUserPicture();
         this.registerLoadLabels();
         this.rootScope.loadLabels();
@@ -57,7 +58,7 @@ class AppController {
             this.todos = result;
         });
 
-        let broadcastAddNotificationListener = $scope.$on(broadcastAddNotification, (event, notification: Notification) => {
+        let broadcastAddNotificationListener = $scope.$on(broadcastAddNotification, (event, notification: EmailNotification) => {
             this.userNotifications.push(notification);
         });
 
@@ -116,8 +117,7 @@ class AppController {
     registerLoadLabels() {
         let self = this;
         self.rootScope.loadLabels = function () {
-            if (!angular
-                .isUndefined(self.rootScope.user)) {
+            if (self.rootScope.user != null) {
                 self.processResource.getCountWorkflowByStatus({
                     workflow: "LEAD",
                     status: "OPEN"
@@ -145,17 +145,19 @@ class AppController {
     registerSetUserDefaultLanguage() {
         let self = this;
         self.rootScope.setUserDefaultLanguage = function () {
-            if (!angular
-                .isUndefined(self.rootScope.user)) {
-                self.userResource
-                    .get({
-                        id: self.rootScope.user.id
-                    }).$promise.then(function (result) {
-                        self.rootScope.changeLanguage(result.language);
-                    });
+            if (self.rootScope.user != null) {
+                if (!isNullOrUndefined(self.rootScope.user.language)) {
+                    self.rootScope.changeLanguage(self.rootScope.user.language);
+                } else {
+                    self.userResource
+                        .get({
+                            id: self.rootScope.user.id
+                        }).$promise.then(function (result) {
+                            self.rootScope.changeLanguage(result.language);
+                        });
+                }
             }
             else {
-                // TODO remove after Safari testing          
                 let lang: string = self.window.navigator.language || self.window.navigator.userLanguage;
                 if (lang.indexOf("de") !== -1) {
                     lang = "DE";
@@ -174,8 +176,7 @@ class AppController {
             }
         });
         self.stop = self.interval(function () {
-            if (!angular
-                .isUndefined(self.rootScope.user)) {
+            if (self.rootScope.user != null) {
                 self.processResource.getCountWorkflowByStatus({
                     workflow: "LEAD",
                     status: "OPEN"
@@ -218,7 +219,7 @@ class AppController {
         return sum;
     }
 
-    openEmailDirective(notification: Notification, processId: number): void {
+    openEmailDirective(notification: EmailNotification, processId: number): void {
         this.rootScope.$emit(openQuickEmailModal, { notification: deepCopy(notification), processId: processId });
     }
 }

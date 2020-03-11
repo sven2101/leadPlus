@@ -57,9 +57,15 @@
 									<label><i class="fa fa-phone " aria-hidden="true "></i> {{ 'COMMON_PHONE' | translate }}</label>
 									<span>{{dashboardCtrl.workflowModalData.customer.phone}}</span>
 								</div>
-							</div>
+							</div>		
 						</div>
 						<div class="row customerdetails">
+							<div class="col-md-3 b-r ">
+								<div>
+									<label><i class="fa fa-mobile " aria-hidden="true "></i> {{ 'COMMON_MOBILE' | translate }}</label>
+									<span>{{dashboardCtrl.workflowModalData.customer.mobile}}</span>
+								</div>
+							</div>
 							<div class="col-md-3 b-r ">
 								<div>
 									<label><i class="fa fa-truck " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_DESTINATION' | translate }}</label>
@@ -158,7 +164,7 @@
 							</div>
 							<div class="col-md-3 b-r " ng-if="dashboardCtrl.workflowModalProcess.processor != null">
 								<div>
-									<label><i class="fa fa-user " aria-hidden="true "></i> {{ 'COMMON_PROCESSOR' | translate }}</label>
+									<label><i class="fa fa-thumb-tack " aria-hidden="true "></i> {{ 'COMMON_PROCESSOR' | translate }}</label>
 									<span>{{dashboardCtrl.getNameOfUser(dashboardCtrl.workflowModalProcess.processor)}}</span>
 								</div>
 							</div>
@@ -170,7 +176,9 @@
 						<div class="ibox">
 							<div class="ibox-content">
 								<label style="font-size: 1.2em"><i class="fa fa-envelope" aria-hidden="true "></i> {{ 'COMMON_NOTE' | translate }}</label>
-								<div style="margin-left:20px" ng-bind-html="dashboardCtrl.getAsHtml(dashboardCtrl.workflowModalData.message)"></div>
+								<div style="max-height: 400px;overflow: auto;overflow-x: hidden;">
+									<div style="margin-left:20px" ng-bind-html="dashboardCtrl.getAsHtml(dashboardCtrl.workflowModalData.message)"></div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -178,14 +186,16 @@
 						<div class="ibox" >
 							<div class="ibox-content">
 								<label style="font-size: 1.2em"><i class="fa fa-table" aria-hidden="true "></i> {{ 'PRODUCT_MENU' | translate }}</label>
-								<table class="table table-bordered text-left" style="table-layout: fixed">
-									<tbody>
-										<tr ng-repeat="orderPosition in dashboardCtrl.workflowModalData.orderPositions">
-											<td style="white-space: nowrap; width: 100%"><span class="ellipsis" title="{{orderPosition.amount}}x {{orderPosition.product.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'\u20AC'}})">
-												{{orderPosition.amount}}x {{orderPosition.product.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'\u20AC'}})</span></td>
-										</tr>
-									</tbody>
-								</table>
+								<div style="max-height: 400px;overflow: auto;overflow-x: hidden;">
+									<table class="table table-bordered text-left" style="table-layout: fixed">
+										<tbody>
+											<tr ng-repeat="orderPosition in dashboardCtrl.workflowModalData.orderPositions">
+												<td style="white-space: nowrap; width: 100%"><span class="ellipsis" title="{{orderPosition.amount}}x {{orderPosition.product.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'\u20AC'}})">
+													{{orderPosition.amount}}x {{orderPosition.product.name}} ({{orderPosition.product.netPrice*orderPosition.amount| currency:'\u20AC'}})</span></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>

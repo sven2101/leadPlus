@@ -6,7 +6,7 @@
 /// <reference path="../../Product/model/OrderPosition.Model.ts" />
 /// <reference path="../../Commentary/model/Commentary.Model.ts" />
 /// <reference path="../../app/App.Common.ts" />
-/// <reference path="../../app/App.Common.ts" />
+/// <reference path="../../app/App.TokenService.ts" />
 /// <reference path="../../Process/model/Status.Model.ts" />
 /// <reference path="../../Workflow/model/WorkflowType.ts" />
 /// <reference path="../../Workflow/controller/Workflow.Controller.ts" />
@@ -19,14 +19,18 @@ const WorkflowDatatableServiceId: string = "WorkflowDatatableService";
 
 class WorkflowDatatableService {
 
-    private $inject = [$rootScopeId, $compileId];
+    private $inject = [$rootScopeId, $compileId, TokenServiceId, $httpId, ProcessResourceId];
 
     rootScope;
     compile;
+    showMyTasksUserId: { [key: string]: number } = {};
 
-    constructor($rootScope, $compile) {
+    constructor($rootScope, $compile, private TokenService: TokenService, private $http, ProcessResource) {
         this.rootScope = $rootScope;
         this.compile = $compile;
+        this.showMyTasksUserId["LEAD"] = 0;
+        this.showMyTasksUserId["OFFER"] = 0;
+        this.showMyTasksUserId["SALE"] = 0;
     }
 
     getButtons(title: string, columns: Array<number>): Array<any> {
@@ -97,17 +101,13 @@ class WorkflowDatatableService {
         }
     }
 
-    changeDataInput(loadAllData: boolean, dtOptions: any, allDataRoute: string, latestDataRoute: string) {
-        let searchDelay: number = 0;
-        if (loadAllData === true) {
-            searchDelay = 600;
-        }
-        dtOptions.withOption("serverSide", loadAllData)
-            .withOption("ajax", this.getData(loadAllData, allDataRoute, latestDataRoute))
-            .withOption("searchDelay", searchDelay);
+    async changeDataInput(loadAllData: boolean, dtOptions: any, allDataRoute: string, latestDataRoute: string) {
+        let self = this;
+        let ajaxCall = await self.getData(loadAllData, allDataRoute, latestDataRoute);
+        dtOptions.withOption("ajax", ajaxCall);
     }
 
-    getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): any {
+    async getData(loadAllData: boolean, allDataRoute: string, latestDataRoute: string): Promise<any> {
         let self = this;
         if (loadAllData === true) {
             return {
@@ -118,50 +118,61 @@ class WorkflowDatatableService {
                 error: function (xhr, error, thrown) {
                     handleError(xhr);
                 },
-                "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
+                beforeSend: function (request) {
+                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
                 }
             };
         } else {
             return {
                 url: latestDataRoute,
+                type: "GET",
+                pages: 2,
+                dataSrc: "data",
+                data: function (d) {
+                    d.userId = self.showMyTasksUserId[self.getStatusByWorkflowType(latestDataRoute)];
+                },
                 error: function (xhr, error, thrown) {
                     handleError(xhr);
                 },
-                type: "GET",
-                "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
+                beforeSend: function (request) {
+                    request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
                 }
             };
         }
     }
 
-    appendChildRow(childScope: any, process: Process, workflowUnit: IWorkflow, dtInstance: any, parent: WorkflowController, type: string) {
+    getStatusByWorkflowType(latestDataRoute): WorkflowType {
+        switch (latestDataRoute) {
+            case openDataLeadRoute:
+                return WorkflowType.LEAD;
+            case openDataOfferRoute:
+                return WorkflowType.OFFER;
+            case openDataSaleRoute:
+                return WorkflowType.SALE;
+        };
+    }
+
+
+    appendChildRow(childScope: any, process: Process, workflowUnit: IWorkflow, dtInstance: any, parent: WorkflowController, type: string, withEasingIn: boolean = false) {
         childScope.workflowUnit = workflowUnit;
         childScope.process = process;
         childScope.parent = parent;
         childScope.type = type;
 
-        let link = angular.element("#id_" + process.id), icon = link
-            .find(".glyphicon"), tr = link.parent().parent(), table = dtInstance.DataTable, row = table
-                .row(tr);
+        let tr = angular.element("#id_" + process.id), table = dtInstance.DataTable, row = table
+            .row(tr);
 
         if (row.child.isShown()) {
             let newChildRow = $("#childRow" + process.id);
             newChildRow.removeClass("openMenu");
+            newChildRow.removeClass("openMenu2");
             newChildRow.parent().parent().children("td").css("height", "0px");
             setTimeout(function () {
-                icon.removeClass("glyphicon-minus-sign")
-                    .addClass("glyphicon-plus-sign");
                 row.child.hide();
                 tr.removeClass("shown");
                 childScope.$destroy();
             }, 300);
         } else {
-            icon.removeClass("glyphicon-plus-sign")
-                .addClass("glyphicon-minus-sign");
             let childRow = row.child(
                 this.compile(
                     "<div childrow id='childRow" + process.id + "' type='" + type + "' class='clearfix closeMenuChildRow'></div>")(
@@ -171,9 +182,13 @@ class WorkflowDatatableService {
             let newChildRow = $("#childRow" + process.id);
             newChildRow.parent().parent().children("td").css("height", "0px");
             newChildRow.parent().parent().addClass("childstyle");
-            setTimeout(function () {
-                newChildRow.addClass("openMenu");
-            }, 100);
+            if (withEasingIn === true) {
+                newChildRow.addClass("openMenu2");
+            } else {
+                setTimeout(function () {
+                    newChildRow.addClass("openMenu");
+                }, 100);
+            }
         }
     }
 }

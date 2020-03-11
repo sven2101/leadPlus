@@ -2,7 +2,6 @@ package dash.notificationmanagement.business;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,7 +11,6 @@ import java.util.Set;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -22,10 +20,13 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.log4j.Logger;
 import org.apache.pdfbox.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
@@ -39,13 +40,19 @@ import dash.notificationmanagement.domain.Attachment;
 @Service
 public class AWSEmailService {
 
+	private static final String CLASSPATH_RESOURCE_IMAGE_EMPLOYEE = "classpath:email/images/Andreas_Foitzik.png";
+	private static final String CLASSPATH_RESOURCE_IMAGE_LOGO = "classpath:email/images/logo.png";
+
 	private static final Logger logger = Logger.getLogger(AWSEmailService.class);
 
 	private AmazonSimpleEmailServiceClient amazonSimpleEmailServiceClient;
+	private ResourceLoader resourceLoader;
 
 	@Autowired
-	public AWSEmailService(AmazonSimpleEmailServiceClient amazonSimpleEmailServiceClient) {
+	public AWSEmailService(AmazonSimpleEmailServiceClient amazonSimpleEmailServiceClient,
+			ResourceLoader resourceLoader) {
 		this.amazonSimpleEmailServiceClient = amazonSimpleEmailServiceClient;
+		this.resourceLoader = resourceLoader;
 	}
 
 	public void send(final String fromEmail, final String toEmail, final String subject, final String emailBody)
@@ -72,18 +79,26 @@ public class AWSEmailService {
 		message.setContent(content);
 		content.addBodyPart(wrap);
 
-		Map<String, String> attachmentsFiles = new HashMap<>();
-		attachmentsFiles.put("employee", "src/main/resources/email/images/Andreas_Foitzik.png");
-		attachmentsFiles.put("logo", "src/main/resources/email/images/logo.png");
+		Resource resourceEmployee = resourceLoader.getResource(CLASSPATH_RESOURCE_IMAGE_EMPLOYEE);
+		Resource resourceLogo = resourceLoader.getResource(CLASSPATH_RESOURCE_IMAGE_LOGO);
 
-		for (Map.Entry<String, String> entry : attachmentsFiles.entrySet()) {
+		Map<String, Resource> attachmentsFiles = new HashMap<>();
+		attachmentsFiles.put("employee", resourceEmployee);
+		attachmentsFiles.put("logo", resourceLogo);
+
+		for (Map.Entry<String, Resource> entry : attachmentsFiles.entrySet()) {
 
 			MimeBodyPart attachment = new MimeBodyPart();
 
-			DataSource fds = new FileDataSource(entry.getValue());
-			attachment.setDataHandler(new DataHandler(fds));
-			attachment.setHeader("Content-ID", "<" + entry.getKey() + ">");
-			attachment.setFileName(fds.getName());
+			DataSource fds;
+			try {
+				fds = new ByteArrayDataSource(entry.getValue().getInputStream(), "image/png");
+				attachment.setDataHandler(new DataHandler(fds));
+				attachment.setHeader("Content-ID", "<" + entry.getKey() + ">");
+				attachment.setFileName(fds.getName());
+			} catch (IOException e) {
+				logger.error("Error creating FileDataSource Object from File.", e);
+			}
 
 			content.addBodyPart(attachment);
 		}
@@ -134,19 +149,20 @@ public class AWSEmailService {
 	private Set<Attachment> getInlineAttachments() {
 		Set<Attachment> attachments = new HashSet<>();
 
-		Map<String, String> attachmentsFiles = new HashMap<>();
-		attachmentsFiles.put("employee", "/email/images/Andreas_Foitzik.png");
-		attachmentsFiles.put("logo", "/email/images/logo.png");
+		Resource resourceEmployee = resourceLoader.getResource(CLASSPATH_RESOURCE_IMAGE_EMPLOYEE);
+		Resource resourceLogo = resourceLoader.getResource(CLASSPATH_RESOURCE_IMAGE_LOGO);
+
+		Map<String, Resource> attachmentsFiles = new HashMap<>();
+		attachmentsFiles.put("employee", resourceEmployee);
+		attachmentsFiles.put("logo", resourceLogo);
 
 		try {
-			for (Map.Entry<String, String> entry : attachmentsFiles.entrySet()) {
-				final InputStream inputStream = this.getClass().getResourceAsStream(entry.getValue());
+			for (Map.Entry<String, Resource> entry : attachmentsFiles.entrySet()) {
 				Attachment attachment = new Attachment();
 				FileUpload file = new FileUpload();
 				file.setFilename(entry.getKey());
 				file.setMimeType("image/png");
-
-				file.setContent(IOUtils.toByteArray(inputStream));
+				file.setContent(IOUtils.toByteArray(entry.getValue().getInputStream()));
 
 				attachment.setFileUpload(file);
 				attachments.add(attachment);

@@ -13,25 +13,26 @@
  *******************************************************************************/
 package dash.templatemanagement.domain;
 
+import java.util.Set;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import dash.consistencymanagement.domain.ConsistencyObject;
+
 @Entity
 @Table(name = "template")
-public class Template {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "template_auto_gen")
-	@SequenceGenerator(name = "template_auto_gen", sequenceName = "template_id_seq", allocationSize = 1)
-	@Column(name = "id", nullable = false)
-	private Long id;
+@SequenceGenerator(name = "idgen", sequenceName = "template_id_seq", allocationSize = 1)
+public class Template extends ConsistencyObject {
 
 	@NotNull
 	@Size(max = 255)
@@ -62,11 +63,13 @@ public class Template {
 	@Column(name = "deactivated", nullable = false)
 	private boolean deactivated;
 
-	public Template() {
-	}
+	@ElementCollection(targetClass = TemplateType.class)
+	@CollectionTable(name = "template_types", joinColumns = @JoinColumn(name = "template_id"))
+	@Column(name = "template_type", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Set<TemplateType> templateTypes;
 
-	public Long getId() {
-		return id;
+	public Template() {
 	}
 
 	public String getName() {
@@ -117,10 +120,6 @@ public class Template {
 		this.sourceString = sourceString;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getSubject() {
 		return subject;
 	}
@@ -129,18 +128,26 @@ public class Template {
 		this.subject = subject;
 	}
 
+	public Set<TemplateType> getTemplateTypes() {
+		return templateTypes;
+	}
+
+	public void setTemplateTypes(Set<TemplateType> templateTypes) {
+		this.templateTypes = templateTypes;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((content == null) ? 0 : content.hashCode());
 		result = prime * result + (deactivated ? 1231 : 1237);
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((notificationTypeString == null) ? 0 : notificationTypeString.hashCode());
 		result = prime * result + ((sourceString == null) ? 0 : sourceString.hashCode());
 		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+		result = prime * result + ((templateTypes == null) ? 0 : templateTypes.hashCode());
 		return result;
 	}
 
@@ -148,7 +155,7 @@ public class Template {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -164,11 +171,6 @@ public class Template {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -189,6 +191,11 @@ public class Template {
 			if (other.subject != null)
 				return false;
 		} else if (!subject.equals(other.subject))
+			return false;
+		if (templateTypes == null) {
+			if (other.templateTypes != null)
+				return false;
+		} else if (!templateTypes.equals(other.templateTypes))
 			return false;
 		return true;
 	}

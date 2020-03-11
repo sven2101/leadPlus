@@ -10,7 +10,7 @@ const SettingServiceId: string = "SettingService";
 
 class SettingService {
 
-    private $inject = [$filterId, toasterId, $translateId, $rootScopeId, SettingResourceId, SmtpResourceId, UserResourceId, FileResourceId, TemplateServiceId];
+    private $inject = [$filterId, toasterId, $translateId, $rootScopeId, SettingResourceId, SmtpResourceId, UserResourceId, FileResourceId, TemplateServiceId, ApiServiceId];
 
     settingsResource;
     smtpResource;
@@ -19,6 +19,7 @@ class SettingService {
     templateResource;
 
     templateService;
+    apiService;
 
     rootScope;
     translate;
@@ -29,10 +30,9 @@ class SettingService {
     roleSelection = Array<any>();
     users: Array<User>;
     templates: Array<Template>;
+    apis: Array<Api>;
 
-
-
-    constructor($filter, toaster, $translate, $rootScope, SettingResource, SmtpResource, UserResource, FileResource, TemplateService) {
+    constructor($filter, toaster, $translate, $rootScope, SettingResource, SmtpResource, UserResource, FileResource, TemplateService, ApiService) {
         this.filter = $filter;
         this.toaster = toaster;
         this.rootScope = $rootScope;
@@ -45,8 +45,9 @@ class SettingService {
         this.loadUsers();
 
         this.templateService = TemplateService;
+        this.apiService = ApiService;
         this.templateService.getAll();
-
+        this.apiService.getAll();
     }
 
     loadUsers() {
@@ -58,18 +59,24 @@ class SettingService {
 
     activateUser(user: User) {
         let self = this;
-        this.settingsResource.activate({ id: user.id }, true).$promise.then(function () {
-            self.filter("filter")(self.users, { id: user.id })[0].enabled = true;
+        this.settingsResource.activate({ id: user.id }, true).$promise.then(function (result: User) {
+            self.replaceUser(result);
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_ACCESS_GRANTED"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_ACCESS_GRANTED_ERROR"));
         });
     }
 
+    replaceUser(newUser: User) {
+        let oldUser: User = findElementById(this.users, newUser.id);
+        let index = this.users.indexOf(oldUser);
+        this.users[index] = newUser;
+    }
+
     deactivateUser(user: User) {
         let self = this;
-        this.settingsResource.activate({ id: user.id }, false).$promise.then(function () {
-            self.filter("filter")(self.users, { id: user.id })[0].enabled = false;
+        this.settingsResource.activate({ id: user.id }, false).$promise.then(function (result: User) {
+            self.replaceUser(result);
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_ACCESS_REVOKED"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_ACCESS_REVOKED_ERROR"));
@@ -78,8 +85,8 @@ class SettingService {
 
     changeRole(user: User) {
         let self = this;
-        this.settingsResource.changeRole({ id: user.id, role: user.role }).$promise.then(function (data) {
-            user = data;
+        this.settingsResource.changeRole({ id: user.id, role: user.role }).$promise.then(function (result: User) {
+            self.replaceUser(result);
             self.toaster.pop("success", "", self.translate.instant("SETTING_TOAST_SET_ROLE"));
         }, function () {
             self.toaster.pop("error", "", self.translate.instant("SETTING_TOAST_SET_ROLE_ERROR"));

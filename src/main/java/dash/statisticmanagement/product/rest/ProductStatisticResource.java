@@ -76,10 +76,10 @@ public class ProductStatisticResource {
 			Object obj = ByteSearializer.deserialize(olap.getProducts());
 			if (!(obj instanceof Map<?, ?>))
 				return new ArrayList<>();
-			Map<String, List<ProductStatistic>> sourceMap = (Map<String, List<ProductStatistic>>) obj;
-			if (!sourceMap.containsKey(source))
+			Map<Workflow, Map<String, List<ProductStatistic>>> sourceMap = (Map<Workflow, Map<String, List<ProductStatistic>>>) obj;
+			if (!sourceMap.containsKey(Workflow.SALE) || !sourceMap.get(Workflow.SALE).containsKey(source))
 				return new ArrayList<>();
-			return sourceMap.get(source);
+			return sourceMap.get(Workflow.SALE).get(source);
 		} else {
 			logger.info("Infromation directly calculating.");
 			Map<String, List<ProductStatistic>> sourceMap = productStatisticService.getTopProductStatstic(workflow,
@@ -90,6 +90,7 @@ public class ProductStatisticResource {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/{workflow}/daterange/{dateRange}/source/{source}/id/{id}", method = { RequestMethod.GET,
 			RequestMethod.POST })
 	@ResponseStatus(HttpStatus.OK)
@@ -98,16 +99,39 @@ public class ProductStatisticResource {
 			@ApiParam(required = true) @PathVariable @Valid final Workflow workflow,
 			@ApiParam(required = true) @PathVariable @Valid final DateRange dateRange,
 			@ApiParam(required = true) @PathVariable @Valid String source,
-			@ApiParam(required = true) @PathVariable @Valid final Long id) throws NotFoundException {
+			@ApiParam(required = true) @PathVariable @Valid final Long id)
+			throws NotFoundException, ClassNotFoundException, IOException {
 		if (CommonUtils.isNullOrEmpty(source))
 			source = AbstractStatisticService.ALL_STATISTIC_KEY;
-		ProductStatistic productStatistic = new ProductStatistic();
-		Map<String, List<ProductStatistic>> sourceMap = productStatisticService.getTopProductStatstic(workflow,
-				dateRange, id);
-		if (!sourceMap.containsKey(source))
+
+		Olap olap = olapRepository.findTopByDateRangeOrderByTimestampDesc(dateRange);
+		if (olap != null && olap.getProducts() != null) {
+			logger.info("Infromation from OLAP.");
+			Object obj = ByteSearializer.deserialize(olap.getProducts());
+			if (!(obj instanceof Map<?, ?>))
+				return new ProductStatistic();
+			Map<Workflow, Map<String, List<ProductStatistic>>> sourceMap = (Map<Workflow, Map<String, List<ProductStatistic>>>) obj;
+			if (!sourceMap.containsKey(workflow) || !sourceMap.get(workflow).containsKey(source))
+				return new ProductStatistic();
+			ProductStatistic productStatisticReturn = new ProductStatistic();
+			for (ProductStatistic productStatistic : sourceMap.get(workflow).get(source)) {
+				if (productStatistic.getProduct().getId().equals(id)) {
+					productStatisticReturn = productStatistic;
+					break;
+				}
+			}
+			return productStatisticReturn;
+		} else {
+			logger.info("Infromation directly calculating.");
+			ProductStatistic productStatistic = new ProductStatistic();
+			Map<String, List<ProductStatistic>> sourceMap = productStatisticService.getTopProductStatstic(workflow,
+					dateRange, id);
+			if (!sourceMap.containsKey(source))
+				return productStatistic;
+			if (sourceMap.get(source).size() > 0)
+				productStatistic = sourceMap.get(source).get(0);
 			return productStatistic;
-		if (sourceMap.get(source).size() > 0)
-			productStatistic = sourceMap.get(source).get(0);
-		return productStatistic;
+		}
+
 	}
 }

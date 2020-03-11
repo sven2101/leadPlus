@@ -25,10 +25,11 @@ const broadcastOnTodosChanged: string = "onTodosChange";
 
 class DashboardService {
 
-    private $inject = [ProcessResourceId, toasterId, $rootScopeId, $translateId, WorkflowServiceId, $uibModalId, $qId, "SweetAlert"];
+    private $inject = [ProcessResourceId, toasterId, $rootScopeId, $translateId, WorkflowServiceId, $uibModalId, $qId, SweetAlertId, WorkflowDatatableServiceId];
 
     processResource: any;
     workflowService: WorkflowService;
+    workflowDatatableService: WorkflowDatatableService;
     toaster: any;
     translate: any;
     rootScope: any;
@@ -44,11 +45,8 @@ class DashboardService {
     elementToDelete: Array<Process> = [];
     delementDropzoneVisibility: string = "hidden";
 
-    allOpenLeads: Array<Process> = [];
-    allInContacts: Array<Process> = [];
-    allOpenOffers: Array<Process> = [];
-    allDoneOffers: Array<Process> = [];
-    allClosedSales: Array<Process> = [];
+    allDataLoad: boolean = false;
+    tempUpdatedProcess: Process;
 
     openLeadsValue: number = 0;
     inContactsValue: number = 0;
@@ -57,7 +55,7 @@ class DashboardService {
     closedSalesValue: number = 0;
     SweetAlert: any;
     uibModal;
-    todos: Array<Process> = [];
+    todos: any = { content: [] };
     dropzoneClass = {
         lead: "none",
         contact: "none",
@@ -66,16 +64,21 @@ class DashboardService {
         sale: "none",
     };
 
-    constructor(ProcessResource, toaster, $rootScope, $translate, WorkflowService, $uibModal, $q, SweetAlert) {
+    searchText: string = null;
+    showMyTaskUserId: number = 0;
+    direction: string = "ASC";
+
+
+    constructor(ProcessResource, toaster, $rootScope, $translate, WorkflowService, $uibModal, $q, SweetAlert, WorkflowDatatableService) {
         this.processResource = ProcessResource.resource;
         this.workflowService = WorkflowService;
+        this.workflowDatatableService = WorkflowDatatableService;
         this.toaster = toaster;
         this.rootScope = $rootScope;
         this.translate = $translate;
         this.q = $q;
         this.SweetAlert = SweetAlert;
         this.uibModal = $uibModal;
-        this.refreshTodos();
 
         $rootScope.$on(broadcastOnTodosChanged, (event) => {
             this.refreshTodos();
@@ -87,84 +90,119 @@ class DashboardService {
         }, 10 * 60 * 1000);
     }
 
-    initDashboard() {
+    initDashboard(withLaoading: boolean, loadSums: boolean) {
         let self = this;
-        this.processResource.getWorkflowByStatus({ workflow: "LEAD", status: "OPEN" }).$promise.then(function (result) {
-            let open: Array<Process> = new Array<Process>();
-            let contact: Array<Process> = new Array<Process>();
-            for (let i = 0; i < result.length; i++) {
-                if (result[i].status === "OPEN") {
-                    open.push(result[i]);
-                }
-                else if (result[i].status === "INCONTACT") {
-                    contact.push(result[i]);
-                }
-            }
-            self.openLeads = self.orderProcessByTimestamp(open, "lead");
-            self.allOpenLeads = self.openLeads;
-            self.sumLeads();
-            self.inContacts = self.orderProcessByTimestamp(contact, "lead");
-            self.allInContacts = self.inContacts;
-            self.sumInContacts();
+        this.allDataLoad = !withLaoading;
+        let open: Array<Process> = new Array<Process>();
+        let contact: Array<Process> = new Array<Process>();
+        let openOffer: Array<Process> = new Array<Process>();
+        let done: Array<Process> = new Array<Process>();
+        let sale: Array<Process> = new Array<Process>();
+        let leadLoad: boolean = false;
+        let contactLoad: boolean = false;
+        let offerLoad: boolean = false;
+        let doneLoad: boolean = false;
+        let saleLoad: boolean = false;
+
+        this.processResource.getExtendedProcessPage({ status: Status.OPEN }, { properties: "lead.timestamp", size: 8, page: 0, direction: this.direction, searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+            open = result.content;
+            leadLoad = true;
+            self.loadDataToDashboard(open, contact, openOffer, done, sale, leadLoad, contactLoad, offerLoad, doneLoad, saleLoad, loadSums);
         });
 
-        this.processResource.getWorkflowByStatus({ workflow: "OFFER", status: "OFFER" }).$promise.then(function (result) {
-            let open: Array<Process> = new Array<Process>();
-            let done: Array<Process> = new Array<Process>();
-            for (let i = 0; i < result.length; i++) {
-                if (result[i].status === "OFFER" || result[i].status === "FOLLOWUP") {
-                    open.push(result[i]);
-                }
-                else if (result[i].status === "DONE") {
-                    done.push(result[i]);
-                }
-            }
-            self.openOffers = self.orderProcessByTimestamp(open, "offer");
-            self.allOpenOffers = self.openOffers;
-            self.sumOffers();
-            self.doneOffers = self.orderProcessByTimestamp(done, "offer");
-            self.allDoneOffers = self.doneOffers;
-            self.sumDoneOffers();
+        this.processResource.getExtendedProcessPage({ status: Status.INCONTACT }, { properties: "lead.timestamp", size: 8, page: 0, direction: this.direction, searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+            contact = result.content;
+            contactLoad = true;
+            self.loadDataToDashboard(open, contact, openOffer, done, sale, leadLoad, contactLoad, offerLoad, doneLoad, saleLoad, loadSums);
         });
 
-        this.processResource.getLatestSales().$promise.then(function (result) {
-            self.closedSales = result;
-            self.allClosedSales = self.closedSales;
-            self.sumSales();
+        this.processResource.getExtendedProcessPage({ status: Status.OFFER }, { properties: "offer.timestamp", size: 8, page: 0, direction: this.direction, searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+            openOffer = result.content;
+            offerLoad = true;
+            self.loadDataToDashboard(open, contact, openOffer, done, sale, leadLoad, contactLoad, offerLoad, doneLoad, saleLoad, loadSums);
         });
+
+        this.processResource.getExtendedProcessPage({ status: Status.DONE }, { properties: "offer.timestamp", size: 8, page: 0, direction: this.direction, searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+            done = result.content;
+            doneLoad = true;
+            self.loadDataToDashboard(open, contact, openOffer, done, sale, leadLoad, contactLoad, offerLoad, doneLoad, saleLoad, loadSums);
+        });
+
+        this.processResource.getExtendedProcessPage({ status: Status.SALE }, { properties: "sale.timestamp", size: 7, page: 0, direction: this.direction, searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+            sale = result.content;
+            saleLoad = true;
+            self.loadDataToDashboard(open, contact, openOffer, done, sale, leadLoad, contactLoad, offerLoad, doneLoad, saleLoad, loadSums);
+        });
+
+    }
+
+    loadDataToDashboard(open, contact, openOffer, done, sale, leadLoad: boolean, contactLoad: boolean, offerLoad: boolean, doneLoad: boolean, saleLoad: boolean, loadSums: boolean) {
+        if (leadLoad === true && contactLoad === true && offerLoad === true && doneLoad === true && saleLoad === true) {
+            if (loadSums === true) {
+                this.sumLeads();
+                this.sumInContacts();
+                this.sumOffers();
+                this.sumDoneOffers();
+                this.sumSales();
+            }
+            this.openLeads = open;
+            this.inContacts = contact;
+            this.openOffers = openOffer;
+            this.doneOffers = done;
+            this.closedSales = sale;
+            this.allDataLoad = true;
+        }
+    }
+
+    updateProcessElement(oldProcess: Process, process: Process, updateNow: boolean) {
+        if (updateNow === false) {
+            this.tempUpdatedProcess = process;
+        } else if (updateNow === true) {
+            this.updateElementInArray(this.openLeads, oldProcess, process);
+            this.updateElementInArray(this.inContacts, oldProcess, process);
+            this.updateElementInArray(this.openOffers, oldProcess, process);
+            this.updateElementInArray(this.doneOffers, oldProcess, process);
+        }
+
     }
 
     sumLeads(): void {
+        let self = this;
         this.openLeadsValue = 0;
-        for (let i = 0; i < this.openLeads.length; i++) {
-            this.openLeadsValue += this.workflowService.sumOrderPositions(this.openLeads[i].lead.orderPositions);
-        }
+        this.processResource.getSumByStatus({ status: Status.OPEN }, { searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+            self.openLeadsValue = result.value;
+        });
     }
+
     sumInContacts(): void {
+        let self = this;
         this.inContactsValue = 0;
-        for (let i = 0; i < this.inContacts.length; i++) {
-            this.inContactsValue += this.workflowService.sumOrderPositions(this.inContacts[i].lead.orderPositions);
-        }
+        this.processResource.getSumByStatus({ status: Status.INCONTACT }, { searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+            self.inContactsValue = result.value;
+        });
     }
     sumOffers(): void {
+        let self = this;
         this.openOffersValue = 0;
-        for (let i = 0; i < this.openOffers.length; i++) {
-            this.openOffersValue += this.openOffers[i].offer.netPrice;
-        }
+        this.processResource.getSumByStatus({ status: Status.OFFER }, { searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+            self.openOffersValue = result.value;
+        });
     }
 
     sumDoneOffers(): void {
+        let self = this;
         this.doneOffersValue = 0;
-        for (let i = 0; i < this.doneOffers.length; i++) {
-            this.doneOffersValue += this.doneOffers[i].offer.netPrice;
-        }
+        this.processResource.getSumByStatus({ status: Status.DONE }, { searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+            self.doneOffersValue = result.value;
+        });
     }
 
     sumSales(): void {
+        let self = this;
         this.closedSalesValue = 0;
-        for (let i = 0; i < this.closedSales.length; i++) {
-            this.closedSalesValue += this.closedSales[i].sale.saleTurnover;
-        }
+        this.processResource.getSumByStatus({ status: Status.SALE }, { searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+            self.closedSalesValue = result.value;
+        });
     }
 
     setSortableOptions(scope: any): any {
@@ -213,7 +251,7 @@ class DashboardService {
                     ui.item.sortable.cancel();
                 }
             },
-            stop: function (e, ui) {
+            stop: async function (e, ui) {
                 let target = ui.item.sortable.droptargetModel;
                 let source = ui.item.sortable.sourceModel;
                 let item = ui.item.sortable.model;
@@ -233,22 +271,28 @@ class DashboardService {
                         if (result === undefined) {
                             item.sale = undefined;
                             target.splice(target.indexOf(item), 1);
-                            source.push(item);
+                            source.push(self.getUpdatedItem(item));
                             self.inModal = false;
+                            self.orderProcessByTimestamp(source, "offer", self.direction);
                         } else {
                             let index = target.indexOf(item);
                             target[index] = result;
-                            self.removeFromSourceAndAddToTarget(self.allClosedSales, self.allOpenOffers, item, result);
-                            self.removeFromSourceAndAddToTarget(self.allClosedSales, self.allDoneOffers, item, result);
                             self.inModal = false;
+                            if (self.openOffers === source) {
+                                self.openOffersValue -= result.offer.netPrice;
+                                self.updateDashboard("offer");
+                            } else if (self.doneOffers === source) {
+                                self.doneOffersValue -= result.offer.netPrice;
+                                self.updateDashboard("done");
+                            }
+                            self.closedSalesValue += result.sale.saleTurnover;
                         }
-                        self.updateDashboard("sale");
                     }, function (result) {
                         item.sale = undefined;
                         target.splice(target.indexOf(item), 1);
-                        source.push(item);
+                        source.push(self.getUpdatedItem(item));
                         self.inModal = false;
-                        self.updateDashboard("sale");
+                        self.orderProcessByTimestamp(source, "offer", self.direction);
                     });
                 }
                 else if (self.openOffers === target && self.openLeads === source
@@ -258,41 +302,67 @@ class DashboardService {
                         if (result === undefined) {
                             item.offer = undefined;
                             target.splice(target.indexOf(item), 1);
-                            source.push(item);
+                            source.push(self.getUpdatedItem(item));
                             self.inModal = false;
+                            self.orderProcessByTimestamp(source, "lead", self.direction);
                         } else {
                             let index = target.indexOf(item);
                             target[index] = result;
-                            self.removeFromSourceAndAddToTarget(self.allOpenOffers, self.allOpenLeads, item, result);
-                            self.removeFromSourceAndAddToTarget(self.allOpenOffers, self.allInContacts, item, result);
                             self.inModal = false;
+                            self.orderProcessByTimestamp(target, "offer", self.direction);
+                            if (self.openLeads === source) {
+                                self.openLeadsValue -= result.offer.netPrice;
+                                self.updateDashboard("lead");
+                            } else if (self.inContacts === source) {
+                                self.inContactsValue -= result.offer.netPrice;
+                                self.updateDashboard("incontact");
+                            }
+                            self.openOffersValue += result.offer.netPrice;
                         }
-                        self.updateDashboard("offer");
                     }, function (result) {
                         item.offer = undefined;
                         target.splice(target.indexOf(item), 1);
-                        source.push(item);
+                        source.push(self.getUpdatedItem(item));
                         self.inModal = false;
-                        self.updateDashboard("offer");
+                        self.orderProcessByTimestamp(source, "lead", self.direction);
                     });
                 }
                 else if (self.inContacts === target && self.openLeads === source) {
-                    self.inContact(item);
-                    item.processor = self.rootScope.user;
-                    self.removeFromSourceAndAddToTarget(self.allInContacts, self.allOpenLeads, item, item);
-                    self.updateDashboard("lead");
+                    self.inContact(item).then(function (result: Process) {
+                        let index = target.indexOf(item);
+                        target[index] = result;
+                        let leadOrderpositionValue = self.workflowService.sumOrderPositions(result.lead.orderPositions);
+                        self.openLeadsValue -= leadOrderpositionValue;
+                        self.inContactsValue += leadOrderpositionValue;
+                        self.orderProcessByTimestamp(target, "lead", self.direction);
+                        self.updateDashboard("lead");
+                    }, function (error) {
+                        self.inconsistencySweetAlert(error);
+                    });
                 }
                 else if (self.doneOffers === target && self.openOffers === source) {
-                    self.doneOffer(item);
-                    item.processor = null;
-                    self.removeFromSourceAndAddToTarget(self.allDoneOffers, self.allOpenOffers, item, item);
-                    self.updateDashboard("offer");
+                    self.doneOffer(item).then(function (result: Process) {
+                        let index = target.indexOf(item);
+                        target[index] = result;
+                        self.openOffersValue -= result.offer.netPrice;
+                        self.doneOffersValue += result.offer.netPrice;
+                        self.orderProcessByTimestamp(target, "offer", self.direction);
+                        self.updateDashboard("offer");
+                    }, function (error) {
+                        self.inconsistencySweetAlert(error);
+                    });
                 }
                 else if (self.openOffers === target && self.doneOffers === source) {
-                    self.doneOffer(item);
-                    item.processor = self.rootScope.user;
-                    self.removeFromSourceAndAddToTarget(self.allOpenOffers, self.allDoneOffers, item, item);
-                    self.updateDashboard("offer");
+                    self.doneOffer(item).then(function (result: Process) {
+                        let index = target.indexOf(item);
+                        target[index] = result;
+                        self.doneOffersValue -= result.offer.netPrice;
+                        self.openOffersValue += result.offer.netPrice;
+                        self.orderProcessByTimestamp(target, "offer", self.direction);
+                        self.updateDashboard("done");
+                    }, function (error) {
+                        self.inconsistencySweetAlert(error);
+                    });
                 }
                 else if (target === self.elementToDelete) {
                     let title = "";
@@ -304,8 +374,9 @@ class DashboardService {
                         title = self.translate.instant("OFFER_CLOSE_OFFER");
                         text = self.translate.instant("OFFER_CLOSE_OFFER_REALLY");
                     }
+
                     self.inModal = true;
-                    self.SweetAlert.swal({
+                    let deletePromise = self.SweetAlert.swal({
                         title: title,
                         text: text,
                         type: "warning",
@@ -313,27 +384,29 @@ class DashboardService {
                         cancelButtonText: self.translate.instant("NO"),
                         confirmButtonColor: "#DD6B55",
                         confirmButtonText: self.translate.instant("YES"),
-                    }, function (isConfirm) {
-                        if (isConfirm) {
-                            self.closeProcess(item, source);
-                            target.splice(source.indexOf(item), 1);
-                            self.sliceElementFromArray(self.allOpenLeads, item);
-                            self.sliceElementFromArray(self.allInContacts, item);
-                            self.sliceElementFromArray(self.allOpenOffers, item);
-                            self.sliceElementFromArray(self.allDoneOffers, item);
-                            let todoElement: Process = findElementById(self.todos, item.id) as Process;
-                            if (!isNullOrUndefined(todoElement)) {
-                                self.todos.splice(self.todos.indexOf(todoElement), 1);
-                                self.rootScope.$broadcast("todosChanged", self.todos);
-                            }
-                            self.inModal = false;
-                        }
-                        else {
-                            target.splice(target.indexOf(item), 1);
-                            source.push(item);
-                            self.inModal = false;
-                        }
                     });
+
+                    try {
+                        await deletePromise;
+                        self.closeProcess(item, source);
+                        target.splice(source.indexOf(item), 1);
+
+                        let todoElement: Process = findElementById(self.todos, item.id) as Process;
+                        if (!isNullOrUndefined(todoElement)) {
+                            self.todos.splice(self.todos.indexOf(todoElement), 1);
+                            self.rootScope.$broadcast("todosChanged", self.todos);
+                        }
+                        self.inModal = false;
+                    } catch (error) {
+                        target.splice(target.indexOf(item), 1);
+                        source.push(item);
+                        self.inModal = false;
+                        if (source === self.openLeads || source === self.inContacts) {
+                            self.orderProcessByTimestamp(source, "lead", self.direction);
+                        } else if (source === self.openOffers || source === self.doneOffer) {
+                            self.orderProcessByTimestamp(source, "offer", self.direction);
+                        }
+                    }
                 }
             },
             connectWith: ".connectList",
@@ -342,10 +415,43 @@ class DashboardService {
         return sortableList;
     }
 
+    async inconsistencySweetAlert(error) {
+        this.inModal = true;
+        let refreshPromise = this.SweetAlert.swal({
+            text: getConsistencyErrorMessage(error, this.translate, this.translate.instant("PROCESS_PROCESS")),
+            type: "warning",
+            showCancelButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "OK",
+        });
+
+        await refreshPromise;
+        this.initDashboard(true, true);
+        this.inModal = false;
+    }
+
     removeFromSourceAndAddToTarget(target: Array<Process>, source: Array<Process>, item: Process, replaceItem) {
         if (source.indexOf(item) > -1) {
             target.push(replaceItem);
             source.splice(source.indexOf(item), 1);
+        } else if (target.indexOf(item) > -1) {
+            target[target.indexOf(item)] = replaceItem;
+        }
+    }
+
+    getUpdatedItem(item: Process): Process {
+        if (!isNullOrUndefined(this.tempUpdatedProcess) && this.tempUpdatedProcess.id === item.id && this.tempUpdatedProcess.status === item.status) {
+            return deepCopy(this.tempUpdatedProcess);
+        } else {
+            return item;
+        }
+    }
+
+    updateElementInArray(target: Array<Process>, item: Process, replaceItem) {
+        if (target.indexOf(item) > -1) {
+            target[target.indexOf(item)] = replaceItem;
         }
     }
 
@@ -357,33 +463,52 @@ class DashboardService {
 
     addNewLead(process: Process) {
         this.openLeads.push(process);
-        this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead");
-        this.sumLeads();
+        this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead", this.direction);
+        this.openLeadsValue = this.workflowService.sumOrderPositions(process.lead.orderPositions);
     }
 
     updateDashboard(type: string) {
-        if (type === "lead") {
-            this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead");
-            this.inContacts = this.orderProcessByTimestamp(this.inContacts, "lead");
-            this.sumLeads();
-            this.sumInContacts();
+        let self = this;
+        if (type === "lead" && self.openLeads.length === 7) {
+            this.processResource.getProcessPage({ status: Status.OPEN }, { properties: "lead.timestamp", size: 10, page: 0, direction: this.direction, searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+                self.updateArray(self.openLeads, result.content, WorkflowType.LEAD);
+            });
+        } else if (type === "incontact" && self.inContacts.length === 7) {
+            this.processResource.getProcessPage({ status: Status.INCONTACT }, { properties: "lead.timestamp", size: 10, page: 0, direction: this.direction, searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+                self.updateArray(self.inContacts, result.content, WorkflowType.LEAD);
+            });
         }
-        else if (type === "offer") {
-            this.openOffers = this.orderProcessByTimestamp(this.openOffers, "offer");
-            this.doneOffers = this.orderProcessByTimestamp(this.doneOffers, "offer");
-            this.openLeads = this.orderProcessByTimestamp(this.openLeads, "lead");
-            this.inContacts = this.orderProcessByTimestamp(this.inContacts, "lead");
-            this.sumLeads();
-            this.sumInContacts();
-            this.sumDoneOffers();
-            this.sumOffers();
-        } else if (type === "sale") {
-            this.closedSales = this.orderProcessByTimestamp(this.closedSales, "sale").reverse();
-            this.doneOffers = this.orderProcessByTimestamp(this.doneOffers, "offer");
-            this.openOffers = this.orderProcessByTimestamp(this.openOffers, "offer");
-            this.sumOffers();
-            this.sumDoneOffers();
-            this.sumSales();
+        else if (type === "offer" && self.openOffers.length === 7) {
+            this.processResource.getProcessPage({ status: Status.OFFER }, { properties: "offer.timestamp", size: 10, page: 0, direction: this.direction, searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+                self.updateArray(self.openOffers, result.content, WorkflowType.OFFER);
+            });
+        } else if (type === "done" && self.doneOffers.length === 7) {
+            this.processResource.getProcessPage({ status: Status.DONE }, { properties: "offer.timestamp", size: 10, page: 0, direction: this.direction, searchText: this.searchText, userId: this.showMyTaskUserId }).$promise.then(function (result) {
+                self.updateArray(self.doneOffers, result.content, WorkflowType.OFFER);
+            });
+        }
+    }
+
+    updateArray(local: Array<Process>, server: Array<Process>, workflowType: WorkflowType) {
+        let removedProcesses: Array<Process> = deepCopy(local);
+        let indexOfData = 0;
+        for (let serverProcess of server) {
+            indexOfData++;
+            let localProcess: Process = findElementById(local, serverProcess.id);
+            if (localProcess == null) {
+                local.push(serverProcess);
+            } else {
+                this.sliceElementFromArray(removedProcesses, findElementById(removedProcesses, localProcess.id));
+                if (localProcess.lastEdited !== serverProcess.lastEdited || localProcess[workflowType.toString().toLowerCase()].customer.lastEdited !== serverProcess[workflowType.toString().toLowerCase()].customer.lastEdited) {
+                    this.updateElementInArray(local, localProcess, serverProcess);
+                }
+            }
+            if (server.length === indexOfData) {
+                for (let i = 0; i < removedProcesses.length; i++) {
+                    this.sliceElementFromArray(local, findElementById(local, removedProcesses[i].id));
+                }
+                this.orderProcessByTimestamp(local, workflowType.toString().toLowerCase(), this.direction);
+            }
         }
     }
 
@@ -407,38 +532,44 @@ class DashboardService {
         return defer.promise;
     }
 
-    inContact(process: Process) {
-        this.workflowService.inContact(process);
+    async inContact(process: Process): Promise<Process> {
+        return await this.workflowService.inContact(deepCopy(process));
     }
 
-    doneOffer(process: Process) {
-        this.workflowService.doneOffer(process);
+    async doneOffer(process: Process): Promise<Process> {
+        return await this.workflowService.doneOffer(deepCopy(process));
     }
 
     closeProcess(process: Process, source: any) {
         let self = this;
         this.processResource.setStatus({
             id: process.id
-        }, "CLOSED").$promise.then(function () {
+        }, "CLOSED").$promise.then(function (result: Process) {
             let message = "";
             if (source === self.openLeads) {
-                self.sumLeads();
+                let leadOrderpositionValue = self.workflowService.sumOrderPositions(result.lead.orderPositions);
+                self.openLeadsValue -= leadOrderpositionValue;
                 self.rootScope.leadsCount -= 1;
+                self.updateDashboard("lead");
                 message = self.translate.instant("COMMON_TOAST_SUCCESS_CLOSE_LEAD");
             }
             else if (source === self.inContacts) {
+                let leadOrderpositionValue = self.workflowService.sumOrderPositions(result.lead.orderPositions);
                 self.rootScope.leadsCount -= 1;
-                self.sumInContacts();
+                self.updateDashboard("incontact");
+                self.inContactsValue -= leadOrderpositionValue;
                 message = self.translate.instant("COMMON_TOAST_SUCCESS_CLOSE_LEAD");
             }
             else if (source === self.openOffers) {
                 self.rootScope.offersCount -= 1;
-                self.sumOffers();
+                self.updateDashboard("offer");
+                self.openOffersValue -= result.offer.netPrice;
                 message = self.translate.instant("COMMON_TOAST_SUCCESS_CLOSE_OFFER");
             }
             else if (source === self.doneOffers) {
                 self.rootScope.offersCount -= 1;
-                self.sumDoneOffers();
+                self.updateDashboard("done");
+                self.doneOffersValue -= result.offer.netPrice;
                 message = self.translate.instant("COMMON_TOAST_SUCCESS_CLOSE_OFFER");
             }
             self.toaster.pop("success", "", message);
@@ -466,77 +597,38 @@ class DashboardService {
     filterMytasks(showMytasks: boolean) {
         let self = this;
         if (showMytasks) {
-            this.openLeads = this.openLeads.filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
-            this.inContacts = this.inContacts.filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
-            this.openOffers = this.openOffers.filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
-            this.doneOffers = this.doneOffers.filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
-            this.closedSales = this.closedSales.filter(process => !isNullOrUndefined(process.processor) && process.processor.id === self.rootScope.user.id);
+            this.showMyTaskUserId = this.rootScope.user.id;
+
         } else {
-            this.openLeads = this.allOpenLeads;
-            this.inContacts = this.allInContacts;
-            this.openOffers = this.allOpenOffers;
-            this.doneOffers = this.allDoneOffers;
-            this.closedSales = this.allClosedSales;
+            this.showMyTaskUserId = 0;
         }
-        this.updateDashboard("lead");
-        this.updateDashboard("offer");
-        this.updateDashboard("sale");
+        this.initDashboard(true, false);
     }
 
     filterBySearch(searchText: string, showMyTasks: boolean) {
         let self = this;
         if (!stringIsNullorEmpty(searchText)) {
-            this.openLeads = this.allOpenLeads.filter(process => (!isNullOrUndefined(process.lead.customer.firstname) && process.lead.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.lead.customer.lastname) && process.lead.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.lead.customer.company) && process.lead.customer.company.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.lead.customer.email) && process.lead.customer.email.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.lead.deliveryAddressLine) && process.lead.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
-            this.inContacts = this.allInContacts.filter(process => (!isNullOrUndefined(process.lead.customer.firstname) && process.lead.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.lead.customer.lastname) && process.lead.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.lead.customer.company) && process.lead.customer.company.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.lead.customer.email) && process.lead.customer.email.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.lead.deliveryAddressLine) && process.lead.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
-            this.openOffers = this.allOpenOffers.filter(process => (!isNullOrUndefined(process.offer.customer.firstname) && process.offer.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.offer.customer.lastname) && process.offer.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.offer.customer.company) && process.offer.customer.company.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.offer.customer.email) && process.offer.customer.email.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.offer.deliveryAddressLine) && process.offer.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
-            this.doneOffers = this.allDoneOffers.filter(process => (!isNullOrUndefined(process.offer.customer.firstname) && process.offer.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.offer.customer.lastname) && process.offer.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.offer.customer.company) && process.offer.customer.company.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.offer.customer.email) && process.offer.customer.email.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.offer.deliveryAddressLine) && process.offer.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
-            this.closedSales = this.allClosedSales.filter(process => (!isNullOrUndefined(process.sale.customer.firstname) && process.sale.customer.firstname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.sale.customer.lastname) && process.sale.customer.lastname.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.sale.customer.company) && process.sale.customer.company.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.sale.customer.email) && process.sale.customer.email.toLowerCase().includes(searchText.toLowerCase()))
-                || (!isNullOrUndefined(process.sale.deliveryAddressLine) && process.sale.deliveryAddressLine.toLowerCase().includes(searchText.toLowerCase())));
+            this.searchText = searchText;
         } else {
-            this.openLeads = this.allOpenLeads;
-            this.inContacts = this.allInContacts;
-            this.openOffers = this.allOpenOffers;
-            this.doneOffers = this.allDoneOffers;
-            this.closedSales = this.allClosedSales;
+            this.searchText = null;
         }
-
-        if (showMyTasks) {
-            self.filterMytasks(showMyTasks);
-        }
-
-        this.updateDashboard("lead");
-        this.updateDashboard("offer");
-        this.updateDashboard("sale");
+        this.initDashboard(true, false);
     }
 
     refreshTodos(): void {
         if (isNullOrUndefined(this.rootScope.user)) {
             return;
         }
-        this.processResource.getTodos({ processorId: this.rootScope.user.id }).$promise.then((data) => {
-            this.todos = this.orderByTimestamp(data);
+        this.processResource.getTodos({ processorId: this.rootScope.user.id }, { properties: "lead.timestamp", size: 5, page: 0, direction: "ASC", searchText: null }).$promise.then((data) => {
+            this.todos = data;
             this.rootScope.$broadcast("todosChanged", this.todos);
         }, (error) => handleError(error));
 
+    }
+
+    async getTodosBySearchText(searchText: String, size: number, page: number, direction: string, ): Promise<Array<Process>> {
+        let todos = await this.processResource.getTodos({ processorId: this.rootScope.user.id }, { properties: "lead.timestamp", size: size, page: page, direction: direction, searchText: searchText });
+        return todos;
     }
 
     orderByTimestamp(todos: Array<Process>): Array<Process> {
@@ -549,9 +641,10 @@ class DashboardService {
         });
     }
 
-    orderProcessByTimestamp(process: Array<Process>, type: string): Array<Process> {
+    orderProcessByTimestamp(process: Array<Process>, type: string, order: string): Array<Process> {
+        let tempArray: Array<Process>;
         if (type === "lead") {
-            return process.sort((a, b) => {
+            tempArray = process.sort((a, b) => {
                 let tempA = moment(a.lead.timestamp, "DD.MM.YYYY HH:mm:ss");
                 let tempB = moment(b.lead.timestamp, "DD.MM.YYYY HH:mm:ss");
                 if (tempA < tempB) { return -1; }
@@ -559,7 +652,7 @@ class DashboardService {
                 else { return 0; }
             });
         } else if (type === "offer") {
-            return process.sort((a, b) => {
+            tempArray = process.sort((a, b) => {
                 let tempA = moment(a.offer.timestamp, "DD.MM.YYYY HH:mm:ss");
                 let tempB = moment(b.offer.timestamp, "DD.MM.YYYY HH:mm:ss");
                 if (tempA < tempB) { return -1; }
@@ -567,13 +660,19 @@ class DashboardService {
                 else { return 0; }
             });
         } else if (type === "sale") {
-            return process.sort((a, b) => {
+            tempArray = process.sort((a, b) => {
                 let tempA = moment(a.sale.timestamp, "DD.MM.YYYY HH:mm:ss");
                 let tempB = moment(b.sale.timestamp, "DD.MM.YYYY HH:mm:ss");
                 if (tempA < tempB) { return -1; }
                 else if (tempA > tempB) { return 1; }
                 else { return 0; }
             });
+        }
+        if (order === "DESC") {
+            return tempArray.reverse();
+        }
+        else if (order === "ASC") {
+            return tempArray;
         }
     }
 }

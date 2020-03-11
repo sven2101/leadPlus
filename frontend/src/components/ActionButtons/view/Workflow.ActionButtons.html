@@ -1,23 +1,24 @@
 <div ng-style="::{'min-width':minwidth+'px'}" class="text-center btn-group" role="group" aria-label="...">
 	<button style="min-height:34px" ng-if="::config['CREATE_NEXT_WORKFLOWUNIT'].visible" class="btn btn-white" ng-disabled="config['CREATE_NEXT_WORKFLOWUNIT'].disabled"
-		ng-click="workflowService.createNextWorkflowUnit(process)" title="{{ config['CREATE_NEXT_WORKFLOWUNIT'].title | translate }}">
+	 ng-click="workflowService.createNextWorkflowUnit(process)" title="{{ config['CREATE_NEXT_WORKFLOWUNIT'].title | translate }}">
         <i class="{{::config['CREATE_NEXT_WORKFLOWUNIT'].icon}}"></i>
     </button>
 	<div ng-if="::config['PIN_DROPDOWN'].visible" class="btn-group" role="group">
 		<button style="height:34px" type="button" class="btn btn-default dropdown-toggle" ng-disabled="config['PIN_DROPDOWN'].disabled"
-			data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{{config['PIN_DROPDOWN'].title| translate }}">
+		 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{{config['PIN_DROPDOWN'].title| translate }}">
        <i class=" fa fa-thumb-tack "></i>
       <span class="caret "></span>
     </button>
 		<ul style="max-height: 200px; overflow-x: hidden; " class="dropdown-menu right ">
 			<li ng-if="::config[ 'PIN_DROPDOWN_EMPTY_PROCESSOR'].visible " ng-click="workflowService.togglePin(process,null) "><a>{{ 'COMMON_EMPTY_PROCESSOR' | translate }}</a></li>
+			<li ng-if="::config[ 'PIN_DROPDOWN_EMPTY_PROCESSOR'].visible " ng-click="workflowService.togglePin(process,rootScope.user) "><a>{{ 'COMMON_PIN_TO_ME' | translate }}</a></li>
 			<li ng-if="::config[ 'PIN_DROPDOWN_EMPTY_PROCESSOR'].visible " role="separator " class="divider "></li>
 			<li ng-click="workflowService.togglePin(process,user) " ng-repeat="user in ::workflowService.users ">
 				<a ng-if="::(((user.firstname==null||user.firstname=='' )&&(user.lastname==null||user.lastname=='' ))&&user.role!='API')"
-					ng-style="::(user.id==process.processor.id?{ 'font-weight': 'bold', 'font-style': 'italic'}:{ 'font-weight': 'normal', 'font-style':
+				 ng-style="::(user.id==process.processor.id?{ 'font-weight': 'bold', 'font-style': 'italic'}:{ 'font-weight': 'normal', 'font-style':
 			'normal'} )">{{::user.username}}</a>
 				<a ng-if="::(!((user.firstname==null||user.firstname=='' )&&(user.lastname==null||user.lastname=='' ))&&user.role!='API')"
-					ng-style="::(user.id==process.processor.id?{ 'font-weight': 'bold', 'font-style': 'italic'}:{ 'font-weight': 'normal', 'font-style':
+				 ng-style="::(user.id==process.processor.id?{ 'font-weight': 'bold', 'font-style': 'italic'}:{ 'font-weight': 'normal', 'font-style':
 			'normal'}) ">  {{::user.firstname}} {{::user.lastname}}</a>
 			</li>
 		</ul>
@@ -28,7 +29,7 @@
          <i class="fa fa-thumb-tack "></i>
     </button>
 	<button style="min-height:34px" ng-if="::config[ 'QUICK_MAIL'].visible" class="btn btn-white " ng-disabled="config['QUICK_MAIL'].disabled"
-		ng-click="workflowService.openQuickEmailModal(process) " title="{{config['QUICK_MAIL'].title| translate }} ">
+	 ng-click="workflowService.openQuickEmailModal(process) " title="{{config['QUICK_MAIL'].title| translate }} ">
          <i  class="fa fa-envelope "></i>
     </button>
 	<button style="min-height:34px " ng-if="::config[ 'SET_INCONTACT'].visible " class="btn btn-white " ng-disabled="config[
@@ -36,34 +37,39 @@
          <i  class="fa fa-address-card-o "></i>
     </button>
 	<button style="min-height:34px" ng-if="::config[ 'SET_OFFER_DONE'].visible" class="btn btn-white " ng-disabled="config['SET_OFFER_DONE'].disabled"
-		ng-click="workflowService.doneOffer(process) " title="{{config['SET_OFFER_DONE'].title| translate }} ">
+	 ng-click="workflowService.doneOffer(process) " title="{{config['SET_OFFER_DONE'].title| translate }} ">
          <i  class="{{::config[ 'SET_OFFER_DONE'].icon}} "></i>
     </button>
 
 	<div class="btn-group " role="group ">
 		<button style="height:34px" type="button " class="btn btn-default dropdown-toggle " data-toggle="dropdown " aria-haspopup="true"
-			aria-expanded="false " ng-disabled="config['DETAILS_DROPDOWN'].disabled" title="{{config['DETAILS_DROPDOWN'].title| translate }} ">
+		 aria-expanded="false " ng-disabled="config['DETAILS_DROPDOWN'].disabled" title="{{config['DETAILS_DROPDOWN'].title| translate }} ">
        <i class="fa fa-ellipsis-h "></i>
       <span class="caret "></span>
     </button>
-		<ul style="max-height: 200px; " class="dropdown-menu right ">
+		<ul style="max-height: 250px; " class="dropdown-menu right ">
 			<li ng-class="{ 'disabled': config[ 'DETAILS_TOGGLE_CLOSE_OR_OPEN'].disabled } " ng-if="::config[
 		'DETAILS_TOGGLE_CLOSE_OR_OPEN'].visible " ng-click="workflowService.toggleClosedOrOpenState(process) ">
 				<a><i class="{{::config[ 'DETAILS_TOGGLE_CLOSE_OR_OPEN'].icon}} "></i>&nbsp;{{config['DETAILS_TOGGLE_CLOSE_OR_OPEN'].title| translate }}</a></li>
 			<li ng-if="::config[ 'DETAILS_TOGGLE_CLOSE_OR_OPEN'].visible " role="separator " class="divider "></li>
 			<li ng-class="{ 'disabled': config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled } " ng-if="::config[ 'DETAILS_OPEN_EDIT_MODAL'].visible "
-				ng-click="openEditModal(process) " data-toggle="{{::!config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled ? 'modal' : ''}} "
-				data-backdrop="static">
+			 ng-click="::config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled || openEditModal(process) " data-toggle="{{::!config[ 'DETAILS_OPEN_EDIT_MODAL'].disabled ? 'modal' : ''}} " data-backdrop="static">
 				<a><i class="fa fa-edit "></i>&nbsp;{{config['DETAILS_OPEN_EDIT_MODAL'].title| translate }}</a></li>
+			<li role="separator " class="divider "></li>
+			<li ng-click="exportProcessAsPDF()">
+				<a><i class="fa fa-file-pdf-o"></i>&nbsp;{{ 'PROCESS_EXPORT'| translate }}</a>
+			</li>
 			<li ng-if="::config[ 'DETAILS_OPEN_EDIT_MODAL'].visible " role="separator " class="divider "></li>
 			<li ng-if="::config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].visible " ng-class="{ 'disabled': config[
-		'DETAILS_OPEN_ROLLBACK_MODAL'].disabled } " ng-click="workflowService.openConfirmationModal(process,ConfirmationFunctionType.ROLLBACK)" data-toggle="{{::!config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].disabled ?
-		'modal' : ''}} " data-backdrop="static" >
+		'DETAILS_OPEN_ROLLBACK_MODAL'].disabled } " ng-click="workflowService.openConfirmationModal(process,ConfirmationFunctionType.ROLLBACK)"
+			 data-toggle="{{::!config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].disabled ?
+		'modal' : ''}} " data-backdrop="static">
 				<a><i class="fa fa-reply "></i>&nbsp;{{config['DETAILS_OPEN_ROLLBACK_MODAL'].title| translate }}</a>
 			</li>
 			<li ng-if="::config[ 'DETAILS_OPEN_ROLLBACK_MODAL'].visible " role="separator " class="divider "></li>
 			<li ng-if="::config[ 'DETAILS_OPEN_DELETE_MODAL'].visible " ng-class="{ 'disabled': config[
-		'DETAILS_OPEN_DELETE_MODAL'].disabled } " ng-click="workflowService.openConfirmationModal(process,ConfirmationFunctionType.DELETE)" data-toggle="{{::!config[ 'DETAILS_OPEN_DELETE_MODAL'].disabled ? 'modal'
+		'DETAILS_OPEN_DELETE_MODAL'].disabled } " ng-click="::config[ 'DETAILS_OPEN_DELETE_MODAL'].disabled || workflowService.openConfirmationModal(process,ConfirmationFunctionType.DELETE)"
+			 data-toggle="{{::!config[ 'DETAILS_OPEN_DELETE_MODAL'].disabled ? 'modal'
 		: ''}} " data-backdrop="static" data-target="#deleteConfirmationModal ">
 				<a><i class="fa fa-trash-o "></i>&nbsp;{{config['DETAILS_OPEN_DELETE_MODAL'].title| translate }}</a>
 			</li>

@@ -19,11 +19,12 @@ class WorkflowTemplateObject {
     skonto: number;
     deliveryAddress: Address;
     billingAddress: Address;
+    referencedOfferContent: string;
 
     constructor() {
         this.id = 0;
         let p = new Product();
-        p.id = 0;
+        p.id = null;
         p.name = "Product 1";
         p.netPrice = 500;
         p.productNumber = "A12345";
@@ -32,7 +33,7 @@ class WorkflowTemplateObject {
         p.deactivated = false;
         p.description = "Product one";
         let p2 = new Product();
-        p2.id = 0;
+        p2.id = null;
         p2.name = "Product 2";
         p2.netPrice = 800;
         p2.productNumber = "A12346";

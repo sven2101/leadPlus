@@ -86,14 +86,6 @@ public class Olap implements Serializable {
 		this.dateRange = dateRange;
 	}
 
-	public Calendar getTimeStamp() {
-		return timestamp;
-	}
-
-	public void setTimeStamp(Calendar timeStamp) {
-		this.timestamp = timeStamp;
-	}
-
 	public Calendar getTimestamp() {
 		return timestamp;
 	}

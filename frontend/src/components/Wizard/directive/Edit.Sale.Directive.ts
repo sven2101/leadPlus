@@ -48,7 +48,7 @@ class SaleEditDirective implements IDirective {
 
     calculateProfit(scope: any) {
         if (!isNullOrUndefined(scope.editWorkflowUnit.saleTurnover) && !isNullOrUndefined(scope.editWorkflowUnit.saleCost)) {
-            scope.editWorkflowUnit.saleProfit = scope.editWorkflowUnit.saleTurnover - scope.editWorkflowUnit.saleCost;
+            scope.editWorkflowUnit.saleProfit = Math.round((scope.editWorkflowUnit.saleTurnover - scope.editWorkflowUnit.saleCost) * 1000) / 1000;
         }
     }
 }

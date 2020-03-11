@@ -43,11 +43,13 @@
 						<ul class="nav nav-tabs">			
 							<li ng-class="{'active':settingCtrl.currentTab === 'user'}" ng-click="settingCtrl.tabOnClick('user')"><a href="/#/settings/user" aria-expanded="true">{{'SETTING_USER' | translate }}</a></li>
 							<li ng-class="{'active':settingCtrl.currentTab === 'source'}" ng-click="settingCtrl.tabOnClick('source')"><a href="/#/settings/source" aria-expanded="true">{{'SOURCE_SOURCES' | translate }}</a></li>
-							<li ng-class="{'active':settingCtrl.currentTab === 'template'}" ng-click="settingCtrl.tabOnClick('template')" ><a href="/#/settings/template" aria-expanded="true">{{ 'SETTING_EMAIL' | translate}}</a></li>
+							<li ng-class="{'active':settingCtrl.currentTab === 'template'}" ng-click="settingCtrl.tabOnClick('template')" ><a href="/#/settings/template" aria-expanded="true">{{ 'SETTING_TEMPLATES' | translate}}</a></li>
+							<li ng-class="{'active':settingCtrl.currentTab === 'api'}" ng-click="settingCtrl.tabOnClick('api')" ><a href="/#/settings/api" aria-expanded="true">CRM {{ 'SETTING_API' | translate}}</a></li>
 						</ul>
 						<div ng-include="'components/Setting/view/Setting.Users.html'"></div>
 						<div ng-include="'components/Setting/view/Setting.Email.html'"></div>
 						<div ng-include="'components/Setting/view/Setting.Source.html'"></div>
+						<div ng-include="'components/Setting/view/Setting.Api.html'"></div>
 					</div>
                 </div>
 		</div>

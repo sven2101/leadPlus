@@ -7,10 +7,13 @@
 const WorkflowControllerId: string = "WorkflowController";
 
 const broadcastUpdate: string = "updateRow";
-const broadcastRemoveOrUpdate: string = "removeOrUpdateRow";
 const broadcastRemove: string = "removeRow";
+const broadcastRemoveOrUpdate: string = "removeOrUpdateRow";
 const broadcastOpenEditModal: string = "openEditModal";
 const broadcastUpdateChildrow: string = "updateChildrow";
+const broadcastClickChildrow: string = "clickChildrow";
+const broadcastRefreshDatatable: string = "refreshDatatable";
+const broadcastInitProcess: string = "initProcess";
 
 
 class WorkflowController {
@@ -28,10 +31,12 @@ class WorkflowController {
     dtColumns;
     dtInstance: any = { DataTable: null };
     dtInstanceCallback: any;
+    showMyTasks: boolean = false;
 
     compile: any;
     uibModal: any;
     rootScope: any;
+    translate: any;
 
     commentInput: string;
     commentModalInput: string;
@@ -44,11 +49,19 @@ class WorkflowController {
     allDataRoute: string;
     openDataRoute: string;
 
-    $inject = [$rootScopeId, $scopeId, $compileId, $routeParamsId, $routeId, $sceId, $uibModalId, WorkflowServiceId, WorkflowDatatableServiceId, WorkflowDatatableRowServiceId, LeadDataTableServiceId, , OfferDataTableServiceId, SaleDataTableServiceId];
+    processResource: any;
+    createdActionButtonsHtml: { [key: number]: any } = {};
+    createdRows: { [key: number]: Process } = {};
+    processOpenChildrow: { [key: number]: boolean } = {};
+    toaster;
 
-    constructor($rootScope, $scope, $compile, $routeParams, $route, $sce, $uibModal, WorkflowService, WorkflowDatatableService, WorkflowDatatableRowService, LeadDataTableService, OfferDataTableService, SaleDataTableService) {
+    $inject = [$rootScopeId, $scopeId, $compileId, $routeParamsId, $routeId, $sceId, $uibModalId, WorkflowServiceId, WorkflowDatatableServiceId, WorkflowDatatableRowServiceId, LeadDataTableServiceId, , OfferDataTableServiceId, SaleDataTableServiceId, $translateId, ProcessResourceId, toasterId];
 
+    constructor($rootScope, $scope, $compile, $routeParams, $route, $sce, $uibModal, WorkflowService, WorkflowDatatableService, WorkflowDatatableRowService, LeadDataTableService, OfferDataTableService, SaleDataTableService, $translate, ProcessResource, toaster) {
+        this.workflowDatatableService = WorkflowDatatableService;
+        this.processResource = ProcessResource.resource;
         this.controllerType = $route.current.$$route.type;
+        this.toaster = toaster;
         switch (this.controllerType) {
             case WorkflowType.LEAD:
                 this.IDatatableService = LeadDataTableService;
@@ -68,7 +81,6 @@ class WorkflowController {
         };
 
         this.workflowService = WorkflowService;
-        this.workflowDatatableService = WorkflowDatatableService;
         this.workflowDatatableRowService = WorkflowDatatableRowService;
         this.sce = $sce;
         this.scope = $scope;
@@ -76,13 +88,29 @@ class WorkflowController {
         this.uibModal = $uibModal;
         this.rootScope = $rootScope;
         this.compile = $compile;
-
+        this.translate = $translate;
         let self = this;
 
         function createdRow(row, data: Process, dataIndex) {
             self.workflowDatatableRowService.setRow(data.id, self.controllerType, row);
             self.IDatatableService.configRow(row, data);
-            self.compile(angular.element(row).contents())(self.getScopeByKey("actionButtonScope" + data.id));
+            self.compile(angular.element(row).contents()[0])(self.getScopeByKey("profilePicture" + data.id));
+
+            let childScope = self.scopes["actionButtonScope" + data.id];
+            if (isNullOrUndefined(childScope) || childScope.$$destroyed || isNullOrUndefined(self.createdActionButtonsHtml[data.id]) || isNullOrUndefined(self.createdRows[data.id]) || self.createdRows[data.id].lastEdited !== data.lastEdited) {
+                self.compile(angular.element(row).contents()[6])(self.getScopeByKey("actionButtonScope" + data.id));
+                setTimeout(function () {
+                    self.createdActionButtonsHtml[data.id] = angular.element(row).contents()[6];
+                }, 150);
+            } else {
+                angular.element(row)[0].replaceChild(self.createdActionButtonsHtml[data.id], angular.element(row).contents()[6]);
+            }
+            if (!isNullOrUndefined(angular.element("#id_" + data.id)) && !isNullOrUndefined(self.processes[data.id]) && !isNullOrUndefined(self.processOpenChildrow[data.id]) && self.processOpenChildrow[data.id] === true) {
+                setTimeout(function () {
+                    self.appendChildRow(data.id, true);
+                }, 150);
+            }
+            self.createdRows[data.id] = deepCopy(data);
         }
         function addActionsButtons(data: Process, type, full, meta) {
             return self.IDatatableService.getActionButtonsHTML(data, self.actionButtonConfig);
@@ -92,8 +120,8 @@ class WorkflowController {
             return self.IDatatableService.getStatusStyleHTML(data);
         }
         function addDetailButton(data: Process, type, full, meta) {
-            self.processes[data.id] = data;
-            return self.IDatatableService.getDetailHTML(data.id);
+            // self.processes[data.id] = data;
+            // return self.IDatatableService.getDetailHTML(data.id);
         }
 
         this.dtOptions = this.IDatatableService.getDTOptionsConfiguration(createdRow, "");
@@ -104,21 +132,23 @@ class WorkflowController {
                 self.destroyAllScopes();
             }
         };
+        let searchLink = "";
+        let processId = $routeParams.processId;
+        if (!isNullOrUndefined(processId) && processId !== "") {
+            searchLink = "#id:" + processId + "#";
+        }
 
         this.dtInstanceCallback = function dtInstanceCallback(dtInstance) {
             self.dtInstance = dtInstance;
-            dtInstance.DataTable.on("page.dt length.dt search.dt", function () {
-                clearWatchers(self.loadAllData);
+            self.dtInstance.DataTable.on("page.dt search.dt length.dt", function () {
+                self.processOpenChildrow = {};
             });
-
-            let searchLink = "";
-            let processId = $routeParams.processId;
-            if (!isNullOrUndefined(processId) && processId !== "") {
-                searchLink = "#id:" + processId + "#";
-                self.dtInstance.DataTable.search(searchLink).draw;
+            if (!isNullOrUndefined(processId) && processId !== "" && searchLink !== "") {
+                self.dtInstance.DataTable.search(searchLink);
+                self.refreshData();
                 let intervall = setInterval(function () {
                     if (!isNullOrUndefined(angular.element("#id_" + processId)) && !isNullOrUndefined(self.processes[processId])) {
-                        self.appendChildRow(self.processes[processId]);
+                        self.appendChildRow(processId);
                         clearInterval(intervall);
                     }
                 }, 100);
@@ -126,6 +156,7 @@ class WorkflowController {
                 setTimeout(function () {
                     clearInterval(intervall);
                 }, 10000);
+                searchLink = "";
             }
         };
 
@@ -136,11 +167,14 @@ class WorkflowController {
 
         let updateOrRemove = $rootScope.$on(broadcastRemoveOrUpdate, (event, data) => {
             clearWatchers(self.loadAllData);
+            this.processes[data.id] = data;
             self.workflowDatatableRowService.removeOrUpdateRow(data, self.loadAllData, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope" + data.id));
         });
 
-        let updateRow = $rootScope.$on(broadcastUpdate, (event, data) => {
+
+        let updateRow = $rootScope.$on(broadcastUpdate, (event, data: Process) => {
             clearWatchers(self.loadAllData);
+            this.processes[data.id] = data;
             self.workflowDatatableRowService.updateRow(data, self.dtInstance, self.controllerType, self.dropCreateScope("compileScope" + data.id));
         });
 
@@ -148,33 +182,96 @@ class WorkflowController {
             this.updateChildRow(data);
         });
 
+        let clickChildRow = $rootScope.$on(broadcastClickChildrow, (event, data: Process) => {
+            if (!isNullOrUndefined(data) && !isNullOrUndefined(data.id)) {
+                this.appendChildRow(data.id);
+            }
+        });
+
         let openEditModal = $rootScope.$on(broadcastOpenEditModal, (event, data: Process) => {
             self.openEditModal(data);
         });
 
+        let refreshDatatable = $rootScope.$on(broadcastRefreshDatatable, (event) => {
+            self.refreshData();
+        });
+
         $scope.$on("$destroy", function handler() {
+            self.workflowDatatableRowService.resetWorkflowProcessMap();
+            self.workflowDatatableService.showMyTasksUserId[self.controllerType.toString()] = 0;
             deleteRow();
             updateOrRemove();
             updateRow();
             openEditModal();
+            refreshDatatable();
+            clickChildRow();
+            updateChildRow();
             self.destroyAllScopes();
         });
         this.registerIntervall();
     }
 
+    async setDtOptions() {
+
+    }
+
+    getShowMyTasksInfo(type: string): string {
+        return this.translate.instant("SHOW_MY_OPEN_" + type + "_INFO");
+    }
+
+    filterMyTasks() {
+        this.processOpenChildrow = {};
+        if (this.loadAllData === true) {
+            return;
+        }
+        let table = this.dtInstance.DataTable;
+        if (this.showMyTasks === true) {
+            this.workflowDatatableService.showMyTasksUserId[this.controllerType.toString()] = this.rootScope.user.id;
+            this.refreshData();
+        } else {
+            this.workflowDatatableService.showMyTasksUserId[this.controllerType.toString()] = 0;
+            this.dtInstance.reloadData(false);
+            this.refreshData();
+        }
+    }
+
     registerIntervall() {
         let self = this;
         let intervall = setInterval(function () {
-            self.refreshData();
+            self.toaster.pop("success", "", self.translate.instant("DATATABLE_REFRESH"));
+            let openChildRowsBeforeRefresh = deepCopy(self.processOpenChildrow);
+            self.refreshData(openChildRowsBeforeRefresh);
         }, 10 * 60 * 1000);
         self.scope.$on("$destroy", function () {
             clearInterval(intervall);
         });
     }
 
-    refreshData() {
+    refreshData(reopechilds: { [key: number]: boolean } = null) {
         let resetPaging = false;
-        this.dtInstance.reloadData(resetPaging);
+        let self = this;
+        this.dtInstance.reloadData(function () {
+            if (reopechilds !== null) {
+                for (let key in reopechilds) {
+                    if (reopechilds[key] === true) {
+                        self.appendChildRow(Number(key), false, true);
+                    }
+                }
+            }
+        }, resetPaging);
+        this.rootScope.loadLabels();
+        this.rootScope.$broadcast(broadcastOnTodosChanged);
+    }
+
+    getStatusByWorkflowType(): string {
+        switch (this.controllerType) {
+            case WorkflowType.LEAD:
+                return "OPEN";
+            case WorkflowType.OFFER:
+                return "OFFER";
+            case WorkflowType.SALE:
+                return "SALE";
+        };
     }
 
     async openEditModal(process: Process) {
@@ -213,11 +310,27 @@ class WorkflowController {
 
     changeDataInput() {
         this.destroyAllScopes();
+        this.processOpenChildrow = {};
+        if (this.loadAllData === false) {
+            this.workflowDatatableService.showMyTasksUserId[this.controllerType.toString()] = 0;
+        } else if (this.loadAllData === true) {
+            this.showMyTasks = false;
+        }
         this.workflowDatatableService.changeDataInput(this.loadAllData, this.dtOptions, this.allDataRoute, this.openDataRoute);
+        this.rootScope.loadLabels();
     }
 
-    appendChildRow(process: Process) {
-        this.workflowDatatableService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process[this.controllerType.toString().toLowerCase()], this.dtInstance, this, this.controllerType.toString().toLowerCase());
+    appendChildRow(id: number, appendByCreatedRow: boolean = false, withEasingIn: boolean = false) {
+        if (isNullOrUndefined(id) || isNullOrUndefined(this.processes[id])) {
+            return;
+        }
+        if (isNullOrUndefined(this.processOpenChildrow[id]) && appendByCreatedRow === false) {
+            this.processOpenChildrow[id] = true;
+        } else if (appendByCreatedRow === false) {
+            this.processOpenChildrow[id] = !this.processOpenChildrow[id];
+        }
+        let process = this.processes[id];
+        this.workflowDatatableService.appendChildRow(this.getScopeByKey("childRowScope" + process.id, true), process, process[this.controllerType.toString().toLowerCase()], this.dtInstance, this, this.controllerType.toString().toLowerCase(), withEasingIn);
     }
 
     getAsHtml(html: string) {
@@ -254,6 +367,8 @@ class WorkflowController {
         }
         return childScope;
     }
+
+
 
     dropCreateScope(key: string, isolated: boolean = false): any {
         let childScope = this.scopes[key];

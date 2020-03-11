@@ -26,6 +26,7 @@ class SourceService {
     SourceResource;
     q;
     formdata;
+    inconsistency: string;
 
     constructor(toaster, $translate, SourceResource, $q) {
         this.toaster = toaster;
@@ -37,16 +38,15 @@ class SourceService {
         this.getAllSources();
     }
 
-    saveSource(source: Source) {
-        let self = this;
-        this.SourceResource.createSource(source).$promise.then(function (result: Source) {
-            self.getAllSources();
-            self.toaster.pop("success", "", self.translate.instant("SOURCE_TOAST_SAVE"));
-
-        }, function () {
-            self.toaster.pop("error", "", self.translate.instant("SOURCE_TOAST_SAVE_ERROR"));
-        });
-
+    async saveSource(source: Source) {
+        try {
+            let savedSource = await this.SourceResource.createSource(source).$promise;
+            this.getAllSources();
+            this.inconsistency = null;
+            return savedSource;
+        } catch (error) {
+            throw error;
+        }
     }
 
     getAllSources(): Promise<Array<Source>> {
@@ -76,6 +76,10 @@ class SourceService {
             return false;
         }
         return this.sources.filter(s => s.name.toLowerCase() === source.name.toLowerCase()).length > 0;
+    }
+
+    public async generateApiToken(source): Promise<any> {
+        return await this.SourceResource.generateApiToken({ id: source.id }).$promise;
     }
 
 }

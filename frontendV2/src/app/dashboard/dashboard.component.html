@@ -1,0 +1,76 @@
+<p>
+  dashboard works!
+</p>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <app-modal (dismiss)="d($event)" (close)="c($event)">
+    <p step-title="1">Email</p>
+    <i step-icon="1" class="fa fa-envelope"></i>
+    <div step-content="1">Email-content</div>
+    <i step-icon="2" class="fa fa-dollar"></i>
+    <p step-title="2">Saleeeeeeeeeeeeeeee</p>
+    <sale-step [process]="process" step-content="2" step-content="2">Sale</sale-step>
+    <div step-content="3">
+      <h1 style="min-height:0px">dies ist ein test</h1>
+      <h1 style="min-height:0px">dies ist ein test</h1>
+      <h1 style="min-height:0px">dies ist ein test</h1>
+    </div>
+    <i step-icon="4" class="fa fa-trash"></i>
+    <test-step step-content="4"></test-step>
+    <sven step-content="5"></sven>
+    <i step-icon="3" class="fa fa-envelope"></i>
+    <div modal-footer>
+      <button type="button" class="btn btn-secondary btn-sm" (click)="d('wtf')">Close</button>
+      <button type="button" submit-button class="btn btn-success btn-sm" (submit)="c('wtf');save()"><i class="fa fa-save"></i> Save</button>
+      <button type="button" submit-button class="btn btn-success btn-sm" (submit)="c('wtf');send()"><i class="fa fa-save"></i> Send</button>
+    </div>
+  </app-modal>
+</ng-template>
+<button class="btn btn-lg btn-outline-primary" (click)="open(content)">email modal</button>
+
+<ng-template #content2 let-c="close" let-d="dismiss">
+  <app-modal (dismiss)="d($event)" (close)="c($event)">
+    <p step-title="1">title 1</p>
+    <i step-icon="1" class="fa fa-plus fa-lg"></i>
+    <h1 step-content="1">content 1</h1>
+    <p step-title="2">title 2</p>
+    <i step-icon="2" class="fa fa-send fa-lg"></i>
+    <h1 step-content="2">content 2</h1>
+    <p step-title="3">title 3</p>
+    <i step-icon="3" class="fa fa-user fa-lg"></i>
+    <h1 step-content="3">content 3</h1>
+    <p step-title="4">title 4</p>
+    <i step-icon="4" class="fa fa-user fa-lg"></i>
+    <h1 step-content="4">content 4</h1>
+    <p step-title="5">title 5</p>
+    <i step-icon="5" class="fa fa-user fa-lg"></i>
+    <sven step-content="5"></sven>
+    <div modal-footer>
+      <button type="button" class="btn btn-secondary btn-sm" (click)="d('wtf')">Close</button>
+      <button type="button" submit-button class="btn btn-success btn-sm" (submit)="c('wtf');save()"><i class="fa fa-save"></i> Save</button>
+      <button type="button" submit-button class="btn btn-success btn-sm" (submit)="c('wtf');save()"><i class="fa fa-save"></i> Send</button>
+    </div>
+  </app-modal>
+</ng-template>
+<button class="btn btn-lg btn-outline-primary" (click)="open(content2)">full wizard</button>
+
+<ng-template #content3 let-c="close" let-d="dismiss">
+  <app-modal (dismiss)="d($event)" (close)="xyz.hidden=!xyz.hidden">
+    <div modal-header>Modal title...</div>
+    <p step-title="1">Email</p>
+    <i step-icon="1" class="fa fa-envelope"></i>
+    <h1 step-content="1"><strong>nice body</strong>
+      <h2 #xyz>WOW</h2>
+    </h1>
+  </app-modal>
+</ng-template>
+
+
+
+<button class="btn btn-lg btn-outline-primary" (click)="open(content3)">basic modal</button>
+
+<dashboard-statistic></dashboard-statistic>
+
+<dashbhoard-managment></dashbhoard-managment>
+
+<dashboard-to-do></dashboard-to-do>

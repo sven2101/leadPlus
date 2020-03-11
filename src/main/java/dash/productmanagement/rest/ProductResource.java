@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.EmailAlreadyExistsException;
 import dash.exceptions.NotFoundException;
@@ -45,7 +46,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController(value = "Product Resource")
-@RequestMapping(value = "/api/rest/products", consumes = { MediaType.ALL_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/rest/products", consumes = { MediaType.ALL_VALUE }, produces = {
+		MediaType.APPLICATION_JSON_VALUE })
 @Api(value = "product")
 public class ProductResource {
 
@@ -69,7 +71,8 @@ public class ProductResource {
 	@ApiOperation(value = "Add a single product.", notes = "You have to provide a valid product Object")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Product save(@ApiParam(required = true) @RequestBody @Valid final Product product) throws SaveFailedException {
+	public Product save(@ApiParam(required = true) @RequestBody @Valid final Product product)
+			throws SaveFailedException, ConsistencyFailedException {
 		return productService.save(product);
 	}
 
@@ -77,7 +80,8 @@ public class ProductResource {
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Post a file. ", notes = "")
 	public Product setImage(@PathVariable final long id, @RequestParam("file") MultipartFile file)
-			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException, EmailAlreadyExistsException {
+			throws SaveFailedException, NotFoundException, UpdateFailedException, UsernameAlreadyExistsException,
+			EmailAlreadyExistsException, ConsistencyFailedException {
 		return productService.setImage(id, file);
 	}
 
@@ -102,14 +106,23 @@ public class ProductResource {
 	@ApiOperation(value = "Update a single product.", notes = "")
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public Product update(@ApiParam(required = true) @RequestBody @Valid final Product product) throws UpdateFailedException {
-		return productService.update(product);
+	public Product update(@ApiParam(required = true) @RequestBody @Valid final Product product)
+			throws UpdateFailedException, SaveFailedException, ConsistencyFailedException {
+		return productService.save(product);
 	}
 
 	@ApiOperation(value = "Delete a single product.", notes = "")
-	@RequestMapping(method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
 		productService.delete(id);
+	}
+
+	@ApiOperation(value = "Get a single product.", notes = "You have to provide a valid product ID.")
+	@RequestMapping(value = "/includedeleted/{id}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public Product getProductByIdIncludeDeleted(@ApiParam(required = true) @PathVariable final Long id)
+			throws NotFoundException {
+		return productService.getProductByIdIncludeDeleted(id);
 	}
 }

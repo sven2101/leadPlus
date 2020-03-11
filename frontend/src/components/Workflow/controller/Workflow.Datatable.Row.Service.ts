@@ -24,8 +24,8 @@ class WorkflowDatatableRowService {
     toaster;
     compile;
 
-    worfklowProcessMap: WorkflowProcessMap = new WorkflowProcessMap();
 
+    worfklowProcessMap: WorkflowProcessMap = new WorkflowProcessMap();
     constructor($rootScope, $translate, toaster, $compile, ProcessService) {
         this.translate = $translate;
         this.rootScope = $rootScope;
@@ -38,10 +38,22 @@ class WorkflowDatatableRowService {
         this.worfklowProcessMap[workflowType.toString().toLowerCase()][id] = row;
     }
 
+    resetWorkflowProcessMap() {
+        this.worfklowProcessMap = new WorkflowProcessMap();
+    }
+
     updateRow(process: Process, dtInstance: any, workflowType: WorkflowType, scope: any) {
-        dtInstance.DataTable.row(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).data(process).draw(
-            false);
-        this.compile(angular.element(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).contents())(scope);
+        if (!isNullOrUndefined(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id])) {
+            dtInstance.DataTable.row(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).data(process);
+            this.compile(angular.element(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).contents())(scope);
+        } else {
+            dtInstance.DataTable.rows().every(function () {
+                if (this.data().id === process.id) {
+                    this.data(process);
+                    this.invalidate();
+                }
+            });
+        }
     }
 
     removeOrUpdateRow(process: Process, loadAllData: boolean, dtInstance: any, workflowType: WorkflowType, scope: any) {
@@ -53,7 +65,7 @@ class WorkflowDatatableRowService {
     }
 
     deleteRow(process: Process, dtInstance: any, workflowType: WorkflowType): void {
-        dtInstance.DataTable.row(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).remove().draw();
+        dtInstance.DataTable.row(this.worfklowProcessMap[workflowType.toString().toLowerCase()][process.id]).remove().draw("page");
     }
 }
 

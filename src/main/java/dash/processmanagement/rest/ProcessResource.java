@@ -14,12 +14,16 @@
 
 package dash.processmanagement.rest;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,14 +38,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
 import dash.leadmanagement.domain.Lead;
 import dash.offermanagement.domain.Offer;
-import dash.processmanagement.business.IProcessService;
 import dash.processmanagement.business.ProcessRepository;
+import dash.processmanagement.business.ProcessService;
+import dash.processmanagement.business.newProcessService;
 import dash.processmanagement.domain.Process;
 import dash.salemanagement.domain.Sale;
 import dash.statusmanagement.domain.Status;
@@ -58,7 +64,10 @@ import io.swagger.annotations.ApiParam;
 public class ProcessResource {
 
 	@Autowired
-	private IProcessService processService;
+	private ProcessService processService;
+
+	@Autowired
+	private newProcessService newProcessService;
 
 	@Autowired
 	private ProcessRepository processRepository;
@@ -74,8 +83,7 @@ public class ProcessResource {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public Process getById(@ApiParam(required = true) @PathVariable final Long id) throws NotFoundException {
-		Process x = processService.getById(id);
-		return x;
+		return processService.getById(id);
 	}
 
 	@ApiOperation(value = "Returns processes with a certain state", notes = "")
@@ -84,7 +92,6 @@ public class ProcessResource {
 	public List<Process> getElementsByStatus(@ApiParam(required = true) @PathVariable final Workflow workflow,
 			@ApiParam(required = true) @PathVariable final Status status) {
 		return processService.getElementsByStatus(workflow, status);
-
 	}
 
 	@ApiOperation(value = "Returns count processes with a certain state", notes = "")
@@ -94,7 +101,6 @@ public class ProcessResource {
 			@ApiParam(required = true) @PathVariable final Workflow workflow,
 			@ApiParam(required = true) @PathVariable final Status status) {
 		return processService.getCountElementsByStatus(workflow, status);
-
 	}
 
 	@ApiOperation(value = "Returns status", notes = "")
@@ -110,18 +116,8 @@ public class ProcessResource {
 	@ResponseStatus(HttpStatus.OK)
 	public Process setStatusByProcessId(@ApiParam(required = true) @PathVariable final Long id,
 			@ApiParam(required = true) @RequestBody @Valid final String status)
-			throws NotFoundException, SaveFailedException, UpdateFailedException {
-
+			throws NotFoundException, SaveFailedException, UpdateFailedException, ConsistencyFailedException {
 		return processService.setStatus(id, status);
-
-	}
-
-	@ApiOperation(value = "Update a single process.", notes = "")
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.OK)
-	public Process update(@ApiParam(required = true) @RequestBody @Valid final Process updateProcess)
-			throws UpdateFailedException {
-		return processService.update(updateProcess);
 	}
 
 	@ApiOperation(value = "Returns processor.", notes = "")
@@ -142,9 +138,9 @@ public class ProcessResource {
 	@ApiOperation(value = "Remove processor from process", notes = "")
 	@RequestMapping(value = "/{id}/processors", method = { RequestMethod.DELETE })
 	@ResponseStatus(HttpStatus.OK)
-	public void removeProcessorByProcessId(@ApiParam(required = true) @PathVariable final Long id)
-			throws UpdateFailedException {
-		processService.removeProcessorByProcessId(id);
+	public Process removeProcessorByProcessId(@ApiParam(required = true) @PathVariable final Long id)
+			throws UpdateFailedException, ConsistencyFailedException {
+		return processService.removeProcessorByProcessId(id);
 	}
 
 	@ApiOperation(value = "Delete a single process.", notes = "")
@@ -157,15 +153,9 @@ public class ProcessResource {
 	@ApiOperation(value = "Creates a process.", notes = "")
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Process save(@RequestBody @Valid final Process process) throws SaveFailedException {
+	public Process save(@RequestBody @Valid final Process process)
+			throws SaveFailedException, ConsistencyFailedException {
 		return processService.save(process);
-	}
-
-	@ApiOperation(value = "Creates processes based on a List of Processes.", notes = "")
-	@RequestMapping(value = "/list", method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.OK)
-	public void saveProcesses(@RequestBody final List<Process> processes) throws SaveFailedException {
-		processService.saveProcesses(processes);
 	}
 
 	/*
@@ -208,6 +198,48 @@ public class ProcessResource {
 				page.getContent());
 	}
 
+	@ApiOperation(value = "Returns a list of offers.", notes = "")
+	@RequestMapping(value = "/leads/open", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public DatatableServerSideJsonObject getProcessWithOpenLeads(@RequestParam Integer draw,
+			@RequestParam Integer start, @RequestParam Integer length,
+			@RequestParam(value = "search[value]") String searchText,
+			@RequestParam(value = "order[0][column]") int orderCol,
+			@RequestParam(value = "order[0][dir]") String orderDir, @RequestParam(value = "userId") long userId) {
+		String sortColumn = "lead.timestamp";
+		if (orderCol == 1)
+			sortColumn = "lead.customer.lastname";
+		else if (orderCol == 2)
+			sortColumn = "lead.customer.company";
+		else if (orderCol == 3)
+			sortColumn = "lead.customer.email";
+		else if (orderCol == 4)
+			sortColumn = "lead.timestamp";
+		else if (orderCol == 15)
+			sortColumn = "status";
+
+		if (searchText.startsWith("#id:") && searchText.endsWith("#")) {
+			long gotoProcessId = Long.parseLong(searchText.replace("#id:", "").replaceAll("#", ""));
+			Page<Process> gotoPage = this.processRepository.findById(gotoProcessId, new PageRequest(0, 1));
+			return new DatatableServerSideJsonObject(draw, gotoPage.getTotalElements(), gotoPage.getTotalElements(),
+					gotoPage.getContent());
+		}
+
+		Sort.Direction sortDirection = Sort.Direction.ASC;
+		if (orderDir.equals("desc"))
+			sortDirection = Sort.Direction.DESC;
+		Page<Process> page;
+		Collection<Status> statusCol = new ArrayList<>();
+		statusCol.add(Status.OPEN);
+		statusCol.add(Status.INCONTACT);
+
+		page = this.processService.getAllProcessesByStatusAndSearchTextAndMyTasksPage(statusCol, start / length, length,
+				sortDirection.toString(), sortColumn, searchText, userId, false);
+
+		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),
+				page.getContent());
+	}
+
 	@ApiOperation(value = "Return a single lead.", notes = "")
 	@RequestMapping(value = "/{processId}/leads", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -219,7 +251,7 @@ public class ProcessResource {
 	@RequestMapping(value = "/{processId}/leads", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Lead createLeadByProcess(@PathVariable final Long processId, @RequestBody @Valid final Lead lead)
-			throws NotFoundException, SaveFailedException {
+			throws NotFoundException, SaveFailedException, ConsistencyFailedException {
 		return processService.createLead(processId, lead);
 	}
 
@@ -264,6 +296,49 @@ public class ProcessResource {
 				page.getContent());
 	}
 
+	@ApiOperation(value = "Returns a list of offers.", notes = "")
+	@RequestMapping(value = "/offers/open", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public DatatableServerSideJsonObject getProcessWithOpenOffers(@RequestParam Integer draw,
+			@RequestParam Integer start, @RequestParam Integer length,
+			@RequestParam(value = "search[value]") String searchText,
+			@RequestParam(value = "order[0][column]") int orderCol,
+			@RequestParam(value = "order[0][dir]") String orderDir, @RequestParam(value = "userId") long userId) {
+		String sortColumn = "offer.timestamp";
+		if (orderCol == 1)
+			sortColumn = "offer.customer.lastname";
+		else if (orderCol == 2)
+			sortColumn = "offer.customer.company";
+		else if (orderCol == 3)
+			sortColumn = "offer.customer.email";
+		else if (orderCol == 4)
+			sortColumn = "offer.timestamp";
+		else if (orderCol == 15)
+			sortColumn = "status";
+
+		if (searchText.startsWith("#id:") && searchText.endsWith("#")) {
+			long gotoProcessId = Long.parseLong(searchText.replace("#id:", "").replaceAll("#", ""));
+			Page<Process> gotoPage = this.processRepository.findById(gotoProcessId, new PageRequest(0, 1));
+			return new DatatableServerSideJsonObject(draw, gotoPage.getTotalElements(), gotoPage.getTotalElements(),
+					gotoPage.getContent());
+		}
+
+		Sort.Direction sortDirection = Sort.Direction.ASC;
+		if (orderDir.equals("desc"))
+			sortDirection = Sort.Direction.DESC;
+		Page<Process> page;
+		Collection<Status> statusCol = new ArrayList<>();
+		statusCol.add(Status.OFFER);
+		statusCol.add(Status.FOLLOWUP);
+		statusCol.add(Status.DONE);
+
+		page = this.processService.getAllProcessesByStatusAndSearchTextAndMyTasksPage(statusCol, start / length, length,
+				sortDirection.toString(), sortColumn, searchText, userId, false);
+
+		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),
+				page.getContent());
+	}
+
 	@ApiOperation(value = "Returns single offer.", notes = "")
 	@RequestMapping(value = "{processId}/offers", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -275,15 +350,15 @@ public class ProcessResource {
 	@RequestMapping(value = "/{processId}/offers", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Offer createOfferByProcess(@PathVariable final Long processId, @RequestBody @Valid final Offer offer)
-			throws SaveFailedException {
+			throws SaveFailedException, ConsistencyFailedException {
 		return processService.createOffer(processId, offer);
 	}
 
 	/*
-	 * Sales
+	 * Sales Not in Use
 	 */
 	@ApiOperation(value = "Returns a list of sales.", notes = "")
-	@RequestMapping(value = "/sales", method = RequestMethod.GET)
+	@RequestMapping(value = "/sales/old", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	public DatatableServerSideJsonObject getProcessWithSales(@RequestParam Integer draw, @RequestParam Integer start,
 			@RequestParam Integer length, @RequestParam(value = "search[value]") String searchText,
@@ -314,6 +389,48 @@ public class ProcessResource {
 					.findBySaleCustomerFirstnameContainingOrSaleCustomerLastnameContainingOrSaleCustomerEmailContainingOrSaleCustomerCompanyContainingOrSaleDeliveryAddressLineContainingOrSaleCustomerPhoneContainingOrStatusContainingAllIgnoreCaseAndSaleIsNotNull(
 							searchText, searchText, searchText, searchText, searchText, searchText, searchText,
 							new PageRequest(start / length, length, sortDirection, sortColumn));
+
+		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),
+				page.getContent());
+	}
+
+	@ApiOperation(value = "Returns a list of sales.", notes = "")
+	@RequestMapping(value = "/sales", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+	public DatatableServerSideJsonObject getProcessWithClosedSales(@RequestParam Integer draw,
+			@RequestParam Integer start, @RequestParam Integer length,
+			@RequestParam(value = "search[value]") String searchText,
+			@RequestParam(value = "order[0][column]") int orderCol,
+			@RequestParam(value = "order[0][dir]") String orderDir, @RequestParam(value = "userId") long userId) {
+		String sortColumn = "sale.timestamp";
+		if (orderCol == 1)
+			sortColumn = "sale.customer.lastname";
+		else if (orderCol == 2)
+			sortColumn = "sale.customer.company";
+		else if (orderCol == 3)
+			sortColumn = "sale.customer.email";
+		else if (orderCol == 4)
+			sortColumn = "sale.timestamp";
+		else if (orderCol == 14)
+			sortColumn = "status";
+
+		if (searchText.startsWith("#id:") && searchText.endsWith("#")) {
+			long gotoProcessId = Long.parseLong(searchText.replace("#id:", "").replaceAll("#", ""));
+			Page<Process> gotoPage = this.processRepository.findById(gotoProcessId, new PageRequest(0, 1));
+			return new DatatableServerSideJsonObject(draw, gotoPage.getTotalElements(), gotoPage.getTotalElements(),
+					gotoPage.getContent());
+		}
+
+		Sort.Direction sortDirection = Sort.Direction.ASC;
+		if (orderDir.equals("desc"))
+			sortDirection = Sort.Direction.DESC;
+		Page<Process> page;
+
+		Collection<Status> statusCol = new ArrayList<>();
+		statusCol.add(Status.SALE);
+
+		page = this.processService.getAllProcessesByStatusAndSearchTextAndMyTasksPage(statusCol, start / length, length,
+				sortDirection.toString(), sortColumn, searchText, userId, false);
 
 		return new DatatableServerSideJsonObject(draw, page.getTotalElements(), page.getTotalElements(),
 				page.getContent());
@@ -356,15 +473,119 @@ public class ProcessResource {
 	@RequestMapping(value = "/{processId}/sales", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Sale createSaleByProcess(@PathVariable Long processId, @RequestBody @Valid final Sale sale)
-			throws NotFoundException, SaveFailedException {
+			throws NotFoundException, SaveFailedException, ConsistencyFailedException {
 		return processService.createSale(processId, sale);
 	}
 
 	@ApiOperation(value = "Get Processes by ProcessorId.", notes = "")
-	@RequestMapping(value = "/processor/{processorId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/processor/{processorId}", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	public List<Process> createSaleByProcess(@PathVariable Long processorId) {
-		return processService.getProcessesByProcessor(processorId);
+	public Page<Process> getProcessesByProcessor(@PathVariable Long processorId, @RequestBody final String body) throws JSONException {
+
+		JSONObject pageRequest = new JSONObject(body);
+		return processService.getProcessesByProcessor(processorId,pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"),
+				pageRequest.optString("searchText"));
+	}
+
+	@ApiOperation(value = "Returns sum of turnover by Status.", notes = "")
+	@RequestMapping(value = "sum/{status}", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Map<String, Double> getSumTurnoverByStatus(@PathVariable final Status status, @RequestBody final String body)
+			throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return processService.getSumTurnoverByStatus(status);
+	}
+
+	@ApiOperation(value = "Returns a page of processes by Status.", notes = "")
+	@RequestMapping(value = "pagination/extended/{status}", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesByStatusAndSearchTextAndMyTasks(@PathVariable final Status status,
+			@RequestBody final String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		Collection<Status> statusCol = new ArrayList<>();
+		statusCol.add(status);
+		if (status.equals(Status.OFFER)) {
+			statusCol.add(Status.FOLLOWUP);
+		}
+		return processService.getAllProcessesByStatusAndSearchTextAndMyTasksPage(statusCol, pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"),
+				pageRequest.optString("searchText"), pageRequest.optLong("userId"), true);
+	}
+
+	////////////////////////////////////////////////////////////////////////////// NEW
+	////////////////////////////////////////////////////////////////////////////// METHODS
+
+	@ApiOperation(value = "Returns a page of processes where lead is not null.", notes = "")
+	@RequestMapping(value = "pagination/leads", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesWithLeadNotNullPage(@RequestBody String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesWithLeadNotNullPage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+
+	}
+
+	@ApiOperation(value = "Returns a page of processes where offer is not null.", notes = "")
+	@RequestMapping(value = "pagination/offers", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesWithOfferNotNullPage(@RequestBody String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesWithOfferNotNullPage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+	}
+
+	@ApiOperation(value = "Returns a page of processes where sale is not null.", notes = "")
+	@RequestMapping(value = "pagination/sales", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesWithSaleNotNullPage(@RequestBody String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesWithSaleNotNullPage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+	}
+
+	@ApiOperation(value = "Returns a page of processes by Status.", notes = "")
+	@RequestMapping(value = "pagination/{status}", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesByStatus(@PathVariable final Status status, @RequestBody final String body)
+			throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesByStatusPage(status, pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+	}
+
+	@ApiOperation(value = "Returns a page of processes by Status OPEN or INCONTACT.", notes = "")
+	@RequestMapping(value = "pagination/open-or-incontact", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesByStatusIsOpenOrInContact(@RequestBody final String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesByStatusIsOpenOrIncontactPage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+	}
+
+	@ApiOperation(value = "Returns a page of processes by Status OFFER or FOLLOWUP.", notes = "")
+	@RequestMapping(value = "pagination/offer-or-followup", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesByStatusIsOfferOrFollowup(@RequestBody final String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesByStatusIsOfferOrFollowupPage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+	}
+
+	@ApiOperation(value = "Returns a page of processes by Status DONE or SALE.", notes = "")
+	@RequestMapping(value = "pagination/done-or-sale", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Page<Process> getAllProcessesByStatusIsDoneOrSale(@RequestBody final String body) throws JSONException {
+		JSONObject pageRequest = new JSONObject(body);
+		return newProcessService.getAllProcessesByStatusIsDoneOrSalePage(pageRequest.optInt("page"),
+				pageRequest.optInt("size"), pageRequest.optString("direction"), pageRequest.optString("properties"));
+	}
+
+	@ApiOperation(value = "Save a process and its customer", notes = "")
+	@RequestMapping(value = "save", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Process saveProcess(@RequestBody final Process process) throws ConsistencyFailedException {
+		return newProcessService.saveProcess(process);
 	}
 
 }

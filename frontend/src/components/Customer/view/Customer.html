@@ -47,10 +47,10 @@
 							<thead>
 								<tr>
 									<th></th>
-									<th class="text-center">{{ 'COMMON_NAME' | translate }}</th>
-									<th class="text-center">{{ 'COMMON_EMAIL' | translate }}</th>
-									<th class="text-center">{{ 'COMMON_PHONE' | translate }}</th>
-									<th class="text-center">{{ 'COMMON_COMPANY' | translate }}</th>
+									<th class="text-left">{{ 'COMMON_NAME' | translate }}</th>
+									<th class="text-left">{{ 'COMMON_EMAIL' | translate }}</th>
+									<th class="text-left">{{ 'COMMON_PHONE' | translate }}</th>
+									<th class="text-left">{{ 'COMMON_COMPANY' | translate }}</th>
                                     <th class="text-center"><i class="fa fa-cog"></i></th>
 								</tr>
 							</thead>
@@ -60,18 +60,18 @@
 										<span ng-show="!customer.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
 										<span ng-show="customer.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 									</td>
-									<td  class="project-title col-md-3 text-center"  ng-click="customerCtrl.showCustomer(customer.id)" style="cursor: pointer">
+									<td  class="project-title col-md-3 text-left"  ng-click="customerCtrl.showCustomer(customer.id)" style="cursor: pointer">
 										{{customer.firstname}} {{customer.lastname}}
 										<br>
 										<small>{{ 'CUSTOMER_CREATED' | translate }} {{customerCtrl.getLocalTimestamp(customer)}}</small>
 									</td>
-									<td style="white-space: nowrap;cursor: pointer" class="project-title col-md-3 text-center"  ng-click="customerCtrl.showCustomer(customer.id)" >
+									<td style="white-space: nowrap;cursor: pointer" class="project-title col-md-3 text-left"  ng-click="customerCtrl.showCustomer(customer.id)" >
 										{{customer.email}}
 									</td>
-									<td style="white-space: nowrap;cursor: pointer" class="project-title col-md-2 text-center"  ng-click="customerCtrl.showCustomer(customer.id)" >
+									<td style="white-space: nowrap;cursor: pointer" class="project-title col-md-2 text-left"  ng-click="customerCtrl.showCustomer(customer.id)" >
 										{{customer.phone}}
 									</td>
-									<td style="white-space: nowrap;cursor: pointer" class="project-completion col-md-3 text-center"  ng-click="customerCtrl.showCustomer(customer.id)" >
+									<td style="white-space: nowrap;cursor: pointer" class="project-completion col-md-3 text-left"  ng-click="customerCtrl.showCustomer(customer.id)" >
 										{{customer.company}}
 									</td>
 									<td class="project-actions col-md-1 text-center" >

@@ -1,0 +1,34 @@
+<div class="container-fluid workflow-container">
+  <div class="row cardRow">
+    <div class="fixed-column">
+      <div style="clear:right;clear:left;">
+        <div *ngIf="process?.processor!=null" style="height:48px;">
+          <img [title]="process?.processor.firstname+' '+process?.processor.lastname" style="width: 48px; height:48px;border-radius: 10%;"
+            [pictureId]="process?.processor?.thumbnail?.id" alt="">
+        </div>
+        <div *ngIf="process?.processor==null" style="height:48px;border-radius: 10%;border-style: dashed;  border-width: 1px; border-color: grey;"
+          ng-click="pin(process)">
+          <a *ngIf="!disabled" style="margin-top:5px;" class="btn btn-xs">
+            <i style="color:grey" class="fa fa-thumb-tack lg"></i>
+          </a>
+        </div>
+        <div class="icon-buttons" (click)="sendEventOpenInfoModal(process)"><i style="color:black" class="fa fa-info-circle fa-lg" aria-hidden="true"></i></div>
+        <div class="icon-buttons"><i style="color:black" class="fa fa-globe fa-lg" aria-hidden="true"></i></div>       
+      </div>
+    </div>
+    <div class="fluid-column">
+      <div style="margin-left:3px;overflow:hidden;line-height:95%; word-wrap: break-word;">
+        <div style="height:54px;">
+          {{text}}
+        </div>
+        <span><small><i class="fa fa-clock-o"></i> {{editWorkflowUnit?.timestamp|toLocalTimestamp}}</small></span>
+        <small class="pull-right">
+                    <span style="cursor:pointer" ng-click="openQuickEmailModal(process)">
+                        <i  title="EMAIL_SEND" i18n-title class="fa fa-envelope" aria-hidden="true" ></i>
+                       <span *ngIf="workflowService?.isOffer(process)"> {{process?.followUpAmount}}</span>
+                    </span>
+                </small>
+      </div>
+    </div>
+  </div>
+</div>

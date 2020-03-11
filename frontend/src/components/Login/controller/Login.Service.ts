@@ -45,26 +45,33 @@ class LoginService {
         this.subdomainService = SubdomainService;
     }
 
-    login(credentials: Credentials) {
-        let self = this;
-        credentials.email = credentials.email.toLowerCase();
-        self.authService.login(credentials).then(
-            (data) => {
-                if (self.location.host() === credentials.tenant) {
-                    self.location.path("/dashboard");
-                } else {
-                    let domain = "https://" + credentials.tenant;
-                    if (Number(self.location.port()) === 8080) {
-                        domain += ":" + self.location.port();
-                    }
-                    domain += "/#/login";
-                    self.window.open(domain, "_self");
+    async login(credentials: Credentials): Promise<void> {
+        try {
+            if (isNullOrUndefined(credentials.email) || isNullOrUndefined(credentials.password)) {
+                throw { "error": "username or password requiered!" };
+            }
+            credentials.email = credentials.email.toLowerCase();
+            await this.authService.login(credentials);
+            if (this.location.host() === credentials.tenant) {
+                this.location.path("/dashboard");
+            } else {
+                let domain = "https://" + credentials.tenant;
+                if (Number(this.location.port()) === 8080) {
+                    domain += ":" + this.location.port();
                 }
-                self.rootScope.setUserDefaultLanguage();
-                self.rootScope.loadLabels();
-            }, (error) => {
-                self.toaster.pop("error", "", self.translate.instant("LOGIN_ERROR"));
-            });
+                domain += "/#/login";
+                this.window.open(domain, "_self");
+            }
+            await this.authService.awaitInit();
+            this.rootScope.setUserDefaultLanguage();
+            this.rootScope.loadLabels();
+        } catch (error) {
+            handleError(error);
+            this.toaster.pop("error", "", this.translate.instant("LOGIN_ERROR"));
+        }
+
+
+
     }
 }
 

@@ -50,7 +50,7 @@ public class Address {
 	@Size(max = 255)
 	@Column(name = "country", length = 255, nullable = true)
 	private String country;
-	
+
 	@NotNull
 	@ApiModelProperty(hidden = true)
 	@Column(name = "deleted", nullable = false)
@@ -114,14 +114,42 @@ public class Address {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-	
-	
+
 	public boolean isDeleted() {
 		return deleted;
 	}
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getAsAdressLine() {
+		String addressStr = "";
+		if (street != null && street != "") {
+			addressStr += street;
+			if (number != null) {
+				addressStr += " " + number;
+			}
+			addressStr += ", ";
+		}
+		if (city != null && city != "") {
+			if (zip != null && zip != "") {
+				addressStr += zip + " ";
+			}
+			addressStr += city;
+			addressStr += ", ";
+		}
+		if (state != null && state != "") {
+			addressStr += state;
+			addressStr += ", ";
+		}
+		if (country != null && country != "") {
+			addressStr += country;
+		}
+		if (addressStr.endsWith(", ")) {
+			addressStr = addressStr.substring(0, addressStr.length() - 2);
+		}
+		return addressStr;
 	}
 
 	@Override
@@ -193,5 +221,5 @@ public class Address {
 		return "Address [id=" + id + ", number=" + number + ", street=" + street + ", city=" + city + ", state=" + state
 				+ ", zip=" + zip + ", country=" + country + ", deleted=" + deleted + "]";
 	}
-	
+
 }

@@ -8,7 +8,7 @@ const ProductDetailControllerId: string = "ProductDetailController";
 
 class ProductDetailController {
 
-    $inject = [ProductServiceId, $routeParamsId, $scopeId, $rootScopeId, $locationId];
+    $inject = [ProductServiceId, $routeParamsId, $scopeId, $rootScopeId, $locationId, SweetAlertId, $translateId, toasterId];
     productService: ProductService;
     routeParams;
     rootScope;
@@ -19,7 +19,7 @@ class ProductDetailController {
     isNewProduct: boolean;
     location;
 
-    constructor(ProductService, $routeParams, $scope, $rootScope, $location) {
+    constructor(ProductService, $routeParams, $scope, $rootScope, $location, private SweetAlert, private $translate, private toaster) {
         this.productService = ProductService;
         this.routeParams = $routeParams;
         this.rootScope = $rootScope;
@@ -39,7 +39,9 @@ class ProductDetailController {
         let productId = $routeParams.productId;
         if (!isNullOrUndefined(productId) && productId !== 0 && !isNaN(productId) && angular.isNumber(+productId)) {
             this.product = await this.productService.getProductById(Number(productId));
-            this.productHead = this.product.name;
+            if (!isNullOrUndefined(this.product)) {
+                this.productHead = this.product.name;
+            }
             this.isNewProduct = false;
             isNullOrUndefined(this.product) ? this.productFound = false : this.productFound = true;
         } else if (!isNullOrUndefined(productId) && productId === "new") {
@@ -52,17 +54,42 @@ class ProductDetailController {
             if (isNullOrUndefined(this.productService.products)) {
                 this.productService.getAllProducts();
             }
-
         }
+        this.productService.inconsistency = null;
     }
 
     savePicture() {
         this.rootScope.$broadcast("saveCroppedImage");
     }
 
-    saveProduct() {
-        this.productService.saveProduct(this.product, this.isNewProduct);
-        this.location.path("/product");
+    async saveProduct() {
+        try {
+            this.product = await this.productService.saveProduct(this.product, this.isNewProduct);
+            this.location.path("/product");
+        } catch (error) {
+            this.productService.inconsistency = showConsistencyErrorMessage(error, this.$translate, this.toaster, "PRODUCT_PRODUCT");
+            throw error;
+        }
+
+    }
+
+    async deleteProduct(): Promise<void> {
+        try {
+            await this.SweetAlert.swal({
+                title: this.$translate.instant("COMMON_DELETE"),
+                html: this.$translate.instant("COMMON_DELETE_QUESTITION"),
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonColor: "#3085d6",
+                confirmButtonColor: "#d33",
+                confirmButtonText: this.$translate.instant("COMMON_DELETE"),
+                cancelButtonText: this.$translate.instant("COMMON_CANCEL")
+            });
+            await this.productService.deleteProduct(this.product);
+            this.location.path("/product");
+        } catch (error) {
+            this.toaster.pop("error", "", this.$translate.instant("COMMON_DELETE_ERROR"));
+        }
     }
 }
 angular.module(moduleProductDetail, [ngResourceId]).controller(ProductDetailControllerId, ProductDetailController);

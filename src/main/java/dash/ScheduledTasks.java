@@ -8,16 +8,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
-import dash.exceptions.NotFoundException;
+import dash.multitenancy.configuration.TenantContext;
 import dash.statisticmanagement.olap.business.OlapStatisticService;
 import dash.tenantmanagement.business.ITenantService;
-import dash.tenantmanagement.business.TenantContext;
 import dash.tenantmanagement.domain.Tenant;
 
 @Component
 public class ScheduledTasks {
 
-	private static final int THREAD_MIN = 5;
+	private static final int THREAD_MIN = 2;
 
 	private static final Logger logger = Logger.getLogger(ScheduledTasks.class);
 
@@ -27,13 +26,13 @@ public class ScheduledTasks {
 	@Autowired
 	private ITenantService tenantService;
 
-	@Scheduled(cron = "0 0/10 5-23 * * MON-FRI")
+	@Scheduled(cron = "0 0 5-20/3 * * MON-FRI")
 	private void generateStatisticsSchedulerMoToFr() {
 		logger.info("Do cronejob for MON-FRI");
 		generateStatistics();
 	}
 
-	@Scheduled(cron = "0 0 6-22/2 * * SAT,SUN")
+	@Scheduled(cron = "0 0 6-20/12 * * SAT,SUN")
 	// @Scheduled(cron = "0 0/1 5-23 * * SAT,SUN")
 	private void generateStatisticsSchedulerSatToSun() {
 		logger.info("Do cronejob for SAT,SUN");
@@ -61,12 +60,14 @@ public class ScheduledTasks {
 					public void run() {
 						TenantContext.setTenant(tenantKey);
 						try {
-							logger.info("Generate Statistics for " + tenantKey);
+							// logger.info("Generate Statistics for " +
+							// tenantKey);
 							olapStatisticService.generateOlapStatistics();
-							logger.info("Statistics generated for " + tenantKey);
-						} catch (NotFoundException ex) {
-							logger.error("Something went wrong when trying to generate olap statistics for" + tenantKey,
-									ex);
+							// logger.info("Statistics generated for " +
+							// tenantKey);
+						} catch (Exception ex) {
+							logger.error("Something went wrong when trying to generate olap statistics for " + tenantKey
+									+ " | " + ex.getMessage(), ex);
 						}
 					}
 				});

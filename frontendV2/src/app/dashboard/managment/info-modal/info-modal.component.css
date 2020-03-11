@@ -1,0 +1,21 @@
+	.chat-view {
+		word-break: break-all;
+	}
+	.customerdetails div{
+			min-height: 80px;
+			font-size: 1.1em;
+	}
+
+	.customerdetails span{
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		display: block;
+		overflow: hidden
+	}
+	 .ellipsis{
+		white-space: nowrap;
+		text-overflow: ellipsis; 
+		display: block;
+		overflow: hidden;
+	}
+

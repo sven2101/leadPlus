@@ -20,10 +20,13 @@ class TemplateController {
     summernoteOptions: any;
     templateFound: boolean;
     templateTested: boolean = false;
+    routeParams;
     templateHead: string;
+    templateType = TemplateType;
     constructor(TemplateService, private SummernoteService: SummernoteService, private SourceService: SourceService, private $translate, private toaster, $routeParams, $location) {
         this.templateService = TemplateService;
         this.location = $location;
+        this.routeParams = $routeParams;
         this.initTemplate($routeParams);
         this.SetAvailablesourceNames();
         this.availableNotificationTypes.splice(this.availableNotificationTypes.indexOf(NotificationType.ERROR.toString()), 1);
@@ -35,10 +38,13 @@ class TemplateController {
         let templateId = $routeParams.templateId;
         if (!isNullOrUndefined(templateId) && templateId !== 0 && !isNaN(templateId) && angular.isNumber(+templateId)) {
             this.template = await this.templateService.getTemplateById(Number(templateId));
-            this.templateHead = this.template.name;
+            if (!isNullOrUndefined(this.template)) {
+                this.templateHead = this.template.name;
+            }
             isNullOrUndefined(this.template) ? this.templateFound = false : this.templateFound = true;
         } else if (!isNullOrUndefined(templateId) && templateId === "new") {
             this.template = new Template();
+            this.template.templateTypes = [TemplateType.EMAIL];
             this.templateService.currentEditTemplate = this.template;
             this.template.sourceString = "NONE,ALL";
             this.templateHead = "SETTING_EMAIL_NEW_TEMPLATE";
@@ -50,8 +56,8 @@ class TemplateController {
             if (isNullOrUndefined(this.templateService.templates)) {
                 this.templateService.getAll();
             }
-
         }
+        this.templateService.inconsistency = null;
     }
 
     isTemplateInPreviewMode(): boolean {
@@ -67,7 +73,7 @@ class TemplateController {
         return this.$translate.instant(key);
     }
 
-    save() {
+    async save() {
         if (this.currentSelectedNotificationTypes.length > 0) {
             this.template.notificationTypeString = this.currentSelectedNotificationTypes.join(",");
         } else {
@@ -79,30 +85,35 @@ class TemplateController {
             this.template.sourceString = null;
         }
 
-        if (isNullOrUndefined(this.template.id)) {
-            this.templateService.save(this.template);
-        } else {
-            this.templateService.update(this.template);
+        let savedTemplate;
+        try {
+            if (isNullOrUndefined(this.template.id)) {
+                savedTemplate = await this.templateService.save(this.template);
+            } else {
+                savedTemplate = await this.templateService.update(this.template);
+            }
+            this.goBack();
+        } catch (error) {
+            this.templateService.inconsistency = showConsistencyErrorMessage(error, this.$translate, this.toaster, "SETTING_TEMPLATE");
+            throw error;
         }
 
-        this.template = null;
-        this.goBack();
     }
 
     goBack() {
         this.location.path("settings/template");
+        this.templateService.getAll();
         this.SummernoteService.resetSummernoteConfiguration();
     }
 
     async testSyntax(): Promise<void> {
         try {
-            await this.templateService.testTemplate(this.template, new WorkflowTemplateObject(), new Notification());
+            await this.templateService.testTemplate(this.template, new WorkflowTemplateObject(), new EmailNotification());
             this.templateTested = true;
             this.toaster.pop("success", "", this.$translate.instant("EMAIL_TEMPLATE_SYNTAX_SUCCESS"));
 
         } catch (error) {
             this.templateTested = false;
-            console.log(error);
             if (error.data != null && error.data.exception !== "dash.templatemanagement.business.TemplateCompilationException") {
                 return this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR"));
             }
@@ -114,7 +125,6 @@ class TemplateController {
             errorMessage = error == null || error.data == null ? "" : ": " + error.data.message.substring(36);
             this.toaster.pop("error", "", this.$translate.instant("EMAIL_TEMPLATE_ERROR") + errorMessage);
         }
-
     }
 
 

@@ -18,7 +18,7 @@ const CustomerServiceId: string = "CustomerService";
 
 class CustomerService {
 
-    private $inject = [CustomerResourceId, $httpId, toasterId, $translateId];
+    private $inject = [CustomerResourceId, $httpId, toasterId, $translateId, $rootScopeId];
 
     customerResource: any;
     pagingCustomers: Array<Customer> = new Array<Customer>();
@@ -27,25 +27,32 @@ class CustomerService {
     http: any;
     toaster: any;
     translate: any;
+    rootScope: any;
+    inconsistency: string;
 
-    constructor(CustomerResource: CustomerResource, $http, toaster, $translate) {
+    constructor(CustomerResource: CustomerResource, $http, toaster, $translate, $rootScope) {
         this.customerResource = CustomerResource.resource;
         this.http = $http;
         this.toaster = toaster;
         this.translate = $translate;
-        this.getAllCustomerByPage(1, 20, "noSearchText", false);
+        this.rootScope = $rootScope;
+        // this.getAllCustomerByPage(1, 20, "noSearchText", false);
     }
 
-    async saveCustomer(customer: Customer, insert: boolean = true): Promise<Customer> {
-        let self = this;
+    async saveCustomer(customer: Customer, insert: boolean = false, upgradeToRealCustomer: boolean = false): Promise<Customer> {
         if (insert) {
             customer.timestamp = newTimestamp();
-            customer.realCustomer = true;
-            customer = await this.customerResource.createCustomer(customer).$promise as Customer;
-        } else {
-            customer = await this.customerResource.updateCustomer(customer).$promise as Customer;
         }
-        return customer;
+        if (upgradeToRealCustomer) {
+            customer.realCustomer = true;
+        }
+        try {
+            let savedCustomer = await this.customerResource.createCustomer(customer).$promise;
+            this.inconsistency = null;
+            return savedCustomer;
+        } catch (error) {
+            throw error;
+        }
     }
 
     async getCustomerById(customerId: number) {
@@ -54,14 +61,6 @@ class CustomerService {
             return null;
         }
         return customer;
-    }
-
-    async insertCustomer(customer: Customer): Promise<Customer> {
-        return await this.customerResource.createCustomer(customer).$promise as Customer;
-    }
-
-    async updateCustomer(customer: Customer): Promise<Customer> {
-        return await this.customerResource.updateCustomer(customer).$promise as Customer;
     }
 
     // TODO change to mapzen api
@@ -153,6 +152,9 @@ class CustomerService {
                 return temp;
             });
         }
+    }
+    async deleteCustomer(customer: Customer): Promise<void> {
+        await this.customerResource.deleteCustomer({ id: customer.id }).$promise;
     }
 }
 

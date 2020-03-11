@@ -29,12 +29,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dash.customermanagement.business.ICustomerService;
+import dash.customermanagement.business.CustomerService;
 import dash.customermanagement.domain.Customer;
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
-import dash.exceptions.SaveFailedException;
-import dash.exceptions.UpdateFailedException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -46,7 +45,7 @@ import io.swagger.annotations.ApiParam;
 public class CustomerResource {
 
 	@Autowired
-	private ICustomerService customerService;
+	private CustomerService customerService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -63,7 +62,7 @@ public class CustomerResource {
 		return customerService.getAllByPage(start, length, searchtext, allCustomers);
 
 	}
-	
+
 	@ApiOperation(value = "Returns a list of customer by page.", notes = "")
 	@RequestMapping(value = "/search/{searchtext}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -90,7 +89,7 @@ public class CustomerResource {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Create a single customer.", notes = "You have to provide a valid customer entity.")
 	public Customer save(@ApiParam(required = true) @RequestBody @Valid final Customer customer)
-			throws SaveFailedException {
+			throws ConsistencyFailedException {
 		return customerService.save(customer);
 	}
 
@@ -98,12 +97,12 @@ public class CustomerResource {
 	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Update a single customer.", notes = "You have to provide a valid customer ID.")
 	public Customer update(@ApiParam(required = true) @RequestBody @Valid final Customer customer)
-			throws UpdateFailedException {
-		return customerService.update(customer);
+			throws ConsistencyFailedException {
+		return customerService.save(customer);
 	}
 
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Delete a single customer.", notes = "You have to provide a valid customer ID.")
 	public void delete(@ApiParam(required = true) @PathVariable final Long id) throws DeleteFailedException {
 		customerService.delete(id);

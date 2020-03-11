@@ -13,20 +13,19 @@
  *******************************************************************************/
 package dash.templatemanagement.rest;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.apache.log4j.Logger;
-import org.apache.pdfbox.io.IOUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,16 +33,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.DeleteFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.exceptions.UpdateFailedException;
+import dash.fileuploadmanagement.business.PdfGenerationFailedException;
 import dash.messagemanagement.domain.AbstractMessage;
 import dash.messagemanagement.domain.MessageContext;
-import dash.processmanagement.domain.Process;
+import dash.security.jwt.domain.UserContext;
 import dash.templatemanagement.business.ITemplateService;
 import dash.templatemanagement.business.TemplateCompilationException;
 import dash.templatemanagement.domain.Template;
+import dash.templatemanagement.domain.WorkflowTemplateObject;
+import dash.usermanagement.business.UserService;
+import dash.usermanagement.domain.User;
+import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -53,10 +60,14 @@ import io.swagger.annotations.ApiParam;
 @Api(value = "Template API")
 public class TemplateResource {
 
-	private static final Logger logger = Logger.getLogger(TemplateResource.class);
+	private ITemplateService templateService;
+	private UserService userService;
 
 	@Autowired
-	private ITemplateService templateService;
+	public TemplateResource(ITemplateService templateService, UserService userService) {
+		this.templateService = templateService;
+		this.userService = userService;
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -76,7 +87,7 @@ public class TemplateResource {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiOperation(value = "Post a template. ", notes = "")
 	public Template save(@ApiParam(required = true) @RequestBody @Valid final Template template)
-			throws SaveFailedException {
+			throws SaveFailedException, ConsistencyFailedException {
 		return templateService.save(template);
 	}
 
@@ -84,8 +95,8 @@ public class TemplateResource {
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public Template update(@ApiParam(required = true) @RequestBody @Valid final Template template)
-			throws UpdateFailedException {
-		return templateService.update(template);
+			throws UpdateFailedException, SaveFailedException, ConsistencyFailedException {
+		return templateService.save(template);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -102,7 +113,7 @@ public class TemplateResource {
 			@ApiParam(required = true) @RequestBody @Valid final MessageContext messageContext)
 			throws NotFoundException, IOException, TemplateCompilationException {
 		return templateService.getMessageContent(templateId, messageContext.getWorkflowTemplateObject(),
-				messageContext.getNotification());
+				messageContext.getNotification(), messageContext.getUser());
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.POST)
@@ -111,28 +122,57 @@ public class TemplateResource {
 	public AbstractMessage generate(@ApiParam(required = true) @RequestBody @Valid final MessageContext messageContext)
 			throws NotFoundException, IOException, TemplateCompilationException {
 		return templateService.getMessageContentByTemplate(messageContext.getTemplate(),
-				messageContext.getWorkflowTemplateObject(), messageContext.getNotification());
+				messageContext.getWorkflowTemplateObject(), messageContext.getNotification(), messageContext.getUser());
 	}
 
-	@RequestMapping(value = "/{templateId}/offers/pdf/generate", method = RequestMethod.POST, produces = "application/pdf")
-	@ResponseStatus(HttpStatus.CREATED)
+	@RequestMapping(value = "/{templateId}/offers/pdf/generate", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
 	@ApiOperation(value = "Generate a pdf based on a template and an offer.", notes = "")
-	public ResponseEntity<byte[]> generatePdf(@ApiParam(required = true) @PathVariable final Long templateId,
-			@ApiParam(required = true) @PathVariable final long offerId,
-			@ApiParam(required = true) @RequestBody @Valid final Process process)
-			throws NotFoundException, IOException {
+	public Map<String, byte[]> generatePdf(@ApiParam(required = true) @PathVariable final long templateId,
+			@ApiParam(required = true) @RequestBody @Valid final MessageContext messageContext)
+			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException,
+			TemplateException {
+		Map<String, byte[]> map = new HashMap<>();
+		map.put("data", templateService.getPdfBytemplateId(templateId, messageContext.getWorkflowTemplateObject(),
+				messageContext.getUser()));
+		return map;
+	}
 
-		FileInputStream fileStream;
-		fileStream = new FileInputStream(new File("D://abc.pdf"));
-		logger.info("PDF: " + fileStream.toString());
-		byte[] contents = IOUtils.toByteArray(fileStream);
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.parseMediaType("application/pdf"));
-		String filename = "abc.pdf";
-		headers.setContentDispositionFormData(filename, filename);
-		fileStream.close();
-		return new ResponseEntity<byte[]>(contents, headers, HttpStatus.OK);
+	@RequestMapping(value = "/test/pdf/generate", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Generate a pdf based on a template and an offer.", notes = "")
+	public Map<String, byte[]> generatePdfByTemplate(@RequestBody @Valid String payload) throws NotFoundException,
+			IOException, TemplateCompilationException, PdfGenerationFailedException, TemplateException, JSONException {
+		JSONObject json = null;
+		Template template = null;
+		WorkflowTemplateObject workflowTemplateObject = null;
+		User user = null;
+		try {
+			json = new JSONObject(payload);
+			template = new ObjectMapper().readValue(json.get("template").toString(), Template.class);
+			workflowTemplateObject = new ObjectMapper().readValue(json.get("workflowTemplateObject").toString(),
+					WorkflowTemplateObject.class);
+			user = new ObjectMapper().readValue(json.get("user").toString(), User.class);
+		} catch (JSONException e) {
+			throw new JSONException(e.getMessage());
+		}
+		Map<String, byte[]> map = new HashMap<>();
+		map.put("data", templateService.getPdfBytemplate(template, workflowTemplateObject, user));
+		return map;
+	}
 
+	@RequestMapping(value = "/process/pdf", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation(value = "Generate a pdf based on a workflowTemplateObject.", notes = "")
+	public Map<String, byte[]> exportProcessAsPDF(
+			@ApiParam(required = true) @RequestBody @Valid final WorkflowTemplateObject workflowTemplateObject)
+			throws NotFoundException, IOException, TemplateCompilationException, PdfGenerationFailedException,
+			TemplateException {
+		UserContext userContext = (UserContext) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Map<String, byte[]> map = new HashMap<>();
+		map.put("data", templateService.exportProcessAsPDF(workflowTemplateObject,
+				this.userService.getUserByEmail(userContext.getUsername())));
+		return map;
 	}
 
 }

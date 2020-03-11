@@ -1,33 +1,42 @@
-/// <reference path="../../app/App.Constants.ts" />
-/*******************************************************************************
- * Copyright (c) 2016 Eviarc GmbH.
- * All rights reserved.  
- *
- * NOTICE:  All information contained herein is, and remains
- * the property of Eviarc GmbH and its suppliers, if any.  
- * The intellectual and technical concepts contained
- * herein are proprietary to Eviarc GmbH,
- * and are protected by trade secret or copyright law.
- * Dissemination of this information or reproduction of this material
- * is strictly forbidden unless prior written permission is obtained
- * from Eviarc GmbH.
- *******************************************************************************/
-"use strict";
 
-angular.module(moduleApp)
-    .directive("childrow", function() {
-        let directive: { restrict: string, templateUrl: any, transclude: boolean, link: any };
-        directive = { restrict: null, templateUrl: null, transclude: null, link: null };
-        directive.restrict = "A";
-        directive.templateUrl = function(elem, attr) {
-            return "components/Workflow/view/ChildRow.html";
-        };
-        directive.transclude = true;
-        directive.link = function(scope, element, attrs) {
-            scope.getTimestamp = function(timestamp, pattern) {
-                return toLocalDate(timestamp, pattern);
-            };
-        };
+
+const ChildrowDirectiveId: string = "childrow";
+
+class ChildrowDirective {
+
+    templateUrl = () => { return "components/Workflow/view/ChildRow.html"; };
+    transclude = false;
+    restrict = "A";
+
+    constructor(private $http, private FileSaver) { }
+
+    static directiveFactory(): ChildrowDirective {
+        let directive: any = ($http, FileSaver) => new ChildrowDirective($http, FileSaver);
+        directive.$inject = [$httpId, FileSaverId];
         return directive;
-    });
+    }
+
+    link(scope, element, attrs) {
+        scope.getTimestamp = function (timestamp, pattern) {
+            return toLocalDate(timestamp, pattern);
+        };
+        scope.openAttachment = (fileUpload) => this.openAttachment(fileUpload);
+    }
+
+    async openAttachment(fileUpload: FileUpload): Promise<void> {
+        let self = this;
+        if (!isNullOrUndefined(fileUpload.content)) {
+            let file = b64toBlob(fileUpload.content, fileUpload.mimeType);
+            this.FileSaver.saveAs(file, fileUpload.filename);
+            return;
+        }
+        let response = await this.$http.get("/api/rest/files/open/content/" + fileUpload.id, { method: "GET", responseType: "arraybuffer" });
+        let contentType = response.headers("content-type");
+        let file = new Blob([response.data], { type: contentType });
+        this.FileSaver.saveAs(file, fileUpload.filename);
+
+    }
+}
+
+angular.module(moduleApp).directive(ChildrowDirectiveId, ChildrowDirective.directiveFactory());
 

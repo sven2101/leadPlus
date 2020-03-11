@@ -4,7 +4,7 @@ import javax.validation.constraints.NotNull;
 
 public class NotificationContext {
 
-	@NotNull
+	// @NotNull
 	private String smtpKey;
 
 	@NotNull

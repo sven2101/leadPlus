@@ -25,6 +25,7 @@ public final class Constants {
 	public static final String NOT_FOUND = "Not found. ";
 	public static final String PROCESS_NOT_FOUND = "Process not found. ";
 	public static final String PRODUCT_NOT_FOUND = "Product not found. ";
+	public static final String API_NOT_FOUND = "Api not found. ";
 	public static final String COMMENT_NOT_FOUND = "Comment not found. ";
 	public static final String USER_NOT_FOUND = "User not found. ";
 	public static final String SMTP_NOT_FOUND = "Smtp not found";
@@ -45,6 +46,7 @@ public final class Constants {
 	public static final String ATTACHMENT_NOT_FOUND = "Attachment not found. ";
 	public static final String TEMPLATE_NOT_FOUND = "Template not found. ";
 	public static final String TENANT_NOT_FOUND = "Tenant not found. ";
+	public static final String RESET_ID_NOT_FOUND = "Password Reset ID not found";
 
 	public static final String USER_NOT_ACTIVATED = "User not activated. ";
 	public static final String USER_EXISTS = "Username already exists. ";

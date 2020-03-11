@@ -4,24 +4,24 @@
 			<h5>{{ 'SETTING_ACCESS_MANAGEMENT' | translate }}</h5>
 		</div>
 		<div class="ibox-content">
-			<table class="table text-center">
+			<table class="table text-left">
 				<thead>
 					<tr>
-						<th class="text-center">{{ 'COMMON_FIRSTNAME' | translate }}</th>
-						<th class="text-center">{{ 'COMMON_LASTNAME' | translate }}</th>
-						<th class="text-center">{{ 'COMMON_EMAIL' | translate }}</th>
-						<th class="text-center">{{ 'COMMON_ROLE' | translate }}</th>
+						<th class="text-left">{{ 'COMMON_LASTNAME' | translate }}</th>
+						<th class="text-left">{{ 'COMMON_FIRSTNAME' | translate }}</th>
+						<th class="text-left">{{ 'COMMON_EMAIL' | translate }}</th>
+						<th class="text-left">{{ 'COMMON_ROLE' | translate }}</th>
 						<th class="text-center"><i class="fa fa-cog"></i></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-if="user.role!='API'" ng-repeat="user in settingCtrl.settingService.users">
-						<td>{{user.firstname}}</td>
+					<tr ng-if="user.role!='API'" ng-repeat="user in settingCtrl.settingService.users | orderBy : ['lastname','firstname']">
 						<td>{{user.lastname}}</td>
+						<td>{{user.firstname}}</td>
 						<td>{{user.email}}</td>
 						<td ng-if="user.role!='SUPERADMIN'">
 
-							<select ng-disabled="user.role=='ADMIN'&&settingCtrl.currentUser.role!='SUPERADMIN'" class="form-control" ng-change="settingCtrl.changeRole(user)"
+							<select ng-disabled="user.enabled===false||(user.role=='ADMIN'&&settingCtrl.currentUser.role!='SUPERADMIN')" class="form-control" ng-change="settingCtrl.changeRole(user)"
 								ng-model="user.role ">                            
 								<option value="USER ">{{ 'COMMON_USER' | translate }}</option>
 								<option value="ADMIN ">{{ 'COMMON_ADMIN' | translate }}</option>                                        
@@ -30,16 +30,16 @@
 						<td ng-if="user.role=='SUPERADMIN' ">
 							{{ 'COMMON_SUPERADMIN' | translate }}
 						</td>
-						<td ng-if="user.enabled==false ">
+						<td ng-if="user.enabled==false " class="text-center" style="white-space: nowrap;text-align:center;">
 
 							<button ng-click="settingCtrl.activateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&settingCtrl.currentUser.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
 
 							<i class="fa fa-check "></i>&nbsp;{{ 'SETTING_ACTIVATE_USER' | translate }}
 						</button>
 						</td>
-						<td ng-if="user.enabled==true ">
+						<td ng-if="user.enabled==true " class="text-center" style="white-space: nowrap;text-align:center;">
 
-							<button ng-click="settingCtrl.deactivateUser(user) " type="button " class="btn btn-success" ng-disabled="(user.role=='ADMIN'&&settingCtrl.currentUser.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
+							<button ng-click="settingCtrl.deactivateUser(user) " type="button " class="btn btn-danger" ng-disabled="(user.role=='ADMIN'&&settingCtrl.currentUser.role!='SUPERADMIN')||user.role=='SUPERADMIN'">
 
 							<i class="fa fa-ban "></i>&nbsp;{{ 'SETTING_DEACTIVATE_USER' | translate }}
 						</button>

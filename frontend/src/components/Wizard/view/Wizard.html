@@ -35,18 +35,23 @@
             <button ng-if="currentWizard.showSaveButton" type="button " class="btn btn-success " style="float:left;" ng-disabled="!allowToContinue()"
         ng-click="continue()">{{ 'COMMON_NEXT'| translate }}&nbsp;<i class="fa fa-arrow-right" aria-hidden="true"></i></button>
     <button type="button " class="btn btn-white " ng-click="close(false)">{{ 'COMMON_CANCEL'| translate }}</button>
-    <button ng-if="currentWizard.showSaveButton" type="button " class="btn btn-success " ng-disabled="isAnyFormInvalid()"
+    <button ng-if="currentWizard.showSaveButton" type="button " class="btn btn-success " ng-disabled="isAnyFormInvalid() || inconsistency !== null"
         ng-click="saveOrTransform()"> <i class="fa fa-save "></i>&nbsp;{{ 'COMMON_SAVE'| translate }}</button>
     <button ng-if="currentWizard.isFollowUp" type="button " class="btn btn-success" data-style="zoom-in"
-        ng-click="followUp()">
+        ng-click="followUp()" ng-disabled="inconsistency !== null">
 		<span><i class="fa fa-arrow-up" aria-hidden="true"></i>&nbsp;{{ 'EMAIL_ONLY_FOLLOWUP'| translate }}</span>
 		</button>
+        <!--         || !rootScope.isSmptVerified"-->
     <button ng-if="currentWizard.isEmail" type="button " class="btn btn-warning" data-style="zoom-in"
-        ng-disabled="isAnyFormInvalid() || currentWizard.form.$invalid || disableSendingButton || !rootScope.isSmptVerified"
+        ng-disabled="isAnyFormInvalid() || currentWizard.form.$invalid || disableSendingButton || inconsistency !== null"
+
         ng-click="send()">
          <span  ng-if="disableSendingButton==true" style="float: left;margin-left: -5px;padding-right:2px;padding-top: 2px ">
              <div  class="spinner-white"></div>
         </span>
         <i ng-if="disableSendingButton==false" class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;{{ ::currentWizard.sendButtonName | translate }}
 		</button>
+        <br>
+        <br>
+        <span ng-if="inconsistency !== null" style="color:red;float:left; font-size:14px;font-weight:bold"><i style="color:red" class="fa fa-exclamation-triangle "></i> {{inconsistency}} <a ng-click="closeAndRefresh()">{{'COMMON_CLOSE' | translate}} {{'COMMON_AND' | translate}} {{'COMMON_REFRESH' | translate}}</a></span>
 </div>

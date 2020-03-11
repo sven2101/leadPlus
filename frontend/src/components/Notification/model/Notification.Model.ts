@@ -2,7 +2,7 @@
 /// <reference path="../../FileUpload/model/FileUpload.Model.ts" />
 /// <reference path="./NotificationType.ts" />
 
-class Notification {
+class EmailNotification {
 
     id: number;
     recipients: string;

@@ -12,18 +12,19 @@ import org.springframework.data.jpa.domain.Specification;
 
 import dash.common.AbstractWorkflow;
 import dash.common.AbstractWorkflow_;
+import dash.customermanagement.domain.Customer;
+import dash.consistencymanagement.domain.ConsistencyObject_;
 import dash.processmanagement.domain.Process;
 import dash.processmanagement.domain.Process_;
 import dash.processmanagement.domain.Processor_;
 import dash.statusmanagement.domain.Status;
-import dash.usermanagement.domain.User_;
 
 public class ProcessSpecs {
 
 	public static Specification<Process> isProcessor(final long id) {
 		return new Specification<Process>() {
 			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-				return builder.equal(root.join(Process_.processor).get(User_.id), id);
+				return builder.equal(root.join(Process_.processor).get(ConsistencyObject_.id), id);
 			}
 
 		};
@@ -33,7 +34,7 @@ public class ProcessSpecs {
 		return new Specification<Process>() {
 			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 				query.distinct(true);
-				return builder.equal(root.join(Process_.formerProcessors).join(Processor_.user).get(User_.id), id);
+				return builder.equal(root.join(Process_.formerProcessors).join(Processor_.user).get(ConsistencyObject_.id), id);
 			}
 		};
 	}
@@ -46,10 +47,18 @@ public class ProcessSpecs {
 		};
 	}
 
+	public static Specification<Process> hasStatus(final Status status) {
+		return new Specification<Process>() {
+			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+				return builder.equal(root.get(Process_.status), status);
+			}
+		};
+	}
+
 	public static Specification<Process> isDeleted(boolean isDeleted) {
 		return new Specification<Process>() {
 			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-				return builder.equal(root.get(Process_.deleted), isDeleted);
+				return builder.equal(root.get(ConsistencyObject_.deleted), isDeleted);
 			}
 		};
 	}
@@ -58,6 +67,43 @@ public class ProcessSpecs {
 		return new Specification<Process>() {
 			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 				return builder.equal(root.get(Process_.status), Status.SALE);
+			}
+		};
+	}
+
+	public static Specification<Process> containsSearchTextInCustomer(
+			SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute,
+			SingularAttribute<Customer, String> customerAttribute, String searchText) {
+
+		return new Specification<Process>() {
+			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+				final String tmpSearchtext = "%" + searchText + "%";
+				return builder.like(
+						root.join(abstractWorkflowAttribute).join(AbstractWorkflow_.customer).get(customerAttribute),
+						tmpSearchtext);
+			}
+		};
+	}
+
+	public static Specification<Process> containsSearchTextInStatus(
+
+			String searchText) {
+
+		return new Specification<Process>() {
+			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+				final String tmpSearchtext = "%" + searchText + "%";
+				return builder.like(root.get(Process_.status).as(String.class), tmpSearchtext);
+			}
+		};
+	}
+
+	public static Specification<Process> containsSearchTextInWorkflow(
+			SingularAttribute<Process, AbstractWorkflow> abstractWorkflowAttribute,
+			SingularAttribute<AbstractWorkflow, String> workflowAttribute, String searchText) {
+		return new Specification<Process>() {
+			public Predicate toPredicate(Root<Process> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+				final String tmpSearchtext = "%" + searchText + "%";
+				return builder.like(root.join(abstractWorkflowAttribute).get(workflowAttribute), tmpSearchtext);
 			}
 		};
 	}

@@ -18,8 +18,13 @@
         </div>
     </div>
 </div>
-<div class="wrapper wrapper-content animated fadeInRight" ng-if="productDetailCtrl.productFound===true">
-	<div class="row">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins" ng-if="productDetailCtrl.productFound===false && productDetailCtrl.productService.inconsistency === null">
+        <div class="ibox-content" style="font-size: 1.3em">
+            {{ 'INCONSISTENCY_DELETED' | translate}} <a href="#/product"> {{ 'COMMON_BACK' | translate}}</a>
+        </div>
+    </div>
+    <div class="row" ng-if="productDetailCtrl.productFound===true">
 		<div class="col-lg-12">
 			<div class="ibox float-e-margins">
 				<div class="ibox-title">
@@ -57,7 +62,7 @@
                                     <div class="input-group">
                                         <span class="input-group-addon">{{ 'COMMON_CURRENCY'| translate }}</span>
                                         <input type="number" name="netPrice" class="form-control currency" ng-model="productDetailCtrl.product.netPrice" ng-maxlength="10"
-                                            ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" required>
+                                            ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="any" required>
                                     </div>
 
                                 </div>
@@ -91,8 +96,11 @@
                     </form>
                     <div>
                         <a class="btn btn-success" href="#/product"><i class="fa fa-arrow-left" aria-hidden="true"></i>&nbsp;{{ 'COMMON_BACK' | translate }}</a>
-                        <button type="button" class="btn btn-success" ng-disabled="createProductForm.$invalid" ng-click="productDetailCtrl.savePicture()" style="float:right;"><i class="fa fa-save "></i>&nbsp;{{ 'COMMON_SAVE' | translate }}</button>
+                        <button type="button" class="btn btn-success" ng-disabled="createProductForm.$invalid || productDetailCtrl.productService.inconsistency !== null" ng-click="productDetailCtrl.savePicture()" style="float:right;"><i class="fa fa-save "></i>&nbsp;{{ 'COMMON_SAVE' | translate }}</button>
+                        <button ng-if="productDetailCtrl.isNewProduct===false" type="button" class="btn btn-danger" ng-click="productDetailCtrl.deleteProduct()" style="float:right;margin-right: 3px;" ng-disabled="productDetailCtrl.productService.inconsistency !== null"><i class="fa fa-trash "></i>&nbsp;{{ 'COMMON_DELETE' | translate }}</button>
                     </div>
+                    <br>
+                    <span ng-if="productDetailCtrl.productService.inconsistency !== null" style="color:red; font-size:14px;font-weight:bold"><i style="color:red" class="fa fa-exclamation-triangle "></i> {{productDetailCtrl.productService.inconsistency}} <a ng-click="productDetailCtrl.initProduct(productDetailCtrl.routeParams)">{{'COMMON_REFRESH' | translate}}</a></span>
 				</div>
 			</div>
 		</div>

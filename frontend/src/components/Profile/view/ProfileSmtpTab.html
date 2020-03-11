@@ -16,69 +16,69 @@
                 <form name="smtpForm">
                     <div class="row">
                         <div class="col-sm-6 b-r ">
-                            <div class="form-group">
+                            <div class="form-group" ng-class="{'has-error' :smtpForm.sender.$invalid && !smtpForm.sender.$pristine } ">
                                 <label>{{ 'SETTING_EMAIL_MANAGEMENT_SENDER' | translate }}<span style="color:red">*</span></label>
                                 <span style="color:red" ng-show="smtpForm.sender.$error.required && !smtpForm.sender.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
                                 <span style="color:red" ng-show="smtpForm.sender.$error.maxlength">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
                                 <input type="text" name="sender" class="form-control" ng-model="profileCtrl.SmtpService.currentSmtp.sender" required ng-maxlength="255">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" ng-class="{'has-error' :smtpForm.email.$invalid && !smtpForm.email.$pristine } ">
                                 <label>{{ 'SETTING_EMAIL_MANAGEMENT_EMAIL' | translate }}<span style="color:red">*</span></label>
                                 <span style="color:red" ng-show="smtpForm.email.$error.required && !smtpForm.email.$pristine&&!smtpForm.email.$invalid">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
                                 <span style="color:red" ng-show="smtpForm.email.$error.maxlength">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
                                 <span style="color:red" ng-show="smtpForm.email.$invalid && !smtpForm.email.$pristine">{{ 'COMMON_VALIDATE_EMAIL'| translate }}</span>
                                 <input type="email" name="email" class="form-control" ng-model="profileCtrl.SmtpService.currentSmtp.email" required ng-maxlength="255">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" ng-class="{'has-error' :smtpForm.server.$invalid && !smtpForm.server.$pristine } ">
                                 <label>{{ 'SETTING_EMAIL_MANAGEMENT_SERVER' | translate }}<span style="color:red">*</span></label>
                                 <span style="color:red" ng-show="smtpForm.server.$error.required && !smtpForm.server.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
                                 <span style="color:red" ng-show="smtpForm.server.$error.maxlength">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
                                 <input type="text" name="server" class="form-control" ng-model="profileCtrl.SmtpService.currentSmtp.host" required ng-maxlength="255">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" >
                                 <button class="btn btn-success" type="submit" ng-click="profileCtrl.saveSmtpConnection()" ng-disabled="smtpForm.$invalid">
                                     <i class="fa fa-save"></i>&nbsp;{{ 'COMMON_SAVE' | translate }}
                                 </button>
                                 <button ng-disabled="smtpForm.$invalid" class="btn btn-primary" ng-click="profileCtrl.testSmtpConnection()">
                                     <span  ng-if="profileCtrl.testingSmtp==true" style="float: left;margin-left: -5px;padding-right:2px;padding-top: 2px ">
-                                        <div  class="spinner-white"></div>
+                                        <div class="spinner-white"></div>
                                     </span>
                                     
                                     <i ng-if="profileCtrl.testingSmtp==false" class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;
                                     {{ 'SETTING_EMAIL_MANAGEMENT_CONNECTION_TEST' | translate }}
                                 </button>
-                                <span style="color:red;padding-left: 10px" ng-if="profileCtrl.SmtpService.currentSmtp.verified===false">
+                                <span style="color:red;padding-left: 10px" ng-if="(profileCtrl.SmtpService.currentSmtp.verified===false || profileCtrl.SmtpService.currentSmtp.smtpPasswordNull === true)&&profileCtrl.testingSmtp!==true">
                                     <i class="fa fa-exclamation-triangle"></i>
                                     {{ 'SETTING_SMTP_NOT_YET_VERIFIED' | translate }}         
                                 </span>
-                                <span style="color: green;padding-left: 10px" ng-if="profileCtrl.SmtpService.currentSmtp.verified===true">
+                                <span style="color: green;padding-left: 10px" ng-if="(profileCtrl.SmtpService.currentSmtp.verified===true && profileCtrl.SmtpService.currentSmtp.smtpPasswordNull === false)&&profileCtrl.testingSmtp!==true">
                                     <i  class="fa fa-check"></i>
                                      {{ 'SETTING_SMTP_ALREADY_VERIFIED' | translate }}
                                 </span>
                             </div>
                         </div>
                         <div class="col-sm-6 ">
-                            <div class="form-group">
+                            <div class="form-group" ng-class="{'has-error' :smtpForm.username.$invalid && !smtpForm.username.$pristine } ">
                                 <label>{{ 'SETTING_EMAIL_MANAGEMENT_USERNAME' | translate }}<span style="color:red">*</span></label>
                                 <span style="color:red" ng-show="smtpForm.username.$error.required && !smtpForm.username.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
                                 <span style="color:red" ng-show="smtpForm.username.$error.maxlength">{{ 'COMMON_VALIDATE_MAX' | translate }}255{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
                                 <input type="text" name="username" class="form-control" ng-model="profileCtrl.SmtpService.currentSmtp.username" required
                                     ng-maxlength="255"></div>
-                            <div class="form-group">
+                            <div class="form-group" ng-class="{'has-error' :smtpForm.smtpPassword.$invalid && !smtpForm.smtpPassword.$pristine } ">
                                 <label>{{ 'SETTING_EMAIL_MANAGEMENT_PASSWORD' | translate }}<span style="color:red">*</span></label>
                                 <span style="color:red" ng-show="smtpForm.smtpPassword.$error.required && !smtpForm.smtpPassword.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
                                 <span style="color:red" ng-show="smtpForm.smtpPassword.$error.maxlength">{{ 'COMMON_VALIDATE_MAX' | translate }}50{{ 'COMMON_VALIDATE_MAX_END' | translate }}</span>
-                                <input name="smtpPassword" type="password" class="form-control" ng-model="profileCtrl.SmtpService.currentSmtp.stringPassword"
+                                <input name="smtpPassword" type="password" class="form-control" ng-class="{error: profileCtrl.SmtpService.currentSmtp.smtpPasswordNull === true}" ng-model="profileCtrl.SmtpService.currentSmtp.stringPassword"
                                     required ng-maxlength="50">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" ng-class="{'has-error' :smtpForm.smtpEncryptionType.$invalid && !smtpForm.smtpEncryptionType.$pristine } ">
                                 <label>{{ 'SETTING_EMAIL_MANAGEMENT_ENCRYPTION' | translate }}<span style="color:red">*</span></label>
                                 <span style="color:red" ng-show="smtpForm.smtpEncryptionType.$error.required && !smtpForm.smtpEncryptionType.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
                                 <select class="form-control m-b" name="smtpEncryptionType" ng-model="profileCtrl.SmtpService.currentSmtp.encryption" required>
                                     <option ng-repeat="encryption in profileCtrl.SmtpEncryptionType.getAll()">{{encryption}}</option>                      
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" ng-class="{'has-error' :smtpForm.port.$invalid && !smtpForm.port.$pristine } ">
                                 <label>{{ 'SETTING_EMAIL_MANAGEMENT_PORT' | translate }}<span style="color:red">*</span></label>
                                 <span style="color:red" ng-show="smtpForm.port.$error.required && !smtpForm.port.$pristine">{{ 'COMMON_VALIDATE_REQ' | translate }}</span>
                                 <input type="number" name="port" class="form-control" ng-model="profileCtrl.SmtpService.currentSmtp.port" min="0" required>

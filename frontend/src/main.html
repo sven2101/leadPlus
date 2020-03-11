@@ -89,6 +89,21 @@
 			<ul class="nav navbar-top-links navbar-right">
 				<li class="dropdown">
 					<a class="dropdown-toggle count-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<span><i class="fa fa-question-circle"></i><b class="caret"></b></span>
+					</a>
+					<ul class="dropdown-menu animated fadeInRight m-t-xs ng-scope">
+						<li><a target="_blank" href="https://leadplus.io/article-categories/general/"><i class="fa fa-globe" aria-hidden="true"></i>  {{ 'HELP_GENERAL' | translate }}</a></li>
+						<li><a target="_blank" href="https://leadplus.io/article-categories/pipeline/"><i class="fa fa-forward" aria-hidden="true"></i>  {{ 'HELP_PIPELINE' | translate }}</a></li>
+						<li><a target="_blank" href="https://leadplus.io/article-categories/einstellungen/"><i class="fa fa-cogs" aria-hidden="true"></i>  {{ 'HELP_SETTINGS' | translate }}</a></li>
+						<li><a target="_blank" href="https://leadplus.io/article-categories/account-management/"><i class="fa fa-user" aria-hidden="true"></i>  {{ 'HELP_ACCOUNT' | translate }}</a></li>
+						<li><a target="_blank" href="https://leadplus.io/article-categories/vorlagen/"><i class="fa fa-file-text" aria-hidden="true"></i>  {{ 'HELP_TEMPLATES' | translate }}</a></li>
+						<li><a target="_blank" href="https://leadplus.io/article-categories/email/"><i class="fa fa-envelope-o" aria-hidden="true"></i>  {{ 'HELP_EMAIL' | translate }}</a></li>
+						<li><a target="_blank" href="https://leadplus.io/article-categories/schnittstellen/"><i class="fa fa-magic" aria-hidden="true"></i>  {{ 'HELP_API' | translate }}</a></li>
+						<li><a target="_blank" href="https://leadplus.io/article-categories/support/"><i class="fa fa-phone" aria-hidden="true"></i>  {{ 'HELP_SUPPORT' | translate }}</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a class="dropdown-toggle count-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<span>{{ 'LANGUAGE' | translate }}<b class="caret"></b></span>
 					</a>
 					<ul class="dropdown-menu animated fadeInRight m-t-xs ng-scope">
@@ -108,7 +123,7 @@
 					<a class="dropdown-toggle count-info" data-toggle="dropdown">
 						<i class="fa fa-tasks fa-lg"></i>
 
-						<span ng-if="appCtrl.todos.length>0" class="label label-danger">{{ appCtrl.todos.length}}</span>
+						<span ng-if="appCtrl.todos.totalElements>0" class="label label-danger">{{ appCtrl.todos.totalElements}}</span>
 
 					</a>
 					<ul style="min-width:480px" class="dropdown-menu dropdown-messages">
@@ -124,7 +139,7 @@
 						<li>
 							<table class="table table-hover">
 								<tbody>
-									<tr style="cursor:pointer" ng-click="appCtrl.navigateTo(todo)" ng-repeat="todo in appCtrl.todos | limitTo:5 | orderBy:'timestamp'">
+									<tr style="cursor:pointer" ng-click="appCtrl.navigateTo(todo)" ng-repeat="todo in appCtrl.todos.content | limitTo:5 | orderBy:'timestamp'">
 										<td class="project-status" style="padding: 13px 20px !important">
 											<span ng-if="todo.status=='OPEN'" class="label label-danger">{{ 'LEAD' | translate }}</span>
 											<span ng-if="todo.status=='OFFER'" class="label label-warning">{{ 'COMMON_STATUS_OFFER' | translate }}</span>
@@ -143,12 +158,12 @@
 									</tr>
 								</tbody>
 							</table>
-							<div ng-if="appCtrl.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
+							<div ng-if="appCtrl.todos.totalElements==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
 								<p style="margin-top:7px">{{ 'TODO_NO_TODOS' | translate }}</p>
 							</div>
 						</li>
 						<li>
-							<p ng-if="appCtrl.todos.length>5" class="text-center">...</p>
+							<p ng-if="appCtrl.todos.totalElements>5" class="text-center">...</p>
 						</li>
 					</ul>
 				</li>
@@ -172,7 +187,6 @@
 					<ul style="min-width:600px" class="dropdown-menu dropdown-messages">
 						<li>
 							<div class="dropdown-messages-box">
-
 								<div class="media-body">
 									<strong>  {{ 'NOTIFICATION_SEND_NOTIFICATIONS' | translate }}</strong> <br>
 									<br>
@@ -213,7 +227,7 @@
 							</div>
 						</li>
 						<li>
-							<p ng-if="appCtrl.todos.length>5" class="text-center">...</p>
+							<p ng-if="appCtrl.todos.totalElements>5" class="text-center">...</p>
 						</li>
 					</ul>
 				</li>

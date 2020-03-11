@@ -76,10 +76,10 @@
 							<thead>
 								<tr>
 									<th></th>
-									<th class="text-center">{{ 'COMMON_NAME' | translate }}</th>
-									<th class="text-center">{{ 'PRODUCT_PRICE' | translate }}</th>
-									<th class="text-center">{{ 'PRODUCT_PRODUCT_STATE' | translate }}</th>
-									<th class="text-center">{{ 'PRODUCT_NUMBER' | translate }}</th>
+									<th class="text-left">{{ 'COMMON_NAME' | translate }}</th>
+									<th class="text-left">{{ 'PRODUCT_PRICE' | translate }}</th>
+									<th class="text-left">{{ 'PRODUCT_PRODUCT_STATE' | translate }}</th>
+									<th class="text-left">{{ 'PRODUCT_NUMBER' | translate }}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -93,18 +93,18 @@
 										<span ng-if="product.picture==null" ng-show="!product.deactivated" class="label label-primary">{{ 'COMMON_ACTIVATED' | translate }}</span>
 										<span ng-if="product.picture==null" ng-show="product.deactivated" class="label label-default">{{ 'COMMON_DEACTIVATED' | translate }}</span>
 									</td>
-									<td class="project-title col-md-4 text-center">
+									<td class="project-title col-md-4 text-left">
 										{{product.name}}
 										<br>
 										<small>{{ 'PRODUCT_CREATED' | translate }} {{productCtrl.getLocalTimestamp(product)}}</small>
 									</td>
-									<td class="project-completion col-md-2 text-center" style="word-wrap: break-word;">
+									<td class="project-completion col-md-2 text-left" style="word-wrap: break-word;">
 										{{product.netPrice | currency:'\u20AC'}}
 									</td>
-									<td class="project-completion col-md-2 text-center" style="word-wrap: break-word;">
+									<td class="project-completion col-md-2 text-left" style="word-wrap: break-word;">
 										{{ product.productState | translate }}
 									</td>
-									<td class="project-completion col-md-2 text-center" style="word-wrap: break-word;">
+									<td class="project-completion col-md-2 text-left" style="word-wrap: break-word;">
 										{{product.productNumber}}
 									</td>
 								</tr>

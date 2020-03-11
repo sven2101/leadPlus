@@ -1,5 +1,7 @@
 package dash.fileuploadmanagement.domain;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -45,6 +47,7 @@ public class FileContent {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + Arrays.hashCode(content);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
@@ -58,6 +61,8 @@ public class FileContent {
 		if (getClass() != obj.getClass())
 			return false;
 		FileContent other = (FileContent) obj;
+		if (!Arrays.equals(content, other.content))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;

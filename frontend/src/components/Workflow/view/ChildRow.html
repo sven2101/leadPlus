@@ -3,21 +3,32 @@
 		word-break: break-all;
 	}
 	
-	#childrow .col-sm-3{
-		width:20% !important;
+	#childrow .col-sm-3 {
+		width: 20% !important;
 	}
-	#childrow div{
-		min-height: 80px;
+	
+	#childrow div {
+		min-height: 85px;
+		max-height: 85px;
 	}
-	#childrow label{
+	
+	#childrow label {
 		white-space: nowrap;
-		text-overflow: ellipsis; 
+		text-overflow: ellipsis;
 		display: block;
 		overflow: hidden;
 	}
-	#childrow span{
+	
+	#childrow span {
 		white-space: nowrap;
-		text-overflow: ellipsis; 
+		text-overflow: ellipsis;
+		display: block;
+		overflow: hidden;
+	}
+	
+	.ellipsis {
+		white-space: nowrap;
+		text-overflow: ellipsis;
 		display: block;
 		overflow: hidden;
 	}
@@ -30,8 +41,8 @@
 					<div id="childrow" class="row text-left">
 						<div class="col-sm-3 b-r">
 							<div>
-								<label><a ng-href="#/customer/detail/{{workflowUnit.customer.id}}" title="{{ 'CUSTOMER_DETAIL_TIMELINE' | translate }}" style="cursor: pointer"><i class="fa fa-address-book-o" aria-hidden="true "></i></a> {{ 'COMMON_NAME' | translate }}</label>
-								<span title="{{workflowUnit.customer.firstname}} {{workflowUnit.customer.lastname}}">{{workflowUnit.customer.firstname}} {{workflowUnit.customer.lastname}}</span> 
+								<label><a ng-href="#/customer/timeline/{{workflowUnit.customer.id}}" title="{{ 'CUSTOMER_DETAIL_TIMELINE' | translate }}" style="cursor: pointer"><i class="fa fa-address-book-o" aria-hidden="true "></i></a> {{ 'COMMON_NAME' | translate }}</label>
+								<span title="{{workflowUnit.customer.firstname}} {{workflowUnit.customer.lastname}}">{{workflowUnit.customer.firstname}} {{workflowUnit.customer.lastname}}</span>
 							</div>
 						</div>
 						<div class="col-sm-3 b-r ">
@@ -44,6 +55,12 @@
 							<div>
 								<label><i class="fa fa-phone " aria-hidden="true "></i>  {{ 'COMMON_PHONE' | translate }}</label>
 								<span>{{workflowUnit.customer.phone}}</span>
+							</div>
+						</div>
+						<div class="col-sm-3 b-r ">
+							<div>
+								<label><i class="fa fa-mobile " aria-hidden="true "></i>  {{ 'COMMON_MOBILE' | translate }}</label>
+								<span>{{workflowUnit.customer.mobile}}</span>
 							</div>
 						</div>
 						<div class="col-sm-3 b-r ">
@@ -83,7 +100,7 @@
 							</div>
 						</div>
 						<div class="col-sm-3 b-r " ng-if="type ==='lead'">
-							<div> 
+							<div>
 								<label title="{{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}"><i class="fa fa-usd " aria-hidden="true "></i> {{ 'COMMON_PRODUCT_ENTIRE_PRICE' | translate }} {{ 'COMMON_PRODUCT_INCL_DELIVERY_COSTS' | translate }}</label>
 								<span>{{(parent.workflowService.sumOrderPositions(workflowUnit.orderPositions)+workflowUnit.deliveryCosts)| currency:'\u20AC'}}</span>
 							</div>
@@ -144,7 +161,7 @@
 						</div>
 						<div class="col-sm-3 b-r " ng-if="process.processor != null">
 							<div>
-								<label><i class="fa fa-user " aria-hidden="true "></i>  {{ 'COMMON_PROCESSOR' | translate }}</label>
+								<label><i class="fa fa-thumb-tack " aria-hidden="true "></i>  {{ 'COMMON_PROCESSOR' | translate }}</label>
 								<span>{{parent.getNameOfUser(process.processor)}}</span>
 							</div>
 						</div>
@@ -156,16 +173,32 @@
 	<div class="row">
 		<div class="col-lg-4">
 			<div class="ibox">
-				<div class="ibox-content text-left" style="min-height: 122px">
+				<div class="ibox-content text-left" style="min-height: 122px;">
 					<label><i class="fa fa-envelope " aria-hidden="true "></i>  {{ 'COMMON_NOTE' | translate }}</label>
-					<div ng-bind-html="parent.getAsHtml(workflowUnit.message)"></div>
+					<div style="max-height: 400px;overflow: auto;overflow-x: hidden;">
+						<div ng-bind-html="parent.getAsHtml(workflowUnit.message)"></div>
+					</div>
+				</div>
+			</div>
+			<div class="ibox">
+				<div class="ibox-content text-left" style="min-height: 122px;">
+					<label><i class="fa fa-paperclip" aria-hidden="true "></i>  {{ 'COMMON_FILES' | translate }}</label>
+					<div ng-repeat="notification in process.notifications" style="max-height: 400px;overflow: auto;overflow-x: hidden;">
+						<div class="ellipsis" ng-repeat="attachment in notification.attachments">
+							<span ng-if="::attachment.fileUpload.mimeType==='image/jpeg'"><i class="fa fa-file-image-o" aria-hidden="true "></i></span>
+							<span ng-if="::attachment.fileUpload.mimeType==='application/pdf'"><i class="fa fa-file-pdf-o" aria-hidden="true "></i></span>
+							<span ng-if="::(attachment.fileUpload.mimeType!=='application/pdf'&&attachment.fileUpload.mimeType!=='image/jpeg')"><i class="fa fa-paperclip" aria-hidden="true "></i></span>
+							<span>{{::notification.timestamp| limitTo:16}}</span>
+							<span> <a ng-click="openAttachment(attachment.fileUpload)">{{::attachment.fileUpload.filename}}</a></span>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div ng-include="'components/Workflow/view/ProductView.html'"></div>
-	</div>
-	<div class="row">
-		<div ng-include="'components/Workflow/view/CommentView.html'"></div>
+		<div class="col-lg-8">
+			<div ng-include="'components/Workflow/view/ProductView.html'"></div>
+			<div ng-include="'components/Workflow/view/CommentView.html'"></div>
+		</div>
 	</div>
 </div>
 <!--<div class="row" ng-include="'components/Commentary/view/AllComments.Modal.html'"></div>-->

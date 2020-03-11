@@ -4,41 +4,37 @@
 			<div class="ibox-title">
 				<h5>{{ 'TODO_TODOS' | translate }}</h5>
 				<div class="ibox-tools">
-					<i class="fa fa-question-circle" uib-tooltip="{{ 'TOOLTIP_TODO' | translate }}" ></i>
+					<i style="font-size: 1.5em;" class="fa fa-question-circle" tooltip-placement="top-right" tooltip-class="defaultTooltip" uib-tooltip="{{ 'TOOLTIP_TODO' | translate }}"></i>
 				</div>
 			</div>
 			<div class="ibox-content">
-
-				<form role="form" class="form-inline">
-					<!--
-                    <div class="col-md-1">
-                        <button ng-click="dashboardCtrl.refreshTodos();" type="button" id="loading-example-btn" class="btn btn-white btn-sm"><i class="fa fa-refresh"></i> Refresh</button>
-                    </div>
-                    -->
 					<span class="pull-right ">
-                                 <input  type="text" placeholder="{{ 'COMMON_SEARCH' | translate }}" class="input-sm form-control" ng-model="searchText">
-                         </span>
-
-
-
-				</form>
-
-				<div class="project-list">
-
-					<table class="table table-hover">
+                                 <input  type="text" placeholder="{{ 'COMMON_SEARCH' | translate }}" class="input-sm form-control" ng-model="dashboardCtrl.todoSearchText" ng-model-options="{debounce: 600}" ng-change="dashboardCtrl.searchTodos()">
+                    </span>
+					<span class="pull-right" style="padding-right:15px;"><label><span  style="cursor: pointer;" ng-click= "dashboardCtrl.switchTodoDirection()"><i ng-class="{'fa fa-sort-amount-asc':dashboardCtrl.todoDirection==='ASC', 'fa fa-sort-amount-desc':dashboardCtrl.todoDirection==='DESC'}" aria-hidden="true"></i> {{ dashboardCtrl.todoDirection | translate }}</span></label></span>
+				<div class="project-list" style="min-height: 450px">
+					<table class="table table-hover" ng-if="dashboardCtrl.todosLoad===true">
 						<tbody>
-							<tr todoitem process="::todo" ng-repeat="todo in dashboardCtrl.dashboardService.todos|filter:searchText| orderBy:'timestamp' | limitTo:dashboardCtrl.todoAmountLimit ">
-								
+							<tr todoitem process="::todo" ng-repeat="todo in dashboardCtrl.dashboardTodos.content">		
 							</tr>
 						</tbody>
 					</table>
-					<div ng-if="dashboardCtrl.dashboardService.todos.length==0" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
-						<p style="margin-top:7px">{{ 'TODO_NO_TODOS' | translate }}</p>
+					<div style = "text-align: center;" ng-if="dashboardCtrl.todosLoad===false">
+						<br>
+						<i class="fa fa-refresh fa-spin" style="font-size:24px"></i>
 					</div>
-					<div ng-if="dashboardCtrl.todoAmountLimit<dashboardCtrl.dashboardService.todos.length" class="row" style="text-align: center;">
-						<a href="" ng-click="dashboardCtrl.todoAmountLimit=dashboardCtrl.todoAmountLimit+10">10 {{ 'COMMON_LOAD_MORE' | translate }}</a>
+					<div ng-if="dashboardCtrl.dashboardTodos.totalElements==0 && dashboardCtrl.todosLoad===true" align="center" style="min-height:30px;border-style: dashed;  border-width: 1px; border-color: grey;border-radius:7px;">
+					<p style="margin-top:7px">{{ 'TODO_NO_TODOS' | translate }}</p>
 					</div>
-				</div>
+				</div>				
+					<div style="min-height:30px">
+						<span class="pull-left">{{dashboardCtrl.dashboardTodos.totalElements}} {{ 'TODO_MANY_TODOS' | translate }}</span>
+						<span class="pull-left" style="margin-left:30px">{{ 'PAGE_PAGE' | translate }} {{dashboardCtrl.dashboardTodos.number+1}} {{ 'PAGE_OF' | translate }} {{dashboardCtrl.dashboardTodos.totalPages}}</span>
+						<span class="pull-right"><button type="button" ng-disabled="dashboardCtrl.dashboardTodos.last" class="btn btn-default" ng-click="dashboardCtrl.searchTodos(dashboardCtrl.dashboardTodos.totalPages-1)">{{ 'PAGE_LAST' | translate }}</button></span>
+						<span class="pull-right"><button type="button" ng-disabled="dashboardCtrl.dashboardTodos.last" class="btn btn-default" ng-click="dashboardCtrl.searchTodos(dashboardCtrl.dashboardTodos.number+1)">{{ 'PAGE_NEXT' | translate }}</button></span>
+						<span class="pull-right"><button type="button" ng-disabled="dashboardCtrl.dashboardTodos.first" class="btn btn-default" ng-click="dashboardCtrl.searchTodos(dashboardCtrl.dashboardTodos.number-1)">{{ 'PAGE_BACK' | translate }}</button></span>
+						<span class="pull-right"><button type="button" ng-disabled="dashboardCtrl.dashboardTodos.first" class="btn btn-default" ng-click="dashboardCtrl.searchTodos(0)">{{ 'PAGE_FIRST' | translate }}</button></span>
+					</div>
 			</div>
 		</div>
 	</div>

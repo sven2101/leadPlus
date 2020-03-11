@@ -1,0 +1,107 @@
+<div class="modal-header">
+  <div style="width:100%" class="modal-title">
+    <div #modalHeader>
+      <ng-content select="[modal-header]"></ng-content>
+    </div>
+    <div *ngIf="!isElementPresent('modalHeaderElement')">
+      <ul class="nav justify-content-center">
+        <li *ngIf="isElementPresent('step1ContentElement')" class="nav-item">
+          <div class="step-header">
+            <ng-content select="[step-title=1]"></ng-content>
+          </div>
+          <div [class]="getNavItemClass(currentStep,1,formMap)" (click)="currentStep=1">
+            <div class="step-icon">
+              <ng-content select="[step-icon=1]"></ng-content>
+            </div>
+          </div>
+        </li>
+        <li *ngIf="isElementPresent('step2ContentElement')" class="nav-item step-seperator"></li>
+        <li *ngIf="isElementPresent('step2ContentElement')" class="nav-item">
+          <div class="step-header">
+            <ng-content select="[step-title=2]"></ng-content>
+          </div>
+          <div [class]="getNavItemClass(currentStep,2,formMap)" (click)="currentStep=2">
+            <div class="step-icon">
+              <ng-content select="[step-icon=2]"></ng-content>
+            </div>
+          </div>
+        </li>
+        <li *ngIf="isElementPresent('step3ContentElement')" class="nav-item step-seperator"></li>
+        <li *ngIf="isElementPresent('step3ContentElement')" class="nav-item">
+          <div class="step-header">
+            <ng-content select="[step-title=3]"></ng-content>
+          </div>
+          <div [class]="getNavItemClass(currentStep,3,formMap)" (click)="currentStep=3">
+            <div class="step-icon">
+              <ng-content select="[step-icon=3]"></ng-content>
+            </div>
+          </div>
+        </li>
+        <li *ngIf="isElementPresent('step4ContentElement')" class="nav-item step-seperator"></li>
+        <li *ngIf="isElementPresent('step4ContentElement')" class="nav-item">
+          <div class="step-header">
+            <ng-content select="[step-title=4]"></ng-content>
+          </div>
+          <div [class]="getNavItemClass(currentStep,4,formMap)" (click)="currentStep=4">
+            <div class="step-icon">
+              <ng-content select="[step-icon=4]"></ng-content>
+            </div>
+          </div>
+        </li>
+        <li *ngIf="isElementPresent('step5ContentElement')" class="nav-item step-seperator"></li>
+        <li *ngIf="isElementPresent('step5ContentElement')" class="nav-item">
+          <div class="step-header">
+            <ng-content select="[step-title=5]"></ng-content>
+          </div>
+          <div [class]="getNavItemClass(currentStep,5,formMap)" (click)="currentStep=5">
+            <div class="step-icon">
+              <ng-content select="[step-icon=5]"></ng-content>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <button type="button" class="close" aria-label="Close" (click)="fireDismissEvent('Cross click')" [style.margin-top]="!isElementPresent('modalHeaderElement')?'-80px':''">
+      <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" [style.minHeight]="maxContentHeight+58+'px'">
+  <form novalidate [formGroup]="formModel">
+    <div #step1Content [hidden]="currentStep!==1">
+      <ng-content select="[step-content=1]"></ng-content>
+      <div #xyz></div>
+    </div>
+    <div #step2Content [hidden]="currentStep!==2">
+      <ng-content select="[step-content=2]"></ng-content>
+    </div>
+    <div #step3Content [hidden]="currentStep!==3">
+      <ng-content select="[step-content=3]"></ng-content>
+    </div>
+    <div #step4Content [hidden]="currentStep!==4">
+      <ng-content select="[step-content=4]"></ng-content>
+    </div>
+    <div #step5Content [hidden]="currentStep!==5">
+      <ng-content select="[step-content=5]"></ng-content>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <div *ngIf="isElementPresent('step'+(currentStep-1)+'ContentElement')||isElementPresent('step'+(currentStep+1)+'ContentElement')"
+    class="step-navigation-buttons">
+    <button type="button" class="btn btn-success btn-sm" [disabled]="!isElementPresent('step'+(currentStep-1)+'ContentElement')"
+      (click)="currentStep=currentStep-1"><i class="fa fa-arrow-left"></i> Back</button>
+    <button type="button" class="btn btn-success btn-sm" [disabled]="!isElementPresent('step'+(currentStep+1)+'ContentElement')"
+      (click)="currentStep=currentStep+1">Next <i class="fa fa-arrow-right"></i></button>
+  </div>
+  {{formModel.status|json}}
+  <div #modalFooterButtons>
+    <div #modalFooter>
+      <ng-content select="[modal-footer]"></ng-content>
+    </div>
+    <div *ngIf="!isElementPresent('modalFooterElement')">
+      <button type="button" class="btn btn-secondary btn-sm" (click)="fireDismissEvent('Close Button')">Close</button>
+      <button type="button" submit-button class="btn btn-success btn-sm" (click)="fireCloseEvent('OK Button')">OK</button>
+    </div>
+  </div>
+</div>

@@ -29,7 +29,7 @@ import dash.notificationmanagement.domain.Attachment;
 import dash.notificationmanagement.domain.Notification;
 import dash.notificationmanagement.domain.NotificationContext;
 import dash.notificationmanagement.domain.NotificationType;
-import dash.processmanagement.business.IProcessService;
+import dash.processmanagement.business.ProcessService;
 import dash.processmanagement.domain.Process;
 import dash.smtpmanagement.business.ISmtpService;
 import dash.smtpmanagement.business.SmtpUtil;
@@ -47,11 +47,11 @@ public class NotificationService implements INotificationService {
 	private final NotificationRepository notificationRepository;
 	private final IFileUploadService fileUploadService;
 	private final ISmtpService smtpService;
-	private final IProcessService processService;
+	private final ProcessService processService;
 	private final UserService userService;
 
 	@Autowired
-	public NotificationService(ISmtpService smtpService, IProcessService processService, UserService userService,
+	public NotificationService(ISmtpService smtpService, ProcessService processService, UserService userService,
 			NotificationRepository notificationRepository, IFileUploadService fileUploadService) {
 		this.smtpService = smtpService;
 		this.processService = processService;
@@ -116,7 +116,7 @@ public class NotificationService implements INotificationService {
 
 		this.setReferenceForAlreadyUploadFiles(notification);
 
-		password = SmtpUtil.decryptPasswordForSmtp(smtp, smtpKey);
+		password = SmtpUtil.decryptPasswordForSmtp(smtp);
 		session = SmtpUtil.createSessionWithAuthentication(host, port, smtpEncryptionType, username, password);
 
 		if (smtpEncryptionType == SmtpEncryptionType.PLAIN)

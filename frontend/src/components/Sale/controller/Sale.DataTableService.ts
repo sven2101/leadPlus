@@ -5,11 +5,11 @@
 
 const SaleDataTableServiceId: string = "SaleDataTableService";
 const allDataSaleRoute: string = "/api/rest/processes/sales";
-const openDataSaleRoute: string = "/api/rest/processes/sales/latest/50";
+const openDataSaleRoute: string = "/api/rest/processes/sales";
 
 class SaleDataTableService implements IDatatableService {
 
-    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId];
+    $inject = [DTOptionsBuilderId, DTColumnBuilderId, $filterId, $compileId, $rootScopeId, $translateId, WorkflowServiceId, WorkflowDatatableServiceId, TokenServiceId, $httpId];
 
     workflowService: WorkflowService;
     workflowDatatableService: WorkflowDatatableService;
@@ -22,7 +22,7 @@ class SaleDataTableService implements IDatatableService {
     compile;
     rootScope;
 
-    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService) {
+    constructor(DTOptionsBuilder, DTColumnBuilder, $filter, $compile, $rootScope, $translate, WorkflowService, WorkflowDatatableService, private TokenService: TokenService, private $http) {
         this.translate = $translate;
         this.DTOptionsBuilder = DTOptionsBuilder;
         this.DTColumnBuilder = DTColumnBuilder;
@@ -36,42 +36,73 @@ class SaleDataTableService implements IDatatableService {
     getDTOptionsConfiguration(createdRow: Function, defaultSearch: string = "") {
         let self = this;
         return this.DTOptionsBuilder.newOptions()
-            .withOption("ajax", {
-                url: openDataSaleRoute,
-                error: function (xhr, error, thrown) {
-                    handleError(xhr);
-                },
-                type: "GET",
-                "beforeSend": function (request) {
-                    request.setRequestHeader("Authorization", "Basic " + self.rootScope.user.authorization);
-                    request.setRequestHeader("X-TenantID", self.rootScope.tenant.tenantKey);
-                }
-            })
+            .withOption("searchDelay", 600)
+            .withOption("ajax", self.getInitData())
             .withOption("stateSave", false)
+            .withOption("serverSide", true)
             .withDOM(this.workflowDatatableService.getDomString())
             .withPaginationType("full_numbers")
-            .withButtons(this.workflowDatatableService.getButtons(this.translate("SALE_SALES"), [7, 2, 1, 3, 4, 5, 9, 10, 11, 13, 12]))
+            .withButtons(this.workflowDatatableService.getButtons(this.translate("SALE_SALES"), [8, 3, 2, 4, 7, 6, 14, 13, 10, 11]))
             .withBootstrap()
             .withOption("createdRow", createdRow)
-            .withOption("deferRender", true)
+            .withOption("deferRender", false)
             .withOption("lengthMenu", [10, 20, 50])
-            .withOption("order", [5, "desc"])
+            .withOption("order", [6, "desc"])
             .withOption("search", { "search": defaultSearch })
             .withLanguageSource(this.workflowDatatableService.getLanguageSource(this.rootScope.language));
     }
 
+    async getInitData() {
+        let self = this;
+        return {
+            url: openDataSaleRoute,
+            type: "GET",
+            pages: 2,
+            dataSrc: "data",
+            data: function (d) {
+                d.userId = self.workflowDatatableService.showMyTasksUserId["SALE"];
+            },
+            error: function (xhr, error, thrown) {
+                handleError(xhr);
+            },
+            beforeSend: function (request) {
+                request.setRequestHeader("X-Authorization", "Bearer " + self.TokenService.getAccessTokenInstant());
+            }
+        };
+    }
+
     getDetailHTML(id: number): string {
         return "<a id='id_" + id + "' class='green shortinfo' href='javascript:;'"
-            + "ng-click='saleCtrl.appendChildRow(saleCtrl.processes[" + id
-            + "])' title='Details'>"
+            + "ng-click='saleCtrl.appendChildRow(" + id + ")' title='Details'>"
             + "<i class='glyphicon glyphicon-plus-sign'/></a>";
     }
 
     getDTColumnConfiguration(addDetailButton: Function, addStatusStyle: Function, addActionsButtons: Function): Array<any> {
         let self = this;
         return [
-            this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
-                .renderWith(addDetailButton),
+            /*this.DTColumnBuilder.newColumn(null).withTitle("").notSortable()
+                            .renderWith(addDetailButton),*/
+            this.DTColumnBuilder.newColumn(null).withTitle(
+                "<i style='margin-top:2px;margin-left:12px;' class='fa fa-thumb-tack' aria-hidden='true'></i>").withClass("text-center").renderWith(function (data: Process, type, full) {
+                    if (data.processor != null && data.processor.thumbnail != null) {
+                        return `<div style="height:45px;">
+                    <img title="` + data.processor.firstname + ` ` + data.processor.lastname + `" style="width: 45px; height:45px;border-radius: 10%;"
+                    pictureid="` + data.processor.thumbnail.id + `" httpsrc="/api/rest/files/content/" alt="">
+                </div>`;
+                    } else if (data.processor != null && data.processor.thumbnail == null && data.processor.firstname != null && data.processor.lastname != null) {
+                        return "<span style='font-weight:bold' title='" + data.processor.firstname + " " + data.processor.lastname + "'>" + data.processor.firstname[0] + data.processor.lastname[0] + "</span>";
+                    } else {
+                        return "-";
+                    }
+                }).withOption("width", "45px").notSortable(),
+            this.DTColumnBuilder.newColumn(null).renderWith(
+                function (data: Process, type, full) {
+                    if (data != null && data.processor != null) {
+                        return data.processor.email;
+                    } else {
+                        return "";
+                    }
+                }).notVisible(),
             this.DTColumnBuilder.newColumn("sale.customer.company").withTitle(
                 this.translate("COMMON_COMPANY")).withClass("text-center"),
             this.DTColumnBuilder.newColumn("sale.customer.lastname").withTitle(
@@ -119,21 +150,35 @@ class SaleDataTableService implements IDatatableService {
                         (data.sale.saleProfit, "€", 2);
                 }).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
-                this.translate("COMMON_PROCESSOR")).renderWith((data: Process, type, full) => {
-                    if (isNullOrUndefined(data.processor)) {
-                        return "";
-                    }
-                    return data.processor.email;
-                }).notVisible(),
-            this.DTColumnBuilder.newColumn(null).withTitle(
                 this.translate("COMMON_STATUS")).withClass("text-center")
                 .renderWith(addStatusStyle),
             this.DTColumnBuilder.newColumn("sale.invoiceNumber").withTitle(
                 this.translate("COMMON_PRODUCT_SALE_INVOICE_NUMBER")).notVisible(),
             this.DTColumnBuilder.newColumn(null).withTitle(
+                this.translate("COMMON_BILLING_ADDRESS")).renderWith(function (data: Process, type, full) {
+                    let street = "";
+                    let streetNumber = "";
+                    let zip = "";
+                    let city = "";
+                    let country = "";
+                    !isNullOrUndefined(data.sale.billingAddress.street) ? street = data.sale.billingAddress.street : angular.noop;
+                    !isNullOrUndefined(data.sale.billingAddress.number) ? streetNumber = data.sale.billingAddress.number : angular.noop;
+                    !isNullOrUndefined(data.sale.billingAddress.zip) ? zip = data.sale.billingAddress.zip : angular.noop;
+                    !isNullOrUndefined(data.sale.billingAddress.city) ? city = data.sale.billingAddress.city : angular.noop;
+                    !isNullOrUndefined(data.sale.billingAddress.country) ? country = data.sale.billingAddress.country : angular.noop;
+                    return street + " " + streetNumber + " " + zip + " " + city + " " + country;
+                }).notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(
                 "<span class='glyphicon glyphicon-cog'></span>").withClass(
                 "text-center").withOption("width", "90px").notSortable().renderWith(addActionsButtons),
-            this.DTColumnBuilder.newColumn("sale.deliveryAddressLine").notVisible(),
+            this.DTColumnBuilder.newColumn(null).withTitle(this.translate("COMMON_PROCESSOR")).renderWith(
+                function (data: Process, type, full) {
+                    if (data != null && data.processor != null) {
+                        return data.processor.firstname + " " + data.processor.lastname;
+                    } else {
+                        return "";
+                    }
+                }).notVisible(),
             this.DTColumnBuilder.newColumn(null)
                 .renderWith(
                 function (data, type, full) {
@@ -168,6 +213,12 @@ class SaleDataTableService implements IDatatableService {
     }
 
     configRow(row: any, data: Process) {
+        let self = this;
+        $(row).attr("id", "id_" + data.id);
+        $("td:not(:last-child)", row).unbind("click");
+        $("td:not(:last-child)", row).bind("click", function () {
+            self.rootScope.$broadcast(broadcastClickChildrow, data);
+        }).css("cursor", "pointer");
     }
 
     getActionButtonsHTML(process: Process, actionButtonConfig: { [key: number]: any }): string {

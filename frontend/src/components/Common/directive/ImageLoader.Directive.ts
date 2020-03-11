@@ -33,21 +33,30 @@ class ImageLoaderDirective implements IDirective {
         };
         attrs.$set("src", "assets/img/placeholder_person.png");
         let self = this;
-        this.$http(requestConfig)
-            .then(response => {
+        this.setPicture(requestConfig, attrs);
 
-                let arr = new Uint8Array(response.data);
-                let raw = "";
-                let i, j, subArray, chunk = 5000;
-                for (i = 0, j = arr.length; i < j; i += chunk) {
-                    subArray = arr.subarray(i, i + chunk);
-                    raw += String.fromCharCode.apply(null, subArray);
-                }
-                let b64 = btoa(raw);
-                attrs.$set("src", "data:image/jpeg;base64," + b64);
-            });
+        scope.$watch(function () { return element.attr("pictureid"); }, function (newPictureId) {
+            if (isNullOrUndefined(newPictureId) || stringIsNullorEmpty(newPictureId)) {
+                return;
+            }
+            requestConfig.url = attrs.httpsrc + newPictureId;
+            self.setPicture(requestConfig, attrs);
+        });
     }
 
+    setPicture(requestConfig, attrs) {
+        this.$http(requestConfig).then(response => {
+            let arr = new Uint8Array(response.data);
+            let raw = "";
+            let i, j, subArray, chunk = 5000;
+            for (i = 0, j = arr.length; i < j; i += chunk) {
+                subArray = arr.subarray(i, i + chunk);
+                raw += String.fromCharCode.apply(null, subArray);
+            }
+            let b64 = btoa(raw);
+            attrs.$set("src", "data:image/jpeg;base64," + b64);
+        });
+    }
 }
 
 angular.module(moduleApp).directive(ImageLoaderDirectiveId, ImageLoaderDirective.directiveFactory());

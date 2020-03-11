@@ -14,8 +14,6 @@
 
 package dash.usermanagement.registration.rest;
 
-import java.io.IOException;
-
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
@@ -33,11 +31,10 @@ import dash.usermanagement.business.UserService;
 import dash.usermanagement.domain.User;
 import dash.usermanagement.registration.domain.Registration;
 import dash.usermanagement.registration.domain.Validation;
-import freemarker.template.TemplateException;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping(value = "/api/rest/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
+@RequestMapping(value = "/registrations", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
 		MediaType.APPLICATION_JSON_VALUE })
 public class RegistrationResource {
 
@@ -56,7 +53,6 @@ public class RegistrationResource {
 		try {
 			final User user = this.userService.register(registration);
 			user.setPassword(null);
-			this.userService.notifyUser(user);
 			return new ResponseEntity<>(user, HttpStatus.CREATED);
 		} catch (Exception ex) {
 			logger.error(RegistrationResource.class.getSimpleName(), ex);
@@ -70,9 +66,4 @@ public class RegistrationResource {
 		return userService.emailAlreadyExists(registration.getEmail());
 	}
 
-	@RequestMapping(value = "/init", method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.CREATED)
-	public void createInitialUsers(@RequestBody final String apiPassword) throws IOException, TemplateException {
-		this.userService.createInitialUsers(apiPassword);
-	}
 }

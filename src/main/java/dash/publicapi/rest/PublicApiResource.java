@@ -24,10 +24,10 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import dash.exceptions.ConsistencyFailedException;
 import dash.exceptions.NotFoundException;
 import dash.exceptions.SaveFailedException;
 import dash.leadmanagement.domain.Lead;
@@ -52,10 +52,9 @@ public class PublicApiResource {
 	@Authorization(value = "API")
 	@RequestMapping(value = "/lead", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public Lead save(@ApiParam(required = true) @RequestBody @Valid final Lead lead,
-			@ApiParam(required = false) @RequestParam(required = false) String source)
-			throws SaveFailedException, NotFoundException {
-		return publicApiService.saveLead(lead, source);
+	public Lead save(@ApiParam(required = true) @RequestBody @Valid final Lead lead)
+			throws SaveFailedException, NotFoundException, ConsistencyFailedException {
+		return publicApiService.saveLead(lead);
 	}
 
 	@ApiOperation(value = "Get all active products.", notes = "")
