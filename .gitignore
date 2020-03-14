@@ -12,4 +12,3 @@ src/main/resources/static/*
 frontend/tmp/*
 frontend/gulp/TODO.md
 src/main/resources/static/assets/assets.css
-elb_config/phantomjs/win/phantomjs.exe
