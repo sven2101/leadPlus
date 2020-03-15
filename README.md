@@ -23,16 +23,13 @@ Prepare your environment and setup the requirements Java SDK, Postgres database,
 
 ### 1.2 Replace passwords, security keys and database name
 
-Search in your project for \__PLACEHOLDER__ and you will find all replacable passwords, keys and database names. To run it on your local machine you have to change these keys:
+Search in your project for \_\_PLACEHOLDER\_\_ and you will find all replacable passwords, keys and database names. To run it on your local machine you have to change these keys:
 
 
 File |      Description     
 -------------- | ------------ 
-
-application-local.properties | spring.datasource.url=jdbc:postgresql://localhost:5432/\__PLACEHOLDER__ with your database name<br/>
-                               spring.datasource.password=\__PLACEHOLDER__ with your database password
-build.gradle | url = "jdbc:postgresql://localhost:5432/\__PLACEHOLDER__" with your database name<br/> 
-                password = "\__PLACEHOLDER__" with your database password
+application-local.properties | spring.datasource.url=jdbc:postgresql://localhost:5432/\_\_PLACEHOLDER\_\_ with your database name<br/>spring.datasource.password=\_\_PLACEHOLDER\_\_ with your database password
+build.gradle | url = "jdbc:postgresql://localhost:5432/\_\_PLACEHOLDER\_\_" with your database name<br/> password = "\_\_PLACEHOLDER\_\_" with your database password
 
 The other keys are not neccesary for a local environment but **you should set the keys for security reasons!** If you are **not on AWS** you can remove the aws keys. In the `application-xxx.properties` files you can also change some configuration stuff e.g. database user, flyway settings, jwt settings, ...
 
@@ -81,6 +78,6 @@ The files in this repository are under the [GNU General Public License v3.0](LIC
 ## 4. TODOs
 
 - [x] done
-- [] not yet
+- [ ] not yet
 
 
