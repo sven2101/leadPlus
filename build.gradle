@@ -79,9 +79,9 @@ dependencies {
 }
 
 flyway {
-    url = "jdbc:postgresql://localhost:5432/applica"
+    url = "jdbc:postgresql://localhost:5432/__PLACEHOLDER__"
     user = "postgres"
-    password = "***REMOVED***"
+    password = "__PLACEHOLDER__"
     placeholderPrefix = "\$&{"
     placeholderSuffix = "}&\$"
 }

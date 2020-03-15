@@ -60,7 +60,7 @@ public abstract class BaseConfig {
 	protected final static String REST_SALES = "/api/rest/sales";
 	protected final static String REST_VENDORS = "/api/rest/vendors";
 
-	protected final static String BASIC_HEADER = "***REMOVED***";
+	protected final static String BASIC_HEADER = "__PLACEHOLDER__";
 
 	@Bean
 	public TestRestTemplate testRestTemplate() {
