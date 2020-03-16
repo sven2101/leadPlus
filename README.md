@@ -11,7 +11,7 @@ This repository contains a software-as-a-service application to manage your lead
 * Track your own **Tasks** (Assigned leads, offers and sales)
 * See all leads, offers and sales organized in an **easy datatable**
 * Make **comments** to share information with your team
-* **More statistics** like Profit, turnover, leads, offers and sales over a specific time (week, month year)
+* **More statistics** like Profit, turnover, leads, offers and sales over a specific time (week, month, year)
 * User statistics
 * Product statistics 
 * **Manage your products** you want to sell
@@ -96,7 +96,7 @@ password: demodemo<br/>
 3. Now you can start to track your leads, offers and sales
 4. Enjoy!
 
-## 3. Troubleshooting
+## 3. More Information
 
 
 ## 4. License
