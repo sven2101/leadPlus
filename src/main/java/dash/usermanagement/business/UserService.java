@@ -79,8 +79,7 @@ public class UserService extends ConsistencyService {
 	}
 
 	public List<User> getAll() {
-		return userRepository.findAll().stream().filter(it -> !"superadmin@eviarc.com".equals(it.getUsername()))
-				.collect(Collectors.toList());
+		return userRepository.findAll();
 	}
 
 	public User getById(final long id) throws NotFoundException {
@@ -343,7 +342,8 @@ public class UserService extends ConsistencyService {
 				user.setEnabled(enabled);
 				user.setLanguage(registration.getLanguage());
 				user.setDefaultVat(19.00);
-				notify(user);
+				//TODO Activate for mail welcome message with aws
+				//notify(user);
 				return save(user);
 			} catch (SaveFailedException ex) {
 				logger.error(ex.getMessage() + UserService.class.getSimpleName(), ex);

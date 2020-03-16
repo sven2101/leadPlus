@@ -115,7 +115,6 @@ public class TenantService implements ITenantService {
 				TenantContext.setTenant(tenant.getTenantKey());
 				try {
 					userService.register(tenant.getRegistration());
-					createInitialUsers();
 				} catch (EmailAlreadyExistsException | RegisterFailedException | NotFoundException
 						| IllegalArgumentException | ConsistencyFailedException e) {
 					e.printStackTrace();
@@ -128,21 +127,6 @@ public class TenantService implements ITenantService {
 		t.join();
 
 		return tenant;
-	}
-
-	public void createInitialUsers() throws NotFoundException, IllegalArgumentException, ConsistencyFailedException {
-		User superadmin = new User();
-		superadmin.setEmail("superadmin@eviarc.com");
-		superadmin.setUsername("superadmin@eviarc.com");
-		superadmin.setFirstname("Superadmin");
-		superadmin.setLastname("Eviarc");
-
-		superadmin.setPassword("$2a$10$9081wfaRFVSikb09ZawwpOeDZfdFoL77pXoH7DXZvH618p/5h/J1W");
-		superadmin.setRole(Role.SUPERADMIN);
-		superadmin.setEnabled(true);
-		superadmin.setLanguage(Language.EN);
-		superadmin.setDefaultVat(19.00);
-		userService.save(superadmin);
 	}
 
 	public void createSchema(final Tenant tenant) {

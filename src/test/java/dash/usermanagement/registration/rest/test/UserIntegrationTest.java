@@ -67,7 +67,7 @@ public class UserIntegrationTest extends BaseConfig {
 		registrationWrapper.setLastname("Foitzik");
 		registrationWrapper.setPassword("test");
 		registrationWrapper.setPassword2("test");
-		registrationWrapper.setEmail("andreas.foitzik@eviarc.com");
+		registrationWrapper.setEmail("andreas.foitzik@demo.com");
 		return registrationWrapper;
 	}
 }

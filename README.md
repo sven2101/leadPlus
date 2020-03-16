@@ -62,13 +62,13 @@ Extract `leadplus-3.4.3.6.zip` to your server or to any place on your local mach
 
 now your server is online and you can access the webpage **demo.leadplus.localhost:8080** with the credentials:<br/>
 
-username: superadmin@eviarc.com<br/>
-password: test<br/>
+username: superadmin@demo.com<br/>
+password: demodemo<br/>
 <br/>
 or <br/>
 <br/>
-username: user@eviarc.com<br/>
-password: test<br/>
+username: user@demo.com<br/>
+password: demodemo<br/>
 
 ## 2. Troubleshooting
 

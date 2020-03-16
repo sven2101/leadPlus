@@ -59,7 +59,7 @@
         </p>
         
         <div class="information">
-            <h4>Your lead+ entry point <a href="https://${tenant}.leadplus.io">https://${tenant}.leadplus.io</a></h4>
+            <h4>Your lead+ entry point <a href="http://${tenant}.leadplus.localhost:8080">http://${tenant}.leadplus.localhost:8080</a></h4>
             <h4>Login with your username ${user.email}</h4>
         </div>
 

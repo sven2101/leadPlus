@@ -5,7 +5,7 @@ public class Provider {
 	public final static String EMAIL_SUBJECT = "Test E-Mail";
 	public final static String EMAIL_TEXT = "This is a test e-mail.";
 	public final static String EMAIL_RECIPIENTS = "eviarc.com@gmail.com, eviarc@web.de, eviarc@gmx.de";
-	public final static String USERNAME = "admin@eviarc.com";
+	public final static String USERNAME = "admin@demo.com";
 	public final static String PASSWORD = "test";
 	public final static String SMTP_KEY = "__PLACEHOLDER__";
 	public final static String SMTP_KEY_ENCRYPTED = "__PLACEHOLDER__";
