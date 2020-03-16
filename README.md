@@ -1,25 +1,29 @@
+[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
 # LeadPlus+
 
 This repository contains a software-as-a-service application to manage your leads, generate offers and make sales. 
 
 ## 0. Requirements
 
-We use [Spring Boot](https://spring.io/projects/spring-boot) for our server and [AngularJS 1.6.1](https://angularjs.org/) for our frontend. 
+We use [Spring Boot 1.5.0](https://spring.io/projects/spring-boot) for our server and [AngularJS 1.6.1](https://angularjs.org/) for our frontend. 
 
 It works with the following setup
 
 * Java 8
-* PostgresSQL 9.6
+* PostgreSQL 9.6
 * npm 5.0.3
 * Gradle 3.2.1
 
-of course you can try it with newer versions.
+-> of course you can try newer versions.
 
 ## 1. Installation
-[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
 
 ### 1.1 Prepare your environment
-Prepare your environment and setup the requirements Java SDK, Postgres database, npm and Gradle on your machine.
+Prepare your environment and setup the requirements [Java](https://www.java.com/de/download/), [postgreSQL](https://www.postgresql.org/), [npm](https://nodejs.org/en/download/) and [gradle](https://gradle.org/install/) on your machine.
+<br>
+<br>
+**Don't forget to create a database in postgreSQL!** 
+
 
 ### 1.2 Replace passwords, security keys and database name
 
@@ -28,8 +32,8 @@ Search in your project for \_\_PLACEHOLDER\_\_ and you will find all replacable 
 
 File |      Description     
 -------------- | ------------ 
-application-local.properties | spring.datasource.url=jdbc:postgresql://localhost:5432/\_\_PLACEHOLDER\_\_ with your database name<br/>spring.datasource.password=\_\_PLACEHOLDER\_\_ with your database password
-build.gradle | url = "jdbc:postgresql://localhost:5432/\_\_PLACEHOLDER\_\_" with your database name<br/> password = "\_\_PLACEHOLDER\_\_" with your database password
+application-local.properties | spring.datasource.platform=postgresql<br>spring.datasource.url=jdbc:postgresql://localhost:5432/\_\_PLACEHOLDER\_\_ <br>spring.datasource.username=postgres<br>spring.datasource.password=\_\_PLACEHOLDER\_\_
+build.gradle | flyway{<br>  url = "jdbc:postgresql://localhost:5432/\_\_PLACEHOLDER\_\_"<br>  user = "postgres"<br>  password = "\_\_PLACEHOLDER\_\_"<br>}
 
 The other keys are not neccesary for a local environment but **you should set the keys for security reasons!** If you are **not on AWS** you can remove the aws keys. In the `application-xxx.properties` files you can also change some configuration stuff e.g. database user, flyway settings, jwt settings, ...
 
@@ -69,15 +73,18 @@ or <br/>
 <br/>
 username: user@demo.com<br/>
 password: demodemo<br/>
+## 2. Create your own tenant/subdomain
 
-## 2. Troubleshooting
+1. To create your own tenant start your server and visit **http://leadplus.localhost:8080/registration** 
+2. Fill in the form and you have access to **http://yourtenant.leadplus.localhost:8080**. 
+3. Now you can start to track your leads, offers and sales
+4. Enjoy!
+
+## 3. Troubleshooting
 
 
-## 3. License
+## 4. License
 The files in this repository are under the [GNU General Public License v3.0](LICENSE)
-## 4. TODOs
 
-- [x] done
-- [ ] not yet
 
 
