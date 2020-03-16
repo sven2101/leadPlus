@@ -75,26 +75,13 @@
         <br/>
         Cheers,
         <br/>
-        Andreas
+        Max
         <br/>
         <br/>
-		<img src="cid:employee" alt="Andreas Foitzik"/>
+		<img src="cid:employee" alt="Max Mustermann"/>
         <br/>
         <br/>
-        <div class="footer">
-            Andreas Foitzik 
-            <br/>
-            CEO
-            <br/>
-            <br/>
-            <a href="http://leadplus.io">www.leadplus.io</a> <br/>
-            eviarc UG (haftungsbeschränkt) i.G. <br/>
-            Hauptstrasse 55 <br/>
-            76133 Karlsruhe <br/>
-            Germany <br/>
-            <br/>
-            +49 123 456 789 00
-        </div>
+    
 	</div>
 	
 </body>

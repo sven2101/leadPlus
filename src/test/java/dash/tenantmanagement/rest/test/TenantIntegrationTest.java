@@ -36,7 +36,7 @@ public class TenantIntegrationTest extends BaseConfig {
 
 	public Tenant createTenant() {
 		Tenant tenant = new Tenant();
-		tenant.setTenantKey("eviarc");
+		tenant.setTenantKey("testdemo");
 		tenant.setAddress("Karlsruhe");
 		tenant.setDescription("Tenant for JUnit Tests");
 		tenant.setLicense(createLicense());

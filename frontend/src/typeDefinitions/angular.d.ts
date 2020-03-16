@@ -228,8 +228,7 @@ declare module angular {
          * @param directiveFactory An injectable directive factory function.
          */
         directive(name: string, inlineAnnotatedFunction: any[]): IModule;
-
-        // Max Hermann 25.10.2016
+        
         directive(name: string, directiveFactoryMethode: Object): IModule;
 
         directive(object: Object): IModule;

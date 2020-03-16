@@ -40,7 +40,7 @@ import dash.notificationmanagement.domain.Attachment;
 @Service
 public class AWSEmailService {
 
-	private static final String CLASSPATH_RESOURCE_IMAGE_EMPLOYEE = "classpath:email/images/Andreas_Foitzik.png";
+	private static final String CLASSPATH_RESOURCE_IMAGE_EMPLOYEE = "classpath:email/images/Max_Mustermann.png";
 	private static final String CLASSPATH_RESOURCE_IMAGE_LOGO = "classpath:email/images/logo.png";
 
 	private static final Logger logger = Logger.getLogger(AWSEmailService.class);

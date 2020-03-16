@@ -63,11 +63,11 @@ public class UserIntegrationTest extends BaseConfig {
 
 	public RegistrationWrapper createRegistration() {
 		RegistrationWrapper registrationWrapper = new RegistrationWrapper();
-		registrationWrapper.setFirstname("Andreas");
-		registrationWrapper.setLastname("Foitzik");
+		registrationWrapper.setFirstname("Max");
+		registrationWrapper.setLastname("Mustermann");
 		registrationWrapper.setPassword("test");
 		registrationWrapper.setPassword2("test");
-		registrationWrapper.setEmail("andreas.foitzik@demo.com");
+		registrationWrapper.setEmail("Max.Mustermann@demo.com");
 		return registrationWrapper;
 	}
 }

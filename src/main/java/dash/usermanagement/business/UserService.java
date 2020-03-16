@@ -386,7 +386,7 @@ public class UserService extends ConsistencyService {
 		AbstractMessage welcomeMessage;
 		try {
 			welcomeMessage = this.messageService.getWelcomeMessage(templateName, tenant, user);
-			this.awsEmailService.sendMail("andreas.foitzik@leadplus.io", welcomeMessage.getRecipients(),
+			this.awsEmailService.sendMail("Max.Mustermann@leadplus.io", welcomeMessage.getRecipients(),
 					welcomeMessage.getSubject(), welcomeMessage.getContent());
 		} catch (Exception e) {
 			e.printStackTrace();

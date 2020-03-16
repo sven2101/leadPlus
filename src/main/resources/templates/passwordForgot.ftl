@@ -68,7 +68,6 @@
 							<a href="/#/login" id=userLogin class="btn btn-primary block full-width m-b"><strong id="loginMessage"></strong></a>
 						</div>
 					</form>
-					<p>©eviarc 2017 All Rights Reserved.</p>
 				</div>
 			</div>
 		</div>

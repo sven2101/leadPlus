@@ -76,7 +76,6 @@
 							<a href="/#/login" id=userLogin class="btn btn-success block full-width m-b"><strong id="loginMessage"></strong></a>
 						</div>
 					</form>
-					©eviarc 2017 All Rights Reserved.
 				</div>
 			</div>
 		</div>
