@@ -3,6 +3,22 @@
 
 This repository contains a software-as-a-service application to manage your leads, generate offers and make sales. 
 
+<img src="photos/manage_leads.png" width="49%"></img> <img src="photos/statistics.png" width="49%"></img>
+<img src="photos/templates.png" width="49%"></img> <img src="photos/email.png" width="49%"></img>
+
+## More Features
+
+* Track your own **Tasks** (Assigned leads, offers and sales)
+* See all leads, offers and sales organized in an **easy datatable**
+* Make **comments** to share information with your team
+* **More statistics** like Profit, turnover, leads, offers and sales over a specific time (week, month year)
+* User statistics
+* Product statistics 
+* **Manage your products** you want to sell
+* **Manage your clients** and see the history with them
+* Add **apis** for getting leads from external pages (e.g. marketplace) directly in your system
+* Manage your own **profile** (picture, phone, skype, ...)
+
 ## 0. Requirements
 
 We use [Spring Boot 1.5.0](https://spring.io/projects/spring-boot) for our server and [AngularJS 1.6.1](https://angularjs.org/) for our frontend. 
