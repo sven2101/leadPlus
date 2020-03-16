@@ -1,4 +1,3 @@
-[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
 # LeadPlus+
 
 This repository contains a software-as-a-service application to manage your leads, generate offers and make sales. 
@@ -98,9 +97,6 @@ password: demodemo<br/>
 
 ## 3. More Information
 
-
-## 4. License
-The files in this repository are under the [GNU General Public License v3.0](LICENSE)
 
 
 
