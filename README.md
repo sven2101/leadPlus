@@ -2,8 +2,8 @@
 
 This repository contains a software-as-a-service application to manage your leads, generate offers and make sales. 
 
-<img src="photos/manage_leads.png" width="49%"></img> <img src="photos/statistics.png" width="49%"></img>
-<img src="photos/templates.png" width="49%"></img> <img src="photos/email.png" width="49%"></img>
+<img src="photos/manage_leads.png" width="100%"></img> <img src="photos/statistics.png" width="100%"></img>
+<img src="photos/templates.png" width="100%"></img> <img src="photos/email.png" width="100%"></img>
 
 ## More Features
 
