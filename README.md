@@ -1,6 +1,7 @@
-# LeadPlus+
+# LeadPlus+ a Lead Management System
 
-This repository contains a software-as-a-service application to manage your leads, generate offers and make sales. 
+This repository contains a software-as-a-service application for managing your leads, offers and sales by yourself or your team. 
+The goal of **LeadPlus** is to support your work with **intelligent functions**, to **automate processes** in dealing with your leads and to **get important performance indicators** from your business in order to **maximize your sales**.
 
 <img src="photos/manage_leads.png" width="100%"></img> <img src="photos/statistics.png" width="100%"></img>
 <img src="photos/templates.png" width="100%"></img> <img src="photos/email.png" width="100%"></img>
@@ -96,6 +97,41 @@ password: demodemo<br/>
 4. Enjoy!
 
 ## 3. More Information
+### 3.1 HTTPS local
+If you want to test your application locally by HTTPS just uncomment these lines in `application-local.properties`:
+
+> #server.ssl.key-store: keystore.p12<br>
+> #server.ssl.key-store-password: test12<br>
+> #server.ssl.key-password = test12<br>
+> #server.ssl.keyStoreType: PKCS12<br>
+> #server.ssl.keyAlias: keystore<br>
+
+and include `keystore.p12` in your build process. 
+
+**NOTE: Check your application for http references and change to https!**
+
+### 3.2 API
+If you want to use the api for getting leads from an external page or something else you have to:
+1. Create a source on your page http://yourtenant.leadplus.localhost:8080/#/settings/source 
+2. Press the button on the right to get an Access-Token
+
+This Access-Token grants you the permission to post leads via the rest api:
+
+> http://yourtenant.leadplus.localhost:8080/api/rest/public/lead
+
+For more information check out the swagger-ui: http://yourtenant.leadplus.localhost:8080/swagger-ui.html. 
+
+### 3.3 Nginx
+If you want to deploy the application on a webserver with nginx then you have to configure the nginx files in `/elb_config/.ebextensions/`. The example file is configured for AWS. 
+
+### 3.4 AWS
+To deploy to AWS you need to set up your environment, configure nginx, set AWS keys, and deploy the zip file `leadplus-3.4.3.6.zip`. Make sure you change the profile in `application.properties`:
+
+> spring.profiles.active=yourProfileYouWantToUse
+
+## 4. License
+You may need to purchase a [Highcharts license](https://www.highcharts.com/) for **commercial** use.
+
 
 
 
