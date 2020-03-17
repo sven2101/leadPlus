@@ -96,7 +96,7 @@ password: demodemo<br/>
 3. Now you can start to track your leads, offers and sales
 4. Enjoy!
 
-## 3. More Information
+## 3. Advanced Setup
 ### 3.1 HTTPS local
 If you want to test your application locally by HTTPS just uncomment these lines in `application-local.properties`:
 
@@ -114,10 +114,7 @@ and include `keystore.p12` in your build process.
 If you want to use the api for getting leads from an external page or something else you have to:
 1. Create a source on your page http://yourtenant.leadplus.localhost:8080/#/settings/source 
 2. Press the button on the right to get an Access-Token
-
-This Access-Token grants you the permission to post leads via the rest api:
-
-> http://yourtenant.leadplus.localhost:8080/api/rest/public/lead
+3. This Access-Token grants you the permission to post leads via the rest api http://yourtenant.leadplus.localhost:8080/api/rest/public/lead
 
 For more information check out the swagger-ui: http://yourtenant.leadplus.localhost:8080/swagger-ui.html. 
 
