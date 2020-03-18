@@ -3,8 +3,32 @@
 This repository contains a software-as-a-service application for managing your leads, offers and sales by yourself or your team. 
 The goal of **LeadPlus** is to support your work with **intelligent functions**, to **automate processes** in dealing with your leads and to **get important performance indicators** from your business in order to **maximize your sales**.
 
-<img src="photos/manage_leads.png" width="100%"></img> <img src="photos/statistics.png" width="100%"></img>
-<img src="photos/templates.png" width="100%"></img> <img src="photos/email.png" width="100%"></img>
+<p align="center">
+  
+### Manage your leads, offers and sales!
+  <img src="photos/manage_leads.png" width="100%"></img> 
+</p>
+
+<p align="center">
+  
+### Keep track on your KPIs and get important insights!
+  <img src="photos/statistics.png" width="100%"></img>
+</p>
+
+<p align="center">
+  
+### Generate your own template for E-Mails and PDFs!
+  <img src="photos/templates.png" width="100%"></img>
+</p>
+
+<p align="center">
+  
+### Generate automatic offers and responses!
+  <img src="photos/email.png" width="100%"></img>
+</p>
+
+
+
 
 ## More Features
 
@@ -118,10 +142,13 @@ If you want to use the api for getting leads from an external page or something 
 
 For more information check out the swagger-ui: http://yourtenant.leadplus.localhost:8080/swagger-ui.html. 
 
-### 3.3 Nginx
+### 3.3 Templates
+We use [freemarker](https://freemarker.apache.org/) to generate our templates for E-Mails and PDFs. Checkout this [tutorial](https://www.vogella.com/tutorials/FreeMarker/article.html) for adding more variables to your customized template design. 
+
+### 3.4 Nginx
 If you want to deploy the application on a webserver with nginx then you have to configure the nginx files in `/elb_config/.ebextensions/`. The example file is configured for AWS. 
 
-### 3.4 AWS
+### 3.5 AWS
 To deploy to AWS you need to set up your environment, configure nginx, set AWS keys, and deploy the zip file `leadplus-3.4.3.6.zip`. Make sure you change the profile in `application.properties`:
 
 > spring.profiles.active=yourProfileYouWantToUse
